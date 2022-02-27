@@ -1,0 +1,153 @@
+name: eqmonitor
+description: Earth Quake Monitor Application
+
+publish_to: "none"
+
+version: 0.0.3+36
+
+environment:
+  sdk: ">=2.15.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.2
+  get: ^4.6.1
+  logger: ^1.1.0
+  firebase_core: ^1.12.0
+  firebase_crashlytics: ^2.5.1
+  firebase_messaging: ^11.2.6
+  font_awesome_flutter: ^9.2.0
+  ntp: ^2.0.0
+  http: ^0.13.4
+  intl: ^0.17.0
+  sliding_up_panel: ^2.0.0+1
+  geojson: ^1.0.0
+  flutter_map: ^0.14.0
+  syncfusion_flutter_maps: ^19.4.50-beta
+  csv: ^5.0.1
+  image: ^3.1.1
+  firebase_performance: ^0.8.0+5
+  firebase_app_check: ^0.0.6+5
+  firebase_auth: ^3.3.7
+  twitter_login: ^4.0.1
+  settings_ui: ^2.0.2
+  flutter_native_splash: ^2.0.4
+  status_alert: ^1.0.0
+  oauth1: ^2.0.0
+  url_launcher: ^6.0.20
+  cool_alert: ^1.1.0
+  hive: ^2.0.5
+  hive_flutter: ^1.1.0
+  package_info_plus: ^1.3.1
+  awesome_notifications: ^0.6.21
+  html: ^0.15.0
+  solid_bottom_sheet: ^0.1.10
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  import_path_converter: ^1.0.1
+  pedantic_mono: ^1.16.0
+  flutter_launcher_icons: ^0.9.2
+  flutter_flavorizr: ^2.1.2
+  hive_generator: ^1.1.2
+  build_runner: ^2.1.7
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/japan.geojson
+    - assets/icon.png
+    - assets/light1.gif
+    - assets/light2.gif
+
+flutter_native_splash:
+  #? flutter pub run flutter_native_splash:create
+  # This package generates native code to customize Flutter's default white native splash screen
+  # with background color and splash image.
+  # Customize the parameters below, and run the following command in the terminal:
+  # flutter pub run flutter_native_splash:create
+  # To restore Flutter's default white splash screen, run the following command in the terminal:
+  # flutter pub run flutter_native_splash:remove
+
+  # color or background_image is the only required parameter.  Use color to set the background
+  # of your splash screen to a solid color.  Use background_image to set the background of your
+  # splash screen to a png image.  This is useful for gradients. The image will be stretch to the
+  # size of the app. Only one parameter can be used, color and background_image cannot both be set.
+  color: "#F1F4F9"
+  #background_image: "assets/background.png"
+
+  # Optional parameters are listed below.  To enable a parameter, uncomment the line by removing
+  # the leading # character.
+
+  # The image parameter allows you to specify an image used in the splash screen.  It must be a
+  # png file and should be sized for 4x pixel density.
+  image: assets/icon.png
+
+  # This property allows you to specify an image used as branding in the splash screen. It must be
+  # a png file. Currently, it is only supported for Android and iOS.
+  #branding: assets/dart.png
+
+  # Specify your branding image for dark mode.
+  #branding_dark: assets/dart_dark.png
+
+  # To position the branding image at the bottom of the screen you can use bottom, bottomRight,
+  # and bottomLeft. The default values is bottom if not specified or specified something else.
+  #
+  # Make sure this content mode value should not be similar to android_gravity value and
+  # ios_content_mode value.
+  #branding_mode: bottom
+
+  # The color_dark, background_image_dark, and image_dark are parameters that set the background
+  # and image when the device is in dark mode. If they are not specified, the app will use the
+  # parameters from above. If the image_dark parameter is specified, color_dark or
+  # background_image_dark must be specified.  color_dark and background_image_dark cannot both be
+  # set.
+  color_dark: "##F1F4F9"
+  #background_image_dark: "assets/dark-background.png"
+  #image_dark: assets/splash-invert.png
+
+  # The position of the splash image can be set with android_gravity, ios_content_mode, and
+  # web_image_mode parameters.  All default to center.
+  #
+  # android_gravity can be one of the following Android Gravity (see
+  # https://developer.android.com/reference/android/view/Gravity): bottom, center,
+  # center_horizontal, center_vertical, clip_horizontal, clip_vertical, end, fill, fill_horizontal,
+  # fill_vertical, left, right, start, or top.
+  #android_gravity: center
+  #
+  # ios_content_mode can be one of the following iOS UIView.ContentMode (see
+  # https://developer.apple.com/documentation/uikit/uiview/contentmode): scaleToFill,
+  # scaleAspectFit, scaleAspectFill, center, top, bottom, left, right, topLeft, topRight,
+  # bottomLeft, or bottomRight.
+  #ios_content_mode: center
+  #
+  # web_image_mode can be one of the following modes: center, contain, stretch, and cover.
+  #web_image_mode: center
+
+  # To hide the notification bar, use the fullscreen parameter.  Has no effect in web since web
+  # has no notification bar.  Defaults to false.
+  # NOTE: Unlike Android, iOS will not automatically show the notification bar when the app loads.
+  #       To show the notification bar, add the following code to your Flutter app:
+  #       WidgetsFlutterBinding.ensureInitialized();
+  #       SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom, SystemUiOverlay.top]);
+  fullscreen: true
+
+  # If you have changed the name(s) of your info.plist file(s), you can specify the filename(s)
+  # with the info_plist_files parameter.  Remove only the # characters in the three lines below,
+  # do not remove any spaces:
+  #info_plist_files:
+  #  - 'ios/Runner/Info-Debug.plist'
+  #  - 'ios/Runner/Info-Release.plist'
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon.png"
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/icon.png"

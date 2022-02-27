@@ -1,0 +1,5 @@
+#include "Generated.xcconfig"
+
+FLUTTER_TARGET=lib/main-prod.dart
+ASSET_PREFIX=prod
+BUNDLE_NAME=eqmonitor
