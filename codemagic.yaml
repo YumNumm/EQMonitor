@@ -2,8 +2,8 @@
 # Note that this configuration is not an exact match to UI settings. Review and adjust as necessary.
 
 workflows:
-  default-workflow:
-    name: Default Workflow
+  main-WF:
+    name: Release Build
     max_build_duration: 30
     environment:
       vars:
@@ -24,7 +24,7 @@ workflows:
         - $FLUTTER_ROOT/.pub-cache
     scripts:
       - |
-        # set up key.properties
+        # Set up key.properties
         echo $FCI_KEYSTORE | base64 --decode > $FCI_KEYSTORE_PATH
         cat >> "$FCI_BUILD_DIR/android/key.properties" <<EOF
         storePassword=$FCI_KEYSTORE_PASSWORD
@@ -33,11 +33,11 @@ workflows:
         storeFile=/tmp/keystore.keystore
         EOF
       - |
-        # set up local properties
+        # Set up local properties
         echo "flutter.sdk=$HOME/programs/flutter" > "$FCI_BUILD_DIR/android/local.properties"
       - |
+        # Pre-build Cmd
         #!/bin/sh
-
         echo $FIREBASE_ANDROID | base64 --decode > $FCI_BUILD_DIR/Android/app/google-services.json
         shasum $FCI_BUILD_DIR/Android/app/google-services.json
         echo "\nFirebase Secret File Sync Done!"
