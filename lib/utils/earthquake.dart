@@ -180,7 +180,7 @@ class EarthQuake extends GetxController {
         );
       } catch (e) {}
       lastUpdateTimeString.value =
-          '最終更新: ${DateFormat('yyyy/MM/dd hh:mm:ss').format(now)}';
+          '最終更新: ${DateFormat('yyyy/MM/dd HH:mm:ss').format(now)}';
     }
   }
 
