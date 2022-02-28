@@ -44,10 +44,12 @@ workflows:
         echo $PRIVATE_KEYS | base64 --decode > $FCI_BUILD_DIR/lib/private/keys.dart
         shasum $FCI_BUILD_DIR/lib/private/keys.dart
         echo "Twitter Api Key Sync Done!"
-      - flutter packages pub get
-      - 'flutter build appbundle --release --obfuscate --split-debug-info=obfuscate '
+      - | # Get Dependency
+         flutter packages pub get
+      - | # Build Android(AAB)
+          flutter build appbundle --release --obfuscate --split-debug-info=obfuscate
       - |
-        # generate signed universal apk with user specified keys
+         # Generate apk
         android-app-bundle build-universal-apk \
           --bundle build/**/outputs/**/*.aab \
           --ks /tmp/keystore.keystore \
