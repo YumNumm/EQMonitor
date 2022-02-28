@@ -113,6 +113,13 @@ Widget aboutThisApp() {
             },
             title: const Text('Debug Mode'),
           ),
+ListTile(
+                      title: const Text('ソースコード'),
+                      subtitle: const Text('GitHub'),
+                      onTap: () => launch(
+                        'https://github.com/YumNumm/EQMonitor',
+                      ),
+                    ),
         ],
       ),
     ],
