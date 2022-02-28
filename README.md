@@ -5,7 +5,7 @@
 
 
 ## ※注意
-GitHub上にあるコードのみではビルドできません。
+GitHub上にあるコードのみではビルドできません。  
 以下がGitHub上にないコードです
 ```
 android/app/google-services.json
