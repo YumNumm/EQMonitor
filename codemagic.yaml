@@ -1,6 +1,3 @@
-# Automatically generated on 2022-02-28 UTC from https://codemagic.io/app/621bb2a4bc3d3d2156cab924/settings
-# Note that this configuration is not an exact match to UI settings. Review and adjust as necessary.
-
 workflows:
   main-WF:
     name: Release Build
