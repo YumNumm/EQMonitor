@@ -1,0 +1,10 @@
+📖 Docs:
+  - **/*.md
+  - *.md
+
+🧵 Code:
+  - lib/*.*
+
+👷‍♀️ CI:
+  - '.github/*.yml'
+  - '.github/workflows/**/*'
