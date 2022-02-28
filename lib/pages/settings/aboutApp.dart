@@ -115,7 +115,7 @@ Widget aboutThisApp() {
           ),
           SettingsTile.navigation(
                       title: const Text('ソースコード'),
-                      onTap: () => launch(
+                      onPressed: (BuildContext context) => launch(
                         'https://github.com/YumNumm/EQMonitor',
                       ),
                     ),
