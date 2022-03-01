@@ -107,7 +107,7 @@ class IntroPage extends StatelessWidget {
                   zoomPanBehavior: earthQuake.mapZoomPanBehavior,
                   initialMarkersCount: earthQuake.analyzedPoint.length,
                   markerBuilder: (BuildContext context, int index) {
-                    final iconSize = earthQuake.iconSize;
+                    final iconSize = earthQuake.iconSize.value;
                     return MapMarker(
                       latitude: earthQuake.analyzedPoint[index].lat,
                       longitude: earthQuake.analyzedPoint[index].lon,
