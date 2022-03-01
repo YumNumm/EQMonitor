@@ -34,7 +34,7 @@ class EarthQuake extends GetxController {
   final RxBool widgetLoaded = false.obs;
   final RxDouble zoomLevel = 1.0.obs;
   final RxList<EQLog> eqLog = <EQLog>[].obs;
-  double iconSize = 10;
+  final Rxdouble iconSize = 5.obs;
   final RxString lastUpdateTimeString = '更新待ち'.obs;
   final MapShapeLayerController mapShapeLayerController =
       MapShapeLayerController();
@@ -66,7 +66,7 @@ class EarthQuake extends GetxController {
     //! 気持ち待機(これ待ち時間調節しないとね)
     //await Future<void>.delayed(const Duration(milliseconds: 3500));
     timer2 = Timer.periodic(const Duration(milliseconds: 250), (_) async {
-      iconSize = mapZoomPanBehavior.zoomLevel * 0.6 + 3;
+      iconSize.value= mapZoomPanBehavior.zoomLevel * 0.6 + 3;
       zoomLevel.value = mapZoomPanBehavior.zoomLevel;
     });
 
