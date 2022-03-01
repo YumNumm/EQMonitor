@@ -64,7 +64,7 @@ class EarthQuake extends GetxController {
     await updateEQLog();
     await updateEQData();
     //! 気持ち待機(これ待ち時間調節しないとね)
-    await Future<void>.delayed(const Duration(milliseconds: 3500));
+    //await Future<void>.delayed(const Duration(milliseconds: 3500));
     timer2 = Timer.periodic(const Duration(milliseconds: 250), (_) async {
       iconSize = mapZoomPanBehavior.zoomLevel * 0.6 + 3;
       zoomLevel.value = mapZoomPanBehavior.zoomLevel;
