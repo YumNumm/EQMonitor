@@ -34,7 +34,7 @@ class EarthQuake extends GetxController {
   final RxBool widgetLoaded = false.obs;
   final RxDouble zoomLevel = 1.0.obs;
   final RxList<EQLog> eqLog = <EQLog>[].obs;
-  final Rxdouble iconSize = 3.6.obs;
+  final RxDouble iconSize = 3.6.obs;
   final RxString lastUpdateTimeString = '更新待ち'.obs;
   final MapShapeLayerController mapShapeLayerController =
       MapShapeLayerController();
