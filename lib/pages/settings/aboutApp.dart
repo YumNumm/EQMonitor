@@ -67,7 +67,7 @@ Widget aboutThisApp() {
                   children: [
                     ListTile(
                       title: const Text('Chromium_Linux氏'),
-                      subtitle: const Text('起動画面・アプリアイコンの作成'),
+                      subtitle: const Text('起動画面・アプリアイコン'),
                       onTap: () => launch('https://twitter.com/Chromium_Linux'),
                     ),
                     ListTile(
