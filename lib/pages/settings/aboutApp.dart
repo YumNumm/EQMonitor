@@ -66,9 +66,14 @@ Widget aboutThisApp() {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     ListTile(
-                      title: const Text('@Chromium_Linux'),
-                      subtitle: const Text('Splash Screen・アプリアイコンの作成'),
+                      title: const Text('Chromium_Linux氏'),
+                      subtitle: const Text('起動画面・アプリアイコンの作成'),
                       onTap: () => launch('https://twitter.com/Chromium_Linux'),
+                    ),
+                    ListTile(
+                      title: const Text('ingen084氏'),
+                      subtitle: const Text('強震モニタ画像解析手法'),
+                      onTap: () => launch('https://github.com/ingen084/KyoshinMonitorLib'),
                     ),
                     const Divider(
                       height: 5,
