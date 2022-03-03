@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as Image;
@@ -36,6 +37,16 @@ class EarthQuake extends GetxController {
   final RxList<EQLog> eqLog = <EQLog>[].obs;
   final RxDouble iconSize = 3.6.obs;
   final RxString lastUpdateTimeString = '更新待ち'.obs;
+  final RxSet<Circle> circles = <Circle>{
+    Circle(
+      circleId: const CircleId('0'),
+      center: const LatLng(35, 135),
+      radius: 100000,
+      fillColor: Colors.redAccent.withOpacity(0.2),
+      strokeWidth: 5,
+      strokeColor: Colors.redAccent,
+    ),
+  }.obs;
   final MapShapeLayerController mapShapeLayerController =
       MapShapeLayerController();
   final SolidController solidController = SolidController();
@@ -66,7 +77,7 @@ class EarthQuake extends GetxController {
     //! 気持ち待機(これ待ち時間調節しないとね)
     //await Future<void>.delayed(const Duration(milliseconds: 3500));
     timer2 = Timer.periodic(const Duration(milliseconds: 250), (_) async {
-      iconSize.value= mapZoomPanBehavior.zoomLevel * 0.6 + 3;
+      iconSize.value = mapZoomPanBehavior.zoomLevel * 0.6 + 3;
       zoomLevel.value = mapZoomPanBehavior.zoomLevel;
     });
 
@@ -129,6 +140,7 @@ class EarthQuake extends GetxController {
       //画像解析開始
       // 仮に入れておくAnalyzedPointたち
       final temp = <AnalyzedPoint>[];
+      final tempcircle = <Circle>{};
       //logger.w(OBSPoints.length);
       zoomLevel.value = mapZoomPanBehavior.zoomLevel;
       //logger.d(zoomLevel.value);
@@ -168,11 +180,22 @@ class EarthQuake extends GetxController {
                   zoomLevel: zoomLevel.value,
                 ),
               );
+              tempcircle.add(
+                Circle(
+                  circleId: CircleId(OBSPoint.code),
+                  radius: 1000,
+                  strokeColor: Color.fromRGBO(r, g, b, 1),
+                  fillColor: Color.fromRGBO(r, g, b, 1),
+                  center: LatLng(OBSPoint.lat, OBSPoint.lon),
+                  strokeWidth: 5,
+                ),
+              );
             }
           });
         }
       }
       analyzedPoint.value = temp;
+      circles.value = tempcircle;
       // Widgetは読み込み終わってるかを確認してから更新!
       try {
         mapShapeLayerController.updateMarkers(
@@ -198,7 +221,7 @@ class EarthQuake extends GetxController {
       '#main > .yjw_main_md > #eqhist > table > tbody > tr',
     );
     var counter = 0;
-    var eqTemp = <EQLog>[];
+    final eqTemp = <EQLog>[];
     for (final e in result) {
       if (counter == 0) {
         counter++;

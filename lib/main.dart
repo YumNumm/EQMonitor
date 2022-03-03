@@ -15,6 +15,7 @@ import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import './const/const.dart';
+import './pages/googlemappage.dart';
 import 'pages/intro.dart';
 import 'pages/settingscreen.dart';
 import 'pages/splashscreen.dart';
@@ -95,6 +96,10 @@ class EQApp extends StatelessWidget {
           name: '/setting',
           page: SettingScreen.new,
           popGesture: true,
+        ),
+        GetPage<dynamic>(
+          name: '/google-map',
+          page: GoogleMapPage.new,
         ),
       ],
     );

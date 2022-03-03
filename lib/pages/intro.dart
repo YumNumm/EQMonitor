@@ -43,6 +43,12 @@ class IntroPage extends StatelessWidget {
             },
             icon: const Icon(Icons.settings),
           ),
+          IconButton(
+            icon: const Icon(Icons.near_me),
+            onPressed: () async {
+              await Get.toNamed<void>('/google-map');
+            },
+          ),
         ],
       ),
       bottomSheet: SolidBottomSheet(
