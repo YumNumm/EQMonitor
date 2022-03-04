@@ -2,9 +2,6 @@ name: Labeler
 on: [pull_request, push]
 
 jobs:
-  - name: Label Syncer
-  uses: micnncim/action-label-syncer@v1.3.0
-
   - label:
     runs-on: ubuntu-latest
     permissions:
@@ -12,6 +9,8 @@ jobs:
       pull-requests: write
 
     steps:
+    - name: Label Syncer
+      uses: micnncim/action-label-syncer@v1.3.0
     - uses: actions/labeler@v2
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
