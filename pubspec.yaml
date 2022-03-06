@@ -46,6 +46,7 @@ dependencies:
   awesome_notifications: ^0.6.21
   html: ^0.15.0
   solid_bottom_sheet: ^0.1.10
+  sentry_flutter: ^6.3.0
 
 dev_dependencies:
   flutter_test:
