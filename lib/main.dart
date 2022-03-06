@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import './const/const.dart';
 import 'pages/intro.dart';
@@ -58,7 +59,16 @@ Future<void> main() async {
   Get.put<MapData>(MapData());
   Get.put<AuthStateUtils>(AuthStateUtils());
   Get.put<EarthQuake>(EarthQuake());
-  runApp(const EQApp());
+  await SentryFlutter.init(
+    (options) {
+      // options.dsn = '';
+      //* dart defineするわ
+      // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+      // We recommend adjusting this value in production.
+      options.tracesSampleRate = 1.0;
+    },
+    appRunner: () => runApp(const EQApp()),
+  );
 }
 
 class EQApp extends StatelessWidget {
