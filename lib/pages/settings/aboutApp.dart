@@ -127,14 +127,15 @@ Widget aboutThisApp() {
                     ),
                     SettingsTile.navigation(
                       title: const Text('crash!'),
-                      onPressed: (BuildContext context) {
-try {
-  aMethodThatMightFail();
-} catch (exception, stackTrace) {
-  await Sentry.captureException(
-    exception,
-    stackTrace: stackTrace,
-  );
+                      onPressed: (BuildContext context) async {
+                        try {
+                         aMethodThatMightFail();
+                        } catch (exception, stackTrace) {
+                         await Sentry.captureException(
+                           exception,
+                           stackTrace: stackTrace,
+                         );
+                        }
                       }
                     ),
         ],
