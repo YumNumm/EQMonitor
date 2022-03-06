@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:sentry/sentry.dart';
 
 import '../../utils/messaging.dart';
 
@@ -123,6 +124,18 @@ Widget aboutThisApp() {
                       onPressed: (BuildContext context) => launch(
                         'https://github.com/YumNumm/EQMonitor',
                       ),
+                    ),
+                    SettingsTile.navigation(
+                      title: const Text('crash!'),
+                      onPressed: (BuildContext context) {
+try {
+  aMethodThatMightFail();
+} catch (exception, stackTrace) {
+  await Sentry.captureException(
+    exception,
+    stackTrace: stackTrace,
+  );
+                      }
                     ),
         ],
       ),
