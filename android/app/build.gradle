@@ -87,6 +87,9 @@ android {
         }
     }
     buildToolsVersion '32.1.0 rc1'
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 flutter {
