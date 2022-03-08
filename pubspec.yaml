@@ -46,6 +46,7 @@ dependencies:
   awesome_notifications: ^0.6.21
   html: ^0.15.0
   solid_bottom_sheet: ^0.1.10
+  home_widget: ^0.1.5
 
 dev_dependencies:
   flutter_test:
