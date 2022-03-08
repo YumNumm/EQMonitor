@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
-    <string name="app_widget_description">This is an app widget description</string>
+    <string name="text">震度1</string>
+    <string name="time">2021/03/09 12:xx頃</string>
+    <string name="place">太陽</string>
+    <string name="magunitude">M0.0</string>
+    <string name="max_intensity">震度8</string>
+    <string name="description">直近の地震履歴</string>
+    <string name="msg">太陽付近で地震 M0.0\n2023/03/09 12:00頃</string>
 </resources>

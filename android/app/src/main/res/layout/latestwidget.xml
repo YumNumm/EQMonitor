@@ -4,16 +4,48 @@
     android:layout_height="match_parent"
     android:theme="@style/Theme.Android.AppWidgetContainer">
 
-    <TextView
-        android:id="@+id/appwidget_text"
-        style="@style/Widget.Android.AppWidget.InnerView"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="8dp"
-        android:contentDescription="@string/appwidget_text"
-        android:text="@string/appwidget_text"
-        android:textSize="24sp"
-        android:textStyle="bold|italic" />
+        android:gravity="center|fill"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/appwidget_text"
+            style="@style/Widget.Android.AppWidget.InnerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginBottom="1dp"
+            android:backgroundTint="#00BCD4"
+            android:contentDescription="@string/text"
+            android:text="@string/text"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center|fill"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="147dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/msg"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+
+    </LinearLayout>
+
 </RelativeLayout>
