@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center|fill"
+        android:gravity="center_horizontal|center_vertical"
         android:orientation="horizontal">
 
         <TextView
@@ -16,35 +16,33 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="1dp"
+            android:layout_marginLeft="1dp"
             android:layout_marginTop="1dp"
             android:layout_marginEnd="1dp"
+            android:layout_marginRight="5dp"
             android:layout_marginBottom="1dp"
-            android:backgroundTint="#00BCD4"
+            android:backgroundTint="#2A5A0A"
             android:contentDescription="@string/text"
             android:text="@string/text"
-            android:textColor="#000000"
+            android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold" />
 
         <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center|fill"
-            android:orientation="vertical">
+            android:layout_weight="20" />
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="147dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/msg"
-                android:textColor="#FFFFFF" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="182dp"
+            android:layout_height="51dp"
+            android:layout_weight="1"
+            android:autoSizeTextType="uniform"
+            android:text="@string/msg"
+            android:textAlignment="center"
+            android:textColor="#2962FF"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

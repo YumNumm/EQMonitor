@@ -1,0 +1,72 @@
+{
+    "type": "data",
+    "version": "2.0",
+    "id": "1216cb9c8d6884aa5e7411ae6a8a465f465f9968aae1d6c6ab5645b4f64d8225b683408b269ab0143911b1397abff416",
+    "originalId": "2d9104d09704b58107f1636318d4a61d5ddad57dc6b51cf792a8b44dcf16385de0b25ffbe34713dd3266ac104f7f7869",
+    "classification": "telegram.earthquake",
+    "passing": [
+        {
+            "name": "jmbsc",
+            "time": "2022-03-09T10:44:00.000Z"
+        },
+        {
+            "name": "ftp-01",
+            "time": "2022-03-09T10:44:02.241Z"
+        },
+        {
+            "name": "ires-01",
+            "time": "2022-03-09T10:44:02.242Z"
+        },
+        {
+            "name": "json-01",
+            "time": "2022-03-09T10:44:02.250Z"
+        },
+        {
+            "name": "ires-01",
+            "time": "2022-03-09T10:44:02.251Z"
+        },
+        {
+            "name": "file-01",
+            "time": "2022-03-09T10:44:02.253Z"
+        },
+        {
+            "name": "file-system",
+            "time": "2022-03-09T11:00:14.351Z"
+        }
+    ],
+    "head": {
+        "type": "VXSE53",
+        "author": "RJTD",
+        "time": "2022-03-09T10:44:00.000Z",
+        "designation": null,
+        "test": false
+    },
+    "xmlReport": {
+        "control": {
+            "title": "震源・震度に関する情報",
+            "dateTime": "2022-03-09T10:44:00Z",
+            "status": "通常",
+            "editorialOffice": "気象庁本庁",
+            "publishingOffice": "気象庁"
+        },
+        "head": {
+            "title": "震源・震度情報",
+            "reportDateTime": "2022-03-09T19:44:00+09:00",
+            "targetDateTime": "2022-03-09T19:44:00+09:00",
+            "eventId": "20220309194003",
+            "serial": "1",
+            "infoType": "発表",
+            "infoKind": "地震情報",
+            "infoKindVersion": "1.0_1",
+            "headline": "　９日１９時４０分ころ、地震がありました。"
+        }
+    },
+    "format": "json",
+    "schema": {
+        "type": "earthquake-information",
+        "version": "1.1.0"
+    },
+    "compression": "gzip",
+    "encoding": "base64",
+    "body": "H4sIAAAAAAAAAI1UXW8TRxT9L/tKYs1+2Ov1c/uAqsIDUR9aRdF4Z9aesh/u7jgiQpG8u6KBQhAVFJPUfEqpIgWlCVSqZQz8AH7GsBv8lL/QO2ubbEJa1Q+r8cw5586999y5rqwEIWsxH7sXidJQNGKpyCDIMpHRrNZVZDpqTa/pap0YuKaSKiGYVE1i15pV1XZMS8P1pmEQW8LqVUJRU6s6TpPqhqnqhOharYZtkHRMx6zXLGVBWYnsNvWw0riu8LUOhaAUh7z9UxdfpYvMd4LQw5wFPkBXaRjJVUNRK2oFKesLc8pksJGP7on0DSyy0R8i3ps8fCHiLZHcztMb2bNDYHPG3XOwn88jjnk3koDedjYcwo6MvjQNcLQ1+vR8F/YoYRxKhN3LjsNseZQf9D8dPs9GcT54CV/AdLpNl0Vt5rfmoB9OUMoyAEIaRV9hTpeYJyU0pGmLSF9E1pKKGobRQOh70AlpJwj5v+CsKe4CsuAr08Nhi/5fMF2lPp92GFBIR5ZqGQjpsgxUZncpkFWe1eAb5ktoNjiQtZvXa37yXakraEVy2hQTl/nyEqLXOx5v5f2d4/GvcrGVHI8fHI/vZTd/FvF9kWyKXjzVFfEdESci+UXE70TcF/FT0UtArBmQNWmOE1fIf1OXnpupbpUzxWHIVrF7fk1QGdle6wQ2lIWGMoAdEEkwCo/6uGB/HN6abGweDe5km/388WH+6iGc2UEQEhgYXtzLBa/yLinWnF7jwNL1iv5h+5L0L3a7dLaDUOFfN/BbZwmqblasD9tflxjF1ozSpqzV5qV5mew9EvFvgO76TPK9EnFRl5EKXotCSpzZV9YiTj1p3P4OWDYfvoQGHL1+IzGEdni7JJ3/fXhK+qp3Kg3QBZKHW/5JDlOiSJ+I5ECkt0Uai3RHpGOR3ipzK+aJ6rc/FjoMau9HjBft9vC1iz6fmRDmxaE278LYwCx9bg4q9SZ/luaDXeiNslDmri/LMWqBP08xdVU9hwptnaS7XwrYjLOzkTWkFq6ZaWT7G5P0bba/nw2TLwXk03L2Cv8pkT+6+/H948nG3aMHo2LU5lrr0nCeBzaNZJXgdaQ2jnjJPXKs4v35TO2J5KZ8BP/ayV+/kPvv08mNTRH/WZq130Vyfzpr8mrykgrS1KqyvA6/fwCi8YZ1EgYAAA=="
+}

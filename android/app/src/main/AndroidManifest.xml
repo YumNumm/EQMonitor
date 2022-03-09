@@ -12,7 +12,7 @@
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
-        android:label="eqmonitor">
+        android:label="EQMonitor">
         <receiver
             android:name=".latestwidget"
             android:exported="true">
