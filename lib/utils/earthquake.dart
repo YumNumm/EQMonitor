@@ -66,7 +66,7 @@ class EarthQuake extends GetxController {
     //! 気持ち待機(これ待ち時間調節しないとね)
     //await Future<void>.delayed(const Duration(milliseconds: 3500));
     timer2 = Timer.periodic(const Duration(milliseconds: 250), (_) async {
-      iconSize.value= mapZoomPanBehavior.zoomLevel * 0.6 + 3;
+      iconSize.value = mapZoomPanBehavior.zoomLevel * 0.6 + 3;
       zoomLevel.value = mapZoomPanBehavior.zoomLevel;
     });
 
@@ -198,7 +198,7 @@ class EarthQuake extends GetxController {
       '#main > .yjw_main_md > #eqhist > table > tbody > tr',
     );
     var counter = 0;
-    var eqTemp = <EQLog>[];
+    final eqTemp = <EQLog>[];
     for (final e in result) {
       if (counter == 0) {
         counter++;
@@ -208,7 +208,9 @@ class EarthQuake extends GetxController {
       for (final el in e.children) {
         temp.add(el.text);
       }
-      eqTemp.add(EQLog.fromList(temp));
+      try {
+        eqTemp.add(EQLog.fromList(temp));
+      } catch (_) {}
     }
     eqLog.value = eqTemp;
   }
