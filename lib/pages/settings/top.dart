@@ -8,7 +8,7 @@ import '../../utils/auth.dart';
 
 final AuthStateUtils authStateUtils = Get.find<AuthStateUtils>();
 final Logger logger = Get.find<Logger>();
-
+bool isDarkmode = Get.isDarkMode;
 Widget topSettingPage() {
   return SettingsList(
     shrinkWrap: false,
@@ -54,9 +54,10 @@ Widget topSettingPage() {
             },
           ),
           SettingsTile.switchTile(
-            initialValue: Get.isDarkMode,
+            initialValue: isDarkmode,
             onToggle: (bool b) async {
               Get.changeThemeMode(b ? ThemeMode.dark : ThemeMode.light);
+              isDarkmode = b;
               return b;
             },
             title: const Text('ダークモード'),

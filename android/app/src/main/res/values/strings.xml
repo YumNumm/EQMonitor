@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="text">震度1</string>
+    <string name="text">震度2</string>
     <string name="time">2021/03/09 12:xx頃</string>
     <string name="place">太陽</string>
     <string name="magunitude">M0.0</string>

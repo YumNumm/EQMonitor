@@ -47,6 +47,7 @@ class IntroPage extends StatelessWidget {
       ),
       bottomSheet: SolidBottomSheet(
         controller: earthQuake.solidController,
+        smoothness: Smoothness.high,
         elevation: 0,
         body: Obx(
           () => ListView.builder(
