@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:lat_lon_grid_plugin/lat_lon_grid_plugin.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -101,34 +102,61 @@ class IntroPage extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            Obx(()=> FlutterMap(
-                  mapController: earthQuake.mapController,
-                  options: MapOptions(
-                    center: LatLng(35, 135),
-                    zoom: 13,
+            Obx(
+              () => FlutterMap(
+                mapController: earthQuake.mapController,
+                options: MapOptions(
+                  center: LatLng(36.3583, 138.6159),
+                  swPanBoundary: LatLng(23.1809, 122.4978),
+                  nePanBoundary: LatLng(46.3310, 149.2160),
+                  zoom: 5,
+                  //minZoom: 5,
+                  maxZoom: 10,
+                  interactiveFlags: InteractiveFlag.drag |
+                      InteractiveFlag.flingAnimation |
+                      InteractiveFlag.pinchMove |
+                      InteractiveFlag.pinchZoom |
+                      InteractiveFlag.doubleTapZoom,
+                  plugins: [MapPluginLatLonGrid()],
+                ),
+                layers: [
+                  TileLayerOptions(
+                    tileProvider: const AssetTileProvider(),
+                    urlTemplate: 'assets/map/{z}/{x}/{y}.png',
+                    maxZoom: 10,
                   ),
-                  layers: [
-                    TileLayerOptions(
-                      urlTemplate:
-                          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      subdomains: ['a', 'b', 'c'],
-                    ),
-                    MarkerLayerOptions(
-                      markers: List<Marker>.generate(
-                          earthQuake.analyzedPoint.length, (index) {
-                        final ap = earthQuake.analyzedPoint[index];
-                        return Marker(
-                          point: LatLng(ap.lat, ap.lon),
-                          builder: (_) => Icon(
-                            Icons.circle,
-                            color: ap.color,
-                            size: earthQuake.iconSize.value,
-                          ),
-                        );
-                      }),
-                    ),
-                  ],
-                )),
+                  MapPluginLatLonGridOptions(
+                    lineWidth: 0.5,
+                    // apply alpha for grid lines
+                    lineColor: const Color.fromARGB(100, 0, 0, 0),
+                    textColor: Colors.white,
+                    textBackgroundColor: Colors.black,
+                    showCardinalDirections: true,
+                    showCardinalDirectionsAsPrefix: false,
+                    textSize: 12,
+                    showLabels: true,
+                    rotateLonLabels: true,
+                    placeLabelsOnLines: true,
+                    offsetLonTextBottom: 20,
+                    offsetLatTextLeft: 20,
+                  ),
+                  MarkerLayerOptions(
+                    markers: List<Marker>.generate(
+                        earthQuake.analyzedPoint.length, (index) {
+                      final ap = earthQuake.analyzedPoint[index];
+                      return Marker(
+                        point: LatLng(ap.lat, ap.lon),
+                        builder: (_) => Icon(
+                          Icons.circle,
+                          color: ap.color,
+                          size: earthQuake.iconSize.value,
+                        ),
+                      );
+                    }),
+                  ),
+                ],
+              ),
+            ),
             Align(
               alignment: Alignment.topRight,
               child: Container(
@@ -178,7 +206,7 @@ class IntroPage extends StatelessWidget {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

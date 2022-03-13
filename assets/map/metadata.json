@@ -1,0 +1,12 @@
+{
+    "bounds": "122.4976,23.1808,149.2163,46.3318",
+    "center": "138.6159,36.3583,6",
+    "minzoom": "0",
+    "maxzoom": "10",
+    "name": "eqmonitor",
+    "description": "",
+    "attribution": "v1.2",
+    "legend": "",
+    "template": "",
+    "version": "1.0.0"
+}
