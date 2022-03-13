@@ -3,11 +3,11 @@ package com.yumnumm.eqmonitor
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
+import android.net.Uri
+import android.content.SharedPreferences
 import android.widget.RemoteViews
+import com.yumnumm.eqmonitor.MainActivity
 
-/**
- * Implementation of App Widget functionality.
- */
 class latestwidget : AppWidgetProvider() {
     override fun onUpdate(
         context: Context,
@@ -33,12 +33,17 @@ internal fun updateAppWidget(
     context: Context,
     appWidgetManager: AppWidgetManager,
     appWidgetId: Int
-) {/*
-    val widgetText = context.getString(R.string.appwidget_text)
-    // Construct the RemoteViews object
+) {
+    var time = context.getString(R.string.time)
+    var place = context.getString(R.string.place)
+    var magnitude = context.getString(R.string.magnitude)
+    var max_intensity = context.getString(R.string.max_intensity)
+    max_intensity = "震度100"
+        // Construct the RemoteViews object
     val views = RemoteViews(context.packageName, R.layout.latestwidget)
-    views.setTextViewText(R.id.appwidget_text, widgetText)
+    views.setImageViewUri(R.id.intensityImageView,Uri.parse(""))
+    // views.setTextViewText(R.id.appwidget_text, widgetText)
 
     // Instruct the widget manager to update the widget
-    appWidgetManager.updateAppWidget(appWidgetId, views)*/
+    appWidgetManager.updateAppWidget(appWidgetId, views)
 }
