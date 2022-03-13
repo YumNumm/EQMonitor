@@ -595,6 +595,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.1"
+  lat_lon_grid_plugin:
+    dependency: "direct main"
+    description:
+      name: lat_lon_grid_plugin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.2"
   latlong2:
     dependency: "direct main"
     description:
@@ -861,6 +868,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  protobuf:
+    dependency: transitive
+    description:
+      name: protobuf
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   pub_semver:
     dependency: transitive
     description:
@@ -1237,6 +1251,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
+  vector_map_tiles:
+    dependency: "direct main"
+    description:
+      name: vector_map_tiles
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.4.3"
   vector_math:
     dependency: transitive
     description:
@@ -1244,6 +1265,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
+  vector_tile:
+    dependency: transitive
+    description:
+      name: vector_tile
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.2"
+  vector_tile_renderer:
+    dependency: "direct main"
+    description:
+      name: vector_tile_renderer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.3.1"
   watcher:
     dependency: transitive
     description:
