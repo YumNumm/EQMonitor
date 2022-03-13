@@ -66,6 +66,7 @@ flutter:
     - assets/icon.png
     - assets/light1.gif
     - assets/light2.gif
+    - assets/intensity/
 
 flutter_native_splash:
   #? flutter pub run flutter_native_splash:create

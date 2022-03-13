@@ -11,26 +11,13 @@
         android:gravity="center_horizontal|center_vertical"
         android:orientation="horizontal">
 
-        <TextView
-          android:id="@+id/appwidget_text"
-          style="@style/Widget.Android.AppWidget.InnerView"
+        <ImageView
+          android:id="@+id/intensityImageView"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_gravity="center|fill"
-          android:layout_marginStart="1dp"
-          android:layout_marginLeft="1dp"
-          android:layout_marginTop="1dp"
-          android:layout_marginEnd="1dp"
-          android:layout_marginRight="5dp"
-          android:layout_marginBottom="1dp"
-          android:backgroundTint="#00AAFF"
-          android:contentDescription="@string/text"
-          android:foregroundGravity="center|fill"
-          android:gravity="center"
-          android:text="@string/text"
-          android:textColor="#FFFFFF"
-          android:textSize="20sp"
-          android:textStyle="bold" />
+          android:layout_weight="0"
+          android:scaleType="center"
+          app:srcCompat="@drawable/ic_launcher_foreground" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,57 +26,59 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:gravity="center"
+              android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0"
-                    android:orientation="horizontal">
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:layout_weight="0"
+                  android:gravity="center"
+                  android:orientation="horizontal">
 
                     <ImageView
-                        android:id="@+id/placeIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:srcCompat="@drawable/ic_baseline_location_on_24" />
+                      android:id="@+id/placeIcon"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      app:srcCompat="@drawable/ic_baseline_location_on_24" />
 
                     <TextView
-                        android:id="@+id/placeText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/place"
-                        android:textAlignment="center"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
+                      android:id="@+id/placeText"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:text="@string/place"
+                      android:textAlignment="center"
+                      android:textColor="#FFFFFF"
+                      android:textStyle="bold" />
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:orientation="horizontal">
 
                     <ImageView
-                        android:id="@+id/magunitudeIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:srcCompat="@drawable/ic_baseline_double_arrow_24" />
+                      android:id="@+id/magunitudeIcon"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      app:srcCompat="@drawable/ic_baseline_double_arrow_24" />
 
                     <TextView
-                        android:id="@+id/magunitudeText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/magunitude"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
+                      android:id="@+id/magunitudeText"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:text="@string/magunitude"
+                      android:textColor="#FFFFFF"
+                      android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -102,28 +91,28 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0"
-                    android:gravity="center|fill"
-                    android:orientation="horizontal">
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:layout_weight="0"
+                  android:gravity="center"
+                  android:orientation="horizontal">
 
                     <ImageView
-                        android:id="@+id/magunitudeIcon2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        app:srcCompat="@drawable/ic_baseline_double_arrow_24" />
+                      android:id="@+id/magunitudeIcon2"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="0"
+                      app:srcCompat="@drawable/ic_baseline_double_arrow_24" />
 
                     <TextView
-                        android:id="@+id/dateTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center|fill"
-                        android:text="@string/time"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
+                      android:id="@+id/dateTextView"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:gravity="center|fill"
+                      android:text="@string/time"
+                      android:textColor="#FFFFFF"
+                      android:textStyle="bold" />
 
                 </LinearLayout>
             </LinearLayout>
