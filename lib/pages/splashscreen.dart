@@ -53,7 +53,7 @@ class SplashScreen extends StatelessWidget {
                     fit: BoxFit.contain,
                   ),
                 ),
-                const CircularProgressIndicator(
+                const CircularProgressIndicator.adaptive(
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
                 )
               ],

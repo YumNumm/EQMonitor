@@ -1,3 +1,4 @@
+import 'package:eqmonitor/pages/settings/notificationSettings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -24,11 +25,11 @@ class SettingScreen extends StatelessWidget {
               index: int.parse(par!),
               children: <Widget>[
                 // Account Setting
-                Obx(accountSettingPage),
+                const Obx(accountSettingPage),
                 // Notification
-                Container(),
+                notificationSettings(context),
                 //About
-                aboutThisApp(),
+                aboutThisApp(context),
               ],
             ),
     );
