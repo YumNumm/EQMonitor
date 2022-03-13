@@ -77,27 +77,36 @@ Widget accountSettingPage() {
                           logger.d(pinCodeController.text);
                           if (int.tryParse(pinCodeController.text) != null) {
                             Get.snackbar('ログイン中...', 'しばらくお待ちください。');
-                            //OK Next Step
-                            final res = await auth.requestTokenCredentials(
-                              tokenCredentials!,
-                              pinCodeController.text,
-                            );
-                            logger.d(
-                              'AC: ${res.credentials.token}\nATS: ${res.credentials.tokenSecret}',
-                            );
+                            await Get.showOverlay(
+                              loadingWidget: const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                              asyncFunction: () async {
+                                //OK Next Step
+                                final res = await auth.requestTokenCredentials(
+                                  tokenCredentials!,
+                                  pinCodeController.text,
+                                );
+                                logger.d(
+                                  'AC: ${res.credentials.token}\nATS: ${res.credentials.tokenSecret}',
+                                );
 
-                            final credential = TwitterAuthProvider.credential(
-                              accessToken: res.credentials.token,
-                              secret: res.credentials.tokenSecret,
+                                final credential =
+                                    TwitterAuthProvider.credential(
+                                  accessToken: res.credentials.token,
+                                  secret: res.credentials.tokenSecret,
+                                );
+                                await FirebaseAuth.instance
+                                    .signInWithCredential(credential);
+                                await authStateUtils.onInit();
+                              },
                             );
-                            await FirebaseAuth.instance
-                                .signInWithCredential(credential);
-                            await authStateUtils.onInit();
                             Get.closeAllSnackbars();
                             Get.snackbar(
                               'ログイン成功',
                               'ようこそ ${authStateUtils.user.value!.displayName}さん!',
                             );
+                            Get.back<void>();
                           } else {
                             Get.snackbar(
                               'PINコードを入力してください',
