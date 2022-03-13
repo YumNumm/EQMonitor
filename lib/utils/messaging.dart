@@ -43,6 +43,15 @@ class Messaging extends GetxController {
         null,
         [
           NotificationChannel(
+            channelGroupKey: 'fromdev',
+            channelKey: 'fromdev',
+            channelName: '開発者からのお知らせ',
+            channelDescription: '^^',
+            channelShowBadge: true,
+            enableVibration: true,
+            importance: NotificationImportance.High,
+          ),
+          NotificationChannel(
             channelGroupKey: 'eew',
             channelKey: 'eew_alert',
             channelName: '緊急地震速報(警報)',
@@ -256,7 +265,7 @@ class Messaging extends GetxController {
             channelGroupName: '津波通知',
           ),
           NotificationChannelGroup(
-            channelGroupkey: 'fromDev',
+            channelGroupkey: 'fromdev',
             channelGroupName: '開発者からのお知らせ',
           ),
         ],
@@ -282,7 +291,7 @@ class Messaging extends GetxController {
         if (!now.contains(e.name)) {
           await messaging.subscribeToTopic(e.name);
           now.add(e.name);
-          await prefs.setStringList("topics", now);
+          await prefs.setStringList('topics', now);
         }
       }
       await prefs.setBool('hasInited', true);
