@@ -10,9 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import './const/const.dart';
 import 'pages/intro.dart';
@@ -22,7 +22,6 @@ import 'utils/auth.dart';
 import 'utils/earthquake.dart';
 import 'utils/map.dart';
 import 'utils/messaging.dart';
-import 'utils/settings/notification.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,10 +31,7 @@ Future<void> main() async {
       statusBarColor: Colors.transparent, // transparent status bar
     ),
   );
-  await Hive.initFlutter();
-  // Adapter
-  Hive.registerAdapter(NotificationSettingsAdapter());
-  Get.put(await Hive.openBox<NotificationSettingsAdapter>('settings'));
+  Get.put<SharedPreferences>(await SharedPreferences.getInstance());
   await Firebase.initializeApp();
   await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   final appCheck = FirebaseAppCheck.instance;

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:settings_ui/settings_ui.dart';
-import 'package:status_alert/status_alert.dart';
 
 import '../../utils/auth.dart';
 
 final AuthStateUtils authStateUtils = Get.find<AuthStateUtils>();
 final Logger logger = Get.find<Logger>();
+final RxBool isDarkMode = Get.isDarkMode.obs;
 bool isDarkmode = Get.isDarkMode;
 Widget topSettingPage() {
   return SettingsList(
@@ -33,17 +33,8 @@ Widget topSettingPage() {
           SettingsTile.navigation(
             title: const Text('通知設定'),
             leading: const Icon(Icons.notifications_rounded),
-            value: const Text('震度0以上'),
-            onPressed: (context) {
-              StatusAlert.show(
-                context,
-                duration: const Duration(milliseconds: 2000),
-                title: '未実装だよ～～ん',
-                subtitle: 'ｳｯﾋｮｯﾋｮﾋｮ',
-                configuration: const IconConfiguration(
-                  icon: Icons.no_encryption,
-                ),
-              );
+            onPressed: (context) async {
+              await Get.toNamed<void>('/setting/?page=1');
             },
           ),
           SettingsTile.navigation(
@@ -53,14 +44,25 @@ Widget topSettingPage() {
               await Get.toNamed<void>('/setting/?page=2');
             },
           ),
-          SettingsTile.switchTile(
-            initialValue: isDarkmode,
-            onToggle: (bool b) async {
-              Get.changeThemeMode(b ? ThemeMode.dark : ThemeMode.light);
-              isDarkmode = b;
-              return b;
-            },
+          SettingsTile(
             title: const Text('ダークモード'),
+            onPressed: (_) {
+              Get.changeThemeMode(
+                (Get.isDarkMode) ? ThemeMode.light : ThemeMode.dark,
+              );
+              isDarkMode.value = !Get.isDarkMode;
+            },
+            trailing: Obx(
+              () => Switch(
+                value: isDarkMode.value,
+                onChanged: (bool e) async {
+                  Get.changeThemeMode(
+                    (Get.isDarkMode) ? ThemeMode.light : ThemeMode.dark,
+                  );
+                  isDarkMode.value = !Get.isDarkMode;
+                },
+              ),
+            ),
           ),
         ],
       ),

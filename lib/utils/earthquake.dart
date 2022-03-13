@@ -11,6 +11,7 @@ import 'package:image/image.dart' as Image;
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:ntp/ntp.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solid_bottom_sheet/solid_bottom_sheet.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
 
@@ -24,6 +25,7 @@ import 'map.dart';
 class EarthQuake extends GetxController {
   final Logger logger = Get.find<Logger>();
   final MapData mapData = Get.find<MapData>();
+  final SharedPreferences prefs = Get.find<SharedPreferences>();
   final RxInt offset = 0.obs;
   final RxString url = ''.obs;
   late Timer timer;
@@ -64,7 +66,6 @@ class EarthQuake extends GetxController {
     await updateEQLog();
     await updateEQData();
     //! 気持ち待機(これ待ち時間調節しないとな)
-    //await Future<void>.delayed(const Duration(milliseconds: 3500));
     timer2 = Timer.periodic(const Duration(milliseconds: 100), (_) async {
       iconSize.value = mapZoomPanBehavior.zoomLevel * 0.6 + 3;
       zoomLevel.value = mapZoomPanBehavior.zoomLevel;
@@ -212,6 +213,13 @@ class EarthQuake extends GetxController {
         eqTemp.add(EQLog.fromList(temp));
       } catch (_) {}
     }
+    await prefs.setString('max_intensity', eqTemp[0].maxIntensity);
+    await prefs.setString('place', eqTemp[0].place);
+    await prefs.setString('magnitude', 'M${eqTemp[0].magunitude}');
+    await prefs.setString(
+      'time',
+      DateFormat('yyyy/MM/dd HH:mm頃').format(eqTemp[0].time),
+    );
     eqLog.value = eqTemp;
   }
 }

@@ -1,18 +1,22 @@
 // ignore_for_file: file_names
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../utils/messaging.dart';
 
 final PackageInfo packageInfo = Get.find<PackageInfo>();
+final SharedPreferences prefs = Get.find<SharedPreferences>();
+final fcm = Get.find<FirebaseMessaging>();
 final Messaging messaging = Get.find<Messaging>();
-
-Widget aboutThisApp() {
+final RxInt devCounter = 0.obs;
+Widget aboutThisApp(BuildContext context) {
   return SettingsList(
     sections: [
       SettingsSection(
@@ -62,40 +66,51 @@ Widget aboutThisApp() {
             title: const Text('Special Thanks'),
             onPressed: (BuildContext context) => Get.dialog<void>(
               AlertDialog(
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ListTile(
-                      title: const Text('Chromium_Linux氏'),
-                      subtitle: const Text('起動画面・アプリアイコン'),
-                      onTap: () => launch('https://twitter.com/Chromium_Linux'),
-                    ),
-                    ListTile(
-                      title: const Text('ingen084氏'),
-                      subtitle: const Text('強震モニタ画像解析手法'),
-                      onTap: () => launch('https://github.com/ingen084/KyoshinMonitorLib'),
-                    ),
-                    const Divider(
-                      height: 5,
-                      color: Colors.grey,
-                    ),
-                    ListTile(
-                      title: const Text('国立研究開発法人 防災科学技術研究所'),
-                      subtitle: const Text('リアルタイム震度データ'),
-                      onTap: () => launch(
-                        'https://www.kyoshin.bosai.go.jp/kyoshin/docs/new_kyoshinmonitor.html',
+                content: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        title: const Text('Chromium_Linux氏'),
+                        subtitle: const Text('起動画面・アプリアイコン'),
+                        onTap: () =>
+                            launch('https://twitter.com/Chromium_Linux'),
                       ),
-                    ),
-                    ListTile(
-                      title: const Text('Yahoo 天気・災害'),
-                      subtitle: const Text('過去の地震データ'),
-                      onTap: () => launch(
-                        'https://typhoon.yahoo.co.jp/weather/jp/earthquake/',
+                      ListTile(
+                        title: const Text('ingen084氏'),
+                        subtitle: const Text('強震モニタ画像解析手法'),
+                        onTap: () => launch(
+                          'https://github.com/ingen084/KyoshinMonitorLib',
+                        ),
                       ),
-                    ),
-                  ],
+                      ListTile(
+                        title: const Text('iedred7584氏'),
+                        subtitle: const Text('緊急地震速報(EEW)'),
+                        onTap: () => launch(
+                          'https://iedred7584.dev/',
+                        ),
+                      ),
+                      const Divider(
+                        height: 5,
+                        color: Colors.grey,
+                      ),
+                      ListTile(
+                        title: const Text('国立研究開発法人 防災科学技術研究所'),
+                        subtitle: const Text('リアルタイム震度データ\n緊急地震速報(EEW)'),
+                        onTap: () => launch(
+                          'https://www.kyoshin.bosai.go.jp/kyoshin/docs/new_kyoshinmonitor.html',
+                        ),
+                      ),
+                      ListTile(
+                        title: const Text('Project DM-D.S.S'),
+                        subtitle: const Text('過去の地震データ\n地震・津波情報'),
+                        onTap: () => launch(
+                          'https://dmdata.jp/',
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                actions: const [],
                 title: const Text('Special Thanks'),
                 contentPadding: const EdgeInsets.all(30),
                 shape: const RoundedRectangleBorder(
@@ -106,24 +121,70 @@ Widget aboutThisApp() {
               ),
             ),
           ),
-          SettingsTile.switchTile(
-            initialValue: false,
-            onToggle: (bool b) async {
-              Get.snackbar(
-                '(´･ω･｀)',
-                'Developer Only Menu',
-                duration: const Duration(milliseconds: 2000),
-                snackPosition: SnackPosition.BOTTOM,
-              );
-            },
-            title: const Text('Debug Mode'),
-          ),
-          SettingsTile.navigation(
-                      title: const Text('ソースコード'),
-                      onPressed: (BuildContext context) => launch(
-                        'https://github.com/YumNumm/EQMonitor',
+          SettingsTile(
+            title: const Text('開発者向けオプション'),
+            onPressed: (_) async {
+              devCounter.value++;
+              if (devCounter.value >= 10) {
+                if (!Get.isDialogOpen!) {
+                  Get.showSnackbar(
+                    const GetSnackBar(
+                      title: 'Now you are a developer!',
+                      message: '^_^',
+                      duration: Duration(milliseconds: 1500),
+                    ),
+                  );
+                  final isSubscribedToDev =
+                      (prefs.getStringList('topics') ?? []).contains('dev').obs;
+                  await Get.dialog<void>(
+                    AlertDialog(
+                      title: const Text('Developer Menu'),
+                      content: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            ListTile(
+                              title: const Text('Dev Topicの購読'),
+                              subtitle: const Text('開発中の通知が飛んできます。'),
+                              trailing: Obx(
+                                () => Switch(
+                                  value: isSubscribedToDev.value,
+                                  onChanged: (bool b) async {
+                                    await Get.showOverlay(
+                                      loadingWidget: const Center(
+                                        child: CircularProgressIndicator
+                                            .adaptive(),
+                                      ),
+                                      asyncFunction: () async {
+                                        if (b) {
+                                          // 有効にする～～
+                                          await fcm.subscribeToTopic('dev');
+                                        } else {
+                                          await fcm.unsubscribeFromTopic('dev');
+                                        }
+                                      },
+                                    );
+                                    isSubscribedToDev.value = b;
+                                  },
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
+                  );
+                }
+              }
+            },
+          ),
+          SettingsTile.navigation(
+            title: const Text('ソースコード'),
+            trailing: const Icon(Icons.open_in_browser),
+            description: const Text('https://github.com/EQMonitor/EQMonitor'),
+            onPressed: (BuildContext context) => launch(
+              'https://github.com/EQMonitor/EQMonitor',
+            ),
+          ),
         ],
       ),
     ],
