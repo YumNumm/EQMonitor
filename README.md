@@ -11,9 +11,6 @@ GitHub上にあるコードのみではビルドできません。
 android/app/google-services.json
 lib/private/keys.dart #Twitter API Keyを格納
 ```
-予定では、新規ビルドしたい場合はPRを送っていただければ自動的にビルドするようにします。
-(↑これ不適切なコードを埋め込まれる可能性があるので保留中)
-
 
 ## Build Command
 ```bash
