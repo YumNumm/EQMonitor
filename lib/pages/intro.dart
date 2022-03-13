@@ -1,12 +1,13 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:solid_bottom_sheet/solid_bottom_sheet.dart';
-import 'package:syncfusion_flutter_maps/maps.dart';
 
 import '../utils/earthquake.dart';
 import '../utils/map.dart';
@@ -100,61 +101,34 @@ class IntroPage extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            SfMaps(
-              layers: <MapLayer>[
-                MapShapeLayer(
-                  source: MapData.dataSource,
-                  showDataLabels: false,
-                  zoomPanBehavior: earthQuake.mapZoomPanBehavior,
-                  initialMarkersCount: earthQuake.analyzedPoint.length,
-                  markerBuilder: (BuildContext context, int index) {
-                    final iconSize = earthQuake.iconSize.value;
-                    return MapMarker(
-                      latitude: earthQuake.analyzedPoint[index].lat,
-                      longitude: earthQuake.analyzedPoint[index].lon,
-                      iconColor: earthQuake.analyzedPoint[index].color,
-                      iconType: MapIconType.circle,
-                      size: (earthQuake.zoomLevel > 30)
-                          ? null
-                          : Size(
-                              iconSize,
-                              iconSize,
-                            ),
-                      child: (earthQuake.zoomLevel > 30)
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.circle,
-                                  color: earthQuake.analyzedPoint[index].color,
-                                  size: 24,
-                                ),
-                                Text(
-                                  '${earthQuake.analyzedPoint[index].name}\n震度: ${earthQuake.analyzedPoint[index].shindo}',
-                                  maxLines: 2,
-                                  style: const TextStyle(fontSize: 12),
-                                )
-                              ],
-                            )
-                          : null,
-                    );
-                  },
-                  controller: earthQuake.mapShapeLayerController,
-                  sublayers: [
-                    MapCircleLayer(
-                      circles: List<MapCircle>.generate(
-                        mapData.circles.length,
-                        (index) => MapCircle(
-                          center: mapData.circles[index],
-                          radius: 30,
-                        ),
-                      ).toSet(),
-                    )
+            Obx(()=> FlutterMap(
+                  mapController: earthQuake.mapController,
+                  options: MapOptions(
+                    center: LatLng(35, 135),
+                    zoom: 13,
+                  ),
+                  layers: [
+                    TileLayerOptions(
+                      urlTemplate:
+                          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      subdomains: ['a', 'b', 'c'],
+                    ),
+                    MarkerLayerOptions(
+                      markers: List<Marker>.generate(
+                          earthQuake.analyzedPoint.length, (index) {
+                        final ap = earthQuake.analyzedPoint[index];
+                        return Marker(
+                          point: LatLng(ap.lat, ap.lon),
+                          builder: (_) => Icon(
+                            Icons.circle,
+                            color: ap.color,
+                            size: earthQuake.iconSize.value,
+                          ),
+                        );
+                      }),
+                    ),
                   ],
-                ),
-              ],
-            ),
+                )),
             Align(
               alignment: Alignment.topRight,
               child: Container(

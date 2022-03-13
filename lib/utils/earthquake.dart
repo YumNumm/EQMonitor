@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_map/plugin_api.dart';
 import 'package:get/get.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
@@ -46,6 +47,7 @@ class EarthQuake extends GetxController {
     enablePanning: true,
     enablePinching: true,
   );
+  final MapController mapController = MapController();
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -67,8 +69,8 @@ class EarthQuake extends GetxController {
     await updateEQData();
     //! 気持ち待機(これ待ち時間調節しないとな)
     timer2 = Timer.periodic(const Duration(milliseconds: 100), (_) async {
-      iconSize.value = mapZoomPanBehavior.zoomLevel * 0.6 + 3;
-      zoomLevel.value = mapZoomPanBehavior.zoomLevel;
+      iconSize.value = mapController.zoom * 0.6 + 3;
+      zoomLevel.value = mapController.zoom;
     });
 
     await Get.offAllNamed<void>('/');
