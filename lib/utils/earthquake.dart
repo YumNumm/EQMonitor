@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:home_widget/home_widget.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as Image;
@@ -213,12 +214,21 @@ class EarthQuake extends GetxController {
         eqTemp.add(EQLog.fromList(temp));
       } catch (_) {}
     }
-    await prefs.setString('max_intensity', eqTemp[0].maxIntensity);
-    await prefs.setString('place', eqTemp[0].place);
-    await prefs.setString('magnitude', 'M${eqTemp[0].magunitude}');
-    await prefs.setString(
+    await HomeWidget.saveWidgetData<String>(
+      'max_intensity',
+      eqTemp[0].maxIntensity,
+    );
+    await HomeWidget.saveWidgetData<String>('place', eqTemp[0].place);
+    await HomeWidget.saveWidgetData<String>(
+      'magnitude',
+      'M${eqTemp[0].magunitude}',
+    );
+    await HomeWidget.saveWidgetData<String>(
       'time',
       DateFormat('yyyy/MM/dd HH:mm頃').format(eqTemp[0].time),
+    );
+    await HomeWidget.updateWidget(
+      androidName: 'latestwidget',
     );
     eqLog.value = eqTemp;
   }

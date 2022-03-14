@@ -285,17 +285,17 @@ class Messaging extends GetxController {
       );
     }
 
-    if (!(prefs.getBool('hasInited') ?? false)) {
-      for (final e in Topics.values) {
-        final now = prefs.getStringList('topics') ?? [];
-        if (!now.contains(e.name)) {
-          await messaging.subscribeToTopic(e.name);
-          now.add(e.name);
-          await prefs.setStringList('topics', now);
-        }
-      }
-      await prefs.setBool('hasInited', true);
+    //if (!(prefs.getBool('hasInited') ?? false)) {
+    for (final e in Topics.values) {
+      //final now = prefs.getStringList('topics') ?? [];
+      //if (!now.contains(e.name)) {
+      await messaging.subscribeToTopic(e.name);
+      //now.add(e.name);
+      //await prefs.setStringList('topics', now);
+      //}
     }
+    await prefs.setBool('hasInited', true);
+    //}
 
     //? Init Done!
     isInitalizing.value = false;

@@ -1,17 +1,21 @@
 // ignore_for_file: file_names
 
+import 'package:eqmonitor/utils/earthquake.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:home_widget/home_widget.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
 
 import '../../utils/messaging.dart';
 
 final PackageInfo packageInfo = Get.find<PackageInfo>();
+final EarthQuake eq = Get.find<EarthQuake>();
 final SharedPreferences prefs = Get.find<SharedPreferences>();
 final fcm = Get.find<FirebaseMessaging>();
 final Messaging messaging = Get.find<Messaging>();
@@ -84,10 +88,10 @@ Widget aboutThisApp(BuildContext context) {
                         ),
                       ),
                       ListTile(
-                        title: const Text('iedred7584氏'),
-                        subtitle: const Text('緊急地震速報(EEW)'),
+                        title: const Text('Shion氏'),
+                        subtitle: const Text('通知・効果音'),
                         onTap: () => launch(
-                          'https://iedred7584.dev/',
+                          'https://twitter.com/Shion30227499',
                         ),
                       ),
                       const Divider(
@@ -102,10 +106,27 @@ Widget aboutThisApp(BuildContext context) {
                         ),
                       ),
                       ListTile(
+                        title: const Text('P2P地震情報'),
+                        subtitle: const Text('緊急地震速報(EEW)'),
+                        onTap: () => launch(
+                          'https://dmdata.jp/',
+                        ),
+                      ),
+                      ListTile(
                         title: const Text('Project DM-D.S.S'),
                         subtitle: const Text('過去の地震データ\n地震・津波情報'),
                         onTap: () => launch(
                           'https://dmdata.jp/',
+                        ),
+                      ),
+                      const Divider(
+                        height: 5,
+                        color: Colors.grey,
+                      ),
+                      ListTile(
+                        title: const Text('国土交通省 気象庁'),
+                        onTap: () => launch(
+                          'https://www.jma.go.jp/jma/kishou/info/coment.html',
                         ),
                       ),
                     ],
@@ -167,7 +188,73 @@ Widget aboutThisApp(BuildContext context) {
                                   },
                                 ),
                               ),
-                            )
+                            ),
+                            ListTile(
+                              title: const Text('Widgetの震度を設定'),
+                              onTap: () async {
+                                final l = [
+                                  '0',
+                                  '1',
+                                  '2',
+                                  '3',
+                                  '4',
+                                  '5-',
+                                  '5+',
+                                  '6-',
+                                  '6+',
+                                  '7'
+                                ];
+                                await Get.dialog<void>(
+                                  AlertDialog(
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: List<Widget>.generate(
+                                        l.length,
+                                        (index) => ListTile(
+                                          title: Text('震度${l[index]}'),
+                                          onTap: () async {
+                                            await HomeWidget.saveWidgetData<
+                                                String>(
+                                              'max_intensity',
+                                              l[index].toString(),
+                                            );
+                                            await HomeWidget.saveWidgetData<
+                                                String>('magnitude', 'M9.1');
+                                            await HomeWidget.saveWidgetData<
+                                                    String>(
+                                                'time',
+                                                DateFormat(
+                                                        'yyyy/MM/dd HH:mm:ss.SSS',)
+                                                    .format(DateTime.now()),);
+                                            await HomeWidget.saveWidgetData<
+                                                String>('place', 'テスト');
+                                            await HomeWidget.updateWidget(
+                                              androidName: 'latestwidget',
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                            ListTile(
+                              title: const Text('Widgetをリセット'),
+                              onTap: () async {
+                                await Get.showOverlay(
+                                  loadingWidget: const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                  asyncFunction: () async {
+                                    await eq.updateEQLog();
+                                    await HomeWidget.updateWidget(
+                                      androidName: 'latestwidget',
+                                    );
+                                  },
+                                );
+                              },
+                            ),
                           ],
                         ),
                       ),
