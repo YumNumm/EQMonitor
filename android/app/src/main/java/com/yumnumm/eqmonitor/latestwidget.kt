@@ -33,10 +33,10 @@ internal fun updateAppWidget(
 ) {
     val prefs = context.getSharedPreferences("FlutterSharedPrefrences",Context.MODE_PRIVATE)
     // 最新情報を取得
-    val max_intensity :String? = prefs.getString("max_intensity","")
-    val place :String? = prefs.getString("place","太陽")
-    val magnitude: String? = prefs.getString("magnitude","M0.0")
-    val time :String? = prefs.getString("time","2022/03/13 15:00")
+    val max_intensity :String? = prefs.getString("flutter.max_intensity","")
+    val place :String? = prefs.getString("flutter.place","太陽")
+    val magnitude: String? = prefs.getString("flutter.magnitude","M0.0")
+    val time :String? = prefs.getString("flutter.time","2022/03/13 15:00")
     var imageNum:Int = 0
     // image読み込み
     when(max_intensity){
