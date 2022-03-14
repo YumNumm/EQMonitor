@@ -107,8 +107,8 @@ class IntroPage extends StatelessWidget {
                 mapController: earthQuake.mapController,
                 options: MapOptions(
                   center: LatLng(36.3583, 138.6159),
-                  swPanBoundary: LatLng(23.1809, 122.4978),
-                  nePanBoundary: LatLng(46.3310, 149.2160),
+                  //swPanBoundary: LatLng(23.1809, 122.4978),
+                  //nePanBoundary: LatLng(46.3310, 149.2160),
                   zoom: 5,
                   //minZoom: 5,
                   maxZoom: 10,
