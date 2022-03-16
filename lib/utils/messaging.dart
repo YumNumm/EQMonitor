@@ -1,8 +1,11 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +21,7 @@ class Messaging extends GetxController {
   Future<void> onInit() async {
     super.onInit();
     final messaging = Get.find<FirebaseMessaging>();
-    final settings = await messaging.requestPermission(
+    await messaging.requestPermission(
       alert: true,
       announcement: true,
       badge: true,
@@ -27,8 +30,15 @@ class Messaging extends GetxController {
       sound: true,
     );
     FirebaseMessaging.onMessage.listen(
-      (RemoteMessage message) async => await AwesomeNotifications()
-          .createNotificationFromJsonData(message.data),
+      (RemoteMessage message) async {
+        await AwesomeNotifications()
+            .createNotificationFromJsonData(message.data);
+        final flutterTts = FlutterTts();
+        await flutterTts.setLanguage('ja-JP');
+        if (message.data['tts'] != null) {
+          await flutterTts.speak(message.data['tts'].toString());
+        }
+      },
     );
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
@@ -46,11 +56,13 @@ class Messaging extends GetxController {
             channelGroupKey: 'fromdev',
             channelKey: 'fromdev',
             channelName: '開発者からのお知らせ',
-            channelDescription: '^^',
+            channelDescription: '開発者からなにか連絡があった時に使用されます。',
             channelShowBadge: true,
             enableVibration: true,
+            playSound: true,
             importance: NotificationImportance.High,
           ),
+          //! EEW
           NotificationChannel(
             channelGroupKey: 'eew',
             channelKey: 'eew_alert',
@@ -63,6 +75,7 @@ class Messaging extends GetxController {
             playSound: true,
             criticalAlerts: true,
             enableVibration: true,
+            soundSource: 'resource://raw/res_eew',
             importance: NotificationImportance.Max,
           ),
           NotificationChannel(
@@ -77,8 +90,10 @@ class Messaging extends GetxController {
             playSound: true,
             criticalAlerts: true,
             enableVibration: true,
+            soundSource: 'resource://raw/res_eq1',
             importance: NotificationImportance.Max,
           ),
+          //! 地震通知
           NotificationChannel(
             channelGroupKey: 'earthquake',
             channelKey: 'VZSE40',
@@ -88,6 +103,7 @@ class Messaging extends GetxController {
             defaultPrivacy: NotificationPrivacy.Public,
             playSound: true,
             enableVibration: true,
+            soundSource: 'resource://raw/res_eq1',
             importance: NotificationImportance.Low,
           ),
           NotificationChannel(
@@ -307,6 +323,11 @@ class Messaging extends GetxController {
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   await AwesomeNotifications().createNotificationFromJsonData(message.data);
+  final flutterTts = FlutterTts();
+  await flutterTts.setLanguage('ja-JP');
+  if (message.data['tts'] != null) {
+    await flutterTts.speak(message.data['tts'].toString());
+  }
 }
 
 enum Topics {

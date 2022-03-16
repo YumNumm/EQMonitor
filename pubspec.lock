@@ -415,6 +415,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_tts:
+    dependency: "direct main"
+    description:
+      name: flutter_tts
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.3.3"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -1252,7 +1259,7 @@ packages:
     source: hosted
     version: "1.0.1"
   web_socket_channel:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: web_socket_channel
       url: "https://pub.dartlang.org"
