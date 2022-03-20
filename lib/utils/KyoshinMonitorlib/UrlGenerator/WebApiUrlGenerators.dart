@@ -1,11 +1,9 @@
 import 'package:eqmonitor/utils/KyoshinMonitorlib/UrlGenerator/RealTimeDataType.dart';
-import 'package:intl/intl.dart';
 
 import '../utils.dart';
 
 /// ## 新強震モニタのURL生成器
 class WebApiUrlGenerator {
-
   /// JsonEewのUrl
   String JsonEewBase(DateTime dt) =>
       'http://www.kmoni.bosai.go.jp/webservice/hypo/eew/${ymdhms.format(dt)}.json';

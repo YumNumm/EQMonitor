@@ -65,7 +65,7 @@ enum RealtimeDataType {
   Abrsp_7s,
 }
 
-extension RealTimeDataExtensions on RealtimeDataType {
+extension RealtimeDataTypeExt on RealtimeDataType {
   static final toUrlStringMap = <RealtimeDataType, String>{
     RealtimeDataType.Shindo: 'jma',
     RealtimeDataType.Pga: 'acmap',

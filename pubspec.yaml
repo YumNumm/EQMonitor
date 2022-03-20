@@ -51,6 +51,7 @@ dependencies:
   supabase_flutter: ^0.2.12
   flutter_tts: ^3.3.3
   web_socket_channel: ^2.1.0
+  mapbox_gl: ^0.15.0
 
 dev_dependencies:
   flutter_test:
