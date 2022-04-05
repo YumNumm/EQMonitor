@@ -92,9 +92,6 @@ Widget accountSettingPage() {
                                   tokenCredentials!,
                                   pinCodeController.text,
                                 );
-                                logger.d(
-                                  'AC: ${res.credentials.token}\nAS: ${res.credentials.tokenSecret}',
-                                );
                                 await fss.write(
                                   key: 'AT',
                                   value: res.credentials.token,
@@ -126,6 +123,7 @@ Widget accountSettingPage() {
                               backgroundColor: Colors.redAccent,
                             );
                           }
+                          Get.back<void>();
                         },
                         child: const Text('次に進む'),
                       ),
@@ -152,6 +150,21 @@ Widget accountSettingPage() {
                 child: Image.network('${authStateUtils.user.value!.photoURL}'),
               ),
               description: Text('${authStateUtils.user.value!.displayName}'),
+            ),
+            SettingsTile.navigation(
+              title: const Text('ログアウト'),
+              leading: const Icon(Icons.logout),
+              onPressed: (_) async {
+                await Get.showOverlay<void>(
+                  asyncFunction: () async {
+                    // Secure StorageのAT,ASを抹消!!
+                    await fss.delete(key: 'AT');
+                    await fss.delete(key: 'AS');
+                    await authStateUtils.firebaseauth.signOut();
+                    await Get.offNamed<void>('/setting');
+                  },
+                );
+              },
             ),
           ],
         ),

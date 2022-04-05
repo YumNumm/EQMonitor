@@ -338,7 +338,6 @@ class Messaging extends GetxController {
     await prefs.setBool('hasInited', true);
     //}
 
-    //? Init Done!
     isInitalizing.value = false;
     token.value =
         await messaging.getToken() ?? "[E] coludn't get FCM Token...!";
@@ -370,7 +369,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           secret: AS,
         ),
       );
-      print(AT + AS);
+      //print(AT + AS);
       final res = await twitterApi.tweetService.update(
         status:
             '${message.data['content']['title']}\n${message.data['content']['body']}',
