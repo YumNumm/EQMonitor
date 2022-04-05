@@ -1,5 +1,6 @@
 // ignore_for_file: cascade_invocations, file_names
 
+import 'package:eqmonitor/utils/settings/notificationSettings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -43,6 +44,7 @@ Future<void> main() async {
     ),
   );
   Get.put<PackageInfo>(await PackageInfo.fromPlatform());
+  Get.put<UserNotificationSettings>(await UserNotificationSettings().onInit());
   Get.put<FirebaseApp>(await Firebase.initializeApp());
   Get.put<FirebaseAuth>(FirebaseAuth.instance);
   Get.put<FirebaseMessaging>(FirebaseMessaging.instance);

@@ -92,6 +92,11 @@ Widget accountSettingPage() {
                                   tokenCredentials!,
                                   pinCodeController.text,
                                 );
+                                if (res.credentials.token == null) {
+                                  //ERROR
+                                  Get.back<void>();
+                                  return;
+                                }
                                 await fss.write(
                                   key: 'AT',
                                   value: res.credentials.token,
@@ -156,14 +161,20 @@ Widget accountSettingPage() {
               leading: const Icon(Icons.logout),
               onPressed: (_) async {
                 await Get.showOverlay<void>(
+                  loadingWidget: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
                   asyncFunction: () async {
                     // Secure StorageのAT,ASを抹消!!
                     await fss.delete(key: 'AT');
                     await fss.delete(key: 'AS');
                     await authStateUtils.firebaseauth.signOut();
-                    await Get.offNamed<void>('/setting');
+                    logger
+                        .w(authStateUtils.firebaseauth.currentUser.toString());
+                    await authStateUtils.updateStatus();
                   },
                 );
+                await Get.offNamed<void>('/setting');
               },
             ),
           ],
