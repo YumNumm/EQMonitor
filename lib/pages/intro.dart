@@ -214,7 +214,7 @@ class IntroPage extends StatelessWidget {
                     alignment: Alignment.topLeft,
                     child: Padding(
                       padding: EdgeInsets.all(10),
-                      child: NonEEW(),
+                     // child: NonEEW(),
                       // child: NonEEW(context),
                     ),
                   ),
