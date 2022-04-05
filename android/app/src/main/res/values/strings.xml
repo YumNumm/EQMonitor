@@ -4,5 +4,5 @@
     <string name="place">太陽</string>
     <string name="magnitude">M0.0</string>
     <string name="max_intensity">震度8</string>
-    <string name="description">直近の地震情報を表示します</string>
+    <string name="description">直近の地震情報を表示します(1分おきに自動更新)</string>
 </resources>

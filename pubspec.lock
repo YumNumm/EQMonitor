@@ -36,6 +36,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.8.2"
+  auto_size_text:
+    dependency: "direct main"
+    description:
+      name: auto_size_text
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   awesome_notifications:
     dependency: "direct main"
     description:
@@ -197,6 +204,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.1"
+  dart_twitter_api:
+    dependency: "direct main"
+    description:
+      name: dart_twitter_api
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.6"
   extra_pedantic:
     dependency: transitive
     description:
@@ -232,27 +246,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "9.0.2"
-  firebase_app_check:
-    dependency: "direct main"
-    description:
-      name: firebase_app_check
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.6+7"
-  firebase_app_check_platform_interface:
-    dependency: transitive
-    description:
-      name: firebase_app_check_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.4+1"
-  firebase_app_check_web:
-    dependency: transitive
-    description:
-      name: firebase_app_check_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.5+7"
   firebase_auth:
     dependency: "direct main"
     description:
@@ -397,12 +390,12 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_map:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_map
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.14.0"
+    version: "0.13.1"
   flutter_native_splash:
     dependency: "direct main"
     description:
@@ -410,23 +403,65 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
+  flutter_secure_storage:
+    dependency: "direct main"
+    description:
+      name: flutter_secure_storage
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.2"
+  flutter_secure_storage_linux:
+    dependency: transitive
+    description:
+      name: flutter_secure_storage_linux
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
+  flutter_secure_storage_macos:
+    dependency: transitive
+    description:
+      name: flutter_secure_storage_macos
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
+  flutter_secure_storage_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_secure_storage_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
+  flutter_secure_storage_web:
+    dependency: transitive
+    description:
+      name: flutter_secure_storage_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.2"
+  flutter_secure_storage_windows:
+    dependency: transitive
+    description:
+      name: flutter_secure_storage_windows
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.2"
   flutter_test:
     dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_tts:
+    dependency: "direct main"
+    description:
+      name: flutter_tts
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.3.3"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.0"
-  font_awesome_flutter:
-    dependency: "direct main"
-    description:
-      name: font_awesome_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "9.2.0"
   frontend_server_client:
     dependency: transitive
     description:
@@ -469,6 +504,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
+  google_nav_bar:
+    dependency: "direct main"
+    description:
+      name: google_nav_bar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.6"
   gotrue:
     dependency: transitive
     description:
@@ -484,14 +526,14 @@ packages:
     source: hosted
     version: "2.1.0"
   hive:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: hive
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.6"
   hive_flutter:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: hive_flutter
       url: "https://pub.dartlang.org"
@@ -595,13 +637,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.1"
-  lat_lon_grid_plugin:
-    dependency: "direct main"
-    description:
-      name: lat_lon_grid_plugin
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.2"
   latlong2:
     dependency: "direct main"
     description:
@@ -644,6 +679,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.2"
+  map_controller:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: "769adf2de0684d130cb34d56a8d6da014a22aaae"
+      url: "https://github.com/joflee/map_controller"
+    source: git
+    version: "0.9.0"
   matcher:
     dependency: transitive
     description:
@@ -868,13 +912,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
-  protobuf:
-    dependency: transitive
-    description:
-      name: protobuf
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.1"
   pub_semver:
     dependency: transitive
     description:
@@ -903,6 +940,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.15"
+  rxdart:
+    dependency: transitive
+    description:
+      name: rxdart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.27.3"
   settings_ui:
     dependency: "direct main"
     description:
@@ -985,13 +1029,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
-  sliding_up_panel:
-    dependency: "direct main"
-    description:
-      name: sliding_up_panel
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0+1"
   slugify:
     dependency: transitive
     description:
@@ -1096,14 +1133,14 @@ packages:
       name: syncfusion_flutter_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "19.4.53"
+    version: "20.1.47"
   syncfusion_flutter_maps:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_maps
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "19.4.53-beta"
+    version: "20.1.47"
   term_glyph:
     dependency: transitive
     description:
@@ -1251,13 +1288,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
-  vector_map_tiles:
-    dependency: "direct main"
-    description:
-      name: vector_map_tiles
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.4.3"
   vector_math:
     dependency: transitive
     description:
@@ -1265,20 +1295,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
-  vector_tile:
-    dependency: transitive
-    description:
-      name: vector_tile
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.2"
-  vector_tile_renderer:
-    dependency: "direct main"
-    description:
-      name: vector_tile_renderer
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.3.1"
   watcher:
     dependency: transitive
     description:
@@ -1287,7 +1303,7 @@ packages:
     source: hosted
     version: "1.0.1"
   web_socket_channel:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: web_socket_channel
       url: "https://pub.dartlang.org"

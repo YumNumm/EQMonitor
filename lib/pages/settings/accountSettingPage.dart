@@ -2,6 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:oauth1/oauth1.dart' as oauth1;
@@ -13,6 +14,8 @@ import '../../utils/auth.dart';
 
 final AuthStateUtils authStateUtils = Get.find<AuthStateUtils>();
 final Logger logger = Get.find<Logger>();
+final FlutterSecureStorage fss = Get.find<FlutterSecureStorage>();
+
 bool _isProcessing = false;
 
 Widget accountSettingPage() {
@@ -25,6 +28,8 @@ Widget accountSettingPage() {
           tiles: <AbstractSettingsTile>[
             SettingsTile.navigation(
               title: const Text('ログイン'),
+              description:
+                  const Text('Twitterでログインすることにより、すべての地震に関する通知がツイートされます'),
               leading: const Icon(Icons.people),
               onPressed: (e) async {
                 _isProcessing = true;
@@ -77,27 +82,43 @@ Widget accountSettingPage() {
                           logger.d(pinCodeController.text);
                           if (int.tryParse(pinCodeController.text) != null) {
                             Get.snackbar('ログイン中...', 'しばらくお待ちください。');
-                            //OK Next Step
-                            final res = await auth.requestTokenCredentials(
-                              tokenCredentials!,
-                              pinCodeController.text,
+                            await Get.showOverlay(
+                              loadingWidget: const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                              asyncFunction: () async {
+                                //OK Next Step
+                                final res = await auth.requestTokenCredentials(
+                                  tokenCredentials!,
+                                  pinCodeController.text,
+                                );
+                                logger.d(
+                                  'AC: ${res.credentials.token}\nAS: ${res.credentials.tokenSecret}',
+                                );
+                                await fss.write(
+                                  key: 'AT',
+                                  value: res.credentials.token,
+                                );
+                                await fss.write(
+                                  key: 'AS',
+                                  value: res.credentials.tokenSecret,
+                                );
+                                final credential =
+                                    TwitterAuthProvider.credential(
+                                  accessToken: res.credentials.token,
+                                  secret: res.credentials.tokenSecret,
+                                );
+                                await FirebaseAuth.instance
+                                    .signInWithCredential(credential);
+                                await authStateUtils.onInit();
+                              },
                             );
-                            logger.d(
-                              'AC: ${res.credentials.token}\nATS: ${res.credentials.tokenSecret}',
-                            );
-
-                            final credential = TwitterAuthProvider.credential(
-                              accessToken: res.credentials.token,
-                              secret: res.credentials.tokenSecret,
-                            );
-                            await FirebaseAuth.instance
-                                .signInWithCredential(credential);
-                            await authStateUtils.onInit();
                             Get.closeAllSnackbars();
                             Get.snackbar(
                               'ログイン成功',
                               'ようこそ ${authStateUtils.user.value!.displayName}さん!',
                             );
+                            Get.back<void>();
                           } else {
                             Get.snackbar(
                               'PINコードを入力してください',

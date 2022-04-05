@@ -20,13 +20,14 @@ Widget notificationSettings(BuildContext context) {
         title: const Text('通知設定'),
         tiles: <AbstractSettingsTile>[
           SettingsTile(
+            enabled: false,
             title: const Text('通知'),
             description: const Text('すべての通知をオフにできます。'),
             onPressed: (_) async {
-              messaging.isAllNotificationDisabled.value =
-                  !messaging.isAllNotificationDisabled.value;
+              // messaging.isAllNotificationDisabled.value =
+              //   !messaging.isAllNotificationDisabled.value;
             },
-            trailing: Obx(
+            /*trailing: Obx(
               () => Switch(
                 value: messaging.isAllNotificationDisabled.value,
                 onChanged: (_) async {
@@ -65,7 +66,7 @@ Widget notificationSettings(BuildContext context) {
                       !messaging.isAllNotificationDisabled.value;
                 },
               ),
-            ),
+            ),*/
           ),
         ],
       ),
