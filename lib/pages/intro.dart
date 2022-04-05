@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:eqmonitor/widget/noneew.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -229,9 +228,9 @@ class IntroPage extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(0, 2, 0, 0),
                     decoration: BoxDecoration(
                       border: Border(
-                        bottom: (i == 0)
+                        bottom: (earthQuake.eqLog[i+1] != null)
                             ? BorderSide.none
-                            : (earthQuake.eqLog[i - 1].time.day !=
+                            : (earthQuake.eqLog[i + 1].time.day !=
                                     eqLog.time.day)
                                 ? const BorderSide()
                                 : BorderSide.none,
