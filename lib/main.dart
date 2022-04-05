@@ -1,6 +1,5 @@
 // ignore_for_file: cascade_invocations, file_names
 
-import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -9,6 +8,7 @@ import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -34,9 +34,6 @@ Future<void> main() async {
   Get.put<SharedPreferences>(await SharedPreferences.getInstance());
   await Firebase.initializeApp();
   await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-  final appCheck = FirebaseAppCheck.instance;
-  await appCheck.activate();
-  await appCheck.setTokenAutoRefreshEnabled(true);
   Get.put<Logger>(
     Logger(
       level: Level.debug,
@@ -50,10 +47,11 @@ Future<void> main() async {
   Get.put<FirebaseAuth>(FirebaseAuth.instance);
   Get.put<FirebaseMessaging>(FirebaseMessaging.instance);
   Get.put<FirebasePerformance>(FirebasePerformance.instance);
-  Get.put<Messaging>(Messaging());
   Get.put<MapData>(MapData());
+  Get.put<Messaging>(Messaging());
   Get.put<AuthStateUtils>(AuthStateUtils());
   Get.put<EarthQuake>(EarthQuake());
+  Get.put<FlutterSecureStorage>(const FlutterSecureStorage());
   runApp(const EQApp());
 }
 

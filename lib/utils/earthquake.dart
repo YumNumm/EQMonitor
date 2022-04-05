@@ -4,8 +4,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_map/plugin_api.dart';
 import 'package:get/get.dart';
+import 'package:home_widget/home_widget.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as Image;
@@ -21,17 +21,16 @@ import '../const/const.dart';
 import '../const/obspoints.dart';
 import '../utils/jsonParser/APIResponse.dart';
 import 'analyzedpoints.dart';
-import 'map.dart';
 
 class EarthQuake extends GetxController {
   final Logger logger = Get.find<Logger>();
-  final MapData mapData = Get.find<MapData>();
   final SharedPreferences prefs = Get.find<SharedPreferences>();
   final RxInt offset = 0.obs;
   final RxString url = ''.obs;
   late Timer timer;
   late Timer timer2;
   late Timer timer3;
+  final RxInt hasEEW = 0.obs;
   final RxInt diffSec = 0.obs;
   final RxList<AnalyzedPoint> analyzedPoint = <AnalyzedPoint>[].obs;
   final RxBool widgetLoaded = false.obs;
@@ -46,12 +45,11 @@ class EarthQuake extends GetxController {
     maxZoomLevel: 60,
     enablePanning: true,
     enablePinching: true,
+    enableDoubleTapZooming: true,
   );
-  final MapController mapController = MapController();
   @override
   Future<void> onInit() async {
     super.onInit();
-    mapZoomPanBehavior.zoomLevel = zoomLevel.value;
     // NTPから正しい時間を取得する
     final startDate = DateTime.now().toLocal();
     offset.value = await NTP.getNtpOffset(localTime: startDate);
@@ -68,9 +66,9 @@ class EarthQuake extends GetxController {
     await updateEQLog();
     await updateEQData();
     //! 気持ち待機(これ待ち時間調節しないとな)
-    timer2 = Timer.periodic(const Duration(milliseconds: 100), (_) async {
-      iconSize.value = mapController.zoom * 0.6 + 3;
-      zoomLevel.value = mapController.zoom;
+    timer2 = Timer.periodic(const Duration(milliseconds: 250), (_) async {
+      iconSize.value = mapZoomPanBehavior.zoomLevel * 0.6 + 3;
+      zoomLevel.value = mapZoomPanBehavior.zoomLevel;
     });
 
     await Get.offAllNamed<void>('/');
@@ -89,9 +87,8 @@ class EarthQuake extends GetxController {
             seconds: -2,
           ),
         );
-    {
-      final df = DateFormat('yyyyMMddHHmmss');
-
+    final df = DateFormat('yyyyMMddHHmmss');
+    try {
       final res = await http.get(
         Uri.parse(
           'http://www.kmoni.bosai.go.jp/webservice/hypo/eew/${df.format(now)}.json',
@@ -108,9 +105,11 @@ class EarthQuake extends GetxController {
         //なんかあった
         final pres = EEWApiResponse.fromJson(jsonres); //? Parsed Response
         final msg =
-            '[これはテスト!!!]\n緊急地震速報(${pres.alertFlg}) ${pres.reportTime}\nマグニチュード${pres.magunitude}\n深さ${pres.depth}\n${pres.regionName}で地震';
+            '緊急地震速報(${pres.alertFlg}) ${pres.reportTime}\nマグニチュード${pres.magunitude}\n深さ${pres.depth}\n${pres.regionName}で地震';
         logger.i(msg);
       }
+    } catch (e) {
+      logger.e(e);
     }
     // PGA Update
     {
@@ -183,7 +182,7 @@ class EarthQuake extends GetxController {
         );
       } catch (e) {}
       lastUpdateTimeString.value =
-          '最終更新: ${DateFormat('yyyy/MM/dd HH:mm:ss').format(now)}';
+          DateFormat('yyyy/MM/dd HH:mm:ss').format(now);
     }
   }
 
@@ -200,13 +199,8 @@ class EarthQuake extends GetxController {
     final result = doc.querySelectorAll(
       '#main > .yjw_main_md > #eqhist > table > tbody > tr',
     );
-    var counter = 0;
     final eqTemp = <EQLog>[];
     for (final e in result) {
-      if (counter == 0) {
-        counter++;
-        continue;
-      }
       final temp = <String>[];
       for (final el in e.children) {
         temp.add(el.text);
@@ -215,12 +209,21 @@ class EarthQuake extends GetxController {
         eqTemp.add(EQLog.fromList(temp));
       } catch (_) {}
     }
-    await prefs.setString('max_intensity', eqTemp[0].maxIntensity);
-    await prefs.setString('place', eqTemp[0].place);
-    await prefs.setString('magnitude', 'M${eqTemp[0].magunitude}');
-    await prefs.setString(
+    await HomeWidget.saveWidgetData<String>(
+      'max_intensity',
+      eqTemp[0].maxIntensity,
+    );
+    await HomeWidget.saveWidgetData<String>('place', eqTemp[0].place);
+    await HomeWidget.saveWidgetData<String>(
+      'magnitude',
+      'M${eqTemp[0].magunitude}',
+    );
+    await HomeWidget.saveWidgetData<String>(
       'time',
       DateFormat('yyyy/MM/dd HH:mm頃').format(eqTemp[0].time),
+    );
+    await HomeWidget.updateWidget(
+      androidName: 'latestwidget',
     );
     eqLog.value = eqTemp;
   }

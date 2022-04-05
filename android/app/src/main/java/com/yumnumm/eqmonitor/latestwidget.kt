@@ -1,10 +1,14 @@
 package com.yumnumm.eqmonitor
 
+import android.annotation.SuppressLint
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
+import android.content.SharedPreferences
 import android.widget.RemoteViews
 
+import es.antonborri.home_widget.HomeWidgetPlugin
+@SuppressLint("NewApi")
 class latestwidget : AppWidgetProvider() {
     override fun onUpdate(
         context: Context,
@@ -26,18 +30,19 @@ class latestwidget : AppWidgetProvider() {
     }
 }
 
+@SuppressLint("NewApi")
 internal fun updateAppWidget(
     context: Context,
     appWidgetManager: AppWidgetManager,
     appWidgetId: Int
 ) {
-    val prefs = context.getSharedPreferences("FlutterSharedPrefrences",Context.MODE_PRIVATE)
+    val prefs:SharedPreferences = HomeWidgetPlugin.getData(context)
     // 最新情報を取得
-    val max_intensity :String? = prefs.getString("max_intensity","")
+    val max_intensity :String? = prefs.getString("max_intensity","?")
     val place :String? = prefs.getString("place","太陽")
     val magnitude: String? = prefs.getString("magnitude","M0.0")
     val time :String? = prefs.getString("time","2022/03/13 15:00")
-    var imageNum:Int = 0
+    val imageNum:Int
     // image読み込み
     when(max_intensity){
         "0" -> imageNum = R.drawable.int0
@@ -56,8 +61,9 @@ internal fun updateAppWidget(
 
     val views = RemoteViews(context.packageName, R.layout.latestwidget)
     // 更新
+
     views.setImageViewResource(R.id.intensityImageView,imageNum)
-    views.setTextViewText(R.id.time,time)
+    views.setTextViewText(R.id.dateTextView,time)
     views.setTextViewText(R.id.placeText,place)
     views.setTextViewText(R.id.magunitudeText,magnitude)
     views.setImageViewResource(R.id.placeIcon,R.drawable.ic_baseline_location_on_24)

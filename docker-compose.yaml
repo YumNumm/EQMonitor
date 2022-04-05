@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  eqmonitor:
+    build: .
+    container_name: eqmonitor
+    volumes:
+      - ./app:/app:rw
+    tty: true
+    stdin_open: true
+    logging:
+      driver: "json-file"
+    pid: "host"
+    cap_add:
+      - ALL
+    
