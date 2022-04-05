@@ -213,7 +213,7 @@ class IntroPage extends StatelessWidget {
                     alignment: Alignment.topLeft,
                     child: Padding(
                       padding: EdgeInsets.all(10),
-                     // child: NonEEW(),
+                      // child: NonEEW(),
                       // child: NonEEW(context),
                     ),
                   ),
@@ -226,19 +226,14 @@ class IntroPage extends StatelessWidget {
 
                   return Container(
                     padding: const EdgeInsets.fromLTRB(0, 2, 0, 0),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: (earthQuake.eqLog[i+1] != null)
-                            ? BorderSide.none
-                            : (earthQuake.eqLog[i + 1].time.day !=
-                                    eqLog.time.day)
-                                ? const BorderSide()
-                                : BorderSide.none,
-                      ),
-                    ),
+                    decoration: const BoxDecoration(),
                     child: ListTile(
-                      leading: Image.asset(
-                        'assets/intensity/${(eqLog.maxIntensity == "---") ? "unknown" : eqLog.maxIntensity}.PNG',
+                      leading: ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(4)),
+                        child: Image.asset(
+                          'assets/intensity/${(eqLog.maxIntensity == "---") ? "unknown" : eqLog.maxIntensity}.PNG',
+                        ),
                       ),
                       title: Text(
                         df.format(eqLog.time),
