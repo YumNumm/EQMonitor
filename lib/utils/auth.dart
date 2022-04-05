@@ -19,4 +19,15 @@ class AuthStateUtils extends GetxController {
       isLoggedin.value = false;
     }
   }
+
+  Future<void> updateStatus() async {
+    user = firebaseauth.currentUser.obs;
+    if (user.value != null) {
+      logger.d('Hello ${user.value!.displayName}');
+      isLoggedin.value = true;
+    } else {
+      logger.d('Not logged in!');
+      isLoggedin.value = false;
+    }
+  }
 }

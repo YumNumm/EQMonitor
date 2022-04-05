@@ -3,6 +3,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dart_twitter_api/twitter_api.dart';
 import 'package:eqmonitor/private/keys.dart';
+import 'package:eqmonitor/utils/settings/notificationSettings.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -345,6 +346,27 @@ class Messaging extends GetxController {
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  //? 通知条件をクリアしているかをチェックする
+  final settings = await UserNotificationSettings().onInit();
+
+  if (message.data['content']['channelKey'].toString() == 'eew_forecast') {
+    var shouldNotif = false;
+    if (settings.state.notifAll.value) shouldNotif = true;
+    final payload = List<bool>.generate(
+      (message.data['condition'] as List<dynamic>).length,
+      (index) => bool.fromEnvironment(
+        (message.data['condition'] as List<dynamic>)[index].toString(),
+      ),
+    );
+
+    if (settings.state.notifFirstReport.value && payload[0]) shouldNotif = true;
+    if (settings.state.notifLastReport.value && payload[1]) shouldNotif = true;
+    if (settings.state.notifOnUpdate.value && payload[2]) shouldNotif = true;
+    if (settings.state.notifOnUpwardUpdate.value && payload[3]) {
+      shouldNotif = true;
+    }
+    if (!shouldNotif) return;
+  }
   await Firebase.initializeApp();
   const fss = FlutterSecureStorage();
   await AwesomeNotifications().createNotificationFromJsonData(message.data);
@@ -353,7 +375,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   if (message.data['tts'] != null) {
     await flutterTts.speak(message.data['tts'].toString());
   }
-  print(message.data);
   if (bool.fromEnvironment(
     fss.read(key: 'toTweet').toString(),
     defaultValue: true,

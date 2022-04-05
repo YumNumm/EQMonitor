@@ -20,7 +20,7 @@ class IntroPage extends StatelessWidget {
   final MapData mapData = Get.find<MapData>();
   final RxInt page = 0.obs;
 
-  final DateFormat df = DateFormat('yyyy/MM/dd hh:mm頃');
+  final DateFormat df = DateFormat('yyyy/MM/dd HH:mm頃');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
