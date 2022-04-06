@@ -79,19 +79,30 @@ Widget notificationSettings(BuildContext context) {
           SettingsTile(
             title: const Text('すべて通知'),
             description: const Text('緊急地震速報(予報)をすべて通知'),
+            onPressed: (_) async {
+              if (!settings.notifAll.value) {
+                settings
+                  ..notifFirstReport.value = true
+                  ..notifLastReport.value = true
+                  ..notifOnUpdate.value = true
+                  ..notifOnUpwardUpdate.value = true;
+              }
+              settings.notifAll.value = !settings.notifAll.value;
+              await settings.save();
+            },
             trailing: Obx(
               () => Switch(
-                value: settings.state.notifAll.value,
-                onChanged: (bool b) {
-                  settings.state.notifAll.value = b;
+                value: settings.notifAll.value,
+                onChanged: (bool b)async {
+                  settings.notifAll.value = b;
                   if (b) {
-                    settings.state
+                    settings
                       ..notifFirstReport.value = true
                       ..notifLastReport.value = true
                       ..notifOnUpdate.value = true
                       ..notifOnUpwardUpdate.value = true;
                   }
-                  settings.save();
+                  await settings.save();
                 },
               ),
             ),
@@ -99,12 +110,17 @@ Widget notificationSettings(BuildContext context) {
           SettingsTile(
             title: const Text('第1報通知'),
             description: const Text('緊急地震速報(予報)において、第1報を通知するかどうか'),
+            onPressed: (_) async {
+              settings.notifFirstReport.value =
+                  !settings.notifFirstReport.value;
+              await settings.save();
+            },
             trailing: Obx(
               () => Switch(
-                value: settings.state.notifFirstReport.value,
-                onChanged: (bool b) {
-                  settings.state.notifFirstReport.value = b;
-                  settings.save();
+                value: settings.notifFirstReport.value,
+                onChanged: (bool b)async {
+                  settings.notifFirstReport.value = b;
+                  await settings.save();
                 },
               ),
             ),
@@ -114,9 +130,9 @@ Widget notificationSettings(BuildContext context) {
             description: const Text('緊急地震速報(予報)において、最終報を通知するかどうか'),
             trailing: Obx(
               () => Switch(
-                value: settings.state.notifLastReport.value,
+                value: settings.notifLastReport.value,
                 onChanged: (bool b) {
-                  settings.state.notifLastReport.value = b;
+                  settings.notifLastReport.value = b;
                   settings.save();
                 },
               ),
@@ -127,11 +143,11 @@ Widget notificationSettings(BuildContext context) {
             description: const Text('マグニチュードもしくは最大震度が変更された時に通知'),
             trailing: Obx(
               () => Switch(
-                value: settings.state.notifOnUpdate.value,
+                value: settings.notifOnUpdate.value,
                 onChanged: (bool b) {
-                  settings.state.notifOnUpdate.value = b;
+                  settings.notifOnUpdate.value = b;
                   if (b) {
-                    settings.state.notifOnUpwardUpdate.value = true;
+                    settings.notifOnUpwardUpdate.value = true;
                   }
 
                   settings.save();
@@ -144,9 +160,9 @@ Widget notificationSettings(BuildContext context) {
             description: const Text('マグニチュードもしくは最大震度が上方変更された際に通知'),
             trailing: Obx(
               () => Switch(
-                value: settings.state.notifOnUpwardUpdate.value,
+                value: settings.notifOnUpwardUpdate.value,
                 onChanged: (bool b) {
-                  settings.state.notifOnUpwardUpdate.value = b;
+                  settings.notifOnUpwardUpdate.value = b;
                   settings.save();
                 },
               ),
