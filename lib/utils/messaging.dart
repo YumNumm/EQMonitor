@@ -373,7 +373,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   //? 通知条件をクリアしているかをチェックする
   final j =
       json.decode(message.data['content'].toString()) as Map<String, dynamic>;
-  if (j['channelKey'].toString() == 'eew_forecast') {
+  /*if (j['channelKey'].toString() == 'eew_forecast') {
     await Hive.initFlutter();
     final notifBox =
         await Hive.openBox<NotificationSettingsState?>('NotificationSettings');
@@ -394,7 +394,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       shouldNotif = true;
     }
     if (!shouldNotif) return;
-  }
+  }*/
   await Firebase.initializeApp();
   const fss = FlutterSecureStorage();
   await AwesomeNotifications().createNotificationFromJsonData(message.data);
