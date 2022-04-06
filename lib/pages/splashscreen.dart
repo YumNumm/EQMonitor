@@ -10,8 +10,9 @@ class SplashScreen extends StatelessWidget {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          color: (context.isDarkMode) ? Colors.grey[900] : Color(0xFFF1F4F9),
+        decoration: BoxDecoration(
+          color:
+              (context.isDarkMode) ? Colors.grey[900] : const Color(0xFFF1F4F9),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
