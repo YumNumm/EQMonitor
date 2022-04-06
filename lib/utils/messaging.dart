@@ -1,9 +1,10 @@
 // ignore_for_file: constant_identifier_names
 
+import 'dart:convert';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dart_twitter_api/twitter_api.dart';
 import 'package:eqmonitor/private/keys.dart';
-import 'package:eqmonitor/utils/settings/notificationSettings.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -11,12 +12,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import '../db/notificationSettings/notificationSettings.dart';
 
 class Messaging extends GetxController {
   final Logger logger = Get.find<Logger>();
-  final SharedPreferences prefs = Get.find<SharedPreferences>();
+  final Box<NotificationSettingsState?> notifBox =
+      Get.find<Box<NotificationSettingsState?>>();
   final RxBool isInitalizing = true.obs;
   late Stream<RemoteMessage> onMessageOpenedApp;
   final RxString token = ''.obs;
@@ -33,39 +37,60 @@ class Messaging extends GetxController {
       provisional: true,
       sound: true,
     );
-    FirebaseMessaging.onMessage.listen(
-      (RemoteMessage message) async {
-        const fss = FlutterSecureStorage();
-        await AwesomeNotifications()
-            .createNotificationFromJsonData(message.data);
-        final flutterTts = FlutterTts();
-        await flutterTts.setLanguage('ja-JP');
-        if (message.data['tts'] != null) {
-          await flutterTts.speak(message.data['tts'].toString());
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      //? 通知条件をクリアしているかをチェックする
+      final j = json.decode(message.data['content'].toString())
+          as Map<String, dynamic>;
+      if (j['channelKey'].toString() == 'eew_forecast') {
+        final state = notifBox.get('recent')!;
+
+        var shouldNotif = false;
+        if (state.notifAll) shouldNotif = true;
+        final payload = List<bool>.generate(
+          (message.data['condition'] as List<dynamic>).length,
+          (index) => bool.fromEnvironment(
+            (message.data['condition'] as List<dynamic>)[index].toString(),
+          ),
+        );
+
+        if (state.notifFirstReport && payload[0]) shouldNotif = true;
+        if (state.notifLastReport && payload[1]) shouldNotif = true;
+        if (state.notifOnUpdate && payload[2]) shouldNotif = true;
+        if (state.notifOnUpwardUpdate && payload[3]) {
+          shouldNotif = true;
         }
-        if (bool.fromEnvironment(
-          fss.read(key: 'toTweet').toString(),
-          defaultValue: true,
-        )) {
-          final AT = await fss.read(key: 'AT');
-          final AS = await fss.read(key: 'AS');
-          if (AT != null && AS != null) {
-            final twitterApi = TwitterApi(
-              client: TwitterClient(
-                consumerKey: clientCredentials.token,
-                consumerSecret: clientCredentials.tokenSecret,
-                token: AT,
-                secret: AS,
-              ),
-            );
-            final res = await twitterApi.tweetService.update(
-              status:
-                  '${message.data['content']['title']}\n${message.data['content']['body']}',
-            );
-          }
+        if (!shouldNotif) return;
+      }
+      const fss = FlutterSecureStorage();
+      await AwesomeNotifications().createNotificationFromJsonData(message.data);
+      final flutterTts = FlutterTts();
+      await flutterTts.setLanguage('ja-JP');
+      if (message.data['tts'] != null) {
+        await flutterTts.speak(message.data['tts'].toString());
+      }
+      if (bool.fromEnvironment(
+        fss.read(key: 'toTweet').toString(),
+        defaultValue: true,
+      )) {
+        final AT = await fss.read(key: 'AT');
+        final AS = await fss.read(key: 'AS');
+        if (AT != null && AS != null) {
+          final twitterApi = TwitterApi(
+            client: TwitterClient(
+              consumerKey: clientCredentials.token,
+              consumerSecret: clientCredentials.tokenSecret,
+              token: AT,
+              secret: AS,
+            ),
+          );
+          //print(AT + AS);
+          final res = await twitterApi.tweetService.update(
+            status:
+                '${message.data['content']['title']}\n${message.data['content']['body']}',
+          );
         }
-      },
-    );
+      }
+    });
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
       alert: true,
@@ -336,7 +361,6 @@ class Messaging extends GetxController {
       //await prefs.setStringList('topics', now);
       //}
     }
-    await prefs.setBool('hasInited', true);
     //}
 
     isInitalizing.value = false;
@@ -347,11 +371,15 @@ class Messaging extends GetxController {
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   //? 通知条件をクリアしているかをチェックする
-  final settings = await UserNotificationSettings().onInit();
-
-  if (message.data['content']['channelKey'].toString() == 'eew_forecast') {
+  final j =
+      json.decode(message.data['content'].toString()) as Map<String, dynamic>;
+  if (j['channelKey'].toString() == 'eew_forecast') {
+    await Hive.initFlutter();
+    final notifBox =
+        await Hive.openBox<NotificationSettingsState?>('NotificationSettings');
+    final state = notifBox.get('recent')!;
     var shouldNotif = false;
-    if (settings.state.notifAll.value) shouldNotif = true;
+    if (state.notifAll) shouldNotif = true;
     final payload = List<bool>.generate(
       (message.data['condition'] as List<dynamic>).length,
       (index) => bool.fromEnvironment(
@@ -359,10 +387,10 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       ),
     );
 
-    if (settings.state.notifFirstReport.value && payload[0]) shouldNotif = true;
-    if (settings.state.notifLastReport.value && payload[1]) shouldNotif = true;
-    if (settings.state.notifOnUpdate.value && payload[2]) shouldNotif = true;
-    if (settings.state.notifOnUpwardUpdate.value && payload[3]) {
+    if (state.notifFirstReport && payload[0]) shouldNotif = true;
+    if (state.notifLastReport && payload[1]) shouldNotif = true;
+    if (state.notifOnUpdate && payload[2]) shouldNotif = true;
+    if (state.notifOnUpwardUpdate && payload[3]) {
       shouldNotif = true;
     }
     if (!shouldNotif) return;

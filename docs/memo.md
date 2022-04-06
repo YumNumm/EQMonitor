@@ -8,6 +8,13 @@
 |||
 残りの部分(ex.`震度速報`や`震源に関する情報`は、Androidの設定からでもいじれるので後回し
 
+## HiveDB
+- `NotificationSettingsStateAdapter()`
+|type|key|description|
+|---|---|---|
+|`NotificationSettingsState`|`recent`|最近の設定|
+|||
+
 ## SecureStorage
 |key|value|
 |---|---|

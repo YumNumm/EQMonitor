@@ -1,5 +1,6 @@
 // ignore_for_file: cascade_invocations, file_names
 
+import 'package:eqmonitor/db/notificationSettings/notificationSettings.dart';
 import 'package:eqmonitor/utils/settings/notificationSettings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,6 +34,13 @@ Future<void> main() async {
       statusBarColor: Colors.transparent, // transparent status bar
     ),
   );
+  //? Setup DB
+  await Hive.initFlutter();
+  Hive.registerAdapter(NotificationSettingsStateAdapter());
+  Get.put<Box<NotificationSettingsState?>>(
+    await Hive.openBox<NotificationSettingsState?>('NotificationSettings'),
+  );
+  //? End DB
   Get.put<SharedPreferences>(await SharedPreferences.getInstance());
   await Firebase.initializeApp();
   await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
