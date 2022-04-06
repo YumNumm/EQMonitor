@@ -123,25 +123,29 @@ class IntroPage extends StatelessWidget {
                           return MapMarker(
                             latitude: earthQuake.analyzedPoint[index].lat,
                             longitude: earthQuake.analyzedPoint[index].lon,
-                            iconColor: earthQuake.analyzedPoint[index].color,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.circle,
-                                  color: earthQuake.analyzedPoint[index].color,
-                                  size: earthQuake.iconSize.value,
-                                ),
-                                Text(
-                                  (earthQuake.zoomLevel > 20)
-                                      ? '${earthQuake.analyzedPoint[index].name}\n震度: ${earthQuake.analyzedPoint[index].shindo}'
-                                      : '',
-                                  maxLines: 2,
-                                  style: const TextStyle(fontSize: 12),
-                                )
-                              ],
-                            ),
+                            child: (earthQuake.zoomLevel > 20)
+                                ? Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.circle,
+                                        color: earthQuake
+                                            .analyzedPoint[index].color,
+                                        size: earthQuake.iconSize.value,
+                                      ),
+                                      Text(
+                                        '${earthQuake.analyzedPoint[index].name}\n震度: ${earthQuake.analyzedPoint[index].shindo}',
+                                      )
+                                    ],
+                                  )
+                                : Icon(
+                                    Icons.circle,
+                                    color:
+                                        earthQuake.analyzedPoint[index].color,
+                                    size: earthQuake.iconSize.value,
+                                  ),
                           );
                         },
                         controller: earthQuake.mapShapeLayerController,
