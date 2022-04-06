@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,6 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../utils/messaging.dart';
 
 final PackageInfo packageInfo = Get.find<PackageInfo>();
+final Logger logger = Get.find<Logger>();
 final EarthQuake eq = Get.find<EarthQuake>();
 final SharedPreferences prefs = Get.find<SharedPreferences>();
 final fcm = Get.find<FirebaseMessaging>();
@@ -42,6 +44,7 @@ Widget aboutThisApp(BuildContext context) {
             title: const Text('FCMトークン'),
             description: Text(messaging.token.toString()),
             onPressed: (BuildContext context) async {
+              logger.d(messaging.token.toString());
               await Clipboard.setData(
                 ClipboardData(
                   text: messaging.token.toString(),
