@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -23,24 +24,9 @@ class SplashScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Column(
-              children: [
-                /*Image.network(
-                    'https://pbs.twimg.com/profile_images/1455531489790251014/ZtHyZ3RQ_400x400.jpg'),*/
-                Image.asset(
-                  'assets/light1.gif',
-                  fit: BoxFit.contain,
-                ),
-                /*Text(
-                  'eqmonitor',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: Get.textTheme.displaySmall!.fontSize,
-                  ),
-                ),*/
-              ],
+            Image.asset(
+              (context.isDarkMode) ? 'assets/dark1.gif' : 'assets/light1.gif',
+              fit: BoxFit.contain,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -49,7 +35,9 @@ class SplashScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 25),
                   child: Image.asset(
-                    'assets/light2.gif',
+                    (context.isDarkMode)
+                        ? 'assets/dark2.gif'
+                        : 'assets/light2.gif',
                     fit: BoxFit.contain,
                   ),
                 ),
