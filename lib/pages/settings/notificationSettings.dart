@@ -80,20 +80,20 @@ Widget notificationSettings(BuildContext context) {
             title: const Text('すべて通知'),
             description: const Text('緊急地震速報(予報)をすべて通知'),
             onPressed: (_) async {
-              if (!settings.notifAll.value) {
+              settings.notifAll.value = !settings.notifAll.value;
+              if (settings.notifAll.value) {
                 settings
                   ..notifFirstReport.value = true
                   ..notifLastReport.value = true
                   ..notifOnUpdate.value = true
                   ..notifOnUpwardUpdate.value = true;
               }
-              settings.notifAll.value = !settings.notifAll.value;
               await settings.save();
             },
             trailing: Obx(
               () => Switch(
                 value: settings.notifAll.value,
-                onChanged: (bool b)async {
+                onChanged: (bool b) async {
                   settings.notifAll.value = b;
                   if (b) {
                     settings
@@ -118,7 +118,7 @@ Widget notificationSettings(BuildContext context) {
             trailing: Obx(
               () => Switch(
                 value: settings.notifFirstReport.value,
-                onChanged: (bool b)async {
+                onChanged: (bool b) async {
                   settings.notifFirstReport.value = b;
                   await settings.save();
                 },
@@ -128,12 +128,16 @@ Widget notificationSettings(BuildContext context) {
           SettingsTile(
             title: const Text('最終報通知'),
             description: const Text('緊急地震速報(予報)において、最終報を通知するかどうか'),
+            onPressed: (_) async {
+              settings.notifLastReport.value = !settings.notifLastReport.value;
+              await settings.save();
+            },
             trailing: Obx(
               () => Switch(
                 value: settings.notifLastReport.value,
-                onChanged: (bool b) {
+                onChanged: (bool b) async {
                   settings.notifLastReport.value = b;
-                  settings.save();
+                  await settings.save();
                 },
               ),
             ),
@@ -141,16 +145,22 @@ Widget notificationSettings(BuildContext context) {
           SettingsTile(
             title: const Text('修正時に通知'),
             description: const Text('マグニチュードもしくは最大震度が変更された時に通知'),
+            onPressed: (_) async {
+              settings.notifOnUpdate.value = !settings.notifOnUpdate.value;
+              if (settings.notifOnUpdate.value) {
+                settings.notifOnUpwardUpdate.value = true;
+              }
+              await settings.save();
+            },
             trailing: Obx(
               () => Switch(
                 value: settings.notifOnUpdate.value,
-                onChanged: (bool b) {
+                onChanged: (bool b) async {
                   settings.notifOnUpdate.value = b;
                   if (b) {
                     settings.notifOnUpwardUpdate.value = true;
                   }
-
-                  settings.save();
+                  await settings.save();
                 },
               ),
             ),
@@ -158,12 +168,17 @@ Widget notificationSettings(BuildContext context) {
           SettingsTile(
             title: const Text('上方修正時に通知'),
             description: const Text('マグニチュードもしくは最大震度が上方変更された際に通知'),
+            onPressed: (_) async {
+              settings.notifOnUpwardUpdate.value =
+                  !settings.notifOnUpwardUpdate.value;
+              await settings.save();
+            },
             trailing: Obx(
               () => Switch(
                 value: settings.notifOnUpwardUpdate.value,
-                onChanged: (bool b) {
+                onChanged: (bool b) async {
                   settings.notifOnUpwardUpdate.value = b;
-                  settings.save();
+                  await settings.save();
                 },
               ),
             ),
