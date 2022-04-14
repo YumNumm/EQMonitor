@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dart_twitter_api/twitter_api.dart';
+import 'package:eqmonitor/const/const.dart';
 import 'package:eqmonitor/private/keys.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -38,29 +39,6 @@ class Messaging extends GetxController {
       sound: true,
     );
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      //? 通知条件をクリアしているかをチェックする
-      final j = json.decode(message.data['content'].toString())
-          as Map<String, dynamic>;
-      if (j['channelKey'].toString() == 'eew_forecast') {
-        final state = notifBox.get('recent')!;
-
-        var shouldNotif = false;
-        if (state.notifAll) shouldNotif = true;
-        final payload = List<bool>.generate(
-          (message.data['condition'] as List<dynamic>).length,
-          (index) => bool.fromEnvironment(
-            (message.data['condition'] as List<dynamic>)[index].toString(),
-          ),
-        );
-
-        if (state.notifFirstReport && payload[0]) shouldNotif = true;
-        if (state.notifLastReport && payload[1]) shouldNotif = true;
-        if (state.notifOnUpdate && payload[2]) shouldNotif = true;
-        if (state.notifOnUpwardUpdate && payload[3]) {
-          shouldNotif = true;
-        }
-        if (!shouldNotif) return;
-      }
       const fss = FlutterSecureStorage();
       await AwesomeNotifications().createNotificationFromJsonData(message.data);
       final flutterTts = FlutterTts();
@@ -370,59 +348,72 @@ class Messaging extends GetxController {
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  const fss = FlutterSecureStorage();
   //? 通知条件をクリアしているかをチェックする
   final j =
       json.decode(message.data['content'].toString()) as Map<String, dynamic>;
-  /*if (j['channelKey'].toString() == 'eew_forecast') {
-    await Hive.initFlutter();
-    final notifBox =
-        await Hive.openBox<NotificationSettingsState?>('NotificationSettings');
-    final state = notifBox.get('recent')!;
+  if (j['channelKey'].toString() == 'eew_forecast') {
+    final Map<String, dynamic> fssData = await fss.readAll();
+    final state = NotificationSettingsState(
+      notifAll: fssData['notifAll'].toString().parseBool(),
+      notifFirstReport: fssData['notifFirstReport'].toString().parseBool(),
+      notifLastReport: fssData['notifLastReport'].toString().parseBool(),
+      notifOnUpdate: fssData['notifOnUpdate'].toString().parseBool(),
+      notifOnUpwardUpdate:
+          fssData['notifOnUpwardUpdate'].toString().parseBool(),
+    );
     var shouldNotif = false;
     if (state.notifAll) shouldNotif = true;
-    final payload = List<bool>.generate(
-      (message.data['condition'] as List<dynamic>).length,
-      (index) => bool.fromEnvironment(
-        (message.data['condition'] as List<dynamic>)[index].toString(),
-      ),
-    );
-
-    if (state.notifFirstReport && payload[0]) shouldNotif = true;
-    if (state.notifLastReport && payload[1]) shouldNotif = true;
-    if (state.notifOnUpdate && payload[2]) shouldNotif = true;
-    if (state.notifOnUpwardUpdate && payload[3]) {
-      shouldNotif = true;
-    }
-    if (!shouldNotif) return;
-  }*/
-  await Firebase.initializeApp();
-  const fss = FlutterSecureStorage();
-  await AwesomeNotifications().createNotificationFromJsonData(message.data);
-  final flutterTts = FlutterTts();
-  await flutterTts.setLanguage('ja-JP');
-  if (message.data['tts'] != null) {
-    await flutterTts.speak(message.data['tts'].toString());
-  }
-  if (bool.fromEnvironment(
-    fss.read(key: 'toTweet').toString(),
-    defaultValue: true,
-  )) {
-    final AT = await fss.read(key: 'AT');
-    final AS = await fss.read(key: 'AS');
-    if (AT != null && AS != null) {
-      final twitterApi = TwitterApi(
-        client: TwitterClient(
-          consumerKey: clientCredentials.token,
-          consumerSecret: clientCredentials.tokenSecret,
-          token: AT,
-          secret: AS,
-        ),
+    try {
+      final condition =
+          json.decode(message.data['condition'].toString()) as List<dynamic>;
+      final payload = List<bool>.generate(
+        condition.length,
+        (index) => condition[index].toString().parseBool(),
       );
-      //print(AT + AS);
-      final res = await twitterApi.tweetService.update(
-        status:
-            '${message.data['content']['title']}\n${message.data['content']['body']}',
+      print(
+        'Notification Settings: ${state.notifAll},${state.notifFirstReport},${state.notifLastReport},${state.notifOnUpdate},${state.notifOnUpwardUpdate}',
       );
+      if (state.notifFirstReport && payload[0]) shouldNotif = true;
+      if (state.notifLastReport && payload[1]) shouldNotif = true;
+      if (state.notifOnUpdate && payload[2]) shouldNotif = true;
+      if (state.notifOnUpwardUpdate && payload[3]) {
+        shouldNotif = true;
+      }
+      if (shouldNotif) {
+        await AwesomeNotifications()
+            .createNotificationFromJsonData(message.data);
+        final flutterTts = FlutterTts();
+        await flutterTts.setLanguage('ja-JP');
+        if (message.data['tts'] != null) {
+          await flutterTts.speak(message.data['tts'].toString());
+        }
+        if (bool.fromEnvironment(
+          fss.read(key: 'toTweet').toString(),
+          defaultValue: true,
+        )) {
+          final AT = await fss.read(key: 'AT');
+          final AS = await fss.read(key: 'AS');
+          if (AT != null && AS != null) {
+            final twitterApi = TwitterApi(
+              client: TwitterClient(
+                consumerKey: clientCredentials.token,
+                consumerSecret: clientCredentials.tokenSecret,
+                token: AT,
+                secret: AS,
+              ),
+            );
+            //print(AT + AS);
+            final res = await twitterApi.tweetService.update(
+              status:
+                  '${message.data['content']['title']}\n${message.data['content']['body']}',
+            );
+          }
+        }
+      }
+    } catch (e) {
+      print(e);
     }
   }
 }
