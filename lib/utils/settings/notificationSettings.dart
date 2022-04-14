@@ -1,4 +1,5 @@
 import 'package:eqmonitor/db/notificationSettings/notificationSettings.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
@@ -6,6 +7,7 @@ import 'package:logger/logger.dart';
 class UserNotificationSettings extends GetxController {
   final box = Get.find<Box<NotificationSettingsState?>>();
   final logger = Get.find<Logger>();
+  final fss = Get.find<FlutterSecureStorage>();
   late NotificationSettingsState state;
 
   //
@@ -39,6 +41,7 @@ class UserNotificationSettings extends GetxController {
     logger.d(
       'Notification Settings: ${notifAll.value},${notifFirstReport.value},${notifLastReport.value},${notifOnUpdate.value},${notifOnUpwardUpdate.value}',
     );
+    await save();
     super.onInit();
     return this;
   }
@@ -53,6 +56,23 @@ class UserNotificationSettings extends GetxController {
         notifOnUpdate: notifOnUpdate.value,
         notifOnUpwardUpdate: notifOnUpwardUpdate.value,
       ),
+    );
+    await fss.write(key: 'notifAll', value: notifAll.value.toString());
+    await fss.write(
+      key: 'notifFirstReport',
+      value: notifFirstReport.value.toString(),
+    );
+    await fss.write(
+      key: 'notifLastReport',
+      value: notifLastReport.value.toString(),
+    );
+    await fss.write(
+      key: 'notifOnUpdate',
+      value: notifOnUpdate.value.toString(),
+    );
+    await fss.write(
+      key: 'notifOnUpwardUpdate',
+      value: notifOnUpwardUpdate.value.toString(),
     );
     logger.d(
       'Notification Settings: ${notifAll.value},${notifFirstReport.value},${notifLastReport.value},${notifOnUpdate.value},${notifOnUpwardUpdate.value}',

@@ -52,6 +52,7 @@ Future<void> main() async {
       ),
     ),
   );
+  Get.put<FlutterSecureStorage>(const FlutterSecureStorage());
   Get.put<PackageInfo>(await PackageInfo.fromPlatform());
   Get.put<UserNotificationSettings>(await UserNotificationSettings().onInit());
   Get.put<FirebaseApp>(await Firebase.initializeApp());
