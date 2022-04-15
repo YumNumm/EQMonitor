@@ -1,5 +1,6 @@
 // ignore_for_file: cascade_invocations, file_names
 
+import 'package:device_preview/device_preview.dart';
 import 'package:eqmonitor/db/notificationSettings/notificationSettings.dart';
 import 'package:eqmonitor/utils/settings/notificationSettings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -41,7 +42,8 @@ Future<void> main() async {
     await Hive.openBox<NotificationSettingsState?>('NotificationSettings'),
   );
   //? End DB
-  Get.put<SharedPreferences>(await SharedPreferences.getInstance());
+  final prefs =
+      Get.put<SharedPreferences>(await SharedPreferences.getInstance());
   await Firebase.initializeApp();
   await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   Get.put<Logger>(
@@ -64,7 +66,12 @@ Future<void> main() async {
   Get.put<AuthStateUtils>(AuthStateUtils());
   Get.put<EarthQuake>(EarthQuake());
   Get.put<FlutterSecureStorage>(const FlutterSecureStorage());
-  runApp(const EQApp());
+  runApp(
+    DevicePreview(
+      enabled: prefs.getBool('showDevicePreview') ?? false,
+      builder: (context) => const EQApp(),
+    ),
+  );
 }
 
 class EQApp extends StatelessWidget {
@@ -76,7 +83,7 @@ class EQApp extends StatelessWidget {
       theme: lightTheme(),
       darkTheme: darkTheme(),
       themeMode: ThemeMode.system,
-      locale: locale,
+      locale: DevicePreview.locale(context),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -85,6 +92,8 @@ class EQApp extends StatelessWidget {
       supportedLocales: const [
         locale,
       ],
+      useInheritedMediaQuery: true,
+      builder: DevicePreview.appBuilder,
       initialRoute: '/splash',
       getPages: [
         GetPage<dynamic>(

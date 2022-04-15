@@ -145,19 +145,20 @@ Widget aboutThisApp(BuildContext context) {
               ),
             ),
           ),
+          SettingsTile.navigation(
+            title: const Text('ソースコード'),
+            trailing: const Icon(Icons.open_in_browser),
+            description: const Text('https://github.com/EQMonitor/EQMonitor'),
+            onPressed: (BuildContext context) => launch(
+              'https://github.com/EQMonitor/EQMonitor',
+            ),
+          ),
           SettingsTile(
-            title: const Text('開発者向けオプション'),
+            title: const Text(''),
             onPressed: (_) async {
               devCounter.value++;
               if (devCounter.value >= 10) {
                 if (!Get.isDialogOpen!) {
-                  Get.showSnackbar(
-                    const GetSnackBar(
-                      title: 'Now you are a developer!',
-                      message: '^_^',
-                      duration: Duration(milliseconds: 1500),
-                    ),
-                  );
                   final isSubscribedToDev =
                       (prefs.getStringList('topics') ?? []).contains('dev').obs;
                   await Get.dialog<void>(
@@ -190,6 +191,14 @@ Widget aboutThisApp(BuildContext context) {
                                     isSubscribedToDev.value = b;
                                   },
                                 ),
+                              ),
+                            ),
+                            ListTile(
+                              title: const Text('Device Preview'),
+                              subtitle: const Text('Device Previewを表示'),
+                              onTap: () async => await prefs.setBool(
+                                'showDevicePreview',
+                                !(prefs.getBool('showDevicePreview') ?? false),
                               ),
                             ),
                             ListTile(
@@ -267,14 +276,6 @@ Widget aboutThisApp(BuildContext context) {
                 }
               }
             },
-          ),
-          SettingsTile.navigation(
-            title: const Text('ソースコード'),
-            trailing: const Icon(Icons.open_in_browser),
-            description: const Text('https://github.com/EQMonitor/EQMonitor'),
-            onPressed: (BuildContext context) => launch(
-              'https://github.com/EQMonitor/EQMonitor',
-            ),
           ),
         ],
       ),
