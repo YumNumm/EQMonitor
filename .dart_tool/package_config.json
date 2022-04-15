@@ -182,6 +182,18 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "device_frame",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/device_frame-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "device_preview",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/device_preview-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "extra_pedantic",
       "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/extra_pedantic-1.5.0",
       "packageUri": "lib/",
@@ -402,6 +414,12 @@
       "rootUri": "file:///C:/path/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "freezed_annotation",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/freezed_annotation-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
     },
     {
       "name": "frontend_server_client",
@@ -626,6 +644,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "nested",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/nested-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "ntp",
       "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/ntp-2.0.0",
       "packageUri": "lib/",
@@ -784,6 +808,12 @@
     {
       "name": "proj4dart",
       "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/proj4dart-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "provider",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/provider-6.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -1166,7 +1196,7 @@
       "languageVersion": "2.15"
     }
   ],
-  "generated": "2022-04-14T15:36:25.069235Z",
+  "generated": "2022-04-15T15:32:28.816742Z",
   "generator": "pub",
   "generatorVersion": "2.16.2"
 }
