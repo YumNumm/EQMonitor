@@ -3,7 +3,7 @@ description: Earth Quake Monitor Application
 
 publish_to: "none"
 
-version: 0.2.4+67
+version: 0.2.4+69
 
 environment:
   sdk: ">=2.15.0 <3.0.0"
@@ -31,14 +31,12 @@ dependencies:
   twitter_login: ^4.0.1
   settings_ui: ^2.0.2
   flutter_native_splash: ^2.0.4
-  status_alert: ^1.0.0
   oauth1: ^2.0.0
   url_launcher: ^6.0.20
   cool_alert: ^1.1.0
   package_info_plus: ^1.3.1
   awesome_notifications: ^0.6.21
   html: ^0.15.0
-  solid_bottom_sheet: ^0.1.10
   home_widget: ^0.1.5
   shared_preferences: ^2.0.13
   supabase_flutter: ^0.2.12
@@ -47,16 +45,13 @@ dependencies:
   auto_size_text: ^3.0.0
   flutter_secure_storage: ^5.0.2
   dart_twitter_api: ^0.5.6
-  map_controller:
-    git:
-      url: https://github.com/joflee/map_controller
-      ref: master
   latlong2: ^0.8.1
-  google_nav_bar: ^5.0.6
   syncfusion_flutter_maps: ^20.1.47
   hive: ^2.1.0
   hive_flutter: ^1.1.0
   device_preview: ^1.0.0
+  open_settings: ^2.0.2
+  perfect_volume_control: ^1.0.5
 
 dev_dependencies:
   flutter_test:

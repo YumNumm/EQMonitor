@@ -11,6 +11,6 @@ class EEWSecurity {
   });
 
   EEWSecurity.fromJson(Map<String, dynamic> j)
-      : realm = (j['realm'].toString() == "") ? null : j['realm'].toString(),
-        hash = (j['hash'].toString() == "") ? null : j['hash'].toString();
+      : realm = (j['realm'].toString() == '') ? null : j['realm'].toString(),
+        hash = (j['hash'].toString() == '') ? null : j['hash'].toString();
 }

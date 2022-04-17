@@ -19,14 +19,13 @@ ThemeData lightTheme() {
 }
 
 extension BoolParsing on String {
-  bool parseBool() {
-    if (this.toLowerCase() == 'true') {
+  bool parseBool({bool defaultValue = true}) {
+    if (toLowerCase() == 'true') {
       return true;
-    } else if (this.toLowerCase() == 'false') {
+    } else if (toLowerCase() == 'false') {
       return false;
     }
-
-    throw '"$this" can not be parsed to boolean.';
+    return defaultValue;
   }
 }
 
@@ -47,7 +46,6 @@ const MaterialColor materialWhite = MaterialColor(
     900: Color(0xFFFFFFFF),
   },
 );
-
 
 // RGBColorから震度の値に変換するのに使用
 const Map<List<int>, double> colorMap = {

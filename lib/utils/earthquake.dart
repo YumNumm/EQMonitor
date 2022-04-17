@@ -13,7 +13,6 @@ import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:ntp/ntp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:solid_bottom_sheet/solid_bottom_sheet.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
 
 import './eqlog.dart';
@@ -40,7 +39,6 @@ class EarthQuake extends GetxController {
   final RxString lastUpdateTimeString = '更新待ち'.obs;
   final MapShapeLayerController mapShapeLayerController =
       MapShapeLayerController();
-  final SolidController solidController = SolidController();
   final MapZoomPanBehavior mapZoomPanBehavior = MapZoomPanBehavior(
     maxZoomLevel: 60,
     enablePanning: true,
@@ -120,7 +118,7 @@ class EarthQuake extends GetxController {
         ),
       );
       if (res.statusCode != 200) {
-        logger.wtf('*Web API Error* ${res.statusCode}');
+        logger.wtf('リアルタイム震度の画像を取得できませんでした。(status: ${res.statusCode})');
         return;
       }
       final image = Image.decodeGif(res.bodyBytes);
