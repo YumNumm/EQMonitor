@@ -3,6 +3,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:eqmonitor/db/notificationSettings/notificationSettings.dart';
 import 'package:eqmonitor/utils/settings/notificationSettings.dart';
+import 'package:eqmonitor/utils/settings/volumeController.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -65,6 +66,7 @@ Future<void> main() async {
   Get.put<Messaging>(Messaging());
   Get.put<AuthStateUtils>(AuthStateUtils());
   Get.put<EarthQuake>(EarthQuake());
+  Get.put<VolumeController>(VolumeController());
   Get.put<FlutterSecureStorage>(const FlutterSecureStorage());
   runApp(
     DevicePreview(

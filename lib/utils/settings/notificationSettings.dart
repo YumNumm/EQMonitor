@@ -16,6 +16,8 @@ class UserNotificationSettings extends GetxController {
   final RxBool notifLastReport = true.obs;
   final RxBool notifOnUpdate = false.obs;
   final RxBool notifOnUpwardUpdate = false.obs;
+  final RxBool useTTS = true.obs;
+
   @override
   Future<UserNotificationSettings> onInit() async {
     if (box.isEmpty) {
@@ -28,6 +30,7 @@ class UserNotificationSettings extends GetxController {
           notifLastReport: true,
           notifOnUpdate: false,
           notifOnUpwardUpdate: false,
+          useTTS: true,
         ),
       );
     }
@@ -38,8 +41,9 @@ class UserNotificationSettings extends GetxController {
     notifLastReport.value = state.notifLastReport;
     notifOnUpdate.value = state.notifOnUpdate;
     notifOnUpwardUpdate.value = state.notifOnUpwardUpdate;
+    useTTS.value = state.useTTS;
     logger.d(
-      'Notification Settings: ${notifAll.value},${notifFirstReport.value},${notifLastReport.value},${notifOnUpdate.value},${notifOnUpwardUpdate.value}',
+      'Notification Settings: ${notifAll.value},${notifFirstReport.value},${notifLastReport.value},${notifOnUpdate.value},${notifOnUpwardUpdate.value},${useTTS.value}',
     );
     await save();
     super.onInit();
@@ -55,6 +59,7 @@ class UserNotificationSettings extends GetxController {
         notifLastReport: notifLastReport.value,
         notifOnUpdate: notifOnUpdate.value,
         notifOnUpwardUpdate: notifOnUpwardUpdate.value,
+        useTTS: useTTS.value,
       ),
     );
     await fss.write(key: 'notifAll', value: notifAll.value.toString());
@@ -74,8 +79,12 @@ class UserNotificationSettings extends GetxController {
       key: 'notifOnUpwardUpdate',
       value: notifOnUpwardUpdate.value.toString(),
     );
+    await fss.write(
+      key: 'useTTS',
+      value: useTTS.value.toString(),
+    );
     logger.d(
-      'Notification Settings: ${notifAll.value},${notifFirstReport.value},${notifLastReport.value},${notifOnUpdate.value},${notifOnUpwardUpdate.value}',
+      'Notification Settings: ${notifAll.value},${notifFirstReport.value},${notifLastReport.value},${notifOnUpdate.value},${notifOnUpwardUpdate.value},${useTTS.value}',
     );
   }
 }

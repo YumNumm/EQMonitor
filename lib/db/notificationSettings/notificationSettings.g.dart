@@ -23,13 +23,14 @@ class NotificationSettingsStateAdapter
       notifLastReport: fields[2] as bool,
       notifOnUpdate: fields[3] as bool,
       notifOnUpwardUpdate: fields[4] as bool,
+      useTTS: fields[5] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, NotificationSettingsState obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.notifAll)
       ..writeByte(1)
@@ -39,7 +40,9 @@ class NotificationSettingsStateAdapter
       ..writeByte(3)
       ..write(obj.notifOnUpdate)
       ..writeByte(4)
-      ..write(obj.notifOnUpwardUpdate);
+      ..write(obj.notifOnUpwardUpdate)
+      ..writeByte(5)
+      ..write(obj.useTTS);
   }
 
   @override

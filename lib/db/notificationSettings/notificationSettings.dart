@@ -25,11 +25,15 @@ class NotificationSettingsState {
   @HiveField(4)
   final bool notifOnUpwardUpdate;
 
+  @HiveField(5)
+  final bool useTTS;
+
   NotificationSettingsState({
     required this.notifAll,
     required this.notifFirstReport,
     required this.notifLastReport,
     required this.notifOnUpdate,
     required this.notifOnUpwardUpdate,
+    required this.useTTS,
   });
 }

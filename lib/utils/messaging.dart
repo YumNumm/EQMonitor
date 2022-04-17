@@ -350,6 +350,10 @@ class Messaging extends GetxController {
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   const fss = FlutterSecureStorage();
+  //? TTSを使うかどうか
+  final useTTS =
+      fss.read(key: 'useTTS').toString().parseBool(defaultValue: true);
+
   //? 通知条件をクリアしているかをチェックする
   final j =
       json.decode(message.data['content'].toString()) as Map<String, dynamic>;
@@ -364,6 +368,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       notifOnUpdate: fssData['notifOnUpdate'].toString().parseBool(),
       notifOnUpwardUpdate:
           fssData['notifOnUpwardUpdate'].toString().parseBool(),
+      useTTS: fssData['useTTS'].toString().parseBool(),
     );
     if (state.notifAll) shouldNotif = true;
     try {
@@ -393,7 +398,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     final flutterTts = FlutterTts();
     await flutterTts.setLanguage('ja-JP');
     if (message.data['tts'] != null) {
-      await flutterTts.speak(message.data['tts'].toString());
+      if (useTTS) await flutterTts.speak(message.data['tts'].toString());
     }
     if (bool.fromEnvironment(
       fss.read(key: 'toTweet').toString(),
