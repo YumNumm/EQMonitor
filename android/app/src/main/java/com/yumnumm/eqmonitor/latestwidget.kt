@@ -5,9 +5,11 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Resources
+import android.graphics.*
 import android.widget.RemoteViews
-
 import es.antonborri.home_widget.HomeWidgetPlugin
+
 @SuppressLint("NewApi")
 class latestwidget : AppWidgetProvider() {
     override fun onUpdate(
@@ -62,14 +64,38 @@ internal fun updateAppWidget(
     val views = RemoteViews(context.packageName, R.layout.latestwidget)
     // 更新
 
-    views.setImageViewResource(R.id.intensityImageView,imageNum)
+     views.setImageViewResource(R.id.intensityImageView,imageNum)
+    /*views.setImageViewBitmap(R.id.intensityImageView, getCroppedBitmap(BitmapFactory.decodeResource(
+        Resources.getSystem(),imageNum,null
+    )))*/
     views.setTextViewText(R.id.dateTextView,time)
+    //! views.setTextViewText(R.id.dateTextView,"dbg!")
     views.setTextViewText(R.id.placeText,place)
     views.setTextViewText(R.id.magunitudeText,magnitude)
     views.setImageViewResource(R.id.placeIcon,R.drawable.ic_baseline_location_on_24)
     views.setImageViewResource(R.id.magunitudeIcon,R.drawable.ic_baseline_double_arrow_24)
     views.setImageViewResource(R.id.timeicon,R.drawable.ic_baseline_access_time_filled_24)
+    //views.setInt(R.id.notification_background,"setBackgroundResource", Color.parseColor("ff00000000"))
+
+    // 角丸
+
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
+}
+
+
+fun getCroppedBitmap(bitmap: Bitmap): Bitmap? {
+    val width: Int = bitmap.getWidth()
+    val height: Int = bitmap.getHeight()
+    val rect = Rect(0, 0, width, height)
+    val rectf = RectF(0F, 0F, width.toFloat(), height.toFloat())
+    val output: Bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(output)
+    val paint = Paint()
+    paint.setAntiAlias(true)
+    canvas.drawRoundRect(rectf, (width / 5).toFloat(), (height / 5).toFloat(), paint)
+    paint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.SRC_IN))
+    canvas.drawBitmap(bitmap, rect, rect, paint)
+    return output
 }
