@@ -1,9 +1,11 @@
 package com.yumnumm.eqmonitor
 
 import android.annotation.SuppressLint
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.graphics.*
@@ -59,12 +61,9 @@ internal fun updateAppWidget(
         "7" -> imageNum = R.drawable.int7
         else -> imageNum = R.drawable.unknown
     }
-
-
     val views = RemoteViews(context.packageName, R.layout.latestwidget)
     // 更新
-
-     views.setImageViewResource(R.id.intensityImageView,imageNum)
+    views.setImageViewResource(R.id.intensityImageView,imageNum)
     /*views.setImageViewBitmap(R.id.intensityImageView, getCroppedBitmap(BitmapFactory.decodeResource(
         Resources.getSystem(),imageNum,null
     )))*/
