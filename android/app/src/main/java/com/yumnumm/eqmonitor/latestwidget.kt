@@ -54,10 +54,10 @@ internal fun updateAppWidget(
         "2" -> imageNum = R.drawable.int2
         "3" -> imageNum = R.drawable.int3
         "4" -> imageNum = R.drawable.int4
-        "5-" -> imageNum = R.drawable.int5m
-        "5+" -> imageNum = R.drawable.int5p
-        "6-" -> imageNum = R.drawable.int6m
-        "6+" -> imageNum = R.drawable.int6p
+        "5弱" -> imageNum = R.drawable.int5m
+        "5強" -> imageNum = R.drawable.int5p
+        "6弱" -> imageNum = R.drawable.int6m
+        "6強" -> imageNum = R.drawable.int6p
         "7" -> imageNum = R.drawable.int7
         else -> imageNum = R.drawable.unknown
     }
