@@ -353,7 +353,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   //? TTSを使うかどうか
   final useTTS =
       (await fss.read(key: 'useTTS')).toString().parseBool(defaultValue: false);
-  print('useTTS: ${await fss.read(key: "useTTS")}');
   //? 通知条件をクリアしているかをチェックする
   final j =
       json.decode(message.data['content'].toString()) as Map<String, dynamic>;
