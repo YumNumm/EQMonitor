@@ -2,6 +2,7 @@
 
 import 'package:device_preview/device_preview.dart';
 import 'package:eqmonitor/db/notificationSettings/notificationSettings.dart';
+import 'package:eqmonitor/utils/KyoshinMonitorlib/kyoshinMonitorlibTime.dart';
 import 'package:eqmonitor/utils/settings/notificationSettings.dart';
 import 'package:eqmonitor/utils/settings/volumeController.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -65,6 +66,7 @@ Future<void> main() async {
   Get.put<MapData>(MapData());
   Get.put<Messaging>(Messaging());
   Get.put<AuthStateUtils>(AuthStateUtils());
+  Get.put<KyoshinMonitorlibTime>(await KyoshinMonitorlibTime().onInit());
   Get.put<EarthQuake>(EarthQuake());
   Get.put<VolumeController>(VolumeController());
   Get.put<FlutterSecureStorage>(const FlutterSecureStorage());
@@ -84,7 +86,6 @@ class EQApp extends StatelessWidget {
       title: 'EQMonitor',
       theme: lightTheme(),
       darkTheme: darkTheme(),
-      themeMode: ThemeMode.system,
       locale: DevicePreview.locale(context),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,

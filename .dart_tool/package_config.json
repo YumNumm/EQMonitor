@@ -741,7 +741,7 @@
     },
     {
       "name": "pedantic_mono",
-      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/pedantic_mono-1.17.0",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/pedantic_mono-1.18.0",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
@@ -957,13 +957,13 @@
     },
     {
       "name": "syncfusion_flutter_core",
-      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/syncfusion_flutter_core-20.1.48",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/syncfusion_flutter_core-20.1.50",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "syncfusion_flutter_maps",
-      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/syncfusion_flutter_maps-20.1.48",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/syncfusion_flutter_maps-20.1.50",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -1124,7 +1124,7 @@
       "languageVersion": "2.15"
     }
   ],
-  "generated": "2022-04-18T14:38:24.080524Z",
+  "generated": "2022-04-20T14:22:46.094281Z",
   "generator": "pub",
   "generatorVersion": "2.16.2"
 }

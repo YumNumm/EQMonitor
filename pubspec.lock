@@ -860,7 +860,7 @@ packages:
       name: pedantic_mono
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.17.0"
+    version: "1.18.0"
   perfect_volume_control:
     dependency: "direct main"
     description:
@@ -1110,14 +1110,14 @@ packages:
       name: syncfusion_flutter_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "20.1.48"
+    version: "20.1.50"
   syncfusion_flutter_maps:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_maps
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "20.1.48"
+    version: "20.1.50"
   term_glyph:
     dependency: transitive
     description:
