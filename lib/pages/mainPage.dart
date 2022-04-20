@@ -115,9 +115,13 @@ class IntroPage extends StatelessWidget {
                     layers: <MapLayer>[
                       MapShapeLayer(
                         source: MapData.dataSource,
-                        showDataLabels: false,
                         zoomPanBehavior: earthQuake.mapZoomPanBehavior,
                         initialMarkersCount: earthQuake.analyzedPoint.length,
+                        loadingBuilder: (context) => const Center(
+                          child: CircularProgressIndicator.adaptive(
+                            strokeWidth: 5,
+                          ),
+                        ),
                         markerBuilder: (BuildContext context, int index) {
                           final iconSize = earthQuake.iconSize.value;
                           return MapMarker(
@@ -129,22 +133,49 @@ class IntroPage extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Icon(
-                                        Icons.circle,
-                                        color: earthQuake
-                                            .analyzedPoint[index].color,
-                                        size: earthQuake.iconSize.value,
+                                      Container(
+                                        width: earthQuake.iconSize.value,
+                                        height: earthQuake.iconSize.value,
+                                        decoration: (earthQuake
+                                                    .analyzedPoint[index]
+                                                    .shindo ==
+                                                null)
+                                            ? const BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.grey,
+                                              )
+                                            : BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: earthQuake
+                                                    .analyzedPoint[index].color,
+                                              ),
                                       ),
                                       Text(
-                                        '${earthQuake.analyzedPoint[index].name}\n震度: ${earthQuake.analyzedPoint[index].shindo}',
+                                        (earthQuake.analyzedPoint[index]
+                                                    .shindo ==
+                                                null)
+                                            ? earthQuake
+                                                .analyzedPoint[index].name
+                                            : '${earthQuake.analyzedPoint[index].name}\n震度: ${earthQuake.analyzedPoint[index].shindo}',
                                       )
                                     ],
                                   )
-                                : Icon(
-                                    Icons.circle,
-                                    color:
-                                        earthQuake.analyzedPoint[index].color,
-                                    size: earthQuake.iconSize.value,
+                                : Container(
+                                    width: earthQuake.iconSize.value,
+                                    height: earthQuake.iconSize.value,
+                                    decoration: (earthQuake
+                                                .analyzedPoint[index].shindo ==
+                                            null)
+                                        ? BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border:
+                                                Border.all(color: Colors.grey),
+                                          )
+                                        : BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: earthQuake
+                                                .analyzedPoint[index].color,
+                                          ),
                                   ),
                           );
                         },

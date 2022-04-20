@@ -3,12 +3,17 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:eqmonitor/const/obspoints.dart';
+import 'package:eqmonitor/utils/KyoshinMonitorlib/ApiResult/EEW.dart';
+import 'package:eqmonitor/utils/KyoshinMonitorlib/UrlGenerator/RealTimeDataType.dart';
+import 'package:eqmonitor/utils/KyoshinMonitorlib/UrlGenerator/WebApiUrlGenerators.dart';
+import 'package:eqmonitor/utils/KyoshinMonitorlib/imageParser/jmaParser.dart';
+import 'package:eqmonitor/utils/KyoshinMonitorlib/kyoshinMonitorlibTime.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
-import 'package:image/image.dart' as Image;
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:ntp/ntp.dart';
@@ -16,23 +21,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
 
 import './eqlog.dart';
-import '../const/const.dart';
-import '../const/obspoints.dart';
-import '../utils/jsonParser/APIResponse.dart';
 import 'analyzedpoints.dart';
 
 class EarthQuake extends GetxController {
   final Logger logger = Get.find<Logger>();
   final SharedPreferences prefs = Get.find<SharedPreferences>();
+  final WebApiUrlGenerator webApiUrlGenerator = WebApiUrlGenerator();
+  final KyoshinMonitorlibTime kyoshinMonitorlibTime =
+      Get.find<KyoshinMonitorlibTime>();
+  final JmaImageParser jmaImageParser = JmaImageParser();
+
   final RxInt offset = 0.obs;
   final RxString url = ''.obs;
   late Timer timer;
   late Timer timer2;
   late Timer timer3;
-  final RxInt hasEEW = 0.obs;
-  final RxInt diffSec = 0.obs;
   final RxList<AnalyzedPoint> analyzedPoint = <AnalyzedPoint>[].obs;
-  final RxBool widgetLoaded = false.obs;
   final RxDouble zoomLevel = 1.0.obs;
   final RxList<EQLog> eqLog = <EQLog>[].obs;
   final RxDouble iconSize = 3.6.obs;
@@ -41,19 +45,46 @@ class EarthQuake extends GetxController {
       MapShapeLayerController();
   final MapZoomPanBehavior mapZoomPanBehavior = MapZoomPanBehavior(
     maxZoomLevel: 60,
-    enablePanning: true,
-    enablePinching: true,
     enableDoubleTapZooming: true,
   );
+  final df = DateFormat('yyyyMMdd/yyyyMMddHHmmss');
+
   @override
   Future<void> onInit() async {
     super.onInit();
+    // 仮で空っぽの観測点を配置しておく
+    for (final obsPoint in OBSPoints) {
+      analyzedPoint.add(
+        AnalyzedPoint(
+          code: obsPoint.code,
+          name: obsPoint.name,
+          pref: obsPoint.pref,
+          lat: obsPoint.lat,
+          lon: obsPoint.lon,
+          x: obsPoint.x,
+          y: obsPoint.y,
+          color: const Color(0x00FFFFFF),
+          shindo: null,
+          zoomLevel: zoomLevel.value,
+        ),
+      );
+    }
     // NTPから正しい時間を取得する
     final startDate = DateTime.now().toLocal();
-    offset.value = await NTP.getNtpOffset(localTime: startDate);
+    try {
+      offset.value = await NTP.getNtpOffset(localTime: startDate);
+    } catch (e) {
+      logger.w(e.toString());
+    }
 
-    timer = Timer.periodic(const Duration(milliseconds: 1000), (_) async {
-      await updateEQData();
+    timer = Timer.periodic(
+      const Duration(milliseconds: 1000),
+      (_) async => updateEQData(),
+    );
+    timer2 = Timer.periodic(const Duration(milliseconds: 250), (_) async {
+      iconSize.value = mapZoomPanBehavior.zoomLevel * 0.6 + 3;
+      jmaImageParser.zoomLevel.value =
+          zoomLevel.value = mapZoomPanBehavior.zoomLevel;
     });
     timer3 = Timer.periodic(
       const Duration(
@@ -62,168 +93,106 @@ class EarthQuake extends GetxController {
       (_) => updateEQLog(),
     );
     await updateEQLog();
-    await updateEQData();
-    //! 気持ち待機(これ待ち時間調節しないとな)
-    timer2 = Timer.periodic(const Duration(milliseconds: 250), (_) async {
-      iconSize.value = mapZoomPanBehavior.zoomLevel * 0.6 + 3;
-      zoomLevel.value = mapZoomPanBehavior.zoomLevel;
-    });
-
     await Get.offAllNamed<void>('/');
-  }
 
-  int _abgrToArgb(int argbColor) {
-    final r = (argbColor >> 16) & 0xFF;
-    final b = argbColor & 0xFF;
-    return (argbColor & 0xFF00FF00) | (b << 16) | r;
+    await updateEQData();
   }
 
   Future<void> updateEQData() async {
-    final now = DateTime.now().toLocal().add(
-          Duration(
-            milliseconds: offset.value,
-            seconds: -2,
-          ),
-        );
-    final df = DateFormat('yyyyMMddHHmmss');
     try {
       final res = await http.get(
         Uri.parse(
-          'http://www.kmoni.bosai.go.jp/webservice/hypo/eew/${df.format(now)}.json',
+          webApiUrlGenerator.JsonEewBase(kyoshinMonitorlibTime.now.value),
         ),
       );
-      //'http://www.kmoni.bosai.go.jp/webservice/hypo/eew/20220220195006.json'));
-
-      final jsonres = jsonDecode(res.body) as Map<String, dynamic>;
-      if (jsonres['result']['message'] == 'データがありません') {
-        // 平常運転なり
-        //final parsedResponse = NormalApiResponse.fromJson(jsonres);
-        //logger.i(parsedResponse.result.message);
-      } else {
-        //なんかあった
-        final pres = EEWApiResponse.fromJson(jsonres); //? Parsed Response
+      final kyoshinEEW =
+          KyoshinEEW.fromJson(jsonDecode(res.body) as Map<String, dynamic>);
+      if (kyoshinEEW.result.hasData) {
         final msg =
-            '緊急地震速報(${pres.alertFlg}) ${pres.reportTime}\nマグニチュード${pres.magunitude}\n深さ${pres.depth}\n${pres.regionName}で地震';
+            '緊急地震速報(第${kyoshinEEW.reportNum})報 ${(kyoshinEEW.reportTime != null) ? df.format(kyoshinEEW.reportTime!) : ""}\n'
+            'マグニチュード${kyoshinEEW.magnitude}\n'
+            '深さ${kyoshinEEW.depth}\n'
+            '${kyoshinEEW.regionName}で地震';
+
         logger.i(msg);
-      }
+      } else {}
     } catch (e) {
       logger.e(e);
     }
     // PGA Update
-    {
-      final df = DateFormat('yyyyMMdd/yyyyMMddHHmmss');
+    try {
       final res = await http.get(
         Uri.parse(
-          'http://www.kmoni.bosai.go.jp/data/map_img/RealTimeImg/jma_s/${df.format(now)}.jma_s.gif',
+          webApiUrlGenerator.RealtimeBase(
+            dt: kyoshinMonitorlibTime.now.value,
+            type: RealtimeDataType.Shindo,
+            sorb: 's',
+          ),
         ),
       );
       if (res.statusCode != 200) {
         logger.wtf('リアルタイム震度の画像を取得できませんでした。(status: ${res.statusCode})');
-        return;
       }
-      final image = Image.decodeGif(res.bodyBytes);
-      if (image == null) {
-        logger.wtf('Image was Null!!');
-        return;
-      }
-      //画像解析開始
-      // 仮に入れておくAnalyzedPointたち
-      final temp = <AnalyzedPoint>[];
-      //logger.w(OBSPoints.length);
-      zoomLevel.value = mapZoomPanBehavior.zoomLevel;
-      //logger.d(zoomLevel.value);
-      for (final OBSPoint in OBSPoints) {
-        //logger.d('${OBSPoint.x},${OBSPoint.y}');
-        final pixel32 = image.getPixelSafe(OBSPoint.x, OBSPoint.y);
-        //print(pixel32);
-        // 16進数のカラーコード
-        final hex = _abgrToArgb(pixel32).toRadixString(16);
-        // hex[0,1] = a, [2,3] = r, [4,5] = g, [6.7] =b
-        if (hex == '0') {
-          continue;
-        } else {
-          final r = int.parse(hex[2] + hex[3], radix: 16);
-          final g = int.parse(hex[4] + hex[5], radix: 16);
-          final b = int.parse(hex[6] + hex[7], radix: 16);
-          //logger.d('$r,$g,$b');
-          final tofind = <int>[r, g, b];
-          //? 色を探索
-          colorMap.forEach((key, value) {
-            if (key[0] == tofind[0] &&
-                key[1] == tofind[1] &&
-                key[2] == tofind[2]) {
-              //logger.d('FIND! $value');
-              //OBSPoint.shindo = value;
-              temp.add(
-                AnalyzedPoint(
-                  code: OBSPoint.code,
-                  name: OBSPoint.name,
-                  pref: OBSPoint.pref,
-                  lat: OBSPoint.lat,
-                  lon: OBSPoint.lon,
-                  x: OBSPoint.x,
-                  y: OBSPoint.y,
-                  color: Color.fromRGBO(r, g, b, 1),
-                  shindo: value,
-                  zoomLevel: zoomLevel.value,
-                ),
-              );
-            }
-          });
-        }
-      }
-      analyzedPoint.value = temp;
-      // Widgetは読み込み終わってるかを確認してから更新!
-      try {
-        mapShapeLayerController.updateMarkers(
-          List<int>.generate(analyzedPoint.length - 1, (i) => i + 1),
-        );
-      } catch (e) {}
-      lastUpdateTimeString.value =
-          DateFormat('yyyy/MM/dd HH:mm:ss').format(now);
+      analyzedPoint.value =
+          jmaImageParser.imageParser(bodyBytes: res.bodyBytes);
+      mapShapeLayerController.updateMarkers(
+        List<int>.generate(analyzedPoint.length, (i) => i),
+      );
+      lastUpdateTimeString.value = DateFormat('yyyy/MM/dd HH:mm:ss')
+          .format(kyoshinMonitorlibTime.now.value);
+    } catch (e) {
+      logger.w(e);
+      analyzedPoint.value = jmaImageParser.imageParser(bodyBytes: []);
+      mapShapeLayerController.updateMarkers(
+        List<int>.generate(analyzedPoint.length, (i) => i),
+      );
+      lastUpdateTimeString.value = DateFormat('yyyy/MM/dd HH:mm:ss')
+          .format(kyoshinMonitorlibTime.now.value);
     }
   }
 
   Future<void> updateEQLog() async {
-    const url = 'https://typhoon.yahoo.co.jp/weather/jp/earthquake/list/';
-    final target = Uri.parse(url);
-
-    final res = await http.get(target);
-    if (res.statusCode != 200) {
-      print('ERROR');
-      return;
-    }
-    final doc = parse(res.body);
-    final result = doc.querySelectorAll(
-      '#main > .yjw_main_md > #eqhist > table > tbody > tr',
-    );
-    final eqTemp = <EQLog>[];
-    for (final e in result) {
-      final temp = <String>[];
-      for (final el in e.children) {
-        temp.add(el.text);
+    try {
+      const url = 'https://typhoon.yahoo.co.jp/weather/jp/earthquake/list/';
+      final res = await http.get(Uri.parse(url));
+      if (res.statusCode != 200) {
+        print('ERROR');
+        return;
       }
-      try {
-        eqTemp.add(EQLog.fromList(temp));
-      } catch (_) {}
+      final doc = parse(res.body);
+      final result = doc.querySelectorAll(
+        '#main > .yjw_main_md > #eqhist > table > tbody > tr',
+      );
+      final eqTemp = <EQLog>[];
+      for (final e in result) {
+        final temp = <String>[];
+        for (final el in e.children) {
+          temp.add(el.text);
+        }
+        try {
+          eqTemp.add(EQLog.fromList(temp));
+        } catch (_) {}
+      }
+      await HomeWidget.saveWidgetData<String>(
+        'max_intensity',
+        eqTemp[0].maxIntensity,
+      );
+      await HomeWidget.saveWidgetData<String>('place', eqTemp[0].place);
+      await HomeWidget.saveWidgetData<String>(
+        'magnitude',
+        'M${eqTemp[0].magunitude}',
+      );
+      await HomeWidget.saveWidgetData<String>(
+        'time',
+        DateFormat('yyyy/MM/dd HH:mm頃').format(eqTemp[0].time),
+      );
+      await HomeWidget.updateWidget(
+        androidName: 'latestwidget',
+      );
+      eqLog.value = eqTemp;
+    } catch (e) {
+      logger.e(e);
     }
-    await HomeWidget.saveWidgetData<String>(
-      'max_intensity',
-      eqTemp[0].maxIntensity,
-    );
-    await HomeWidget.saveWidgetData<String>('place', eqTemp[0].place);
-    await HomeWidget.saveWidgetData<String>(
-      'magnitude',
-      'M${eqTemp[0].magunitude}',
-    );
-    await HomeWidget.saveWidgetData<String>(
-      'time',
-      DateFormat('yyyy/MM/dd HH:mm頃').format(eqTemp[0].time),
-    );
-    await HomeWidget.updateWidget(
-      androidName: 'latestwidget',
-    );
-    eqLog.value = eqTemp;
   }
 }
 

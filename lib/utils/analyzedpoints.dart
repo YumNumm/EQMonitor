@@ -10,7 +10,7 @@ class AnalyzedPoint extends GetxController {
   final int x;
   final int y;
   Color color;
-  double shindo;
+  double? shindo;
   double zoomLevel;
   AnalyzedPoint({
     required this.code,
