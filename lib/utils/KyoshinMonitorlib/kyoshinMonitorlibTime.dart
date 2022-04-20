@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:get/get.dart';
@@ -15,14 +16,6 @@ class KyoshinMonitorlibTime extends GetxController {
   /// NIEDと時刻を同期するまでのカウンター
   RxInt timeUpdateCounter = 0.obs;
 
-  @override
-  Future<KyoshinMonitorlibTime> onInit() async {
-    super.onInit();
-    now.value = await generateNowTime();
-    timeUpdateCounter.value = 60;
-    return this;
-  }
-
   /// ## 強震モニタでの最新時刻を取得する。
   Future<DateTime> generateNowTime() async {
     try {
@@ -32,14 +25,18 @@ class KyoshinMonitorlibTime extends GetxController {
             'http://www.kmoni.bosai.go.jp/webservice/server/pros/latest.json',
           ),
         );
+        logger.i(res.body);
         if (res.statusCode != 200) {}
         final df = DateFormat('yyyy/MM/dd hh:mm:ss');
         final j =
             json.decode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
         final dt = df.parseStrict(j['latest_time'].toString());
         now.value = dt;
+        timeUpdateCounter.value = 10;
         return dt;
       } else {
+        timeUpdateCounter.value--;
+        now.value = now.value.add(const Duration(seconds: 1));
         return now.value;
       }
     } catch (e) {

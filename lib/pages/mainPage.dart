@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -111,117 +112,135 @@ class IntroPage extends StatelessWidget {
             children: <Widget>[
               Stack(
                 children: [
-                  SfMaps(
-                    layers: <MapLayer>[
-                      MapShapeLayer(
-                        source: MapData.dataSource,
-                        zoomPanBehavior: earthQuake.mapZoomPanBehavior,
-                        initialMarkersCount: earthQuake.analyzedPoint.length,
-                        loadingBuilder: (context) => const Center(
-                          child: CircularProgressIndicator.adaptive(
-                            strokeWidth: 5,
-                          ),
-                        ),
-                        markerBuilder: (BuildContext context, int index) {
-                          final iconSize = earthQuake.iconSize.value;
-                          return MapMarker(
-                            latitude: earthQuake.analyzedPoint[index].lat,
-                            longitude: earthQuake.analyzedPoint[index].lon,
-                            child: (earthQuake.zoomLevel > 20)
-                                ? Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        width: earthQuake.iconSize.value,
-                                        height: earthQuake.iconSize.value,
-                                        decoration: (earthQuake
-                                                    .analyzedPoint[index]
-                                                    .shindo ==
-                                                null)
-                                            ? const BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: Colors.grey,
-                                              )
-                                            : BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: earthQuake
-                                                    .analyzedPoint[index].color,
-                                              ),
-                                      ),
-                                      Text(
-                                        (earthQuake.analyzedPoint[index]
-                                                    .shindo ==
-                                                null)
-                                            ? earthQuake
-                                                .analyzedPoint[index].name
-                                            : '${earthQuake.analyzedPoint[index].name}\n震度: ${earthQuake.analyzedPoint[index].shindo}',
-                                      )
-                                    ],
-                                  )
-                                : Container(
-                                    width: earthQuake.iconSize.value,
-                                    height: earthQuake.iconSize.value,
-                                    decoration: (earthQuake
-                                                .analyzedPoint[index].shindo ==
-                                            null)
-                                        ? BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border:
-                                                Border.all(color: Colors.grey),
-                                          )
-                                        : BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: earthQuake
-                                                .analyzedPoint[index].color,
-                                          ),
-                                  ),
-                          );
-                        },
-                        controller: earthQuake.mapShapeLayerController,
-                        sublayers: [
-                          MapCircleLayer(
-                            circles: List<MapCircle>.generate(
-                              mapData.circles.length,
-                              (index) => MapCircle(
-                                center: mapData.circles[index],
-                                radius: 30,
-                              ),
-                            ).toSet(),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Container(
-                      margin: const EdgeInsets.all(10),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Container(
-                          color: Colors.white.withOpacity(0.15),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(
-                              sigmaX: 10,
-                              sigmaY: 10,
-                            ),
-                            child: Obx(
-                              () => Container(
-                                margin: const EdgeInsets.all(10),
-                                child: Text(
-                                  '${earthQuake.lastUpdateTimeString.value}\n観測点: ${earthQuake.analyzedPoint.length}点\n倍率: ${earthQuake.zoomLevel.value.toStringAsFixed(1)}',
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Center(
+                              child: Obx(
+                                () => AutoSizeText(
+                                  earthQuake.msg.value,
                                 ),
                               ),
                             ),
                           ),
+                          Container(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Container(
+                                margin: const EdgeInsets.all(2),
+                                color: Colors.white.withOpacity(0.15),
+                                child: BackdropFilter(
+                                  filter: ImageFilter.blur(
+                                    sigmaX: 10,
+                                    sigmaY: 10,
+                                  ),
+                                  child: Obx(
+                                    () => Container(
+                                      margin: const EdgeInsets.all(10),
+                                      child: Text(
+                                        '${earthQuake.lastUpdateTimeString.value}\n観測点: ${earthQuake.numberOfAnalyzedPoint.value}点\n倍率: ${earthQuake.zoomLevel.value.toStringAsFixed(1)}',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Expanded(
+                        child: SfMaps(
+                          layers: <MapLayer>[
+                            MapShapeLayer(
+                              source: MapData.dataSource,
+                              zoomPanBehavior: earthQuake.mapZoomPanBehavior,
+                              initialMarkersCount:
+                                  earthQuake.analyzedPoint.length,
+                              loadingBuilder: (context) => const Center(
+                                child: CircularProgressIndicator.adaptive(
+                                  strokeWidth: 5,
+                                ),
+                              ),
+                              markerBuilder: (BuildContext context, int index) {
+                                final iconSize = earthQuake.iconSize.value;
+                                return MapMarker(
+                                  latitude: earthQuake.analyzedPoint[index].lat,
+                                  longitude:
+                                      earthQuake.analyzedPoint[index].lon,
+                                  child: (earthQuake.zoomLevel > 20)
+                                      ? Stack(
+                                          children: [
+                                            Align(
+                                              child: Container(
+                                                width:
+                                                    earthQuake.iconSize.value,
+                                                height:
+                                                    earthQuake.iconSize.value,
+                                                decoration: (earthQuake
+                                                            .analyzedPoint[
+                                                                index]
+                                                            .shindo ==
+                                                        null)
+                                                    ? const BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: Colors.grey,
+                                                      )
+                                                    : BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: earthQuake
+                                                            .analyzedPoint[
+                                                                index]
+                                                            .color,
+                                                      ),
+                                              ),
+                                            ),
+                                            Align(
+                                              child: Text(
+                                                (earthQuake.analyzedPoint[index]
+                                                            .shindo ==
+                                                        null)
+                                                    ? earthQuake
+                                                        .analyzedPoint[index]
+                                                        .name
+                                                    : '${earthQuake.analyzedPoint[index].name}\n震度: ${earthQuake.analyzedPoint[index].shindo}',
+                                              ),
+                                            )
+                                          ],
+                                        )
+                                      : Container(
+                                          width: earthQuake.iconSize.value,
+                                          height: earthQuake.iconSize.value,
+                                          decoration: (earthQuake
+                                                      .analyzedPoint[index]
+                                                      .shindo ==
+                                                  null)
+                                              ? BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  border: Border.all(
+                                                    color: Colors.grey,
+                                                  ),
+                                                )
+                                              : BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: earthQuake
+                                                      .analyzedPoint[index]
+                                                      .color,
+                                                ),
+                                        ),
+                                );
+                              },
+                              controller: earthQuake.mapShapeLayerController,
+                            ),
+                          ],
                         ),
                       ),
-                    ),
+                    ],
                   ),
                   Align(
-                    alignment: Alignment.centerRight,
+                    alignment: Alignment.bottomLeft,
                     child: Container(
                       margin: const EdgeInsets.all(10),
                       child: ClipRRect(
@@ -235,8 +254,9 @@ class IntroPage extends StatelessWidget {
                             ),
                             child: Container(
                               margin: const EdgeInsets.all(10),
-                              child: Image.network(
-                                'http://www.kmoni.bosai.go.jp/data/map_img/ScaleImg/nied_jma_s_w_scale.gif',
+                              child: Image.asset(
+                                'assets/nied_jma_s_w_scale.gif',
+                                height: context.height * 0.2,
                               ),
                             ),
                           ),
@@ -263,6 +283,31 @@ class IntroPage extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(0, 2, 0, 0),
                     decoration: const BoxDecoration(),
                     child: ListTile(
+                      onTap: () async {
+                        await Get.dialog<void>(
+                          AlertDialog(
+                            title: Text(df.format(eqLog.time)),
+                            content: Row(
+                              children: [
+                                Image.asset(
+                                  'assets/intensity/${(eqLog.maxIntensity == "---") ? "unknown" : eqLog.maxIntensity}.PNG',
+                                  fit: BoxFit.scaleDown,
+                                  height: context.height * 0.1,
+                                ),
+                                SizedBox(width: context.width * 0.05),
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('M${eqLog.magunitude}'),
+                                    Text('震源地: ${eqLog.place}'),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                       leading: ClipRRect(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(4)),
