@@ -32,6 +32,7 @@ class EarthQuake extends GetxController {
   final JmaImageParser jmaImageParser = JmaImageParser();
 
   final RxInt offset = 0.obs;
+  final RxInt numberOfAnalyzedPoint = 0.obs;
   final RxString url = ''.obs;
   late Timer timer;
   late Timer timer2;
@@ -47,11 +48,16 @@ class EarthQuake extends GetxController {
     maxZoomLevel: 60,
     enableDoubleTapZooming: true,
   );
+  final RxString msg = '緊急地震速報は発表されていません'.obs;
   final df = DateFormat('yyyyMMdd/yyyyMMddHHmmss');
 
   @override
   Future<void> onInit() async {
     super.onInit();
+    Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) async => await kyoshinMonitorlibTime.generateNowTime(),
+    );
     // 仮で空っぽの観測点を配置しておく
     for (final obsPoint in OBSPoints) {
       analyzedPoint.add(
@@ -108,13 +114,13 @@ class EarthQuake extends GetxController {
       final kyoshinEEW =
           KyoshinEEW.fromJson(jsonDecode(res.body) as Map<String, dynamic>);
       if (kyoshinEEW.result.hasData) {
-        final msg =
+        msg.value =
             '緊急地震速報(第${kyoshinEEW.reportNum})報 ${(kyoshinEEW.reportTime != null) ? df.format(kyoshinEEW.reportTime!) : ""}\n'
             'マグニチュード${kyoshinEEW.magnitude}\n'
             '深さ${kyoshinEEW.depth}\n'
             '${kyoshinEEW.regionName}で地震';
 
-        logger.i(msg);
+        logger.i(msg.value);
       } else {}
     } catch (e) {
       logger.e(e);
@@ -140,6 +146,8 @@ class EarthQuake extends GetxController {
       );
       lastUpdateTimeString.value = DateFormat('yyyy/MM/dd HH:mm:ss')
           .format(kyoshinMonitorlibTime.now.value);
+      numberOfAnalyzedPoint.value =
+          analyzedPoint.where((p0) => p0.shindo != null).length;
     } catch (e) {
       logger.w(e);
       analyzedPoint.value = jmaImageParser.imageParser(bodyBytes: []);
@@ -148,6 +156,7 @@ class EarthQuake extends GetxController {
       );
       lastUpdateTimeString.value = DateFormat('yyyy/MM/dd HH:mm:ss')
           .format(kyoshinMonitorlibTime.now.value);
+      numberOfAnalyzedPoint.value = 0;
     }
   }
 

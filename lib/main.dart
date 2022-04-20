@@ -48,6 +48,8 @@ Future<void> main() async {
       Get.put<SharedPreferences>(await SharedPreferences.getInstance());
   await Firebase.initializeApp();
   await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  
   Get.put<Logger>(
     Logger(
       level: Level.debug,
@@ -66,25 +68,26 @@ Future<void> main() async {
   Get.put<MapData>(MapData());
   Get.put<Messaging>(Messaging());
   Get.put<AuthStateUtils>(AuthStateUtils());
-  Get.put<KyoshinMonitorlibTime>(await KyoshinMonitorlibTime().onInit());
+  Get.put<KyoshinMonitorlibTime>(KyoshinMonitorlibTime());
   Get.put<EarthQuake>(EarthQuake());
   Get.put<VolumeController>(VolumeController());
   Get.put<FlutterSecureStorage>(const FlutterSecureStorage());
   runApp(
     DevicePreview(
       enabled: prefs.getBool('showDevicePreview') ?? false,
-      builder: (context) => const EQApp(),
+      builder: (context) => EQApp(),
     ),
   );
 }
 
 class EQApp extends StatelessWidget {
-  const EQApp({Key? key}) : super(key: key);
+  EQApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'EQMonitor',
-      theme: lightTheme(),
+      theme: lightTheme().copyWith(),
       darkTheme: darkTheme(),
       locale: DevicePreview.locale(context),
       localizationsDelegates: const [
