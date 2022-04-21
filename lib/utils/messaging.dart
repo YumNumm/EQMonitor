@@ -52,12 +52,10 @@ class Messaging extends GetxController {
         AwesomeNotifications().requestPermissionToSendNotifications();
       }
     });
-    if (prefs.getBool('hasSubscribed') ?? false) {
       for (final e in Topics.values) {
         await messaging.subscribeToTopic(e.name);
       }
       await prefs.setBool('hasSubscribed', true);
-    }
 
     isInitalizing.value = false;
     token.value =
