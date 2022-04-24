@@ -350,6 +350,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "flutter_markdown",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_markdown-0.6.10",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_native_splash",
       "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_native_splash-2.1.6",
       "packageUri": "lib/",
@@ -592,6 +598,12 @@
     {
       "name": "lottie",
       "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/lottie-1.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "markdown",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/markdown-5.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -1124,7 +1136,7 @@
       "languageVersion": "2.15"
     }
   ],
-  "generated": "2022-04-24T05:50:41.160075Z",
+  "generated": "2022-04-24T14:32:29.840936Z",
   "generator": "pub",
   "generatorVersion": "2.16.2"
 }
