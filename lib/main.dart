@@ -3,6 +3,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:eqmonitor/db/notificationSettings/notificationSettings.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/kyoshinMonitorlibTime.dart';
+import 'package:eqmonitor/utils/map/customZoomPanBehavior.dart';
 import 'package:eqmonitor/utils/settings/notificationSettings.dart';
 import 'package:eqmonitor/utils/settings/volumeController.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -48,7 +49,8 @@ Future<void> main() async {
   final prefs =
       Get.put<SharedPreferences>(await SharedPreferences.getInstance());
   await Firebase.initializeApp();
-  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
+  await FirebaseCrashlytics.instance
+      .setCrashlyticsCollectionEnabled(!kDebugMode);
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
   Get.put<Logger>(
@@ -70,6 +72,7 @@ Future<void> main() async {
   Get.put<Messaging>(Messaging());
   Get.put<AuthStateUtils>(AuthStateUtils());
   Get.put<KyoshinMonitorlibTime>(KyoshinMonitorlibTime());
+  Get.put<CustomZoomPanBehavior>(CustomZoomPanBehavior());
   Get.put<EarthQuake>(EarthQuake());
   Get.put<VolumeController>(VolumeController());
   Get.put<FlutterSecureStorage>(const FlutterSecureStorage());

@@ -9,6 +9,7 @@ import 'package:eqmonitor/utils/KyoshinMonitorlib/UrlGenerator/RealTimeDataType.
 import 'package:eqmonitor/utils/KyoshinMonitorlib/UrlGenerator/WebApiUrlGenerators.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/imageParser/jmaParser.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/kyoshinMonitorlibTime.dart';
+import 'package:eqmonitor/utils/map/customZoomPanBehavior.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:home_widget/home_widget.dart';
@@ -44,10 +45,9 @@ class EarthQuake extends GetxController {
   final RxString lastUpdateTimeString = '更新待ち'.obs;
   final MapShapeLayerController mapShapeLayerController =
       MapShapeLayerController();
-  final MapZoomPanBehavior mapZoomPanBehavior = MapZoomPanBehavior(
-    maxZoomLevel: 60,
-    enableDoubleTapZooming: true,
-  );
+  final MapZoomPanBehavior mapZoomPanBehavior = CustomZoomPanBehavior()
+    ..enableDoubleTapZooming
+    ..maxZoomLevel = 50;
   final RxString msg = '緊急地震速報は発表されていません'.obs;
   final df = DateFormat('yyyyMMdd/yyyyMMddHHmmss');
 
@@ -83,11 +83,11 @@ class EarthQuake extends GetxController {
       logger.w(e.toString());
     }
 
-    timer = Timer.periodic(
+    Timer.periodic(
       const Duration(milliseconds: 1000),
       (_) async => updateEQData(),
     );
-    timer2 = Timer.periodic(const Duration(milliseconds: 250), (_) async {
+    Timer.periodic(const Duration(milliseconds: 250), (_) async {
       iconSize.value = mapZoomPanBehavior.zoomLevel * 0.6 + 3;
       jmaImageParser.zoomLevel.value =
           zoomLevel.value = mapZoomPanBehavior.zoomLevel;
