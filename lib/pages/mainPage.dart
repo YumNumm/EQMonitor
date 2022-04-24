@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:eqmonitor/utils/updater/appUpdate.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
@@ -16,6 +18,7 @@ class IntroPage extends StatelessWidget {
   IntroPage({Key? key}) : super(key: key);
   final Logger logger = Get.find<Logger>();
   final EarthQuake earthQuake = Get.find<EarthQuake>();
+  final AppUpdate appUpdate = Get.find<AppUpdate>();
   final Messaging messaging = Get.find<Messaging>();
   final PackageInfo packageInfo = Get.find<PackageInfo>();
   final Key mapKey = const Key('mapKey');
@@ -29,6 +32,31 @@ class IntroPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('EQMonitor Ver.α (Build${packageInfo.buildNumber})'),
         actions: [
+          Obx(
+            () => (appUpdate.hasUpdate.value)
+                ? IconButton(
+                    icon: const Icon(Icons.system_update),
+                    color: Colors.redAccent,
+                    tooltip: 'アップデートがあります',
+                    onPressed: () async {
+                      await Get.dialog<void>(
+                        AlertDialog(
+                          title: const Text('アップデートがあります'),
+                          content: Column(
+                            children: [
+                              Text(appUpdate.updateApi.title),
+                              Markdown(
+                                data: appUpdate.updateApi.body.toString(),
+                                selectable: true,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  )
+                : Container(),
+          ),
           IconButton(
             onPressed: () async {
               await Get.toNamed<void>('/setting');

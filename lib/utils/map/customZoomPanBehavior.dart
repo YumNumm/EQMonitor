@@ -1,4 +1,3 @@
-import 'package:eqmonitor/utils/earthquake.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
@@ -7,7 +6,7 @@ import 'package:syncfusion_flutter_maps/maps.dart';
 
 class CustomZoomPanBehavior extends MapZoomPanBehavior {
   final Logger logger = Get.find<Logger>();
-  final EarthQuake earthQuake = Get.find<EarthQuake>();
+  //!final EarthQuake earthQuake = Get.find<EarthQuake>();
   final Path path = Path();
   Size renderBoxSize = Size.infinite;
   final RxDouble dy = 0.0.obs;
@@ -38,6 +37,7 @@ class CustomZoomPanBehavior extends MapZoomPanBehavior {
 
   @override
   void paint(PaintingContext context, Offset offset) {
+    /*
     print('PAINT');
     renderBoxSize = renderBox.size;
 
@@ -68,7 +68,7 @@ class CustomZoomPanBehavior extends MapZoomPanBehavior {
       );
 
     context.canvas.restore();
-    super.paint(context, offset);
+    super.paint(context, offset);*/
   }
 
   // 表示領域からdx,dyを計算し、更新

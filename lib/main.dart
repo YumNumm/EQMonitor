@@ -6,6 +6,7 @@ import 'package:eqmonitor/utils/KyoshinMonitorlib/kyoshinMonitorlibTime.dart';
 import 'package:eqmonitor/utils/map/customZoomPanBehavior.dart';
 import 'package:eqmonitor/utils/settings/notificationSettings.dart';
 import 'package:eqmonitor/utils/settings/volumeController.dart';
+import 'package:eqmonitor/utils/updater/appUpdate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -75,6 +76,7 @@ Future<void> main() async {
   Get.put<CustomZoomPanBehavior>(CustomZoomPanBehavior());
   Get.put<EarthQuake>(EarthQuake());
   Get.put<VolumeController>(VolumeController());
+  Get.put<AppUpdate>(AppUpdate());
   Get.put<FlutterSecureStorage>(const FlutterSecureStorage());
   runApp(
     DevicePreview(
@@ -85,7 +87,7 @@ Future<void> main() async {
 }
 
 class EQApp extends StatelessWidget {
-  EQApp({Key? key}) : super(key: key);
+  const EQApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
