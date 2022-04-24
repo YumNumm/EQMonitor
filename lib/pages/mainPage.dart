@@ -18,6 +18,7 @@ class IntroPage extends StatelessWidget {
   final EarthQuake earthQuake = Get.find<EarthQuake>();
   final Messaging messaging = Get.find<Messaging>();
   final PackageInfo packageInfo = Get.find<PackageInfo>();
+  final Key mapKey = const Key('mapKey');
   final MapData mapData = Get.find<MapData>();
   final RxInt page = 0.obs;
 
@@ -53,58 +54,6 @@ class IntroPage extends StatelessWidget {
           ],
         ),
       ),
-      /*bottomSheet: SolidBottomSheet(
-        controller: earthQuake.solidController,
-        smoothness: Smoothness.high,
-        elevation: 0,
-        body: Obx(
-          () => ListView.builder(
-            itemCount: earthQuake.eqLog.length - 1,
-            itemBuilder: (context, index) {
-              final eq = earthQuake.eqLog[index + 1];
-              final dt = DateFormat('yyyy/MM/dd HH:mm').format(eq.time);
-              return ListTile(
-                title: Text('${index + 1}: ${eq.place}'),
-                subtitle: Text('M${eq.magunitude}, $dt頃'),
-                trailing: Text('震度${eq.maxIntensity}'),
-              );
-            },
-          ),
-        ),
-        headerBar: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              margin: const EdgeInsets.fromLTRB(15, 5, 0, 0),
-              child: const Text(
-                '直近の地震',
-                style: TextStyle(color: Colors.grey),
-              ),
-            ),
-            ListTile(
-              tileColor: Colors.transparent,
-              hoverColor: Colors.transparent,
-              title: Obx(
-                () => Text(
-                  earthQuake.eqLog[0].place,
-                  style: context.textTheme.titleLarge!
-                      .apply(backgroundColor: Colors.transparent),
-                ),
-              ),
-              subtitle: Obx(
-                () => Text(
-                  'M${earthQuake.eqLog[0].magunitude} '
-                  '${DateFormat("yyyy/MM/dd HH:mm").format(earthQuake.eqLog[0].time)}頃',
-                ),
-              ),
-              trailing:
-                  Obx(() => Text('震度${earthQuake.eqLog[0].maxIntensity}')),
-            ),
-            const Divider(),
-          ],
-        ),
-      ),*/
       body: SafeArea(
         child: Obx(
           () => IndexedStack(
@@ -141,7 +90,9 @@ class IntroPage extends StatelessWidget {
                                     () => Container(
                                       margin: const EdgeInsets.all(10),
                                       child: Text(
-                                        '${earthQuake.lastUpdateTimeString.value}\n観測点: ${earthQuake.numberOfAnalyzedPoint.value}点\n倍率: ${earthQuake.zoomLevel.value.toStringAsFixed(1)}',
+                                        '${earthQuake.lastUpdateTimeString.value}\n'
+                                        '観測点: ${earthQuake.numberOfAnalyzedPoint.value}点\n'
+                                        '倍率: ${earthQuake.zoomLevel.value.toStringAsFixed(1)}',
                                       ),
                                     ),
                                   ),
@@ -152,89 +103,98 @@ class IntroPage extends StatelessWidget {
                         ],
                       ),
                       Expanded(
-                        child: SfMaps(
-                          layers: <MapLayer>[
-                            MapShapeLayer(
-                              source: MapData.dataSource,
-                              zoomPanBehavior: earthQuake.mapZoomPanBehavior,
-                              initialMarkersCount:
-                                  earthQuake.analyzedPoint.length,
-                              loadingBuilder: (context) => const Center(
-                                child: CircularProgressIndicator.adaptive(
-                                  strokeWidth: 5,
+                        child: Obx(
+                          () => SfMaps(
+                            key: mapKey,
+                            layers: <MapLayer>[
+                              MapShapeLayer(
+                                source: MapData.dataSource,
+                                zoomPanBehavior: earthQuake.mapZoomPanBehavior,
+                                initialMarkersCount:
+                                    earthQuake.analyzedPoint.length,
+                                loadingBuilder: (context) => const Center(
+                                  child: CircularProgressIndicator.adaptive(
+                                    strokeWidth: 5,
+                                  ),
                                 ),
-                              ),
-                              markerBuilder: (BuildContext context, int index) {
-                                final iconSize = earthQuake.iconSize.value;
-                                return MapMarker(
-                                  latitude: earthQuake.analyzedPoint[index].lat,
-                                  longitude:
-                                      earthQuake.analyzedPoint[index].lon,
-                                  child: (earthQuake.zoomLevel > 20)
-                                      ? Stack(
-                                          children: [
-                                            Align(
-                                              child: Container(
-                                                width:
-                                                    earthQuake.iconSize.value,
-                                                height:
-                                                    earthQuake.iconSize.value,
-                                                decoration: (earthQuake
-                                                            .analyzedPoint[
-                                                                index]
-                                                            .shindo ==
-                                                        null)
-                                                    ? const BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color: Colors.grey,
-                                                      )
-                                                    : BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color: earthQuake
-                                                            .analyzedPoint[
-                                                                index]
-                                                            .color,
-                                                      ),
-                                              ),
-                                            ),
-                                            Align(
-                                              child: Text(
-                                                (earthQuake.analyzedPoint[index]
-                                                            .shindo ==
-                                                        null)
-                                                    ? earthQuake
-                                                        .analyzedPoint[index]
-                                                        .name
-                                                    : '${earthQuake.analyzedPoint[index].name}\n震度: ${earthQuake.analyzedPoint[index].shindo}',
-                                              ),
-                                            )
-                                          ],
-                                        )
-                                      : Container(
-                                          width: earthQuake.iconSize.value,
-                                          height: earthQuake.iconSize.value,
-                                          decoration: (earthQuake
-                                                      .analyzedPoint[index]
-                                                      .shindo ==
-                                                  null)
-                                              ? BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  border: Border.all(
-                                                    color: Colors.grey,
-                                                  ),
-                                                )
-                                              : BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: earthQuake
-                                                      .analyzedPoint[index]
-                                                      .color,
+                                markerBuilder:
+                                    (BuildContext context, int index) {
+                                  final iconSize = earthQuake.iconSize.value;
+                                  return MapMarker(
+                                    latitude:
+                                        earthQuake.analyzedPoint[index].lat,
+                                    longitude:
+                                        earthQuake.analyzedPoint[index].lon,
+                                    child: (earthQuake.zoomLevel > 20)
+                                        ? Stack(
+                                            children: [
+                                              Align(
+                                                child: Container(
+                                                  width:
+                                                      earthQuake.iconSize.value,
+                                                  height:
+                                                      earthQuake.iconSize.value,
+                                                  decoration: (earthQuake
+                                                              .analyzedPoint[
+                                                                  index]
+                                                              .shindo ==
+                                                          null)
+                                                      ? const BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color: Colors.grey,
+                                                        )
+                                                      : BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color: earthQuake
+                                                              .analyzedPoint[
+                                                                  index]
+                                                              .color,
+                                                        ),
                                                 ),
-                                        ),
-                                );
-                              },
-                              controller: earthQuake.mapShapeLayerController,
-                            ),
-                          ],
+                                              ),
+                                              Align(
+                                                child: Text(
+                                                  (earthQuake
+                                                              .analyzedPoint[
+                                                                  index]
+                                                              .shindo ==
+                                                          null)
+                                                      ? earthQuake
+                                                          .analyzedPoint[index]
+                                                          .name
+                                                      : '${earthQuake.analyzedPoint[index].name}\n震度: ${earthQuake.analyzedPoint[index].shindo}',
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        : Container(
+                                            width: earthQuake.iconSize.value,
+                                            height: earthQuake.iconSize.value,
+                                            decoration: (earthQuake
+                                                        .analyzedPoint[index]
+                                                        .shindo ==
+                                                    null)
+                                                ? BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                      color: Colors.grey,
+                                                    ),
+                                                  )
+                                                : BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: earthQuake
+                                                        .analyzedPoint[index]
+                                                        .color,
+                                                  ),
+                                          ),
+                                  );
+                                },
+                                controller: earthQuake.mapShapeLayerController,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
