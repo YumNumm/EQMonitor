@@ -1,3 +1,4 @@
+import 'package:eqmonitor/utils/earthquake.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
@@ -6,7 +7,6 @@ import 'package:syncfusion_flutter_maps/maps.dart';
 
 class CustomZoomPanBehavior extends MapZoomPanBehavior {
   final Logger logger = Get.find<Logger>();
-  //!final EarthQuake earthQuake = Get.find<EarthQuake>();
   final Path path = Path();
   Size renderBoxSize = Size.infinite;
   final RxDouble dy = 0.0.obs;
@@ -31,18 +31,14 @@ class CustomZoomPanBehavior extends MapZoomPanBehavior {
   @override
   void onPanning(MapPanDetails details) {
     if (details.localFocalPoint == null) return;
-
     super.onPanning(details);
   }
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    /*
-    print('PAINT');
-    renderBoxSize = renderBox.size;
+    /*renderBoxSize = renderBox.size;
 
     calc();
-
     context.canvas.save();
     context.canvas.translate(offset.dx, offset.dy);
     context.canvas

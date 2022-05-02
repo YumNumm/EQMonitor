@@ -11,7 +11,6 @@ final RxBool isDarkMode = Get.isDarkMode.obs;
 bool isDarkmode = Get.isDarkMode;
 Widget topSettingPage() {
   return SettingsList(
-    shrinkWrap: false,
     sections: [
       SettingsSection(
         //title: const Text(''),

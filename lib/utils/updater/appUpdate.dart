@@ -34,5 +34,6 @@ class AppUpdate extends GetxController {
       updateApi = resData;
       hasUpdate.value = true;
     }
+    super.onInit();
   }
 }

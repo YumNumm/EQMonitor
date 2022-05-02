@@ -42,10 +42,11 @@ class Messaging extends GetxController {
     );
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     await AwesomeNotifications().initialize(
-      null,
+      "resource://drawable/icon_monochrome",
       notificationChannels,
       channelGroups: channelGroups,
       debug: kDebugMode,
+
     );
     await AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {

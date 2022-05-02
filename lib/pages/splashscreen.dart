@@ -15,7 +15,6 @@ class SplashScreen extends StatelessWidget {
               (context.isDarkMode) ? Colors.grey[900] : const Color(0xFFF1F4F9),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Image.asset(
@@ -23,7 +22,6 @@ class SplashScreen extends StatelessWidget {
               fit: BoxFit.contain,
             ),
             Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Padding(

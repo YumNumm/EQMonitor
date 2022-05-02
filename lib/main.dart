@@ -1,8 +1,10 @@
 // ignore_for_file: cascade_invocations, file_names
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:eqmonitor/db/notificationSettings/notificationSettings.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/kyoshinMonitorlibTime.dart';
+import 'package:eqmonitor/utils/background/background_task.dart';
 import 'package:eqmonitor/utils/map/customZoomPanBehavior.dart';
 import 'package:eqmonitor/utils/settings/notificationSettings.dart';
 import 'package:eqmonitor/utils/settings/volumeController.dart';
@@ -22,6 +24,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workmanager/workmanager.dart';
 
 import './const/const.dart';
 import 'pages/mainPage.dart';
@@ -64,6 +67,8 @@ Future<void> main() async {
   );
   Get.put<FlutterSecureStorage>(const FlutterSecureStorage());
   Get.put<PackageInfo>(await PackageInfo.fromPlatform());
+  final deviceInfo =
+      Get.put<AndroidDeviceInfo>(await DeviceInfoPlugin().androidInfo);
   Get.put<UserNotificationSettings>(await UserNotificationSettings().onInit());
   Get.put<FirebaseApp>(await Firebase.initializeApp());
   Get.put<FirebaseAuth>(FirebaseAuth.instance);
@@ -78,10 +83,17 @@ Future<void> main() async {
   Get.put<VolumeController>(VolumeController());
   Get.put<AppUpdate>(AppUpdate());
   Get.put<FlutterSecureStorage>(const FlutterSecureStorage());
+  await Workmanager().initialize(callbackDispatcher,
+      isInDebugMode: deviceInfo.androidId == '50249192fa1a1539');
+  await Workmanager().registerPeriodicTask(
+    'widgetUpdate',
+    'widgetUpdate',
+    frequency: const Duration(minutes: 15),
+  );
   runApp(
     DevicePreview(
       enabled: prefs.getBool('showDevicePreview') ?? false,
-      builder: (context) => EQApp(),
+      builder: (context) => const EQApp(),
     ),
   );
 }
