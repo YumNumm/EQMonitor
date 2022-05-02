@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:eqmonitor/utils/earthquake.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../utils/messaging.dart';
 
 final PackageInfo packageInfo = Get.find<PackageInfo>();
+final AndroidDeviceInfo androidDeviceInfo = Get.find<AndroidDeviceInfo>();
 final Logger logger = Get.find<Logger>();
 final EarthQuake eq = Get.find<EarthQuake>();
 final SharedPreferences prefs = Get.find<SharedPreferences>();
@@ -39,10 +41,14 @@ Widget aboutThisApp(BuildContext context) {
             title: const Text('パッケージ名'),
             description: Text(packageInfo.packageName),
           ),
+          SettingsTile.navigation(
+            title: const Text('デバイスID'),
+            description: Text(androidDeviceInfo.androidId ?? '不明'),
+          ),
           // FCM Token
           SettingsTile.navigation(
             title: const Text('FCMトークン'),
-            description: Text(messaging.token.toString()),
+            description: Obx(() => Text(messaging.token.toString())),
             onPressed: (BuildContext context) async {
               logger.d(messaging.token.toString());
               await Clipboard.setData(
@@ -102,6 +108,13 @@ Widget aboutThisApp(BuildContext context) {
                         subtitle: const Text('通知・効果音'),
                         onTap: () => launch(
                           'https://twitter.com/Shion30227499',
+                        ),
+                      ),
+                      ListTile(
+                        title: const Text('かている氏'),
+                        subtitle: const Text('地震情報の画像生成手法'),
+                        onTap: () => launch(
+                          'https://github.com/earthquake-alert',
                         ),
                       ),
                       const Divider(
@@ -168,7 +181,7 @@ Widget aboutThisApp(BuildContext context) {
                         child: Column(
                           children: [
                             ListTile(
-                              title: const Text('Dev Topicの購読'),
+                              title: const Text('Dev/Accuracy Topicの購読'),
                               subtitle: const Text('開発中の通知が飛んできます。'),
                               trailing: Obx(
                                 () => Switch(
@@ -183,8 +196,12 @@ Widget aboutThisApp(BuildContext context) {
                                         if (b) {
                                           // 有効にする～～
                                           await fcm.subscribeToTopic('dev');
+                                          await fcm
+                                              .subscribeToTopic('accuracy');
                                         } else {
                                           await fcm.unsubscribeFromTopic('dev');
+                                          await fcm
+                                              .subscribeToTopic('accuracy');
                                         }
                                       },
                                     );

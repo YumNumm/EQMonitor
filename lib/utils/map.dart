@@ -7,11 +7,6 @@ class MapData extends GetxController {
   final Logger logger = Get.find<Logger>();
   final RxBool isInited = false.obs;
   final RxBool isViewLoaded = false.obs;
-  static MapShapeSource dataSource = const MapShapeSource.asset(
-    'assets/japan.geojson',
-    dataCount: 1903,
-    shapeDataField: '',
-  );
   final List<MapLatLng> circles = <MapLatLng>[
     //const MapLatLng(35, 139),
   ];
@@ -20,6 +15,11 @@ class MapData extends GetxController {
     super.onInit();
     isInited.value = true;
   }
+
+  static MapShapeSource dataSource = const MapShapeSource.asset(
+    'assets/japan.geojson',
+    dataCount: 47,
+  );
 }
 
 class ObservePoint {

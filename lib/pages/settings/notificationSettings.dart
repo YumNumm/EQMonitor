@@ -229,7 +229,7 @@ Widget notificationSettings(BuildContext context) {
                   channelKey: 'fromdev',
                   title: '[テスト通知]',
                   body: 'これはテスト通知です\n$engine',
-                  backgroundColor: Colors.blueAccent,
+                  backgroundColor: Color.fromARGB(255, 255, 0, 0),
                   criticalAlert: true,
                   category: NotificationCategory.Social,
                 ),

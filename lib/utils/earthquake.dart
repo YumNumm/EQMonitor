@@ -17,7 +17,6 @@ import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'package:ntp/ntp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
 
@@ -30,14 +29,11 @@ class EarthQuake extends GetxController {
   final WebApiUrlGenerator webApiUrlGenerator = WebApiUrlGenerator();
   final KyoshinMonitorlibTime kyoshinMonitorlibTime =
       Get.find<KyoshinMonitorlibTime>();
+  late Rx<KyoshinEEW> kyoshinEEW;
   final JmaImageParser jmaImageParser = JmaImageParser();
 
-  final RxInt offset = 0.obs;
   final RxInt numberOfAnalyzedPoint = 0.obs;
   final RxString url = ''.obs;
-  late Timer timer;
-  late Timer timer2;
-  late Timer timer3;
   final RxList<AnalyzedPoint> analyzedPoint = <AnalyzedPoint>[].obs;
   final RxDouble zoomLevel = 1.0.obs;
   final RxList<EQLog> eqLog = <EQLog>[].obs;
@@ -55,8 +51,8 @@ class EarthQuake extends GetxController {
   Future<void> onInit() async {
     super.onInit();
     Timer.periodic(
-      const Duration(seconds: 1),
-      (timer) async => await kyoshinMonitorlibTime.generateNowTime(),
+      const Duration(milliseconds: 1000),
+      (timer) async => kyoshinMonitorlibTime.generateNowTime(),
     );
     // 仮で空っぽの観測点を配置しておく
     for (final obsPoint in OBSPoints) {
@@ -75,14 +71,6 @@ class EarthQuake extends GetxController {
         ),
       );
     }
-    // NTPから正しい時間を取得する
-    final startDate = DateTime.now().toLocal();
-    try {
-      offset.value = await NTP.getNtpOffset(localTime: startDate);
-    } catch (e) {
-      logger.w(e.toString());
-    }
-
     Timer.periodic(
       const Duration(milliseconds: 1000),
       (_) async => updateEQData(),
@@ -92,7 +80,7 @@ class EarthQuake extends GetxController {
       jmaImageParser.zoomLevel.value =
           zoomLevel.value = mapZoomPanBehavior.zoomLevel;
     });
-    timer3 = Timer.periodic(
+    Timer.periodic(
       const Duration(
         seconds: 30,
       ),
@@ -206,13 +194,6 @@ class EarthQuake extends GetxController {
 }
 
 class OBSPoint {
-  final String code;
-  final String name;
-  final String pref;
-  final double lat;
-  final double lon;
-  final int x;
-  final int y;
   OBSPoint({
     required this.code,
     required this.name,
@@ -231,4 +212,11 @@ class OBSPoint {
         lon = double.parse(lis[4].toString()),
         x = int.parse(lis[5].toString()),
         y = int.parse(lis[6].toString());
+  final String code;
+  final String name;
+  final String pref;
+  final double lat;
+  final double lon;
+  final int x;
+  final int y;
 }

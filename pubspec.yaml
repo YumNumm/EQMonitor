@@ -3,7 +3,7 @@ description: Earth Quake Monitor Application
 
 publish_to: "none"
 
-version: 0.2.7+75
+version: 0.2.7+80
 
 environment:
   sdk: ">=2.15.0 <3.0.0"
@@ -53,6 +53,8 @@ dependencies:
   open_settings: ^2.0.2
   perfect_volume_control: ^1.0.5
   flutter_markdown: ^0.6.10
+  workmanager: ^0.4.1
+  device_info_plus: ^3.2.3
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +72,10 @@ flutter:
   assets:
     - assets/
     - assets/intensity/
+  fonts:
+    - family: CaskaydiaCove
+      fonts:
+        - asset: fonts/Caskaydia_Cove_Nerd_Font_Mono.ttf
 
 flutter_native_splash:
   #? flutter pub run flutter_native_splash:create

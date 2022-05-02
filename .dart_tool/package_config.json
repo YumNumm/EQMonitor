@@ -188,6 +188,42 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "device_info_plus",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/device_info_plus-3.2.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "device_info_plus_linux",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/device_info_plus_linux-2.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "device_info_plus_macos",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/device_info_plus_macos-2.2.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "device_info_plus_platform_interface",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/device_info_plus_platform_interface-2.3.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "device_info_plus_web",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/device_info_plus_web-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "device_info_plus_windows",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/device_info_plus_windows-2.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "device_preview",
       "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/device_preview-1.0.0",
       "packageUri": "lib/",
@@ -1112,6 +1148,12 @@
       "languageVersion": "2.15"
     },
     {
+      "name": "workmanager",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/workmanager-0.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "xdg_directories",
       "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/xdg_directories-0.2.0+1",
       "packageUri": "lib/",
@@ -1136,7 +1178,7 @@
       "languageVersion": "2.15"
     }
   ],
-  "generated": "2022-04-24T14:32:29.840936Z",
+  "generated": "2022-04-30T14:07:49.077641Z",
   "generator": "pub",
   "generatorVersion": "2.16.2"
 }

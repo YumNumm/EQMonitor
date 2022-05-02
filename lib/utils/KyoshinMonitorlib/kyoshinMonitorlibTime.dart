@@ -25,14 +25,13 @@ class KyoshinMonitorlibTime extends GetxController {
             'http://www.kmoni.bosai.go.jp/webservice/server/pros/latest.json',
           ),
         );
-        logger.i(res.body);
         if (res.statusCode != 200) {}
         final df = DateFormat('yyyy/MM/dd hh:mm:ss');
         final j =
             json.decode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
         final dt = df.parseStrict(j['latest_time'].toString());
         now.value = dt;
-        timeUpdateCounter.value = 10;
+        timeUpdateCounter.value = 3;
         return dt;
       } else {
         timeUpdateCounter.value--;
