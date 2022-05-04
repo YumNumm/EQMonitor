@@ -2,6 +2,7 @@
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:eqmonitor/utils/earthquake.dart';
+import 'package:eqmonitor/utils/eq_history/eq_history_lib.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -269,23 +270,13 @@ Widget aboutThisApp(BuildContext context) {
                                 );
                               },
                             ),
-                            ListTile(
-                              title: const Text('Widgetをリセット'),
-                              onTap: () async {
-                                await Get.showOverlay(
-                                  loadingWidget: const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                  asyncFunction: () async {
-                                    await eq.updateEQLog();
-                                    await HomeWidget.updateWidget(
-                                      androidName: 'latestwidget',
-                                    );
-                                  },
-                                );
-                              },
-                            ),
                           ],
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.all(30),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(30),
                         ),
                       ),
                     ),

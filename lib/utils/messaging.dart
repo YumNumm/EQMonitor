@@ -5,6 +5,7 @@ import 'package:eqmonitor/const/const.dart';
 import 'package:eqmonitor/utils/notification/foregroundHandler.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
@@ -42,21 +43,47 @@ class Messaging extends GetxController {
     );
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     await AwesomeNotifications().initialize(
-      "resource://drawable/icon_monochrome",
+      'resource://drawable/icon_monochrome',
       notificationChannels,
       channelGroups: channelGroups,
       debug: kDebugMode,
-
     );
     await AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
         AwesomeNotifications().requestPermissionToSendNotifications();
       }
     });
-      for (final e in Topics.values) {
-        await messaging.subscribeToTopic(e.name);
-      }
-      await prefs.setBool('hasSubscribed', true);
+    AwesomeNotifications().actionStream.listen((event) {
+      logger.i(event.bigPicturePath);
+      Get.dialog<void>(
+        AlertDialog(
+          scrollable: true,
+          title: Text(event.title.toString()),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(event.body.toString()),
+              Hero(
+                tag: 'Image',
+                child: Image.network(
+                  event.bigPicture.toString(),
+                ),
+              ),
+            ],
+          ),
+          contentPadding: const EdgeInsets.all(30),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(30),
+            ),
+          ),
+        ),
+      );
+    });
+    for (final e in Topics.values) {
+      await messaging.subscribeToTopic(e.name);
+    }
+    await prefs.setBool('hasSubscribed', true);
 
     isInitalizing.value = false;
     token.value =
