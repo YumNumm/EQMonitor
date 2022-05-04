@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 ThemeData darkTheme() {
   return ThemeData.dark().copyWith(
     scaffoldBackgroundColor: Colors.grey[900],
+    useMaterial3: true,
   );
 }
 
 ThemeData lightTheme() {
   return ThemeData.light().copyWith(
     scaffoldBackgroundColor: Colors.white,
+    useMaterial3: true,
     primaryColor: materialWhite,
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.white,

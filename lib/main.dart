@@ -2,13 +2,9 @@
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:device_preview/device_preview.dart';
-import 'package:eqmonitor/db/notificationSettings/notificationSettings.dart';
-import 'package:eqmonitor/utils/KyoshinMonitorlib/kyoshinMonitorlibTime.dart';
-import 'package:eqmonitor/utils/background/background_task.dart';
-import 'package:eqmonitor/utils/map/customZoomPanBehavior.dart';
-import 'package:eqmonitor/utils/settings/notificationSettings.dart';
-import 'package:eqmonitor/utils/settings/volumeController.dart';
-import 'package:eqmonitor/utils/updater/appUpdate.dart';
+import 'package:eqmonitor/pages/eq_info_page.dart';
+import 'package:eqmonitor/utils/EQMonitorApi/history_lib.dart';
+import 'package:eqmonitor/utils/eq_history/eq_history_lib.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -27,13 +23,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 
 import './const/const.dart';
+import 'db/notificationSettings/notificationSettings.dart';
 import 'pages/mainPage.dart';
 import 'pages/settingscreen.dart';
 import 'pages/splashscreen.dart';
+import 'utils/KyoshinMonitorlib/kyoshinMonitorlibTime.dart';
 import 'utils/auth.dart';
+import 'utils/background/background_task.dart';
 import 'utils/earthquake.dart';
 import 'utils/map.dart';
+import 'utils/map/customZoomPanBehavior.dart';
 import 'utils/messaging.dart';
+import 'utils/settings/notificationSettings.dart';
+import 'utils/settings/volumeController.dart';
+import 'utils/updater/appUpdate.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -83,13 +86,18 @@ Future<void> main() async {
   Get.put<VolumeController>(VolumeController());
   Get.put<AppUpdate>(AppUpdate());
   Get.put<FlutterSecureStorage>(const FlutterSecureStorage());
-  await Workmanager().initialize(callbackDispatcher,
-      isInDebugMode: deviceInfo.androidId == '50249192fa1a1539');
+  Get.put<HistoryLib>(HistoryLib());
+  Get.put<EqHistoryLib>(EqHistoryLib());
+  await Workmanager().initialize(
+    callbackDispatcher,
+    isInDebugMode: deviceInfo.androidId == '50249192fa1a1539',
+  );
   await Workmanager().registerPeriodicTask(
     'widgetUpdate',
     'widgetUpdate',
     frequency: const Duration(minutes: 15),
   );
+
   runApp(
     DevicePreview(
       enabled: prefs.getBool('showDevicePreview') ?? false,
@@ -133,7 +141,11 @@ class EQApp extends StatelessWidget {
         GetPage<dynamic>(
           name: '/setting',
           page: SettingScreen.new,
-          popGesture: true,
+        ),
+        GetPage<dynamic>(
+          name: '/eqinfo',
+          page: EqInfoPage.new,
+          
         ),
       ],
     );

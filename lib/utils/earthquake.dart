@@ -12,15 +12,12 @@ import 'package:eqmonitor/utils/KyoshinMonitorlib/kyoshinMonitorlibTime.dart';
 import 'package:eqmonitor/utils/map/customZoomPanBehavior.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:home_widget/home_widget.dart';
-import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
 
-import './eqlog.dart';
 import 'analyzedpoints.dart';
 
 class EarthQuake extends GetxController {
@@ -36,7 +33,6 @@ class EarthQuake extends GetxController {
   final RxString url = ''.obs;
   final RxList<AnalyzedPoint> analyzedPoint = <AnalyzedPoint>[].obs;
   final RxDouble zoomLevel = 1.0.obs;
-  final RxList<EQLog> eqLog = <EQLog>[].obs;
   final RxDouble iconSize = 3.6.obs;
   final RxString lastUpdateTimeString = '更新待ち'.obs;
   final MapShapeLayerController mapShapeLayerController =
@@ -80,13 +76,7 @@ class EarthQuake extends GetxController {
       jmaImageParser.zoomLevel.value =
           zoomLevel.value = mapZoomPanBehavior.zoomLevel;
     });
-    Timer.periodic(
-      const Duration(
-        seconds: 30,
-      ),
-      (_) => updateEQLog(),
-    );
-    await updateEQLog();
+    await Future<void>.delayed(const Duration(milliseconds: 1000));
     await Get.offAllNamed<void>('/');
 
     await updateEQData();
@@ -148,7 +138,7 @@ class EarthQuake extends GetxController {
     }
   }
 
-  Future<void> updateEQLog() async {
+  /*Future<void> updateEQLog() async {
     try {
       const url = 'https://typhoon.yahoo.co.jp/weather/jp/earthquake/list/';
       final res = await http.get(Uri.parse(url));
@@ -190,7 +180,7 @@ class EarthQuake extends GetxController {
     } catch (e) {
       logger.e(e);
     }
-  }
+  }*/
 }
 
 class OBSPoint {

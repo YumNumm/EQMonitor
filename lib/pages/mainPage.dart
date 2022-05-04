@@ -1,6 +1,9 @@
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:eqmonitor/pages/eq_history_page.dart';
+import 'package:eqmonitor/pages/notification_history_page.dart';
+import 'package:eqmonitor/utils/eq_history/eq_history_lib.dart';
 import 'package:eqmonitor/utils/map/customZoomPanBehavior.dart';
 import 'package:eqmonitor/utils/map/marker_builder.dart';
 import 'package:eqmonitor/utils/updater/appUpdate.dart';
@@ -19,8 +22,10 @@ import '../utils/messaging.dart';
 
 class IntroPage extends StatelessWidget {
   IntroPage({Key? key}) : super(key: key);
+
   final Logger logger = Get.find<Logger>();
   final EarthQuake earthQuake = Get.find<EarthQuake>();
+  final EqHistoryLib eqHistory = Get.find<EqHistoryLib>();
   final AppUpdate appUpdate = Get.find<AppUpdate>();
   final CustomZoomPanBehavior zoomPanBehavior =
       Get.find<CustomZoomPanBehavior>();
@@ -31,7 +36,6 @@ class IntroPage extends StatelessWidget {
   final RxInt page = 0.obs;
   final RxInt selectedIndex = (-1).obs;
 
-  final DateFormat df = DateFormat('yyyy/MM/dd HH:mm頃');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,6 +103,10 @@ class IntroPage extends StatelessWidget {
             BottomNavigationBarItem(
               icon: Icon(Icons.history),
               label: '地震履歴',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.notifications_active),
+              label: '通知履歴',
             ),
           ],
         ),
@@ -232,55 +240,8 @@ class IntroPage extends StatelessWidget {
                   ),
                 ],
               ),
-              ListView.builder(
-                itemCount: earthQuake.eqLog.length,
-                itemBuilder: (BuildContext context, int i) {
-                  final eqLog = earthQuake.eqLog[i];
-
-                  return Container(
-                    padding: const EdgeInsets.fromLTRB(0, 2, 0, 0),
-                    decoration: const BoxDecoration(),
-                    child: ListTile(
-                      onTap: () async {
-                        await Get.dialog<void>(
-                          AlertDialog(
-                            title: Text(df.format(eqLog.time)),
-                            content: Row(
-                              children: [
-                                Image.asset(
-                                  'assets/intensity/${(eqLog.maxIntensity == "---") ? "unknown" : eqLog.maxIntensity}.PNG',
-                                  fit: BoxFit.scaleDown,
-                                  height: context.height * 0.1,
-                                ),
-                                SizedBox(width: context.width * 0.05),
-                                Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('M${eqLog.magunitude}'),
-                                    Text('震源地: ${eqLog.place}'),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                      leading: ClipRRect(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(4)),
-                        child: Image.asset(
-                          'assets/intensity/${(eqLog.maxIntensity == "---") ? "unknown" : eqLog.maxIntensity}.PNG',
-                        ),
-                      ),
-                      title: Text(
-                        df.format(eqLog.time),
-                      ),
-                      subtitle: Text('${eqLog.place} M${eqLog.magunitude}'),
-                    ),
-                  );
-                },
-              ),
+              EqHistoryPage(),
+              NotificationHistoryPage(),
             ],
           ),
         ),
