@@ -872,6 +872,42 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "share_plus",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/share_plus-4.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "share_plus_linux",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/share_plus_linux-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "share_plus_macos",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/share_plus_macos-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "share_plus_platform_interface",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/share_plus_platform_interface-3.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "share_plus_web",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/share_plus_web-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "share_plus_windows",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/share_plus_windows-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "shared_preferences",
       "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/shared_preferences-2.0.13",
       "packageUri": "lib/",
@@ -1184,7 +1220,7 @@
       "languageVersion": "2.15"
     }
   ],
-  "generated": "2022-05-04T06:49:01.757640Z",
+  "generated": "2022-05-05T01:32:36.429759Z",
   "generator": "pub",
   "generatorVersion": "2.16.2"
 }
