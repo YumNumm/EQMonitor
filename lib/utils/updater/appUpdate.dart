@@ -16,7 +16,7 @@ class AppUpdate extends GetxController {
   late UpdateAPI updateApi;
   @override
   Future<void> onInit() async {
-    const url = '${privateApiUrl}app-status.json';
+    const url = '$baseUrl/app-status.json';
     final res = await http.get(Uri.parse(url)).onError((error, stackTrace) {
       hasError.value = true;
       logger.e(error, stackTrace);

@@ -74,6 +74,7 @@ flutter:
   assets:
     - assets/
     - assets/intensity/
+    - assets/notification_type/
   fonts:
     - family: CaskaydiaCove
       fonts:
@@ -81,17 +82,6 @@ flutter:
 
 flutter_native_splash:
   #? flutter pub run flutter_native_splash:create
-  # This package generates native code to customize Flutter's default white native splash screen
-  # with background color and splash image.
-  # Customize the parameters below, and run the following command in the terminal:
-  # flutter pub run flutter_native_splash:create
-  # To restore Flutter's default white splash screen, run the following command in the terminal:
-  # flutter pub run flutter_native_splash:remove
-
-  # color or background_image is the only required parameter.  Use color to set the background
-  # of your splash screen to a solid color.  Use background_image to set the background of your
-  # splash screen to a png image.  This is useful for gradients. The image will be stretch to the
-  # size of the app. Only one parameter can be used, color and background_image cannot both be set.
   color: "#F1F4F9"
   #background_image: "assets/background.png"
 
@@ -121,7 +111,7 @@ flutter_native_splash:
   # parameters from above. If the image_dark parameter is specified, color_dark or
   # background_image_dark must be specified.  color_dark and background_image_dark cannot both be
   # set.
-  color_dark: "##F1F4F9"
+  color_dark: "#222222"
   #background_image_dark: "assets/dark-background.png"
   #image_dark: assets/splash-invert.png
 

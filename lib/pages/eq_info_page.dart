@@ -59,6 +59,38 @@ class EqInfoPage extends StatelessWidget {
                         (BuildContext context, Object obj, StackTrace? st) {
                       return Text('エラーが発生しました\n$st');
                     },
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: child,
+                          ),
+                        );
+                      }
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                            children: [
+                              Text(
+                                '${(loadingProgress.cumulativeBytesLoaded / 1024).ceilToDouble()}KB'
+                                '${(loadingProgress.expectedTotalBytes != null) ? '/${(loadingProgress.expectedTotalBytes! / 1024).ceilToDouble()}KB' : ''}',
+                              ),
+                              CircularProgressIndicator.adaptive(
+                                value: loadingProgress.expectedTotalBytes !=
+                                        null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                    : null,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
                 ClipRRect(

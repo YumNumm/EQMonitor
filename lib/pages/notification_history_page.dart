@@ -24,18 +24,90 @@ class NotificationHistoryPage extends StatelessWidget {
           itemCount: history.content.length,
           itemBuilder: (BuildContext context, int i) {
             final h = history.content[i];
-            return ListTile(
-              leading: (h.pictureUrl != null)
-                  ? Image.asset(
-                      h.pictureUrl.toString().replaceAll(
-                            'https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/docs/intensity/',
-                            'assets/intensity/',
-                          ),
-                    )
-                  : null,
-              title: Text(h.title),
-              subtitle: Text(df.format(h.publishedDate.toLocal())),
+            final Widget leading = Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.asset(
+                    'assets/notification_type/${h.type.name}.PNG',
+                  ),
+                ),
+                const SizedBox(
+                  width: 2,
+                ),
+                (h.pictureUrl != null)
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset(
+                          h.pictureUrl.toString().replaceAll(
+                                'https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/docs/intensity/',
+                                'assets/intensity/',
+                              ),
+                        ),
+                      )
+                    : Container(),
+              ],
             );
+            final Widget subtitle = Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(df.format(h.publishedDate.toLocal())),
+                //if (h.bigPictureUrl != null)
+                //  Image.network(h.bigPictureUrl.toString())
+              ],
+            );
+            if (h.type == NotificationType.vxse53) {
+              return ExpansionTile(
+                title: Text(h.title),
+                leading: leading,
+                subtitle: subtitle,
+                children: [
+                  Image.network(
+                    h.bigPictureUrl.toString(),
+                    fit: BoxFit.fill,
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: child,
+                          ),
+                        );
+                      }
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                            children: [
+                              Text(
+                                '${(loadingProgress.cumulativeBytesLoaded / 1024).ceilToDouble()}KB'
+                                '${(loadingProgress.expectedTotalBytes != null) ? '/${(loadingProgress.expectedTotalBytes! / 1024).ceilToDouble()}KB' : ''}',
+                              ),
+                              CircularProgressIndicator.adaptive(
+                                value: loadingProgress.expectedTotalBytes !=
+                                        null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                    : null,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  )
+                ],
+              );
+            } else {
+              return ListTile(
+                leading: leading,
+                title: Text(h.title),
+                subtitle: subtitle,
+              );
+            }
           },
         ),
       ),

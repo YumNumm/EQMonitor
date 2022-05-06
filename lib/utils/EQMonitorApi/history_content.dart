@@ -11,7 +11,7 @@ class HistoryContent {
   HistoryContent.fromJson(Map<String, dynamic> j)
       : id = j['id'].toString(),
         publishedDate = DateTime.parse(j['publishedDate'].toString()),
-        type = NotificaitonType.values
+        type = NotificationType.values
             .firstWhere((e) => e.name == j['type'].toString()),
         title = j['title'].toString(),
         pictureUrl =
@@ -34,7 +34,7 @@ class HistoryContent {
   final String id;
 
   /// Type
-  final NotificaitonType type;
+  final NotificationType type;
 
   ///  配信時刻
   final DateTime publishedDate;
@@ -54,7 +54,7 @@ class HistoryContent {
   final String url;
 }
 
-enum NotificaitonType {
+enum NotificationType {
   eew,
   vxse51,
   vxse52,
