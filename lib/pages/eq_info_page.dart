@@ -129,7 +129,8 @@ class EqInfoPage extends StatelessWidget {
                                 Align(
                                   alignment: Alignment.bottomRight,
                                   child: Text(
-                                    "発生時刻: ${DateFormat("yyyy/MM/dd HH:mm頃").format(data.earthquake!.arrivalTime)}",
+                                    '発生時刻: '
+                                    '${DateFormat("yyyy/MM/dd HH:mm頃").format(data.earthquake!.arrivalTime.toLocal())}',
                                     style:
                                         context.textTheme.bodySmall!.copyWith(
                                       fontFamily: 'CaskaydiaCove',

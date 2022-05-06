@@ -42,9 +42,7 @@ class EqHistoryPage extends StatelessWidget {
               decoration: const BoxDecoration(),
               child: ListTile(
                 onTap: () async {
-                  logger.i(eqLog.url);
                   final res = await http.get(Uri.parse(eqLog.url));
-                  logger.i(res.body);
                   final payload = CommonHead.fromJson(
                     jsonDecode(
                       utf8.decode(gzip.decode(res.bodyBytes)).toString(),
@@ -65,7 +63,7 @@ class EqHistoryPage extends StatelessWidget {
                   ),
                 ),
                 title: Text(
-                  df.format(eqLog.publishedDate),
+                  df.format(eqLog.publishedDate.toLocal()),
                 ),
                 subtitle: Text('${eqLog.hypoName} M${eqLog.magnitude}'),
               ),
