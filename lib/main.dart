@@ -20,7 +20,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:workmanager/workmanager.dart';
 
 import './const/const.dart';
 import 'db/notificationSettings/notificationSettings.dart';
@@ -88,16 +87,7 @@ Future<void> main() async {
   Get.put<FlutterSecureStorage>(const FlutterSecureStorage());
   Get.put<HistoryLib>(HistoryLib());
   Get.put<EqHistoryLib>(EqHistoryLib());
-  await Workmanager().initialize(
-    callbackDispatcher,
-    isInDebugMode: deviceInfo.androidId == '50249192fa1a1539',
-  );
-  await Workmanager().registerPeriodicTask(
-    'widgetUpdate',
-    'widgetUpdate',
-    frequency: const Duration(minutes: 15),
-  );
-
+ 
   runApp(
     DevicePreview(
       enabled: prefs.getBool('showDevicePreview') ?? false,
@@ -113,7 +103,7 @@ class EQApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'EQMonitor',
-      theme: lightTheme().copyWith(),
+      theme: lightTheme(),
       darkTheme: darkTheme(),
       locale: DevicePreview.locale(context),
       localizationsDelegates: const [
@@ -145,7 +135,7 @@ class EQApp extends StatelessWidget {
         GetPage<dynamic>(
           name: '/eqinfo',
           page: EqInfoPage.new,
-          
+
         ),
       ],
     );

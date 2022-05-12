@@ -5,12 +5,12 @@ import 'package:eqmonitor/pages/eq_history_page.dart';
 import 'package:eqmonitor/pages/notification_history_page.dart';
 import 'package:eqmonitor/utils/eq_history/eq_history_lib.dart';
 import 'package:eqmonitor/utils/map/customZoomPanBehavior.dart';
+import 'package:flutter/services.dart';
 import 'package:eqmonitor/utils/map/marker_builder.dart';
 import 'package:eqmonitor/utils/updater/appUpdate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
@@ -40,7 +40,7 @@ class IntroPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('EQMonitor Ver.α (Build${packageInfo.buildNumber})'),
+        title: Text('EQMonitor (Build${packageInfo.buildNumber})'),
         actions: [
           Obx(
             () => (appUpdate.hasUpdate.value)
@@ -91,20 +91,23 @@ class IntroPage extends StatelessWidget {
         ],
       ),
       bottomNavigationBar: Obx(
-        () => BottomNavigationBar(
+        () => NavigationBar(
           elevation: 10,
-          currentIndex: page.value,
-          onTap: (int value) => page.value = value,
-          items: const [
-            BottomNavigationBarItem(
+          selectedIndex: page.value,
+          onDestinationSelected: (int value) {
+            page.value = value;
+            HapticFeedback.mediumImpact();
+          },
+          destinations: const [
+            NavigationDestination(
               icon: Icon(Icons.home),
               label: 'リアルタイム震度',
             ),
-            BottomNavigationBarItem(
+            NavigationDestination(
               icon: Icon(Icons.history),
               label: '地震履歴',
             ),
-            BottomNavigationBarItem(
+            NavigationDestination(
               icon: Icon(Icons.notifications_active),
               label: '通知履歴',
             ),
@@ -142,8 +145,10 @@ class IntroPage extends StatelessWidget {
                                       strokeWidth: 5,
                                     ),
                                   ),
-                                  markerBuilder: (BuildContext context,
-                                          int index) =>
+                                  markerBuilder: (
+                                    BuildContext context,
+                                    int index,
+                                  ) =>
                                       markerBuilder(context, index, earthQuake),
                                   controller:
                                       earthQuake.mapShapeLayerController,

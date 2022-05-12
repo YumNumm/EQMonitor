@@ -93,9 +93,10 @@ class EarthQuake extends GetxController {
           KyoshinEEW.fromJson(jsonDecode(res.body) as Map<String, dynamic>);
       if (kyoshinEEW.result.hasData) {
         msg.value =
-            '緊急地震速報(第${kyoshinEEW.reportNum})報 ${(kyoshinEEW.reportTime != null) ? df.format(kyoshinEEW.reportTime!) : ""}\n'
-            'マグニチュード${kyoshinEEW.magnitude}\n'
-            '深さ${kyoshinEEW.depth}\n'
+            '緊急地震速報(第${kyoshinEEW.reportNum}報) ${(kyoshinEEW.reportTime != null) ? df.format(kyoshinEEW.reportTime!) : ""}\n'
+            'M${kyoshinEEW.magnitude}\n'
+            '深さ: ${kyoshinEEW.depth}\n'
+            '最大震度: ${kyoshinEEW.calcintensity}\n'
             '${kyoshinEEW.regionName}で地震';
 
         logger.i(msg.value);
