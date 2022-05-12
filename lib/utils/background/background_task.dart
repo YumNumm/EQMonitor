@@ -4,7 +4,6 @@ import 'package:home_widget/home_widget.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:workmanager/workmanager.dart';
 
 import '../eqlog.dart';
 
@@ -51,12 +50,3 @@ Future<void> updateEQLog() async {
   }
 }
 
-void callbackDispatcher() {
-  Workmanager().executeTask((taskName, inputData) async {
-    if (taskName == 'updateWidget') {
-      await updateEQLog();
-      return true;
-    }
-    return false;
-  });
-}

@@ -21,7 +21,7 @@ class KyoshinEEW {
   final String? depth;
 
   /// ## 予想最大震度
-  final int? calcintensity;
+  final String? calcintensity;
 
   /// ## 最終報かどうか
   final bool? isFinal;
@@ -92,7 +92,7 @@ class KyoshinEEW {
             (json['depth'].toString() == '') ? null : json['depth'].toString(),
         calcintensity = (json['calcintensity'].toString() == '')
             ? null
-            : int.parse(json['calcintensity'].toString()),
+            : json['calcintensity'].toString(),
         isFinal = (json['is_final'].toString() == '')
             ? null
             : bool.fromEnvironment(json['is_final'].toString()),
