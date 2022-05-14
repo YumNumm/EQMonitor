@@ -45,7 +45,7 @@ class EqHistoryLib extends GetxController {
     );
     await HomeWidget.saveWidgetData<String>(
       'time',
-      DateFormat('yyyy/MM/dd HH:mm頃').format(latest.publishedDate),
+      DateFormat('yyyy/MM/dd HH:mm頃').format(latest.publishedDate.toLocal()),
     );
     await HomeWidget.updateWidget(
       androidName: 'latestwidget',
