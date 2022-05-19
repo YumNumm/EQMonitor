@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:eqmonitor/const/obspoints.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/ApiResult/EEW.dart';
+import 'package:eqmonitor/utils/KyoshinMonitorlib/ApiResult/EEWResult.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/UrlGenerator/RealTimeDataType.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/UrlGenerator/WebApiUrlGenerators.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/imageParser/jmaParser.dart';
@@ -26,7 +27,7 @@ class EarthQuake extends GetxController {
   final WebApiUrlGenerator webApiUrlGenerator = WebApiUrlGenerator();
   final KyoshinMonitorlibTime kyoshinMonitorlibTime =
       Get.find<KyoshinMonitorlibTime>();
-  late Rx<KyoshinEEW> kyoshinEEW;
+
   final JmaImageParser jmaImageParser = JmaImageParser();
 
   final RxInt numberOfAnalyzedPoint = 0.obs;
@@ -40,7 +41,6 @@ class EarthQuake extends GetxController {
   final MapZoomPanBehavior mapZoomPanBehavior = CustomZoomPanBehavior()
     ..enableDoubleTapZooming
     ..maxZoomLevel = 50;
-  final RxString msg = '緊急地震速報は発表されていません'.obs;
   final df = DateFormat('yyyyMMdd/yyyyMMddHHmmss');
 
   @override
@@ -83,27 +83,7 @@ class EarthQuake extends GetxController {
   }
 
   Future<void> updateEQData() async {
-    try {
-      final res = await http.get(
-        Uri.parse(
-          webApiUrlGenerator.JsonEewBase(kyoshinMonitorlibTime.now.value),
-        ),
-      );
-      final kyoshinEEW =
-          KyoshinEEW.fromJson(jsonDecode(res.body) as Map<String, dynamic>);
-      if (kyoshinEEW.result.hasData) {
-        msg.value =
-            '緊急地震速報(第${kyoshinEEW.reportNum}報) ${(kyoshinEEW.reportTime != null) ? df.format(kyoshinEEW.reportTime!) : ""}\n'
-            'M${kyoshinEEW.magnitude}\n'
-            '深さ: ${kyoshinEEW.depth}\n'
-            '最大震度: ${kyoshinEEW.calcintensity}\n'
-            '${kyoshinEEW.regionName}で地震';
 
-        logger.i(msg.value);
-      } else {}
-    } catch (e) {
-      logger.e(e);
-    }
     // PGA Update
     try {
       final res = await http.get(

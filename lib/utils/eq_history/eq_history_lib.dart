@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:eqmonitor/private/keys.dart';
-import 'package:eqmonitor/utils/EQMonitorApi/history.dart';
-import 'package:eqmonitor/utils/EQMonitorApi/history_content.dart';
 import 'package:eqmonitor/utils/eq_history/eq_history_content.dart';
 import 'package:get/get.dart';
 import 'package:home_widget/home_widget.dart';
@@ -37,8 +35,8 @@ class EqHistoryLib extends GetxController {
 
     // Widgetの更新
     final latest = his.contents[0];
-    await HomeWidget.saveWidgetData<String>("max_intensity", latest.maxint);
-     await HomeWidget.saveWidgetData<String>('place', latest.hypoName);
+    await HomeWidget.saveWidgetData<String>('max_intensity', latest.maxint);
+    await HomeWidget.saveWidgetData<String>('place', latest.hypoName);
     await HomeWidget.saveWidgetData<String>(
       'magnitude',
       'M${latest.magnitude}',
