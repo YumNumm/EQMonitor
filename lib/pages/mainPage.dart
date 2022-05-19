@@ -5,26 +5,28 @@ import 'package:eqmonitor/pages/eq_history_page.dart';
 import 'package:eqmonitor/pages/notification_history_page.dart';
 import 'package:eqmonitor/utils/eq_history/eq_history_lib.dart';
 import 'package:eqmonitor/utils/map/customZoomPanBehavior.dart';
-import 'package:flutter/services.dart';
-import 'package:eqmonitor/utils/map/marker_builder.dart';
 import 'package:eqmonitor/utils/updater/appUpdate.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:syncfusion_flutter_maps/maps.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../utils/earthquake.dart';
 import '../utils/map.dart';
 import '../utils/messaging.dart';
+import '../utils/svir/svir.dart';
+import '../widget/map.dart';
+import '../widget/on_eew.dart';
 
 class IntroPage extends StatelessWidget {
   IntroPage({Key? key}) : super(key: key);
 
   final Logger logger = Get.find<Logger>();
   final EarthQuake earthQuake = Get.find<EarthQuake>();
+  final Svir svir = Get.find<Svir>();
   final EqHistoryLib eqHistory = Get.find<EqHistoryLib>();
   final AppUpdate appUpdate = Get.find<AppUpdate>();
   final CustomZoomPanBehavior zoomPanBehavior =
@@ -55,7 +57,9 @@ class IntroPage extends StatelessWidget {
                           actions: [
                             TextButton.icon(
                               onPressed: () async {
-                                await launch(appUpdate.updateApi.assetUrl);
+                                await launchUrlString(
+                                  appUpdate.updateApi.assetUrl,
+                                );
                               },
                               icon: const Icon(Icons.download),
                               label: const Text('ダウンロードする'),
@@ -123,53 +127,26 @@ class IntroPage extends StatelessWidget {
                 children: [
                   Obx(
                     () => (mapData.isInited.value)
-                        ? Obx(
-                            () => SfMaps(
-                              layers: <MapLayer>[
-                                MapShapeLayer(
-                                  source: MapData.dataSource,
-                                  selectedIndex: selectedIndex.value,
-                                  onSelectionChanged: (int index) {
-                                    selectedIndex.value = index;
-                                  },
-                                  selectionSettings: const MapSelectionSettings(
-                                    color: Colors.orange,
-                                    strokeWidth: 3,
-                                  ),
-                                  zoomPanBehavior:
-                                      earthQuake.mapZoomPanBehavior,
-                                  initialMarkersCount:
-                                      earthQuake.analyzedPoint.length,
-                                  loadingBuilder: (context) => const Center(
-                                    child: CircularProgressIndicator.adaptive(
-                                      strokeWidth: 5,
-                                    ),
-                                  ),
-                                  markerBuilder: (
-                                    BuildContext context,
-                                    int index,
-                                  ) =>
-                                      markerBuilder(context, index, earthQuake),
-                                  controller:
-                                      earthQuake.mapShapeLayerController,
-                                ),
-                              ],
-                            ),
-                          )
+                        ? RealtimeIntensityMap()
                         : const Center(
                             child: CircularProgressIndicator.adaptive(),
                           ),
                   ),
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      //! child: OnEEWWidget(),
-                      child: AutoSizeText(
-                        earthQuake.msg.value,
-                        maxLines: 3,
-                      ),
-                    ),
+                  Obx(
+                    () => (svir.svirResponse.value != null )
+                        ? Align(
+                            alignment: Alignment.topCenter,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                              child: Obx(
+                                () => OnEEWWidget(
+                                  eew: svir.svirResponse.value,
+                                  now: DateTime.now(),
+                                ),
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
                   ),
                   Align(
                     alignment: Alignment.bottomRight,

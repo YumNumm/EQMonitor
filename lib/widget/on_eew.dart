@@ -1,81 +1,76 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:eqmonitor/utils/svir/svirResponse.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class OnEEWWidget extends StatelessWidget {
-  OnEEWWidget({Key? key}) : super(key: key);
+  OnEEWWidget({
+    Key? key,
+    required this.eew,
+    required this.now,
+  }) : super(key: key);
 
+  final SvirResponse eew;
+  final DateTime now;
   final headGroup = AutoSizeGroup();
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: const BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Color.fromARGB(255, 255, 0, 0),
-            spreadRadius: -2,
-            blurRadius: 10,
-          )
-        ],
+    return Card(
+      elevation: 10,
+      margin: const EdgeInsets.all(5),
+      color: (eew.body.warningFlag)
+          ? const Color.fromARGB(255, 209, 0, 0)
+          : const Color.fromARGB(255, 255, 37, 37),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
-      child: ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        child: Container(
-          height: context.height * 0.1,
-          width: context.width * 0.9,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: const Color.fromARGB(255, 158, 2, 2),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
             children: [
               Row(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
-                    margin: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                  DecoratedBox(
                     decoration: const BoxDecoration(
                       color: Color.fromARGB(255, 228, 221, 255),
                     ),
                     child: AutoSizeText(
-                      'EEW(予報)',
+                      (eew.body.warningFlag) ? 'EEW(警報)' : 'EEW(予報)',
                       group: headGroup,
                       minFontSize: 17,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.red,
+                        color: Color.fromARGB(255, 206, 0, 0),
                       ),
                     ),
                   ),
+                  const SizedBox(width: 5),
                   AutoSizeText(
-                    '福島県沖',
+                    (eew.body.endFlag)
+                        ? '最終報(第${eew.head.serial}報)'
+                        : '第${eew.head.serial}報',
                     group: headGroup,
+                    minFontSize: 17,
                     style: const TextStyle(
-                      color: Colors.white,
                       fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 0, 0, 0),
                     ),
                   ),
                 ],
               ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(),
-                  //! Overflowする....
-                  Image.asset(
-                    'assets/intensity/0.PNG',
-                    fit: BoxFit.fitHeight,
-                  ),
-                  //! 
-                ],
-              )
             ],
           ),
-        ),
+          ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            child: Image.asset(
+              'assets/intensity/${(eew.body.intensity != null) ? '${eew.body.intensity!.maxInt}.PNG' : 'unknown.PNG'}',
+              height: Get.height * 0.1,
+            ),
+          ),
+        ],
       ),
     );
   }
