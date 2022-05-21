@@ -10,7 +10,6 @@ MapMarker markerBuilder(
   final iconSize = earthQuake.iconSize.value;
   final point = earthQuake.analyzedPoint[index];
   final showShindo = earthQuake.showShindo.value;
-  print(showShindo);
   return MapMarker(
     latitude: point.lat,
     longitude: point.lon,
