@@ -98,27 +98,36 @@ class JmaImageParser {
     final h = hsv[0] / 255;
     final s = hsv[1] / 255;
     final v = hsv[2] / 255;
-    final double p;
+    var p = 0.toDouble();
     if (v > 0.1 && s > 0.75) {
       if (h > 0.1476) {
-        return 280.31 * pow(h, 6) -
+        p = 280.31 * pow(h, 6) -
             916.05 * pow(h, 5) +
             1142.6 * pow(h, 4) -
             709.95 * pow(h, 3) +
             234.65 * pow(h, 2) -
             40.27 * h +
             3.2217;
-      } else if (h <= 0.1476 && h > 0.001) {
-        return 151.4 * pow(h, 4) -
+      }
+
+      if (h <= 0.1476 && h > 0.001) {
+        p = 151.4 * pow(h, 4) -
             49.32 * pow(h, 3) +
             6.753 * pow(h, 2) -
             2.481 * h +
             0.9033;
-      } else if (h <= 0.001) {
-        return -0.005171 * pow(v, 2) - 0.3282 * v + 1.2236;
+      }
+
+      if (h <= 0.001) {
+        p = -0.005171 * pow(v, 2) - 0.3282 * v + 1.2236;
       }
     }
-    return 0;
+
+    if (p < 0) {
+      p = 0;
+    }
+
+    return p;
   }
 
   /// pixel32の値からARGBを算出する データがない場合は`null`

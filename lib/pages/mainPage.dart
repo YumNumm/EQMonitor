@@ -136,16 +136,25 @@ class IntroPage extends StatelessWidget {
                                 label: const Text('リアルタイム震度'),
                                 selected: earthQuake.showShindo.value,
                                 selectedColor: Colors.blueAccent,
-                                onSelected: (_) => earthQuake.showShindo
-                                    .value = !earthQuake.showShindo.value,
+                                onSelected: (bool b) {
+                                  if (b) {
+                                    earthQuake.showShindo.value =
+                                        !earthQuake.showShindo.value;
+                                  }
+                                },
                               ),
                             ),
                             Obx(
                               () => ChoiceChip(
                                 label: const Text('リアルタイム加速度'),
                                 selected: !earthQuake.showShindo.value,
-                                onSelected: (_) => earthQuake.showShindo
-                                    .value = !earthQuake.showShindo.value,
+                                selectedColor: Colors.blueAccent,
+                                onSelected: (bool b) {
+                                  if (b) {
+                                    earthQuake.showShindo.value =
+                                        !earthQuake.showShindo.value;
+                                  }
+                                },
                               ),
                             ),
                           ],
@@ -209,8 +218,12 @@ class IntroPage extends StatelessWidget {
                           onTap: () async => Get.defaultDialog(
                             backgroundColor: Colors.white.withOpacity(0.9),
                             title: '',
-                            content: Image.asset(
-                              'assets/nied_jma_s_w_scale.gif',
+                            content: Obx(
+                              () => Image.asset(
+                                (earthQuake.showShindo.value)
+                                    ? 'assets/nied_jma_s_w_scale.png'
+                                    : 'assets/nied_acmap_s_w_scale.png',
+                              ),
                             ),
                           ),
                           child: Container(
@@ -223,8 +236,9 @@ class IntroPage extends StatelessWidget {
                               child: Container(
                                 margin: const EdgeInsets.all(10),
                                 child: Image.asset(
-                                  'assets/nied_jma_s_w_scale.gif',
-                                  height: context.height * 0.2,
+                                  (earthQuake.showShindo.value)
+                                      ? 'assets/nied_jma_s_w_scale.png'
+                                      : 'assets/nied_acmap_s_w_scale.png',
                                 ),
                               ),
                             ),
