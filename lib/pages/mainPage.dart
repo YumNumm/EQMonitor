@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:eqmonitor/pages/eq_history_page.dart';
 import 'package:eqmonitor/pages/notification_history_page.dart';
+import 'package:eqmonitor/utils/KyoshinMonitorlib/kyoshinMonitorlibTime.dart';
 import 'package:eqmonitor/utils/eq_history/eq_history_lib.dart';
 import 'package:eqmonitor/utils/map/customZoomPanBehavior.dart';
 import 'package:eqmonitor/utils/updater/appUpdate.dart';
@@ -28,6 +29,7 @@ class IntroPage extends StatelessWidget {
   final EarthQuake earthQuake = Get.find<EarthQuake>();
   final Svir svir = Get.find<Svir>();
   final EqHistoryLib eqHistory = Get.find<EqHistoryLib>();
+  final KyoshinMonitorlibTime kmoniTime = Get.find<KyoshinMonitorlibTime>();
   final AppUpdate appUpdate = Get.find<AppUpdate>();
   final CustomZoomPanBehavior zoomPanBehavior =
       Get.find<CustomZoomPanBehavior>();
@@ -118,6 +120,45 @@ class IntroPage extends StatelessWidget {
           ],
         ),
       ),
+      floatingActionButton: Obx(
+        () => (page.value == 0)
+            ? FloatingActionButton.extended(
+                onPressed: () async {
+                  await Get.dialog<void>(
+                    AlertDialog(
+                      title: const Text('表示設定'),
+                      actions: [
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Obx(
+                              () => ChoiceChip(
+                                label: const Text('リアルタイム震度'),
+                                selected: earthQuake.showShindo.value,
+                                selectedColor: Colors.blueAccent,
+                                onSelected: (_) => earthQuake.showShindo
+                                    .value = !earthQuake.showShindo.value,
+                              ),
+                            ),
+                            Obx(
+                              () => ChoiceChip(
+                                label: const Text('リアルタイム加速度'),
+                                selected: !earthQuake.showShindo.value,
+                                onSelected: (_) => earthQuake.showShindo
+                                    .value = !earthQuake.showShindo.value,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.display_settings),
+                label: const Text('表示設定'),
+              )
+            : const SizedBox.shrink(),
+      ),
       body: SafeArea(
         child: Obx(
           () => IndexedStack(
@@ -133,18 +174,28 @@ class IntroPage extends StatelessWidget {
                           ),
                   ),
                   Obx(
-                    () => (svir.svirResponse.value != null )
-                        ? Align(
-                            alignment: Alignment.topCenter,
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                              child: Obx(
-                                () => OnEEWWidget(
-                                  eew: svir.svirResponse.value,
-                                  now: DateTime.now(),
-                                ),
-                              ),
-                            ),
+                    () => (svir.svirResponse.value != null)
+                        ? Obx(
+                            () => (svir.svirResponse.value.head.dateTime
+                                        .difference(kmoniTime.now.value)
+                                        .inSeconds <=
+                                    180)
+                                ? Align(
+                                    alignment: Alignment.topCenter,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                        10,
+                                        10,
+                                        10,
+                                        0,
+                                      ),
+                                      child: OnEEWWidget(
+                                        eew: svir.svirResponse.value,
+                                        now: kmoniTime.now.value,
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox.shrink(),
                           )
                         : const SizedBox.shrink(),
                   ),

@@ -1,11 +1,8 @@
 // ignore_for_file: library_prefixes
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:eqmonitor/const/obspoints.dart';
-import 'package:eqmonitor/utils/KyoshinMonitorlib/ApiResult/EEW.dart';
-import 'package:eqmonitor/utils/KyoshinMonitorlib/ApiResult/EEWResult.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/UrlGenerator/RealTimeDataType.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/UrlGenerator/WebApiUrlGenerators.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/imageParser/jmaParser.dart';
@@ -43,6 +40,8 @@ class EarthQuake extends GetxController {
     ..maxZoomLevel = 50;
   final df = DateFormat('yyyyMMdd/yyyyMMddHHmmss');
 
+  /// 震度かPGAか
+  final showShindo = true.obs;
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -61,9 +60,11 @@ class EarthQuake extends GetxController {
           lon: obsPoint.lon,
           x: obsPoint.x,
           y: obsPoint.y,
-          color: const Color(0x00FFFFFF),
+          shindoColor: const Color(0x00FFFFFF),
+          pgaColor: const Color(0x00FFFFFF),
           shindo: null,
           zoomLevel: zoomLevel.value,
+          pga: null,
         ),
       );
     }
@@ -83,10 +84,9 @@ class EarthQuake extends GetxController {
   }
 
   Future<void> updateEQData() async {
-
     // PGA Update
     try {
-      final res = await http.get(
+      final shindoPic = await http.get(
         Uri.parse(
           webApiUrlGenerator.RealtimeBase(
             dt: kyoshinMonitorlibTime.now.value,
@@ -95,11 +95,32 @@ class EarthQuake extends GetxController {
           ),
         ),
       );
-      if (res.statusCode != 200) {
-        logger.wtf('リアルタイム震度の画像を取得できませんでした。(status: ${res.statusCode})');
+      print(
+        webApiUrlGenerator.RealtimeBase(
+          dt: kyoshinMonitorlibTime.now.value,
+          type: RealtimeDataType.Shindo,
+          sorb: 's',
+        ),
+      );
+      final pgaPic = await http.get(
+        Uri.parse(
+          webApiUrlGenerator.RealtimeBase(
+            dt: kyoshinMonitorlibTime.now.value,
+            type: RealtimeDataType.Pga,
+            sorb: 's',
+          ),
+        ),
+      );
+      if (shindoPic.statusCode != 200) {
+        logger.wtf('リアルタイム震度の画像を取得できませんでした。(status: ${shindoPic.statusCode})');
       }
-      analyzedPoint.value =
-          jmaImageParser.imageParser(bodyBytes: res.bodyBytes);
+      if (pgaPic.statusCode != 200) {
+        logger.wtf('PGAの取得に失敗');
+      }
+      analyzedPoint.value = jmaImageParser.imageParser(
+        shindoPic: shindoPic.bodyBytes,
+        pgaPic: pgaPic.bodyBytes,
+      );
       mapShapeLayerController.updateMarkers(
         List<int>.generate(analyzedPoint.length, (i) => i),
       );
@@ -109,7 +130,8 @@ class EarthQuake extends GetxController {
           analyzedPoint.where((p0) => p0.shindo != null).length;
     } catch (e) {
       logger.w(e);
-      analyzedPoint.value = jmaImageParser.imageParser(bodyBytes: []);
+      analyzedPoint.value =
+          jmaImageParser.imageParser(pgaPic: [], shindoPic: []);
       mapShapeLayerController.updateMarkers(
         List<int>.generate(analyzedPoint.length, (i) => i),
       );
@@ -183,6 +205,7 @@ class OBSPoint {
         lon = double.parse(lis[4].toString()),
         x = int.parse(lis[5].toString()),
         y = int.parse(lis[6].toString());
+
   final String code;
   final String name;
   final String pref;

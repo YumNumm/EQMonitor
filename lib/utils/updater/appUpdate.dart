@@ -30,7 +30,7 @@ class AppUpdate extends GetxController {
     final resData = UpdateAPI.fromJson(
       json.decode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>,
     );
-    if (int.parse(packageInfo.buildNumber) < resData.buildNum || kDebugMode) {
+    if (int.parse(packageInfo.buildNumber) < resData.buildNum && !kDebugMode) {
       updateApi = resData;
       hasUpdate.value = true;
     }

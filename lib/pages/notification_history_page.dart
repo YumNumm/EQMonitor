@@ -40,10 +40,13 @@ class NotificationHistoryPage extends StatelessWidget {
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.asset(
-                          h.pictureUrl.toString().replaceAll(
+                          h.pictureUrl
+                              .toString()
+                              .replaceAll(
                                 'https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/docs/intensity/',
                                 'assets/intensity/',
-                              ),
+                              )
+                              .replaceAll('不明', 'unknown'),
                         ),
                       )
                     : Container(),
@@ -66,8 +69,11 @@ class NotificationHistoryPage extends StatelessWidget {
                   Image.network(
                     h.bigPictureUrl.toString(),
                     fit: BoxFit.fill,
-                    loadingBuilder: (BuildContext context, Widget child,
-                        ImageChunkEvent? loadingProgress) {
+                    loadingBuilder: (
+                      BuildContext context,
+                      Widget child,
+                      ImageChunkEvent? loadingProgress,
+                    ) {
                       if (loadingProgress == null) {
                         return Padding(
                           padding: const EdgeInsets.all(8),

@@ -3,11 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
 
 MapMarker markerBuilder(
-    BuildContext context, int index, EarthQuake earthQuake) {
+  BuildContext context,
+  int index,
+  EarthQuake earthQuake,
+) {
   final iconSize = earthQuake.iconSize.value;
+  final point = earthQuake.analyzedPoint[index];
+  final showShindo = earthQuake.showShindo.value;
+  print(showShindo);
   return MapMarker(
-    latitude: earthQuake.analyzedPoint[index].lat,
-    longitude: earthQuake.analyzedPoint[index].lon,
+    latitude: point.lat,
+    longitude: point.lon,
     child: (earthQuake.zoomLevel.value > 20)
         ? Stack(
             children: [
@@ -15,22 +21,24 @@ MapMarker markerBuilder(
                 child: Container(
                   width: earthQuake.iconSize.value,
                   height: earthQuake.iconSize.value,
-                  decoration: (earthQuake.analyzedPoint[index].shindo == null)
+                  decoration: (point.shindo == null)
                       ? const BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.grey,
                         )
                       : BoxDecoration(
                           shape: BoxShape.circle,
-                          color: earthQuake.analyzedPoint[index].color,
+                          color:
+                              showShindo ? point.shindoColor : point.pgaColor,
                         ),
                 ),
               ),
               Align(
                 child: Text(
-                  (earthQuake.analyzedPoint[index].shindo == null)
-                      ? earthQuake.analyzedPoint[index].name
-                      : '${earthQuake.analyzedPoint[index].name}\n震度: ${earthQuake.analyzedPoint[index].shindo}',
+                  (point.shindo == null)
+                      ? point.name
+                      : '${point.name}\n震度: ${point.shindo!}\n${(point.pga == null) ? 'PGA:不明' : 'PGA: ${point.pga}'}',
+                  textScaleFactor: 0.8,
                 ),
               )
             ],
@@ -38,7 +46,7 @@ MapMarker markerBuilder(
         : Container(
             width: earthQuake.iconSize.value,
             height: earthQuake.iconSize.value,
-            decoration: (earthQuake.analyzedPoint[index].shindo == null)
+            decoration: (point.shindo == null)
                 ? BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
@@ -47,7 +55,7 @@ MapMarker markerBuilder(
                   )
                 : BoxDecoration(
                     shape: BoxShape.circle,
-                    color: earthQuake.analyzedPoint[index].color,
+                    color: showShindo ? point.shindoColor : point.pgaColor,
                   ),
           ),
   );
