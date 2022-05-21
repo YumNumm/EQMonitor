@@ -9,9 +9,12 @@ class AnalyzedPoint extends GetxController {
   final double lon;
   final int x;
   final int y;
-  Color color;
+  Color shindoColor;
+  Color pgaColor;
   double? shindo;
   double zoomLevel;
+  double? pga;
+
   AnalyzedPoint({
     required this.code,
     required this.name,
@@ -20,8 +23,10 @@ class AnalyzedPoint extends GetxController {
     required this.lon,
     required this.x,
     required this.y,
-    required this.color,
+    required this.shindoColor,
+    required this.pgaColor,
     required this.shindo,
     required this.zoomLevel,
+    required this.pga,
   });
 }

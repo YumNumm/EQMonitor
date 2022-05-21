@@ -16,62 +16,78 @@ class OnEEWWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 10,
-      margin: const EdgeInsets.all(5),
-      color: (eew.body.warningFlag)
-          ? const Color.fromARGB(255, 209, 0, 0)
-          : const Color.fromARGB(255, 255, 37, 37),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
+    print(eew.head.dateTime);
+    if (eew.head.dateTime.difference(now).inSeconds >= -180) {
+      return Card(
+        elevation: 10,
+        margin: const EdgeInsets.all(5),
+        color: (eew.body.warningFlag)
+            ? const Color.fromARGB(255, 209, 0, 0)
+            : const Color.fromARGB(255, 255, 37, 37),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              Column(
                 children: [
-                  DecoratedBox(
-                    decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 228, 221, 255),
-                    ),
-                    child: AutoSizeText(
-                      (eew.body.warningFlag) ? 'EEW(警報)' : 'EEW(予報)',
-                      group: headGroup,
-                      minFontSize: 17,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 206, 0, 0),
+                  Row(
+                    children: [
+                      DecoratedBox(
+                        decoration: const BoxDecoration(
+                          color: Color.fromARGB(255, 228, 221, 255),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(2),
+                          child: AutoSizeText(
+                            (eew.body.warningFlag) ? 'EEW(警報)' : 'EEW(予報)',
+                            group: headGroup,
+                            minFontSize: 17,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 206, 0, 0),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(width: 5),
-                  AutoSizeText(
-                    (eew.body.endFlag)
-                        ? '最終報(第${eew.head.serial}報)'
-                        : '第${eew.head.serial}報',
-                    group: headGroup,
-                    minFontSize: 17,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 0, 0, 0),
-                    ),
+                      const SizedBox(width: 5),
+                      Padding(
+                        padding: const EdgeInsets.all(2),
+                        child: AutoSizeText(
+                          (eew.body.endFlag)
+                              ? '最終報(第${eew.head.serial}報)'
+                              : '第${eew.head.serial}報',
+                          group: headGroup,
+                          minFontSize: 17,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
+              ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                child: Image.asset(
+                  'assets/intensity/${(eew.body.intensity != null) ? '${eew.body.intensity!.maxInt}.PNG' : 'unknown.PNG'}',
+                  height: Get.height * 0.1,
+                ),
+              ),
+              Text('NOW: ${now.toIso8601String()}'),
+              Text('EEW: ${eew.head.dateTime.toIso8601String()}'),
             ],
           ),
-          ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-            child: Image.asset(
-              'assets/intensity/${(eew.body.intensity != null) ? '${eew.body.intensity!.maxInt}.PNG' : 'unknown.PNG'}',
-              height: Get.height * 0.1,
-            ),
-          ),
-        ],
-      ),
-    );
+        ),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
   }
 }
