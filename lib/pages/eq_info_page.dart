@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eqmonitor/utils/dmdata/schemas/commonHeader.dart';
 import 'package:eqmonitor/utils/dmdata/schemas/eq-information/earthquake-information.dart';
 import 'package:eqmonitor/utils/eq_history/eq_history_content.dart';
@@ -9,12 +10,15 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class EqInfoPage extends StatelessWidget {
   EqInfoPage({Key? key}) : super(key: key);
   final GlobalKey shareKey = GlobalKey();
+
+  final Logger logger = Get.find<Logger>();
 
   final payload =
       (Get.arguments as Map<String, dynamic>)['payload'] as CommonHead;
@@ -51,46 +55,14 @@ class EqInfoPage extends StatelessWidget {
               children: [
                 Container(
                   margin: const EdgeInsets.all(10),
-                  child: Image.network(
-                    eqLog.imageUrl,
-                    cacheWidth: 1024,
-                    cacheHeight: 512,
-                    errorBuilder:
-                        (BuildContext context, Object obj, StackTrace? st) {
-                      return Text('エラーが発生しました\n$st');
-                    },
-                    loadingBuilder: (BuildContext context, Widget child,
-                        ImageChunkEvent? loadingProgress) {
-                      if (loadingProgress == null) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: child,
-                          ),
-                        );
-                      }
-                      return Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Column(
-                            children: [
-                              Text(
-                                '${(loadingProgress.cumulativeBytesLoaded / 1024).ceilToDouble()}KB'
-                                '${(loadingProgress.expectedTotalBytes != null) ? '/${(loadingProgress.expectedTotalBytes! / 1024).ceilToDouble()}KB' : ''}',
-                              ),
-                              CircularProgressIndicator.adaptive(
-                                value: loadingProgress.expectedTotalBytes !=
-                                        null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                    : null,
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
+                  child: CachedNetworkImage(
+                    imageUrl: eqLog.imageUrl,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) =>
+                            CircularProgressIndicator(
+                                value: downloadProgress.progress),
+                    errorWidget: (context, url, dynamic error) =>
+                        const Icon(Icons.error),
                   ),
                 ),
                 ClipRRect(
@@ -216,12 +188,14 @@ class EqInfoPage extends StatelessWidget {
       await Share.shareFiles([path], subject: 'image');
       await applicationDocumentsFile.delete();
     } catch (error) {
-      print(error);
+      logger.i(error);
     }
   }
 
   Future<File> _getApplicationDocumentsFile(
-      String text, List<int> imageData) async {
+    String text,
+    List<int> imageData,
+  ) async {
     final directory = await getApplicationDocumentsDirectory();
 
     final exportFile = File('${directory.path}/$text.png');

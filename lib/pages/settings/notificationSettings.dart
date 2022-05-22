@@ -35,46 +35,6 @@ Widget notificationSettings(BuildContext context) {
             description: const Text('OSの通知設定を開きます'),
             onPressed: (_) async =>
                 await AwesomeNotifications().showNotificationConfigPage(),
-            /*trailing: Obx(
-              () => Switch(
-                value: messaging.isAllNotificationDisabled.value,
-                onChanged: (_) async {
-                  final i = 0.obs;
-                  await Get.showOverlay(
-                    loadingWidget: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const CircularProgressIndicator.adaptive(),
-                          Obx(
-                            () => Text(
-                              '処理中....(${i.value})',
-                              style: context.textTheme.displaySmall,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    asyncFunction: () async {
-                      if (messaging.isAllNotificationDisabled.value) {
-                        for (final e in Topics.values) {
-                          i.value++;
-                          await fcm.unsubscribeFromTopic(e.name);
-                        }
-                      } else {
-                        // 有効にする
-                        for (final e in Topics.values) {
-                          i.value++;
-                          await fcm.subscribeToTopic(e.name);
-                        }
-                      }
-                    },
-                  );
-                  messaging.isAllNotificationDisabled.value =
-                      !messaging.isAllNotificationDisabled.value;
-                },
-              ),
-            ),*/
           ),
         ],
       ),
@@ -86,13 +46,6 @@ Widget notificationSettings(BuildContext context) {
             description: const Text('緊急地震速報(予報)をすべて通知'),
             onPressed: (_) async {
               settings.notifAll.value = !settings.notifAll.value;
-              if (settings.notifAll.value) {
-                settings
-                  ..notifFirstReport.value = true
-                  ..notifLastReport.value = true
-                  ..notifOnUpdate.value = true
-                  ..notifOnUpwardUpdate.value = true;
-              }
               await settings.save();
             },
             trailing: Obx(
@@ -229,7 +182,7 @@ Widget notificationSettings(BuildContext context) {
                   channelKey: 'fromdev',
                   title: '[テスト通知]',
                   body: 'これはテスト通知です\n$engine',
-                  backgroundColor: Color.fromARGB(255, 255, 0, 0),
+                  backgroundColor: const Color.fromARGB(255, 255, 0, 0),
                   criticalAlert: true,
                   category: NotificationCategory.Social,
                 ),

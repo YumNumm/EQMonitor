@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eqmonitor/utils/EQMonitorApi/history_content.dart';
 import 'package:eqmonitor/utils/EQMonitorApi/history_lib.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +58,7 @@ class NotificationHistoryPage extends StatelessWidget {
               children: [
                 Text(df.format(h.publishedDate.toLocal())),
                 //if (h.bigPictureUrl != null)
-                //  Image.network(h.bigPictureUrl.toString())
+                //  CachedNetworkImage(imageUrl:h.bigPictureUrl.toString())
               ],
             );
             if (h.type == NotificationType.vxse53) {
@@ -66,44 +67,14 @@ class NotificationHistoryPage extends StatelessWidget {
                 leading: leading,
                 subtitle: subtitle,
                 children: [
-                  Image.network(
+                  CachedNetworkImage(imageUrl:
                     h.bigPictureUrl.toString(),
-                    fit: BoxFit.fill,
-                    loadingBuilder: (
-                      BuildContext context,
-                      Widget child,
-                      ImageChunkEvent? loadingProgress,
-                    ) {
-                      if (loadingProgress == null) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: child,
-                          ),
-                        );
-                      }
-                      return Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Column(
-                            children: [
-                              Text(
-                                '${(loadingProgress.cumulativeBytesLoaded / 1024).ceilToDouble()}KB'
-                                '${(loadingProgress.expectedTotalBytes != null) ? '/${(loadingProgress.expectedTotalBytes! / 1024).ceilToDouble()}KB' : ''}',
-                              ),
-                              CircularProgressIndicator.adaptive(
-                                value: loadingProgress.expectedTotalBytes !=
-                                        null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                    : null,
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
+                   progressIndicatorBuilder:
+                        (context, url, downloadProgress) =>
+                            CircularProgressIndicator(
+                                value: downloadProgress.progress),
+                    errorWidget: (context, url, dynamic error) =>
+                        const Icon(Icons.error),
                   )
                 ],
               );
