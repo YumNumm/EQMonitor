@@ -1,4 +1,5 @@
 import 'package:eqmonitor/utils/earthquake.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
 
@@ -32,6 +33,13 @@ MapMarker markerBuilder(
                         ),
                 ),
               ),
+              if (kDebugMode)
+                Align(
+                  child: Image.asset(
+                    'assets/intensity/3.PNG',
+                    height: iconSize,
+                  ),
+                ),
               Align(
                 child: Text(
                   (point.shindo == null)
@@ -39,7 +47,7 @@ MapMarker markerBuilder(
                       : '${point.name}\n震度: ${point.shindo!}\n${(point.pga == null) ? 'PGA:不明' : 'PGA: ${point.pga}'}',
                   textScaleFactor: 0.8,
                 ),
-              )
+              ),
             ],
           )
         : Container(
@@ -56,6 +64,7 @@ MapMarker markerBuilder(
                     shape: BoxShape.circle,
                     color: showShindo ? point.shindoColor : point.pgaColor,
                   ),
+          
           ),
   );
 }

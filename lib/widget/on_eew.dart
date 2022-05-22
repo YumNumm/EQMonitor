@@ -16,7 +16,6 @@ class OnEEWWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(eew.head.dateTime);
     if (eew.head.dateTime.difference(now).inSeconds >= -180) {
       return Card(
         elevation: 10,

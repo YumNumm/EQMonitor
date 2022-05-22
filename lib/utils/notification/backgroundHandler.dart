@@ -6,6 +6,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dart_twitter_api/twitter_api.dart';
 import 'package:eqmonitor/const/const.dart';
 import 'package:eqmonitor/private/keys.dart';
+import 'package:eqmonitor/utils/eq_history/eq_history_lib.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -88,4 +89,5 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       }
     }
   }
+  await EqHistoryLib().fetch();
 }

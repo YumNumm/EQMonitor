@@ -95,13 +95,6 @@ class EarthQuake extends GetxController {
           ),
         ),
       );
-      print(
-        webApiUrlGenerator.RealtimeBase(
-          dt: kyoshinMonitorlibTime.now.value,
-          type: RealtimeDataType.Shindo,
-          sorb: 's',
-        ),
-      );
       final pgaPic = await http.get(
         Uri.parse(
           webApiUrlGenerator.RealtimeBase(

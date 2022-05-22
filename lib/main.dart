@@ -17,13 +17,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import './const/const.dart';
-import 'db/notificationSettings/notificationSettings.dart';
 import 'pages/mainPage.dart';
 import 'pages/settingscreen.dart';
 import 'pages/splashscreen.dart';
@@ -39,18 +37,13 @@ import 'utils/updater/appUpdate.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent, // transparent status bar
     ),
   );
   //? Setup DB
-  await Hive.initFlutter();
-  Hive.registerAdapter(NotificationSettingsStateAdapter());
-  Get.put<Box<NotificationSettingsState?>>(
-    await Hive.openBox<NotificationSettingsState?>('NotificationSettings'),
-  );
+  // final dir = await getApplicationSupportDirectory();
   //? End DB
   final prefs =
       Get.put<SharedPreferences>(await SharedPreferences.getInstance());
