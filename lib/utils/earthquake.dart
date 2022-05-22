@@ -1,8 +1,11 @@
 // ignore_for_file: library_prefixes
 
 import 'dart:async';
+import 'dart:collection';
+import 'dart:typed_data';
 
 import 'package:eqmonitor/const/obspoints.dart';
+import 'package:eqmonitor/utils/KyoshinMonitorlib/JmaIntensity.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/UrlGenerator/RealTimeDataType.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/UrlGenerator/WebApiUrlGenerators.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/imageParser/jmaParser.dart';
@@ -39,6 +42,7 @@ class EarthQuake extends GetxController {
     ..enableDoubleTapZooming
     ..maxZoomLevel = 50;
   final df = DateFormat('yyyyMMdd/yyyyMMddHHmmss');
+  final Rx<Queue<Uint8List>> imageQueue = Queue<Uint8List>().obs;
 
   /// 震度かPGAか
   final showShindo = true.obs;
@@ -65,6 +69,7 @@ class EarthQuake extends GetxController {
           shindo: null,
           zoomLevel: zoomLevel.value,
           pga: null,
+          intensity: JmaIntensity.Int0,
         ),
       );
     }
@@ -111,8 +116,11 @@ class EarthQuake extends GetxController {
         logger.wtf('PGAの取得に失敗');
       }
       analyzedPoint.value = jmaImageParser.imageParser(
-        shindoPic: shindoPic.bodyBytes,
+        shindoPic: (imageQueue.value.isEmpty)
+            ? shindoPic.bodyBytes
+            : imageQueue.value.removeFirst(),
         pgaPic: pgaPic.bodyBytes,
+        isPng: imageQueue.value.isNotEmpty,
       );
       mapShapeLayerController.updateMarkers(
         List<int>.generate(analyzedPoint.length, (i) => i),
@@ -121,10 +129,13 @@ class EarthQuake extends GetxController {
           .format(kyoshinMonitorlibTime.now.value);
       numberOfAnalyzedPoint.value =
           analyzedPoint.where((p0) => p0.shindo != null).length;
-    } catch (e) {
+    } on Exception catch (e) {
       logger.w(e);
-      analyzedPoint.value =
-          jmaImageParser.imageParser(pgaPic: [], shindoPic: []);
+      analyzedPoint.value = jmaImageParser.imageParser(
+        pgaPic: [],
+        shindoPic: [],
+        isPng: false,
+      );
       mapShapeLayerController.updateMarkers(
         List<int>.generate(analyzedPoint.length, (i) => i),
       );
@@ -133,50 +144,6 @@ class EarthQuake extends GetxController {
       numberOfAnalyzedPoint.value = 0;
     }
   }
-
-  /*Future<void> updateEQLog() async {
-    try {
-      const url = 'https://typhoon.yahoo.co.jp/weather/jp/earthquake/list/';
-      final res = await http.get(Uri.parse(url));
-      if (res.statusCode != 200) {
-        print('ERROR');
-        return;
-      }
-      final doc = parse(res.body);
-      final result = doc.querySelectorAll(
-        '#main > .yjw_main_md > #eqhist > table > tbody > tr',
-      );
-      final eqTemp = <EQLog>[];
-      for (final e in result) {
-        final temp = <String>[];
-        for (final el in e.children) {
-          temp.add(el.text);
-        }
-        try {
-          eqTemp.add(EQLog.fromList(temp));
-        } catch (_) {}
-      }
-      await HomeWidget.saveWidgetData<String>(
-        'max_intensity',
-        eqTemp[0].maxIntensity,
-      );
-      await HomeWidget.saveWidgetData<String>('place', eqTemp[0].place);
-      await HomeWidget.saveWidgetData<String>(
-        'magnitude',
-        'M${eqTemp[0].magunitude}',
-      );
-      await HomeWidget.saveWidgetData<String>(
-        'time',
-        DateFormat('yyyy/MM/dd HH:mm頃').format(eqTemp[0].time),
-      );
-      await HomeWidget.updateWidget(
-        androidName: 'latestwidget',
-      );
-      eqLog.value = eqTemp;
-    } catch (e) {
-      logger.e(e);
-    }
-  }*/
 }
 
 class OBSPoint {

@@ -3,45 +3,48 @@
 
 enum JmaIntensity {
   /// 震度不明
-  Unknown,
+  Unknown("unknown"),
 
   /// 震度1未満
-  Int0,
+  Int0("0"),
 
   /// 震度1
-  Int1,
+  Int1("1"),
 
   /// 震度2
-  Int2,
+  Int2("2"),
 
   /// 震度3
-  Int3,
+  Int3("3"),
 
   /// 震度4
-  Int4,
+  Int4("4"),
 
   /// 震度5弱
-  Int5Lower,
+  Int5Lower("5-"),
 
   /// 震度5強
-  Int5Upper,
+  Int5Upper("5+"),
 
   /// 震度6弱
-  Int6Lower,
+  Int6Lower("6-"),
 
   /// 震度6強
-  Int6Upper,
+  Int6Upper("6+"),
 
   /// 震度7
-  Int7,
+  Int7("7"),
 
   /// 震度異常
-  Error,
+  Error("unknown");
+
+  final String name;
+  const JmaIntensity(this.name);
 }
 
 /// JMAIntensityの拡張メゾッド
 class JmaIntensityExtensions {
-  /// 生の震度の値を気象庁震度階級(`double`型へ変換)
+  /// 生の震度の値を気象庁震度階級(`JmaIntensity`型へ変換)
   static JmaIntensity toJmaIntensity({required double? intensity}) {
     if (intensity == null) {
       return JmaIntensity.Unknown;

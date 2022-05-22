@@ -3,8 +3,10 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:eqmonitor/pages/eq_info_page.dart';
+import 'package:eqmonitor/utils/CustomImageLoader/custom_image_loader.dart';
 import 'package:eqmonitor/utils/EQMonitorApi/history_lib.dart';
 import 'package:eqmonitor/utils/eq_history/eq_history_lib.dart';
+import 'package:eqmonitor/utils/image_cache/image_cache.dart';
 import 'package:eqmonitor/utils/svir/svir.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -82,6 +84,10 @@ Future<void> main() async {
   Get.put<HistoryLib>(HistoryLib());
   Get.put<EqHistoryLib>(EqHistoryLib());
   Get.put<EarthQuake>(EarthQuake());
+  Get.put<CustomImageLoader>(CustomImageLoader());
+
+  final assetImageCache = Get.put<AssetImageCache>(AssetImageCache());
+  await assetImageCache.onInit();
 
   runApp(
     DevicePreview(
