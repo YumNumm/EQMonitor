@@ -1,5 +1,6 @@
+import 'package:eqmonitor/utils/KyoshinMonitorlib/JmaIntensity.dart';
 import 'package:eqmonitor/utils/earthquake.dart';
-import 'package:flutter/foundation.dart';
+import 'package:eqmonitor/utils/image_cache/image_cache.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
 
@@ -7,10 +8,12 @@ MapMarker markerBuilder(
   BuildContext context,
   int index,
   EarthQuake earthQuake,
+  AssetImageCache aic,
 ) {
   final iconSize = earthQuake.iconSize.value;
   final point = earthQuake.analyzedPoint[index];
   final showShindo = earthQuake.showShindo.value;
+
   return MapMarker(
     latitude: point.lat,
     longitude: point.lon,
@@ -33,38 +36,42 @@ MapMarker markerBuilder(
                         ),
                 ),
               ),
-              if (kDebugMode)
-                Align(
-                  child: Image.asset(
-                    'assets/intensity/3.PNG',
-                    height: iconSize,
-                  ),
-                ),
               Align(
                 child: Text(
                   (point.shindo == null)
                       ? point.name
-                      : '${point.name}\n震度: ${point.shindo!}\n${(point.pga == null) ? 'PGA:不明' : 'PGA: ${point.pga}'}',
+                      : '${point.name}\n震度: ${point.shindo!.toStringAsFixed(1)}\n${(point.pga == null) ? 'PGA:不明' : 'PGA: ${point.pga!.toStringAsFixed(1)}'}',
                   textScaleFactor: 0.8,
                 ),
               ),
             ],
           )
-        : Container(
-            width: earthQuake.iconSize.value,
-            height: earthQuake.iconSize.value,
-            decoration: (point.shindo == null)
-                ? BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                  )
-                : BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: showShindo ? point.shindoColor : point.pgaColor,
+        : (point.intensity != JmaIntensity.Int0 &&
+                point.intensity != JmaIntensity.Unknown)
+            ? Align(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: Image.memory(
+                    aic.assets[point.intensity]!,
+                    height: iconSize * 3,
+                    width: iconSize * 3,
                   ),
-          
-          ),
+                ),
+              )
+            : Container(
+                width: earthQuake.iconSize.value,
+                height: earthQuake.iconSize.value,
+                decoration: (point.shindo == null)
+                    ? BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                      )
+                    : BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: showShindo ? point.shindoColor : point.pgaColor,
+                      ),
+              ),
   );
 }

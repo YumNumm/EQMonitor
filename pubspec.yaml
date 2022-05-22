@@ -6,7 +6,7 @@ publish_to: "none"
 version: 0.3.3+88
 
 environment:
-  sdk: ">=2.15.0 <3.0.0"
+  sdk: ">=2.17.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -65,6 +65,12 @@ dependencies:
   share_plus: ^4.0.4
   flutter_cache_manager: ^3.3.0
   cached_network_image: ^3.2.1
+  color_convert:
+    git:
+      url: https://github.com/Genialngash/color_convert.git
+  file_picker: ^4.5.1
+  flutter_archive: ^5.0.0
+  flutter_colorpicker: ^1.0.3
 
 dev_dependencies:
   flutter_test:

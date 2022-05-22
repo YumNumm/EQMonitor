@@ -1,8 +1,8 @@
 // ignore_for_file: file_names
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:eqmonitor/utils/CustomImageLoader/custom_image_loader.dart';
 import 'package:eqmonitor/utils/earthquake.dart';
-import 'package:eqmonitor/utils/eq_history/eq_history_lib.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,6 +24,7 @@ final EarthQuake eq = Get.find<EarthQuake>();
 final SharedPreferences prefs = Get.find<SharedPreferences>();
 final fcm = Get.find<FirebaseMessaging>();
 final Messaging messaging = Get.find<Messaging>();
+final CustomImageLoader customImageLoader = Get.find<CustomImageLoader>();
 final RxInt devCounter = 0.obs;
 Widget aboutThisApp(BuildContext context) {
   return SettingsList(
@@ -102,6 +103,13 @@ Widget aboutThisApp(BuildContext context) {
                         subtitle: const Text('強震モニタ画像解析手法'),
                         onTap: () => launch(
                           'https://github.com/ingen084/KyoshinMonitorLib',
+                        ),
+                      ),
+                      ListTile(
+                        title: const Text('François LN / フランソワ (JQuake) 氏'),
+                        subtitle: const Text('強震モニタ画像解析手法'),
+                        onTap: () => launch(
+                          'https://qiita.com/NoneType1/items/a4d2cf932e20b56ca444',
                         ),
                       ),
                       ListTile(
@@ -284,6 +292,10 @@ Widget aboutThisApp(BuildContext context) {
                 }
               }
             },
+          ),
+          SettingsTile(
+            title: const SizedBox.shrink(),
+            onPressed: (_) async => customImageLoader.chooseFile(),
           ),
         ],
       ),

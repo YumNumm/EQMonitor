@@ -7,6 +7,7 @@ import 'package:eqmonitor/utils/KyoshinMonitorlib/kyoshinMonitorlibTime.dart';
 import 'package:eqmonitor/utils/eq_history/eq_history_lib.dart';
 import 'package:eqmonitor/utils/map/customZoomPanBehavior.dart';
 import 'package:eqmonitor/utils/updater/appUpdate.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -15,6 +16,7 @@ import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import '../utils/analyzedpoints.dart';
 import '../utils/earthquake.dart';
 import '../utils/map.dart';
 import '../utils/messaging.dart';
@@ -39,6 +41,8 @@ class IntroPage extends StatelessWidget {
   final MapData mapData = Get.find<MapData>();
   final RxInt page = 0.obs;
   final RxInt selectedIndex = (-1).obs;
+  final RxBool showLegend = true.obs;
+  final Rx<Color?> mapBackgroundColor = null.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -122,49 +126,132 @@ class IntroPage extends StatelessWidget {
       ),
       floatingActionButton: Obx(
         () => (page.value == 0)
-            ? FloatingActionButton.extended(
-                onPressed: () async {
-                  await Get.dialog<void>(
-                    AlertDialog(
-                      title: const Text('表示設定'),
-                      actions: [
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Obx(
-                              () => ChoiceChip(
-                                label: const Text('リアルタイム震度'),
-                                selected: earthQuake.showShindo.value,
-                                selectedColor: Colors.blueAccent,
-                                onSelected: (bool b) {
-                                  if (b) {
-                                    earthQuake.showShindo.value =
-                                        !earthQuake.showShindo.value;
-                                  }
-                                },
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Obx(
+                    () => (showLegend.value)
+                        ? Container(
+                            margin: const EdgeInsets.all(10),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: GestureDetector(
+                                onTap: () async => Get.defaultDialog(
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 0, 0, 0)
+                                          .withOpacity(0.9),
+                                  title: '',
+                                  content: Obx(
+                                    () => Image.asset(
+                                      (earthQuake.showShindo.value)
+                                          ? 'assets/nied_jma_s_w_scale.png'
+                                          : 'assets/nied_acmap_s_w_scale.png',
+                                    ),
+                                  ),
+                                ),
+                                child: Container(
+                                  color: const Color.fromARGB(255, 0, 0, 0)
+                                      .withOpacity(0.15),
+                                  child: BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                      sigmaX: 10,
+                                      sigmaY: 10,
+                                    ),
+                                    child: Container(
+                                      margin: const EdgeInsets.all(10),
+                                      child: Image.asset(
+                                        (earthQuake.showShindo.value)
+                                            ? 'assets/nied_jma_s_w_scale.png'
+                                            : 'assets/nied_acmap_s_w_scale.png',
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                            Obx(
-                              () => ChoiceChip(
-                                label: const Text('リアルタイム加速度'),
-                                selected: !earthQuake.showShindo.value,
-                                selectedColor: Colors.blueAccent,
-                                onSelected: (bool b) {
-                                  if (b) {
-                                    earthQuake.showShindo.value =
-                                        !earthQuake.showShindo.value;
-                                  }
-                                },
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+                  FloatingActionButton.extended(
+                    onPressed: () async {
+                      await Get.dialog<void>(
+                        AlertDialog(
+                          title: const Text('表示設定'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('マップに表示するデータ'),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Obx(
+                                    () => ChoiceChip(
+                                      label: const Text('リアルタイム震度'),
+                                      selected: earthQuake.showShindo.value,
+                                      selectedColor: Colors.blueAccent,
+                                      onSelected: (bool b) {
+                                        if (b) {
+                                          earthQuake.showShindo.value =
+                                              !earthQuake.showShindo.value;
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                  Obx(
+                                    () => ChoiceChip(
+                                      label: const Text('リアルタイム加速度'),
+                                      selected: !earthQuake.showShindo.value,
+                                      selectedColor: Colors.blueAccent,
+                                      onSelected: (bool b) {
+                                        if (b) {
+                                          earthQuake.showShindo.value =
+                                              !earthQuake.showShindo.value;
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.display_settings),
-                label: const Text('表示設定'),
+                              const Divider(),
+                              /*ElevatedButton(
+                                child: const Text('マップの背景選択'),
+                                onPressed: () async {
+                                  var tmpColor =
+                                      mapBackgroundColor.value ?? Colors.grey;
+                                  await Get.dialog<void>(
+                                    AlertDialog(
+                                      title: const Text('Pick a color!'),
+                                      content: SingleChildScrollView(
+                                        child: MaterialPicker(
+                                          pickerColor: tmpColor,
+                                          onColorChanged: (Color c) =>
+                                              tmpColor = c,
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        ElevatedButton(
+                                          child: const Text('決定'),
+                                          onPressed: () {
+                                            mapBackgroundColor.value = tmpColor;
+                                            Get.back<void>();
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),*/
+                            ],
+                          ),
+                          actions: const [],
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.display_settings),
+                    label: const Text('表示設定'),
+                  ),
+                ],
               )
             : const SizedBox.shrink(),
       ),
@@ -177,7 +264,11 @@ class IntroPage extends StatelessWidget {
                 children: [
                   Obx(
                     () => (mapData.isInited.value)
-                        ? RealtimeIntensityMap()
+                        ? Obx(
+                            () => RealtimeIntensityMap(
+                              backgroundColor: mapBackgroundColor.value,
+                            ),
+                          )
                         : const Center(
                             child: CircularProgressIndicator.adaptive(),
                           ),
@@ -186,9 +277,10 @@ class IntroPage extends StatelessWidget {
                     () => (svir.svirResponse.value != null)
                         ? Obx(
                             () => (svir.svirResponse.value.head.dateTime
-                                        .difference(kmoniTime.now.value)
-                                        .inSeconds <=
-                                    180)
+                                            .difference(kmoniTime.now.value)
+                                            .inSeconds <=
+                                        180 ||
+                                    kDebugMode)
                                 ? Align(
                                     alignment: Alignment.topCenter,
                                     child: Padding(
@@ -208,45 +300,6 @@ class IntroPage extends StatelessWidget {
                           )
                         : const SizedBox.shrink(),
                   ),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Container(
-                      margin: const EdgeInsets.all(10),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: GestureDetector(
-                          onTap: () async => Get.defaultDialog(
-                            backgroundColor: Colors.white.withOpacity(0.9),
-                            title: '',
-                            content: Obx(
-                              () => Image.asset(
-                                (earthQuake.showShindo.value)
-                                    ? 'assets/nied_jma_s_w_scale.png'
-                                    : 'assets/nied_acmap_s_w_scale.png',
-                              ),
-                            ),
-                          ),
-                          child: Container(
-                            color: Colors.white.withOpacity(0.15),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(
-                                sigmaX: 10,
-                                sigmaY: 10,
-                              ),
-                              child: Container(
-                                margin: const EdgeInsets.all(10),
-                                child: Image.asset(
-                                  (earthQuake.showShindo.value)
-                                      ? 'assets/nied_jma_s_w_scale.png'
-                                      : 'assets/nied_acmap_s_w_scale.png',
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
                   const Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
@@ -258,6 +311,12 @@ class IntroPage extends StatelessWidget {
                   Align(
                     alignment: Alignment.bottomLeft,
                     child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.2),
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       margin: const EdgeInsets.all(10),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
@@ -275,8 +334,12 @@ class IntroPage extends StatelessWidget {
                                 child: AutoSizeText(
                                   '${earthQuake.lastUpdateTimeString.value}\n'
                                   '観測点: ${earthQuake.numberOfAnalyzedPoint.value}点\n'
-                                  '倍率: ${earthQuake.zoomLevel.value.toStringAsFixed(1)}',
-                                  maxLines: 3,
+                                  '倍率: ${earthQuake.zoomLevel.value.toStringAsFixed(1)}\n'
+                                  '最大震度: ${maxIntensity(earthQuake.analyzedPoint.value)}\n'
+                                  '最大PGA: ${maxPga(earthQuake.analyzedPoint.value)}',
+                                  maxLines: 5,
+                                  minFontSize: 5,
+                                  maxFontSize: 15,
                                 ),
                               ),
                             ),
@@ -294,5 +357,45 @@ class IntroPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String maxIntensity(List<AnalyzedPoint> l) {
+    double? max;
+    String? maxPlaceName;
+    String? maxPref;
+    for (final e in l) {
+      if (e.shindo == null) continue;
+      if (max == null) {
+        max = e.shindo;
+        maxPlaceName = e.name;
+        maxPref = e.pref;
+      } else if (max < e.shindo!) {
+        max = e.shindo;
+        maxPref = e.pref;
+        maxPlaceName = e.name;
+      }
+    }
+    if (max == null) return '不明';
+    return '${max.toStringAsFixed(2)}($maxPref $maxPlaceName)';
+  }
+
+  String maxPga(List<AnalyzedPoint> l) {
+    double? max;
+    String? maxPlaceName;
+    String? maxPref;
+    for (final e in l) {
+      if (e.pga == null) continue;
+      if (max == null) {
+        max = e.pga;
+        maxPref = e.pref;
+        maxPlaceName = e.name;
+      } else if (max < e.pga!) {
+        max = e.pga;
+        maxPref = e.pref;
+        maxPlaceName = e.name;
+      }
+    }
+    if (max == null) return '不明';
+    return '${max.toStringAsFixed(2)}($maxPref $maxPlaceName)';
   }
 }

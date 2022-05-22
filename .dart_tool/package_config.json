@@ -152,6 +152,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "color_convert",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/git/color_convert-1fc24b0dc8e7e2088337e5b04a5018e3f3dbfd6e/",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "convert",
       "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/convert-3.0.1",
       "packageUri": "lib/",
@@ -274,6 +280,12 @@
     {
       "name": "file",
       "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/file-6.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "file_picker",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/file_picker-4.5.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -404,6 +416,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "flutter_archive",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_archive-5.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
       "name": "flutter_blurhash",
       "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_blurhash-0.7.0",
       "packageUri": "lib/",
@@ -412,6 +430,12 @@
     {
       "name": "flutter_cache_manager",
       "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_cache_manager-3.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_colorpicker",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_colorpicker-1.0.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -444,6 +468,12 @@
       "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_native_splash-2.1.6",
       "packageUri": "lib/",
       "languageVersion": "2.15"
+    },
+    {
+      "name": "flutter_plugin_android_lifecycle",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-2.0.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "flutter_secure_storage",
@@ -1289,10 +1319,10 @@
       "name": "eqmonitor",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "2.15"
+      "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-05-22T08:30:48.210814Z",
+  "generated": "2022-05-22T15:59:44.555602Z",
   "generator": "pub",
   "generatorVersion": "2.17.1"
 }

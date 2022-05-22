@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:eqmonitor/utils/svir/svirResponse.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class OnEEWWidget extends StatelessWidget {
   OnEEWWidget({
@@ -16,77 +17,163 @@ class OnEEWWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (eew.head.dateTime.difference(now).inSeconds >= -180) {
-      return Card(
-        elevation: 10,
-        margin: const EdgeInsets.all(5),
-        color: (eew.body.warningFlag)
-            ? const Color.fromARGB(255, 209, 0, 0)
-            : const Color.fromARGB(255, 255, 37, 37),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                children: [
-                  Row(
+    return Card(
+      elevation: 10,
+      margin: const EdgeInsets.all(5),
+      color: (eew.body.warningFlag)
+          ? const Color.fromARGB(240, 147, 28, 6)
+          : const Color.fromARGB(238, 255, 167, 36),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                DecoratedBox(
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 228, 221, 255),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: AutoSizeText(
+                      (eew.body.warningFlag) ? 'EEW(警報)' : 'EEW(予報)',
+                      group: headGroup,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 206, 0, 0),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 5),
+                Padding(
+                  padding: const EdgeInsets.all(2),
+                  child: AutoSizeText(
+                    (eew.body.endFlag)
+                        ? '最終報(第${eew.head.serial}報)'
+                        : '第${eew.head.serial}報',
+                    group: headGroup,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                  ),
+                ),
+                AutoSizeText(
+                  '${eew.body.earthquake.hypocenter.name}で地震',
+                  group: headGroup,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      DecoratedBox(
-                        decoration: const BoxDecoration(
-                          color: Color.fromARGB(255, 228, 221, 255),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(2),
-                          child: AutoSizeText(
-                            (eew.body.warningFlag) ? 'EEW(警報)' : 'EEW(予報)',
-                            group: headGroup,
-                            minFontSize: 17,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromARGB(255, 206, 0, 0),
-                            ),
-                          ),
+                      Text(
+                        '予想最大震度',
+                        style: context.textTheme.bodyMedium!.copyWith(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(width: 5),
-                      Padding(
-                        padding: const EdgeInsets.all(2),
-                        child: AutoSizeText(
-                          (eew.body.endFlag)
-                              ? '最終報(第${eew.head.serial}報)'
-                              : '第${eew.head.serial}報',
-                          group: headGroup,
-                          minFontSize: 17,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 0, 0, 0),
-                          ),
+                      ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                        child: Image.asset(
+                          'assets/intensity/${(eew.body.intensity != null) ? '${eew.body.intensity!.maxInt}.PNG' : 'unknown.PNG'}',
+                          height: Get.height * 0.1,
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
-              ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-                child: Image.asset(
-                  'assets/intensity/${(eew.body.intensity != null) ? '${eew.body.intensity!.maxInt}.PNG' : 'unknown.PNG'}',
-                  height: Get.height * 0.1,
                 ),
-              ),
-              Text('NOW: ${now.toIso8601String()}'),
-              Text('EEW: ${eew.head.dateTime.toIso8601String()}'),
-            ],
-          ),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                        child: Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    '深さ',
+                                    style:
+                                        context.textTheme.bodyMedium!.copyWith(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    (eew.body.earthquake.magnitude != null)
+                                        ? '${eew.body.earthquake.magnitude}km'
+                                        : '不明',
+                                    style: context.textTheme.displaySmall!
+                                        .copyWith(
+                                      color: Colors.black,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'マグニチュード',
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  (eew.body.earthquake.magnitude != null)
+                                      ? eew.body.earthquake.magnitude.toString()
+                                      : '不明',
+                                  style:
+                                      context.textTheme.displaySmall!.copyWith(
+                                    color: Colors.black,
+                                  ),
+                                )
+                              ],
+                            ),
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: AutoSizeText(
+                                '発生時刻: '
+                                '${DateFormat("yyyy/MM/dd HH:mm:ss頃").format(eew.body.earthquake.originTime.toLocal())}\n'
+                                '地震発生から${now.difference(eew.body.earthquake.originTime).inSeconds}秒経過',
+                                style: context.textTheme.bodyMedium!.copyWith(
+                                  color: Colors.black,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
-      );
-    } else {
-      return const SizedBox.shrink();
-    }
+      ),
+    );
   }
 }

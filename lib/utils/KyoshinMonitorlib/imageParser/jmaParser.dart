@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:eqmonitor/const/obspoints.dart';
+import 'package:eqmonitor/utils/KyoshinMonitorlib/JmaIntensity.dart';
 import 'package:eqmonitor/utils/earthquake.dart';
 import 'package:flutter/material.dart' show Color, Colors;
 import 'package:get/get.dart';
@@ -20,13 +21,19 @@ class JmaImageParser {
   List<AnalyzedPoint> imageParser({
     required List<int> shindoPic,
     required List<int> pgaPic,
+    required bool isPng,
   }) {
     final toReturn = <AnalyzedPoint>[];
     Image.Image? shindo;
     Image.Image? pga;
     try {
-      shindo = Image.decodeGif(shindoPic);
-      pga = Image.decodeGif(pgaPic);
+      if (isPng) {
+        shindo = Image.decodePng(shindoPic);
+        pga = Image.decodeGif(pgaPic);
+      } else {
+        shindo = Image.decodeGif(shindoPic);
+        pga = Image.decodeGif(pgaPic);
+      }
     } catch (_) {}
     if (shindo == null || pga == null) {
       shindo = Image.Image(352, 400);
@@ -56,9 +63,22 @@ class JmaImageParser {
   }) {
     final shindoRgb = _parsePixel32(pixel32: shindoPixel32);
     final pgaRgb = _parsePixel32(pixel32: pgaPixel32);
-    final pgaHsv = _rgbToHsv(pgaRgb);
-    final shindo = (shindoRgb == null) ? null : _parsePixel(rgb: shindoRgb);
-    final pgaPosition = _hsvToPosition(pgaHsv);
+    final shindoHsv = (shindoRgb == null) ? null : _rgbToHsv(shindoRgb);
+    final pgaHsv = (pgaRgb == null) ? null : _rgbToHsv(pgaRgb);
+    final shindoPosition =
+        (shindoHsv == null) ? null : _hsvToPosition(shindoHsv);
+    final pgaPosition = (pgaHsv == null) ? null : _hsvToPosition(pgaHsv);
+    final shindo = (shindoPosition == null) ? null : (shindoPosition * 10) - 3;
+    // https://qiita.com/NoneType1/items/a4d2cf932e20b56ca444
+    // ### 震度
+    // I = 10p-3
+    // ### 最大加速度
+    // PGA = 10^{5p-2}
+    // ### 最大速度
+    // PGV = 10^{5p-3}
+    // ### 最大変位
+    // PGD = 10^{5p-4}
+    //
     return AnalyzedPoint(
       code: obsPoint.code,
       name: obsPoint.name,
@@ -78,6 +98,7 @@ class JmaImageParser {
       pga: (pgaPosition == null)
           ? null
           : pow(10, (5 * pgaPosition) - 2).toDouble(),
+      intensity: JmaIntensityExtensions.toJmaIntensity(intensity: shindo),
     );
   }
 
@@ -93,11 +114,18 @@ class JmaImageParser {
   }
 
   /// 任意のピクセルのHSV値からカラーバーのPositionを算出(0->1)
-  double? _hsvToPosition(List<double>? hsv) {
-    if (hsv == null) return null;
-    final h = hsv[0] / 255;
-    final s = hsv[1] / 255;
-    final v = hsv[2] / 255;
+  /// ### hsv
+  /// channel | full-scale value
+  /// ---|---
+  /// h | 360
+  /// s | 100
+  /// v | 100
+
+  double? _hsvToPosition(List<double> hsv) {
+    final h = hsv[0] / 360;
+    final s = hsv[1] / 100;
+    final v = hsv[2] / 100;
+    if (s <= 0.5) return null;
     var p = 0.toDouble();
     if (v > 0.1 && s > 0.75) {
       if (h > 0.1476) {
@@ -126,7 +154,6 @@ class JmaImageParser {
     if (p < 0) {
       p = 0;
     }
-
     return p;
   }
 
@@ -146,41 +173,43 @@ class JmaImageParser {
   }
 
   /// RGB値からHSV値に変換する
-  /// https://www.peko-step.com/tool/hsvrgb.html の変換式を参照
-  List<double>? _rgbToHsv(List<int>? rgb) {
-    // hex[0,1] = a, [2,3] = r, [4,5] = g, [6.7] =b
-    if (rgb == null) {
-      return null;
-    }
-    final r = rgb[0];
-    final g = rgb[1];
-    final b = rgb[2];
+  List<double> _rgbToHsv(List<num> rgb) {
+    final r = rgb[0] / 255;
+    final g = rgb[1] / 255;
+    final b = rgb[2] / 255;
 
-    // 最大と最小を出す
-    final maxValue = rgb.reduce(max);
-    final minValue = rgb.reduce(min);
+    final min_ = min(min(r, g), b);
+    final max_ = max(max(r, g), b);
+    final delta = max_ - min_;
+    double? h;
 
-    //? 色相 H
-    // 全部同じだったら色相 H =0
-    final double h;
-    if (r == g && g == b) {
+    if (max_ == min_) {
       h = 0;
-    } else if (r == maxValue) {
-      // Rが最大値の場合
-      h = 60 * ((g - b) / (maxValue - minValue));
-    } else if (g == max) {
-      // Gが最大値の場合
-      h = 60 * ((b - r) / (maxValue - minValue)) + 120;
-    } else {
-      // Bが最大値の場合
-      h = 60 * ((r - g) / (maxValue - minValue)) + 240;
+    } else if (r == max_) {
+      h = (g - b) / delta;
+    } else if (g == max_) {
+      h = 2 + (b - r) / delta;
+    } else if (b == max_) {
+      h = 4 + (r - g) / delta;
     }
 
-    //? 彩度 S
-    final s = (maxValue - minValue) / maxValue;
-    //? 明度 V
-    final v = maxValue.toDouble();
-    return [h, s, v];
+    h = min(h! * 60, 360);
+
+    if (h < 0) {
+      h += 360;
+    }
+
+    final l = (min_ + max_) / 2;
+    double s;
+    if (max_ == min_) {
+      s = 0;
+    } else if (l <= 0.5) {
+      s = delta / (max_ + min_);
+    } else {
+      s = delta / (2 - max_ - min_);
+    }
+
+    return [h, s * 100, l * 100];
   }
 }
 
