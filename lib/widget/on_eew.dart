@@ -120,8 +120,13 @@ class OnEEWWidget extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    (eew.body.earthquake.magnitude != null)
-                                        ? '${eew.body.earthquake.magnitude}km'
+                                    (eew.body.earthquake.hypocenter.depth !=
+                                            null)
+                                        ? (eew.body.earthquake.hypocenter
+                                                    .depth !=
+                                                0)
+                                            ? '${eew.body.earthquake.hypocenter.depth}km'
+                                            : 'ごく浅い'
                                         : '不明',
                                     style: context.textTheme.displaySmall!
                                         .copyWith(

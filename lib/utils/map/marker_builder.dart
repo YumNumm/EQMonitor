@@ -51,6 +51,7 @@ MapMarker markerBuilder(
             ? Align(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(100),
+                  
                   child: Image.memory(
                     aic.assets[point.intensity]!,
                     height: iconSize * 3,

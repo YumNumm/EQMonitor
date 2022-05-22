@@ -7,7 +7,6 @@ import 'package:eqmonitor/utils/KyoshinMonitorlib/kyoshinMonitorlibTime.dart';
 import 'package:eqmonitor/utils/eq_history/eq_history_lib.dart';
 import 'package:eqmonitor/utils/map/customZoomPanBehavior.dart';
 import 'package:eqmonitor/utils/updater/appUpdate.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -146,12 +145,13 @@ class IntroPage extends StatelessWidget {
                                       (earthQuake.showShindo.value)
                                           ? 'assets/nied_jma_s_w_scale.png'
                                           : 'assets/nied_acmap_s_w_scale.png',
+                                      height: Get.height * 0.1,
                                     ),
                                   ),
                                 ),
                                 child: Container(
-                                  color: const Color.fromARGB(255, 0, 0, 0)
-                                      .withOpacity(0.15),
+                                  color:
+                                      const Color(0xFFFFFFFF).withOpacity(0.15),
                                   child: BackdropFilter(
                                     filter: ImageFilter.blur(
                                       sigmaX: 10,
@@ -276,11 +276,12 @@ class IntroPage extends StatelessWidget {
                   Obx(
                     () => (svir.svirResponse.value != null)
                         ? Obx(
-                            () => (svir.svirResponse.value.head.dateTime
-                                            .difference(kmoniTime.now.value)
-                                            .inSeconds <=
-                                        180 ||
-                                    kDebugMode)
+                            () => (kmoniTime.now.value
+                                        .difference(
+                                          svir.svirResponse.value.head.dateTime,
+                                        )
+                                        .inSeconds <=
+                                    180)
                                 ? Align(
                                     alignment: Alignment.topCenter,
                                     child: Padding(
@@ -396,6 +397,6 @@ class IntroPage extends StatelessWidget {
       }
     }
     if (max == null) return '不明';
-    return '${max.toStringAsFixed(2)}($maxPref $maxPlaceName)';
+    return '${max.toStringAsFixed(2)}gal($maxPref $maxPlaceName)';
   }
 }
