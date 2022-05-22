@@ -26,7 +26,7 @@ class KyoshinMonitorlibTime extends GetxController {
           ),
         );
         if (res.statusCode != 200) {}
-        final df = DateFormat('yyyy/MM/dd hh:mm:ss');
+        final df = DateFormat('yyyy/MM/dd HH:mm:ss');
         final j =
             json.decode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
         final dt = df.parseStrict(j['latest_time'].toString());
