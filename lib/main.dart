@@ -50,8 +50,13 @@ Future<void> main() async {
   final prefs =
       Get.put<SharedPreferences>(await SharedPreferences.getInstance());
   await Firebase.initializeApp();
-  await FirebaseCrashlytics.instance
-      .setCrashlyticsCollectionEnabled(!kDebugMode);
+
+  final deviceInfo =
+      Get.put<AndroidDeviceInfo>(await DeviceInfoPlugin().androidInfo);
+  final crashlytics = Get.put(FirebaseCrashlytics.instance);
+  await crashlytics.sendUnsentReports();
+  await crashlytics.setUserIdentifier(deviceInfo.androidId.toString());
+  await crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode);
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
   Get.put<Logger>(
@@ -64,8 +69,6 @@ Future<void> main() async {
   );
   Get.put<FlutterSecureStorage>(const FlutterSecureStorage());
   Get.put<PackageInfo>(await PackageInfo.fromPlatform());
-  final deviceInfo =
-      Get.put<AndroidDeviceInfo>(await DeviceInfoPlugin().androidInfo);
   Get.put<UserNotificationSettings>(await UserNotificationSettings().onInit());
   Get.put<FirebaseApp>(await Firebase.initializeApp());
   Get.put<FirebaseAuth>(FirebaseAuth.instance);
