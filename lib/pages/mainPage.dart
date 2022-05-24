@@ -281,7 +281,11 @@ class IntroPage extends StatelessWidget {
                                           svir.svirResponse.value.head.dateTime,
                                         )
                                         .inSeconds <=
-                                    180)
+                                    180 && kmoniTime.now.value
+                                        .difference(
+                                          svir.svirResponse.value.head.dateTime,
+                                        )
+                                        .inSeconds >= 0)
                                 ? Align(
                                     alignment: Alignment.topCenter,
                                     child: Padding(
