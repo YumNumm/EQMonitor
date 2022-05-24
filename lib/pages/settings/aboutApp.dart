@@ -3,6 +3,7 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:eqmonitor/utils/CustomImageLoader/custom_image_loader.dart';
 import 'package:eqmonitor/utils/earthquake.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,6 +20,8 @@ import '../../utils/messaging.dart';
 
 final PackageInfo packageInfo = Get.find<PackageInfo>();
 final AndroidDeviceInfo androidDeviceInfo = Get.find<AndroidDeviceInfo>();
+
+final FirebaseCrashlytics firebaseCrashlytics = Get.find<FirebaseCrashlytics>();
 final Logger logger = Get.find<Logger>();
 final EarthQuake eq = Get.find<EarthQuake>();
 final SharedPreferences prefs = Get.find<SharedPreferences>();
@@ -175,6 +178,7 @@ Widget aboutThisApp(BuildContext context) {
               'https://github.com/EQMonitor/EQMonitor',
             ),
           ),
+
           SettingsTile(
             title: const Text(''),
             onPressed: (_) async {
@@ -226,6 +230,11 @@ Widget aboutThisApp(BuildContext context) {
                                 'showDevicePreview',
                                 !(prefs.getBool('showDevicePreview') ?? false),
                               ),
+                            ),
+                            ListTile(
+                              title: const Text('クラッシュさせる'),
+                              subtitle: const Text('Firebase Crashlytics'),
+                              onTap: () async => firebaseCrashlytics.crash(),
                             ),
                             ListTile(
                               title: const Text('Widgetの震度を設定'),
