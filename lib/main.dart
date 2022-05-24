@@ -53,7 +53,8 @@ Future<void> main() async {
 
   final deviceInfo =
       Get.put<AndroidDeviceInfo>(await DeviceInfoPlugin().androidInfo);
-  final crashlytics = Get.put(FirebaseCrashlytics.instance);
+  final crashlytics =
+      Get.put<FirebaseCrashlytics>(FirebaseCrashlytics.instance);
   await crashlytics.sendUnsentReports();
   await crashlytics.setUserIdentifier(deviceInfo.androidId.toString());
   await crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode);
