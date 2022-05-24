@@ -21,8 +21,13 @@ class OnEEWWidget extends StatelessWidget {
       elevation: 10,
       margin: const EdgeInsets.all(5),
       color: (eew.body.warningFlag)
+<<<<<<< HEAD
           ? const Color.fromARGB(240, 147, 28, 6)
           : Color.fromARGB(237, 255, 126, 20),
+=======
+          ? const Color.fromARGB(240, 200, 28, 6)
+          : const Color.fromARGB(240, 255, 99, 71),
+>>>>>>> ef33e1ef47c0d75a65f498a9b952ad2d149f8881
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
