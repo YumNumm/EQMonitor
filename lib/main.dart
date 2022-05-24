@@ -24,6 +24,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import './const/const.dart';
+import 'firebase_options.dart';
 import 'pages/mainPage.dart';
 import 'pages/settingscreen.dart';
 import 'pages/splashscreen.dart';
@@ -49,7 +50,9 @@ Future<void> main() async {
   //? End DB
   final prefs =
       Get.put<SharedPreferences>(await SharedPreferences.getInstance());
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   final deviceInfo =
       Get.put<AndroidDeviceInfo>(await DeviceInfoPlugin().androidInfo);
