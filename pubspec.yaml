@@ -18,11 +18,11 @@ dependencies:
   get: ^4.6.1
   logger: ^1.1.0
   # Firebase libs
-  firebase_core: ^1.16.0
-  firebase_crashlytics: ^2.7.2
-  firebase_messaging: ^11.3.0
-  firebase_performance: ^0.8.0+11
-  firebase_auth: ^3.3.17
+  firebase_core: ^1.17.0
+  firebase_crashlytics: ^2.8.0
+  firebase_messaging: ^11.4.0
+  firebase_performance: ^0.8.0+12
+  firebase_auth: ^3.3.18
   firebase_analytics: ^9.1.8
 
   #DB
