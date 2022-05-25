@@ -7,9 +7,13 @@
 ![GitHub release (latest by date and asset including pre-releases)](https://img.shields.io/github/downloads-pre/EQMonitor/EQMonitor/latest/app-release.apk)
 [![Codemagic build status](https://api.codemagic.io/apps/621bb2a4bc3d3d2156cab924/621bb2a4bc3d3d2156cab923/status_badge.svg)](https://codemagic.io/apps/621bb2a4bc3d3d2156cab924/621bb2a4bc3d3d2156cab923/latest_build)
 
-> **Note**. 
-> This application is being developed.   
-> Please keep in mind. 
+> **Warning**
+> [利用規約](https://github.com/EQMonitor/EQMonitor/blob/main/docs/policy.md)を必ずご確認の上ご利用ください。
+
+> **Note**
+> 一部のサムスン製デバイスで起動できない問題が発生していることを把握しています。現在解決策を検討中です。
+> [EQMonitor V0.2.7](https://github.com/EQMonitor/EQMonitor/releases/tag/v0.2.7-alpha)では、起動できることも確認済みです。
+
 
 ## **機能**
 - [x] リアルタイム震度の表示
