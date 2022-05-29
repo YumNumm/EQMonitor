@@ -3,9 +3,10 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:eqmonitor/pages/eq_info_page.dart';
+import 'package:eqmonitor/pages/terms.dart';
 import 'package:eqmonitor/utils/CustomImageLoader/custom_image_loader.dart';
 import 'package:eqmonitor/utils/EQMonitorApi/history_lib.dart';
-import 'package:eqmonitor/utils/eq_history/eq_history_lib.dart';
+import 'package:eqmonitor/utils/earthquake-history/earthquake-history.dart';
 import 'package:eqmonitor/utils/image_cache/image_cache.dart';
 import 'package:eqmonitor/utils/svir/svir.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -83,13 +84,13 @@ Future<void> main() async {
   Get.put<AuthStateUtils>(AuthStateUtils());
   Get.put<KyoshinMonitorlibTime>(KyoshinMonitorlibTime());
   Get.put<CustomZoomPanBehavior>(CustomZoomPanBehavior());
+  Get.put<EarthQuakeHistory>(await EarthQuakeHistory().onInit());
   final svir = Get.put<Svir>(Svir());
   svir.start();
   Get.put<VolumeController>(VolumeController());
   Get.put<AppUpdate>(AppUpdate());
   Get.put<FlutterSecureStorage>(const FlutterSecureStorage());
   Get.put<HistoryLib>(HistoryLib());
-  Get.put<EqHistoryLib>(EqHistoryLib());
   Get.put<EarthQuake>(EarthQuake());
   Get.put<CustomImageLoader>(CustomImageLoader());
 
@@ -105,7 +106,7 @@ Future<void> main() async {
 }
 
 class EQApp extends StatelessWidget {
-  const EQApp({Key? key}) : super(key: key);
+  const EQApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +130,10 @@ class EQApp extends StatelessWidget {
         GetPage<dynamic>(
           name: '/',
           page: IntroPage.new,
-          transition: Transition.fadeIn,
+        ),
+        GetPage<dynamic>(
+          name: '/terms',
+          page: TermsScreen.new,
         ),
         GetPage<dynamic>(
           name: '/splash',

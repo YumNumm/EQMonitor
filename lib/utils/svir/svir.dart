@@ -27,8 +27,6 @@ class Svir extends GetxController {
     final j = json.decode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
     final tmp = SvirResponse.fromJson(j);
 
-    if (tmp.head.dateTime.difference(DateTime.now()).inSeconds <= 180) {
-      svirResponse.value = tmp;
-    }
+    svirResponse.value = tmp;
   }
 }

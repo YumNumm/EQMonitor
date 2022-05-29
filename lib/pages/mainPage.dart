@@ -4,9 +4,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:eqmonitor/pages/eq_history_page.dart';
 import 'package:eqmonitor/pages/notification_history_page.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/kyoshinMonitorlibTime.dart';
-import 'package:eqmonitor/utils/eq_history/eq_history_lib.dart';
 import 'package:eqmonitor/utils/map/customZoomPanBehavior.dart';
 import 'package:eqmonitor/utils/updater/appUpdate.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -24,12 +24,11 @@ import '../widget/map.dart';
 import '../widget/on_eew.dart';
 
 class IntroPage extends StatelessWidget {
-  IntroPage({Key? key}) : super(key: key);
+  IntroPage({super.key});
 
   final Logger logger = Get.find<Logger>();
   final EarthQuake earthQuake = Get.find<EarthQuake>();
   final Svir svir = Get.find<Svir>();
-  final EqHistoryLib eqHistory = Get.find<EqHistoryLib>();
   final KyoshinMonitorlibTime kmoniTime = Get.find<KyoshinMonitorlibTime>();
   final AppUpdate appUpdate = Get.find<AppUpdate>();
   final CustomZoomPanBehavior zoomPanBehavior =
@@ -47,7 +46,10 @@ class IntroPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('EQMonitor (Build${packageInfo.buildNumber})'),
+        backgroundColor: kDebugMode ? Colors.redAccent : null,
+        title: kDebugMode
+            ? const Text('EQMonitor DebugMode')
+            : Text('EQMonitor (Build${packageInfo.buildNumber})'),
         actions: [
           Obx(
             () => (appUpdate.hasUpdate.value)

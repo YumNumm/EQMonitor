@@ -87,6 +87,7 @@ class JmaImageParser {
       lon: obsPoint.lon,
       x: obsPoint.x,
       y: obsPoint.y,
+      pointType: PointType.Observer,
       shindoColor: (shindoRgb == null)
           ? Colors.transparent
           : Color.fromRGBO(shindoRgb[0], shindoRgb[1], shindoRgb[2], 1),

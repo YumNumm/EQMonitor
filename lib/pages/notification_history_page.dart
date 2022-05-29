@@ -1,13 +1,15 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eqmonitor/utils/EQMonitorApi/history_content.dart';
 import 'package:eqmonitor/utils/EQMonitorApi/history_lib.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 
 class NotificationHistoryPage extends StatelessWidget {
-  NotificationHistoryPage({Key? key}) : super(key: key);
+  NotificationHistoryPage({super.key});
   final Logger logger = Get.find<Logger>();
   final history = Get.find<HistoryLib>();
   final DateFormat df = DateFormat('yyyy/MM/dd HH:mm頃');
@@ -67,15 +69,28 @@ class NotificationHistoryPage extends StatelessWidget {
                 leading: leading,
                 subtitle: subtitle,
                 children: [
-                  CachedNetworkImage(imageUrl:
-                    h.bigPictureUrl.toString(),
-                   progressIndicatorBuilder:
-                        (context, url, downloadProgress) =>
-                            CircularProgressIndicator(
-                                value: downloadProgress.progress),
-                    errorWidget: (context, url, dynamic error) =>
-                        const Icon(Icons.error),
-                  )
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      child: CachedNetworkImage(
+                        imageUrl: h.bigPictureUrl.toString(),
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                          value: downloadProgress.progress,
+                        ),
+                        errorWidget: (context, url, dynamic error) =>
+                            const Icon(Icons.error),
+                      ),
+                    ),
+                  ),
+                  if (kDebugMode)
+                    AutoSizeText(
+                      'id: ${h.id}',
+                      maxLines: 1,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
                 ],
               );
             } else {

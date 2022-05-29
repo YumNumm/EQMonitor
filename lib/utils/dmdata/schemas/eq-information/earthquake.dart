@@ -227,13 +227,16 @@ class Depth {
 
 enum DepthCondition {
   /// `ごく浅い`
-  VeryShallow,
+  VeryShallow('ごく浅い'),
 
   /// `７００ｋｍ以上`
-  MoreThan700km,
+  MoreThan700km('700km以上'),
 
   /// `不明`
-  Undefined,
+  Undefined('不明');
+
+  const DepthCondition(this.explain);
+  final String explain;
 }
 
 /// ## 震央地名を補足する詳細震央地名。
@@ -342,8 +345,11 @@ class Magnitude {
 
 enum MagnitudeCondition {
   /// `Ｍ不明`
-  Undefined,
+  Undefined('不明'),
 
   /// `Ｍ８を超える巨大地震`
-  HugeEarthquakeExceedingM8,
+  HugeEarthquakeExceedingM8('M8を超える巨大地震');
+
+  const MagnitudeCondition(this.explain);
+  final String explain;
 }

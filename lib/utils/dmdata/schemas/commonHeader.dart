@@ -61,7 +61,7 @@ class CommonHead {
             ? null
             : DateTime.parse(j['validDateTime'].toString()),
         eventId = (j['eventId'] == null) ? null : j['eventId'].toString(),
-        serialNo = (j['eventId'] == null) ? null : j['eventId'].toString(),
+        serialNo = (j['serialNo'] == null) ? null : j['serialNo'].toString(),
         infoKind = j['infoKind'].toString(),
         infoKindVersion = j['infoKindVersion'].toString(),
         headline = (j['headline'] == null) ? null : j['headline'].toString(),

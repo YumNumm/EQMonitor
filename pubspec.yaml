@@ -3,7 +3,7 @@ description: Earth Quake Monitor Application
 
 publish_to: "none"
 
-version: 0.3.4+100
+version: 0.3.5+110
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -58,7 +58,7 @@ dependencies:
   dart_twitter_api: ^0.5.6+1
   latlong2: ^0.8.1
   syncfusion_flutter_maps: ^20.1.52
-  device_preview: ^1.0.0
+  device_preview: ^1.1.0
   open_settings: ^2.0.2
   perfect_volume_control: ^1.0.5
   flutter_markdown: ^0.6.10
@@ -72,6 +72,9 @@ dependencies:
   file_picker: ^4.5.1
   flutter_archive: ^5.0.0
   flutter_colorpicker: ^1.0.3
+  bordered_text: ^2.0.0
+  restart_app: ^1.1.0+1
+  firebase_remote_config: ^2.0.8
 
 dev_dependencies:
   flutter_test:

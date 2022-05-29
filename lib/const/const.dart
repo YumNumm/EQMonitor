@@ -1,4 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:eqmonitor/utils/KyoshinMonitorlib/JmaIntensity.dart';
+import 'package:eqmonitor/utils/analyzedpoints.dart';
 import 'package:flutter/material.dart';
 
 ThemeData darkTheme() {
@@ -459,4 +461,58 @@ const List<String> prefectures = [
   '宮崎県',
   '鹿児島県',
   '沖縄県',
+];
+
+final List<AnalyzedPoint> initEewPoints = <AnalyzedPoint>[
+  // 震央
+  AnalyzedPoint(
+    code: 'eew1HypoCenter',
+    name: '震央',
+    pref: 'pref',
+    lat: 0,
+    lon: 0,
+    x: 0,
+    y: 0,
+    pointType: PointType.HypoCenter,
+    shindoColor: Colors.transparent,
+    pgaColor: Colors.transparent,
+    shindo: null,
+    zoomLevel: 0,
+    pga: null,
+    intensity: JmaIntensity.Unknown,
+  ),
+  // P波到達予想円
+  AnalyzedPoint(
+    code: 'eew1Pwave',
+    name: 'P波',
+    pref: 'pref',
+    lat: 0,
+    lon: 0,
+    x: 0,
+    y: 0,
+    pointType: PointType.Pwave,
+    shindoColor: Colors.transparent,
+    pgaColor: Colors.transparent,
+    shindo: null,
+    zoomLevel: 0,
+    pga: null,
+    intensity: JmaIntensity.Unknown,
+  ),
+  // S波到達予想円
+  AnalyzedPoint(
+    code: 'eew1Swave',
+    name: 'S波',
+    pref: 'pref',
+    lat: 0,
+    lon: 0,
+    x: 0,
+    y: 0,
+    pointType: PointType.Swave,
+    shindoColor: Colors.transparent,
+    pgaColor: Colors.transparent,
+    shindo: null,
+    zoomLevel: 0,
+    pga: null,
+    intensity: JmaIntensity.Unknown,
+  ),
 ];

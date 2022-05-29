@@ -16,6 +16,13 @@ class Comments {
             : OtherComments.fromJson(j['var'] as Map<String, dynamic>),
         uri = (j['uri'] == null) ? null : j['uri'].toString();
 
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        if (free != null) 'free': free.toString(),
+        if (forecast != null) 'forecast': forecast!.toJson(),
+        if (comments != null) 'comments': comments!.toJson(),
+        if (uri != null) 'uri': uri.toString()
+      };
+
   /// ## その他の付加的な情報を自由形式で記載する
   final String? free;
 
@@ -43,6 +50,10 @@ class Forecast {
           (j['codes'] as List<dynamic>).length,
           (i) => int.parse((j['codes'] as List<dynamic>)[i].toString()),
         );
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'text': text,
+        'codes': codes,
+      };
 
   /// ## 固定付加文を記載する。複数ある場合は改行コード 0x0A を区切りに挿入する
   final String text;
@@ -61,8 +72,12 @@ class OtherComments {
       : text = j['text'].toString(),
         codes = List<int>.generate(
           (j['codes'] as List<dynamic>).length,
-          (i) => int.parse(j['codes'][i].toString()),
+          (i) => int.parse((j['codes'] as List<dynamic>)[i].toString()),
         );
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'text': text,
+        'codes': codes,
+      };
 
   /// ## 固定付加文を記載する。複数ある場合は改行コード 0x0A を区切りに挿入する
   final String text;

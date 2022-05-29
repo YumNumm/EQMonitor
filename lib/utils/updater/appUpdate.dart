@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:eqmonitor/private/keys.dart';
 import 'package:eqmonitor/utils/updater/updateAPI.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -16,19 +17,16 @@ class AppUpdate extends GetxController {
   late UpdateAPI updateApi;
   @override
   Future<void> onInit() async {
-    const url = '$baseUrl/app-status.json';
-    final res = await http.get(Uri.parse(url)).onError((error, stackTrace) {
-      hasError.value = true;
-      logger.e(error, stackTrace);
-      throw stackTrace;
-    });
-    if (res.statusCode != 200) {
-      hasError.value = true;
-      return;
-    }
-    logger.i(res.body);
+    final remoteConfig = FirebaseRemoteConfig.instance;
+    await remoteConfig.setConfigSettings(
+      RemoteConfigSettings(
+        fetchTimeout: const Duration(minutes: 1),
+        minimumFetchInterval: const Duration(hours: 1),
+      ),
+    );
+    await remoteConfig.fetchAndActivate();
     final resData = UpdateAPI.fromJson(
-      json.decode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>,
+      json.decode(remoteConfig.getString('version')) as Map<String, dynamic>,
     );
     if (int.parse(packageInfo.buildNumber) < resData.buildNum && !kDebugMode) {
       updateApi = resData;
