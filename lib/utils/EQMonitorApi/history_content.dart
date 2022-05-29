@@ -34,8 +34,7 @@ class HistoryContent {
   final String id;
 
   /// Type
-  final NotificationType type;
-
+  final NotificationType  type;
   ///  配信時刻
   final DateTime publishedDate;
 
@@ -59,5 +58,16 @@ enum NotificationType {
   vxse51,
   vxse52,
   vxse53,
+  vxse56,
+  vxse60,
+  vxse61,
   vxse62,
+  vyse50,
+  vyse51,
+  vyse52,
+  vtse41,
+  vtse51,
+  vtse52,
+  wepa60,
+  vzse40,
 }

@@ -22,7 +22,7 @@ class Event {
             : EarthQuakeInformationHypoCenter.fromJson(
                 j['hypocenter'] as Map<String, dynamic>,
               ),
-        magnitude = (j['magnitude'].toString() == 'null')
+        magnitude = (j['magnitude'].toString() == "null")
             ? null
             : Magnitude.fromJson(j['magnitude'] as Map<String, dynamic>),
         maxInt = (j['magnitude'].toString() == 'null')

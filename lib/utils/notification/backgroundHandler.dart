@@ -6,7 +6,6 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dart_twitter_api/twitter_api.dart';
 import 'package:eqmonitor/const/const.dart';
 import 'package:eqmonitor/private/keys.dart';
-import 'package:eqmonitor/utils/eq_history/eq_history_lib.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -60,16 +59,14 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     shouldNotif = true;
   }
   if (shouldNotif) {
+    print(message.messageType);
     await AwesomeNotifications().createNotificationFromJsonData(message.data);
     final flutterTts = FlutterTts();
     await flutterTts.setLanguage('ja-JP');
     if (message.data['tts'] != null) {
       if (useTTS) await flutterTts.speak(message.data['tts'].toString());
     }
-    if (bool.fromEnvironment(
-      fss.read(key: 'toTweet').toString(),
-      defaultValue: true,
-    )) {
+    if (fss.read(key: 'toTweet').toString().toLowerCase() == 'true') {
       final AT = await fss.read(key: 'AT');
       final AS = await fss.read(key: 'AS');
       if (AT != null && AS != null) {
@@ -89,5 +86,4 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       }
     }
   }
-  await EqHistoryLib().fetch();
 }

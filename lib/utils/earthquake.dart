@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:typed_data';
 
+import 'package:eqmonitor/const/const.dart';
 import 'package:eqmonitor/const/obspoints.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/JmaIntensity.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/UrlGenerator/RealTimeDataType.dart';
@@ -33,6 +34,7 @@ class EarthQuake extends GetxController {
   final RxInt numberOfAnalyzedPoint = 0.obs;
   final RxString url = ''.obs;
   final RxList<AnalyzedPoint> analyzedPoint = <AnalyzedPoint>[].obs;
+  final RxList<AnalyzedPoint> eewAnalyzedPoint = <AnalyzedPoint>[].obs;
   final RxDouble zoomLevel = 1.0.obs;
   final RxDouble iconSize = 3.6.obs;
   final RxString lastUpdateTimeString = '更新待ち'.obs;
@@ -64,6 +66,7 @@ class EarthQuake extends GetxController {
           lon: obsPoint.lon,
           x: obsPoint.x,
           y: obsPoint.y,
+          pointType: PointType.Observer,
           shindoColor: const Color(0x00FFFFFF),
           pgaColor: const Color(0x00FFFFFF),
           shindo: null,
@@ -73,6 +76,7 @@ class EarthQuake extends GetxController {
         ),
       );
     }
+    eewAnalyzedPoint.value = initEewPoints;
     Timer.periodic(
       const Duration(milliseconds: 1000),
       (_) async => updateEQData(),
@@ -83,7 +87,14 @@ class EarthQuake extends GetxController {
           zoomLevel.value = mapZoomPanBehavior.zoomLevel;
     });
     await Future<void>.delayed(const Duration(milliseconds: 1000));
-    await Get.offAllNamed<void>('/');
+    // 利用規約同意画面に飛ばすかどうか
+    final String route;
+    if (prefs.getBool('isAcceptTerm') ?? true) {
+      route = '/terms';
+    } else {
+      route = '/';
+    }
+    await Get.offAllNamed<void>(route);
 
     await updateEQData();
   }
@@ -123,7 +134,10 @@ class EarthQuake extends GetxController {
         isPng: imageQueue.value.isNotEmpty,
       );
       mapShapeLayerController.updateMarkers(
-        List<int>.generate(analyzedPoint.length, (i) => i),
+        List<int>.generate(
+          analyzedPoint.length + eewAnalyzedPoint.length,
+          (i) => i,
+        ),
       );
       lastUpdateTimeString.value = DateFormat('yyyy/MM/dd HH:mm:ss')
           .format(kyoshinMonitorlibTime.now.value);
@@ -137,7 +151,10 @@ class EarthQuake extends GetxController {
         isPng: false,
       );
       mapShapeLayerController.updateMarkers(
-        List<int>.generate(analyzedPoint.length, (i) => i),
+        List<int>.generate(
+          analyzedPoint.length + eewAnalyzedPoint.length,
+          (i) => i,
+        ),
       );
       lastUpdateTimeString.value = DateFormat('yyyy/MM/dd HH:mm:ss')
           .format(kyoshinMonitorlibTime.now.value);

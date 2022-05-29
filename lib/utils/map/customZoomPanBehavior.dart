@@ -1,12 +1,14 @@
-import 'package:eqmonitor/utils/earthquake.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:logger/logger.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
 
+import '../earthquake.dart';
+
 class CustomZoomPanBehavior extends MapZoomPanBehavior {
   final Logger logger = Get.find<Logger>();
+
   final Path path = Path();
   Size renderBoxSize = Size.infinite;
   final RxDouble dy = 0.0.obs;
@@ -36,11 +38,24 @@ class CustomZoomPanBehavior extends MapZoomPanBehavior {
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    /*renderBoxSize = renderBox.size;
+    /*
+    renderBoxSize = renderBox.size;
+    const lat = 35;
+    const lon = 135;
 
     calc();
     context.canvas.save();
     context.canvas.translate(offset.dx, offset.dy);
+    // 左上からの距離(x)
+    final topLeftPosition =
+        earthQuake.mapShapeLayerController.pixelToLatLng(Offset.zero);
+    final dxDistance = const Distance().as(
+      LengthUnit.Kilometer,
+      LatLng(topLeftPosition.latitude, topLeftPosition.longitude),
+      LatLng(topLeftPosition.latitude, lon.toDouble()),
+    );
+    print(dxDistance);
+
     context.canvas
       ..drawCircle(
         Offset(renderBoxSize.width / 2, renderBoxSize.height / 2),
@@ -51,16 +66,6 @@ class CustomZoomPanBehavior extends MapZoomPanBehavior {
         Offset(renderBoxSize.width / 2, renderBoxSize.height / 2),
         (dx.value + dy.value) / 2 * 100,
         pWavePaint,
-      )
-      ..drawLine(
-        Offset(renderBoxSize.width / 2 - 10, renderBoxSize.height / 2 - 10),
-        Offset(renderBoxSize.width / 2 + 10, renderBoxSize.height / 2 + 10),
-        sWavePaint,
-      )
-      ..drawLine(
-        Offset(renderBoxSize.width / 2 + 10, renderBoxSize.height / 2 - 10),
-        Offset(renderBoxSize.width / 2 - 10, renderBoxSize.height / 2 + 10),
-        sWavePaint,
       );
 
     context.canvas.restore();
@@ -71,12 +76,12 @@ class CustomZoomPanBehavior extends MapZoomPanBehavior {
   void calc() {
     if (latLngBounds == null) return;
     // 表示領域の取得
-    final _northest = latLngBounds!.northeast;
-    final _southest = latLngBounds!.southwest;
-    final topLeft = LatLng(_northest.latitude, _southest.longitude);
-    final topRight = LatLng(_northest.latitude, _northest.longitude);
-    final bottomLeft = LatLng(_southest.latitude, _southest.longitude);
-    final bottomRight = LatLng(_southest.latitude, _northest.longitude);
+    final northest = latLngBounds!.northeast;
+    final southest = latLngBounds!.southwest;
+    final topLeft = LatLng(northest.latitude, southest.longitude);
+    final topRight = LatLng(northest.latitude, northest.longitude);
+    final bottomLeft = LatLng(southest.latitude, southest.longitude);
+    final bottomRight = LatLng(southest.latitude, northest.longitude);
     // topLeft->bottomLeft
     final rightHeight = renderBoxSize.height /
         const Distance().as(LengthUnit.Kilometer, topLeft, topRight);

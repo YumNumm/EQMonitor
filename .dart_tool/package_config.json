@@ -50,6 +50,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "bordered_text",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/bordered_text-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "build",
       "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/build-2.3.0",
       "packageUri": "lib/",
@@ -213,7 +219,7 @@
     },
     {
       "name": "device_frame",
-      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/device_frame-1.0.0",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/device_frame-1.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -255,7 +261,7 @@
     },
     {
       "name": "device_preview",
-      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/device_preview-1.0.0",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/device_preview-1.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -398,6 +404,24 @@
       "languageVersion": "2.16"
     },
     {
+      "name": "firebase_remote_config",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_remote_config-2.0.8",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
+    },
+    {
+      "name": "firebase_remote_config_platform_interface",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_remote_config_platform_interface-1.1.7",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
+    },
+    {
+      "name": "firebase_remote_config_web",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_remote_config_web-1.0.13",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
+    },
+    {
       "name": "fixnum",
       "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/fixnum-1.0.1",
       "packageUri": "lib/",
@@ -531,7 +555,7 @@
     },
     {
       "name": "freezed_annotation",
-      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/freezed_annotation-1.1.0",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/freezed_annotation-2.0.3",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -956,6 +980,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "restart_app",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/restart_app-1.1.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "rxdart",
       "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/rxdart-0.27.3",
       "packageUri": "lib/",
@@ -1322,7 +1352,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-05-25T09:56:15.428750Z",
+  "generated": "2022-05-29T15:07:01.669095Z",
   "generator": "pub",
   "generatorVersion": "2.17.1"
 }
