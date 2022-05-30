@@ -27,7 +27,7 @@ class Svir extends GetxController {
     final j = json.decode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
     final tmp = SvirResponse.fromJson(j);
     
-    // 発表日時が
+    // TODO: 発表日時が
     // 1. 現在保持しているデータよりも新しい
     // 2. 発表されてから180秒以内 であることを確認する
 
