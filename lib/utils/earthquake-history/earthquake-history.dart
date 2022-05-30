@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:eqmonitor/private/keys.dart';
+import 'package:eqmonitor/utils/KyoshinMonitorlib/JmaIntensity.dart';
 import 'package:eqmonitor/utils/earthquake-history/schema/telegram.dart';
 import 'package:get/get.dart';
 import 'package:home_widget/home_widget.dart';
@@ -11,9 +12,14 @@ import 'package:logger/logger.dart';
 /// 地震履歴を管理・取得する
 class EarthQuakeHistory extends GetxController {
   final Logger logger = Get.find<Logger>();
+  // 取得した電文のリスト
   final RxList<Schema> telegrams = <Schema>[].obs;
+  // 取得した電文のうちVXSE53のリスト
   final RxList<Schema> vxse53Telegrams = <Schema>[].obs;
+  // サーバにある電文の総数
   final RxInt maxItemCount = 0.obs;
+  // 表示したい震度のリスト
+  final RxList<JmaIntensity> selectedMaxIntensity = JmaIntensity.values.obs;
 
   @override
   Future<EarthQuakeHistory> onInit() async {
@@ -53,7 +59,7 @@ class EarthQuakeHistory extends GetxController {
     );
     await HomeWidget.saveWidgetData(
       'time',
-      DateFormat('yyyy/MM/dd HH:mm頃').format(latest.time),
+      DateFormat('yyyy/MM/dd HH:mm頃').format(latest.time.toLocal()),
     );
 
     logger.i('Earthquake-history: GET ${telegrams.length}');
@@ -82,4 +88,6 @@ class EarthQuakeHistory extends GetxController {
       }
     }
   }
+
+  Future<void> setMaxIntensity(List<JmaIntensity> intensity) {}
 }

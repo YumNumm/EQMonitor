@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:restart_app/restart_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -60,7 +59,14 @@ class TermsScreen extends StatelessWidget {
                             children: [
                               FloatingActionButton.extended(
                                 onPressed: () async {
-                                  Restart();
+                                  Get.showSnackbar(
+                                    const GetSnackBar(
+                                      duration: Duration(seconds: 1),
+                                      title: '利用規約に同意してください ',
+                                      message:
+                                          '利用規約に同意していただけない場合は、アプリケーションを利用できません。',
+                                    ),
+                                  );
                                 },
                                 label: const Text('同意しない'),
                                 icon: const Icon(Icons.exit_to_app),
@@ -71,7 +77,7 @@ class TermsScreen extends StatelessWidget {
                               FloatingActionButton.extended(
                                 onPressed: () async {
                                   await prefs.setBool('isAcceptTerm', true);
-                                  Restart();
+                                  await Get.offAllNamed<void>('/');
                                 },
                                 label: const Text('同意する'),
                                 icon: const Icon(Icons.check),
