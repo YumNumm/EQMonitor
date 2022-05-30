@@ -67,6 +67,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       if (useTTS) await flutterTts.speak(message.data['tts'].toString());
     }
     if (fss.read(key: 'toTweet').toString().toLowerCase() == 'true') {
+      await fss.read(key: 'tweetIntensityList') ?? "{}";
       final AT = await fss.read(key: 'AT');
       final AS = await fss.read(key: 'AS');
       if (AT != null && AS != null) {

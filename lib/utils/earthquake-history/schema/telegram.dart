@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:eqmonitor/utils/KyoshinMonitorlib/JmaIntensity.dart';
+
 import '../../dmdata/extension/extension.dart';
 import '../../dmdata/schemas/commonHeader.dart';
 import '../../dmdata/schemas/eq-information/earthquake-information.dart';
@@ -131,4 +133,7 @@ class Schema {
   final double? lon;
   final int? serialNo;
   final String? hypoName;
+
+  JmaIntensity get toMaxIntensity => JmaIntensity.values
+      .firstWhere((e) => e.name == maxint, orElse: () => JmaIntensity.Unknown);
 }

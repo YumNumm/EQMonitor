@@ -23,6 +23,8 @@ class EarthQuakeHistory extends GetxController {
 
   @override
   Future<EarthQuakeHistory> onInit() async {
+    // 電文リストが更新された際に自動で条件を満たしたものをVXSE53Listへ転送する
+
     // アイテム数を取得
     super.onInit();
     final itemCountResponse =
@@ -39,7 +41,7 @@ class EarthQuakeHistory extends GetxController {
     for (final element in parsedFirstItems) {
       final schema = Schema.fromJson(element as Map<String, dynamic>);
       telegrams.add(schema);
-      if (schema.type == 'VXSE53') {
+      if (selectedMaxIntensity.contains(schema.toMaxIntensity)) {
         vxse53Telegrams.add(schema);
       }
     }
@@ -68,11 +70,12 @@ class EarthQuakeHistory extends GetxController {
 
   ///次のデータがある場合に読み込む
   Future<void> getMoreData() async {
+    final beforeGetdataVXSE53Length = vxse53Telegrams.length;
     final itemCountResponse =
         await http.get(Uri.parse('$baseUrl/eqhistory/total.txt'));
     maxItemCount.value = int.parse(itemCountResponse.body);
-    logger.i(maxItemCount.value);
-    if (maxItemCount.value - 1 != telegrams.length) {
+    logger.i('${maxItemCount.value}, ${telegrams.length}');
+    if (maxItemCount.value != telegrams.length) {
       // 更新可能
       final firstItemsResponse = await http
           .get(Uri.parse('$baseUrl/eqhistory/${telegrams.length ~/ 100}.json'));
@@ -83,11 +86,28 @@ class EarthQuakeHistory extends GetxController {
         final schema = Schema.fromJson(element as Map<String, dynamic>);
         telegrams.add(schema);
         if (schema.type == 'VXSE53') {
-          vxse53Telegrams.add(schema);
+          if (selectedMaxIntensity.contains(schema.toMaxIntensity)) {
+            vxse53Telegrams.add(schema);
+          }
         }
       }
+    } else {
+      return;
+    }
+    if (beforeGetdataVXSE53Length == vxse53Telegrams.length) {
+      await getMoreData();
     }
   }
 
-  Future<void> setMaxIntensity(List<JmaIntensity> intensity) {}
+  void setMaxIntensity() {
+    final tmp = <Schema>[];
+    for (final tel in telegrams) {
+      if (tel.type == 'VXSE53') {
+        if (selectedMaxIntensity.contains(tel.toMaxIntensity)) {
+          tmp.add(tel);
+        }
+      }
+    }
+    vxse53Telegrams.value = tmp;
+  }
 }
