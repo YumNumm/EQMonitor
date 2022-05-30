@@ -89,10 +89,10 @@ class EarthQuake extends GetxController {
     await Future<void>.delayed(const Duration(milliseconds: 1000));
     // 利用規約同意画面に飛ばすかどうか
     final String route;
-    if (prefs.getBool('isAcceptTerm') ?? true) {
-      route = '/terms';
-    } else {
+    if (prefs.getBool('isAcceptTerm') ?? false) {
       route = '/';
+    } else {
+      route = '/terms';
     }
     await Get.offAllNamed<void>(route);
 
