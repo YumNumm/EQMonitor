@@ -58,6 +58,7 @@ class TermsScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               FloatingActionButton.extended(
+                                heroTag: 'TermDeny',
                                 onPressed: () async {
                                   Get.showSnackbar(
                                     const GetSnackBar(
@@ -75,6 +76,7 @@ class TermsScreen extends StatelessWidget {
                                 padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
                               ),
                               FloatingActionButton.extended(
+                                heroTag: 'TermAccept',
                                 onPressed: () async {
                                   await prefs.setBool('isAcceptTerm', true);
                                   await Get.offAllNamed<void>('/');
