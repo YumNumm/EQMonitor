@@ -85,7 +85,8 @@ class EqHistoryPage extends StatelessWidget {
                             );
                           }
                         }
-
+                        if (eqLog.type != 'VXSE53')
+                          return const SizedBox.shrink();
                         return Container(
                           padding: const EdgeInsets.fromLTRB(0, 2, 0, 0),
                           decoration: const BoxDecoration(),

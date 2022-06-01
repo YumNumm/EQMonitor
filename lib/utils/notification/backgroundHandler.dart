@@ -27,13 +27,13 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   if (j['channelKey'].toString() == 'eew_forecast') {
     final Map<String, dynamic> fssData = await fss.readAll();
     final state = NotificationSettingsState(
-      notifAll: fssData['notifAll'].toString().parseBool(),
-      notifFirstReport: fssData['notifFirstReport'].toString().parseBool(),
-      notifLastReport: fssData['notifLastReport'].toString().parseBool(),
-      notifOnUpdate: fssData['notifOnUpdate'].toString().parseBool(),
+      notifAll: fss.read(key: 'notifAll').toString().parseBool(),
+      notifFirstReport: fss.read(key: 'notifFirstReport').toString().parseBool(),
+      notifLastReport: fss.read(key: 'notifLastReport').toString().parseBool(),
+      notifOnUpdate: fss.read(key: 'notifOnUpdate').toString().parseBool(),
       notifOnUpwardUpdate:
-          fssData['notifOnUpwardUpdate'].toString().parseBool(),
-      useTTS: fssData['useTTS'].toString().parseBool(),
+          fss.read(key: 'notifOnUpwardUpdate').toString().parseBool(),
+      useTTS: fss.read(key: 'useTTS').toString().parseBool(),
     );
     if (state.notifAll) shouldNotif = true;
     try {
@@ -67,7 +67,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       if (useTTS) await flutterTts.speak(message.data['tts'].toString());
     }
     if (fss.read(key: 'toTweet').toString().toLowerCase() == 'true') {
-      await fss.read(key: 'tweetIntensityList') ?? "{}";
+      await fss.read(key: 'tweetIntensityList') ?? '{}';
       final AT = await fss.read(key: 'AT');
       final AS = await fss.read(key: 'AS');
       if (AT != null && AS != null) {
