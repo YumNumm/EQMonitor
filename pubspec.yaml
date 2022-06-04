@@ -3,7 +3,7 @@ description: Earth Quake Monitor Application
 
 publish_to: "none"
 
-version: 0.3.6+113
+version: 0.4.0+138
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -14,17 +14,17 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  cupertino_icons: ^1.0.4
-  get: ^4.6.1
+  cupertino_icons: ^1.0.5
+  get: ^5.0.0-beta.51
   logger: ^1.1.0
   # Firebase libs
 
-  firebase_core: ^1.12.0
-  firebase_crashlytics: ^2.5.1
-  firebase_messaging: ^11.2.6
-  firebase_performance: ^0.8.0+5
-  firebase_auth: ^3.3.7
-  firebase_analytics: ^9.1.8
+  firebase_core: ^1.17.1
+  firebase_crashlytics: ^2.8.1
+  firebase_messaging: ^11.4.1
+  firebase_performance: ^0.8.0+13
+  firebase_auth: ^3.3.19
+  firebase_analytics: ^9.1.9
 
   #DB
   path_provider: ^2.0.9
@@ -44,7 +44,7 @@ dependencies:
   url_launcher: ^6.1.0
   cool_alert: ^1.1.0
   package_info_plus: ^1.4.2
-  awesome_notifications: ^0.6.21
+  awesome_notifications: ^0.7.0-beta.4
   html: ^0.15.0
   home_widget:
     git:
@@ -75,6 +75,9 @@ dependencies:
   bordered_text: ^2.0.0
   restart_app: ^1.1.0+1
   firebase_remote_config: ^2.0.8
+  flutter_riverpod: ^1.0.4
+  freezed: ^2.0.3+1
+  freezed_annotation: ^2.0.3
 
 dev_dependencies:
   flutter_test:
