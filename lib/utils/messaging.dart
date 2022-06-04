@@ -50,7 +50,7 @@ class Messaging extends GetxController {
         AwesomeNotifications().requestPermissionToSendNotifications();
       }
     });
-    AwesomeNotifications().actionStream.listen((event) {
+    /*AwesomeNotifications().actionStream.listen((event) {
       logger.i(event.bigPicturePath);
       Get.dialog<void>(
         AlertDialog(
@@ -82,7 +82,7 @@ class Messaging extends GetxController {
           ),
         ),
       );
-    });
+    });*/
     for (final e in Topics.values) {
       await messaging.subscribeToTopic(e.name);
     }

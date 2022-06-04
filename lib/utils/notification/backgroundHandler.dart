@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dart_twitter_api/twitter_api.dart';
@@ -10,12 +11,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../db/notificationSettings/notificationSettings.dart';
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   const fss = FlutterSecureStorage();
+
+
   //? TTSを使うかどうか
   final useTTS =
       (await fss.read(key: 'useTTS')).toString().parseBool(defaultValue: false);
@@ -28,7 +32,8 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     final Map<String, dynamic> fssData = await fss.readAll();
     final state = NotificationSettingsState(
       notifAll: fss.read(key: 'notifAll').toString().parseBool(),
-      notifFirstReport: fss.read(key: 'notifFirstReport').toString().parseBool(),
+      notifFirstReport:
+          fss.read(key: 'notifFirstReport').toString().parseBool(),
       notifLastReport: fss.read(key: 'notifLastReport').toString().parseBool(),
       notifOnUpdate: fss.read(key: 'notifOnUpdate').toString().parseBool(),
       notifOnUpwardUpdate:
@@ -53,7 +58,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
         shouldNotif = true;
       }
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   } else {
     shouldNotif = true;
