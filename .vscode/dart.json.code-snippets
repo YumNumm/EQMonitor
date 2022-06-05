@@ -1,0 +1,18 @@
+{
+    "Freezed class template": {
+        "prefix": "frzclass",
+        "description": "Create a Freezed class",
+        "body": [
+            "import 'package:freezed_annotation/freezed_annotation.dart';",
+            "import 'package:flutter/foundation.dart';",
+            "part '${TM_FILENAME_BASE}.freezed.dart';",
+            "",
+            "@freezed",
+            "class ${1:DataClass} with _$${1:DataClass} {",
+            "\tconst factory ${1:DataClass}({",
+            "\t\t@Default(0) int counter, // Add your fields here",
+            "\t}) = _${1:DataClass};",
+            "}"
+        ]
+    },
+}

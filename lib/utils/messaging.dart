@@ -1,12 +1,10 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eqmonitor/const/const.dart';
 import 'package:eqmonitor/utils/notification/foregroundHandler.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,7 +28,7 @@ class Messaging extends GetxController {
       provisional: true,
     );
     FirebaseMessaging.onMessage.listen(
-      (RemoteMessage message) async => await foregroundHandler(message),
+      (message) async => await foregroundHandler(message),
     );
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(

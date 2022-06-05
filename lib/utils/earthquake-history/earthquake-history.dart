@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:eqmonitor/private/keys.dart';
+import 'package:eqmonitor/schema/earthquake-history/telegram.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/JmaIntensity.dart';
-import 'package:eqmonitor/schemas/earthquake-history/telegram.dart';
 import 'package:get/get.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:http/http.dart' as http;
@@ -28,7 +28,7 @@ class EarthQuakeHistory extends GetxController {
     // アイテム数を取得
     super.onInit();
     final itemCountResponse =
-        await http.get(Uri.parse('$baseUrl/eqhistory/total.txt'));
+        await http.get(Uri.parse('$baseUrl//eqhistory/0.json'));
     maxItemCount.value = int.parse(itemCountResponse.body);
 
     // 0個目を取得する

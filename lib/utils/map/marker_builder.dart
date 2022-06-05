@@ -98,11 +98,11 @@ MapMarker markerBuilder(
   final eew = svir.svirResponse.value;
 
   if (kmoniTime.now.value
-                  .difference(
-                    svir.svirResponse.value.head.dateTime,
-                  )
-                  .inSeconds <=
-              180 ||
+              .difference(
+                svir.svirResponse.value.head.dateTime,
+              )
+              .inSeconds <=
+          180 ||
       !kDebugMode) {
     return const MapMarker(
       latitude: 0,

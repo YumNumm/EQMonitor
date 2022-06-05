@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../schemas/svir/svirResponse.dart';
+import '../schema/svir/svirResponse.dart';
 
 class OnEEWWidget extends StatelessWidget {
   OnEEWWidget({
-    Key? key,
+    super.key,
     required this.eew,
     required this.now,
-  }) : super(key: key);
+  });
 
   final SvirResponse eew;
   final DateTime now;

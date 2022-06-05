@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../schemas/dmdata/eq-information/earthquake-information.dart';
-
+import '../schema/dmdata/eq-information/earthquake-information.dart';
 
 class PrefWidget extends StatelessWidget {
   const PrefWidget({super.key, required this.pref, required this.data});

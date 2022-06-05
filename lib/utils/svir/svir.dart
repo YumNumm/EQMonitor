@@ -4,8 +4,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
-import '../../schemas/svir/svirResponse.dart';
-
+import '../../schema/svir/svirResponse.dart';
 
 class Svir extends GetxController {
   // EEW情報更新タイマー

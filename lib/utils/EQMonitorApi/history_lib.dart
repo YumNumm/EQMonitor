@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
-import '../../schemas/eqmonitor_api/history.dart';
-import '../../schemas/eqmonitor_api/history_content.dart';
+import '../../schema/eqmonitor_api/history.dart';
+import '../../schema/eqmonitor_api/history_content.dart';
 
 class HistoryLib extends GetxController {
   final Logger logger = Get.find<Logger>();
