@@ -1,4 +1,19 @@
 class UpdateAPI {
+  UpdateAPI.fromJson(Map<String, dynamic> j)
+      : latestVersion = j['latestVer'].toString(),
+        buildNum = int.parse(j['buildNum'].toString()),
+        assetUrl = j['assetUrl'].toString(),
+        title = j['title'].toString(),
+        body = j['body'].toString();
+
+  UpdateAPI({
+    required this.latestVersion,
+    required this.buildNum,
+    required this.assetUrl,
+    required this.title,
+    required this.body,
+  });
+
   /// 最新Ver
   final String latestVersion;
 
@@ -13,19 +28,4 @@ class UpdateAPI {
 
   /// 中身
   final String body;
-
-  UpdateAPI({
-    required this.latestVersion,
-    required this.buildNum,
-    required this.assetUrl,
-    required this.title,
-    required this.body,
-  });
-
-  UpdateAPI.fromJson(Map<String, dynamic> j)
-      : latestVersion = j['latestVer'].toString(),
-        buildNum = int.parse(j['buildNum'].toString()),
-        assetUrl = j['assetUrl'].toString(),
-        title = j['title'].toString(),
-        body = j['body'].toString();
 }

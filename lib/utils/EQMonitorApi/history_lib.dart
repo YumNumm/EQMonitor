@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:eqmonitor/private/keys.dart';
-import 'package:eqmonitor/utils/EQMonitorApi/history.dart';
-import 'package:eqmonitor/utils/EQMonitorApi/history_content.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
+
+import '../../schemas/eqmonitor_api/history.dart';
+import '../../schemas/eqmonitor_api/history_content.dart';
 
 class HistoryLib extends GetxController {
   final Logger logger = Get.find<Logger>();

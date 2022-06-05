@@ -1,11 +1,9 @@
 import 'dart:convert';
 
-import 'package:eqmonitor/private/keys.dart';
 import 'package:eqmonitor/utils/updater/updateAPI.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 

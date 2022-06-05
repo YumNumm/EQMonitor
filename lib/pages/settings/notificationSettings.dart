@@ -2,7 +2,6 @@
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:eqmonitor/utils/settings/notificationSettings.dart';
-import 'package:eqmonitor/utils/settings/volumeController.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -17,7 +16,6 @@ import '../../utils/messaging.dart';
 final PackageInfo packageInfo = Get.find<PackageInfo>();
 final SharedPreferences prefs = Get.find<SharedPreferences>();
 final Messaging messaging = Get.find<Messaging>();
-final VolumeController vc = Get.find<VolumeController>();
 final Logger logger = Get.find<Logger>();
 final flutterTts = FlutterTts();
 

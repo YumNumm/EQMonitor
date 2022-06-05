@@ -199,13 +199,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
-  cool_alert:
-    dependency: "direct main"
-    description:
-      name: cool_alert
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
   crypto:
     dependency: transitive
     description:
@@ -500,13 +493,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
-  flare_flutter:
-    dependency: transitive
-    description:
-      name: flare_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.2"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -540,6 +526,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
+  flutter_hooks:
+    dependency: transitive
+    description:
+      name: flutter_hooks
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.18.4"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -646,15 +639,8 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  freezed:
-    dependency: "direct main"
-    description:
-      name: freezed
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.3+1"
   freezed_annotation:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: freezed_annotation
       url: "https://pub.dartlang.org"
@@ -667,13 +653,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.3"
-  functions_client:
-    dependency: transitive
-    description:
-      name: functions_client
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.1-dev.5"
   geodesy:
     dependency: transitive
     description:
@@ -701,7 +680,7 @@ packages:
       name: get
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.0-beta.51"
+    version: "4.6.5"
   glob:
     dependency: transitive
     description:
@@ -709,13 +688,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
-  gotrue:
-    dependency: transitive
-    description:
-      name: gotrue
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.2"
   graphs:
     dependency: transitive
     description:
@@ -723,20 +695,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
-  hive:
-    dependency: transitive
-    description:
-      name: hive
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.2.1"
-  hive_flutter:
-    dependency: transitive
-    description:
-      name: hive_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
   home_widget:
     dependency: "direct main"
     description:
@@ -746,6 +704,13 @@ packages:
       url: "https://github.com/josepedromonteiro/home_widget.git"
     source: git
     version: "0.1.5"
+  hooks_riverpod:
+    dependency: "direct main"
+    description:
+      name: hooks_riverpod
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
   html:
     dependency: "direct main"
     description:
@@ -837,13 +802,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.5.0"
-  jwt_decode:
-    dependency: transitive
-    description:
-      name: jwt_decode
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.1"
   latlong2:
     dependency: "direct main"
     description:
@@ -879,13 +837,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
-  lottie:
-    dependency: transitive
-    description:
-      name: lottie
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.3.0"
   markdown:
     dependency: transitive
     description:
@@ -928,13 +879,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
-  ntp:
-    dependency: "direct main"
-    description:
-      name: ntp
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   oauth1:
     dependency: "direct main"
     description:
@@ -1075,13 +1019,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.19.2"
-  perfect_volume_control:
-    dependency: "direct main"
-    description:
-      name: perfect_volume_control
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.5"
   petitparser:
     dependency: transitive
     description:
@@ -1110,13 +1047,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.0"
-  postgrest:
-    dependency: transitive
-    description:
-      name: postgrest
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.10+1"
   process:
     dependency: transitive
     description:
@@ -1145,20 +1075,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
-  realtime_client:
-    dependency: transitive
-    description:
-      name: realtime_client
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.15"
-  restart_app:
-    dependency: "direct main"
-    description:
-      name: restart_app
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0+1"
   riverpod:
     dependency: transitive
     description:
@@ -1346,13 +1262,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.7.2+1"
-  storage_client:
-    dependency: transitive
-    description:
-      name: storage_client
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.6+2"
   stream_channel:
     dependency: transitive
     description:
@@ -1374,20 +1283,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  supabase:
-    dependency: transitive
-    description:
-      name: supabase
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.4"
-  supabase_flutter:
-    dependency: "direct main"
-    description:
-      name: supabase_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.1"
   syncfusion_flutter_core:
     dependency: transitive
     description:
@@ -1451,27 +1346,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.1"
-  uni_links:
-    dependency: transitive
-    description:
-      name: uni_links
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.5.1"
-  uni_links_platform_interface:
-    dependency: transitive
-    description:
-      name: uni_links_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
-  uni_links_web:
-    dependency: transitive
-    description:
-      name: uni_links_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0"
   universal_io:
     dependency: transitive
     description:
@@ -1557,7 +1431,7 @@ packages:
     source: hosted
     version: "1.0.1"
   web_socket_channel:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: web_socket_channel
       url: "https://pub.dartlang.org"

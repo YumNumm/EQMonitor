@@ -37,7 +37,6 @@ import 'utils/map.dart';
 import 'utils/map/customZoomPanBehavior.dart';
 import 'utils/messaging.dart';
 import 'utils/settings/notificationSettings.dart';
-import 'utils/settings/volumeController.dart';
 import 'utils/updater/appUpdate.dart';
 
 Future<void> main() async {
