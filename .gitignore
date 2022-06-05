@@ -9,6 +9,10 @@
 .history
 .svn/
 
+# Generated Code
+*.g.dart
+*.*.*.dart
+
 .VSCodeCounter/*
 # IntelliJ related
 *.iml

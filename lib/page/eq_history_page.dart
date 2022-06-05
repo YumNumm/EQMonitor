@@ -10,8 +10,8 @@ import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../schema/dmdata/commonHeader.dart';
 import '../utils/KyoshinMonitorlib/JmaIntensity.dart';
-import '../schemas/dmdata/commonHeader.dart';
 import '../utils/earthquake-history/earthquake-history.dart';
 import '../utils/earthquake.dart';
 import '../utils/messaging.dart';
@@ -49,7 +49,7 @@ class EqHistoryPage extends StatelessWidget {
                     () => ListView.builder(
                       controller: _scrollController,
                       itemCount: eqHistory.vxse53Telegrams.length,
-                      itemBuilder: (BuildContext context, int i) {
+                      itemBuilder: (context, i) {
                         final eqLog = eqHistory.vxse53Telegrams[i];
                         final previousData = (i - 1 > 0)
                             ? eqHistory.vxse53Telegrams[i - 1]
@@ -85,8 +85,9 @@ class EqHistoryPage extends StatelessWidget {
                             );
                           }
                         }
-                        if (eqLog.type != 'VXSE53')
+                        if (eqLog.type != 'VXSE53') {
                           return const SizedBox.shrink();
+                        }
                         return Container(
                           padding: const EdgeInsets.fromLTRB(0, 2, 0, 0),
                           decoration: const BoxDecoration(),
@@ -210,7 +211,7 @@ class _ChooseIntensityButton extends StatelessWidget {
                         ),
                         selected: eqHistory.selectedMaxIntensity
                             .contains(jmaIntensity),
-                        onSelected: (bool b) {
+                        onSelected: (b) {
                           if (b) {
                             eqHistory.selectedMaxIntensity.add(jmaIntensity);
                           } else {

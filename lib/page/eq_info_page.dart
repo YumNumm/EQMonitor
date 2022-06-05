@@ -13,11 +13,11 @@ import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import '../schemas/dmdata/alphabet_extension.dart';
 
-import '../schemas/dmdata/commonHeader.dart';
-import '../schemas/dmdata/eq-information/earthquake-information.dart';
-import '../schemas/earthquake-history/telegram.dart';
+import '../schema/dmdata/alphabet_extension.dart';
+import '../schema/dmdata/commonHeader.dart';
+import '../schema/dmdata/eq-information/earthquake-information.dart';
+import '../schema/earthquake-history/telegram.dart';
 
 class EqInfoPage extends StatelessWidget {
   EqInfoPage({super.key});

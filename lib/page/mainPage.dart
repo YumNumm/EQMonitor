@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:eqmonitor/pages/eq_history_page.dart';
-import 'package:eqmonitor/pages/notification_history_page.dart';
+import 'package:eqmonitor/page/eq_history_page.dart';
+import 'package:eqmonitor/page/notification_history_page.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/kyoshinMonitorlibTime.dart';
 import 'package:eqmonitor/utils/map/customZoomPanBehavior.dart';
 import 'package:eqmonitor/utils/updater/appUpdate.dart';
@@ -105,7 +105,7 @@ class IntroPage extends StatelessWidget {
         () => NavigationBar(
           elevation: 10,
           selectedIndex: page.value,
-          onDestinationSelected: (int value) {
+          onDestinationSelected: (value) {
             page.value = value;
             HapticFeedback.mediumImpact();
           },
@@ -192,7 +192,7 @@ class IntroPage extends StatelessWidget {
                                       label: const Text('リアルタイム震度'),
                                       selected: earthQuake.showShindo.value,
                                       selectedColor: Colors.blueAccent,
-                                      onSelected: (bool b) {
+                                      onSelected: (b) {
                                         if (b) {
                                           earthQuake.showShindo.value =
                                               !earthQuake.showShindo.value;
@@ -205,7 +205,7 @@ class IntroPage extends StatelessWidget {
                                       label: const Text('リアルタイム加速度'),
                                       selected: !earthQuake.showShindo.value,
                                       selectedColor: Colors.blueAccent,
-                                      onSelected: (bool b) {
+                                      onSelected: (b) {
                                         if (b) {
                                           earthQuake.showShindo.value =
                                               !earthQuake.showShindo.value;

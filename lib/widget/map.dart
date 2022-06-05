@@ -47,8 +47,8 @@ class RealtimeIntensityMap extends StatelessWidget {
             ),
           ),
           markerBuilder: (
-            BuildContext context,
-            int index,
+            context,
+            index,
           ) =>
               markerBuilder(
             context,

@@ -1,15 +1,15 @@
-import 'package:eqmonitor/pages/settings/notificationSettings.dart';
+import 'package:eqmonitor/page/settings/notificationSettings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
-import '../pages/settings/aboutApp.dart';
+import '../page/settings/aboutApp.dart';
 import '../utils/auth.dart';
 import 'settings/accountSettingPage.dart';
 import 'settings/top.dart';
 
 class SettingScreen extends StatelessWidget {
-  SettingScreen({Key? key}) : super(key: key);
+  SettingScreen({super.key});
   final par = Get.parameters['page'];
   final AuthStateUtils authStateUtils = Get.find<AuthStateUtils>();
   final Logger logger = Get.find<Logger>();

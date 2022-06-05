@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 
-import '../schemas/eqmonitor_api/history_content.dart';
+import '../schema/eqmonitor_api/history_content.dart';
 
 class NotificationHistoryPage extends StatelessWidget {
   NotificationHistoryPage({super.key});
