@@ -11,7 +11,7 @@ import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../utils/KyoshinMonitorlib/JmaIntensity.dart';
-import '../utils/dmdata/schemas/commonHeader.dart';
+import '../schemas/dmdata/commonHeader.dart';
 import '../utils/earthquake-history/earthquake-history.dart';
 import '../utils/earthquake.dart';
 import '../utils/messaging.dart';

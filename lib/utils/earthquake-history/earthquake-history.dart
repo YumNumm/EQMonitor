@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:eqmonitor/private/keys.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/JmaIntensity.dart';
-import 'package:eqmonitor/utils/earthquake-history/schema/telegram.dart';
+import 'package:eqmonitor/schemas/earthquake-history/telegram.dart';
 import 'package:get/get.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:http/http.dart' as http;

@@ -4,8 +4,6 @@ import 'dart:ui' as ui;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/JmaIntensity.dart';
-import 'package:eqmonitor/utils/dmdata/extension/extension.dart';
-import 'package:eqmonitor/utils/dmdata/schemas/eq-information/earthquake-information.dart';
 import 'package:eqmonitor/widget/pref.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -15,9 +13,11 @@ import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import '../schemas/dmdata/alphabet_extension.dart';
 
-import '../utils/dmdata/schemas/commonHeader.dart';
-import '../utils/earthquake-history/schema/telegram.dart';
+import '../schemas/dmdata/commonHeader.dart';
+import '../schemas/dmdata/eq-information/earthquake-information.dart';
+import '../schemas/earthquake-history/telegram.dart';
 
 class EqInfoPage extends StatelessWidget {
   EqInfoPage({super.key});

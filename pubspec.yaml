@@ -15,7 +15,7 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.5
-  get: ^5.0.0-beta.51
+  get: ^4.6.5
   logger: ^1.1.0
   # Firebase libs
 
@@ -31,7 +31,6 @@ dependencies:
   isar: ^2.5.0
   isar_flutter_libs: ^2.5.0
 
-  ntp: ^2.0.0
   http: ^0.13.4
   intl: ^0.17.0
   geojson: ^1.0.0
@@ -42,7 +41,6 @@ dependencies:
   flutter_native_splash: ^2.1.6
   oauth1: ^2.0.0
   url_launcher: ^6.1.0
-  cool_alert: ^1.1.0
   package_info_plus: ^1.4.2
   awesome_notifications: ^0.7.0-beta.4
   html: ^0.15.0
@@ -50,9 +48,7 @@ dependencies:
     git:
       url: https://github.com/josepedromonteiro/home_widget.git
   shared_preferences: ^2.0.13
-  supabase_flutter: ^0.3.0
   flutter_tts: ^3.3.3
-  web_socket_channel: ^2.2.0
   auto_size_text: ^3.0.0
   flutter_secure_storage: ^5.0.2
   dart_twitter_api: ^0.5.6+1
@@ -60,7 +56,6 @@ dependencies:
   syncfusion_flutter_maps: ^20.1.52
   device_preview: ^1.1.0
   open_settings: ^2.0.2
-  perfect_volume_control: ^1.0.5
   flutter_markdown: ^0.6.10
   device_info_plus: ^3.2.3
   share_plus: ^4.0.4
@@ -73,11 +68,11 @@ dependencies:
   flutter_archive: ^5.0.0
   flutter_colorpicker: ^1.0.3
   bordered_text: ^2.0.0
-  restart_app: ^1.1.0+1
   firebase_remote_config: ^2.0.8
+
+  # 依存管理
   flutter_riverpod: ^1.0.4
-  freezed: ^2.0.3+1
-  freezed_annotation: ^2.0.3
+  hooks_riverpod: ^1.0.4
 
 dev_dependencies:
   flutter_test:

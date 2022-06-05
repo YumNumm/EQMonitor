@@ -1,12 +1,13 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:eqmonitor/utils/EQMonitorApi/history_content.dart';
 import 'package:eqmonitor/utils/EQMonitorApi/history_lib.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
+
+import '../schemas/eqmonitor_api/history_content.dart';
 
 class NotificationHistoryPage extends StatelessWidget {
   NotificationHistoryPage({super.key});
