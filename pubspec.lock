@@ -1291,7 +1291,7 @@ packages:
     source: hosted
     version: "1.10.0"
   state_notifier:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: state_notifier
       url: "https://pub.dartlang.org"
