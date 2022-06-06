@@ -121,10 +121,10 @@ class EarthQuake extends GetxController {
         ),
       );
       if (shindoPic.statusCode != 200) {
-        logger.wtf('リアルタイム震度の画像を取得できませんでした。(status: ${shindoPic.statusCode})');
+        //logger.wtf('リアルタイム震度の画像を取得できませんでした。(status: ${shindoPic.statusCode})');
       }
       if (pgaPic.statusCode != 200) {
-        logger.wtf('PGAの取得に失敗');
+        //logger.wtf('PGAの取得に失敗');
       }
       analyzedPoint.value = jmaImageParser.imageParser(
         shindoPic: (imageQueue.value.isEmpty)
@@ -144,7 +144,7 @@ class EarthQuake extends GetxController {
       numberOfAnalyzedPoint.value =
           analyzedPoint.where((p0) => p0.shindo != null).length;
     } on Exception catch (e) {
-      logger.w(e);
+      //logger.w(e);
       analyzedPoint.value = jmaImageParser.imageParser(
         pgaPic: [],
         shindoPic: [],
