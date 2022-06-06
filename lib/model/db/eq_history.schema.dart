@@ -8,14 +8,19 @@ class EQHistory {
   int? id;
 
   String? hash;
+  @Index()
   String? type;
+  @Index()
   DateTime? time;
   String? url;
   String? imageUrl;
   String? headline;
+  @Index()
   String? maxint;
+  @Index()
   double? magnitude;
   String? magnitudeCondition;
+  @Index()
   double? depth;
   double? lat;
   double? lon;

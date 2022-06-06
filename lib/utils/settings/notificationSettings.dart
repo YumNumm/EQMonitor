@@ -18,16 +18,18 @@ class UserNotificationSettings extends GetxController {
 
   @override
   Future<UserNotificationSettings> onInit() async {
-    state = NotificationSettingsState.fromJson(await fss.readAll());
     // 更新
-    notifAll.value = state.notifAll;
-    notifFirstReport.value = state.notifFirstReport;
-    notifLastReport.value = state.notifLastReport;
-    notifOnUpdate.value = state.notifOnUpdate;
-    notifOnUpwardUpdate.value = state.notifOnUpwardUpdate;
-    useTTS.value = state.useTTS;
+    notifAll.value = fss.read(key: 'notifAll').toString() == 'true';
+    notifFirstReport.value =
+        !(fss.read(key: 'notifFirstReport').toString() == 'false');
+    notifLastReport.value =
+        !(fss.read(key: 'notifLastReport').toString() == 'false');
+    notifOnUpdate.value = fss.read(key: 'notifOnUpdate').toString() == 'true';
+    notifOnUpwardUpdate.value =
+        !(fss.read(key: 'notifOnUpwardUpdate').toString() == 'false');
+    useTTS.value = !(fss.read(key: 'useTTS').toString() == 'false');
     //Stream
-    notifAll.stream.listen((bool b) {
+    notifAll.stream.listen((b) {
       if (b) {
         notifFirstReport.value = notifLastReport.value =
             notifOnUpdate.value = notifOnUpwardUpdate.value = true;

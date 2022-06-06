@@ -3,6 +3,7 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:eqmonitor/model/db/city.model.dart';
+import 'package:eqmonitor/model/db/eq_history.schema.dart';
 import 'package:eqmonitor/page/eq_info_page.dart';
 import 'package:eqmonitor/page/terms.dart';
 import 'package:eqmonitor/state/cities.state.dart';
@@ -102,7 +103,10 @@ Future<void> main() async {
   //* =======Isarデータベースを開く=======
   final dir = await getApplicationSupportDirectory();
   final isar = await Isar.open(
-    schemas: <CollectionSchema<dynamic>>[CitySchema],
+    schemas: <CollectionSchema<dynamic>>[
+      CitySchema,
+      EQHistorySchema,
+    ],
     directory: dir.path,
     inspector: kDebugMode,
   );
