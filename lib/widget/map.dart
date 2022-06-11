@@ -59,13 +59,13 @@ class RealtimeIntensityMap extends StatelessWidget {
             kmoniTime,
           ),
           controller: earthQuake.mapShapeLayerController,
-          sublayers: [
+          /*sublayers: [
             MapShapeSublayer(
               source: MapData.areasSource,
               color: Colors.transparent,
               strokeWidth: 1,
             ),
-          ],
+          ],*/
         ),
       ],
     );

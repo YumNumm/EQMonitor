@@ -3,7 +3,7 @@ description: Earth Quake Monitor Application
 
 publish_to: "none"
 
-version: 0.3.7+143
+version: 0.3.7+145
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -97,6 +97,7 @@ flutter:
     - assets/
     - assets/intensity/
     - assets/notification_type/
+    - assets/maps/
   fonts:
     - family: CaskaydiaCove
       fonts:
