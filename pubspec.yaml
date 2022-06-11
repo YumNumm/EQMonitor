@@ -3,7 +3,7 @@ description: Earth Quake Monitor Application
 
 publish_to: "none"
 
-version: 0.3.7+142
+version: 0.3.7+143
 
 environment:
   sdk: ">=2.17.0 <3.0.0"

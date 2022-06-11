@@ -36,7 +36,7 @@ class RealtimeIntensityMap extends StatelessWidget {
     return SfMaps(
       layers: <MapLayer>[
         MapShapeLayer(
-          source: MapData.dataSource,
+          source: MapData.japanSource,
           color: backgroundColor,
           zoomPanBehavior: earthQuake.mapZoomPanBehavior,
           initialMarkersCount: earthQuake.analyzedPoint.length +
@@ -59,6 +59,13 @@ class RealtimeIntensityMap extends StatelessWidget {
             kmoniTime,
           ),
           controller: earthQuake.mapShapeLayerController,
+          sublayers: [
+            MapShapeSublayer(
+              source: MapData.areasSource,
+              color: Colors.transparent,
+              strokeWidth: 1,
+            ),
+          ],
         ),
       ],
     );

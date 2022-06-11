@@ -16,21 +16,25 @@ class MapData extends GetxController {
     isInited.value = true;
   }
 
-  static MapShapeSource dataSource = const MapShapeSource.asset(
-    'assets/japan.geojson',
-    dataCount: 47,
-  );
+  static MapShapeSource japanSource =
+      const MapShapeSource.asset('assets/maps/japan.json');
+
+  static MapShapeSource tsunamiSource =
+      const MapShapeSource.asset('assets/maps/tsunami.json');
+
+  static MapShapeSource areasSource =
+      const MapShapeSource.asset('assets/maps/areas.json');
 }
 
 class ObservePoint {
-  final String name;
-  final double latitude;
-  final double longitude;
-  final Color color;
   const ObservePoint({
     required this.name,
     required this.latitude,
     required this.longitude,
     required this.color,
   });
+  final String name;
+  final double latitude;
+  final double longitude;
+  final Color color;
 }
