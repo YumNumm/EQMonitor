@@ -1,6 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:eqmonitor/api/kmoni/JmaIntensity.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../schema/svir/svirResponse.dart';
@@ -15,15 +15,140 @@ class OnEEWWidget extends StatelessWidget {
   final SvirResponse eew;
   final DateTime now;
   final headGroup = AutoSizeGroup();
+  final depthAndMagnitudeGroup = AutoSizeGroup();
 
   @override
+  Widget build(BuildContext context) {
+    final maxIntensity = JmaIntensity.values.firstWhere(
+      (e) => e.name == eew.body.intensity?.maxInt,
+      orElse: () => JmaIntensity.Error,
+    );
+    return Card(
+      color: const Color.fromRGBO(236, 245, 251, 1),
+      margin: const EdgeInsets.fromLTRB(5, 3, 5, 0),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            IntrinsicWidth(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Card(
+                    elevation: 0,
+                    color: const Color.fromRGBO(255, 203, 203, 1),
+                    margin: const EdgeInsets.all(8),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Text(
+                        ((eew.body.warningFlag) ? 'EEW(警報 ' : 'EEW(予報 ') +
+                            ((eew.body.endFlag)
+                                ? '最終報(第${eew.head.serial}報))'
+                                : '第${eew.head.serial}報)'),
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Card(
+                    elevation: 0,
+                    color: maxIntensity.color.withAlpha(100),
+                    //color: const Color.fromARGB(255, 241, 230, 127),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            '予想最大震度',
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          Text(
+                            eew.body.intensity?.maxInt ?? '不明',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'CaskaydiaCove',
+                            ),
+                            textScaleFactor: 4,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Card(
+              elevation: 0,
+              margin: const EdgeInsets.all(5),
+              color: const Color(0xFFCFE9F8),
+              child: Padding(
+                padding: const EdgeInsets.all(5),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      eew.body.earthquake.hypocenter.name,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      'M${eew.body.earthquake.magnitude ?? '不明'} '
+                      '深さ${(eew.body.earthquake.hypocenter.depth != null) ? (eew.body.earthquake.hypocenter.depth != 0) ? '${eew.body.earthquake.hypocenter.depth}km' : 'ごく浅い' : '不明'}',
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                      ),
+                    ),
+                    Text(
+                      DateFormat('yyyy/MM/dd HH:mm頃')
+                          .format(eew.body.earthquake.originTime.toLocal()),
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.white,
+                          ),
+                          onPressed: () {},
+                          child: const Text('詳しく見る'),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /*@override
   Widget build(BuildContext context) {
     return Card(
       elevation: 10,
       margin: const EdgeInsets.all(5),
       color: (eew.body.warningFlag)
           ? const Color.fromARGB(240, 147, 28, 6)
-          : const Color.fromARGB(240,255,212,0),
+          : const Color.fromARGB(238, 255, 64, 0),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
@@ -77,8 +202,7 @@ class OnEEWWidget extends StatelessWidget {
             ),
             Row(
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                Expanded(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -93,7 +217,7 @@ class OnEEWWidget extends StatelessWidget {
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10)),
                         child: Image.asset(
-                          'assets/intensity/${(eew.body.intensity != null) ? '${eew.body.intensity!.maxInt}.PNG' : 'unknown.PNG'}',
+                          '${(eew.body.intensity != null) ? '${eew.body.intensity!.maxInt}.PNG' : 'unknown.PNG'}',
                           height: Get.height * 0.1,
                         ),
                       ),
@@ -101,62 +225,30 @@ class OnEEWWidget extends StatelessWidget {
                   ),
                 ),
                 Expanded(
+                  flex: 3,
                   child: Column(
                     children: [
                       Padding(
                         padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                         child: Column(
                           children: [
-                            Align(
-                              alignment: Alignment.topCenter,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    '深さ',
-                                    style:
-                                        context.textTheme.bodyMedium!.copyWith(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    (eew.body.earthquake.hypocenter.depth !=
-                                            null)
-                                        ? (eew.body.earthquake.hypocenter
-                                                    .depth !=
-                                                0)
-                                            ? '${eew.body.earthquake.hypocenter.depth}km'
-                                            : 'ごく浅い'
-                                        : '不明',
-                                    style: context.textTheme.displaySmall!
-                                        .copyWith(
-                                      color: Colors.black,
-                                    ),
-                                  )
-                                ],
+                            AutoSizeText(
+                              '深さ${(eew.body.earthquake.hypocenter.depth != null) ? (eew.body.earthquake.hypocenter.depth != 0) ? '${eew.body.earthquake.hypocenter.depth}km' : 'ごく浅い' : '不明'}',
+                              style: context.textTheme.headline5!.copyWith(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
                               ),
+                              maxLines: 1,
+                              group: depthAndMagnitudeGroup,
                             ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'マグニチュード',
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  (eew.body.earthquake.magnitude != null)
-                                      ? eew.body.earthquake.magnitude.toString()
-                                      : '不明',
-                                  style:
-                                      context.textTheme.displaySmall!.copyWith(
-                                    color: Colors.black,
-                                  ),
-                                )
-                              ],
+                            AutoSizeText(
+                              'マグニチュード:${(eew.body.earthquake.magnitude != null) ? eew.body.earthquake.magnitude.toString() : '不明'}',
+                              style: context.textTheme.headline5!.copyWith(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 1,
+                              group: depthAndMagnitudeGroup,
                             ),
                             Align(
                               alignment: Alignment.bottomCenter,
@@ -181,5 +273,5 @@ class OnEEWWidget extends StatelessWidget {
         ),
       ),
     );
-  }
+  }*/
 }

@@ -716,6 +716,12 @@
       "languageVersion": "2.14"
     },
     {
+      "name": "json_serializable",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/json_serializable-6.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
       "name": "latlong2",
       "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/latlong2-0.8.1",
       "packageUri": "lib/",
@@ -1088,6 +1094,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "source_helper",
+      "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/source_helper-1.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "source_span",
       "rootUri": "file:///C:/Users/YumNumm/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/source_span-1.8.2",
       "packageUri": "lib/",
@@ -1298,7 +1310,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-06-11T18:10:09.863088Z",
+  "generated": "2022-06-13T11:22:09.110873Z",
   "generator": "pub",
   "generatorVersion": "2.17.1"
 }

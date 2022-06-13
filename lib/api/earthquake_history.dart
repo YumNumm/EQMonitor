@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:dio_http2_adapter/dio_http2_adapter.dart';
 import 'package:eqmonitor/model/eq_history_content.model.dart';
@@ -20,18 +22,26 @@ class EarthQuakeHistoryApi {
   final _logger = Logger();
 
   Future<List<EQHistoryContent>?> fetch(int count) async {
-    final res = await dio.get<List<dynamic>>(
+    final res = await dio.get<List<int>>(
       '/eqhistory/$count.json',
+      options: Options(responseType: ResponseType.bytes),
     );
     if (res.statusCode == 200) {
-      _logger.i(res.data!.length);
+      final parsedList =
+          jsonDecode(utf8.decode(res.data ?? [])) as List<dynamic>;
+      final toReturnList = <EQHistoryContent>[];
+      for (final e in parsedList) {
+        toReturnList.add(
+          EQHistoryContent.fromJson(e as Map<String, dynamic>),
+        );
+      }
+      return toReturnList;
     } else {
       throw HttpExceptionWithStatus(
         res.statusCode ?? 500,
         res.statusMessage ?? res.realUri.path,
       );
     }
-    return null;
   }
 
   Future<int?> fetchCount() async {

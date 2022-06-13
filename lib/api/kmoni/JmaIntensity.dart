@@ -1,45 +1,49 @@
+import 'package:flutter/material.dart';
+
 /// 気象庁震度階級 + α
 // ignore_for_file: constant_identifier_names, always_put_control_body_on_new_line, file_names, avoid_classes_with_only_static_members
 
 enum JmaIntensity {
   /// 震度不明
-  Unknown('unknown'),
+  Unknown('unknown', Color.fromARGB(255, 242, 242, 255), true),
 
   /// 震度1未満
-  Int0('0'),
+  Int0('0', Color.fromARGB(255, 242, 242, 255), true),
 
   /// 震度1
-  Int1('1'),
+  Int1('1', Color.fromARGB(255, 242, 242, 255), true),
 
   /// 震度2
-  Int2('2'),
+  Int2('2', Color.fromARGB(255, 0, 170, 255), false),
 
   /// 震度3
-  Int3('3'),
+  Int3('3', Color.fromARGB(255, 0, 65, 255), false),
 
   /// 震度4
-  Int4('4'),
+  Int4('4', Color.fromARGB(255, 250, 230, 150), true),
 
   /// 震度5弱
-  Int5Lower('5-'),
+  Int5Lower('5-', Color.fromARGB(255, 255, 230, 0), true),
 
   /// 震度5強
-  Int5Upper('5+'),
+  Int5Upper('5+', Color.fromARGB(255, 255, 153, 0), true),
 
   /// 震度6弱
-  Int6Lower('6-'),
+  Int6Lower('6-', Color.fromARGB(255, 255, 40, 0), false),
 
   /// 震度6強
-  Int6Upper('6+'),
+  Int6Upper('6+', Color.fromARGB(255, 165, 0, 33), false),
 
   /// 震度7
-  Int7('7'),
+  Int7('7', Color.fromARGB(255, 180, 0, 104), false),
 
   /// 震度異常
-  Error('unknown');
+  Error('unknown', Color.fromARGB(255, 73, 243, 214), true);
 
   final String name;
-  const JmaIntensity(this.name);
+  final Color color;
+  final bool shouldTextBlack;
+  const JmaIntensity(this.name, this.color, this.shouldTextBlack);
 }
 
 /// JMAIntensityの拡張メゾッド
