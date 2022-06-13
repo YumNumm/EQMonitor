@@ -10,11 +10,6 @@
 > **Warning**
 > [利用規約](https://github.com/EQMonitor/EQMonitor/blob/main/docs/policy.md)を必ずご確認の上ご利用ください。
 
-> **Note**
-> 一部のサムスン製デバイスで起動できない問題が発生していることを把握しています。現在解決策を検討中です。
-> [EQMonitor V0.2.7](https://github.com/EQMonitor/EQMonitor/releases/tag/v0.2.7-alpha)では、起動できることも確認済みです。
-
-
 ## **機能**
 - [x] リアルタイム震度の表示
 - [x] 緊急地震速報・地震情報の通知
