@@ -46,10 +46,17 @@ class IntroPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kDebugMode ? Colors.redAccent : null,
-        title: kDebugMode
-            ? const Text('EQMonitor DebugMode')
-            : Text('EQMonitor (Build${packageInfo.buildNumber})'),
+        backgroundColor:
+            kDebugMode ? const Color.fromARGB(255, 157, 0, 0) : null,
+        title: Column(
+          children: [
+            kDebugMode
+                ? Text('EQMonitor DebugMode - ${packageInfo.buildNumber}')
+                : Text('EQMonitor (Build${packageInfo.buildNumber})'),
+            Obx(() => Text(earthQuake.lastUpdateTimeString.value)),
+          ],
+        ),
+        centerTitle: true,
         actions: [
           Obx(
             () => (appUpdate.hasUpdate.value)
@@ -216,34 +223,10 @@ class IntroPage extends StatelessWidget {
                                 ],
                               ),
                               const Divider(),
-                              /*ElevatedButton(
-                                child: const Text('マップの背景選択'),
-                                onPressed: () async {
-                                  var tmpColor =
-                                      mapBackgroundColor.value ?? Colors.grey;
-                                  await Get.dialog<void>(
-                                    AlertDialog(
-                                      title: const Text('Pick a color!'),
-                                      content: SingleChildScrollView(
-                                        child: MaterialPicker(
-                                          pickerColor: tmpColor,
-                                          onColorChanged: (Color c) =>
-                                              tmpColor = c,
-                                        ),
-                                      ),
-                                      actions: <Widget>[
-                                        ElevatedButton(
-                                          child: const Text('決定'),
-                                          onPressed: () {
-                                            mapBackgroundColor.value = tmpColor;
-                                            Get.back<void>();
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),*/
+                              ElevatedButton(
+                                onPressed: () async {},
+                                child: const Text('Fetch DB'),
+                              )
                             ],
                           ),
                           actions: const [],
@@ -284,20 +267,14 @@ class IntroPage extends StatelessWidget {
                                                   .dateTime,
                                             )
                                             .inSeconds <=
-                                        180 &&
-                                    kmoniTime.now.value
-                                            .difference(
-                                              svir.svirResponse.value.head
-                                                  .dateTime,
-                                            )
-                                            .inSeconds >=
-                                        0)
+                                        180 ||
+                                    kDebugMode)
                                 ? Align(
                                     alignment: Alignment.topCenter,
                                     child: Padding(
                                       padding: const EdgeInsets.fromLTRB(
                                         10,
-                                        10,
+                                        0,
                                         10,
                                         0,
                                       ),
@@ -343,12 +320,11 @@ class IntroPage extends StatelessWidget {
                               () => Container(
                                 margin: const EdgeInsets.all(10),
                                 child: AutoSizeText(
-                                  '${earthQuake.lastUpdateTimeString.value}\n'
                                   '観測点: ${earthQuake.numberOfAnalyzedPoint.value}点\n'
                                   '倍率: ${earthQuake.zoomLevel.value.toStringAsFixed(1)}\n'
                                   '最大震度: ${maxIntensity(earthQuake.analyzedPoint.value)}\n'
                                   '最大PGA: ${maxPga(earthQuake.analyzedPoint.value)}',
-                                  maxLines: 5,
+                                  maxLines: 4,
                                   minFontSize: 5,
                                   maxFontSize: 15,
                                 ),

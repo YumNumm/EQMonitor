@@ -6,7 +6,6 @@ import 'package:eqmonitor/model/db/city.model.dart';
 import 'package:eqmonitor/model/db/eq_history.schema.dart';
 import 'package:eqmonitor/page/eq_info_page.dart';
 import 'package:eqmonitor/page/terms.dart';
-import 'package:eqmonitor/state/cities.state.dart';
 import 'package:eqmonitor/utils/CustomImageLoader/custom_image_loader.dart';
 import 'package:eqmonitor/utils/EQMonitorApi/history_lib.dart';
 import 'package:eqmonitor/utils/image_cache/image_cache.dart';
@@ -42,6 +41,12 @@ import 'utils/map/customZoomPanBehavior.dart';
 import 'utils/messaging.dart';
 import 'utils/settings/notificationSettings.dart';
 import 'utils/updater/appUpdate.dart';
+
+// ダミーのProviderを用意する
+final isarProvider = Provider<Isar>((_) {
+  debugPrint('run isarprovider');
+  throw UnimplementedError('アプリケーション起動時にmainでawaitして生成したインスタンスを使用する');
+});
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

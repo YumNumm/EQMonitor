@@ -96,41 +96,35 @@ MapMarker markerBuilder(
 
   //? Get EEW Information
   final eew = svir.svirResponse.value;
-
   if (kmoniTime.now.value
               .difference(
                 svir.svirResponse.value.head.dateTime,
               )
               .inSeconds <=
           180 ||
-      !kDebugMode) {
-    return const MapMarker(
-      latitude: 0,
-      longitude: 0,
-      child: SizedBox.shrink(),
-    );
-  }
-  if (point.pointType.name == PointType.HypoCenter.name) {
-    return MapMarker(
-      latitude: eew.body.earthquake.hypocenter.lat,
-      longitude: eew.body.earthquake.hypocenter.lon,
-      child: BorderedText(
-        strokeWidth: iconSize * 2,
-        strokeColor: (Get.isDarkMode) ? Colors.white : Colors.black,
-        child: Text(
-          '×',
-          style: TextStyle(
-            fontSize: iconSize * 10,
-            fontWeight: FontWeight.bold,
-            color: const Color.fromARGB(255, 255, 17, 0),
+      kDebugMode) {
+    if (point.pointType.name == PointType.HypoCenter.name) {
+      return MapMarker(
+        latitude: eew.body.earthquake.hypocenter.lat,
+        longitude: eew.body.earthquake.hypocenter.lon,
+        child: BorderedText(
+          strokeWidth: iconSize * 2,
+          strokeColor: (Get.isDarkMode) ? Colors.white : Colors.black,
+          child: Text(
+            '×',
+            style: TextStyle(
+              fontSize: iconSize * 10,
+              fontWeight: FontWeight.bold,
+              color: const Color.fromARGB(255, 255, 17, 0),
+            ),
           ),
         ),
-      ),
-    );
+      );
+    }
   }
   return const MapMarker(
     latitude: 0,
     longitude: 0,
-    child: Text('A'),
+    child: SizedBox.shrink(),
   );
 }

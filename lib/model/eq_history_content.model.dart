@@ -26,6 +26,6 @@ class EQHistoryContent with _$EQHistoryContent {
     @JsonKey(name: 'hyponame') String? hypoName,
   }) = _EQHistoryContent;
 
-  factory EQHistoryContent.fromJson(Map<String, dynamic> j) =>
-      _$EQHistoryContentFromJson(j);
+  factory EQHistoryContent.fromJson(Map<String, dynamic> json) =>
+      _$EQHistoryContentFromJson(json);
 }
