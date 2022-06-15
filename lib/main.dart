@@ -50,6 +50,7 @@ final isarProvider = Provider<Isar>((_) {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Get.testMode = kDebugMode;
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent, // transparent status bar
