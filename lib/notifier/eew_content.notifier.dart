@@ -3,10 +3,13 @@ import 'dart:async';
 import 'package:eqmonitor/api/svir.dart';
 import 'package:eqmonitor/model/eew.model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:isar/isar.dart';
 import 'package:logger/logger.dart';
 
+import '../main.dart';
+
 class EEWNotifier extends StateNotifier<EEWModel> {
-  EEWNotifier()
+  EEWNotifier(this.isar)
       : super(
           const EEWModel(
             responses: [],
@@ -15,7 +18,7 @@ class EEWNotifier extends StateNotifier<EEWModel> {
         ) {
     _onInit();
   }
-
+  final Isar isar;
   final Logger _logger = Logger();
   final SvirApi svirApi = SvirApi();
 
@@ -28,6 +31,7 @@ class EEWNotifier extends StateNotifier<EEWModel> {
       Duration(milliseconds: state.apiFetchDuration),
       (timer) => updateData(),
     );
+    _logger.w(svirTimer?.isActive);
   }
 
   Future<void> updateData() async {
@@ -48,6 +52,6 @@ class EEWNotifier extends StateNotifier<EEWModel> {
   }
 }
 
-final eqHistroyProvider = StateNotifierProvider<EEWNotifier, EEWModel>((ref) {
-  return EEWNotifier();
+final EewStateNotifier = StateNotifierProvider<EEWNotifier, EEWModel>((ref) {
+  return EEWNotifier(ref.watch(isarProvider));
 });

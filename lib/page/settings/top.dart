@@ -30,6 +30,20 @@ Widget topSettingPage() {
             },
           ),
           SettingsTile.navigation(
+            title: const Text('LINE Notify 連携'),
+            leading: const Icon(Icons.person),
+            value: Obx(
+              () => (authStateUtils.isLoggedin.value)
+                  ? Text('ログイン済み (${authStateUtils.user.value!.displayName}さん)')
+                  : const Text('ログインしていません'),
+            ),
+            onPressed: (e) {
+              Get.toNamed<void>(
+                '/setting/?page=0&isAuthed=${authStateUtils.isLoggedin.value}',
+              );
+            },
+          ),
+          SettingsTile.navigation(
             title: const Text('通知設定'),
             leading: const Icon(Icons.notifications_rounded),
             onPressed: (context) async {

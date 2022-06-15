@@ -15,7 +15,7 @@ class EqHistoryNotifier extends StateNotifier<EQHistoryModel> {
           EQHistoryModel(
             isar: isar,
             content:
-                isar.eQHistorys.where().typeEqualTo('VXSE53').findAllSync(),
+                isar.eQHistorys.filter().typeEqualTo('VXSE53').findAllSync(),
             intensities: JmaIntensity.values,
           ),
         ) {
@@ -48,7 +48,7 @@ class EqHistoryNotifier extends StateNotifier<EQHistoryModel> {
 
   Future<void> _resetHistoryState() async {
     final contentList = await isar.eQHistorys
-        .where()
+        .filter()
         .typeEqualTo('VXSE53')
         .sortByTimeDesc()
         .findAll();
@@ -60,7 +60,7 @@ class EqHistoryNotifier extends StateNotifier<EQHistoryModel> {
 
   Future<void> _reloadDB() async {
     final tmpContentList = await isar.eQHistorys
-        .where()
+        .filter()
         .typeEqualTo('VXSE53')
         .sortByTimeDesc()
         .findAll();
@@ -119,8 +119,9 @@ class EqHistoryNotifier extends StateNotifier<EQHistoryModel> {
     return isar.eQHistorys.countSync();
   }
 }
-
+/*
 final eqHistroyProvider =
     StateNotifierProvider<EqHistoryNotifier, EQHistoryModel>((ref) {
   return EqHistoryNotifier(ref.watch(isarProvider));
 });
+*/

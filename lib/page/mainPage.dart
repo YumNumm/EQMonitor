@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:eqmonitor/notifier/eew_content.notifier.dart';
 import 'package:eqmonitor/page/eq_history_page.dart';
 import 'package:eqmonitor/page/notification_history_page.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/kyoshinMonitorlibTime.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -23,7 +25,7 @@ import '../utils/svir/svir.dart';
 import '../widget/map.dart';
 import '../widget/on_eew.dart';
 
-class IntroPage extends StatelessWidget {
+class IntroPage extends HookConsumerWidget {
   IntroPage({super.key});
 
   final Logger logger = Get.find<Logger>();
@@ -43,7 +45,11 @@ class IntroPage extends StatelessWidget {
   final Rx<Color?> mapBackgroundColor = null.obs;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Svir EEWのFetch Timer開始
+    WidgetsBinding.instance.addPostFrameCallback((_){
+    });
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor:

@@ -28,7 +28,7 @@ Widget accountSettingPage() {
           title: const Text('アカウント設定'),
           tiles: <AbstractSettingsTile>[
             SettingsTile.navigation(
-              title: const Text('ログイン'),
+              title: const Text('Twitter ログイン'),
               description:
                   const Text('Twitterでログインすることにより、すべての地震に関する通知がツイートされます'),
               leading: const Icon(Icons.people),
