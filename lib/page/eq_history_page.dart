@@ -32,7 +32,6 @@ class EqHistoryPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    /*
     final eqHistoryState = ref.watch(eqHistroyProvider);
     return Stack(
       children: [
@@ -222,7 +221,7 @@ class _ChooseIntensityButton extends StatelessWidget {
       ),
       child: const Text('地震情報を絞り込む'),
     );
-  }*/
+
     return const SizedBox.shrink();
   }
 }

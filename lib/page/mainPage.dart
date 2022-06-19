@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:eqmonitor/notifier/eew_content.notifier.dart';
 import 'package:eqmonitor/page/eq_history_page.dart';
 import 'package:eqmonitor/page/notification_history_page.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/kyoshinMonitorlibTime.dart';
@@ -47,8 +46,7 @@ class IntroPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Svir EEWのFetch Timer開始
-    WidgetsBinding.instance.addPostFrameCallback((_){
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {});
 
     return Scaffold(
       appBar: AppBar(
@@ -62,7 +60,6 @@ class IntroPage extends HookConsumerWidget {
             Obx(() => Text(earthQuake.lastUpdateTimeString.value)),
           ],
         ),
-        centerTitle: true,
         actions: [
           Obx(
             () => (appUpdate.hasUpdate.value)
@@ -158,8 +155,8 @@ class IntroPage extends HookConsumerWidget {
                                   content: Obx(
                                     () => Image.asset(
                                       (earthQuake.showShindo.value)
-                                          ? 'assets/nied_jma_s_w_scale.png'
-                                          : 'assets/nied_acmap_s_w_scale.png',
+                                          ? 'assets/scale_int.png'
+                                          : 'assets/scale_pga.png',
                                     ),
                                   ),
                                 ),

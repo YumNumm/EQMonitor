@@ -3,7 +3,7 @@ description: Earth Quake Monitor Application
 
 publish_to: "none"
 
-version: 0.3.7+149
+version: 0.3.7+158
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -107,7 +107,7 @@ flutter:
 
 flutter_native_splash:
   #? flutter pub run flutter_native_splash:create
-  color: "#F1F4F9"
+  color: "#F1F5F9"
   #background_image: "assets/background.png"
 
   # Optional parameters are listed below.  To enable a parameter, uncomment the line by removing

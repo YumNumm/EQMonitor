@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eqmonitor/model/db/eq_history.schema.dart';
 import 'package:eqmonitor/utils/KyoshinMonitorlib/JmaIntensity.dart';
 import 'package:eqmonitor/widget/pref.dart';
 import 'package:flutter/material.dart';
@@ -17,15 +18,14 @@ import 'package:share_plus/share_plus.dart';
 import '../schema/dmdata/alphabet_extension.dart';
 import '../schema/dmdata/commonHeader.dart';
 import '../schema/dmdata/eq-information/earthquake-information.dart';
-import '../schema/earthquake-history/telegram.dart';
 
 class EqInfoPage extends StatelessWidget {
   EqInfoPage({super.key});
   final GlobalKey shareKey = GlobalKey();
 
   final Logger logger = Get.find<Logger>();
-  final Schema schema =
-      (Get.arguments as Map<String, dynamic>)['eqLog'] as Schema;
+  final eqHistory =
+      (Get.arguments as Map<String, dynamic>)['eqLog'] as EQHistory;
   final payload =
       (Get.arguments as Map<String, dynamic>)['payload'] as CommonHead;
   final data = EarthquakeInformation.fromJson(
@@ -55,7 +55,8 @@ class EqInfoPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          schema.headline.alphanumericToHalfLength().replaceAll(' ', ''),
+          eqHistory.headline?.alphanumericToHalfLength().replaceAll(' ', '') ??
+              '不明',
         ),
         actions: [
           IconButton(
@@ -76,11 +77,11 @@ class EqInfoPage extends StatelessWidget {
             key: shareKey,
             child: Column(
               children: [
-                if (schema.imageUrl != null)
+                if (eqHistory.imageUrl != null)
                   Container(
                     margin: const EdgeInsets.all(10),
                     child: CachedNetworkImage(
-                      imageUrl: schema.imageUrl.toString(),
+                      imageUrl: eqHistory.imageUrl.toString(),
                       progressIndicatorBuilder:
                           (context, url, downloadProgress) =>
                               CircularProgressIndicator(
@@ -101,8 +102,8 @@ class EqInfoPage extends StatelessWidget {
                         Row(),
                         AutoSizeText(
                           '深さ: ${(data.earthquake?.hypoCenter.depth.value != null) ? "${data.earthquake?.hypoCenter.depth.value}km" : '不明'}\n'
-                          'マグニチュード: ${schema.magnitude ?? schema.magnitudeCondition ?? '不明'}\n'
-                          '震源地: ${schema.hypoName ?? "不明"}\n'
+                          'マグニチュード: ${eqHistory.magnitude ?? eqHistory.magnitudeCondition ?? '不明'}\n'
+                          '震源地: ${eqHistory.hypoName ?? "不明"}\n'
                           '${(data.earthquake != null) ? '発生時刻: '
                               '${DateFormat("yyyy/MM/dd HH:mm頃").format(data.earthquake!.arrivalTime.toLocal())}' : '発生時刻 不明'}',
                           style: context.textTheme.headline5?.copyWith(
