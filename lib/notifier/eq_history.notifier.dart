@@ -1,11 +1,11 @@
 import 'package:eqmonitor/api/earthquake_history.dart';
 import 'package:eqmonitor/api/kmoni/JmaIntensity.dart';
+import 'package:eqmonitor/main.dart';
 import 'package:eqmonitor/model/eq_history_content.model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:logger/logger.dart';
 
-import '../main.dart';
 import '../model/db/eq_history.schema.dart';
 import '../model/eq_histroy.model.dart';
 
@@ -51,6 +51,7 @@ class EqHistoryNotifier extends StateNotifier<EQHistoryModel> {
         .filter()
         .typeEqualTo('VXSE53')
         .sortByTimeDesc()
+        .thenBySerialNo()
         .findAll();
     state = state.copyWith(
       content: contentList,
@@ -99,6 +100,31 @@ class EqHistoryNotifier extends StateNotifier<EQHistoryModel> {
     await _resetHistoryState();
   }
 
+  Future<void> addFromApiContentList(List<EQHistoryContent> elements) async {
+    final toInsert = <EQHistory>[];
+    for (final e in elements) {
+      final eqHistory = EQHistory()
+        ..id = e.hashCode
+        ..hash = e.hash
+        ..type = e.type
+        ..time = e.time
+        ..url = e.url
+        ..imageUrl = e.imageUrl
+        ..headline = e.headline
+        ..maxint = e.maxint
+        ..magnitude = e.magnitude
+        ..magnitudeCondition = e.magnitudeCondition
+        ..depth = e.depth
+        ..lat = e.lat
+        ..lon = e.lon
+        ..serialNo = e.serialNo
+        ..hypoName = e.hypoName;
+      toInsert.add(eqHistory);
+    }
+    await isar.writeTxn((isar) => isar.eQHistorys.putAll(toInsert));
+    await _resetHistoryState();
+  }
+
   List<JmaIntensity> get choosedIntensities => state.intensities;
 
   List<JmaIntensity> addIntensity(JmaIntensity jmaInt, bool add) {
@@ -119,9 +145,7 @@ class EqHistoryNotifier extends StateNotifier<EQHistoryModel> {
     return isar.eQHistorys.countSync();
   }
 }
-/*
 final eqHistroyProvider =
     StateNotifierProvider<EqHistoryNotifier, EQHistoryModel>((ref) {
   return EqHistoryNotifier(ref.watch(isarProvider));
 });
-*/
