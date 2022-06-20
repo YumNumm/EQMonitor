@@ -4,6 +4,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:eqmonitor/model/db/city.model.dart';
 import 'package:eqmonitor/model/db/eq_history.schema.dart';
+import 'package:eqmonitor/model/db/error_log.model.dart';
 import 'package:eqmonitor/page/eq_info_page.dart';
 import 'package:eqmonitor/page/terms.dart';
 import 'package:eqmonitor/utils/CustomImageLoader/custom_image_loader.dart';
@@ -72,7 +73,30 @@ Future<void> main() async {
   await crashlytics.sendUnsentReports();
   await crashlytics.setUserIdentifier(deviceInfo.androidId.toString());
   await crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode);
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  //* =======Isarデータベースを開く=======
+  final dir = await getApplicationSupportDirectory();
+  final isar = await Isar.open(
+    schemas: <CollectionSchema<dynamic>>[
+      CitySchema,
+      EQHistorySchema,
+      ErrorLogSchema,
+    ],
+    directory: dir.path,
+    inspector: kDebugMode,
+  );
+  //* =================================
+  FlutterError.onError = (details) async {
+    FlutterError.dumpErrorToConsole(details);
+    isar.writeTxnSync(
+      (isar) => isar.errorLogs.putSync(
+        ErrorLog()
+          ..code = details.hashCode
+          ..createdAt = DateTime.now()
+          ..payload = details.toString(),
+      ),
+    );
+    await FirebaseCrashlytics.instance.recordFlutterError(details);
+  };
 
   Get.put<Logger>(
     Logger(
@@ -105,18 +129,6 @@ Future<void> main() async {
 
   final assetImageCache = Get.put<AssetImageCache>(AssetImageCache());
   await assetImageCache.onInit();
-
-  //* =======Isarデータベースを開く=======
-  final dir = await getApplicationSupportDirectory();
-  final isar = await Isar.open(
-    schemas: <CollectionSchema<dynamic>>[
-      CitySchema,
-      EQHistorySchema,
-    ],
-    directory: dir.path,
-    inspector: kDebugMode,
-  );
-  //* =================================
 
   runApp(
     DevicePreview(

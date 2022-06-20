@@ -1,5 +1,4 @@
 import 'package:eqmonitor/api/earthquake_history.dart';
-import 'package:eqmonitor/api/kmoni/JmaIntensity.dart';
 import 'package:eqmonitor/main.dart';
 import 'package:eqmonitor/model/eq_history_content.model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,14 +7,21 @@ import 'package:logger/logger.dart';
 
 import '../model/db/eq_history.schema.dart';
 import '../model/eq_histroy.model.dart';
+import '../utils/KyoshinMonitorlib/JmaIntensity.dart';
 
 class EqHistoryNotifier extends StateNotifier<EQHistoryModel> {
   EqHistoryNotifier(this.isar)
       : super(
           EQHistoryModel(
             isar: isar,
-            content:
-                isar.eQHistorys.filter().typeEqualTo('VXSE53').findAllSync(),
+            content: isar.eQHistorys
+                .filter()
+                .typeEqualTo('VXSE53')
+                .sortBySerialNo()
+                .thenByTimeDesc()
+                .offset(0)
+                .limit(500)
+                .findAllSync(),
             intensities: JmaIntensity.values,
           ),
         ) {
@@ -33,8 +39,8 @@ class EqHistoryNotifier extends StateNotifier<EQHistoryModel> {
     if (totalRemoteDBCount == null) {
       throw Exception('電文データの同期に失敗しました');
     }
-    // RemoteDBとLocalDBの電文の総数が合致しない場合は取得
-    if (dbContentsCount() != totalRemoteDBCount) {
+    // RemoteDBの方がLocalDBより多い時に取得
+    if (dbContentsCount() < totalRemoteDBCount) {
       for (final toGetFileid
           in List<int>.generate(totalRemoteDBCount ~/ 100, (i) => i)) {
         final fetchedData = await _eqApi.fetch(toGetFileid);
@@ -44,26 +50,38 @@ class EqHistoryNotifier extends StateNotifier<EQHistoryModel> {
       }
     }
     // 完了したので、すべての電文がLocalDBにも、EQHistoryModel.contentにも配置されています
+    state.copyWith(content: []);
+    await _reloadDB();
   }
 
-  Future<void> _resetHistoryState() async {
-    final contentList = await isar.eQHistorys
-        .filter()
-        .typeEqualTo('VXSE53')
-        .sortByTimeDesc()
-        .thenBySerialNo()
-        .findAll();
-    state = state.copyWith(
-      content: contentList,
-      intensities: JmaIntensity.values,
-    );
-  }
-
-  Future<void> _reloadDB() async {
+  Future<bool> loadMore() async {
+    if (state.content.length == isar.eQHistorys.countSync()) {
+      // これ以上取得できないので[false]を返します。
+      return false;
+    }
+    // 追加で条件に合致するデータを100件取得します。
     final tmpContentList = await isar.eQHistorys
         .filter()
         .typeEqualTo('VXSE53')
-        .sortByTimeDesc()
+        .sortBySerialNo()
+        .thenByTimeDesc()
+        .offset(state.content.length)
+        .limit(100)
+        .findAll();
+    state.copyWith(
+      content: state.content + tmpContentList,
+    );
+    return true;
+  }
+
+  Future<void> _reloadDB({int limit = 100}) async {
+    final tmpContentList = await isar.eQHistorys
+        .filter()
+        .typeEqualTo('VXSE53')
+        .sortBySerialNo()
+        .thenByTimeDesc()
+        .offset(0)
+        .limit(limit)
         .findAll();
     final contentList = <EQHistory>[];
     for (final e in tmpContentList) {
@@ -97,7 +115,7 @@ class EqHistoryNotifier extends StateNotifier<EQHistoryModel> {
       ..serialNo = e.serialNo
       ..hypoName = e.hypoName;
     final val = await isar.writeTxn((isar) => isar.eQHistorys.put(eqHistory));
-    await _resetHistoryState();
+    await _reloadDB();
   }
 
   Future<void> addFromApiContentList(List<EQHistoryContent> elements) async {
@@ -122,12 +140,12 @@ class EqHistoryNotifier extends StateNotifier<EQHistoryModel> {
       toInsert.add(eqHistory);
     }
     await isar.writeTxn((isar) => isar.eQHistorys.putAll(toInsert));
-    await _resetHistoryState();
+    await _reloadDB();
   }
 
   List<JmaIntensity> get choosedIntensities => state.intensities;
 
-  List<JmaIntensity> addIntensity(JmaIntensity jmaInt, bool add) {
+  List<JmaIntensity> changeIntensity(JmaIntensity jmaInt, bool add) {
     final latestIntensitiesList = state.intensities;
     if (add) {
       latestIntensitiesList.add(jmaInt);
@@ -145,7 +163,8 @@ class EqHistoryNotifier extends StateNotifier<EQHistoryModel> {
     return isar.eQHistorys.countSync();
   }
 }
-final eqHistroyProvider =
+
+final eqHistoryProvider =
     StateNotifierProvider<EqHistoryNotifier, EQHistoryModel>((ref) {
   return EqHistoryNotifier(ref.watch(isarProvider));
 });

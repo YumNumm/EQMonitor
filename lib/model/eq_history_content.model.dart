@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'eq_history_content.model.freezed.dart';
 part 'eq_history_content.model.g.dart';

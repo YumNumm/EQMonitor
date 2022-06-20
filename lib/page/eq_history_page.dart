@@ -32,7 +32,7 @@ class EqHistoryPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eqHistoryState = ref.watch(eqHistroyProvider);
+    final eqHistoryState = ref.watch(eqHistoryProvider);
     return Stack(
       children: [
         RefreshIndicator(
@@ -56,32 +56,15 @@ class EqHistoryPage extends ConsumerWidget {
                         (previousData?.time?.toLocal().day ?? -1) !=
                                 eqLog.time?.toLocal().day &&
                             previousData != null;
-                    /* if (eqHistoryState.content.length - 1 == i ) {
-                          /*if (eqHistory.maxItemCount.value ==
-                              eqHistory.telegrams.length) {
-                            return const Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(8),
-                                child: Text('これ以上前のデータは保存されていません。'),
-                              ),
-                            );
-                          } else {*/
-                            eqHistory.getMoreData();
-                            return Column(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: CircularProgressIndicator.adaptive(),
-                                ),
-                                Obx(
-                                  () => Text(
-                                    '${eqHistory.telegrams.length}件目以降のデータを取得しています',
-                                  ),
-                                )
-                              ],
-                            );
-                          }
-                        }*/
+                    if (i + 1 == eqHistoryState.content.length) {
+                      return FutureBuilder(
+                        future: ref.read(eqHistoryProvider.notifier).loadMore(),
+                        builder: (a, b) => const Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        ),
+                      );
+                    }
+
                     return Container(
                       padding: const EdgeInsets.fromLTRB(0, 2, 0, 0),
                       decoration: const BoxDecoration(),
@@ -171,14 +154,16 @@ class EqHistoryPage extends ConsumerWidget {
   }
 }
 
-class _ChooseIntensityButton extends StatelessWidget {
+class _ChooseIntensityButton extends ConsumerWidget {
   _ChooseIntensityButton({super.key});
   final Logger logger = Get.find<Logger>();
   final EarthQuake earthQuake = Get.find<EarthQuake>();
   //final EarthQuakeHistory eqHistory = Get.find<EarthQuakeHistory>();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final eqHistoryState = ref.watch(eqHistoryProvider);
+
     return ElevatedButton(
       onPressed: () => Get.dialog<void>(
         AlertDialog(
@@ -201,17 +186,13 @@ class _ChooseIntensityButton extends StatelessWidget {
                             ? '例外'
                             : '震度${jmaIntensity.name}',
                       ),
-                      selected: true,
-                      /* selected: eqHistory.selectedMaxIntensity
-                            .contains(jmaIntensity),
-                        onSelected: (b) {
-                          if (b) {
-                            eqHistory.selectedMaxIntensity.add(jmaIntensity);
-                          } else {
-                            eqHistory.selectedMaxIntensity.remove(jmaIntensity);
-                          }
-                          eqHistory.setMaxIntensity();
-                        },*/
+                      selected:
+                          eqHistoryState.intensities.contains(jmaIntensity),
+                      onSelected: (b) {
+                        ref
+                            .read(eqHistoryProvider.notifier)
+                            .changeIntensity(jmaIntensity, b);
+                      },
                     ),
                 ],
               ),

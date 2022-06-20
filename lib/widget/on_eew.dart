@@ -1,9 +1,13 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:eqmonitor/api/kmoni/JmaIntensity.dart';
+import 'package:eqmonitor/schema/svir/Body/accuracy/depth_calculation.dart';
+import 'package:eqmonitor/schema/svir/Body/accuracy/epicCenterAccuracy.dart';
+import 'package:eqmonitor/schema/svir/Body/accuracy/magnitude_calculation.dart';
+import 'package:eqmonitor/schema/svir/Body/accuracy/number_of_magnitude_calculation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../schema/svir/svirResponse.dart';
+import '../utils/KyoshinMonitorlib/JmaIntensity.dart';
 
 class OnEEWWidget extends StatelessWidget {
   OnEEWWidget({
@@ -126,8 +130,21 @@ class OnEEWWidget extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             primary: Colors.white,
                           ),
-                          onPressed: () {},
-                          child: const Text('詳しく見る'),
+                          onPressed: () async {
+                            await showDialog<void>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                content: Text(
+                                  '深さ精度値: ${eew.body.earthquake.accuracy.depthCalculation.description}\n'
+                                  'M精度値: ${eew.body.earthquake.accuracy.magnitudeCalculation.description}\n'
+                                  'M計算使用観測点数:${eew.body.earthquake.accuracy.numberOfMagnitudeCalculation.description}\n'
+                                  '震央位置: ${eew.body.earthquake.accuracy.epicCenterAccuracy.epicCenterAccuracy.description}\n'
+                                  '震源位置: ${eew.body.earthquake.accuracy.epicCenterAccuracy.hypoCenterAccuracy.description}\n',
+                                ),
+                              ),
+                            );
+                          },
+                          child: const Text('精度情報'),
                         ),
                       ],
                     )

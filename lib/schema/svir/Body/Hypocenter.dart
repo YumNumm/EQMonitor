@@ -13,9 +13,7 @@ class SvirBodyEQHypocenter {
         lat = double.parse(j['Lat'].toString()),
         lon = double.parse(j['Lon'].toString()),
         depth = int.parse(j['Depth'].toString()),
-        landOrSea = (j['LandOrSea'].toString() == 'null')
-            ? null
-            : j['LandOrSea'].toString();
+        landOrSea = (j['LandOrSea'] == null) ? null : j['LandOrSea'].toString();
 
   ///  震央地名
   final String name;
