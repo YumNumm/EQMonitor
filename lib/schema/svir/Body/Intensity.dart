@@ -10,15 +10,12 @@ class SvirBodyEQIntensity {
         intnum = StrToint(j['MaxInt'].toString());
 
   /// 最大予測震度
-  /// 不明時 "不明"
-  /// 5+
   final String maxInt;
 
   /// テキストの予測最大震度
   final String textInt;
 
-  /// 最大震度(数値化)
-  /// 0->9
+  // 最大震度(数値化)
   final int intnum;
 }
 

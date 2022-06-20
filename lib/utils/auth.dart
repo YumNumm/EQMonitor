@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
@@ -22,11 +23,14 @@ class AuthStateUtils extends GetxController {
 
   Future<void> updateStatus() async {
     user = firebaseauth.currentUser.obs;
+    const fss = FlutterSecureStorage();
     if (user.value != null) {
       logger.d('Hello ${user.value!.displayName}');
+      await fss.write(key: 'toTweet', value: 'true');
       isLoggedin.value = true;
     } else {
       logger.d('Not logged in!');
+      await fss.write(key: 'toTweet', value: 'false');
       isLoggedin.value = false;
     }
   }

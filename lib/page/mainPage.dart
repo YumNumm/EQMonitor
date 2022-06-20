@@ -172,8 +172,8 @@ class IntroPage extends HookConsumerWidget {
                                       margin: const EdgeInsets.all(2),
                                       child: Image.asset(
                                         (earthQuake.showShindo.value)
-                                            ? 'assets/nied_jma_s_w_scale.png'
-                                            : 'assets/nied_acmap_s_w_scale.png',
+                                            ? 'assets/scale_int.png'
+                                            : 'assets/scale_pga.png',
                                         height: Get.height * 0.1,
                                       ),
                                     ),
@@ -264,13 +264,20 @@ class IntroPage extends HookConsumerWidget {
                   Obx(
                     () => (svir.svirResponse.value != null)
                         ? Obx(
-                            () => (kmoniTime.now.value
-                                            .difference(
-                                              svir.svirResponse.value.head
-                                                  .dateTime,
-                                            )
-                                            .inSeconds <=
-                                        180 ||
+                            () => ((kmoniTime.now.value
+                                                .difference(
+                                                  svir.svirResponse.value.head
+                                                      .dateTime,
+                                                )
+                                                .inSeconds <=
+                                            180 &&
+                                        kmoniTime.now.value
+                                                .difference(
+                                                  svir.svirResponse.value.head
+                                                      .dateTime,
+                                                )
+                                                .inSeconds <=
+                                            0) ||
                                     kDebugMode)
                                 ? Align(
                                     alignment: Alignment.topCenter,

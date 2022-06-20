@@ -29,7 +29,7 @@ Widget topSettingPage() {
               );
             },
           ),
-          SettingsTile.navigation(
+          /*SettingsTile.navigation(
             title: const Text('LINE Notify 連携'),
             leading: const Icon(Icons.person),
             value: Obx(
@@ -42,7 +42,7 @@ Widget topSettingPage() {
                 '/setting/?page=0&isAuthed=${authStateUtils.isLoggedin.value}',
               );
             },
-          ),
+          ),*/
           SettingsTile.navigation(
             title: const Text('通知設定'),
             leading: const Icon(Icons.notifications_rounded),
