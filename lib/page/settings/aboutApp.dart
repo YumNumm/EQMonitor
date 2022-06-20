@@ -81,7 +81,7 @@ Widget aboutThisApp(BuildContext context) {
             ),
           ),
           SettingsTile.navigation(
-            title: const Text('Special Thanks'),
+            title: const Text('謝辞'),
             onPressed: (BuildContext context) => Get.dialog<void>(
               AlertDialog(
                 content: SingleChildScrollView(
@@ -123,10 +123,17 @@ Widget aboutThisApp(BuildContext context) {
                         ),
                       ),
                       ListTile(
-                        title: const Text('かている氏'),
-                        subtitle: const Text('地震情報の画像生成手法'),
+                        title: const Text('HARLAB氏'),
+                        subtitle: const Text('緊急地震速報のUI提案'),
                         onTap: () => launch(
                           'https://github.com/earthquake-alert',
+                        ),
+                      ),
+                      ListTile(
+                        title: const Text('ingen084氏'),
+                        subtitle: const Text('強震モニタ画像解析手法'),
+                        onTap: () => launch(
+                          'https://github.com/ingen084/KyoshinMonitorLib',
                         ),
                       ),
                       const Divider(
@@ -157,6 +164,7 @@ Widget aboutThisApp(BuildContext context) {
                           'https://www.jma.go.jp/jma/kishou/info/coment.html',
                         ),
                       ),
+                      Text("及び、すべての関係者に感謝いたします。")
                     ],
                   ),
                 ),
