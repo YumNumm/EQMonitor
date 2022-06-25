@@ -44,9 +44,7 @@ class OnEEWWidget extends StatelessWidget {
                     elevation: 0,
                     color: const Color.fromRGBO(255, 203, 203, 1),
                     margin: const EdgeInsets.all(8),
-                    child: Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: Text(
+                    child: Text(
                         ((eew.body.warningFlag) ? 'EEW(警報 ' : 'EEW(予報 ') +
                             ((eew.body.endFlag)
                                 ? '最終報(第${eew.head.serial}報))'
@@ -54,7 +52,6 @@ class OnEEWWidget extends StatelessWidget {
                         style: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
-                        ),
                       ),
                     ),
                   ),
