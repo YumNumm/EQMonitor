@@ -1,7 +1,7 @@
 # EQMonitor
 
-スマートフォン上で強震モニタの情報をいい感じのUIで表示できるアプリ
-(を目標に…)     
+### すべての人がいち早く地震情報を入手し適切な行動をできるようにする
+ことを目標に開発しています。
 
 [![Github All Releases](https://img.shields.io/github/downloads/EQMonitor/EQMonitor/total.svg)]()   ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/EQMonitor/EQMonitor?color=blue&include_prereleases&label=Release)
 ![GitHub release (latest by date and asset including pre-releases)](https://img.shields.io/github/downloads-pre/EQMonitor/EQMonitor/latest/app-release.apk)
