@@ -1,6 +1,6 @@
 # EQMonitor
 
-### すべての人がいち早く地震情報を入手し適切な行動をできるようにする
+**どんな人でも地震発生時に即座に地震情報を入手でき、適切な行動をする支援をするアプリケーションになる**
 ことを目標に開発しています。
 
 [![Github All Releases](https://img.shields.io/github/downloads/EQMonitor/EQMonitor/total.svg)]()   ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/EQMonitor/EQMonitor?color=blue&include_prereleases&label=Release)
@@ -21,7 +21,14 @@
 - [ ] 緊急地震速報の表示(通知ではない)
 - [ ] 震度の色分け
 - [ ] 震源地の表示
+- [ ] アクセシビリティ向上
 
+- **定性目標**
+**どんな人でも地震発生時に即座に地震情報を入手でき、適切な行動をする支援をするアプリケーションになる**
+
+- **定量目標**
+**アプリストア公開から半年後までに計5000DL**
+PlayStoreへの公開は2023年1月1日午前0時を目標にしています。
 
 
 ## **Warning**
