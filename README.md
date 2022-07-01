@@ -1,6 +1,6 @@
 # EQMonitor
 
-**どんな人でも地震発生時に即座に地震情報を入手でき、適切な行動をする支援をするアプリケーションになる**
+**どんな人でも地震発生時に即座に地震情報を入手でき、適切な行動をする支援をするアプリケーションになる**  
 ことを目標に開発しています。
 
 [![Github All Releases](https://img.shields.io/github/downloads/EQMonitor/EQMonitor/total.svg)]()   ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/EQMonitor/EQMonitor?color=blue&include_prereleases&label=Release)
