@@ -48,7 +48,7 @@ dependencies:
     git:
       url: https://github.com/josepedromonteiro/home_widget.git
   shared_preferences: ^2.0.13
-  flutter_tts: ^3.3.3
+  flutter_tts: ^3.5.0
   auto_size_text: ^3.0.0
   flutter_secure_storage: ^5.0.2
   dart_twitter_api: ^0.5.6+1
