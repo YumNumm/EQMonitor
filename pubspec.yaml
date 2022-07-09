@@ -20,7 +20,7 @@ dependencies:
   # Firebase libs
 
   firebase_core: ^1.17.1
-  firebase_crashlytics: ^2.8.1
+  firebase_crashlytics: ^2.8.4
   firebase_messaging: ^11.4.1
   firebase_performance: ^0.8.0+13
   firebase_auth: ^3.4.1
