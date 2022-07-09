@@ -27,7 +27,7 @@ dependencies:
   firebase_analytics: ^9.1.9
 
   #DB
-  path_provider: ^2.0.9
+  path_provider: ^2.0.11
   isar: ^2.5.0
   isar_flutter_libs: ^2.5.0
 
