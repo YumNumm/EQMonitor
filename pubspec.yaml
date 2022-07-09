@@ -40,7 +40,7 @@ dependencies:
   settings_ui: ^2.0.2
   flutter_native_splash: ^2.1.6
   oauth1: ^2.0.0
-  url_launcher: ^6.1.0
+  url_launcher: ^6.1.4
   package_info_plus: ^1.4.2
   awesome_notifications: ^0.7.0-beta.4
   html: ^0.15.0
