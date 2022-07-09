@@ -23,7 +23,7 @@ dependencies:
   firebase_crashlytics: ^2.8.1
   firebase_messaging: ^11.4.1
   firebase_performance: ^0.8.0+13
-  firebase_auth: ^3.3.19
+  firebase_auth: ^3.4.1
   firebase_analytics: ^9.1.9
 
   #DB
