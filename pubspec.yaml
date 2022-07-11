@@ -64,7 +64,7 @@ dependencies:
   color_convert:
     git:
       url: https://github.com/Genialngash/color_convert.git
-  file_picker: ^4.5.1
+  file_picker: ^4.6.1
   flutter_archive: ^5.0.0
   flutter_colorpicker: ^1.0.3
   bordered_text: ^2.0.0
