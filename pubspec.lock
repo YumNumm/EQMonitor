@@ -261,7 +261,7 @@ packages:
       name: device_info_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.3"
+    version: "4.0.0"
   device_info_plus_linux:
     dependency: transitive
     description:
