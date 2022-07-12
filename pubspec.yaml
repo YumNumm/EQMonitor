@@ -57,7 +57,7 @@ dependencies:
   device_preview: ^1.1.0
   open_settings: ^2.0.2
   flutter_markdown: ^0.6.10
-  device_info_plus: ^3.2.3
+  device_info_plus: ^4.0.0
   share_plus: ^4.0.4
   flutter_cache_manager: ^3.3.0
   cached_network_image: ^3.2.1
