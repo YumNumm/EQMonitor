@@ -68,7 +68,7 @@ dependencies:
   flutter_archive: ^5.0.0
   flutter_colorpicker: ^1.0.3
   bordered_text: ^2.0.0
-  firebase_remote_config: ^2.0.8
+  firebase_remote_config: ^2.0.11
 
   # 依存管理
   flutter_riverpod: ^1.0.4
@@ -86,7 +86,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  json_serializable: ^6.2.0
+  json_serializable: ^6.3.1
   pedantic_mono: ^1.18.0
   flutter_launcher_icons: ^0.9.2
   build_runner: ^2.1.10
