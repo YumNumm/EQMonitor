@@ -58,7 +58,7 @@ dependencies:
   open_settings: ^2.0.2
   flutter_markdown: ^0.6.10
   device_info_plus: ^4.0.0
-  share_plus: ^4.0.4
+  share_plus: ^4.0.10
   flutter_cache_manager: ^3.3.0
   cached_network_image: ^3.2.1
   color_convert:
