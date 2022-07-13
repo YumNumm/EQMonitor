@@ -24,7 +24,7 @@ dependencies:
   firebase_messaging: ^11.4.4
   firebase_performance: ^0.8.2
   firebase_auth: ^3.4.1
-  firebase_analytics: ^9.1.12
+  firebase_analytics: ^9.2.0
 
   #DB
   path_provider: ^2.0.11
