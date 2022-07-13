@@ -49,7 +49,7 @@ packages:
       name: awesome_notifications
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.7.0-beta.4"
+    version: "0.7.0-beta.5"
   boolean_selector:
     dependency: transitive
     description:
