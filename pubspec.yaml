@@ -28,8 +28,8 @@ dependencies:
 
   #DB
   path_provider: ^2.0.11
-  isar: ^2.5.0
-  isar_flutter_libs: ^2.5.0
+  isar: ^3.0.0-dev.2
+  isar_flutter_libs: ^3.0.0-dev.2
 
   http: ^0.13.4
   intl: ^0.17.0
@@ -90,8 +90,8 @@ dev_dependencies:
   pedantic_mono: ^1.18.0
   flutter_launcher_icons: ^0.9.3
   build_runner: ^2.1.10
-  isar_generator: ^2.5.0
-  freezed: ^2.0.4
+  isar_generator: ^3.0.0-dev.2
+  freezed: ^2.0.5
 
 flutter:
   uses-material-design: true
