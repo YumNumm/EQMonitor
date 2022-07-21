@@ -2,6 +2,23 @@ import 'package:intl/intl.dart';
 
 /// ## 地震情報
 class P2PJMAQuake {
+  /// ## 情報を一意に識別するID
+  final String id;
+
+  /// ## 情報コード。常に`551`
+  final int code;
+
+  /// ## 受信日付
+  final DateTime time;
+
+  /// ## 発表元の情報
+  final P2PJMAQuakeIssue issue;
+
+  /// ## 地震情報
+  final P2PJMAQuakeEarthQuake earthquake;
+
+  /// ## 震度観測点の情報
+  final List<P2PJMAQuakePoint>? points;
 
   P2PJMAQuake({
     required this.id,
@@ -28,41 +45,10 @@ class P2PJMAQuake {
                   (j['points'] as List<dynamic>)[index] as Map<String, dynamic>,
                 ),
               );
-  /// ## 情報を一意に識別するID
-  final String id;
-
-  /// ## 情報コード。常に`551`
-  final int code;
-
-  /// ## 受信日付
-  final DateTime time;
-
-  /// ## 発表元の情報
-  final P2PJMAQuakeIssue issue;
-
-  /// ## 地震情報
-  final P2PJMAQuakeEarthQuake earthquake;
-
-  /// ## 震度観測点の情報
-  final List<P2PJMAQuakePoint>? points;
 }
 
 /// ## 発表元の情報
 class P2PJMAQuakeIssue {
-
-  P2PJMAQuakeIssue.fromJson(Map<String, dynamic> j)
-      : source = (j['source'].toString() == '') ? null : j['source'].toString(),
-        time = DateFormat('yyyy/MM/dd HH:mm.SSS').parse(j['time'].toString()),
-        type = P2PJMAQuakeIssueType.values
-            .firstWhere((e) => e.name == j['type'].toString()),
-        correct = P2PJMAQuakeIssueCorrect.values
-            .firstWhere((e) => e.name == j['correct'].toString());
-  P2PJMAQuakeIssue({
-    required this.source,
-    required this.time,
-    required this.type,
-    required this.correct,
-  });
   /// ## 発表元
   final String? source;
 
@@ -74,10 +60,45 @@ class P2PJMAQuakeIssue {
 
   /// ## 訂正の有無
   final P2PJMAQuakeIssueCorrect correct;
+  P2PJMAQuakeIssue({
+    required this.source,
+    required this.time,
+    required this.type,
+    required this.correct,
+  });
+
+  P2PJMAQuakeIssue.fromJson(Map<String, dynamic> j)
+      : source = (j['source'].toString() == '') ? null : j['source'].toString(),
+        time = DateFormat('yyyy/MM/dd HH:mm.SSS').parse(j['time'].toString()),
+        type = P2PJMAQuakeIssueType.values
+            .firstWhere((e) => e.name == j['type'].toString()),
+        correct = P2PJMAQuakeIssueCorrect.values
+            .firstWhere((e) => e.name == j['correct'].toString());
 }
 
 /// ## 地震情報
 class P2PJMAQuakeEarthQuake {
+  /// ## 発生日時
+  final DateTime time;
+
+  /// ## 震源情報
+  final P2PJMAQuakeEarthQuakeHypoCenter? hypocenter;
+
+  /// ## 最大震度
+  final String? maxScale;
+
+  /// ## 国内への津波の有無
+  final P2PJMAQuakeDomesticTsunami? domesticTsunami;
+
+  /// ## 海外での津波の有無
+  final P2PJMAQuakeForeignTsunami? foreignTsunami;
+  P2PJMAQuakeEarthQuake({
+    required this.time,
+    required this.hypocenter,
+    required this.maxScale,
+    required this.domesticTsunami,
+    required this.foreignTsunami,
+  });
   P2PJMAQuakeEarthQuake.fromJson(Map<String, dynamic> j)
       : time = DateFormat('yyyy/MM/dd HH:mm.SSS').parse(j['time'].toString()),
         hypocenter = (j['hypocenter'].toString() == '')
@@ -94,45 +115,10 @@ class P2PJMAQuakeEarthQuake {
             ? null
             : P2PJMAQuakeForeignTsunami.values
                 .firstWhere((e) => e.name == j['foreignTsunami'].toString());
-  P2PJMAQuakeEarthQuake({
-    required this.time,
-    required this.hypocenter,
-    required this.maxScale,
-    required this.domesticTsunami,
-    required this.foreignTsunami,
-  });
-  /// ## 発生日時
-  final DateTime time;
-
-  /// ## 震源情報
-  final P2PJMAQuakeEarthQuakeHypoCenter? hypocenter;
-
-  /// ## 最大震度
-  final String? maxScale;
-
-  /// ## 国内への津波の有無
-  final P2PJMAQuakeDomesticTsunami? domesticTsunami;
-
-  /// ## 海外での津波の有無
-  final P2PJMAQuakeForeignTsunami? foreignTsunami;
 }
 
 /// ## 震度観測点の情報
 class P2PJMAQuakePoint {
-
-  P2PJMAQuakePoint.fromJson(Map<String, dynamic> j)
-      : pref = j['pref'].toString(),
-        addr = j['addr'].toString(),
-        isArea =
-            bool.fromEnvironment(j['isArea'].toString(), defaultValue: true),
-        scale = enumToScale(j['scale'].toString())!;
-
-  P2PJMAQuakePoint({
-    required this.pref,
-    required this.addr,
-    required this.isArea,
-    required this.scale,
-  });
   /// ## 都道府県
   final String pref;
 
@@ -145,10 +131,40 @@ class P2PJMAQuakePoint {
 
   /// ## 震度
   final String scale;
+
+  P2PJMAQuakePoint({
+    required this.pref,
+    required this.addr,
+    required this.isArea,
+    required this.scale,
+  });
+
+  P2PJMAQuakePoint.fromJson(Map<String, dynamic> j)
+      : pref = j['pref'].toString(),
+        addr = j['addr'].toString(),
+        isArea =
+            bool.fromEnvironment(j['isArea'].toString(), defaultValue: true),
+        scale = enumToScale(j['scale'].toString())!;
 }
 
 /// ## 震源情報
 class P2PJMAQuakeEarthQuakeHypoCenter {
+  /// ## 名称
+  final String? name;
+
+  /// ## 緯度
+  final double? latitude;
+
+  /// ## 経度
+  final double? longitude;
+
+  /// ## 深さ(km)
+  /// - ごく浅い = `0`
+  /// - 存在しない = `-1`
+  final int? depth;
+
+  /// ## マグニチュード
+  final double? magnitude;
   P2PJMAQuakeEarthQuakeHypoCenter({
     required this.name,
     required this.latitude,
@@ -171,22 +187,6 @@ class P2PJMAQuakeEarthQuakeHypoCenter {
         magnitude = (j['magnitude'].toString() == '-1')
             ? null
             : double.parse(j['magnitude'].toString());
-  /// ## 名称
-  final String? name;
-
-  /// ## 緯度
-  final double? latitude;
-
-  /// ## 経度
-  final double? longitude;
-
-  /// ## 深さ(km)
-  /// - ごく浅い = `0`
-  /// - 存在しない = `-1`
-  final int? depth;
-
-  /// ## マグニチュード
-  final double? magnitude;
 }
 
 enum P2PJMAQuakeIssueType {
