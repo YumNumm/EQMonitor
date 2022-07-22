@@ -393,7 +393,7 @@
     },
     {
       "name": "flutter_hooks",
-      "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/flutter_hooks-0.18.4",
+      "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/flutter_hooks-0.18.5+1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -500,6 +500,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "functions_client",
+      "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/functions_client-0.0.1-dev.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "geodesy",
       "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/geodesy-0.4.0-nullsafety.0",
       "packageUri": "lib/",
@@ -524,8 +530,26 @@
       "languageVersion": "2.14"
     },
     {
+      "name": "gotrue",
+      "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/gotrue-0.2.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "graphs",
       "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/graphs-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "hive",
+      "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/hive-2.2.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "hive_flutter",
+      "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/hive_flutter-1.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -630,6 +654,12 @@
       "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/json_serializable-6.2.0",
       "packageUri": "lib/",
       "languageVersion": "2.14"
+    },
+    {
+      "name": "jwt_decode",
+      "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/jwt_decode-0.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "latlong2",
@@ -788,6 +818,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "postgrest",
+      "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/postgrest-0.1.11",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "process",
       "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/process-4.2.4",
       "packageUri": "lib/",
@@ -810,6 +846,12 @@
       "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/pubspec_parse-1.2.0",
       "packageUri": "lib/",
       "languageVersion": "2.14"
+    },
+    {
+      "name": "realtime_client",
+      "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/realtime_client-0.1.15",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "riverpod",
@@ -956,6 +998,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "storage_client",
+      "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/storage_client-0.0.6+2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "stream_channel",
       "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/stream_channel-2.1.0",
       "packageUri": "lib/",
@@ -972,6 +1020,18 @@
       "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/string_scanner-1.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "supabase",
+      "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/supabase-0.3.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "supabase_flutter",
+      "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/supabase_flutter-0.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
     },
     {
       "name": "term_glyph",
@@ -1000,6 +1060,24 @@
     {
       "name": "typed_data",
       "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "uni_links",
+      "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/uni_links-0.5.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "uni_links_platform_interface",
+      "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/uni_links_platform_interface-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "uni_links_web",
+      "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/uni_links_web-0.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -1106,7 +1184,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-07-17T13:33:02.633714Z",
+  "generated": "2022-07-22T09:35:57.068776Z",
   "generator": "pub",
   "generatorVersion": "2.17.3"
 }

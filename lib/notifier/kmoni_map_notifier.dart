@@ -45,9 +45,8 @@ class KmoniMapNotifier extends StateNotifier<KmoniMapModel> {
     final mapPaths = <MapPolygon>[];
 
     geo.processedFeatures.listen((feature) {
-      print(feature.type);
       if (feature.type == GeoJsonFeatureType.multipolygon) {
-        final geometry = feature.geometry;
+        final geometry = feature.geometry as GeoJsonMultiPolygon;
         for (final polygon in geometry.polygons) {
           for (final geoSeries in polygon.geoSeries) {
             final tmpPoints = <Offset>[];
@@ -63,11 +62,10 @@ class KmoniMapNotifier extends StateNotifier<KmoniMapModel> {
                 path: Path()..addPolygon(tmpPoints, true),
               ),
             );
-            print(mapPaths.length);
           }
         }
       } else if (feature.type == GeoJsonFeatureType.polygon) {
-        final geometry = feature.geometry;
+        final geometry = feature.geometry as GeoJsonPolygon;
         for (final geoSeries in geometry.geoSeries) {
           final tmpPoints = <Offset>[];
           for (final geoPoint in geoSeries.geoPoints) {
@@ -83,15 +81,15 @@ class KmoniMapNotifier extends StateNotifier<KmoniMapModel> {
             ),
           );
         }
-        print(mapPaths.length);
       }
     });
     geo.endSignal.listen((_) {
-      print('end');
-      state = state.copyWith(
-        isMapLoaded: true,
-        mapPolygons: mapPaths,
-      );
+      if (mounted) {
+        state = state.copyWith(
+          isMapLoaded: true,
+          mapPolygons: mapPaths,
+        );
+      }
     });
     await geo.parse(
       await rootBundle.loadString('assets/maps/AreaForecastLocalE.json'),

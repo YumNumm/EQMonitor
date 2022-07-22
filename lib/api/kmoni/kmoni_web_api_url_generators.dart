@@ -5,15 +5,15 @@ import 'package:eqmonitor/const/kmoni/real_time_data_type.dart';
 /// ## 新強震モニタのURL生成器
 class KyoshinWebApiUrlGenerator {
   /// JsonEewのUrl
-  String JsonEewBase(DateTime dt) =>
+  String jsonEewBase(DateTime dt) =>
       'http://www.kmoni.bosai.go.jp/webservice/hypo/eew/${ymdhms.format(dt)}.json';
 
   /// PsWaveImgのURL
-  String PsWaveBase(DateTime dt) =>
+  String psWaveBase(DateTime dt) =>
       'http://www.kmoni.bosai.go.jp/data/map_img/PSWaveImg/eew/${ymd.format(dt)}/${ymdhms.format(dt)}';
 
   /// RealtimeImgのURL
-  String RealtimeBase({
+  String realtimeBase({
     required DateTime dt,
     required RealtimeDataType type,
 
@@ -23,6 +23,6 @@ class KyoshinWebApiUrlGenerator {
       'http://www.kmoni.bosai.go.jp/data/map_img/RealTimeImg/${type.urlString}_$sorb/${ymd.format(dt)}/${ymdhms.format(dt)}.${type.urlString}_$sorb.gif';
 
   /// 予想震度のURL
-  String EstShindoBase(DateTime dt) =>
+  String estShindoBase(DateTime dt) =>
       'http://www.kmoni.bosai.go.jp/data/map_img/EstShindoImg/eew/${ymd.format(dt)}/${ymdhms.format(dt)}.eew.gif';
 }

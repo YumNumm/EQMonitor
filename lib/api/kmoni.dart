@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:dio_http2_adapter/dio_http2_adapter.dart';
 import 'package:intl/intl.dart';
 
 import '../schema/kmoni/EEW.dart';
@@ -36,7 +35,7 @@ class KyoshinMonitorApi {
     }
     // ちゃんと取得できていることが期待されるのでJsonParse
     final df = DateFormat('yyyy/MM/dd HH:mm:ss');
-    final j = jsonDecode(utf8.decode(res.data ?? []));
+    final j = jsonDecode(utf8.decode(res.data ?? [])) as Map<String,dynamic>;
     final dt = df.parseStrict(j['latest_time'].toString());
     return dt;
   }
@@ -65,7 +64,7 @@ class KyoshinMonitorApi {
   /// 強震モニタのAPIを叩く
   /// [url]には`kmoni.bosai.go.jp`以降を入力
   Future<Response<List<int>>> getRawData(String url) async {
-    return await dio.get<List<int>>(
+    return dio.get<List<int>>(
       url,
       options: Options(responseType: ResponseType.bytes),
     );
