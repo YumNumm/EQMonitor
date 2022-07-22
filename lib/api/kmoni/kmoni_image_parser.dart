@@ -4,7 +4,7 @@ import 'package:eqmonitor/const/kmoni/jma_intensity.dart';
 import 'package:eqmonitor/const/kmoni/real_time_data_type.dart';
 import 'package:eqmonitor/model/analyzed_point_model.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:image/image.dart' as Image;
+import 'package:image/image.dart' as image_lib;
 import 'package:logger/logger.dart';
 
 import '../../const/obspoint.dart';
@@ -17,15 +17,17 @@ class KyoshinImageParser {
     required List<ObsPoint> obsPoints,
     required RealtimeDataType type,
   }) {
-    final List<AnalyzedPoint> analyzedPoints = [];
-    Image.Image? image;
-    image = Image.decodeGif(picture);
-    if (image == null) throw Exception("Image was null");
+    final analyzedPoints = <AnalyzedPoint>[];
+    image_lib.Image? image;
+    image = image_lib.decodeGif(picture);
+    if (image == null) {
+      throw Exception('Image was null');
+    }
 
     // 画像解析開始
     for (final obsPoint in obsPoints) {
       final pixel32 = image.getPixelSafe(obsPoint.x, obsPoint.y);
-      final AnalyzedPoint analyzedPoint = _parsePixelToAnalyzedPoint(
+      final analyzedPoint = _parsePixelToAnalyzedPoint(
         obsPoint: obsPoint,
         pixel32: pixel32,
         type: type,
@@ -64,8 +66,9 @@ class KyoshinImageParser {
           : null,
       hadValue: position != null,
       intensity: (type == RealtimeDataType.Shindo && position != null)
-          ? JmaIntensityExtensions.toJmaIntensity(
-              intensity: (position * 10) - 3)
+          ? JmaIntensity.toJmaIntensity(
+              intensity: (position * 10) - 3,
+            )
           : null,
     );
   }
@@ -82,7 +85,9 @@ class KyoshinImageParser {
     final h = hsv[0] / 360;
     final s = hsv[1] / 100;
     final v = hsv[2] / 100;
-    if (s <= 0.5) return null;
+    if (s <= 0.5) {
+      return null;
+    }
     var p = 0.toDouble();
     if (v > 0.1 && s > 0.75) {
       if (h > 0.1476) {

@@ -25,7 +25,8 @@ class MapGlobalOffset extends Offset {
     return MapGlobalOffset(
         origin.dx + latLng.longitude * pixelsPerLonDegree,
         origin.dy +
-            0.5 * math.log((1 + siny) / (1 - siny)) * -pixelsPerLonRadian);
+            0.5 * math.log((1 + siny) / (1 - siny)) * -pixelsPerLonRadian
+      );
   }
 
   static MapGlobalOffset globalPointToLatLng(Offset point) {
@@ -36,14 +37,13 @@ class MapGlobalOffset extends Offset {
     return MapGlobalOffset(lat, lng);
   }
 
+
+  /// すべてのポリゴンを内包する矩形の北西端がOffset(0,0)に、
+  /// 南東端が[displaySize]のdx,dyのうち小さいほうになるように変換する
   Offset toLocalOffset(Size displaySize) {
-    // displaySizeのdx,dyのうち小さい方を基準にして
-    // 座標を変換する
-    final delta = math.min(displaySize.width, displaySize.height);
-    final x =
-        (dx - minMapOffset.dx) / (maxMapOffset.dx - minMapOffset.dx) * delta;
-    final y =
-        (dy - minMapOffset.dy) / (maxMapOffset.dy - minMapOffset.dy) * delta;
+    final zoom = math.min(displaySize.width / 18.9 , displaySize.height / 22.1);
+    final x = (dx - minMapOffset.dx) * zoom;
+    final y = (dy - minMapOffset.dy) * zoom;
     return Offset(x, y);
   }
 }

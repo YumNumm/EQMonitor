@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars, avoid_positional_boolean_parameters
+
 import 'dart:ui';
 
 /// 気象庁震度階級 + α
@@ -5,54 +7,87 @@ import 'dart:ui';
 
 enum JmaIntensity {
   /// 震度不明
-  Unknown('unknown', Color.fromARGB(255, 242, 242, 255), true),
+  Unknown(
+    'unknown',
+    Color.fromARGB(255, 242, 242, 255),
+    true,
+    -1,
+  ),
 
   /// 震度1未満
-  Int0('0', Color.fromARGB(255, 242, 242, 255), true),
+  Int0('0', Color.fromARGB(255, 242, 242, 255), true, 0),
 
   /// 震度1
-  Int1('1', Color.fromARGB(255, 242, 242, 255), true),
+  Int1('1', Color.fromARGB(255, 242, 242, 255), true, 1),
 
   /// 震度2
-  Int2('2', Color.fromARGB(255, 0, 170, 255), false),
+  Int2('2', Color.fromARGB(255, 0, 170, 255), false, 2),
 
   /// 震度3
-  Int3('3', Color.fromARGB(255, 0, 65, 255), false),
+  Int3('3', Color.fromARGB(255, 0, 65, 255), false, 3),
 
   /// 震度4
-  Int4('4', Color.fromARGB(255, 250, 230, 150), true),
+  Int4('4', Color.fromARGB(255, 250, 230, 150), true, 4),
 
   /// 震度5弱
-  Int5Lower('5-', Color.fromARGB(255, 255, 230, 0), true),
+  Int5Lower('5-', Color.fromARGB(255, 255, 230, 0), true, 5),
 
   /// 震度5強
-  Int5Upper('5+', Color.fromARGB(255, 255, 153, 0), true),
+  Int5Upper('5+', Color.fromARGB(255, 255, 153, 0), true, 6),
 
   /// 震度6弱
-  Int6Lower('6-', Color.fromARGB(255, 255, 40, 0), false),
+  Int6Lower('6-', Color.fromARGB(255, 255, 40, 0), false, 7),
 
   /// 震度6強
-  Int6Upper('6+', Color.fromARGB(255, 165, 0, 33), false),
+  Int6Upper('6+', Color.fromARGB(255, 165, 0, 33), false, 8),
 
   /// 震度7
-  Int7('7', Color.fromARGB(255, 180, 0, 104), false),
+  Int7('7', Color.fromARGB(255, 180, 0, 104), false, 9),
+
+  // 程度以上
+  over('over', Color.fromARGB(255, 255, 255, 255), true, -1),
 
   /// 震度異常
-  Error('unknown', Color.fromARGB(255, 73, 243, 214), true);
+  Error('unknown', Color.fromARGB(255, 73, 243, 214), true, -2);
 
   const JmaIntensity(
     this.name,
     this.color,
     this.shouldTextBlack,
+    this.intValue,
   );
   final String name;
   final Color color;
   final bool shouldTextBlack;
-}
+  final int intValue;
 
-/// JMAIntensityの拡張メゾッド
-class JmaIntensityExtensions {
-  /// 生の震度の値を気象庁震度階級(`JmaIntensity`型へ変換)
+  static JmaIntensity fromInt(int value) {
+    switch (value) {
+      case 0:
+        return Int0;
+      case 1:
+        return Int1;
+      case 2:
+        return Int2;
+      case 3:
+        return Int3;
+      case 4:
+        return Int4;
+      case 5:
+        return Int5Lower;
+      case 6:
+        return Int6Lower;
+      case 7:
+        return Int7;
+      case 8:
+        return Int6Upper;
+      case 9:
+        return Int5Upper;
+      default:
+        return Unknown;
+    }
+  }
+
   static JmaIntensity toJmaIntensity({required double? intensity}) {
     if (intensity == null) {
       return JmaIntensity.Unknown;
@@ -70,7 +105,6 @@ class JmaIntensityExtensions {
     }
   }
 
-  /// 気象庁震度階級を短い形式の文字列に変換します
   static String toShortString(JmaIntensity shindo) {
     switch (shindo) {
       case JmaIntensity.Error:
@@ -107,6 +141,8 @@ class JmaIntensityExtensions {
         return '7';
       case JmaIntensity.Unknown:
         return '-';
+      case JmaIntensity.over:
+        return '+';
     }
   }
 }

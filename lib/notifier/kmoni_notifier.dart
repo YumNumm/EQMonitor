@@ -46,31 +46,36 @@ class KMoniNotifier extends StateNotifier<KmoniModel> {
       /// 観測点CSVの読み込み
       await _loadKansokuten();
       // タイマーを開始
-      state = state.copyWith(
-        updateTimer: Timer.periodic(state.updateFrequency, _onTimer),
-      );
+      if (mounted) {
+        state = state.copyWith(
+          updateTimer: Timer.periodic(state.updateFrequency, _onTimer),
+        );
+      }
     }
   }
 
   Future<void> _onTimer(Timer timer) async {
     // 更新中でないことを確認
     if (state.isUpdating) {
-      log("Kmoni is updating. skip.", name: "KMoniTimer");
+      log('Kmoni is updating. skip.', name: 'KMoniTimer');
       return;
     }
     // 更新中フラグを立てる
     state = state.copyWith(isUpdating: true);
     // Kmoniの最新時刻を取得
     final dt = await kyoshinMonitorApi.getLatestDateTime();
-    updateShindo(dt);
+    await updateShindo(dt);
     // 更新中フラグを下ろす
     state = state.copyWith(isUpdating: false);
   }
 
   Future<void> updateShindo(DateTime dt) async {
     // Shindo画像を取得する
-    final shindoUrl = kyoshinWebApiUrlGenerator.RealtimeBase(
-        dt: dt, type: RealtimeDataType.Shindo, sorb: 's');
+    final shindoUrl = kyoshinWebApiUrlGenerator.realtimeBase(
+      dt: dt,
+      type: RealtimeDataType.Shindo,
+      sorb: 's',
+    );
     final imageResponse = await kyoshinMonitorApi
         .getRawData(shindoUrl.replaceAll('http://www.kmoni.bosai.go.jp', ''));
     // log(imageResponse.realUri.toString(), name: "KmoniNotifier");
@@ -87,12 +92,15 @@ class KMoniNotifier extends StateNotifier<KmoniModel> {
     );
     final analyzedPoint = state.analyzedPoint;
     final newAnalyzedPoint = <AnalyzedPoint>[];
-    for (int i = 0; i < analyzedPoint.length; i++) {
-      newAnalyzedPoint.add(analyzedPoint[i].copyWith(
-        shindo: parsedAnalyzedPoint[i].shindo,
-        shindoColor: parsedAnalyzedPoint[i].shindoColor,
-        hadValue: parsedAnalyzedPoint[i].hadValue || analyzedPoint[i].hadValue,
-      ));
+    for (var i = 0; i < analyzedPoint.length; i++) {
+      newAnalyzedPoint.add(
+        analyzedPoint[i].copyWith(
+          shindo: parsedAnalyzedPoint[i].shindo,
+          shindoColor: parsedAnalyzedPoint[i].shindoColor,
+          hadValue:
+              parsedAnalyzedPoint[i].hadValue || analyzedPoint[i].hadValue,
+        ),
+      );
     }
     state = state.copyWith(
       analyzedPoint: newAnalyzedPoint,
@@ -103,14 +111,13 @@ class KMoniNotifier extends StateNotifier<KmoniModel> {
 
   /// 観測点CSVを読み込む
   Future<void> _loadKansokuten() async {
-    final kansokutenFile = await rootBundle.load("assets/kmoni/kansokuten.csv");
-    final List<List<dynamic>> rowsAsListOfValues =
-        const CsvToListConverter().convert(
+    final kansokutenFile = await rootBundle.load('assets/kmoni/kansokuten.csv');
+    final rowsAsListOfValues = const CsvToListConverter().convert(
       utf8.decode(kansokutenFile.buffer.asUint8List()),
     );
-    final List<ObsPoint> obsPoints = <ObsPoint>[];
+    final obsPoints = <ObsPoint>[];
     for (final row in rowsAsListOfValues) {
-      if (row[7].toString() == "") {
+      if (row[7].toString() == '') {
         continue;
       }
       obsPoints.add(ObsPoint.fromList(row));
@@ -120,22 +127,24 @@ class KMoniNotifier extends StateNotifier<KmoniModel> {
         obsPoints: obsPoints,
         isKansokutenLoaded: true,
         analyzedPoint: obsPoints
-            .map((e) => AnalyzedPoint(
-                  code: e.code,
-                  name: e.name,
-                  hadValue: false,
-                  intensity: null,
-                  lat: e.lat,
-                  lon: e.lon,
-                  pga: null,
-                  pgaColor: null,
-                  prefectureName: e.pref,
-                  shindo: null,
-                  shindoColor: null,
-                ))
+            .map(
+              (e) => AnalyzedPoint(
+                code: e.code,
+                name: e.name,
+                hadValue: false,
+                intensity: null,
+                lat: e.lat,
+                lon: e.lon,
+                pga: null,
+                pgaColor: null,
+                prefectureName: e.pref,
+                shindo: null,
+                shindoColor: null,
+              ),
+            )
             .toList(),
       );
-      logger.i("観測点データを読み込みました: ${state.obsPoints.length}");
+      logger.i('観測点データを読み込みました: ${state.obsPoints.length}');
     }
   }
 }
