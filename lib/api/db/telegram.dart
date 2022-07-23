@@ -19,7 +19,7 @@ class TelegramApi {
     if (offset != 0) {
       throw UnimplementedError('Telegram offset is not implemented yet');
     }
-    final PostgrestResponse res;
+    final PostgrestResponse<dynamic> res;
     if (limit == null) {
       res = await supabase
           .from('telegram')
