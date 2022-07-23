@@ -73,6 +73,9 @@ class KmoniMapNotifier extends StateNotifier<KmoniMapModel> {
                 .toLocalOffset(const Size(476, 927.4));
             tmpPoints.add(offset);
           }
+          if (feature.properties!['code'] == null) {
+            continue;
+          }
           mapPaths.add(
             MapPolygon(
               code: int.parse(feature.properties!['code'].toString()),

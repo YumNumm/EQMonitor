@@ -1,8 +1,9 @@
-import 'package:eqmonitor/api/supabase/telegram.dart';
 import 'package:eqmonitor/schema/supabase/telegram.dart';
 import 'package:flutter/material.dart' hide Theme;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+
+import '../../api/db/telegram.dart';
 
 class EarthquakeHistoryPage extends HookConsumerWidget {
   EarthquakeHistoryPage({super.key});
