@@ -44,6 +44,7 @@ Future<void> main() async {
   await crashlytics.setUserIdentifier(deviceInfo.androidId.toString());
   await crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode);
 
+
   runApp(
     DevicePreview(
       builder: (context) => ProviderScope(
