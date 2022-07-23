@@ -302,6 +302,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0"
+  fast_i18n:
+    dependency: "direct main"
+    description:
+      name: fast_i18n
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.12.6"
   ffi:
     dependency: transitive
     description:
