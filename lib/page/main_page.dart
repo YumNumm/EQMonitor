@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'main/settings.dart';
+
 class MainPage extends HookConsumerWidget {
   const MainPage({super.key});
 
@@ -21,10 +23,11 @@ class MainPage extends HookConsumerWidget {
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home), label: '強震モニタ'),
           NavigationDestination(icon: Icon(Icons.history), label: '地震履歴'),
+          NavigationDestination(icon: Icon(Icons.settings), label: '設定'),
         ],
       ),
       body:
-          selectedIndex.value == 0 ? const KmoniMap() : EarthquakeHistoryPage(),
+          selectedIndex.value == 0 ? const KmoniMap() : selectedIndex.value == 1 ? EarthquakeHistoryPage() : const SettingsPage(),
     );
   }
 }
