@@ -10,7 +10,7 @@ class KmoniMap extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final kmoniMapMatrix4 =
-        ref.watch(kmoniMapNotifier.select((value) => value.mapMatrix4));
+        ref.watch(kmoniMapController.select((value) => value.mapMatrix4));
 
     return GestureDetector(
       child: InteractiveViewer(
@@ -53,7 +53,7 @@ class BaseMapWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapSource =
-        ref.watch(kmoniMapNotifier.select((value) => value.mapPolygons));
+        ref.watch(kmoniMapController.select((value) => value.mapPolygons));
     return CustomPaint(
       painter: MapBasePainter(
         mapPolygons: mapSource,

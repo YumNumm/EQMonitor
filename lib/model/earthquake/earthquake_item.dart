@@ -1,5 +1,6 @@
 import 'package:eqmonitor/schema/dmdata/eq-information/earthquake-information/intensity/prefecture.dart';
 import 'package:eqmonitor/schema/dmdata/eq-information/earthquake-information/intensity/region.dart';
+import 'package:eqmonitor/schema/dmdata/websocketv2/type.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:latlong2/latlong.dart';
@@ -18,7 +19,7 @@ part 'earthquake_item.freezed.dart';
 class EarthquakeItem with _$EarthquakeItem {
   const factory EarthquakeItem({
     /// この地震情報に用いた電文
-    required List<Telegram> usedTelegrams,
+    required Map<DmDssTelegramDataType, List<Telegram>> usedTelegrams,
 
     /// 地震ID
     required int id,
@@ -51,10 +52,10 @@ class EarthquakeItem with _$EarthquakeItem {
     required JmaIntensity maxIntensity,
 
     /// マグニチュード
-    required Magnitude magnitude,
+    required String? magnitude,
     required String? headline,
-    required Comments? comments,
-    required Depth depth,
+    required String? comments,
+    required String? depth,
 
     /// 都道府県内における最大震度
     required List<Prefecture>? prefectures,
@@ -63,6 +64,7 @@ class EarthquakeItem with _$EarthquakeItem {
     required List<Region>? regions,
   }) = _EarthquakeItem;
 
+  /// 通知に用いる文字列を生成する
   String getNotificationMessage() {
     final sb = StringBuffer();
     if (isTraining) {
@@ -92,5 +94,14 @@ class EarthquakeItem with _$EarthquakeItem {
       sb.write(' マグニチュード:${magnitude.value}');
     }
     return sb.toString();
+  }
+
+  /// usedTelegramsのMapをListに変換して返す
+  List<Telegram> getAllTelegram() {
+    final result = <Telegram>[];
+    usedTelegrams.forEach((type, telegrams) {
+      result.addAll(telegrams);
+    });
+    return result;
   }
 }
