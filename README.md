@@ -8,7 +8,8 @@
 [![Codemagic build status](https://api.codemagic.io/apps/621bb2a4bc3d3d2156cab924/621bb2a4bc3d3d2156cab923/status_badge.svg)](https://codemagic.io/apps/621bb2a4bc3d3d2156cab924/621bb2a4bc3d3d2156cab923/latest_build)
 
 > **Warning**
-> [利用規約](https://github.com/EQMonitor/EQMonitor/blob/main/docs/policy.md)を必ずご確認の上ご利用ください。
+> [利用規約](https://github.com/EQMonitor/EQMonitor/blob/main/docs/policy.md)を必ずご確認の上ご利用ください。  
+> 現在、地震履歴が正しく表示されていません。
 
 ## **機能**
 - [x] リアルタイム震度の表示
