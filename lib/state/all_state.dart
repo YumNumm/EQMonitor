@@ -1,19 +1,18 @@
+import 'package:eqmonitor/controller/firebase/firebase_notification_controller.dart';
+import 'package:eqmonitor/controller/kmoni_controller.dart';
+import 'package:eqmonitor/controller/kmoni_map_controller.dart';
 import 'package:eqmonitor/model/firebase/firebase_notification_status_model.dart';
 import 'package:eqmonitor/model/kmoni_map_model.dart';
 import 'package:eqmonitor/model/kmoni_model.dart';
-import 'package:eqmonitor/notifier/firebase/firebase_notification_controller.dart';
-import 'package:eqmonitor/notifier/kmoni_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../notifier/kmoni_map_notifier.dart';
-
-final kmoniMapNotifier =
-    StateNotifierProvider<KmoniMapNotifier, KmoniMapModel>((ref) {
-  return KmoniMapNotifier();
+final kmoniMapController =
+    StateNotifierProvider<KmoniMapController, KmoniMapModel>((ref) {
+  return KmoniMapController();
 });
 
-final kmoniNotifier = StateNotifierProvider<KMoniNotifier, KmoniModel>((ref) {
-  return KMoniNotifier();
+final kmoniNotifier = StateNotifierProvider<KmoniController, KmoniModel>((ref) {
+  return KmoniController();
 });
 
 /*

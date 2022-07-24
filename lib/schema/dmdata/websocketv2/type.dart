@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 enum DmDataWebSocketType {
   start,
   ping,
@@ -14,9 +16,13 @@ extension on String {
 
 /// データ種別コード
 enum DmDssTelegramDataType {
-  // EEW TEST
+  /// 緊急地震速報テスト
   VXSE42,
-  /// 緊急地震速報(予報)
+
+  /// 緊急地震速報（地震動予報）
+  VXSE45,
+
+  /// 緊急地震速報（予報）
   VXSE44,
 
   /// 地震・津波に関するお知らせ
