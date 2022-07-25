@@ -15,8 +15,9 @@ class EarthquakeHistoryModel with _$EarthquakeHistoryModel {
   const factory EarthquakeHistoryModel({
     /// 電文を保管
     required List<Telegram> telegrams,
-    /// 地震履歴を保管
-    required List<EarthquakeItem> earthquakes,
+    /// EventIdでgroupByされたMap
+    /// VXSE5xとVXSE61のみを対象とする。
+    required Map<int,List<Telegram>> telegramsGroupByEventId,
 
 
   }) = _EarthquakeHistoryModel;

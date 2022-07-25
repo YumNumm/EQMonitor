@@ -1,7 +1,7 @@
-import 'package:eqmonitor/schema/supabase/telegram.dart';
+import 'package:eqmonitor/const/kmoni/jma_intensity.dart';
+import 'package:eqmonitor/state/all_state.dart';
 import 'package:flutter/material.dart' hide Theme;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 
 import '../../api/db/telegram.dart';
 
@@ -12,39 +12,48 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: FutureBuilder(
-        future: telegramApi.getTelegramsWithLimit(limit: 40),
-        builder: (ctx, snapshot) {
-          if (snapshot.hasData) {
-            final telegrams = snapshot.data as List<Telegram>;
-            return ListView.builder(
-              itemCount: telegrams.length,
-              itemBuilder: (ctx, index) {
-                final telegram = telegrams[index];
-                return ListTile(
-                  title: Text(
-                    DateFormat('yyyy-MM-dd HH:mm頃').format(
-                      telegram.time.toUtc().toLocal(),
-                    ),
-                  ),
-                  subtitle: Text(
-                    '電文タイプ: ${telegram.type}\n'
-                    '電文id,hashの一部: ${telegram.id}, ${(telegram.hash).substring(0, 10)}\n'
-                    'イベントID: ${telegram.eventId} 電文データの長さ: ${telegram.data?.toString().length}\n'
-                    '最大震度: ${telegram.maxint} 震央: ${telegram.hypoName}\n',
-                  ),
-                );
-              },
-            );
-          } else if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
+    final earthquakeHistory = ref.watch(earthquakeHistoryNotifier);
+    return ListView.builder(
+      itemCount: earthquakeHistory.telegramsGroupByEventId.length,
+      itemBuilder: (context, index) {
+        final key =
+            earthquakeHistory.telegramsGroupByEventId.keys.elementAt(index);
+        final telegrams = earthquakeHistory.telegramsGroupByEventId[key]!;
+        return ListTile(
+          tileColor: (telegrams
+                      .lastWhere(
+                        (element) => element.type == 'VXSE53',
+                      )
+                      .maxint ??
+                  JmaIntensity.Error)
+              .color,
+          textColor: (telegrams
+                          .lastWhere(
+                            (element) => element.type == 'VXSE53',
+                          )
+                          .maxint ??
+                      JmaIntensity.Error)
+                  .shouldTextBlack
+              ? Colors.black
+              : Colors.white,
+          enableFeedback: true,
+          title: Text(
+            "$key 最大震度${(telegrams.lastWhere(
+                  (element) => element.type == 'VXSE53',
+                ).maxint ?? JmaIntensity.Error).name}",
+            style: const TextStyle(fontSize: 18),
+          ),
+          subtitle: Text(
+            telegrams
+                .map(
+                  (telegram) =>
+                      '${telegram.type} ${telegram.id} ${telegram.headline}',
+                )
+                .join('\n'),
+            style: const TextStyle(fontSize: 14),
+          ),
+        );
+      },
     );
   }
 }

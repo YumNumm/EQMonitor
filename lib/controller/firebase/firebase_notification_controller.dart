@@ -18,9 +18,7 @@ class FirebaseCloudMessagingController
             token: null,
             hasToken: false,
           ),
-        ) {
-    onInit();
-  }
+        );
 
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
   final Logger _logger = Logger();

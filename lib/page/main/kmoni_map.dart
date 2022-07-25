@@ -39,6 +39,7 @@ class ObsPointsMapWidget extends ConsumerWidget {
     final kmoni = ref.watch(kmoniNotifier);
 
     return CustomPaint(
+      isComplex: true,
       painter: ObsPointPainter(
         obsPoints: kmoni.analyzedPoint,
       ),
@@ -55,6 +56,7 @@ class BaseMapWidget extends ConsumerWidget {
     final mapSource =
         ref.watch(kmoniMapController.select((value) => value.mapPolygons));
     return CustomPaint(
+      isComplex: true,
       painter: MapBasePainter(
         mapPolygons: mapSource,
         outlineStrokeWidth: 0.1,

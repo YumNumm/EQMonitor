@@ -1,4 +1,4 @@
-import 'package:eqmonitor/schema/dmdata/eq-information/earthquake-information/intensity/prefecture.dart';
+/*import 'package:eqmonitor/schema/dmdata/eq-information/earthquake-information/intensity/prefecture.dart';
 import 'package:eqmonitor/schema/dmdata/eq-information/earthquake-information/intensity/region.dart';
 import 'package:eqmonitor/schema/dmdata/websocketv2/type.dart';
 import 'package:flutter/foundation.dart';
@@ -6,9 +6,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../const/kmoni/jma_intensity.dart';
-import '../../schema/dmdata/eq-information/comments.dart';
-import '../../schema/dmdata/eq-information/earthquake-information/hypocenter/depth.dart';
-import '../../schema/dmdata/eq-information/earthquake-information/magnitude.dart';
 import '../../schema/supabase/telegram.dart';
 
 part 'earthquake_item.freezed.dart';
@@ -72,7 +69,6 @@ class EarthquakeItem with _$EarthquakeItem {
     }
 
     sb
-
       /// 最大震度
       ..write(
         (maxIntensity == JmaIntensity.Unknown)
@@ -82,16 +78,12 @@ class EarthquakeItem with _$EarthquakeItem {
       // 震源地名
       ..write(' 震央地:${place ?? '不明'}');
     // 深さ
-    if (depth.condition != null) {
-      sb.write(' 深さ:${depth.condition!.description}');
-    } else if (depth.value != null) {
-      sb.write(' 深さ:${depth.value}km');
+    if (depth != null) {
+      sb.write(' 深さ:$depth');
     }
     // マグニチュード
-    if (magnitude.condition != null) {
-      sb.write(' マグニチュード:${magnitude.condition!.description}');
-    } else if (magnitude.value != null) {
-      sb.write(' マグニチュード:${magnitude.value}');
+    if (magnitude != null) {
+      sb.write(' マグニチュード:${magnitude}');
     }
     return sb.toString();
   }
@@ -105,3 +97,4 @@ class EarthquakeItem with _$EarthquakeItem {
     return result;
   }
 }
+*/
