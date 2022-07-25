@@ -28,9 +28,7 @@ class KmoniController extends StateNotifier<KmoniModel> {
             updateTimer: null,
             isUpdating: false,
           ),
-        ) {
-    _onInit();
-  }
+        );
 
   final logger = Logger();
   late Timer updateTimer;
@@ -41,10 +39,10 @@ class KmoniController extends StateNotifier<KmoniModel> {
   final KyoshinImageParser kyoshinImageParser = KyoshinImageParser();
 
   // Kmoniからデータを取得するタイマーを開始
-  Future<void> _onInit() async {
+  void onInit()  {
     if (!state.isKansokutenLoaded) {
       /// 観測点CSVの読み込み
-      await _loadKansokuten();
+       _loadKansokuten();
       // タイマーを開始
       if (mounted) {
         state = state.copyWith(

@@ -19,9 +19,7 @@ class KmoniMapController extends StateNotifier<KmoniMapModel> {
             mapOutlineStrokeColor: Colors.black,
             mapFillColor: Colors.white,
           ),
-        ) {
-    onInit();
-  }
+        );
 
   static const String japanMapFileName = 'assets/maps/japan_comp.json';
   static const String areaForecastLocalEFileName =

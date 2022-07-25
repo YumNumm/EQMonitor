@@ -48,6 +48,7 @@ Future<void> main() async {
   runApp(
     DevicePreview(
       builder: (context) => ProviderScope(
+
         child: MaterialApp(
           title: 'EQMonitor',
           theme: lightTheme(),

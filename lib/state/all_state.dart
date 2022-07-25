@@ -1,6 +1,8 @@
+import 'package:eqmonitor/controller/earthquake/earthquake_controller.dart';
 import 'package:eqmonitor/controller/firebase/firebase_notification_controller.dart';
 import 'package:eqmonitor/controller/kmoni_controller.dart';
 import 'package:eqmonitor/controller/kmoni_map_controller.dart';
+import 'package:eqmonitor/model/earthquake/earthquake_log_model.dart';
 import 'package:eqmonitor/model/firebase/firebase_notification_status_model.dart';
 import 'package:eqmonitor/model/kmoni_map_model.dart';
 import 'package:eqmonitor/model/kmoni_model.dart';
@@ -31,3 +33,9 @@ final firebaseCloudMessagingNotifier = StateNotifierProvider<
     return FirebaseCloudMessagingController();
   },
 );
+
+// 地震履歴
+final earthquakeHistoryNotifier = StateNotifierProvider<
+    EarthquakeHistoryController, EarthquakeHistoryModel>((ref) {
+  return EarthquakeHistoryController();
+});

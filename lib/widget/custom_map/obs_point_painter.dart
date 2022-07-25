@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:eqmonitor/utils/map/map_global_offset.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
@@ -14,8 +12,9 @@ class ObsPointPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     for (final point in obsPoints) {
+      if (point.shindoColor == null) continue;
       final paint = Paint()
-        ..color = point.shindoColor ?? Colors.grey
+        ..color = point.shindoColor!
         ..isAntiAlias = true
         ..style = PaintingStyle.fill
         ..strokeWidth = 0.5;
