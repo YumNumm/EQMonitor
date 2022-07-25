@@ -47,6 +47,9 @@ class KmoniMapController extends StateNotifier<KmoniMapModel> {
         final geometry = feature.geometry as GeoJsonMultiPolygon;
         for (final polygon in geometry.polygons) {
           for (final geoSeries in polygon.geoSeries) {
+            if (feature.properties!['code'] == null) {
+              continue;
+            }
             final tmpPoints = <Offset>[];
             for (final geoPoint in geoSeries.geoPoints) {
               final offset = MapGlobalOffset.latLonToGlobalPoint(geoPoint.point)
@@ -65,14 +68,14 @@ class KmoniMapController extends StateNotifier<KmoniMapModel> {
       } else if (feature.type == GeoJsonFeatureType.polygon) {
         final geometry = feature.geometry as GeoJsonPolygon;
         for (final geoSeries in geometry.geoSeries) {
+          if (feature.properties!['code'] == null) {
+            continue;
+          }
           final tmpPoints = <Offset>[];
           for (final geoPoint in geoSeries.geoPoints) {
             final offset = MapGlobalOffset.latLonToGlobalPoint(geoPoint.point)
                 .toLocalOffset(const Size(476, 927.4));
             tmpPoints.add(offset);
-          }
-          if (feature.properties!['code'] == null) {
-            continue;
           }
           mapPaths.add(
             MapPolygon(
