@@ -9,27 +9,6 @@
 > [利用規約](https://github.com/EQMonitor/EQMonitor/blob/main/docs/policy.md)を必ずご確認の上ご利用ください。
 
 ## **機能**
-- [x] リアルタイム震度の表示
-- [x] 緊急地震速報・地震情報の通知
-- [x] 通知の自動ツイート機能
-- [x] 地震履歴の表示
-- [x] PGA(リアルタイム加速度)の表示
-- [ ] P,S波到達予想円の表示
-- [ ] 震源地からの距離の表示
-- [ ] 緊急地震速報の表示(通知ではない)
-- [ ] 震度の色分け
-- [ ] 震源地の表示
-
-
-
-## **Warning**
-GitHub上にあるコードのみではビルドできません。
-以下がGitHub上にないコードです
-```
-android/app/google-services.json #Firebase Key
-lib/private/keys.dart #Twitter API Keyを格納
-```
-
 
 ## Build Status
 
