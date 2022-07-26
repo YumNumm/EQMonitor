@@ -1,9 +1,5 @@
 # EQMonitor  
-![4E1F7298-DC0D-4283-8F0A-69E6ABAE36F9](https://user-images.githubusercontent.com/73390859/180933334-e9f295a0-1512-4b70-bfec-906f841ad6eb.jpeg)
-
-
-スマートフォン上で強震モニタの情報をいい感じのUIで表示できるアプリ
-(を目標に…)     
+![BBE4EA96-1EF4-488A-A3CC-A56531934291](https://user-images.githubusercontent.com/73390859/180933535-e2e6825d-ca60-45a1-b580-a35f36aa0add.jpeg)
 
 [![Github All Releases](https://img.shields.io/github/downloads/EQMonitor/EQMonitor/total.svg)]()   ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/EQMonitor/EQMonitor?color=blue&include_prereleases&label=Release)
 ![GitHub release (latest by date and asset including pre-releases)](https://img.shields.io/github/downloads-pre/EQMonitor/EQMonitor/latest/app-release.apk)
