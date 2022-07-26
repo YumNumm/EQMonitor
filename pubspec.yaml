@@ -75,7 +75,6 @@ dependencies:
   hooks_riverpod: ^1.0.4
   freezed_annotation: ^2.0.3
 
-
   # HTTP/S
   dio: ^4.0.6
   pretty_dio_logger: ^1.2.0-beta-1
