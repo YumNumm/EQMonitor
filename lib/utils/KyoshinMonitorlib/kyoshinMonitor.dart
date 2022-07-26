@@ -14,4 +14,3 @@ class KyoshinMonitorlib extends GetxController {
 /// 強震モニターのURLを生成する
 /// [`KyoshinMonitorLib.UrlGenerator`](https://github.com/ingen084/KyoshinMonitorLib/blob/master/src/KyoshinMonitorLib/UrlGenerator/RealTimeDataType.cs)
 // class KyoshinMonitorlibUrlGenerator {}
-

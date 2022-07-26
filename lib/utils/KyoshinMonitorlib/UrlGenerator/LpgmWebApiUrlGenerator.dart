@@ -21,4 +21,3 @@ class LpgmWebApiUtlGenerator {
       'https://smi.lmoniexp.bosai.go.jp/data/map_img/EstShindoImg/eew/${_ymd.format(dt)}/${_ymdhms.format(dt)}.eew.gif';
 
 }
-

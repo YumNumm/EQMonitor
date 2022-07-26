@@ -7296,7 +7296,7 @@ final List<OBSPoint> OBSPoints = [
       lat: 35.2641,
       lon: 139.152,
       x: 214,
-      y: 269,),    
+      y: 269,),
   OBSPoint(
       code: 'KOC007',
       name: '高知',

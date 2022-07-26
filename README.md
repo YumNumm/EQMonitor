@@ -8,7 +8,7 @@
 [![Codemagic build status](https://api.codemagic.io/apps/621bb2a4bc3d3d2156cab924/621bb2a4bc3d3d2156cab923/status_badge.svg)](https://codemagic.io/apps/621bb2a4bc3d3d2156cab924/621bb2a4bc3d3d2156cab923/latest_build)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FEQMonitor%2FEQMonitor.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FEQMonitor%2FEQMonitor?ref=badge_shield)
 
-> **Warning** > [利用規約](https://github.com/EQMonitor/EQMonitor/blob/main/docs/policy.md)を必ずご確認の上ご利用ください。  
+> **Warning** > [利用規約](https://github.com/EQMonitor/EQMonitor/blob/main/docs/policy.md)を必ずご確認の上ご利用ください。
 > 現在、地震履歴が正しく表示されていません。
 
 ## **機能**
