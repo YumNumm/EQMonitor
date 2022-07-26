@@ -1,4 +1,6 @@
-# EQMonitor
+# EQMonitor  
+![4E1F7298-DC0D-4283-8F0A-69E6ABAE36F9](https://user-images.githubusercontent.com/73390859/180933334-e9f295a0-1512-4b70-bfec-906f841ad6eb.jpeg)
+
 
 スマートフォン上で強震モニタの情報をいい感じのUIで表示できるアプリ
 (を目標に…)     
