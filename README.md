@@ -6,6 +6,7 @@
 [![Github All Releases](https://img.shields.io/github/downloads/EQMonitor/EQMonitor/total.svg)]()   ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/EQMonitor/EQMonitor?color=blue&include_prereleases&label=Release)
 ![GitHub release (latest by date and asset including pre-releases)](https://img.shields.io/github/downloads-pre/EQMonitor/EQMonitor/latest/app-release.apk)
 [![Codemagic build status](https://api.codemagic.io/apps/621bb2a4bc3d3d2156cab924/621bb2a4bc3d3d2156cab923/status_badge.svg)](https://codemagic.io/apps/621bb2a4bc3d3d2156cab924/621bb2a4bc3d3d2156cab923/latest_build)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FEQMonitor%2FEQMonitor.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FEQMonitor%2FEQMonitor?ref=badge_shield)
 
 > **Warning**
 > [利用規約](https://github.com/EQMonitor/EQMonitor/blob/main/docs/policy.md)を必ずご確認の上ご利用ください。  
@@ -24,16 +25,5 @@
 - [ ] 震源地の表示
 
 
-
-## **Warning**
-GitHub上にあるコードのみではビルドできません。
-以下がGitHub上にないコードです
-```
-android/app/google-services.json #Firebase Key
-lib/private/keys.dart #Twitter API Keyを格納
-```
-
-
-## Build Status
-
-[![DigitalOcean Referral Badge](https://web-platforms.sfo2.cdn.digitaloceanspaces.com/WWW/Badge%201.svg)](https://www.digitalocean.com/?refcode=642cebc69a3e&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge)
+## License
+ [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FEQMonitor%2FEQMonitor.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FEQMonitor%2FEQMonitor?ref=badge_large)
