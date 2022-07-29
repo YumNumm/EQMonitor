@@ -29,7 +29,6 @@ jobs:
     # uses ・・・ GitHubやサードパーティで用意されているactionを使用できます
     # run ・・・ 実行コマンド
     steps:
-　　　　　　　　　　　　  # 該当リポジトリにチェックアウト
       - name: checkout
         uses: actions/checkout@v2
 
