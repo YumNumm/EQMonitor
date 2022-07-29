@@ -41,20 +41,34 @@ jobs:
           cache: true
           cache-key: flutter
           cache-path: ${{ runner.tool_cache }}/flutter
+ - name: 'Setup flutter environment'
+   uses: subosito/flutter-action@v2
+   with:
+     flutter-version: '2.10.3'
+     channel: 'stable'
+     cache: true
 
-      - name: install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.0.5"
-          channel: "stable"
+ - name: 'Cache pubspec dependencies'
+   uses: actions/cache@v2
+   with:
+     path: |
+       ${{ env.FLUTTER_HOME }}/.pub-cache
+       **/.packages
+       **/.flutter-plugins
+       **/.flutter-plugin-dependencies
+       **/.dart_tool/package_config.json
+     key: build-pubspec-${{ hashFiles('**/pubspec.lock') }}
+     restore-keys: |
+       build-pubspec-
 
-　　　　　　　　　　　　　　 # flutter versionの確認
-      - name: flutter version
-        run: flutter --version
-
-      　　 # flutter pub get 実行
-      - name: flutter pub get
-        run: flutter pub get
+ - name: Cache build runner
+   uses: actions/cache@v2
+   with:
+     path: |
+       **/.dart_tool/build
+     key: build-runner-${{ hashFiles('**/asset_graph.json') }}-${{ hashFiles('**/pubspec.lock') }}
+     restore-keys: |
+       build-runner-
 
         # 静的解析の実行
       - name: flutter analyze
