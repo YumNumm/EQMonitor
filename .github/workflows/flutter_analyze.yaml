@@ -2,10 +2,10 @@ name: Android CD
 
 #発火条件
 on:
-  #ソースをmasterブランチにプッシュする時
+  #ソースをmainブランチにプッシュする時
   push:
     branches: [main]
-  #他のブランチをmasterブランチにマッジする時
+  #他のブランチをmainブランチにマージする時
   pull_request:
     branches: [main]
 
@@ -16,7 +16,7 @@ jobs:
     #ビルド環境
     runs-on: ubuntu-latest
     # タイムアウト時間を設定
-    timeout-minutes: 5
+    timeout-minutes: 15
 
     steps:
       #リポジトリからソースをダンロード
@@ -68,10 +68,11 @@ jobs:
         run: flutter pub get
 
       - name: Run BuildRunner
-        run: flutter pub run build_runner build --delete-conflicting-outputs
+        run: flutter pub run build_runner build
 
       - name: Analyze
         run: flutter analyze .
+        continue-on-error: true
 
       - name: build apk
         run: |
