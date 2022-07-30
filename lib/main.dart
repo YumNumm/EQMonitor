@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:eqmonitor/page/main_page.dart';
@@ -17,57 +19,61 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
-  // スプラッシュ画面を表示
-  FlutterNativeSplash.preserve(
-    widgetsBinding: WidgetsFlutterBinding.ensureInitialized(),
-  );
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent, // transparent status bar
-    ),
-  );
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  // Supabaseを初期化
-  await Supabase.initialize(
-    url: supabaseUrl,
-    anonKey: supabaseAnonKey,
-    debug: kDebugMode,
-  );
-
-  Intl.defaultLocale = 'ja_JP';
-  // final prefs = await SharedPreferences.getInstance();
-  final crashlytics = FirebaseCrashlytics.instance;
-  final deviceInfo = await DeviceInfoPlugin().androidInfo;
-  await crashlytics.sendUnsentReports();
-  await crashlytics.setUserIdentifier(deviceInfo.androidId.toString());
-  await crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode);
-
-
-  runApp(
-    DevicePreview(
-      builder: (context) => ProviderScope(
-
-        child: MaterialApp(
-          title: 'EQMonitor',
-          theme: lightTheme(),
-          darkTheme: darkTheme(),
-          locale: DevicePreview.locale(context),
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate
-          ],
-          supportedLocales: const [
-            Locale('ja', 'JP'),
-          ],
-          useInheritedMediaQuery: true,
-          builder: DevicePreview.appBuilder,
-          home: const MainPage(),
+  await runZonedGuarded<Future<void>>(
+    () async {
+      FlutterNativeSplash.preserve(
+        widgetsBinding: WidgetsFlutterBinding.ensureInitialized(),
+      );
+      SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent, // transparent status bar
         ),
-      ),
-    ),
+      );
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      // Supabaseを初期化
+      await Supabase.initialize(
+        url: supabaseUrl,
+        anonKey: supabaseAnonKey,
+        debug: kDebugMode,
+      );
+
+      Intl.defaultLocale = 'ja_JP';
+      // final prefs = await SharedPreferences.getInstance();
+      final crashlytics = FirebaseCrashlytics.instance;
+      final deviceInfo = await DeviceInfoPlugin().androidInfo;
+      await crashlytics.sendUnsentReports();
+      await crashlytics.setUserIdentifier(deviceInfo.androidId.toString());
+      await crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode);
+      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+
+      runApp(
+        DevicePreview(
+          builder: (context) => ProviderScope(
+            child: MaterialApp(
+              title: 'EQMonitor',
+              theme: lightTheme(),
+              darkTheme: darkTheme(),
+              locale: DevicePreview.locale(context),
+              localizationsDelegates: const [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate
+              ],
+              supportedLocales: const [
+                Locale('ja', 'JP'),
+              ],
+              useInheritedMediaQuery: true,
+              builder: DevicePreview.appBuilder,
+              home: const MainPage(),
+            ),
+          ),
+        ),
+      );
+      FlutterNativeSplash.remove();
+    },
+    (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack),
   );
-  FlutterNativeSplash.remove();
+  // スプラッシュ画面を表示
 }

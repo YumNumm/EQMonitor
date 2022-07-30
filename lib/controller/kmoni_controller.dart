@@ -44,7 +44,7 @@ class KmoniController extends StateNotifier<KmoniModel> {
       /// 観測点CSVの読み込み
       _loadKansokuten();
       // タイマーを開始
-      if (mounted) {
+
         state = state.copyWith(
           updateTimer: Timer.periodic(state.updateFrequency, (timer) {
             if (mounted) {
@@ -52,7 +52,7 @@ class KmoniController extends StateNotifier<KmoniModel> {
             }
           }),
         );
-      }
+      
     }
   }
 
