@@ -17,24 +17,24 @@ dependencies:
   # State Control
   flutter_riverpod: ^1.0.4
   hooks_riverpod: ^1.0.4
-  freezed_annotation: ^2.0.3
+  freezed_annotation: ^2.1.0
   state_notifier: ^0.7.2+1
   # DB
-  isar: ^2.5.0
+  isar: ^3.0.0-dev.8
   path_provider: ^2.0.11
-  isar_flutter_libs: ^2.5.0
+  isar_flutter_libs: ^3.0.0-dev.8
   shared_preferences: ^2.0.15
   flutter_secure_storage: ^5.0.2
   # Firebase
-  firebase_core: ^1.18.0
-  firebase_crashlytics: ^2.8.2
-  firebase_messaging: ^11.4.2
-  firebase_auth: ^3.3.20
-  firebase_performance: ^0.8.0+14
-  firebase_analytics: ^9.1.10
+  firebase_core: ^1.20.0
+  firebase_crashlytics: ^2.8.6
+  firebase_messaging: ^12.0.1
+  firebase_auth: ^3.6.1
+  firebase_performance: ^0.8.2+1
+  firebase_analytics: ^9.3.0
   # Notificaiton
   awesome_notifications: ^0.6.21
-  flutter_tts: ^3.4.0
+  flutter_tts: ^3.5.0
   # API
   dio: ^4.0.6
   dio_http2_adapter: ^2.0.0
@@ -42,12 +42,12 @@ dependencies:
   # Map
   latlong2: ^0.8.1
 
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.5
   intl: ^0.17.0
   logger: ^1.1.0
   geojson: ^1.0.0
   image: ^3.2.0
-  url_launcher: ^6.1.3
+  url_launcher: ^6.1.5
   html: ^0.15.0
   home_widget:
     git:
@@ -55,13 +55,13 @@ dependencies:
   auto_size_text: ^3.0.0
   dart_twitter_api: ^0.5.6+1
   device_preview: ^1.1.0
-  device_info_plus: ^3.2.4
-  share_plus: ^4.0.8
+  device_info_plus: ^4.0.1
+  share_plus: ^4.0.10
   bordered_text: ^2.0.0
 
-  flutter_native_splash: ^2.2.3+1
+  flutter_native_splash: ^2.2.6
   csv: ^5.0.1
-  supabase_flutter: ^0.3.2
+  supabase_flutter: ^0.3.3
   flutter_hooks: ^0.18.5+1
   fast_i18n: ^5.12.6
   collection: ^1.16.0
@@ -69,12 +69,12 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
-  build_runner: ^2.1.11
-  freezed: ^2.0.3+1
-  json_serializable: ^6.2.0
+  flutter_lints: ^2.0.1
+  build_runner: ^2.2.0
+  freezed: ^2.1.0+1
+  json_serializable: ^6.3.1
   pedantic_mono: ^1.19.2
-  isar_generator: ^2.5.0
+  isar_generator: ^3.0.0-dev.8
   flutter_launcher_icons: ^0.9.3
 
 flutter:
