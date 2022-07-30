@@ -1,4 +1,4 @@
-name: Android CD
+name: Flutter build Android
 
 #発火条件
 on:
