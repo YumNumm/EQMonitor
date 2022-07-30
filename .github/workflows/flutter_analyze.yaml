@@ -4,53 +4,94 @@ name: Android CD
 on:
   #ソースをmasterブランチにプッシュする時
   push:
-    branches: [ main ]
+    branches: [main]
   #他のブランチをmasterブランチにマッジする時
   pull_request:
-    branches: [ main ]
+    branches: [main]
+
+  workflow_dispatch:
 
 jobs:
   build:
     #ビルド環境
     runs-on: ubuntu-latest
+    # タイムアウト時間を設定
+    timeout-minutes: 5
 
     steps:
       #リポジトリからソースをダンロード
       - uses: actions/checkout@v2
+
       #JAVA環境構築
-      - name: install java 8.x
-        uses: actions/setup-java@v1
+      - name: Setup Java 17
+        uses: actions/setup-java@v2
         with:
-          java-version: '8.x'
+          distribution: "adopt"
+          java-version: "17"
+          cache: "gradle"
 
-      - name: setup cache
-        uses: actions/cache@v1
+      - name: 'Setup flutter environment'
+        uses: subosito/flutter-action@v2
         with:
-          path: /Users/runner/hostedtoolcache/flutter
-          key: ${{ runner.OS }}-flutter-install-cache
-
-      #Flutter環境構築
-      - name: install flutter
-        uses: subosito/flutter-action@v1
-        with:
-          #Flutterのバージョン
           flutter-version: '3.0.5'
           channel: 'stable'
+          cache: true
+
+      - name: 'Cache pubspec dependencies'
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ env.FLUTTER_HOME }}/.pub-cache
+            **/.packages
+            **/.flutter-plugins
+            **/.flutter-plugin-dependencies
+            **/.dart_tool/package_config.json
+          key: build-pubspec-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            build-pubspec-
+
+      - name: Cache build runner
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/.dart_tool/build
+          key: build-runner-${{ hashFiles('**/asset_graph.json') }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            build-runner-
+
+
+      - name: flutter version
+        run: flutter --version
 
       - name: flutter dependencies install
         #ライブラリーの導入
         run: flutter pub get
 
+      - name: Run BuildRunner
+        run: flutter pub run build_runner build --delete-conflicting-outputs
+
+      - name: Analyze
+        run: flutter analyze .
+
       - name: build apk
         run: |
           echo '${{ secrets.KEYSTORE_BASE64 }}' | base64 -d > android/release.keystore
+          echo '${{ secrets.FIREBASE_ANDROID }}' | base64 -d > android/app/google-services.json
+          echo '${{ secrets.PRIVATE_KEYS }}' | base64 -d > lib/private/kets.dart
           export KEYSTORE_PASSWORD='${{ secrets.KEYSTORE_PASSWORD }}'
           export KEY_ALIAS='${{ secrets.KEY_ALIAS }}'
           export KEY_PASSWORD='${{ secrets.KEY_PASSWORD }}'
-          flutter build apk --release
+          flutter build apk --release --obfuscate --split-debug-info=obfuscate/android
 
       - name: Upload artifact
         uses: actions/upload-artifact@v1.0.0
         with:
-          name: android
+          name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
+
+      # - uses: codecov/codecov-action@v3
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+      #     fail_ci_if_error: false # optional (default = false)
+      #     verbose: true # optional (default = false)
+      #     file: ~/coverage/lcov.info
