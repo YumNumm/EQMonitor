@@ -12,42 +12,39 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final earthquakeHistory = ref.watch(earthquakeHistoryNotifier);
+    final earthquakeHistory = ref.watch(earthquakeHistoryController);
     return ListView.builder(
+      shrinkWrap: true,
       itemCount: earthquakeHistory.telegramsGroupByEventId.length,
       itemBuilder: (context, index) {
         final key =
             earthquakeHistory.telegramsGroupByEventId.keys.elementAt(index);
         final telegrams = earthquakeHistory.telegramsGroupByEventId[key]!;
+        final vxse53 = telegrams.firstWhere(
+          (element) => element.type == 'VXSE53',
+        );
         return ListTile(
-          tileColor: (telegrams
-                      .lastWhere(
-                        (element) => element.type == 'VXSE53',
-                      )
-                      .maxint ??
-                  JmaIntensity.Error)
-              .color,
-          textColor: (telegrams
-                          .lastWhere(
-                            (element) => element.type == 'VXSE53',
-                          )
-                          .maxint ??
-                      JmaIntensity.Error)
-                  .shouldTextBlack
-              ? Colors.black
-              : Colors.white,
+          /*leading: Container(
+            color: (vxse53.maxint ?? JmaIntensity.Error).color,
+            child: Text(
+              (vxse53.maxint ?? JmaIntensity.Error).name,
+              style: const TextStyle(fontSize: 18),
+            ),
+          ),*/
+          tileColor: (vxse53.maxint != JmaIntensity.Int1)
+              ? (vxse53.maxint ?? JmaIntensity.Error).color.withOpacity(0.3)
+              : null,
           enableFeedback: true,
           title: Text(
-            "$key 最大震度${(telegrams.lastWhere(
-                  (element) => element.type == 'VXSE53',
-                ).maxint ?? JmaIntensity.Error).name}",
+            (vxse53.hypoName ?? '不明') +
+                ' ' +
+                ('最大震度${(vxse53.maxint ?? JmaIntensity.Error).name}'),
             style: const TextStyle(fontSize: 18),
           ),
           subtitle: Text(
             telegrams
                 .map(
-                  (telegram) =>
-                      '${telegram.type} ${telegram.id} ${telegram.headline}',
+                  (telegram) => '${telegram.type} ${telegram.headline}',
                 )
                 .join('\n'),
             style: const TextStyle(fontSize: 14),

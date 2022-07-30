@@ -24,25 +24,25 @@ enum JmaIntensity {
   Int2('2', Color.fromARGB(255, 0, 170, 255), false, 2),
 
   /// 震度3
-  Int3('3', Color.fromARGB(255, 0, 65, 255), false, 3),
+  Int3('3', Color.fromARGB(255, 45, 244, 255), false, 3),
 
   /// 震度4
-  Int4('4', Color.fromARGB(255, 250, 230, 150), true, 4),
+  Int4('4', Color.fromARGB(255, 255, 213, 0), true, 4),
 
   /// 震度5弱
-  Int5Lower('5-', Color.fromARGB(255, 255, 230, 0), true, 5),
+  Int5Lower('5-', Color.fromARGB(255, 255, 153, 0), true, 5),
 
   /// 震度5強
-  Int5Upper('5+', Color.fromARGB(255, 255, 153, 0), true, 6),
+  Int5Upper('5+', Color.fromARGB(255, 255, 77, 0), true, 6),
 
   /// 震度6弱
-  Int6Lower('6-', Color.fromARGB(255, 255, 40, 0), false, 7),
+  Int6Lower('6-', Color.fromARGB(255, 255, 57, 57), false, 7),
 
   /// 震度6強
-  Int6Upper('6+', Color.fromARGB(255, 165, 0, 33), false, 8),
+  Int6Upper('6+', Color.fromARGB(255, 254, 25, 162), false, 8),
 
   /// 震度7
-  Int7('7', Color.fromARGB(255, 180, 0, 104), false, 9),
+  Int7('7', Color.fromARGB(255, 188, 0, 226), false, 9),
 
   // 程度以上
   over('over', Color.fromARGB(255, 255, 255, 255), true, -1),

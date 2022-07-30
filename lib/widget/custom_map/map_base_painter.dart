@@ -10,7 +10,7 @@ class MapBasePainter extends CustomPainter {
   double outlineStrokeWidth;
 
   final Paint paintBuilding = Paint()
-    ..color = const Color.fromARGB(255, 17, 147, 0)
+    ..color = const Color.fromARGB(161, 66, 66, 66)
     ..isAntiAlias = true
     ..strokeCap = StrokeCap.round;
 
