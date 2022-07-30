@@ -1,75 +1,56 @@
-# ワークフロー名を定義(任意の名称)
-name: flutter analyze
+name: Android CD
 
-# トリガーを定義
+#発火条件
 on:
-  # プルリク作成がトリガー(GitHub Actionsが実行される)となる
+  #ソースをmasterブランチにプッシュする時
+  push:
+    branches: [ main ]
+  #他のブランチをmasterブランチにマッジする時
   pull_request:
-    # プルリク作成時とプルリクにコミットが行われた時
-    types: [opened, synchronize]
-    # 対象ブランチを指定
-    branches:
-      - develop
+    branches: [ main ]
 
-  # GitHubページから手動で実行できる
-  workflow_dispatch:
-
-# 実行するジョブを定義
 jobs:
-  # ジョブ名を設定
-  flutter_analyze:
-
-    # ジョブを実行する仮想ホストマシンタイプ
+  build:
+    #ビルド環境
     runs-on: ubuntu-latest
 
-    # タイムアウト時間を設定
-    timeout-minutes: 5
-
-    # steps配下に実行したいアクションを定義します。(usesもしくはrunを使用することになると思います)
-    # uses ・・・ GitHubやサードパーティで用意されているactionを使用できます
-    # run ・・・ 実行コマンド
     steps:
-      - name: checkout
-        uses: actions/checkout@v2
-
-　　　　　　　　　　　　  # flutterインストール（キャッシュする）
-      - name: flutter cache
-        uses: subosito/flutter-action@v2
+      #リポジトリからソースをダンロード
+      - uses: actions/checkout@v2
+      #JAVA環境構築
+      - name: install java 8.x
+        uses: actions/setup-java@v1
         with:
-          flutter-version: "3.0.5"
-          channel: "stable"
-          cache: true
-          cache-key: flutter
-          cache-path: ${{ runner.tool_cache }}/flutter
- - name: 'Setup flutter environment'
-   uses: subosito/flutter-action@v2
-   with:
-     flutter-version: '2.10.3'
-     channel: 'stable'
-     cache: true
+          java-version: '8.x'
 
- - name: 'Cache pubspec dependencies'
-   uses: actions/cache@v2
-   with:
-     path: |
-       ${{ env.FLUTTER_HOME }}/.pub-cache
-       **/.packages
-       **/.flutter-plugins
-       **/.flutter-plugin-dependencies
-       **/.dart_tool/package_config.json
-     key: build-pubspec-${{ hashFiles('**/pubspec.lock') }}
-     restore-keys: |
-       build-pubspec-
+      - name: setup cache
+        uses: actions/cache@v1
+        with:
+          path: /Users/runner/hostedtoolcache/flutter
+          key: ${{ runner.OS }}-flutter-install-cache
 
- - name: Cache build runner
-   uses: actions/cache@v2
-   with:
-     path: |
-       **/.dart_tool/build
-     key: build-runner-${{ hashFiles('**/asset_graph.json') }}-${{ hashFiles('**/pubspec.lock') }}
-     restore-keys: |
-       build-runner-
+      #Flutter環境構築
+      - name: install flutter
+        uses: subosito/flutter-action@v1
+        with:
+          #Flutterのバージョン
+          flutter-version: '3.0.5'
+          channel: 'stable'
 
-        # 静的解析の実行
-      - name: flutter analyze
-        run: flutter analyze
+      - name: flutter dependencies install
+        #ライブラリーの導入
+        run: flutter pub get
+
+      - name: build apk
+        run: |
+          echo '${{ secrets.KEYSTORE_BASE64 }}' | base64 -d > android/release.keystore
+          export KEYSTORE_PASSWORD='${{ secrets.KEYSTORE_PASSWORD }}'
+          export KEY_ALIAS='${{ secrets.KEY_ALIAS }}'
+          export KEY_PASSWORD='${{ secrets.KEY_PASSWORD }}'
+          flutter build apk --release
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: android
+          path: build/app/outputs/flutter-apk/app-release.apk
