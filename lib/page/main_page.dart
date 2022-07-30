@@ -18,7 +18,8 @@ class _MainPageState extends ConsumerState<MainPage> {
   @override
   void initState() {
     ref.read(kmoniMapController.notifier).onInit();
-    ref.read(earthquakeHistoryNotifier.notifier).onInit();
+    ref.read(earthquakeHistoryController.notifier).onInit();
+    ref.read(eewHistoryController.notifier).onInit();
 
     // FCM登録
     ref.read(firebaseCloudMessagingNotifier.notifier).onInit();

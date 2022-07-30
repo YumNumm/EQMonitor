@@ -97,7 +97,6 @@ class KmoniMapController extends StateNotifier<KmoniMapModel> {
     });
     await geo.parse(
       await rootBundle.loadString('assets/maps/AreaForecastLocalE.json'),
-      verbose: true,
     );
     return;
   }
