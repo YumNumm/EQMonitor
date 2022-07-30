@@ -19,25 +19,20 @@ class KmoniMap extends ConsumerWidget {
 
     return Stack(
       children: [
-        GestureDetector(
-          child: InteractiveViewer(
-            maxScale: 100,
-            child: Transform(
-              transform: kmoniMapMatrix4,
-              child: Stack(
-                children: const [
-                  // マップベース
-                  BaseMapWidget(),
-                  // EEWの予想震度
-                  MapIntensityWidget(),
+        InteractiveViewer(
+          maxScale: 100,
+          child: Stack(
+            children: const [
+              // マップベース
+              BaseMapWidget(),
+              // EEWの予想震度
+              MapIntensityWidget(),
 
-                  // 観測点
-                  ObsPointsMapWidget(),
-                  // EEWの震央位置
-                  EewCenterMapWidget(),
-                ],
-              ),
-            ),
+              // 観測点
+              ObsPointsMapWidget(),
+              // EEWの震央位置
+              EewCenterMapWidget(),
+            ],
           ),
         ),
         // EEW表示

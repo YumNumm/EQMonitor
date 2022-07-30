@@ -12,7 +12,7 @@ class TelegramApi {
   /// [limit] 結果の最大数
   /// [offset] 結果のオフセット
   Future<List<Telegram>> getTelegramsWithLimit({
-    int? limit = 100,
+    int? limit = 200,
     int offset = 0,
   }) async {
     // TODO(YumNumm): Telegram取得時offsetの実装

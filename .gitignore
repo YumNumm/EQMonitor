@@ -9,6 +9,8 @@
 .history
 .svn/
 
+log
+
 # Generated Code
 *.g.dart
 *.*.*.dart
