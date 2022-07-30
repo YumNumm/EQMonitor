@@ -78,7 +78,7 @@ jobs:
         run: |
           echo '${{ secrets.KEYSTORE_BASE64 }}' | base64 -d > android/release.keystore
           echo '${{ secrets.FIREBASE_ANDROID }}' | base64 -d > android/app/google-services.json
-          echo '${{ secrets.PRIVATE_KEYS }}' | base64 -d > lib/private/kets.dart
+          echo '${{ secrets.PRIVATE_KEYS }}' | base64 -d > lib/private/keys.dart
           export KEYSTORE_PASSWORD='${{ secrets.KEYSTORE_PASSWORD }}'
           export KEY_ALIAS='${{ secrets.KEY_ALIAS }}'
           export KEY_PASSWORD='${{ secrets.KEY_PASSWORD }}'
