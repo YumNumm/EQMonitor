@@ -5,9 +5,6 @@ on:
   #ソースをmainブランチにプッシュする時
   push:
     branches: [main]
-  #他のブランチをmainブランチにマージする時
-  pull_request:
-    branches: [main]
 
   workflow_dispatch:
 
@@ -73,6 +70,9 @@ jobs:
       - name: Analyze
         run: flutter analyze .
         continue-on-error: true
+      
+      - name: Flutter Accept Android License
+        run: yes | flutter doctor --android-licenses
 
       - name: build apk
         run: |
