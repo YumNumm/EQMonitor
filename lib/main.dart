@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:device_preview/device_preview.dart';
@@ -16,9 +17,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'firebase_options.dart';
+
+late Directory logDirectory;
 
 Future<void> main() async {
   await runZonedGuarded<Future<void>>(
@@ -26,6 +30,8 @@ Future<void> main() async {
       FlutterNativeSplash.preserve(
         widgetsBinding: WidgetsFlutterBinding.ensureInitialized(),
       );
+      logDirectory = await getApplicationDocumentsDirectory();
+
       SystemChrome.setSystemUIOverlayStyle(
         const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent, // transparent status bar
@@ -48,7 +54,7 @@ Future<void> main() async {
       await crashlytics.sendUnsentReports();
       await crashlytics.setUserIdentifier(deviceInfo.androidId.toString());
       await crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode);
-      FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+      FlutterError.onError = onFlutterError;
       if (kDebugMode) {
         runApp(
           DevicePreview(
@@ -63,6 +69,18 @@ Future<void> main() async {
     (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack),
   );
   // スプラッシュ画面を表示
+}
+
+Future<void> onFlutterError(FlutterErrorDetails details) async {
+  await FirebaseCrashlytics.instance.recordFlutterError(details);
+  logToFile(details.exception.toString());
+}
+
+ void logToFile(dynamic message) {
+  File('${logDirectory.path}/log.txt').writeAsStringSync(
+    message.toString(),
+    mode: FileMode.append,
+  );
 }
 
 class EqMonitorApp extends StatelessWidget {
@@ -109,7 +127,6 @@ class EqMonitorApp extends StatelessWidget {
             ],
             useInheritedMediaQuery: true,
             builder: DevicePreview.appBuilder,
-
             home: const MainPage(),
           );
         },

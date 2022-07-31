@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geojson/geojson.dart';
 import 'package:logger/logger.dart';
 
+import '../utils/logger/filter.dart';
 import '../utils/map/map_global_offset.dart';
 
 class KmoniMapController extends StateNotifier<KmoniMapModel> {
@@ -29,6 +30,8 @@ class KmoniMapController extends StateNotifier<KmoniMapModel> {
       'assets/maps/AreaForecastLocalEew.json';
 
   final Logger logger = Logger(
+    filter: MyFilter(),
+    output: MyOutput(),
     printer: PrettyPrinter(
       methodCount: 1,
       printTime: true,

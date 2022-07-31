@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
+import '../utils/logger/filter.dart';
+
 class TravelTimeController extends StateNotifier<TravelTimeModel> {
   TravelTimeController()
       : super(
@@ -17,6 +19,8 @@ class TravelTimeController extends StateNotifier<TravelTimeModel> {
         );
 
   final logger = Logger(
+    filter: MyFilter(),
+    output: MyOutput(),
     printer: PrettyPrinter(
       methodCount: 1,
       printTime: true,
