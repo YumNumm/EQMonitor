@@ -8,6 +8,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "38.0.0"
+  adaptive_breakpoints:
+    dependency: transitive
+    description:
+      name: adaptive_breakpoints
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.4"
+  adaptive_navigation:
+    dependency: "direct main"
+    description:
+      name: adaptive_navigation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.7"
   analyzer:
     dependency: transitive
     description:
