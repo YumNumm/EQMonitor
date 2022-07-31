@@ -27,14 +27,14 @@ jobs:
           java-version: "17"
           cache: "gradle"
 
-      - name: 'Setup flutter environment'
+      - name: Setup flutter environment
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.0.5'
           channel: 'stable'
           cache: true
 
-      - name: 'Cache pubspec dependencies'
+      - name: Cache pubspec dependencies
         uses: actions/cache@v2
         with:
           path: |
@@ -57,24 +57,24 @@ jobs:
             build-runner-
 
 
-      - name: flutter version
+      - name: Flutter version
         run: flutter --version
 
-      - name: flutter dependencies install
+      - name: Flutter dependencies install
         #ライブラリーの導入
         run: flutter pub get
 
-      - name: Run BuildRunner
+      - name: Build codes with build_runner
         run: flutter pub run build_runner build --delete-conflicting-outputs
 
       - name: Analyze
         run: flutter analyze .
         continue-on-error: true
       
-      - name: Flutter Accept Android License
+      - name: Accept Android License
         run: yes | flutter doctor --android-licenses
 
-      - name: build apk
+      - name: Build apk
         run: |
           echo '${{ secrets.KEYSTORE_BASE64 }}' | base64 -d > android/release.keystore
           echo '${{ secrets.FIREBASE_ANDROID }}' | base64 -d > android/app/google-services.json
