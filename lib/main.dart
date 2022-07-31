@@ -47,33 +47,47 @@ Future<void> main() async {
       await crashlytics.setUserIdentifier(deviceInfo.androidId.toString());
       await crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode);
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-
-      runApp(
-        DevicePreview(
-          builder: (context) => ProviderScope(
-            child: MaterialApp(
-              title: 'EQMonitor',
-              theme: lightTheme(),
-              darkTheme: darkTheme(),
-              locale: DevicePreview.locale(context),
-              localizationsDelegates: const [
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate
-              ],
-              supportedLocales: const [
-                Locale('ja', 'JP'),
-              ],
-              useInheritedMediaQuery: true,
-              builder: DevicePreview.appBuilder,
-              home: const MainPage(),
-            ),
+      if (kDebugMode) {
+        runApp(
+          DevicePreview(
+            builder: (context) => const mainWidget(),
           ),
-        ),
-      );
+        );
+      } else {
+        runApp(const mainWidget());
+      }
       FlutterNativeSplash.remove();
     },
     (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack),
   );
   // スプラッシュ画面を表示
+}
+
+class mainWidget extends StatelessWidget {
+  const mainWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ProviderScope(
+      child: MaterialApp(
+        title: 'EQMonitor',
+        theme: lightTheme(),
+        darkTheme: darkTheme(),
+        locale: DevicePreview.locale(context),
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate
+        ],
+        supportedLocales: const [
+          Locale('ja', 'JP'),
+        ],
+        useInheritedMediaQuery: true,
+        builder: DevicePreview.appBuilder,
+        home: const MainPage(),
+      ),
+    );
+  }
 }
