@@ -10,7 +10,12 @@ import 'package:logger/logger.dart';
 import '../../const/obspoint.dart';
 
 class KyoshinImageParser {
-  final Logger logger = Logger();
+  final Logger logger = Logger(
+    printer: PrettyPrinter(
+      methodCount: 1,
+      printTime: true,
+    ),
+  );
 
   List<AnalyzedPoint> imageParse({
     required List<int> picture,

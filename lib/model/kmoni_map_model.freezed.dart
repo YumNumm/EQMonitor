@@ -26,6 +26,9 @@ mixin _$KmoniMapModel {
   /// マップがロードされたかどうか
   bool get isMapLoaded => throw _privateConstructorUsedError;
 
+  /// 読み込みにかかった時間
+  Duration? get loadDuration => throw _privateConstructorUsedError;
+
   @JsonKey(ignore: true)
   $KmoniMapModelCopyWith<KmoniMapModel> get copyWith =>
       throw _privateConstructorUsedError;
@@ -42,7 +45,8 @@ abstract class $KmoniMapModelCopyWith<$Res> {
       double mapOutlineStrokeWidth,
       Color mapOutlineStrokeColor,
       Color mapFillColor,
-      bool isMapLoaded});
+      bool isMapLoaded,
+      Duration? loadDuration});
 }
 
 /// @nodoc
@@ -62,6 +66,7 @@ class _$KmoniMapModelCopyWithImpl<$Res>
     Object? mapOutlineStrokeColor = freezed,
     Object? mapFillColor = freezed,
     Object? isMapLoaded = freezed,
+    Object? loadDuration = freezed,
   }) {
     return _then(_value.copyWith(
       mapPolygons: mapPolygons == freezed
@@ -88,6 +93,10 @@ class _$KmoniMapModelCopyWithImpl<$Res>
           ? _value.isMapLoaded
           : isMapLoaded // ignore: cast_nullable_to_non_nullable
               as bool,
+      loadDuration: loadDuration == freezed
+          ? _value.loadDuration
+          : loadDuration // ignore: cast_nullable_to_non_nullable
+              as Duration?,
     ));
   }
 }
@@ -105,7 +114,8 @@ abstract class _$$_KmoniMapModelCopyWith<$Res>
       double mapOutlineStrokeWidth,
       Color mapOutlineStrokeColor,
       Color mapFillColor,
-      bool isMapLoaded});
+      bool isMapLoaded,
+      Duration? loadDuration});
 }
 
 /// @nodoc
@@ -127,6 +137,7 @@ class __$$_KmoniMapModelCopyWithImpl<$Res>
     Object? mapOutlineStrokeColor = freezed,
     Object? mapFillColor = freezed,
     Object? isMapLoaded = freezed,
+    Object? loadDuration = freezed,
   }) {
     return _then(_$_KmoniMapModel(
       mapPolygons: mapPolygons == freezed
@@ -153,6 +164,10 @@ class __$$_KmoniMapModelCopyWithImpl<$Res>
           ? _value.isMapLoaded
           : isMapLoaded // ignore: cast_nullable_to_non_nullable
               as bool,
+      loadDuration: loadDuration == freezed
+          ? _value.loadDuration
+          : loadDuration // ignore: cast_nullable_to_non_nullable
+              as Duration?,
     ));
   }
 }
@@ -166,7 +181,8 @@ class _$_KmoniMapModel implements _KmoniMapModel {
       required this.mapOutlineStrokeWidth,
       required this.mapOutlineStrokeColor,
       required this.mapFillColor,
-      required this.isMapLoaded})
+      required this.isMapLoaded,
+      required this.loadDuration})
       : _mapPolygons = mapPolygons;
 
   /// Mapに表示する日本のポリゴン
@@ -192,9 +208,13 @@ class _$_KmoniMapModel implements _KmoniMapModel {
   @override
   final bool isMapLoaded;
 
+  /// 読み込みにかかった時間
+  @override
+  final Duration? loadDuration;
+
   @override
   String toString() {
-    return 'KmoniMapModel(mapPolygons: $mapPolygons, mapMatrix4: $mapMatrix4, mapOutlineStrokeWidth: $mapOutlineStrokeWidth, mapOutlineStrokeColor: $mapOutlineStrokeColor, mapFillColor: $mapFillColor, isMapLoaded: $isMapLoaded)';
+    return 'KmoniMapModel(mapPolygons: $mapPolygons, mapMatrix4: $mapMatrix4, mapOutlineStrokeWidth: $mapOutlineStrokeWidth, mapOutlineStrokeColor: $mapOutlineStrokeColor, mapFillColor: $mapFillColor, isMapLoaded: $isMapLoaded, loadDuration: $loadDuration)';
   }
 
   @override
@@ -213,7 +233,9 @@ class _$_KmoniMapModel implements _KmoniMapModel {
             const DeepCollectionEquality()
                 .equals(other.mapFillColor, mapFillColor) &&
             const DeepCollectionEquality()
-                .equals(other.isMapLoaded, isMapLoaded));
+                .equals(other.isMapLoaded, isMapLoaded) &&
+            const DeepCollectionEquality()
+                .equals(other.loadDuration, loadDuration));
   }
 
   @override
@@ -224,7 +246,8 @@ class _$_KmoniMapModel implements _KmoniMapModel {
       const DeepCollectionEquality().hash(mapOutlineStrokeWidth),
       const DeepCollectionEquality().hash(mapOutlineStrokeColor),
       const DeepCollectionEquality().hash(mapFillColor),
-      const DeepCollectionEquality().hash(isMapLoaded));
+      const DeepCollectionEquality().hash(isMapLoaded),
+      const DeepCollectionEquality().hash(loadDuration));
 
   @JsonKey(ignore: true)
   @override
@@ -239,7 +262,8 @@ abstract class _KmoniMapModel implements KmoniMapModel {
       required final double mapOutlineStrokeWidth,
       required final Color mapOutlineStrokeColor,
       required final Color mapFillColor,
-      required final bool isMapLoaded}) = _$_KmoniMapModel;
+      required final bool isMapLoaded,
+      required final Duration? loadDuration}) = _$_KmoniMapModel;
 
   @override
 
@@ -257,6 +281,10 @@ abstract class _KmoniMapModel implements KmoniMapModel {
 
   /// マップがロードされたかどうか
   bool get isMapLoaded => throw _privateConstructorUsedError;
+  @override
+
+  /// 読み込みにかかった時間
+  Duration? get loadDuration => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$$_KmoniMapModelCopyWith<_$_KmoniMapModel> get copyWith =>

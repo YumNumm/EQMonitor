@@ -15,7 +15,12 @@ class EewHistoryController extends StateNotifier<EewHistoryModel> {
         );
 
   final EewApi eewApi = EewApi();
-  final logger = Logger();
+  final logger = Logger(
+    printer: PrettyPrinter(
+      methodCount: 1,
+      printTime: true,
+    ),
+  );
 
   void onInit() {
     startEewStreaming();
@@ -29,7 +34,6 @@ class EewHistoryController extends StateNotifier<EewHistoryModel> {
   void startEewStreaming() {
     eewApi.eewStream().listen(
       (eewTelegram) {
-        logger.i('eewTelegram: $eewTelegram');
         if (mounted) {
           addTelegram(eewTelegram);
         }

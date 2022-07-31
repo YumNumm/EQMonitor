@@ -884,6 +884,12 @@
       "languageVersion": "2.14"
     },
     {
+      "name": "settings_ui",
+      "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/settings_ui-2.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "share_plus",
       "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/share_plus-4.0.10",
       "packageUri": "lib/",
@@ -1208,7 +1214,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-07-31T11:44:54.584415Z",
+  "generated": "2022-07-31T12:49:43.737391Z",
   "generator": "pub",
   "generatorVersion": "2.17.6"
 }

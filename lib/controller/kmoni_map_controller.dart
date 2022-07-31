@@ -18,6 +18,7 @@ class KmoniMapController extends StateNotifier<KmoniMapModel> {
             mapOutlineStrokeWidth: 0.1,
             mapOutlineStrokeColor: Colors.black,
             mapFillColor: Colors.white,
+            loadDuration: null,
           ),
         );
 
@@ -27,7 +28,12 @@ class KmoniMapController extends StateNotifier<KmoniMapModel> {
   static const String areaForecastLocalEewFileName =
       'assets/maps/AreaForecastLocalEew.json';
 
-  final Logger logger = Logger();
+  final Logger logger = Logger(
+    printer: PrettyPrinter(
+      methodCount: 1,
+      printTime: true,
+    ),
+  );
   late GeoJsonFeatureCollection japanMap;
 
   void onInit() {
@@ -38,6 +44,7 @@ class KmoniMapController extends StateNotifier<KmoniMapModel> {
   }
 
   Future<void> _loadJapanMap({bool showLabel = false}) async {
+    final stopwatch = Stopwatch()..start();
     final geo = GeoJson();
 
     final mapPaths = <MapPolygon>[];
@@ -88,10 +95,13 @@ class KmoniMapController extends StateNotifier<KmoniMapModel> {
       }
     });
     geo.endSignal.listen((_) {
+      stopwatch.stop();
+      logger.i('マップデータを読み込みました: ${stopwatch.elapsedMicroseconds / 1000}ms');
       if (mounted) {
         state = state.copyWith(
           isMapLoaded: true,
           mapPolygons: mapPaths,
+          loadDuration: stopwatch.elapsed,
         );
       }
     });

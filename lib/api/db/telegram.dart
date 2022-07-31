@@ -24,7 +24,23 @@ class TelegramApi {
       res = await supabase
           .from('telegram')
           .select(
-            'id,type,time,url,image_url,headline,maxint,magnitude,magnitude_condition,depth,lat,lon,serial_no,event_id,hypo_name,hash,depth_condition',
+            'id,'
+            'type,'
+            'time,'
+            'url,'
+            'image_url,'
+            'headline,'
+            'maxint,'
+            'magnitude,'
+            'magnitude_condition,'
+            'depth,'
+            'lat,'
+            'lon,'
+            'serial_no,'
+            'event_id,'
+            'hypo_name,'
+            'hash,'
+            'depth_condition',
           )
           .order('id')
           .execute();
@@ -32,21 +48,34 @@ class TelegramApi {
       res = await supabase
           .from('telegram')
           .select(
-            'id,type,time,url,image_url,headline,maxint,magnitude,magnitude_condition,depth,lat,lon,serial_no,event_id,hypo_name,hash,depth_condition',
+            'id,'
+            'type,'
+            'time,'
+            'url,'
+            'image_url,'
+            'headline,'
+            'maxint,'
+            'magnitude,'
+            'magnitude_condition,'
+            'depth,'
+            'lat,'
+            'lon,'
+            'serial_no,'
+            'event_id,'
+            'hypo_name,'
+            'hash,'
+            'depth_condition',
           )
           .order('id')
           .limit(limit)
-
           .execute();
     }
 
     if (res.hasError) {
       throw Exception(res.error?.message);
     }
-    log('TelegramApi.getTelegramsWithLimit: ${res.data}');
     final telegrams = <Telegram>[];
     for (final telegram in res.data) {
-      log(telegram['id'].toString());
       telegrams.add(Telegram.fromJson(telegram));
     }
     return telegrams;
@@ -64,5 +93,4 @@ class TelegramApi {
     }
     return res.count!;
   }
-
 }
