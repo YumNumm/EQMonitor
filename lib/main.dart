@@ -109,6 +109,7 @@ class EqMonitorApp extends StatelessWidget {
             ],
             useInheritedMediaQuery: true,
             builder: DevicePreview.appBuilder,
+
             home: const MainPage(),
           );
         },

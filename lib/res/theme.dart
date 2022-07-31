@@ -8,6 +8,7 @@ ThemeData darkTheme() {
     scaffoldBackgroundColor: Colors.grey[900],
     useMaterial3: true,
     colorScheme: const ColorScheme.dark().copyWith(),
+    visualDensity: VisualDensity.adaptivePlatformDensity,
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.grey[900],
       foregroundColor: Colors.white,
@@ -20,6 +21,7 @@ ThemeData lightTheme() {
   return ThemeData.light().copyWith(
     scaffoldBackgroundColor: Colors.white,
     useMaterial3: true,
+    visualDensity: VisualDensity.adaptivePlatformDensity,
     colorScheme: const ColorScheme.light().copyWith(
       primary: Colors.blue,
       secondary: Colors.blue,
