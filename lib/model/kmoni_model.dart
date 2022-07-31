@@ -12,6 +12,9 @@ class KmoniModel with _$KmoniModel {
     /// 観測点のリスト
     required List<AnalyzedPoint> analyzedPoint,
 
+    /// 観測点の読み込みにかかった時間
+    required Duration? loadDuration,
+
     /// 最新の更新時刻
     /// `Null`の時は、まだ更新されていません
     required DateTime? lastUpdated,

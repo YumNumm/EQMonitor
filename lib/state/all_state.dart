@@ -3,11 +3,13 @@ import 'package:eqmonitor/controller/earthquake/eew_controller.dart';
 import 'package:eqmonitor/controller/firebase/firebase_notification_controller.dart';
 import 'package:eqmonitor/controller/kmoni_controller.dart';
 import 'package:eqmonitor/controller/kmoni_map_controller.dart';
+import 'package:eqmonitor/controller/travel_time_controller.dart';
 import 'package:eqmonitor/model/earthquake/earthquake_log_model.dart';
 import 'package:eqmonitor/model/earthquake/eew_history_model.dart';
 import 'package:eqmonitor/model/firebase/firebase_notification_status_model.dart';
 import 'package:eqmonitor/model/kmoni_map_model.dart';
 import 'package:eqmonitor/model/kmoni_model.dart';
+import 'package:eqmonitor/model/travel_time_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final kmoniMapController =
@@ -46,4 +48,9 @@ final earthquakeHistoryController =
 final eewHistoryController =
     StateNotifierProvider<EewHistoryController, EewHistoryModel>((ref) {
   return EewHistoryController();
+});
+
+final travelTimeController =
+    StateNotifierProvider<TravelTimeController, TravelTimeModel>((ref) {
+  return TravelTimeController();
 });

@@ -18,6 +18,7 @@ class MainPage extends StatefulHookConsumerWidget {
 class _MainPageState extends ConsumerState<MainPage> {
   @override
   void initState() {
+    ref.read(travelTimeController.notifier).onInit();
     ref.read(kmoniMapController.notifier).onInit();
     ref.read(earthquakeHistoryController.notifier).onInit();
     ref.read(eewHistoryController.notifier).onInit();

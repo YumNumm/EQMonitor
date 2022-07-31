@@ -1,4 +1,3 @@
-
 import 'package:eqmonitor/const/prefecture/area_forecast_local_eew.model.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -10,16 +9,15 @@ class KmoniMapModel with _$KmoniMapModel {
   const factory KmoniMapModel({
     /// Mapに表示する日本のポリゴン
     required List<MapPolygon> mapPolygons,
-
     required Matrix4 mapMatrix4,
-
     required double mapOutlineStrokeWidth,
-
     required Color mapOutlineStrokeColor,
-
     required Color mapFillColor,
 
     /// マップがロードされたかどうか
     required bool isMapLoaded,
+
+    /// 読み込みにかかった時間
+    required Duration? loadDuration,
   }) = _KmoniMapModel;
 }

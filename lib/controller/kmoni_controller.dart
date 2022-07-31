@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:csv/csv.dart';
 import 'package:eqmonitor/api/kmoni.dart';
@@ -27,10 +26,17 @@ class KmoniController extends StateNotifier<KmoniModel> {
             isKansokutenLoaded: false,
             updateTimer: null,
             isUpdating: false,
+            loadDuration: null,
           ),
         );
 
-  final logger = Logger();
+  final logger = Logger(
+    printer: PrettyPrinter(
+      methodCount: 1,
+      printTime: true,
+    ),
+  );
+
   late Timer updateTimer;
 
   final KyoshinMonitorApi kyoshinMonitorApi = KyoshinMonitorApi();
@@ -57,7 +63,9 @@ class KmoniController extends StateNotifier<KmoniModel> {
     }
     // 更新中でないことを確認
     if (state.isUpdating) {
-      log('Kmoni is updating. skip.', name: 'KMoniTimer');
+      logger.v(
+        '現在読み込み中の強震モニタ画像があるため、新規取得をスキップします。',
+      );
       return;
     }
     // 更新中フラグを立てる
@@ -111,17 +119,19 @@ class KmoniController extends StateNotifier<KmoniModel> {
 
   /// 観測点CSVを読み込む
   Future<void> _loadKansokuten() async {
+    final stopwatch = Stopwatch()..start();
     final kansokutenFile = await rootBundle.load('assets/kmoni/kansokuten.csv');
-    final rowsAsListOfValues = const CsvToListConverter().convert(
+    final rowsAsListOfValues = const CsvToListConverter().convert<String>(
       utf8.decode(kansokutenFile.buffer.asUint8List()),
+      shouldParseNumbers: false,
     );
     final obsPoints = <ObsPoint>[];
     for (final row in rowsAsListOfValues) {
-      if (row[7].toString() == '') {
-        continue;
-      }
       obsPoints.add(ObsPoint.fromList(row));
     }
+    stopwatch.stop();
+    logger.d('観測点データを読み込みました: ${stopwatch.elapsedMicroseconds / 1000}ms');
+
     if (mounted) {
       state = state.copyWith(
         obsPoints: obsPoints,
@@ -143,8 +153,8 @@ class KmoniController extends StateNotifier<KmoniModel> {
               ),
             )
             .toList(),
+        loadDuration: stopwatch.elapsed,
       );
-      logger.i('観測点データを読み込みました: ${state.obsPoints.length}');
     }
   }
 }

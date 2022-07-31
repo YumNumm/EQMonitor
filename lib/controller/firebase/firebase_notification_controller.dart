@@ -21,7 +21,12 @@ class FirebaseCloudMessagingController
         );
 
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-  final Logger _logger = Logger();
+  final Logger _logger = Logger(
+    printer: PrettyPrinter(
+      methodCount: 1,
+      printTime: true,
+    ),
+  );
 
   Future<void> onInit() async {
     // 権限が取得
@@ -58,7 +63,7 @@ class FirebaseCloudMessagingController
     // FCM Tokenを取得
     final token = await _messaging.getToken();
     if (token != null) {
-      _logger.i('FCM Token: $token');
+      _logger.d('FCM Token: $token');
       state = state.copyWith(
         token: token,
         hasToken: true,
