@@ -24,7 +24,7 @@ enum JmaIntensity {
   Int2('2', Color.fromARGB(255, 0, 170, 255), false, 2),
 
   /// 震度3
-  Int3('3', Color.fromARGB(255, 45, 244, 255), false, 3),
+  Int3('3', Color.fromARGB(255, 45, 244, 255), true, 3),
 
   /// 震度4
   Int4('4', Color.fromARGB(255, 255, 213, 0), true, 4),
