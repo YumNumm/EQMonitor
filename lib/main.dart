@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eqmonitor/page/main_page.dart';
 import 'package:eqmonitor/private/keys.dart';
 import 'package:eqmonitor/res/theme.dart';
@@ -50,11 +51,11 @@ Future<void> main() async {
       if (kDebugMode) {
         runApp(
           DevicePreview(
-            builder: (context) => const mainWidget(),
+            builder: (context) => const EqMonitorApp(),
           ),
         );
       } else {
-        runApp(const mainWidget());
+        runApp(const EqMonitorApp());
       }
       FlutterNativeSplash.remove();
     },
@@ -63,31 +64,53 @@ Future<void> main() async {
   // スプラッシュ画面を表示
 }
 
-class mainWidget extends StatelessWidget {
-  const mainWidget({
+class EqMonitorApp extends StatelessWidget {
+  const EqMonitorApp({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ProviderScope(
-      child: MaterialApp(
-        title: 'EQMonitor',
-        theme: lightTheme(),
-        darkTheme: darkTheme(),
-        locale: DevicePreview.locale(context),
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate
-        ],
-        supportedLocales: const [
-          Locale('ja', 'JP'),
-        ],
-        useInheritedMediaQuery: true,
-        builder: DevicePreview.appBuilder,
-        home: const MainPage(),
-      ),
+    return DynamicColorBuilder(
+      builder: (lightDynamic, darkDynamic) {
+        ColorScheme lightColorScheme;
+        ColorScheme darkColorScheme;
+        if (lightDynamic != null && darkDynamic != null) {
+          lightColorScheme = lightDynamic.harmonized();
+          darkColorScheme = darkDynamic.harmonized();
+        } else {
+          lightColorScheme = ColorScheme.fromSeed(
+            seedColor: Colors.blueAccent,
+          );
+          darkColorScheme = ColorScheme.fromSeed(
+            seedColor: Colors.blueAccent,
+            brightness: Brightness.dark,
+          );
+        }
+        return ProviderScope(
+          child: MaterialApp(
+            title: 'EQMonitor',
+            theme: lightTheme().copyWith(
+              colorScheme: lightColorScheme,
+            ),
+            darkTheme: darkTheme().copyWith(
+              colorScheme: darkColorScheme,
+            ),
+            locale: DevicePreview.locale(context),
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate
+            ],
+            supportedLocales: const [
+              Locale('ja', 'JP'),
+            ],
+            useInheritedMediaQuery: true,
+            builder: DevicePreview.appBuilder,
+            home: const MainPage(),
+          ),
+        );
+      },
     );
   }
 }

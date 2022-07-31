@@ -65,6 +65,7 @@ dependencies:
   flutter_hooks: ^0.18.5+1
   fast_i18n: ^5.12.6
   collection: ^1.16.0
+  dynamic_color: ^1.4.0
 
 dev_dependencies:
   flutter_test:

@@ -1,24 +1,26 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/api/dio_firebase_performance.dart';
 import 'package:intl/intl.dart';
 
 import '../schema/kmoni/EEW.dart';
 
 class KyoshinMonitorApi {
   final Dio dio = Dio()
-    ..options.baseUrl = 'http://www.kmoni.bosai.go.jp'
-    ..options.connectTimeout = 5000
-    //..interceptors.add(LogInterceptor())
-    //..httpClientAdapter = Http2Adapter(
-    //  ConnectionManager(
-    //    idleTimeout: 1000,
-    //
-    //    // Ignore bad certificate
-    //   // onClientCreate: (_, config) => config.onBadCertificate = (_) => true,
-    //  ),
-    //);
-    ;
+        ..options.baseUrl = 'http://www.kmoni.bosai.go.jp'
+        ..options.connectTimeout = 5000
+        ..interceptors.add(DioFirebasePerformanceInterceptor())
+        //..interceptors.add(LogInterceptor())
+      //..httpClientAdapter = Http2Adapter(
+      //  ConnectionManager(
+      //    idleTimeout: 1000,
+      //
+      //    // Ignore bad certificate
+      //   // onClientCreate: (_, config) => config.onBadCertificate = (_) => true,
+      //  ),
+      //);
+      ;
 
   // final _logger = Logger();
 
@@ -35,7 +37,7 @@ class KyoshinMonitorApi {
     }
     // ちゃんと取得できていることが期待されるのでJsonParse
     final df = DateFormat('yyyy/MM/dd HH:mm:ss');
-    final j = jsonDecode(utf8.decode(res.data ?? [])) as Map<String,dynamic>;
+    final j = jsonDecode(utf8.decode(res.data ?? [])) as Map<String, dynamic>;
     final dt = df.parseStrict(j['latest_time'].toString());
     return dt;
   }

@@ -45,14 +45,9 @@ class KmoniController extends StateNotifier<KmoniModel> {
       _loadKansokuten();
       // タイマーを開始
 
-        state = state.copyWith(
-          updateTimer: Timer.periodic(state.updateFrequency, (timer) {
-            if (mounted) {
-              _onTimer(timer);
-            }
-          }),
-        );
-      
+      state = state.copyWith(
+        updateTimer: Timer.periodic(state.updateFrequency, _onTimer),
+      );
     }
   }
 
