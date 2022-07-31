@@ -1,3 +1,4 @@
+import 'package:eqmonitor/main.dart';
 import 'package:eqmonitor/state/all_state.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -57,6 +58,12 @@ class AboutAppPage extends HookConsumerWidget {
                   (kmoni.loadDuration != null)
                       ? '${kmoni.loadDuration!.inMicroseconds / 1000}ms (${kmoni.analyzedPoint.length}件)'
                       : '読み込み失敗',
+                ),
+              ),
+              SettingsTile(
+                title: const Text('ログ保管先'),
+                value: Text(
+                  logDirectory.path,
                 ),
               ),
             ],
