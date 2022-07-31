@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:device_preview/device_preview.dart';
@@ -71,24 +72,25 @@ class EqMonitorApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DynamicColorBuilder(
-      builder: (lightDynamic, darkDynamic) {
-        ColorScheme lightColorScheme;
-        ColorScheme darkColorScheme;
-        if (lightDynamic != null && darkDynamic != null) {
-          lightColorScheme = lightDynamic.harmonized();
-          darkColorScheme = darkDynamic.harmonized();
-        } else {
-          lightColorScheme = ColorScheme.fromSeed(
-            seedColor: Colors.blueAccent,
-          );
-          darkColorScheme = ColorScheme.fromSeed(
-            seedColor: Colors.blueAccent,
-            brightness: Brightness.dark,
-          );
-        }
-        return ProviderScope(
-          child: MaterialApp(
+    return ProviderScope(
+      child: DynamicColorBuilder(
+        builder: (lightDynamic, darkDynamic) {
+          ColorScheme lightColorScheme;
+          ColorScheme darkColorScheme;
+          if (lightDynamic != null && darkDynamic != null) {
+            log('Loaded DynamicColor ${lightDynamic.background}', name: 'main');
+            lightColorScheme = lightDynamic.harmonized();
+            darkColorScheme = darkDynamic.harmonized();
+          } else {
+            lightColorScheme = ColorScheme.fromSeed(
+              seedColor: Colors.blueAccent,
+            );
+            darkColorScheme = ColorScheme.fromSeed(
+              seedColor: Colors.blueAccent,
+              brightness: Brightness.dark,
+            );
+          }
+          return MaterialApp(
             title: 'EQMonitor',
             theme: lightTheme().copyWith(
               colorScheme: lightColorScheme,
@@ -108,9 +110,9 @@ class EqMonitorApp extends StatelessWidget {
             useInheritedMediaQuery: true,
             builder: DevicePreview.appBuilder,
             home: const MainPage(),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

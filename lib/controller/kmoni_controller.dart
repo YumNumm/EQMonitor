@@ -52,6 +52,9 @@ class KmoniController extends StateNotifier<KmoniModel> {
   }
 
   Future<void> _onTimer(Timer timer) async {
+    if (!mounted) {
+      return;
+    }
     // 更新中でないことを確認
     if (state.isUpdating) {
       log('Kmoni is updating. skip.', name: 'KMoniTimer');
