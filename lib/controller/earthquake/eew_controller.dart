@@ -8,6 +8,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
+import '../../utils/logger/filter.dart';
+
 class EewHistoryController extends StateNotifier<EewHistoryModel> {
   EewHistoryController()
       : super(
@@ -16,6 +18,8 @@ class EewHistoryController extends StateNotifier<EewHistoryModel> {
 
   final EewApi eewApi = EewApi();
   final logger = Logger(
+    filter: MyFilter(),
+    output: MyOutput(),
     printer: PrettyPrinter(
       methodCount: 1,
       printTime: true,
