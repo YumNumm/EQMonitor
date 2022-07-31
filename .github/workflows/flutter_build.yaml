@@ -67,10 +67,16 @@ jobs:
       - name: Build codes with build_runner
         run: flutter pub run build_runner build --delete-conflicting-outputs
 
+      - name: Generate LauncherIcon
+        run: flutter pub run flutter_launcher_icons:main
+
+      - name: Generate NativeSplash
+        run: flutter pub run flutter_native_splash:create
+
       - name: Analyze
         run: flutter analyze .
         continue-on-error: true
-      
+
       - name: Accept Android License
         run: yes | flutter doctor --android-licenses
 

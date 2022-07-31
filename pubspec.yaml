@@ -94,7 +94,7 @@ flutter:
 
 flutter_native_splash:
   #? flutter pub run flutter_native_splash:create
-  color: "#F1F5F9"
+  color: "#011C30"
   #background_image: "assets/background.png"
 
   # Optional parameters are listed below.  To enable a parameter, uncomment the line by removing
@@ -123,7 +123,7 @@ flutter_native_splash:
   # parameters from above. If the image_dark parameter is specified, color_dark or
   # background_image_dark must be specified.  color_dark and background_image_dark cannot both be
   # set.
-  color_dark: "#222222"
+  #color_dark: "#222222"
   #background_image_dark: "assets/dark-background.png"
   #image_dark: assets/splash-invert.png
 
@@ -161,8 +161,10 @@ flutter_native_splash:
   #  - 'ios/Runner/Info-Release.plist'
 
 flutter_icons:
+  #? flutter pub run flutter_launcher_icons:main
   android: "launcher_icon"
   ios: true
   image_path: "assets/icon.png"
-  adaptive_icon_background: "#F1F5F9"
-  adaptive_icon_foreground: "assets/icon.png"
+  adaptive_icon_background: "#011C30"
+  adaptive_icon_foreground: "assets/icon_foreground.png"
+  remove_alpha_ios: true
