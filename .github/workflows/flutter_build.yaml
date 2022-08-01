@@ -63,7 +63,7 @@ jobs:
         #ライブラリーの導入
         run: flutter pub get
 
-      - name: Build codes with build_runner
+      - name: Generate codes with build_runner
         run: flutter pub run build_runner build --delete-conflicting-outputs
 
       - name: Generate LauncherIcon
