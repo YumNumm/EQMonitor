@@ -11,6 +11,7 @@ class AboutAppPage extends HookConsumerWidget {
     final travelTime = ref.watch(travelTimeController);
     final kmoniMap = ref.watch(kmoniMapController);
     final kmoni = ref.watch(kmoniNotifier);
+    final fcm = ref.watch(firebaseCloudMessagingNotifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -18,6 +19,15 @@ class AboutAppPage extends HookConsumerWidget {
       ),
       body: SettingsList(
         sections: [
+          SettingsSection(
+            tiles: <SettingsTile>[
+              SettingsTile(
+                title: Card(
+                  child: Image.asset('assets/head.png'),
+                ),
+              )
+            ],
+          ),
           SettingsSection(
             title: const Text('基本情報'),
             tiles: <SettingsTile>[
@@ -40,7 +50,8 @@ class AboutAppPage extends HookConsumerWidget {
                 title: const Text('走時表読み込み'),
                 value: Text(
                   (travelTime.loadDuration != null)
-                      ? '${travelTime.loadDuration!.inMicroseconds / 1000}ms (${travelTime.travelTimeTable.length}件)'
+                      ? '${travelTime.loadDuration!.inMicroseconds / 1000}ms '
+                          '(${travelTime.travelTimeTable.length}件)'
                       : '読み込み失敗',
                 ),
               ),
@@ -48,7 +59,8 @@ class AboutAppPage extends HookConsumerWidget {
                 title: const Text('マップ読み込み'),
                 value: Text(
                   (kmoniMap.loadDuration != null)
-                      ? '${kmoniMap.loadDuration!.inMicroseconds / 1000}ms (${kmoniMap.mapPolygons.length}件)'
+                      ? '${kmoniMap.loadDuration!.inMicroseconds / 1000}ms '
+                          '(${kmoniMap.mapPolygons.length}件)'
                       : '読み込み失敗',
                 ),
               ),
@@ -56,7 +68,8 @@ class AboutAppPage extends HookConsumerWidget {
                 title: const Text('観測点読み込み'),
                 value: Text(
                   (kmoni.loadDuration != null)
-                      ? '${kmoni.loadDuration!.inMicroseconds / 1000}ms (${kmoni.analyzedPoint.length}件)'
+                      ? '${kmoni.loadDuration!.inMicroseconds / 1000}ms '
+                          '(${kmoni.analyzedPoint.length}件)'
                       : '読み込み失敗',
                 ),
               ),
@@ -65,6 +78,10 @@ class AboutAppPage extends HookConsumerWidget {
                 value: Text(
                   logDirectory.path,
                 ),
+              ),
+              SettingsTile(
+                title: const Text('Firebase Cloud Messaging トークン'),
+                value: Text(fcm.token.toString()),
               ),
             ],
           ),

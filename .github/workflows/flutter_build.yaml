@@ -30,8 +30,8 @@ jobs:
       - name: Setup flutter environment
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.5'
-          channel: 'stable'
+          flutter-version: "3.0.5"
+          channel: "stable"
           cache: true
 
       - name: Cache pubspec dependencies
@@ -55,7 +55,6 @@ jobs:
           key: build-runner-${{ hashFiles('**/asset_graph.json') }}-${{ hashFiles('**/pubspec.lock') }}
           restore-keys: |
             build-runner-
-
 
       - name: Flutter version
         run: flutter --version
@@ -82,13 +81,19 @@ jobs:
 
       - name: Build apk
         run: |
-          echo '${{ secrets.KEYSTORE_BASE64 }}' | base64 -d > android/release.keystore
+          echo '${{ secrets.SIGNING_KEY }}' | base64 -d > android/app/key.jks
           echo '${{ secrets.FIREBASE_ANDROID }}' | base64 -d > android/app/google-services.json
           echo '${{ secrets.PRIVATE_KEYS }}' | base64 -d > lib/private/keys.dart
           export KEYSTORE_PASSWORD='${{ secrets.KEYSTORE_PASSWORD }}'
           export KEY_ALIAS='${{ secrets.KEY_ALIAS }}'
           export KEY_PASSWORD='${{ secrets.KEY_PASSWORD }}'
           flutter build apk --release --obfuscate --split-debug-info=obfuscate/android
+        env:
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          ALIAS: ${{ secrets.ALIAS }}
+          KEY_PATH: key.jks
 
       - name: Upload artifact
         uses: actions/upload-artifact@v1.0.0
