@@ -5,11 +5,20 @@ if (localPropertiesFile.exists()) {
         localProperties.load(reader)
     }
 }
-def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+} else {
+    keystoreProperties.setProperty('storePassword', System.getenv('KEY_STORE_PASSWORD'))
+    keystoreProperties.setProperty('keyPassword', System.getenv('KEY_PASSWORD'))
+    keystoreProperties.setProperty('keyAlias', System.getenv('ALIAS'))
+    keystoreProperties.setProperty('storeFile', System.getenv('KEY_PATH'))
+}
 
 def flutterRoot = localProperties.getProperty('flutter.sdk')
 if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+    throw new GradleException('Flutter SDK not found. Define location with flutter.sdk in the local.properties file.')
 }
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
@@ -29,7 +38,6 @@ apply plugin: 'kotlin-android'
 
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
-
     compileSdk 32
 
     compileOptions {
@@ -46,7 +54,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.yumnumm.eqmonitor"
+        applicationId 'com.yumnumm.eqmonitor'
         minSdkVersion 26
         multiDexEnabled true
         targetSdkVersion flutter.targetSdkVersion
@@ -56,27 +64,18 @@ android {
     // 以下を追加
     signingConfigs {
         release {
-             if (System.getenv()["CI"]) { // CI=true is exported by Codemagic
-                storeFile file(System.getenv()["FCI_BUILD_DIR"] + "/keystore.jks")
-                storePassword System.getenv()["FCI_KEYSTORE_PASSWORD"]
-                keyAlias System.getenv()["FCI_KEY_ALIAS"]
-                keyPassword System.getenv()["FCI_KEY_PASSWORD"]
-            } else if (keystorePropertiesFile.exists()) {
-                def keystoreProperties = new Properties()
-                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-                keyAlias keystoreProperties['keyAlias']
-                keyPassword keystoreProperties['keyPassword']
-                storeFile file(keystoreProperties['storeFile'])
-                storePassword keystoreProperties['storePassword']
-            }
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
         }
     }
     // 追加ここまで
 
     buildTypes {
         release {
-             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig signingConfigs.release
             minifyEnabled true
             shrinkResources true
             multiDexEnabled true
