@@ -23,7 +23,7 @@ class AboutAppPage extends HookConsumerWidget {
             tiles: <SettingsTile>[
               SettingsTile(
                 title: Card(
-                  child: Image.asset('assets/head.png'),
+                  child: Image.asset('assets/header.png'),
                 ),
               )
             ],
@@ -36,6 +36,14 @@ class AboutAppPage extends HookConsumerWidget {
                 onPressed: (context) => showLicensePage(
                   context: context,
                   applicationName: 'EQMonitor',
+                  applicationIcon: ClipRRect(
+                    borderRadius: BorderRadius.circular(2),
+                    child: Image.asset(
+                      'assets/icon.png',
+                      height: 40,
+                      width: 40,
+                    ),
+                  ),
                   applicationLegalese:
                       'MIT License\nCopyright (c) 2022 Onoue Ryotaro',
                   useRootNavigator: true,
