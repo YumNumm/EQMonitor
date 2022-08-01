@@ -90,7 +90,7 @@ class Telegram {
         depthCondition: (j['depth_condition'] == null)
             ? null
             : DepthCondition.values.firstWhere(
-                (e) => e.name == j['depth_condition'].toString(),
+                (e) => e.description == j['depth_condition'].toString(),
                 orElse: () => DepthCondition.unknown,
               ),
         lat: double.tryParse(j['lat'].toString()),
