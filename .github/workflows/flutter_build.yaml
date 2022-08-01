@@ -116,6 +116,9 @@ jobs:
         env:
           SLACK_TITLE: Deploy Success
           SLACK_COLOR: good
+          SLACK_ICON: https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/assets/icon.png
+          SLACK_USERNAME: EQMonitor
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       # 失敗
       - name: Slack Notification on Failure
@@ -124,3 +127,6 @@ jobs:
         env:
           SLACK_TITLE: Deploy Failure
           SLACK_COLOR: danger
+          SLACK_ICON: https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/assets/icon.png
+          SLACK_USERNAME: EQMonitor
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
