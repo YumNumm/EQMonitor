@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:eqmonitor/api/db/eew.dart';
+import 'package:eqmonitor/api/remote_db/eew.dart';
 import 'package:eqmonitor/model/earthquake/eew_history_model.dart';
 import 'package:eqmonitor/schema/dmdata/commonHeader.dart';
 import 'package:flutter/foundation.dart';
