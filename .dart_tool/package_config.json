@@ -416,6 +416,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "flutter_colorpicker",
+      "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/flutter_colorpicker-1.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_hooks",
       "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/flutter_hooks-0.18.5+1",
       "packageUri": "lib/",
@@ -884,6 +890,12 @@
       "languageVersion": "2.14"
     },
     {
+      "name": "sembast",
+      "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/sembast-3.2.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
+    },
+    {
       "name": "settings_ui",
       "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/settings_ui-2.0.2",
       "packageUri": "lib/",
@@ -1064,6 +1076,12 @@
       "languageVersion": "2.14"
     },
     {
+      "name": "synchronized",
+      "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/synchronized-3.0.0+2",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
       "name": "term_glyph",
       "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/term_glyph-1.2.0",
       "packageUri": "lib/",
@@ -1214,7 +1232,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-07-31T14:32:27.056533Z",
+  "generated": "2022-08-02T01:01:05.347033Z",
   "generator": "pub",
   "generatorVersion": "2.17.6"
 }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart' hide Theme;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../api/db/telegram.dart';
+import '../../api/remote_db/telegram.dart';
 
 class EarthquakeHistoryPage extends HookConsumerWidget {
   EarthquakeHistoryPage({super.key});
