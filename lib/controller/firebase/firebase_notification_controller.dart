@@ -10,8 +10,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
-import '../../utils/logger/filter.dart';
-
 class FirebaseCloudMessagingController
     extends StateNotifier<FirebaseCloudMessagingModel> {
   FirebaseCloudMessagingController()
@@ -24,8 +22,6 @@ class FirebaseCloudMessagingController
 
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
   final Logger _logger = Logger(
-    filter: MyFilter(),
-    output: MyOutput(),
     printer: PrettyPrinter(
       methodCount: 1,
       printTime: true,

@@ -13,7 +13,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
 import '../model/analyzed_point_model.dart';
-import '../utils/logger/filter.dart';
 
 class KmoniController extends StateNotifier<KmoniModel> {
   KmoniController()
@@ -32,8 +31,6 @@ class KmoniController extends StateNotifier<KmoniModel> {
         );
 
   final logger = Logger(
-    filter: MyFilter(),
-    output: MyOutput(),
     printer: PrettyPrinter(
       methodCount: 1,
       printTime: true,
