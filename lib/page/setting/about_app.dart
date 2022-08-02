@@ -1,4 +1,4 @@
-import 'package:eqmonitor/main.dart';
+import 'package:eqmonitor/page/setting/term_of_service.dart';
 import 'package:eqmonitor/state/all_state.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -23,6 +23,11 @@ class AboutAppPage extends HookConsumerWidget {
             tiles: <SettingsTile>[
               SettingsTile(
                 title: Card(
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(32),
+                  ),
                   child: Image.asset('assets/header.png'),
                 ),
               )
@@ -47,6 +52,16 @@ class AboutAppPage extends HookConsumerWidget {
                   applicationLegalese:
                       'MIT License\nCopyright (c) 2022 Onoue Ryotaro',
                   useRootNavigator: true,
+                ),
+              ),
+              SettingsTile(
+                title: const Text('利用規約'),
+                onPressed: (context) => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const TermOfServicePage(
+                      showAcceptButton: false,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -79,12 +94,6 @@ class AboutAppPage extends HookConsumerWidget {
                       ? '${kmoni.loadDuration!.inMicroseconds / 1000}ms '
                           '(${kmoni.analyzedPoint.length}件)'
                       : '読み込み失敗',
-                ),
-              ),
-              SettingsTile(
-                title: const Text('ログ保管先'),
-                value: Text(
-                  logDirectory.path,
                 ),
               ),
               SettingsTile(

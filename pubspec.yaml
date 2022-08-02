@@ -71,6 +71,9 @@ dependencies:
   http: ^0.13.4
   sembast: ^3.2.0+1
   flutter_colorpicker: ^1.0.3
+  connectivity_plus: ^2.3.6
+  permission_handler: ^10.0.0
+  flutter_markdown: ^0.6.10+3
 
 dev_dependencies:
   flutter_test:
@@ -90,6 +93,7 @@ flutter:
     - assets/intensity/
     - assets/kmoni/
     - assets/maps/
+    - assets/docs/
   fonts:
     - family: CaskaydiaCove
       fonts:

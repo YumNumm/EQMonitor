@@ -70,11 +70,16 @@ class KmoniController extends StateNotifier<KmoniModel> {
     }
     // 更新中フラグを立てる
     state = state.copyWith(isUpdating: true);
-    // Kmoniの最新時刻を取得
-    final dt = await kyoshinMonitorApi.getLatestDateTime();
-    await updateShindo(dt);
-    // 更新中フラグを下ろす
-    state = state.copyWith(isUpdating: false);
+    try {
+      // Kmoniの最新時刻を取得
+      final dt = await kyoshinMonitorApi.getLatestDateTime();
+      await updateShindo(dt);
+    } on Exception catch (e) {
+      logger.e(e);
+    } finally {
+      // 更新中フラグを下ろす
+      state = state.copyWith(isUpdating: false);
+    }
   }
 
   Future<void> updateShindo(DateTime dt) async {
