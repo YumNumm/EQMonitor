@@ -41,7 +41,9 @@ class TravelTimeController extends StateNotifier<TravelTimeModel> {
     for (final row in rowsAsListOfValues) {
       try {
         travelTimeTable.add(TravelTimeTable.fromList(row));
-      } on Exception {}
+      } on Exception catch (e) {
+        print(e.toString());
+      }
     }
     // 走時表読み込み終了
     stopWatch.stop();
