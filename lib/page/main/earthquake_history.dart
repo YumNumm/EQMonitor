@@ -3,6 +3,8 @@ import 'package:eqmonitor/state/all_state.dart';
 import 'package:flutter/material.dart' hide Theme;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 import '../../api/remote_db/telegram.dart';
 
@@ -13,6 +15,7 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    double _w = MediaQuery.of(context).size.width;
     final earthquakeHistory = ref.watch(earthquakeHistoryController);
     return ListView.builder(
       shrinkWrap: true,
@@ -24,7 +27,17 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
         final vxse53 = telegrams.firstWhere(
           (element) => element.type == 'VXSE53',
         );
-        return ListTile(
+
+        return AnimationConfiguration.staggeredList(
+              position: index,
+              delay: Duration(milliseconds: 100),
+              child: SlideAnimation(
+                duration: Duration(milliseconds: 2500),
+                curve: Curves.fastLinearToSlowEaseIn,
+                child: FadeInAnimation(
+                  curve: Curves.fastLinearToSlowEaseIn,
+                  duration: Duration(milliseconds: 2500),
+                  child: ListTile(
           leading: ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: Container(
@@ -47,14 +60,6 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
               ),
             ),
           ),
-          /* leading: (vxse53.maxint != null)
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.asset(
-                    'assets/intensity/${vxse53.maxint!.name}.PNG',
-                  ),
-                )
-              : const SizedBox.shrink(),*/
           tileColor: (vxse53.maxint != JmaIntensity.Int1)
               ? (vxse53.maxint ?? JmaIntensity.Error).color.withOpacity(0.3)
               : null,
@@ -69,7 +74,10 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
             '深さ${(vxse53.depthCondition != null) ? (vxse53.depthCondition!.description) : (vxse53.depth != null) ? '${vxse53.depth}km' : '不明'}',
             style: const TextStyle(fontSize: 14),
           ),
-        );
+        ),
+                ),
+              ),
+            );
       },
     );
   }
