@@ -24,10 +24,8 @@ class TravelTimeController extends StateNotifier<TravelTimeModel> {
   );
 
   void onInit() {
-    if (state.travelTimeTable.isEmpty) {
       // 走時表読み込み開始
       loadTravelTimeCsv();
-    }
   }
 
   Future<void> loadTravelTimeCsv() async {

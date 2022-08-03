@@ -3,13 +3,14 @@ import 'dart:convert';
 import 'package:eqmonitor/schema/dmdata/commonHeader.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class EewApi {
   final supabase = Supabase.instance.client;
 
-  /// ## SupabaseからEewをStreamで取得します
-  /// eewテーブル
+  // ## SupabaseからEewをStreamで取得します
+  // eewテーブル
   Stream<CommonHead> eewStream() async* {
     // もし、デバッグモードならテスト電文を追加
     if (!kDebugMode) {
@@ -22,14 +23,10 @@ class EewApi {
         jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>,
       );
     }
-    final res =
-        supabase.from('eew').stream(['id']).limit(5).order('id').execute();
-    await for (final telegrams in res) {
-      for (final telegram in telegrams) {
-        yield CommonHead.fromJson(
-          jsonDecode(telegram['data']) as Map<String, dynamic>,
-        );
-      }
-    }
-  }
+    final subscription =
+        supabase.from('eew').on(SupabaseEventTypes.all, (payload) {
+      Logger().i('commitDt: ${payload.commitTimestamp}\n${payload.newRecord}');
+      if (payload.eventType == 'INSERT') {}
+    });
+   }
 }
