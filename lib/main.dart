@@ -8,9 +8,10 @@ import 'package:device_preview/device_preview.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eqmonitor/page/main_page.dart';
 import 'package:eqmonitor/private/keys.dart';
-import 'package:eqmonitor/res/theme.dart';
+import 'package:eqmonitor/state/theme_providers.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -54,12 +55,16 @@ Future<void> main() async {
       FlutterError.onError = onFlutterError;
       if (kDebugMode) {
         runApp(
-          DevicePreview(
-            builder: (context) => const EqMonitorApp(),
+          ProviderScope(
+            child: DevicePreview(
+              builder: (context) => const EqMonitorApp(),
+            ),
           ),
         );
       } else {
-        runApp(const EqMonitorApp());
+        runApp(
+          const ProviderScope(child: EqMonitorApp()),
+        );
       }
       FlutterNativeSplash.remove();
     },
@@ -78,54 +83,50 @@ Future<void> onFlutterError(FlutterErrorDetails details) async {
   await FirebaseCrashlytics.instance.recordFlutterError(details);
 }
 
-class EqMonitorApp extends StatelessWidget {
+class EqMonitorApp extends ConsumerWidget {
   const EqMonitorApp({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return ProviderScope(
-      child: DynamicColorBuilder(
-        builder: (lightDynamic, darkDynamic) {
-          ColorScheme lightColorScheme;
-          ColorScheme darkColorScheme;
-          if (lightDynamic != null && darkDynamic != null) {
-            log('Loaded DynamicColor ${lightDynamic.background}', name: 'main');
-            lightColorScheme = lightDynamic.harmonized();
-            darkColorScheme = darkDynamic.harmonized();
-          } else {
-            lightColorScheme = ColorScheme.fromSeed(
-              seedColor: Colors.blueAccent,
-            );
-            darkColorScheme = ColorScheme.fromSeed(
-              seedColor: Colors.blueAccent,
-              brightness: Brightness.dark,
-            );
-          }
-          return MaterialApp(
-            title: 'EQMonitor',
-            theme: lightTheme().copyWith(
-              colorScheme: lightColorScheme,
-            ),
-            darkTheme: darkTheme().copyWith(
-              colorScheme: darkColorScheme,
-            ),
-            locale: DevicePreview.locale(context),
-            localizationsDelegates: const [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate
-            ],
-            supportedLocales: const [
-              Locale('ja', 'JP'),
-            ],
-            useInheritedMediaQuery: true,
-            builder: DevicePreview.appBuilder,
-            home: const MainPage(),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeModeProvider);
+    return DynamicColorBuilder(
+      builder: (lightDynamic, darkDynamic) {
+        ColorScheme lightColorScheme;
+        ColorScheme darkColorScheme;
+        if (lightDynamic != null && darkDynamic != null) {
+          log('Loaded DynamicColor ${lightDynamic.background}', name: 'main');
+          lightColorScheme = lightDynamic.harmonized();
+          darkColorScheme = darkDynamic.harmonized();
+        } else {
+          lightColorScheme = ColorScheme.fromSeed(
+            seedColor: Colors.blueAccent,
           );
-        },
-      ),
+          darkColorScheme = ColorScheme.fromSeed(
+            seedColor: Colors.blueAccent,
+            brightness: Brightness.dark,
+          );
+        }
+        return MaterialApp(
+          title: 'EQMonitor',
+          theme: FlexThemeData.light(),
+          darkTheme: FlexThemeData.dark(),
+          themeMode: themeMode,
+          locale: DevicePreview.locale(context),
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate
+          ],
+          supportedLocales: const [
+            Locale('ja', 'JP'),
+          ],
+          useInheritedMediaQuery: true,
+          builder: DevicePreview.appBuilder,
+          home: const MainPage(),
+        );
+      },
     );
   }
 }

@@ -452,6 +452,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "flex_color_scheme",
+      "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/.pub-cache/hosted/pub.dartlang.org/flex_color_scheme-5.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "flutter",
       "rootUri": "file:///C:/Users/onory/scoop/apps/flutter/3.0.2/packages/flutter",
       "packageUri": "lib/",
@@ -1328,7 +1334,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-08-03T01:05:11.555976Z",
+  "generated": "2022-08-03T09:40:03.587139Z",
   "generator": "pub",
   "generatorVersion": "2.17.6"
 }
