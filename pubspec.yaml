@@ -3,7 +3,7 @@ description: Earth Quake Monitor Application
 
 publish_to: "none"
 
-version: 0.4.1+201
+version: 0.4.2+202
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -76,7 +76,7 @@ dependencies:
   flutter_markdown: ^0.6.10+3
   fluttertoast: ^8.0.9
   flex_color_scheme: ^5.1.0
-
+  flutter_staggered_animations: ^1.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
