@@ -32,11 +32,11 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
               position: index,
               delay: Duration(milliseconds: 100),
               child: SlideAnimation(
-                duration: Duration(milliseconds: 2500),
+                duration: Duration(milliseconds: 100),
                 curve: Curves.fastLinearToSlowEaseIn,
                 child: FadeInAnimation(
                   curve: Curves.fastLinearToSlowEaseIn,
-                  duration: Duration(milliseconds: 2500),
+                  duration: Duration(milliseconds: 100),
                   child: ListTile(
           leading: ClipRRect(
             borderRadius: BorderRadius.circular(8),
