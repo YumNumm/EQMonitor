@@ -11,12 +11,12 @@ class TravelTimeTable with _$TravelTimeTable {
     required int distance,
   }) = _TravelTimeTable;
 
-  factory TravelTimeTable.fromList(List<String> list) {
+  factory TravelTimeTable.fromList(List<dynamic> list) {
     return TravelTimeTable(
-      p: double.parse(list[0]),
-      s: double.parse(list[1]),
-      depth: int.parse(list[2]),
-      distance: int.parse(list[3]),
+      p: double.parse(list[0].toString()),
+      s: double.parse(list[1].toString()),
+      depth: int.parse(list[2].toString()),
+      distance: int.parse(list[3].toString()),
     );
   }
 }

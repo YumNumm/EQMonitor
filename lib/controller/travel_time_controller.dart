@@ -34,7 +34,7 @@ class TravelTimeController extends StateNotifier<TravelTimeModel> {
     final stopWatch = Stopwatch()..start();
     // CSV読みこみ
     final file = await rootBundle.load('assets/tjma2001.csv');
-    final rowsAsListOfValues = const CsvToListConverter().convert<String>(
+    final rowsAsListOfValues = const CsvToListConverter().convert<dynamic>(
       utf8.decode(file.buffer.asUint8List()),
     );
     final travelTimeTable = <TravelTimeTable>[];

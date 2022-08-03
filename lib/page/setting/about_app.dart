@@ -1,6 +1,8 @@
 import 'package:eqmonitor/page/setting/term_of_service.dart';
 import 'package:eqmonitor/state/all_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:settings_ui/settings_ui.dart';
 
@@ -12,6 +14,7 @@ class AboutAppPage extends HookConsumerWidget {
     final kmoniMap = ref.watch(kmoniMapController);
     final kmoni = ref.watch(kmoniNotifier);
     final fcm = ref.watch(firebaseCloudMessagingNotifier);
+    final eew = ref.watch(eewHistoryController);
 
     return Scaffold(
       appBar: AppBar(
@@ -99,6 +102,15 @@ class AboutAppPage extends HookConsumerWidget {
               SettingsTile(
                 title: const Text('Firebase Cloud Messaging トークン'),
                 value: Text(fcm.token.toString()),
+                onPressed: (context) async {
+                  final data = ClipboardData(text: fcm.token.toString());
+                  await Clipboard.setData(data);
+                  await Fluttertoast.showToast(msg: 'クリップボードにコピーしました');
+                },
+              ),
+              SettingsTile(
+                title: const Text('読み込んだEEW電文数'),
+                value: Text(eew.eewTelegrams.length.toString()),
               ),
             ],
           ),

@@ -13,14 +13,14 @@ class ObsPoint {
     required this.y,
   });
 
-  ObsPoint.fromList(List<String> lis)
-      : code = lis[1],
-        name = lis[3],
-        pref = lis[4],
-        lat = double.parse(lis[5]),
-        lon = double.parse(lis[6]),
-        x = int.parse(lis[7]),
-        y = int.parse(lis[8]);
+  ObsPoint.fromList(List<dynamic> lis)
+      : code = lis[1].toString(),
+        name = lis[3].toString(),
+        pref = lis[4].toString(),
+        lat = double.parse(lis[5].toString()),
+        lon = double.parse(lis[6].toString()),
+        x = int.parse(lis[7].toString()),
+        y = int.parse(lis[8].toString());
 
   final String code;
   final String name;

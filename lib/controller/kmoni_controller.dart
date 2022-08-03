@@ -128,9 +128,8 @@ class KmoniController extends StateNotifier<KmoniModel> {
   Future<void> _loadKansokuten() async {
     final stopwatch = Stopwatch()..start();
     final kansokutenFile = await rootBundle.load('assets/kmoni/kansokuten.csv');
-    final rowsAsListOfValues = const CsvToListConverter().convert<String>(
+    final rowsAsListOfValues = const CsvToListConverter().convert(
       utf8.decode(kansokutenFile.buffer.asUint8List()),
-      shouldParseNumbers: false,
     );
     final obsPoints = <ObsPoint>[];
     for (final row in rowsAsListOfValues) {
