@@ -9,6 +9,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class FirebaseCloudMessagingController
     extends StateNotifier<FirebaseCloudMessagingModel> {
@@ -29,18 +30,9 @@ class FirebaseCloudMessagingController
   );
 
   Future<void> onInit() async {
-    // 権限が取得
-    await _messaging.requestPermission(
-      announcement: true,
-      criticalAlert: true,
-      provisional: true,
-    );
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+    // 権限を取得
+    final permissionResult = await Permission.notification.request();
+    _logger.d('通知権限: ${permissionResult.isGranted}');
     // Foreground/Backgroundでイベントを受け取るHandlerを登録
     FirebaseMessaging.onMessage.listen(
       (message) async => firebaseMessagingForegroundHandler(message),
@@ -54,11 +46,6 @@ class FirebaseCloudMessagingController
       channelGroups: channelGroups,
       debug: kDebugMode,
     );
-    await AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if (!isAllowed) {
-        AwesomeNotifications().requestPermissionToSendNotifications();
-      }
-    });
 
     // FCM Tokenを取得
     final token = await _messaging.getToken();

@@ -24,8 +24,8 @@ class TravelTimeController extends StateNotifier<TravelTimeModel> {
   );
 
   void onInit() {
-      // 走時表読み込み開始
-      loadTravelTimeCsv();
+    // 走時表読み込み開始
+    loadTravelTimeCsv();
   }
 
   Future<void> loadTravelTimeCsv() async {
@@ -36,11 +36,12 @@ class TravelTimeController extends StateNotifier<TravelTimeModel> {
     final file = await rootBundle.load('assets/tjma2001.csv');
     final rowsAsListOfValues = const CsvToListConverter().convert<String>(
       utf8.decode(file.buffer.asUint8List()),
-      shouldParseNumbers: false,
     );
     final travelTimeTable = <TravelTimeTable>[];
     for (final row in rowsAsListOfValues) {
-      travelTimeTable.add(TravelTimeTable.fromList(row));
+      try {
+        travelTimeTable.add(TravelTimeTable.fromList(row));
+      } on Exception {}
     }
     // 走時表読み込み終了
     stopWatch.stop();
