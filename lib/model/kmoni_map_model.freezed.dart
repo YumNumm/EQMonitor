@@ -268,23 +268,23 @@ abstract class _KmoniMapModel implements KmoniMapModel {
   @override
 
   /// Mapに表示する日本のポリゴン
-  List<MapPolygon> get mapPolygons => throw _privateConstructorUsedError;
+  List<MapPolygon> get mapPolygons;
   @override
-  Matrix4 get mapMatrix4 => throw _privateConstructorUsedError;
+  Matrix4 get mapMatrix4;
   @override
-  double get mapOutlineStrokeWidth => throw _privateConstructorUsedError;
+  double get mapOutlineStrokeWidth;
   @override
-  Color get mapOutlineStrokeColor => throw _privateConstructorUsedError;
+  Color get mapOutlineStrokeColor;
   @override
-  Color get mapFillColor => throw _privateConstructorUsedError;
+  Color get mapFillColor;
   @override
 
   /// マップがロードされたかどうか
-  bool get isMapLoaded => throw _privateConstructorUsedError;
+  bool get isMapLoaded;
   @override
 
   /// 読み込みにかかった時間
-  Duration? get loadDuration => throw _privateConstructorUsedError;
+  Duration? get loadDuration;
   @override
   @JsonKey(ignore: true)
   _$$_KmoniMapModelCopyWith<_$_KmoniMapModel> get copyWith =>

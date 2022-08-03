@@ -153,9 +153,9 @@ abstract class _FirebaseCloudMessagingModel
   @override
 
   /// FCM Token
-  String? get token => throw _privateConstructorUsedError;
+  String? get token;
   @override // FCM Tokenが取得できたかどうか
-  bool get hasToken => throw _privateConstructorUsedError;
+  bool get hasToken;
   @override
   @JsonKey(ignore: true)
   _$$_FirebaseCloudMessagingModelCopyWith<_$_FirebaseCloudMessagingModel>

@@ -363,47 +363,47 @@ abstract class _AnalyzedPoint implements AnalyzedPoint {
   @override
 
   /// 観測点コード
-  String get code => throw _privateConstructorUsedError;
+  String get code;
   @override
 
   /// 観測点名
-  String get name => throw _privateConstructorUsedError;
+  String get name;
   @override
 
   /// 都道府県
-  String get prefectureName => throw _privateConstructorUsedError;
+  String get prefectureName;
   @override
 
   /// 緯度
-  double get lat => throw _privateConstructorUsedError;
+  double get lat;
   @override
 
   /// 経度
-  double get lon => throw _privateConstructorUsedError;
+  double get lon;
   @override
 
   /// リアルタイム震度
-  double? get shindo => throw _privateConstructorUsedError;
+  double? get shindo;
   @override
 
   /// リアルタイム震度の色
-  Color? get shindoColor => throw _privateConstructorUsedError;
+  Color? get shindoColor;
   @override
 
   /// リアルタイム加速度(PGA)
-  double? get pga => throw _privateConstructorUsedError;
+  double? get pga;
   @override
 
   /// リアルタイム加速度(PGA)の色
-  Color? get pgaColor => throw _privateConstructorUsedError;
+  Color? get pgaColor;
   @override
 
   /// アプリ起動中に震度 もしくは PGAが値を持っていたかどうか
-  bool get hadValue => throw _privateConstructorUsedError;
+  bool get hadValue;
   @override
 
   /// リアルタイム震度をJMA-Intensityに変換したもの
-  JmaIntensity? get intensity => throw _privateConstructorUsedError;
+  JmaIntensity? get intensity;
   @override
   @JsonKey(ignore: true)
   _$$_AnalyzedPointCopyWith<_$_AnalyzedPoint> get copyWith =>

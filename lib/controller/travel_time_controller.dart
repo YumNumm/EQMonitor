@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:csv/csv.dart';
 import 'package:eqmonitor/const/travel_time_table/travel_time_table.dart';
 import 'package:eqmonitor/model/travel_time_model.dart';
 import 'package:flutter/services.dart';
@@ -35,14 +32,13 @@ class TravelTimeController extends StateNotifier<TravelTimeModel> {
     // ストップウォッチ
     final stopWatch = Stopwatch()..start();
     // CSV読みこみ
-    final file = await rootBundle.load('assets/tjma2001.csv');
-    final rowsAsListOfValues = const CsvToListConverter().convert<dynamic>(
-      utf8.decode(file.buffer.asUint8List()),
-    );
+    final file = await rootBundle.loadString('assets/tjma2001.csv');
+    // 改行で区切る
+    final csv = file.split('\n');
     final travelTimeTable = <TravelTimeTable>[];
-    for (final row in rowsAsListOfValues) {
+    for (final row in csv) {
       try {
-        travelTimeTable.add(TravelTimeTable.fromList(row));
+        travelTimeTable.add(TravelTimeTable.fromList(row.split(',')));
       } on Exception catch (e) {
         print(e.toString());
       }

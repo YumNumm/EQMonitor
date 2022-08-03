@@ -1,11 +1,9 @@
 // ignore_for_file: avoid_print
 
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:device_preview/device_preview.dart';
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eqmonitor/page/main_page.dart';
 import 'package:eqmonitor/private/keys.dart';
 import 'package:eqmonitor/state/theme_providers.dart';
@@ -91,42 +89,23 @@ class EqMonitorApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
-    return DynamicColorBuilder(
-      builder: (lightDynamic, darkDynamic) {
-        ColorScheme lightColorScheme;
-        ColorScheme darkColorScheme;
-        if (lightDynamic != null && darkDynamic != null) {
-          log('Loaded DynamicColor ${lightDynamic.background}', name: 'main');
-          lightColorScheme = lightDynamic.harmonized();
-          darkColorScheme = darkDynamic.harmonized();
-        } else {
-          lightColorScheme = ColorScheme.fromSeed(
-            seedColor: Colors.blueAccent,
-          );
-          darkColorScheme = ColorScheme.fromSeed(
-            seedColor: Colors.blueAccent,
-            brightness: Brightness.dark,
-          );
-        }
-        return MaterialApp(
-          title: 'EQMonitor',
-          theme: FlexThemeData.light(),
-          darkTheme: FlexThemeData.dark(),
-          themeMode: themeMode,
-          locale: DevicePreview.locale(context),
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate
-          ],
-          supportedLocales: const [
-            Locale('ja', 'JP'),
-          ],
-          useInheritedMediaQuery: true,
-          builder: DevicePreview.appBuilder,
-          home: const MainPage(),
-        );
-      },
+    return MaterialApp(
+      title: 'EQMonitor',
+      theme: FlexThemeData.light(),
+      darkTheme: FlexThemeData.dark(),
+      themeMode: themeMode,
+      locale: DevicePreview.locale(context),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate
+      ],
+      supportedLocales: const [
+        Locale('ja', 'JP'),
+      ],
+      useInheritedMediaQuery: true,
+      builder: DevicePreview.appBuilder,
+      home: const MainPage(),
     );
   }
 }
