@@ -1,21 +1,7 @@
-import 'package:flex_color_scheme/flex_color_scheme.dart';
-import 'package:flutter/material.dart';
+import 'package:eqmonitor/controller/setting/theme_controller.dart';
+import 'package:eqmonitor/model/setting/theme_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final StateProvider<ThemeMode> themeModeProvider =
-    StateProvider<ThemeMode>((StateProviderRef<ThemeMode> ref) {
-  return ThemeMode.system;
-});
-
-final lightTheme = FlexThemeData.light(scheme: FlexScheme.bahamaBlue);
-final darkTheme = FlexThemeData.dark(scheme: FlexScheme.bahamaBlue);
-
-final themeProvider = StateNotifierProvider<ThemeNotifier, ThemeData>((ref) {
-  return ThemeNotifier();
-});
-
-class ThemeNotifier extends StateNotifier<ThemeData> {
-  ThemeNotifier() : super(lightTheme);
-  void switchTheme() => state = state == lightTheme ? darkTheme : lightTheme;
-}
+final themeController = StateNotifierProvider<ThemeController, ThemeModel>(
+  (ref) => ThemeController(),
+);

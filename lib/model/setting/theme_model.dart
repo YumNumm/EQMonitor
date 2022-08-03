@@ -8,6 +8,5 @@ part 'theme_model.freezed.dart';
 class ThemeModel with _$ThemeModel {
   const factory ThemeModel({
     @Default(ThemeMode.system) ThemeMode themeMode,
-    @Default(ColorScheme.light()) FlexColorScheme colorScheme,
   }) = _ThemeModel;
 }

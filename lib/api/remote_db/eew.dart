@@ -12,8 +12,10 @@ class EewApi {
   // ## SupabaseからEewをStreamで取得します
   // eewテーブル
   Stream<CommonHead> eewStream() async* {
+    // 5秒待機
+    await Future<void>.delayed(const Duration(seconds: 5));
     // もし、デバッグモードならテスト電文を追加
-    if (!kDebugMode) {
+    if (kDebugMode) {
       final res = await http.get(
         Uri.parse(
           'https://sample.dmdata.jp/eew/20171213b/json/vxse44_rjtd_20171213112257.json',
@@ -28,5 +30,5 @@ class EewApi {
       Logger().i('commitDt: ${payload.commitTimestamp}\n${payload.newRecord}');
       if (payload.eventType == 'INSERT') {}
     });
-   }
+  }
 }
