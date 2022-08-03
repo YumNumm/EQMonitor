@@ -74,6 +74,7 @@ dependencies:
   connectivity_plus: ^2.3.6
   permission_handler: ^10.0.0
   flutter_markdown: ^0.6.10+3
+  fluttertoast: ^8.0.9
 
 dev_dependencies:
   flutter_test:
