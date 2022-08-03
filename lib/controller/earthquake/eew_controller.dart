@@ -32,16 +32,18 @@ class EewHistoryController extends StateNotifier<EewHistoryModel> {
   }
 
   void startEewStreaming() {
-    eewApi.eewStream().listen(
-      (eewTelegram) {
-        if (mounted) {
-          addTelegram(eewTelegram);
-        }
-      },
-    );
+    Logger().i('Start Eew Streaming');
+     eewApi.eewStream().listen(
+       (eewTelegram) {
+         if (mounted) {
+           addTelegram(eewTelegram);
+         }
+       },
+     );
   }
 
   void addTelegram(CommonHead commonHead) {
+    logger.d('addTelegram: ${commonHead.originalId}');
     // eewTelegramsに追加
     // ただし、同じ電文(originalIdで判別)があれば追加しない
     final eewTelegrams = state.eewTelegrams;
@@ -82,8 +84,6 @@ class EewHistoryController extends StateNotifier<EewHistoryModel> {
 
   /// 表示する電文を更新
   void checkTelegrams() {
-    final eewTelegrams = state.eewTelegrams;
-
     final toUpdateTelegramsGroupBy = state.eewTelegrams
         .toList()
         .groupListsBy((element) => int.parse(element.eventId.toString()));

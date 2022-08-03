@@ -42,11 +42,11 @@ class AboutAppPage extends HookConsumerWidget {
                   context: context,
                   applicationName: 'EQMonitor',
                   applicationIcon: ClipRRect(
-                    borderRadius: BorderRadius.circular(2),
+                    borderRadius: BorderRadius.circular(16),
                     child: Image.asset(
                       'assets/icon.png',
-                      height: 40,
-                      width: 40,
+                      height: 120,
+                      width: 120,
                     ),
                   ),
                   applicationLegalese:
