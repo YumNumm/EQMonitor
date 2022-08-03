@@ -6,6 +6,7 @@ import 'package:eqmonitor/widget/custom_map/map_intensity_painter.dart';
 import 'package:eqmonitor/widget/custom_map/obs_point_painter.dart';
 import 'package:flutter/material.dart' hide Theme;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../widget/eew/eew_body_widget.dart';
 
@@ -36,14 +37,53 @@ class KmoniMap extends ConsumerWidget {
           ),
         ),
         // EEW表示
-        const onEewWidget(),
+        const OnEewWidget(),
+        // KMoniの更新状況
+        const Align(
+          alignment: Alignment.bottomLeft,
+          child: KmoniStatusWidget(),
+        ),
       ],
     );
   }
 }
 
-class onEewWidget extends ConsumerWidget {
-  const onEewWidget({
+class KmoniStatusWidget extends ConsumerWidget {
+  const KmoniStatusWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final kmoni = ref.watch(kmoniNotifier);
+    return Card(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            (kmoni.isUpdating)
+                ? Icons.system_security_update_rounded
+                : Icons.system_security_update_good_rounded,
+          ),
+          Text(
+            (kmoni.lastUpdated != null)
+                ? DateFormat('yyyy/MM/dd HH:mm:ss').format(kmoni.lastUpdated!)
+                : '-',
+            style: TextStyle(
+              color: (kmoni.lastUpdateAttempt
+                          .difference(kmoni.lastUpdated ?? DateTime(2000))
+                          .inSeconds >
+                      3)
+                  ? Colors.red
+                  : null,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class OnEewWidget extends ConsumerWidget {
+  const OnEewWidget({
     super.key,
   });
 
