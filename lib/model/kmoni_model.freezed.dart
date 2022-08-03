@@ -340,41 +340,41 @@ abstract class _KmoniModel implements KmoniModel {
   @override
 
   /// 観測点のリスト
-  List<AnalyzedPoint> get analyzedPoint => throw _privateConstructorUsedError;
+  List<AnalyzedPoint> get analyzedPoint;
   @override
 
   /// 観測点の読み込みにかかった時間
-  Duration? get loadDuration => throw _privateConstructorUsedError;
+  Duration? get loadDuration;
   @override
 
   /// 最新の更新時刻
   /// `Null`の時は、まだ更新されていません
-  DateTime? get lastUpdated => throw _privateConstructorUsedError;
+  DateTime? get lastUpdated;
   @override
 
   /// 最終更新試行時
   /// デフォルトは 現在時刻
-  DateTime get lastUpdateAttempt => throw _privateConstructorUsedError;
+  DateTime get lastUpdateAttempt;
   @override
 
   /// 観測点の位置
-  List<ObsPoint> get obsPoints => throw _privateConstructorUsedError;
+  List<ObsPoint> get obsPoints;
   @override
 
   /// 観測点CSVがロードされたかどうか
-  bool get isKansokutenLoaded => throw _privateConstructorUsedError;
+  bool get isKansokutenLoaded;
   @override
 
   /// Kmoniの更新タイマー
-  Timer? get updateTimer => throw _privateConstructorUsedError;
+  Timer? get updateTimer;
   @override
 
   /// Kmoniの更新頻度
-  Duration get updateFrequency => throw _privateConstructorUsedError;
+  Duration get updateFrequency;
   @override
 
   /// Kmoniの更新中かどうか
-  bool get isUpdating => throw _privateConstructorUsedError;
+  bool get isUpdating;
   @override
   @JsonKey(ignore: true)
   _$$_KmoniModelCopyWith<_$_KmoniModel> get copyWith =>

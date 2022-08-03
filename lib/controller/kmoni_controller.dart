@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
 
-import 'package:csv/csv.dart';
 import 'package:eqmonitor/api/kmoni.dart';
 import 'package:eqmonitor/api/kmoni/kmoni_image_parser.dart';
 import 'package:eqmonitor/api/kmoni/kmoni_web_api_url_generators.dart';
@@ -131,13 +129,16 @@ class KmoniController extends StateNotifier<KmoniModel> {
   /// 観測点CSVを読み込む
   Future<void> _loadKansokuten() async {
     final stopwatch = Stopwatch()..start();
-    final kansokutenFile = await rootBundle.load('assets/kmoni/kansokuten.csv');
-    final rowsAsListOfValues = const CsvToListConverter().convert(
-      utf8.decode(kansokutenFile.buffer.asUint8List()),
-    );
+
+    final kansokuten =
+        await rootBundle.loadString('assets/kmoni/kansokuten.csv');
+    // 改行で区切る
+    final rowsAsListOfStrings = kansokuten.split('\n');
+
     final obsPoints = <ObsPoint>[];
-    for (final row in rowsAsListOfValues) {
-      obsPoints.add(ObsPoint.fromList(row));
+    for (final row in rowsAsListOfStrings) {
+      print(row.split(','));
+      obsPoints.add(ObsPoint.fromList(row.split(',')));
     }
     stopwatch.stop();
     logger.d('観測点データを読み込みました: ${stopwatch.elapsedMicroseconds / 1000}ms');
