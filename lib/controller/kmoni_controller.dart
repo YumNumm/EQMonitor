@@ -83,43 +83,45 @@ class KmoniController extends StateNotifier<KmoniModel> {
   }
 
   Future<void> updateShindo(DateTime dt) async {
-    // Shindo画像を取得する
-    final shindoUrl = kyoshinWebApiUrlGenerator.realtimeBase(
-      dt: dt,
-      type: RealtimeDataType.Shindo,
-      sorb: 's',
-    );
-    final imageResponse = await kyoshinMonitorApi
-        .getRawData(shindoUrl.replaceAll('http://www.kmoni.bosai.go.jp', ''));
-    // log(imageResponse.realUri.toString(), name: "KmoniController");
-    if (imageResponse.statusCode != 200 || imageResponse.data == null) {
-      throw Exception(
-        'リアルタイム震度画像の取得に失敗しました\n'
-        'StatusCode: ${imageResponse.statusCode}',
+    try {
+      // Shindo画像を取得する
+      final shindoUrl = kyoshinWebApiUrlGenerator.realtimeBase(
+        dt: dt,
+        type: RealtimeDataType.Shindo,
+        sorb: 's',
       );
-    }
-    final parsedAnalyzedPoint = kyoshinImageParser.imageParse(
-      picture: imageResponse.data!,
-      obsPoints: state.obsPoints,
-      type: RealtimeDataType.Shindo,
-    );
-    final analyzedPoint = state.analyzedPoint;
-    final newAnalyzedPoint = <AnalyzedPoint>[];
-    for (var i = 0; i < analyzedPoint.length; i++) {
-      newAnalyzedPoint.add(
-        analyzedPoint[i].copyWith(
-          shindo: parsedAnalyzedPoint[i].shindo,
-          shindoColor: parsedAnalyzedPoint[i].shindoColor,
-          hadValue:
-              parsedAnalyzedPoint[i].hadValue || analyzedPoint[i].hadValue,
-        ),
+      final imageResponse = await kyoshinMonitorApi
+          .getRawData(shindoUrl.replaceAll('http://www.kmoni.bosai.go.jp', ''));
+      // log(imageResponse.realUri.toString(), name: "KmoniController");
+      if (imageResponse.statusCode != 200 || imageResponse.data == null) {
+        throw Exception(
+          'リアルタイム震度画像の取得に失敗しました\n'
+          'StatusCode: ${imageResponse.statusCode}',
+        );
+      }
+      final parsedAnalyzedPoint = kyoshinImageParser.imageParse(
+        picture: imageResponse.data!,
+        obsPoints: state.obsPoints,
+        type: RealtimeDataType.Shindo,
       );
-    }
-    state = state.copyWith(
-      analyzedPoint: newAnalyzedPoint,
-      lastUpdated: dt,
-      lastUpdateAttempt: DateTime.now(),
-    );
+      final analyzedPoint = state.analyzedPoint;
+      final newAnalyzedPoint = <AnalyzedPoint>[];
+      for (var i = 0; i < analyzedPoint.length; i++) {
+        newAnalyzedPoint.add(
+          analyzedPoint[i].copyWith(
+            shindo: parsedAnalyzedPoint[i].shindo,
+            shindoColor: parsedAnalyzedPoint[i].shindoColor,
+            hadValue:
+                parsedAnalyzedPoint[i].hadValue || analyzedPoint[i].hadValue,
+          ),
+        );
+      }
+      state = state.copyWith(
+        analyzedPoint: newAnalyzedPoint,
+        lastUpdated: dt,
+        lastUpdateAttempt: DateTime.now(),
+      );
+    } on Exception {}
   }
 
   /// 観測点CSVを読み込む

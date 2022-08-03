@@ -33,13 +33,13 @@ class EewHistoryController extends StateNotifier<EewHistoryModel> {
 
   void startEewStreaming() {
     Logger().i('Start Eew Streaming');
-     eewApi.eewStream().listen(
-       (eewTelegram) {
-         if (mounted) {
-           addTelegram(eewTelegram);
-         }
-       },
-     );
+    eewApi.eewStream().listen(
+      (eewTelegram) {
+        if (mounted) {
+          addTelegram(eewTelegram);
+        }
+      },
+    );
   }
 
   void addTelegram(CommonHead commonHead) {
