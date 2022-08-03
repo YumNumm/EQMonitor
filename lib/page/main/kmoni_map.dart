@@ -67,20 +67,8 @@ class KmoniStatusWidget extends ConsumerWidget {
           children: [
             Row(
               children: [
-                if (kmoni.isUpdating)
-                  Container(
-                    width: 10,
-                    height: 10,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      
-                    ),
-                  ),
                 Text(
-                  (kmoni.lastUpdated != null)
-                      ? DateFormat('yyyy/MM/dd HH:mm:ss')
-                          .format((kmoni.lastUpdated!).toLocal())
-                      : '-',
+                  "最終更新: ${(kmoni.lastUpdated != null) ? DateFormat('yyyy/MM/dd HH:mm:ss').format((kmoni.lastUpdated!).toLocal()) : '-'}",
                   style: TextStyle(
                     color: (kmoni.lastUpdateAttempt
                                 .difference(kmoni.lastUpdated ?? DateTime(2000))
@@ -90,6 +78,21 @@ class KmoniStatusWidget extends ConsumerWidget {
                         : null,
                   ),
                 ),
+                const SizedBox(width: 8),
+                if (kmoni.isUpdating)
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.blue,
+                    ),
+                  )
+                else
+                  const SizedBox(
+                    width: 10,
+                    height: 10,
+                  ),
               ],
             ),
           ],
