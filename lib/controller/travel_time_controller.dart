@@ -14,7 +14,9 @@ class TravelTimeController extends StateNotifier<TravelTimeModel> {
             travelTimeTable: [],
             loadDuration: null,
           ),
-        );
+        ) {
+    onInit();
+  }
 
   final logger = Logger(
     printer: PrettyPrinter(

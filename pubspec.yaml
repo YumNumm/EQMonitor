@@ -75,6 +75,7 @@ dependencies:
   permission_handler: ^10.0.0
   flutter_markdown: ^0.6.10+3
   fluttertoast: ^8.0.9
+  flex_color_scheme: ^5.1.0
 
 dev_dependencies:
   flutter_test:

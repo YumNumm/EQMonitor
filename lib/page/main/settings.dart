@@ -15,7 +15,8 @@ class SettingsPage extends StatelessWidget {
               title: const Text('アプリ情報'),
               onPressed: (context) => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const AboutAppPage()),
+                MaterialPageRoute<void>(
+                    builder: (context) => const AboutAppPage()),
               ),
             ),
           ],

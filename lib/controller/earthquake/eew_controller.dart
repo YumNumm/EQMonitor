@@ -12,7 +12,9 @@ class EewHistoryController extends StateNotifier<EewHistoryModel> {
   EewHistoryController()
       : super(
           const EewHistoryModel(),
-        );
+        ){
+          onInit();
+        }
 
   final EewApi eewApi = EewApi();
   final logger = Logger(

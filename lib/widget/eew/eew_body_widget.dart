@@ -1,5 +1,5 @@
 import 'package:eqmonitor/const/kmoni/jma_intensity.dart';
-import 'package:eqmonitor/const/res/text_styles.dart';
+import 'package:eqmonitor/res/text_styles.dart';
 import 'package:eqmonitor/schema/dmdata/commonHeader.dart';
 import 'package:eqmonitor/schema/dmdata/eew-information/eew-infomation.dart';
 import 'package:flutter/material.dart';

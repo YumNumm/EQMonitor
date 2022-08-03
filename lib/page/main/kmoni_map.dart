@@ -28,7 +28,6 @@ class KmoniMap extends ConsumerWidget {
               BaseMapWidget(),
               // EEWの予想震度
               MapIntensityWidget(),
-
               // 観測点
               ObsPointsMapWidget(),
               // EEWの震央位置
@@ -54,29 +53,47 @@ class KmoniStatusWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final kmoni = ref.watch(kmoniNotifier);
+    print(
+      kmoni.lastUpdateAttempt
+          .difference(kmoni.lastUpdated ?? DateTime(2000))
+          .inSeconds,
+    );
     return Card(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            (kmoni.isUpdating)
-                ? Icons.system_security_update_rounded
-                : Icons.system_security_update_good_rounded,
-          ),
-          Text(
-            (kmoni.lastUpdated != null)
-                ? DateFormat('yyyy/MM/dd HH:mm:ss').format(kmoni.lastUpdated!)
-                : '-',
-            style: TextStyle(
-              color: (kmoni.lastUpdateAttempt
-                          .difference(kmoni.lastUpdated ?? DateTime(2000))
-                          .inSeconds >
-                      3)
-                  ? Colors.red
-                  : null,
+      margin: const EdgeInsets.all(8),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                if (kmoni.isUpdating)
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      
+                    ),
+                  ),
+                Text(
+                  (kmoni.lastUpdated != null)
+                      ? DateFormat('yyyy/MM/dd HH:mm:ss')
+                          .format((kmoni.lastUpdated!).toLocal())
+                      : '-',
+                  style: TextStyle(
+                    color: (kmoni.lastUpdateAttempt
+                                .difference(kmoni.lastUpdated ?? DateTime(2000))
+                                .inSeconds >
+                            3)
+                        ? const Color.fromARGB(255, 255, 17, 0)
+                        : null,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

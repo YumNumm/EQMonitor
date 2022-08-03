@@ -28,7 +28,9 @@ class KmoniController extends StateNotifier<KmoniModel> {
             isUpdating: false,
             loadDuration: null,
           ),
-        );
+        ) {
+    onInit();
+  }
 
   final logger = Logger(
     printer: PrettyPrinter(
@@ -78,7 +80,10 @@ class KmoniController extends StateNotifier<KmoniModel> {
       logger.e(e);
     } finally {
       // 更新中フラグを下ろす
-      state = state.copyWith(isUpdating: false);
+      state = state.copyWith(
+        isUpdating: false,
+        lastUpdateAttempt: DateTime.now(),
+      );
     }
   }
 
@@ -119,7 +124,6 @@ class KmoniController extends StateNotifier<KmoniModel> {
       state = state.copyWith(
         analyzedPoint: newAnalyzedPoint,
         lastUpdated: dt,
-        lastUpdateAttempt: DateTime.now(),
       );
     } on Exception {}
   }
