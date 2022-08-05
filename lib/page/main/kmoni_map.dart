@@ -17,11 +17,17 @@ class KmoniMap extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final kmoniMapMatrix4 =
         ref.watch(kmoniMapController.select((value) => value.mapMatrix4));
-
+    final isKmoniMapLoaded =
+        ref.watch(kmoniMapController.select((value) => value.isMapLoaded));
+    if (!isKmoniMapLoaded) {
+      return const Center(
+        child: CircularProgressIndicator.adaptive(),
+      );
+    }
     return Stack(
       children: [
         InteractiveViewer(
-          maxScale: 100,
+          maxScale: 5,
           child: Stack(
             children: const [
               // マップベース
@@ -53,11 +59,7 @@ class KmoniStatusWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final kmoni = ref.watch(kmoniNotifier);
-    print(
-      kmoni.lastUpdateAttempt
-          .difference(kmoni.lastUpdated ?? DateTime(2000))
-          .inSeconds,
-    );
+
     return Card(
       margin: const EdgeInsets.all(8),
       child: Padding(

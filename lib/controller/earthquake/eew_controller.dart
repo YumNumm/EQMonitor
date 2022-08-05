@@ -1,22 +1,27 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:collection/collection.dart';
-import 'package:eqmonitor/api/remote_db/eew.dart';
 import 'package:eqmonitor/model/earthquake/eew_history_model.dart';
+import 'package:eqmonitor/private/keys.dart';
 import 'package:eqmonitor/schema/dmdata/commonHeader.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class EewHistoryController extends StateNotifier<EewHistoryModel> {
   EewHistoryController()
       : super(
-          const EewHistoryModel(),
-        ){
-          onInit();
-        }
+          EewHistoryModel(
+            supabase: SupabaseClient(supabaseS2Url, supabaseS2AnonKey),
+            subscription: null,
+          ),
+        ) {
+    onInit();
+  }
 
-  final EewApi eewApi = EewApi();
   final logger = Logger(
     printer: PrettyPrinter(
       methodCount: 1,
@@ -33,15 +38,36 @@ class EewHistoryController extends StateNotifier<EewHistoryModel> {
     });
   }
 
-  void startEewStreaming() {
+  Future<void> startEewStreaming() async {
     Logger().i('Start Eew Streaming');
-    eewApi.eewStream().listen(
-      (eewTelegram) {
-        if (mounted) {
-          addTelegram(eewTelegram);
-        }
-      },
-    );
+    // EEW STREAMを開始する
+    final subscription =
+        state.supabase.from('eew').on(SupabaseEventTypes.insert, (payload) {
+      logger.i('EEW STREAM: ${payload.newRecord}', payload.commitTimestamp);
+      if (payload.newRecord == null) return;
+      final commonHead = CommonHead.fromJson(payload.newRecord!['data']);
+      addTelegram(commonHead);
+    }).subscribe();
+    subscription.socket.onMessage((p0) => logger.i('EEW STREAM: $p0'));
+    logger.i(subscription.socket.connState?.toString());
+    // もし、デバッグモードならテスト電文を追加
+    if (kDebugMode) {
+      final res = await http.get(
+        Uri.parse(
+          'https://sample.dmdata.jp/eew/20171213b/json/vxse44_rjtd_20171213112257.json',
+        ),
+      );
+      addTelegram(
+        CommonHead.fromJson(
+          jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>,
+        ),
+      );
+    }
+  }
+
+  bool _isConnected() {
+    return true;
+    // TODO(YumNumm): NEED TO IMPLEMENT
   }
 
   void addTelegram(CommonHead commonHead) {

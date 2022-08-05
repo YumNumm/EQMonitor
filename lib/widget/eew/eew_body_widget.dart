@@ -5,6 +5,8 @@ import 'package:eqmonitor/schema/dmdata/eew-information/eew-infomation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../extension/relative_luminance.dart';
+
 class EewBodyWidget extends StatelessWidget {
   const EewBodyWidget({
     super.key,
@@ -18,9 +20,19 @@ class EewBodyWidget extends StatelessWidget {
     /// 地震発生時刻があるかどうか
     final hasOriginTime = eew.value.earthQuake?.originTime != null;
 
+    /// 最大震度
+    /// to がoverなら fromを返す
+    /// それ以外はtoを返す
+    final maxIntensity = (eew.value.intensity?.maxint.to == JmaIntensity.over)
+        ? eew.value.intensity!.maxint.from
+        : eew.value.intensity?.maxint.to ?? JmaIntensity.Error;
+
     /// 通常報でない場合は、早期Return
     if (eew.key.infoType != CommonHeadInfoType.announcement) {
       return Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: Text(
@@ -46,20 +58,43 @@ class EewBodyWidget extends StatelessWidget {
                 : '不明',
       ]);
     return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
       color: eew.value.intensity?.maxint.from.color.withOpacity(0.8),
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            /// EEWタイトル部分
-            Text(
-              '緊急地震速報(${(eew.value.isLastInfo) ? '最終' : '第'}${eew.key.serialNo}報)',
-              style: TextStyles.eewTitleStyle(
-                isTextBlack: eew.value.intensity?.maxint.from.shouldTextBlack,
-              ),
+            Row(
+              children: [
+                Text(
+                  '予想最大震度',
+                  style: TextStyle(
+                    color: maxIntensity.color.onPrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  maxIntensity.name,
+                  style: TextStyle(
+                    fontSize: 40,
+                    color: maxIntensity.color.onPrimary,
+                    fontFamily: 'CaskaydiaCove',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                if (eew.value.intensity!.maxint.to == JmaIntensity.over)
+                  Text(
+                    '程度以上',
+                    style: TextStyle(
+                      color: maxIntensity.color.onPrimary,
+                    ),
+                  )
+              ],
             ),
-            const SizedBox(height: 2),
 
             /// EEW 本文部分
             DefaultTextStyle.merge(
@@ -83,11 +118,9 @@ class EewBodyWidget extends StatelessWidget {
                     '${DateFormat('yyyy/MM/dd hh:mm:ss頃').format(eew.value.earthQuake!.originTime ?? eew.value.earthQuake!.arrivalTime)}${hasOriginTime ? '発生' : '検知'}',
                   ),
                   // マグニチュード
-                  Text(magAndDepth.toString()),
-                  // 予想最大震度
                   Text(
-                    '予想最大震度 ${eew.value.intensity!.maxint.from.name}'
-                    '${(eew.value.intensity!.maxint.to == JmaIntensity.over) ? '程度以上' : ''}',
+                    '$magAndDepth '
+                    '(${(eew.value.isLastInfo) ? '最終' : ''}第${eew.key.serialNo}報)',
                   ),
                   // PLUM報かどうか
                   if (eew.value.earthQuake!.isAssuming) const Text('PLUM報'),
@@ -95,6 +128,44 @@ class EewBodyWidget extends StatelessWidget {
                     Text(eew.value.comments!.warning!.text),
                   if (eew.value.text != null) Text(eew.value.text!),
                 ],
+              ),
+            ),
+
+            /// info button
+            ElevatedButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    content: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          '精度情報',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          '震央位置:${eew.value.earthQuake!.hypoCenter.accuracy.epicCenterAccuracy.epicCenterAccuracy.description}\n'
+                          '震源位置: ${eew.value.earthQuake!.hypoCenter.accuracy.epicCenterAccuracy.hypoCenterAccuracy.description}\n'
+                          '深さ: ${eew.value.earthQuake!.hypoCenter.accuracy.depthCalculation.description}\n'
+                          'マグニチュード: ${eew.value.earthQuake!.hypoCenter.accuracy.magnitudeCalculation.description}',
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              },
+              child: Text(
+                '精度情報',
+                style: TextStyle(
+                  color: maxIntensity.color.onPrimary,
+                ),
               ),
             ),
           ],

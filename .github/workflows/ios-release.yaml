@@ -3,8 +3,8 @@ name: Build ipa(release)
 #発火条件
 on:
   #ソースをmainブランチにプッシュする時
-  push:
-    branches: [main]
+  # push:
+  #   branches: [main]
 
   workflow_dispatch:
 
@@ -22,7 +22,7 @@ jobs:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: latest-stable
-        
+
       - name: Show Xcode version
         run: xcodebuild -version
 
@@ -45,7 +45,7 @@ jobs:
           key: build-pubspec-${{ hashFiles('**/pubspec.lock') }}
           restore-keys: |
             build-pubspec-
-            
+
       - name: Cache build runner
         uses: actions/cache@v2
         with:
@@ -73,7 +73,6 @@ jobs:
       - name: Analyze
         run: flutter analyze .
         continue-on-error: true
-
 
       - name: Build ipa
         run: |
