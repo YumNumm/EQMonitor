@@ -1,0 +1,115 @@
+name: Flutter build Android
+
+#発火条件
+on:
+  #ソースをmainブランチにプッシュする時
+  push:
+    branches: [main]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    #ビルド環境
+    runs-on: macos-latest
+    # タイムアウト時間を設定
+    timeout-minutes: 15
+
+    steps:
+      #リポジトリからソースをダンロード
+      - uses: actions/checkout@v2
+
+    - name: Select Xcode version # Xcode 13.4.1 を使う
+      run: sudo xcode-select -s '/Applications/Xcode_13.4.1.app/Contents/Developer'
+      
+    - name: Show Xcode version
+      run: xcodebuild -version
+
+      - name: Setup flutter environment
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.0.5"
+          channel: "stable"
+          cache: true
+
+      - name: Cache pubspec dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ env.FLUTTER_HOME }}/.pub-cache
+            **/.packages
+            **/.flutter-plugins
+            **/.flutter-plugin-dependencies
+            **/.dart_tool/package_config.json
+          key: build-pubspec-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            build-pubspec-
+            
+      - name: Cache build runner
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/.dart_tool/build
+          key: build-runner-${{ hashFiles('**/asset_graph.json') }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            build-runner-
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Flutter dependencies install
+        #ライブラリーの導入
+        run: flutter pub get
+
+      - name: Generate codes with build_runner
+        run: flutter pub run build_runner build --delete-conflicting-outputs
+
+      - name: Generate LauncherIcon
+        run: flutter pub run flutter_launcher_icons:main
+
+      - name: Generate NativeSplash
+        run: flutter pub run flutter_native_splash:create
+
+      - name: Analyze
+        run: flutter analyze .
+        continue-on-error: true
+
+
+      - name: Build ipa
+        run: |
+          flutter build ipa --release --obfuscate --split-debug-info=obfuscate/ios
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: release-ipa
+          path: build/ios/ipa
+
+      # - uses: codecov/codecov-action@v3
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+      #     fail_ci_if_error: false # optional (default = false)
+      #     verbose: true # optional (default = false)
+      #     file: ~/coverage/lcov.info
+
+      #-- Slack通知 --#
+      # 成功
+      - name: Slack Notification on Success
+        if: ${{ success() }}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_TITLE: Deploy Success
+          SLACK_COLOR: good
+          SLACK_ICON: https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/assets/icon.png
+          SLACK_USERNAME: EQMonitor
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      # 失敗
+      - name: Slack Notification on Failure
+        if: ${{ failure() }}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_TITLE: Deploy Failure
+          SLACK_COLOR: danger
+          SLACK_ICON: https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/assets/icon.png
+          SLACK_USERNAME: EQMonitor
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
