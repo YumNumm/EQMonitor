@@ -137,7 +137,6 @@ class KmoniController extends StateNotifier<KmoniModel> {
 
     final obsPoints = <ObsPoint>[];
     for (final row in rowsAsListOfStrings) {
-      print(row.split(','));
       obsPoints.add(ObsPoint.fromList(row.split(',')));
     }
     stopwatch.stop();

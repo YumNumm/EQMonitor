@@ -38,8 +38,8 @@ Future<void> main() async {
       );
       // Supabaseを初期化
       await Supabase.initialize(
-        url: supabaseUrl,
-        anonKey: supabaseAnonKey,
+        url: supabaseS1Url,
+        anonKey: supabaseS1AnonKey,
         debug: false,
       );
 

@@ -2,6 +2,7 @@ import 'package:eqmonitor/const/prefecture/area_forecast_local_eew.model.dart';
 import 'package:eqmonitor/schema/dmdata/commonHeader.dart';
 import 'package:eqmonitor/schema/dmdata/eew-information/eew-infomation.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class MapIntensityPainter extends CustomPainter {
   MapIntensityPainter({
@@ -26,8 +27,9 @@ class MapIntensityPainter extends CustomPainter {
         for (final region in eew.value.intensity!.region) {
           // region.codeが一致するMapPolygonを探す
           try {
-            final mapPolygon = mapPolygons
-                .firstWhere((element) => element.code == region.code);
+            final mapPolygon = mapPolygons.firstWhere(
+              (element) => element.code == region.code,
+            );
             canvas
               ..drawPath(
                 mapPolygon.path,
@@ -44,7 +46,9 @@ class MapIntensityPainter extends CustomPainter {
                   ..style = PaintingStyle.stroke
                   ..strokeWidth = outlineStrokeWidth,
               );
-          } on Exception catch (_) {}
+          } on Error catch (e) {
+            Logger().e(e, region.code);
+          }
         }
       }
     }
