@@ -1,4 +1,4 @@
-name: Flutter build Android
+name: Build ipa(release)
 
 #発火条件
 on:
