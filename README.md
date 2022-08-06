@@ -1,5 +1,6 @@
 # EQMonitor  
-![8FC13A71-C3CE-4CE0-BAC6-3860CE0DFCA9](https://user-images.githubusercontent.com/73390859/181158250-6ac8d276-451b-437e-8b1f-8af9013b38db.jpeg)
+![45BD36DF-05A4-4875-B913-2F53FDAA48FF](https://user-images.githubusercontent.com/73390859/183258345-ac71c9ca-b794-4c00-bd7d-a9a20693464e.png)
+
 
 
 [![Github All Releases](https://img.shields.io/github/downloads/EQMonitor/EQMonitor/total.svg)]()   ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/EQMonitor/EQMonitor?color=blue&include_prereleases&label=Release)
