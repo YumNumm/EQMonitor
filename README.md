@@ -14,7 +14,7 @@
 - [x] 強震モニタの表示
 - [ ] 緊急地震速報の情報をマップ上に表示
 - [ ] 地震履歴
-- [ ] 地震情報の読み上げ(バックグラウンド/フォアグラウンド)  
+- [ ] 地震情報の読み上げ(バックグラウンド/フォアグラウンド)
       などなど… 詳しくは、[ロードマップ](https://github.com/EQMonitor/EQMonitor/issues/89)をご覧ください
 
 [![DigitalOcean Referral Badge](https://web-platforms.sfo2.cdn.digitaloceanspaces.com/WWW/Badge%201.svg)](https://www.digitalocean.com/?refcode=642cebc69a3e&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge)
