@@ -44,11 +44,13 @@ class EewHistoryController extends StateNotifier<EewHistoryModel> {
     final subscription =
         state.supabase.from('eew').on(SupabaseEventTypes.insert, (payload) {
       logger.i('EEW STREAM: ${payload.newRecord}', payload.commitTimestamp);
-      if (payload.newRecord == null) return;
+      if (payload.newRecord == null) {
+        return;
+      }
       final commonHead = CommonHead.fromJson(payload.newRecord!['data']);
       addTelegram(commonHead);
     }).subscribe();
-    subscription.socket.onMessage((p0) => logger.i('EEW STREAM: $p0'));
+    subscription.socket.onMessage((p0) => logger.i('EEW WebSocket: $p0'));
     logger.i(subscription.socket.connState?.toString());
     // もし、デバッグモードならテスト電文を追加
     if (kDebugMode) {
@@ -66,7 +68,7 @@ class EewHistoryController extends StateNotifier<EewHistoryModel> {
   }
 
   bool _isConnected() {
-    return true;
+    return true ;
     // TODO(YumNumm): NEED TO IMPLEMENT
   }
 

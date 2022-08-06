@@ -6,10 +6,10 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:eqmonitor/page/main_page.dart';
 import 'package:eqmonitor/private/keys.dart';
+import 'package:eqmonitor/res/theme.dart';
 import 'package:eqmonitor/state/theme_providers.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -92,8 +92,8 @@ class EqMonitorApp extends ConsumerWidget {
         ref.watch(themeController.select((value) => value.themeMode));
     return MaterialApp(
       title: 'EQMonitor',
-      theme: FlexThemeData.light(),
-      darkTheme: FlexThemeData.dark(),
+      theme: lightTheme(),
+      darkTheme: darkTheme(),
       themeMode: themeMode,
       locale: DevicePreview.locale(context),
       localizationsDelegates: const [

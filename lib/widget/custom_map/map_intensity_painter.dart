@@ -14,39 +14,35 @@ class MapIntensityPainter extends CustomPainter {
   double outlineStrokeWidth;
   Iterable<MapEntry<CommonHead, EEWInformation>> eews;
 
-  final Paint paintBuilding = Paint()
-    ..color = const Color.fromARGB(255, 17, 147, 0)
-    ..isAntiAlias = true
-    ..strokeCap = StrokeCap.round;
-
   @override
   void paint(Canvas canvas, Size size) {
     for (final eew in eews) {
       if (eew.value.intensity?.region != null) {
-        //Logger().i(eew.value.intensity?.region);
         for (final region in eew.value.intensity!.region) {
           // region.codeが一致するMapPolygonを探す
           try {
-            final mapPolygon = mapPolygons.firstWhere(
+            final mapRegionPolygons = mapPolygons.where(
               (element) => element.code == region.code,
             );
-            canvas
-              ..drawPath(
-                mapPolygon.path,
-                Paint()
-                  ..color = region.forecastMaxInt.from.color
-                  ..isAntiAlias = true
-                  ..strokeCap = StrokeCap.round,
-              )
-              ..drawPath(
-                mapPolygon.path,
-                Paint()
-                  ..color = const Color.fromARGB(255, 255, 255, 255)
-                  ..isAntiAlias = true
-                  ..style = PaintingStyle.stroke
-                  ..strokeWidth = outlineStrokeWidth,
-              );
-          } on Error catch (e) {
+            for (final mapPolygon in mapRegionPolygons) {
+              canvas
+                ..drawPath(
+                  mapPolygon.path,
+                  Paint()
+                    ..color = region.forecastMaxInt.from.color
+                    ..isAntiAlias = true
+                    ..strokeCap = StrokeCap.round,
+                )
+                ..drawPath(
+                  mapPolygon.path,
+                  Paint()
+                    ..color = const Color.fromARGB(255, 255, 255, 255)
+                    ..isAntiAlias = true
+                    ..style = PaintingStyle.stroke
+                    ..strokeWidth = outlineStrokeWidth,
+                );
+            }
+          } catch (e) {
             Logger().e(e, region.code);
           }
         }
