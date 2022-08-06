@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:eqmonitor/schema/dmdata/eew-information/eew-infomation.dart';
 import 'package:eqmonitor/state/all_state.dart';
 import 'package:eqmonitor/widget/custom_map/map_base_painter.dart';
@@ -27,7 +29,7 @@ class KmoniMap extends ConsumerWidget {
     return Stack(
       children: [
         InteractiveViewer(
-          maxScale: 5,
+          maxScale: 500,
           child: Stack(
             children: const [
               // マップベース
@@ -59,45 +61,67 @@ class KmoniStatusWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final kmoni = ref.watch(kmoniNotifier);
-
-    return Card(
-      margin: const EdgeInsets.all(8),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
+    final maxShindoColor = (kmoni.analyzedPoint.length > 100)
+        ? kmoni.analyzedPoint
+            .reduce(
+              (curr, next) =>
+                  (curr.shindo ?? -4) > (next.shindo ?? -4) ? curr : next,
+            )
+            .shindoColor
+        : null;
+    return ClipRRect(
+      borderRadius: const BorderRadius.all(Radius.circular(8)),
+      child: Container(
+        decoration: BoxDecoration(
+          color: (kmoni.analyzedPoint.length > 100)
+              ? maxShindoColor?.withOpacity(0.6)
+              : null,
+          border: Border.all(
+            color: maxShindoColor ?? Colors.transparent,
+          ),
+        ),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  "最終更新: ${(kmoni.lastUpdated != null) ? DateFormat('yyyy/MM/dd HH:mm:ss').format((kmoni.lastUpdated!).toLocal()) : '-'}",
-                  style: TextStyle(
-                    color: (kmoni.lastUpdateAttempt
-                                .difference(kmoni.lastUpdated ?? DateTime(2000))
-                                .inSeconds >
-                            3)
-                        ? const Color.fromARGB(255, 255, 17, 0)
-                        : null,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                if (kmoni.isUpdating)
-                  Container(
-                    width: 10,
-                    height: 10,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.blue,
+                Row(
+                  children: [
+                    Text(
+                      "最終更新: ${(kmoni.lastUpdated != null) ? DateFormat('yyyy/MM/dd HH:mm:ss').format((kmoni.lastUpdated!).toLocal()) : '-'}",
+                      style: TextStyle(
+                        color: (kmoni.lastUpdateAttempt
+                                    .difference(
+                                      kmoni.lastUpdated ?? DateTime(2000),
+                                    )
+                                    .inSeconds >
+                                3)
+                            ? const Color.fromARGB(255, 255, 17, 0)
+                            : null,
+                      ),
                     ),
-                  )
-                else
-                  const SizedBox(
-                    width: 10,
-                    height: 10,
-                  ),
+                    const SizedBox(width: 8),
+                    if (kmoni.isUpdating)
+                      Container(
+                        width: 10,
+                        height: 10,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.blue,
+                        ),
+                      )
+                    else
+                      const SizedBox(
+                        width: 10,
+                        height: 10,
+                      ),
+                  ],
+                ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );

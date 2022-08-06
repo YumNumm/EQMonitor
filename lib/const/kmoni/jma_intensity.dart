@@ -48,7 +48,7 @@ enum JmaIntensity {
   over('over', Color.fromARGB(255, 255, 255, 255), true, -1),
 
   /// 震度異常
-  Error('unknown', Color.fromARGB(255, 73, 243, 214), true, -2);
+  Error('-', Color.fromARGB(255, 73, 243, 214), true, -2);
 
   const JmaIntensity(
     this.name,
