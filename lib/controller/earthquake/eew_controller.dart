@@ -68,7 +68,7 @@ class EewHistoryController extends StateNotifier<EewHistoryModel> {
   }
 
   bool _isConnected() {
-    return true ;
+    return true;
     // TODO(YumNumm): NEED TO IMPLEMENT
   }
 
@@ -99,7 +99,8 @@ class EewHistoryController extends StateNotifier<EewHistoryModel> {
       // valueの最初のものをshowEewsに追加する
       if (value.any(
         (element) =>
-            element.pressDateTime.difference(DateTime.now()).inSeconds > 180,
+            element.pressDateTime.difference(DateTime.now()).inSeconds > 180 ||
+            element.originalId == 'TELEGRAM_ID',
       )) {
         showEews.add(value.first);
       }
@@ -131,7 +132,7 @@ class EewHistoryController extends StateNotifier<EewHistoryModel> {
       if (value.any(
         (element) =>
             element.pressDateTime.difference(DateTime.now()).inSeconds > 180 ||
-            kDebugMode,
+            element.originalId == 'TELEGRAM_ID',
       )) {
         showEews.add(value.first);
       }

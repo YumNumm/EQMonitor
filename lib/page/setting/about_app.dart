@@ -1,5 +1,6 @@
 import 'package:eqmonitor/page/setting/term_of_service.dart';
 import 'package:eqmonitor/state/all_state.dart';
+import 'package:eqmonitor/state/theme_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,6 +16,7 @@ class AboutAppPage extends HookConsumerWidget {
     final kmoni = ref.watch(kmoniNotifier);
     final fcm = ref.watch(firebaseCloudMessagingNotifier);
     final eew = ref.watch(eewHistoryController);
+    final isDarkMode = ref.watch(themeController.notifier).isDarkMode;
 
     return Scaffold(
       appBar: AppBar(
@@ -31,7 +33,9 @@ class AboutAppPage extends HookConsumerWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(32),
                   ),
-                  child: Image.asset('assets/header.png'),
+                  child: Image.asset(isDarkMode
+                      ? 'assets/header-dark.png'
+                      : 'assets/header.png'),
                 ),
               )
             ],
@@ -53,7 +57,7 @@ class AboutAppPage extends HookConsumerWidget {
                     ),
                   ),
                   applicationLegalese:
-                      'MIT License\nCopyright (c) 2022 Onoue Ryotaro',
+                      'MIT License\nCopyright (c) 2022 YumNumm',
                   useRootNavigator: true,
                 ),
               ),
