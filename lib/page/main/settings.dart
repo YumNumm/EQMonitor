@@ -1,5 +1,7 @@
 import 'package:eqmonitor/page/setting/about_app.dart';
+import 'package:eqmonitor/page/setting/debug_info.dart';
 import 'package:eqmonitor/page/setting/theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
 
@@ -31,6 +33,17 @@ class SettingsPage extends StatelessWidget {
                 ),
               ),
             ),
+            if (kDebugMode)
+              SettingsTile.navigation(
+                leading: const Icon(Icons.bug_report),
+                title: const Text('デバッグ情報'),
+                onPressed: (context) => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (context) => const DebugInfoPage(),
+                  ),
+                ),
+              ),
           ],
         ),
       ],

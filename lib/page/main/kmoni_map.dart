@@ -48,7 +48,10 @@ class KmoniMap extends ConsumerWidget {
         // KMoniの更新状況
         const Align(
           alignment: Alignment.bottomLeft,
-          child: KmoniStatusWidget(),
+          child: Padding(
+            padding: EdgeInsets.all(4),
+            child: KmoniStatusWidget(),
+          ),
         ),
       ],
     );
@@ -74,7 +77,7 @@ class KmoniStatusWidget extends ConsumerWidget {
       child: Container(
         decoration: BoxDecoration(
           color: (kmoni.analyzedPoint.length > 100)
-              ? maxShindoColor?.withOpacity(0.6)
+              ? maxShindoColor?.withAlpha(100)
               : null,
           border: Border.all(
             color: maxShindoColor ?? Colors.transparent,
@@ -88,6 +91,7 @@ class KmoniStatusWidget extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       "最終更新: ${(kmoni.lastUpdated != null) ? DateFormat('yyyy/MM/dd HH:mm:ss').format((kmoni.lastUpdated!).toLocal()) : '-'}",

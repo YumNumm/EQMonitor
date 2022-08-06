@@ -1,5 +1,6 @@
 import 'package:eqmonitor/model/setting/theme_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,7 +14,8 @@ class ThemeController extends StateNotifier<ThemeModel> {
     loadSettingsFromSharedPrefrences();
   }
 
-  /// SharedPreferencesから直近の設定を取得する
+  /// ## SharedPreferencesから設定を取得
+  /// デフォルトはThemeMode.system
   Future<void> loadSettingsFromSharedPrefrences() async {
     final prefs = await SharedPreferences.getInstance();
     final themeMode = prefs.getString('themeMode');
@@ -26,17 +28,26 @@ class ThemeController extends StateNotifier<ThemeModel> {
     );
   }
 
-  /// SharedPreferencesに設定を保存する
-  Future<void> saveSettingsToSharedPrefrences() async {
+  /// ## SharedPreferencesに設定を保存する
+  Future<void> _saveSettingsToSharedPrefrences() async {
     final prefs = await SharedPreferences.getInstance();
 
     await prefs.setString('themeMode', state.themeMode.name);
   }
 
+  /// ## テーマを変更
+  /// [themeMode] テーマモード
+  /// 変更後、SharedPreferencesに設定を保存します
   void setTheme(ThemeMode themeMode) {
     state = state.copyWith(
       themeMode: themeMode,
     );
-    saveSettingsToSharedPrefrences();
+    _saveSettingsToSharedPrefrences();
   }
+
+  /// ## ダークモードかどうか
+  /// システム設定のテーマも考慮します
+  bool get isDarkMode => (state.themeMode == ThemeMode.system)
+      ? (SchedulerBinding.instance.window.platformBrightness == Brightness.dark)
+      : state.themeMode == ThemeMode.dark;
 }
