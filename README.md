@@ -6,14 +6,14 @@
 ![GitHub release (latest by date and asset including pre-releases)](https://img.shields.io/github/downloads-pre/EQMonitor/EQMonitor/latest/app-release.apk)
 [![Flutter build Android](https://github.com/EQMonitor/EQMonitor/actions/workflows/android-release.yaml/badge.svg)](https://github.com/EQMonitor/EQMonitor/actions/workflows/android-release.yaml)
 
-> **Warning** > [利用規約](https://github.com/EQMonitor/EQMonitor/blob/main/docs/policy.md)を必ずご確認の上ご利用ください。
+> **Warning**  [利用規約](https://github.com/EQMonitor/EQMonitor/blob/main/assets/docs/term_of_service.md)を必ずご確認の上ご利用ください。
 
 ## 機能
 
 - [x] 緊急地震速報などの地震情報の通知
 - [x] 強震モニタの表示
-- [ ] 緊急地震速報の情報をマップ上に表示
-- [ ] 地震履歴
+- [x] 緊急地震速報の情報をマップ上に表示
+- [x] 地震履歴
 - [ ] 地震情報の読み上げ(バックグラウンド/フォアグラウンド)
       などなど… 詳しくは、[ロードマップ](https://github.com/EQMonitor/EQMonitor/issues/89)をご覧ください
 
