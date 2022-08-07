@@ -6,7 +6,7 @@
 ![GitHub release (latest by date and asset including pre-releases)](https://img.shields.io/github/downloads-pre/EQMonitor/EQMonitor/latest/app-release.apk)
 [![Flutter build Android](https://github.com/EQMonitor/EQMonitor/actions/workflows/android-release.yaml/badge.svg)](https://github.com/EQMonitor/EQMonitor/actions/workflows/android-release.yaml)
 
-> **Warning**  [利用規約](https://github.com/EQMonitor/EQMonitor/blob/main/assets/docs/term_of_service.md)を必ずご確認の上ご利用ください。
+> **Warning** [利用規約](https://github.com/EQMonitor/EQMonitor/blob/main/assets/docs/term_of_service.md)を必ずご確認の上ご利用ください。
 
 ## 機能
 
