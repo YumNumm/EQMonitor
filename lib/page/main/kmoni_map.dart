@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'dart:ui';
 
 import 'package:eqmonitor/schema/dmdata/eew-information/eew-infomation.dart';
@@ -17,8 +19,8 @@ class KmoniMap extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final kmoniMapMatrix4 =
-        ref.watch(kmoniMapController.select((value) => value.mapMatrix4));
+    // final kmoniMapMatrix4 =
+    //     ref.watch(kmoniMapController.select((value) => value.mapMatrix4));
     final isKmoniMapLoaded =
         ref.watch(kmoniMapController.select((value) => value.isMapLoaded));
     if (!isKmoniMapLoaded) {
@@ -74,7 +76,7 @@ class KmoniStatusWidget extends ConsumerWidget {
         : null;
     return ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(8)),
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           color: (kmoni.analyzedPoint.length > 100)
               ? maxShindoColor?.withAlpha(100)

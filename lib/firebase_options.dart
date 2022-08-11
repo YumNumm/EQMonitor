@@ -42,10 +42,16 @@ class DefaultFirebaseOptions {
           'DefaultFirebaseOptions have not been configured for linux - '
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
-      default:
+      case TargetPlatform.fuchsia:
         throw UnsupportedError(
-          'DefaultFirebaseOptions are not supported for this platform.',
+          'DefaultFirebaseOptions have not been configured for fuchsia - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
         );
+
+      //default:
+      //  throw UnsupportedError(
+      //    'DefaultFirebaseOptions are not supported for this platform.',
+      //  );
     }
   }
 
@@ -63,8 +69,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '179553945248',
     projectId: 'eqmonitor-main',
     storageBucket: 'eqmonitor-main.appspot.com',
-    androidClientId: '179553945248-gnhkjhr4feqsv308rf3dlcber84o647i.apps.googleusercontent.com',
-    iosClientId: '179553945248-l0p6vhl8ujr8a6no8irbio8b0jv8ptjo.apps.googleusercontent.com',
+    androidClientId:
+        '179553945248-gnhkjhr4feqsv308rf3dlcber84o647i.apps.googleusercontent.com',
+    iosClientId:
+        '179553945248-l0p6vhl8ujr8a6no8irbio8b0jv8ptjo.apps.googleusercontent.com',
     iosBundleId: 'com.yumnumm.eqmonitor',
   );
 }

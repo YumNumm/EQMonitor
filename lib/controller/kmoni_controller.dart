@@ -123,7 +123,11 @@ class KmoniController extends StateNotifier<KmoniModel> {
         analyzedPoint: newAnalyzedPoint,
         lastUpdated: dt,
       );
-    } on Exception {}
+    } on Exception {
+      logger.e(
+        'リアルタイム震度画像の取得に失敗しました',
+      );
+    }
   }
 
   /// 観測点CSVを読み込む

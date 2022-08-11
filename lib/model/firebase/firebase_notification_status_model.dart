@@ -10,7 +10,5 @@ class FirebaseCloudMessagingModel with _$FirebaseCloudMessagingModel {
 
     // FCM Tokenが取得できたかどうか
     required bool hasToken,
-
-
   }) = _FirebaseCloudMessagingModel;
 }

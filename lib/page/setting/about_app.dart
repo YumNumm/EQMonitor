@@ -33,9 +33,9 @@ class AboutAppPage extends HookConsumerWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(32),
                   ),
-                  child: Image.asset(isDarkMode
-                      ? 'assets/header-dark.png'
-                      : 'assets/header.png'),
+                  child: Image.asset(
+                    isDarkMode ? 'assets/header-dark.png' : 'assets/header.png',
+                  ),
                 ),
               )
             ],
@@ -64,7 +64,7 @@ class AboutAppPage extends HookConsumerWidget {
               SettingsTile(
                 title: const Text('利用規約'),
                 onPressed: (context) => Navigator.of(context).push(
-                  MaterialPageRoute(
+                  MaterialPageRoute<void>(
                     builder: (context) => const TermOfServicePage(
                       showAcceptButton: false,
                     ),

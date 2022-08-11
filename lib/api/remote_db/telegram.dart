@@ -23,6 +23,7 @@ class TelegramApi {
           .from('telegram')
           .select(
             'id,'
+            'data, '
             'type,'
             'time,'
             'url,'
@@ -48,6 +49,7 @@ class TelegramApi {
           .select(
             'id,'
             'type,'
+            'data, '
             'time,'
             'url,'
             'image_url,'

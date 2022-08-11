@@ -10,7 +10,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
-
 Future<void> firebaseMessagingForegroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   final deviceInfo = await DeviceInfoPlugin().androidInfo;
@@ -23,8 +22,7 @@ Future<void> firebaseMessagingForegroundHandler(RemoteMessage message) async {
   };
 
   await AwesomeNotifications().createNotificationFromJsonData(message.data);
-  if(message.data['payload']  != null) {
-  }
+  if (message.data['payload'] != null) {}
   final flutterTts = FlutterTts();
   await flutterTts.setLanguage('ja-JP');
   if (message.data['tts'] != null) {

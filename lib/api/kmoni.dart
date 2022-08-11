@@ -11,7 +11,7 @@ class KyoshinMonitorApi {
         ..options.baseUrl = 'http://www.kmoni.bosai.go.jp'
         ..options.connectTimeout = 5000
         ..interceptors.add(DioFirebasePerformanceInterceptor())
-        //..interceptors.add(LogInterceptor())
+      //..interceptors.add(LogInterceptor())
       //..httpClientAdapter = Http2Adapter(
       //  ConnectionManager(
       //    idleTimeout: 1000,

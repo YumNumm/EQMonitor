@@ -54,4 +54,3 @@ final travelTimeController =
     StateNotifierProvider<TravelTimeController, TravelTimeModel>((ref) {
   return TravelTimeController();
 });
-

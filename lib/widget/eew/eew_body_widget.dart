@@ -1,5 +1,6 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:eqmonitor/const/kmoni/jma_intensity.dart';
-import 'package:eqmonitor/res/text_styles.dart';
 import 'package:eqmonitor/schema/dmdata/commonHeader.dart';
 import 'package:eqmonitor/schema/dmdata/eew-information/eew-infomation.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,10 @@ class EewBodyWidget extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: Text(
             eew.key.headline ?? '先ほどの緊急地震速報は取り消されました',
-            style: TextStyles.eewTitleStyle(),
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       );
@@ -59,7 +63,7 @@ class EewBodyWidget extends StatelessWidget {
       ]);
     return ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(8)),
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           color: eew.value.intensity?.maxint.from.color.withOpacity(0.8),
           borderRadius: const BorderRadius.all(Radius.circular(8)),

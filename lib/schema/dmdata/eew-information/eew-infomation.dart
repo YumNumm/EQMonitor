@@ -1,4 +1,3 @@
-
 import 'area.dart';
 import 'comments.dart';
 import 'earthquake.dart';
@@ -64,7 +63,6 @@ class EEWInformation {
           : Comments.fromJson(j['comments'] as Map<String, dynamic>),
     );
   }
-
 
   /// このイベントで最終の更新かどうかを識別する。
   /// 最終報・取り消し報の場合は、`true`となる

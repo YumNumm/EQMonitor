@@ -76,7 +76,7 @@ android {
             versionNameSuffix '.d'
         }
     }
-    buildToolsVersion '32.1.0 rc1'
+    buildToolsVersion '33.0.0'
     buildFeatures {
         viewBinding true
     }

@@ -20,9 +20,9 @@ class KmoniMapController extends StateNotifier<KmoniMapModel> {
             mapFillColor: Colors.white,
             loadDuration: null,
           ),
-        ){
-          onInit();
-        }
+        ) {
+    onInit();
+  }
 
   static const String japanMapFileName = 'assets/maps/japan_comp.json';
   static const String areaForecastLocalEFileName =
@@ -45,7 +45,7 @@ class KmoniMapController extends StateNotifier<KmoniMapModel> {
     }
   }
 
-  Future<void> _loadJapanMap({bool showLabel = false}) async {
+  Future<void> _loadJapanMap() async {
     final stopwatch = Stopwatch()..start();
     final geo = GeoJson();
 
