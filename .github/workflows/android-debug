@@ -1,0 +1,132 @@
+name: Flutter build Android(d)
+
+#発火条件
+on:
+  #ソースをmainブランチにプッシュする時
+  push:
+    branches: [main]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    #ビルド環境
+    runs-on: ubuntu-latest
+    # タイムアウト時間を設定
+    timeout-minutes: 15
+
+    steps:
+      #リポジトリからソースをダンロード
+      - uses: actions/checkout@v2
+
+      #JAVA環境構築
+      - name: Setup Java 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: "adopt"
+          java-version: "17"
+          cache: "gradle"
+
+      - name: Setup flutter environment
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.0.5"
+          channel: "stable"
+          cache: true
+
+      - name: Cache pubspec dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ env.FLUTTER_HOME }}/.pub-cache
+            **/.packages
+            **/.flutter-plugins
+            **/.flutter-plugin-dependencies
+            **/.dart_tool/package_config.json
+          key: build-pubspec-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            build-pubspec-
+
+      - name: Cache build runner
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/.dart_tool/build
+          key: build-runner-${{ hashFiles('**/asset_graph.json') }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            build-runner-
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Flutter dependencies install
+        #ライブラリーの導入
+        run: flutter pub get
+
+      - name: Generate codes with build_runner
+        run: flutter pub run build_runner build --delete-conflicting-outputs
+
+      - name: Generate LauncherIcon
+        run: flutter pub run flutter_launcher_icons:main
+
+      - name: Generate NativeSplash
+        run: flutter pub run flutter_native_splash:create
+
+      - name: Analyze
+        run: flutter analyze .
+        continue-on-error: true
+
+      - name: Accept Android License
+        run: yes | flutter doctor --android-licenses
+
+      - name: Build apk
+        run: |
+          echo '${{ secrets.SIGNING_KEY }}' | base64 -d > android/app/key.jks
+          echo '${{ secrets.FIREBASE_ANDROID }}' | base64 -d > android/app/google-services.json
+          echo '${{ secrets.PRIVATE_KEYS }}' | base64 -d > lib/private/keys.dart
+          export KEYSTORE_PASSWORD='${{ secrets.KEYSTORE_PASSWORD }}'
+          export KEY_ALIAS='${{ secrets.KEY_ALIAS }}'
+          export KEY_PASSWORD='${{ secrets.KEY_PASSWORD }}'
+          flutter build apk --debug
+        env:
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          ALIAS: ${{ secrets.ALIAS }}
+          KEY_PATH: key.jks
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: release-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
+
+      # - uses: codecov/codecov-action@v3
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+      #     fail_ci_if_error: false # optional (default = false)
+      #     verbose: true # optional (default = false)
+      #     file: ~/coverage/lcov.info
+
+      #-- Slack通知 --#
+      # 成功
+      - name: Slack Notification on Success
+        if: ${{ success() }}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_TITLE: Deploy Success
+          SLACK_COLOR: good
+          SLACK_ICON: https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/assets/icon.png
+          SLACK_USERNAME: EQMonitor
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      # 失敗
+      - name: Slack Notification on Failure
+        if: ${{ failure() }}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_TITLE: Deploy Failure
+          SLACK_COLOR: danger
+          SLACK_ICON: https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/assets/icon.png
+          SLACK_USERNAME: EQMonitor
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
