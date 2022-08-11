@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_dynamic_calls
+
 import 'package:dio/dio.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 
@@ -102,7 +104,7 @@ extension _ResponseHttpMetric on HttpMetric {
 
 extension _UriHttpMethod on Uri {
   String normalized() {
-    return "$scheme://$host$path";
+    return '$scheme://$host$path';
   }
 }
 

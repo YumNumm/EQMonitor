@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.yumnumm.eqmonitor">
 
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
@@ -10,32 +11,14 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon"
         android:label="EQMonitor">
-        <receiver
-            android:name=".latestwidget"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="CLICK_WIDGET"/>
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/latestwidget_info" />
-        </receiver>
-
-        <service
-            android:name=".ForegroundService"
-            android:enabled="true"
-            android:exported="false"
-            android:stopWithTask="true" />
 
         <activity
             android:name=".MainActivity"
@@ -46,12 +29,6 @@
             android:theme="@style/LaunchTheme"
             android:windowSoftInputMode="adjustResize">
 
-            <!--
-                 Specifies an Android theme to apply to this Activity as soon as
-                 the Android process has started. This theme is visible to the user
-                 while the Flutter UI initializes. After that, this theme continues
-                 to determine the Window background behind the Flutter UI.
-            -->
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme" />
@@ -71,3 +48,4 @@
     </application>
 
 </manifest>
+

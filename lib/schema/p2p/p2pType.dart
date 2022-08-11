@@ -24,6 +24,4 @@ class P2PJsonApiv2 {
       : id = j['id'].toString(),
         code = int.parse(j['code'].toString()),
         time = DateFormat('yyyy/MM/dd HH:mm.SSS').parse(j['time'].toString());
-
-
 }

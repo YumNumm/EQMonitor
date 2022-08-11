@@ -2,7 +2,6 @@ import 'package:intl/intl.dart';
 
 /// ## 地震情報
 class P2PJMAQuake {
-
   P2PJMAQuake({
     required this.id,
     required this.code,
@@ -28,6 +27,7 @@ class P2PJMAQuake {
                   (j['points'] as List<dynamic>)[index] as Map<String, dynamic>,
                 ),
               );
+
   /// ## 情報を一意に識別するID
   final String id;
 
@@ -49,7 +49,6 @@ class P2PJMAQuake {
 
 /// ## 発表元の情報
 class P2PJMAQuakeIssue {
-
   P2PJMAQuakeIssue.fromJson(Map<String, dynamic> j)
       : source = (j['source'].toString() == '') ? null : j['source'].toString(),
         time = DateFormat('yyyy/MM/dd HH:mm.SSS').parse(j['time'].toString()),
@@ -63,6 +62,7 @@ class P2PJMAQuakeIssue {
     required this.type,
     required this.correct,
   });
+
   /// ## 発表元
   final String? source;
 
@@ -101,6 +101,7 @@ class P2PJMAQuakeEarthQuake {
     required this.domesticTsunami,
     required this.foreignTsunami,
   });
+
   /// ## 発生日時
   final DateTime time;
 
@@ -119,7 +120,6 @@ class P2PJMAQuakeEarthQuake {
 
 /// ## 震度観測点の情報
 class P2PJMAQuakePoint {
-
   P2PJMAQuakePoint.fromJson(Map<String, dynamic> j)
       : pref = j['pref'].toString(),
         addr = j['addr'].toString(),
@@ -133,6 +133,7 @@ class P2PJMAQuakePoint {
     required this.isArea,
     required this.scale,
   });
+
   /// ## 都道府県
   final String pref;
 
@@ -171,6 +172,7 @@ class P2PJMAQuakeEarthQuakeHypoCenter {
         magnitude = (j['magnitude'].toString() == '-1')
             ? null
             : double.parse(j['magnitude'].toString());
+
   /// ## 名称
   final String? name;
 

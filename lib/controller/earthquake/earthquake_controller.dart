@@ -13,9 +13,9 @@ class EarthquakeHistoryController
             telegrams: <Telegram>[],
             telegramsGroupByEventId: {},
           ),
-        ){
-          onInit();
-        }
+        ) {
+    onInit();
+  }
   final TelegramApi telegramApi = TelegramApi();
 
   /// 電文を追加します

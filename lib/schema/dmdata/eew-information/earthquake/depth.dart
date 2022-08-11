@@ -1,4 +1,3 @@
-
 import 'package:eqmonitor/schema/dmdata/eq-information/earthquake-information/hypocenter/depth/depth_condition.dart';
 
 /// 緊急地震速報が対象とする震源の深さを記載します。

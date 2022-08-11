@@ -37,6 +37,5 @@ class KmoniModel with _$KmoniModel {
 
     /// Kmoniの更新中かどうか
     required bool isUpdating,
-
   }) = _KmoniModel;
 }

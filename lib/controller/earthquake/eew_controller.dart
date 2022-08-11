@@ -67,11 +67,6 @@ class EewHistoryController extends StateNotifier<EewHistoryModel> {
     }
   }
 
-  bool _isConnected() {
-    return true;
-    // TODO(YumNumm): NEED TO IMPLEMENT
-  }
-
   void addTelegram(CommonHead commonHead) {
     logger.d('addTelegram: ${commonHead.originalId}');
     // eewTelegramsに追加

@@ -40,7 +40,7 @@ class TravelTimeController extends StateNotifier<TravelTimeModel> {
       try {
         travelTimeTable.add(TravelTimeTable.fromList(row.split(',')));
       } on Exception catch (e) {
-        print(e.toString());
+        logger.e(e);
       }
     }
     // 走時表読み込み終了

@@ -1,4 +1,6 @@
 /// 震央位置の精度値
+// ignore_for_file: file_names
+
 class EpicCenters {
   EpicCenters({
     required this.epicCenterAccuracy,

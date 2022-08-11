@@ -5,8 +5,8 @@ import 'package:eqmonitor/utils/fcm/foreground_handler.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 
-Future<void> setUpFirebaseCloudMessaging() async{
-    FirebaseMessaging.onMessage.listen(
+Future<void> setUpFirebaseCloudMessaging() async {
+  FirebaseMessaging.onMessage.listen(
     (message) async => firebaseMessagingForegroundHandler(message),
   );
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(

@@ -14,3 +14,5 @@ analyzer:
     - "**/*.gr.dart"
     - "**/l10n*.dart"
     - "**/*.gen.dart"
+
+

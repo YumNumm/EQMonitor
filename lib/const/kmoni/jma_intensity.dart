@@ -8,7 +8,7 @@ import 'dart:ui';
 enum JmaIntensity {
   /// 震度不明
   Unknown(
-    'unknown',
+    '?',
     Color.fromARGB(255, 242, 242, 255),
     true,
     -1,

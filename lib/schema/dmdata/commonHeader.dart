@@ -1,5 +1,7 @@
 /// # Telegram head
 /// 共通部分
+// ignore_for_file: avoid_dynamic_calls, file_names
+
 class CommonHead {
   CommonHead({
     required this.originalId,
