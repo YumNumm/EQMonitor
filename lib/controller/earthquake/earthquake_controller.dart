@@ -59,4 +59,14 @@ class EarthquakeHistoryController
   Future<List<Telegram>> getTelegrams({int limit = 100}) async {
     return telegramApi.getTelegramsWithLimit(limit: limit);
   }
+
+  Future<bool> refreshTelegrams({int limit = 100}) async {
+    try{
+      final res = await telegramApi.getTelegramsWithLimit(limit: limit);
+      res.forEach(addTelegram);
+      return true;
+    }on Exception catch(e){
+      return false;
+    }
+  }
 }

@@ -26,6 +26,9 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
       child: RefreshIndicator(
         onRefresh: () async {
           await Future<void>.delayed(const Duration(seconds: 1));
+          await ref
+              .read(earthquakeHistoryController.notifier)
+              .refreshTelegrams();
         },
         child: ListView.builder(
           shrinkWrap: true,
@@ -147,7 +150,8 @@ class EarthquakeHistoryTile extends StatelessWidget {
           component?.hypoCenter.name ?? '震源調査中',
           style: const TextStyle(fontSize: 18),
         ),
-        subtitle: Row(
+        subtitle: Wrap(
+          
           children: [
             // 速報かどうか
             if (isSokuhou)

@@ -18,3 +18,19 @@
       などなど… 詳しくは、[ロードマップ](https://github.com/EQMonitor/EQMonitor/issues/89)をご覧ください
 
 [![DigitalOcean Referral Badge](https://web-platforms.sfo2.cdn.digitaloceanspaces.com/WWW/Badge%201.svg)](https://www.digitalocean.com/?refcode=642cebc69a3e&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge)
+
+## HOW TO BUILD
+`android/app/google-service.json`,`lib/private/keys.dart`を追加する必要があります。
+`google-service.json`は、FirebaseのAndroid Key
+`keys.dart`は様々なAPIKeyが格納されています(`.keys.sample.dart`をご覧ください)
+
+```bash
+flutter pub get
+flutter pub run build_runner build --delete-conflicting-outputs
+flutter pub run flutter_launcher_icons:main
+flutter pub run flutter_native_splash:create
+# RELEASE BUILD
+flutter build apk --release --obfuscate --split-debug-info=obfuscate/android
+# DEBUG BUILD
+flutter build apk --debug
+```
