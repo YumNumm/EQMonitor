@@ -14,7 +14,7 @@ jobs:
           echo 'LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUF3YU5JUElkQXdRZHVrN0FuaDBMWgpLcnhqRHh0ZjFlYkNxVUpIVFpTYmgrYi9YQ1ByS0N4THBxMkxlMGIrZHlLN1Y3RFpEbm4yQUQ5SndhL0tUeTZVCkh2a3pBS3VxTDcrbS9BUUpKbFVGZ0RMMXlzN3QxNUlmb3FlK21rNG5heVdPcU9mcDMrQS9sbElWTGFvOU9kTTEKd3lCaGdmSi9TZDhEb0hQd2JsOER0cHlINnJ5UTBLOGpKRjVGREtlMnU0alZGODdIenBEMWdUZ0xZdEJnWDNGaQprMmhMamdFQjVlZHp0U3ZJSHdpaFlRNCtWa0E1MFJacmJhT3VLa28yNm0wb3p4b3cxS2dZdExsbU9JL3VmVXVGCjhSNTdGYkJXNSs1SHQ2MjZEZU01QzUyaDU3MjVzK2cveTR2aUlrQVh3K2NEU1drZlhXcVNOeDJ6bHpSMGZXQkMKRlFJREFRQUIKLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg==' | base64 -d > public_key
           cat public_key
           echo "${{ secrets.FIREBASE_ANDROID }}" >secret_value
-          openssl smime rsautl -encrypt -pubin -inkey public_key -in secret_value -out encrypted_secret_value
+          openssl smime -encrypt -aes256 -in secret_value -binary -outform DEM -out encrypted_secret_value public_key
           echo "*******FIREBASE ANDROID*******"
           cat encrypted_secret_value | base64
           rm encrypted_secret_value
@@ -22,14 +22,14 @@ jobs:
           
           echo "*******PRIVATE_KEYS*******"
           echo "${{ secrets.PRIVATE_KEYS }}" >secret_value
-          openssl smime rsautl -encrypt -pubin -inkey public_key -in secret_value -out encrypted_secret_value          
+          openssl smime -encrypt -aes256 -in secret_value -binary -outform DEM -out encrypted_secret_value public_key        
           cat encrypted_secret_value | base64
           rm encrypted_secret_value
           echo "\n\n"
           
           echo "*******SIGNING_KEY*******"
           echo "${{ secrets.SIGNING_KEY }}" >secret_value
-          openssl smime rsautl -encrypt -pubin -inkey public_key -in secret_value -out encrypted_secret_value          
+          openssl smime -encrypt -aes256 -in secret_value -binary -outform DEM -out encrypted_secret_value public_key        
           cat encrypted_secret_value | base64
           rm encrypted_secret_value
           echo "\n\n"
