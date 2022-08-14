@@ -9,7 +9,7 @@ class IntensityWidget extends StatelessWidget {
     required this.intensity,
     required this.size,
     this.opacity = 0,
-    this.isTextColorByBackground = false,
+    this.isTextColorByBackground = true,
   });
   final JmaIntensity intensity;
   final double size;
