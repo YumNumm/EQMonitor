@@ -72,7 +72,7 @@ class _MainPageState extends ConsumerState<MainPage> {
                 : selectedIndex.value == 1
                     ? EarthquakeHistoryPage()
                     : selectedIndex.value == 2
-                        ? const IntensityCalcPage()
+                        ? const IntensityEstimateApiPage()
                         : const SettingsPage(),
           );
         } else {
@@ -109,7 +109,7 @@ class _MainPageState extends ConsumerState<MainPage> {
                         : selectedIndex.value == 1
                             ? EarthquakeHistoryPage()
                             : selectedIndex.value == 2
-                                ? const IntensityCalcPage()
+                                ? const IntensityEstimateApiPage()
                                 : const SettingsPage(),
                   ),
                 ],

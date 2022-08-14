@@ -8,7 +8,7 @@ import 'package:latlong2/latlong.dart';
 /// ref: https://qiita.com/soshi1822/items/f5fd9ccf6830d834abc4
 /// ref: https://www.data.jma.go.jp/svd/eqev/data/study-panel/tyoshuki_joho_kentokai/yoho1/sanko1.pdf
 /// ref: https://www.jstage.jst.go.jp/article/segj/60/5/60_5_367/_pdf/-char/ja
-class IntensityCalc {
+class IntensityEstimateApi {
   /// ## 震度計算
   /// [jmaMagnitude] マグニチュード
   /// [depth] 深さ
