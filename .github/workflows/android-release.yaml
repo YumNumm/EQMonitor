@@ -1,4 +1,4 @@
-name: Flutter build Android
+name: Flutter build Android(r)
 
 #発火条件
 on:

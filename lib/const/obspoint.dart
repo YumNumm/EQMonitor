@@ -11,16 +11,18 @@ class ObsPoint {
     required this.lon,
     required this.x,
     required this.y,
+    required this.arv,
   });
 
   ObsPoint.fromList(List<dynamic> lis)
-      : code = lis[1].toString(),
-        name = lis[3].toString(),
-        pref = lis[4].toString(),
-        lat = double.parse(lis[5].toString()),
-        lon = double.parse(lis[6].toString()),
-        x = int.parse(lis[7].toString()),
-        y = int.parse(lis[8].toString());
+      : code = lis[0].toString(),
+        pref = lis[1].toString(),
+        name = lis[2].toString(),
+        lat = double.parse(lis[3].toString()),
+        lon = double.parse(lis[4].toString()),
+        x = int.parse(lis[5].toString()),
+        y = int.parse(lis[6].toString()),
+        arv = double.parse(lis[7].toString());
 
   final String code;
   final String name;
@@ -29,4 +31,8 @@ class ObsPoint {
   final double lon;
   final int x;
   final int y;
+
+  /// 工学的基盤（Vs=400m/s）から地表に至る最大速度の増幅率
+  /// ref: https://www.j-shis.bosai.go.jp/api-sstruct-meshinfo
+  final double arv;
 }
