@@ -70,3 +70,5 @@ class EewHypocenterPainter extends CustomPainter {
   bool shouldRepaint(covariant EewHypocenterPainter oldDelegate) =>
       oldDelegate.eews != eews;
 }
+
+

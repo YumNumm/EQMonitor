@@ -13,7 +13,7 @@ class AboutAppPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final travelTime = ref.watch(travelTimeController);
     final kmoniMap = ref.watch(kmoniMapController);
-    final kmoni = ref.watch(kmoniNotifier);
+    final kmoni = ref.watch(kmoniController);
     final fcm = ref.watch(firebaseCloudMessagingNotifier);
     final eew = ref.watch(eewHistoryController);
     final isDarkMode = ref.watch(themeController.notifier).isDarkMode;
