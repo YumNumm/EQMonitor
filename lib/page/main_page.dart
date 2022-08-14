@@ -1,5 +1,6 @@
 import 'package:eqmonitor/page/main/earthquake_history.dart';
 import 'package:eqmonitor/page/main/kmoni_map.dart';
+import 'package:eqmonitor/state/all_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -23,7 +24,7 @@ class _MainPageState extends ConsumerState<MainPage> {
     // ref.read(eewHistoryController.notifier).onInit();
 
     // FCM登録
-    // ref.read(firebaseCloudMessagingNotifier.notifier).onInit();
+    ref.read(firebaseCloudMessagingNotifier.notifier).onInit();
     // ref.read(kmoniNotifier.notifier).onInit();
     super.initState();
   }
