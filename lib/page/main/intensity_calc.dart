@@ -10,11 +10,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
-class IntensityCalcPage extends HookConsumerWidget {
-  const IntensityCalcPage({super.key});
+class IntensityEstimateApiPage extends HookConsumerWidget {
+  const IntensityEstimateApiPage({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final intensityCalc = IntensityCalc();
+    final intensityCalc = IntensityEstimateApi();
     final magnitude = useState<double>(8);
     final depth = useState<int>(50);
     final isCollect = useState<bool>(true);
