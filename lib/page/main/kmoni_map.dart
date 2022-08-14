@@ -65,7 +65,7 @@ class KmoniStatusWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final kmoni = ref.watch(kmoniNotifier);
+    final kmoni = ref.watch(kmoniController);
     final maxShindoColor = (kmoni.analyzedPoint.length > 100)
         ? kmoni.analyzedPoint
             .reduce(
@@ -165,7 +165,7 @@ class ObsPointsMapWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final kmoni = ref.watch(kmoniNotifier);
+    final kmoni = ref.watch(kmoniController);
 
     return CustomPaint(
       isComplex: true,

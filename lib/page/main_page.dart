@@ -1,4 +1,5 @@
 import 'package:eqmonitor/page/main/earthquake_history.dart';
+import 'package:eqmonitor/page/main/intensity_calc.dart';
 import 'package:eqmonitor/page/main/kmoni_map.dart';
 import 'package:eqmonitor/state/all_state.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class _MainPageState extends ConsumerState<MainPage> {
 
     // FCM登録
     ref.read(firebaseCloudMessagingNotifier.notifier).onInit();
-    // ref.read(kmoniNotifier.notifier).onInit();
+    // ref.read(kmoniController.notifier).onInit();
     super.initState();
   }
 
@@ -57,6 +58,10 @@ class _MainPageState extends ConsumerState<MainPage> {
                   label: '地震履歴',
                 ),
                 NavigationDestination(
+                  icon: Icon(Icons.calculate),
+                  label: '震度計算',
+                ),
+                NavigationDestination(
                   icon: Icon(Icons.settings),
                   label: '設定',
                 ),
@@ -66,7 +71,9 @@ class _MainPageState extends ConsumerState<MainPage> {
                 ? const KmoniMap()
                 : selectedIndex.value == 1
                     ? EarthquakeHistoryPage()
-                    : const SettingsPage(),
+                    : selectedIndex.value == 2
+                        ? const IntensityCalcPage()
+                        : const SettingsPage(),
           );
         } else {
           return Scaffold(
@@ -74,6 +81,7 @@ class _MainPageState extends ConsumerState<MainPage> {
               child: Row(
                 children: [
                   NavigationRail(
+                    labelType: NavigationRailLabelType.all,
                     destinations: const [
                       NavigationRailDestination(
                         icon: Icon(Icons.home),
@@ -82,6 +90,10 @@ class _MainPageState extends ConsumerState<MainPage> {
                       NavigationRailDestination(
                         icon: Icon(Icons.history),
                         label: Text('地震履歴'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.calculate),
+                        label: Text('震度計算'),
                       ),
                       NavigationRailDestination(
                         icon: Icon(Icons.settings),
@@ -96,7 +108,9 @@ class _MainPageState extends ConsumerState<MainPage> {
                         ? const KmoniMap()
                         : selectedIndex.value == 1
                             ? EarthquakeHistoryPage()
-                            : const SettingsPage(),
+                            : selectedIndex.value == 2
+                                ? const IntensityCalcPage()
+                                : const SettingsPage(),
                   ),
                 ],
               ),

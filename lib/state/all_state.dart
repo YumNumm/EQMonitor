@@ -17,7 +17,8 @@ final kmoniMapController =
   return KmoniMapController();
 });
 
-final kmoniNotifier = StateNotifierProvider<KmoniController, KmoniModel>((ref) {
+final kmoniController =
+    StateNotifierProvider<KmoniController, KmoniModel>((ref) {
   return KmoniController();
 });
 

@@ -33,7 +33,7 @@ class IntensityWidget extends StatelessWidget {
           child: Text(
             intensity.name,
             style: TextStyle(
-              fontSize: 32,
+              fontSize: size * 0.8,
               color: textColor,
               fontFamily: 'CaskaydiaCove',
               fontWeight: FontWeight.bold,
