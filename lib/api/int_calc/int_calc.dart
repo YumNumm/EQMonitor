@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:eqmonitor/const/kmoni/jma_intensity.dart';
-import 'package:eqmonitor/const/obspoint.dart';
+import 'package:eqmonitor/schema/dmdata/parameter-earthquake/parameter-earthquake.dart';
 import 'package:latlong2/latlong.dart';
 
 /// ## 距離減衰式による震度計算
@@ -14,25 +14,25 @@ class IntensityEstimateApi {
   /// [depth] 深さ
   /// [hypocenter] 震央
   /// [obsPoints] 観測点
-  List<EstimatedShindoPoint> estimateIntensity({
+  List<EstimatedEarthquakeParameterItem> estimateIntensity({
     required double jmaMagnitude,
     required double depth,
     required LatLng hypocenter,
-    required List<ObsPoint> obsPoints,
+    required List<ParameterEarthquakeItem> obsPoints,
   }) {
     // Mjma(気象庁マグニチュード)->Mw(モーメントマグニチュード)
     // 宇津(1982)の経験式を用いる
     final momentMagnitude = jmaMagnitude - 0.171;
     // 断層長計算(半径)
     final faultLength = math.pow(10, 0.5 * momentMagnitude - 1.85) / 2;
-    final estimatedObsPoints = <EstimatedShindoPoint>[];
+    final estimatedObsPoints = <EstimatedEarthquakeParameterItem>[];
     //* 各観測点毎の処理
     for (final obsPoint in obsPoints) {
       // 震央と観測点の距離を求める
       final epicenterDistance = const Distance().as(
         LengthUnit.Kilometer,
         hypocenter,
-        LatLng(obsPoint.lat, obsPoint.lon),
+        LatLng(obsPoint.latitude, obsPoint.longitude),
       );
       // 断層長を引いた震源距離を求める
       final hypocenterDistance =
@@ -60,17 +60,20 @@ class IntensityEstimateApi {
       final intensity = 2.68 + 1.72 * log10(pgv);
       final jmaIntensity = JmaIntensity.toJmaIntensity(intensity: intensity);
       estimatedObsPoints.add(
-        EstimatedShindoPoint(
-          arv: obsPoint.arv,
-          code: obsPoint.code,
+        EstimatedEarthquakeParameterItem(
           estimatedIntensity: intensity,
           estimatedJmaIntensity: jmaIntensity,
-          lat: obsPoint.lat,
-          lon: obsPoint.lon,
           name: obsPoint.name,
-          pref: obsPoint.pref,
-          x: obsPoint.x,
-          y: obsPoint.y,
+          arv: obsPoint.arv,
+          city: obsPoint.city,
+          code: obsPoint.code,
+          latitude: obsPoint.latitude,
+          longitude: obsPoint.longitude,
+          kana: obsPoint.kana,
+          noCode: obsPoint.noCode,
+          owner: obsPoint.owner,
+          region: obsPoint.region,
+          status: obsPoint.status,
         ),
       );
     }
@@ -78,15 +81,18 @@ class IntensityEstimateApi {
   }
 }
 
-class EstimatedShindoPoint extends ObsPoint {
-  const EstimatedShindoPoint({
+class EstimatedEarthquakeParameterItem extends ParameterEarthquakeItem {
+  EstimatedEarthquakeParameterItem({
+    required super.region,
+    required super.city,
+    required super.noCode,
     required super.code,
     required super.name,
-    required super.pref,
-    required super.lat,
-    required super.lon,
-    required super.x,
-    required super.y,
+    required super.kana,
+    required super.status,
+    required super.owner,
+    required super.latitude,
+    required super.longitude,
     required super.arv,
     required this.estimatedIntensity,
     required this.estimatedJmaIntensity,

@@ -16,12 +16,11 @@ class ObsPointPainter extends CustomPainter {
       final paint = Paint()
         ..color = point.shindoColor!
         ..isAntiAlias = true
-        ..style = PaintingStyle.fill
-        ..strokeWidth = 0.5;
+        ..style = PaintingStyle.fill;
       canvas.drawCircle(
         MapGlobalOffset.latLonToGlobalPoint(LatLng(point.lat, point.lon))
             .toLocalOffset(const Size(476, 927.4)),
-        0.6,
+        1,
         paint,
       );
     }

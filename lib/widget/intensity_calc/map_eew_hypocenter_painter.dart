@@ -10,7 +10,10 @@ class HypocenterPainterfromLatLng extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     // ×印を描く
-    TextPainter(
+    final offset = MapGlobalOffset.latLonToGlobalPoint(
+      hypocenter,
+    ).toLocalOffset(const Size(476, 927.4));
+    final textPainter = TextPainter(
       text: const TextSpan(
         children: [
           TextSpan(
@@ -23,17 +26,16 @@ class HypocenterPainterfromLatLng extends CustomPainter {
         ],
       ),
       textDirection: TextDirection.ltr,
-    )
-      ..layout()
-      ..paint(
-        canvas,
-        MapGlobalOffset.latLonToGlobalPoint(
-          hypocenter,
-        ).toLocalOffset(const Size(476, 927.4)),
-      );
+    )..layout();
+    textPainter.paint(
+      canvas,
+      Offset(
+        offset.dx - (textPainter.width / 2),
+        offset.dy - (textPainter.height / 2),
+      ),
+    );
   }
 
   @override
-  bool shouldRepaint(covariant HypocenterPainterfromLatLng oldDelegate) =>
-      oldDelegate.hypocenter != hypocenter;
+  bool shouldRepaint(covariant HypocenterPainterfromLatLng oldDelegate) => true;
 }
