@@ -1,5 +1,5 @@
 import 'package:eqmonitor/page/main/earthquake_history.dart';
-import 'package:eqmonitor/page/main/intensity_calc.dart';
+import 'package:eqmonitor/page/main/intensity_estimate.dart';
 import 'package:eqmonitor/page/main/kmoni_map.dart';
 import 'package:eqmonitor/state/all_state.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +25,7 @@ class _MainPageState extends ConsumerState<MainPage> {
     // ref.read(eewHistoryController.notifier).onInit();
 
     // FCM登録
-    ref.read(firebaseCloudMessagingNotifier.notifier).onInit();
+    //ref.read(firebaseCloudMessagingNotifier.notifier).onInit();
     // ref.read(kmoniController.notifier).onInit();
     super.initState();
   }
@@ -72,7 +72,7 @@ class _MainPageState extends ConsumerState<MainPage> {
                 : selectedIndex.value == 1
                     ? EarthquakeHistoryPage()
                     : selectedIndex.value == 2
-                        ? const IntensityEstimateApiPage()
+                        ? const IntensityEstimatePage()
                         : const SettingsPage(),
           );
         } else {
@@ -109,7 +109,7 @@ class _MainPageState extends ConsumerState<MainPage> {
                         : selectedIndex.value == 1
                             ? EarthquakeHistoryPage()
                             : selectedIndex.value == 2
-                                ? const IntensityEstimateApiPage()
+                                ? const IntensityEstimatePage()
                                 : const SettingsPage(),
                   ),
                 ],
