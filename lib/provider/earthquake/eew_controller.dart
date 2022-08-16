@@ -12,6 +12,11 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+final eewHistoryProvider =
+    StateNotifierProvider<EewHistoryProvider, EewHistoryModel>((ref) {
+  return EewHistoryProvider();
+});
+
 class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
   EewHistoryProvider()
       : super(

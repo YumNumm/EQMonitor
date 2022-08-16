@@ -25,7 +25,7 @@ class IntensityEstimateApi {
     final momentMagnitude = jmaMagnitude - 0.171;
     // 断層長計算(半径)
     final faultLength = math.pow(10, 0.5 * momentMagnitude - 1.85) / 2;
-    final estimatedObsPoints = <EstimatedEarthquakeParameterItem>[];
+    final estimatedKyoshinKansokutens = <EstimatedEarthquakeParameterItem>[];
     //* 各観測点毎の処理
     for (final obsPoint in obsPoints) {
       // 震央と観測点の距離を求める
@@ -59,7 +59,7 @@ class IntensityEstimateApi {
       //* 予測する地点の地表面推定最大速度から計測震度への変換
       final intensity = 2.68 + 1.72 * log10(pgv);
       final jmaIntensity = JmaIntensity.toJmaIntensity(intensity: intensity);
-      estimatedObsPoints.add(
+      estimatedKyoshinKansokutens.add(
         EstimatedEarthquakeParameterItem(
           estimatedIntensity: intensity,
           estimatedJmaIntensity: jmaIntensity,
@@ -77,7 +77,7 @@ class IntensityEstimateApi {
         ),
       );
     }
-    return estimatedObsPoints;
+    return estimatedKyoshinKansokutens;
   }
 }
 

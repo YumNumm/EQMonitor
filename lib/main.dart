@@ -4,10 +4,18 @@ import 'dart:async';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:eqmonitor/const/obspoint.dart';
+import 'package:eqmonitor/const/prefecture/area_forecast_local_eew.model.dart';
+import 'package:eqmonitor/model/travel_time_table/travel_time_table.dart';
 import 'package:eqmonitor/page/main_page.dart';
 import 'package:eqmonitor/private/keys.dart';
+import 'package:eqmonitor/provider/init/kyoshin_kansokuten.dart';
+import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
+import 'package:eqmonitor/provider/init/parameter-earthquake.dart';
+import 'package:eqmonitor/provider/init/travel_time.dart';
+import 'package:eqmonitor/provider/theme_providers.dart';
 import 'package:eqmonitor/res/theme.dart';
-import 'package:eqmonitor/state/theme_providers.dart';
+import 'package:eqmonitor/schema/dmdata/parameter-earthquake/parameter-earthquake.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -17,6 +25,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'firebase_options.dart';
@@ -24,6 +33,7 @@ import 'firebase_options.dart';
 Future<void> main() async {
   await runZonedGuarded<Future<void>>(
     () async {
+      final stopwatch = Stopwatch()..start();
       FlutterNativeSplash.preserve(
         widgetsBinding: WidgetsFlutterBinding.ensureInitialized(),
       );
@@ -36,34 +46,50 @@ Future<void> main() async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
-      // Supabaseを初期化
-      await Supabase.initialize(
-        url: supabaseS1Url,
-        anonKey: supabaseS1AnonKey,
-        debug: false,
-      );
-
       Intl.defaultLocale = 'ja_JP';
-      // final prefs = await SharedPreferences.getInstance();
       final crashlytics = FirebaseCrashlytics.instance;
       final deviceInfo = await DeviceInfoPlugin().androidInfo;
-      await crashlytics.sendUnsentReports();
-      await crashlytics.setUserIdentifier(deviceInfo.androidId.toString());
-      await crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode);
+      late List<KyoshinKansokuten> kansokuten;
+      late List<MapPolygon> mapAreaForecastLocalE;
+      late ParameterEarthquake parameterEarthquake;
+      late List<TravelTimeTable> travelTimeTable;
+      final futures = <Future>[
+        loadKyoshinKansokuten().then((e) => kansokuten = e),
+        loadMapAreaForecastLocalE().then((e) => mapAreaForecastLocalE = e),
+        loadParameterEarthquake().then((e) => parameterEarthquake = e),
+        loadTravelTimeTable().then((e) => travelTimeTable = e),
+        Supabase.initialize(
+          url: supabaseS1Url,
+          anonKey: supabaseS1AnonKey,
+          debug: false,
+        ),
+        crashlytics.sendUnsentReports(),
+        crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode),
+        crashlytics.setUserIdentifier(deviceInfo.fingerprint.toString()),
+      ];
+      await Future.wait(futures);
+      FlutterNativeSplash.remove();
+      Logger()
+          .d('全ての初期化が完了: ${(stopwatch..stop()).elapsedMicroseconds / 1000}ms');
+
+      // final prefs = await SharedPreferences.getInstance();
       FlutterError.onError = onFlutterError;
-      if (kDebugMode) {
-        runApp(
-          ProviderScope(
-            child: DevicePreview(
-              builder: (context) => const EqMonitorApp(),
-            ),
-          ),
-        );
-      } else {
-        runApp(
-          const ProviderScope(child: EqMonitorApp()),
-        );
-      }
+      runApp(
+        ProviderScope(
+          overrides: [
+            TravelTimeProvider.overrideWithValue(travelTimeTable),
+            kyoshinKansokutenProvider.overrideWithValue(kansokuten),
+            mapAreaForecastLocalEProvider
+                .overrideWithValue(mapAreaForecastLocalE),
+            parameterEarthquakeProvider.overrideWithValue(parameterEarthquake),
+          ],
+          observers: const [
+            // if (kDebugMode) ProvidersLogger(),
+          ],
+          child: const EqMonitorApp(),
+        ),
+      );
+
       FlutterNativeSplash.remove();
     },
     (error, stack) async {
@@ -107,6 +133,31 @@ class EqMonitorApp extends ConsumerWidget {
       useInheritedMediaQuery: true,
       builder: DevicePreview.appBuilder,
       home: const MainPage(),
+    );
+  }
+}
+
+class LoadingApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'EQMonitor',
+      theme: lightTheme(),
+      darkTheme: darkTheme(),
+      themeMode: ThemeMode.light,
+      locale: DevicePreview.locale(context),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate
+      ],
+      supportedLocales: const [
+        Locale('ja', 'JP'),
+      ],
+      useInheritedMediaQuery: true,
+      home: const Center(
+        child: CircularProgressIndicator.adaptive(),
+      ),
     );
   }
 }

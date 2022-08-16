@@ -2,12 +2,12 @@ import 'package:eqmonitor/utils/map/map_global_offset.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../../model/analyzed_point_model.dart';
+import '../../model/analyzed_kyoshin_kansokuten.dart';
 
-class ObsPointPainter extends CustomPainter {
-  ObsPointPainter({required this.obsPoints});
+class KyoshinKansokutenPainter extends CustomPainter {
+  KyoshinKansokutenPainter({required this.obsPoints});
 
-  final List<AnalyzedPoint> obsPoints;
+  final List<AnalyzedKoshinKansokuten> obsPoints;
 
   @override
   void paint(Canvas canvas, Size size) {

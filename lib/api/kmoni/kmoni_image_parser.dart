@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:eqmonitor/const/kmoni/jma_intensity.dart';
 import 'package:eqmonitor/const/kmoni/real_time_data_type.dart';
-import 'package:eqmonitor/model/analyzed_point_model.dart';
+import 'package:eqmonitor/model/analyzed_kyoshin_kansokuten.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image/image.dart' as image_lib;
 import 'package:logger/logger.dart';
@@ -17,12 +17,12 @@ class KyoshinImageParser {
     ),
   );
 
-  List<AnalyzedPoint> imageParse({
+  List<AnalyzedKoshinKansokuten> imageParse({
     required List<int> picture,
-    required List<ObsPoint> obsPoints,
+    required List<KyoshinKansokuten> obsPoints,
     required RealtimeDataType type,
   }) {
-    final analyzedPoints = <AnalyzedPoint>[];
+    final analyzedPoints = <AnalyzedKoshinKansokuten>[];
     image_lib.Image? image;
     image = image_lib.decodeGif(picture);
     if (image == null) {
@@ -43,18 +43,17 @@ class KyoshinImageParser {
   }
 
   /// 任意のPixelからAnalyzedPointを生成する
-  AnalyzedPoint _parsePixelToAnalyzedPoint({
-    required ObsPoint obsPoint,
+  AnalyzedKoshinKansokuten _parsePixelToAnalyzedPoint({
+    required KyoshinKansokuten obsPoint,
     required RealtimeDataType type,
     required int pixel32,
   }) {
     final rgb = _parsePixel32(pixel32: pixel32);
     final hsv = (rgb == null) ? null : _rgbToHsv(rgb);
     final position = (hsv == null) ? null : _hsvToPosition(hsv);
-    return AnalyzedPoint(
+    return AnalyzedKoshinKansokuten(
       code: obsPoint.code,
       name: obsPoint.name,
-      prefectureName: obsPoint.pref,
       lat: obsPoint.lat,
       lon: obsPoint.lon,
       shindo: (type == RealtimeDataType.Shindo && position != null)
@@ -75,6 +74,10 @@ class KyoshinImageParser {
               intensity: (position * 10) - 3,
             )
           : null,
+      arv: obsPoint.arv,
+      pref: obsPoint.pref,
+      y: obsPoint.y,
+      x: obsPoint.x,
     );
   }
 

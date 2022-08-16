@@ -2,9 +2,11 @@
 
 import 'dart:ui';
 
+import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
+import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
+import 'package:eqmonitor/provider/kmoni_controller.dart';
+import 'package:eqmonitor/provider/theme_providers.dart';
 import 'package:eqmonitor/schema/dmdata/eew-information/eew-infomation.dart';
-import 'package:eqmonitor/state/all_state.dart';
-import 'package:eqmonitor/state/theme_providers.dart';
 import 'package:eqmonitor/widget/custom_map/map_base_painter.dart';
 import 'package:eqmonitor/widget/custom_map/map_eew_hypocenter_painter.dart';
 import 'package:eqmonitor/widget/custom_map/map_intensity_painter.dart';
@@ -13,6 +15,7 @@ import 'package:flutter/material.dart' hide Theme;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../model/analyzed_kyoshin_kansokuten.dart';
 import '../../widget/eew/eew_body_widget.dart';
 
 class KmoniMap extends ConsumerWidget {
@@ -20,15 +23,6 @@ class KmoniMap extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final kmoniMapMatrix4 =
-    //     ref.watch(kmoniMapProvider.select((value) => value.mapMatrix4));
-    final isKmoniMapLoaded =
-        ref.watch(kmoniMapProvider.select((value) => value.isMapLoaded));
-    if (!isKmoniMapLoaded) {
-      return const Center(
-        child: CircularProgressIndicator.adaptive(),
-      );
-    }
     return Stack(
       children: [
         InteractiveViewer(
@@ -40,7 +34,7 @@ class KmoniMap extends ConsumerWidget {
               // EEWの予想震度
               MapEewIntensityWidget(),
               // 観測点
-              ObsPointsMapWidget(),
+              KyoshinKansokutensMapWidget(),
               // EEWの震央位置
               EewHypoCenterMapWidget(),
             ],
@@ -161,17 +155,16 @@ class OnEewWidget extends ConsumerWidget {
   }
 }
 
-class ObsPointsMapWidget extends ConsumerWidget {
-  const ObsPointsMapWidget({super.key});
+class KyoshinKansokutensMapWidget extends ConsumerWidget {
+  const KyoshinKansokutensMapWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final kmoni = ref.watch(kmoniProvider);
+    final analyzedKmoniPoints = ref.watch(kmoniProvider.select((value) => value.analyzedPoint));
 
     return CustomPaint(
-      isComplex: true,
-      painter: ObsPointPainter(
-        obsPoints: kmoni.analyzedPoint,
+      painter: KyoshinKansokutenPainter(
+        obsPoints: analyzedKmoniPoints,
       ),
       size: Size.infinite,
     );
@@ -183,8 +176,7 @@ class BaseMapWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mapSource =
-        ref.watch(kmoniMapProvider.select((value) => value.mapPolygons));
+    final mapSource = ref.watch(mapAreaForecastLocalEProvider);
     // * ThemeMode変更時に自動で更新されるので、ここでは更新しない
     final isDarkMode = ref.read(themeProvider.notifier).isDarkMode;
     print(isDarkMode);
@@ -204,8 +196,7 @@ class MapEewIntensityWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mapSource =
-        ref.watch(kmoniMapProvider.select((value) => value.mapPolygons));
+    final mapSource = ref.watch(mapAreaForecastLocalEProvider);
     final eews = ref
         .watch(eewHistoryProvider.select((value) => value.showEews))
         .map((eew) => MapEntry(eew, EEWInformation.fromJson(eew.body)));

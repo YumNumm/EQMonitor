@@ -1,14 +1,14 @@
 import 'package:eqmonitor/const/kmoni/jma_intensity.dart';
 import 'package:eqmonitor/const/prefecture/area_forecast_local_eew.model.dart';
 import 'package:eqmonitor/page/main/kmoni_map.dart';
+import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
+import 'package:eqmonitor/provider/init/parameter-earthquake.dart';
 import 'package:eqmonitor/schema/dmdata/commonHeader.dart';
 import 'package:eqmonitor/schema/dmdata/eq-information/earthquake-information.dart';
 import 'package:eqmonitor/schema/dmdata/eq-information/earthquake-information/intensity/region.dart';
 import 'package:eqmonitor/schema/dmdata/eq-information/earthquake-information/intensity/station.dart';
 import 'package:eqmonitor/schema/dmdata/eq-information/earthquake.dart';
-import 'package:eqmonitor/schema/dmdata/parameter-earthquake/parameter-earthquake.dart';
 import 'package:eqmonitor/schema/supabase/telegram.dart';
-import 'package:eqmonitor/state/all_state.dart';
 import 'package:eqmonitor/utils/map/map_global_offset.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -95,7 +95,6 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
         title: Text('地震${isSokuhou ? "速報" : "情報"}'),
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           DecoratedBox(
             decoration: BoxDecoration(
@@ -170,55 +169,57 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
               ),
             ),
           ),
-          Stack(
-            children: [
-              Expanded(
-                child: InteractiveViewer(
-                  maxScale: 20,
-                  child: Stack(
+          Expanded(
+            child: Stack(
+              children: [
+                Expanded(
+                  child: InteractiveViewer(
+                    maxScale: 20,
+                    child: Stack(
+                      children: [
+                        // マップベース
+                        const BaseMapWidget(),
+                        // Region毎の震度
+                        MapRegionIntensityWidget(
+                          regions: intensity?.regions ?? <Region>[],
+                        ),
+                        // 震央位置
+                        MapHypoCenterMapWidget(
+                          component: component,
+                        ),
+                        //  観測点ごとの震度
+                        // TODO(YumNumm): 観測点震度描画をCustomPainterに移植する
+                        // MapStationIntensityWidget(
+                        //   stations: intensity?.stations ?? [],
+                        // ),
+                      ],
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Row(
                     children: [
-                      // マップベース
-                      const BaseMapWidget(),
-                      // Region毎の震度
-                      MapRegionIntensityWidget(
-                        regions: intensity?.regions ?? <Region>[],
-                      ),
-                      // 震央位置
-                      MapHypoCenterMapWidget(
-                        component: component,
-                      ),
-                      //  観測点ごとの震度
-                      // TODO(YumNumm): 観測点震度描画をCustomPainterに移植する
-                      // MapStationIntensityWidget(
-                      //   stations: intensity?.stations ?? [],
-                      // ),
+                      for (final i in JmaIntensity.values)
+                        if (i == JmaIntensity.over)
+                          const SizedBox.shrink()
+                        else
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IntensityWidget(
+                                intensity: i,
+                                size: 25,
+                                opacity: 1,
+                              ),
+                              const SizedBox(width: 5),
+                            ],
+                          ),
                     ],
                   ),
                 ),
-              ),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Row(
-                  children: [
-                    for (final i in JmaIntensity.values)
-                      if (i == JmaIntensity.over)
-                        const SizedBox.shrink()
-                      else
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IntensityWidget(
-                              intensity: i,
-                              size: 25,
-                              opacity: 1,
-                            ),
-                            const SizedBox(width: 5),
-                          ],
-                        ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -235,8 +236,7 @@ class MapRegionIntensityWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mapSource =
-        ref.watch(kmoniMapProvider.select((value) => value.mapPolygons));
+    final mapSource = ref.watch(mapAreaForecastLocalEProvider);
     return CustomPaint(
       painter: MapRegionIntensityPainter(
         mapPolygons: mapSource,
@@ -432,9 +432,7 @@ class MapStationIntensityWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final allParameterEarthquakeItem =
-        ref.read(parameterEarthquakeProvider).parameterEarthquake?.items ??
-            <ParameterEarthquakeItem>[];
+    final allParameterEarthquakeItem = ref.watch(parameterEarthquakeProvider);
 
     final widgets = <Widget>[];
 
@@ -442,7 +440,7 @@ class MapStationIntensityWidget extends ConsumerWidget {
     for (final station in stations) {
       try {
         // 緯度経度を取得
-        final param = allParameterEarthquakeItem
+        final param = allParameterEarthquakeItem.items
             .firstWhere((e) => e.code == station.code);
         final offset = MapGlobalOffset.latLonToGlobalPoint(
           LatLng(param.latitude, param.longitude),
