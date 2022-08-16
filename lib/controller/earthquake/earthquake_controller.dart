@@ -5,9 +5,8 @@ import 'package:eqmonitor/schema/supabase/telegram.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// ref: https://github.com/ingen084/KyoshinEewViewerIngen/blob/2801ad7959f99abe7ac81c2ff3a7d1974716a786/src/KyoshinEewViewer/Series/Earthquake/Services/EarthquakeWatchService.cs
-class EarthquakeHistoryController
-    extends StateNotifier<EarthquakeHistoryModel> {
-  EarthquakeHistoryController()
+class EarthquakeHistoryProvider extends StateNotifier<EarthquakeHistoryModel> {
+  EarthquakeHistoryProvider()
       : super(
           const EarthquakeHistoryModel(
             telegrams: <Telegram>[],
@@ -61,11 +60,11 @@ class EarthquakeHistoryController
   }
 
   Future<bool> refreshTelegrams({int limit = 100}) async {
-    try{
+    try {
       final res = await telegramApi.getTelegramsWithLimit(limit: limit);
       res.forEach(addTelegram);
       return true;
-    }on Exception catch(e){
+    } on Exception catch (e) {
       return false;
     }
   }

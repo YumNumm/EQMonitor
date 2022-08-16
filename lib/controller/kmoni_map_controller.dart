@@ -8,8 +8,8 @@ import 'package:logger/logger.dart';
 
 import '../utils/map/map_global_offset.dart';
 
-class KmoniMapController extends StateNotifier<KmoniMapModel> {
-  KmoniMapController()
+class KmoniMapProvider extends StateNotifier<KmoniMapModel> {
+  KmoniMapProvider()
       : super(
           KmoniMapModel(
             isMapLoaded: false,

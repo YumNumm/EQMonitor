@@ -12,8 +12,8 @@ import 'package:logger/logger.dart';
 
 import '../model/analyzed_point_model.dart';
 
-class KmoniController extends StateNotifier<KmoniModel> {
-  KmoniController()
+class KmoniProvider extends StateNotifier<KmoniModel> {
+  KmoniProvider()
       : super(
           KmoniModel(
             analyzedPoint: [],
@@ -95,7 +95,7 @@ class KmoniController extends StateNotifier<KmoniModel> {
       );
       final imageResponse = await kyoshinMonitorApi
           .getRawData(shindoUrl.replaceAll('http://www.kmoni.bosai.go.jp', ''));
-      // log(imageResponse.realUri.toString(), name: "KmoniController");
+      // log(imageResponse.realUri.toString(), name: "KmoniProvider");
       if (imageResponse.statusCode != 200 || imageResponse.data == null) {
         throw Exception(
           'リアルタイム震度画像の取得に失敗しました\n'

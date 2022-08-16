@@ -12,8 +12,8 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class EewHistoryController extends StateNotifier<EewHistoryModel> {
-  EewHistoryController()
+class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
+  EewHistoryProvider()
       : super(
           EewHistoryModel(
             supabase: SupabaseClient(supabaseS2Url, supabaseS2AnonKey),

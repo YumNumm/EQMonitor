@@ -7,7 +7,7 @@ class ThemeChoicePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentThemeMode =
-        ref.watch(themeController.select((value) => value.themeMode));
+        ref.watch(themeProvider.select((value) => value.themeMode));
     return Scaffold(
       appBar: AppBar(
         title: const Text('テーマ設定'),
@@ -26,7 +26,7 @@ class ThemeChoicePage extends HookConsumerWidget {
                 value: themeMode == currentThemeMode,
                 groupValue: ThemeMode,
                 onChanged: (_) {
-                  ref.read(themeController.notifier).setTheme(themeMode);
+                  ref.read(themeProvider.notifier).setTheme(themeMode);
                 },
               );
             },

@@ -21,9 +21,9 @@ class KmoniMap extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // final kmoniMapMatrix4 =
-    //     ref.watch(kmoniMapController.select((value) => value.mapMatrix4));
+    //     ref.watch(kmoniMapProvider.select((value) => value.mapMatrix4));
     final isKmoniMapLoaded =
-        ref.watch(kmoniMapController.select((value) => value.isMapLoaded));
+        ref.watch(kmoniMapProvider.select((value) => value.isMapLoaded));
     if (!isKmoniMapLoaded) {
       return const Center(
         child: CircularProgressIndicator.adaptive(),
@@ -66,7 +66,7 @@ class KmoniStatusWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final kmoni = ref.watch(kmoniController);
+    final kmoni = ref.watch(kmoniProvider);
     final maxShindoColor = (kmoni.analyzedPoint.length > 100)
         ? kmoni.analyzedPoint
             .reduce(
@@ -143,7 +143,7 @@ class OnEewWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final eews = ref
-        .watch(eewHistoryController.select((value) => value.showEews))
+        .watch(eewHistoryProvider.select((value) => value.showEews))
         .map((eew) => MapEntry(eew, EEWInformation.fromJson(eew.body)));
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -166,7 +166,7 @@ class ObsPointsMapWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final kmoni = ref.watch(kmoniController);
+    final kmoni = ref.watch(kmoniProvider);
 
     return CustomPaint(
       isComplex: true,
@@ -184,9 +184,9 @@ class BaseMapWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapSource =
-        ref.watch(kmoniMapController.select((value) => value.mapPolygons));
+        ref.watch(kmoniMapProvider.select((value) => value.mapPolygons));
     // * ThemeMode変更時に自動で更新されるので、ここでは更新しない
-    final isDarkMode = ref.read(themeController.notifier).isDarkMode;
+    final isDarkMode = ref.read(themeProvider.notifier).isDarkMode;
     print(isDarkMode);
     return CustomPaint(
       isComplex: true,
@@ -205,9 +205,9 @@ class MapEewIntensityWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapSource =
-        ref.watch(kmoniMapController.select((value) => value.mapPolygons));
+        ref.watch(kmoniMapProvider.select((value) => value.mapPolygons));
     final eews = ref
-        .watch(eewHistoryController.select((value) => value.showEews))
+        .watch(eewHistoryProvider.select((value) => value.showEews))
         .map((eew) => MapEntry(eew, EEWInformation.fromJson(eew.body)));
     return CustomPaint(
       painter: EewIntensityPainter(
@@ -225,7 +225,7 @@ class EewHypoCenterMapWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final eews = ref
-        .watch(eewHistoryController.select((value) => value.showEews))
+        .watch(eewHistoryProvider.select((value) => value.showEews))
         .map((eew) => MapEntry(eew, EEWInformation.fromJson(eew.body)));
     if (eews.isNotEmpty) {
       // 1秒間隔のOpacityAnimationを作成する

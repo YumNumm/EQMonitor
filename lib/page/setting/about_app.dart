@@ -11,12 +11,12 @@ class AboutAppPage extends HookConsumerWidget {
   const AboutAppPage({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final travelTime = ref.watch(travelTimeController);
-    final kmoniMap = ref.watch(kmoniMapController);
-    final kmoni = ref.watch(kmoniController);
+    final travelTime = ref.watch(travelTimeProvider);
+    final kmoniMap = ref.watch(kmoniMapProvider);
+    final kmoni = ref.watch(kmoniProvider);
     final fcm = ref.watch(firebaseCloudMessagingNotifier);
-    final eew = ref.watch(eewHistoryController);
-    final isDarkMode = ref.watch(themeController.notifier).isDarkMode;
+    final eew = ref.watch(eewHistoryProvider);
+    final isDarkMode = ref.watch(themeProvider.notifier).isDarkMode;
 
     return Scaffold(
       appBar: AppBar(

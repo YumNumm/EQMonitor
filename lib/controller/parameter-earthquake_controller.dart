@@ -6,9 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
-class ParameterEarthquakeController
+class ParameterEarthquakeProvider
     extends StateNotifier<ParameterEarthquakeModel> {
-  ParameterEarthquakeController()
+  ParameterEarthquakeProvider()
       : super(
           const ParameterEarthquakeModel(
             parameterEarthquake: null,

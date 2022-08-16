@@ -14,14 +14,13 @@ import 'package:eqmonitor/model/parameter-earthquake_model.dart';
 import 'package:eqmonitor/model/travel_time_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final kmoniMapController =
-    StateNotifierProvider<KmoniMapController, KmoniMapModel>((ref) {
-  return KmoniMapController();
+final kmoniMapProvider =
+    StateNotifierProvider<KmoniMapProvider, KmoniMapModel>((ref) {
+  return KmoniMapProvider();
 });
 
-final kmoniController =
-    StateNotifierProvider<KmoniController, KmoniModel>((ref) {
-  return KmoniController();
+final kmoniProvider = StateNotifierProvider<KmoniProvider, KmoniModel>((ref) {
+  return KmoniProvider();
 });
 
 /*
@@ -35,30 +34,30 @@ final kmoniMapForecastEewNotifier = StateNotifierProvider<
 
 // FCM Notifier
 final firebaseCloudMessagingNotifier = StateNotifierProvider<
-    FirebaseCloudMessagingController, FirebaseCloudMessagingModel>(
+    FirebaseCloudMessagingProvider, FirebaseCloudMessagingModel>(
   (ref) {
-    return FirebaseCloudMessagingController();
+    return FirebaseCloudMessagingProvider();
   },
 );
 
 // 地震履歴
-final earthquakeHistoryController =
-    StateNotifierProvider<EarthquakeHistoryController, EarthquakeHistoryModel>(
+final earthquakeHistoryProvider =
+    StateNotifierProvider<EarthquakeHistoryProvider, EarthquakeHistoryModel>(
         (ref) {
-  return EarthquakeHistoryController();
+  return EarthquakeHistoryProvider();
 });
 
-final eewHistoryController =
-    StateNotifierProvider<EewHistoryController, EewHistoryModel>((ref) {
-  return EewHistoryController();
+final eewHistoryProvider =
+    StateNotifierProvider<EewHistoryProvider, EewHistoryModel>((ref) {
+  return EewHistoryProvider();
 });
 
-final travelTimeController =
-    StateNotifierProvider<TravelTimeController, TravelTimeModel>((ref) {
-  return TravelTimeController();
+final travelTimeProvider =
+    StateNotifierProvider<TravelTimeProvider, TravelTimeModel>((ref) {
+  return TravelTimeProvider();
 });
 
-final parameterEarthquakeController = StateNotifierProvider<
-    ParameterEarthquakeController, ParameterEarthquakeModel>((ref) {
-  return ParameterEarthquakeController();
+final parameterEarthquakeProvider = StateNotifierProvider<
+    ParameterEarthquakeProvider, ParameterEarthquakeModel>((ref) {
+  return ParameterEarthquakeProvider();
 });

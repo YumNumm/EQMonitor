@@ -21,15 +21,13 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final earthquakeHistory = ref.watch(earthquakeHistoryController);
+    final earthquakeHistory = ref.watch(earthquakeHistoryProvider);
 
     return AnimationLimiter(
       child: RefreshIndicator(
         onRefresh: () async {
           await Future<void>.delayed(const Duration(seconds: 1));
-          await ref
-              .read(earthquakeHistoryController.notifier)
-              .refreshTelegrams();
+          await ref.read(earthquakeHistoryProvider.notifier).refreshTelegrams();
         },
         child: ListView.builder(
           shrinkWrap: true,

@@ -21,12 +21,12 @@ class IntensityEstimatePage extends HookConsumerWidget {
     final isCollect = useState<bool>(true);
     final intensityCalcResult =
         useState<Map<int, List<EstimatedEarthquakeParameterItem>>>({});
-    final parameterController = ref.watch(parameterEarthquakeController);
+    final parameterProvider = ref.watch(parameterEarthquakeProvider);
 
     /// 計算処理にかかった時間
     final calcTime = useState<int?>(null);
 
-    if (!parameterController.isMapLoaded) {
+    if (!parameterProvider.isMapLoaded) {
       return const Center(child: CircularProgressIndicator.adaptive());
     }
     print(intensityCalcResult.value.length);
@@ -39,7 +39,7 @@ class IntensityEstimatePage extends HookConsumerWidget {
             depth: depth.value.toDouble(),
             hypocenter: LatLng(35, 135),
             obsPoints: ref
-                    .read(parameterEarthquakeController)
+                    .read(parameterEarthquakeProvider)
                     .parameterEarthquake
                     ?.items ??
                 [],
@@ -121,7 +121,7 @@ class IntensityEstimatePage extends HookConsumerWidget {
                               estimatedShindoPointsGroupBy:
                                   intensityCalcResult.value,
                               mapPolygons:
-                                  ref.watch(kmoniMapController).mapPolygons,
+                                  ref.watch(kmoniMapProvider).mapPolygons,
                             ),
                           ),
                           // EEWの震央位置
