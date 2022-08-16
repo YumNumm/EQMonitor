@@ -13,27 +13,55 @@ class HypocenterPainterfromLatLng extends CustomPainter {
     final offset = MapGlobalOffset.latLonToGlobalPoint(
       hypocenter,
     ).toLocalOffset(const Size(476, 927.4));
-    final textPainter = TextPainter(
-      text: const TextSpan(
-        children: [
-          TextSpan(
-            text: '×',
-            style: TextStyle(
-              color: Color.fromARGB(255, 255, 17, 0),
-              fontSize: 20,
+    {
+      final textPainter = TextPainter(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: '×',
+              style: TextStyle(
+                fontSize: 20,
+                foreground: Paint()
+                  ..style = PaintingStyle.stroke
+                  ..strokeWidth = 1
+                  ..color = const Color.fromARGB(255, 255, 255, 255),
+              ),
             ),
-          ),
-        ],
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
-    textPainter.paint(
-      canvas,
-      Offset(
-        offset.dx - (textPainter.width / 2),
-        offset.dy - (textPainter.height / 2),
-      ),
-    );
+          ],
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
+      textPainter.paint(
+        canvas,
+        Offset(
+          offset.dx - (textPainter.width / 2),
+          offset.dy - (textPainter.height / 2),
+        ),
+      );
+    }
+    {
+      final textPainter = TextPainter(
+        text: const TextSpan(
+          children: [
+            TextSpan(
+              text: '×',
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 20,
+              ),
+            ),
+          ],
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
+      textPainter.paint(
+        canvas,
+        Offset(
+          offset.dx - (textPainter.width / 2),
+          offset.dy - (textPainter.height / 2),
+        ),
+      );
+    }
   }
 
   @override

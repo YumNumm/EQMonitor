@@ -151,28 +151,7 @@ class EarthquakeHistoryTile extends StatelessWidget {
           style: const TextStyle(fontSize: 18),
         ),
         subtitle: Wrap(
-          
           children: [
-            // 速報かどうか
-            if (isSokuhou)
-              const Chip(
-                label: Text(
-                  '速報',
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            // 顕著な地震の震源要素更新のお知らせ かどうか
-            if (latestVxse61Head != null)
-              const Chip(
-                label: Text(
-                  '顕著な地震の震源要素更新のお知らせ ',
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ),
             Text(
               (StringBuffer()
                     ..writeAll(
@@ -200,6 +179,28 @@ class EarthquakeHistoryTile extends StatelessWidget {
                   .toString(),
               style: const TextStyle(fontSize: 14),
             ),
+            // 速報かどうか
+            if (isSokuhou)
+              const Chip(
+                padding: EdgeInsets.zero,
+                label: Text(
+                  '速報',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            // 顕著な地震の震源要素更新のお知らせ かどうか
+            if (latestVxse61Head != null)
+              const Chip(
+                padding: EdgeInsets.zero,
+                label: Text(
+                  '顕著な地震の震源要素更新のお知らせ ',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+              ),
           ],
         ),
       ),

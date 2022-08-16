@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:eqmonitor/schema/dmdata/eew-information/eew-infomation.dart';
 import 'package:eqmonitor/state/all_state.dart';
+import 'package:eqmonitor/state/theme_providers.dart';
 import 'package:eqmonitor/widget/custom_map/map_base_painter.dart';
 import 'package:eqmonitor/widget/custom_map/map_eew_hypocenter_painter.dart';
 import 'package:eqmonitor/widget/custom_map/map_intensity_painter.dart';
@@ -184,11 +185,14 @@ class BaseMapWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mapSource =
         ref.watch(kmoniMapController.select((value) => value.mapPolygons));
+    // * ThemeMode変更時に自動で更新されるので、ここでは更新しない
+    final isDarkMode = ref.read(themeController.notifier).isDarkMode;
+    print(isDarkMode);
     return CustomPaint(
       isComplex: true,
       painter: MapBasePainter(
         mapPolygons: mapSource,
-        outlineStrokeWidth: 0.1,
+        isDarkMode: isDarkMode,
       ),
       size: Size.infinite,
     );
@@ -209,7 +213,6 @@ class MapIntensityWidget extends ConsumerWidget {
       painter: MapIntensityPainter(
         eews: eews,
         mapPolygons: mapSource,
-        outlineStrokeWidth: 0.1,
       ),
       size: Size.infinite,
     );

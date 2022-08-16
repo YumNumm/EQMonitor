@@ -1,5 +1,6 @@
 import 'package:eqmonitor/api/int_calc/int_calc.dart';
 import 'package:eqmonitor/const/prefecture/area_forecast_local_eew.model.dart';
+import 'package:eqmonitor/extension/relative_luminance.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
@@ -46,10 +47,9 @@ class EstimatedShindoPainter extends CustomPainter {
               ..drawPath(
                 mapRegionPolygon.path,
                 Paint()
-                  ..color = const Color.fromARGB(255, 255, 255, 255)
+                  ..color = maxJmaIntensity.color.onPrimary
                   ..isAntiAlias = true
-                  ..style = PaintingStyle.stroke
-                  ..strokeWidth = 0.1,
+                  ..style = PaintingStyle.stroke,
               );
           }
 

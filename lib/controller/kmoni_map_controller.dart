@@ -70,6 +70,7 @@ class KmoniMapController extends StateNotifier<KmoniMapModel> {
                 code: int.parse(feature.properties!['code'].toString()),
                 name: feature.properties!['name'].toString(),
                 path: Path()..addPolygon(tmpPoints, true),
+                points: tmpPoints,
               ),
             );
           }
@@ -91,6 +92,7 @@ class KmoniMapController extends StateNotifier<KmoniMapModel> {
               code: int.parse(feature.properties!['code'].toString()),
               name: feature.properties!['name'].toString(),
               path: Path()..addPolygon(tmpPoints, true),
+              points: tmpPoints,
             ),
           );
         }

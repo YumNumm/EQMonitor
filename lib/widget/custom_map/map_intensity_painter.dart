@@ -7,11 +7,9 @@ import 'package:logger/logger.dart';
 class MapIntensityPainter extends CustomPainter {
   MapIntensityPainter({
     required this.mapPolygons,
-    required this.outlineStrokeWidth,
     required this.eews,
   });
   List<MapPolygon> mapPolygons;
-  double outlineStrokeWidth;
   Iterable<MapEntry<CommonHead, EEWInformation>> eews;
 
   @override
@@ -38,8 +36,7 @@ class MapIntensityPainter extends CustomPainter {
                   Paint()
                     ..color = const Color.fromARGB(255, 255, 255, 255)
                     ..isAntiAlias = true
-                    ..style = PaintingStyle.stroke
-                    ..strokeWidth = outlineStrokeWidth,
+                    ..style = PaintingStyle.stroke,
                 );
             }
           } catch (e) {
@@ -52,8 +49,6 @@ class MapIntensityPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(MapIntensityPainter oldDelegate) {
-    return oldDelegate.mapPolygons != mapPolygons ||
-        oldDelegate.outlineStrokeWidth != outlineStrokeWidth ||
-        oldDelegate.eews != eews;
+    return oldDelegate.mapPolygons != mapPolygons || oldDelegate.eews != eews;
   }
 }
