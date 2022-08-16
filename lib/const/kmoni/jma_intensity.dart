@@ -10,55 +10,52 @@ enum JmaIntensity {
   Unknown(
     '?',
     Color.fromARGB(255, 242, 242, 255),
-    true,
     -1,
   ),
 
   /// 震度1未満
-  Int0('0', Color.fromARGB(255, 183, 183, 183), true, 0),
+  Int0('0', Color.fromARGB(255, 242, 242, 242), 0),
 
   /// 震度1
-  Int1('1', Color.fromARGB(255, 175, 169, 214), true, 1),
+  Int1('1', Color.fromARGB(255, 187, 187, 255), 1),
 
   /// 震度2
-  Int2('2', Color.fromARGB(255, 140, 217, 255), false, 2),
+  Int2('2', Color(0xFF00A5FF), 1),
 
   /// 震度3
-  Int3('3', Color.fromARGB(255, 44, 153, 82), true, 3),
+  Int3('3', Color.fromARGB(255, 0, 193, 84), 3),
 
   /// 震度4
-  Int4('4', Color.fromARGB(255, 219, 201, 0), true, 4),
+  Int4('4', Color.fromARGB(255, 249, 208, 25), 4),
 
   /// 震度5弱
-  Int5Lower('5-', Color.fromARGB(255, 255, 168, 37), true, 5),
+  Int5Lower('5-', Color.fromARGB(255, 254, 122, 14), 5),
 
   /// 震度5強
-  Int5Upper('5+', Color.fromARGB(255, 209, 95, 33), true, 6),
+  Int5Upper('5+', Color.fromARGB(255, 246, 0, 0), 6),
 
   /// 震度6弱
-  Int6Lower('6-', Color.fromARGB(255, 187, 36, 117), false, 7),
+  Int6Lower('6-', Color(0xFFf03eb8), 7),
 
   /// 震度6強
-  Int6Upper('6+', Color.fromARGB(255, 215, 0, 68), false, 8),
+  Int6Upper('6+', Color.fromARGB(255, 189, 0, 129), 8),
 
   /// 震度7
-  Int7('7', Color.fromARGB(255, 153, 0, 0), false, 9),
+  Int7('7', Color.fromARGB(255, 158, 63, 209), 9),
 
   // 程度以上
-  over('over', Color.fromARGB(255, 255, 255, 255), true, -1),
+  over('over', Color.fromARGB(255, 255, 255, 255), -1),
 
   /// 震度異常
-  Error('-', Color.fromARGB(255, 73, 243, 214), true, -2);
+  Error('-', Color.fromARGB(255, 73, 243, 214), -2);
 
   const JmaIntensity(
     this.name,
     this.color,
-    this.shouldTextBlack,
     this.intValue,
   );
   final String name;
   final Color color;
-  final bool shouldTextBlack;
   final int intValue;
 
   static JmaIntensity fromInt(int value) {
