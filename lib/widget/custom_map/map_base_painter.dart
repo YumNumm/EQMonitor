@@ -22,7 +22,7 @@ class MapBasePainter extends CustomPainter {
     final paintOutline = Paint()
       ..color = isDarkMode
           ? const Color.fromARGB(255, 255, 255, 255)
-          : const Color.fromARGB(255, 160, 151, 215)
+          : const Color.fromARGB(255, 190, 190, 190)
       ..isAntiAlias = true
       ..style = PaintingStyle.stroke;
 

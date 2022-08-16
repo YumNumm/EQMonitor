@@ -12,6 +12,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../api/remote_db/telegram.dart';
+import 'earthquake_history_detail.dart';
 
 class EarthquakeHistoryPage extends HookConsumerWidget {
   EarthquakeHistoryPage({super.key});
@@ -76,7 +77,6 @@ class EarthquakeHistoryTile extends StatelessWidget {
     final vxse53Telegrams = <CommonHead>[];
     final vxse61Telegrams = <CommonHead>[];
     for (final e in telegrams) {
-      print(e.type);
       switch (e.type) {
         case 'VXSE51':
           vxse51Telegrams.add(CommonHead.fromJson(e.data!));
@@ -140,6 +140,13 @@ class EarthquakeHistoryTile extends StatelessWidget {
             : null,
       ),
       child: ListTile(
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (context) => EarthquakeHistoryDetailPage(
+              telegrams: telegrams,
+            ),
+          ),
+        ),
         leading: IntensityWidget(
           intensity: maxInt,
           opacity: 0.3,
