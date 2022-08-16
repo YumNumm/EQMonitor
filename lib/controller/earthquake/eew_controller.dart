@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:eqmonitor/api/remote_db/eew.dart';
 import 'package:eqmonitor/model/earthquake/eew_history_model.dart';
 import 'package:eqmonitor/private/keys.dart';
 import 'package:eqmonitor/schema/dmdata/commonHeader.dart';
@@ -22,6 +23,8 @@ class EewHistoryController extends StateNotifier<EewHistoryModel> {
     onInit();
   }
 
+  final eewApi = EewApi();
+
   final logger = Logger(
     printer: PrettyPrinter(
       methodCount: 1,
@@ -39,6 +42,12 @@ class EewHistoryController extends StateNotifier<EewHistoryModel> {
   }
 
   Future<void> startEewStreaming() async {
+    // 直近のEEW電文10件を追加しておく
+    final telegrams = await eewApi.getEewTelegrams();
+    for (final e in telegrams) {
+      print(e.eventId);
+      addTelegram(e);
+    }
     Logger().i('Start Eew Streaming');
     // EEW STREAMを開始する
     final subscription =
@@ -47,13 +56,14 @@ class EewHistoryController extends StateNotifier<EewHistoryModel> {
       if (payload.newRecord == null) {
         return;
       }
-      final commonHead = CommonHead.fromJson(payload.newRecord!['data']);
+      final commonHead =
+          CommonHead.fromJson(jsonDecode(payload.newRecord!['data']));
       addTelegram(commonHead);
     }).subscribe();
     subscription.socket.onMessage((p0) => logger.i('EEW WebSocket: $p0'));
     logger.i(subscription.socket.connState?.toString());
     // もし、デバッグモードならテスト電文を追加
-    if (kDebugMode) {
+    if (kDebugMode && false) {
       final res = await http.get(
         Uri.parse(
           'https://sample.dmdata.jp/eew/20171213b/json/vxse44_rjtd_20171213112257.json',
@@ -92,9 +102,11 @@ class EewHistoryController extends StateNotifier<EewHistoryModel> {
       value.sort((a, b) => b.pressDateTime.compareTo(a.pressDateTime));
       // 任意の電文が180秒以内に発表されている場合に
       // valueの最初のものをshowEewsに追加する
+
       if (value.any(
         (element) =>
-            element.pressDateTime.difference(DateTime.now()).inSeconds > 180 ||
+            element.pressDateTime.difference(DateTime.now()).inSeconds >
+                -18000 ||
             element.originalId == 'TELEGRAM_ID',
       )) {
         showEews.add(value.first);
@@ -124,9 +136,11 @@ class EewHistoryController extends StateNotifier<EewHistoryModel> {
       value.sort((a, b) => b.pressDateTime.compareTo(a.pressDateTime));
       // 任意の電文が180秒以内に発表されている場合に
       // valueの最初のものをshowEewsに追加する
+
       if (value.any(
         (element) =>
-            element.pressDateTime.difference(DateTime.now()).inSeconds > 180 ||
+            element.pressDateTime.difference(DateTime.now()).inSeconds >
+                (kDebugMode ? -18000 : -180) ||
             element.originalId == 'TELEGRAM_ID',
       )) {
         showEews.add(value.first);

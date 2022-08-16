@@ -4,23 +4,27 @@ import 'package:flutter/material.dart';
 class MapBasePainter extends CustomPainter {
   MapBasePainter({
     required this.mapPolygons,
-    required this.outlineStrokeWidth,
+    required this.isDarkMode,
   });
   List<MapPolygon> mapPolygons;
-  double outlineStrokeWidth;
-
-  final Paint paintBuilding = Paint()
-    ..color = const Color.fromARGB(161, 66, 66, 66)
-    ..isAntiAlias = true
-    ..strokeCap = StrokeCap.round;
+  bool isDarkMode;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paintOutline = Paint()
-      ..color = const Color.fromARGB(255, 255, 255, 255)
+    final paintBuilding = Paint()
+      ..color = isDarkMode
+          ? const Color.fromARGB(255, 148, 148, 148)
+          : const Color.fromARGB(255, 231, 230, 230)
       ..isAntiAlias = true
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = outlineStrokeWidth;
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.fill;
+
+    final paintOutline = Paint()
+      ..color = isDarkMode
+          ? const Color.fromARGB(255, 255, 255, 255)
+          : const Color.fromARGB(255, 160, 151, 215)
+      ..isAntiAlias = true
+      ..style = PaintingStyle.stroke;
 
     for (final polygon in mapPolygons) {
       canvas
@@ -31,7 +35,6 @@ class MapBasePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(MapBasePainter oldDelegate) {
-    return oldDelegate.mapPolygons != mapPolygons ||
-        oldDelegate.outlineStrokeWidth != outlineStrokeWidth;
+    return oldDelegate.mapPolygons != mapPolygons;
   }
 }

@@ -109,12 +109,7 @@ class EewBodyWidget extends StatelessWidget {
               /// EEW 本文部分
               DefaultTextStyle.merge(
                 style: TextStyle(
-                  color:
-                      (eew.value.intensity?.maxint.from.shouldTextBlack == null)
-                          ? null
-                          : (eew.value.intensity!.maxint.from.shouldTextBlack)
-                              ? Colors.black
-                              : Colors.white,
+                  color: eew.value.intensity?.maxint.from.color.onPrimary,
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
