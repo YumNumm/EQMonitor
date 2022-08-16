@@ -170,29 +170,55 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
               ),
             ),
           ),
-          Expanded(
-            child: InteractiveViewer(
-              maxScale: 20,
-              child: Stack(
-                children: [
-                  // マップベース
-                  const BaseMapWidget(),
-                  // Region毎の震度
-                  MapRegionIntensityWidget(
-                    regions: intensity?.regions ?? <Region>[],
+          Stack(
+            children: [
+              Expanded(
+                child: InteractiveViewer(
+                  maxScale: 20,
+                  child: Stack(
+                    children: [
+                      // マップベース
+                      const BaseMapWidget(),
+                      // Region毎の震度
+                      MapRegionIntensityWidget(
+                        regions: intensity?.regions ?? <Region>[],
+                      ),
+                      // 震央位置
+                      MapHypoCenterMapWidget(
+                        component: component,
+                      ),
+                      //  観測点ごとの震度
+                      // TODO(YumNumm): 観測点震度描画をCustomPainterに移植する
+                      // MapStationIntensityWidget(
+                      //   stations: intensity?.stations ?? [],
+                      // ),
+                    ],
                   ),
-                  // 震央位置
-                  MapHypoCenterMapWidget(
-                    component: component,
-                  ),
-                  //  観測点ごとの震度
-                  // TODO(YumNumm): 観測点震度描画をCustomPainterに移植する
-                  // MapStationIntensityWidget(
-                  //   stations: intensity?.stations ?? [],
-                  // ),
-                ],
+                ),
               ),
-            ),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Row(
+                  children: [
+                    for (final i in JmaIntensity.values)
+                      if (i == JmaIntensity.over)
+                        const SizedBox.shrink()
+                      else
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IntensityWidget(
+                              intensity: i,
+                              size: 25,
+                              opacity: 1,
+                            ),
+                            const SizedBox(width: 5),
+                          ],
+                        ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
