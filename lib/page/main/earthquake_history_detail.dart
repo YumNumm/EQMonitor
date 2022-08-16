@@ -236,7 +236,7 @@ class MapRegionIntensityWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapSource =
-        ref.watch(kmoniMapController.select((value) => value.mapPolygons));
+        ref.watch(kmoniMapProvider.select((value) => value.mapPolygons));
     return CustomPaint(
       painter: MapRegionIntensityPainter(
         mapPolygons: mapSource,
@@ -433,7 +433,7 @@ class MapStationIntensityWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final allParameterEarthquakeItem =
-        ref.read(parameterEarthquakeController).parameterEarthquake?.items ??
+        ref.read(parameterEarthquakeProvider).parameterEarthquake?.items ??
             <ParameterEarthquakeItem>[];
 
     final widgets = <Widget>[];

@@ -11,9 +11,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class FirebaseCloudMessagingController
+class FirebaseCloudMessagingProvider
     extends StateNotifier<FirebaseCloudMessagingModel> {
-  FirebaseCloudMessagingController()
+  FirebaseCloudMessagingProvider()
       : super(
           const FirebaseCloudMessagingModel(
             token: null,

@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
-class TravelTimeController extends StateNotifier<TravelTimeModel> {
-  TravelTimeController()
+class TravelTimeProvider extends StateNotifier<TravelTimeModel> {
+  TravelTimeProvider()
       : super(
           const TravelTimeModel(
             travelTimeTable: [],

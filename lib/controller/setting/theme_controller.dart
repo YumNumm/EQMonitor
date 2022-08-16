@@ -4,8 +4,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ThemeController extends StateNotifier<ThemeModel> {
-  ThemeController()
+class ThemeProvider extends StateNotifier<ThemeModel> {
+  ThemeProvider()
       : super(
           const ThemeModel(
             themeMode: ThemeMode.system,

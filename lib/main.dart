@@ -89,7 +89,7 @@ class EqMonitorApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode =
-        ref.watch(themeController.select((value) => value.themeMode));
+        ref.watch(themeProvider.select((value) => value.themeMode));
     return MaterialApp(
       title: 'EQMonitor',
       theme: lightTheme(),
