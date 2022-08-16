@@ -4,31 +4,33 @@ import 'package:eqmonitor/api/kmoni.dart';
 import 'package:eqmonitor/api/kmoni/kmoni_image_parser.dart';
 import 'package:eqmonitor/api/kmoni/kmoni_web_api_url_generators.dart';
 import 'package:eqmonitor/const/kmoni/real_time_data_type.dart';
-import 'package:eqmonitor/const/obspoint.dart';
 import 'package:eqmonitor/model/kmoni_model.dart';
-import 'package:flutter/services.dart';
+import 'package:eqmonitor/provider/init/kyoshin_kansokuten.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
-import '../model/analyzed_point_model.dart';
+import '../model/analyzed_kyoshin_kansokuten.dart';
+
+final kmoniProvider = StateNotifierProvider<KmoniProvider, KmoniModel>((ref) {
+  return KmoniProvider(ref);
+});
 
 class KmoniProvider extends StateNotifier<KmoniModel> {
-  KmoniProvider()
+  KmoniProvider(this.ref)
       : super(
           KmoniModel(
             analyzedPoint: [],
             lastUpdated: null,
             lastUpdateAttempt: DateTime.now(),
             updateFrequency: const Duration(seconds: 1),
-            obsPoints: [],
-            isKansokutenLoaded: false,
             updateTimer: null,
             isUpdating: false,
-            loadDuration: null,
           ),
-        ) {
-    onInit();
-  }
+        ){
+          onInit();
+        }
+
+  final Ref ref;
 
   final logger = Logger(
     printer: PrettyPrinter(
@@ -46,15 +48,9 @@ class KmoniProvider extends StateNotifier<KmoniModel> {
 
   // Kmoniからデータを取得するタイマーを開始
   void onInit() {
-    if (!state.isKansokutenLoaded) {
-      /// 観測点CSVの読み込み
-      _loadKansokuten();
-      // タイマーを開始
-
-      state = state.copyWith(
-        updateTimer: Timer.periodic(state.updateFrequency, _onTimer),
-      );
-    }
+    state = state.copyWith(
+      updateTimer: Timer.periodic(state.updateFrequency, _onTimer),
+    );
   }
 
   Future<void> _onTimer(Timer timer) async {
@@ -104,70 +100,17 @@ class KmoniProvider extends StateNotifier<KmoniModel> {
       }
       final parsedAnalyzedPoint = kyoshinImageParser.imageParse(
         picture: imageResponse.data!,
-        obsPoints: state.obsPoints,
+        obsPoints: ref.read(kyoshinKansokutenProvider),
         type: RealtimeDataType.Shindo,
       );
-      final analyzedPoint = state.analyzedPoint;
-      final newAnalyzedPoint = <AnalyzedPoint>[];
-      for (var i = 0; i < analyzedPoint.length; i++) {
-        newAnalyzedPoint.add(
-          analyzedPoint[i].copyWith(
-            shindo: parsedAnalyzedPoint[i].shindo,
-            shindoColor: parsedAnalyzedPoint[i].shindoColor,
-            hadValue:
-                parsedAnalyzedPoint[i].hadValue || analyzedPoint[i].hadValue,
-          ),
-        );
-      }
+
       state = state.copyWith(
-        analyzedPoint: newAnalyzedPoint,
+        analyzedPoint: parsedAnalyzedPoint,
         lastUpdated: dt,
       );
     } on Exception {
       logger.e(
         'リアルタイム震度画像の取得に失敗しました',
-      );
-    }
-  }
-
-  /// 観測点CSVを読み込む
-  Future<void> _loadKansokuten() async {
-    final stopwatch = Stopwatch()..start();
-
-    final kansokuten =
-        await rootBundle.loadString('assets/kmoni/kansokuten.csv');
-    // 改行で区切る
-    final rowsAsListOfStrings = kansokuten.split('\n');
-
-    final obsPoints = <ObsPoint>[];
-    for (final row in rowsAsListOfStrings) {
-      obsPoints.add(ObsPoint.fromList(row.split(',')));
-    }
-    stopwatch.stop();
-    logger.d('観測点データを読み込みました: ${stopwatch.elapsedMicroseconds / 1000}ms');
-
-    if (mounted) {
-      state = state.copyWith(
-        obsPoints: obsPoints,
-        isKansokutenLoaded: true,
-        analyzedPoint: obsPoints
-            .map(
-              (e) => AnalyzedPoint(
-                code: e.code,
-                name: e.name,
-                hadValue: false,
-                intensity: null,
-                lat: e.lat,
-                lon: e.lon,
-                pga: null,
-                pgaColor: null,
-                prefectureName: e.pref,
-                shindo: null,
-                shindoColor: null,
-              ),
-            )
-            .toList(),
-        loadDuration: stopwatch.elapsed,
       );
     }
   }

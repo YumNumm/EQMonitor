@@ -17,10 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$KmoniModel {
   /// 観測点のリスト
-  List<AnalyzedPoint> get analyzedPoint => throw _privateConstructorUsedError;
-
-  /// 観測点の読み込みにかかった時間
-  Duration? get loadDuration => throw _privateConstructorUsedError;
+  List<AnalyzedKoshinKansokuten> get analyzedPoint =>
+      throw _privateConstructorUsedError;
 
   /// 最新の更新時刻
   /// `Null`の時は、まだ更新されていません
@@ -29,12 +27,6 @@ mixin _$KmoniModel {
   /// 最終更新試行時
   /// デフォルトは 現在時刻
   DateTime get lastUpdateAttempt => throw _privateConstructorUsedError;
-
-  /// 観測点の位置
-  List<ObsPoint> get obsPoints => throw _privateConstructorUsedError;
-
-  /// 観測点CSVがロードされたかどうか
-  bool get isKansokutenLoaded => throw _privateConstructorUsedError;
 
   /// Kmoniの更新タイマー
   Timer? get updateTimer => throw _privateConstructorUsedError;
@@ -56,12 +48,9 @@ abstract class $KmoniModelCopyWith<$Res> {
           KmoniModel value, $Res Function(KmoniModel) then) =
       _$KmoniModelCopyWithImpl<$Res>;
   $Res call(
-      {List<AnalyzedPoint> analyzedPoint,
-      Duration? loadDuration,
+      {List<AnalyzedKoshinKansokuten> analyzedPoint,
       DateTime? lastUpdated,
       DateTime lastUpdateAttempt,
-      List<ObsPoint> obsPoints,
-      bool isKansokutenLoaded,
       Timer? updateTimer,
       Duration updateFrequency,
       bool isUpdating});
@@ -78,11 +67,8 @@ class _$KmoniModelCopyWithImpl<$Res> implements $KmoniModelCopyWith<$Res> {
   @override
   $Res call({
     Object? analyzedPoint = freezed,
-    Object? loadDuration = freezed,
     Object? lastUpdated = freezed,
     Object? lastUpdateAttempt = freezed,
-    Object? obsPoints = freezed,
-    Object? isKansokutenLoaded = freezed,
     Object? updateTimer = freezed,
     Object? updateFrequency = freezed,
     Object? isUpdating = freezed,
@@ -91,11 +77,7 @@ class _$KmoniModelCopyWithImpl<$Res> implements $KmoniModelCopyWith<$Res> {
       analyzedPoint: analyzedPoint == freezed
           ? _value.analyzedPoint
           : analyzedPoint // ignore: cast_nullable_to_non_nullable
-              as List<AnalyzedPoint>,
-      loadDuration: loadDuration == freezed
-          ? _value.loadDuration
-          : loadDuration // ignore: cast_nullable_to_non_nullable
-              as Duration?,
+              as List<AnalyzedKoshinKansokuten>,
       lastUpdated: lastUpdated == freezed
           ? _value.lastUpdated
           : lastUpdated // ignore: cast_nullable_to_non_nullable
@@ -104,14 +86,6 @@ class _$KmoniModelCopyWithImpl<$Res> implements $KmoniModelCopyWith<$Res> {
           ? _value.lastUpdateAttempt
           : lastUpdateAttempt // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      obsPoints: obsPoints == freezed
-          ? _value.obsPoints
-          : obsPoints // ignore: cast_nullable_to_non_nullable
-              as List<ObsPoint>,
-      isKansokutenLoaded: isKansokutenLoaded == freezed
-          ? _value.isKansokutenLoaded
-          : isKansokutenLoaded // ignore: cast_nullable_to_non_nullable
-              as bool,
       updateTimer: updateTimer == freezed
           ? _value.updateTimer
           : updateTimer // ignore: cast_nullable_to_non_nullable
@@ -136,12 +110,9 @@ abstract class _$$_KmoniModelCopyWith<$Res>
       __$$_KmoniModelCopyWithImpl<$Res>;
   @override
   $Res call(
-      {List<AnalyzedPoint> analyzedPoint,
-      Duration? loadDuration,
+      {List<AnalyzedKoshinKansokuten> analyzedPoint,
       DateTime? lastUpdated,
       DateTime lastUpdateAttempt,
-      List<ObsPoint> obsPoints,
-      bool isKansokutenLoaded,
       Timer? updateTimer,
       Duration updateFrequency,
       bool isUpdating});
@@ -160,11 +131,8 @@ class __$$_KmoniModelCopyWithImpl<$Res> extends _$KmoniModelCopyWithImpl<$Res>
   @override
   $Res call({
     Object? analyzedPoint = freezed,
-    Object? loadDuration = freezed,
     Object? lastUpdated = freezed,
     Object? lastUpdateAttempt = freezed,
-    Object? obsPoints = freezed,
-    Object? isKansokutenLoaded = freezed,
     Object? updateTimer = freezed,
     Object? updateFrequency = freezed,
     Object? isUpdating = freezed,
@@ -173,11 +141,7 @@ class __$$_KmoniModelCopyWithImpl<$Res> extends _$KmoniModelCopyWithImpl<$Res>
       analyzedPoint: analyzedPoint == freezed
           ? _value._analyzedPoint
           : analyzedPoint // ignore: cast_nullable_to_non_nullable
-              as List<AnalyzedPoint>,
-      loadDuration: loadDuration == freezed
-          ? _value.loadDuration
-          : loadDuration // ignore: cast_nullable_to_non_nullable
-              as Duration?,
+              as List<AnalyzedKoshinKansokuten>,
       lastUpdated: lastUpdated == freezed
           ? _value.lastUpdated
           : lastUpdated // ignore: cast_nullable_to_non_nullable
@@ -186,14 +150,6 @@ class __$$_KmoniModelCopyWithImpl<$Res> extends _$KmoniModelCopyWithImpl<$Res>
           ? _value.lastUpdateAttempt
           : lastUpdateAttempt // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      obsPoints: obsPoints == freezed
-          ? _value._obsPoints
-          : obsPoints // ignore: cast_nullable_to_non_nullable
-              as List<ObsPoint>,
-      isKansokutenLoaded: isKansokutenLoaded == freezed
-          ? _value.isKansokutenLoaded
-          : isKansokutenLoaded // ignore: cast_nullable_to_non_nullable
-              as bool,
       updateTimer: updateTimer == freezed
           ? _value.updateTimer
           : updateTimer // ignore: cast_nullable_to_non_nullable
@@ -214,31 +170,23 @@ class __$$_KmoniModelCopyWithImpl<$Res> extends _$KmoniModelCopyWithImpl<$Res>
 
 class _$_KmoniModel implements _KmoniModel {
   const _$_KmoniModel(
-      {required final List<AnalyzedPoint> analyzedPoint,
-      required this.loadDuration,
+      {required final List<AnalyzedKoshinKansokuten> analyzedPoint,
       required this.lastUpdated,
       required this.lastUpdateAttempt,
-      required final List<ObsPoint> obsPoints,
-      required this.isKansokutenLoaded,
       required this.updateTimer,
       required this.updateFrequency,
       required this.isUpdating})
-      : _analyzedPoint = analyzedPoint,
-        _obsPoints = obsPoints;
+      : _analyzedPoint = analyzedPoint;
 
   /// 観測点のリスト
-  final List<AnalyzedPoint> _analyzedPoint;
+  final List<AnalyzedKoshinKansokuten> _analyzedPoint;
 
   /// 観測点のリスト
   @override
-  List<AnalyzedPoint> get analyzedPoint {
+  List<AnalyzedKoshinKansokuten> get analyzedPoint {
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_analyzedPoint);
   }
-
-  /// 観測点の読み込みにかかった時間
-  @override
-  final Duration? loadDuration;
 
   /// 最新の更新時刻
   /// `Null`の時は、まだ更新されていません
@@ -249,20 +197,6 @@ class _$_KmoniModel implements _KmoniModel {
   /// デフォルトは 現在時刻
   @override
   final DateTime lastUpdateAttempt;
-
-  /// 観測点の位置
-  final List<ObsPoint> _obsPoints;
-
-  /// 観測点の位置
-  @override
-  List<ObsPoint> get obsPoints {
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_obsPoints);
-  }
-
-  /// 観測点CSVがロードされたかどうか
-  @override
-  final bool isKansokutenLoaded;
 
   /// Kmoniの更新タイマー
   @override
@@ -278,7 +212,7 @@ class _$_KmoniModel implements _KmoniModel {
 
   @override
   String toString() {
-    return 'KmoniModel(analyzedPoint: $analyzedPoint, loadDuration: $loadDuration, lastUpdated: $lastUpdated, lastUpdateAttempt: $lastUpdateAttempt, obsPoints: $obsPoints, isKansokutenLoaded: $isKansokutenLoaded, updateTimer: $updateTimer, updateFrequency: $updateFrequency, isUpdating: $isUpdating)';
+    return 'KmoniModel(analyzedPoint: $analyzedPoint, lastUpdated: $lastUpdated, lastUpdateAttempt: $lastUpdateAttempt, updateTimer: $updateTimer, updateFrequency: $updateFrequency, isUpdating: $isUpdating)';
   }
 
   @override
@@ -289,15 +223,9 @@ class _$_KmoniModel implements _KmoniModel {
             const DeepCollectionEquality()
                 .equals(other._analyzedPoint, _analyzedPoint) &&
             const DeepCollectionEquality()
-                .equals(other.loadDuration, loadDuration) &&
-            const DeepCollectionEquality()
                 .equals(other.lastUpdated, lastUpdated) &&
             const DeepCollectionEquality()
                 .equals(other.lastUpdateAttempt, lastUpdateAttempt) &&
-            const DeepCollectionEquality()
-                .equals(other._obsPoints, _obsPoints) &&
-            const DeepCollectionEquality()
-                .equals(other.isKansokutenLoaded, isKansokutenLoaded) &&
             const DeepCollectionEquality()
                 .equals(other.updateTimer, updateTimer) &&
             const DeepCollectionEquality()
@@ -310,11 +238,8 @@ class _$_KmoniModel implements _KmoniModel {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_analyzedPoint),
-      const DeepCollectionEquality().hash(loadDuration),
       const DeepCollectionEquality().hash(lastUpdated),
       const DeepCollectionEquality().hash(lastUpdateAttempt),
-      const DeepCollectionEquality().hash(_obsPoints),
-      const DeepCollectionEquality().hash(isKansokutenLoaded),
       const DeepCollectionEquality().hash(updateTimer),
       const DeepCollectionEquality().hash(updateFrequency),
       const DeepCollectionEquality().hash(isUpdating));
@@ -327,12 +252,9 @@ class _$_KmoniModel implements _KmoniModel {
 
 abstract class _KmoniModel implements KmoniModel {
   const factory _KmoniModel(
-      {required final List<AnalyzedPoint> analyzedPoint,
-      required final Duration? loadDuration,
+      {required final List<AnalyzedKoshinKansokuten> analyzedPoint,
       required final DateTime? lastUpdated,
       required final DateTime lastUpdateAttempt,
-      required final List<ObsPoint> obsPoints,
-      required final bool isKansokutenLoaded,
       required final Timer? updateTimer,
       required final Duration updateFrequency,
       required final bool isUpdating}) = _$_KmoniModel;
@@ -340,11 +262,7 @@ abstract class _KmoniModel implements KmoniModel {
   @override
 
   /// 観測点のリスト
-  List<AnalyzedPoint> get analyzedPoint;
-  @override
-
-  /// 観測点の読み込みにかかった時間
-  Duration? get loadDuration;
+  List<AnalyzedKoshinKansokuten> get analyzedPoint;
   @override
 
   /// 最新の更新時刻
@@ -355,14 +273,6 @@ abstract class _KmoniModel implements KmoniModel {
   /// 最終更新試行時
   /// デフォルトは 現在時刻
   DateTime get lastUpdateAttempt;
-  @override
-
-  /// 観測点の位置
-  List<ObsPoint> get obsPoints;
-  @override
-
-  /// 観測点CSVがロードされたかどうか
-  bool get isKansokutenLoaded;
   @override
 
   /// Kmoniの更新タイマー

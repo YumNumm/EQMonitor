@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:eqmonitor/const/obspoint.dart';
-import 'package:eqmonitor/model/analyzed_point_model.dart';
+import 'package:eqmonitor/model/analyzed_kyoshin_kansokuten.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'kmoni_model.freezed.dart';
@@ -10,10 +10,7 @@ part 'kmoni_model.freezed.dart';
 class KmoniModel with _$KmoniModel {
   const factory KmoniModel({
     /// 観測点のリスト
-    required List<AnalyzedPoint> analyzedPoint,
-
-    /// 観測点の読み込みにかかった時間
-    required Duration? loadDuration,
+    required List<AnalyzedKoshinKansokuten> analyzedPoint,
 
     /// 最新の更新時刻
     /// `Null`の時は、まだ更新されていません
@@ -23,11 +20,6 @@ class KmoniModel with _$KmoniModel {
     /// デフォルトは 現在時刻
     required DateTime lastUpdateAttempt,
 
-    /// 観測点の位置
-    required List<ObsPoint> obsPoints,
-
-    /// 観測点CSVがロードされたかどうか
-    required bool isKansokutenLoaded,
 
     /// Kmoniの更新タイマー
     required Timer? updateTimer,

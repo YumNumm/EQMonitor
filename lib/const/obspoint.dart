@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 
 /// 観測点の位置を表すクラス
 @immutable
-class ObsPoint {
-  const ObsPoint({
+class KyoshinKansokuten {
+  const KyoshinKansokuten({
     required this.code,
     required this.name,
     required this.pref,
@@ -14,7 +14,7 @@ class ObsPoint {
     required this.arv,
   });
 
-  ObsPoint.fromList(List<dynamic> lis)
+  KyoshinKansokuten.fromList(List<dynamic> lis)
       : code = lis[0].toString(),
         pref = lis[1].toString(),
         name = lis[2].toString(),

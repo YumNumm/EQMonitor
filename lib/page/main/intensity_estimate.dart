@@ -2,7 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:eqmonitor/api/int_calc/int_calc.dart';
 import 'package:eqmonitor/const/kmoni/jma_intensity.dart';
 import 'package:eqmonitor/page/main/kmoni_map.dart';
-import 'package:eqmonitor/state/all_state.dart';
+import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
+import 'package:eqmonitor/provider/init/parameter-earthquake.dart';
 import 'package:eqmonitor/widget/intensity/intensity_widget.dart';
 import 'package:eqmonitor/widget/intensity_calc/estimated_shindo_painter.dart';
 import 'package:eqmonitor/widget/intensity_calc/map_eew_hypocenter_painter.dart';
@@ -26,10 +27,6 @@ class IntensityEstimatePage extends HookConsumerWidget {
     /// 計算処理にかかった時間
     final calcTime = useState<int?>(null);
 
-    if (!parameterProvider.isMapLoaded) {
-      return const Center(child: CircularProgressIndicator.adaptive());
-    }
-    print(intensityCalcResult.value.length);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -38,11 +35,7 @@ class IntensityEstimatePage extends HookConsumerWidget {
             jmaMagnitude: magnitude.value,
             depth: depth.value.toDouble(),
             hypocenter: LatLng(35, 135),
-            obsPoints: ref
-                    .read(parameterEarthquakeProvider)
-                    .parameterEarthquake
-                    ?.items ??
-                [],
+            obsPoints: ref.watch(parameterEarthquakeProvider).items,
           );
           intensityCalcResult.value =
               result.groupListsBy((element) => element.region.code);
@@ -121,7 +114,7 @@ class IntensityEstimatePage extends HookConsumerWidget {
                               estimatedShindoPointsGroupBy:
                                   intensityCalcResult.value,
                               mapPolygons:
-                                  ref.watch(kmoniMapProvider).mapPolygons,
+                                  ref.watch(mapAreaForecastLocalEProvider),
                             ),
                           ),
                           // EEWの震央位置

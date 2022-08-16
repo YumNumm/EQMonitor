@@ -4,6 +4,12 @@ import 'package:eqmonitor/model/earthquake/earthquake_log_model.dart';
 import 'package:eqmonitor/schema/supabase/telegram.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+final earthquakeHistoryProvider =
+    StateNotifierProvider<EarthquakeHistoryProvider, EarthquakeHistoryModel>(
+        (ref) {
+  return EarthquakeHistoryProvider();
+});
+
 /// ref: https://github.com/ingen084/KyoshinEewViewerIngen/blob/2801ad7959f99abe7ac81c2ff3a7d1974716a786/src/KyoshinEewViewer/Series/Earthquake/Services/EarthquakeWatchService.cs
 class EarthquakeHistoryProvider extends StateNotifier<EarthquakeHistoryModel> {
   EarthquakeHistoryProvider()

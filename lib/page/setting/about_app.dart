@@ -1,9 +1,6 @@
 import 'package:eqmonitor/page/setting/term_of_service.dart';
-import 'package:eqmonitor/state/all_state.dart';
-import 'package:eqmonitor/state/theme_providers.dart';
+import 'package:eqmonitor/provider/theme_providers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:settings_ui/settings_ui.dart';
 
@@ -11,11 +8,6 @@ class AboutAppPage extends HookConsumerWidget {
   const AboutAppPage({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final travelTime = ref.watch(travelTimeProvider);
-    final kmoniMap = ref.watch(kmoniMapProvider);
-    final kmoni = ref.watch(kmoniProvider);
-    final fcm = ref.watch(firebaseCloudMessagingNotifier);
-    final eew = ref.watch(eewHistoryProvider);
     final isDarkMode = ref.watch(themeProvider.notifier).isDarkMode;
 
     return Scaffold(
@@ -70,51 +62,6 @@ class AboutAppPage extends HookConsumerWidget {
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          SettingsSection(
-            title: const Text('デバッグ情報'),
-            tiles: <SettingsTile>[
-              SettingsTile(
-                title: const Text('走時表読み込み'),
-                value: Text(
-                  (travelTime.loadDuration != null)
-                      ? '${travelTime.loadDuration!.inMicroseconds / 1000}ms '
-                          '(${travelTime.travelTimeTable.length}件)'
-                      : '読み込み失敗',
-                ),
-              ),
-              SettingsTile(
-                title: const Text('マップ読み込み'),
-                value: Text(
-                  (kmoniMap.loadDuration != null)
-                      ? '${kmoniMap.loadDuration!.inMicroseconds / 1000}ms '
-                          '(${kmoniMap.mapPolygons.length}件)'
-                      : '読み込み失敗',
-                ),
-              ),
-              SettingsTile(
-                title: const Text('観測点読み込み'),
-                value: Text(
-                  (kmoni.loadDuration != null)
-                      ? '${kmoni.loadDuration!.inMicroseconds / 1000}ms '
-                          '(${kmoni.analyzedPoint.length}件)'
-                      : '読み込み失敗',
-                ),
-              ),
-              SettingsTile(
-                title: const Text('Firebase Cloud Messaging トークン'),
-                value: Text(fcm.token.toString()),
-                onPressed: (context) async {
-                  final data = ClipboardData(text: fcm.token.toString());
-                  await Clipboard.setData(data);
-                  await Fluttertoast.showToast(msg: 'クリップボードにコピーしました');
-                },
-              ),
-              SettingsTile(
-                title: const Text('読み込んだEEW電文数'),
-                value: Text(eew.eewTelegrams.length.toString()),
               ),
             ],
           ),
