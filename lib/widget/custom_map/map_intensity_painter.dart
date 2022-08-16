@@ -4,8 +4,8 @@ import 'package:eqmonitor/schema/dmdata/eew-information/eew-infomation.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
-class MapIntensityPainter extends CustomPainter {
-  MapIntensityPainter({
+class EewIntensityPainter extends CustomPainter {
+  EewIntensityPainter({
     required this.mapPolygons,
     required this.eews,
   });
@@ -39,7 +39,7 @@ class MapIntensityPainter extends CustomPainter {
                     ..style = PaintingStyle.stroke,
                 );
             }
-          } catch (e) {
+          }on Exception catch (e) {
             Logger().e(e, region.code);
           }
         }
@@ -48,7 +48,7 @@ class MapIntensityPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(MapIntensityPainter oldDelegate) {
+  bool shouldRepaint(EewIntensityPainter oldDelegate) {
     return oldDelegate.mapPolygons != mapPolygons || oldDelegate.eews != eews;
   }
 }

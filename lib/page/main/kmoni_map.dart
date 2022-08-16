@@ -32,17 +32,17 @@ class KmoniMap extends ConsumerWidget {
     return Stack(
       children: [
         InteractiveViewer(
-          maxScale: 500,
+          maxScale: 20,
           child: Stack(
             children: const [
               // マップベース
               BaseMapWidget(),
               // EEWの予想震度
-              MapIntensityWidget(),
+              MapEewIntensityWidget(),
               // 観測点
               ObsPointsMapWidget(),
               // EEWの震央位置
-              EewCenterMapWidget(),
+              EewHypoCenterMapWidget(),
             ],
           ),
         ),
@@ -199,8 +199,8 @@ class BaseMapWidget extends ConsumerWidget {
   }
 }
 
-class MapIntensityWidget extends ConsumerWidget {
-  const MapIntensityWidget({super.key});
+class MapEewIntensityWidget extends ConsumerWidget {
+  const MapEewIntensityWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -210,7 +210,7 @@ class MapIntensityWidget extends ConsumerWidget {
         .watch(eewHistoryController.select((value) => value.showEews))
         .map((eew) => MapEntry(eew, EEWInformation.fromJson(eew.body)));
     return CustomPaint(
-      painter: MapIntensityPainter(
+      painter: EewIntensityPainter(
         eews: eews,
         mapPolygons: mapSource,
       ),
@@ -219,8 +219,8 @@ class MapIntensityWidget extends ConsumerWidget {
   }
 }
 
-class EewCenterMapWidget extends ConsumerWidget {
-  const EewCenterMapWidget({super.key});
+class EewHypoCenterMapWidget extends ConsumerWidget {
+  const EewHypoCenterMapWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

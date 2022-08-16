@@ -105,28 +105,33 @@ class IntensityEstimatePage extends HookConsumerWidget {
               padding: const EdgeInsets.all(8),
               child: Stack(
                 children: [
-                  InteractiveViewer(
-                    maxScale: 100,
-                    child: Stack(
-                      children: [
-                        // マップベース
-                        const BaseMapWidget(),
-                        // 推定した観測点震度
-                        CustomPaint(
-                          painter: EstimatedShindoPainter(
-                            estimatedShindoPointsGroupBy:
-                                intensityCalcResult.value,
-                            mapPolygons:
-                                ref.watch(kmoniMapController).mapPolygons,
+                  GestureDetector(
+                    onTapDown: (details) {
+                      // TODO(YumNumm): onTapした場所の検知 -> LatLngへの変換
+                    },
+                    child: InteractiveViewer(
+                      maxScale: 100,
+                      child: Stack(
+                        children: [
+                          // マップベース
+                          const BaseMapWidget(),
+                          // 推定した観測点震度
+                          CustomPaint(
+                            painter: EstimatedShindoPainter(
+                              estimatedShindoPointsGroupBy:
+                                  intensityCalcResult.value,
+                              mapPolygons:
+                                  ref.watch(kmoniMapController).mapPolygons,
+                            ),
                           ),
-                        ),
-                        // EEWの震央位置
-                        CustomPaint(
-                          painter: HypocenterPainterfromLatLng(
-                            hypocenter: LatLng(35, 135),
+                          // EEWの震央位置
+                          CustomPaint(
+                            painter: HypocenterPainterfromLatLng(
+                              hypocenter: LatLng(35, 135),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   // 凡例
