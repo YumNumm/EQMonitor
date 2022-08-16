@@ -15,7 +15,6 @@ import 'package:flutter/material.dart' hide Theme;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../model/analyzed_kyoshin_kansokuten.dart';
 import '../../widget/eew/eew_body_widget.dart';
 
 class KmoniMap extends ConsumerWidget {
@@ -101,6 +100,7 @@ class KmoniStatusWidget extends ConsumerWidget {
                                 3)
                             ? const Color.fromARGB(255, 255, 17, 0)
                             : null,
+                        fontFamily: 'CaskaydiaCove',
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -108,9 +108,12 @@ class KmoniStatusWidget extends ConsumerWidget {
                       Container(
                         width: 10,
                         height: 10,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.blue,
+                          color: const Color.fromARGB(255, 0, 140, 255),
+                          border: Border.all(
+                            color: const Color.fromARGB(255, 0, 69, 125),
+                          ),
                         ),
                       )
                     else
@@ -160,7 +163,8 @@ class KyoshinKansokutensMapWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final analyzedKmoniPoints = ref.watch(kmoniProvider.select((value) => value.analyzedPoint));
+    final analyzedKmoniPoints =
+        ref.watch(kmoniProvider.select((value) => value.analyzedPoint));
 
     return CustomPaint(
       painter: KyoshinKansokutenPainter(

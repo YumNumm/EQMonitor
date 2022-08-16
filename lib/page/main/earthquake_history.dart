@@ -12,6 +12,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../api/remote_db/telegram.dart';
+import '../../extension/relative_luminance.dart';
 import 'earthquake_history_detail.dart';
 
 class EarthquakeHistoryPage extends HookConsumerWidget {
@@ -187,6 +188,7 @@ class EarthquakeHistoryTile extends StatelessWidget {
             // 速報かどうか
             if (isSokuhou)
               const Chip(
+                backgroundColor: Colors.blueAccent,
                 padding: EdgeInsets.zero,
                 label: Text(
                   '速報',
@@ -197,12 +199,14 @@ class EarthquakeHistoryTile extends StatelessWidget {
               ),
             // 顕著な地震の震源要素更新のお知らせ かどうか
             if (latestVxse61Head != null)
-              const Chip(
+              Chip(
+                backgroundColor: const Color.fromARGB(255, 192, 0, 80),
                 padding: EdgeInsets.zero,
                 label: Text(
                   '顕著な地震の震源要素更新のお知らせ ',
                   style: TextStyle(
                     fontSize: 16,
+                    color: const Color.fromARGB(255, 192, 0, 80).onPrimary,
                   ),
                 ),
               ),
