@@ -13,7 +13,7 @@ class MapBasePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paintBuilding = Paint()
       ..color = isDarkMode
-          ? const Color.fromARGB(255, 148, 148, 148)
+          ? const Color.fromARGB(255, 95, 95, 95)
           : const Color.fromARGB(255, 231, 230, 230)
       ..isAntiAlias = true
       ..strokeCap = StrokeCap.round

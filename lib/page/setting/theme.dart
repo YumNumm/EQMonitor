@@ -21,10 +21,12 @@ class ThemeChoicePage extends HookConsumerWidget {
             itemCount: ThemeMode.values.length,
             itemBuilder: (context, index) {
               final themeMode = ThemeMode.values[index];
+              print(currentThemeMode.name);
               return RadioListTile(
                 title: Text(themeMode.name),
-                value: themeMode == currentThemeMode,
-                groupValue: ThemeMode,
+                value: themeMode.name,
+                selected: themeMode.name == currentThemeMode.name,
+                groupValue: currentThemeMode.name,
                 onChanged: (_) {
                   ref.read(themeProvider.notifier).setTheme(themeMode);
                 },

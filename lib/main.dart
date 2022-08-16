@@ -24,7 +24,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -132,7 +132,11 @@ class EqMonitorApp extends ConsumerWidget {
       ],
       useInheritedMediaQuery: true,
       builder: DevicePreview.appBuilder,
-      home: const MainPage(),
+      home: const Banner(
+        message: 'DEVELOP',
+        location: BannerLocation.bottomStart,
+        child: MainPage(),
+      ),
     );
   }
 }

@@ -90,6 +90,13 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
       orElse: () => JmaIntensity.Unknown,
     );
 
+    /// ## 最新のComment
+    /// VXSE61 -> VXSE53 -> VXSE52 -> VXSE51
+    final comment = latestVxse61Info?.comments ??
+        latestVxse53Info?.comments ??
+        latestVxse52Info?.comments ??
+        latestVxse51Info?.comments;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('地震${isSokuhou ? "速報" : "情報"}'),
@@ -169,53 +176,68 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
               ),
             ),
           ),
+          Text(
+            (StringBuffer()
+                  ..writeAll(
+                    <String>[
+                      if (comment?.forecast?.text != null)
+                        '${comment!.forecast!.text}\n',
+                      if (comment?.comments?.text != null)
+                        '${comment!.comments!.text}\n',
+                      if (comment?.free != null) comment!.free!,
+                    ],
+                  ))
+                .toString(),
+            style: const TextStyle(fontSize: 12),
+          ),
           Expanded(
             child: Stack(
               children: [
-                Expanded(
-                  child: InteractiveViewer(
-                    maxScale: 20,
-                    child: Stack(
-                      children: [
-                        // マップベース
-                        const BaseMapWidget(),
-                        // Region毎の震度
-                        MapRegionIntensityWidget(
-                          regions: intensity?.regions ?? <Region>[],
-                        ),
-                        // 震央位置
-                        MapHypoCenterMapWidget(
-                          component: component,
-                        ),
-                        //  観測点ごとの震度
-                        // TODO(YumNumm): 観測点震度描画をCustomPainterに移植する
-                        // MapStationIntensityWidget(
-                        //   stations: intensity?.stations ?? [],
-                        // ),
-                      ],
-                    ),
+                InteractiveViewer(
+                  maxScale: 20,
+                  child: Stack(
+                    children: [
+                      // マップベース
+                      const BaseMapWidget(),
+                      // Region毎の震度
+                      MapRegionIntensityWidget(
+                        regions: intensity?.regions ?? <Region>[],
+                      ),
+                      // 震央位置
+                      MapHypoCenterMapWidget(
+                        component: component,
+                      ),
+                      //  観測点ごとの震度
+                      // TODO(YumNumm): 観測点震度描画をCustomPainterに移植する
+                      // MapStationIntensityWidget(
+                      //   stations: intensity?.stations ?? [],
+                      // ),
+                    ],
                   ),
                 ),
                 Align(
                   alignment: Alignment.bottomLeft,
-                  child: Row(
-                    children: [
-                      for (final i in JmaIntensity.values)
-                        if (i == JmaIntensity.over)
-                          const SizedBox.shrink()
-                        else
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IntensityWidget(
-                                intensity: i,
-                                size: 25,
-                                opacity: 1,
-                              ),
-                              const SizedBox(width: 5),
-                            ],
-                          ),
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Row(
+                      children: [
+                        for (final i in JmaIntensity.values)
+                          if (i == JmaIntensity.over)
+                            const SizedBox.shrink()
+                          else
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IntensityWidget(
+                                  intensity: i,
+                                  size: 25,
+                                  opacity: 1,
+                                ),
+                                const SizedBox(width: 5),
+                              ],
+                            ),
+                      ],
+                    ),
                   ),
                 ),
               ],
