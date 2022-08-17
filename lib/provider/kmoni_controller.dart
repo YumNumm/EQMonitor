@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:eqmonitor/api/kmoni.dart';
-import 'package:eqmonitor/api/kmoni/kmoni_image_parser.dart';
-import 'package:eqmonitor/api/kmoni/kmoni_web_api_url_generators.dart';
-import 'package:eqmonitor/const/kmoni/real_time_data_type.dart';
-import 'package:eqmonitor/model/kmoni_model.dart';
-import 'package:eqmonitor/provider/init/kyoshin_kansokuten.dart';
+import '../api/kmoni.dart';
+import '../api/kmoni/kmoni_image_parser.dart';
+import '../api/kmoni/kmoni_web_api_url_generators.dart';
+import '../const/kmoni/real_time_data_type.dart';
+import '../model/kmoni_model.dart';
+import 'init/kyoshin_kansokuten.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 

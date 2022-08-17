@@ -1,5 +1,5 @@
-import 'package:eqmonitor/page/setting/term_of_service.dart';
-import 'package:eqmonitor/provider/theme_providers.dart';
+import 'term_of_service.dart';
+import '../../provider/theme_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:settings_ui/settings_ui.dart';

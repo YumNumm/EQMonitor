@@ -1,4 +1,4 @@
-import 'package:eqmonitor/provider/theme_providers.dart';
+import '../../provider/theme_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

@@ -1,4 +1,4 @@
-import 'package:eqmonitor/schema/dmdata/commonHeader.dart';
+import '../../schema/dmdata/commonHeader.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:supabase/supabase.dart';
 

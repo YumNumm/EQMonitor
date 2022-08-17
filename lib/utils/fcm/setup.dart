@@ -1,7 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:eqmonitor/const/notification_channel.dart';
-import 'package:eqmonitor/utils/fcm/background_handler.dart';
-import 'package:eqmonitor/utils/fcm/foreground_handler.dart';
+import '../../const/notification_channel.dart';
+import 'background_handler.dart';
+import 'foreground_handler.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 

@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
-import 'package:eqmonitor/api/remote_db/eew.dart';
-import 'package:eqmonitor/model/earthquake/eew_history_model.dart';
-import 'package:eqmonitor/private/keys.dart';
-import 'package:eqmonitor/schema/dmdata/commonHeader.dart';
+import '../../api/remote_db/eew.dart';
+import '../../model/earthquake/eew_history_model.dart';
+import '../../private/keys.dart';
+import '../../schema/dmdata/commonHeader.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;

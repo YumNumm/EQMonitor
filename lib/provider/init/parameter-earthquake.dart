@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:eqmonitor/schema/dmdata/parameter-earthquake/parameter-earthquake.dart';
+import '../../schema/dmdata/parameter-earthquake/parameter-earthquake.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';

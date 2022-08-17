@@ -1,5 +1,5 @@
-import 'package:eqmonitor/api/kmoni/date_format.dart';
-import 'package:eqmonitor/const/kmoni/real_time_data_type.dart';
+import 'date_format.dart';
+import '../../const/kmoni/real_time_data_type.dart';
 
 /// ## 新強震モニタのURL生成器
 class KyoshinWebApiUrlGenerator {

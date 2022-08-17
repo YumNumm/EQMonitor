@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
-import 'package:eqmonitor/api/remote_db/telegram.dart';
-import 'package:eqmonitor/model/earthquake/earthquake_log_model.dart';
-import 'package:eqmonitor/schema/supabase/telegram.dart';
+import '../../api/remote_db/telegram.dart';
+import '../../model/earthquake/earthquake_log_model.dart';
+import '../../schema/supabase/telegram.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final earthquakeHistoryProvider =

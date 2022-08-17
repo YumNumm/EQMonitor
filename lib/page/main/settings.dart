@@ -1,6 +1,6 @@
-import 'package:eqmonitor/page/setting/about_app.dart';
-import 'package:eqmonitor/page/setting/debug_info.dart';
-import 'package:eqmonitor/page/setting/theme.dart';
+import '../setting/about_app.dart';
+import '../setting/debug_info.dart';
+import '../setting/theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';

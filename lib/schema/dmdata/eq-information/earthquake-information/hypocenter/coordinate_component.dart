@@ -1,4 +1,4 @@
-import 'package:eqmonitor/schema/dmdata/eq-information/earthquake-information/hypocenter/coordinate_component/geodetic_system.dart';
+import 'coordinate_component/geodetic_system.dart';
 
 import 'coordinate_component/height.dart';
 import 'coordinate_component/latitude.dart';

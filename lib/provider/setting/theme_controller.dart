@@ -1,4 +1,4 @@
-import 'package:eqmonitor/model/setting/theme_model.dart';
+import '../../model/setting/theme_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

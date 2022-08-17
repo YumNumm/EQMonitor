@@ -1,6 +1,6 @@
-import 'package:eqmonitor/schema/dmdata/commonHeader.dart';
-import 'package:eqmonitor/schema/dmdata/eew-information/eew-infomation.dart';
-import 'package:eqmonitor/utils/map/map_global_offset.dart';
+import '../../schema/dmdata/commonHeader.dart';
+import '../../schema/dmdata/eew-information/eew-infomation.dart';
+import '../../utils/map/map_global_offset.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 

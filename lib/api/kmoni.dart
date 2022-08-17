@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:eqmonitor/api/dio_firebase_performance.dart';
+import 'dio_firebase_performance.dart';
 import 'package:intl/intl.dart';
 
 import '../schema/kmoni/EEW.dart';
