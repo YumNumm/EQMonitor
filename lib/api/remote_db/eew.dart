@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:eqmonitor/private/keys.dart';
-import 'package:eqmonitor/schema/dmdata/commonHeader.dart';
+import '../../private/keys.dart';
+import '../../schema/dmdata/commonHeader.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class EewApi {

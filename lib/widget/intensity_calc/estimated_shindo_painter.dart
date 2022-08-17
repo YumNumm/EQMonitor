@@ -1,5 +1,5 @@
-import 'package:eqmonitor/api/int_calc/int_calc.dart';
-import 'package:eqmonitor/const/prefecture/area_forecast_local_eew.model.dart';
+import '../../api/int_calc/int_calc.dart';
+import '../../const/prefecture/area_forecast_local_eew.model.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 

@@ -1,8 +1,9 @@
 import 'dart:math' as math;
 
-import 'package:eqmonitor/const/kmoni/jma_intensity.dart';
-import 'package:eqmonitor/schema/dmdata/parameter-earthquake/parameter-earthquake.dart';
 import 'package:latlong2/latlong.dart';
+
+import '../../const/kmoni/jma_intensity.dart';
+import '../../schema/dmdata/parameter-earthquake/parameter-earthquake.dart';
 
 /// ## 距離減衰式による震度計算
 /// ref: https://qiita.com/soshi1822/items/f5fd9ccf6830d834abc4

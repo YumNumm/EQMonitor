@@ -1,5 +1,5 @@
-import './city.dart';
-import './region.dart';
+import 'city.dart';
+import 'region.dart';
 
 class ParameterEarthquake {
   ParameterEarthquake({

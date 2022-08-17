@@ -1,4 +1,4 @@
-import './P2PJMAQuake.dart';
+import 'P2PJMAQuake.dart';
 
 class P2PJMAQuakes {
   final List<P2PJMAQuake>? list;

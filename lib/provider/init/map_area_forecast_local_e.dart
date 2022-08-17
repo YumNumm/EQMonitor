@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:eqmonitor/const/prefecture/area_forecast_local_eew.model.dart';
-import 'package:eqmonitor/utils/map/map_global_offset.dart';
+import '../../const/prefecture/area_forecast_local_eew.model.dart';
+import '../../utils/map/map_global_offset.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:geojson/geojson.dart';

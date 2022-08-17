@@ -1,4 +1,4 @@
-import 'package:eqmonitor/model/travel_time_table/travel_time_table.dart';
+import '../../model/travel_time_table/travel_time_table.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';

@@ -1,6 +1,6 @@
-import 'package:eqmonitor/const/prefecture/area_forecast_local_eew.model.dart';
-import 'package:eqmonitor/schema/dmdata/commonHeader.dart';
-import 'package:eqmonitor/schema/dmdata/eew-information/eew-infomation.dart';
+import '../../const/prefecture/area_forecast_local_eew.model.dart';
+import '../../schema/dmdata/commonHeader.dart';
+import '../../schema/dmdata/eew-information/eew-infomation.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 

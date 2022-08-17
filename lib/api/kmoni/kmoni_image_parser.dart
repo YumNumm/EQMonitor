@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:eqmonitor/const/kmoni/jma_intensity.dart';
-import 'package:eqmonitor/const/kmoni/real_time_data_type.dart';
-import 'package:eqmonitor/model/analyzed_kyoshin_kansokuten.dart';
+import '../../const/kmoni/jma_intensity.dart';
+import '../../const/kmoni/real_time_data_type.dart';
+import '../../model/analyzed_kyoshin_kansokuten.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image/image.dart' as image_lib;
 import 'package:logger/logger.dart';

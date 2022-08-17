@@ -1,4 +1,4 @@
-import './Body.dart';
+import 'Body.dart';
 import 'Head.dart';
 
 class SvirResponse {
