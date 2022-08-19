@@ -1,5 +1,6 @@
-import '../../const/prefecture/area_forecast_local_eew.model.dart';
 import 'package:flutter/material.dart';
+
+import '../../const/prefecture/area_forecast_local_eew.model.dart';
 
 class MapBasePainter extends CustomPainter {
   MapBasePainter({

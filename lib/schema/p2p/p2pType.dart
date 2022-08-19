@@ -1,6 +1,16 @@
 import 'package:intl/intl.dart';
 
 class P2PJsonApiv2 {
+  P2PJsonApiv2({
+    required this.id,
+    required this.code,
+    required this.time,
+  });
+  P2PJsonApiv2.fromJson(Map<String, dynamic> j)
+      : id = j['id'].toString(),
+        code = int.parse(j['code'].toString()),
+        time = DateFormat('yyyy/MM/dd HH:mm.SSS').parse(j['time'].toString());
+
   /// 情報を一意に識別するID
   final String id;
 
@@ -15,13 +25,4 @@ class P2PJsonApiv2 {
 
   /// 受信日付
   final DateTime time;
-  P2PJsonApiv2({
-    required this.id,
-    required this.code,
-    required this.time,
-  });
-  P2PJsonApiv2.fromJson(Map<String, dynamic> j)
-      : id = j['id'].toString(),
-        code = int.parse(j['code'].toString()),
-        time = DateFormat('yyyy/MM/dd HH:mm.SSS').parse(j['time'].toString());
 }

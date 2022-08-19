@@ -6,48 +6,6 @@ import 'EEWResult.dart';
 // {timestamp} = YYYYMMDDhhmmss
 // https://qiita.com/smmy/items/78c77e5fa24245f202af
 class KyoshinEEW {
-  final EEWResult result;
-
-  /// ## 情報更新時刻
-  final DateTime? reportTime;
-  final String? regionCode;
-
-  final DateTime requestTime;
-
-  /// ## 震源地
-  final String? regionName;
-  final bool? isCancel;
-
-  /// ##  震源の深さ
-  final String? depth;
-
-  /// ## 予想最大震度
-  final String? calcintensity;
-
-  /// ## 最終報かどうか
-  final bool? isFinal;
-
-  /// ## 訓練報かどうか
-  final bool? isTraining;
-
-  /// ## 緯度(北緯)
-  final double? latitude;
-
-  /// ## 経度(東経)
-  final double? longitude;
-
-  /// ## 地震発生時刻
-  final DateTime? originTime;
-
-  /// ## マグニチュード
-  final double? magnitude;
-
-  /// ## 第n報
-  final int? reportNum;
-  final String requestHypoType;
-
-  /// 地震ID
-  final int? reportId;
   KyoshinEEW({
     required this.result,
     required this.reportTime,
@@ -113,6 +71,48 @@ class KyoshinEEW {
         reportId = (json['report_id'].toString() == '')
             ? null
             : int.parse(json['report_id'].toString());
+  final EEWResult result;
+
+  /// ## 情報更新時刻
+  final DateTime? reportTime;
+  final String? regionCode;
+
+  final DateTime requestTime;
+
+  /// ## 震源地
+  final String? regionName;
+  final bool? isCancel;
+
+  /// ##  震源の深さ
+  final String? depth;
+
+  /// ## 予想最大震度
+  final String? calcintensity;
+
+  /// ## 最終報かどうか
+  final bool? isFinal;
+
+  /// ## 訓練報かどうか
+  final bool? isTraining;
+
+  /// ## 緯度(北緯)
+  final double? latitude;
+
+  /// ## 経度(東経)
+  final double? longitude;
+
+  /// ## 地震発生時刻
+  final DateTime? originTime;
+
+  /// ## マグニチュード
+  final double? magnitude;
+
+  /// ## 第n報
+  final int? reportNum;
+  final String requestHypoType;
+
+  /// 地震ID
+  final int? reportId;
 }
 
 DateTime yyyyMMddHHmmss(String s) {

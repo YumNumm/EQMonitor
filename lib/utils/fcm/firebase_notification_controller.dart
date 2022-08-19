@@ -34,10 +34,15 @@ Future<void> initFirebaseCloudMessaging() async {
   if (token != null) {
     logger.d('FCM Token: $token');
   }
-  // TopicをSubscribe
-  for (final e in Topics.values) {
-    await messaging.subscribeToTopic(e.name);
+  Future<void> subscribe() async {
+    // TopicをSubscribe
+    for (final e in Topics.values) {
+      await messaging.subscribeToTopic(e.name);
+    }
   }
+
+  void sub() => subscribe();
+  sub();
 }
 
 enum Topics {
@@ -52,7 +57,6 @@ enum Topics {
 
   /// ## 震源・震度に関する情報
   VXSE53,
-
 
   /// ## 利用者全員への緊急連絡
   everyone,

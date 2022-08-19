@@ -1,6 +1,12 @@
+import 'package:eqmonitor/extension/relative_luminance.dart';
+import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart' hide TextDirection;
+import 'package:latlong2/latlong.dart';
+import 'package:logger/logger.dart';
+
 import '../../const/kmoni/jma_intensity.dart';
 import '../../const/prefecture/area_forecast_local_eew.model.dart';
-import 'kmoni_map.dart';
 import '../../provider/init/map_area_forecast_local_e.dart';
 import '../../provider/init/parameter-earthquake.dart';
 import '../../schema/dmdata/commonHeader.dart';
@@ -10,13 +16,8 @@ import '../../schema/dmdata/eq-information/earthquake-information/intensity/stat
 import '../../schema/dmdata/eq-information/earthquake.dart';
 import '../../schema/supabase/telegram.dart';
 import '../../utils/map/map_global_offset.dart';
-import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart' hide TextDirection;
-import 'package:latlong2/latlong.dart';
-import 'package:logger/logger.dart';
-
 import '../../widget/intensity/intensity_widget.dart';
+import 'kmoni_map.dart';
 
 class EarthquakeHistoryDetailPage extends HookConsumerWidget {
   EarthquakeHistoryDetailPage({
@@ -110,10 +111,19 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                   : null,
             ),
             child: ListTile(
-              leading: IntensityWidget(
-                intensity: maxInt,
-                opacity: 0.3,
-                size: 42,
+              leading: Container(
+                decoration: BoxDecoration(
+                  color: maxInt.color,
+                  border: Border.all(
+                    color: maxInt.color.onPrimary,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: IntensityWidget(
+                  intensity: maxInt,
+                  size: 42,
+                ),
               ),
               enableFeedback: true,
               title: Text(
@@ -468,7 +478,7 @@ class MapStationIntensityWidget extends ConsumerWidget {
           LatLng(param.latitude, param.longitude),
         ).toLocalOffset(const Size(476, 927.4));
         widgets.add(
-          Container(
+          DecoratedBox(
             decoration: BoxDecoration(
               border: Border.all(
                 color: Colors.red,

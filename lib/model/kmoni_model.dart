@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import '../const/obspoint.dart';
-import 'analyzed_kyoshin_kansokuten.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import 'analyzed_kyoshin_kansokuten.dart';
 
 part 'kmoni_model.freezed.dart';
 

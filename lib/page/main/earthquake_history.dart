@@ -22,41 +22,61 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final earthquakeHistory = ref.watch(earthquakeHistoryProvider);
-
-    return AnimationLimiter(
-      child: RefreshIndicator(
-        onRefresh: () async {
-          await Future<void>.delayed(const Duration(seconds: 1));
-          await ref.read(earthquakeHistoryProvider.notifier).refreshTelegrams();
-        },
-        child: ListView.builder(
-          shrinkWrap: true,
-          physics: const BouncingScrollPhysics(
-            parent: AlwaysScrollableScrollPhysics(),
+    return ref.watch(earthquakeHistoryFutureProvider).when<Widget>(
+          loading: () => const Center(
+            child: CircularProgressIndicator(),
           ),
-          itemCount: earthquakeHistory.telegramsGroupByEventId.length,
-          itemBuilder: (context, index) {
-            final key =
-                earthquakeHistory.telegramsGroupByEventId.keys.elementAt(index);
-            final telegrams = earthquakeHistory.telegramsGroupByEventId[key]!;
-            return AnimationConfiguration.staggeredList(
-              position: index,
-              delay: const Duration(milliseconds: 20),
-              child: SlideAnimation(
-                duration: const Duration(milliseconds: 1000),
-                curve: Curves.fastLinearToSlowEaseIn,
-                child: FadeInAnimation(
-                  duration: const Duration(milliseconds: 1000),
-                  curve: Curves.fastLinearToSlowEaseIn,
-                  child: EarthquakeHistoryTile(telegrams: telegrams),
+          error: (context, error) => Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'エラーが発生しました',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text('$error'),
+              FloatingActionButton.extended(
+                label: const Text('再読み込みする'),
+                icon: const Icon(Icons.refresh),
+                onPressed: () => ref.refresh(earthquakeHistoryFutureProvider),
+              ),
+            ],
+          ),
+          data: (data) {
+            return AnimationLimiter(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  return await ref.refresh(earthquakeHistoryFutureProvider);
+                },
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics(),
+                  ),
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    final key = data.keys.elementAt(index);
+                    final telegrams = data[key]!;
+                    return AnimationConfiguration.staggeredList(
+                      position: index,
+                      delay: const Duration(milliseconds: 20),
+                      child: SlideAnimation(
+                        duration: const Duration(milliseconds: 1000),
+                        curve: Curves.fastLinearToSlowEaseIn,
+                        child: FadeInAnimation(
+                          duration: const Duration(milliseconds: 1000),
+                          curve: Curves.fastLinearToSlowEaseIn,
+                          child: EarthquakeHistoryTile(telegrams: telegrams),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             );
           },
-        ),
-      ),
-    );
+        );
   }
 }
 
@@ -134,9 +154,7 @@ class EarthquakeHistoryTile extends StatelessWidget {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: (maxInt != JmaIntensity.Int1)
-            ? maxInt.color.withOpacity(0.3)
-            : null,
+        color: maxInt.color.withOpacity(0.3),
       ),
       child: ListTile(
         onTap: () => Navigator.of(context).push(
@@ -148,7 +166,7 @@ class EarthquakeHistoryTile extends StatelessWidget {
         ),
         leading: IntensityWidget(
           intensity: maxInt,
-          opacity: 0.3,
+          opacity: 1,
           size: 42,
         ),
         enableFeedback: true,

@@ -1,16 +1,15 @@
 /// 津波の到達予想時刻（推定値）を表現します。
 /// 1.3.3
 class FirstHeight {
-  FirstHeight.fromJson(Map<String, dynamic> j)
-      : arraivalTime = DateTime.parse(j['arrivalTime'].toString()),
-        condition = (j['condition'] == null) ? null : j['condition'].toString(),
-        revise = (j['revise'] == null) ? null : j['revise'].toString();
-
   FirstHeight({
     required this.arraivalTime,
     required this.condition,
     required this.revise,
   });
+  FirstHeight.fromJson(Map<String, dynamic> j)
+      : arraivalTime = DateTime.parse(j['arrivalTime'].toString()),
+        condition = (j['condition'] == null) ? null : j['condition'].toString(),
+        revise = (j['revise'] == null) ? null : j['revise'].toString();
 
   /// 津波到達予想時刻
   final DateTime arraivalTime;

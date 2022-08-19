@@ -1,15 +1,15 @@
 class FirstHeight {
+  FirstHeight({
+    required this.arraivalTime,
+    required this.condition,
+    required this.revise,
+  });
   FirstHeight.fromJson(Map<String, dynamic> j)
       : arraivalTime = (j['arrivalTime'] == null)
             ? null
             : DateTime.parse(j['arrivalTime'].toString()),
         condition = (j['condition'] == null) ? null : j['condition'].toString(),
         revise = (j['revise'] == null) ? null : j['revise'].toString();
-  FirstHeight({
-    required this.arraivalTime,
-    required this.condition,
-    required this.revise,
-  });
 
   /// 津波到達予想時刻
   /// まだ津波が到達していない場合,到達していないと推測される場合に出現する

@@ -2,15 +2,16 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
-import '../../api/remote_db/eew.dart';
-import '../../model/earthquake/eew_history_model.dart';
-import '../../private/keys.dart';
-import '../../schema/dmdata/commonHeader.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../api/remote_db/eew.dart';
+import '../../model/earthquake/eew_history_model.dart';
+import '../../private/keys.dart';
+import '../../schema/dmdata/commonHeader.dart';
 
 final eewHistoryProvider =
     StateNotifierProvider<EewHistoryProvider, EewHistoryModel>((ref) {
@@ -23,6 +24,9 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
           EewHistoryModel(
             supabase: SupabaseClient(supabaseS2Url, supabaseS2AnonKey),
             subscription: null,
+            eewTelegrams: [],
+            eewTelegramsGroupByEventId: {},
+            showEews: [],
           ),
         ) {
     onInit();
@@ -50,7 +54,6 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
     // 直近のEEW電文10件を追加しておく
     final telegrams = await eewApi.getEewTelegrams();
     for (final e in telegrams) {
-      print(e.eventId);
       addTelegram(e);
     }
     Logger().i('Start Eew Streaming');

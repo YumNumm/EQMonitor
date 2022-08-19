@@ -100,6 +100,14 @@ class KmoniStatusWidget extends ConsumerWidget {
                                 3)
                             ? const Color.fromARGB(255, 255, 17, 0)
                             : null,
+                        fontWeight: ((kmoni.lastUpdateAttempt
+                                    .difference(
+                                      kmoni.lastUpdated ?? DateTime(2000),
+                                    )
+                                    .inSeconds >
+                                3))
+                            ? FontWeight.bold
+                            : null,
                         fontFamily: 'CaskaydiaCove',
                       ),
                     ),

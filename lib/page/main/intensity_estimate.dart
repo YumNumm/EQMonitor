@@ -1,48 +1,49 @@
 import 'package:collection/collection.dart';
-import '../../api/int_calc/int_calc.dart';
-import '../../const/kmoni/jma_intensity.dart';
-import 'kmoni_map.dart';
-import '../../provider/init/map_area_forecast_local_e.dart';
-import '../../provider/init/parameter-earthquake.dart';
-import '../../widget/intensity/intensity_widget.dart';
-import '../../widget/intensity_calc/estimated_shindo_painter.dart';
-import '../../widget/intensity_calc/map_eew_hypocenter_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../api/int_calc/int_calc.dart';
+import '../../const/kmoni/jma_intensity.dart';
+import '../../provider/init/map_area_forecast_local_e.dart';
+import '../../provider/init/parameter-earthquake.dart';
+import '../../widget/intensity/intensity_widget.dart';
+import '../../widget/intensity_calc/estimated_shindo_painter.dart';
+import '../../widget/intensity_calc/map_eew_hypocenter_painter.dart';
+import 'kmoni_map.dart';
+
 class IntensityEstimatePage extends HookConsumerWidget {
   const IntensityEstimatePage({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final intensityCalc = IntensityEstimateApi();
     final magnitude = useState<double>(8);
     final depth = useState<int>(50);
+    final lat = useState<double>(35);
+    final lon = useState<double>(135);
     final isCollect = useState<bool>(true);
     final intensityCalcResult =
         useState<Map<int, List<EstimatedEarthquakeParameterItem>>>({});
-    final parameterProvider = ref.watch(parameterEarthquakeProvider);
 
     /// 計算処理にかかった時間
     final calcTime = useState<int?>(null);
 
+    void calc() {
+      final stopWatch = Stopwatch()..start();
+      final result = intensityCalc.estimateIntensity(
+        jmaMagnitude: magnitude.value,
+        depth: depth.value.toDouble(),
+        hypocenter: LatLng(lat.value, lon.value),
+        obsPoints: ref.watch(parameterEarthquakeProvider).items,
+      );
+      intensityCalcResult.value =
+          result.groupListsBy((element) => element.region.code);
+      calcTime.value = (stopWatch..stop()).elapsedMicroseconds;
+    }
+
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          final stopWatch = Stopwatch()..start();
-          final result = intensityCalc.estimateIntensity(
-            jmaMagnitude: magnitude.value,
-            depth: depth.value.toDouble(),
-            hypocenter: LatLng(35, 135),
-            obsPoints: ref.watch(parameterEarthquakeProvider).items,
-          );
-          intensityCalcResult.value =
-              result.groupListsBy((element) => element.region.code);
-          calcTime.value = (stopWatch..stop()).elapsedMicroseconds;
-        },
-        child: const Icon(Icons.calculate),
-      ),
       body: Column(
         children: [
           Padding(
@@ -59,6 +60,7 @@ class IntensityEstimatePage extends HookConsumerWidget {
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
                     magnitude.value = double.tryParse(value) ?? 8;
+                    calc();
                   },
                   validator: (value) {
                     if (double.tryParse(value ?? 'a') == null) {
@@ -80,6 +82,7 @@ class IntensityEstimatePage extends HookConsumerWidget {
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
                     depth.value = int.tryParse(value) ?? 50;
+                    calc();
                   },
                   validator: (value) {
                     if (double.tryParse(value ?? 'a') == null) {
@@ -87,6 +90,50 @@ class IntensityEstimatePage extends HookConsumerWidget {
                       return '深さの値を入力してください';
                     }
                     isCollect.value = isCollect.value && true;
+                    return null;
+                  },
+                )
+                // 深さの値を入力するテキストフィールド
+                ,
+                TextFormField(
+                  autovalidateMode: AutovalidateMode.always,
+                  initialValue: lat.value.toString(),
+                  decoration: const InputDecoration(
+                    labelText: '緯度',
+                  ),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    lat.value = double.tryParse(value) ?? 35;
+                    calc();
+                  },
+                  validator: (value) {
+                    try {
+                      LatLng(lat.value, lon.value);
+                    } on Exception {
+                      isCollect.value = false;
+                      return '正しいの値を入力してください';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  initialValue: lon.value.toString(),
+                  decoration: const InputDecoration(
+                    labelText: '経度',
+                  ),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    lon.value = double.tryParse(value) ?? 35;
+                    calc();
+                  },
+                  validator: (value) {
+                    try {
+                      LatLng(lat.value, lon.value);
+                    } on Exception {
+                      isCollect.value = false;
+                      return '正しいの値を入力してください';
+                    }
                     return null;
                   },
                 )
@@ -120,7 +167,7 @@ class IntensityEstimatePage extends HookConsumerWidget {
                           // EEWの震央位置
                           CustomPaint(
                             painter: HypocenterPainterfromLatLng(
-                              hypocenter: LatLng(35, 135),
+                              hypocenter: LatLng(lat.value, lon.value),
                             ),
                           ),
                         ],

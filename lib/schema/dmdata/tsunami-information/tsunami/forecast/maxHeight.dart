@@ -2,16 +2,15 @@
 /// 津波注意報以上が発表されていた場合に続報において津波予報（若干の海面変動）となった場合は、出現しません。
 
 class MaxHeight {
-  MaxHeight.fromJson(Map<String, dynamic> j)
-      : height = Height.fromJson(j['height'] as Map<String, dynamic>),
-        condition = (j['condition'] == null) ? null : j['condition'].toString(),
-        revise = (j['revise'] == null) ? null : j['revise'].toString();
-
   MaxHeight({
     required this.height,
     required this.condition,
     required this.revise,
   });
+  MaxHeight.fromJson(Map<String, dynamic> j)
+      : height = Height.fromJson(j['height'] as Map<String, dynamic>),
+        condition = (j['condition'] == null) ? null : j['condition'].toString(),
+        revise = (j['revise'] == null) ? null : j['revise'].toString();
 
   /// 津波の予想される高さ
   final Height height;
@@ -26,14 +25,6 @@ class MaxHeight {
 
 /// 津波の予想される高さ
 class Height {
-  Height.fromJson(Map<String, dynamic> j)
-      : type = j['type'].toString(),
-        unit = j['unit'].toString(),
-        value =
-            (j['value'] == null) ? null : double.parse(j['value'].toString()),
-        over = (j['over'] == null) ? null : true,
-        condition = (j['condition'] == null) ? null : j['condition'].toString();
-
   Height({
     required this.type,
     required this.unit,
@@ -41,6 +32,13 @@ class Height {
     required this.over,
     required this.condition,
   });
+  Height.fromJson(Map<String, dynamic> j)
+      : type = j['type'].toString(),
+        unit = j['unit'].toString(),
+        value =
+            (j['value'] == null) ? null : double.parse(j['value'].toString()),
+        over = (j['over'] == null) ? null : true,
+        condition = (j['condition'] == null) ? null : j['condition'].toString();
 
   /// 数値情報のタイプ `津波の高さ`で固定
   final String type;

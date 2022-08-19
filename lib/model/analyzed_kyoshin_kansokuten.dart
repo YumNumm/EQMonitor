@@ -1,6 +1,7 @@
+import 'package:flutter/cupertino.dart';
+
 import '../const/kmoni/jma_intensity.dart';
 import '../const/obspoint.dart';
-import 'package:flutter/cupertino.dart';
 
 class AnalyzedKoshinKansokuten extends KyoshinKansokuten {
   const AnalyzedKoshinKansokuten({

@@ -7,6 +7,14 @@ import 'forecast/station.dart';
 /// VTSE41や、VTSE51に出現します。VTSE51の場合、津波観測がされるとその津波予報区で到達予想時刻が第１波到達を確認となります。
 /// 下記は各予報区ごとに出現します。
 class Forecast {
+  Forecast({
+    required this.code,
+    required this.name,
+    required this.kind,
+    required this.firstHeight,
+    required this.maxHeight,
+    required this.stations,
+  });
   Forecast.fromJson(Map<String, dynamic> j)
       : code = int.parse(j['code'].toString()),
         name = j['name'].toString(),
@@ -26,15 +34,6 @@ class Forecast {
                       as Map<String, dynamic>,
                 ),
               );
-
-  Forecast({
-    required this.code,
-    required this.name,
-    required this.kind,
-    required this.firstHeight,
-    required this.maxHeight,
-    required this.stations,
-  });
 
   /// 津波予報区コード
   /// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による

@@ -1,5 +1,6 @@
-import '../../schema/supabase/telegram.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../../schema/supabase/telegram.dart';
 
 part 'earthquake_log_model.freezed.dart';
 

@@ -103,7 +103,7 @@ class WebSocketv2DataHead {
         time = DateTime.parse(j['time'].toString()),
         target = (j['target'] == null) ? null : j['target'].toString(),
         designation = j['designation'].toString(),
-        test = bool.fromEnvironment(j['test'].toString(), defaultValue: false),
+        test = bool.fromEnvironment(j['test'].toString()),
         xml = (j['xml'].toString() == 'true')
             ? true
             : (j['xml'] == 'false')
