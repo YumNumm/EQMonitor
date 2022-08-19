@@ -8,29 +8,10 @@ import 'main/intensity_estimate.dart';
 import 'main/kmoni_map.dart';
 import 'main/settings.dart';
 
-class MainPage extends StatefulHookConsumerWidget {
-  const MainPage({super.key});
-
+class MainPage extends HookConsumerWidget {
+  const MainPage({Key? key}) : super(key: key);
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _MainPageState();
-}
-
-class _MainPageState extends ConsumerState<MainPage> {
-  @override
-  void initState() {
-    // ref.read(travelTimeProvider.notifier).onInit();
-    // ref.read(kmoniMapProvider.notifier).onInit();
-    // ref.read(earthquakeHistoryProvider.notifier).onInit();
-    // ref.read(eewHistoryProvider.notifier).onInit();
-
-    // FCM登録
-    //ref.read(firebaseCloudMessagingNotifier.notifier).onInit();
-    // ref.read(kmoniProvider.notifier).onInit();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = useState(0);
 
     return OrientationBuilder(

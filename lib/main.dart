@@ -113,7 +113,6 @@ Future<void> main() async {
                 ),
               ),
             ),
-            //isarProvider.overrideWithValue(isar),
           ],
           observers: const [
             // if (kDebugMode) ProvidersLogger(),
