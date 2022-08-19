@@ -3,8 +3,8 @@ name: Flutter build Android(d)
 #発火条件
 on:
   #ソースをmainブランチにプッシュする時
-  push:
-    branches: [main]
+  #push:
+  #  branches: [main]
 
   workflow_dispatch:
 

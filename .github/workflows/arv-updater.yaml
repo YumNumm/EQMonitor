@@ -1,0 +1,45 @@
+name: GitHub Pages
+
+#発火条件
+on:
+  #ソースをmainブランチにプッシュする時
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 0 * * 0' # Everyday At 00:00
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    #ビルド環境
+    runs-on: ubuntu-latest
+    # タイムアウト時間を設定
+    timeout-minutes: 15
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        working-directory: ./util/arv
+
+      - name: Generate
+        run: python3 main.py
+        working-directory: ./util/arv
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: /home/runner/work/EQMonitor/EQMonitor/util/arv/public
+          working-directory: ./util/arv
