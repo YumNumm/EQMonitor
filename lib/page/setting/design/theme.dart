@@ -1,4 +1,4 @@
-import '../../provider/theme_providers.dart';
+import '../../../provider/theme_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -21,7 +21,6 @@ class ThemeChoicePage extends HookConsumerWidget {
             itemCount: ThemeMode.values.length,
             itemBuilder: (context, index) {
               final themeMode = ThemeMode.values[index];
-              print(currentThemeMode.name);
               return RadioListTile(
                 title: Text(themeMode.name),
                 value: themeMode.name,

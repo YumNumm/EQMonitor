@@ -10,10 +10,12 @@ class IntensityWidget extends StatelessWidget {
     required this.size,
     this.opacity = 0,
     this.isTextColorByBackground = true,
+    this.color,
   });
   final JmaIntensity intensity;
   final double size;
   final double opacity;
+  final Color? color;
 
   /// 文字色を背景に合わせるかどうか
   /// しない場合は指定しない。
@@ -21,7 +23,7 @@ class IntensityWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final intensityColor = intensity.color.withOpacity(opacity);
+    final intensityColor = color ?? intensity.color.withOpacity(opacity);
     final textColor = isTextColorByBackground ? intensityColor.onPrimary : null;
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),

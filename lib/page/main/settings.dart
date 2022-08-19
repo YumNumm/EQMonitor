@@ -1,9 +1,10 @@
-import '../setting/about_app.dart';
-import '../setting/debug_info.dart';
-import '../setting/theme.dart';
+import 'package:eqmonitor/page/setting/design_settings.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
+
+import '../setting/about_app.dart';
+import '../setting/debug_info.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -24,12 +25,12 @@ class SettingsPage extends StatelessWidget {
               ),
             ),
             SettingsTile.navigation(
-              leading: const Icon(Icons.light_mode),
-              title: const Text('テーマ設定'),
+              leading: const Icon(Icons.design_services),
+              title: const Text('デザイン設定'),
               onPressed: (context) => Navigator.push(
                 context,
                 MaterialPageRoute<void>(
-                  builder: (context) => const ThemeChoicePage(),
+                  builder: (context) => const DesignSettingsPage(),
                 ),
               ),
             ),

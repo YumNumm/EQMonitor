@@ -10,9 +10,9 @@ import '../const/kmoni/real_time_data_type.dart';
 import '../model/kmoni_model.dart';
 import 'init/kyoshin_kansokuten.dart';
 
-final kmoniProvider = StateNotifierProvider<KmoniProvider, KmoniModel>((ref) {
-  return KmoniProvider(ref);
-});
+final kmoniProvider = StateNotifierProvider<KmoniProvider, KmoniModel>(
+  KmoniProvider.new,
+);
 
 class KmoniProvider extends StateNotifier<KmoniModel> {
   KmoniProvider(this.ref)
@@ -25,9 +25,9 @@ class KmoniProvider extends StateNotifier<KmoniModel> {
             updateTimer: null,
             isUpdating: false,
           ),
-        ){
-          onInit();
-        }
+        ) {
+    onInit();
+  }
 
   final Ref ref;
 
