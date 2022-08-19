@@ -1,8 +1,8 @@
-import '../../utils/map/map_global_offset.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../model/analyzed_kyoshin_kansokuten.dart';
+import '../../utils/map/map_global_offset.dart';
 
 class KyoshinKansokutenPainter extends CustomPainter {
   KyoshinKansokutenPainter({required this.obsPoints});

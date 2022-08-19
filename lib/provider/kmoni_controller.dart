@@ -1,15 +1,14 @@
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
+
 import '../api/kmoni.dart';
 import '../api/kmoni/kmoni_image_parser.dart';
 import '../api/kmoni/kmoni_web_api_url_generators.dart';
 import '../const/kmoni/real_time_data_type.dart';
 import '../model/kmoni_model.dart';
 import 'init/kyoshin_kansokuten.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logger/logger.dart';
-
-import '../model/analyzed_kyoshin_kansokuten.dart';
 
 final kmoniProvider = StateNotifierProvider<KmoniProvider, KmoniModel>((ref) {
   return KmoniProvider(ref);

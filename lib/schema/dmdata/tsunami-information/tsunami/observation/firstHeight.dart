@@ -1,4 +1,10 @@
 class FirstHeight {
+  FirstHeight({
+    required this.arraivalTime,
+    required this.condition,
+    required this.initial,
+    required this.revise,
+  });
   FirstHeight.fromJson(Map<String, dynamic> j)
       : arraivalTime = (j['arrivalTime'] == null)
             ? null
@@ -6,13 +12,6 @@ class FirstHeight {
         initial = (j['initial'] == null) ? null : j['initial'].toString(),
         condition = (j['condition'] == null) ? null : j['condition'].toString(),
         revise = (j['revise'] == null) ? null : j['revise'].toString();
-
-  FirstHeight({
-    required this.arraivalTime,
-    required this.condition,
-    required this.initial,
-    required this.revise,
-  });
 
   /// 津波到達予想時刻
   /// 識別不能時は出現しない

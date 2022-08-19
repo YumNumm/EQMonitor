@@ -8,12 +8,6 @@ enum DmDataWebSocketType {
   error,
 }
 
-extension on String {
-  DmDataWebSocketType toWebSocketTypeEnum() {
-    return DmDataWebSocketType.values.firstWhere((e) => e.name == this);
-  }
-}
-
 /// データ種別コード
 enum DmDssTelegramDataType {
   /// 緊急地震速報テスト
@@ -71,11 +65,7 @@ enum DmDssTelegramDataType {
   VYSE52,
 }
 
-extension on String {
-  DmDssTelegramDataType ToDmDssTelegramDataType() {
-    return DmDssTelegramDataType.values.firstWhere((e) => e.name == this);
-  }
-}
+
 
 extension on DmDssTelegramDataType {
   static final toNameStringMap = <DmDssTelegramDataType, String>{

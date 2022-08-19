@@ -1,8 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+
 import '../../const/prefecture/area_forecast_local_eew.model.dart';
 import '../../schema/dmdata/commonHeader.dart';
 import '../../schema/dmdata/eew-information/eew-infomation.dart';
-import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
 class EewIntensityPainter extends CustomPainter {
   EewIntensityPainter({
@@ -39,7 +40,7 @@ class EewIntensityPainter extends CustomPainter {
                     ..style = PaintingStyle.stroke,
                 );
             }
-          }on Exception catch (e) {
+          } on Exception catch (e) {
             Logger().e(e, region.code);
           }
         }

@@ -1,5 +1,5 @@
-import 'date_format.dart';
 import '../../const/kmoni/real_time_data_type.dart';
+import 'date_format.dart';
 
 /// ## 新強震モニタのURL生成器
 class KyoshinWebApiUrlGenerator {

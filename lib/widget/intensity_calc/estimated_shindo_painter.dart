@@ -1,9 +1,9 @@
-import '../../api/int_calc/int_calc.dart';
-import '../../const/prefecture/area_forecast_local_eew.model.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
+import '../../api/int_calc/int_calc.dart';
 import '../../const/kmoni/jma_intensity.dart';
+import '../../const/prefecture/area_forecast_local_eew.model.dart';
 
 class EstimatedShindoPainter extends CustomPainter {
   EstimatedShindoPainter({
@@ -35,6 +35,7 @@ class EstimatedShindoPainter extends CustomPainter {
           final maxJmaIntensity =
               JmaIntensity.toJmaIntensity(intensity: maxIntensity);
           for (final mapRegionPolygon in mapRegionPolygons) {
+            if (maxIntensity < 0) continue;
             canvas
               ..drawPath(
                 mapRegionPolygon.path,

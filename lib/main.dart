@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:device_preview/device_preview.dart';
@@ -12,10 +13,14 @@ import 'package:eqmonitor/private/keys.dart';
 import 'package:eqmonitor/provider/init/kyoshin_kansokuten.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
 import 'package:eqmonitor/provider/init/parameter-earthquake.dart';
+import 'package:eqmonitor/provider/init/secure_storage.dart';
+import 'package:eqmonitor/provider/init/shared_preferences.dart';
 import 'package:eqmonitor/provider/init/travel_time.dart';
+import 'package:eqmonitor/provider/setting/crash_log_share.dart';
 import 'package:eqmonitor/provider/theme_providers.dart';
 import 'package:eqmonitor/res/theme.dart';
 import 'package:eqmonitor/schema/dmdata/parameter-earthquake/parameter-earthquake.dart';
+import 'package:eqmonitor/utils/fcm/firebase_notification_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -24,8 +29,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart' hide TextDirection;
+import 'package:isar/isar.dart';
 import 'package:logger/logger.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'firebase_options.dart';
@@ -53,21 +62,34 @@ Future<void> main() async {
       late List<MapPolygon> mapAreaForecastLocalE;
       late ParameterEarthquake parameterEarthquake;
       late List<TravelTimeTable> travelTimeTable;
-      final futures = <Future>[
+      late SharedPreferences prefs;
+      late Directory dir;
+      late Isar isar;
+
+      final futures = <Future<dynamic>>[
         loadKyoshinKansokuten().then((e) => kansokuten = e),
         loadMapAreaForecastLocalE().then((e) => mapAreaForecastLocalE = e),
         loadParameterEarthquake().then((e) => parameterEarthquake = e),
         loadTravelTimeTable().then((e) => travelTimeTable = e),
+        SharedPreferences.getInstance().then((e) => prefs = e),
+        getApplicationSupportDirectory().then((e) => dir = e),
         Supabase.initialize(
           url: supabaseS1Url,
           anonKey: supabaseS1AnonKey,
           debug: false,
         ),
+        initFirebaseCloudMessaging(),
         crashlytics.sendUnsentReports(),
-        crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode),
         crashlytics.setUserIdentifier(deviceInfo.fingerprint.toString()),
       ];
       await Future.wait(futures);
+      final isCrashLogShareAllowed =
+          await CrashLogShareProvider(prefs).loadSettingsFromSharedPrefrences();
+      await crashlytics.setCrashlyticsCollectionEnabled(
+        isCrashLogShareAllowed && kReleaseMode,
+      );
+
+      //isar = await Isar.open([], directory: dir.path);
       FlutterNativeSplash.remove();
       Logger()
           .d('全ての初期化が完了: ${(stopwatch..stop()).elapsedMicroseconds / 1000}ms');
@@ -82,11 +104,21 @@ Future<void> main() async {
             mapAreaForecastLocalEProvider
                 .overrideWithValue(mapAreaForecastLocalE),
             parameterEarthquakeProvider.overrideWithValue(parameterEarthquake),
+            sharedPreferencesProvder.overrideWithValue(prefs),
+            secureStorageProvider.overrideWithValue(
+              const FlutterSecureStorage(
+                aOptions: AndroidOptions(
+                  encryptedSharedPreferences: true,
+                  resetOnError: true,
+                ),
+              ),
+            ),
+            //isarProvider.overrideWithValue(isar),
           ],
           observers: const [
             // if (kDebugMode) ProvidersLogger(),
           ],
-          child: const EqMonitorApp(),
+          child: const MyApp(),
         ),
       );
 
@@ -107,8 +139,8 @@ Future<void> onFlutterError(FlutterErrorDetails details) async {
   await FirebaseCrashlytics.instance.recordFlutterError(details);
 }
 
-class EqMonitorApp extends ConsumerWidget {
-  const EqMonitorApp({
+class MyApp extends ConsumerWidget {
+  const MyApp({
     super.key,
   });
 
@@ -136,31 +168,6 @@ class EqMonitorApp extends ConsumerWidget {
         message: 'DEVELOP',
         location: BannerLocation.bottomStart,
         child: MainPage(),
-      ),
-    );
-  }
-}
-
-class LoadingApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'EQMonitor',
-      theme: lightTheme(),
-      darkTheme: darkTheme(),
-      themeMode: ThemeMode.light,
-      locale: DevicePreview.locale(context),
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate
-      ],
-      supportedLocales: const [
-        Locale('ja', 'JP'),
-      ],
-      useInheritedMediaQuery: true,
-      home: const Center(
-        child: CircularProgressIndicator.adaptive(),
       ),
     );
   }

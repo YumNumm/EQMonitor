@@ -1,6 +1,5 @@
 import '../eq-information/earthquake-information/hypocenter.dart';
 import '../eq-information/earthquake-information/magnitude.dart';
-import '../eq-information/earthquake.dart';
 
 /// ## GD Earthquake List
 /// `GET https://api.dmdata.jp/v2/gd/earthquake

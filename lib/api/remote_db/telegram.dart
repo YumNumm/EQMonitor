@@ -3,13 +3,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../schema/supabase/telegram.dart' show Telegram;
 
 class TelegramApi {
-  final supabase = Supabase.instance.client;
-
   /// ## SupabaseからTelegramを取得します
   /// dataは除きます。
   /// [limit] 結果の最大数
   /// [offset] 結果のオフセット
-  Future<List<Telegram>> getTelegramsWithLimit({
+  static Future<List<Telegram>> getTelegramsWithLimit({
     int? limit = 200,
     int offset = 0,
   }) async {
@@ -19,7 +17,7 @@ class TelegramApi {
     }
     final PostgrestResponse<dynamic> res;
     if (limit == null) {
-      res = await supabase
+      res = await Supabase.instance.client
           .from('telegram')
           .select(
             'id,'
@@ -44,7 +42,7 @@ class TelegramApi {
           .order('id')
           .execute();
     } else {
-      res = await supabase
+      res = await Supabase.instance.client
           .from('telegram')
           .select(
             'id,'
@@ -82,7 +80,7 @@ class TelegramApi {
   }
 
   Future<int> getAllTelegramCount() async {
-    final res = await supabase
+    final res = await Supabase.instance.client
         .from('telegram')
         .select('id')
         .order('id')

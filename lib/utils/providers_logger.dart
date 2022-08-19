@@ -41,7 +41,7 @@ class ProvidersLogger extends ProviderObserver {
 
   @override
   void didDisposeProvider(
-    ProviderBase provider,
+    ProviderBase<dynamic> provider,
     ProviderContainer containers,
   ) {
     //super.didDisposeProvider(provider, containers);

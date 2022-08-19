@@ -4,7 +4,7 @@ import os
 import datetime
 
 
-DMDATA_KEY = os.getenv("DMDATA_API_KEY")
+DMDATA_KEY = os.getenv("DMDATA_KEY")
 DMDATA_ORIGIN = os.getenv("DMDATA_ORIGIN")
 
 def downloadParam():

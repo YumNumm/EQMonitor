@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 
 class MapGlobalOffset extends Offset {
+  MapGlobalOffset(super.dx, super.dy);
   static const int tileSize = 256;
   static const pixelsPerLonDegree = tileSize / 360;
   static const pixelsPerLonRadian = tileSize / (2 * math.pi);
@@ -11,8 +12,6 @@ class MapGlobalOffset extends Offset {
 
   static const minMapOffset = Offset(215.4, 91.5);
   static const maxMapOffset = Offset(237.5, 110.4);
-
-  MapGlobalOffset(super.dx, super.dy);
 
   static MapGlobalOffset latLonToGlobalPoint(LatLng latLng) {
     final siny = math.min(
@@ -23,9 +22,9 @@ class MapGlobalOffset extends Offset {
       0.9999,
     );
     return MapGlobalOffset(
-        origin.dx + latLng.longitude * pixelsPerLonDegree,
-        origin.dy +
-            0.5 * math.log((1 + siny) / (1 - siny)) * -pixelsPerLonRadian);
+      origin.dx + latLng.longitude * pixelsPerLonDegree,
+      origin.dy + 0.5 * math.log((1 + siny) / (1 - siny)) * -pixelsPerLonRadian,
+    );
   }
 
   static MapGlobalOffset globalPointToLatLng(Offset point) {

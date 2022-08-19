@@ -1,7 +1,7 @@
 // ## 地震の規模(マグニチュード)
 
-import 'magnitude/magnitude_condition.dart';
 import '../../../../extension/japanese_string.dart';
+import 'magnitude/magnitude_condition.dart';
 
 class Magnitude {
   Magnitude({

@@ -4,19 +4,20 @@ import 'observation/station.dart';
 /// VTSE51や、VTSE52に出現します。
 /// 1.2 observation
 class Observation {
-  Observation.fromJson(Map<String, dynamic> j)
-      : code = (j['code'] == null) ? null : int.parse(j['code'].toString()),
-        name = (j['name'] == null) ? null : j['name'].toString(),
-        stations = List<Station>.generate(
-            (j['stations'] as List<dynamic>).length,
-            (index) => Station.fromJson((j['stations'] as List<dynamic>)[index]
-                as Map<String, dynamic>));
-
   Observation({
     required this.code,
     required this.name,
     required this.stations,
   });
+  Observation.fromJson(Map<String, dynamic> j)
+      : code = (j['code'] == null) ? null : int.parse(j['code'].toString()),
+        name = (j['name'] == null) ? null : j['name'].toString(),
+        stations = List<Station>.generate(
+          (j['stations'] as List<dynamic>).length,
+          (index) => Station.fromJson(
+            (j['stations'] as List<dynamic>)[index] as Map<String, dynamic>,
+          ),
+        );
 
   ///津波予報区コード
   ///VTSE52の場合は`Null`とします

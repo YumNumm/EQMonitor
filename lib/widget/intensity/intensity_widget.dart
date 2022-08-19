@@ -1,6 +1,6 @@
-import '../../const/kmoni/jma_intensity.dart';
 import 'package:flutter/material.dart';
 
+import '../../const/kmoni/jma_intensity.dart';
 import '../../extension/relative_luminance.dart';
 
 class IntensityWidget extends StatelessWidget {

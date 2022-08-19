@@ -1,6 +1,7 @@
-import '../../utils/map/map_global_offset.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
+
+import '../../utils/map/map_global_offset.dart';
 
 class HypocenterPainterfromLatLng extends CustomPainter {
   HypocenterPainterfromLatLng({required this.hypocenter});

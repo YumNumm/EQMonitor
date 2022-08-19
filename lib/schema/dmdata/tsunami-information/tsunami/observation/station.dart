@@ -4,13 +4,6 @@ import 'maxHeight.dart';
 /// 潮位観測点の満潮時刻と津波の到達予想時刻を表現します。
 /// 1.1.6 station
 class Station {
-  Station.fromJson(Map<String, dynamic> j)
-      : code = int.parse(j['code'].toString()),
-        name = j['name'].toString(),
-        sensor = (j['sensor'] == null) ? null : j['sensor'].toString(),
-        firstHeight =
-            FirstHeight.fromJson(j['firstHeight'] as Map<String, dynamic>),
-        maxHeight = MaxHeight.fromJson(j['maxHeight'] as Map<String, dynamic>);
   Station({
     required this.code,
     required this.name,
@@ -18,6 +11,13 @@ class Station {
     required this.firstHeight,
     required this.maxHeight,
   });
+  Station.fromJson(Map<String, dynamic> j)
+      : code = int.parse(j['code'].toString()),
+        name = j['name'].toString(),
+        sensor = (j['sensor'] == null) ? null : j['sensor'].toString(),
+        firstHeight =
+            FirstHeight.fromJson(j['firstHeight'] as Map<String, dynamic>),
+        maxHeight = MaxHeight.fromJson(j['maxHeight'] as Map<String, dynamic>);
 
   /// 潮位観測点コード
   /// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による
