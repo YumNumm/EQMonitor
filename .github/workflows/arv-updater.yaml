@@ -9,6 +9,9 @@ on:
     - cron: '0 0 * * 0' # Everyday At 00:00
   workflow_dispatch:
 
+env:
+  DMDATA_ORIGIN: ${{secrets.DMDATA_ORIGIN}}
+  DMDATA_KEY: ${{secrets.DMDATA_KEY}}
 jobs:
   deploy:
     #ビルド環境
