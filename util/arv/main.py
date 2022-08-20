@@ -27,7 +27,7 @@ def getArv(lat, lon):
     return arv
 
 
-downloadParam()
+#downloadParam()
 
 with open(
     "./station.json",
@@ -42,9 +42,12 @@ with open(
     ) as w:
         j = json.loads(f.read())
         items = []
+        c = 0
         for i in j["items"]:
             arv = getArv(i["latitude"], i["longitude"])
-            print(arv)
+            c+=1
+            name = i["name"]
+            print(f"{c}: {name} {arv}")
             items.append(
                 {
                     "code": i["code"],
