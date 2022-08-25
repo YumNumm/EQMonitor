@@ -9,6 +9,7 @@ import 'package:eqmonitor/const/obspoint.dart';
 import 'package:eqmonitor/const/prefecture/area_forecast_local_eew.model.dart';
 import 'package:eqmonitor/model/travel_time_table/travel_time_table.dart';
 import 'package:eqmonitor/private/keys.dart';
+import 'package:eqmonitor/provider/init/device_info.dart';
 import 'package:eqmonitor/provider/init/kyoshin_kansokuten.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
 import 'package:eqmonitor/provider/init/parameter-earthquake.dart';
@@ -65,6 +66,8 @@ Future<void> main() async {
       late SharedPreferences prefs;
       late Directory dir;
       late Isar isar;
+      late AndroidDeviceInfo androidDeviceInfo;
+      late IosDeviceInfo iosDeviceInfo;
 
       final futures = <Future<dynamic>>[
         loadKyoshinKansokuten().then((e) => kansokuten = e),
@@ -80,7 +83,10 @@ Future<void> main() async {
         ),
         initFirebaseCloudMessaging(),
         crashlytics.sendUnsentReports(),
-        crashlytics.setUserIdentifier(deviceInfo.fingerprint.toString()),
+        if (Platform.isAndroid)
+          DeviceInfoPlugin().androidInfo.then((e) => androidDeviceInfo = e),
+        if (Platform.isIOS)
+          DeviceInfoPlugin().iosInfo.then((e) => iosDeviceInfo = e),
       ];
       await Future.wait(futures);
       final isCrashLogShareAllowed =
@@ -94,7 +100,7 @@ Future<void> main() async {
       FlutterNativeSplash.remove();
       Logger()
           .d('全ての初期化が完了: ${(stopwatch..stop()).elapsedMicroseconds / 1000}ms');
-
+      Logger().wtf(DateTime.now().toIso8601String());
       FlutterError.onError = onFlutterError;
       runApp(
         ProviderScope(
@@ -113,6 +119,10 @@ Future<void> main() async {
                 ),
               ),
             ),
+            if (Platform.isAndroid)
+              androidDeviceInfoProvider.overrideWithValue(androidDeviceInfo),
+            if (Platform.isIOS)
+              iOSDeviceInfoProvider.overrideWithValue(iosDeviceInfo),
           ],
           observers: const [
             //if (kDebugMode) ProvidersLogger(),

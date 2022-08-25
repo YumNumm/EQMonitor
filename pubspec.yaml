@@ -3,7 +3,7 @@ description: An earthquake monitoring Application
 
 publish_to: "none"
 
-version: 0.4.1+202
+version: 0.4.1+250
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -82,6 +82,7 @@ dependencies:
   matrix4_transform: ^2.0.1
   shared_preferences_android: ^2.0.12
   shared_preferences_ios: ^2.1.1
+  package_info_plus: ^1.4.3+1
 
 dev_dependencies:
   flutter_test:
