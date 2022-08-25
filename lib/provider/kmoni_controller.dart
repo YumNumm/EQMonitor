@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:eqmonitor/provider/app_lifecycle.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
@@ -24,6 +27,7 @@ class KmoniProvider extends StateNotifier<KmoniModel> {
             updateFrequency: const Duration(seconds: 1),
             updateTimer: null,
             isUpdating: false,
+            testCaseStartTime: null,
           ),
         ) {
     onInit();
@@ -56,11 +60,49 @@ class KmoniProvider extends StateNotifier<KmoniModel> {
     if (!mounted) {
       return;
     }
+    // バックグラウンドの場合処理しない
+    if (ref.read(appLifecycleProvider) == AppLifecycleState.paused) {
+      print('_onTimer: paused');
+      return;
+    }
+    // テストケースの場合の処理
+    if (state.testCaseStartTime != null) {
+      try {
+        // 開始時刻と現在時刻の差分 + 2022/06/20 10:31:10
+        final dt = DateTime.parse('2022-06-20T10:31:35')
+            .add(DateTime.now().difference(state.testCaseStartTime!));
+        final assetUrl = KyoshinWebApiUrlGenerator.realtimeBase(
+          dt: dt,
+          type: RealtimeDataType.Shindo,
+          sorb: 's',
+        ).replaceAll(
+          'http://www.kmoni.bosai.go.jp/data/map_img/RealTimeImg/jma_s/20220620/',
+          'assets/develop/06301031/jma_s/',
+        );
+
+        final data = (await rootBundle.load(assetUrl)).buffer.asUint8List();
+        final parsedAnalyzedPoint = kyoshinImageParser.imageParse(
+          picture: data,
+          obsPoints: ref.read(kyoshinKansokutenProvider),
+          type: RealtimeDataType.Shindo,
+        );
+        state = state.copyWith(
+          analyzedPoint: parsedAnalyzedPoint,
+          lastUpdated: dt,
+        );
+      } catch (_) {
+        // テストケースを終了する
+        state = state.copyWith(
+          testCaseStartTime: null,
+        );
+      }
+      return;
+    }
     // 更新中でないことを確認
     if (state.isUpdating) {
-      logger.v(
-        '現在読み込み中の強震モニタ画像があるため、新規取得をスキップします。',
-      );
+      // logger.v(
+      //   '現在読み込み中の強震モニタ画像があるため、新規取得をスキップします。',
+      // );
       return;
     }
     // 更新中フラグを立てる
@@ -83,14 +125,13 @@ class KmoniProvider extends StateNotifier<KmoniModel> {
   Future<void> updateShindo(DateTime dt) async {
     try {
       // Shindo画像を取得する
-      final shindoUrl = kyoshinWebApiUrlGenerator.realtimeBase(
+      final shindoUrl = KyoshinWebApiUrlGenerator.realtimeBase(
         dt: dt,
         type: RealtimeDataType.Shindo,
         sorb: 's',
       );
       final imageResponse = await kyoshinMonitorApi
           .getRawData(shindoUrl.replaceAll('http://www.kmoni.bosai.go.jp', ''));
-      // log(imageResponse.realUri.toString(), name: "KmoniProvider");
       if (imageResponse.statusCode != 200 || imageResponse.data == null) {
         throw Exception(
           'リアルタイム震度画像の取得に失敗しました\n'
@@ -112,5 +153,12 @@ class KmoniProvider extends StateNotifier<KmoniModel> {
         'リアルタイム震度画像の取得に失敗しました',
       );
     }
+  }
+
+  void startTestCase() {
+    // 時刻設定
+    state = state.copyWith(
+      testCaseStartTime: DateTime.now(),
+    );
   }
 }

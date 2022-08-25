@@ -36,7 +36,7 @@ class JmaIntensityColorProvider extends StateNotifier<JmaIntensityColorModel> {
 
   Future<void> _load() async {
     final prefs = ref.read(sharedPreferencesProvder);
-    final model = await loadFromPrefs(prefs);
+    final model = loadFromPrefs(prefs);
     state = state.copyWith(
       unknown: model.unknown,
       int0: model.int0,
@@ -54,9 +54,9 @@ class JmaIntensityColorProvider extends StateNotifier<JmaIntensityColorModel> {
     );
   }
 
-  static Future<JmaIntensityColorModel> loadFromPrefs(
+  static JmaIntensityColorModel loadFromPrefs(
     SharedPreferences prefs,
-  ) async {
+  ) {
     final unknown = prefs.getInt(JmaIntensity.Unknown.toString());
     final int0 = prefs.getInt(JmaIntensity.Int0.toString());
     final int1 = prefs.getInt(JmaIntensity.Int1.toString());
@@ -122,6 +122,28 @@ class JmaIntensityColorProvider extends StateNotifier<JmaIntensityColorModel> {
     await prefs.setInt(JmaIntensity.Error.toString(), state.error.value);
   }
 
+  void change(JmaIntensity intensity, Color color) {
+    state = state.copyWith(
+      unknown: (intensity == JmaIntensity.Unknown) ? color : state.unknown,
+      int0: (intensity == JmaIntensity.Int0) ? color : state.int0,
+      int1: (intensity == JmaIntensity.Int1) ? color : state.int1,
+      int2: (intensity == JmaIntensity.Int2) ? color : state.int2,
+      int3: (intensity == JmaIntensity.Int3) ? color : state.int3,
+      int4: (intensity == JmaIntensity.Int4) ? color : state.int4,
+      int5Lower:
+          (intensity == JmaIntensity.Int5Lower) ? color : state.int5Lower,
+      int5Upper:
+          (intensity == JmaIntensity.Int5Upper) ? color : state.int5Upper,
+      int6Lower:
+          (intensity == JmaIntensity.Int6Lower) ? color : state.int6Lower,
+      int6Upper:
+          (intensity == JmaIntensity.Int6Upper) ? color : state.int6Upper,
+      int7: (intensity == JmaIntensity.Int7) ? color : state.int7,
+      over: (intensity == JmaIntensity.over) ? color : state.over,
+      error: (intensity == JmaIntensity.Error) ? color : state.error,
+    );
+  }
+
   Future<void> set(JmaIntensity intensity, Color color) async {
     final prefs = ref.read(sharedPreferencesProvder);
     await prefs.setInt(
@@ -148,5 +170,4 @@ class JmaIntensityColorProvider extends StateNotifier<JmaIntensityColorModel> {
       error: (intensity == JmaIntensity.Error) ? color : state.error,
     );
   }
-
 }

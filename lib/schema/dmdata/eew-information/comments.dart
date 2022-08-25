@@ -12,6 +12,11 @@ class Comments {
   /// 津波や緊急地震速報に関する情報を固定付加文の形式で記載する
   /// #4.2. warning
   final Warning? warning;
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'free': free,
+        'warning': warning,
+      };
 }
 
 class Warning {
@@ -29,4 +34,9 @@ class Warning {
   /// 固定付加文をのコードを記載する
   /// コードは、気象庁防災情報XMLフォーマット コード表 地震火山関連コード表 による
   final List<int> codes;
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'text': text,
+        'codes': codes,
+      };
 }

@@ -26,12 +26,15 @@ class Intensity {
         appendix: (j['appendix'] == null)
             ? null
             : Appendix.fromJson(j['appendix'] as Map<String, dynamic>),
-        region: List.generate(
-          (j['regions'] as List<dynamic>).length,
-          (index) => Region.fromJson(
-            (j['regions'] as List<dynamic>)[index] as Map<String, dynamic>,
-          ),
-        ),
+        region: (j['regions'] == null)
+            ? <Region>[]
+            : List<Region>.generate(
+                (j['regions'] as List<dynamic>).length,
+                (index) => Region.fromJson(
+                  (j['regions'] as List<dynamic>)[index]
+                      as Map<String, dynamic>,
+                ),
+              ),
       );
 
   Map<String, dynamic> toJson() {

@@ -27,12 +27,12 @@ class MapGlobalOffset extends Offset {
     );
   }
 
-  static MapGlobalOffset globalPointToLatLng(Offset point) {
+  static LatLng globalPointToLatLng(Offset point) {
     final lng = (point.dx - origin.dx) / pixelsPerLonDegree;
     final latRadians = (point.dy - origin.dy) / -pixelsPerLonRadian;
     final lat =
         (2 * math.atan(math.exp(latRadians)) - math.pi / 2) * (180 / math.pi);
-    return MapGlobalOffset(lat, lng);
+    return LatLng(lat, lng);
   }
 
   /// すべてのポリゴンを内包する矩形の北西端がOffset(0,0)に、

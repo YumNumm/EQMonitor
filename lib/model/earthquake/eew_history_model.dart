@@ -13,5 +13,8 @@ class EewHistoryModel with _$EewHistoryModel {
     required List<CommonHead> showEews,
     required SupabaseClient supabase,
     required RealtimeSubscription? subscription,
+
+    /// テストケースを読み込み始めた時刻
+    required DateTime? testCaseStartTime,
   }) = _EewHistoryModel;
 }

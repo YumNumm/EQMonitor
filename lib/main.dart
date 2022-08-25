@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_Logger().wtf
 
 import 'dart:async';
 import 'dart:io';
@@ -8,7 +8,6 @@ import 'package:device_preview/device_preview.dart';
 import 'package:eqmonitor/const/obspoint.dart';
 import 'package:eqmonitor/const/prefecture/area_forecast_local_eew.model.dart';
 import 'package:eqmonitor/model/travel_time_table/travel_time_table.dart';
-import 'package:eqmonitor/page/main_page.dart';
 import 'package:eqmonitor/private/keys.dart';
 import 'package:eqmonitor/provider/init/kyoshin_kansokuten.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
@@ -38,6 +37,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'firebase_options.dart';
+import 'page/main_page.dart';
 
 Future<void> main() async {
   await runZonedGuarded<Future<void>>(
@@ -85,6 +85,7 @@ Future<void> main() async {
       await Future.wait(futures);
       final isCrashLogShareAllowed =
           await CrashLogShareProvider(prefs).loadSettingsFromSharedPrefrences();
+      final isDeveloper = prefs.getBool('isDeveloperMode') ?? false;
       await crashlytics.setCrashlyticsCollectionEnabled(
         isCrashLogShareAllowed && kReleaseMode,
       );
@@ -94,7 +95,6 @@ Future<void> main() async {
       Logger()
           .d('全ての初期化が完了: ${(stopwatch..stop()).elapsedMicroseconds / 1000}ms');
 
-      // final prefs = await SharedPreferences.getInstance();
       FlutterError.onError = onFlutterError;
       runApp(
         ProviderScope(
@@ -115,17 +115,16 @@ Future<void> main() async {
             ),
           ],
           observers: const [
-            // if (kDebugMode) ProvidersLogger(),
+            //if (kDebugMode) ProvidersLogger(),
           ],
           child: const MyApp(),
         ),
       );
-
       FlutterNativeSplash.remove();
     },
     (error, stack) async {
-      print('Error: $error');
-      print('Stack: $stack');
+      Logger().wtf('Error: $error');
+      Logger().wtf('Stack: $stack');
       await FirebaseCrashlytics.instance.recordError(error, stack);
     },
   );
@@ -133,8 +132,8 @@ Future<void> main() async {
 }
 
 Future<void> onFlutterError(FlutterErrorDetails details) async {
-  print('Error: ${details.exception}');
-  print('Stack: ${details.stack}');
+  Logger().wtf('Error: ${details.exception}');
+  Logger().wtf('Stack: ${details.stack}');
   await FirebaseCrashlytics.instance.recordFlutterError(details);
 }
 
@@ -168,6 +167,7 @@ class MyApp extends ConsumerWidget {
         location: BannerLocation.bottomStart,
         child: MainPage(),
       ),
+      //home: const IntroductionPage(),
     );
   }
 }

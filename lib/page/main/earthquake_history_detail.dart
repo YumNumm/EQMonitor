@@ -1,4 +1,6 @@
 import 'package:eqmonitor/extension/relative_luminance.dart';
+import 'package:eqmonitor/model/setting/jma_intensity_color_model.dart';
+import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart' hide TextDirection;
@@ -8,7 +10,6 @@ import 'package:logger/logger.dart';
 import '../../const/kmoni/jma_intensity.dart';
 import '../../const/prefecture/area_forecast_local_eew.model.dart';
 import '../../provider/init/map_area_forecast_local_e.dart';
-import '../../provider/init/parameter-earthquake.dart';
 import '../../schema/dmdata/commonHeader.dart';
 import '../../schema/dmdata/eq-information/earthquake-information.dart';
 import '../../schema/dmdata/eq-information/earthquake-information/intensity/region.dart';
@@ -29,6 +30,7 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.watch(jmaIntensityColorProvider);
     // 地震情報を解析していきます
     final vxse51Telegrams = <CommonHead>[];
     final vxse52Telegrams = <CommonHead>[];
@@ -107,15 +109,15 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
           DecoratedBox(
             decoration: BoxDecoration(
               color: (maxInt != JmaIntensity.Int1)
-                  ? maxInt.color.withOpacity(0.3)
+                  ? maxInt.fromUser(colors).withOpacity(0.3)
                   : null,
             ),
             child: ListTile(
               leading: Container(
                 decoration: BoxDecoration(
-                  color: maxInt.color,
+                  color: maxInt.fromUser(colors),
                   border: Border.all(
-                    color: maxInt.color.onPrimary,
+                    color: maxInt.fromUser(colors).onPrimary,
                     width: 2,
                   ),
                   borderRadius: BorderRadius.circular(8),
@@ -273,6 +275,7 @@ class MapRegionIntensityWidget extends ConsumerWidget {
       painter: MapRegionIntensityPainter(
         mapPolygons: mapSource,
         regions: regions,
+        colors: ref.watch(jmaIntensityColorProvider),
       ),
       size: Size.infinite,
     );
@@ -283,9 +286,11 @@ class MapRegionIntensityPainter extends CustomPainter {
   MapRegionIntensityPainter({
     required this.mapPolygons,
     required this.regions,
+    required this.colors,
   });
   final List<MapPolygon> mapPolygons;
   final List<Region> regions;
+  final JmaIntensityColorModel colors;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -305,7 +310,7 @@ class MapRegionIntensityPainter extends CustomPainter {
                       (e) => e.name == region.maxInt.toString(),
                       orElse: () => JmaIntensity.Error,
                     )
-                    .color
+                    .fromUser(colors)
                 ..isAntiAlias = true
                 ..strokeCap = StrokeCap.round,
             )
@@ -464,7 +469,7 @@ class MapStationIntensityWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final allParameterEarthquakeItem = ref.watch(parameterEarthquakeProvider);
+    //final allParameterEarthquakeItem = ref.watch(parameterEarthquakeProvider);
 
     final widgets = <Widget>[];
 
@@ -472,30 +477,30 @@ class MapStationIntensityWidget extends ConsumerWidget {
     for (final station in stations) {
       try {
         // 緯度経度を取得
-        final param = allParameterEarthquakeItem.items
-            .firstWhere((e) => e.code == station.code);
-        final offset = MapGlobalOffset.latLonToGlobalPoint(
-          LatLng(param.latitude, param.longitude),
-        ).toLocalOffset(const Size(476, 927.4));
-        widgets.add(
-          DecoratedBox(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.red,
-              ),
-            ),
-            child: Positioned(
-              left: offset.dx,
-              top: offset.dy,
-              child: IntensityWidget(
-                intensity: JmaIntensity.values
-                    .firstWhere((e) => e.name == station.intensity),
-                size: 2,
-                opacity: 1,
-              ),
-            ),
-          ),
-        );
+        //final param = allParameterEarthquakeItem.items
+        //    .firstWhere((e) => e.code == station.code);
+        // final offset = MapGlobalOffset.latLonToGlobalPoint(
+        //   LatLng(param.latitude, param.longitude),
+        // ).toLocalOffset(const Size(476, 927.4));
+        // widgets.add(
+        //   DecoratedBox(
+        //     decoration: BoxDecoration(
+        //       border: Border.all(
+        //         color: Colors.red,
+        //       ),
+        //     ),
+        //     child: Positioned(
+        //       left: offset.dx,
+        //       top: offset.dy,
+        //       child: IntensityWidget(
+        //         intensity: JmaIntensity.values
+        //             .firstWhere((e) => e.name == station.intensity),
+        //         size: 2,
+        //         opacity: 1,
+        //       ),
+        //     ),
+        //   ),
+        // );
       } on Exception catch (_) {}
     }
 

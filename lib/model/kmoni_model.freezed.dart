@@ -37,6 +37,9 @@ mixin _$KmoniModel {
   /// Kmoniの更新中かどうか
   bool get isUpdating => throw _privateConstructorUsedError;
 
+  /// テストケースを読み込み始めた時刻
+  DateTime? get testCaseStartTime => throw _privateConstructorUsedError;
+
   @JsonKey(ignore: true)
   $KmoniModelCopyWith<KmoniModel> get copyWith =>
       throw _privateConstructorUsedError;
@@ -53,7 +56,8 @@ abstract class $KmoniModelCopyWith<$Res> {
       DateTime lastUpdateAttempt,
       Timer? updateTimer,
       Duration updateFrequency,
-      bool isUpdating});
+      bool isUpdating,
+      DateTime? testCaseStartTime});
 }
 
 /// @nodoc
@@ -72,6 +76,7 @@ class _$KmoniModelCopyWithImpl<$Res> implements $KmoniModelCopyWith<$Res> {
     Object? updateTimer = freezed,
     Object? updateFrequency = freezed,
     Object? isUpdating = freezed,
+    Object? testCaseStartTime = freezed,
   }) {
     return _then(_value.copyWith(
       analyzedPoint: analyzedPoint == freezed
@@ -98,6 +103,10 @@ class _$KmoniModelCopyWithImpl<$Res> implements $KmoniModelCopyWith<$Res> {
           ? _value.isUpdating
           : isUpdating // ignore: cast_nullable_to_non_nullable
               as bool,
+      testCaseStartTime: testCaseStartTime == freezed
+          ? _value.testCaseStartTime
+          : testCaseStartTime // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -115,7 +124,8 @@ abstract class _$$_KmoniModelCopyWith<$Res>
       DateTime lastUpdateAttempt,
       Timer? updateTimer,
       Duration updateFrequency,
-      bool isUpdating});
+      bool isUpdating,
+      DateTime? testCaseStartTime});
 }
 
 /// @nodoc
@@ -136,6 +146,7 @@ class __$$_KmoniModelCopyWithImpl<$Res> extends _$KmoniModelCopyWithImpl<$Res>
     Object? updateTimer = freezed,
     Object? updateFrequency = freezed,
     Object? isUpdating = freezed,
+    Object? testCaseStartTime = freezed,
   }) {
     return _then(_$_KmoniModel(
       analyzedPoint: analyzedPoint == freezed
@@ -162,6 +173,10 @@ class __$$_KmoniModelCopyWithImpl<$Res> extends _$KmoniModelCopyWithImpl<$Res>
           ? _value.isUpdating
           : isUpdating // ignore: cast_nullable_to_non_nullable
               as bool,
+      testCaseStartTime: testCaseStartTime == freezed
+          ? _value.testCaseStartTime
+          : testCaseStartTime // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -175,7 +190,8 @@ class _$_KmoniModel implements _KmoniModel {
       required this.lastUpdateAttempt,
       required this.updateTimer,
       required this.updateFrequency,
-      required this.isUpdating})
+      required this.isUpdating,
+      required this.testCaseStartTime})
       : _analyzedPoint = analyzedPoint;
 
   /// 観測点のリスト
@@ -210,9 +226,13 @@ class _$_KmoniModel implements _KmoniModel {
   @override
   final bool isUpdating;
 
+  /// テストケースを読み込み始めた時刻
+  @override
+  final DateTime? testCaseStartTime;
+
   @override
   String toString() {
-    return 'KmoniModel(analyzedPoint: $analyzedPoint, lastUpdated: $lastUpdated, lastUpdateAttempt: $lastUpdateAttempt, updateTimer: $updateTimer, updateFrequency: $updateFrequency, isUpdating: $isUpdating)';
+    return 'KmoniModel(analyzedPoint: $analyzedPoint, lastUpdated: $lastUpdated, lastUpdateAttempt: $lastUpdateAttempt, updateTimer: $updateTimer, updateFrequency: $updateFrequency, isUpdating: $isUpdating, testCaseStartTime: $testCaseStartTime)';
   }
 
   @override
@@ -231,7 +251,9 @@ class _$_KmoniModel implements _KmoniModel {
             const DeepCollectionEquality()
                 .equals(other.updateFrequency, updateFrequency) &&
             const DeepCollectionEquality()
-                .equals(other.isUpdating, isUpdating));
+                .equals(other.isUpdating, isUpdating) &&
+            const DeepCollectionEquality()
+                .equals(other.testCaseStartTime, testCaseStartTime));
   }
 
   @override
@@ -242,7 +264,8 @@ class _$_KmoniModel implements _KmoniModel {
       const DeepCollectionEquality().hash(lastUpdateAttempt),
       const DeepCollectionEquality().hash(updateTimer),
       const DeepCollectionEquality().hash(updateFrequency),
-      const DeepCollectionEquality().hash(isUpdating));
+      const DeepCollectionEquality().hash(isUpdating),
+      const DeepCollectionEquality().hash(testCaseStartTime));
 
   @JsonKey(ignore: true)
   @override
@@ -257,7 +280,8 @@ abstract class _KmoniModel implements KmoniModel {
       required final DateTime lastUpdateAttempt,
       required final Timer? updateTimer,
       required final Duration updateFrequency,
-      required final bool isUpdating}) = _$_KmoniModel;
+      required final bool isUpdating,
+      required final DateTime? testCaseStartTime}) = _$_KmoniModel;
 
   @override
 
@@ -285,6 +309,10 @@ abstract class _KmoniModel implements KmoniModel {
 
   /// Kmoniの更新中かどうか
   bool get isUpdating;
+  @override
+
+  /// テストケースを読み込み始めた時刻
+  DateTime? get testCaseStartTime;
   @override
   @JsonKey(ignore: true)
   _$$_KmoniModelCopyWith<_$_KmoniModel> get copyWith =>

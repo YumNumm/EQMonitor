@@ -29,5 +29,8 @@ class KmoniModel with _$KmoniModel {
 
     /// Kmoniの更新中かどうか
     required bool isUpdating,
+
+    /// テストケースを読み込み始めた時刻
+    required DateTime? testCaseStartTime,
   }) = _KmoniModel;
 }

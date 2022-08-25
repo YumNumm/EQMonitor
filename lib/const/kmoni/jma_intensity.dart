@@ -2,6 +2,11 @@
 
 import 'dart:ui';
 
+import 'package:eqmonitor/model/setting/jma_intensity_color_model.dart';
+import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 /// 気象庁震度階級 + α
 // ignore_for_file: constant_identifier_names, always_put_control_body_on_new_line, file_names, avoid_classes_with_only_static_members
 
@@ -142,4 +147,37 @@ enum JmaIntensity {
         return '+';
     }
   }
+
+  Color fromUser(JmaIntensityColorModel colors) {
+    switch (this) {
+      case JmaIntensity.Int0:
+        return colors.int0;
+      case JmaIntensity.Int1:
+        return colors.int1;
+      case JmaIntensity.Int2:
+        return colors.int2;
+      case JmaIntensity.Int3:
+        return colors.int3;
+      case JmaIntensity.Int4:
+        return colors.int4;
+      case JmaIntensity.Int5Lower:
+        return colors.int5Lower;
+      case JmaIntensity.Int5Upper:
+        return colors.int5Upper;
+      case JmaIntensity.Int6Lower:
+        return colors.int6Lower;
+      case JmaIntensity.Int6Upper:
+        return colors.int6Upper;
+      case JmaIntensity.Int7:
+        return colors.int7;
+      case JmaIntensity.Unknown:
+        return colors.unknown;
+      case JmaIntensity.over:
+        return colors.over;
+      case JmaIntensity.Error:
+        return colors.error;
+    }
+  }
 }
+
+extension on JmaIntensity {}

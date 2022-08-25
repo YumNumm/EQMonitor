@@ -1,3 +1,4 @@
+import 'package:eqmonitor/model/setting/jma_intensity_color_model.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
@@ -9,9 +10,11 @@ class EewIntensityPainter extends CustomPainter {
   EewIntensityPainter({
     required this.mapPolygons,
     required this.eews,
+    required this.colors,
   });
   List<MapPolygon> mapPolygons;
   Iterable<MapEntry<CommonHead, EEWInformation>> eews;
+  JmaIntensityColorModel colors;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -28,7 +31,7 @@ class EewIntensityPainter extends CustomPainter {
                 ..drawPath(
                   mapPolygon.path,
                   Paint()
-                    ..color = region.forecastMaxInt.from.color
+                    ..color = region.forecastMaxInt.from.fromUser(colors)
                     ..isAntiAlias = true
                     ..strokeCap = StrokeCap.round,
                 )

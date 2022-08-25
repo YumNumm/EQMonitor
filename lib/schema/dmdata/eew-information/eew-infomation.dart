@@ -63,6 +63,19 @@ class EEWInformation {
           : Comments.fromJson(j['comments'] as Map<String, dynamic>),
     );
   }
+  
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'isLastInfo': isLastInfo.toString(),
+        'isCanceled': isCanceled.toString(),
+        'isWarning': isWarning.toString(),
+        'zones': zones?.map((e) => e.toJson()).toList(),
+        'prefectures': prefectures?.map((e) => e.toJson()).toList(),
+        'regions': regions?.map((e) => e.toJson()).toList(),
+        'earthquake': earthQuake?.toJson(),
+        'intensity': intensity?.toJson(),
+        'text': text,
+        'comments': comments?.toJson(),
+      };
 
   /// このイベントで最終の更新かどうかを識別する。
   /// 最終報・取り消し報の場合は、`true`となる

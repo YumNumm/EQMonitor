@@ -1,3 +1,23 @@
+import 'dart:developer';
+
+import 'package:eqmonitor/const/kmoni/jma_intensity.dart';
+import 'package:eqmonitor/schema/dmdata/commonHeader.dart';
+import 'package:eqmonitor/schema/dmdata/eew-information/earthquake.dart';
+import 'package:eqmonitor/schema/dmdata/eew-information/earthquake/accuracy.dart';
+import 'package:eqmonitor/schema/dmdata/eew-information/earthquake/accuracy/depth_calculation.dart';
+import 'package:eqmonitor/schema/dmdata/eew-information/earthquake/accuracy/epicCenterAccuracy.dart';
+import 'package:eqmonitor/schema/dmdata/eew-information/earthquake/accuracy/magnitude_calculation.dart';
+import 'package:eqmonitor/schema/dmdata/eew-information/earthquake/accuracy/number_of_magnitude_calculation.dart';
+import 'package:eqmonitor/schema/dmdata/eew-information/earthquake/depth.dart';
+import 'package:eqmonitor/schema/dmdata/eew-information/earthquake/hypocenter.dart';
+import 'package:eqmonitor/schema/dmdata/eew-information/earthquake/reduce.dart';
+import 'package:eqmonitor/schema/dmdata/eew-information/eew-infomation.dart';
+import 'package:eqmonitor/schema/dmdata/eew-information/intensity/forecast_max_int.dart';
+import 'package:eqmonitor/schema/dmdata/eew-information/intensity/intensity.dart';
+import 'package:eqmonitor/schema/dmdata/eq-information/earthquake-information/hypocenter/coordinate_component.dart';
+import 'package:eqmonitor/schema/dmdata/eq-information/earthquake-information/hypocenter/coordinate_component/latitude.dart';
+import 'package:eqmonitor/schema/dmdata/eq-information/earthquake-information/hypocenter/coordinate_component/longitude.dart';
+import 'package:eqmonitor/schema/dmdata/eq-information/earthquake-information/magnitude.dart';
 import 'package:intl/intl.dart';
 
 import 'EEWResult.dart';
@@ -113,6 +133,113 @@ class KyoshinEEW {
 
   /// 地震ID
   final int? reportId;
+
+  CommonHead? toDmdataEew() {
+    log(result.hasData.toString());
+    if (!result.hasData) {
+      return null;
+    }
+
+    // 処理していく
+    return CommonHead(
+      eventId: reportId.toString(),
+      headline: result.message,
+      editoralOffice: '強震モニタ',
+      infoKind: '強震モニタ',
+      infoType: CommonHeadInfoType.announcement,
+      infoKindVersion: '0',
+      originalId: 'TELEGRAM_ID',
+      pressDateTime: reportTime!,
+      publishingOffice: [],
+      reportDateTime: reportTime!,
+      schema: CommonHeadSchema(type: 'VXSE4x', version: '0'),
+      serialNo: reportNum?.toString(),
+      status: CommonHeadStatus.normal,
+      targetDateTime: reportTime!,
+      targetDateTimeDubious: '強震モニタ - リプレイ',
+      targetDuration: null,
+      title: result.message.toString(),
+      type: '強震モニタ',
+      validDateTime: null,
+      body: EEWInformation(
+        isLastInfo: isFinal!,
+        isCanceled: isTraining ?? false,
+        isWarning: true,
+        zones: [],
+        prefectures: [],
+        regions: [],
+        earthQuake: EarthQuake(
+          originTime: originTime,
+          arrivalTime: originTime!,
+          isAssuming: false,
+          hypoCenter: HypoCenter(
+            name: regionName.toString(),
+            code: int.tryParse(regionCode.toString()) ?? 0,
+            coordinateComponent: CoordinateComponent(
+              latitude: Latitude(text: '', value: latitude!),
+              longitude: Longitude(text: '', value: longitude!),
+              height: null,
+              geodeticSystem: null,
+              condition: null,
+            ),
+            depth: Depth(
+              unit: 'km',
+              value: int.parse(depth!.replaceAll('km', '')),
+              condition: null,
+              type: '深さ',
+            ),
+            reduce: Reduce(
+              code: 0,
+              name: '',
+            ),
+            landOrSea: null,
+            accuracy: Accuracy(
+              depthCalculation: DepthCalculation.f1,
+              epicCenterAccuracy: EpicCenters(
+                epicCenterAccuracy: EpicCenterAccuracy.f1,
+                hypoCenterAccuracy: HypoCenterAccuracy.f1,
+              ),
+              magnitudeCalculation: MagnitudeCalculation.f2,
+              numberOfMagnitudeCalculation: NumberOfMagnitudeCalculation.f1,
+            ),
+          ),
+          magnitude: Magnitude(
+            condition: null,
+            type: '',
+            unit: 'M',
+            value: magnitude,
+          ),
+        ),
+        intensity: Intensity(
+          maxint: ForecastMaxInt(
+            from: JmaIntensity.values.firstWhere(
+              (e) =>
+                  e.name ==
+                  calcintensity
+                      .toString()
+                      .replaceAll('強', '+')
+                      .replaceAll('弱', '-'),
+              orElse: () => JmaIntensity.Error,
+            ),
+            to: JmaIntensity.values.firstWhere(
+              (e) =>
+                  e.name ==
+                  calcintensity
+                      .toString()
+                      .replaceAll('強', '+')
+                      .replaceAll('弱', '-'),
+              orElse: () => JmaIntensity.Error,
+            ),
+          ),
+          appendix: null,
+          forecastMaxLpgmInt: null,
+          region: [],
+        ),
+        text: result.message,
+        comments: null,
+      ).toJson(),
+    );
+  }
 }
 
 DateTime yyyyMMddHHmmss(String s) {
