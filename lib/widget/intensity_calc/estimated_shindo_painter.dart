@@ -10,12 +10,14 @@ class EstimatedShindoPainter extends CustomPainter {
     required this.mapPolygons,
     required this.estimatedShindoPointsGroupBy,
     this.showIntensityPoint = false,
+    this.alpha = 1,
   });
 
   List<MapPolygon> mapPolygons;
   final Map<int, List<EstimatedEarthquakeParameterItem>>
       estimatedShindoPointsGroupBy;
   final bool showIntensityPoint;
+  final double alpha;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -35,12 +37,15 @@ class EstimatedShindoPainter extends CustomPainter {
           final maxJmaIntensity =
               JmaIntensity.toJmaIntensity(intensity: maxIntensity);
           for (final mapRegionPolygon in mapRegionPolygons) {
-            if (maxIntensity < 0) continue;
+            if (maxIntensity < 0) {
+              continue;
+            }
             canvas
               ..drawPath(
                 mapRegionPolygon.path,
                 Paint()
-                  ..color = maxJmaIntensity.color
+                  ..color =
+                      maxJmaIntensity.color.withAlpha((alpha * 255).toInt())
                   ..isAntiAlias = true
                   ..strokeCap = StrokeCap.round,
               )
@@ -52,35 +57,6 @@ class EstimatedShindoPainter extends CustomPainter {
                   ..style = PaintingStyle.stroke,
               );
           }
-
-          // 0 < int < 0.5のみ点を描く
-          //for (final point in estimatedShindoPoints) {
-          //  if (point.estimatedIntensity < 0 ||
-          //      point.estimatedIntensity > 0.5) {
-          //    continue;
-          //  }
-          //  final offset = MapGlobalOffset.latLonToGlobalPoint(
-          //    LatLng(point.latitude, point.longitude),
-          //  ).toLocalOffset(const Size(476, 927.4));
-          //  canvas
-          //    ..drawCircle(
-          //      offset,
-          //      1,
-          //      Paint()
-          //        ..color = point.estimatedJmaIntensity.color
-          //        ..isAntiAlias = true
-          //        ..style = PaintingStyle.fill,
-          //    )
-          //    ..drawCircle(
-          //      offset,
-          //      1,
-          //      Paint()
-          //        ..color = Colors.white
-          //        ..isAntiAlias = true
-          //        ..strokeWidth = 0.1
-          //        ..style = PaintingStyle.stroke,
-          //    );
-          //}
         } on Exception catch (e) {
           Logger().e(e);
         }
@@ -93,5 +69,6 @@ class EstimatedShindoPainter extends CustomPainter {
       oldDelegate.showIntensityPoint != showIntensityPoint ||
       oldDelegate.estimatedShindoPointsGroupBy !=
           estimatedShindoPointsGroupBy ||
-      oldDelegate.mapPolygons != mapPolygons;
+      oldDelegate.mapPolygons != mapPolygons ||
+      oldDelegate.alpha != alpha;
 }

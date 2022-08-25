@@ -26,6 +26,34 @@ class ParameterEarthquake {
         ),
       );
 
+  factory ParameterEarthquake.fromTwoJson(
+    Map<String, dynamic> param,
+    Map<String, dynamic> paramArv,
+  ) {
+    final items = <ParameterEarthquakeItem>[];
+    final paramItems = param['items'] as List<Map<String, dynamic>>;
+    final paramArvItems = paramArv['items'] as List<Map<String, dynamic>>;
+    for (final item in paramItems) {
+      final arv = double.parse(
+        (paramArvItems.firstWhere(
+          (e) => item['id'] == e['id'],
+          orElse: () => {'arv': '0'},
+        ))['arv'],
+      );
+      items.add(
+        ParameterEarthquakeItem.fromJsonWithArv(param, arv),
+      );
+    }
+    return ParameterEarthquake(
+      responseId: param['responseId'].toString(),
+      responseTime: DateTime.parse(param['responseTime'].toString()),
+      status: param['status'].toString(),
+      changeTime: DateTime.parse(param['changeTime'].toString()),
+      version: param['version'].toString(),
+      items: items,
+    );
+  }
+
   final String responseId;
   final DateTime responseTime;
   final String status;
@@ -63,6 +91,25 @@ class ParameterEarthquakeItem {
         longitude: double.parse(j['longitude'].toString()),
         arv: double.parse(j['arv'].toString()),
       );
+
+  factory ParameterEarthquakeItem.fromJsonWithArv(
+    Map<String, dynamic> param,
+    double arv,
+  ) {
+    return ParameterEarthquakeItem(
+      region: Region.fromJson(param['region']),
+      city: City.fromJson(param['city']),
+      noCode: int.parse(param['noCode'].toString()),
+      code: int.parse(param['code'].toString()),
+      name: param['name'].toString(),
+      kana: param['kana'].toString(),
+      status: param['status'].toString(),
+      owner: param['owner'].toString(),
+      latitude: double.parse(param['latitude'].toString()),
+      longitude: double.parse(param['longitude'].toString()),
+      arv: arv,
+    );
+  }
 
   final Region region;
   final City city;

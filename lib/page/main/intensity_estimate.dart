@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:eqmonitor/utils/map/map_global_offset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,7 +15,10 @@ import '../../widget/intensity_calc/map_eew_hypocenter_painter.dart';
 import 'kmoni_map.dart';
 
 class IntensityEstimatePage extends HookConsumerWidget {
-  const IntensityEstimatePage({super.key});
+  IntensityEstimatePage({super.key});
+
+  final TransformationController transformationController =
+      TransformationController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,50 +55,41 @@ class IntensityEstimatePage extends HookConsumerWidget {
             child: Column(
               children: [
                 // マグニチュードの値を入力するテキストフィールド
-                TextFormField(
-                  autovalidateMode: AutovalidateMode.always,
-                  initialValue: magnitude.value.toString(),
-                  decoration: const InputDecoration(
-                    labelText: 'マグニチュード',
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    magnitude.value = double.tryParse(value) ?? 8;
-                    calc();
-                  },
-                  validator: (value) {
-                    if (double.tryParse(value ?? 'a') == null) {
-                      isCollect.value = false;
-
-                      return 'マグニチュードの値を入力してください';
-                    }
-                    isCollect.value = isCollect.value && true;
-                    return null;
-                  },
+                Row(
+                  children: [
+                    const Text('マグニチュード'),
+                    Expanded(
+                      child: Slider.adaptive(
+                        value: magnitude.value,
+                        max: 10,
+                        divisions: 100,
+                        label: 'M ${magnitude.value}',
+                        onChanged: (value) {
+                          magnitude.value =
+                              double.parse(value.toStringAsFixed(1));
+                          calc();
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-                // 深さの値を入力するテキストフィールド
-                TextFormField(
-                  autovalidateMode: AutovalidateMode.always,
-                  initialValue: depth.value.toString(),
-                  decoration: const InputDecoration(
-                    labelText: '深さ',
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    depth.value = int.tryParse(value) ?? 50;
-                    calc();
-                  },
-                  validator: (value) {
-                    if (double.tryParse(value ?? 'a') == null) {
-                      isCollect.value = false;
-                      return '深さの値を入力してください';
-                    }
-                    isCollect.value = isCollect.value && true;
-                    return null;
-                  },
-                )
-                // 深さの値を入力するテキストフィールド
-                ,
+                Row(
+                  children: [
+                    const Text('深さ'),
+                    Expanded(
+                      child: Slider.adaptive(
+                        value: depth.value.toDouble(),
+                        max: 200,
+                        divisions: 20,
+                        label: '${depth.value}km',
+                        onChanged: (value) {
+                          depth.value = value.toInt();
+                          calc();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
                 TextFormField(
                   autovalidateMode: AutovalidateMode.always,
                   initialValue: lat.value.toString(),
@@ -147,10 +142,17 @@ class IntensityEstimatePage extends HookConsumerWidget {
                 children: [
                   GestureDetector(
                     onTapDown: (details) {
-                      // TODO(YumNumm): onTapした場所の検知 -> LatLngへの変換
+                      final position = MapGlobalOffset.globalPointToLatLng(
+                        transformationController.toScene(details.localPosition),
+                      );
+                      lat.value = position.latitude;
+                      lon.value = position.longitude;
+                      calc();
                     },
                     child: InteractiveViewer(
-                      maxScale: 100,
+                      transformationController: transformationController,
+                      constrained: false,
+                      maxScale: 10,
                       child: Stack(
                         children: [
                           // マップベース
@@ -163,12 +165,14 @@ class IntensityEstimatePage extends HookConsumerWidget {
                               mapPolygons:
                                   ref.watch(mapAreaForecastLocalEProvider),
                             ),
+                            size: const Size(476, 927.4),
                           ),
                           // EEWの震央位置
                           CustomPaint(
                             painter: HypocenterPainterfromLatLng(
                               hypocenter: LatLng(lat.value, lon.value),
                             ),
+                            size: const Size(476, 927.4),
                           ),
                         ],
                       ),

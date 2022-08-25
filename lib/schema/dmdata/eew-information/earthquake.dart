@@ -17,7 +17,8 @@ class EarthQuake {
 
   factory EarthQuake.fromJson(Map<String, dynamic> j) => EarthQuake(
         originTime: DateTime.tryParse(j['originTime'].toString()),
-        arrivalTime: DateTime.parse(j['arrivalTime'].toString()),
+        arrivalTime:
+            DateTime.tryParse(j['arrivalTime'].toString()) ?? DateTime.now(),
         isAssuming: j['condition'].toString() == '仮定震源要素',
         hypoCenter:
             HypoCenter.fromJson(j['hypocenter'] as Map<String, dynamic>),

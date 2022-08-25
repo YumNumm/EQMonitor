@@ -1,9 +1,11 @@
+import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../const/kmoni/jma_intensity.dart';
 import '../../extension/relative_luminance.dart';
 
-class IntensityWidget extends StatelessWidget {
+class IntensityWidget extends ConsumerWidget {
   const IntensityWidget({
     super.key,
     required this.intensity,
@@ -22,8 +24,11 @@ class IntensityWidget extends StatelessWidget {
   final bool isTextColorByBackground;
 
   @override
-  Widget build(BuildContext context) {
-    final intensityColor = color ?? intensity.color.withOpacity(opacity);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final intensityColor = color ??
+        intensity
+            .fromUser(ref.read(jmaIntensityColorProvider))
+            .withOpacity(opacity);
     final textColor = isTextColorByBackground ? intensityColor.onPrimary : null;
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),

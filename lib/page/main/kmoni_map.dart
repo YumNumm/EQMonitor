@@ -3,9 +3,12 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:collection/collection.dart';
+import 'package:eqmonitor/api/int_calc/int_calc.dart';
 import 'package:eqmonitor/model/travel_time_table/travel_time_table.dart';
 import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
+import 'package:eqmonitor/provider/init/parameter-earthquake.dart';
 import 'package:eqmonitor/provider/init/travel_time.dart';
 import 'package:eqmonitor/provider/kmoni_controller.dart';
 import 'package:eqmonitor/provider/setting/developer_mode.dart';
@@ -18,6 +21,7 @@ import 'package:eqmonitor/widget/custom_map/map_base_painter.dart';
 import 'package:eqmonitor/widget/custom_map/map_eew_hypocenter_painter.dart';
 import 'package:eqmonitor/widget/custom_map/map_intensity_painter.dart';
 import 'package:eqmonitor/widget/custom_map/obs_point_painter.dart';
+import 'package:eqmonitor/widget/intensity_calc/estimated_shindo_painter.dart';
 import 'package:flutter/material.dart' hide Theme;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -58,18 +62,26 @@ class KmoniMap extends HookConsumerWidget {
                   ref.watch(transformationControllerProvider),
               maxScale: 20,
               constrained: false,
-              child: Stack(
-                children: const [
-                  // マップベース
-                  BaseMapWidget(),
-                  // EEWの距離減衰式による予想震度
-                  // EEWの予想震度
-                  MapEewIntensityWidget(),
-                  // 観測点
-                  KyoshinKansokutensMapWidget(),
-                  // EEWの震央位置
-                  EewHypoCenterMapWidget(),
-                ],
+              child: SizedBox(
+                height: 927.4,
+                width: 476,
+                child: Stack(
+                  children: [
+                    // マップベース
+                    const BaseMapWidget(),
+                    // EEWの距離減衰式による予想震度
+                    if (isDeveloper ||
+                        (ref.watch(kmoniProvider).testCaseStartTime != null))
+                      const MapEewIntensityEstimateWidget(),
+
+                    // EEWの予想震度
+                    const MapEewIntensityWidget(),
+                    // 観測点
+                    const KyoshinKansokutensMapWidget(),
+                    // EEWの震央位置
+                    const EewHypoCenterMapWidget(),
+                  ],
+                ),
               ),
             ),
           ),
@@ -85,6 +97,41 @@ class KmoniMap extends HookConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class MapEewIntensityEstimateWidget extends ConsumerWidget {
+  const MapEewIntensityEstimateWidget();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final eews = ref.watch(eewHistoryProvider).showEews;
+    if (eews.isEmpty ||
+        (eews.any(
+          (e) =>
+              EEWInformation.fromJson(e.body).earthQuake?.isAssuming ?? false,
+        ))) {
+      return const SizedBox.shrink();
+    }
+    final eew = EEWInformation.fromJson(eews.first.body);
+    final result = IntensityEstimateApi().estimateIntensity(
+      jmaMagnitude: eew.earthQuake!.magnitude.value!,
+      depth: eew.earthQuake!.hypoCenter.depth.value!.toDouble(),
+      hypocenter: LatLng(
+        eew.earthQuake!.hypoCenter.coordinateComponent.latitude!.value,
+        eew.earthQuake!.hypoCenter.coordinateComponent.longitude!.value,
+      ),
+      obsPoints: ref.watch(parameterEarthquakeProvider).items,
+    );
+
+    return CustomPaint(
+      painter: EstimatedShindoPainter(
+        estimatedShindoPointsGroupBy:
+            result.groupListsBy((element) => element.region.code),
+        mapPolygons: ref.watch(mapAreaForecastLocalEProvider),
+        alpha: 0.5,
+      ),
     );
   }
 }
@@ -255,7 +302,7 @@ class MapEewIntensityWidget extends ConsumerWidget {
         eews: eews,
         mapPolygons: mapSource,
       ),
-      size: Size.infinite,
+      size: const Size(476, 927.4),
     );
   }
 }
@@ -599,6 +646,7 @@ class EewHypoCenterMapWidget extends ConsumerWidget {
             EewHypoCenterNormalMapWidget(
               eew: eew,
               travelTimeTables: ref.watch(TravelTimeProvider),
+              onTestStarted: ref.watch(kmoniProvider).testCaseStartTime,
             ),
       ],
     );
@@ -610,9 +658,11 @@ class EewHypoCenterNormalMapWidget extends StatefulWidget {
     required this.eew,
     required this.travelTimeTables,
     super.key,
+    required this.onTestStarted,
   });
   final MapEntry<CommonHead, EEWInformation> eew;
   final List<TravelTimeTable> travelTimeTables;
+  final DateTime? onTestStarted;
 
   @override
   _EewHypoCenterNormalMapWidgetState createState() =>
@@ -631,7 +681,7 @@ class _EewHypoCenterNormalMapWidgetState
       duration: const Duration(milliseconds: 500),
     );
 
-    opacityAnimation = Tween<double>(begin: 1, end: 0.6).animate(
+    opacityAnimation = Tween<double>(begin: 1, end: 0.3).animate(
       CurvedAnimation(
         parent: opacityController,
         curve: Curves.linear,
@@ -667,12 +717,14 @@ class _EewHypoCenterNormalMapWidgetState
   Widget build(BuildContext context) {
     final eew = widget.eew;
     final travelTimeTables = widget.travelTimeTables;
+    final onTestStarted = widget.onTestStarted;
 
     return CustomPaint(
       painter: EewHypocenterNormalPainter(
         eew: eew,
         opacity: opacityAnimation.value,
         travelTime: travelTimeTables,
+        onTestStarted: onTestStarted,
       ),
     );
   }

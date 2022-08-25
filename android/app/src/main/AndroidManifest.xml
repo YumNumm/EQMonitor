@@ -28,7 +28,8 @@
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:directBootAware="true">
 
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"

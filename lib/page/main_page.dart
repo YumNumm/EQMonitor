@@ -1,3 +1,7 @@
+import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
+import 'package:eqmonitor/provider/kmoni_controller.dart';
+import 'package:eqmonitor/provider/setting/developer_mode.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -9,7 +13,7 @@ import 'main/kmoni_map.dart';
 import 'main/settings.dart';
 
 class MainPage extends HookConsumerWidget {
-  const MainPage({Key? key}) : super(key: key);
+  const MainPage({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = useState(0);
@@ -20,6 +24,20 @@ class MainPage extends HookConsumerWidget {
           return Scaffold(
             appBar: AppBar(
               title: const Text('EQMonitor'),
+              actions: [
+                if (kDebugMode ||
+                    ref.watch(isDeveloperModeAllowedProvider) == true)
+                  IconButton(
+                    icon: const Icon(Icons.settings),
+                    onPressed: () {
+                      ref.read(kmoniProvider.notifier).startTestCase();
+                      ref.read(eewHistoryProvider.notifier).startTestcase();
+                    },
+                  ),
+              ],
+              leading: (ref.watch(isDeveloperModeAllowedProvider) == true)
+                  ? const Icon(Icons.lock_open)
+                  : null,
             ),
             bottomNavigationBar: NavigationBar(
               selectedIndex: selectedIndex.value,
@@ -52,7 +70,7 @@ class MainPage extends HookConsumerWidget {
                 : selectedIndex.value == 1
                     ? EarthquakeHistoryPage()
                     : selectedIndex.value == 2
-                        ? const IntensityEstimatePage()
+                        ? IntensityEstimatePage()
                         : const SettingsPage(),
           );
         } else {
@@ -89,7 +107,7 @@ class MainPage extends HookConsumerWidget {
                         : selectedIndex.value == 1
                             ? EarthquakeHistoryPage()
                             : selectedIndex.value == 2
-                                ? const IntensityEstimatePage()
+                                ? IntensityEstimatePage()
                                 : const SettingsPage(),
                   ),
                 ],

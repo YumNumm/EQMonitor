@@ -2,6 +2,7 @@
 
 import 'package:eqmonitor/const/kmoni/jma_intensity.dart';
 import 'package:eqmonitor/provider/earthquake/earthquake_controller.dart';
+import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
 import 'package:eqmonitor/schema/dmdata/commonHeader.dart';
 import 'package:eqmonitor/schema/dmdata/eq-information/earthquake-information.dart';
 import 'package:eqmonitor/schema/supabase/telegram.dart';
@@ -80,7 +81,7 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
   }
 }
 
-class EarthquakeHistoryTile extends StatelessWidget {
+class EarthquakeHistoryTile extends ConsumerWidget {
   const EarthquakeHistoryTile({
     super.key,
     required this.telegrams,
@@ -89,7 +90,8 @@ class EarthquakeHistoryTile extends StatelessWidget {
   final List<Telegram> telegrams;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.watch(jmaIntensityColorProvider);
     // 地震情報を解析していきます
     final vxse51Telegrams = <CommonHead>[];
     final vxse52Telegrams = <CommonHead>[];
@@ -154,7 +156,7 @@ class EarthquakeHistoryTile extends StatelessWidget {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: maxInt.color.withOpacity(0.3),
+        color: maxInt.fromUser(colors).withOpacity(0.3),
       ),
       child: ListTile(
         onTap: () => Navigator.of(context).push(

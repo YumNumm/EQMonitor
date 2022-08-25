@@ -78,6 +78,10 @@ dependencies:
   flex_color_scheme: ^5.1.0
   supabase: ^0.3.6
   flutter_staggered_animations: ^1.0.0
+  crypto: ^3.0.2
+  matrix4_transform: ^2.0.1
+  shared_preferences_android: ^2.0.12
+  shared_preferences_ios: ^2.1.1
 
 dev_dependencies:
   flutter_test:
@@ -98,6 +102,11 @@ flutter:
     - assets/kmoni/
     - assets/maps/
     - assets/docs/
+    - assets/develop/
+    - assets/develop/06301031/acmap_s/
+    - assets/develop/06301031/eew/
+    - assets/develop/06301031/jma_s/
+
   fonts:
     - family: CaskaydiaCove
       fonts:
