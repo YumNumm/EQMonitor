@@ -1,6 +1,6 @@
-import 'package:eqmonitor/extension/relative_luminance.dart';
-import 'package:eqmonitor/model/setting/jma_intensity_color_model.dart';
-import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
+import '../../extension/relative_luminance.dart';
+import '../../model/setting/jma_intensity_color_model.dart';
+import '../../provider/setting/intensity_color_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart' hide TextDirection;
