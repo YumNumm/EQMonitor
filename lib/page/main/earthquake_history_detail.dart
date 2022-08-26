@@ -1,6 +1,3 @@
-import '../../extension/relative_luminance.dart';
-import '../../model/setting/jma_intensity_color_model.dart';
-import '../../provider/setting/intensity_color_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart' hide TextDirection;
@@ -9,7 +6,9 @@ import 'package:logger/logger.dart';
 
 import '../../const/kmoni/jma_intensity.dart';
 import '../../const/prefecture/area_forecast_local_eew.model.dart';
+import '../../model/setting/jma_intensity_color_model.dart';
 import '../../provider/init/map_area_forecast_local_e.dart';
+import '../../provider/setting/intensity_color_provider.dart';
 import '../../schema/dmdata/commonHeader.dart';
 import '../../schema/dmdata/eq-information/earthquake-information.dart';
 import '../../schema/dmdata/eq-information/earthquake-information/intensity/region.dart';
@@ -113,20 +112,10 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                   : null,
             ),
             child: ListTile(
-              leading: Container(
-                decoration: BoxDecoration(
-                  color: maxInt.fromUser(colors),
-                  border: Border.all(
-                    color: maxInt.fromUser(colors).onPrimary,
-                    width: 2,
-                  ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: IntensityWidget(
+              leading: IntensityWidget(
                   intensity: maxInt,
                   size: 42,
                 ),
-              ),
               enableFeedback: true,
               title: Text(
                 component?.hypoCenter.name ?? '震源調査中',

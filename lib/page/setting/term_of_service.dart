@@ -26,7 +26,6 @@ class TermOfServicePage extends HookConsumerWidget {
           if (snapshot.hasData) {
             final markdownSource = snapshot.data!.toString();
             return SingleChildScrollView(
-              physics: const RangeMaintainingScrollPhysics(),
               child: Markdown(
                 shrinkWrap: true,
                 selectable: true,

@@ -1193,7 +1193,7 @@ packages:
     source: hosted
     version: "1.2.0"
   realtime_client:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: realtime_client
       url: "https://pub.dartlang.org"

@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:intl/intl.dart';
 
 import '../../const/kmoni/jma_intensity.dart';
 import '../dmdata/commonHeader.dart';
@@ -18,8 +18,6 @@ import '../dmdata/eq-information/earthquake-information/hypocenter/coordinate_co
 import '../dmdata/eq-information/earthquake-information/hypocenter/coordinate_component/latitude.dart';
 import '../dmdata/eq-information/earthquake-information/hypocenter/coordinate_component/longitude.dart';
 import '../dmdata/eq-information/earthquake-information/magnitude.dart';
-import 'package:intl/intl.dart';
-
 import 'EEWResult.dart';
 
 // GET http://www.kmoni.bosai.go.jp/webservice/hypo/eew/${timestamp}.json
@@ -134,8 +132,9 @@ class KyoshinEEW {
   /// 地震ID
   final int? reportId;
 
-  CommonHead? toDmdataEew() {
-    log(result.hasData.toString());
+  CommonHead? toDmdataEew({
+    bool isTesting = false,
+  }) {
     if (!result.hasData) {
       return null;
     }
@@ -154,7 +153,7 @@ class KyoshinEEW {
       reportDateTime: reportTime!,
       schema: CommonHeadSchema(type: 'VXSE4x', version: '0'),
       serialNo: reportNum?.toString(),
-      status: CommonHeadStatus.normal,
+      status: isTesting ? CommonHeadStatus.test : CommonHeadStatus.normal,
       targetDateTime: reportTime!,
       targetDateTimeDubious: '強震モニタ - リプレイ',
       targetDuration: null,

@@ -39,7 +39,6 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                           .read(jmaIntensityColorProvider.notifier)
                           .change(JmaIntensity.Int0, color);
                     },
-                    paletteType: PaletteType.hsl,
                     hexInputBar: true,
                   ),
                 ),
@@ -66,7 +65,6 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                           .read(jmaIntensityColorProvider.notifier)
                           .change(JmaIntensity.Int1, color);
                     },
-                    paletteType: PaletteType.hsl,
                     hexInputBar: true,
                   ),
                 ),
@@ -93,7 +91,6 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                           .read(jmaIntensityColorProvider.notifier)
                           .change(JmaIntensity.Int2, color);
                     },
-                    paletteType: PaletteType.hsl,
                     hexInputBar: true,
                   ),
                 ),
@@ -120,7 +117,6 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                           .read(jmaIntensityColorProvider.notifier)
                           .change(JmaIntensity.Int3, color);
                     },
-                    paletteType: PaletteType.hsl,
                     hexInputBar: true,
                   ),
                 ),
@@ -147,7 +143,6 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                           .read(jmaIntensityColorProvider.notifier)
                           .change(JmaIntensity.Int4, color);
                     },
-                    paletteType: PaletteType.hsl,
                     hexInputBar: true,
                   ),
                 ),
@@ -174,7 +169,6 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                           .read(jmaIntensityColorProvider.notifier)
                           .change(JmaIntensity.Int5Lower, color);
                     },
-                    paletteType: PaletteType.hsl,
                     hexInputBar: true,
                   ),
                 ),
@@ -201,7 +195,6 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                           .read(jmaIntensityColorProvider.notifier)
                           .change(JmaIntensity.Int5Upper, color);
                     },
-                    paletteType: PaletteType.hsl,
                     hexInputBar: true,
                   ),
                 ),
@@ -228,7 +221,6 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                           .read(jmaIntensityColorProvider.notifier)
                           .change(JmaIntensity.Int6Lower, color);
                     },
-                    paletteType: PaletteType.hsl,
                     hexInputBar: true,
                   ),
                 ),
@@ -255,7 +247,6 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                           .read(jmaIntensityColorProvider.notifier)
                           .change(JmaIntensity.Int6Upper, color);
                     },
-                    paletteType: PaletteType.hsl,
                     hexInputBar: true,
                   ),
                 ),
@@ -282,7 +273,6 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                           .read(jmaIntensityColorProvider.notifier)
                           .change(JmaIntensity.Int7, color);
                     },
-                    paletteType: PaletteType.hsl,
                     hexInputBar: true,
                   ),
                 ),
@@ -309,12 +299,19 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                           .read(jmaIntensityColorProvider.notifier)
                           .change(JmaIntensity.Unknown, color);
                     },
-                    paletteType: PaletteType.hsl,
                     hexInputBar: true,
                   ),
                 ),
               ),
             ),
+          ),
+          const Divider(),
+
+          ListTile(
+            title: const Text('デフォルトに戻す'),
+            leading: const Icon(Icons.restore),
+            onTap: () async =>
+                ref.read(jmaIntensityColorProvider.notifier).reset(),
           ),
         ],
       ),

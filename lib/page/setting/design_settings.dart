@@ -1,3 +1,4 @@
+import 'package:eqmonitor/extension/theme_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:settings_ui/settings_ui.dart';
@@ -24,7 +25,7 @@ class DesignSettingsPage extends ConsumerWidget {
               SettingsTile.navigation(
                 leading: const Icon(Icons.design_services),
                 title: const Text('テーマ設定'),
-                description: Text(currentThemeMode.name),
+                description: Text(currentThemeMode.title),
                 onPressed: (context) => Navigator.push(
                   context,
                   MaterialPageRoute<void>(

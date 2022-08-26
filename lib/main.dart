@@ -9,6 +9,7 @@ import 'package:eqmonitor/const/obspoint.dart';
 import 'package:eqmonitor/const/prefecture/area_forecast_local_eew.model.dart';
 import 'package:eqmonitor/model/travel_time_table/travel_time_table.dart';
 import 'package:eqmonitor/private/keys.dart';
+import 'package:eqmonitor/provider/init/application_support_dir.dart';
 import 'package:eqmonitor/provider/init/device_info.dart';
 import 'package:eqmonitor/provider/init/kyoshin_kansokuten.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
@@ -120,6 +121,7 @@ Future<void> main() async {
                 ),
               ),
             ),
+            applicationSupportDirectoryProvider.overrideWithValue(dir),
             if (Platform.isAndroid)
               androidDeviceInfoProvider.overrideWithValue(androidDeviceInfo),
             if (Platform.isIOS)
