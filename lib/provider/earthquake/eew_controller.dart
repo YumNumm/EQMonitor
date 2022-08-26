@@ -87,10 +87,10 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
         ),
       );
     }
+    state = state.copyWith(subscription: subscription);
   }
 
   void addTelegram(CommonHead commonHead) {
-    logger.d('addTelegram: ${commonHead.originalId}');
     // eewTelegramsに追加
     // ただし、同じ電文(originalIdで判別)があれば追加しない
     final eewTelegrams = state.eewTelegrams;
@@ -183,7 +183,7 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
             "assets/develop/06301031/eew/${DateFormat('yyyyMMddHHmmss').format(dt)}.json";
         try {
           final data = jsonDecode(await rootBundle.loadString(assetUrl));
-          final eew = KyoshinEEW.fromJson(data).toDmdataEew();
+          final eew = KyoshinEEW.fromJson(data).toDmdataEew(isTesting: true);
           if (eew != null) {
             addTelegram(eew);
           }
@@ -191,7 +191,11 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
           // テストケースを終了する
           state = state.copyWith(
             testCaseStartTime: null,
+            eewTelegrams: [],
+            eewTelegramsGroupByEventId: {},
+            showEews: [],
           );
+
           timer.cancel();
         }
       },

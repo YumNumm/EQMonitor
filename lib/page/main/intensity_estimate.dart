@@ -1,4 +1,6 @@
 import 'package:collection/collection.dart';
+import 'package:eqmonitor/provider/logger.dart';
+import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -8,7 +10,6 @@ import '../../api/int_calc/int_calc.dart';
 import '../../const/kmoni/jma_intensity.dart';
 import '../../provider/init/map_area_forecast_local_e.dart';
 import '../../provider/init/parameter-earthquake.dart';
-import '../../utils/map/map_global_offset.dart';
 import '../../widget/intensity/intensity_widget.dart';
 import '../../widget/intensity_calc/estimated_shindo_painter.dart';
 import '../../widget/intensity_calc/map_eew_hypocenter_painter.dart';
@@ -98,13 +99,21 @@ class IntensityEstimatePage extends HookConsumerWidget {
                   ),
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
+                    try {
+                      LatLng(lat.value, double.tryParse(value) ?? 35);
+                    } catch (e) {
+                      ref.read(loggerProvider).e(e);
+                      isCollect.value = false;
+                      return;
+                    }
                     lat.value = double.tryParse(value) ?? 35;
                     calc();
                   },
                   validator: (value) {
                     try {
                       LatLng(lat.value, lon.value);
-                    } on Exception {
+                    } catch (e) {
+                      ref.read(loggerProvider).e(e);
                       isCollect.value = false;
                       return '正しいの値を入力してください';
                     }
@@ -112,20 +121,28 @@ class IntensityEstimatePage extends HookConsumerWidget {
                   },
                 ),
                 TextFormField(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  autovalidateMode: AutovalidateMode.always,
                   initialValue: lon.value.toString(),
                   decoration: const InputDecoration(
                     labelText: '経度',
                   ),
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
+                    try {
+                      LatLng(double.tryParse(value) ?? 35, lon.value);
+                    } catch (e) {
+                      ref.read(loggerProvider).e(e);
+                      isCollect.value = false;
+                      return;
+                    }
                     lon.value = double.tryParse(value) ?? 35;
                     calc();
                   },
                   validator: (value) {
                     try {
                       LatLng(lat.value, lon.value);
-                    } on Exception {
+                    } catch (e) {
+                      ref.read(loggerProvider).e(e);
                       isCollect.value = false;
                       return '正しいの値を入力してください';
                     }
@@ -140,16 +157,7 @@ class IntensityEstimatePage extends HookConsumerWidget {
               padding: const EdgeInsets.all(8),
               child: Stack(
                 children: [
-                  GestureDetector(
-                    onTapDown: (details) {
-                      final position = MapGlobalOffset.globalPointToLatLng(
-                        transformationController.toScene(details.localPosition),
-                      );
-                      lat.value = position.latitude;
-                      lon.value = position.longitude;
-                      calc();
-                    },
-                    child: InteractiveViewer(
+                InteractiveViewer(
                       transformationController: transformationController,
                       constrained: false,
                       maxScale: 10,
@@ -162,6 +170,7 @@ class IntensityEstimatePage extends HookConsumerWidget {
                             painter: EstimatedShindoPainter(
                               estimatedShindoPointsGroupBy:
                                   intensityCalcResult.value,
+                                  colors: ref.watch(jmaIntensityColorProvider),
                               mapPolygons:
                                   ref.watch(mapAreaForecastLocalEProvider),
                             ),
@@ -177,7 +186,6 @@ class IntensityEstimatePage extends HookConsumerWidget {
                         ],
                       ),
                     ),
-                  ),
                   // 凡例
                   Align(
                     alignment: Alignment.bottomLeft,

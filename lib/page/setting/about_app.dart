@@ -1,8 +1,9 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:crypto/crypto.dart';
+import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
+import 'package:eqmonitor/provider/kmoni_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -31,9 +32,8 @@ class AboutAppPage extends HookConsumerWidget {
             tiles: <SettingsTile>[
               SettingsTile(
                 title: InkWell(
-                  onDoubleTap: () {
+                  onTap: () {
                     logoTapCount.value++;
-                    log('logoTapCount: ${logoTapCount.value}');
                     if (logoTapCount.value == 10) {
                       logoTapCount.value = 0;
                       //Notification
@@ -41,19 +41,16 @@ class AboutAppPage extends HookConsumerWidget {
                         content: NotificationContent(
                           id: 0,
                           channelKey: 'fromdev',
-                          body: 'いちごうますぎる....。 ふぁーん///',
-                          title: 'いちごうますぎる....。 ふぁーん///',
+                          title: 'テストモードを開始します',
+                          body: '強震モニタを確認してください',
                           fullScreenIntent: true,
                           color: const Color.fromARGB(255, 159, 0, 24),
                         ),
                       );
-                    } else {
-                      // Toast message
-                      Fluttertoast.showToast(
-                        msg: logoTapCount.value.toString(),
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                      );
+                      Navigator.of(context).pop();
+
+                      ref.read(kmoniProvider.notifier).startTestCase();
+                      ref.read(eewHistoryProvider.notifier).startTestcase();
                     }
                   },
                   child: Card(

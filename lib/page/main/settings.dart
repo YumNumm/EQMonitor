@@ -1,15 +1,17 @@
+import 'package:eqmonitor/provider/setting/developer_mode.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:settings_ui/settings_ui.dart';
 
 import '../setting/about_app.dart';
 import '../setting/debug_info.dart';
 import '../setting/design_settings.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     return SettingsList(
       sections: [
         SettingsSection(
@@ -34,7 +36,7 @@ class SettingsPage extends StatelessWidget {
                 ),
               ),
             ),
-            if (kDebugMode)
+            if (kDebugMode ||  ref.watch(developerModeProvider).isDeveloper )
               SettingsTile.navigation(
                 leading: const Icon(Icons.bug_report),
                 title: const Text('デバッグ情報'),

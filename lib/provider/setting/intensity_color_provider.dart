@@ -14,28 +14,14 @@ final jmaIntensityColorProvider =
 class JmaIntensityColorProvider extends StateNotifier<JmaIntensityColorModel> {
   JmaIntensityColorProvider(this.ref)
       : super(
-          JmaIntensityColorModel(
-            unknown: JmaIntensity.Unknown.color,
-            int0: JmaIntensity.Int0.color,
-            int1: JmaIntensity.Int1.color,
-            int2: JmaIntensity.Int2.color,
-            int3: JmaIntensity.Int3.color,
-            int4: JmaIntensity.Int4.color,
-            int5Lower: JmaIntensity.Int5Lower.color,
-            int5Upper: JmaIntensity.Int5Upper.color,
-            int6Lower: JmaIntensity.Int6Lower.color,
-            int6Upper: JmaIntensity.Int6Upper.color,
-            int7: JmaIntensity.Int7.color,
-            over: JmaIntensity.over.color,
-            error: JmaIntensity.Error.color,
+          loadFromPrefs(
+            ref.read(sharedPreferencesProvder),
           ),
-        ) {
-    _load();
-  }
+        );
 
   final Ref ref;
 
-  Future<void> _load() async {
+  void _load() {
     final prefs = ref.read(sharedPreferencesProvder);
     final model = loadFromPrefs(prefs);
     state = state.copyWith(
@@ -170,5 +156,24 @@ class JmaIntensityColorProvider extends StateNotifier<JmaIntensityColorModel> {
       over: (intensity == JmaIntensity.over) ? color : state.over,
       error: (intensity == JmaIntensity.Error) ? color : state.error,
     );
+  }
+
+  Future<void> reset() async {
+    state = state.copyWith(
+      unknown: JmaIntensity.Unknown.color,
+      int0: JmaIntensity.Int0.color,
+      int1: JmaIntensity.Int1.color,
+      int2: JmaIntensity.Int2.color,
+      int3: JmaIntensity.Int3.color,
+      int4: JmaIntensity.Int4.color,
+      int5Lower: JmaIntensity.Int5Lower.color,
+      int5Upper: JmaIntensity.Int5Upper.color,
+      int6Lower: JmaIntensity.Int6Lower.color,
+      int6Upper: JmaIntensity.Int6Upper.color,
+      int7: JmaIntensity.Int7.color,
+      over: JmaIntensity.over.color,
+      error: JmaIntensity.Error.color,
+    );
+    await saveAll();
   }
 }

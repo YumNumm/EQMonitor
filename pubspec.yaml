@@ -83,6 +83,7 @@ dependencies:
   shared_preferences_android: ^2.0.12
   shared_preferences_ios: ^2.1.1
   package_info_plus: ^1.4.3+1
+  realtime_client: ^0.1.15
 
 dev_dependencies:
   flutter_test:

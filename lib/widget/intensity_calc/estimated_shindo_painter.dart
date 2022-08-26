@@ -1,3 +1,4 @@
+import 'package:eqmonitor/model/setting/jma_intensity_color_model.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
@@ -9,6 +10,7 @@ class EstimatedShindoPainter extends CustomPainter {
   EstimatedShindoPainter({
     required this.mapPolygons,
     required this.estimatedShindoPointsGroupBy,
+    required this.colors,
     this.showIntensityPoint = false,
     this.alpha = 1,
   });
@@ -16,6 +18,7 @@ class EstimatedShindoPainter extends CustomPainter {
   List<MapPolygon> mapPolygons;
   final Map<int, List<EstimatedEarthquakeParameterItem>>
       estimatedShindoPointsGroupBy;
+  JmaIntensityColorModel colors;
   final bool showIntensityPoint;
   final double alpha;
 
@@ -44,8 +47,9 @@ class EstimatedShindoPainter extends CustomPainter {
               ..drawPath(
                 mapRegionPolygon.path,
                 Paint()
-                  ..color =
-                      maxJmaIntensity.color.withAlpha((alpha * 255).toInt())
+                  ..color = maxJmaIntensity
+                      .fromUser(colors)
+                      .withAlpha((alpha * 255).toInt())
                   ..isAntiAlias = true
                   ..strokeCap = StrokeCap.round,
               )
@@ -70,5 +74,6 @@ class EstimatedShindoPainter extends CustomPainter {
       oldDelegate.estimatedShindoPointsGroupBy !=
           estimatedShindoPointsGroupBy ||
       oldDelegate.mapPolygons != mapPolygons ||
-      oldDelegate.alpha != alpha;
+      oldDelegate.alpha != alpha ||
+      oldDelegate.colors != colors;
 }

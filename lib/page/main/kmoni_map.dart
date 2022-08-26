@@ -27,6 +27,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:realtime_client/src/constants.dart';
 
 import '../../widget/eew/eew_body_widget.dart';
 
@@ -86,6 +87,23 @@ class KmoniMap extends HookConsumerWidget {
             ),
           ),
         ),
+
+        // テストモードのオーバレイ
+        if (ref.watch(kmoniProvider).testCaseStartTime != null)
+          const Center(
+            child: IgnorePointer(
+              child: FittedBox(
+                child: Text(
+                  ' TEST ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(100, 0, 0, 0),
+                    fontSize: 200,
+                  ),
+                ),
+              ),
+            ),
+          ),
         // EEW表示
         const OnEewWidget(),
         // KMoniの更新状況
@@ -130,6 +148,7 @@ class MapEewIntensityEstimateWidget extends ConsumerWidget {
         estimatedShindoPointsGroupBy:
             result.groupListsBy((element) => element.region.code),
         mapPolygons: ref.watch(mapAreaForecastLocalEProvider),
+        colors: ref.watch(jmaIntensityColorProvider),
         alpha: 0.5,
       ),
     );
@@ -142,6 +161,8 @@ class KmoniStatusWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final kmoni = ref.watch(kmoniProvider);
+    final eewProvider = ref.watch(eewHistoryProvider);
+
     final maxShindoColor = (kmoni.analyzedPoint.length > 100)
         ? kmoni.analyzedPoint
             .reduce(
@@ -194,6 +215,21 @@ class KmoniStatusWidget extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
+                    // WebSocket 接続状態
+                    if (eewProvider.subscription?.socket.connState ==
+                        SocketStates.open)
+                      const Icon(
+                        Icons.link,
+                        semanticLabel: 'WebSocket 接続中',
+                      )
+                    else
+                      const Icon(
+                        Icons.link_off,
+                        color: Colors.red,
+                        semanticLabel: 'WebSocket 切断',
+                      ),
+                    const SizedBox(width: 8),
+
                     if (kmoni.isUpdating)
                       Container(
                         width: 10,
@@ -211,6 +247,10 @@ class KmoniStatusWidget extends ConsumerWidget {
                         width: 10,
                         height: 10,
                       ),
+
+                    /// テストモード時
+                    if (ref.watch(kmoniProvider).testCaseStartTime != null)
+                      const Icon(Icons.developer_mode),
                   ],
                 ),
               ],
@@ -222,6 +262,7 @@ class KmoniStatusWidget extends ConsumerWidget {
   }
 }
 
+/// EEW情報
 class OnEewWidget extends ConsumerWidget {
   const OnEewWidget({
     super.key,
