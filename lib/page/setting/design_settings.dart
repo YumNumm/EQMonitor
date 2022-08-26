@@ -1,9 +1,10 @@
-import 'design/intensity_color_choice.dart';
-import 'design/theme.dart';
-import '../../provider/theme_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:settings_ui/settings_ui.dart';
+
+import '../../provider/theme_providers.dart';
+import 'design/intensity_color_choice.dart';
+import 'design/theme.dart';
 
 class DesignSettingsPage extends ConsumerWidget {
   const DesignSettingsPage({super.key});

@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import '../../utils/map/map_global_offset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -9,6 +8,7 @@ import '../../api/int_calc/int_calc.dart';
 import '../../const/kmoni/jma_intensity.dart';
 import '../../provider/init/map_area_forecast_local_e.dart';
 import '../../provider/init/parameter-earthquake.dart';
+import '../../utils/map/map_global_offset.dart';
 import '../../widget/intensity/intensity_widget.dart';
 import '../../widget/intensity_calc/estimated_shindo_painter.dart';
 import '../../widget/intensity_calc/map_eew_hypocenter_painter.dart';
