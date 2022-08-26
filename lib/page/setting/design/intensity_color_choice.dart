@@ -1,6 +1,6 @@
-import 'package:eqmonitor/const/kmoni/jma_intensity.dart';
-import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
-import 'package:eqmonitor/widget/intensity/intensity_widget.dart';
+import '../../../const/kmoni/jma_intensity.dart';
+import '../../../provider/setting/intensity_color_provider.dart';
+import '../../../widget/intensity/intensity_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

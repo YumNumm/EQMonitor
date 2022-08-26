@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:crypto/crypto.dart';
-import 'package:eqmonitor/provider/setting/developer_mode.dart';
+import '../../provider/setting/developer_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -19,7 +19,7 @@ class AboutAppPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDarkMode = ref.watch(themeProvider.notifier).isDarkMode;
     final logoTapCount = useState<int>(0);
-    final isDeveloper = ref.watch(isDeveloperModeAllowedProvider);
+    final isDeveloper = ref.watch(developerModeProvider).isDeveloper;
 
     return Scaffold(
       appBar: AppBar(

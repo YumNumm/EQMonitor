@@ -1,5 +1,5 @@
-import 'package:eqmonitor/model/travel_time_table/travel_time_table.dart';
-import 'package:eqmonitor/provider/init/travel_time.dart';
+import '../../model/travel_time_table/travel_time_table.dart';
+import '../../provider/init/travel_time.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart' hide Path;
 

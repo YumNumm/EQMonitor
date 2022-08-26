@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:eqmonitor/page/introduction.dart';
+import '../introduction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';

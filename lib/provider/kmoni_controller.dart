@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:eqmonitor/provider/app_lifecycle.dart';
+import 'app_lifecycle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

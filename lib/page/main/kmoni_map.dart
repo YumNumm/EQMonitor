@@ -38,7 +38,7 @@ class KmoniMap extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isDeveloper = ref.watch(isDeveloperModeAllowedProvider);
+    final isDeveloper = ref.watch(developerModeProvider).isDeveloper;
     final doubleTapPosition = useState(TapDownDetails());
     return Stack(
       children: [

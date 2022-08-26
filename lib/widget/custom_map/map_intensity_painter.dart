@@ -1,4 +1,4 @@
-import 'package:eqmonitor/model/setting/jma_intensity_color_model.dart';
+import '../../model/setting/jma_intensity_color_model.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 

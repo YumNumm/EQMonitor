@@ -1,4 +1,4 @@
-import 'package:eqmonitor/page/setting/term_of_service.dart';
+import 'setting/term_of_service.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

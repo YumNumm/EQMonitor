@@ -1,7 +1,7 @@
-import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
-import 'package:eqmonitor/provider/kmoni_controller.dart';
-import 'package:eqmonitor/provider/setting/developer_mode.dart';
-import 'package:eqmonitor/widget/updater.dart';
+import '../provider/earthquake/eew_controller.dart';
+import '../provider/kmoni_controller.dart';
+import '../provider/setting/developer_mode.dart';
+import '../widget/updater.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,9 +19,7 @@ class MainPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = useState(0);
 
-    return Stack(
-      children: [
-        OrientationBuilder(
+    return OrientationBuilder(
           builder: (context, orientation) {
             if (orientation == Orientation.portrait) {
               return Scaffold(
@@ -29,7 +27,7 @@ class MainPage extends HookConsumerWidget {
                   title: const Text('EQMonitor'),
                   actions: [
                     if (kDebugMode ||
-                        ref.watch(isDeveloperModeAllowedProvider) == true)
+                        ref.watch(developerModeProvider).isDeveloper == true)
                       IconButton(
                         icon: const Icon(Icons.settings),
                         onPressed: () {
@@ -38,7 +36,7 @@ class MainPage extends HookConsumerWidget {
                         },
                       ),
                   ],
-                  leading: (ref.watch(isDeveloperModeAllowedProvider) == true)
+                  leading: (ref.watch(developerModeProvider).isDeveloper )
                       ? const Icon(Icons.lock_open)
                       : null,
                 ),
@@ -119,10 +117,6 @@ class MainPage extends HookConsumerWidget {
               );
             }
           },
-        ),
-        // 破壊的なアップデートがある場合のダイアログ
-        const UpdaterWidget(),
-      ],
-    );
+        );
   }
 }

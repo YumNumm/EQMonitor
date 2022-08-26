@@ -16,6 +16,7 @@ import 'package:eqmonitor/provider/init/parameter-earthquake.dart';
 import 'package:eqmonitor/provider/init/secure_storage.dart';
 import 'package:eqmonitor/provider/init/shared_preferences.dart';
 import 'package:eqmonitor/provider/init/travel_time.dart';
+import 'package:eqmonitor/provider/setting/change_log.dart';
 import 'package:eqmonitor/provider/setting/crash_log_share.dart';
 import 'package:eqmonitor/provider/theme_providers.dart';
 import 'package:eqmonitor/res/theme.dart';
@@ -123,6 +124,8 @@ Future<void> main() async {
               androidDeviceInfoProvider.overrideWithValue(androidDeviceInfo),
             if (Platform.isIOS)
               iOSDeviceInfoProvider.overrideWithValue(iosDeviceInfo),
+            if (kDebugMode)
+              changeLogProvider.overrideWithProvider(changeLogMockProvider),
           ],
           observers: const [
             //if (kDebugMode) ProvidersLogger(),
