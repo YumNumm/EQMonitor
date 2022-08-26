@@ -1,9 +1,10 @@
-import '../init/dio.dart';
-import '../../schema/setting/change_log.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../schema/setting/change_log.dart';
+import '../init/dio.dart';
+
 final changeLogProvider = FutureProvider<ChangeLog>((ref) async {
-  final res = await ref.read(DioProvider).get(
+  final res = await ref.read(DioProvider).get<Map<String,dynamic>>(
         'https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/changelog.json',
       );
   return ChangeLog.fromJson(res.data as Map<String, dynamic>);

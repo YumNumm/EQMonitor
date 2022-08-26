@@ -18,7 +18,6 @@ class MainPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = useState(0);
-
     return OrientationBuilder(
           builder: (context, orientation) {
             if (orientation == Orientation.portrait) {

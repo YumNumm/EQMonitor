@@ -1,9 +1,10 @@
-import '../../const/kmoni/jma_intensity.dart';
-import '../../model/setting/jma_intensity_color_model.dart';
-import '../init/shared_preferences.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../const/kmoni/jma_intensity.dart';
+import '../../model/setting/jma_intensity_color_model.dart';
+import '../init/shared_preferences.dart';
 
 final jmaIntensityColorProvider =
     StateNotifierProvider<JmaIntensityColorProvider, JmaIntensityColorModel>(

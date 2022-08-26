@@ -3,13 +3,13 @@ import 'dart:developer';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:crypto/crypto.dart';
-import '../../provider/setting/developer_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:settings_ui/settings_ui.dart';
 
+import '../../provider/setting/developer_mode.dart';
 import '../../provider/theme_providers.dart';
 import 'term_of_service.dart';
 

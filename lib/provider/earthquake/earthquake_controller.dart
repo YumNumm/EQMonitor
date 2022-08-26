@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../api/remote_db/telegram.dart';
-import '../../model/earthquake/earthquake_log_model.dart';
 import '../../schema/supabase/telegram.dart';
 
 final earthquakeHistoryFutureProvider =

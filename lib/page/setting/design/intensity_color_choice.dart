@@ -1,9 +1,10 @@
-import '../../../const/kmoni/jma_intensity.dart';
-import '../../../provider/setting/intensity_color_provider.dart';
-import '../../../widget/intensity/intensity_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../../../const/kmoni/jma_intensity.dart';
+import '../../../provider/setting/intensity_color_provider.dart';
+import '../../../widget/intensity/intensity_widget.dart';
 
 class IntensityColorSettingsPage extends HookConsumerWidget {
   const IntensityColorSettingsPage({super.key});
@@ -37,6 +38,276 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                       ref
                           .read(jmaIntensityColorProvider.notifier)
                           .change(JmaIntensity.Int0, color);
+                    },
+                    paletteType: PaletteType.hsl,
+                    hexInputBar: true,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text('震度1'),
+            leading: IntensityWidget(
+              intensity: JmaIntensity.Int1,
+              size: 42,
+              color: intensityColor.int1,
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () => showDialog<void>(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('震度1'),
+                content: SingleChildScrollView(
+                  child: ColorPicker(
+                    pickerColor: intensityColor.int1,
+                    onColorChanged: (color) {
+                      ref
+                          .read(jmaIntensityColorProvider.notifier)
+                          .change(JmaIntensity.Int1, color);
+                    },
+                    paletteType: PaletteType.hsl,
+                    hexInputBar: true,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text('震度2'),
+            leading: IntensityWidget(
+              intensity: JmaIntensity.Int2,
+              size: 42,
+              color: intensityColor.int2,
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () => showDialog<void>(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('震度2'),
+                content: SingleChildScrollView(
+                  child: ColorPicker(
+                    pickerColor: intensityColor.int2,
+                    onColorChanged: (color) {
+                      ref
+                          .read(jmaIntensityColorProvider.notifier)
+                          .change(JmaIntensity.Int2, color);
+                    },
+                    paletteType: PaletteType.hsl,
+                    hexInputBar: true,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text('震度3'),
+            leading: IntensityWidget(
+              intensity: JmaIntensity.Int3,
+              size: 42,
+              color: intensityColor.int3,
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () => showDialog<void>(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('震度3'),
+                content: SingleChildScrollView(
+                  child: ColorPicker(
+                    pickerColor: intensityColor.int3,
+                    onColorChanged: (color) {
+                      ref
+                          .read(jmaIntensityColorProvider.notifier)
+                          .change(JmaIntensity.Int3, color);
+                    },
+                    paletteType: PaletteType.hsl,
+                    hexInputBar: true,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text('震度4'),
+            leading: IntensityWidget(
+              intensity: JmaIntensity.Int4,
+              size: 42,
+              color: intensityColor.int4,
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () => showDialog<void>(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('震度4'),
+                content: SingleChildScrollView(
+                  child: ColorPicker(
+                    pickerColor: intensityColor.int4,
+                    onColorChanged: (color) {
+                      ref
+                          .read(jmaIntensityColorProvider.notifier)
+                          .change(JmaIntensity.Int4, color);
+                    },
+                    paletteType: PaletteType.hsl,
+                    hexInputBar: true,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text('震度5弱'),
+            leading: IntensityWidget(
+              intensity: JmaIntensity.Int5Lower,
+              size: 42,
+              color: intensityColor.int5Lower,
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () => showDialog<void>(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('震度5弱'),
+                content: SingleChildScrollView(
+                  child: ColorPicker(
+                    pickerColor: intensityColor.int5Lower,
+                    onColorChanged: (color) {
+                      ref
+                          .read(jmaIntensityColorProvider.notifier)
+                          .change(JmaIntensity.Int5Lower, color);
+                    },
+                    paletteType: PaletteType.hsl,
+                    hexInputBar: true,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text('震度5強'),
+            leading: IntensityWidget(
+              intensity: JmaIntensity.Int5Upper,
+              size: 42,
+              color: intensityColor.int5Upper,
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () => showDialog<void>(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('震度5強'),
+                content: SingleChildScrollView(
+                  child: ColorPicker(
+                    pickerColor: intensityColor.int5Upper,
+                    onColorChanged: (color) {
+                      ref
+                          .read(jmaIntensityColorProvider.notifier)
+                          .change(JmaIntensity.Int5Upper, color);
+                    },
+                    paletteType: PaletteType.hsl,
+                    hexInputBar: true,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text('震度6弱'),
+            leading: IntensityWidget(
+              intensity: JmaIntensity.Int6Lower,
+              size: 42,
+              color: intensityColor.int6Lower,
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () => showDialog<void>(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('震度6弱'),
+                content: SingleChildScrollView(
+                  child: ColorPicker(
+                    pickerColor: intensityColor.int6Lower,
+                    onColorChanged: (color) {
+                      ref
+                          .read(jmaIntensityColorProvider.notifier)
+                          .change(JmaIntensity.Int6Lower, color);
+                    },
+                    paletteType: PaletteType.hsl,
+                    hexInputBar: true,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text('震度6強'),
+            leading: IntensityWidget(
+              intensity: JmaIntensity.Int6Upper,
+              size: 42,
+              color: intensityColor.int6Upper,
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () => showDialog<void>(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('震度6強'),
+                content: SingleChildScrollView(
+                  child: ColorPicker(
+                    pickerColor: intensityColor.int6Upper,
+                    onColorChanged: (color) {
+                      ref
+                          .read(jmaIntensityColorProvider.notifier)
+                          .change(JmaIntensity.Int6Upper, color);
+                    },
+                    paletteType: PaletteType.hsl,
+                    hexInputBar: true,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text('震度7'),
+            leading: IntensityWidget(
+              intensity: JmaIntensity.Int7,
+              size: 42,
+              color: intensityColor.int7,
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () => showDialog<void>(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('震度7'),
+                content: SingleChildScrollView(
+                  child: ColorPicker(
+                    pickerColor: intensityColor.int7,
+                    onColorChanged: (color) {
+                      ref
+                          .read(jmaIntensityColorProvider.notifier)
+                          .change(JmaIntensity.Int7, color);
+                    },
+                    paletteType: PaletteType.hsl,
+                    hexInputBar: true,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text('震度不明'),
+            leading: IntensityWidget(
+              intensity: JmaIntensity.Unknown,
+              size: 42,
+              color: intensityColor.unknown,
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () => showDialog<void>(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('震度不明'),
+                content: SingleChildScrollView(
+                  child: ColorPicker(
+                    pickerColor: intensityColor.unknown,
+                    onColorChanged: (color) {
+                      ref
+                          .read(jmaIntensityColorProvider.notifier)
+                          .change(JmaIntensity.Unknown, color);
                     },
                     paletteType: PaletteType.hsl,
                     hexInputBar: true,
