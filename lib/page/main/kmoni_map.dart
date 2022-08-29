@@ -1,6 +1,7 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'dart:async';
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
@@ -67,20 +68,21 @@ class KmoniMap extends HookConsumerWidget {
                 height: 927.4,
                 width: 476,
                 child: Stack(
-                  children: [
+                  children: const [
                     // マップベース
-                    const BaseMapWidget(),
+                    BaseMapWidget(),
                     // EEWの距離減衰式による予想震度
-                    if (isDeveloper ||
-                        (ref.watch(kmoniProvider).testCaseStartTime != null))
-                      const MapEewIntensityEstimateWidget(),
+                    // if (isDeveloper ||
+                    //     kDebugMode ||
+                    //     (ref.watch(kmoniProvider).testCaseStartTime != null))
+                    //   const MapEewIntensityEstimateWidget(),
 
                     // EEWの予想震度
-                    const MapEewIntensityWidget(),
+                    MapEewIntensityWidget(),
                     // 観測点
-                    const KyoshinKansokutensMapWidget(),
+                    KyoshinKansokutensMapWidget(),
                     // EEWの震央位置
-                    const EewHypoCenterMapWidget(),
+                    EewHypoCenterMapWidget(),
                   ],
                 ),
               ),
@@ -127,21 +129,26 @@ class MapEewIntensityEstimateWidget extends ConsumerWidget {
     final eews = ref.watch(eewHistoryProvider).showEews;
     if (eews.isEmpty ||
         (eews.any(
-          (e) =>
-              EEWInformation.fromJson(e.body).earthQuake?.isAssuming ?? false,
+          (e) => e.value.earthQuake?.isAssuming ?? false,
         ))) {
       return const SizedBox.shrink();
     }
-    final eew = EEWInformation.fromJson(eews.first.body);
-    final result = IntensityEstimateApi().estimateIntensity(
-      jmaMagnitude: eew.earthQuake!.magnitude.value!,
-      depth: eew.earthQuake!.hypoCenter.depth.value!.toDouble(),
-      hypocenter: LatLng(
-        eew.earthQuake!.hypoCenter.coordinateComponent.latitude!.value,
-        eew.earthQuake!.hypoCenter.coordinateComponent.longitude!.value,
-      ),
-      obsPoints: ref.watch(parameterEarthquakeProvider).items,
-    );
+    final result = eews
+        .map(
+          (eew) => IntensityEstimateApi().estimateIntensity(
+            jmaMagnitude: eew.value.earthQuake!.magnitude.value!,
+            depth: eew.value.earthQuake!.hypoCenter.depth.value!.toDouble(),
+            hypocenter: LatLng(
+              eew.value.earthQuake!.hypoCenter.coordinateComponent.latitude!
+                  .value,
+              eew.value.earthQuake!.hypoCenter.coordinateComponent.longitude!
+                  .value,
+            ),
+            obsPoints: ref.watch(parameterEarthquakeProvider).items,
+          ),
+        )
+        .expand((e) => e)
+        .toList();
 
     return CustomPaint(
       painter: EstimatedShindoPainter(
@@ -230,6 +237,10 @@ class KmoniStatusWidget extends ConsumerWidget {
                       ),
                     const SizedBox(width: 8),
 
+                    /// テストモード時
+                    if (ref.watch(kmoniProvider).testCaseStartTime != null)
+                      const Icon(Icons.bug_report),
+
                     if (kmoni.isUpdating)
                       Container(
                         width: 10,
@@ -247,10 +258,6 @@ class KmoniStatusWidget extends ConsumerWidget {
                         width: 10,
                         height: 10,
                       ),
-
-                    /// テストモード時
-                    if (ref.watch(kmoniProvider).testCaseStartTime != null)
-                      const Icon(Icons.developer_mode),
                   ],
                 ),
               ],
@@ -270,9 +277,9 @@ class OnEewWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eews = ref
-        .watch(eewHistoryProvider.select((value) => value.showEews))
-        .map((eew) => MapEntry(eew, EEWInformation.fromJson(eew.body)));
+    final eews =
+        ref.watch(eewHistoryProvider.select((value) => value.showEews));
+    log(eews.length.toString(), name: 'eews.length');
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -334,9 +341,8 @@ class MapEewIntensityWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapSource = ref.watch(mapAreaForecastLocalEProvider);
-    final eews = ref
-        .watch(eewHistoryProvider.select((value) => value.showEews))
-        .map((eew) => MapEntry(eew, EEWInformation.fromJson(eew.body)));
+    final eews =
+        ref.watch(eewHistoryProvider.select((value) => value.showEews));
     return CustomPaint(
       painter: EewIntensityPainter(
         colors: ref.watch(jmaIntensityColorProvider),
@@ -672,9 +678,8 @@ class EewHypoCenterMapWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eews = ref
-        .watch(eewHistoryProvider.select((value) => value.showEews))
-        .map((eew) => MapEntry(eew, EEWInformation.fromJson(eew.body)));
+    final eews =
+        ref.watch(eewHistoryProvider.select((value) => value.showEews));
 
     return Stack(
       children: <Widget>[

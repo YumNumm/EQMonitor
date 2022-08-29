@@ -8,6 +8,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:eqmonitor/const/obspoint.dart';
 import 'package:eqmonitor/const/prefecture/area_forecast_local_eew.model.dart';
 import 'package:eqmonitor/model/travel_time_table/travel_time_table.dart';
+import 'package:eqmonitor/page/introduction.dart';
 import 'package:eqmonitor/private/keys.dart';
 import 'package:eqmonitor/provider/init/application_support_dir.dart';
 import 'package:eqmonitor/provider/init/device_info.dart';
@@ -177,12 +178,12 @@ class MyApp extends ConsumerWidget {
       ],
       useInheritedMediaQuery: true,
       builder: DevicePreview.appBuilder,
-      home: const Banner(
-        message: 'DEVELOP',
-        location: BannerLocation.bottomStart,
-        child: MainPage(),
-      ),
-      //home: const IntroductionPage(),
+     // home: const Banner(
+     //   message: 'DEVELOP',
+     //   location: BannerLocation.bottomStart,
+     //   child: MainPage(),
+     // ),
+      home: const IntroductionPage(),
     );
   }
 }

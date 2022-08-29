@@ -1,6 +1,8 @@
-import 'setting/term_of_service.dart';
+import 'package:eqmonitor/page/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import 'setting/term_of_service.dart';
 
 final introductionController =
     Provider<PageController>((ref) => PageController());
@@ -17,22 +19,34 @@ class IntroductionPage extends HookConsumerWidget {
         const WelcomeWidget(),
         const TermOfServicePage(showAcceptButton: true),
         Container(
-          color: Colors.blue,
+          color: const Color.fromARGB(255, 0, 46, 83),
+          child: Center(
+            child: FloatingActionButton.extended(
+              onPressed: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute<void>(
+                    builder: (context) => const MainPage(),
+                  ),
+                );
+              },
+              label: const Text('進む'),
+            ),
+          ),
         ),
       ],
     );
   }
 }
 
-class WelcomeWidget extends StatelessWidget {
+class WelcomeWidget extends ConsumerWidget {
   const WelcomeWidget({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -43,21 +57,19 @@ class WelcomeWidget extends StatelessWidget {
             ],
           ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset('assets/header-dark.png'),
-            const SizedBox(height: 16),
-            const Text(
-              'このアプリは、自分の身体を監視して、自分の身体が悪いときに通知を行うアプリです。',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
+        child: Center(child: Image.asset('assets/header-transparent.png')),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async {
+          await ref.read(introductionController).animateToPage(
+                1,
+                duration: const Duration(milliseconds: 100),
+                curve: Curves.bounceOut,
+              );
+        },
+        label: const Text('次へ進む'),
+        icon: const Icon(Icons.arrow_forward),
+        backgroundColor: Colors.white,
       ),
     );
   }

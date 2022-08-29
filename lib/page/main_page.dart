@@ -18,105 +18,109 @@ class MainPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = useState(0);
-    return OrientationBuilder(
-      builder: (context, orientation) {
-        if (orientation == Orientation.portrait) {
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('EQMonitor'),
-              actions: [
-                if (kDebugMode ||
-                    ref.watch(developerModeProvider).isDeveloper == true)
-                  IconButton(
-                    icon: const Icon(Icons.model_training),
-                    onPressed: () {
-                      ref.read(kmoniProvider.notifier).startTestCase();
-                      ref.read(eewHistoryProvider.notifier).startTestcase();
-                    },
-                  ),
-                const UpdaterButtonWidget(),
-              ],
-              leading: (ref.watch(developerModeProvider).isDeveloper)
-                  ? const Icon(Icons.lock_open)
-                  : null,
-            ),
-            bottomNavigationBar: NavigationBar(
-              selectedIndex: selectedIndex.value,
-              onDestinationSelected: (i) {
-                HapticFeedback.selectionClick();
+    return Banner(
+      message: 'DEVELOP',
+      location: BannerLocation.bottomStart,
+      child: OrientationBuilder(
+        builder: (context, orientation) {
+          if (orientation == Orientation.portrait) {
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('EQMonitor'),
+                actions: [
+                  if (kDebugMode ||
+                      ref.watch(developerModeProvider).isDeveloper == true)
+                    IconButton(
+                      icon: const Icon(Icons.model_training),
+                      onPressed: () {
+                        ref.read(kmoniProvider.notifier).startTestCase();
+                        ref.read(eewHistoryProvider.notifier).startTestcase();
+                      },
+                    ),
+                  const UpdaterButtonWidget(),
+                ],
+                leading: (ref.watch(developerModeProvider).isDeveloper)
+                    ? const Icon(Icons.lock_open)
+                    : null,
+              ),
+              bottomNavigationBar: NavigationBar(
+                selectedIndex: selectedIndex.value,
+                onDestinationSelected: (i) {
+                  HapticFeedback.selectionClick();
 
-                selectedIndex.value = i;
-              },
-              destinations: const [
-                NavigationDestination(
-                  icon: Icon(Icons.home),
-                  label: '強震モニタ',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.history),
-                  label: '地震履歴',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.calculate),
-                  label: '震度計算',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.settings),
-                  label: '設定',
-                ),
-              ],
-            ),
-            body: selectedIndex.value == 0
-                ? const KmoniMap()
-                : selectedIndex.value == 1
-                    ? EarthquakeHistoryPage()
-                    : selectedIndex.value == 2
-                        ? IntensityEstimatePage()
-                        : const SettingsPage(),
-          );
-        } else {
-          return Scaffold(
-            body: SafeArea(
-              child: Row(
-                children: [
-                  NavigationRail(
-                    labelType: NavigationRailLabelType.all,
-                    destinations: const [
-                      NavigationRailDestination(
-                        icon: Icon(Icons.home),
-                        label: Text('強震モニタ'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.history),
-                        label: Text('地震履歴'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.calculate),
-                        label: Text('震度計算'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.settings),
-                        label: Text('設定'),
-                      ),
-                    ],
-                    selectedIndex: selectedIndex.value,
-                    onDestinationSelected: (i) => selectedIndex.value = i,
+                  selectedIndex.value = i;
+                },
+                destinations: const [
+                  NavigationDestination(
+                    icon: Icon(Icons.home),
+                    label: '強震モニタ',
                   ),
-                  Expanded(
-                    child: selectedIndex.value == 0
-                        ? const KmoniMap()
-                        : selectedIndex.value == 1
-                            ? EarthquakeHistoryPage()
-                            : selectedIndex.value == 2
-                                ? IntensityEstimatePage()
-                                : const SettingsPage(),
+                  NavigationDestination(
+                    icon: Icon(Icons.history),
+                    label: '地震履歴',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.calculate),
+                    label: '震度計算',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.settings),
+                    label: '設定',
                   ),
                 ],
               ),
-            ),
-          );
-        }
-      },
+              body: selectedIndex.value == 0
+                  ? const KmoniMap()
+                  : selectedIndex.value == 1
+                      ? EarthquakeHistoryPage()
+                      : selectedIndex.value == 2
+                          ? IntensityEstimatePage()
+                          : const SettingsPage(),
+            );
+          } else {
+            return Scaffold(
+              body: SafeArea(
+                child: Row(
+                  children: [
+                    NavigationRail(
+                      labelType: NavigationRailLabelType.all,
+                      destinations: const [
+                        NavigationRailDestination(
+                          icon: Icon(Icons.home),
+                          label: Text('強震モニタ'),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.history),
+                          label: Text('地震履歴'),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.calculate),
+                          label: Text('震度計算'),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.settings),
+                          label: Text('設定'),
+                        ),
+                      ],
+                      selectedIndex: selectedIndex.value,
+                      onDestinationSelected: (i) => selectedIndex.value = i,
+                    ),
+                    Expanded(
+                      child: selectedIndex.value == 0
+                          ? const KmoniMap()
+                          : selectedIndex.value == 1
+                              ? EarthquakeHistoryPage()
+                              : selectedIndex.value == 2
+                                  ? IntensityEstimatePage()
+                                  : const SettingsPage(),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 }
