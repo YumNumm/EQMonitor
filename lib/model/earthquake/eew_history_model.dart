@@ -1,3 +1,4 @@
+import 'package:eqmonitor/schema/dmdata/eew-information/eew-infomation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:supabase/supabase.dart';
 
@@ -10,7 +11,7 @@ class EewHistoryModel with _$EewHistoryModel {
   const factory EewHistoryModel({
     required List<CommonHead> eewTelegrams,
     required Map<int, List<CommonHead>> eewTelegramsGroupByEventId,
-    required List<CommonHead> showEews,
+    required Iterable<MapEntry<CommonHead, EEWInformation>> showEews,
     required SupabaseClient supabase,
     required RealtimeSubscription? subscription,
 

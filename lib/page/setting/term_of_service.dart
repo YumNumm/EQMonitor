@@ -66,7 +66,7 @@ class TermOfServicePage extends HookConsumerWidget {
                       child: FloatingActionButton.extended(
                         onPressed: () {
                           ref.watch(introductionController).animateToPage(
-                                1,
+                                2,
                                 duration: const Duration(milliseconds: 100),
                                 curve: Curves.bounceOut,
                               );

@@ -1,8 +1,7 @@
-import 'dart:convert';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../const/kmoni/jma_intensity.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'notification_settings_model.freezed.dart';
 part 'notification_settings_model.g.dart';
@@ -34,7 +33,4 @@ class NotificationSettingsModel with _$NotificationSettingsModel {
 
   factory NotificationSettingsModel.fromJson(Map<String, dynamic> json) =>
       _$NotificationSettingsModelFromJson(json);
-
-
-
 }

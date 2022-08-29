@@ -28,7 +28,7 @@ class UpdaterButtonWidget extends HookConsumerWidget {
                       changeLog.items.first.isBreakingChange) {
                     return TextButton.icon(
                       onPressed: () async {
-                        final changeLog = ref.watch(changeLogProvider);
+                        final changeLog = ref.read(changeLogProvider);
                         await showDialog<void>(
                           context: context,
                           builder: (context) => changeLog.when<Widget>(

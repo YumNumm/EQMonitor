@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:collection/collection.dart';
+import 'package:eqmonitor/schema/dmdata/eew-information/eew-infomation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,7 +31,7 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
             subscription: null,
             eewTelegrams: <CommonHead>[],
             eewTelegramsGroupByEventId: <int, List<CommonHead>>{},
-            showEews: <CommonHead>[],
+            showEews: [],
             testCaseStartTime: null,
           ),
         ) {
@@ -55,12 +57,6 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
   }
 
   Future<void> startEewStreaming() async {
-    // 直近のEEW電文10件を追加しておく
-    final telegrams = await eewApi.getEewTelegrams();
-    for (final e in telegrams) {
-      addTelegram(e);
-    }
-    Logger().i('Start Eew Streaming');
     // EEW STREAMを開始する
     final subscription =
         state.supabase.from('eew').on(SupabaseEventTypes.insert, (payload) {
@@ -72,8 +68,17 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
           CommonHead.fromJson(jsonDecode(payload.newRecord!['data']));
       addTelegram(commonHead);
     }).subscribe();
+    state = state.copyWith(subscription: subscription);
+
     subscription.socket.onMessage((p0) => logger.i('EEW WebSocket: $p0'));
     logger.i(subscription.socket.connState?.toString());
+    // 直近のEEW電文10件を追加しておく
+    final telegrams = await eewApi.getEewTelegrams(limit: 30);
+    for (final e in telegrams) {
+      addTelegram(e);
+    }
+    Logger().i('Start Eew Streaming');
+
     // もし、デバッグモードならテスト電文を追加
     if (kDebugMode) {
       final res = await http.get(
@@ -87,7 +92,7 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
         ),
       );
     }
-    state = state.copyWith(subscription: subscription);
+    log('');
   }
 
   void addTelegram(CommonHead commonHead) {
@@ -101,7 +106,6 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
         .groupListsBy((element) => int.parse(element.eventId.toString()));
 
     // 180秒以内に発表されていて
-    // 取り消しされていない電文のうち
     // 最新のものを取得する
     // eventIdが大きい順
     final showEews = <CommonHead>[];
@@ -113,9 +117,9 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
 
       if (value.any(
         (element) =>
-            element.pressDateTime.difference(DateTime.now()).inSeconds >
-                (kDebugMode ? -180000 : -180) ||
-            element.originalId == 'TELEGRAM_ID',
+            element.pressDateTime.difference(DateTime.now()).inSeconds > -180 ||
+            element.originalId == 'TELEGRAM_ID' ||
+            kDebugMode,
       )) {
         showEews.add(value.first);
       }
@@ -124,7 +128,8 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
     state = state.copyWith(
       eewTelegrams: [...state.eewTelegrams, commonHead],
       eewTelegramsGroupByEventId: toUpdateTelegramsGroupBy,
-      showEews: showEews,
+      showEews: showEews
+          .map((eew) => MapEntry(eew, EEWInformation.fromJson(eew.body))),
     );
   }
 
@@ -146,8 +151,8 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
 
       if (value.any(
         (element) =>
-            element.pressDateTime.difference(DateTime.now()).inSeconds >
-                (kDebugMode ? -180000 : -180) ||
+            element.pressDateTime.difference(DateTime.now()).inSeconds > -180 ||
+            kDebugMode ||
             element.originalId == 'TELEGRAM_ID',
       )) {
         showEews.add(value.first);
@@ -157,7 +162,8 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
     if (mounted) {
       state = state.copyWith(
         eewTelegramsGroupByEventId: toUpdateTelegramsGroupBy,
-        showEews: showEews,
+        showEews: showEews
+            .map((eew) => MapEntry(eew, EEWInformation.fromJson(eew.body))),
       );
     }
   }
