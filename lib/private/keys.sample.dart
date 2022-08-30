@@ -17,3 +17,4 @@ const String supabaseS2Url = '[Supabase Url]';
 
 /// DMDATA Parameter API Key
 const String dmdataKey = '[DMDATA Parameter API Key]';
+const String dmdataOrigin  = '[DMDATA API Origin Host]';
