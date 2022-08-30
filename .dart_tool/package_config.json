@@ -1034,6 +1034,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "restart_app",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/restart_app-1.1.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "riverpod",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/riverpod-1.0.3",
       "packageUri": "lib/",
@@ -1382,7 +1388,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-08-26T06:50:29.210928Z",
+  "generated": "2022-08-30T15:33:00.277944Z",
   "generator": "pub",
   "generatorVersion": "2.17.6"
 }

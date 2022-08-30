@@ -178,12 +178,15 @@ class MyApp extends ConsumerWidget {
       ],
       useInheritedMediaQuery: true,
       builder: DevicePreview.appBuilder,
-     // home: const Banner(
-     //   message: 'DEVELOP',
-     //   location: BannerLocation.bottomStart,
-     //   child: MainPage(),
-     // ),
-      home: const IntroductionPage(),
+      // home: const Banner(
+      //   message: 'DEVELOP',
+      //   location: BannerLocation.bottomStart,
+      //   child: MainPage(),
+      // ),
+      home: (ref.read(sharedPreferencesProvder).getBool('isInitializated') ??
+              false)
+          ? const MainPage()
+          : const IntroductionPage(),
     );
   }
 }
