@@ -23,6 +23,7 @@ import 'package:eqmonitor/widget/custom_map/map_eew_hypocenter_painter.dart';
 import 'package:eqmonitor/widget/custom_map/map_intensity_painter.dart';
 import 'package:eqmonitor/widget/custom_map/obs_point_painter.dart';
 import 'package:eqmonitor/widget/intensity_calc/estimated_shindo_painter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Theme;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -68,21 +69,21 @@ class KmoniMap extends HookConsumerWidget {
                 height: 927.4,
                 width: 476,
                 child: Stack(
-                  children: const [
+                  children: [
                     // マップベース
-                    BaseMapWidget(),
+                    const BaseMapWidget(),
                     // EEWの距離減衰式による予想震度
-                    // if (isDeveloper ||
-                    //     kDebugMode ||
-                    //     (ref.watch(kmoniProvider).testCaseStartTime != null))
-                    //   const MapEewIntensityEstimateWidget(),
+                    if (isDeveloper ||
+                        kDebugMode ||
+                        (ref.watch(kmoniProvider).testCaseStartTime != null))
+                      const MapEewIntensityEstimateWidget(),
 
                     // EEWの予想震度
-                    MapEewIntensityWidget(),
+                    const MapEewIntensityWidget(),
                     // 観測点
-                    KyoshinKansokutensMapWidget(),
+                    const KyoshinKansokutensMapWidget(),
                     // EEWの震央位置
-                    EewHypoCenterMapWidget(),
+                    const EewHypoCenterMapWidget(),
                   ],
                 ),
               ),
@@ -99,8 +100,14 @@ class KmoniMap extends HookConsumerWidget {
                   ' TEST ',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(132, 255, 0, 0),
+                    color: Color.fromARGB(82, 255, 0, 0),
                     fontSize: 200,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 10,
+                        color: Color.fromARGB(82, 179, 0, 0),
+                      ),
+                    ],
                   ),
                 ),
               ),

@@ -109,7 +109,10 @@ class DebugInfoPage extends HookConsumerWidget {
                 ),
               ),
               SettingsTile(
-                title: const Text('sharedPreferencesProvder -keys'),
+                title: const Text('sharedPreferencesProvder - keys'),
+                onPressed: (context) {
+                  ref.read(sharedPreferencesProvder).clear();
+                },
                 value: Text(
                   const JsonEncoder.withIndent(' ').convert(
                     ref.watch(sharedPreferencesProvder).getKeys().toList()

@@ -11,6 +11,12 @@ class Region {
         kana: j['kana'].toString(),
       );
 
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'code': code,
+        'name': name,
+        'kana': kana,
+  };
+
   /// 一次細分化地域コード
   final int code;
 

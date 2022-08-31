@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:eqmonitor/provider/logger.dart';
 import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -26,8 +25,7 @@ class IntensityEstimatePage extends HookConsumerWidget {
     final intensityCalc = IntensityEstimateApi();
     final magnitude = useState<double>(8);
     final depth = useState<int>(50);
-    final lat = useState<double>(35);
-    final lon = useState<double>(135);
+    final hypo = useState<LatLng>(LatLng(35, 135));
     final isCollect = useState<bool>(true);
     final intensityCalcResult =
         useState<Map<int, List<EstimatedEarthquakeParameterItem>>>({});
@@ -40,7 +38,7 @@ class IntensityEstimatePage extends HookConsumerWidget {
       final result = intensityCalc.estimateIntensity(
         jmaMagnitude: magnitude.value,
         depth: depth.value.toDouble(),
-        hypocenter: LatLng(lat.value, lon.value),
+        hypocenter: hypo.value,
         obsPoints: ref.watch(parameterEarthquakeProvider).items,
       );
       intensityCalcResult.value =
@@ -51,141 +49,130 @@ class IntensityEstimatePage extends HookConsumerWidget {
     return Scaffold(
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              children: [
-                // マグニチュードの値を入力するテキストフィールド
-                Row(
-                  children: [
-                    const Text('マグニチュード'),
-                    Expanded(
-                      child: Slider.adaptive(
-                        value: magnitude.value,
-                        max: 10,
-                        divisions: 100,
-                        label: 'M ${magnitude.value}',
-                        onChanged: (value) {
-                          magnitude.value =
-                              double.parse(value.toStringAsFixed(1));
-                          calc();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Text('深さ'),
-                    Expanded(
-                      child: Slider.adaptive(
-                        value: depth.value.toDouble(),
-                        max: 200,
-                        divisions: 20,
-                        label: '${depth.value}km',
-                        onChanged: (value) {
-                          depth.value = value.toInt();
-                          calc();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                TextFormField(
-                  autovalidateMode: AutovalidateMode.always,
-                  initialValue: lat.value.toString(),
-                  decoration: const InputDecoration(
-                    labelText: '緯度',
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    try {
-                      LatLng(lat.value, double.tryParse(value) ?? 35);
-                    } catch (e) {
-                      ref.read(loggerProvider).e(e);
-                      isCollect.value = false;
-                      return;
-                    }
-                    lat.value = double.tryParse(value) ?? 35;
-                    calc();
-                  },
-                  validator: (value) {
-                    try {
-                      LatLng(lat.value, lon.value);
-                    } catch (e) {
-                      ref.read(loggerProvider).e(e);
-                      isCollect.value = false;
-                      return '正しいの値を入力してください';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  autovalidateMode: AutovalidateMode.always,
-                  initialValue: lon.value.toString(),
-                  decoration: const InputDecoration(
-                    labelText: '経度',
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    try {
-                      LatLng(double.tryParse(value) ?? 35, lon.value);
-                    } catch (e) {
-                      ref.read(loggerProvider).e(e);
-                      isCollect.value = false;
-                      return;
-                    }
-                    lon.value = double.tryParse(value) ?? 35;
-                    calc();
-                  },
-                  validator: (value) {
-                    try {
-                      LatLng(lat.value, lon.value);
-                    } catch (e) {
-                      ref.read(loggerProvider).e(e);
-                      isCollect.value = false;
-                      return '正しいの値を入力してください';
-                    }
-                    return null;
-                  },
-                )
-              ],
+          ExpansionTile(
+            title: const Text('震源要素'),
+            leading: const Icon(Icons.place),
+            subtitle: Text(
+              '${hypo.value.latitude.toStringAsFixed(3)}, ${hypo.value.longitude.toStringAsFixed(3)}',
             ),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    // マグニチュードの値を入力するテキストフィールド
+                    Row(
+                      children: [
+                        Text('マグニチュード M ${magnitude.value}'),
+                        Expanded(
+                          child: Slider.adaptive(
+                            value: magnitude.value,
+                            max: 10,
+                            divisions: 100,
+                            label: 'M ${magnitude.value}',
+                            onChanged: (value) {
+                              magnitude.value =
+                                  double.parse(value.toStringAsFixed(1));
+                              calc();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text('深さ ${depth.value}km'),
+                        Expanded(
+                          child: Slider.adaptive(
+                            value: depth.value.toDouble(),
+                            max: 200,
+                            divisions: 20,
+                            label: '${depth.value}km',
+                            onChanged: (value) {
+                              depth.value = value.toInt();
+                              calc();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    // 経度
+                    Row(
+                      children: [
+                        Text('経度 ${hypo.value.longitude.toStringAsFixed(1)}'),
+                        Expanded(
+                          child: Slider.adaptive(
+                            value: hypo.value.longitude,
+                            min: 120,
+                            max: 150,
+                            divisions: 300,
+                            label: hypo.value.longitude.toStringAsFixed(1),
+                            onChanged: (value) {
+                              hypo.value = LatLng(hypo.value.latitude, value);
+                              calc();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    // 緯度
+                    Row(
+                      children: [
+                        Text('緯度 ${hypo.value.latitude.toStringAsFixed(1)}'),
+                        Expanded(
+                          child: Slider.adaptive(
+                            value: hypo.value.latitude,
+                            min: 25,
+                            max: 50,
+                            divisions: 250,
+                            label: hypo.value.latitude.toStringAsFixed(1),
+                            onChanged: (value) {
+                              hypo.value = LatLng(value, hypo.value.longitude);
+                              calc();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ), // マップ
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8),
               child: Stack(
                 children: [
-                InteractiveViewer(
-                      transformationController: transformationController,
-                      constrained: false,
-                      maxScale: 10,
-                      child: Stack(
-                        children: [
-                          // マップベース
-                          const BaseMapWidget(),
-                          // 推定した観測点震度
-                          CustomPaint(
-                            painter: EstimatedShindoPainter(
-                              estimatedShindoPointsGroupBy:
-                                  intensityCalcResult.value,
-                                  colors: ref.watch(jmaIntensityColorProvider),
-                              mapPolygons:
-                                  ref.watch(mapAreaForecastLocalEProvider),
-                            ),
-                            size: const Size(476, 927.4),
+                  InteractiveViewer(
+                    transformationController: transformationController,
+                    constrained: false,
+                    maxScale: 10,
+                    child: Stack(
+                      children: [
+                        // マップベース
+                        const BaseMapWidget(),
+                        // 推定した観測点震度
+                        CustomPaint(
+                          painter: EstimatedShindoPainter(
+                            estimatedShindoPointsGroupBy:
+                                intensityCalcResult.value,
+                            colors: ref.watch(jmaIntensityColorProvider),
+                            mapPolygons:
+                                ref.watch(mapAreaForecastLocalEProvider),
                           ),
-                          // EEWの震央位置
-                          CustomPaint(
-                            painter: HypocenterPainterfromLatLng(
-                              hypocenter: LatLng(lat.value, lon.value),
-                            ),
-                            size: const Size(476, 927.4),
+                          size: const Size(476, 927.4),
+                        ),
+                        // EEWの震央位置
+                        CustomPaint(
+                          painter: HypocenterPainterfromLatLng(
+                            hypocenter: hypo.value,
                           ),
-                        ],
-                      ),
+                          size: const Size(476, 927.4),
+                        ),
+                      ],
                     ),
+                  ),
                   // 凡例
                   Align(
                     alignment: Alignment.bottomLeft,
