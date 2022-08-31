@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 
 import '../../const/kmoni/jma_intensity.dart';
 import '../../schema/dmdata/parameter-earthquake/parameter-earthquake.dart';
+import '../../utils/math_log.dart';
 
 /// ## 距離減衰式による震度計算
 /// ref: https://qiita.com/soshi1822/items/f5fd9ccf6830d834abc4
@@ -102,6 +103,3 @@ class EstimatedEarthquakeParameterItem extends ParameterEarthquakeItem {
   final double estimatedIntensity;
   final JmaIntensity estimatedJmaIntensity;
 }
-
-double logBase(num x, num base) => math.log(x) / math.log(base);
-double log10(num x) => math.log(x) / math.ln10;

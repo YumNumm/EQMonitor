@@ -1,13 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../schema/setting/change_log.dart';
 import '../init/dio.dart';
 
 final changeLogProvider = FutureProvider<ChangeLog>((ref) async {
-  final res = await ref.read(dioProvider).get<Map<String,dynamic>>(
+  final res = await ref.read(dioProvider).get(
         'https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/changelog.json',
       );
-  return ChangeLog.fromJson(res.data as Map<String, dynamic>);
+  return ChangeLog.fromJson(json.decode(res.data));
 });
 
 final changeLogMockProvider = FutureProvider<ChangeLog>((ref) async {
@@ -17,7 +19,7 @@ final changeLogMockProvider = FutureProvider<ChangeLog>((ref) async {
         version: '1.0.0',
         buildId: 1000,
         isBreakingChange: true,
-        comment: '',
+        comment: '#新機能\n - これはテストバージョン',
         date: DateTime.now(),
         url:
             'https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/changelog.json',
