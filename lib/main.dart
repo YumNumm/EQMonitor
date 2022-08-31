@@ -44,107 +44,104 @@ import 'firebase_options.dart';
 import 'page/main_page.dart';
 
 Future<void> main() async {
-  await runZonedGuarded<Future<void>>(
-    () async {
-      final stopwatch = Stopwatch()..start();
-      FlutterNativeSplash.preserve(
-        widgetsBinding: WidgetsFlutterBinding.ensureInitialized(),
-      );
-
-      SystemChrome.setSystemUIOverlayStyle(
-        const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent, // transparent status bar
-        ),
-      );
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
-      Intl.defaultLocale = 'ja_JP';
-      final crashlytics = FirebaseCrashlytics.instance;
-      final deviceInfo = await DeviceInfoPlugin().androidInfo;
-      late List<KyoshinKansokuten> kansokuten;
-      late List<MapPolygon> mapAreaForecastLocalE;
-      late ParameterEarthquake parameterEarthquake;
-      late List<TravelTimeTable> travelTimeTable;
-      late SharedPreferences prefs;
-      late Directory dir;
-      late Isar isar;
-      late AndroidDeviceInfo androidDeviceInfo;
-      late IosDeviceInfo iosDeviceInfo;
-
-      final futures = <Future<dynamic>>[
-        loadKyoshinKansokuten().then((e) => kansokuten = e),
-        loadMapAreaForecastLocalE().then((e) => mapAreaForecastLocalE = e),
-        loadParameterEarthquake().then((e) => parameterEarthquake = e),
-        loadTravelTimeTable().then((e) => travelTimeTable = e),
-        SharedPreferences.getInstance().then((e) => prefs = e),
-        getApplicationSupportDirectory().then((e) => dir = e),
-        Supabase.initialize(
-          url: supabaseS1Url,
-          anonKey: supabaseS1AnonKey,
-          debug: false,
-        ),
-        initFirebaseCloudMessaging(),
-        crashlytics.sendUnsentReports(),
-        if (Platform.isAndroid)
-          DeviceInfoPlugin().androidInfo.then((e) => androidDeviceInfo = e),
-        if (Platform.isIOS)
-          DeviceInfoPlugin().iosInfo.then((e) => iosDeviceInfo = e),
-      ];
-      await Future.wait(futures);
-      final isCrashLogShareAllowed =
-          await CrashLogShareProvider(prefs).loadSettingsFromSharedPrefrences();
-      final isDeveloper = prefs.getBool('isDeveloperMode') ?? false;
-      await crashlytics.setCrashlyticsCollectionEnabled(
-        isCrashLogShareAllowed && kReleaseMode,
-      );
-
-      //isar = await Isar.open([], directory: dir.path);
-      FlutterNativeSplash.remove();
-      Logger()
-          .d('全ての初期化が完了: ${(stopwatch..stop()).elapsedMicroseconds / 1000}ms');
-      Logger().wtf(DateTime.now().toIso8601String());
-      FlutterError.onError = onFlutterError;
-      runApp(
-        ProviderScope(
-          overrides: [
-            TravelTimeProvider.overrideWithValue(travelTimeTable),
-            kyoshinKansokutenProvider.overrideWithValue(kansokuten),
-            mapAreaForecastLocalEProvider
-                .overrideWithValue(mapAreaForecastLocalE),
-            parameterEarthquakeProvider.overrideWithValue(parameterEarthquake),
-            sharedPreferencesProvder.overrideWithValue(prefs),
-            secureStorageProvider.overrideWithValue(
-              const FlutterSecureStorage(
-                aOptions: AndroidOptions(
-                  encryptedSharedPreferences: true,
-                  resetOnError: true,
-                ),
-              ),
-            ),
-            applicationSupportDirectoryProvider.overrideWithValue(dir),
-            if (Platform.isAndroid)
-              androidDeviceInfoProvider.overrideWithValue(androidDeviceInfo),
-            if (Platform.isIOS)
-              iOSDeviceInfoProvider.overrideWithValue(iosDeviceInfo),
-            if (kDebugMode)
-              changeLogProvider.overrideWithProvider(changeLogMockProvider),
-          ],
-          observers: const [
-            //if (kDebugMode) ProvidersLogger(),
-          ],
-          child: const MyApp(),
-        ),
-      );
-      FlutterNativeSplash.remove();
-    },
-    (error, stack) async {
-      Logger().wtf('Error: $error');
-      Logger().wtf('Stack: $stack');
-      await FirebaseCrashlytics.instance.recordError(error, stack);
-    },
+  final stopwatch = Stopwatch()..start();
+  FlutterNativeSplash.preserve(
+    widgetsBinding: WidgetsFlutterBinding.ensureInitialized(),
   );
-  // スプラッシュ画面を表示
+
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent, // transparent status bar
+    ),
+  );
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  Intl.defaultLocale = 'ja_JP';
+  final crashlytics = FirebaseCrashlytics.instance;
+  final deviceInfo = await DeviceInfoPlugin().androidInfo;
+  late List<KyoshinKansokuten> kansokuten;
+  late List<MapPolygon> mapAreaForecastLocalE;
+  late ParameterEarthquake parameterEarthquake;
+  late List<TravelTimeTable> travelTimeTable;
+  late SharedPreferences prefs;
+  late Directory dir;
+  late Isar isar;
+  late AndroidDeviceInfo androidDeviceInfo;
+  late IosDeviceInfo iosDeviceInfo;
+
+  final futures = <Future<dynamic>>[
+    loadKyoshinKansokuten().then((e) => kansokuten = e),
+    loadMapAreaForecastLocalE().then((e) => mapAreaForecastLocalE = e),
+    loadParameterEarthquake().then((e) => parameterEarthquake = e),
+    loadTravelTimeTable().then((e) => travelTimeTable = e),
+    SharedPreferences.getInstance().then((e) => prefs = e),
+    getApplicationSupportDirectory().then((e) => dir = e),
+    Supabase.initialize(
+      url: supabaseS1Url,
+      anonKey: supabaseS1AnonKey,
+      debug: false,
+    ),
+    initFirebaseCloudMessaging(),
+    crashlytics.sendUnsentReports(),
+    if (Platform.isAndroid)
+      DeviceInfoPlugin().androidInfo.then((e) => androidDeviceInfo = e),
+    if (Platform.isIOS)
+      DeviceInfoPlugin().iosInfo.then((e) => iosDeviceInfo = e),
+  ];
+  await Future.wait(futures);
+  final isCrashLogShareAllowed =
+      await CrashLogShareProvider(prefs).loadSettingsFromSharedPrefrences();
+  final isDeveloper = prefs.getBool('isDeveloperMode') ?? false;
+  await crashlytics.setUserIdentifier(
+    deviceInfo.fingerprint ?? deviceInfo.board ?? 'Unknown',
+  );
+  await crashlytics.setCrashlyticsCollectionEnabled(
+    isCrashLogShareAllowed && kReleaseMode,
+  );
+
+  //isar = await Isar.open([], directory: dir.path);
+  FlutterNativeSplash.remove();
+  Logger().d('全ての初期化が完了: ${(stopwatch..stop()).elapsedMicroseconds / 1000}ms');
+  Logger().wtf(DateTime.now().toIso8601String());
+  FlutterError.onError = onFlutterError;
+
+  PlatformDispatcher.instance.onError = (error, stackTrace) {
+    Logger().e(error, stackTrace);
+    crashlytics.recordError(error, stackTrace);
+    return true;
+  };
+  runApp(
+    ProviderScope(
+      overrides: [
+        TravelTimeProvider.overrideWithValue(travelTimeTable),
+        kyoshinKansokutenProvider.overrideWithValue(kansokuten),
+        mapAreaForecastLocalEProvider.overrideWithValue(mapAreaForecastLocalE),
+        parameterEarthquakeProvider.overrideWithValue(parameterEarthquake),
+        sharedPreferencesProvder.overrideWithValue(prefs),
+        secureStorageProvider.overrideWithValue(
+          const FlutterSecureStorage(
+            aOptions: AndroidOptions(
+              encryptedSharedPreferences: true,
+              resetOnError: true,
+            ),
+          ),
+        ),
+        applicationSupportDirectoryProvider.overrideWithValue(dir),
+        if (Platform.isAndroid)
+          androidDeviceInfoProvider.overrideWithValue(androidDeviceInfo),
+        if (Platform.isIOS)
+          iOSDeviceInfoProvider.overrideWithValue(iosDeviceInfo),
+        // if (kDebugMode)
+        //   changeLogProvider.overrideWithProvider(changeLogMockProvider),
+      ],
+      observers: const [
+        //if (kDebugMode) ProvidersLogger(),
+      ],
+      child: const MyApp(),
+    ),
+  );
+  FlutterNativeSplash.remove();
 }
 
 Future<void> onFlutterError(FlutterErrorDetails details) async {
@@ -177,12 +174,17 @@ class MyApp extends ConsumerWidget {
         Locale('ja', 'JP'),
       ],
       useInheritedMediaQuery: true,
-      builder: DevicePreview.appBuilder,
-      // home: const Banner(
-      //   message: 'DEVELOP',
-      //   location: BannerLocation.bottomStart,
-      //   child: MainPage(),
-      // ),
+      builder: (context, widget) {
+        Widget error = const Text('...rendering error...');
+        if (widget is Scaffold || widget is Navigator) {
+          error = Scaffold(body: Center(child: error));
+        }
+        ErrorWidget.builder = (errorDetails) => error;
+        if (widget != null) {
+          return widget;
+        }
+        throw Exception('widget is null');
+      },
       home: (ref.read(sharedPreferencesProvder).getBool('isInitializated') ??
               false)
           ? const MainPage()
