@@ -41,10 +41,26 @@ class UpdaterButtonWidget extends HookConsumerWidget {
                             data: (data) => AlertDialog(
                               title: const Text('アップデート情報'),
                               content: SizedBox(
-                                width: 50,
-                                child: Markdown(
-                                  data: data.items.first.comment,
-                                  shrinkWrap: true,
+                                width: 0,
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        data.items.first.version,
+                                        style: const TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const Divider(),
+                                      Markdown(
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        data: data.items.first.comment,
+                                        shrinkWrap: true,
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                               actions: [

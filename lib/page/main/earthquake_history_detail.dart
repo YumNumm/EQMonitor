@@ -107,15 +107,14 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
         children: <Widget>[
           DecoratedBox(
             decoration: BoxDecoration(
-              color: (maxInt != JmaIntensity.Int1)
-                  ? maxInt.fromUser(colors).withOpacity(0.3)
-                  : null,
+              color: maxInt.fromUser(colors).withOpacity(0.3),
             ),
             child: ListTile(
               leading: IntensityWidget(
-                  intensity: maxInt,
-                  size: 42,
-                ),
+                intensity: maxInt,
+                opacity: 1,
+                size: 42,
+              ),
               enableFeedback: true,
               title: Text(
                 component?.hypoCenter.name ?? '震源調査中',

@@ -4,6 +4,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:crypto/crypto.dart';
 import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
 import 'package:eqmonitor/provider/kmoni_controller.dart';
+import 'package:eqmonitor/provider/package_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -29,6 +30,17 @@ class AboutAppPage extends HookConsumerWidget {
       body: SettingsList(
         sections: [
           SettingsSection(
+            title: ref.watch(packageInfoProvider).when<Widget>(
+                  loading: () => const Text('Loading...'),
+                  error: (error, stackTrace) => Text('Error: $error'),
+                  data: (data) => Text(
+                    '${data.appName} ${data.version} (${data.buildNumber})',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
             tiles: <SettingsTile>[
               SettingsTile(
                 title: InkWell(

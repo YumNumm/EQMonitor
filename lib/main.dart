@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_Logger().wtf
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -18,7 +19,6 @@ import 'package:eqmonitor/provider/init/parameter-earthquake.dart';
 import 'package:eqmonitor/provider/init/secure_storage.dart';
 import 'package:eqmonitor/provider/init/shared_preferences.dart';
 import 'package:eqmonitor/provider/init/travel_time.dart';
-import 'package:eqmonitor/provider/setting/change_log.dart';
 import 'package:eqmonitor/provider/setting/crash_log_share.dart';
 import 'package:eqmonitor/provider/theme_providers.dart';
 import 'package:eqmonitor/res/theme.dart';
@@ -62,18 +62,17 @@ Future<void> main() async {
   final deviceInfo = await DeviceInfoPlugin().androidInfo;
   late List<KyoshinKansokuten> kansokuten;
   late List<MapPolygon> mapAreaForecastLocalE;
-  late ParameterEarthquake parameterEarthquake;
   late List<TravelTimeTable> travelTimeTable;
   late SharedPreferences prefs;
   late Directory dir;
   late Isar isar;
   late AndroidDeviceInfo androidDeviceInfo;
   late IosDeviceInfo iosDeviceInfo;
+  ParameterEarthquake? parameterEarthquake;
 
   final futures = <Future<dynamic>>[
     loadKyoshinKansokuten().then((e) => kansokuten = e),
     loadMapAreaForecastLocalE().then((e) => mapAreaForecastLocalE = e),
-    loadParameterEarthquake().then((e) => parameterEarthquake = e),
     loadTravelTimeTable().then((e) => travelTimeTable = e),
     SharedPreferences.getInstance().then((e) => prefs = e),
     getApplicationSupportDirectory().then((e) => dir = e),
@@ -100,6 +99,14 @@ Future<void> main() async {
     isCrashLogShareAllowed && kReleaseMode,
   );
 
+  if (File('${dir.path}/parameter-earthquake-with-arv.json').existsSync()) {
+    final paramData = json.decode(
+      await File('${dir.path}/parameter-earthquake-with-arv.json')
+          .readAsString(),
+    );
+    parameterEarthquake = ParameterEarthquake.fromJson(paramData);
+  }
+
   //isar = await Isar.open([], directory: dir.path);
   FlutterNativeSplash.remove();
   Logger().d('全ての初期化が完了: ${(stopwatch..stop()).elapsedMicroseconds / 1000}ms');
@@ -117,7 +124,8 @@ Future<void> main() async {
         TravelTimeProvider.overrideWithValue(travelTimeTable),
         kyoshinKansokutenProvider.overrideWithValue(kansokuten),
         mapAreaForecastLocalEProvider.overrideWithValue(mapAreaForecastLocalE),
-        parameterEarthquakeProvider.overrideWithValue(parameterEarthquake),
+        if (parameterEarthquake != null)
+          parameterEarthquakeProvider.overrideWithValue(parameterEarthquake),
         sharedPreferencesProvder.overrideWithValue(prefs),
         secureStorageProvider.overrideWithValue(
           const FlutterSecureStorage(

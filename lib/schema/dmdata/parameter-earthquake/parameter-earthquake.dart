@@ -10,6 +10,34 @@ class ParameterEarthquake {
     required this.version,
     required this.items,
   });
+  
+  factory ParameterEarthquake.fromTwoJson(
+    Map<String, dynamic> param,
+    Map<String, dynamic> paramArv,
+  ) {
+    final items = <ParameterEarthquakeItem>[];
+    final paramItems = param['items'] as List<dynamic>;
+    final paramArvItems = paramArv['items'] as List<dynamic>;
+    for (final item in paramItems) {
+      final arv = double.parse(
+        (paramArvItems.firstWhere(
+          (e) => item['id'] == e['id'],
+          orElse: () => {'arv': '0'},
+        ))['arv'],
+      );
+      items.add(
+        ParameterEarthquakeItem.fromJsonWithArv(item, arv),
+      );
+    }
+    return ParameterEarthquake(
+      responseId: param['responseId'].toString(),
+      responseTime: DateTime.parse(param['responseTime'].toString()),
+      status: param['status'].toString(),
+      changeTime: DateTime.parse(param['changeTime'].toString()),
+      version: param['version'].toString(),
+      items: items,
+    );
+  }
 
   factory ParameterEarthquake.fromJson(Map<String, dynamic> j) =>
       ParameterEarthquake(
@@ -26,33 +54,14 @@ class ParameterEarthquake {
         ),
       );
 
-  factory ParameterEarthquake.fromTwoJson(
-    Map<String, dynamic> param,
-    Map<String, dynamic> paramArv,
-  ) {
-    final items = <ParameterEarthquakeItem>[];
-    final paramItems = param['items'] as List<Map<String, dynamic>>;
-    final paramArvItems = paramArv['items'] as List<Map<String, dynamic>>;
-    for (final item in paramItems) {
-      final arv = double.parse(
-        (paramArvItems.firstWhere(
-          (e) => item['id'] == e['id'],
-          orElse: () => {'arv': '0'},
-        ))['arv'],
-      );
-      items.add(
-        ParameterEarthquakeItem.fromJsonWithArv(param, arv),
-      );
-    }
-    return ParameterEarthquake(
-      responseId: param['responseId'].toString(),
-      responseTime: DateTime.parse(param['responseTime'].toString()),
-      status: param['status'].toString(),
-      changeTime: DateTime.parse(param['changeTime'].toString()),
-      version: param['version'].toString(),
-      items: items,
-    );
-  }
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'responseId': responseId,
+        'responseTime': responseTime.toIso8601String(),
+        'status': status,
+        'changeTime': changeTime.toIso8601String(),
+        'version': version,
+        'items': items.map((e) => e),
+      };
 
   final String responseId;
   final DateTime responseTime;
@@ -76,22 +85,6 @@ class ParameterEarthquakeItem {
     required this.longitude,
     required this.arv,
   });
-
-  factory ParameterEarthquakeItem.fromJson(Map<String, dynamic> j) =>
-      ParameterEarthquakeItem(
-        region: Region.fromJson(j['region']),
-        city: City.fromJson(j['city']),
-        noCode: int.parse(j['noCode'].toString()),
-        code: int.parse(j['code'].toString()),
-        name: j['name'].toString(),
-        kana: j['kana'].toString(),
-        status: j['status'].toString(),
-        owner: j['owner'].toString(),
-        latitude: double.parse(j['latitude'].toString()),
-        longitude: double.parse(j['longitude'].toString()),
-        arv: double.parse(j['arv'].toString()),
-      );
-
   factory ParameterEarthquakeItem.fromJsonWithArv(
     Map<String, dynamic> param,
     double arv,
@@ -110,6 +103,35 @@ class ParameterEarthquakeItem {
       arv: arv,
     );
   }
+
+  factory ParameterEarthquakeItem.fromJson(Map<String, dynamic> j) =>
+      ParameterEarthquakeItem(
+        region: Region.fromJson(j['region']),
+        city: City.fromJson(j['city']),
+        noCode: int.parse(j['noCode'].toString()),
+        code: int.parse(j['code'].toString()),
+        name: j['name'].toString(),
+        kana: j['kana'].toString(),
+        status: j['status'].toString(),
+        owner: j['owner'].toString(),
+        latitude: double.parse(j['latitude'].toString()),
+        longitude: double.parse(j['longitude'].toString()),
+        arv: double.parse(j['arv'].toString()),
+      );
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'region': region.toJson(),
+        'city': city.toJson(),
+        'noCode': noCode,
+        'code': code,
+        'name': name,
+        'kana': kana,
+        'status': status,
+        'owner': owner,
+        'latitude': latitude,
+        'longitude': longitude,
+        'arv': arv,
+      };
 
   final Region region;
   final City city;
