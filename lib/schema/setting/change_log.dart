@@ -5,8 +5,9 @@ class ChangeLog {
 
   factory ChangeLog.fromJson(Map<String, dynamic> json) => ChangeLog(
         items: List<ChangeLogItem>.from(
-          (json['items'] as List<Map<String, dynamic>>)
-              .map(ChangeLogItem.fromJson),
+          (json['items'] as List).map((e) {
+            return ChangeLogItem.fromJson(e as Map<String, dynamic>);
+          }),
         ),
       );
 
@@ -22,7 +23,7 @@ class ChangeLogItem {
     required this.url,
     required this.buildId,
   });
-  
+
   factory ChangeLogItem.fromJson(Map<String, dynamic> json) => ChangeLogItem(
         isBreakingChange: json['isBreakingChange'],
         version: json['version'],

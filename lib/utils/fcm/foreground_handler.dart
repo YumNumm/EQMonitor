@@ -12,7 +12,9 @@ Future<void> firebaseMessagingForegroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   final deviceInfo = await DeviceInfoPlugin().androidInfo;
   final crashlytics = FirebaseCrashlytics.instance;
-  await crashlytics.setUserIdentifier(deviceInfo.androidId.toString());
+  await crashlytics.setUserIdentifier(
+    deviceInfo.fingerprint ?? deviceInfo.board ?? 'Unknown',
+  );
   await crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode);
   FlutterError.onError = (details) async {
     FlutterError.dumpErrorToConsole(details);

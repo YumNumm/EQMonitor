@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../provider/logger.dart';
 import '../provider/package_info.dart';
@@ -24,8 +26,8 @@ class UpdaterButtonWidget extends HookConsumerWidget {
                 loading: () => const SizedBox.shrink(),
                 data: (packageInfo) {
                   if ((int.parse(packageInfo.buildNumber) <
-                          changeLog.items.first.buildId) &&
-                      changeLog.items.first.isBreakingChange) {
+                          changeLog.items.first.buildId) ||
+                      kDebugMode) {
                     return TextButton.icon(
                       onPressed: () async {
                         final changeLog = ref.read(changeLogProvider);
@@ -38,11 +40,25 @@ class UpdaterButtonWidget extends HookConsumerWidget {
                             loading: () => const SizedBox.shrink(),
                             data: (data) => AlertDialog(
                               title: const Text('アップデート情報'),
-                              content: Markdown(
-                                data: data.items.first.comment,
-                                shrinkWrap: true,
+                              content: SizedBox(
+                                width: 50,
+                                child: Markdown(
+                                  data: data.items.first.comment,
+                                  shrinkWrap: true,
+                                ),
                               ),
                               actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    launchUrlString(
+                                      data.items.first.url,
+                                      mode: LaunchMode
+                                          .externalNonBrowserApplication,
+                                    );
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('ダウンロード'),
+                                ),
                                 TextButton(
                                   onPressed: () => Navigator.of(context).pop(),
                                   child: const Text('OK'),

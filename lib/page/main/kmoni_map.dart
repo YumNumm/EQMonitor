@@ -99,7 +99,7 @@ class KmoniMap extends HookConsumerWidget {
                   ' TEST ',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(100, 0, 0, 0),
+                    color: Color.fromARGB(132, 255, 0, 0),
                     fontSize: 200,
                   ),
                 ),
