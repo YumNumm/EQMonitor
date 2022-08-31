@@ -13,7 +13,9 @@ class SupabaseHttpsClientWithDioAndFirebase implements Client {
     ..options.connectTimeout = 5000
     ..interceptors.add(DioFirebasePerformanceInterceptor())
     ..httpClientAdapter = Http2Adapter(
-      ConnectionManager(),
+      ConnectionManager(
+        onClientCreate: (_, config) => config.onBadCertificate = (_) => true,
+      ),
     );
 
   @override
