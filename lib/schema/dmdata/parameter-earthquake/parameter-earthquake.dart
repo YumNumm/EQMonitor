@@ -10,7 +10,7 @@ class ParameterEarthquake {
     required this.version,
     required this.items,
   });
-  
+
   factory ParameterEarthquake.fromTwoJson(
     Map<String, dynamic> param,
     Map<String, dynamic> paramArv,
@@ -60,7 +60,7 @@ class ParameterEarthquake {
         'status': status,
         'changeTime': changeTime.toIso8601String(),
         'version': version,
-        'items': items.map((e) => e),
+        'items': items.map((e) => e.toJson()).toList(),
       };
 
   final String responseId;
