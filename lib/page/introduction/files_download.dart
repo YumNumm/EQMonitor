@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -80,7 +79,8 @@ class FilesDownloadWidget extends HookConsumerWidget {
                       json.decode(param),
                       json.decode(arv),
                     );
-                    log(json.encode(data.toJson()));
+                    final output = data.toJson();
+
                     await File(
                       '${ref.read(applicationSupportDirectoryProvider).path}/parameter-earthquake-with-arv.json',
                     ).writeAsString(json.encode(data));
@@ -140,6 +140,21 @@ class FilesDownloadWidget extends HookConsumerWidget {
                     );
                     downloadingStatus.value = 'ファイル2/2のダウンロード完了... ';
                     // Merge処理
+                    final param = await File(
+                      '${ref.read(applicationSupportDirectoryProvider).path}/parameter-earthquake.json',
+                    ).readAsString();
+                    final arv = await File(
+                      '${ref.read(applicationSupportDirectoryProvider).path}/arv.json',
+                    ).readAsString();
+                    final data = ParameterEarthquake.fromTwoJson(
+                      json.decode(param),
+                      json.decode(arv),
+                    );
+                    final output = data.toJson();
+
+                    await File(
+                      '${ref.read(applicationSupportDirectoryProvider).path}/parameter-earthquake-with-arv.json',
+                    ).writeAsString(json.encode(data));
 
                     isFinished.value = true;
                     isDownloading.value = false;
@@ -148,6 +163,11 @@ class FilesDownloadWidget extends HookConsumerWidget {
                         '${e.message}\n'
                         '${e.response?.data}';
                     ref.read(loggerProvider).wtf(e.response?.data);
+                    showRetry.value = true;
+                  } on Error catch (e) {
+                    downloadingStatus.value = 'エラーが発生しました。\n'
+                        '$e';
+                    ref.read(loggerProvider).wtf(e);
                     showRetry.value = true;
                   }
                 },
