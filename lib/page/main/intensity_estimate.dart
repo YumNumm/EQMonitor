@@ -53,7 +53,7 @@ class IntensityEstimatePage extends HookConsumerWidget {
             title: const Text('震源要素'),
             leading: const Icon(Icons.place),
             subtitle: Text(
-              '${hypo.value.latitude.toStringAsFixed(3)}, ${hypo.value.longitude.toStringAsFixed(3)}',
+              '${hypo.value.longitude.toStringAsFixed(1)}, ${hypo.value.latitude.toStringAsFixed(1)}, 深さ: ${depth.value}km M${magnitude.value}',
             ),
             children: [
               Padding(

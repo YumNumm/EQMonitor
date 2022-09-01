@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 import '../../const/kmoni/jma_intensity.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 part 'notification_settings_model.freezed.dart';
 part 'notification_settings_model.g.dart';
