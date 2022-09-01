@@ -1,3 +1,4 @@
+/* groovylint-disable DuplicateNumberLiteral, DuplicateStringLiteral, NoDef */
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -90,15 +91,15 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:multidex:1.0.3'
     // Import the BoM for the Firebase platform
-    implementation platform('com.google.firebase:firebase-bom:28.4.2')
+    implementation platform('com.google.firebase:firebase-bom:30.3.2')
 
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-perf'
     implementation 'com.google.firebase:firebase-messaging'
-    implementation 'com.google.android.material:material:1.7.0-alpha01'
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.work:work-runtime-ktx:2.7.0'
+    implementation 'com.google.android.material:material:1.7.0-rc01'
+    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.work:work-runtime-ktx:2.8.0-alpha03'
 }
 
 apply plugin: 'com.google.firebase.crashlytics'

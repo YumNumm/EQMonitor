@@ -134,6 +134,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "cli_util",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/cli_util-0.3.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "clock",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/clock-1.1.1",
       "packageUri": "lib/",
@@ -411,7 +417,7 @@
     },
     {
       "name": "firebase_messaging",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_messaging-12.0.3",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_messaging-13.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
@@ -453,9 +459,15 @@
     },
     {
       "name": "flex_color_scheme",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flex_color_scheme-5.1.0",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flex_color_scheme-6.0.0",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "flex_seed_scheme",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flex_seed_scheme-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
     },
     {
       "name": "flutter",
@@ -477,7 +489,7 @@
     },
     {
       "name": "flutter_launcher_icons",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_launcher_icons-0.9.3",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_launcher_icons-0.10.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -513,7 +525,7 @@
     },
     {
       "name": "flutter_secure_storage",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_secure_storage-5.1.2",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_secure_storage-6.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -1394,7 +1406,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-08-31T14:14:48.099172Z",
+  "generated": "2022-09-01T15:42:43.321142Z",
   "generator": "pub",
   "generatorVersion": "2.18.0"
 }
