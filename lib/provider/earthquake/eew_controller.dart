@@ -59,7 +59,7 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
   Future<void> startEewStreaming() async {
     // EEW STREAMを開始する
     final subscription =
-        state.supabase.from('eew').on(SupabaseEventTypes.insert, (payload) {
+        state.supabase.from('eew').on(SupabaseEventTypes.all, (payload) async{
       logger.i('EEW STREAM: ${payload.newRecord}', payload.commitTimestamp);
       if (payload.newRecord == null) {
         return;

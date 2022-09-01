@@ -3,9 +3,7 @@
 import 'dart:ui';
 
 import 'package:eqmonitor/model/setting/jma_intensity_color_model.dart';
-import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// 気象庁震度階級 + α
 // ignore_for_file: constant_identifier_names, always_put_control_body_on_new_line, file_names, avoid_classes_with_only_static_members

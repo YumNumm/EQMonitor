@@ -45,7 +45,6 @@ class FilesDownloadWidget extends HookConsumerWidget {
                       'https://api.dmdata.jp/v2/parameter/earthquake/station',
                       '${ref.read(applicationSupportDirectoryProvider).path}/parameter-earthquake.json',
                       onReceiveProgress: (received, total) {
-                        print('$received/$total');
                         downloadingStatus.value =
                             'ファイル1/2をダウンロード中... (${received / 1024}KB)';
                       },
@@ -62,7 +61,6 @@ class FilesDownloadWidget extends HookConsumerWidget {
                       'https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/public/arv.json',
                       '${ref.read(applicationSupportDirectoryProvider).path}/arv.json',
                       onReceiveProgress: (received, total) {
-                        print('$received/$total');
                         downloadingStatus.value =
                             'ファイル2/2をダウンロード中... (${received / 1024}KB)';
                       },
@@ -79,8 +77,6 @@ class FilesDownloadWidget extends HookConsumerWidget {
                       json.decode(param),
                       json.decode(arv),
                     );
-                    final output = data.toJson();
-
                     await File(
                       '${ref.read(applicationSupportDirectoryProvider).path}/parameter-earthquake-with-arv.json',
                     ).writeAsString(json.encode(data));
@@ -116,7 +112,6 @@ class FilesDownloadWidget extends HookConsumerWidget {
                       'https://api.dmdata.jp/v2/parameter/earthquake/station',
                       '${ref.read(applicationSupportDirectoryProvider).path}/parameter-earthquake.json',
                       onReceiveProgress: (received, total) {
-                        print('$received/$total');
                         downloadingStatus.value =
                             'ファイル1/2をダウンロード中... (${received / 1024}KB)';
                       },
@@ -133,7 +128,6 @@ class FilesDownloadWidget extends HookConsumerWidget {
                       'https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/public/arv.json',
                       '${ref.read(applicationSupportDirectoryProvider).path}/arv.json',
                       onReceiveProgress: (received, total) {
-                        print('$received/$total');
                         downloadingStatus.value =
                             'ファイル2/2をダウンロード中... (${received / 1024}KB)';
                       },
@@ -150,8 +144,6 @@ class FilesDownloadWidget extends HookConsumerWidget {
                       json.decode(param),
                       json.decode(arv),
                     );
-                    final output = data.toJson();
-
                     await File(
                       '${ref.read(applicationSupportDirectoryProvider).path}/parameter-earthquake-with-arv.json',
                     ).writeAsString(json.encode(data));

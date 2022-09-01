@@ -91,7 +91,6 @@ Future<void> main() async {
   await Future.wait(futures);
   final isCrashLogShareAllowed =
       await CrashLogShareProvider(prefs).loadSettingsFromSharedPrefrences();
-  final isDeveloper = prefs.getBool('isDeveloperMode') ?? false;
   await crashlytics.setUserIdentifier(
     deviceInfo.fingerprint ?? deviceInfo.board ?? 'Unknown',
   );
