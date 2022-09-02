@@ -32,7 +32,7 @@ Future<void> initFirebaseCloudMessaging() async {
   // FCM Tokenを取得
   final token = await messaging.getToken();
   if (token != null) {
-    logger.d('FCM Token: $token');
+    print('FCM Token: $token');
   }
   Future<void> subscribe() async {
     // TopicをSubscribe
