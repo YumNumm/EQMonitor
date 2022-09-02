@@ -62,7 +62,6 @@ class KmoniProvider extends StateNotifier<KmoniModel> {
     }
     // バックグラウンドの場合処理しない
     if (ref.read(appLifecycleProvider) == AppLifecycleState.paused) {
-      print('_onTimer: paused');
       return;
     }
     // テストケースの場合の処理

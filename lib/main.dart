@@ -112,11 +112,11 @@ Future<void> main() async {
   Logger().wtf(DateTime.now().toIso8601String());
   FlutterError.onError = onFlutterError;
 
-  PlatformDispatcher.instance.onError = (error, stackTrace) {
-    Logger().e(error, stackTrace);
-    crashlytics.recordError(error, stackTrace);
-    return true;
-  };
+ // PlatformDispatcher.instance.onError = (error, stackTrace) {
+ //   Logger().e(error, stackTrace);
+ //   crashlytics.recordError(error, stackTrace);
+ //   return true;
+ // }; 
   runApp(
     ProviderScope(
       overrides: [
