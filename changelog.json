@@ -3,7 +3,7 @@
     {
       "isBreakingChange": false,
       "buildId": 302,
-      "version": "V0.5.0",
+      "version": "V0.5.1",
       "date": "2022-09-02T14:55:00.000000",
       "comment": "- アプリケーションがバックグラウンド状態の時に通知を受信できない問題を解消しました\n- 軽微なUIの変更を行いました",
       "url": "https://github.com/EQMonitor/EQMonitor/releases/tag/v0.5.1-beta"
