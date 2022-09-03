@@ -1,3 +1,4 @@
+import 'package:eqmonitor/page/setting/notification_setting.dart';
 import 'package:eqmonitor/provider/setting/developer_mode.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,18 +12,18 @@ import '../setting/design_settings.dart';
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
   @override
-  Widget build(BuildContext context,WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SettingsList(
       sections: [
         SettingsSection(
           tiles: <SettingsTile>[
             SettingsTile.navigation(
-              leading: const Icon(Icons.info),
-              title: const Text('アプリ情報'),
+              leading: const Icon(Icons.notifications),
+              title: const Text('通知設定'),
               onPressed: (context) => Navigator.push(
                 context,
                 MaterialPageRoute<void>(
-                  builder: (context) => const AboutAppPage(),
+                  builder: (context) => const NotificationSettingPage(),
                 ),
               ),
             ),
@@ -36,7 +37,17 @@ class SettingsPage extends ConsumerWidget {
                 ),
               ),
             ),
-            if (kDebugMode ||  ref.watch(developerModeProvider).isDeveloper )
+            SettingsTile.navigation(
+              leading: const Icon(Icons.info),
+              title: const Text('アプリ情報'),
+              onPressed: (context) => Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (context) => const AboutAppPage(),
+                ),
+              ),
+            ),
+            if (kDebugMode || ref.watch(developerModeProvider).isDeveloper)
               SettingsTile.navigation(
                 leading: const Icon(Icons.bug_report),
                 title: const Text('デバッグ情報'),

@@ -2,30 +2,21 @@
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:eqmonitor/model/setting/notification_settings_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> firebaseMessagingForegroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  final deviceInfo = await DeviceInfoPlugin().androidInfo;
-  final crashlytics = FirebaseCrashlytics.instance;
-  await crashlytics.setUserIdentifier(
-    deviceInfo.fingerprint ?? deviceInfo.board ?? 'Unknown',
-  );
-  await crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode);
-  FlutterError.onError = (details) async {
-    FlutterError.dumpErrorToConsole(details);
-    await FirebaseCrashlytics.instance.recordFlutterError(details);
-  };
-
   await AwesomeNotifications().createNotificationFromJsonData(message.data);
-  if (message.data['payload'] != null) {}
-  final flutterTts = FlutterTts();
-  await flutterTts.setLanguage('ja-JP');
-  if (message.data['tts'] != null) {
+  final prefs = await SharedPreferences.getInstance();
+
+  if (message.data['tts'] != null && NotificationSettingsModel.load(prefs).useTts) {
+      final flutterTts = FlutterTts();
+    await flutterTts.setLanguage('ja-JP');
     await flutterTts.speak(message.data['tts'].toString());
   }
 }

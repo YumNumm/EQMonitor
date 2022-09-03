@@ -6,6 +6,7 @@ import 'package:eqmonitor/schema/dmdata/eew-information/eew-infomation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -55,16 +56,17 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
   }
 
   Future<void> startEewStreaming() async {
-    // EEW STREAMを開始する
+    // EEWのストリーミングを開始
     final subscription = state.supabase
-        .from(kDebugMode ? 'eew_test' : 'eew')
+        .from('eew')
         .on(SupabaseEventTypes.insert, (payload) async {
       logger.i('EEW STREAM: ${payload.newRecord}', payload.commitTimestamp);
       if (payload.newRecord == null) {
         return;
       }
       final commonHead = CommonHead.fromJson(
-          payload.newRecord!['data'] as Map<String, dynamic>);
+        payload.newRecord!['data'] as Map<String, dynamic>,
+      );
       addTelegram(commonHead);
     }).subscribe()
       ..onClose(() => logger.i('EEW STREAM: close'))
@@ -72,7 +74,7 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
 
     state = state.copyWith(subscription: subscription);
     // final eewStream = state.supabase
-    //     .from(kDebugMode ? 'eew_test' : 'eew')
+    //     .from('eew')
     //     .stream(['id']).execute()
     //   ..listen((events) async {
     //     for (final event in events) {
@@ -84,24 +86,22 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
 
     // 直近のEEW電文10件を追加しておく
     final telegrams = await eewApi.getEewTelegrams();
-    for (final e in telegrams) {
-      addTelegram(e);
-    }
+    telegrams.forEach(addTelegram);
     Logger().i('Start Eew Streaming');
 
     // もし、デバッグモードならテスト電文を追加
-    // if (kDebugMode) {
-    //   final res = await http.get(
-    //     Uri.parse(
-    //       'https://sample.dmdata.jp/eew/20171213b/json/vxse44_rjtd_20171213112257.json',
-    //     ),
-    //   );
-    //   addTelegram(
-    //     CommonHead.fromJson(
-    //       jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>,
-    //     ),
-    //   );
-    // }
+    if (kDebugMode) {
+      final res = await http.get(
+        Uri.parse(
+          'https://sample.dmdata.jp/eew/20171213b/json/vxse44_rjtd_20171213112257.json',
+        ),
+      );
+      addTelegram(
+        CommonHead.fromJson(
+          jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>,
+        ),
+      );
+    }
   }
 
   void addTelegram(CommonHead commonHead) {
