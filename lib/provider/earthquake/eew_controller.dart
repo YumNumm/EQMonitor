@@ -63,10 +63,9 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
       if (payload.newRecord == null) {
         return;
       }
-      final commonHead =
-          CommonHead.fromJson(payload.newRecord!['data'] as Map<String,dynamic>);
+      final commonHead = CommonHead.fromJson(
+          payload.newRecord!['data'] as Map<String, dynamic>);
       addTelegram(commonHead);
-      
     }).subscribe()
       ..onClose(() => logger.i('EEW STREAM: close'))
       ..onError((e) => logger.e('EEW STREAM: error', e));
@@ -107,7 +106,6 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
 
   void addTelegram(CommonHead commonHead) {
     // eewTelegramsに追加
-    // ただし、同じ電文(originalIdで判別)があれば追加しない
     final eewTelegrams = state.eewTelegrams;
 
     final toUpdateTelegrams = [...eewTelegrams, commonHead];
@@ -128,8 +126,7 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
       if (value.any(
         (element) =>
             element.pressDateTime.difference(DateTime.now()).inSeconds > -180 ||
-            element.originalId == 'TELEGRAM_ID' ||
-            kDebugMode,
+            element.originalId == 'TELEGRAM_ID',
       )) {
         showEews.add(value.first);
       }
@@ -145,15 +142,18 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
 
   /// 表示する電文を更新
   void checkTelegrams() {
-    final toUpdateTelegramsGroupBy = state.eewTelegrams
+    // eewTelegramsに追加
+    final eewTelegrams = state.eewTelegrams;
+
+    final telegramsGroupBy = eewTelegrams
         .toList()
         .groupListsBy((element) => int.parse(element.eventId.toString()));
+
     // 180秒以内に発表されていて
-    // 取り消しされていない電文のうち
     // 最新のものを取得する
     // eventIdが大きい順
     final showEews = <CommonHead>[];
-    toUpdateTelegramsGroupBy.forEach((key, value) {
+    telegramsGroupBy.forEach((key, value) {
       // valueをpressDateTimeが一番新しい順に並び変える
       value.sort((a, b) => b.pressDateTime.compareTo(a.pressDateTime));
       // 任意の電文が180秒以内に発表されている場合に
@@ -168,13 +168,10 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
       }
     });
 
-    if (mounted) {
-      state = state.copyWith(
-        eewTelegramsGroupByEventId: toUpdateTelegramsGroupBy,
-        showEews: showEews
-            .map((eew) => MapEntry(eew, EEWInformation.fromJson(eew.body))),
-      );
-    }
+    state = state.copyWith(
+      showEews: showEews
+          .map((eew) => MapEntry(eew, EEWInformation.fromJson(eew.body))),
+    );
   }
 
   void startTestcase() {
