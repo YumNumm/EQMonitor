@@ -1,13 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/schema/dmdata/eew-information/eew-infomation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -58,41 +56,53 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
 
   Future<void> startEewStreaming() async {
     // EEW STREAMを開始する
-    final subscription =
-        state.supabase.from('eew').on(SupabaseEventTypes.all, (payload) async{
+    final subscription = state.supabase
+        .from(kDebugMode ? 'eew_test' : 'eew')
+        .on(SupabaseEventTypes.insert, (payload) async {
       logger.i('EEW STREAM: ${payload.newRecord}', payload.commitTimestamp);
       if (payload.newRecord == null) {
         return;
       }
       final commonHead =
-          CommonHead.fromJson(jsonDecode(payload.newRecord!['data']));
+          CommonHead.fromJson(payload.newRecord!['data'] as Map<String,dynamic>);
       addTelegram(commonHead);
-    }).subscribe();
-    state = state.copyWith(subscription: subscription);
+      
+    }).subscribe()
+      ..onClose(() => logger.i('EEW STREAM: close'))
+      ..onError((e) => logger.e('EEW STREAM: error', e));
 
-    subscription.socket.onMessage((p0) => logger.i('EEW WebSocket: $p0'));
-    logger.i(subscription.socket.connState?.toString());
+    state = state.copyWith(subscription: subscription);
+    // final eewStream = state.supabase
+    //     .from(kDebugMode ? 'eew_test' : 'eew')
+    //     .stream(['id']).execute()
+    //   ..listen((events) async {
+    //     for (final event in events) {
+    //       logger.i('EEW STREAM: $event');
+    //       final commonHead = CommonHead.fromJson(jsonDecode(event['data']));
+    //       addTelegram(commonHead);
+    //     }
+    //   });
+
     // 直近のEEW電文10件を追加しておく
-    final telegrams = await eewApi.getEewTelegrams(limit: 30);
+    final telegrams = await eewApi.getEewTelegrams();
     for (final e in telegrams) {
       addTelegram(e);
     }
     Logger().i('Start Eew Streaming');
 
     // もし、デバッグモードならテスト電文を追加
-    if (kDebugMode) {
-      final res = await http.get(
-        Uri.parse(
-          'https://sample.dmdata.jp/eew/20171213b/json/vxse44_rjtd_20171213112257.json',
-        ),
-      );
-      addTelegram(
-        CommonHead.fromJson(
-          jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>,
-        ),
-      );
-    }
-    log('');
+    // if (kDebugMode) {
+    //   final res = await http.get(
+    //     Uri.parse(
+    //       'https://sample.dmdata.jp/eew/20171213b/json/vxse44_rjtd_20171213112257.json',
+    //     ),
+    //   );
+    //   addTelegram(
+    //     CommonHead.fromJson(
+    //       jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>,
+    //     ),
+    //   );
+    // }
   }
 
   void addTelegram(CommonHead commonHead) {
@@ -152,7 +162,6 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
       if (value.any(
         (element) =>
             element.pressDateTime.difference(DateTime.now()).inSeconds > -180 ||
-            kDebugMode ||
             element.originalId == 'TELEGRAM_ID',
       )) {
         showEews.add(value.first);

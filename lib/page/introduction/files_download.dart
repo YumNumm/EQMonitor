@@ -46,7 +46,7 @@ class FilesDownloadWidget extends HookConsumerWidget {
                       '${ref.read(applicationSupportDirectoryProvider).path}/parameter-earthquake.json',
                       onReceiveProgress: (received, total) {
                         downloadingStatus.value =
-                            'ファイル1/2をダウンロード中... (${received / 1024}KB)';
+                            'ファイル1/2をダウンロード中... (${(received / 1024).toStringAsFixed(1)}KB)';
                       },
                       options: Options(
                         headers: {
@@ -62,7 +62,7 @@ class FilesDownloadWidget extends HookConsumerWidget {
                       '${ref.read(applicationSupportDirectoryProvider).path}/arv.json',
                       onReceiveProgress: (received, total) {
                         downloadingStatus.value =
-                            'ファイル2/2をダウンロード中... (${received / 1024}KB)';
+                            'ファイル2/2をダウンロード中... (${(received / 1024).toStringAsFixed(1)}KB)';
                       },
                     );
                     downloadingStatus.value = 'ファイル2/2のダウンロード完了... ';
@@ -113,7 +113,7 @@ class FilesDownloadWidget extends HookConsumerWidget {
                       '${ref.read(applicationSupportDirectoryProvider).path}/parameter-earthquake.json',
                       onReceiveProgress: (received, total) {
                         downloadingStatus.value =
-                            'ファイル1/2をダウンロード中... (${received / 1024}KB)';
+                            'ファイル1/2をダウンロード中... (${(received / 1024).toStringAsFixed(1)}KB)';
                       },
                       options: Options(
                         headers: {
@@ -129,7 +129,7 @@ class FilesDownloadWidget extends HookConsumerWidget {
                       '${ref.read(applicationSupportDirectoryProvider).path}/arv.json',
                       onReceiveProgress: (received, total) {
                         downloadingStatus.value =
-                            'ファイル2/2をダウンロード中... (${received / 1024}KB)';
+                            'ファイル2/2をダウンロード中... (${(received / 1024).toStringAsFixed(1)}KB)';
                       },
                     );
                     downloadingStatus.value = 'ファイル2/2のダウンロード完了... ';
