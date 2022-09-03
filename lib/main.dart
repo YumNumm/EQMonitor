@@ -109,14 +109,13 @@ Future<void> main() async {
   //isar = await Isar.open([], directory: dir.path);
   FlutterNativeSplash.remove();
   Logger().d('全ての初期化が完了: ${(stopwatch..stop()).elapsedMicroseconds / 1000}ms');
-  Logger().wtf(DateTime.now().toIso8601String());
   FlutterError.onError = onFlutterError;
 
  // PlatformDispatcher.instance.onError = (error, stackTrace) {
  //   Logger().e(error, stackTrace);
  //   crashlytics.recordError(error, stackTrace);
  //   return true;
- // }; 
+ // };
   runApp(
     ProviderScope(
       overrides: [

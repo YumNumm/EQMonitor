@@ -230,8 +230,7 @@ class KmoniStatusWidget extends ConsumerWidget {
                     ),
                     const SizedBox(width: 8),
                     // WebSocket 接続状態
-                    if (eewProvider.subscription?.socket.connState ==
-                        SocketStates.open)
+                    if (eewProvider.subscription?.isJoined() == true)
                       const Icon(
                         Icons.link,
                         semanticLabel: 'WebSocket 接続中',
