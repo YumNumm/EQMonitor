@@ -1,6 +1,14 @@
 {
   "items": [
     {
+      "isBreakingChange": false,
+      "buildId": 308,
+      "version": "V0.5.3",
+      "date": "2022-09-03T18:10:00+09:00",
+      "comment": "- 通知時のTTS読み上げの有効・無効を設定できるようにしました\n- 通知の処理を最適化したため、通知表示が高速になりました",
+      "url": "https://github.com/EQMonitor/EQMonitor/releases/tag/v0.5.3-beta"
+    },
+    {
       "isBreakingChange": true,
       "buildId": 305,
       "version": "V0.5.2",
