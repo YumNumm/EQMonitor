@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:eqmonitor/model/setting/notification_settings_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -27,6 +28,8 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     FlutterError.dumpErrorToConsole(details);
     await FirebaseCrashlytics.instance.recordFlutterError(details);
   };
+
+  final notificationSettings = NotificationSettingsModel.load(prefs);
 
   // try {
   //   if (message.data['url'] != null && message.data['type'] != null) {
@@ -137,8 +140,10 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // } catch (e) {
   await AwesomeNotifications().createNotificationFromJsonData(message.data);
 
-  if (message.data['tts'] != null) {
+  if (message.data['tts'] != null && notificationSettings.useTts) {
     await flutterTts.speak(message.data['tts'].toString());
   }
   // }
+
+  print('通知処理が終了: ${stopwatch.elapsed.inMicroseconds / 1000}ms');
 }

@@ -10,14 +10,14 @@ import 'package:intl/intl.dart';
 import '../../extension/relative_luminance.dart';
 
 class EewBodyWidget extends StatelessWidget {
-  EewBodyWidget({
+  const EewBodyWidget({
     super.key,
     required this.eew,
     required this.colors,
   });
 
   final MapEntry<CommonHead, EEWInformation> eew;
-  JmaIntensityColorModel colors;
+  final JmaIntensityColorModel colors;
 
   @override
   Widget build(BuildContext context) {
@@ -64,15 +64,16 @@ class EewBodyWidget extends StatelessWidget {
                 ? '深さ${eew.value.earthQuake!.hypoCenter.depth.value}km'
                 : '不明',
       ]);
-    return Stack(
-      children: [
-        Card(
-          color: (eew.value.intensity?.maxint.from ?? JmaIntensity.Unknown)
-              .fromUser(colors)
-              .withOpacity(0.8),
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
+    return Card(
+      color: (eew.value.intensity?.maxint.from ?? JmaIntensity.Unknown)
+          .fromUser(colors)
+          .withOpacity(0.8),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Stack(
+          alignment: Alignment.topRight,
+          children: [
+            Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Row(
@@ -95,10 +96,13 @@ class EewBodyWidget extends StatelessWidget {
                       ),
                     ),
                     if (eew.value.intensity?.maxint.to == JmaIntensity.over)
-                      Text(
-                        '程度以上',
-                        style: TextStyle(
-                          color: maxIntensity.fromUser(colors).onPrimary,
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Text(
+                          '程度以上',
+                          style: TextStyle(
+                            color: maxIntensity.fromUser(colors).onPrimary,
+                          ),
                         ),
                       )
                   ],
@@ -107,10 +111,10 @@ class EewBodyWidget extends StatelessWidget {
                 // EEW 本文部分
                 DefaultTextStyle.merge(
                   style: TextStyle(
-                    color:
-                        (eew.value.intensity?.maxint.from ?? JmaIntensity.Unknown)
-                            .fromUser(colors)
-                            .onPrimary,
+                    color: (eew.value.intensity?.maxint.from ??
+                            JmaIntensity.Unknown)
+                        .fromUser(colors)
+                        .onPrimary,
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -136,47 +140,43 @@ class EewBodyWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-
-                // info button
-                ElevatedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        elevation: 4,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        content: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text(
-                              '精度情報',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              '震央位置:${eew.value.earthQuake!.hypoCenter.accuracy.epicCenterAccuracy.epicCenterAccuracy.description}\n'
-                              '震源位置: ${eew.value.earthQuake!.hypoCenter.accuracy.epicCenterAccuracy.hypoCenterAccuracy.description}\n'
-                              '深さ: ${eew.value.earthQuake!.hypoCenter.accuracy.depthCalculation.description}\n'
-                              'マグニチュード: ${eew.value.earthQuake!.hypoCenter.accuracy.magnitudeCalculation.description}',
-                            )
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                  child: const Text(
-                    '精度情報',
-                  ),
-                ),
               ],
             ),
-          ),
+            IconButton(
+              color: maxIntensity.fromUser(colors).onPrimary,
+              padding: EdgeInsets.zero,
+              icon: const Icon(Icons.info_outline),
+              onPressed: () async => ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  content: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        '精度情報',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        '震央位置:${eew.value.earthQuake!.hypoCenter.accuracy.epicCenterAccuracy.epicCenterAccuracy.description}\n'
+                        '震源位置: ${eew.value.earthQuake!.hypoCenter.accuracy.epicCenterAccuracy.hypoCenterAccuracy.description}\n'
+                        '深さ: ${eew.value.earthQuake!.hypoCenter.accuracy.depthCalculation.description}\n'
+                        'マグニチュード: ${eew.value.earthQuake!.hypoCenter.accuracy.magnitudeCalculation.description}',
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

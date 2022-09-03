@@ -5,7 +5,7 @@
       "buildId": 305,
       "version": "V0.5.2",
       "date": "2022-09-03T13:45:30+09:00",
-      "comment": "- アプリケーションの起動中に緊急地震速報が更新されない不具合を修正しました。\n-軽微なUIの変更を行いました",
+      "comment": "- アプリケーションの起動中に緊急地震速報が更新されない不具合を修正しました。\n- 軽微なUIの変更を行いました",
       "url": "https://github.com/EQMonitor/EQMonitor/releases/tag/v0.5.2-beta"
     },
     {
