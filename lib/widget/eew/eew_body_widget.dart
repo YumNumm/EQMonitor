@@ -68,113 +68,105 @@ class EewBodyWidget extends StatelessWidget {
       color: (eew.value.intensity?.maxint.from ?? JmaIntensity.Unknown)
           .fromUser(colors)
           .withOpacity(0.8),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Stack(
-          alignment: Alignment.topRight,
-          children: [
-            Column(
+      child: InkWell(
+        onDoubleTap: () => ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  children: [
-                    Text(
-                      '予想最大震度',
-                      style: TextStyle(
-                        color: maxIntensity.fromUser(colors).onPrimary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      maxIntensity.name,
-                      style: TextStyle(
-                        fontSize: 40,
-                        color: maxIntensity.fromUser(colors).onPrimary,
-                        fontFamily: 'CaskaydiaCove',
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    if (eew.value.intensity?.maxint.to == JmaIntensity.over)
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Text(
-                          '程度以上',
-                          style: TextStyle(
-                            color: maxIntensity.fromUser(colors).onPrimary,
-                          ),
-                        ),
-                      )
-                  ],
-                ),
-
-                // EEW 本文部分
-                DefaultTextStyle.merge(
+                const Text(
+                  '精度情報',
                   style: TextStyle(
-                    color: (eew.value.intensity?.maxint.from ??
-                            JmaIntensity.Unknown)
-                        .fromUser(colors)
-                        .onPrimary,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // 震央地
-                      Text(
-                        '${eew.value.earthQuake!.hypoCenter.name}で地震${hasOriginTime ? '発生' : '検知'}',
-                      ),
-                      Text(
-                        '${DateFormat('yyyy/MM/dd hh:mm:ss頃').format(eew.value.earthQuake!.originTime?.toLocal() ?? eew.value.earthQuake!.arrivalTime.toLocal())}${hasOriginTime ? '発生' : '検知'}',
-                      ),
-                      // マグニチュード
-                      Text(
-                        '$magAndDepth '
-                        '(${(eew.value.isLastInfo) ? '最終' : ''}第${eew.key.serialNo}報)',
-                      ),
-                      // PLUM報かどうか
-                      if (eew.value.earthQuake!.isAssuming) const Text('PLUM報'),
-                      if (eew.value.comments?.warning?.text != null)
-                        Text(eew.value.comments!.warning!.text),
-                      if (eew.value.text != null) Text(eew.value.text!),
-                    ],
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
+                Text(
+                  '震央位置:${eew.value.earthQuake!.hypoCenter.accuracy.epicCenterAccuracy.epicCenterAccuracy.description}\n'
+                  '震源位置: ${eew.value.earthQuake!.hypoCenter.accuracy.epicCenterAccuracy.hypoCenterAccuracy.description}\n'
+                  '深さ: ${eew.value.earthQuake!.hypoCenter.accuracy.depthCalculation.description}\n'
+                  'マグニチュード: ${eew.value.earthQuake!.hypoCenter.accuracy.magnitudeCalculation.description}',
+                )
               ],
             ),
-            IconButton(
-              color: maxIntensity.fromUser(colors).onPrimary,
-              padding: EdgeInsets.zero,
-              icon: const Icon(Icons.info_outline),
-              onPressed: () async => ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    '予想最大震度',
+                    style: TextStyle(
+                      color: maxIntensity.fromUser(colors).onPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  content: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text(
-                        '精度情報',
+                  const SizedBox(width: 8),
+                  Text(
+                    maxIntensity.name,
+                    style: TextStyle(
+                      fontSize: 40,
+                      color: maxIntensity.fromUser(colors).onPrimary,
+                      fontFamily: 'CaskaydiaCove',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  if (eew.value.intensity?.maxint.to == JmaIntensity.over)
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Text(
+                        '程度以上',
                         style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                          color: maxIntensity.fromUser(colors).onPrimary,
                         ),
                       ),
-                      Text(
-                        '震央位置:${eew.value.earthQuake!.hypoCenter.accuracy.epicCenterAccuracy.epicCenterAccuracy.description}\n'
-                        '震源位置: ${eew.value.earthQuake!.hypoCenter.accuracy.epicCenterAccuracy.hypoCenterAccuracy.description}\n'
-                        '深さ: ${eew.value.earthQuake!.hypoCenter.accuracy.depthCalculation.description}\n'
-                        'マグニチュード: ${eew.value.earthQuake!.hypoCenter.accuracy.magnitudeCalculation.description}',
-                      )
-                    ],
-                  ),
+                    )
+                ],
+              ),
+
+              // EEW 本文部分
+              DefaultTextStyle.merge(
+                style: TextStyle(
+                  color:
+                      (eew.value.intensity?.maxint.from ?? JmaIntensity.Unknown)
+                          .fromUser(colors)
+                          .onPrimary,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 震央地
+                    Text(
+                      '${eew.value.earthQuake!.hypoCenter.name}で地震${hasOriginTime ? '発生' : '検知'}',
+                    ),
+                    Text(
+                      '${DateFormat('yyyy/MM/dd hh:mm:ss頃').format(eew.value.earthQuake!.originTime?.toLocal() ?? eew.value.earthQuake!.arrivalTime.toLocal())}${hasOriginTime ? '発生' : '検知'}',
+                    ),
+                    // マグニチュード
+                    Text(
+                      '$magAndDepth '
+                      '(${(eew.value.isLastInfo) ? '最終' : ''}第${eew.key.serialNo}報)',
+                    ),
+                    // PLUM報かどうか
+                    if (eew.value.earthQuake!.isAssuming) const Text('PLUM報'),
+                    if (eew.value.comments?.warning?.text != null)
+                      Text(eew.value.comments!.warning!.text),
+                    if (eew.value.text != null) Text(eew.value.text!),
+                  ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
