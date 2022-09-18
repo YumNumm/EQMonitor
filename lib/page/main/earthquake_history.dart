@@ -13,7 +13,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../api/remote_db/telegram.dart';
-import '../../extension/relative_luminance.dart';
 import 'earthquake_history_detail.dart';
 
 class EarthquakeHistoryPage extends HookConsumerWidget {
@@ -166,15 +165,30 @@ class EarthquakeHistoryTile extends ConsumerWidget {
             ),
           ),
         ),
+        trailing: Text(
+          (component?.magnitude != null)
+              ? (component!.magnitude.condition != null)
+                  ? component.magnitude.condition!.description
+                  : (component.magnitude.value != null)
+                      ? 'M${component.magnitude.value!}'
+                      : 'M不明'
+              : '',
+        ),
         leading: IntensityWidget(
           intensity: maxInt,
           opacity: 1,
           size: 42,
         ),
         enableFeedback: true,
-        title: Text(
-          component?.hypoCenter.name ?? '震源調査中',
-          style: const TextStyle(fontSize: 18),
+        title: Row(
+          children: [
+            Text(
+              component?.hypoCenter.name ?? '震源調査中',
+              style: const TextStyle(fontSize: 18),
+            ),
+            // 速報アイコン
+            if (isSokuhou) const Chip(label: Text('速報')),
+          ],
         ),
         subtitle: Wrap(
           children: [
@@ -184,52 +198,19 @@ class EarthquakeHistoryTile extends ConsumerWidget {
                       <String>[
                         if (component?.originTime != null)
                           "${DateFormat('yyyy/MM/dd HH:mm').format(component!.originTime.toLocal())}頃 ",
-                        // マグニチュード
-                        if (component?.magnitude != null)
-                          (component!.magnitude.condition != null)
-                              ? component.magnitude.condition!.description
-                              : (component.magnitude.value != null)
-                                  ? 'M${component.magnitude.value!}'
-                                  : 'M不明',
                         ' ',
                         // 震源の深さ
                         if (component?.hypoCenter.depth != null)
                           (component?.hypoCenter.depth.condition != null)
-                              ? component!
-                                  .hypoCenter.depth.condition!.description
+                              ? '深さ${component!.hypoCenter.depth.condition!.description}'
                               : (component!.hypoCenter.depth.value != null)
                                   ? '深さ${component.hypoCenter.depth.value}km'
-                                  : '不明',
+                                  : '深さ不明',
                       ],
                     ))
                   .toString(),
               style: const TextStyle(fontSize: 14),
             ),
-            // 速報かどうか
-            if (isSokuhou)
-              const Chip(
-                backgroundColor: Colors.blueAccent,
-                padding: EdgeInsets.zero,
-                label: Text(
-                  '速報',
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            // 顕著な地震の震源要素更新のお知らせ かどうか
-            if (latestVxse61Head != null)
-              Chip(
-                backgroundColor: const Color.fromARGB(255, 192, 0, 80),
-                padding: EdgeInsets.zero,
-                label: Text(
-                  '顕著な地震の震源要素更新のお知らせ ',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: const Color.fromARGB(255, 192, 0, 80).onPrimary,
-                  ),
-                ),
-              ),
           ],
         ),
       ),
