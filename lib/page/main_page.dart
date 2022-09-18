@@ -1,3 +1,4 @@
+import 'package:eqmonitor/provider/package_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,7 +27,26 @@ class MainPage extends HookConsumerWidget {
           if (orientation == Orientation.portrait) {
             return Scaffold(
               appBar: AppBar(
-                title: const Text('EQMonitor'),
+                title: FittedBox(
+                  child: Row(
+                    textBaseline: TextBaseline.alphabetic,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    children: [
+                      const Text(
+                        'EQMonitor',
+                      ),
+                      const SizedBox(width: 5),
+                      ref.watch(packageInfoProvider).when<Widget>(
+                            loading: () => const SizedBox.shrink(),
+                            error: (error, stack) => const SizedBox.shrink(),
+                            data: (data) => Text(
+                              'V${data.version}',
+                              style: const TextStyle(fontSize: 10),
+                            ),
+                          ),
+                    ],
+                  ),
+                ),
                 actions: [
                   if (kDebugMode ||
                       ref.watch(developerModeProvider).isDeveloper == true)

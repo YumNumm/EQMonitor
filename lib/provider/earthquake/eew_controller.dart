@@ -96,11 +96,11 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
           'https://sample.dmdata.jp/eew/20171213b/json/vxse44_rjtd_20171213112257.json',
         ),
       );
-      addTelegram(
-        CommonHead.fromJson(
-          jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>,
-        ),
-      );
+      //addTelegram(
+      //  CommonHead.fromJson(
+      //    jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>,
+      //  ),
+      //);
     }
   }
 
