@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../../model/setting/jma_intensity_color_model.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -18,6 +20,8 @@ class EewIntensityPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    log('描画', name: 'EewIntensityPainter');
+
     for (final eew in eews) {
       if (eew.value.intensity?.region != null) {
         for (final region in eew.value.intensity!.region) {

@@ -29,7 +29,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:realtime_client/src/constants.dart';
 
 import '../../widget/eew/eew_body_widget.dart';
 
@@ -313,12 +312,12 @@ class KyoshinKansokutensMapWidget extends ConsumerWidget {
     final analyzedKmoniPoints =
         ref.watch(kmoniProvider.select((value) => value.analyzedPoint));
 
-    return CustomPaint(
-      painter: KyoshinKansokutenPainter(
-        obsPoints: analyzedKmoniPoints,
-      ),
-      size: const Size(476, 927.4),
-    );
+    return RepaintBoundary(child: CustomPaint(
+        painter: KyoshinKansokutenPainter(
+          obsPoints: analyzedKmoniPoints,
+        ),
+        size: const Size(476, 927.4),
+      ),);
   }
 }
 
@@ -330,13 +329,15 @@ class BaseMapWidget extends ConsumerWidget {
     final mapSource = ref.watch(mapAreaForecastLocalEProvider);
     // * ThemeMode変更時に自動で更新されるので、ここでは更新しない
     final isDarkMode = ref.read(themeProvider.notifier).isDarkMode;
-    return CustomPaint(
-      isComplex: true,
-      painter: MapBasePainter(
-        mapPolygons: mapSource,
-        isDarkMode: isDarkMode,
+    return RepaintBoundary(
+      child: CustomPaint(
+        isComplex: true,
+        painter: MapBasePainter(
+          mapPolygons: mapSource,
+          isDarkMode: isDarkMode,
+        ),
+        size: const Size(476, 927.4),
       ),
-      size: const Size(476, 927.4),
     );
   }
 }
@@ -349,13 +350,16 @@ class MapEewIntensityWidget extends ConsumerWidget {
     final mapSource = ref.watch(mapAreaForecastLocalEProvider);
     final eews =
         ref.watch(eewHistoryProvider.select((value) => value.showEews));
-    return CustomPaint(
-      painter: EewIntensityPainter(
-        colors: ref.watch(jmaIntensityColorProvider),
-        eews: eews,
-        mapPolygons: mapSource,
+    return RepaintBoundary(
+      child: CustomPaint(
+        isComplex: true,
+        painter: EewIntensityPainter(
+          colors: ref.watch(jmaIntensityColorProvider),
+          eews: eews,
+          mapPolygons: mapSource,
+        ),
+        size: const Size(476, 927.4),
       ),
-      size: const Size(476, 927.4),
     );
   }
 }
