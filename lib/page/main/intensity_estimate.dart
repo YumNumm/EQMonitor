@@ -153,22 +153,26 @@ class IntensityEstimatePage extends HookConsumerWidget {
                         // マップベース
                         const BaseMapWidget(),
                         // 推定した観測点震度
-                        CustomPaint(
-                          painter: EstimatedShindoPainter(
-                            estimatedShindoPointsGroupBy:
-                                intensityCalcResult.value,
-                            colors: ref.watch(jmaIntensityColorProvider),
-                            mapPolygons:
-                                ref.watch(mapAreaForecastLocalEProvider),
+                        RepaintBoundary(
+                          child: CustomPaint(
+                            painter: EstimatedShindoPainter(
+                              estimatedShindoPointsGroupBy:
+                                  intensityCalcResult.value,
+                              colors: ref.watch(jmaIntensityColorProvider),
+                              mapPolygons:
+                                  ref.watch(mapAreaForecastLocalEProvider),
+                            ),
+                            size: const Size(476, 927.4),
                           ),
-                          size: const Size(476, 927.4),
                         ),
                         // EEWの震央位置
-                        CustomPaint(
-                          painter: HypocenterPainterfromLatLng(
-                            hypocenter: hypo.value,
+                        RepaintBoundary(
+                          child: CustomPaint(
+                            painter: HypocenterPainterfromLatLng(
+                              hypocenter: hypo.value,
+                            ),
+                            size: const Size(476, 927.4),
                           ),
-                          size: const Size(476, 927.4),
                         ),
                       ],
                     ),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -11,6 +13,8 @@ class KyoshinKansokutenPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    log('描画', name: 'KyoshinKansokutenPainter');
+
     for (final point in obsPoints) {
       if (point.shindoColor == null) {
         continue;

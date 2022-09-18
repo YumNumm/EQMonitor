@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import '../../const/prefecture/area_forecast_local_eew.model.dart';
@@ -12,6 +14,7 @@ class MapBasePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    log('描画', name: 'MapBasePainter');
     final paintBuilding = Paint()
       ..color = isDarkMode
           ? const Color.fromARGB(255, 95, 95, 95)

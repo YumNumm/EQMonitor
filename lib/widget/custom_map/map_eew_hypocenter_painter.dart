@@ -1,8 +1,10 @@
-import '../../model/travel_time_table/travel_time_table.dart';
-import '../../provider/init/travel_time.dart';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart' hide Path;
 
+import '../../model/travel_time_table/travel_time_table.dart';
+import '../../provider/init/travel_time.dart';
 import '../../schema/dmdata/commonHeader.dart';
 import '../../schema/dmdata/eew-information/eew-infomation.dart';
 import '../../utils/map/map_global_offset.dart';
@@ -22,6 +24,8 @@ class EewHypocenterNormalPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    log('描画', name: 'EewHypocenterNormalPainter');
+
     if (eew.value.earthQuake?.hypoCenter.coordinateComponent.latitude != null &&
         eew.value.earthQuake?.hypoCenter.coordinateComponent.longitude !=
             null) {
