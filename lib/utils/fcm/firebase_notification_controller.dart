@@ -6,15 +6,12 @@ import 'package:eqmonitor/utils/fcm/background_handler.dart';
 import 'package:eqmonitor/utils/fcm/foreground_handler.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 Future<void> initFirebaseCloudMessaging() async {
-  final logger = Logger();
   final messaging = FirebaseMessaging.instance;
   // 権限を取得
-  final permissionResult = await Permission.notification.request();
-  logger.d('通知権限: ${permissionResult.isGranted}');
+  await Permission.notification.request();
   // Foreground/Backgroundでイベントを受け取るHandlerを登録
   FirebaseMessaging.onMessage.listen(
     (message) async => firebaseMessagingForegroundHandler(message),

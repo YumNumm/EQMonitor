@@ -170,15 +170,39 @@ class KmoniStatusWidget extends ConsumerWidget {
                     const SizedBox(width: 8),
                     // WebSocket 接続状態
                     if (eewProvider.subscription?.isJoined() == true)
-                      const Icon(
-                        Icons.link,
-                        semanticLabel: 'WebSocket 接続中',
+                      InkWell(
+                        onLongPress: () async {
+                          // SnackBarを表示
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('WebSocketに再接続しています...'),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
+                          eewProvider.subscription?.rejoinUntilConnected();
+                        },
+                        child: const Icon(
+                          Icons.link,
+                          semanticLabel: 'WebSocket 接続中',
+                        ),
                       )
                     else
-                      const Icon(
-                        Icons.link_off,
-                        color: Colors.red,
-                        semanticLabel: 'WebSocket 切断',
+                      InkWell(
+                        onLongPress: () async {
+                          // SnackBarを表示
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('WebSocketに再接続しています...'),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
+                          eewProvider.subscription?.rejoinUntilConnected();
+                        },
+                        child: const Icon(
+                          Icons.link_off,
+                          color: Colors.red,
+                          semanticLabel: 'WebSocket 切断',
+                        ),
                       ),
                     const SizedBox(width: 8),
 
