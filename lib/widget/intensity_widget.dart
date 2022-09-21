@@ -1,10 +1,11 @@
-import '../../provider/setting/intensity_color_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../const/kmoni/jma_intensity.dart';
-import '../../extension/relative_luminance.dart';
+import '../const/kmoni/jma_intensity.dart';
+import '../extension/relative_luminance.dart';
+import '../provider/setting/intensity_color_provider.dart';
 
+/// 震度アイコンWidget
 class IntensityWidget extends ConsumerWidget {
   const IntensityWidget({
     super.key,

@@ -3,6 +3,7 @@ import 'package:latlong2/latlong.dart';
 
 import '../../utils/map/map_global_offset.dart';
 
+/// 震央地表示(点滅なし)
 class HypocenterPainterfromLatLng extends CustomPainter {
   HypocenterPainterfromLatLng({required this.hypocenter});
 

@@ -6,7 +6,7 @@ import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
 import 'package:eqmonitor/schema/dmdata/commonHeader.dart';
 import 'package:eqmonitor/schema/dmdata/eq-information/earthquake-information.dart';
 import 'package:eqmonitor/schema/supabase/telegram.dart';
-import 'package:eqmonitor/widget/intensity/intensity_widget.dart';
+import 'package:eqmonitor/widget/intensity_widget.dart';
 import 'package:flutter/material.dart' hide Theme;
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:go_router/go_router.dart';

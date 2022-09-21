@@ -1,5 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
+import 'package:eqmonitor/widget/map/base_map.dart';
+import 'package:eqmonitor/widget/map/eew_estimated_intensity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -9,8 +11,7 @@ import '../../api/int_calc/int_calc.dart';
 import '../../const/kmoni/jma_intensity.dart';
 import '../../provider/init/map_area_forecast_local_e.dart';
 import '../../provider/init/parameter-earthquake.dart';
-import '../../widget/intensity/intensity_widget.dart';
-import '../../widget/intensity_calc/estimated_shindo_painter.dart';
+import '../../widget/intensity_widget.dart';
 import '../../widget/intensity_calc/map_eew_hypocenter_painter.dart';
 import 'kmoni_map.dart';
 
@@ -155,7 +156,7 @@ class IntensityEstimatePage extends HookConsumerWidget {
                         // 推定した観測点震度
                         RepaintBoundary(
                           child: CustomPaint(
-                            painter: EstimatedShindoPainter(
+                            painter: EstimatedIntensityPainter(
                               estimatedShindoPointsGroupBy:
                                   intensityCalcResult.value,
                               colors: ref.watch(jmaIntensityColorProvider),

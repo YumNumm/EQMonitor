@@ -1,3 +1,4 @@
+import 'package:eqmonitor/widget/map/base_map.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart' hide TextDirection;
@@ -16,7 +17,7 @@ import '../../schema/dmdata/eq-information/earthquake-information/intensity/stat
 import '../../schema/dmdata/eq-information/earthquake.dart';
 import '../../schema/supabase/telegram.dart';
 import '../../utils/map/map_global_offset.dart';
-import '../../widget/intensity/intensity_widget.dart';
+import '../../widget/intensity_widget.dart';
 import 'kmoni_map.dart';
 
 class EarthquakeHistoryDetailPage extends HookConsumerWidget {

@@ -31,6 +31,7 @@ class EewBodyWidget extends StatelessWidget {
     /// 通常報でない場合は、早期Return
     if (eew.key.infoType != CommonHeadInfoType.announcement) {
       return Card(
+        margin: const EdgeInsets.all(8),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
@@ -62,6 +63,7 @@ class EewBodyWidget extends StatelessWidget {
                 : '不明',
       ]);
     return Card(
+      margin: const EdgeInsets.all(8),
       color: (eew.value.intensity?.maxint.from ?? JmaIntensity.Unknown)
           .fromUser(colors)
           .withOpacity(0.8),
