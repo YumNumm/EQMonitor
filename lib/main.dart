@@ -9,7 +9,6 @@ import 'package:device_preview/device_preview.dart';
 import 'package:eqmonitor/const/obspoint.dart';
 import 'package:eqmonitor/const/prefecture/area_forecast_local_eew.model.dart';
 import 'package:eqmonitor/model/travel_time_table/travel_time_table.dart';
-import 'package:eqmonitor/page/introduction.dart';
 import 'package:eqmonitor/private/keys.dart';
 import 'package:eqmonitor/provider/init/application_support_dir.dart';
 import 'package:eqmonitor/provider/init/device_info.dart';
@@ -19,6 +18,7 @@ import 'package:eqmonitor/provider/init/parameter-earthquake.dart';
 import 'package:eqmonitor/provider/init/secure_storage.dart';
 import 'package:eqmonitor/provider/init/shared_preferences.dart';
 import 'package:eqmonitor/provider/init/travel_time.dart';
+import 'package:eqmonitor/provider/route.dart';
 import 'package:eqmonitor/provider/setting/crash_log_share.dart';
 import 'package:eqmonitor/provider/theme_providers.dart';
 import 'package:eqmonitor/res/theme.dart';
@@ -33,6 +33,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:isar/isar.dart';
 import 'package:logger/logger.dart';
@@ -41,7 +42,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'firebase_options.dart';
-import 'page/main_page.dart';
 
 Future<void> main() async {
   final stopwatch = Stopwatch()..start();
@@ -54,6 +54,7 @@ Future<void> main() async {
       statusBarColor: Colors.transparent, // transparent status bar
     ),
   );
+  GoRouter.setUrlPathStrategy(UrlPathStrategy.path);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -111,11 +112,11 @@ Future<void> main() async {
   Logger().d('全ての初期化が完了: ${(stopwatch..stop()).elapsedMicroseconds / 1000}ms');
   FlutterError.onError = onFlutterError;
 
- // PlatformDispatcher.instance.onError = (error, stackTrace) {
- //   Logger().e(error, stackTrace);
- //   crashlytics.recordError(error, stackTrace);
- //   return true;
- // };
+  // PlatformDispatcher.instance.onError = (error, stackTrace) {
+  //   Logger().e(error, stackTrace);
+  //   crashlytics.recordError(error, stackTrace);
+  //   return true;
+  // };
   runApp(
     ProviderScope(
       overrides: [
@@ -165,7 +166,8 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode =
         ref.watch(themeProvider.select((value) => value.themeMode));
-    return MaterialApp(
+    final router = ref.watch(routerProvider);
+    return MaterialApp.router(
       title: 'EQMonitor',
       theme: lightTheme(),
       darkTheme: darkTheme(),
@@ -174,27 +176,15 @@ class MyApp extends ConsumerWidget {
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate
+        GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
         Locale('ja', 'JP'),
       ],
       useInheritedMediaQuery: true,
-      builder: (context, widget) {
-        Widget error = const Text('...rendering error...');
-        if (widget is Scaffold || widget is Navigator) {
-          error = Scaffold(body: Center(child: error));
-        }
-        ErrorWidget.builder = (errorDetails) => error;
-        if (widget != null) {
-          return widget;
-        }
-        throw Exception('widget is null');
-      },
-      home: (ref.read(sharedPreferencesProvder).getBool('isInitializated') ??
-              false)
-          ? const MainPage()
-          : const IntroductionPage(),
+      routerDelegate: router.routerDelegate,
+      routeInformationParser: router.routeInformationParser,
+      routeInformationProvider: router.routeInformationProvider,
     );
   }
 }

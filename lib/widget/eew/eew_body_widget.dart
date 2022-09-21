@@ -5,9 +5,6 @@ import 'package:eqmonitor/model/setting/jma_intensity_color_model.dart';
 import 'package:eqmonitor/schema/dmdata/commonHeader.dart';
 import 'package:eqmonitor/schema/dmdata/eew-information/eew-infomation.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
-import '../../extension/relative_luminance.dart';
 
 class EewBodyWidget extends StatelessWidget {
   const EewBodyWidget({
@@ -68,6 +65,9 @@ class EewBodyWidget extends StatelessWidget {
       color: (eew.value.intensity?.maxint.from ?? JmaIntensity.Unknown)
           .fromUser(colors)
           .withOpacity(0.8),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: InkWell(
         onDoubleTap: () => ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -98,76 +98,137 @@ class EewBodyWidget extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.all(8),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    '予想最大震度',
-                    style: TextStyle(
-                      color: maxIntensity.fromUser(colors).onPrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    maxIntensity.name,
-                    style: TextStyle(
-                      fontSize: 40,
-                      color: maxIntensity.fromUser(colors).onPrimary,
-                      fontFamily: 'CaskaydiaCove',
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  if (eew.value.intensity?.maxint.to == JmaIntensity.over)
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Text(
-                        '程度以上',
-                        style: TextStyle(
-                          color: maxIntensity.fromUser(colors).onPrimary,
+          child: IntrinsicHeight(
+            child: Row(
+              children: [
+                // Headerと予想震度
+                Column(
+                  children: [
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          children: [
+                            const Text('緊急地震速報'),
+                            Text(
+                              '予報 ${eew.value.isLastInfo ? '最終' : ''}#${eew.key.serialNo}',
+                            ),
+                          ],
                         ),
                       ),
-                    )
-                ],
-              ),
-
-              // EEW 本文部分
-              DefaultTextStyle.merge(
-                style: TextStyle(
-                  color:
-                      (eew.value.intensity?.maxint.from ?? JmaIntensity.Unknown)
-                          .fromUser(colors)
-                          .onPrimary,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // 震央地
-                    Text(
-                      '${eew.value.earthQuake!.hypoCenter.name}で地震${hasOriginTime ? '発生' : '検知'}',
                     ),
-                    Text(
-                      '${DateFormat('yyyy/MM/dd hh:mm:ss頃').format(eew.value.earthQuake!.originTime?.toLocal() ?? eew.value.earthQuake!.arrivalTime.toLocal())}${hasOriginTime ? '発生' : '検知'}',
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          children: [
+                            const Text('緊急地震速報'),
+                            Text(
+                              '予報 ${eew.value.isLastInfo ? '最終' : ''}#${eew.key.serialNo}',
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    // マグニチュード
-                    Text(
-                      '$magAndDepth '
-                      '(${(eew.value.isLastInfo) ? '最終' : ''}第${eew.key.serialNo}報)',
-                    ),
-                    // PLUM報かどうか
-                    if (eew.value.earthQuake!.isAssuming) const Text('PLUM報'),
-                    if (eew.value.comments?.warning?.text != null)
-                      Text(eew.value.comments!.warning!.text),
-                    if (eew.value.text != null) Text(eew.value.text!),
                   ],
                 ),
-              ),
-            ],
+                // 詳細情報
+                Column(
+                  children: [
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          children: [
+                            const Text('緊急地震速報'),
+                            Text(
+                              '予報 ${eew.value.isLastInfo ? '最終' : ''}#${eew.key.serialNo}',
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          children: [
+                            Text(
+                              '予報 ${eew.value.isLastInfo ? '最終' : ''}#${eew.key.serialNo}',
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
+        //     Row(
+        //       children: [
+        //         Text(
+        //           '予想最大震度',
+        //           style: TextStyle(
+        //             color: maxIntensity.fromUser(colors).onPrimary,
+        //             fontWeight: FontWeight.bold,
+        //           ),
+        //         ),
+        //         const SizedBox(width: 8),
+        //         Text(
+        //           maxIntensity.name,
+        //           style: TextStyle(
+        //             fontSize: 40,
+        //             color: maxIntensity.fromUser(colors).onPrimary,
+        //             fontFamily: 'CaskaydiaCove',
+        //             fontWeight: FontWeight.bold,
+        //           ),
+        //         ),
+        //         if (eew.value.intensity?.maxint.to == JmaIntensity.over)
+        //           Align(
+        //             alignment: Alignment.bottomCenter,
+        //             child: Text(
+        //               '程度以上',
+        //               style: TextStyle(
+        //                 color: maxIntensity.fromUser(colors).onPrimary,
+        //               ),
+        //             ),
+        //           )
+        //       ],
+        //     ),
+        //     // EEW 本文部分
+        //     DefaultTextStyle.merge(
+        //       style: TextStyle(
+        //         color:
+        //             (eew.value.intensity?.maxint.from ?? JmaIntensity.Unknown)
+        //                 .fromUser(colors)
+        //                 .onPrimary,
+        //       ),
+        //       child: Column(
+        //         mainAxisSize: MainAxisSize.min,
+        //         crossAxisAlignment: CrossAxisAlignment.start,
+        //         children: [
+        //           // 震央地
+        //           Text(
+        //             '${eew.value.earthQuake!.hypoCenter.name}で地震${hasOriginTime ? '発生' : '検知'}',
+        //           ),
+        //           Text(
+        //             '${DateFormat('yyyy/MM/dd hh:mm:ss頃').format(eew.value.earthQuake!.originTime?.toLocal() ?? eew.value.earthQuake!.arrivalTime.toLocal())}${hasOriginTime ? '発生' : '検知'}',
+        //           ),
+        //           // マグニチュード
+        //           Text(
+        //             '$magAndDepth '
+        //             '(${(eew.value.isLastInfo) ? '最終' : ''}第${eew.key.serialNo}報)',
+        //           ),
+        //           // PLUM報かどうか
+        //           if (eew.value.earthQuake!.isAssuming) const Text('PLUM報'),
+        //           if (eew.value.comments?.warning?.text != null)
+        //             Text(eew.value.comments!.warning!.text),
+        //           if (eew.value.text != null) Text(eew.value.text!),
+        //         ],
+        //       ),
+        //     ),
       ),
     );
   }
