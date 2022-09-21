@@ -61,33 +61,31 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
         .from('eew')
         .on(SupabaseEventTypes.insert, (payload) async {
       logger.i('EEW STREAM: ${payload.newRecord}', payload.commitTimestamp);
-      if (payload.newRecord == null) {
-        return;
-      }
       final commonHead = CommonHead.fromJson(
         payload.newRecord!['data'] as Map<String, dynamic>,
       );
       addTelegram(commonHead);
     }).subscribe()
       ..onClose(() => logger.i('EEW STREAM: close'))
-      ..onError((e) => logger.e('EEW STREAM: error', e));
+      ..onError((e) => logger.e('EEW STREAM: error', e))
+      ..socket.onMessage((p0) => logger.i(p0.toString()));
 
     state = state.copyWith(subscription: subscription);
-    // final eewStream = state.supabase
-    //     .from('eew')
-    //     .stream(['id']).execute()
-    //   ..listen((events) async {
-    //     for (final event in events) {
-    //       logger.i('EEW STREAM: $event');
-    //       final commonHead = CommonHead.fromJson(jsonDecode(event['data']));
-    //       addTelegram(commonHead);
-    //     }
-    //   });
+
+    /// 再接続タイマー
+    Timer.periodic(
+      const Duration(seconds: 5),
+      (_) {
+        if (state.subscription?.joinedOnce != true) {
+          logger.i('EEW STREAM: reconnect');
+          state.subscription?.rejoinUntilConnected();
+        }
+      },
+    );
 
     // 直近のEEW電文10件を追加しておく
     final telegrams = await eewApi.getEewTelegrams();
     telegrams.forEach(addTelegram);
-    Logger().i('Start Eew Streaming');
 
     // もし、デバッグモードならテスト電文を追加
     if (kDebugMode) {
