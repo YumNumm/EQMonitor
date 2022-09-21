@@ -1,11 +1,32 @@
-import 'dart:developer';
-
+import 'package:eqmonitor/provider/kmoni_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../model/analyzed_kyoshin_kansokuten.dart';
 import '../../utils/map/map_global_offset.dart';
 
+/// 強震観測点
+class KyoshinKansokutenWidget extends ConsumerWidget {
+  const KyoshinKansokutenWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final analyzedKmoniPoints =
+        ref.watch(kmoniProvider.select((value) => value.analyzedPoint));
+
+    return RepaintBoundary(
+      child: CustomPaint(
+        painter: KyoshinKansokutenPainter(
+          obsPoints: analyzedKmoniPoints,
+        ),
+        size: const Size(476, 927.4),
+      ),
+    );
+  }
+}
+
+/// 強震観測点描画
 class KyoshinKansokutenPainter extends CustomPainter {
   KyoshinKansokutenPainter({required this.obsPoints});
 
@@ -13,8 +34,6 @@ class KyoshinKansokutenPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    log('描画', name: 'KyoshinKansokutenPainter');
-
     for (final point in obsPoints) {
       if (point.shindoColor == null) {
         continue;

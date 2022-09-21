@@ -1,34 +1,21 @@
 // ignore_for_file: lines_longer_than_80_chars
 
-import 'dart:async';
-import 'dart:developer';
 import 'dart:ui';
 
-import 'package:collection/collection.dart';
-import 'package:eqmonitor/api/int_calc/int_calc.dart';
-import 'package:eqmonitor/model/travel_time_table/travel_time_table.dart';
 import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
-import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
-import 'package:eqmonitor/provider/init/parameter-earthquake.dart';
-import 'package:eqmonitor/provider/init/travel_time.dart';
 import 'package:eqmonitor/provider/kmoni_controller.dart';
 import 'package:eqmonitor/provider/setting/developer_mode.dart';
 import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
-import 'package:eqmonitor/provider/theme_providers.dart';
-import 'package:eqmonitor/schema/dmdata/commonHeader.dart';
-import 'package:eqmonitor/schema/dmdata/eew-information/eew-infomation.dart';
-import 'package:eqmonitor/utils/map/map_global_offset.dart';
-import 'package:eqmonitor/widget/custom_map/map_base_painter.dart';
-import 'package:eqmonitor/widget/custom_map/map_eew_hypocenter_painter.dart';
-import 'package:eqmonitor/widget/custom_map/map_intensity_painter.dart';
-import 'package:eqmonitor/widget/custom_map/obs_point_painter.dart';
-import 'package:eqmonitor/widget/intensity_calc/estimated_shindo_painter.dart';
+import 'package:eqmonitor/widget/map/base_map.dart';
+import 'package:eqmonitor/widget/map/eew_estimated_intensity.dart';
+import 'package:eqmonitor/widget/map/eew_hypocenter.dart';
+import 'package:eqmonitor/widget/map/eew_intensity.dart';
+import 'package:eqmonitor/widget/map/kyoshin_kansokuten.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Theme;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:latlong2/latlong.dart';
 
 import '../../widget/eew/eew_body_widget.dart';
 
@@ -75,14 +62,14 @@ class KmoniMap extends HookConsumerWidget {
                     if (isDeveloper ||
                         kDebugMode ||
                         (ref.watch(kmoniProvider).testCaseStartTime != null))
-                      const MapEewIntensityEstimateWidget(),
+                      const EewEstimatedIntensityWidget(),
 
                     // EEWの予想震度
-                    const MapEewIntensityWidget(),
+                    const EewIntensityWidget(),
                     // 観測点
-                    const KyoshinKansokutensMapWidget(),
+                    const KyoshinKansokutenWidget(),
                     // EEWの震央位置
-                    const EewHypoCenterMapWidget(),
+                    const EewHypoCenterWidget(),
                   ],
                 ),
               ),
@@ -99,14 +86,8 @@ class KmoniMap extends HookConsumerWidget {
                   ' TEST ',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(82, 255, 0, 0),
+                    color: Color.fromARGB(129, 255, 0, 0),
                     fontSize: 200,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 10,
-                        color: Color.fromARGB(82, 179, 0, 0),
-                      ),
-                    ],
                   ),
                 ),
               ),
@@ -123,47 +104,6 @@ class KmoniMap extends HookConsumerWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class MapEewIntensityEstimateWidget extends ConsumerWidget {
-  const MapEewIntensityEstimateWidget();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final eews = ref.watch(eewHistoryProvider).showEews;
-    if (eews.isEmpty ||
-        (eews.any(
-          (e) => e.value.earthQuake?.isAssuming ?? false,
-        ))) {
-      return const SizedBox.shrink();
-    }
-    final result = eews
-        .map(
-          (eew) => IntensityEstimateApi().estimateIntensity(
-            jmaMagnitude: eew.value.earthQuake!.magnitude.value!,
-            depth: eew.value.earthQuake!.hypoCenter.depth.value!.toDouble(),
-            hypocenter: LatLng(
-              eew.value.earthQuake!.hypoCenter.coordinateComponent.latitude!
-                  .value,
-              eew.value.earthQuake!.hypoCenter.coordinateComponent.longitude!
-                  .value,
-            ),
-            obsPoints: ref.watch(parameterEarthquakeProvider).items,
-          ),
-        )
-        .expand((e) => e)
-        .toList();
-
-    return CustomPaint(
-      painter: EstimatedShindoPainter(
-        estimatedShindoPointsGroupBy:
-            result.groupListsBy((element) => element.region.code),
-        mapPolygons: ref.watch(mapAreaForecastLocalEProvider),
-        colors: ref.watch(jmaIntensityColorProvider),
-        alpha: 0.5,
-      ),
     );
   }
 }
@@ -284,505 +224,14 @@ class OnEewWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final eews =
         ref.watch(eewHistoryProvider.select((value) => value.showEews));
-    log(eews.length.toString(), name: 'eews.length');
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Column(
-        children: [
-          for (final eew in eews)
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: EewBodyWidget(
-                eew: eew,
-                colors: ref.watch(jmaIntensityColorProvider),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class KyoshinKansokutensMapWidget extends ConsumerWidget {
-  const KyoshinKansokutensMapWidget({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final analyzedKmoniPoints =
-        ref.watch(kmoniProvider.select((value) => value.analyzedPoint));
-
-    return RepaintBoundary(
-      child: CustomPaint(
-        painter: KyoshinKansokutenPainter(
-          obsPoints: analyzedKmoniPoints,
-        ),
-        size: const Size(476, 927.4),
-      ),
-    );
-  }
-}
-
-class BaseMapWidget extends ConsumerWidget {
-  const BaseMapWidget({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final mapSource = ref.watch(mapAreaForecastLocalEProvider);
-    // * ThemeMode変更時に自動で更新されるので、ここでは更新しない
-    final isDarkMode = ref.read(themeProvider.notifier).isDarkMode;
-    return RepaintBoundary(
-      child: CustomPaint(
-        isComplex: true,
-        painter: MapBasePainter(
-          mapPolygons: mapSource,
-          isDarkMode: isDarkMode,
-        ),
-        size: const Size(476, 927.4),
-      ),
-    );
-  }
-}
-
-class MapEewIntensityWidget extends ConsumerWidget {
-  const MapEewIntensityWidget({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final mapSource = ref.watch(mapAreaForecastLocalEProvider);
-    final eews =
-        ref.watch(eewHistoryProvider.select((value) => value.showEews));
-    return RepaintBoundary(
-      child: CustomPaint(
-        isComplex: true,
-        painter: EewIntensityPainter(
-          colors: ref.watch(jmaIntensityColorProvider),
-          eews: eews,
-          mapPolygons: mapSource,
-        ),
-        size: const Size(476, 927.4),
-      ),
-    );
-  }
-}
-
-/// ref: Flutter Animation Gallery
-class EewHypoCenterAssumingMapWidget extends StatefulWidget {
-  const EewHypoCenterAssumingMapWidget({required this.eew, super.key});
-  final MapEntry<CommonHead, EEWInformation> eew;
-
-  @override
-  _EewHypoCenterAssumingMapWidgetState createState() =>
-      _EewHypoCenterAssumingMapWidgetState();
-}
-
-class _EewHypoCenterAssumingMapWidgetState
-    extends State<EewHypoCenterAssumingMapWidget>
-    with TickerProviderStateMixin {
-  late AnimationController firstRippleController;
-  late AnimationController secondRippleController;
-  late AnimationController thirdRippleController;
-  late AnimationController centerCircleController;
-  late Animation<double> firstRippleRadiusAnimation;
-  late Animation<double> firstRippleOpacityAnimation;
-  late Animation<double> firstRippleWidthAnimation;
-  late Animation<double> secondRippleRadiusAnimation;
-  late Animation<double> secondRippleOpacityAnimation;
-  late Animation<double> secondRippleWidthAnimation;
-  late Animation<double> thirdRippleRadiusAnimation;
-  late Animation<double> thirdRippleOpacityAnimation;
-  late Animation<double> thirdRippleWidthAnimation;
-  late Animation<double> centerCircleRadiusAnimation;
-
-  @override
-  void initState() {
-    firstRippleController = AnimationController(
-      vsync: this,
-      duration: const Duration(
-        seconds: 2,
-      ),
-    );
-
-    firstRippleRadiusAnimation = Tween<double>(begin: 0, end: 15).animate(
-      CurvedAnimation(
-        parent: firstRippleController,
-        curve: Curves.ease,
-      ),
-    )
-      ..addListener(() {
-        setState(() {});
-      })
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          firstRippleController.repeat();
-        } else if (status == AnimationStatus.dismissed) {
-          firstRippleController.forward();
-        }
-      });
-
-    firstRippleOpacityAnimation = Tween<double>(begin: 0.5, end: 0).animate(
-      CurvedAnimation(
-        parent: firstRippleController,
-        curve: Curves.ease,
-      ),
-    )..addListener(
-        () {
-          setState(() {});
-        },
-      );
-
-    firstRippleWidthAnimation = Tween<double>(begin: 1, end: 0).animate(
-      CurvedAnimation(
-        parent: firstRippleController,
-        curve: Curves.ease,
-      ),
-    )..addListener(
-        () {
-          setState(() {});
-        },
-      );
-
-    secondRippleController = AnimationController(
-      vsync: this,
-      duration: const Duration(
-        seconds: 2,
-      ),
-    );
-
-    secondRippleRadiusAnimation = Tween<double>(begin: 0, end: 15).animate(
-      CurvedAnimation(
-        parent: secondRippleController,
-        curve: Curves.ease,
-      ),
-    )
-      ..addListener(() {
-        setState(() {});
-      })
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          secondRippleController.repeat();
-        } else if (status == AnimationStatus.dismissed) {
-          secondRippleController.forward();
-        }
-      });
-
-    secondRippleOpacityAnimation = Tween<double>(begin: 0.5, end: 0).animate(
-      CurvedAnimation(
-        parent: secondRippleController,
-        curve: Curves.ease,
-      ),
-    )..addListener(
-        () {
-          setState(() {});
-        },
-      );
-
-    secondRippleWidthAnimation = Tween<double>(begin: 10, end: 0).animate(
-      CurvedAnimation(
-        parent: secondRippleController,
-        curve: Curves.ease,
-      ),
-    )..addListener(
-        () {
-          setState(() {});
-        },
-      );
-
-    thirdRippleController = AnimationController(
-      vsync: this,
-      duration: const Duration(
-        seconds: 2,
-      ),
-    );
-
-    thirdRippleRadiusAnimation = Tween<double>(begin: 0, end: 15).animate(
-      CurvedAnimation(
-        parent: thirdRippleController,
-        curve: Curves.ease,
-      ),
-    )
-      ..addListener(() {
-        setState(() {});
-      })
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          thirdRippleController.repeat();
-        } else if (status == AnimationStatus.dismissed) {
-          thirdRippleController.forward();
-        }
-      });
-
-    thirdRippleOpacityAnimation = Tween<double>(begin: 0.5, end: 0).animate(
-      CurvedAnimation(
-        parent: thirdRippleController,
-        curve: Curves.ease,
-      ),
-    )..addListener(
-        () {
-          setState(() {});
-        },
-      );
-
-    thirdRippleWidthAnimation = Tween<double>(begin: 0, end: 10).animate(
-      CurvedAnimation(
-        parent: thirdRippleController,
-        curve: Curves.ease,
-      ),
-    )..addListener(
-        () {
-          setState(() {});
-        },
-      );
-
-    centerCircleController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 1));
-
-    centerCircleRadiusAnimation = Tween<double>(begin: 2, end: 3).animate(
-      CurvedAnimation(
-        parent: centerCircleController,
-        curve: Curves.fastOutSlowIn,
-      ),
-    )
-      ..addListener(
-        () {
-          setState(() {});
-        },
-      )
-      ..addStatusListener(
-        (status) {
-          if (status == AnimationStatus.completed) {
-            centerCircleController.reverse();
-          } else if (status == AnimationStatus.dismissed) {
-            centerCircleController.forward();
-          }
-        },
-      );
-
-    firstRippleController.forward();
-    Timer(
-      const Duration(milliseconds: 765),
-      () => secondRippleController.forward(),
-    );
-
-    Timer(
-      const Duration(milliseconds: 1050),
-      () => thirdRippleController.forward(),
-    );
-
-    centerCircleController.forward();
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    firstRippleController.dispose();
-    secondRippleController.dispose();
-    thirdRippleController.dispose();
-    centerCircleController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final eew = widget.eew;
-
-    return CustomPaint(
-      painter: EewHypoCenterAssumingPainter(
-        firstRippleRadiusAnimation.value,
-        firstRippleOpacityAnimation.value,
-        firstRippleWidthAnimation.value,
-        secondRippleRadiusAnimation.value,
-        secondRippleOpacityAnimation.value,
-        secondRippleWidthAnimation.value,
-        thirdRippleRadiusAnimation.value,
-        thirdRippleOpacityAnimation.value,
-        thirdRippleWidthAnimation.value,
-        centerCircleRadiusAnimation.value,
-        eew,
-      ),
-    );
-  }
-}
-
-class EewHypoCenterAssumingPainter extends CustomPainter {
-  EewHypoCenterAssumingPainter(
-    this.firstRippleRadius,
-    this.firstRippleOpacity,
-    this.firstRippleStrokeWidth,
-    this.secondRippleRadius,
-    this.secondRippleOpacity,
-    this.secondRippleStrokeWidth,
-    this.thirdRippleRadius,
-    this.thirdRippleOpacity,
-    this.thirdRippleStrokeWidth,
-    this.centerCircleRadius,
-    this.eew,
-  );
-
-  final double firstRippleRadius;
-  final double firstRippleOpacity;
-  final double firstRippleStrokeWidth;
-  final double secondRippleRadius;
-  final double secondRippleOpacity;
-  final double secondRippleStrokeWidth;
-  final double thirdRippleRadius;
-  final double thirdRippleOpacity;
-  final double thirdRippleStrokeWidth;
-  final double centerCircleRadius;
-  final MapEntry<CommonHead, EEWInformation> eew;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final offset = MapGlobalOffset.latLonToGlobalPoint(
-      LatLng(
-        eew.value.earthQuake!.hypoCenter.coordinateComponent.latitude!.value,
-        eew.value.earthQuake!.hypoCenter.coordinateComponent.longitude!.value,
-      ),
-    ).toLocalOffset(const Size(476, 927.4));
-    const myColor = Color.fromARGB(255, 125, 88, 255);
-
-    final firstPaint = Paint()
-      ..color = myColor.withOpacity(firstRippleOpacity)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = firstRippleStrokeWidth;
-
-    canvas.drawCircle(offset, firstRippleRadius, firstPaint);
-
-    final secondPaint = Paint()
-      ..color = myColor.withOpacity(secondRippleOpacity)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = secondRippleStrokeWidth;
-
-    canvas.drawCircle(offset, secondRippleRadius, secondPaint);
-
-    final thirdPaint = Paint()
-      ..color = myColor.withOpacity(thirdRippleOpacity)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = thirdRippleStrokeWidth;
-
-    canvas.drawCircle(offset, thirdRippleRadius, thirdPaint);
-
-    final fourthPaint = Paint()
-      ..color = myColor
-      ..style = PaintingStyle.fill;
-
-    canvas
-      ..drawCircle(offset, centerCircleRadius, fourthPaint)
-      ..drawCircle(
-        offset,
-        centerCircleRadius,
-        fourthPaint
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 0.1
-          ..color = Colors.white,
-      );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
-  }
-}
-
-class EewHypoCenterMapWidget extends ConsumerWidget {
-  const EewHypoCenterMapWidget({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final eews =
-        ref.watch(eewHistoryProvider.select((value) => value.showEews));
-
-    return Stack(
-      children: <Widget>[
+    return Column(
+      children: [
         for (final eew in eews)
-          if (eew.value.earthQuake?.isAssuming == true)
-            EewHypoCenterAssumingMapWidget(
-              eew: eew,
-            )
-          else
-            EewHypoCenterNormalMapWidget(
-              eew: eew,
-              travelTimeTables: ref.watch(TravelTimeProvider),
-              onTestStarted: ref.watch(kmoniProvider).testCaseStartTime,
-            ),
+          EewBodyWidget(
+            eew: eew,
+            colors: ref.watch(jmaIntensityColorProvider),
+          ),
       ],
-    );
-  }
-}
-
-class EewHypoCenterNormalMapWidget extends StatefulWidget {
-  const EewHypoCenterNormalMapWidget({
-    required this.eew,
-    required this.travelTimeTables,
-    super.key,
-    required this.onTestStarted,
-  });
-  final MapEntry<CommonHead, EEWInformation> eew;
-  final List<TravelTimeTable> travelTimeTables;
-  final DateTime? onTestStarted;
-
-  @override
-  _EewHypoCenterNormalMapWidgetState createState() =>
-      _EewHypoCenterNormalMapWidgetState();
-}
-
-class _EewHypoCenterNormalMapWidgetState
-    extends State<EewHypoCenterNormalMapWidget> with TickerProviderStateMixin {
-  late AnimationController opacityController;
-  late Animation<double> opacityAnimation;
-
-  @override
-  void initState() {
-    opacityController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
-
-    opacityAnimation = Tween<double>(begin: 1, end: 0.3).animate(
-      CurvedAnimation(
-        parent: opacityController,
-        curve: Curves.linear,
-      ),
-    )
-      ..addListener(
-        () {
-          setState(() {});
-        },
-      )
-      ..addStatusListener(
-        (status) {
-          if (status == AnimationStatus.completed) {
-            opacityController.reverse();
-          } else if (status == AnimationStatus.dismissed) {
-            opacityController.forward();
-          }
-        },
-      );
-
-    opacityController.forward();
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    opacityController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final eew = widget.eew;
-    final travelTimeTables = widget.travelTimeTables;
-    final onTestStarted = widget.onTestStarted;
-
-    return CustomPaint(
-      painter: EewHypocenterNormalPainter(
-        eew: eew,
-        opacity: opacityAnimation.value,
-        travelTime: travelTimeTables,
-        onTestStarted: onTestStarted,
-      ),
     );
   }
 }

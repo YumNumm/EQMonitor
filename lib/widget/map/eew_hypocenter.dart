@@ -1,13 +1,119 @@
-import 'dart:developer';
-
+import 'package:eqmonitor/model/travel_time_table/travel_time_table.dart';
+import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
+import 'package:eqmonitor/provider/init/travel_time.dart';
+import 'package:eqmonitor/provider/kmoni_controller.dart';
+import 'package:eqmonitor/schema/dmdata/commonHeader.dart';
+import 'package:eqmonitor/schema/dmdata/eew-information/eew-infomation.dart';
+import 'package:eqmonitor/widget/map/eew_assuming_hypocenter.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart' hide Path;
 
-import '../../model/travel_time_table/travel_time_table.dart';
-import '../../provider/init/travel_time.dart';
-import '../../schema/dmdata/commonHeader.dart';
-import '../../schema/dmdata/eew-information/eew-infomation.dart';
 import '../../utils/map/map_global_offset.dart';
+
+/// 通常の震央地表示
+class EewHypoCenterWidget extends ConsumerWidget {
+  const EewHypoCenterWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final eews =
+        ref.watch(eewHistoryProvider.select((value) => value.showEews));
+
+    return Stack(
+      children: <Widget>[
+        for (final eew in eews)
+          if (eew.value.earthQuake?.isAssuming == true)
+            EewHypoCenterAssumingMapWidget(
+              eew: eew,
+            )
+          else
+            EewHypoCenterNormalMapWidget(
+              eew: eew,
+              travelTimeTables: ref.watch(TravelTimeProvider),
+              onTestStarted: ref.watch(kmoniProvider).testCaseStartTime,
+            ),
+      ],
+    );
+  }
+}
+
+class EewHypoCenterNormalMapWidget extends StatefulWidget {
+  const EewHypoCenterNormalMapWidget({
+    required this.eew,
+    required this.travelTimeTables,
+    super.key,
+    required this.onTestStarted,
+  });
+  final MapEntry<CommonHead, EEWInformation> eew;
+  final List<TravelTimeTable> travelTimeTables;
+  final DateTime? onTestStarted;
+
+  @override
+  _EewHypoCenterNormalMapWidgetState createState() =>
+      _EewHypoCenterNormalMapWidgetState();
+}
+
+class _EewHypoCenterNormalMapWidgetState
+    extends State<EewHypoCenterNormalMapWidget> with TickerProviderStateMixin {
+  late AnimationController opacityController;
+  late Animation<double> opacityAnimation;
+
+  @override
+  void initState() {
+    opacityController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+
+    opacityAnimation = Tween<double>(begin: 1, end: 0.3).animate(
+      CurvedAnimation(
+        parent: opacityController,
+        curve: Curves.linear,
+      ),
+    )
+      ..addListener(
+        () {
+          setState(() {});
+        },
+      )
+      ..addStatusListener(
+        (status) {
+          if (status == AnimationStatus.completed) {
+            opacityController.reverse();
+          } else if (status == AnimationStatus.dismissed) {
+            opacityController.forward();
+          }
+        },
+      );
+
+    opacityController.forward();
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    opacityController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final eew = widget.eew;
+    final travelTimeTables = widget.travelTimeTables;
+    final onTestStarted = widget.onTestStarted;
+
+    return CustomPaint(
+      painter: EewHypocenterNormalPainter(
+        eew: eew,
+        opacity: opacityAnimation.value,
+        travelTime: travelTimeTables,
+        onTestStarted: onTestStarted,
+      ),
+    );
+  }
+}
 
 class EewHypocenterNormalPainter extends CustomPainter {
   EewHypocenterNormalPainter({
@@ -24,8 +130,6 @@ class EewHypocenterNormalPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    log('描画', name: 'EewHypocenterNormalPainter');
-
     if (eew.value.earthQuake?.hypoCenter.coordinateComponent.latitude != null &&
         eew.value.earthQuake?.hypoCenter.coordinateComponent.longitude !=
             null) {

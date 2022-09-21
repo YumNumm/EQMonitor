@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../const/kmoni/jma_intensity.dart';
 import '../../../provider/setting/intensity_color_provider.dart';
-import '../../../widget/intensity/intensity_widget.dart';
+import '../../../widget/intensity_widget.dart';
 
 class IntensityColorSettingsPage extends HookConsumerWidget {
   const IntensityColorSettingsPage({super.key});

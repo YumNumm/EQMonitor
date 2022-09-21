@@ -8,6 +8,8 @@ import '../provider/logger.dart';
 import '../provider/package_info.dart';
 import '../provider/setting/change_log.dart';
 
+/// アップデートがある場合はアイコンを表示
+/// ない場合はからのWidgetを返す
 class UpdaterButtonWidget extends HookConsumerWidget {
   const UpdaterButtonWidget({super.key});
   @override
