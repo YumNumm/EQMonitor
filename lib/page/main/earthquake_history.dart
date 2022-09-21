@@ -9,11 +9,11 @@ import 'package:eqmonitor/schema/supabase/telegram.dart';
 import 'package:eqmonitor/widget/intensity/intensity_widget.dart';
 import 'package:flutter/material.dart' hide Theme;
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../api/remote_db/telegram.dart';
-import 'earthquake_history_detail.dart';
 
 class EarthquakeHistoryPage extends HookConsumerWidget {
   EarthquakeHistoryPage({super.key});
@@ -90,6 +90,8 @@ class EarthquakeHistoryTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final eventId = telegrams.first.eventId!;
+
     final colors = ref.watch(jmaIntensityColorProvider);
     // 地震情報を解析していきます
     final vxse51Telegrams = <CommonHead>[];
@@ -158,13 +160,7 @@ class EarthquakeHistoryTile extends ConsumerWidget {
         color: maxInt.fromUser(colors).withOpacity(0.3),
       ),
       child: ListTile(
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            builder: (context) => EarthquakeHistoryDetailPage(
-              telegrams: telegrams,
-            ),
-          ),
-        ),
+        onTap: () => context.push('/earthquake_history_item/$eventId'),
         trailing: Text(
           (component?.magnitude != null)
               ? (component!.magnitude.condition != null)

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../const/kmoni/jma_intensity.dart';
@@ -320,7 +321,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
           await ref.read(jmaIntensityColorProvider.notifier).saveAll();
           // 戻る
           // ignore: use_build_context_synchronously
-          Navigator.of(context).pop();
+          GoRouter.of(context).pop();
           // SnackBarを表示
           // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(

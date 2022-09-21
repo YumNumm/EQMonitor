@@ -287,8 +287,7 @@ class OnEewWidget extends ConsumerWidget {
     log(eews.length.toString(), name: 'eews.length');
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+      child: Column(
         children: [
           for (final eew in eews)
             Padding(
@@ -312,12 +311,14 @@ class KyoshinKansokutensMapWidget extends ConsumerWidget {
     final analyzedKmoniPoints =
         ref.watch(kmoniProvider.select((value) => value.analyzedPoint));
 
-    return RepaintBoundary(child: CustomPaint(
+    return RepaintBoundary(
+      child: CustomPaint(
         painter: KyoshinKansokutenPainter(
           obsPoints: analyzedKmoniPoints,
         ),
         size: const Size(476, 927.4),
-      ),);
+      ),
+    );
   }
 }
 

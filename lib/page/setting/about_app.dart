@@ -8,12 +8,12 @@ import 'package:eqmonitor/provider/package_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:settings_ui/settings_ui.dart';
 
 import '../../provider/setting/developer_mode.dart';
 import '../../provider/theme_providers.dart';
-import 'term_of_service.dart';
 
 class AboutAppPage extends HookConsumerWidget {
   const AboutAppPage({super.key});
@@ -59,7 +59,7 @@ class AboutAppPage extends HookConsumerWidget {
                           color: const Color.fromARGB(255, 159, 0, 24),
                         ),
                       );
-                      Navigator.of(context).pop();
+                      GoRouter.of(context).pop();
 
                       ref.read(kmoniProvider.notifier).startTestCase();
                       ref.read(eewHistoryProvider.notifier).startTestcase();
@@ -104,13 +104,7 @@ class AboutAppPage extends HookConsumerWidget {
               ),
               SettingsTile(
                 title: const Text('利用規約'),
-                onPressed: (context) => Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (context) => const TermOfServicePage(
-                      showAcceptButton: false,
-                    ),
-                  ),
-                ),
+                onPressed: (context) => context.push('/settings/appinfo/termOfService/false'),
               ),
               SettingsTile(
                 title: isDeveloper

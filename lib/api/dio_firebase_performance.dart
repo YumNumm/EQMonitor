@@ -2,6 +2,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:firebase_performance/firebase_performance.dart';
+import 'package:logger/logger.dart';
 
 class DioFirebasePerformanceInterceptor extends Interceptor {
   DioFirebasePerformanceInterceptor({
@@ -27,7 +28,11 @@ class DioFirebasePerformanceInterceptor extends Interceptor {
     final requestKey = options.extra.hashCode;
     _map[requestKey] = metric;
     final requestContentLength = requestContentLengthMethod(options);
-    await metric.start();
+    try {
+      await metric.start();
+    } on Exception catch (e) {
+      Logger().e(e);
+    }
     if (requestContentLength != null) {
       metric.requestPayloadSize = requestContentLength;
     }

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_classes_with_only_static_members
+
 import '../../const/kmoni/real_time_data_type.dart';
 import 'date_format.dart';
 
