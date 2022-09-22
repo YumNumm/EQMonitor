@@ -83,7 +83,7 @@ class KmoniMap extends HookConsumerWidget {
             child: IgnorePointer(
               child: FittedBox(
                 child: Text(
-                  ' TEST ',
+                  ' テストモード ',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color.fromARGB(129, 255, 0, 0),
