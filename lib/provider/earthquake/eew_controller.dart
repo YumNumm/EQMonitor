@@ -67,21 +67,20 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
       addTelegram(commonHead);
     }).subscribe()
       ..onClose(() => logger.i('EEW STREAM: close'))
-      ..onError((e) => logger.e('EEW STREAM: error', e))
-      ..socket.onMessage((p0) => logger.i(p0.toString()));
+      ..onError((e) => logger.e('EEW STREAM: error', e));
 
     state = state.copyWith(subscription: subscription);
 
     /// 再接続タイマー
-    Timer.periodic(
-      const Duration(seconds: 5),
-      (_) {
-        if (state.subscription?.joinedOnce != true) {
-          logger.i('EEW STREAM: reconnect');
-          state.subscription?.rejoinUntilConnected();
-        }
-      },
-    );
+    // Timer.periodic(
+    //   const Duration(seconds: 5),
+    //   (_) {
+    //     if (state.subscription?.joinedOnce != true) {
+    //       logger.i('EEW STREAM: reconnect');
+    //       state.subscription?.rejoinUntilConnected();
+    //     }
+    //   },
+    // );
 
     // 直近のEEW電文10件を追加しておく
     final telegrams = await eewApi.getEewTelegrams();
