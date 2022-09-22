@@ -2,6 +2,14 @@
   "items": [
     {
       "isBreakingChange": false,
+      "buildId": 321,
+      "version": "V0.5.4",
+      "date": "2022-09-22T18:56:00+09:00",
+      "comment": "- 緊急地震速報(EEW)のデザインを変更\n- マップの再描画を見直したことにより、動作が軽快になりました\n- 地震履歴一覧のデザインを変更\n- AppBarにアプリケーションのバージョンを表示するようにしました",
+      "url": "https://github.com/EQMonitor/EQMonitor/releases/tag/v0.5.4-beta"
+    },
+    {
+      "isBreakingChange": false,
       "buildId": 308,
       "version": "V0.5.3",
       "date": "2022-09-03T18:10:00+09:00",
