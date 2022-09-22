@@ -70,22 +70,6 @@ class EewBodyWidget extends ConsumerWidget {
             filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
             child: Stack(
               children: [
-                // テストモードのオーバレイ
-                if (ref.watch(kmoniProvider).testCaseStartTime != null)
-                  const Center(
-                    child: IgnorePointer(
-                      child: FittedBox(
-                        child: Text(
-                          ' テストモード ',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(129, 255, 0, 0),
-                            fontSize: 200,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
                 Card(
                   margin: EdgeInsets.zero,
                   color:
@@ -561,6 +545,25 @@ class EewBodyWidget extends ConsumerWidget {
                     //     ),
                   ),
                 ),
+                // テストモードのオーバレイ
+                if (ref.watch(kmoniProvider).testCaseStartTime != null)
+                  const Center(
+                    child: IgnorePointer(
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: FittedBox(
+                          child: Text(
+                            'TEST MODE',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(129, 255, 0, 0),
+                              fontSize: 200,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),

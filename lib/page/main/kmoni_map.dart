@@ -81,13 +81,16 @@ class KmoniMap extends HookConsumerWidget {
         if (ref.watch(kmoniProvider).testCaseStartTime != null)
           const Center(
             child: IgnorePointer(
-              child: FittedBox(
-                child: Text(
-                  ' テストモード ',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(129, 255, 0, 0),
-                    fontSize: 200,
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: FittedBox(
+                  child: Text(
+                    'TEST MODE',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(129, 255, 0, 0),
+                      fontSize: 200,
+                    ),
                   ),
                 ),
               ),
@@ -169,41 +172,42 @@ class KmoniStatusWidget extends ConsumerWidget {
                     ),
                     const SizedBox(width: 8),
                     // WebSocket 接続状態
-                    if (eewProvider.subscription?.isJoined() == true)
-                      InkWell(
-                        onLongPress: () async {
-                          // SnackBarを表示
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('WebSocketに再接続しています...'),
-                              duration: Duration(seconds: 1),
-                            ),
-                          );
-                          eewProvider.subscription?.rejoinUntilConnected();
-                        },
-                        child: const Icon(
-                          Icons.link,
-                          semanticLabel: 'WebSocket 接続中',
+                    if (ref.watch(developerModeProvider).isDeveloper)
+                      if (eewProvider.subscription?.isJoined() == true)
+                        InkWell(
+                          onLongPress: () async {
+                            // SnackBarを表示
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('WebSocketに再接続しています...'),
+                                duration: Duration(seconds: 1),
+                              ),
+                            );
+                            eewProvider.subscription?.rejoinUntilConnected();
+                          },
+                          child: const Icon(
+                            Icons.link,
+                            semanticLabel: 'WebSocket 接続中',
+                          ),
+                        )
+                      else
+                        InkWell(
+                          onLongPress: () async {
+                            // SnackBarを表示
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('WebSocketに再接続しています...'),
+                                duration: Duration(seconds: 1),
+                              ),
+                            );
+                            eewProvider.subscription?.rejoinUntilConnected();
+                          },
+                          child: const Icon(
+                            Icons.link_off,
+                            color: Colors.red,
+                            semanticLabel: 'WebSocket 切断',
+                          ),
                         ),
-                      )
-                    else
-                      InkWell(
-                        onLongPress: () async {
-                          // SnackBarを表示
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('WebSocketに再接続しています...'),
-                              duration: Duration(seconds: 1),
-                            ),
-                          );
-                          eewProvider.subscription?.rejoinUntilConnected();
-                        },
-                        child: const Icon(
-                          Icons.link_off,
-                          color: Colors.red,
-                          semanticLabel: 'WebSocket 切断',
-                        ),
-                      ),
                     const SizedBox(width: 8),
 
                     /// テストモード時
