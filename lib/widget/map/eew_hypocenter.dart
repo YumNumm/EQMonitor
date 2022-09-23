@@ -3,6 +3,7 @@ import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
 import 'package:eqmonitor/provider/init/travel_time.dart';
 import 'package:eqmonitor/provider/kmoni_controller.dart';
 import 'package:eqmonitor/schema/dmdata/commonHeader.dart';
+import 'package:eqmonitor/schema/dmdata/eew-information/earthquake/accuracy/epicCenterAccuracy.dart';
 import 'package:eqmonitor/schema/dmdata/eew-information/eew-infomation.dart';
 import 'package:eqmonitor/widget/map/eew_assuming_hypocenter.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,10 @@ class EewHypoCenterWidget extends ConsumerWidget {
     return Stack(
       children: <Widget>[
         for (final eew in eews)
-          if (eew.value.earthQuake?.isAssuming == true)
+          if (eew.value.earthQuake?.isAssuming == true ||
+              eew.value.earthQuake?.hypoCenter.accuracy.epicCenterAccuracy
+                      .epicCenterAccuracy ==
+                  EpicCenterAccuracy.f1)
             EewHypoCenterAssumingMapWidget(
               eew: eew,
             )
