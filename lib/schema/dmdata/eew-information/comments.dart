@@ -15,7 +15,7 @@ class Comments {
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'free': free,
-        'warning': warning,
+        'warning': warning?.toJson(),
       };
 }
 

@@ -31,7 +31,7 @@ class SettingsPage extends ConsumerWidget {
             if (kDebugMode || ref.watch(developerModeProvider).isDeveloper)
               SettingsTile.navigation(
                 leading: const Icon(Icons.bug_report),
-                title: const Text('デバッグ情報'),
+                title: const Text('デバッグメニュー'),
                 onPressed: (context) => context.push('/settings/debug'),
               ),
           ],

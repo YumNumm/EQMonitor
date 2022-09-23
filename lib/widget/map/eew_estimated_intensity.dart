@@ -25,9 +25,11 @@ class EewEstimatedIntensityWidget extends ConsumerWidget {
         ))) {
       return const SizedBox.shrink();
     }
-    final result = eews
-        .map(
-          (eew) => IntensityEstimateApi().estimateIntensity(
+    final result = <List<EstimatedEarthquakeParameterItem>>[];
+    for (final eew in eews) {
+      try {
+        result.add(
+          IntensityEstimateApi().estimateIntensity(
             jmaMagnitude: eew.value.earthQuake!.magnitude.value!,
             depth: eew.value.earthQuake!.hypoCenter.depth.value!.toDouble(),
             hypocenter: LatLng(
@@ -38,14 +40,16 @@ class EewEstimatedIntensityWidget extends ConsumerWidget {
             ),
             obsPoints: ref.watch(parameterEarthquakeProvider).items,
           ),
-        )
-        .expand((e) => e)
-        .toList();
+        );
+      } catch (_) {}
+    }
 
     return CustomPaint(
       painter: EstimatedIntensityPainter(
-        estimatedShindoPointsGroupBy:
-            result.groupListsBy((element) => element.region.code),
+        estimatedShindoPointsGroupBy: result
+            .expand((e) => e)
+            .toList()
+            .groupListsBy((element) => element.region.code),
         mapPolygons: ref.watch(mapAreaForecastLocalEProvider),
         colors: ref.watch(jmaIntensityColorProvider),
         alpha: 0.5,

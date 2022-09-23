@@ -5,20 +5,20 @@ import 'package:intl/intl.dart' hide TextDirection;
 import 'package:latlong2/latlong.dart';
 import 'package:logger/logger.dart';
 
-import '../../const/kmoni/jma_intensity.dart';
-import '../../const/prefecture/area_forecast_local_eew.model.dart';
-import '../../model/setting/jma_intensity_color_model.dart';
-import '../../provider/init/map_area_forecast_local_e.dart';
-import '../../provider/setting/intensity_color_provider.dart';
-import '../../schema/dmdata/commonHeader.dart';
-import '../../schema/dmdata/eq-information/earthquake-information.dart';
-import '../../schema/dmdata/eq-information/earthquake-information/intensity/region.dart';
-import '../../schema/dmdata/eq-information/earthquake-information/intensity/station.dart';
-import '../../schema/dmdata/eq-information/earthquake.dart';
-import '../../schema/supabase/telegram.dart';
-import '../../utils/map/map_global_offset.dart';
-import '../../widget/intensity_widget.dart';
-import 'kmoni_map.dart';
+import '../../../const/kmoni/jma_intensity.dart';
+import '../../../const/prefecture/area_forecast_local_eew.model.dart';
+import '../../../model/setting/jma_intensity_color_model.dart';
+import '../../../provider/init/map_area_forecast_local_e.dart';
+import '../../../provider/setting/intensity_color_provider.dart';
+import '../../../schema/dmdata/commonHeader.dart';
+import '../../../schema/dmdata/eq-information/earthquake-information.dart';
+import '../../../schema/dmdata/eq-information/earthquake-information/intensity/region.dart';
+import '../../../schema/dmdata/eq-information/earthquake-information/intensity/station.dart';
+import '../../../schema/dmdata/eq-information/earthquake.dart';
+import '../../../schema/supabase/telegram.dart';
+import '../../../utils/map/map_global_offset.dart';
+import '../../../widget/intensity_widget.dart';
+import '../kmoni_map.dart';
 
 class EarthquakeHistoryDetailPage extends HookConsumerWidget {
   EarthquakeHistoryDetailPage({
