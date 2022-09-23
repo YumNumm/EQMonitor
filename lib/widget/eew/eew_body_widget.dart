@@ -350,7 +350,7 @@ class EewBodyWidget extends ConsumerWidget {
                                           child: Row(
                                             children: [
                                               Text(
-                                                DateFormat('yyyy/MM/dd hh:mm:ss頃')
+                                                DateFormat('yyyy/MM/dd HH:mm:ss頃')
                                                         .format(
                                                       (eew.value.earthQuake!
                                                                   .originTime ??
