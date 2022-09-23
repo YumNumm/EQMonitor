@@ -3,10 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../provider/earthquake/eew_controller.dart';
-import '../provider/kmoni_controller.dart';
 import '../provider/setting/developer_mode.dart';
 import '../widget/updater.dart';
 import 'main/earthquake_history.dart';
@@ -41,7 +40,7 @@ class MainPage extends HookConsumerWidget {
                             error: (error, stack) => const SizedBox.shrink(),
                             data: (data) => Text(
                               'V${data.version}',
-                              style: const TextStyle(fontSize: 10),
+                              style: const TextStyle(fontSize: 12),
                             ),
                           ),
                     ],
@@ -51,11 +50,8 @@ class MainPage extends HookConsumerWidget {
                   if (kDebugMode ||
                       ref.watch(developerModeProvider).isDeveloper == true)
                     IconButton(
-                      icon: const Icon(Icons.model_training),
-                      onPressed: () {
-                        ref.read(kmoniProvider.notifier).startTestCase();
-                        ref.read(eewHistoryProvider.notifier).startTestcase();
-                      },
+                      icon: const Icon(Icons.settings_ethernet),
+                      onPressed: () => context.push('/settings/debug/eew_test'),
                     ),
                   const UpdaterButtonWidget(),
                 ],

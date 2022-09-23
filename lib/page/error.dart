@@ -13,9 +13,10 @@ class ErrorScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SelectableText(error.toString()),
-              TextButton(
+              ElevatedButton.icon(
                 onPressed: () => context.push('/'),
-                child: const Text('Home'),
+                label: const Text('戻る'),
+                icon: const Icon(Icons.arrow_back),
               ),
             ],
           ),

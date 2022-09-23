@@ -84,7 +84,6 @@ class EewBodyWidget extends ConsumerWidget {
                           child: Column(
                             children: [
                               Card(
-                                elevation: 6,
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -208,14 +207,40 @@ class EewBodyWidget extends ConsumerWidget {
                                             '${eew.value.earthQuake?.hypoCenter.name} で地震${hasOriginTime ? '発生' : '検知'}',
                                             style: const TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 18,
+                                              fontSize: 25,
                                             ),
                                           ),
                                         ),
                                         // M と 深さ
                                         if (eew.value.earthQuake!.isAssuming)
                                           const FittedBox(
-                                            child: Text('PLUM法による検知'),
+                                            child: Text(
+                                              'PLUM法による検知',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                          )
+                                        else if (eew.value.earthQuake!
+                                                    .originTime ==
+                                                null &&
+                                            eew
+                                                    .value
+                                                    .earthQuake!
+                                                    .hypoCenter
+                                                    .accuracy
+                                                    .epicCenterAccuracy
+                                                    .epicCenterAccuracy ==
+                                                EpicCenterAccuracy.f1)
+                                          const FittedBox(
+                                            child: Text(
+                                              'レベル法による検知',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20,
+                                              ),
+                                            ),
                                           )
                                         else
                                           FittedBox(

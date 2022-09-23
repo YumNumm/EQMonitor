@@ -1,9 +1,11 @@
 import 'package:eqmonitor/page/error.dart';
 import 'package:eqmonitor/page/introduction.dart';
-import 'package:eqmonitor/page/main/earthquake_history_detail.dart';
+import 'package:eqmonitor/page/main/earthquake_history/earthquake_history_detail.dart';
 import 'package:eqmonitor/page/main/settings.dart';
 import 'package:eqmonitor/page/main_page.dart';
 import 'package:eqmonitor/page/setting/about_app.dart';
+import 'package:eqmonitor/page/setting/debug/debug_menu.dart';
+import 'package:eqmonitor/page/setting/debug/eew_test.dart';
 import 'package:eqmonitor/page/setting/debug_info.dart';
 import 'package:eqmonitor/page/setting/design/intensity_color_choice.dart';
 import 'package:eqmonitor/page/setting/design/theme.dart';
@@ -78,10 +80,20 @@ final routerProvider = Provider<GoRouter>(
           ),
           GoRoute(
             path: 'debug',
-            builder: (context, state) =>
-                (kDebugMode || ref.watch(developerModeProvider).isDeveloper)
-                    ? const DebugInfoPage()
-                    : ErrorScreen(Exception('デバッグモードではありません')),
+            builder: (context, state) => const DebugMenuPage(),
+            routes: [
+              GoRoute(
+                path: 'info',
+                builder: (context, state) =>
+                    (kDebugMode || ref.watch(developerModeProvider).isDeveloper)
+                        ? const DeveloperDebugPage()
+                        : ErrorScreen(Exception('デベロッパーモードが有効になっていません')),
+              ),
+              GoRoute(
+                path: 'eew_test',
+                builder: (context, state) => const EewTestPage(),
+              )
+            ],
           ),
         ],
       ),

@@ -12,8 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:settings_ui/settings_ui.dart';
 
-class DebugInfoPage extends HookConsumerWidget {
-  const DebugInfoPage({super.key});
+class DeveloperDebugPage extends HookConsumerWidget {
+  const DeveloperDebugPage({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
