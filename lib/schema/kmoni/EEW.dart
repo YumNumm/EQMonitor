@@ -193,13 +193,13 @@ class KyoshinEEW {
             ),
             landOrSea: null,
             accuracy: Accuracy(
-              depthCalculation: DepthCalculation.f1,
+              depthCalculation: DepthCalculation.f2,
               epicCenterAccuracy: EpicCenters(
-                epicCenterAccuracy: EpicCenterAccuracy.f1,
-                hypoCenterAccuracy: HypoCenterAccuracy.f1,
+                epicCenterAccuracy: EpicCenterAccuracy.f2,
+                hypoCenterAccuracy: HypoCenterAccuracy.f2,
               ),
               magnitudeCalculation: MagnitudeCalculation.f2,
-              numberOfMagnitudeCalculation: NumberOfMagnitudeCalculation.f1,
+              numberOfMagnitudeCalculation: NumberOfMagnitudeCalculation.f2,
             ),
           ),
           magnitude: Magnitude(
