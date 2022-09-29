@@ -45,7 +45,7 @@ class KyoshinKansokutenPainter extends CustomPainter {
       canvas.drawCircle(
         MapGlobalOffset.latLonToGlobalPoint(LatLng(point.lat, point.lon))
             .toLocalOffset(const Size(476, 927.4)),
-        0.7,
+        1.2,
         paint,
       );
     }
