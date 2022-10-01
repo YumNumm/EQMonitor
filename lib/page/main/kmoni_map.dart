@@ -11,16 +11,15 @@ import 'package:eqmonitor/widget/map/eew_estimated_intensity.dart';
 import 'package:eqmonitor/widget/map/eew_hypocenter.dart';
 import 'package:eqmonitor/widget/map/eew_intensity.dart';
 import 'package:eqmonitor/widget/map/kyoshin_kansokuten.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Theme;
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../widget/eew/eew_body_widget.dart';
 
-final transformationControllerProvider =
-    Provider((ref) => TransformationController());
+final transformationControllerProvider = Provider(
+  (ref) => TransformationController(),
+);
 
 class KmoniMap extends HookConsumerWidget {
   const KmoniMap({super.key});
@@ -28,22 +27,9 @@ class KmoniMap extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDeveloper = ref.watch(developerModeProvider).isDeveloper;
-    final doubleTapPosition = useState(TapDownDetails());
     return Stack(
       children: [
         GestureDetector(
-          onDoubleTapDown: (details) => doubleTapPosition.value = details,
-          onDoubleTap: () {
-            final controller = ref.read(transformationControllerProvider);
-            if (controller.value != Matrix4.identity()) {
-              controller.value = Matrix4.identity();
-            } else {
-              final position = doubleTapPosition.value.localPosition;
-              controller.value = Matrix4.identity()
-                ..translate(-position.dx, -position.dy)
-                ..scale(2);
-            }
-          },
           child: Center(
             child: InteractiveViewer(
               boundaryMargin: const EdgeInsets.all(20),
@@ -60,7 +46,6 @@ class KmoniMap extends HookConsumerWidget {
                     const BaseMapWidget(),
                     // EEWの距離減衰式による予想震度
                     if (isDeveloper ||
-                        kDebugMode ||
                         (ref.watch(kmoniProvider).testCaseStartTime != null))
                       const EewEstimatedIntensityWidget(),
 
