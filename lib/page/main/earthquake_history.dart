@@ -169,6 +169,7 @@ class EarthquakeHistoryTile extends ConsumerWidget {
                       ? 'M${component.magnitude.value!}'
                       : 'M不明'
               : '',
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         leading: IntensityWidget(
           intensity: maxInt,
@@ -180,7 +181,10 @@ class EarthquakeHistoryTile extends ConsumerWidget {
           children: [
             Text(
               component?.hypoCenter.name ?? '震源調査中',
-              style: const TextStyle(fontSize: 18),
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             // 速報アイコン
             if (isSokuhou) const Chip(label: Text('速報')),
