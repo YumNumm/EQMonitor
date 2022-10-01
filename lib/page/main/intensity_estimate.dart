@@ -11,9 +11,8 @@ import '../../api/int_calc/int_calc.dart';
 import '../../const/kmoni/jma_intensity.dart';
 import '../../provider/init/map_area_forecast_local_e.dart';
 import '../../provider/init/parameter-earthquake.dart';
-import '../../widget/intensity_widget.dart';
 import '../../widget/intensity_calc/map_eew_hypocenter_painter.dart';
-import 'kmoni_map.dart';
+import '../../widget/intensity_widget.dart';
 
 class IntensityEstimatePage extends HookConsumerWidget {
   IntensityEstimatePage({super.key});

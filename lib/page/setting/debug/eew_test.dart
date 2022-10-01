@@ -202,10 +202,10 @@ class EewTestPage extends HookConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.all(8),
                     child: DropdownButtonFormField<EpicCenterAccuracy>(
-                      key: const Key('DropdownButtonFormField'),
+                      key: const Key('EpicCenterAccuracy'),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        label: Text('DropdownButtonFormField'),
+                        label: Text('EpicCenterAccuracy'),
                       ),
                       items: EpicCenterAccuracy.values
                           .map(
