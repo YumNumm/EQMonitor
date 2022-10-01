@@ -13,8 +13,8 @@ import 'main/intensity_estimate.dart';
 import 'main/kmoni_map.dart';
 import 'main/settings.dart';
 
-class MainPage extends HookConsumerWidget {
-  const MainPage({super.key});
+class MainView extends HookConsumerWidget {
+  const MainView({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = useState(0);
@@ -31,9 +31,7 @@ class MainPage extends HookConsumerWidget {
                     textBaseline: TextBaseline.alphabetic,
                     crossAxisAlignment: CrossAxisAlignment.baseline,
                     children: [
-                      const Text(
-                        'EQMonitor',
-                      ),
+                      const Text('EQMonitor'),
                       const SizedBox(width: 5),
                       ref.watch(packageInfoProvider).when<Widget>(
                             loading: () => const SizedBox.shrink(),
@@ -63,7 +61,6 @@ class MainPage extends HookConsumerWidget {
                 selectedIndex: selectedIndex.value,
                 onDestinationSelected: (i) {
                   HapticFeedback.selectionClick();
-
                   selectedIndex.value = i;
                 },
                 destinations: const [

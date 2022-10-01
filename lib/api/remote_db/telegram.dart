@@ -11,7 +11,6 @@ class TelegramApi {
     int? limit = 200,
     int offset = 0,
   }) async {
-    // TODO(YumNumm): Telegram取得時offsetの実装
     if (offset != 0) {
       throw UnimplementedError('Telegram offset is not implemented yet');
     }

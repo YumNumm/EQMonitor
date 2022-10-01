@@ -6,7 +6,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../introduction.dart';
+import '../introduction_view.dart';
 
 /// ## 利用規約のページ
 /// ページの末尾にライセンス同意ボタンを表示するかは[showAcceptButton]で指定

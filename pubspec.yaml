@@ -24,6 +24,7 @@ dependencies:
   dio: ^4.0.6
   dio_http2_adapter: ^2.0.0
   dynamic_color: ^1.4.0
+  f_logs: ^2.0.1
   fast_i18n: ^5.12.6
   firebase_analytics: ^9.3.0
   firebase_auth: ^3.6.1

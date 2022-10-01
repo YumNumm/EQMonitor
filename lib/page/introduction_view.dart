@@ -8,8 +8,8 @@ import 'setting/term_of_service.dart';
 final introductionController =
     Provider<PageController>((ref) => PageController());
 
-class IntroductionPage extends HookConsumerWidget {
-  const IntroductionPage({super.key});
+class IntroductionView extends HookConsumerWidget {
+  const IntroductionView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

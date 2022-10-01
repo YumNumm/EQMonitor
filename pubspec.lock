@@ -372,6 +372,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.0"
+  f_logs:
+    dependency: "direct main"
+    description:
+      name: f_logs
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -1610,6 +1617,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  xxtea:
+    dependency: transitive
+    description:
+      name: xxtea
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
   yaml:
     dependency: transitive
     description:

@@ -256,11 +256,9 @@ class EewBodyWidget extends ConsumerWidget {
                                                 if (eew.value.earthQuake!
                                                         .magnitude.condition ==
                                                     null)
-                                                  Text(
-                                                    eew.value.earthQuake
-                                                            ?.magnitude.unit ??
-                                                        'M',
-                                                    style: const TextStyle(
+                                                  const Text(
+                                                    'M',
+                                                    style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       fontSize: 18,

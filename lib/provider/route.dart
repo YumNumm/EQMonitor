@@ -1,8 +1,8 @@
 import 'package:eqmonitor/page/error.dart';
-import 'package:eqmonitor/page/introduction.dart';
+import 'package:eqmonitor/page/introduction_view.dart';
 import 'package:eqmonitor/page/main/earthquake_history/earthquake_history_detail.dart';
 import 'package:eqmonitor/page/main/settings.dart';
-import 'package:eqmonitor/page/main_page.dart';
+import 'package:eqmonitor/page/main_view.dart';
 import 'package:eqmonitor/page/setting/about_app.dart';
 import 'package:eqmonitor/page/setting/debug/debug_menu.dart';
 import 'package:eqmonitor/page/setting/debug/eew_test.dart';
@@ -24,11 +24,11 @@ final routerProvider = Provider<GoRouter>(
     routes: [
       GoRoute(
         path: '/introduction',
-        builder: (context, state) => const IntroductionPage(),
+        builder: (context, state) => const IntroductionView(),
       ),
       GoRoute(
         path: '/',
-        builder: (context, state) => const MainPage(),
+        builder: (context, state) => const MainView(),
         routes: [
           GoRoute(
             path: 'earthquake_history_item/:eventId',

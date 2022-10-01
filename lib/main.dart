@@ -35,8 +35,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart' hide TextDirection;
-import 'package:isar/isar.dart';
 import 'package:logger/logger.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -58,15 +58,30 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   Intl.defaultLocale = 'ja_JP';
   final crashlytics = FirebaseCrashlytics.instance;
   final deviceInfo = await DeviceInfoPlugin().androidInfo;
+  final prefs = await SharedPreferences.getInstance();
+  final appInfo = await PackageInfo.fromPlatform();
+  // クラッシュレポートの初期化
+  final isCrashLogShareAllowed =
+      await CrashLogShareProvider(prefs).loadSettingsFromSharedPrefrences();
+  await crashlytics.setUserIdentifier(
+    deviceInfo.fingerprint ?? deviceInfo.board ?? 'Unknown',
+  );
+  await crashlytics.setCrashlyticsCollectionEnabled(
+    isCrashLogShareAllowed && kReleaseMode,
+  );
+
+  // ログ出力の初期化
+
+  // ファイル等の読み込み
   late List<KyoshinKansokuten> kansokuten;
   late List<MapPolygon> mapAreaForecastLocalE;
   late List<TravelTimeTable> travelTimeTable;
-  late SharedPreferences prefs;
   late Directory dir;
-  late Isar isar;
+  // late Isar isar;
   late AndroidDeviceInfo androidDeviceInfo;
   late IosDeviceInfo iosDeviceInfo;
   ParameterEarthquake? parameterEarthquake;
@@ -75,7 +90,6 @@ Future<void> main() async {
     loadKyoshinKansokuten().then((e) => kansokuten = e),
     loadMapAreaForecastLocalE().then((e) => mapAreaForecastLocalE = e),
     loadTravelTimeTable().then((e) => travelTimeTable = e),
-    SharedPreferences.getInstance().then((e) => prefs = e),
     getApplicationSupportDirectory().then((e) => dir = e),
     Supabase.initialize(
       url: supabaseS1Url,
@@ -90,14 +104,6 @@ Future<void> main() async {
       DeviceInfoPlugin().iosInfo.then((e) => iosDeviceInfo = e),
   ];
   await Future.wait(futures);
-  final isCrashLogShareAllowed =
-      await CrashLogShareProvider(prefs).loadSettingsFromSharedPrefrences();
-  await crashlytics.setUserIdentifier(
-    deviceInfo.fingerprint ?? deviceInfo.board ?? 'Unknown',
-  );
-  await crashlytics.setCrashlyticsCollectionEnabled(
-    isCrashLogShareAllowed && kReleaseMode,
-  );
 
   if (File('${dir.path}/parameter-earthquake-with-arv.json').existsSync()) {
     final paramData = json.decode(
