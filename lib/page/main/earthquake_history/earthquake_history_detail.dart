@@ -1,7 +1,11 @@
+import 'dart:developer';
+
+import 'package:eqmonitor/page/main/earthquake_history.dart';
+import 'package:eqmonitor/provider/init/parameter-earthquake.dart';
+import 'package:eqmonitor/schema/dmdata/parameter-earthquake/parameter-earthquake.dart';
 import 'package:eqmonitor/widget/map/base_map.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart' hide TextDirection;
 import 'package:latlong2/latlong.dart';
 import 'package:logger/logger.dart';
 
@@ -18,7 +22,6 @@ import '../../../schema/dmdata/eq-information/earthquake.dart';
 import '../../../schema/supabase/telegram.dart';
 import '../../../utils/map/map_global_offset.dart';
 import '../../../widget/intensity_widget.dart';
-import '../kmoni_map.dart';
 
 class EarthquakeHistoryDetailPage extends HookConsumerWidget {
   EarthquakeHistoryDetailPage({
@@ -106,76 +109,8 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
       ),
       body: Column(
         children: <Widget>[
-          DecoratedBox(
-            decoration: BoxDecoration(
-              color: maxInt.fromUser(colors).withOpacity(0.3),
-            ),
-            child: ListTile(
-              leading: IntensityWidget(
-                intensity: maxInt,
-                opacity: 1,
-                size: 42,
-              ),
-              enableFeedback: true,
-              title: Text(
-                component?.hypoCenter.name ?? '震源調査中',
-                style: const TextStyle(fontSize: 18),
-              ),
-              subtitle: Wrap(
-                children: [
-                  Text(
-                    (StringBuffer()
-                          ..writeAll(
-                            <String>[
-                              if (component?.originTime != null)
-                                "${DateFormat('yyyy/MM/dd HH:mm').format(component!.originTime.toLocal())}頃 ",
-                              // マグニチュード
-                              if (component?.magnitude != null)
-                                (component!.magnitude.condition != null)
-                                    ? component.magnitude.condition!.description
-                                    : (component.magnitude.value != null)
-                                        ? 'M${component.magnitude.value!}'
-                                        : 'M不明',
-                              ' ',
-                              // 震源の深さ
-                              if (component?.hypoCenter.depth != null)
-                                (component?.hypoCenter.depth.condition != null)
-                                    ? component!
-                                        .hypoCenter.depth.condition!.description
-                                    : (component!.hypoCenter.depth.value !=
-                                            null)
-                                        ? '深さ${component.hypoCenter.depth.value}km'
-                                        : '不明',
-                            ],
-                          ))
-                        .toString(),
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                  // 速報かどうか
-                  if (isSokuhou)
-                    const Chip(
-                      padding: EdgeInsets.zero,
-                      label: Text(
-                        '速報',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  // 顕著な地震の震源要素更新のお知らせ かどうか
-                  if (latestVxse61Head != null)
-                    const Chip(
-                      padding: EdgeInsets.zero,
-                      label: Text(
-                        '顕著な地震の震源要素更新のお知らせ ',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
+          AbsorbPointer(
+            child: EarthquakeHistoryTile(telegrams: telegrams),
           ),
           Text(
             (StringBuffer()
@@ -196,24 +131,22 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
               children: [
                 InteractiveViewer(
                   maxScale: 20,
-                  child: Stack(
-                    children: [
-                      // マップベース
-                      const BaseMapWidget(),
-                      // Region毎の震度
-                      MapRegionIntensityWidget(
-                        regions: intensity?.regions ?? <Region>[],
-                      ),
-                      // 震央位置
-                      MapHypoCenterMapWidget(
-                        component: component,
-                      ),
-                      //  観測点ごとの震度
-                      // TODO(YumNumm): 観測点震度描画をCustomPainterに移植する
-                      // MapStationIntensityWidget(
-                      //   stations: intensity?.stations ?? [],
-                      // ),
-                    ],
+                  child: RepaintBoundary(
+                    child: Stack(
+                      children: [
+                        // マップベース
+                        const BaseMapWidget(),
+                        // Region毎の震度
+                        MapRegionIntensityWidget(
+                          regions: intensity?.regions ?? <Region>[],
+                          stations: intensity?.stations ?? <Station>[],
+                        ),
+                        // 震央位置
+                        MapHypoCenterMapWidget(
+                          component: component,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Align(
@@ -254,17 +187,23 @@ class MapRegionIntensityWidget extends ConsumerWidget {
   const MapRegionIntensityWidget({
     super.key,
     required this.regions,
+    required this.stations,
   });
   final List<Region> regions;
+  final List<Station> stations;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapSource = ref.watch(mapAreaForecastLocalEProvider);
+    final parameterEarthquake = ref.watch(parameterEarthquakeProvider);
+
     return CustomPaint(
       painter: MapRegionIntensityPainter(
         mapPolygons: mapSource,
         regions: regions,
+        stations: stations,
         colors: ref.watch(jmaIntensityColorProvider),
+        parameterEarthquake: parameterEarthquake,
       ),
       size: Size.infinite,
     );
@@ -275,14 +214,20 @@ class MapRegionIntensityPainter extends CustomPainter {
   MapRegionIntensityPainter({
     required this.mapPolygons,
     required this.regions,
+    required this.stations,
     required this.colors,
+    required this.parameterEarthquake,
   });
   final List<MapPolygon> mapPolygons;
   final List<Region> regions;
+  final List<Station> stations;
   final JmaIntensityColorModel colors;
+  final ParameterEarthquake parameterEarthquake;
 
   @override
   void paint(Canvas canvas, Size size) {
+    log('Redraw');
+    // Regionの描画
     for (final region in regions) {
       // region.codeが一致するMapPolygonを探す
       try {
@@ -315,12 +260,35 @@ class MapRegionIntensityPainter extends CustomPainter {
         Logger().e(e, region.code);
       }
     }
+    // TODO(YumNumm): 観測点の描画実装
+    /*for (final station in stations) {
+      final param =
+          parameterEarthquake.items.firstWhere((e) => e.code == station.code);
+      final offset = MapGlobalOffset.latLonToGlobalPoint(
+        LatLng(param.latitude, param.longitude),
+      ).toLocalOffset(const Size(476, 927.4));
+      canvas.drawCircle(
+        offset,
+        1,
+        Paint()
+          ..color = JmaIntensity.values
+              .firstWhere((e) => e.name == station.intensity)
+              .color
+              .withBlue(100)
+          ..isAntiAlias = true
+          ..style = PaintingStyle.fill,
+      );
+    }
+    */
   }
 
   @override
   bool shouldRepaint(MapRegionIntensityPainter oldDelegate) {
     return oldDelegate.mapPolygons != mapPolygons ||
-        oldDelegate.regions != regions;
+        oldDelegate.regions != regions ||
+        oldDelegate.colors != colors ||
+        oldDelegate.parameterEarthquake != parameterEarthquake ||
+        oldDelegate.stations != stations;
   }
 }
 

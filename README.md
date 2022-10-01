@@ -35,3 +35,5 @@ flutter build apk --release --obfuscate --split-debug-info=obfuscate/android
 # DEBUG BUILD
 flutter build apk --debug
 ```
+
+<a href="https://www.buymeacoffee.com/OnoueRyotaro" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
