@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:eqmonitor/provider/init/shared_preferences.dart';
 import 'package:eqmonitor/provider/setting/notification_settings.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +45,7 @@ class NotificationSettingPage extends HookConsumerWidget {
                 onToggle: (_) => ref
                     .read(notificationSettingsProvider.notifier)
                     .toggleUseTts(),
+
               ),
             ],
           ),

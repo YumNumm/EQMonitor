@@ -15,9 +15,11 @@ class NotificationSettingsModel with _$NotificationSettingsModel {
     @Default(false) bool lowPrecision,
 
     /// マグニチュードの閾値
+    /// この値以上の地震が発生した場合に通知する
     @Default(0.0) double magnitudeThreshold,
 
     /// 予想最大震度の閾値
+    /// この値以上の地震が発生した場合に通知する
     @Default(JmaIntensity.Int0) JmaIntensity intensityThreshold,
 
     /// TTSのよる読み上げをするかどうか
