@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:eqmonitor/page/main/earthquake_history.dart';
 import 'package:eqmonitor/provider/init/parameter-earthquake.dart';
 import 'package:eqmonitor/schema/dmdata/parameter-earthquake/parameter-earthquake.dart';
+import 'package:eqmonitor/view/main/earthquake_history.dart';
 import 'package:eqmonitor/widget/map/base_map.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

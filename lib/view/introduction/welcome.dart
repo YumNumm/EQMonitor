@@ -1,4 +1,4 @@
-import 'package:eqmonitor/page/introduction_view.dart';
+import 'package:eqmonitor/view/introduction_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
