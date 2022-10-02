@@ -7,8 +7,7 @@ import 'package:eqmonitor/schema/dmdata/commonHeader.dart';
 import 'package:eqmonitor/schema/dmdata/eq-information/earthquake-information.dart';
 import 'package:eqmonitor/schema/supabase/telegram.dart';
 import 'package:eqmonitor/widget/intensity_widget.dart';
-import 'package:flutter/material.dart' hide Theme;
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -22,61 +21,66 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(earthquakeHistoryFutureProvider).when<Widget>(
-          loading: () => const Center(
-            child: CircularProgressIndicator(),
+    return Scaffold(
+      // SliverAppBar
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            floating: true,
+            expandedHeight: 100,
+            stretch: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(
+                '地震履歴',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              stretchModes: const [
+                StretchMode.zoomBackground,
+                StretchMode.blurBackground,
+                StretchMode.fadeTitle,
+              ],
+            ),
           ),
-          error: (context, error) => Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'エラーが発生しました',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+          // SliverList
+          ref.watch(earthquakeHistoryFutureProvider).when<Widget>(
+                loading: () => const Center(
+                  child: CircularProgressIndicator(),
                 ),
-              ),
-              Text('$error'),
-              FloatingActionButton.extended(
-                label: const Text('再読み込みする'),
-                icon: const Icon(Icons.refresh),
-                onPressed: () => ref.refresh(earthquakeHistoryFutureProvider),
-              ),
-            ],
-          ),
-          data: (data) {
-            return AnimationLimiter(
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  return await ref.refresh(earthquakeHistoryFutureProvider);
-                },
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics(),
-                  ),
-                  itemCount: data.length,
-                  itemBuilder: (context, index) {
-                    final key = data.keys.elementAt(index);
-                    final telegrams = data[key]!;
-                    return AnimationConfiguration.staggeredList(
-                      position: index,
-                      delay: const Duration(milliseconds: 20),
-                      child: SlideAnimation(
-                        duration: const Duration(milliseconds: 1000),
-                        curve: Curves.fastLinearToSlowEaseIn,
-                        child: FadeInAnimation(
-                          duration: const Duration(milliseconds: 1000),
-                          curve: Curves.fastLinearToSlowEaseIn,
-                          child: EarthquakeHistoryTile(telegrams: telegrams),
-                        ),
+                error: (context, error) => Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'エラーが発生しました',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
                       ),
-                    );
-                  },
+                    ),
+                    Text('$error'),
+                    FloatingActionButton.extended(
+                      label: const Text('再読み込みする'),
+                      icon: const Icon(Icons.refresh),
+                      onPressed: () =>
+                          ref.refresh(earthquakeHistoryFutureProvider),
+                    ),
+                  ],
                 ),
+                data: (data) {
+                  return SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final key = data.keys.elementAt(index);
+                        final telegrams = data[key]!;
+                        return EarthquakeHistoryTile(
+                          telegrams: telegrams,
+                        );
+                      },
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        );
+        ],
+      ),
+    );
   }
 }
 

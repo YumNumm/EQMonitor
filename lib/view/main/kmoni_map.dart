@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
 import 'package:eqmonitor/provider/kmoni_controller.dart';
+import 'package:eqmonitor/provider/package_info.dart';
 import 'package:eqmonitor/provider/setting/developer_mode.dart';
 import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
 import 'package:eqmonitor/widget/map/base_map.dart';
@@ -11,7 +12,10 @@ import 'package:eqmonitor/widget/map/eew_estimated_intensity.dart';
 import 'package:eqmonitor/widget/map/eew_hypocenter.dart';
 import 'package:eqmonitor/widget/map/eew_intensity.dart';
 import 'package:eqmonitor/widget/map/kyoshin_kansokuten.dart';
+import 'package:eqmonitor/widget/updater.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Theme;
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -27,71 +31,105 @@ class KmoniMap extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDeveloper = ref.watch(developerModeProvider).isDeveloper;
-    return Stack(
-      children: [
-        GestureDetector(
-          child: Center(
-            child: InteractiveViewer(
-              boundaryMargin: const EdgeInsets.all(20),
-              transformationController:
-                  ref.watch(transformationControllerProvider),
-              maxScale: 20,
-              constrained: false,
-              child: SizedBox(
-                height: 927.4,
-                width: 476,
-                child: Stack(
-                  children: [
-                    // マップベース
-                    const BaseMapWidget(),
-                    // EEWの距離減衰式による予想震度
-                    if (isDeveloper ||
-                        (ref.watch(kmoniProvider).testCaseStartTime != null))
-                      const EewEstimatedIntensityWidget(),
-
-                    // EEWの予想震度
-                    const EewIntensityWidget(),
-                    // 観測点
-                    const KyoshinKansokutenWidget(),
-                    // EEWの震央位置
-                    const EewHypoCenterWidget(),
-                  ],
-                ),
-              ),
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        title: FittedBox(
+          child: Row(
+            textBaseline: TextBaseline.alphabetic,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            children: [
+              const Text('EQMonitor'),
+              const SizedBox(width: 5),
+              ref.watch(packageInfoProvider).when<Widget>(
+                    loading: () => const SizedBox.shrink(),
+                    error: (error, stack) => const SizedBox.shrink(),
+                    data: (data) => Text(
+                      'V${data.version}',
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+            ],
           ),
         ),
+        actions: [
+          if (kDebugMode ||
+              ref.watch(developerModeProvider).isDeveloper == true)
+            IconButton(
+              icon: const Icon(Icons.settings_ethernet),
+              onPressed: () => context.push('/settings/debug/eew_test'),
+            ),
+          const UpdaterButtonWidget(),
+        ],
+        leading: (ref.watch(developerModeProvider).isDeveloper)
+            ? const Icon(Icons.lock_open)
+            : null,
+      ),
+      body: Stack(
+        children: [
+          GestureDetector(
+            child: Center(
+              child: InteractiveViewer(
+                boundaryMargin: const EdgeInsets.all(20),
+                transformationController:
+                    ref.watch(transformationControllerProvider),
+                maxScale: 20,
+                constrained: false,
+                child: SizedBox(
+                  height: 927.4,
+                  width: 476,
+                  child: Stack(
+                    children: [
+                      // マップベース
+                      const BaseMapWidget(),
+                      // EEWの距離減衰式による予想震度
+                      if (isDeveloper ||
+                          (ref.watch(kmoniProvider).testCaseStartTime != null))
+                        const EewEstimatedIntensityWidget(),
 
-        // テストモードのオーバレイ
-        if (ref.watch(kmoniProvider).testCaseStartTime != null)
-          const Center(
-            child: IgnorePointer(
-              child: Padding(
-                padding: EdgeInsets.all(8),
-                child: FittedBox(
-                  child: Text(
-                    'TEST MODE',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(129, 255, 0, 0),
-                      fontSize: 200,
-                    ),
+                      // EEWの予想震度
+                      const EewIntensityWidget(),
+                      // 観測点
+                      const KyoshinKansokutenWidget(),
+                      // EEWの震央位置
+                      const EewHypoCenterWidget(),
+                    ],
                   ),
                 ),
               ),
             ),
           ),
-        // EEW表示
-        const OnEewWidget(),
-        // KMoniの更新状況
-        const Align(
-          alignment: Alignment.bottomLeft,
-          child: Padding(
-            padding: EdgeInsets.all(4),
-            child: KmoniStatusWidget(),
+
+          // テストモードのオーバレイ
+          if (ref.watch(kmoniProvider).testCaseStartTime != null)
+            const Center(
+              child: IgnorePointer(
+                child: Padding(
+                  padding: EdgeInsets.all(8),
+                  child: FittedBox(
+                    child: Text(
+                      'TEST MODE',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(129, 255, 0, 0),
+                        fontSize: 200,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          // EEW表示
+          const OnEewWidget(),
+          // KMoniの更新状況
+          const Align(
+            alignment: Alignment.bottomLeft,
+            child: Padding(
+              padding: EdgeInsets.all(4),
+              child: KmoniStatusWidget(),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
