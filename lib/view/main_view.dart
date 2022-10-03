@@ -42,13 +42,18 @@ class MainView extends HookConsumerWidget {
             ),
           ],
         ),
-        body: selectedIndex.value == 0
-            ? const KmoniMap()
-            : selectedIndex.value == 1
-                ? EarthquakeHistoryPage()
-                : selectedIndex.value == 2
-                    ? IntensityEstimatePage()
-                    : const SettingsPage(),
+        body: (() {
+          switch (selectedIndex.value) {
+            case 0:
+              return const KmoniMap();
+            case 1:
+              return EarthquakeHistoryPage();
+            case 2:
+              return IntensityEstimatePage();
+            case 3:
+              return const SettingsPage();
+          }
+        })(),
       ),
     );
   }

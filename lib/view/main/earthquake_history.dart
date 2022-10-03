@@ -21,66 +21,74 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      // SliverAppBar
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            floating: true,
-            expandedHeight: 100,
-            stretch: true,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                '地震履歴',
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              stretchModes: const [
-                StretchMode.zoomBackground,
-                StretchMode.blurBackground,
-                StretchMode.fadeTitle,
+    final appBar = AppBar(
+      title: const Text('地震履歴'),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.refresh),
+          onPressed: () async => ref.refresh(earthquakeHistoryFutureProvider),
+        ),
+      ],
+    );
+
+    return ref.watch(earthquakeHistoryFutureProvider).when<Widget>(
+          loading: () => Scaffold(
+            body: const Center(
+              child: CircularProgressIndicator(),
+            ),
+            appBar: appBar,
+          ),
+          error: (context, error) => Scaffold(
+            appBar: appBar,
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'エラーが発生しました',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(error.toString()),
+                FloatingActionButton.extended(
+                  label: const Text('再読み込みする'),
+                  icon: const Icon(Icons.refresh),
+                  onPressed: () => ref.refresh(earthquakeHistoryFutureProvider),
+                ),
               ],
             ),
           ),
-          // SliverList
-          ref.watch(earthquakeHistoryFutureProvider).when<Widget>(
-                loading: () => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                error: (context, error) => Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'エラーが発生しました',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+          data: (data) {
+            return Scaffold(
+              // SliverAppBar
+              body: RefreshIndicator(
+                onRefresh: () async =>
+                    ref.refresh(earthquakeHistoryFutureProvider),
+                child: CustomScrollView(
+                  slivers: [
+                    const SliverAppBar(
+                      floating: true,
+                      stretch: true,
+                      title: Text('地震履歴'),
+                    ),
+                    // SliverList
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          final key = data.keys.elementAt(index);
+                          final telegrams = data[key]!;
+                          return EarthquakeHistoryTile(
+                            telegrams: telegrams,
+                          );
+                        },
                       ),
-                    ),
-                    Text('$error'),
-                    FloatingActionButton.extended(
-                      label: const Text('再読み込みする'),
-                      icon: const Icon(Icons.refresh),
-                      onPressed: () =>
-                          ref.refresh(earthquakeHistoryFutureProvider),
-                    ),
+                    )
                   ],
                 ),
-                data: (data) {
-                  return SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final key = data.keys.elementAt(index);
-                        final telegrams = data[key]!;
-                        return EarthquakeHistoryTile(
-                          telegrams: telegrams,
-                        );
-                      },
-                    ),
-                  );
-                },
               ),
-        ],
-      ),
-    );
+            );
+          },
+        );
   }
 }
 
