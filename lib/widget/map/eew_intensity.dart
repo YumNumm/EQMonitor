@@ -55,7 +55,7 @@ class EewIntensityPainter extends CustomPainter {
             final mapRegionPolygons = mapPolygons.where(
               (element) => element.code == region.code,
             );
-            for (final mapPolygon in mapRegionPolygons) {
+            for (final mapPolygon in mapRegionPolygons.toList()) {
               canvas
                 ..drawPath(
                   mapPolygon.path,
@@ -71,6 +71,27 @@ class EewIntensityPainter extends CustomPainter {
                     ..isAntiAlias = true
                     ..style = PaintingStyle.stroke,
                 );
+              // EEW警報の対象だった場合は赤枠を描画
+              // その枠の周りを黒枠で囲む
+              // if (region.isWarning) {
+              //   canvas
+              //     ..drawPath(
+              //       mapPolygon.path,
+              //       Paint()
+              //         ..color = const Color.fromARGB(255, 255, 255, 255)
+              //         ..strokeWidth = 0.5
+              //         ..isAntiAlias = true
+              //         ..style = PaintingStyle.stroke,
+              //     )
+              //     ..drawPath(
+              //       mapPolygon.path,
+              //       Paint()
+              //         ..color = const Color.fromARGB(255, 255, 0, 0)
+              //         ..strokeWidth = 0.1
+              //         ..isAntiAlias = true
+              //         ..style = PaintingStyle.stroke,
+              //     );
+              // }
             }
           } on Exception catch (e) {
             Logger().e(e, region.code);
