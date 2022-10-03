@@ -2,10 +2,10 @@ import 'dart:developer';
 
 import 'package:eqmonitor/provider/init/parameter-earthquake.dart';
 import 'package:eqmonitor/schema/dmdata/parameter-earthquake/parameter-earthquake.dart';
-import 'package:eqmonitor/view/main/earthquake_history.dart';
 import 'package:eqmonitor/widget/map/base_map.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:latlong2/latlong.dart';
 import 'package:logger/logger.dart';
 
@@ -109,8 +109,150 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
       ),
       body: Column(
         children: <Widget>[
-          AbsorbPointer(
-            child: EarthquakeHistoryTile(telegrams: telegrams),
+          // AbsorbPointer(
+          //   child: EarthquakeHistoryTile(telegrams: telegrams),
+          // ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Card(
+              color: maxInt.fromUser(colors).withOpacity(0.3),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                children: [
+                  Row(),
+                  // 発生時刻
+                  Text(
+                    '${DateFormat('yyyy/MM/dd HH:mm').format(component!.originTime.toLocal())}頃',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                            children: [
+                              const Text('最大震度'),
+                              Text(
+                                maxInt.name
+                                    .replaceAll(RegExp(r'[^0-9]'), '')
+                                    .replaceAll('+', '強')
+                                    .replaceAll('-', '弱'),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 55,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const VerticalDivider(),
+                      Flexible(
+                        flex: 2,
+                        child: Column(
+                          children: [
+                            // 震央地
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  '震央地',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 4,
+                                ),
+                                Text(
+                                  component.hypoCenter.name,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 30,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            FittedBox(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  // Magunitude
+                                  if (component.magnitude.condition == null)
+                                    const Text(
+                                      'M',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  if (component.hypoCenter.depth.condition ==
+                                      null)
+                                    Text(
+                                      (component.magnitude.condition != null)
+                                          ? component
+                                              .magnitude.condition!.description
+                                          : component.magnitude.value
+                                                  .toString() ??
+                                              '不明',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 45,
+                                      ),
+                                    ),
+                                  const VerticalDivider(),
+                                  // Depth
+                                  if (component.hypoCenter.depth.condition ==
+                                      null)
+                                    Text(
+                                      component.hypoCenter.depth.type ?? '深さ',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  Text(
+                                    (component.hypoCenter.depth.condition !=
+                                            null)
+                                        ? component.hypoCenter.depth.condition!
+                                            .description
+                                        : component.hypoCenter.depth.value
+                                                .toString() ??
+                                            '不明',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 45,
+                                    ),
+                                  ),
+                                  if (component.hypoCenter.depth.condition ==
+                                      null)
+                                    Text(
+                                      component.hypoCenter.depth.unit ?? 'km',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ),
           Text(
             (StringBuffer()

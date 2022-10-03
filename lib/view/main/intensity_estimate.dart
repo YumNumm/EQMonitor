@@ -47,6 +47,9 @@ class IntensityEstimatePage extends HookConsumerWidget {
     }
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('震度計算'),
+      ),
       body: Column(
         children: [
           ExpansionTile(

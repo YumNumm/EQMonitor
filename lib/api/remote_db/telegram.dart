@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../schema/supabase/telegram.dart' show Telegram;
@@ -69,7 +71,7 @@ class TelegramApi {
     }
 
     if (res.hasError) {
-      throw Exception(res.error?.message);
+      throw HttpException(res.error?.message ?? '原因不明のエラー');
     }
     final telegrams = <Telegram>[];
     for (final telegram in res.data) {
