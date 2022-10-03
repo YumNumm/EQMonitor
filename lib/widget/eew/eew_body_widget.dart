@@ -94,7 +94,8 @@ class EewBodyWidget extends ConsumerWidget {
                                         ),
                                       ),
                                       Text(
-                                        '予報${eew.value.isLastInfo ? ' 最終' : ''} #${eew.key.serialNo}',
+                                        '${(eew.value.comments?.warning?.codes ?? []).contains(201) ? '警報' : '予報'}'
+                                        '${eew.value.isLastInfo ? ' 最終' : ''} #${eew.key.serialNo}',
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
