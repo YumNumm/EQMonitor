@@ -3,7 +3,7 @@ description: An earthquake monitoring Application
 
 publish_to: "none"
 
-version: 0.5.5+325
+version: 0.5.6+350
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -14,38 +14,35 @@ dependencies:
   awesome_notifications: ^0.6.21
   bordered_text: ^2.0.0
   collection: ^1.16.0
-  connectivity_plus: ^2.3.6
+  connectivity_plus: ^2.3.7
   crypto: ^3.0.2
   csv: ^5.0.1
   cupertino_icons: ^1.0.5
-  dart_twitter_api: ^0.5.6+1
-  device_info_plus: ^4.0.1
+  device_info_plus: ^4.1.2
   device_preview: ^1.1.0
   dio: ^4.0.6
   dio_http2_adapter: ^2.0.0
   dynamic_color: ^1.4.0
-  f_logs: ^2.0.1
-  fast_i18n: ^5.12.6
-  firebase_analytics: ^9.3.0
-  firebase_auth: ^3.6.1
-  firebase_core: ^1.20.0
-  firebase_crashlytics: ^2.8.6
-  firebase_messaging: ^13.0.0
-  firebase_performance: ^0.8.2+1
+  firebase_analytics: ^9.3.7
+  firebase_auth: ^3.11.1
+  firebase_core: ^1.24.0
+  firebase_crashlytics: ^2.8.12
+  firebase_messaging: ^13.0.4
+  firebase_performance: ^0.8.3+2
   flutter:
     sdk: flutter
   flutter_colorpicker: ^1.0.3
   flutter_hooks: ^0.18.5+1
   flutter_localizations:
     sdk: flutter
-  flutter_markdown: ^0.6.10+3
+  flutter_markdown: ^0.6.12
 
-  flutter_native_splash: ^2.2.6
+  flutter_native_splash: ^2.2.9
 
-  flutter_riverpod: ^1.0.4
+  flutter_riverpod: ^2.0.2
   flutter_secure_storage: ^6.0.0
-  flutter_staggered_animations: ^1.0.0
-  flutter_tts: ^3.5.0
+  flutter_staggered_animations: ^1.1.1
+  flutter_tts: ^3.5.3
   fluttertoast: ^8.0.9
   freezed_annotation: ^2.1.0
   geojson: ^1.0.0
@@ -53,43 +50,41 @@ dependencies:
   home_widget:
     git:
       url: https://github.com/josepedromonteiro/home_widget.git
-  hooks_riverpod: ^1.0.4
+  hooks_riverpod: ^2.0.2
   html: ^0.15.0
-  http: ^0.13.4
+  http: ^0.13.5
   image: ^3.2.0
   intl: ^0.17.0
-  isar: ^3.0.0-dev.8
-  isar_flutter_libs: ^3.0.0-dev.8
+  isar: ^3.0.2
+  isar_flutter_libs: ^3.0.2
   latlong2: ^0.8.1
   logger: ^1.1.0
-  matrix4_transform: ^2.0.1
   oauth1: ^2.0.0
   package_info_plus: ^1.4.3+1
   path_provider: ^2.0.11
-  permission_handler: ^10.0.0
+  permission_handler: ^10.0.2
   realtime_client: ^0.1.15
   restart_app: ^1.1.0+1
-  sembast: ^3.2.0+1
   settings_ui: ^2.0.2
-  share_plus: ^4.0.10
+  share_plus: ^4.4.0
   shared_preferences: ^2.0.15
-  shared_preferences_android: ^2.0.12
+  shared_preferences_android: ^2.0.13
   shared_preferences_ios: ^2.1.1
   state_notifier: ^0.7.2+1
   supabase: ^0.3.6
   supabase_flutter: ^0.3.3
-  url_launcher: ^6.1.5
+  url_launcher: ^6.1.6
 
 dev_dependencies:
-  build_runner: ^2.2.0
+  build_runner: ^2.2.1
   flutter_launcher_icons: ^0.10.0
   flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
-  freezed: ^2.1.0+1
-  isar_generator: ^3.0.0-dev.8
-  json_serializable: ^6.3.1
-  pedantic_mono: ^1.19.2
+  freezed: ^2.1.1
+  isar_generator: ^3.0.2
+  json_serializable: ^6.4.1
+  pedantic_mono: ^1.19.2+1
 
 flutter:
   uses-material-design: true
