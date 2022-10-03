@@ -80,6 +80,8 @@ class EewBodyWidget extends ConsumerWidget {
                       child: Column(
                         children: [
                           Card(
+                            color: Colors.transparent,
+                            elevation: 0,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -94,7 +96,8 @@ class EewBodyWidget extends ConsumerWidget {
                                         ),
                                       ),
                                       Text(
-                                        '予報${eew.value.isLastInfo ? ' 最終' : ''} #${eew.key.serialNo}',
+                                        '${(eew.value.comments?.warning?.codes ?? []).contains(201) ? '警報' : '予報'} '
+                                        '${eew.value.isLastInfo ? ' 最終' : ''} #${eew.key.serialNo}',
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -105,7 +108,6 @@ class EewBodyWidget extends ConsumerWidget {
                               ],
                             ),
                           ),
-
                           // 予想最大震度
                           Text(
                             '予想最大震度',
@@ -183,10 +185,13 @@ class EewBodyWidget extends ConsumerWidget {
                         ],
                       ),
                     ),
+                    const VerticalDivider(),
                     // 詳細情報
                     Flexible(
                       flex: 2,
                       child: Card(
+                        color: Colors.transparent,
+                        elevation: 0,
                         child: Padding(
                           padding: const EdgeInsets.all(4),
                           child: Column(
