@@ -15,13 +15,20 @@ class BaseMapWidget extends ConsumerWidget {
     // * ThemeMode変更時に自動で更新されるので、ここでは更新しない
     final isDarkMode = ref.read(themeProvider.notifier).isDarkMode;
     return RepaintBoundary(
-      child: CustomPaint(
-        isComplex: true,
-        painter: MapBasePainter(
-          mapPolygons: mapSource,
-          isDarkMode: isDarkMode,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: isDarkMode
+              ? const Color.fromARGB(255, 22, 28, 45)
+              : const Color.fromARGB(255, 207, 219, 255),
         ),
-        size: const Size(476, 927.4),
+        child: CustomPaint(
+          isComplex: true,
+          painter: MapBasePainter(
+            mapPolygons: mapSource,
+            isDarkMode: isDarkMode,
+          ),
+          size: const Size(476, 927.4),
+        ),
       ),
     );
   }
@@ -40,16 +47,16 @@ class MapBasePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paintBuilding = Paint()
       ..color = isDarkMode
-          ? const Color.fromARGB(255, 95, 95, 95)
-          : const Color.fromARGB(255, 231, 230, 230)
+          ? const Color.fromARGB(255, 166, 166, 166)
+          : const Color.fromARGB(255, 255, 255, 255)
       ..isAntiAlias = true
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.fill;
 
     final paintOutline = Paint()
       ..color = isDarkMode
-          ? const Color.fromARGB(255, 255, 255, 255)
-          : const Color.fromARGB(255, 190, 190, 190)
+          ? const Color.fromARGB(255, 79, 79, 79)
+          : const Color.fromARGB(255, 50, 50, 50)
       ..isAntiAlias = true
       ..style = PaintingStyle.stroke;
 
