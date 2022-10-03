@@ -136,15 +136,30 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                           child: Column(
                             children: [
                               const Text('最大震度'),
-                              Text(
-                                maxInt.name
-                                    .replaceAll(RegExp(r'[^0-9]'), '')
-                                    .replaceAll('+', '強')
-                                    .replaceAll('-', '弱'),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 55,
-                                ),
+                              Row(
+                                textBaseline: TextBaseline.alphabetic,
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    maxInt.name
+                                        .replaceAll(RegExp(r'[^0-9]'), ''),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 55,
+                                    ),
+                                  ),
+                                  Text(
+                                    maxInt.name
+                                        .replaceAll(RegExp(r'[0-9]'), '')
+                                        .replaceAll('+', '強')
+                                        .replaceAll('-', '弱'),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 30,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
