@@ -1,7 +1,7 @@
+import 'package:eqmonitor/schema/local/kyoshin_kansokuten.dart';
+import 'package:eqmonitor/ui/theme/jma_intensity.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../const/kmoni/jma_intensity.dart';
-import '../const/obspoint.dart';
 
 class AnalyzedKoshinKansokuten extends KyoshinKansokuten {
   const AnalyzedKoshinKansokuten({

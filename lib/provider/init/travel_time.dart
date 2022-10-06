@@ -6,7 +6,7 @@ import 'package:logger/logger.dart';
 
 import '../../model/travel_time_table/travel_time_table.dart';
 
-final TravelTimeProvider = Provider<List<TravelTimeTable>>((ref) {
+final travelTimeProvider = Provider<List<TravelTimeTable>>((ref) {
   throw UnimplementedError('TravelTimeTableが読み込まれていません');
 });
 

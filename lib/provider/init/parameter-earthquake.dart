@@ -1,10 +1,10 @@
 import 'dart:convert';
 
+import 'package:eqmonitor/schema/remote/dmdata/parameter-earthquake/parameter-earthquake.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
-import '../../schema/dmdata/parameter-earthquake/parameter-earthquake.dart';
 
 final parameterEarthquakeProvider = Provider<ParameterEarthquake>((ref) {
   throw UnimplementedError('Parameter-Earthquakeが読み込まれていません');

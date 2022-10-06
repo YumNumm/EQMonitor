@@ -1,8 +1,8 @@
+import 'package:eqmonitor/schema/local/kyoshin_kansokuten.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
-import '../../const/obspoint.dart';
 
 final kyoshinKansokutenProvider = Provider<List<KyoshinKansokuten>>((ref) {
   throw UnimplementedError('観測点データが読み込まれていません');
