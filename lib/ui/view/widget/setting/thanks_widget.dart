@@ -6,38 +6,50 @@ class ThanksWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = Theme.of(context);
     const titleTextStyle = TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.w500,
     );
-    return const ExpansionTile(
-      title: Text('Special Thanks', style: titleTextStyle),
-      leading: Icon(Icons.favorite),
+    return ExpansionTile(
+      title: const Text('Special Thanks', style: titleTextStyle),
+      leading: const Icon(Icons.favorite),
       children: [
-        ThanksItem(
-          title: 'Project DM-D.S.S',
-          description: '緊急地震速報等の地震情報\n過去の地震情報',
-          url: 'https://dmdata.jp/',
-        ),
-        ThanksItem(
-          title: 'François LN / フランソワ (JQuake)氏',
-          description: '強震モニタ画像解析手法',
-          url: 'https://qiita.com/NoneType1/items/a4d2cf932e20b56ca444',
-        ),
-        ThanksItem(
-          title: '国立研究開発法人 防災科学技術研究所',
-          description: 'リアルタイム震度データ',
-          url:
-              'https://www.kyoshin.bosai.go.jp/kyoshin/docs/new_kyoshinmonitor.html',
-        ),
-        ThanksItem(
-          title: '国土交通省 気象庁',
-          description: '地図データ',
-          url: 'https://www.jma.go.jp/jma/kishou/info/coment.html',
-        ),
-        ThanksItem(
-          title: 'および 全ての関係者に感謝いたします。',
-        ),
+        Padding(
+          padding: const EdgeInsets.all(12),
+          child: Card(
+            color: t.colorScheme.secondaryContainer.withOpacity(0.4),
+            elevation: 0,
+            child: Column(
+              children: const [
+                ThanksItem(
+                  title: 'Project DM-D.S.S',
+                  description: '緊急地震速報等の地震情報',
+                  url: 'https://dmdata.jp/',
+                ),
+                ThanksItem(
+                  title: 'François LN / フランソワ (JQuake)氏',
+                  description: '強震モニタ画像解析手法',
+                  url: 'https://qiita.com/NoneType1/items/a4d2cf932e20b56ca444',
+                ),
+                ThanksItem(
+                  title: '国立研究開発法人 防災科学技術研究所',
+                  description: 'リアルタイム震度データ',
+                  url:
+                      'https://www.kyoshin.bosai.go.jp/kyoshin/docs/new_kyoshinmonitor.html',
+                ),
+                ThanksItem(
+                  title: '国土交通省 気象庁',
+                  description: '地図データ',
+                  url: 'https://www.jma.go.jp/jma/kishou/info/coment.html',
+                ),
+                ThanksItem(
+                  title: 'および 全ての関係者に感謝いたします。',
+                ),
+              ],
+            ),
+          ),
+        )
       ],
     );
   }
