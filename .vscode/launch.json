@@ -2,11 +2,24 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "debug-dev",
-      "request": "launch",
+      "name": "Flutter Debug",
       "type": "dart",
+      "request": "launch",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Flutter Release",
+      "type": "dart",
+      "request": "launch",
       "program": "lib/main.dart",
-      "args": ["--debug"]
+      "flutterMode": "release"
+    },
+    {
+      "name": "Flutter Profile",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main.dart",
+      "flutterMode": "profile"
     }
   ]
 }

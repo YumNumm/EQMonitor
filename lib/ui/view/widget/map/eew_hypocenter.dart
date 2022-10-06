@@ -1,7 +1,7 @@
 import 'package:eqmonitor/model/travel_time_table/travel_time_table.dart';
 import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
 import 'package:eqmonitor/provider/init/travel_time.dart';
-import 'package:eqmonitor/provider/kmoni_controller.dart';
+import 'package:eqmonitor/provider/earthquake/kmoni_controller.dart';
 import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eew-information/earthquake/accuracy/epicCenterAccuracy.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eew-information/eew-infomation.dart';
