@@ -1,8 +1,8 @@
+import 'package:eqmonitor/ui/theme/jma_intensity.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../const/kmoni/jma_intensity.dart';
 import '../../model/setting/jma_intensity_color_model.dart';
 import '../init/shared_preferences.dart';
 
@@ -21,7 +21,7 @@ class JmaIntensityColorProvider extends StateNotifier<JmaIntensityColorModel> {
 
   final Ref ref;
 
-  void _load() {
+  void load() {
     final prefs = ref.read(sharedPreferencesProvder);
     final model = loadFromPrefs(prefs);
     state = state.copyWith(

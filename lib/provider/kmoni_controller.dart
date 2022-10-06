@@ -1,15 +1,16 @@
 import 'dart:async';
 
+import 'package:eqmonitor/api/remote/kmoni.dart';
+import 'package:eqmonitor/api/remote/kmoni/kmoni_image_parser.dart';
+import 'package:eqmonitor/api/remote/kmoni/kmoni_web_api_url_generators.dart';
+import 'package:eqmonitor/api/remote/kmoni/real_time_data_type.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
-import '../api/kmoni.dart';
-import '../api/kmoni/kmoni_image_parser.dart';
-import '../api/kmoni/kmoni_web_api_url_generators.dart';
-import '../const/kmoni/real_time_data_type.dart';
-import '../model/kmoni_model.dart';
+
+import '../model/earthquake/kmoni_model.dart';
 import 'app_lifecycle.dart';
 import 'init/kyoshin_kansokuten.dart';
 
@@ -42,8 +43,6 @@ class KmoniProvider extends StateNotifier<KmoniModel> {
     ),
   );
 
-  late Timer updateTimer;
-
   final KyoshinMonitorApi kyoshinMonitorApi = KyoshinMonitorApi();
   final KyoshinWebApiUrlGenerator kyoshinWebApiUrlGenerator =
       KyoshinWebApiUrlGenerator();
@@ -56,10 +55,13 @@ class KmoniProvider extends StateNotifier<KmoniModel> {
     );
   }
 
+  /// タイマー時のHanlder
   Future<void> _onTimer(Timer timer) async {
     if (!mounted) {
       return;
     }
+    // Timerの更新頻度の更新を確認
+
     // バックグラウンドの場合処理しない
     if (ref.read(appLifecycleProvider) == AppLifecycleState.paused) {
       return;
@@ -121,6 +123,7 @@ class KmoniProvider extends StateNotifier<KmoniModel> {
     }
   }
 
+  /// 指定した時刻の震度を取得
   Future<void> updateShindo(DateTime dt) async {
     try {
       // Shindo画像を取得する
@@ -154,10 +157,19 @@ class KmoniProvider extends StateNotifier<KmoniModel> {
     }
   }
 
+  /// テストケースを開始
   void startTestCase() {
     // 時刻設定
     state = state.copyWith(
       testCaseStartTime: DateTime.now(),
+    );
+  }
+
+  /// Kmoniの更新頻度を変更する
+  void updateFrequency(Duration duration) {
+    state = state.copyWith(
+      updateFrequency: duration,
+      updateTimer: Timer.periodic(duration, _onTimer),
     );
   }
 }

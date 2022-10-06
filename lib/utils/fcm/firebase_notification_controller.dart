@@ -1,9 +1,9 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:eqmonitor/const/notification_channel.dart';
 import 'package:eqmonitor/utils/fcm/background_handler.dart';
 import 'package:eqmonitor/utils/fcm/foreground_handler.dart';
+import 'package:eqmonitor/utils/fcm/notification_channel.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:permission_handler/permission_handler.dart';

@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
+import 'package:eqmonitor/api/remote/supabase/telegram.dart';
+import 'package:eqmonitor/schema/remote/supabase/telegram.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../api/remote_db/telegram.dart';
-import '../../schema/supabase/telegram.dart';
 
 final earthquakeHistoryFutureProvider =
     FutureProvider<Map<int, List<Telegram>>>(

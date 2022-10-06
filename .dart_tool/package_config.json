@@ -638,6 +638,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "go_router_builder",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/go_router_builder-1.0.13",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "gotrue",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/gotrue-0.2.3",
       "packageUri": "lib/",
@@ -936,6 +942,12 @@
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/path_provider_windows-2.1.3",
       "packageUri": "lib/",
       "languageVersion": "2.17"
+    },
+    {
+      "name": "path_to_regexp",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/path_to_regexp-0.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "pedantic",
@@ -1388,7 +1400,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-10-03T16:28:37.217225Z",
+  "generated": "2022-10-06T06:50:31.583425Z",
   "generator": "pub",
   "generatorVersion": "2.17.6"
 }

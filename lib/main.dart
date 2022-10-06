@@ -5,9 +5,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:device_preview/device_preview.dart';
-import 'package:eqmonitor/const/obspoint.dart';
-import 'package:eqmonitor/const/prefecture/area_forecast_local_eew.model.dart';
 import 'package:eqmonitor/model/travel_time_table/travel_time_table.dart';
 import 'package:eqmonitor/private/keys.dart';
 import 'package:eqmonitor/provider/init/application_support_dir.dart';
@@ -18,18 +15,17 @@ import 'package:eqmonitor/provider/init/parameter-earthquake.dart';
 import 'package:eqmonitor/provider/init/secure_storage.dart';
 import 'package:eqmonitor/provider/init/shared_preferences.dart';
 import 'package:eqmonitor/provider/init/travel_time.dart';
-import 'package:eqmonitor/provider/route.dart';
 import 'package:eqmonitor/provider/setting/crash_log_share.dart';
-import 'package:eqmonitor/provider/theme_providers.dart';
-import 'package:eqmonitor/res/theme.dart';
-import 'package:eqmonitor/schema/dmdata/parameter-earthquake/parameter-earthquake.dart';
+import 'package:eqmonitor/schema/local/kyoshin_kansokuten.dart';
+import 'package:eqmonitor/schema/local/prefecture/map_polygon.dart';
+import 'package:eqmonitor/schema/remote/dmdata/parameter-earthquake/parameter-earthquake.dart';
+import 'package:eqmonitor/ui/app.dart';
 import 'package:eqmonitor/utils/fcm/firebase_notification_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -126,7 +122,7 @@ Future<void> main() async {
   runApp(
     ProviderScope(
       overrides: [
-        TravelTimeProvider.overrideWithValue(travelTimeTable),
+        travelTimeProvider.overrideWithValue(travelTimeTable),
         kyoshinKansokutenProvider.overrideWithValue(kansokuten),
         mapAreaForecastLocalEProvider.overrideWithValue(mapAreaForecastLocalE),
         if (parameterEarthquake != null)
@@ -151,7 +147,7 @@ Future<void> main() async {
       observers: const [
         //if (kDebugMode) ProvidersLogger(),
       ],
-      child: const MyApp(),
+      child: const App(),
     ),
   );
   FlutterNativeSplash.remove();
@@ -161,36 +157,4 @@ Future<void> onFlutterError(FlutterErrorDetails details) async {
   Logger().wtf('Error: ${details.exception}');
   Logger().wtf('Stack: ${details.stack}');
   await FirebaseCrashlytics.instance.recordFlutterError(details);
-}
-
-class MyApp extends ConsumerWidget {
-  const MyApp({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode =
-        ref.watch(themeProvider.select((value) => value.themeMode));
-    final router = ref.watch(routerProvider);
-    return MaterialApp.router(
-      title: 'EQMonitor',
-      theme: lightTheme(),
-      darkTheme: darkTheme(),
-      themeMode: themeMode,
-      locale: DevicePreview.locale(context),
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('ja', 'JP'),
-      ],
-      useInheritedMediaQuery: true,
-      routerDelegate: router.routerDelegate,
-      routeInformationParser: router.routeInformationParser,
-      routeInformationProvider: router.routeInformationProvider,
-    );
-  }
 }

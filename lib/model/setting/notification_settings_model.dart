@@ -1,9 +1,9 @@
 import 'dart:convert';
 
+import 'package:eqmonitor/ui/theme/jma_intensity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../const/kmoni/jma_intensity.dart';
 
 part 'notification_settings_model.freezed.dart';
 part 'notification_settings_model.g.dart';
