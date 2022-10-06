@@ -18,6 +18,16 @@ class NotificationSettingViewModel {
     }
   }
 
+  /// マグニチュードの選択ドロップダウンタップ時
+  Future<void> onMagnitudeTap(BuildContext context) async {
+    final magnitude = await _showMagnitudeSelectDropdown(context);
+    if (magnitude != null) {
+      ref
+          .read(notificationSettingsProvider.notifier)
+          .setMagnitudeThreshold(magnitude);
+    }
+  }
+
   /// TTSの切り替え
   void onTtsSwitchChanged() =>
       ref.read(notificationSettingsProvider.notifier).toggleUseTts();
@@ -49,6 +59,29 @@ class NotificationSettingViewModel {
                           : intensity.longName,
                     ),
                   ),
+            ],
+          );
+        },
+      );
+
+  Future<double?> _showMagnitudeSelectDropdown(
+    BuildContext context,
+  ) async =>
+      showDialog<double>(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: const Text('マグニチュードのしきい値'),
+            children: [
+              for (final magnitude in <double>[0, 3, 4, 5, 6, 7])
+                SimpleDialogOption(
+                  onPressed: () {
+                    Navigator.of(context).pop(magnitude);
+                  },
+                  child: Text(
+                    (magnitude == 0) ? '全て' : 'M$magnitude以上',
+                  ),
+                ),
             ],
           );
         },

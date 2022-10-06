@@ -40,7 +40,9 @@ class NotificationSettingsNotifier
     ].contains(intensity)) {
       throw ArgumentError('Invalid intensity: $intensity');
     }
-
     state = state.copyWith(intensityThreshold: intensity);
   }
+
+  void setMagnitudeThreshold(double magnitude) =>
+      state = state.copyWith(magnitudeThreshold: magnitude);
 }

@@ -47,6 +47,13 @@ class NotificationSettingPage extends HookConsumerWidget {
             SettingsSection(
               title: '通知条件(緊急地震速報)',
               children: [
+                const Padding(
+                  padding: EdgeInsets.only(left: 20, top: 5, bottom: 5),
+                  child: Text(
+                    '以下の条件のうちのいずれかに合致した場合に通知します',
+                    style: descriptionTextStyle,
+                  ),
+                ),
                 ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                   title: const Text(
@@ -65,19 +72,37 @@ class NotificationSettingPage extends HookConsumerWidget {
                   ),
                   onTap: () async => viewModel.onIntensityTap(context),
                 ),
+                ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                  title: const Text(
+                    'マグニチュードのしきい値',
+                    style: titleTextStyle,
+                  ),
+                  subtitle: const Text(
+                    'マグニチュードがこの値以上のときに通知します',
+                    style: descriptionTextStyle,
+                  ),
+                  trailing: Text(
+                    (notificationSetting.magnitudeThreshold == 0)
+                        ? '全て'
+                        : 'M${notificationSetting.magnitudeThreshold}以上',
+                  ),
+                  onTap: () async => viewModel.onMagnitudeTap(context),
+                ),
               ],
             ),
+            const Divider(),
             SettingsSection(
               title: '読み上げ設定',
               children: [
                 ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                   title: const Text(
-                    '予想最大震度のしきい値',
+                    'TTSによる読み上げ',
                     style: titleTextStyle,
                   ),
                   subtitle: const Text(
-                    '予想最大震度がこの値以上のときに通知します',
+                    '通知の際に、地震情報を合成音声でお知らせします',
                     style: descriptionTextStyle,
                   ),
                   trailing: CustomSwitch(
