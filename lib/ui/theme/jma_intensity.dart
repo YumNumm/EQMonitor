@@ -12,55 +12,58 @@ enum JmaIntensity {
   /// 震度不明
   Unknown(
     '?',
+    '震度不明',
     Color.fromARGB(255, 242, 242, 255),
     -1,
   ),
 
   /// 震度1未満
-  Int0('0', Color.fromARGB(255, 255, 255, 255), 0),
+  Int0('0', '震度1未満', Color.fromARGB(255, 255, 255, 255), 0),
 
   /// 震度1
-  Int1('1', Color.fromARGB(255, 214, 217, 218), 1),
+  Int1('1', '震度1', Color.fromARGB(255, 214, 217, 218), 1),
 
   /// 震度2
-  Int2('2', Color.fromARGB(255, 170, 224, 249), 1),
+  Int2('2', '震度2', Color.fromARGB(255, 170, 224, 249), 1),
 
   /// 震度3
-  Int3('3', Color.fromARGB(255, 141, 206, 165), 3),
+  Int3('3', '震度3', Color.fromARGB(255, 141, 206, 165), 3),
 
   /// 震度4
   /// 津波注意報
-  Int4('4', Color.fromARGB(255, 250, 245, 0), 4),
+  Int4('4', '震度4', Color.fromARGB(255, 250, 245, 0), 4),
 
   /// 震度5弱
-  Int5Lower('5-', Color.fromARGB(255, 248, 156, 28), 5),
+  Int5Lower('5-', '震度5弱', Color.fromARGB(255, 248, 156, 28), 5),
 
   /// 震度5強
-  Int5Upper('5+', Color.fromARGB(255, 197, 112, 0), 6),
+  Int5Upper('5+', '震度5強', Color.fromARGB(255, 197, 112, 0), 6),
 
   /// 震度6弱
   /// 津波警報
-  Int6Lower('6-', Color.fromARGB(255, 255, 40, 0), 7),
+  Int6Lower('6-', '震度6弱', Color.fromARGB(255, 255, 40, 0), 7),
 
   /// 震度6強
-  Int6Upper('6+', Color.fromARGB(255, 123, 0, 0), 8),
+  Int6Upper('6+', '震度6強', Color.fromARGB(255, 123, 0, 0), 8),
 
   /// 震度7
   /// 大津波警報
-  Int7('7', Color.fromARGB(255, 200, 0, 255), 9),
+  Int7('7', '震度7', Color.fromARGB(255, 200, 0, 255), 9),
 
   // 程度以上
-  over('over', Color.fromARGB(255, 255, 255, 255), -1),
+  over('over', '程度以上', Color.fromARGB(255, 255, 255, 255), -1),
 
   /// 震度異常
-  Error('-', Color.fromARGB(255, 73, 243, 214), -2);
+  Error('-', '震度解析エラー', Color.fromARGB(255, 73, 243, 214), -2);
 
   const JmaIntensity(
     this.name,
+    this.longName,
     this.color,
     this.intValue,
   );
   final String name;
+  final String longName;
   final Color color;
   final int intValue;
 
