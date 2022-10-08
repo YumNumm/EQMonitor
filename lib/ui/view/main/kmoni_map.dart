@@ -2,6 +2,7 @@
 
 import 'dart:ui';
 
+import 'package:bordered_text/bordered_text.dart';
 import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
 import 'package:eqmonitor/provider/earthquake/kmoni_controller.dart';
 import 'package:eqmonitor/provider/package_info.dart';
@@ -69,7 +70,6 @@ class KmoniMap extends HookConsumerWidget {
           GestureDetector(
             child: Center(
               child: InteractiveViewer(
-                boundaryMargin: const EdgeInsets.all(20),
                 transformationController:
                     ref.watch(transformationControllerProvider),
                 maxScale: 20,
@@ -101,23 +101,28 @@ class KmoniMap extends HookConsumerWidget {
 
           // テストモードのオーバレイ
           if (ref.watch(kmoniProvider).testCaseStartTime != null)
-            const Center(
+            Center(
               child: IgnorePointer(
                 child: Padding(
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   child: FittedBox(
-                    child: Text(
-                      'TEST MODE',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(129, 255, 0, 0),
-                        fontSize: 200,
+                    child: BorderedText(
+                      strokeWidth: 1,
+                      strokeColor: Colors.white,
+                      child: const Text(
+                        'TEST MODE',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(129, 255, 0, 0),
+                          fontSize: 200,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
             ),
+
           // EEW表示
           const OnEewWidget(),
           // KMoniの更新状況

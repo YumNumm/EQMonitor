@@ -8,13 +8,10 @@ import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake-informa
 import 'package:eqmonitor/schema/remote/supabase/telegram.dart';
 import 'package:eqmonitor/ui/theme/jma_intensity.dart';
 import 'package:eqmonitor/ui/view/widget/intensity_widget.dart';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-
-
 
 class EarthquakeHistoryPage extends HookConsumerWidget {
   EarthquakeHistoryPage({super.key});
@@ -83,6 +80,7 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
                             telegrams: telegrams,
                           );
                         },
+                        childCount: data.length - 1,
                       ),
                     )
                   ],

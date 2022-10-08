@@ -24,6 +24,8 @@ class WelcomeWidget extends ConsumerWidget {
         child: Center(child: Image.asset('assets/header-transparent.png')),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
         onPressed: () async {
           ref.read(introductionController).jumpToPage(1);
         },

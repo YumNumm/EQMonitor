@@ -11,6 +11,8 @@ import 'package:eqmonitor/provider/init/application_support_dir.dart';
 import 'package:eqmonitor/provider/init/device_info.dart';
 import 'package:eqmonitor/provider/init/kyoshin_kansokuten.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
+import 'package:eqmonitor/provider/init/map_area_forecast_local_eew.dart';
+import 'package:eqmonitor/provider/init/map_area_tsunami_forecast.dart';
 import 'package:eqmonitor/provider/init/parameter-earthquake.dart';
 import 'package:eqmonitor/provider/init/secure_storage.dart';
 import 'package:eqmonitor/provider/init/shared_preferences.dart';
@@ -75,6 +77,8 @@ Future<void> main() async {
   // ファイル等の読み込み
   late List<KyoshinKansokuten> kansokuten;
   late List<MapPolygon> mapAreaForecastLocalE;
+  late List<MapPolygon> mapAreaForecastLocalEew;
+  late List<MapAreaTsunami> mapAreaTsunamiForecast;
   late List<TravelTimeTable> travelTimeTable;
   late Directory dir;
   // late Isar isar;
@@ -84,7 +88,9 @@ Future<void> main() async {
 
   final futures = <Future<dynamic>>[
     loadKyoshinKansokuten().then((e) => kansokuten = e),
+    loadMapAreaTsunamiForecast().then((e) => mapAreaTsunamiForecast = e),
     loadMapAreaForecastLocalE().then((e) => mapAreaForecastLocalE = e),
+    loadMapAreaForecastLocalEew().then((e) => mapAreaForecastLocalEew = e),
     loadTravelTimeTable().then((e) => travelTimeTable = e),
     getApplicationSupportDirectory().then((e) => dir = e),
     Supabase.initialize(
@@ -125,6 +131,10 @@ Future<void> main() async {
         travelTimeProvider.overrideWithValue(travelTimeTable),
         kyoshinKansokutenProvider.overrideWithValue(kansokuten),
         mapAreaForecastLocalEProvider.overrideWithValue(mapAreaForecastLocalE),
+        mapAreaForecastLocalEewProvider
+            .overrideWithValue(mapAreaForecastLocalEew),
+        mapAreaTsunamiForecastProvider
+            .overrideWithValue(mapAreaTsunamiForecast),
         if (parameterEarthquake != null)
           parameterEarthquakeProvider.overrideWithValue(parameterEarthquake),
         sharedPreferencesProvder.overrideWithValue(prefs),

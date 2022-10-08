@@ -12,8 +12,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:restart_app/restart_app.dart';
 
-
-
 class FilesDownloadWidget extends HookConsumerWidget {
   const FilesDownloadWidget({super.key});
   @override
@@ -84,6 +82,10 @@ class FilesDownloadWidget extends HookConsumerWidget {
 
                     isFinished.value = true;
                     isDownloading.value = false;
+                    // 初期化済みフラグを立てる
+                    await ref
+                        .read(sharedPreferencesProvder)
+                        .setBool('isInitializated', true);
                   } on DioError catch (e) {
                     downloadingStatus.value = 'ダウンロード中にエラーが発生しました。\n'
                         '${e.message}\n'
@@ -151,6 +153,10 @@ class FilesDownloadWidget extends HookConsumerWidget {
 
                     isFinished.value = true;
                     isDownloading.value = false;
+                    // 初期化済みフラグを立てる
+                    await ref
+                        .read(sharedPreferencesProvder)
+                        .setBool('isInitializated', true);
                   } on DioError catch (e) {
                     downloadingStatus.value = 'ダウンロード中にエラーが発生しました。\n'
                         '${e.message}\n'
@@ -173,10 +179,6 @@ class FilesDownloadWidget extends HookConsumerWidget {
       floatingActionButton: (isFinished.value)
           ? FloatingActionButton.extended(
               onPressed: () async {
-                // 初期化済みフラグを立てる
-                await ref
-                    .read(sharedPreferencesProvder)
-                    .setBool('isInitializated', true);
                 await Restart.restartApp();
               },
               label: const Text('次へ進む'),

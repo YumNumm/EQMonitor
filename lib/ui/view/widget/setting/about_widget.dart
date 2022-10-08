@@ -32,11 +32,7 @@ class AboutWidget extends HookConsumerWidget {
           ref.watch(packageInfoProvider).when<List<Widget>>(
                 data: (packageInfo) => <Widget>[
                   Text(
-                    'バージョン: ${packageInfo.version}',
-                    style: descriptionTextStyle,
-                  ),
-                  Text(
-                    'ビルド: ${packageInfo.buildNumber}',
+                    'バージョン: ${packageInfo.version}+${packageInfo.buildNumber}',
                     style: descriptionTextStyle,
                   ),
                   Text(
@@ -53,34 +49,29 @@ class AboutWidget extends HookConsumerWidget {
               style: descriptionTextStyle,
             ),
             Text(
-              'モデル: ${deviceInfo.model}',
-              style: descriptionTextStyle,
-            ),
-            Text(
-              'メーカー: ${deviceInfo.manufacturer}',
+              'モデル: ${deviceInfo.manufacturer} ${deviceInfo.model}',
               style: descriptionTextStyle,
             ),
           ],
         ].expand((e) => e).toList(),
       ),
-      onTap: () => ref.watch(packageInfoProvider).hasValue
-          ? () {
-              Clipboard.setData(
-                ClipboardData(
-                  text: () {
-                    final packageInfo = ref.read(packageInfoProvider).value!;
-                    return 'バージョン: ${packageInfo.version}\n'
-                        'ビルド: ${packageInfo.buildNumber}\n'
-                        'パッケージ名: ${packageInfo.packageName}\n'
-                        'OS: Android${deviceInfo.version.release} (SDK${deviceInfo.version.sdkInt})\n'
-                        'モデル: ${deviceInfo.model}\n'
-                        'メーカー: ${deviceInfo.manufacturer}\n';
-                  }(),
-                ),
-              );
-              Fluttertoast.showToast(msg: 'クリップボードにコピーしました');
-            }
-          : null,
+      onTap: () => () async {
+        await Clipboard.setData(
+          ClipboardData(
+            text: () {
+              final packageInfo = ref.read(packageInfoProvider).value;
+              if (packageInfo == null) {
+                return '';
+              }
+              return 'バージョン: ${packageInfo.version}+${packageInfo.buildNumber}\n'
+                  'パッケージ名: ${packageInfo.packageName}\n'
+                  'OS: Android${deviceInfo.version.release} (SDK${deviceInfo.version.sdkInt})\n'
+                  'モデル: ${deviceInfo.model}\n';
+            }(),
+          ),
+        );
+        await Fluttertoast.showToast(msg: 'クリップボードにコピーしました');
+      },
     );
   }
 }
