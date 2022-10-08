@@ -1,4 +1,3 @@
-
 import 'package:eqmonitor/model/setting/jma_intensity_color_model.dart';
 import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
@@ -9,7 +8,6 @@ import 'package:eqmonitor/schema/remote/dmdata/eew-information/eew-infomation.da
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
-
 
 /// 緊急地震速報の予想震度
 /// 電文内の予想震度(震度4以上)を表示
@@ -68,7 +66,7 @@ class EewIntensityPainter extends CustomPainter {
                 ..drawPath(
                   mapPolygon.path,
                   Paint()
-                    ..color = const Color.fromARGB(255, 255, 255, 255)
+                    ..color = const Color.fromARGB(255, 126, 126, 126)
                     ..isAntiAlias = true
                     ..style = PaintingStyle.stroke,
                 );
