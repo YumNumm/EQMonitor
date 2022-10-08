@@ -49,9 +49,14 @@ class ThanksWidget extends StatelessWidget {
                     'https://www.kyoshin.bosai.go.jp/kyoshin/docs/new_kyoshinmonitor.html',
               ),
               ThanksItem(
+                title: 'Cateiru氏',
+                description: '通知用の震度分布図生成ソフトウェア',
+                url: 'https://github.com/earthquake-alert/earthquake-alert',
+              ),
+              ThanksItem(
                 title: '国土交通省 気象庁',
-                description: '地図データ',
-                url: 'https://www.jma.go.jp/jma/kishou/info/coment.html',
+                description: '予報区等GISデータをGeoJSON形式に変換し利用',
+                url: 'https://www.data.jma.go.jp/developer/gis.html',
               ),
               ThanksItem(
                 title: 'および 全ての関係者に感謝いたします。',
@@ -60,10 +65,6 @@ class ThanksWidget extends StatelessWidget {
           ),
         ),
       ),
-    );
-    return const ExpansionTile(
-      title: Text('Special Thanks', style: titleTextStyle),
-      leading: Icon(Icons.favorite),
     );
   }
 }

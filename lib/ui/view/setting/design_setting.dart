@@ -22,15 +22,18 @@ class DesignSettingsPage extends ConsumerWidget {
             SettingsSection(
               title: 'テーマ設定',
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-                    title: const Text('テーマ設定'),
-                    leading: const Icon(Icons.design_services),
-                    subtitle: Text(currentThemeMode.title),
-                    onTap: () => context.push('/settings/design/theme'),
-                  ),
+                ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                  title: const Text('テーマ設定'),
+                  leading: const Icon(Icons.design_services),
+                  subtitle: Text(currentThemeMode.title),
+                  onTap: () => context.push('/settings/design/theme'),
+                ),
+                ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                  title: const Text('震度配色'),
+                  leading: const Icon(Icons.color_lens),
+                  onTap: () => context.push('/settings/design/intensity'),
                 ),
               ],
             ),
