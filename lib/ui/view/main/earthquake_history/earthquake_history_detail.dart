@@ -112,7 +112,7 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
           Padding(
             padding: const EdgeInsets.all(8),
             child: Card(
-              color: maxInt.fromUser(colors).withOpacity(0.3),
+              color: maxInt.fromUser(colors).withOpacity(0.15),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -150,7 +150,8 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                                     maxInt.name
                                         .replaceAll(RegExp(r'[0-9]'), '')
                                         .replaceAll('+', '強')
-                                        .replaceAll('-', '弱'),
+                                        .replaceAll('-', '弱')
+                                        .replaceAll('?', '不明'),
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 30,
@@ -199,7 +200,8 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                                 textBaseline: TextBaseline.alphabetic,
                                 children: [
                                   // Magunitude
-                                  if (component.magnitude.condition == null)
+                                  if (component.magnitude.condition ==
+                                      null) ...[
                                     const Text(
                                       'M',
                                       style: TextStyle(
@@ -207,8 +209,6 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                                         fontSize: 18,
                                       ),
                                     ),
-                                  if (component.hypoCenter.depth.condition ==
-                                      null)
                                     Text(
                                       (component.magnitude.condition != null)
                                           ? component
@@ -220,10 +220,11 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                                         fontSize: 45,
                                       ),
                                     ),
+                                  ],
                                   const VerticalDivider(),
                                   // Depth
                                   if (component.hypoCenter.depth.condition ==
-                                      null)
+                                      null) ...[
                                     Text(
                                       component.hypoCenter.depth.type,
                                       style: const TextStyle(
@@ -231,27 +232,42 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                                         fontSize: 18,
                                       ),
                                     ),
-                                  Text(
-                                    (component.hypoCenter.depth.condition !=
-                                            null)
-                                        ? component.hypoCenter.depth.condition!
-                                            .description
-                                        : component.hypoCenter.depth.value
-                                            .toString(),
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 45,
+                                    Text(
+                                      (component.hypoCenter.depth.condition !=
+                                              null)
+                                          ? component.hypoCenter.depth
+                                              .condition!.description
+                                          : component.hypoCenter.depth.value
+                                              .toString(),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 45,
+                                      ),
                                     ),
-                                  ),
-                                  if (component.hypoCenter.depth.condition ==
-                                      null)
                                     Text(
                                       component.hypoCenter.depth.unit,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
                                       ),
+                                    )
+                                  ] else ...[
+                                    Text(
+                                      component.hypoCenter.depth.type,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
                                     ),
+                                    Text(
+                                      component.hypoCenter.depth.condition!
+                                          .description,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 45,
+                                      ),
+                                    )
+                                  ],
                                 ],
                               ),
                             ),
@@ -276,7 +292,6 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                     ],
                   ))
                 .toString(),
-            style: const TextStyle(fontSize: 12),
           ),
           Expanded(
             child: Stack(

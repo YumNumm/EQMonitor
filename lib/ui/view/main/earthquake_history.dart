@@ -61,8 +61,10 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
             return Scaffold(
               // SliverAppBar
               body: RefreshIndicator(
-                onRefresh: () async =>
-                    ref.refresh(earthquakeHistoryFutureProvider),
+                onRefresh: () async {
+                  await Future<void>.delayed(const Duration(milliseconds: 500));
+                  return ref.refresh(earthquakeHistoryFutureProvider);
+                },
                 child: CustomScrollView(
                   slivers: [
                     const SliverAppBar(
