@@ -1,3 +1,4 @@
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -11,46 +12,58 @@ class ThanksWidget extends StatelessWidget {
       fontSize: 20,
       fontWeight: FontWeight.w500,
     );
-    return ExpansionTile(
-      title: const Text('Special Thanks', style: titleTextStyle),
-      leading: const Icon(Icons.favorite),
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(12),
-          child: Card(
-            color: t.colorScheme.secondaryContainer.withOpacity(0.4),
-            elevation: 0,
-            child: Column(
-              children: const [
-                ThanksItem(
-                  title: 'Project DM-D.S.S',
-                  description: '緊急地震速報等の地震情報',
-                  url: 'https://dmdata.jp/',
-                ),
-                ThanksItem(
-                  title: 'François LN / フランソワ (JQuake)氏',
-                  description: '強震モニタ画像解析手法',
-                  url: 'https://qiita.com/NoneType1/items/a4d2cf932e20b56ca444',
-                ),
-                ThanksItem(
-                  title: '国立研究開発法人 防災科学技術研究所',
-                  description: 'リアルタイム震度データ',
-                  url:
-                      'https://www.kyoshin.bosai.go.jp/kyoshin/docs/new_kyoshinmonitor.html',
-                ),
-                ThanksItem(
-                  title: '国土交通省 気象庁',
-                  description: '地図データ',
-                  url: 'https://www.jma.go.jp/jma/kishou/info/coment.html',
-                ),
-                ThanksItem(
-                  title: 'および 全ての関係者に感謝いたします。',
-                ),
-              ],
-            ),
+    return ExpandablePanel(
+      theme: ExpandableThemeData(
+        hasIcon: true,
+        iconColor: t.iconTheme.color,
+        iconPadding: const EdgeInsets.symmetric(vertical: 16),
+        animationDuration: const Duration(milliseconds: 300),
+      ),
+      header: const ListTile(
+        contentPadding: EdgeInsets.symmetric(horizontal: 20),
+        title: Text('Special Thanks', style: titleTextStyle),
+        leading: Icon(Icons.favorite),
+      ),
+      collapsed: const SizedBox.shrink(),
+      expanded: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Card(
+          color: t.colorScheme.secondaryContainer.withOpacity(0.4),
+          elevation: 0,
+          child: Column(
+            children: const [
+              ThanksItem(
+                title: 'Project DM-D.S.S',
+                description: '緊急地震速報等の地震情報',
+                url: 'https://dmdata.jp/',
+              ),
+              ThanksItem(
+                title: 'François LN / フランソワ (JQuake)氏',
+                description: '強震モニタ画像解析手法',
+                url: 'https://qiita.com/NoneType1/items/a4d2cf932e20b56ca444',
+              ),
+              ThanksItem(
+                title: '国立研究開発法人 防災科学技術研究所',
+                description: 'リアルタイム震度データ',
+                url:
+                    'https://www.kyoshin.bosai.go.jp/kyoshin/docs/new_kyoshinmonitor.html',
+              ),
+              ThanksItem(
+                title: '国土交通省 気象庁',
+                description: '地図データ',
+                url: 'https://www.jma.go.jp/jma/kishou/info/coment.html',
+              ),
+              ThanksItem(
+                title: 'および 全ての関係者に感謝いたします。',
+              ),
+            ],
           ),
-        )
-      ],
+        ),
+      ),
+    );
+    return const ExpansionTile(
+      title: Text('Special Thanks', style: titleTextStyle),
+      leading: Icon(Icons.favorite),
     );
   }
 }

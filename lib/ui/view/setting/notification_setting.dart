@@ -116,40 +116,6 @@ class NotificationSettingPage extends HookConsumerWidget {
           ],
         ),
       ),
-      // body: SettingsList(
-      //   sections: [
-      //     SettingsSection(
-      //       title: const Text('通知条件(緊急地震速報)'),
-      //       tiles: <SettingsTile>[
-      //         SettingsTile.navigation(
-      //           title: const Text('予想最大震度'),
-      //           description: const Text('予想最大震度が指定した値以上の場合に通知します'),
-      //           leading: const Icon(Icons.upcoming),
-      //           value: Text(
-      //             (notificationSetting.intensityThreshold == JmaIntensity.Int0)
-      //                 ? '全て'
-      //                 : notificationSetting.intensityThreshold.name,
-      //           ),
-      //           // ポップアップ
-      //
-      //         ),
-      //       ],
-      //     ),
-      //     SettingsSection(
-      //       title: const Text('読み上げ'),
-      //       tiles: <SettingsTile>[
-      //         SettingsTile.switchTile(
-      //           title: const Text('地震情報の読み上げ'),
-      //           leading: const Icon(Icons.speaker_notes),
-      //           initialValue: notificationSetting.useTts,
-      //           onToggle: (_) => ref
-      //               .read(notificationSettingsProvider.notifier)
-      //               .toggleUseTts(),
-      //         ),
-      //       ],
-      //     ),
-      //   ],
-      // ),
     );
   }
 }

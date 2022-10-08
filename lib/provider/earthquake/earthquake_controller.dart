@@ -3,7 +3,6 @@ import 'package:eqmonitor/api/remote/supabase/telegram.dart';
 import 'package:eqmonitor/schema/remote/supabase/telegram.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
 final earthquakeHistoryFutureProvider =
     FutureProvider<Map<int, List<Telegram>>>(
   (ref) async {
@@ -15,6 +14,11 @@ final earthquakeHistoryFutureProvider =
               .contains(element.type),
         )
         .toList()
+        .sorted(
+          (a, b) => int.parse(b.eventId.toString()).compareTo(
+            int.parse(a.eventId.toString()),
+          ),
+        )
         .groupListsBy((element) => int.parse(element.eventId.toString()));
     return grouped;
   },

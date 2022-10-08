@@ -23,20 +23,20 @@ class AboutAppPage extends HookConsumerWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(8),
-              child: InkWell(
-                onTap: () {
-                  logoTapCount.value++;
-                  if (logoTapCount.value == 10) {
-                    logoTapCount.value = 0;
-                    viewModel.startKmoniTest(context);
-                  }
-                },
-                child: Card(
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+              child: Card(
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    logoTapCount.value++;
+                    if (logoTapCount.value == 10) {
+                      logoTapCount.value = 0;
+                      viewModel.startKmoniTest(context);
+                    }
+                  },
                   child: Image.asset(
                     isDarkMode ? 'assets/header-dark.png' : 'assets/header.png',
                   ),

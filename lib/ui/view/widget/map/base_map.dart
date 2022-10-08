@@ -1,9 +1,8 @@
-import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
+import 'package:eqmonitor/provider/init/map_area_forecast_local_eew.dart';
 import 'package:eqmonitor/provider/theme_providers.dart';
 import 'package:eqmonitor/schema/local/prefecture/map_polygon.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
 
 /// 日本地図
 class BaseMapWidget extends ConsumerWidget {
@@ -11,7 +10,7 @@ class BaseMapWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mapSource = ref.watch(mapAreaForecastLocalEProvider);
+    final mapSource = ref.watch(mapAreaForecastLocalEewProvider);
     // * ThemeMode変更時に自動で更新されるので、ここでは更新しない
     final isDarkMode = ref.read(themeProvider.notifier).isDarkMode;
     return RepaintBoundary(
@@ -58,7 +57,8 @@ class MapBasePainter extends CustomPainter {
           ? const Color.fromARGB(255, 79, 79, 79)
           : const Color.fromARGB(255, 50, 50, 50)
       ..isAntiAlias = true
-      ..style = PaintingStyle.stroke;
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 0.5;
 
     for (final polygon in mapPolygons) {
       canvas

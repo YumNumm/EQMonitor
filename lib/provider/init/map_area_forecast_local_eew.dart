@@ -9,12 +9,12 @@ import 'package:logger/logger.dart';
 
 import '../../utils/map/map_global_offset.dart';
 
-/// 地震情報／細分区域
-final mapAreaForecastLocalEProvider = Provider<List<MapPolygon>>((ref) {
+/// 緊急地震速報/府県予報区
+final mapAreaForecastLocalEewProvider = Provider<List<MapPolygon>>((ref) {
   throw UnimplementedError();
 });
 
-Future<List<MapPolygon>> loadMapAreaForecastLocalE() async {
+Future<List<MapPolygon>> loadMapAreaForecastLocalEew() async {
   final stopwatch = Stopwatch()..start();
   final geo = GeoJson();
   final logger = Logger();
@@ -71,11 +71,11 @@ Future<List<MapPolygon>> loadMapAreaForecastLocalE() async {
   geo.endSignal.listen((_) {
     stopwatch.stop();
     logger.i(
-        'mapAreaForecastLocalEを読み込みました: ${stopwatch.elapsedMicroseconds / 1000}ms');
+        'AreaForecastLocalEEW.jsonを読み込みました: ${stopwatch.elapsedMicroseconds / 1000}ms');
   });
   await geo.parse(
     utf8.decode(
-      (await rootBundle.load('assets/maps/AreaForecastLocalE.json'))
+      (await rootBundle.load('assets/maps/AreaForecastLocalEEW.json'))
           .buffer
           .asUint8List(),
     ),

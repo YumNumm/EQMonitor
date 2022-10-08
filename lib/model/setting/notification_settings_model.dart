@@ -4,7 +4,6 @@ import 'package:eqmonitor/ui/theme/jma_intensity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 part 'notification_settings_model.freezed.dart';
 part 'notification_settings_model.g.dart';
 
@@ -39,8 +38,6 @@ class NotificationSettingsModel with _$NotificationSettingsModel {
       _$NotificationSettingsModelFromJson(json);
 
   static const String key = 'notification_settings';
-
-
 
   static NotificationSettingsModel load(SharedPreferences prefs) {
     final json = prefs.getString(key);
