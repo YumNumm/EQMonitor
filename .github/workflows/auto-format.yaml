@@ -15,14 +15,16 @@ env:
 jobs:
   auto-format:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
-      # main ブランチにチェックアウトして自動フォーマットする
       - name: checkout
         uses: actions/checkout@v2
         with:
           ref: main
+
+      - name: Add Homebrew to PATH
+        run: echo "/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin" >> $GITHUB_PATH
 
       - name: Install fvm
         run: |
