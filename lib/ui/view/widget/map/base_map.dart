@@ -11,23 +11,15 @@ class BaseMapWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapSource = ref.watch(mapAreaForecastLocalEewProvider);
-    // * ThemeMode変更時に自動で更新されるので、ここでは更新しない
     final isDarkMode = ref.read(themeProvider.notifier).isDarkMode;
     return RepaintBoundary(
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: isDarkMode
-              ? const Color.fromARGB(255, 22, 28, 45)
-              : const Color.fromARGB(255, 207, 219, 255),
+      child: CustomPaint(
+        isComplex: true,
+        painter: MapBasePainter(
+          mapPolygons: mapSource,
+          isDarkMode: isDarkMode,
         ),
-        child: CustomPaint(
-          isComplex: true,
-          painter: MapBasePainter(
-            mapPolygons: mapSource,
-            isDarkMode: isDarkMode,
-          ),
-          size: const Size(476, 927.4),
-        ),
+        size: const Size(476, 927.4),
       ),
     );
   }
