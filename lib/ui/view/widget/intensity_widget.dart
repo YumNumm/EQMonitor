@@ -4,7 +4,6 @@ import 'package:eqmonitor/utils/extension/relative_luminance.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
 /// 震度アイコンWidget
 class IntensityWidget extends ConsumerWidget {
   const IntensityWidget({

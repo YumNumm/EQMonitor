@@ -7,7 +7,6 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-
 /// アップデートがある場合はアイコンを表示
 /// ない場合はからのWidgetを返す
 class UpdaterButtonWidget extends HookConsumerWidget {

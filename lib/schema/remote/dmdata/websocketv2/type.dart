@@ -65,8 +65,6 @@ enum DmDssTelegramDataType {
   VYSE52,
 }
 
-
-
 extension on DmDssTelegramDataType {
   static final toNameStringMap = <DmDssTelegramDataType, String>{
     DmDssTelegramDataType.VZSE40: '地震・津波に関するお知らせ',

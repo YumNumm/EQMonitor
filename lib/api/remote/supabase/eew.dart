@@ -4,7 +4,6 @@ import 'package:eqmonitor/private/keys.dart';
 import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-
 class EewApi {
   final supabase = SupabaseClient(supabaseS1Url, supabaseS1AnonKey);
   final streamSupabase = SupabaseClient(supabaseS2Url, supabaseS2AnonKey);

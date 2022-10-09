@@ -15,7 +15,7 @@ class Region {
         'code': code,
         'name': name,
         'kana': kana,
-  };
+      };
 
   /// 一次細分化地域コード
   final int code;

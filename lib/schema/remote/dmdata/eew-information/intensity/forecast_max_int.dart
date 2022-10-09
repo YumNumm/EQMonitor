@@ -1,4 +1,3 @@
-
 import 'package:eqmonitor/ui/theme/jma_intensity.dart';
 
 /// 最大予測震度を記載する

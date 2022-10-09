@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-
 /// ref: https://zenn.dev/riscait/books/flutter-riverpod-practical-introduction/viewer/v2-app-lifecycle
 final appLifecycleProvider = Provider<AppLifecycleState>((ref) {
   final observer = _AppLifecycleObserver((value) => ref.state = value);
