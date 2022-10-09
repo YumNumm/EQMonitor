@@ -27,7 +27,7 @@ def getArv(lat, lon):
     return arv
 
 
-#downloadParam()
+downloadParam()
 
 with open(
     "./station.json",
