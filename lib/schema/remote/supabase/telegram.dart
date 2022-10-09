@@ -6,7 +6,6 @@ import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake-informa
 import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake-information/magnitude/magnitude_condition.dart';
 import 'package:eqmonitor/ui/theme/jma_intensity.dart';
 
-
 ///                                            テーブル"public.telegram"
 ///         列          |           タイプ            | 照合順序 | Null 値を許容 |            デフォルト
 ///---------------------+-----------------------------+----------+---------------+----------------------------------

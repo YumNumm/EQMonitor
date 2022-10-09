@@ -53,5 +53,3 @@ class ThemeProvider extends StateNotifier<ThemeModel> {
       ? (SchedulerBinding.instance.window.platformBrightness == Brightness.dark)
       : state.themeMode == ThemeMode.dark;
 }
-
-

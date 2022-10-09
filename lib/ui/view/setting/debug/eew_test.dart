@@ -1,6 +1,5 @@
 import 'dart:math';
 
-
 import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eew-information/earthquake/accuracy/depth_calculation.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eew-information/earthquake/accuracy/epicCenterAccuracy.dart';

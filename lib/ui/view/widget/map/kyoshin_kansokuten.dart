@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
-
 /// 強震観測点
 class KyoshinKansokutenWidget extends ConsumerWidget {
   const KyoshinKansokutenWidget({super.key});

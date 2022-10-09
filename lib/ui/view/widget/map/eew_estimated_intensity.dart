@@ -100,10 +100,9 @@ class EstimatedIntensityPainter extends CustomPainter {
           final maxJmaIntensity =
               JmaIntensity.toJmaIntensity(intensity: maxIntensity);
           if (maxIntensity < (isDeveloper ? 0 : 4.5)) {
-              return;
-            }
+            return;
+          }
           for (final mapRegionPolygon in mapRegionPolygons) {
-
             canvas
               ..drawPath(
                 mapRegionPolygon.path,

@@ -7,7 +7,6 @@ import 'package:latlong2/latlong.dart';
 
 import '../../../../utils/map/map_global_offset.dart';
 
-
 /// PLUM法等の仮定震源要素表示
 /// ref: Flutter Animation Gallery
 class EewHypoCenterAssumingMapWidget extends StatefulWidget {

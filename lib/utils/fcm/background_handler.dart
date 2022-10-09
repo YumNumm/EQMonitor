@@ -34,7 +34,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
         return;
       }
     }
-    if (payload.accuracy != null  ) {
+    if (payload.accuracy != null) {
       if (payload.accuracy!.epicCenterAccuracy.epicCenterAccuracy.code == 1 &&
           payload.accuracy!.epicCenterAccuracy.hypoCenterAccuracy == 1 &&
           !message.data['content']['title'].toString().contains('警報')) {

@@ -63,7 +63,7 @@ class EEWInformation {
           : Comments.fromJson(j['comments'] as Map<String, dynamic>),
     );
   }
-  
+
   Map<String, dynamic> toJson() => <String, dynamic>{
         'isLastInfo': isLastInfo.toString(),
         'isCanceled': isCanceled.toString(),

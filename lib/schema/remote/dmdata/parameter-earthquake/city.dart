@@ -5,7 +5,7 @@ class City {
     required this.name,
     required this.kana,
   });
-  
+
   factory City.fromJson(Map<String, dynamic> j) => City(
         code: int.parse(j['code'].toString()),
         name: j['name'].toString(),
