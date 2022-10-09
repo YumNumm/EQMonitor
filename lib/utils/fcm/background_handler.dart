@@ -28,19 +28,19 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
         EewPayload.fromJson(message.data['payload'] as Map<String, dynamic>);
     // 最大震度の確認
     if (payload.intensity != null) {
-      if (!(payload.intensity!.maxint.from.intValue >=
-          notificationSettings.intensityThreshold.intValue)) {
-        return;
-      }
-      if (!((payload.magnitude ?? 0.0) >=
-          notificationSettings.magnitudeThreshold)) {
+      if (payload.intensity!.maxint.from.intValue <
+              notificationSettings.intensityThreshold.intValue &&
+          (payload.magnitude ?? 0.0) <
+              notificationSettings.magnitudeThreshold) {
         return;
       }
     }
     if (payload.accuracy != null && !notificationSettings.lowPrecision) {
       if (payload.accuracy!.epicCenterAccuracy.epicCenterAccuracy.code == 1 &&
           payload.accuracy!.epicCenterAccuracy.hypoCenterAccuracy.code == 1 &&
-          !message.data['content']['title'].toString().contains('警報')) {
+          !(message.data['content'] as Map<String, dynamic>)['title']
+              .toString()
+              .contains('警報')) {
         return;
       }
     }
