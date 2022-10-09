@@ -16,6 +16,7 @@ log
 # Generated Code
 *.g.dart
 *.*.*.dart
+.env
 
 .VSCodeCounter/*
 # IntelliJ related

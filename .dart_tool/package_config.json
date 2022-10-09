@@ -3,7 +3,7 @@
   "packages": [
     {
       "name": "_fe_analyzer_shared",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/_fe_analyzer_shared-49.0.0",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/_fe_analyzer_shared-47.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -14,20 +14,8 @@
       "languageVersion": "2.16"
     },
     {
-      "name": "adaptive_breakpoints",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/adaptive_breakpoints-0.1.4",
-      "packageUri": "lib/",
-      "languageVersion": "2.17"
-    },
-    {
-      "name": "adaptive_navigation",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/adaptive_navigation-0.0.7",
-      "packageUri": "lib/",
-      "languageVersion": "2.17"
-    },
-    {
       "name": "analyzer",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/analyzer-5.1.0",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/analyzer-4.7.0",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -46,12 +34,6 @@
     {
       "name": "async",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/async-2.8.2",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "auto_size_text",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/auto_size_text-3.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -176,42 +158,6 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "connectivity_plus",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/connectivity_plus-2.3.9",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "connectivity_plus_linux",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/connectivity_plus_linux-1.3.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "connectivity_plus_macos",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/connectivity_plus_macos-1.2.6",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "connectivity_plus_platform_interface",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/connectivity_plus_platform_interface-1.2.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "connectivity_plus_web",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/connectivity_plus_web-1.2.5",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "connectivity_plus_windows",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/connectivity_plus_windows-1.2.2",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "convert",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/convert-3.0.2",
       "packageUri": "lib/",
@@ -258,12 +204,6 @@
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/dartx-1.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
-    },
-    {
-      "name": "dbus",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/dbus-0.7.8",
-      "packageUri": "lib/",
-      "languageVersion": "2.15"
     },
     {
       "name": "device_frame",
@@ -326,10 +266,28 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "dotenv",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/dotenv-4.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
+    },
+    {
       "name": "dynamic_color",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/dynamic_color-1.4.0",
       "packageUri": "lib/",
       "languageVersion": "2.16"
+    },
+    {
+      "name": "envied",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/envied-0.2.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "envied_generator",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/envied_generator-0.2.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "expandable",
@@ -382,24 +340,6 @@
     {
       "name": "firebase_analytics_web",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_analytics_web-0.4.2+7",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "firebase_auth",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_auth-3.11.2",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "firebase_auth_platform_interface",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_auth_platform_interface-6.10.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "firebase_auth_web",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_auth_web-4.6.1",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
@@ -566,12 +506,6 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "flutter_staggered_animations",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_staggered_animations-1.1.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.17"
-    },
-    {
       "name": "flutter_test",
       "rootUri": "file:///C:/Users/onory/fvm/versions/3.0.5/packages/flutter_test",
       "packageUri": "lib/",
@@ -597,7 +531,7 @@
     },
     {
       "name": "freezed",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/freezed-2.1.1",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/freezed-2.1.0+1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -680,12 +614,6 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "home_widget",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/git/home_widget-3380fd724cac52f18877f8be086029827f8f8a6b/",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "hooks_riverpod",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/hooks_riverpod-2.0.2",
       "packageUri": "lib/",
@@ -742,12 +670,6 @@
     {
       "name": "isar",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/isar-3.0.2",
-      "packageUri": "lib/",
-      "languageVersion": "2.17"
-    },
-    {
-      "name": "isar_flutter_libs",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/isar_flutter_libs-3.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -850,12 +772,6 @@
     {
       "name": "nested",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/nested-1.0.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "nm",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/nm-0.5.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -1412,7 +1328,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-10-08T15:53:22.561165Z",
+  "generated": "2022-10-09T12:27:44.900115Z",
   "generator": "pub",
   "generatorVersion": "2.17.6"
 }

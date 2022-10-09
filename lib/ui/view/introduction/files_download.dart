@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:eqmonitor/private/keys.dart';
+import 'package:eqmonitor/env/env.dart';
 import 'package:eqmonitor/provider/init/application_support_dir.dart';
 import 'package:eqmonitor/provider/init/shared_preferences.dart';
 import 'package:eqmonitor/provider/logger.dart';
@@ -50,8 +50,8 @@ class FilesDownloadWidget extends HookConsumerWidget {
                       options: Options(
                         headers: {
                           'Authorization':
-                              'Basic ${base64.encode(utf8.encode(dmdataKey))}',
-                          'Referer': 'https://$dmdataOrigin/',
+                              'Basic ${base64.encode(utf8.encode(Env.dmdataKey))}',
+                          'Referer': 'https://${Env.dmdataOrigin}/',
                         },
                       ),
                     );
@@ -121,8 +121,8 @@ class FilesDownloadWidget extends HookConsumerWidget {
                       options: Options(
                         headers: {
                           'Authorization':
-                              'Basic ${base64.encode(utf8.encode(dmdataKey))}',
-                          'Referer': 'https://$dmdataOrigin/',
+                              'Basic ${base64.encode(utf8.encode(Env.dmdataKey))}',
+                          'Referer': 'https://${Env.dmdataOrigin}/',
                         },
                       ),
                     );
