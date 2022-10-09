@@ -1,4 +1,3 @@
-
 import 'package:eqmonitor/provider/earthquake/earthquake_controller.dart';
 import 'package:eqmonitor/provider/init/shared_preferences.dart';
 import 'package:eqmonitor/provider/setting/developer_mode.dart';
@@ -12,10 +11,6 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'view/views.dart';
-
-
-
-
 
 final routerProvider = Provider<GoRouter>(
   (ref) => GoRouter(
@@ -104,6 +99,5 @@ final routerProvider = Provider<GoRouter>(
     urlPathStrategy: UrlPathStrategy.path,
     debugLogDiagnostics:
         kDebugMode || ref.watch(developerModeProvider).isDeveloper,
-
   ),
 );

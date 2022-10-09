@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 
-
 class KyoshinMonitorApi {
   final Dio dio = Dio()
         ..options.baseUrl = 'http://www.kmoni.bosai.go.jp'

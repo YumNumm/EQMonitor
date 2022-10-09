@@ -14,5 +14,3 @@ class MapPolygon {
   final Path path;
   final List<Offset> points;
 }
-
-
