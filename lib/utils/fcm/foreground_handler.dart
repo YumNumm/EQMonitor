@@ -11,7 +11,7 @@ Future<void> firebaseMessagingForegroundHandler(RemoteMessage message) async {
   final prefs = await SharedPreferences.getInstance();
 
   if (message.data['tts'] != null &&
-      NotificationSettingsModel.load(prefs).useTts) {
+      NotificationSettingsModel.loadFromPrefs(prefs).useTts) {
     final flutterTts = FlutterTts();
     await flutterTts.setLanguage('ja-JP');
     await flutterTts.speak(message.data['tts'].toString());

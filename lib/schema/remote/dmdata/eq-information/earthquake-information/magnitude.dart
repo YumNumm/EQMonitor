@@ -23,7 +23,8 @@ class Magnitude {
                 (element) =>
                     element.description ==
                     j['condition'].toString().alphanumericToHalfLength(),
-                orElse: () => MagnitudeCondition.unknown);
+                orElse: () => MagnitudeCondition.unknown,
+              );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'type': type,

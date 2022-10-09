@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:eqmonitor/model/setting/jma_intensity_color_model.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
-import 'package:eqmonitor/provider/init/parameter-earthquake.dart';
+import 'package:eqmonitor/provider/init/parameter_earthquake.dart';
 import 'package:eqmonitor/schema/local/prefecture/map_polygon.dart';
 import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake-information.dart';

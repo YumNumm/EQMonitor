@@ -71,7 +71,9 @@ Future<List<MapPolygon>> loadMapAreaForecastLocalE() async {
   geo.endSignal.listen((_) {
     stopwatch.stop();
     logger.i(
-        'mapAreaForecastLocalEを読み込みました: ${stopwatch.elapsedMicroseconds / 1000}ms');
+      'mapAreaForecastLocalEを読み込みました: '
+      '${stopwatch.elapsedMicroseconds / 1000}ms',
+    );
   });
   await geo.parse(
     utf8.decode(

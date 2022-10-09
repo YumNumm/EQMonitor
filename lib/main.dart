@@ -13,7 +13,7 @@ import 'package:eqmonitor/provider/init/kyoshin_kansokuten.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_eew.dart';
 import 'package:eqmonitor/provider/init/map_area_tsunami_forecast.dart';
-import 'package:eqmonitor/provider/init/parameter-earthquake.dart';
+import 'package:eqmonitor/provider/init/parameter_earthquake.dart';
 import 'package:eqmonitor/provider/init/secure_storage.dart';
 import 'package:eqmonitor/provider/init/shared_preferences.dart';
 import 'package:eqmonitor/provider/init/travel_time.dart';
@@ -34,7 +34,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:logger/logger.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -61,7 +60,7 @@ Future<void> main() async {
   final crashlytics = FirebaseCrashlytics.instance;
   final deviceInfo = await DeviceInfoPlugin().androidInfo;
   final prefs = await SharedPreferences.getInstance();
-  final appInfo = await PackageInfo.fromPlatform();
+  // final appInfo = await PackageInfo.fromPlatform();
   // クラッシュレポートの初期化
   final isCrashLogShareAllowed =
       await CrashLogShareProvider(prefs).loadSettingsFromSharedPrefrences();

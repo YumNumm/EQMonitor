@@ -39,7 +39,7 @@ class KyoshinMonitorApi {
     return dt;
   }
 
-  /// 強震モニタのEEWAPIから[targetDateTime]に対応するEEWDataを取得します。
+  /// 強震モニタのEEWAPIからtargetDateTimeに対応するEEWDataを取得します。
   /// Statusが200以外を返した場合に例外`HttpExceptionWithStatus`が発生します。
   // Future<KyoshinEEW> getKyoshinMonitorEEW(DateTime targetDateTime) async {
   //   final ymdhms = DateFormat('yyyyMMddHHmmss');
