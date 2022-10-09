@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_catching_errors
 
+import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -50,29 +51,21 @@ class TravelTimeApi {
     if (table.isEmpty) {
       return null;
     }
-    try {
-      final p1 = table.firstWhere((e) => e.p <= time);
-      final p2 = table.lastWhere((e) => e.p >= time);
-      final p = (time - p1.p) / (p2.p - p1.p) * (p2.distance - p1.distance) +
-          p1.distance;
-      final s1 = table.firstWhere((e) => e.s <= time);
-      final s2 = table.lastWhere((e) => e.s >= time);
-      final s = (time - p1.s) / (p2.s - p1.s) * (p2.distance - p1.distance) +
-          s1.distance;
-      return TravelTimeResult(s, p);
-    } on Error {
-      try {
-        // P波のみ計算
-        final p1 = table.firstWhere((e) => e.p <= time);
-        final p2 = table.lastWhere((e) => e.p >= time);
-        final p = (time - p1.p) / (p2.p - p1.p) * (p2.distance - p1.distance) +
-            p1.distance;
-
-        return TravelTimeResult(0, p);
-      } on Error {
-        return TravelTimeResult(0, 0);
-      }
+    final p1 = table.firstWhereOrNull((e) => e.p <= time);
+    final p2 = table.lastWhereOrNull((e) => e.p >= time);
+    if (p1 == null || p2 == null) {
+      return null;
     }
+    final p = (time - p1.p) / (p2.p - p1.p) * (p2.distance - p1.distance) +
+        p1.distance;
+    final s1 = table.firstWhereOrNull((e) => e.s <= time);
+    final s2 = table.lastWhereOrNull((e) => e.s >= time);
+    if (s1 == null || s2 == null) {
+      return TravelTimeResult(0, p);
+    }
+    final s = (time - s1.s) / (s2.s - s1.s) * (s2.distance - s1.distance) +
+        s1.distance;
+    return TravelTimeResult(s, p);
   }
 }
 
