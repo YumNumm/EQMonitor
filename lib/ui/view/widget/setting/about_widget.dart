@@ -55,7 +55,7 @@ class AboutWidget extends HookConsumerWidget {
           ],
         ].expand((e) => e).toList(),
       ),
-      onTap: () => () async {
+      onTap: () async {
         await Clipboard.setData(
           ClipboardData(
             text: () {

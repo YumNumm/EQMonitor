@@ -1,5 +1,7 @@
 // ignore_for_file: lines_longer_than_80_chars
 
+import 'dart:developer';
+
 import 'package:eqmonitor/api/remote/supabase/telegram.dart';
 import 'package:eqmonitor/provider/earthquake/earthquake_controller.dart';
 import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
@@ -62,15 +64,23 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
               // SliverAppBar
               body: RefreshIndicator(
                 onRefresh: () async {
-                  await Future<void>.delayed(const Duration(milliseconds: 500));
-                  return ref.refresh(earthquakeHistoryFutureProvider);
+                  log('RELOAD');
+                  ref.refresh(earthquakeHistoryFutureProvider);
+                  return ref.read(earthquakeHistoryFutureProvider.future);
                 },
                 child: CustomScrollView(
                   slivers: [
-                    const SliverAppBar(
+                    SliverAppBar(
                       floating: true,
                       stretch: true,
-                      title: Text('地震履歴'),
+                      title: const Text('地震履歴'),
+                      actions: [
+                        IconButton(
+                          icon: const Icon(Icons.refresh),
+                          onPressed: () async =>
+                              ref.refresh(earthquakeHistoryFutureProvider),
+                        ),
+                      ],
                     ),
                     // SliverList
                     SliverList(

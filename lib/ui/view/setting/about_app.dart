@@ -1,6 +1,7 @@
 import 'package:eqmonitor/provider/theme_providers.dart';
 import 'package:eqmonitor/ui/view/setting/about_app.viewmodel.dart';
 import 'package:eqmonitor/ui/view/widget/setting/about_widget.dart';
+import 'package:eqmonitor/ui/view/widget/setting/fcm_token_widget.dart';
 import 'package:eqmonitor/ui/view/widget/setting/license_widget.dart';
 import 'package:eqmonitor/ui/view/widget/setting/setting_section.dart';
 import 'package:eqmonitor/ui/view/widget/setting/thanks_widget.dart';
@@ -56,6 +57,10 @@ class AboutAppPage extends HookConsumerWidget {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 8),
                   child: LicenseWidget(),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: FcmTokenWidget(),
                 ),
               ],
             ),
