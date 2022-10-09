@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/api/remote/supabase/telegram.dart';
 import 'package:eqmonitor/schema/remote/supabase/telegram.dart';

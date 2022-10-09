@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:eqmonitor/model/setting/jma_intensity_color_model.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
 import 'package:eqmonitor/provider/init/parameter_earthquake.dart';
+import 'package:eqmonitor/provider/theme_providers.dart';
 import 'package:eqmonitor/schema/local/prefecture/map_polygon.dart';
 import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake-information.dart';
@@ -294,54 +295,61 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                 .toString(),
           ),
           Expanded(
-            child: Stack(
-              children: [
-                InteractiveViewer(
-                  maxScale: 20,
-                  child: RepaintBoundary(
-                    child: Stack(
-                      children: [
-                        // マップベース
-                        const BaseMapWidget(),
-                        // Region毎の震度
-                        MapRegionIntensityWidget(
-                          regions: intensity?.regions ?? <Region>[],
-                          stations: intensity?.stations ?? <Station>[],
-                        ),
-                        // 震央位置
-                        MapHypoCenterMapWidget(
-                          component: component,
-                        ),
-                      ],
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: ref.watch(themeProvider.notifier).isDarkMode
+                    ? const Color.fromARGB(255, 22, 28, 45)
+                    : const Color.fromARGB(255, 207, 219, 255),
+              ),
+              child: Stack(
+                children: [
+                  InteractiveViewer(
+                    maxScale: 20,
+                    child: RepaintBoundary(
+                      child: Stack(
+                        children: [
+                          // マップベース
+                          const BaseMapWidget(),
+                          // Region毎の震度
+                          MapRegionIntensityWidget(
+                            regions: intensity?.regions ?? <Region>[],
+                            stations: intensity?.stations ?? <Station>[],
+                          ),
+                          // 震央位置
+                          MapHypoCenterMapWidget(
+                            component: component,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      children: [
-                        for (final i in JmaIntensity.values)
-                          if (i == JmaIntensity.over)
-                            const SizedBox.shrink()
-                          else
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IntensityWidget(
-                                  intensity: i,
-                                  size: 25,
-                                  opacity: 1,
-                                ),
-                                const SizedBox(width: 5),
-                              ],
-                            ),
-                      ],
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Row(
+                        children: [
+                          for (final i in JmaIntensity.values)
+                            if (i == JmaIntensity.over)
+                              const SizedBox.shrink()
+                            else
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IntensityWidget(
+                                    intensity: i,
+                                    size: 25,
+                                    opacity: 1,
+                                  ),
+                                  const SizedBox(width: 5),
+                                ],
+                              ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

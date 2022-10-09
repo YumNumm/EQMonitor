@@ -29,8 +29,12 @@ class NotificationSettingViewModel {
   }
 
   /// TTSの切り替え
-  void onTtsSwitchChanged() =>
+  void toggleUseTts() =>
       ref.read(notificationSettingsProvider.notifier).toggleUseTts();
+
+  /// 精度の低いEEW通知の切り替え
+  void toggleLowPrecision() =>
+      ref.read(notificationSettingsProvider.notifier).toggleLowPrecision();
 
   Future<JmaIntensity?> _showIntensitySelectDropdown(
     BuildContext context,

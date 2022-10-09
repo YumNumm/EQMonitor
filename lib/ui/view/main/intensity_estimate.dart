@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
 import 'package:eqmonitor/provider/init/parameter_earthquake.dart';
 import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
+import 'package:eqmonitor/provider/theme_providers.dart';
 import 'package:eqmonitor/ui/theme/jma_intensity.dart';
 import 'package:eqmonitor/utils/intensity_estimate/intensity_estimate.dart';
 import 'package:flutter/material.dart';
@@ -146,81 +147,88 @@ class IntensityEstimatePage extends HookConsumerWidget {
             ],
           ), // マップ
           Expanded(
-            child: Stack(
-              children: [
-                InteractiveViewer(
-                  transformationController: transformationController,
-                  constrained: false,
-                  maxScale: 10,
-                  child: Stack(
-                    children: [
-                      // マップベース
-                      const BaseMapWidget(),
-                      // 推定した観測点震度
-                      RepaintBoundary(
-                        child: CustomPaint(
-                          painter: EstimatedIntensityPainter(
-                            estimatedShindoPointsGroupBy:
-                                intensityCalcResult.value,
-                            colors: ref.watch(jmaIntensityColorProvider),
-                            mapPolygons:
-                                ref.watch(mapAreaForecastLocalEProvider),
-                            isDeveloper: true,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: ref.watch(themeProvider.notifier).isDarkMode
+                    ? const Color.fromARGB(255, 22, 28, 45)
+                    : const Color.fromARGB(255, 207, 219, 255),
+              ),
+              child: Stack(
+                children: [
+                  InteractiveViewer(
+                    transformationController: transformationController,
+                    constrained: false,
+                    maxScale: 10,
+                    child: Stack(
+                      children: [
+                        // マップベース
+                        const BaseMapWidget(),
+                        // 推定した観測点震度
+                        RepaintBoundary(
+                          child: CustomPaint(
+                            painter: EstimatedIntensityPainter(
+                              estimatedShindoPointsGroupBy:
+                                  intensityCalcResult.value,
+                              colors: ref.watch(jmaIntensityColorProvider),
+                              mapPolygons:
+                                  ref.watch(mapAreaForecastLocalEProvider),
+                              isDeveloper: true,
+                            ),
+                            size: const Size(476, 927.4),
                           ),
-                          size: const Size(476, 927.4),
                         ),
-                      ),
-                      // EEWの震央位置
-                      RepaintBoundary(
-                        child: CustomPaint(
-                          painter: HypocenterPainterfromLatLng(
-                            hypocenter: hypo.value,
+                        // EEWの震央位置
+                        RepaintBoundary(
+                          child: CustomPaint(
+                            painter: HypocenterPainterfromLatLng(
+                              hypocenter: hypo.value,
+                            ),
+                            size: const Size(476, 927.4),
                           ),
-                          size: const Size(476, 927.4),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                // 凡例
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Row(
-                    children: [
-                      for (final i in JmaIntensity.values)
-                        if (i == JmaIntensity.over)
-                          const SizedBox.shrink()
-                        else
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IntensityWidget(
-                                intensity: i,
-                                size: 25,
-                                opacity: 1,
-                              ),
-                              const SizedBox(width: 5),
-                            ],
-                          ),
-                    ],
+                  // 凡例
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Row(
+                      children: [
+                        for (final i in JmaIntensity.values)
+                          if (i == JmaIntensity.over)
+                            const SizedBox.shrink()
+                          else
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IntensityWidget(
+                                  intensity: i,
+                                  size: 25,
+                                  opacity: 1,
+                                ),
+                                const SizedBox(width: 5),
+                              ],
+                            ),
+                      ],
+                    ),
                   ),
-                ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Text(
-                      (calcTime.value == null)
-                          ? ''
-                          : '${calcTime.value! / 1000}ms\n'
-                              'maxInt: ${maxInt.value.toStringAsFixed(1)}',
-                      style: const TextStyle(
-                        fontSize: 12,
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(
+                        (calcTime.value == null)
+                            ? ''
+                            : '${calcTime.value! / 1000}ms\n'
+                                'maxInt: ${maxInt.value.toStringAsFixed(1)}',
+                        style: const TextStyle(
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
