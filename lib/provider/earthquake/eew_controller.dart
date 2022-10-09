@@ -77,17 +77,23 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
 
   Future<void> startEewStreaming() async {
     // EEWのストリーミングを開始
-    final subscription = state.supabase
-        .from('eew')
-        .on(SupabaseEventTypes.insert, (payload) async {
-      logger.i('EEW STREAM: ${payload.newRecord}', payload.commitTimestamp);
-      final commonHead = CommonHead.fromJson(
-        payload.newRecord!['data'] as Map<String, dynamic>,
-      );
-      addTelegram(commonHead);
-    }).subscribe()
-      ..onClose(() => logger.i('EEW STREAM: close'))
-      ..onError((e) => logger.e('EEW STREAM: error', e));
+    final subscription = state.supabase.from('eew').on(
+      SupabaseEventTypes.all,
+      (payload) async {
+        logger.i('EEW STREAM: ${payload.newRecord}', payload.commitTimestamp);
+        final commonHead = CommonHead.fromJson(
+          payload.newRecord!['data'] as Map<String, dynamic>,
+        );
+        addTelegram(commonHead);
+      },
+    ).subscribe()
+      ..onError((e) => logger.e('EEW STREAM: error', e))
+      ..socket.onOpen(() => logger.v('Socket Opened'))
+      ..socket.onMessage((p0) => logger.v(p0.toString()));
+    subscription.onClose(() {
+      logger.e('EEW STREAM: close');
+      subscription.rejoinUntilConnected();
+    });
 
     state = state.copyWith(subscription: subscription);
 

@@ -26,7 +26,6 @@ class IntensityEstimatePage extends HookConsumerWidget {
     final magnitude = useState<double>(8);
     final depth = useState<int>(50);
     final hypo = useState<LatLng>(LatLng(35, 135));
-    final isCollect = useState<bool>(true);
     final intensityCalcResult =
         useState<Map<int, List<EstimatedEarthquakeParameterItem>>>({});
 
@@ -39,12 +38,17 @@ class IntensityEstimatePage extends HookConsumerWidget {
         jmaMagnitude: magnitude.value,
         depth: depth.value.toDouble(),
         hypocenter: hypo.value,
-        obsPoints: ref.watch(parameterEarthquakeProvider).items,
+        obsPoints: ref.read(parameterEarthquakeProvider).items,
       );
       intensityCalcResult.value =
           result.groupListsBy((element) => element.region.code);
       calcTime.value = (stopWatch..stop()).elapsedMicroseconds;
     }
+
+    useEffect(
+      () => calc,
+      [magnitude.value, depth.value, hypo.value],
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -56,7 +60,7 @@ class IntensityEstimatePage extends HookConsumerWidget {
             title: const Text('震源要素'),
             leading: const Icon(Icons.place),
             subtitle: Text(
-              '${hypo.value.longitude.toStringAsFixed(1)}, ${hypo.value.latitude.toStringAsFixed(1)}, 深さ: ${depth.value}km M${magnitude.value}',
+              '緯度:${hypo.value.longitude.toStringAsFixed(1)} 経度:${hypo.value.latitude.toStringAsFixed(1)} 深さ:${depth.value}km M${magnitude.value}',
             ),
             children: [
               Padding(
@@ -76,7 +80,6 @@ class IntensityEstimatePage extends HookConsumerWidget {
                             onChanged: (value) {
                               magnitude.value =
                                   double.parse(value.toStringAsFixed(1));
-                              calc();
                             },
                           ),
                         ),
@@ -93,7 +96,6 @@ class IntensityEstimatePage extends HookConsumerWidget {
                             label: '${depth.value}km',
                             onChanged: (value) {
                               depth.value = value.toInt();
-                              calc();
                             },
                           ),
                         ),
@@ -112,7 +114,6 @@ class IntensityEstimatePage extends HookConsumerWidget {
                             label: hypo.value.longitude.toStringAsFixed(1),
                             onChanged: (value) {
                               hypo.value = LatLng(hypo.value.latitude, value);
-                              calc();
                             },
                           ),
                         ),
@@ -131,7 +132,6 @@ class IntensityEstimatePage extends HookConsumerWidget {
                             label: hypo.value.latitude.toStringAsFixed(1),
                             onChanged: (value) {
                               hypo.value = LatLng(value, hypo.value.longitude);
-                              calc();
                             },
                           ),
                         ),
@@ -143,83 +143,80 @@ class IntensityEstimatePage extends HookConsumerWidget {
             ],
           ), // マップ
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Stack(
-                children: [
-                  InteractiveViewer(
-                    transformationController: transformationController,
-                    constrained: false,
-                    maxScale: 10,
-                    child: Stack(
-                      children: [
-                        // マップベース
-                        const BaseMapWidget(),
-                        // 推定した観測点震度
-                        RepaintBoundary(
-                          child: CustomPaint(
-                            painter: EstimatedIntensityPainter(
-                              estimatedShindoPointsGroupBy:
-                                  intensityCalcResult.value,
-                              colors: ref.watch(jmaIntensityColorProvider),
-                              mapPolygons:
-                                  ref.watch(mapAreaForecastLocalEProvider),
-                              isDeveloper: true,
-                            ),
-                            size: const Size(476, 927.4),
+            child: Stack(
+              children: [
+                InteractiveViewer(
+                  transformationController: transformationController,
+                  constrained: false,
+                  maxScale: 10,
+                  child: Stack(
+                    children: [
+                      // マップベース
+                      const BaseMapWidget(),
+                      // 推定した観測点震度
+                      RepaintBoundary(
+                        child: CustomPaint(
+                          painter: EstimatedIntensityPainter(
+                            estimatedShindoPointsGroupBy:
+                                intensityCalcResult.value,
+                            colors: ref.watch(jmaIntensityColorProvider),
+                            mapPolygons:
+                                ref.watch(mapAreaForecastLocalEProvider),
+                            isDeveloper: true,
                           ),
+                          size: const Size(476, 927.4),
                         ),
-                        // EEWの震央位置
-                        RepaintBoundary(
-                          child: CustomPaint(
-                            painter: HypocenterPainterfromLatLng(
-                              hypocenter: hypo.value,
-                            ),
-                            size: const Size(476, 927.4),
+                      ),
+                      // EEWの震央位置
+                      RepaintBoundary(
+                        child: CustomPaint(
+                          painter: HypocenterPainterfromLatLng(
+                            hypocenter: hypo.value,
                           ),
+                          size: const Size(476, 927.4),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  // 凡例
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Row(
-                      children: [
-                        for (final i in JmaIntensity.values)
-                          if (i == JmaIntensity.over)
-                            const SizedBox.shrink()
-                          else
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IntensityWidget(
-                                  intensity: i,
-                                  size: 25,
-                                  opacity: 1,
-                                ),
-                                const SizedBox(width: 5),
-                              ],
-                            ),
-                      ],
-                    ),
+                ),
+                // 凡例
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Row(
+                    children: [
+                      for (final i in JmaIntensity.values)
+                        if (i == JmaIntensity.over)
+                          const SizedBox.shrink()
+                        else
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IntensityWidget(
+                                intensity: i,
+                                size: 25,
+                                opacity: 1,
+                              ),
+                              const SizedBox(width: 5),
+                            ],
+                          ),
+                    ],
                   ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Text(
-                        (calcTime.value == null)
-                            ? ''
-                            : 'took ${calcTime.value! / 1000}ms',
-                        style: const TextStyle(
-                          fontSize: 10,
-                        ),
+                ),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      (calcTime.value == null)
+                          ? ''
+                          : 'took ${calcTime.value! / 1000}ms',
+                      style: const TextStyle(
+                        fontSize: 10,
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],

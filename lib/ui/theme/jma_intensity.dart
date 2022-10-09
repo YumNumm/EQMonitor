@@ -24,27 +24,27 @@ enum JmaIntensity {
   Int1('1', '震度1', Color.fromARGB(255, 183, 185, 186), 1),
 
   /// 震度2
-  Int2('2', '震度2', Color.fromARGB(255, 132, 198, 228), 1),
+  Int2('2', '震度2', Color.fromARGB(255, 132, 198, 228), 2),
 
   /// 震度3
   Int3('3', '震度3', Color.fromARGB(255, 141, 206, 165), 3),
 
   /// 震度4
   /// 津波注意報
-  Int4('4', '震度4', Color.fromARGB(255, 137, 179, 20), 4),
+  Int4('4', '震度4', Color.fromARGB(255, 212, 232, 0), 4),
 
   /// 震度5弱
-  Int5Lower('5-', '震度5弱', Color.fromARGB(255, 248, 156, 28), 5),
+  Int5Lower('5-', '震度5弱', Color.fromARGB(255, 250, 212, 150), 5),
 
   /// 震度5強
-  Int5Upper('5+', '震度5強', Color.fromARGB(255, 168, 95, 0), 6),
+  Int5Upper('5+', '震度5強', Color.fromARGB(255, 255, 153, 0), 6),
 
   /// 震度6弱
   /// 津波警報
   Int6Lower('6-', '震度6弱', Color.fromARGB(255, 255, 40, 0), 7),
 
   /// 震度6強
-  Int6Upper('6+', '震度6強', Color.fromARGB(255, 101, 0, 0), 8),
+  Int6Upper('6+', '震度6強', Color.fromARGB(255, 165, 0, 33), 8),
 
   /// 震度7
   /// 大津波警報
@@ -184,4 +184,3 @@ enum JmaIntensity {
   }
 }
 
-extension on JmaIntensity {}

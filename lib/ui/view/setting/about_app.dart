@@ -37,6 +37,8 @@ class AboutAppPage extends HookConsumerWidget {
                       viewModel.startKmoniTest(context);
                     }
                   },
+                  onScaleStart: (_) =>
+                      viewModel.onDeveloperModeTilePressed(context),
                   child: Image.asset(
                     isDarkMode ? 'assets/header-dark.png' : 'assets/header.png',
                   ),
