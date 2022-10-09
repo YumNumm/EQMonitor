@@ -1,6 +1,13 @@
 {
   "items": [
     {
+      "isBreakingChange": true,
+      "buildId": 360,
+      "version": "V0.5.7",
+      "date": "2022-10-09T23:00:00+09:00",
+      "comment": "- 走時表の実装を修正\n- 緊急地震速報のUIに関する軽微な変更",
+      "url": "https://github.com/EQMonitor/EQMonitor/releases/tag/v0.5.7-beta"
+    },{
       "isBreakingChange": false,
       "buildId": 358,
       "version": "V0.5.6",
