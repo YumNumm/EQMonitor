@@ -27,12 +27,13 @@ jobs:
           java-version: "17"
           cache: "gradle"
 
-      - name: Setup flutter environment
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.0.5"
-          channel: "stable"
-          cache: true
+      - name: Install fvm
+        run: |
+          brew tap leoafarias/fvm
+          brew install fvm
+
+      - name: Setup flutter
+        run: fvm install
 
       - name: Cache pubspec dependencies
         uses: actions/cache@v2
