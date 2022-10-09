@@ -17,35 +17,37 @@ class MainView extends HookConsumerWidget {
       message: 'DEVELOP',
       location: BannerLocation.bottomStart,
       child: Scaffold(
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: selectedIndex.value,
-          onDestinationSelected: (i) {
-            HapticFeedback.selectionClick();
-            selectedIndex.value = i;
-          },
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.home),
-              label: '強震モニタ',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.history),
-              label: '地震履歴',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.calculate),
-              label: '震度計算',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.settings),
-              label: '設定',
-            ),
-          ],
+        bottomNavigationBar: RepaintBoundary(
+          child: NavigationBar(
+            selectedIndex: selectedIndex.value,
+            onDestinationSelected: (i) {
+              HapticFeedback.selectionClick();
+              selectedIndex.value = i;
+            },
+            destinations: const [
+              NavigationDestination(
+                icon: Icon(Icons.home),
+                label: '強震モニタ',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.history),
+                label: '地震履歴',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.calculate),
+                label: '震度計算',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.settings),
+                label: '設定',
+              ),
+            ],
+          ),
         ),
         body: (() {
           switch (selectedIndex.value) {
             case 0:
-              return const KmoniMap();
+              return KmoniMap();
             case 1:
               return EarthquakeHistoryPage();
             case 2:

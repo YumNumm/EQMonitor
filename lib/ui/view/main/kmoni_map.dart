@@ -27,11 +27,14 @@ final transformationControllerProvider = Provider(
 );
 
 class KmoniMap extends HookConsumerWidget {
-  const KmoniMap({super.key});
+  KmoniMap({super.key});
+
+  final mapKey = GlobalKey();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDeveloper = ref.watch(developerModeProvider).isDeveloper;
+
     return Scaffold(
       appBar: AppBar(
         title: FittedBox(
@@ -66,6 +69,7 @@ class KmoniMap extends HookConsumerWidget {
             : null,
       ),
       body: Stack(
+        key: mapKey,
         children: [
           GestureDetector(
             child: Center(
@@ -73,7 +77,7 @@ class KmoniMap extends HookConsumerWidget {
                 transformationController:
                     ref.watch(transformationControllerProvider),
                 maxScale: 20,
-                constrained: false,
+                clipBehavior: Clip.none,
                 child: SizedBox(
                   height: 927.4,
                   width: 476,
@@ -124,7 +128,7 @@ class KmoniMap extends HookConsumerWidget {
             ),
 
           // EEW表示
-          const OnEewWidget(),
+          const RepaintBoundary(child: OnEewWidget()),
           // KMoniの更新状況
           const Align(
             alignment: Alignment.bottomLeft,
