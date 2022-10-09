@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/api/remote/supabase/eew.dart';
+import 'package:eqmonitor/env/env.dart';
 import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eew-information/comments.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eew-information/earthquake.dart';
@@ -35,7 +36,7 @@ import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../model/earthquake/eew_history_model.dart';
-import '../../private/keys.dart';
+
 
 final eewHistoryProvider =
     StateNotifierProvider<EewHistoryProvider, EewHistoryModel>((ref) {
@@ -46,7 +47,7 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
   EewHistoryProvider()
       : super(
           EewHistoryModel(
-            supabase: SupabaseClient(supabaseS2Url, supabaseS2AnonKey),
+            supabase: SupabaseClient(Env.supabaseS2Url, Env.supabaseS2AnonKey),
             subscription: null,
             eewTelegrams: <CommonHead>[],
             eewTelegramsGroupByEventId: <int, List<CommonHead>>{},

@@ -5,8 +5,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:eqmonitor/env/env.dart';
 import 'package:eqmonitor/model/travel_time_table/travel_time_table.dart';
-import 'package:eqmonitor/private/keys.dart';
 import 'package:eqmonitor/provider/init/application_support_dir.dart';
 import 'package:eqmonitor/provider/init/device_info.dart';
 import 'package:eqmonitor/provider/init/kyoshin_kansokuten.dart';
@@ -93,8 +93,8 @@ Future<void> main() async {
     loadTravelTimeTable().then((e) => travelTimeTable = e),
     getApplicationSupportDirectory().then((e) => dir = e),
     Supabase.initialize(
-      url: supabaseS1Url,
-      anonKey: supabaseS1AnonKey,
+      url: Env.supabaseS1Url,
+      anonKey: Env.supabaseS1AnonKey,
       debug: false,
     ),
     initFirebaseCloudMessaging(),
