@@ -11,7 +11,7 @@ def downloadParam():
     url = f"https://api.dmdata.jp/v2/parameter/earthquake/station?key={DMDATA_KEY}"
     res = requests.get(
         url,
-        headers={"Origin": DMDATA_ORIGIN},
+        headers={"Origin": "https://"+DMDATA_ORIGIN+"/"},
     )
     with open("station.json", "wb") as file:
         for chunk in res.iter_content(chunk_size=1024):
