@@ -2,7 +2,6 @@ import 'package:eqmonitor/schema/local/kyoshin_kansokuten.dart';
 import 'package:eqmonitor/ui/theme/jma_intensity.dart';
 import 'package:flutter/cupertino.dart';
 
-
 class AnalyzedKoshinKansokuten extends KyoshinKansokuten {
   const AnalyzedKoshinKansokuten({
     required this.shindo,
@@ -27,5 +26,4 @@ class AnalyzedKoshinKansokuten extends KyoshinKansokuten {
   final Color? pgaColor;
   final bool hadValue;
   final JmaIntensity? intensity;
-
 }

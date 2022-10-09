@@ -183,4 +183,3 @@ enum JmaIntensity {
     }
   }
 }
-

@@ -9,7 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
-
 import '../../model/earthquake/kmoni_model.dart';
 import '../app_lifecycle.dart';
 import '../init/kyoshin_kansokuten.dart';

@@ -88,7 +88,8 @@ class NotificationSettingPage extends HookConsumerWidget {
                         : 'M${notificationSetting.magnitudeThreshold}以上',
                   ),
                   onTap: () async => viewModel.onMagnitudeTap(context),
-                ),ListTile(
+                ),
+                ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                   title: const Text(
                     '精度の低い緊急地震速報を通知する',

@@ -1,4 +1,3 @@
-
 import 'package:device_preview/device_preview.dart';
 import 'package:eqmonitor/provider/theme_providers.dart';
 import 'package:eqmonitor/ui/route.dart';

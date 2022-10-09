@@ -18,7 +18,6 @@ class AboutAppViewModel {
   static const String rightPasswordHash =
       '3024d7c8491f94448dc4f38100c514391824ced1fe687346c84396151d411b7b77c538817b4e4916a87dececbdd3561bc8e0afe03363bd5b1e05df7ce6c5b6e7';
 
-
   /// 強震モニタのテスト開始
   void startKmoniTest(BuildContext context) {
     AwesomeNotifications().createNotification(
@@ -70,7 +69,6 @@ class AboutAppViewModel {
       }
     }
   }
-
 
   bool _isTruePassword(String password) {
     final hash = sha512.convert(utf8.encode(password)).toString();
@@ -142,6 +140,4 @@ class AboutAppViewModel {
     );
     return userInputValue ?? false;
   }
-
-
 }

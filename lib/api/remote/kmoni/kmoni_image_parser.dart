@@ -9,7 +9,6 @@ import 'package:logger/logger.dart';
 
 import 'real_time_data_type.dart';
 
-
 class KyoshinImageParser {
   final Logger logger = Logger(
     printer: PrettyPrinter(
