@@ -6,12 +6,16 @@ import 'package:eqmonitor/utils/fcm/foreground_handler.dart';
 import 'package:eqmonitor/utils/fcm/notification_channel.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 Future<void> initFirebaseCloudMessaging() async {
   final messaging = FirebaseMessaging.instance;
   // 権限を取得
-  await Permission.notification.request();
+  await AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+    if (!isAllowed) {
+      AwesomeNotifications().requestPermissionToSendNotifications();
+    }
+  });
+
   // Foreground/Backgroundでイベントを受け取るHandlerを登録
   FirebaseMessaging.onMessage.listen(
     (message) async => firebaseMessagingForegroundHandler(message),
@@ -31,6 +35,7 @@ Future<void> initFirebaseCloudMessaging() async {
   if (token != null) {
     print('FCM Token: $token');
   }
+  
   Future<void> subscribe() async {
     // TopicをSubscribe
     for (final e in Topics.values) {

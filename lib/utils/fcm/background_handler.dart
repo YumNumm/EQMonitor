@@ -13,12 +13,15 @@ import 'package:shared_preferences_android/shared_preferences_android.dart';
 import 'package:shared_preferences_ios/shared_preferences_ios.dart';
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  final stopwatch = Stopwatch()..start();
   // prefsのセットアップ
-  if (Platform.isAndroid) SharedPreferencesAndroid.registerWith();
-  if (Platform.isIOS) SharedPreferencesIOS.registerWith();
+  if (Platform.isAndroid) {
+    SharedPreferencesAndroid.registerWith();
+  }
+  if (Platform.isIOS) {
+    SharedPreferencesIOS.registerWith();
+  }
   final prefs = await SharedPreferences.getInstance();
-  final notificationSettings = NotificationSettingsModel.load(prefs);
+  final notificationSettings = NotificationSettingsModel.loadFromPrefs(prefs);
   // EEWかどうか
   if (message.data['type'].toString() == DmDssTelegramDataType.VXSE44.name) {
     final payload =
@@ -34,9 +37,9 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
         return;
       }
     }
-    if (payload.accuracy != null) {
+    if (payload.accuracy != null && !notificationSettings.lowPrecision) {
       if (payload.accuracy!.epicCenterAccuracy.epicCenterAccuracy.code == 1 &&
-          payload.accuracy!.epicCenterAccuracy.hypoCenterAccuracy == 1 &&
+          payload.accuracy!.epicCenterAccuracy.hypoCenterAccuracy.code == 1 &&
           !message.data['content']['title'].toString().contains('警報')) {
         return;
       }

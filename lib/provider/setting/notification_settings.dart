@@ -15,7 +15,7 @@ class NotificationSettingsNotifier
     extends StateNotifier<NotificationSettingsModel> {
   NotificationSettingsNotifier(this.ref)
       : super(
-          NotificationSettingsModel.load(
+          NotificationSettingsModel.loadFromPrefs(
             ref.read(sharedPreferencesProvder),
           ),
         );

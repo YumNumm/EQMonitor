@@ -15,7 +15,7 @@ class EewHistoryModel with _$EewHistoryModel {
     required Map<int, List<CommonHead>> eewTelegramsGroupByEventId,
 
     /// 表示する緊急地震速報電文リスト
-    // TODO:(YumNumm): 別のProviderで表示
+    // TODO(YumNumm): 別のProviderで表示
     required Iterable<MapEntry<CommonHead, EEWInformation>> showEews,
 
     /// 緊急地震速報用のClient(WebSocket)

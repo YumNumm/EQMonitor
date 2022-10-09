@@ -34,16 +34,16 @@ class NotificationSettingsModel with _$NotificationSettingsModel {
     @Default(1) double ttsVolume,
   }) = _NotificationSettingsModel;
 
-  factory NotificationSettingsModel.fromJson(Map<String, dynamic> json) =>
-      _$NotificationSettingsModelFromJson(json);
-
-  static const String key = 'notification_settings';
-
-  static NotificationSettingsModel load(SharedPreferences prefs) {
+  factory NotificationSettingsModel.loadFromPrefs(SharedPreferences prefs) {
     final json = prefs.getString(key);
     if (json == null) {
       return const NotificationSettingsModel();
     }
     return NotificationSettingsModel.fromJson(jsonDecode(json));
   }
+
+  factory NotificationSettingsModel.fromJson(Map<String, dynamic> json) =>
+      _$NotificationSettingsModelFromJson(json);
+
+  static const String key = 'notification_settings';
 }

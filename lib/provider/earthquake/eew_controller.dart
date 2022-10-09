@@ -190,11 +190,14 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
         showEews.add(value.first);
       }
     });
-
-    state = state.copyWith(
-      showEews: showEews
-          .map((eew) => MapEntry(eew, EEWInformation.fromJson(eew.body))),
-    );
+    if (state.showEews !=
+        showEews
+            .map((eew) => MapEntry(eew, EEWInformation.fromJson(eew.body)))) {
+      state = state.copyWith(
+        showEews: showEews
+            .map((eew) => MapEntry(eew, EEWInformation.fromJson(eew.body))),
+      );
+    }
   }
 
   void startTestcase() {
@@ -223,6 +226,7 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
             addTelegram(eew);
           }
         } catch (e) {
+          logger.e('NIED EEW STREAM(TEST): $e');
           // テストケースを終了する
           state = state.copyWith(
             testCaseStartTime: null,

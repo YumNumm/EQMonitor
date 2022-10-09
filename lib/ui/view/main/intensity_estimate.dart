@@ -1,6 +1,8 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
-import 'package:eqmonitor/provider/init/parameter-earthquake.dart';
+import 'package:eqmonitor/provider/init/parameter_earthquake.dart';
 import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
 import 'package:eqmonitor/ui/theme/jma_intensity.dart';
 import 'package:eqmonitor/utils/intensity_estimate/intensity_estimate.dart';
@@ -31,6 +33,7 @@ class IntensityEstimatePage extends HookConsumerWidget {
 
     /// 計算処理にかかった時間
     final calcTime = useState<int?>(null);
+    final maxInt = useState<double>(0);
 
     void calc() {
       final stopWatch = Stopwatch()..start();
@@ -40,15 +43,11 @@ class IntensityEstimatePage extends HookConsumerWidget {
         hypocenter: hypo.value,
         obsPoints: ref.read(parameterEarthquakeProvider).items,
       );
+      maxInt.value = result.map((e) => e.estimatedIntensity).reduce(max);
       intensityCalcResult.value =
           result.groupListsBy((element) => element.region.code);
       calcTime.value = (stopWatch..stop()).elapsedMicroseconds;
     }
-
-    useEffect(
-      () => calc,
-      [magnitude.value, depth.value, hypo.value],
-    );
 
     return Scaffold(
       appBar: AppBar(
@@ -80,6 +79,7 @@ class IntensityEstimatePage extends HookConsumerWidget {
                             onChanged: (value) {
                               magnitude.value =
                                   double.parse(value.toStringAsFixed(1));
+                              calc();
                             },
                           ),
                         ),
@@ -96,6 +96,7 @@ class IntensityEstimatePage extends HookConsumerWidget {
                             label: '${depth.value}km',
                             onChanged: (value) {
                               depth.value = value.toInt();
+                              calc();
                             },
                           ),
                         ),
@@ -114,6 +115,7 @@ class IntensityEstimatePage extends HookConsumerWidget {
                             label: hypo.value.longitude.toStringAsFixed(1),
                             onChanged: (value) {
                               hypo.value = LatLng(hypo.value.latitude, value);
+                              calc();
                             },
                           ),
                         ),
@@ -132,6 +134,7 @@ class IntensityEstimatePage extends HookConsumerWidget {
                             label: hypo.value.latitude.toStringAsFixed(1),
                             onChanged: (value) {
                               hypo.value = LatLng(value, hypo.value.longitude);
+                              calc();
                             },
                           ),
                         ),
@@ -209,9 +212,10 @@ class IntensityEstimatePage extends HookConsumerWidget {
                     child: Text(
                       (calcTime.value == null)
                           ? ''
-                          : 'took ${calcTime.value! / 1000}ms',
+                          : '${calcTime.value! / 1000}ms\n'
+                              'maxInt: ${maxInt.value.toStringAsFixed(1)}',
                       style: const TextStyle(
-                        fontSize: 10,
+                        fontSize: 12,
                       ),
                     ),
                   ),
