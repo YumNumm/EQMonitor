@@ -2,6 +2,14 @@
   "items": [
     {
       "isBreakingChange": false,
+      "buildId": 358,
+      "version": "V0.5.6",
+      "date": "2022-10-09T22:00:00+09:00",
+      "comment": "- 緊急地震速報の表示時刻が12Hになっていた問題を修正\n- 緊急地震速報の精度が低い時のマップ上震央地表示を修正\n- 強震モニタの観測点のサイズを大きくしました\n- 緊急地震速報の気象庁マグニチュード表記(`Mj`)を`M`表記に修正しました\n- 地震履歴のUIを改善しました\n- 緊急地震速報警報時に予報と表示される問題を修正しました\n- マップの配色を変更しました\n- マップを変更しました\n- その他、軽微なUI変更を行いました",
+      "url": "https://github.com/EQMonitor/EQMonitor/releases/tag/v0.5.6-beta"
+    },
+    {
+      "isBreakingChange": false,
       "buildId": 321,
       "version": "V0.5.4",
       "date": "2022-09-22T18:56:00+09:00",
