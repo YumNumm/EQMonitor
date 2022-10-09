@@ -116,7 +116,6 @@ class EewBodyWidget extends ConsumerWidget {
                 controller: expandableController,
                 theme: const ExpandableThemeData(
                   animationDuration: Duration(milliseconds: 200),
-                  
                 ),
                 collapsed: Card(
                   margin: EdgeInsets.zero,
@@ -134,7 +133,8 @@ class EewBodyWidget extends ConsumerWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(8),
                                 child: Text(
-                                  '${eew.value.isLastInfo ? ' 最終' : ''} #${eew.key.serialNo}',
+                                  '${(eew.value.comments?.warning?.codes ?? []).contains(201) ? '警報' : ''}'
+                                  '${eew.value.isLastInfo ? ' 最終 ' : ''}#${eew.key.serialNo}',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
