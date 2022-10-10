@@ -2,11 +2,13 @@ import 'dart:developer';
 
 import 'package:eqmonitor/model/setting/jma_intensity_color_model.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
+import 'package:eqmonitor/provider/init/map_area_information_city_quake.dart';
 import 'package:eqmonitor/provider/init/parameter_earthquake.dart';
 import 'package:eqmonitor/provider/theme_providers.dart';
 import 'package:eqmonitor/schema/local/prefecture/map_polygon.dart';
 import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake-information.dart';
+import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake-information/intensity/city.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake-information/intensity/region.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake-information/intensity/station.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake.dart';
@@ -113,9 +115,14 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
           Padding(
             padding: const EdgeInsets.all(8),
             child: Card(
-              color: maxInt.fromUser(colors).withOpacity(0.15),
+              elevation: 0,
+              color: maxInt.fromUser(colors).withOpacity(0.2),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
+                side: BorderSide(
+                  color: maxInt.fromUser(colors),
+                  width: 2,
+                ),
               ),
               child: Column(
                 children: [
@@ -314,7 +321,9 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                           MapRegionIntensityWidget(
                             regions: intensity?.regions ?? <Region>[],
                             stations: intensity?.stations ?? <Station>[],
+                            cities: intensity?.cities ?? <City>[],
                           ),
+
                           // 震央位置
                           MapHypoCenterMapWidget(
                             component: component,
@@ -363,22 +372,29 @@ class MapRegionIntensityWidget extends ConsumerWidget {
     super.key,
     required this.regions,
     required this.stations,
+    required this.cities,
   });
   final List<Region> regions;
   final List<Station> stations;
+  final List<City> cities;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapSource = ref.watch(mapAreaForecastLocalEProvider);
     final parameterEarthquake = ref.watch(parameterEarthquakeProvider);
+    final mapAreaInformationCityQuake =
+        ref.watch(mapAreaInformationCityQuakeProvider);
 
     return CustomPaint(
       painter: MapRegionIntensityPainter(
         mapPolygons: mapSource,
         regions: regions,
+        cities: cities,
         stations: stations,
         colors: ref.watch(jmaIntensityColorProvider),
         parameterEarthquake: parameterEarthquake,
+        mapAreaInformationCityQuakePolygons: mapAreaInformationCityQuake,
+        isDarkMode: ref.watch(themeProvider.notifier).isDarkMode,
       ),
       size: Size.infinite,
     );
@@ -390,33 +406,40 @@ class MapRegionIntensityPainter extends CustomPainter {
     required this.mapPolygons,
     required this.regions,
     required this.stations,
+    required this.cities,
     required this.colors,
     required this.parameterEarthquake,
+    required this.mapAreaInformationCityQuakePolygons,
+    required this.isDarkMode,
   });
   final List<MapPolygon> mapPolygons;
   final List<Region> regions;
   final List<Station> stations;
+  final List<City> cities;
   final JmaIntensityColorModel colors;
   final ParameterEarthquake parameterEarthquake;
+  final List<MapAreaInformationCityQuakePolygon>
+      mapAreaInformationCityQuakePolygons;
+  final bool isDarkMode;
 
   @override
   void paint(Canvas canvas, Size size) {
     log('Redraw');
-    // Regionの描画
-    for (final region in regions) {
-      // region.codeが一致するMapPolygonを探す
+    // Cityの描画
+    for (final city in cities) {
+      // city.codeが一致するMapPolygonを探す
       try {
-        final mapRegionPolygons = mapPolygons.where(
-          (element) => element.code == region.code,
+        final mapCityPolygons = mapAreaInformationCityQuakePolygons.where(
+          (element) => element.code == city.code,
         );
-        for (final mapPolygon in mapRegionPolygons) {
+        for (final mapPolygon in mapCityPolygons) {
           canvas
             ..drawPath(
               mapPolygon.path,
               Paint()
                 ..color = JmaIntensity.values
                     .firstWhere(
-                      (e) => e.name == region.maxInt.toString(),
+                      (e) => e.name == city.maxInt.toString(),
                       orElse: () => JmaIntensity.Error,
                     )
                     .fromUser(colors)
@@ -426,13 +449,47 @@ class MapRegionIntensityPainter extends CustomPainter {
             ..drawPath(
               mapPolygon.path,
               Paint()
-                ..color = const Color.fromARGB(255, 255, 255, 255)
+                ..color = isDarkMode
+                    ? const Color.fromARGB(50, 79, 79, 79)
+                    : const Color.fromARGB(50, 50, 50, 50)
                 ..isAntiAlias = true
                 ..style = PaintingStyle.stroke,
             );
         }
       } on Exception catch (e) {
-        Logger().e(e, region.code);
+        Logger().e(e, city.code);
+      }
+    }
+    // Regionの描画
+    for (final region in regions) {
+      // region.codeが一致するMapPolygonを探す
+      final mapRegionPolygons = mapPolygons.where(
+        (element) => element.code == region.code,
+      );
+      for (final mapPolygon in mapRegionPolygons) {
+        if (cities.isEmpty) {
+          canvas.drawPath(
+            mapPolygon.path,
+            Paint()
+              ..color = JmaIntensity.values
+                  .firstWhere(
+                    (e) => e.name == region.maxInt.toString(),
+                    orElse: () => JmaIntensity.Error,
+                  )
+                  .fromUser(colors)
+              ..isAntiAlias = true
+              ..strokeCap = StrokeCap.round,
+          );
+        }
+        canvas.drawPath(
+          mapPolygon.path,
+          Paint()
+            ..color = isDarkMode
+                ? const Color.fromARGB(255, 79, 79, 79)
+                : const Color.fromARGB(255, 50, 50, 50)
+            ..isAntiAlias = true
+            ..style = PaintingStyle.stroke,
+        );
       }
     }
     // TODO(YumNumm): 観測点の描画実装
@@ -463,7 +520,11 @@ class MapRegionIntensityPainter extends CustomPainter {
         oldDelegate.regions != regions ||
         oldDelegate.colors != colors ||
         oldDelegate.parameterEarthquake != parameterEarthquake ||
-        oldDelegate.stations != stations;
+        oldDelegate.stations != stations ||
+        oldDelegate.cities != cities ||
+        oldDelegate.mapAreaInformationCityQuakePolygons !=
+            mapAreaInformationCityQuakePolygons ||
+        oldDelegate.isDarkMode != isDarkMode;
   }
 }
 
