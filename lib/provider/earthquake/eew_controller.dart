@@ -37,7 +37,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../model/earthquake/eew_history_model.dart';
 
-
 final eewHistoryProvider =
     StateNotifierProvider<EewHistoryProvider, EewHistoryModel>((ref) {
   return EewHistoryProvider();
