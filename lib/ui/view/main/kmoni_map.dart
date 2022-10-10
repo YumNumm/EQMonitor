@@ -47,7 +47,7 @@ class KmoniMap extends HookConsumerWidget {
               const SizedBox(width: 5),
               ref.watch(packageInfoProvider).when<Widget>(
                     loading: () => const SizedBox.shrink(),
-                    error: (error, stack) => const SizedBox.shrink(),
+                    error: (error, stack) =>  const SizedBox.shrink(),
                     data: (data) => Text(
                       'V${data.version}',
                       style: const TextStyle(fontSize: 12),
