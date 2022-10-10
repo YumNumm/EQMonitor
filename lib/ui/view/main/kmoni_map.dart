@@ -47,7 +47,7 @@ class KmoniMap extends HookConsumerWidget {
               const SizedBox(width: 5),
               ref.watch(packageInfoProvider).when<Widget>(
                     loading: () => const SizedBox.shrink(),
-                    error: (error, stack) =>  const SizedBox.shrink(),
+                    error: (error, stack) => const SizedBox.shrink(),
                     data: (data) => Text(
                       'V${data.version}',
                       style: const TextStyle(fontSize: 12),
@@ -83,7 +83,7 @@ class KmoniMap extends HookConsumerWidget {
                 child: InteractiveViewer(
                   transformationController:
                       ref.watch(transformationControllerProvider),
-                  maxScale: 20,
+                  maxScale: 15,
                   boundaryMargin: const EdgeInsets.all(100),
                   clipBehavior: Clip.none,
                   child: SizedBox(
