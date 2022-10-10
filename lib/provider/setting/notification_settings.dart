@@ -32,7 +32,8 @@ class NotificationSettingsNotifier
   void toggleUseTts() => state = state.copyWith(useTts: !state.useTts);
 
   /// 精度の低いEEW通知の使用を切り替える
-  void toggleLowPrecision() => state = state.copyWith(lowPrecision: !state.lowPrecision);
+  void toggleLowPrecision() =>
+      state = state.copyWith(lowPrecision: !state.lowPrecision);
 
   /// 予想最大震度の閾値を設定
   void setIntensityThreshold(JmaIntensity intensity) {
