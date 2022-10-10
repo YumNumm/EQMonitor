@@ -35,7 +35,7 @@ final routerProvider = Provider<GoRouter>(
                 SystemUiMode.manual,
                 overlays: [],
               );
-              return KmoniMap();
+              return KmoniMap(showAppBar: false);
             },
           ),
         ],
