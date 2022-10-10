@@ -13,7 +13,7 @@ jobs:
     #ビルド環境
     runs-on: ubuntu-latest
     # タイムアウト時間を設定
-    timeout-minutes: 15
+    timeout-minutes: 45
 
     steps:
       #リポジトリからソースをダンロード
@@ -27,6 +27,9 @@ jobs:
           java-version: "17"
           cache: "gradle"
 
+      - name: Add Homebrew to PATH
+        run: echo "/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin" >> $GITHUB_PATH
+
       - name: Install fvm
         run: |
           brew tap leoafarias/fvm
@@ -34,28 +37,6 @@ jobs:
 
       - name: Setup flutter
         run: fvm install
-
-      - name: Cache pubspec dependencies
-        uses: actions/cache@v2
-        with:
-          path: |
-            ${{ env.FLUTTER_HOME }}/.pub-cache
-            **/.packages
-            **/.flutter-plugins
-            **/.flutter-plugin-dependencies
-            **/.dart_tool/package_config.json
-          key: build-pubspec-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            build-pubspec-
-
-      - name: Cache build runner
-        uses: actions/cache@v2
-        with:
-          path: |
-            **/.dart_tool/build
-          key: build-runner-${{ hashFiles('**/asset_graph.json') }}-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            build-runner-
 
       - name: Flutter version
         run: flutter --version
@@ -84,8 +65,7 @@ jobs:
         run: |
           echo '${{ secrets.SIGNING_KEY }}' | base64 -d > android/app/key.jks
           echo '${{ secrets.FIREBASE_ANDROID }}' | base64 -d > android/app/google-services.json
-          echo '${{ secrets.PRIVATE_KEYS }}' | base64 -d > lib/private/keys.dart
-          #echo '${{ secrets.PARAMETER_EARTHQUAKE }}' | base64 -d > assets/parameter-earthquake.json
+          echo '${{ secrets.ENV }}' | base64 -d > .env
           export KEYSTORE_PASSWORD='${{ secrets.KEYSTORE_PASSWORD }}'
           export KEY_ALIAS='${{ secrets.KEY_ALIAS }}'
           export KEY_PASSWORD='${{ secrets.KEY_PASSWORD }}'
