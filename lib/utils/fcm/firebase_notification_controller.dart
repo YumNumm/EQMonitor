@@ -35,7 +35,7 @@ Future<void> initFirebaseCloudMessaging() async {
   if (token != null) {
     print('FCM Token: $token');
   }
-  
+
   Future<void> subscribe() async {
     // TopicをSubscribe
     for (final e in Topics.values) {
