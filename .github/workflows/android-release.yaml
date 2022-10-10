@@ -39,27 +39,27 @@ jobs:
         run: fvm install
 
       - name: Flutter version
-        run: flutter --version
+        run: fvm flutter --version
 
       - name: Flutter dependencies install
         #ライブラリーの導入
-        run: flutter pub get
+        run: fvm flutter pub get
 
       - name: Generate codes with build_runner
-        run: flutter pub run build_runner build --delete-conflicting-outputs
+        run: fvm flutter pub run build_runner build --delete-conflicting-outputs
 
       - name: Generate LauncherIcon
-        run: flutter pub run flutter_launcher_icons:main
+        run: fvm flutter pub run flutter_launcher_icons:main
 
       - name: Generate NativeSplash
-        run: flutter pub run flutter_native_splash:create
+        run: fvm flutter pub run flutter_native_splash:create
 
       - name: Analyze
-        run: flutter analyze .
+        run: fvm flutter analyze .
         continue-on-error: true
 
       - name: Accept Android License
-        run: yes | flutter doctor --android-licenses
+        run: yes | fvm flutter doctor --android-licenses
 
       - name: Build apk
         run: |
@@ -69,7 +69,7 @@ jobs:
           export KEYSTORE_PASSWORD='${{ secrets.KEYSTORE_PASSWORD }}'
           export KEY_ALIAS='${{ secrets.KEY_ALIAS }}'
           export KEY_PASSWORD='${{ secrets.KEY_PASSWORD }}'
-          flutter build apk --release --obfuscate --split-debug-info=obfuscate/android
+          fvm flutter build apk --release --obfuscate --split-debug-info=obfuscate/android
         env:
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
