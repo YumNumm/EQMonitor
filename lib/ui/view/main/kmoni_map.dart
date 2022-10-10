@@ -28,7 +28,9 @@ final transformationControllerProvider = Provider(
 );
 
 class KmoniMap extends HookConsumerWidget {
-  KmoniMap({super.key});
+  KmoniMap({this.showAppBar = true, super.key});
+
+  final bool showAppBar;
 
   final mapKey = GlobalKey();
 
@@ -37,38 +39,40 @@ class KmoniMap extends HookConsumerWidget {
     final isDeveloper = ref.watch(developerModeProvider).isDeveloper;
 
     return Scaffold(
-      appBar: AppBar(
-        title: FittedBox(
-          child: Row(
-            textBaseline: TextBaseline.alphabetic,
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            children: [
-              const Text('EQMonitor'),
-              const SizedBox(width: 5),
-              ref.watch(packageInfoProvider).when<Widget>(
-                    loading: () => const SizedBox.shrink(),
-                    error: (error, stack) => const SizedBox.shrink(),
-                    data: (data) => Text(
-                      'V${data.version}',
-                      style: const TextStyle(fontSize: 12),
-                    ),
+      appBar: showAppBar
+          ? AppBar(
+              title: FittedBox(
+                child: Row(
+                  textBaseline: TextBaseline.alphabetic,
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  children: [
+                    const Text('EQMonitor'),
+                    const SizedBox(width: 5),
+                    ref.watch(packageInfoProvider).when<Widget>(
+                          loading: () => const SizedBox.shrink(),
+                          error: (error, stack) => const SizedBox.shrink(),
+                          data: (data) => Text(
+                            'V${data.version}',
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                  ],
+                ),
+              ),
+              actions: [
+                if (kDebugMode ||
+                    ref.watch(developerModeProvider).isDeveloper == true)
+                  IconButton(
+                    icon: const Icon(Icons.settings_ethernet),
+                    onPressed: () => context.push('/settings/debug/eew_test'),
                   ),
-            ],
-          ),
-        ),
-        actions: [
-          if (kDebugMode ||
-              ref.watch(developerModeProvider).isDeveloper == true)
-            IconButton(
-              icon: const Icon(Icons.settings_ethernet),
-              onPressed: () => context.push('/settings/debug/eew_test'),
-            ),
-          const UpdaterButtonWidget(),
-        ],
-        leading: (ref.watch(developerModeProvider).isDeveloper)
-            ? const Icon(Icons.lock_open)
-            : null,
-      ),
+                const UpdaterButtonWidget(),
+              ],
+              leading: (ref.watch(developerModeProvider).isDeveloper)
+                  ? const Icon(Icons.lock_open)
+                  : null,
+            )
+          : null,
       body: DecoratedBox(
         decoration: BoxDecoration(
           color: ref.watch(themeProvider.notifier).isDarkMode
@@ -113,28 +117,28 @@ class KmoniMap extends HookConsumerWidget {
             ),
 
             // テストモードのオーバレイ
-             if (ref.watch(kmoniProvider).testCaseStartTime != null)
-               Center(
-                 child: IgnorePointer(
-                   child: Padding(
-                     padding: const EdgeInsets.all(8),
-                     child: FittedBox(
-                       child: BorderedText(
-                         strokeWidth: 1,
-                         strokeColor: Colors.white,
-                         child: const Text(
-                           'TEST MODE',
-                           style: TextStyle(
-                             fontWeight: FontWeight.bold,
-                             color: Color.fromARGB(129, 255, 0, 0),
-                             fontSize: 200,
-                           ),
-                         ),
-                       ),
-                     ),
-                   ),
-                 ),
-               ),
+            if (ref.watch(kmoniProvider).testCaseStartTime != null)
+              Center(
+                child: IgnorePointer(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: FittedBox(
+                      child: BorderedText(
+                        strokeWidth: 1,
+                        strokeColor: Colors.white,
+                        child: const Text(
+                          'TEST MODE',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(129, 255, 0, 0),
+                            fontSize: 200,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
 
             // EEW表示
             const RepaintBoundary(child: OnEewWidget()),
