@@ -86,6 +86,10 @@ class TelegramApi {
     final urls = <String>[
       'https://sample.dmdata.jp/conversion/json/schema/earthquake-information/vxse53_rjtd_20210213231302.json',
       'https://sample.dmdata.jp/conversion/json/schema/earthquake-information/vxse53_rjtd_20210213231800.json',
+      'https://sample.dmdata.jp/conversion/json/schema/earthquake-information/vxse53_rjtd_20210320181304.json',
+      'https://sample.dmdata.jp/conversion/json/schema/earthquake-information/vxse51_rtjt_20210320181229.json',
+      'https://sample.dmdata.jp/conversion/json/schema/earthquake-information/vxse52_rjtd_20210213231144.json',
+      'https://sample.dmdata.jp/conversion/json/schema/earthquake-information/vxse62_rjtd_20201121023330.json',
     ];
     final telegrams = <Telegram>[];
     final futures = <Future<void>>[];
@@ -102,10 +106,10 @@ class TelegramApi {
                   type: 'VXSE53',
                   time: DateTime.now(),
                   url:
-                      'https://sample.dmdata.jp/conversion/json/schema/earthquake-information/vxse53_rjtd_20210213231800.json',
+                      url,
                   depth: null,
                   depthCondition: null,
-                  eventId: '202102132318000',
+                  eventId: (202102132318000 + url.hashCode ~/ 1000).toString(),
                   hash: '',
                   headline: '',
                   hypoName: null,
