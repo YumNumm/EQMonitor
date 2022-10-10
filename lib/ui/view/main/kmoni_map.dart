@@ -113,28 +113,28 @@ class KmoniMap extends HookConsumerWidget {
             ),
 
             // テストモードのオーバレイ
-            if (ref.watch(kmoniProvider).testCaseStartTime != null)
-              Center(
-                child: IgnorePointer(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: FittedBox(
-                      child: BorderedText(
-                        strokeWidth: 1,
-                        strokeColor: Colors.white,
-                        child: const Text(
-                          'TEST MODE',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(129, 255, 0, 0),
-                            fontSize: 200,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+             if (ref.watch(kmoniProvider).testCaseStartTime != null)
+               Center(
+                 child: IgnorePointer(
+                   child: Padding(
+                     padding: const EdgeInsets.all(8),
+                     child: FittedBox(
+                       child: BorderedText(
+                         strokeWidth: 1,
+                         strokeColor: Colors.white,
+                         child: const Text(
+                           'TEST MODE',
+                           style: TextStyle(
+                             fontWeight: FontWeight.bold,
+                             color: Color.fromARGB(129, 255, 0, 0),
+                             fontSize: 200,
+                           ),
+                         ),
+                       ),
+                     ),
+                   ),
+                 ),
+               ),
 
             // EEW表示
             const RepaintBoundary(child: OnEewWidget()),
