@@ -63,10 +63,10 @@ class Telegram {
   });
 
   factory Telegram.fromJson(Map<String, dynamic> j) => Telegram(
-        id: int.parse(j['id'].toString()),
+        id: int.tryParse(j['id'].toString()) ?? 0,
         hash: j['hash'].toString(),
         type: j['type'].toString(),
-        time: DateTime.parse(j['time'].toString()),
+        time: DateTime.tryParse(j['time'].toString()) ?? DateTime.now(),
         url: j['url'].toString(),
         imageUrl: j['image_url'] as String?,
         headline: j['headline'] as String?,

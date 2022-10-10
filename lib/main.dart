@@ -12,6 +12,7 @@ import 'package:eqmonitor/provider/init/device_info.dart';
 import 'package:eqmonitor/provider/init/kyoshin_kansokuten.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_eew.dart';
+import 'package:eqmonitor/provider/init/map_area_information_city_quake.dart';
 import 'package:eqmonitor/provider/init/map_area_tsunami_forecast.dart';
 import 'package:eqmonitor/provider/init/parameter_earthquake.dart';
 import 'package:eqmonitor/provider/init/secure_storage.dart';
@@ -78,6 +79,7 @@ Future<void> main() async {
   late List<MapPolygon> mapAreaForecastLocalE;
   late List<MapPolygon> mapAreaForecastLocalEew;
   late List<MapAreaTsunami> mapAreaTsunamiForecast;
+  late List<MapAreaInformationCityQuakePolygon> mapAreaInformationCityQuake;
   late List<TravelTimeTable> travelTimeTable;
   late Directory dir;
   // late Isar isar;
@@ -90,6 +92,8 @@ Future<void> main() async {
     loadMapAreaTsunamiForecast().then((e) => mapAreaTsunamiForecast = e),
     loadMapAreaForecastLocalE().then((e) => mapAreaForecastLocalE = e),
     loadMapAreaForecastLocalEew().then((e) => mapAreaForecastLocalEew = e),
+    loadMapAreaInformationCityQuake()
+        .then((e) => mapAreaInformationCityQuake = e),
     loadTravelTimeTable().then((e) => travelTimeTable = e),
     getApplicationSupportDirectory().then((e) => dir = e),
     Supabase.initialize(
@@ -134,6 +138,8 @@ Future<void> main() async {
             .overrideWithValue(mapAreaForecastLocalEew),
         mapAreaTsunamiForecastProvider
             .overrideWithValue(mapAreaTsunamiForecast),
+        mapAreaInformationCityQuakeProvider
+            .overrideWithValue(mapAreaInformationCityQuake),
         if (parameterEarthquake != null)
           parameterEarthquakeProvider.overrideWithValue(parameterEarthquake),
         sharedPreferencesProvder.overrideWithValue(prefs),
