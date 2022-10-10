@@ -453,14 +453,14 @@ class MapRegionIntensityPainter extends CustomPainter {
                     )
                     .fromUser(colors)
                 ..isAntiAlias = true
-                ..strokeCap = StrokeCap.round,
+                ..strokeCap = StrokeCap.square,
             )
             ..drawPath(
               mapPolygon.path,
               Paint()
                 ..color = isDarkMode
-                    ? const Color.fromARGB(50, 79, 79, 79)
-                    : const Color.fromARGB(50, 50, 50, 50)
+                    ? const Color.fromARGB(70, 50, 50, 50)
+                    : const Color.fromARGB(70, 150, 150, 150)
                 ..isAntiAlias = true
                 ..style = PaintingStyle.stroke,
             );
@@ -487,15 +487,15 @@ class MapRegionIntensityPainter extends CustomPainter {
                   )
                   .fromUser(colors)
               ..isAntiAlias = true
-              ..strokeCap = StrokeCap.round,
+              ..strokeCap = StrokeCap.square,
           );
         }
         canvas.drawPath(
           mapPolygon.path,
           Paint()
             ..color = isDarkMode
-                ? const Color.fromARGB(255, 79, 79, 79)
-                : const Color.fromARGB(255, 50, 50, 50)
+                ? const Color.fromARGB(150, 50, 50, 50)
+                : const Color.fromARGB(150, 150, 150, 150)
             ..isAntiAlias = true
             ..style = PaintingStyle.stroke,
         );
@@ -576,83 +576,67 @@ class MapHypoCenterPainter extends CustomPainter {
       ).toLocalOffset(const Size(476, 927.4));
       // ×印を描く
       {
-        final textPainter = TextPainter(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: '×',
-                style: TextStyle(
-                  fontSize: 14,
-                  foreground: Paint()
-                    ..style = PaintingStyle.stroke
-                    ..strokeCap = StrokeCap.round
-                    ..strokeJoin = StrokeJoin.round
-                    ..strokeWidth = 1
-                    ..color = const Color.fromARGB(255, 255, 255, 255),
-                ),
-              ),
-            ],
-          ),
-          textDirection: TextDirection.ltr,
-        )..layout();
-        textPainter.paint(
-          canvas,
-          Offset(
-            offset.dx - (textPainter.width / 2),
-            offset.dy - (textPainter.height / 2),
-          ),
-        );
-      }
-      {
-        final textPainter = TextPainter(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: '×',
-                style: TextStyle(
-                  fontSize: 14,
-                  foreground: Paint()
-                    ..style = PaintingStyle.stroke
-                    ..strokeCap = StrokeCap.round
-                    ..strokeJoin = StrokeJoin.round
-                    ..strokeWidth = 0.3
-                    ..color = const Color.fromARGB(255, 0, 0, 0),
-                ),
-              ),
-            ],
-          ),
-          textDirection: TextDirection.ltr,
-        )..layout();
-        textPainter.paint(
-          canvas,
-          Offset(
-            offset.dx - (textPainter.width / 2),
-            offset.dy - (textPainter.height / 2),
-          ),
-        );
-      }
-      {
-        final textPainter = TextPainter(
-          text: const TextSpan(
-            children: [
-              TextSpan(
-                text: '×',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-          textDirection: TextDirection.ltr,
-        )..layout();
-        textPainter.paint(
-          canvas,
-          Offset(
-            offset.dx - (textPainter.width / 2),
-            offset.dy - (textPainter.height / 2),
-          ),
-        );
+        canvas
+          ..drawLine(
+            Offset(offset.dx - 4, offset.dy - 4),
+            Offset(offset.dx + 4, offset.dy + 4),
+            Paint()
+              ..color = const Color.fromARGB(255, 0, 0, 0)
+              ..isAntiAlias = true
+              ..strokeCap = StrokeCap.square
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 2,
+          )
+          ..drawLine(
+            Offset(offset.dx + 4, offset.dy - 4),
+            Offset(offset.dx - 4, offset.dy + 4),
+            Paint()
+              ..color = const Color.fromARGB(255, 0, 0, 0)
+              ..isAntiAlias = true
+              ..strokeCap = StrokeCap.square
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 2,
+          )
+          ..drawLine(
+            Offset(offset.dx - 4, offset.dy - 4),
+            Offset(offset.dx + 4, offset.dy + 4),
+            Paint()
+              ..color = const Color.fromARGB(255, 255, 255, 255)
+              ..isAntiAlias = true
+              ..strokeCap = StrokeCap.square
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 1.5,
+          )
+          ..drawLine(
+            Offset(offset.dx + 4, offset.dy - 4),
+            Offset(offset.dx - 4, offset.dy + 4),
+            Paint()
+              ..color = const Color.fromARGB(255, 255, 255, 255)
+              ..isAntiAlias = true
+              ..strokeCap = StrokeCap.square
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 1.5,
+          )
+          ..drawLine(
+            Offset(offset.dx - 4, offset.dy - 4),
+            Offset(offset.dx + 4, offset.dy + 4),
+            Paint()
+              ..color = const Color.fromARGB(255, 255, 0, 0)
+              ..isAntiAlias = true
+              ..strokeCap = StrokeCap.square
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 1.3,
+          )
+          ..drawLine(
+            Offset(offset.dx + 4, offset.dy - 4),
+            Offset(offset.dx - 4, offset.dy + 4),
+            Paint()
+              ..color = const Color.fromARGB(255, 255, 0, 0)
+              ..isAntiAlias = true
+              ..strokeCap = StrokeCap.square
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 1.3,
+          );
       }
     }
   }

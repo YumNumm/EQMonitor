@@ -31,7 +31,8 @@ flutter pub run build_runner build --delete-conflicting-outputs
 flutter pub run flutter_launcher_icons:main
 flutter pub run flutter_native_splash:create
 # RELEASE BUILD
-flutter build apk --release --obfuscate --split-debug-info=obfuscate/android
+flutter build apk --release --obfuscate --split-debug-info=obfuscate/android/v0.x.x/split -v --split-per-abi
+flutter build apk --release --obfuscate --split-debug-info=obfuscate/android/v0.x.x/no-split -v 
 # DEBUG BUILD
 flutter build apk --debug
 ```
