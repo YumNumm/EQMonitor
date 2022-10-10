@@ -1,12 +1,8 @@
 import 'package:eqmonitor/provider/earthquake/earthquake_controller.dart';
 import 'package:eqmonitor/provider/init/shared_preferences.dart';
 import 'package:eqmonitor/provider/setting/developer_mode.dart';
-import 'package:eqmonitor/ui/view/introduction_view.dart';
-import 'package:eqmonitor/ui/view/main/earthquake_history/earthquake_history_detail.dart';
-import 'package:eqmonitor/ui/view/main/settings.dart';
-import 'package:eqmonitor/ui/view/main_view.dart';
-import 'package:eqmonitor/ui/view/setting/notification_setting.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -30,6 +26,16 @@ final routerProvider = Provider<GoRouter>(
               final telegrams =
                   ref.read(earthquakeHistoryFutureProvider).value![eventID]!;
               return EarthquakeHistoryDetailPage(telegrams: telegrams);
+            },
+          ),
+          GoRoute(
+            path: 'full_screen',
+            builder: (context, state) {
+              SystemChrome.setEnabledSystemUIMode(
+                SystemUiMode.manual,
+                overlays: [],
+              );
+              return KmoniMap();
             },
           ),
         ],

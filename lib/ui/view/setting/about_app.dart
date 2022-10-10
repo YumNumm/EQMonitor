@@ -7,6 +7,7 @@ import 'package:eqmonitor/ui/view/widget/setting/setting_section.dart';
 import 'package:eqmonitor/ui/view/widget/setting/thanks_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class AboutAppPage extends HookConsumerWidget {
@@ -38,6 +39,7 @@ class AboutAppPage extends HookConsumerWidget {
                       viewModel.startKmoniTest(context);
                     }
                   },
+                  onLongPressMoveUpdate: (_) => context.go('/full_screen'),
                   onScaleStart: (_) =>
                       viewModel.onDeveloperModeTilePressed(context),
                   child: Image.asset(
