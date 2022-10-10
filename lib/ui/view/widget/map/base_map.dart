@@ -6,7 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// 日本地図
 class BaseMapWidget extends ConsumerWidget {
-  const BaseMapWidget({super.key});
+  const BaseMapWidget({this.isFilled = true, super.key});
+  final bool isFilled;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,9 +31,11 @@ class MapBasePainter extends CustomPainter {
   MapBasePainter({
     required this.mapPolygons,
     required this.isDarkMode,
+    this.isFilled = true,
   });
   List<MapPolygon> mapPolygons;
   bool isDarkMode;
+  bool isFilled;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -53,14 +56,17 @@ class MapBasePainter extends CustomPainter {
       ..strokeWidth = 0.2;
 
     for (final polygon in mapPolygons) {
-      canvas
-        ..drawPath(polygon.path, paintBuilding)
-        ..drawPath(polygon.path, paintOutline);
+      if (isFilled) {
+        canvas.drawPath(polygon.path, paintBuilding);
+      }
+      canvas.drawPath(polygon.path, paintOutline);
     }
   }
 
   @override
   bool shouldRepaint(MapBasePainter oldDelegate) {
-    return oldDelegate.mapPolygons != mapPolygons;
+    return oldDelegate.mapPolygons != mapPolygons ||
+        oldDelegate.isDarkMode != isDarkMode ||
+        oldDelegate.isFilled != isFilled;
   }
 }

@@ -83,7 +83,7 @@ class KmoniMap extends HookConsumerWidget {
                 child: InteractiveViewer(
                   transformationController:
                       ref.watch(transformationControllerProvider),
-                  maxScale: 20,
+                  maxScale: 15,
                   boundaryMargin: const EdgeInsets.all(100),
                   clipBehavior: Clip.none,
                   child: SizedBox(

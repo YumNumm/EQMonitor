@@ -2,11 +2,13 @@ import 'dart:developer';
 
 import 'package:eqmonitor/model/setting/jma_intensity_color_model.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
+import 'package:eqmonitor/provider/init/map_area_information_city_quake.dart';
 import 'package:eqmonitor/provider/init/parameter_earthquake.dart';
 import 'package:eqmonitor/provider/theme_providers.dart';
 import 'package:eqmonitor/schema/local/prefecture/map_polygon.dart';
 import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake-information.dart';
+import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake-information/intensity/city.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake-information/intensity/region.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake-information/intensity/station.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake.dart';
@@ -113,18 +115,24 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
           Padding(
             padding: const EdgeInsets.all(8),
             child: Card(
-              color: maxInt.fromUser(colors).withOpacity(0.15),
+              elevation: 0,
+              color: maxInt.fromUser(colors).withOpacity(0.2),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
+                side: BorderSide(
+                  color: maxInt.fromUser(colors),
+                  width: 2,
+                ),
               ),
               child: Column(
                 children: [
                   Row(),
                   // 発生時刻
-                  Text(
-                    '${DateFormat('yyyy/MM/dd HH:mm').format(component!.originTime.toLocal())}頃',
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
+                  if (component != null)
+                    Text(
+                      '${DateFormat('yyyy/MM/dd HH:mm').format(component.originTime.toLocal())}頃',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -185,7 +193,7 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                                   width: 4,
                                 ),
                                 Text(
-                                  component.hypoCenter.name,
+                                  component?.hypoCenter.name ?? '調査中',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 30,
@@ -193,85 +201,90 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                                 ),
                               ],
                             ),
-                            FittedBox(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.baseline,
-                                textBaseline: TextBaseline.alphabetic,
-                                children: [
-                                  // Magunitude
-                                  if (component.magnitude.condition ==
-                                      null) ...[
-                                    const Text(
-                                      'M',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
+                            if (component != null)
+                              FittedBox(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.baseline,
+                                  textBaseline: TextBaseline.alphabetic,
+                                  children: [
+                                    // Magunitude
+                                    if (component.magnitude.condition ==
+                                        null) ...[
+                                      const Text(
+                                        'M',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      (component.magnitude.condition != null)
-                                          ? component
-                                              .magnitude.condition!.description
-                                          : component.magnitude.value
-                                              .toString(),
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 45,
+                                      Text(
+                                        (component.magnitude.condition != null)
+                                            ? component.magnitude.condition!
+                                                .description
+                                            : (component.magnitude.value ??
+                                                    '不明')
+                                                .toString(),
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 45,
+                                        ),
                                       ),
-                                    ),
+                                    ],
+                                    const VerticalDivider(),
+                                    // Depth
+                                    if (component.hypoCenter.depth.condition ==
+                                        null) ...[
+                                      const Text(
+                                        '深さ',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      Text(
+                                        (component.hypoCenter.depth.condition !=
+                                                null)
+                                            ? component.hypoCenter.depth
+                                                .condition!.description
+                                            : (component.hypoCenter.depth
+                                                        .value ??
+                                                    '不明')
+                                                .toString(),
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 45,
+                                        ),
+                                      ),
+                                      const Text(
+                                        'km',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
+                                      )
+                                    ] else ...[
+                                      const Text(
+                                        '深さ',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      Text(
+                                        component.hypoCenter.depth.condition!
+                                            .description,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 45,
+                                        ),
+                                      )
+                                    ],
                                   ],
-                                  const VerticalDivider(),
-                                  // Depth
-                                  if (component.hypoCenter.depth.condition ==
-                                      null) ...[
-                                    Text(
-                                      component.hypoCenter.depth.type,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                    Text(
-                                      (component.hypoCenter.depth.condition !=
-                                              null)
-                                          ? component.hypoCenter.depth
-                                              .condition!.description
-                                          : component.hypoCenter.depth.value
-                                              .toString(),
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 45,
-                                      ),
-                                    ),
-                                    Text(
-                                      component.hypoCenter.depth.unit,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
-                                    )
-                                  ] else ...[
-                                    Text(
-                                      component.hypoCenter.depth.type,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                    Text(
-                                      component.hypoCenter.depth.condition!
-                                          .description,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 45,
-                                      ),
-                                    )
-                                  ],
-                                ],
+                                ),
                               ),
-                            ),
                           ],
                         ),
                       ),
@@ -281,18 +294,21 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
               ),
             ),
           ),
-          Text(
-            (StringBuffer()
-                  ..writeAll(
-                    <String>[
-                      if (comment?.forecast?.text != null)
-                        '${comment!.forecast!.text}\n',
-                      if (comment?.comments?.text != null)
-                        '${comment!.comments!.text}\n',
-                      if (comment?.free != null) comment!.free!,
-                    ],
-                  ))
-                .toString(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(
+              (StringBuffer()
+                    ..writeAll(
+                      <String>[
+                        if (comment?.forecast?.text != null)
+                          comment!.forecast!.text,
+                        if (comment?.comments?.text != null)
+                          '\n${comment!.comments!.text}',
+                        if (comment?.free != null) '\n${comment!.free!}',
+                      ],
+                    ))
+                  .toString(),
+            ),
           ),
           Expanded(
             child: DecoratedBox(
@@ -314,7 +330,9 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                           MapRegionIntensityWidget(
                             regions: intensity?.regions ?? <Region>[],
                             stations: intensity?.stations ?? <Station>[],
+                            cities: intensity?.cities ?? <City>[],
                           ),
+
                           // 震央位置
                           MapHypoCenterMapWidget(
                             component: component,
@@ -363,22 +381,29 @@ class MapRegionIntensityWidget extends ConsumerWidget {
     super.key,
     required this.regions,
     required this.stations,
+    required this.cities,
   });
   final List<Region> regions;
   final List<Station> stations;
+  final List<City> cities;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapSource = ref.watch(mapAreaForecastLocalEProvider);
     final parameterEarthquake = ref.watch(parameterEarthquakeProvider);
+    final mapAreaInformationCityQuake =
+        ref.watch(mapAreaInformationCityQuakeProvider);
 
     return CustomPaint(
       painter: MapRegionIntensityPainter(
         mapPolygons: mapSource,
         regions: regions,
+        cities: cities,
         stations: stations,
         colors: ref.watch(jmaIntensityColorProvider),
         parameterEarthquake: parameterEarthquake,
+        mapAreaInformationCityQuakePolygons: mapAreaInformationCityQuake,
+        isDarkMode: ref.watch(themeProvider.notifier).isDarkMode,
       ),
       size: Size.infinite,
     );
@@ -390,49 +415,90 @@ class MapRegionIntensityPainter extends CustomPainter {
     required this.mapPolygons,
     required this.regions,
     required this.stations,
+    required this.cities,
     required this.colors,
     required this.parameterEarthquake,
+    required this.mapAreaInformationCityQuakePolygons,
+    required this.isDarkMode,
   });
   final List<MapPolygon> mapPolygons;
   final List<Region> regions;
   final List<Station> stations;
+  final List<City> cities;
   final JmaIntensityColorModel colors;
   final ParameterEarthquake parameterEarthquake;
+  final List<MapAreaInformationCityQuakePolygon>
+      mapAreaInformationCityQuakePolygons;
+  final bool isDarkMode;
 
   @override
   void paint(Canvas canvas, Size size) {
     log('Redraw');
-    // Regionの描画
-    for (final region in regions) {
-      // region.codeが一致するMapPolygonを探す
+    // Cityの描画
+    for (final city in cities) {
+      // city.codeが一致するMapPolygonを探す
       try {
-        final mapRegionPolygons = mapPolygons.where(
-          (element) => element.code == region.code,
+        final mapCityPolygons = mapAreaInformationCityQuakePolygons.where(
+          (element) => element.code == city.code,
         );
-        for (final mapPolygon in mapRegionPolygons) {
+        for (final mapPolygon in mapCityPolygons) {
           canvas
             ..drawPath(
               mapPolygon.path,
               Paint()
                 ..color = JmaIntensity.values
                     .firstWhere(
-                      (e) => e.name == region.maxInt.toString(),
+                      (e) => e.name == city.maxInt.toString(),
                       orElse: () => JmaIntensity.Error,
                     )
                     .fromUser(colors)
                 ..isAntiAlias = true
-                ..strokeCap = StrokeCap.round,
+                ..strokeCap = StrokeCap.square,
             )
             ..drawPath(
               mapPolygon.path,
               Paint()
-                ..color = const Color.fromARGB(255, 255, 255, 255)
+                ..color = isDarkMode
+                    ? const Color.fromARGB(70, 50, 50, 50)
+                    : const Color.fromARGB(70, 150, 150, 150)
                 ..isAntiAlias = true
                 ..style = PaintingStyle.stroke,
             );
         }
       } on Exception catch (e) {
-        Logger().e(e, region.code);
+        Logger().e(e, city.code);
+      }
+    }
+    // Regionの描画
+    for (final region in regions) {
+      // region.codeが一致するMapPolygonを探す
+      final mapRegionPolygons = mapPolygons.where(
+        (element) => element.code == region.code,
+      );
+      for (final mapPolygon in mapRegionPolygons) {
+        if (cities.isEmpty) {
+          canvas.drawPath(
+            mapPolygon.path,
+            Paint()
+              ..color = JmaIntensity.values
+                  .firstWhere(
+                    (e) => e.name == region.maxInt.toString(),
+                    orElse: () => JmaIntensity.Error,
+                  )
+                  .fromUser(colors)
+              ..isAntiAlias = true
+              ..strokeCap = StrokeCap.square,
+          );
+        }
+        canvas.drawPath(
+          mapPolygon.path,
+          Paint()
+            ..color = isDarkMode
+                ? const Color.fromARGB(150, 50, 50, 50)
+                : const Color.fromARGB(150, 150, 150, 150)
+            ..isAntiAlias = true
+            ..style = PaintingStyle.stroke,
+        );
       }
     }
     // TODO(YumNumm): 観測点の描画実装
@@ -463,7 +529,11 @@ class MapRegionIntensityPainter extends CustomPainter {
         oldDelegate.regions != regions ||
         oldDelegate.colors != colors ||
         oldDelegate.parameterEarthquake != parameterEarthquake ||
-        oldDelegate.stations != stations;
+        oldDelegate.stations != stations ||
+        oldDelegate.cities != cities ||
+        oldDelegate.mapAreaInformationCityQuakePolygons !=
+            mapAreaInformationCityQuakePolygons ||
+        oldDelegate.isDarkMode != isDarkMode;
   }
 }
 
@@ -506,83 +576,67 @@ class MapHypoCenterPainter extends CustomPainter {
       ).toLocalOffset(const Size(476, 927.4));
       // ×印を描く
       {
-        final textPainter = TextPainter(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: '×',
-                style: TextStyle(
-                  fontSize: 14,
-                  foreground: Paint()
-                    ..style = PaintingStyle.stroke
-                    ..strokeCap = StrokeCap.round
-                    ..strokeJoin = StrokeJoin.round
-                    ..strokeWidth = 1
-                    ..color = const Color.fromARGB(255, 255, 255, 255),
-                ),
-              ),
-            ],
-          ),
-          textDirection: TextDirection.ltr,
-        )..layout();
-        textPainter.paint(
-          canvas,
-          Offset(
-            offset.dx - (textPainter.width / 2),
-            offset.dy - (textPainter.height / 2),
-          ),
-        );
-      }
-      {
-        final textPainter = TextPainter(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: '×',
-                style: TextStyle(
-                  fontSize: 14,
-                  foreground: Paint()
-                    ..style = PaintingStyle.stroke
-                    ..strokeCap = StrokeCap.round
-                    ..strokeJoin = StrokeJoin.round
-                    ..strokeWidth = 0.3
-                    ..color = const Color.fromARGB(255, 0, 0, 0),
-                ),
-              ),
-            ],
-          ),
-          textDirection: TextDirection.ltr,
-        )..layout();
-        textPainter.paint(
-          canvas,
-          Offset(
-            offset.dx - (textPainter.width / 2),
-            offset.dy - (textPainter.height / 2),
-          ),
-        );
-      }
-      {
-        final textPainter = TextPainter(
-          text: const TextSpan(
-            children: [
-              TextSpan(
-                text: '×',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-          textDirection: TextDirection.ltr,
-        )..layout();
-        textPainter.paint(
-          canvas,
-          Offset(
-            offset.dx - (textPainter.width / 2),
-            offset.dy - (textPainter.height / 2),
-          ),
-        );
+        canvas
+          ..drawLine(
+            Offset(offset.dx - 4, offset.dy - 4),
+            Offset(offset.dx + 4, offset.dy + 4),
+            Paint()
+              ..color = const Color.fromARGB(255, 0, 0, 0)
+              ..isAntiAlias = true
+              ..strokeCap = StrokeCap.square
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 2,
+          )
+          ..drawLine(
+            Offset(offset.dx + 4, offset.dy - 4),
+            Offset(offset.dx - 4, offset.dy + 4),
+            Paint()
+              ..color = const Color.fromARGB(255, 0, 0, 0)
+              ..isAntiAlias = true
+              ..strokeCap = StrokeCap.square
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 2,
+          )
+          ..drawLine(
+            Offset(offset.dx - 4, offset.dy - 4),
+            Offset(offset.dx + 4, offset.dy + 4),
+            Paint()
+              ..color = const Color.fromARGB(255, 255, 255, 255)
+              ..isAntiAlias = true
+              ..strokeCap = StrokeCap.square
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 1.5,
+          )
+          ..drawLine(
+            Offset(offset.dx + 4, offset.dy - 4),
+            Offset(offset.dx - 4, offset.dy + 4),
+            Paint()
+              ..color = const Color.fromARGB(255, 255, 255, 255)
+              ..isAntiAlias = true
+              ..strokeCap = StrokeCap.square
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 1.5,
+          )
+          ..drawLine(
+            Offset(offset.dx - 4, offset.dy - 4),
+            Offset(offset.dx + 4, offset.dy + 4),
+            Paint()
+              ..color = const Color.fromARGB(255, 255, 0, 0)
+              ..isAntiAlias = true
+              ..strokeCap = StrokeCap.square
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 1.3,
+          )
+          ..drawLine(
+            Offset(offset.dx + 4, offset.dy - 4),
+            Offset(offset.dx - 4, offset.dy + 4),
+            Paint()
+              ..color = const Color.fromARGB(255, 255, 0, 0)
+              ..isAntiAlias = true
+              ..strokeCap = StrokeCap.square
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 1.3,
+          );
       }
     }
   }

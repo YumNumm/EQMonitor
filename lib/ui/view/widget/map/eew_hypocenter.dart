@@ -1,7 +1,7 @@
 import 'package:eqmonitor/model/travel_time_table/travel_time_table.dart';
 import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
-import 'package:eqmonitor/provider/init/travel_time.dart';
 import 'package:eqmonitor/provider/earthquake/kmoni_controller.dart';
+import 'package:eqmonitor/provider/init/travel_time.dart';
 import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eew-information/earthquake/accuracy/epicCenterAccuracy.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eew-information/eew-infomation.dart';
@@ -152,9 +152,9 @@ class EewHypocenterNormalPainter extends CustomPainter {
           Paint()
             ..color = const Color.fromARGB(255, 0, 0, 0).withOpacity(opacity)
             ..isAntiAlias = true
-            ..strokeCap = StrokeCap.round
+            ..strokeCap = StrokeCap.square
             ..style = PaintingStyle.stroke
-            ..strokeWidth = 1.5,
+            ..strokeWidth = 2,
         )
         ..drawLine(
           Offset(offset.dx + 4, offset.dy - 4),
@@ -162,7 +162,29 @@ class EewHypocenterNormalPainter extends CustomPainter {
           Paint()
             ..color = const Color.fromARGB(255, 0, 0, 0).withOpacity(opacity)
             ..isAntiAlias = true
-            ..strokeCap = StrokeCap.round
+            ..strokeCap = StrokeCap.square
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2,
+        )
+        ..drawLine(
+          Offset(offset.dx - 4, offset.dy - 4),
+          Offset(offset.dx + 4, offset.dy + 4),
+          Paint()
+            ..color =
+                const Color.fromARGB(255, 255, 255, 255).withOpacity(opacity)
+            ..isAntiAlias = true
+            ..strokeCap = StrokeCap.square
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 1.5,
+        )
+        ..drawLine(
+          Offset(offset.dx + 4, offset.dy - 4),
+          Offset(offset.dx - 4, offset.dy + 4),
+          Paint()
+            ..color =
+                const Color.fromARGB(255, 255, 255, 255).withOpacity(opacity)
+            ..isAntiAlias = true
+            ..strokeCap = StrokeCap.square
             ..style = PaintingStyle.stroke
             ..strokeWidth = 1.5,
         )
@@ -170,10 +192,9 @@ class EewHypocenterNormalPainter extends CustomPainter {
           Offset(offset.dx - 4, offset.dy - 4),
           Offset(offset.dx + 4, offset.dy + 4),
           Paint()
-            ..color =
-                const Color.fromARGB(255, 255, 255, 255).withOpacity(opacity)
+            ..color = const Color.fromARGB(255, 255, 0, 0).withOpacity(opacity)
             ..isAntiAlias = true
-            ..strokeCap = StrokeCap.round
+            ..strokeCap = StrokeCap.square
             ..style = PaintingStyle.stroke
             ..strokeWidth = 1.3,
         )
@@ -181,32 +202,11 @@ class EewHypocenterNormalPainter extends CustomPainter {
           Offset(offset.dx + 4, offset.dy - 4),
           Offset(offset.dx - 4, offset.dy + 4),
           Paint()
-            ..color =
-                const Color.fromARGB(255, 255, 255, 255).withOpacity(opacity)
+            ..color = const Color.fromARGB(255, 255, 0, 0).withOpacity(opacity)
             ..isAntiAlias = true
-            ..strokeCap = StrokeCap.round
+            ..strokeCap = StrokeCap.square
             ..style = PaintingStyle.stroke
             ..strokeWidth = 1.3,
-        )
-        ..drawLine(
-          Offset(offset.dx - 4, offset.dy - 4),
-          Offset(offset.dx + 4, offset.dy + 4),
-          Paint()
-            ..color = const Color.fromARGB(255, 255, 0, 0).withOpacity(opacity)
-            ..isAntiAlias = true
-            ..strokeCap = StrokeCap.round
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 1,
-        )
-        ..drawLine(
-          Offset(offset.dx + 4, offset.dy - 4),
-          Offset(offset.dx - 4, offset.dy + 4),
-          Paint()
-            ..color = const Color.fromARGB(255, 255, 0, 0).withOpacity(opacity)
-            ..isAntiAlias = true
-            ..strokeCap = StrokeCap.round
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 1,
         );
 
       // 到達予想円
@@ -267,7 +267,7 @@ class EewHypocenterNormalPainter extends CustomPainter {
           Paint()
             ..color = const Color.fromARGB(255, 255, 140, 0)
             ..isAntiAlias = true
-            ..strokeCap = StrokeCap.round
+            ..strokeCap = StrokeCap.square
             ..style = PaintingStyle.stroke
             ..strokeWidth = 1,
         )
@@ -276,7 +276,7 @@ class EewHypocenterNormalPainter extends CustomPainter {
           Paint()
             ..color = const Color.fromARGB(255, 0, 102, 255)
             ..isAntiAlias = true
-            ..strokeCap = StrokeCap.round
+            ..strokeCap = StrokeCap.square
             ..style = PaintingStyle.stroke
             ..strokeWidth = 0.3,
         );
