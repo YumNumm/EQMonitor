@@ -128,10 +128,11 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                 children: [
                   Row(),
                   // 発生時刻
-                  Text(
-                    '${DateFormat('yyyy/MM/dd HH:mm').format(component!.originTime.toLocal())}頃',
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
+                  if (component != null)
+                    Text(
+                      '${DateFormat('yyyy/MM/dd HH:mm').format(component.originTime.toLocal())}頃',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -192,7 +193,7 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                                   width: 4,
                                 ),
                                 Text(
-                                  component.hypoCenter.name,
+                                  component?.hypoCenter.name ?? '調査中',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 30,
@@ -200,85 +201,90 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                                 ),
                               ],
                             ),
-                            FittedBox(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.baseline,
-                                textBaseline: TextBaseline.alphabetic,
-                                children: [
-                                  // Magunitude
-                                  if (component.magnitude.condition ==
-                                      null) ...[
-                                    const Text(
-                                      'M',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
+                            if (component != null)
+                              FittedBox(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.baseline,
+                                  textBaseline: TextBaseline.alphabetic,
+                                  children: [
+                                    // Magunitude
+                                    if (component.magnitude.condition ==
+                                        null) ...[
+                                      const Text(
+                                        'M',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      (component.magnitude.condition != null)
-                                          ? component
-                                              .magnitude.condition!.description
-                                          : component.magnitude.value
-                                              .toString(),
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 45,
+                                      Text(
+                                        (component.magnitude.condition != null)
+                                            ? component.magnitude.condition!
+                                                .description
+                                            : (component.magnitude.value ??
+                                                    '不明')
+                                                .toString(),
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 45,
+                                        ),
                                       ),
-                                    ),
+                                    ],
+                                    const VerticalDivider(),
+                                    // Depth
+                                    if (component.hypoCenter.depth.condition ==
+                                        null) ...[
+                                      const Text(
+                                        '深さ',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      Text(
+                                        (component.hypoCenter.depth.condition !=
+                                                null)
+                                            ? component.hypoCenter.depth
+                                                .condition!.description
+                                            : (component.hypoCenter.depth
+                                                        .value ??
+                                                    '不明')
+                                                .toString(),
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 45,
+                                        ),
+                                      ),
+                                      const Text(
+                                        'km',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
+                                      )
+                                    ] else ...[
+                                      const Text(
+                                        '深さ',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      Text(
+                                        component.hypoCenter.depth.condition!
+                                            .description,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 45,
+                                        ),
+                                      )
+                                    ],
                                   ],
-                                  const VerticalDivider(),
-                                  // Depth
-                                  if (component.hypoCenter.depth.condition ==
-                                      null) ...[
-                                    Text(
-                                      component.hypoCenter.depth.type,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                    Text(
-                                      (component.hypoCenter.depth.condition !=
-                                              null)
-                                          ? component.hypoCenter.depth
-                                              .condition!.description
-                                          : component.hypoCenter.depth.value
-                                              .toString(),
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 45,
-                                      ),
-                                    ),
-                                    Text(
-                                      component.hypoCenter.depth.unit,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
-                                    )
-                                  ] else ...[
-                                    Text(
-                                      component.hypoCenter.depth.type,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                    Text(
-                                      component.hypoCenter.depth.condition!
-                                          .description,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 45,
-                                      ),
-                                    )
-                                  ],
-                                ],
+                                ),
                               ),
-                            ),
                           ],
                         ),
                       ),
