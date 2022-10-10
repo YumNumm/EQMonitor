@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 /// アップデートがある場合はアイコンを表示
@@ -17,7 +18,7 @@ class UpdaterButtonWidget extends HookConsumerWidget {
           loading: () => const SizedBox.shrink(),
           error: (err, stack) {
             ref.read(loggerProvider).e('error', err, stack);
-            return const SizedBox.shrink();
+            return kDebugMode ? Text(err.toString()) : const SizedBox.shrink();
           },
           data: (changeLog) => ref.watch(packageInfoProvider).when<Widget>(
                 error: (err, stack) {
@@ -46,11 +47,26 @@ class UpdaterButtonWidget extends HookConsumerWidget {
                                 child: SingleChildScrollView(
                                   child: Column(
                                     children: [
-                                      Text(
-                                        data.items.first.version,
-                                        style: const TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold,
+                                      FittedBox(
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              data.items.first.version,
+                                              style: const TextStyle(
+                                                fontSize: 24,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              DateFormat('yyyy/MM/dd').format(
+                                                data.items.first.date.toLocal(),
+                                              ),
+                                              style: const TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       const Divider(),

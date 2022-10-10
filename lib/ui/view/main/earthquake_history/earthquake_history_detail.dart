@@ -288,18 +288,21 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
               ),
             ),
           ),
-          Text(
-            (StringBuffer()
-                  ..writeAll(
-                    <String>[
-                      if (comment?.forecast?.text != null)
-                        '${comment!.forecast!.text}\n',
-                      if (comment?.comments?.text != null)
-                        '${comment!.comments!.text}\n',
-                      if (comment?.free != null) comment!.free!,
-                    ],
-                  ))
-                .toString(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(
+              (StringBuffer()
+                    ..writeAll(
+                      <String>[
+                        if (comment?.forecast?.text != null)
+                          comment!.forecast!.text,
+                        if (comment?.comments?.text != null)
+                          '\n${comment!.comments!.text}',
+                        if (comment?.free != null) '\n${comment!.free!}',
+                      ],
+                    ))
+                  .toString(),
+            ),
           ),
           Expanded(
             child: DecoratedBox(
