@@ -11,7 +11,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class AboutAppPage extends HookConsumerWidget {
-  const AboutAppPage({ super.key});
+  const AboutAppPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
