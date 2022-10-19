@@ -105,8 +105,7 @@ class TelegramApi {
                   data: res.data as Map<String, dynamic>,
                   type: 'VXSE53',
                   time: DateTime.now(),
-                  url:
-                      url,
+                  url: url,
                   depth: null,
                   depthCondition: null,
                   eventId: (202102132318000 + url.hashCode ~/ 1000).toString(),

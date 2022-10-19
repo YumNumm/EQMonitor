@@ -179,64 +179,90 @@ class EarthquakeHistoryTile extends ConsumerWidget {
       orElse: () => JmaIntensity.Unknown,
     );
 
+    final isTesting = (latestVxse61Head ??
+                latestVxse53Head ??
+                latestVxse52Head ??
+                latestVxse51Head)!
+            .status !=
+        CommonHeadStatus.normal;
+
     return DecoratedBox(
       decoration: BoxDecoration(
         color: maxInt.fromUser(colors).withOpacity(0.3),
       ),
-      child: ListTile(
-        onTap: () => context.push('/earthquake_history_item/$eventId'),
-        trailing: Text(
-          (component?.magnitude != null)
-              ? (component!.magnitude.condition != null)
-                  ? component.magnitude.condition!.description
-                  : (component.magnitude.value != null)
-                      ? 'M${component.magnitude.value!}'
-                      : 'M不明'
-              : '',
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        leading: IntensityWidget(
-          intensity: maxInt,
-          opacity: 1,
-          size: 42,
-        ),
-        enableFeedback: true,
-        title: Row(
-          children: [
-            Text(
-              component?.hypoCenter.name ?? '震源調査中',
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+      child: Stack(
+        children: [
+          if (isTesting)
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.3),
+              ),
+              child: const Expanded(
+                child: Text(
+                  'テスト',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
-            // 速報アイコン
-            if (isSokuhou) const Chip(label: Text('速報')),
-          ],
-        ),
-        subtitle: Wrap(
-          children: [
-            Text(
-              (StringBuffer()
-                    ..writeAll(
-                      <String>[
-                        if (component?.originTime != null)
-                          "${DateFormat('yyyy/MM/dd HH:mm').format(component!.originTime.toLocal())}頃 ",
-                        ' ',
-                        // 震源の深さ
-                        if (component?.hypoCenter.depth != null)
-                          (component?.hypoCenter.depth.condition != null)
-                              ? '深さ${component!.hypoCenter.depth.condition!.description}'
-                              : (component!.hypoCenter.depth.value != null)
-                                  ? '深さ${component.hypoCenter.depth.value}km'
-                                  : '深さ不明',
-                      ],
-                    ))
-                  .toString(),
-              style: const TextStyle(fontSize: 14),
+          ListTile(
+            onTap: () => context.push('/earthquake_history_item/$eventId'),
+            trailing: Text(
+              (component?.magnitude != null)
+                  ? (component!.magnitude.condition != null)
+                      ? component.magnitude.condition!.description
+                      : (component.magnitude.value != null)
+                          ? 'M${component.magnitude.value!}'
+                          : 'M不明'
+                  : '',
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-          ],
-        ),
+            leading: IntensityWidget(
+              intensity: maxInt,
+              opacity: 1,
+              size: 42,
+            ),
+            enableFeedback: true,
+            title: Row(
+              children: [
+                Text(
+                  component?.hypoCenter.name ?? '震源調査中',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                // 速報アイコン
+                if (isSokuhou) const Chip(label: Text('速報')),
+              ],
+            ),
+            subtitle: Wrap(
+              children: [
+                Text(
+                  (StringBuffer()
+                        ..writeAll(
+                          <String>[
+                            if (component?.originTime != null)
+                              "${DateFormat('yyyy/MM/dd HH:mm').format(component!.originTime.toLocal())}頃 ",
+                            ' ',
+                            // 震源の深さ
+                            if (component?.hypoCenter.depth != null)
+                              (component?.hypoCenter.depth.condition != null)
+                                  ? '深さ${component!.hypoCenter.depth.condition!.description}'
+                                  : (component!.hypoCenter.depth.value != null)
+                                      ? '深さ${component.hypoCenter.depth.value}km'
+                                      : '深さ不明',
+                          ],
+                        ))
+                      .toString(),
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

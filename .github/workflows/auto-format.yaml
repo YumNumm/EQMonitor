@@ -18,24 +18,26 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - name: checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+
+      # https://github.com/kuhnroyal/flutter-fvm-config-action
+      - name: Fetch flutter config
+        uses: kuhnroyal/flutter-fvm-config-action@v1
+
+      # https://github.com/subosito/flutter-action
+      - name: Set up flutter
+        uses: subosito/flutter-action@v2
         with:
-          ref: main
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
+          cache-key: ${{ env.FLUTTER_VERSION }}-${{ env.FLUTTER_CHANNEL }}
 
-      - name: Add Homebrew to PATH
-        run: echo "/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin" >> $GITHUB_PATH
-
-      - name: Install fvm
-        run: |
-          brew tap leoafarias/fvm
-          brew install fvm
-
-      - name: Setup flutter
-        run: fvm install
+      - name: Flutter version
+        run: flutter --version
 
       - name: Format
-        run: fvm flutter format $FORMAT_PATHS
+        run: flutter format $FORMAT_PATHS
 
       # 変更が発生した場合は main ブランチに向けてプルリクエストを作成
       - name: Create pull request

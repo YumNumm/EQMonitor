@@ -26,12 +26,21 @@ jobs:
       - name: Show Xcode version
         run: xcodebuild -version
 
-      - name: Setup flutter environment
+      # https://github.com/kuhnroyal/flutter-fvm-config-action
+      - name: Fetch flutter config
+        uses: kuhnroyal/flutter-fvm-config-action@v1
+
+      # https://github.com/subosito/flutter-action
+      - name: Set up flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.3.0"
-          channel: "stable"
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
           cache: true
+          cache-key: ${{ env.FLUTTER_VERSION }}-${{ env.FLUTTER_CHANNEL }}
+
+      - name: Flutter version
+        run: flutter --version
 
       - name: Cache pubspec dependencies
         uses: actions/cache@v2
@@ -43,8 +52,7 @@ jobs:
             **/.flutter-plugin-dependencies
             **/.dart_tool/package_config.json
           key: build-pubspec-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            build-pubspec-
+          restore-keys: build-pubspec-
 
       - name: Cache build runner
         uses: actions/cache@v2
@@ -52,13 +60,9 @@ jobs:
           path: |
             **/.dart_tool/build
           key: build-runner-${{ hashFiles('**/asset_graph.json') }}-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            build-runner-
-      - name: Flutter version
-        run: flutter --version
+          restore-keys: build-runner-
 
       - name: Flutter dependencies install
-        #ライブラリーの導入
         run: flutter pub get
 
       - name: Generate codes with build_runner

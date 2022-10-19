@@ -1,67 +1,74 @@
 name: Flutter build Android(r)
 
-#発火条件
 on:
-  #ソースをmainブランチにプッシュする時
   push:
     branches: [main]
-
   workflow_dispatch:
 
 jobs:
   build:
-    #ビルド環境
     runs-on: ubuntu-latest
-    # タイムアウト時間を設定
-    timeout-minutes: 45
+    timeout-minutes: 30
 
     steps:
-      #リポジトリからソースをダンロード
       - uses: actions/checkout@v2
 
-      #JAVA環境構築
-      - name: Setup Java 17
-        uses: actions/setup-java@v2
+      # https://github.com/kuhnroyal/flutter-fvm-config-action
+      - name: Fetch flutter config
+        uses: kuhnroyal/flutter-fvm-config-action@v1
+
+      # https://github.com/subosito/flutter-action
+      - name: Set up flutter
+        uses: subosito/flutter-action@v2
         with:
-          distribution: "adopt"
-          java-version: "17"
-          cache: "gradle"
-
-      - name: Add Homebrew to PATH
-        run: echo "/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin" >> $GITHUB_PATH
-
-      - name: Install fvm
-        run: |
-          brew tap leoafarias/fvm
-          brew install fvm
-
-      - name: Setup flutter
-        run: fvm install
-
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
+          cache-key: ${{ env.FLUTTER_VERSION }}-${{ env.FLUTTER_CHANNEL }}
+          
       - name: Flutter version
-        run: fvm flutter --version
+        run: flutter --version
+
+      - name: Cache pubspec dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ env.FLUTTER_HOME }}/.pub-cache
+            **/.packages
+            **/.flutter-plugins
+            **/.flutter-plugin-dependencies
+            **/.dart_tool/package_config.json
+          key: build-pubspec-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: build-pubspec-
+
+      - name: Cache build runner
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/.dart_tool/build
+          key: build-runner-${{ hashFiles('**/asset_graph.json') }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: build-runner-
 
       - name: Flutter dependencies install
-        #ライブラリーの導入
-        run: fvm flutter pub get
+        run: flutter pub get
 
       - name: Generate codes with build_runner
         run: |
           echo '${{ secrets.ENV }}' | base64 -d > .env
-          fvm flutter pub run build_runner build --delete-conflicting-outputs
+          flutter pub run build_runner build --delete-conflicting-outputs
 
       - name: Generate LauncherIcon
-        run: fvm flutter pub run flutter_launcher_icons:main
+        run: flutter pub run flutter_launcher_icons:main
 
       - name: Generate NativeSplash
-        run: fvm flutter pub run flutter_native_splash:create
+        run: flutter pub run flutter_native_splash:create
 
       - name: Analyze
-        run: fvm flutter analyze .
+        run: flutter analyze .
         continue-on-error: true
 
       - name: Accept Android License
-        run: yes | fvm flutter doctor --android-licenses
+        run: yes | flutter doctor --android-licenses
 
       - name: Build apk
         run: |
@@ -70,7 +77,7 @@ jobs:
           export KEYSTORE_PASSWORD='${{ secrets.KEYSTORE_PASSWORD }}'
           export KEY_ALIAS='${{ secrets.KEY_ALIAS }}'
           export KEY_PASSWORD='${{ secrets.KEY_PASSWORD }}'
-          fvm flutter build apk --release --obfuscate --split-debug-info=obfuscate/android
+          flutter build apk --release --obfuscate --split-debug-info=obfuscate/android
         env:
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}

@@ -8,7 +8,7 @@ final List<NotificationChannel> notificationChannels = [
     channelGroupKey: 'fromdev',
     channelKey: 'fromdev',
     channelName: '開発者からのお知らせ',
-    channelDescription: '開発者からなにか連絡があった時に使用されます。',
+    channelDescription: '開発者からの連絡に使用されます。',
     channelShowBadge: true,
     enableVibration: true,
     playSound: true,
@@ -27,7 +27,7 @@ final List<NotificationChannel> notificationChannels = [
     playSound: true,
     criticalAlerts: true,
     enableVibration: true,
-    soundSource: 'resource://raw/res_eew',
+    soundSource: 'resource://raw/res_eew_inst',
     importance: NotificationImportance.Max,
   ),
   NotificationChannel(
@@ -53,9 +53,7 @@ final List<NotificationChannel> notificationChannels = [
     channelDescription: '地震・津波の試験・訓練配信のお知らせ、自治体震度データの入電停止等のお知らせ、その他を発表',
     channelShowBadge: true,
     defaultPrivacy: NotificationPrivacy.Public,
-    playSound: true,
     enableVibration: true,
-    soundSource: 'resource://raw/res_eq1',
     importance: NotificationImportance.Low,
   ),
   NotificationChannel(
@@ -68,7 +66,7 @@ final List<NotificationChannel> notificationChannels = [
     defaultPrivacy: NotificationPrivacy.Public,
     playSound: true,
     enableVibration: true,
-    importance: NotificationImportance.High,
+    importance: NotificationImportance.Max,
   ),
   NotificationChannel(
     channelGroupKey: 'tsunami',
@@ -166,9 +164,8 @@ final List<NotificationChannel> notificationChannels = [
     channelDescription: '顕著な地震に対して、震源要素をより正確にした情報を発表',
     channelShowBadge: true,
     defaultPrivacy: NotificationPrivacy.Public,
-    playSound: true,
     enableVibration: true,
-    importance: NotificationImportance.High,
+    importance: NotificationImportance.Default,
   ),
   NotificationChannel(
     channelGroupKey: 'earthquake',
