@@ -6,7 +6,7 @@
       "version": "V0.5.8",
       "date": "2022-10-10T14:15:00+09:00",
       "comment": "- 市区町村単位の地震履歴に対応\n- 震度速報の表示改善\n- 緊急地震速報時の震央表示を改善",
-      "url": "https://github.com/EQMonitor/EQMonitor/releases/tag/v0.5.78-beta"
+      "url": "https://github.com/EQMonitor/EQMonitor/releases/tag/v0.5.8-beta"
     },
     {
       "isBreakingChange": true,
