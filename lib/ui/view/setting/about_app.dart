@@ -1,10 +1,10 @@
 import 'package:eqmonitor/provider/theme_providers.dart';
 import 'package:eqmonitor/ui/view/setting/about_app.viewmodel.dart';
-import 'package:eqmonitor/ui/view/widget/setting/about_widget.dart';
-import 'package:eqmonitor/ui/view/widget/setting/fcm_token_widget.dart';
-import 'package:eqmonitor/ui/view/widget/setting/license_widget.dart';
-import 'package:eqmonitor/ui/view/widget/setting/setting_section.dart';
-import 'package:eqmonitor/ui/view/widget/setting/thanks_widget.dart';
+import 'package:eqmonitor/ui/view/setting/component/about_widget.dart';
+import 'package:eqmonitor/ui/view/setting/component/fcm_token_widget.dart';
+import 'package:eqmonitor/ui/view/setting/component/license_widget.dart';
+import 'package:eqmonitor/ui/view/setting/component/setting_section.dart';
+import 'package:eqmonitor/ui/view/setting/component/thanks_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';

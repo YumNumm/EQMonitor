@@ -1,9 +1,10 @@
 import 'package:eqmonitor/provider/init/shared_preferences.dart';
+import 'package:eqmonitor/provider/setting/developer_mode.dart';
 import 'package:eqmonitor/provider/setting/notification_settings.dart';
 import 'package:eqmonitor/ui/theme/jma_intensity.dart';
+import 'package:eqmonitor/ui/view/setting/component/custom_switch.dart';
+import 'package:eqmonitor/ui/view/setting/component/setting_section.dart';
 import 'package:eqmonitor/ui/view/setting/notification_setting.viewmodel.dart';
-import 'package:eqmonitor/ui/view/widget/setting/custom_switch.dart';
-import 'package:eqmonitor/ui/view/widget/setting/setting_section.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,6 +15,7 @@ class NotificationSettingPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = NotificationSettingViewModel(ref);
+    final isDeveloper = ref.watch(developerModeProvider).isDeveloper;
 
     final notificationSetting = ref.watch(notificationSettingsProvider);
     const descriptionTextStyle = TextStyle(
@@ -79,7 +81,7 @@ class NotificationSettingPage extends HookConsumerWidget {
                           (notificationSetting.intensityThreshold ==
                                   JmaIntensity.Int0)
                               ? '全て'
-                              : notificationSetting.intensityThreshold.longName,
+                              : '${notificationSetting.intensityThreshold.longName}以上',
                         ),
                         onTap: () async => viewModel.onIntensityTap(context),
                       ),
@@ -124,6 +126,22 @@ class NotificationSettingPage extends HookConsumerWidget {
                   ),
                   onTap: () async => viewModel.toggleLowPrecision(),
                 ),
+                ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                  title: const Text(
+                    '地震・津波に関する情報を通知する',
+                    style: titleTextStyle,
+                  ),
+                  subtitle: const Text(
+                    '地震・津波の試験・訓練配信のお知らせ、自治体震度データの入電停止等のお知らせ等を通知します',
+                    style: descriptionTextStyle,
+                  ),
+                  onTap: viewModel.toggleVzse40,
+                  trailing: CustomSwitch(
+                    onChanged: (_) => viewModel.toggleVzse40(),
+                    value: notificationSetting.isRecieveVzse40,
+                  ),
+                ),
               ],
             ),
             const Divider(),
@@ -148,6 +166,30 @@ class NotificationSettingPage extends HookConsumerWidget {
                 ),
               ],
             ),
+            if (isDeveloper) ...[
+              const Divider(),
+              SettingsSection(
+                title: 'Developer Mode',
+                children: [
+                  ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                    title: const Text(
+                      'テスト報を受信',
+                      style: titleTextStyle,
+                    ),
+                    subtitle: const Text(
+                      '再起動後から有効になります',
+                      style: descriptionTextStyle,
+                    ),
+                    onTap: viewModel.toggleTestNotification,
+                    trailing: CustomSwitch(
+                      onChanged: (_) => viewModel.toggleTestNotification(),
+                      value: notificationSetting.isRecieveTraining,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),
