@@ -32,6 +32,12 @@ class NotificationSettingViewModel {
   void toggleUseTts() =>
       ref.read(notificationSettingsProvider.notifier).toggleUseTts();
 
+  void toggleTestNotification() =>
+      ref.read(notificationSettingsProvider.notifier).toggleTestNotification();
+
+  void toggleVzse40() =>
+      ref.read(notificationSettingsProvider.notifier).togglevzse40();
+
   /// 精度の低いEEW通知の切り替え
   void toggleLowPrecision() =>
       ref.read(notificationSettingsProvider.notifier).toggleLowPrecision();

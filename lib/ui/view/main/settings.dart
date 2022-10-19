@@ -1,5 +1,5 @@
 import 'package:eqmonitor/provider/setting/developer_mode.dart';
-import 'package:eqmonitor/ui/view/widget/setting/setting_section.dart';
+import 'package:eqmonitor/ui/view/setting/component/setting_section.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -32,6 +32,12 @@ class NotificationSettingsModel with _$NotificationSettingsModel {
 
     /// TTSの音量
     @Default(1) double ttsVolume,
+
+    /// 地震・津波に関する情報の通知を受信するかどうか
+    @Default(false) bool isRecieveVzse40,
+
+    /// 訓練報を受信するかどうか
+    @Default(false) bool isRecieveTraining,
   }) = _NotificationSettingsModel;
 
   factory NotificationSettingsModel.loadFromPrefs(SharedPreferences prefs) {
