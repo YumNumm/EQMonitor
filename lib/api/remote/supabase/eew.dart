@@ -12,9 +12,7 @@ class EewApi {
   Future<List<CommonHead>> getEewTelegrams({int limit = 10}) async {
     final res =
         await supabase.from('eew').select().order('id').limit(limit).execute();
-    if (res.hasError) {
-      throw Exception(res.error!.toJson());
-    }
+
     final toReturn = <CommonHead>[];
     for (final r in res.data as List) {
       toReturn.add(

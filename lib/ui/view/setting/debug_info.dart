@@ -8,9 +8,9 @@ import 'package:eqmonitor/provider/init/kyoshin_kansokuten.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
 import 'package:eqmonitor/provider/init/shared_preferences.dart';
 import 'package:eqmonitor/provider/init/travel_time.dart';
+import 'package:eqmonitor/ui/view/setting/component/setting_section.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:settings_ui/settings_ui.dart';
 
 class DeveloperDebugPage extends HookConsumerWidget {
   const DeveloperDebugPage({super.key});
@@ -20,59 +20,59 @@ class DeveloperDebugPage extends HookConsumerWidget {
       appBar: AppBar(
         title: const Text('デバッグ情報'),
       ),
-      body: SettingsList(
-        sections: [
+      body: SettingsSection(
+        title: 'デバッグ情報',
+        children: [
           SettingsSection(
-            title: const Text('EEW WebSocket'),
-            tiles: [
-              SettingsTile(
+            title: 'EEW WebSocket',
+            children: [
+              ListTile(
                 title: const Text('Join Once'),
-                value: Text(
+                subtitle: Text(
                   ref
                           .watch(eewHistoryProvider)
-                          .subscription
+                          .channel
                           ?.joinedOnce
                           .toString() ??
                       'Unknown',
                 ),
               ),
-              SettingsTile(
+              ListTile(
                 title: const Text('Connection State'),
-                value: Text(
+                subtitle: Text(
                   ref
                           .watch(eewHistoryProvider)
-                          .subscription
+                          .channel
                           ?.socket
                           .connState
                           ?.toString() ??
                       'Unknown',
                 ),
               ),
-              SettingsTile(
+              ListTile(
                 title: const Text('Topic'),
-                value: Text(
-                  ref.watch(eewHistoryProvider).subscription?.topic ??
-                      'Unknown',
+                subtitle: Text(
+                  ref.watch(eewHistoryProvider).channel?.topic ?? 'Unknown',
                 ),
               ),
-              SettingsTile(
+              ListTile(
                 title: const Text('HeartbeatInterval(ms)'),
-                value: Text(
+                subtitle: Text(
                   ref
                           .watch(eewHistoryProvider)
-                          .subscription
+                          .channel
                           ?.socket
                           .heartbeatIntervalMs
                           .toString() ??
                       'Unknown',
                 ),
               ),
-              SettingsTile(
+              ListTile(
                 title: const Text('LongPoller T/O(ms)'),
-                value: Text(
+                subtitle: Text(
                   ref
                           .watch(eewHistoryProvider)
-                          .subscription
+                          .channel
                           ?.socket
                           .longpollerTimeout
                           .toString() ??
@@ -82,38 +82,38 @@ class DeveloperDebugPage extends HookConsumerWidget {
             ],
           ),
           SettingsSection(
-            title: const Text('Providers'),
-            tiles: [
-              SettingsTile(
+            title: 'Providers',
+            children: [
+              ListTile(
                 title: const Text('ApplicationSupportDirectoryProvider'),
-                value: Text(
+                subtitle: Text(
                   ref.watch(applicationSupportDirectoryProvider).path,
                 ),
               ),
-              SettingsTile(
+              ListTile(
                 title: const Text('kyoshinKansokutenProvider'),
-                value: Text(
+                subtitle: Text(
                   ref.watch(kyoshinKansokutenProvider).length.toString(),
                 ),
               ),
-              SettingsTile(
+              ListTile(
                 title: const Text('mapAreaForecastLocalEProvider'),
-                value: Text(
+                subtitle: Text(
                   ref.watch(mapAreaForecastLocalEProvider).length.toString(),
                 ),
               ),
-              SettingsTile(
+              ListTile(
                 title: const Text('travelTimeProvider'),
-                value: Text(
+                subtitle: Text(
                   ref.watch(travelTimeProvider).length.toString(),
                 ),
               ),
-              SettingsTile(
+              ListTile(
                 title: const Text('sharedPreferencesProvder - keys'),
-                onPressed: (context) {
+                onTap: () {
                   ref.read(sharedPreferencesProvder).clear();
                 },
-                value: Text(
+                subtitle: Text(
                   const JsonEncoder.withIndent(' ').convert(
                     ref.watch(sharedPreferencesProvder).getKeys().toList()
                       ..sort((a, b) => a.compareTo(b)),
@@ -121,9 +121,9 @@ class DeveloperDebugPage extends HookConsumerWidget {
                 ),
               ),
               if (Platform.isAndroid)
-                SettingsTile(
+                ListTile(
                   title: const Text('androidDeviceInfoProvider'),
-                  value: Text(
+                  subtitle: Text(
                     const JsonEncoder.withIndent(' ')
                         .convert(ref.watch(androidDeviceInfoProvider).toMap()),
                   ),

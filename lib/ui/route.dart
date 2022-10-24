@@ -102,7 +102,6 @@ final routerProvider = Provider<GoRouter>(
             ? '/'
             : '/introduction',
     errorBuilder: (context, state) => ErrorScreen(state.error!),
-    urlPathStrategy: UrlPathStrategy.path,
     debugLogDiagnostics:
         kDebugMode || ref.watch(developerModeProvider).isDeveloper,
   ),

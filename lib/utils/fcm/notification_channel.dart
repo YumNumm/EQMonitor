@@ -216,19 +216,19 @@ final List<NotificationChannel> notificationChannels = [
 
 final List<NotificationChannelGroup> channelGroups = [
   NotificationChannelGroup(
-    channelGroupkey: 'eew',
+    channelGroupKey:  'eew',
     channelGroupName: '緊急地震速報',
   ),
   NotificationChannelGroup(
-    channelGroupkey: 'earthquake',
+    channelGroupKey: 'earthquake',
     channelGroupName: '地震通知',
   ),
   NotificationChannelGroup(
-    channelGroupkey: 'tsunami',
+    channelGroupKey: 'tsunami',
     channelGroupName: '津波通知',
   ),
   NotificationChannelGroup(
-    channelGroupkey: 'fromdev',
+    channelGroupKey: 'fromdev',
     channelGroupName: '開発者からのお知らせ',
   ),
 ];

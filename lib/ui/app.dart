@@ -1,4 +1,5 @@
 import 'package:device_preview/device_preview.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eqmonitor/provider/theme_providers.dart';
 import 'package:eqmonitor/ui/route.dart';
 import 'package:eqmonitor/ui/theme/theme.dart';
@@ -13,27 +14,32 @@ class App extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode =
-        ref.watch(themeProvider.select((value) => value.themeMode));
+    final themeModeProvider = ref.watch(themeProvider);
     final router = ref.watch(routerProvider);
-    return MaterialApp.router(
-      title: 'EQMonitor',
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: themeMode,
-      locale: DevicePreview.locale(context),
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('ja', 'JP'),
-      ],
-      useInheritedMediaQuery: true,
-      routerDelegate: router.routerDelegate,
-      routeInformationParser: router.routeInformationParser,
-      routeInformationProvider: router.routeInformationProvider,
+    return DynamicColorBuilder(
+      builder: (lightDynamic, darkDynamic) {
+        return MaterialApp.router(
+          title: 'EQMonitor',
+          theme: lightTheme(
+              themeModeProvider.useDynamicColor ? lightDynamic : null),
+          darkTheme:
+              darkTheme(themeModeProvider.useDynamicColor ? darkDynamic : null),
+          themeMode: themeModeProvider.themeMode,
+          locale: DevicePreview.locale(context),
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('ja', 'JP'),
+          ],
+          useInheritedMediaQuery: true,
+          routerDelegate: router.routerDelegate,
+          routeInformationParser: router.routeInformationParser,
+          routeInformationProvider: router.routeInformationProvider,
+        );
+      },
     );
   }
 }

@@ -22,7 +22,7 @@ class EewHistoryModel with _$EewHistoryModel {
     required SupabaseClient supabase,
 
     /// 緊急地震速報のWebSocketの接続状態
-    required RealtimeSubscription? subscription,
+    required RealtimeChannel? channel,
 
     /// テストケースを読み込み始めた時刻
     required DateTime? testCaseStartTime,
