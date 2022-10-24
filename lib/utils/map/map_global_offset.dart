@@ -5,15 +5,8 @@ import 'package:latlong2/latlong.dart';
 
 class MapGlobalOffset extends Offset {
   MapGlobalOffset(super.dx, super.dy);
-  static const int tileSize = 256;
-  static const pixelsPerLonDegree = tileSize / 360;
-  static const pixelsPerLonRadian = tileSize / (2 * math.pi);
-  static const origin = Offset(128, 128);
 
-  static const minMapOffset = Offset(215.4, 91.5);
-  static const maxMapOffset = Offset(237.5, 110.4);
-
-  static MapGlobalOffset latLonToGlobalPoint(LatLng latLng) {
+  factory MapGlobalOffset.latLonToGlobalPoint(LatLng latLng) {
     final siny = math.min(
       math.max(
         math.sin(latLng.latitude * (math.pi / 180)),
@@ -26,6 +19,14 @@ class MapGlobalOffset extends Offset {
       origin.dy + 0.5 * math.log((1 + siny) / (1 - siny)) * -pixelsPerLonRadian,
     );
   }
+  
+  static const int tileSize = 256;
+  static const pixelsPerLonDegree = tileSize / 360;
+  static const pixelsPerLonRadian = tileSize / (2 * math.pi);
+  static const origin = Offset(128, 128);
+
+  static const minMapOffset = Offset(215.4, 91.5);
+  static const maxMapOffset = Offset(237.5, 110.4);
 
   static LatLng globalPointToLatLng(Offset point) {
     final lng = (point.dx - origin.dx) / pixelsPerLonDegree;

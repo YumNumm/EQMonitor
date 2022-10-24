@@ -1,5 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -24,8 +25,9 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   final notificationSettings = NotificationSettingsModel.loadFromPrefs(prefs);
   // EEWかどうか
   if (message.data['type'].toString() == DmDssTelegramDataType.VXSE44.name) {
-    final payload =
-        EewPayload.fromJson(message.data['payload'] as Map<String, dynamic>);
+    final payload = EewPayload.fromJson(
+      jsonDecode(message.data['payload'].toString()) as Map<String, dynamic>,
+    );
     // 最大震度の確認
     if (payload.intensity != null) {
       if (payload.intensity!.maxint.from.intValue <
@@ -51,6 +53,8 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   if (message.data['tts'] != null && notificationSettings.useTts) {
     final flutterTts = FlutterTts();
     await flutterTts.setLanguage('ja-JP');
+    // await flutterTts.setSpeechRate(notificationSettings.ttsSpeed);
+    // await flutterTts.setPitch(notificationSettings.ttsPitch);
     await flutterTts.speak(message.data['tts'].toString());
   }
 }
