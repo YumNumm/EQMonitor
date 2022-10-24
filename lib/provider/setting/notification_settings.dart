@@ -31,9 +31,11 @@ class NotificationSettingsNotifier
   /// TTSの使用を切り替える
   void toggleUseTts() => state = state.copyWith(useTts: !state.useTts);
 
-  void toggleTestNotification() => state = state.copyWith(isRecieveTraining: !state.isRecieveTraining);
+  void toggleTestNotification() =>
+      state = state.copyWith(isRecieveTraining: !state.isRecieveTraining);
 
-  void togglevzse40() => state = state.copyWith(isRecieveVzse40 : !state.isRecieveVzse40);
+  void togglevzse40() =>
+      state = state.copyWith(isRecieveVzse40: !state.isRecieveVzse40);
 
   /// 精度の低いEEW通知の使用を切り替える
   void toggleLowPrecision() =>
