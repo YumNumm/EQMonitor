@@ -25,10 +25,12 @@ class NotificationSettingsModel with _$NotificationSettingsModel {
     @Default(false) bool useTts,
 
     /// TTSの読み上げ速度
-    @Default(1) double ttsSpeed,
+    /// 0(slowest)~1(fastest)
+    @Default(0.4) double ttsSpeed,
 
     /// TTSの声の高さ
-    @Default(1) double ttsPitch,
+    /// 0.5~2.0
+    @Default(0.4) double ttsPitch,
 
     /// TTSの音量
     @Default(1) double ttsVolume,

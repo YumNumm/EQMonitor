@@ -6,7 +6,7 @@ publish_to: "none"
 version: 0.5.9+373
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: ">=2.18.2 <3.0.0"
 
 dependencies:
   awesome_notifications: ^0.6.21
@@ -19,6 +19,7 @@ dependencies:
   device_preview: ^1.1.0
   dio: ^4.0.6
   dio_http2_adapter: ^2.0.0
+  dmdata_telegram_json: ^0.0.2
   dynamic_color: ^1.4.0
   envied: ^0.2.3
   expandable: ^5.0.1

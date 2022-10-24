@@ -7,7 +7,7 @@ class ProvidersLogger extends ProviderObserver {
 
   @override
   void didAddProvider(
-    ProviderBase provider,
+    ProviderBase<dynamic> provider,
     Object? value,
     ProviderContainer container,
   ) {
@@ -25,7 +25,7 @@ class ProvidersLogger extends ProviderObserver {
 
   @override
   void didUpdateProvider(
-    ProviderBase provider,
+    ProviderBase<dynamic> provider,
     Object? previousValue,
     Object? newValue,
     ProviderContainer container,
