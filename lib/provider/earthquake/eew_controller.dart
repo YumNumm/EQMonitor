@@ -85,28 +85,39 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
           schema: '*',
         ),
         (payload, [ref]) {
-          logger.i(payload.runtimeType);
-          logger.i('EEW STREAM: ${payload.newRecord}', payload.commitTimestamp);
+          logger
+            ..i(payload.runtimeType)
+            ..i('EEW STREAM: ${payload.newRecord}', payload.commitTimestamp);
           final commonHead = CommonHead.fromJson(
             payload.newRecord!['data'] as Map<String, dynamic>,
           );
           addTelegram(commonHead);
+        },
+      )
+      ..subscribe(
+        (p0, [p1]) {
+          logger.i('EEW STREAM: $p0', p1);
         },
       );
     state = state.copyWith(
       channel: channel,
     );
 
+    // Timer.periodic(const Duration(seconds: 5), (_) async {
+    //   final latency = await this.latency();
+    //   logger.i('latency: $latency ms');
+    // });
+
     /// 再接続タイマー
-    // Timer.periodic(
-    //   const Duration(seconds: 5),
-    //   (_) {
-    //     if (state.subscription?.joinedOnce != true) {
-    //       logger.i('EEW STREAM: reconnect');
-    //       state.subscription?.rejoinUntilConnected();
-    //     }
-    //   },
-    // );
+    Timer.periodic(
+      const Duration(seconds: 5),
+      (_) {
+        if (state.channel?.joinedOnce == false) {
+          logger.i('EEW STREAM: reconnect');
+          state.channel?.rejoinUntilConnected();
+        }
+      },
+    );
 
     // 直近のEEW電文10件を追加しておく
     final telegrams = await eewApi.getEewTelegrams();
@@ -198,6 +209,16 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
             .map((eew) => MapEntry(eew, EEWInformation.fromJson(eew.body))),
       );
     }
+  }
+
+  Future<double> latency() async {
+    final stopWatch = Stopwatch()..start();
+    await state.channel!.send(
+      type: RealtimeListenTypes.broadcast,
+      payload: {},
+      event: 'latency',
+    );
+    return (stopWatch..stop()).elapsedMicroseconds / 1000;
   }
 
   void startTestcase() {

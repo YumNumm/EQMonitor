@@ -16,9 +16,10 @@ class TelegramApi {
     if (offset != 0) {
       throw UnimplementedError('Telegram offset is not implemented yet');
     }
-    final PostgrestResponse<dynamic> res;
+
+    final List<dynamic> data;
     if (limit == null) {
-      res = await Supabase.instance.client
+      data = await Supabase.instance.client
           .from('telegram')
           .select(
             'id,'
@@ -40,10 +41,9 @@ class TelegramApi {
             'hash,'
             'depth_condition',
           )
-          .order('id')
-          .execute();
+          .order('id');
     } else {
-      res = await Supabase.instance.client
+      data = await Supabase.instance.client
           .from('telegram')
           .select(
             'id,'
@@ -70,7 +70,7 @@ class TelegramApi {
     }
 
     final telegrams = <Telegram>[];
-    for (final telegram in res.data) {
+    for (final telegram in data) {
       telegrams.add(Telegram.fromJson(telegram));
     }
     return telegrams;
@@ -122,5 +122,4 @@ class TelegramApi {
     await Future.wait(futures);
     return telegrams;
   }
-
 }

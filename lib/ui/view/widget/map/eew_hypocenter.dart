@@ -272,6 +272,14 @@ class EewHypocenterNormalPainter extends CustomPainter {
             ..strokeWidth = 1,
         )
         ..drawPath(
+          Path()..addPolygon(sOffsets, true),
+          Paint()
+            ..color = const Color.fromARGB(27, 255, 140, 0)
+            ..isAntiAlias = true
+            ..style = PaintingStyle.fill
+            ..strokeWidth = 1,
+        )
+        ..drawPath(
           Path()..addPolygon(pOffsets, true),
           Paint()
             ..color = const Color.fromARGB(255, 0, 102, 255)
