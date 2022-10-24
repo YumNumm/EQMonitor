@@ -21,20 +21,20 @@ enum JmaIntensity {
   Int0('0', '震度1未満', Color.fromARGB(200, 255, 255, 255), 0),
 
   /// 震度1
-  Int1('1', '震度1', Color.fromARGB(255, 183, 185, 186), 1),
+  Int1('1', '震度1', Color.fromARGB(255, 143, 159, 255), 1),
 
   /// 震度2
-  Int2('2', '震度2', Color.fromARGB(255, 132, 198, 228), 2),
+  Int2('2', '震度2', Color.fromARGB(255, 0, 85, 255), 2),
 
   /// 震度3
-  Int3('3', '震度3', Color.fromARGB(255, 141, 206, 165), 3),
+  Int3('3', '震度3', Color.fromARGB(255, 47, 255, 0), 3),
 
   /// 震度4
   /// 津波注意報
-  Int4('4', '震度4', Color.fromARGB(255, 212, 232, 0), 4),
+  Int4('4', '震度4', Color.fromARGB(255, 246, 255, 0), 4),
 
   /// 震度5弱
-  Int5Lower('5-', '震度5弱', Color.fromARGB(255, 250, 212, 150), 5),
+  Int5Lower('5-', '震度5弱', Color.fromARGB(255, 255, 230, 0), 5),
 
   /// 震度5強
   Int5Upper('5+', '震度5強', Color.fromARGB(255, 255, 153, 0), 6),
