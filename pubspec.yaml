@@ -9,25 +9,25 @@ environment:
   sdk: ">=2.18.2 <3.0.0"
 
 dependencies:
-  awesome_notifications: ^0.6.21
+  awesome_notifications: ^0.7.3
   bordered_text: ^2.0.0
   collection: ^1.16.0
   crypto: ^3.0.2
   csv: ^5.0.1
   cupertino_icons: ^1.0.5
-  device_info_plus: ^4.1.2
+  device_info_plus: ^7.0.1
   device_preview: ^1.1.0
   dio: ^4.0.6
   dio_http2_adapter: ^2.0.0
   dmdata_telegram_json: ^0.0.2
-  dynamic_color: ^1.4.0
+  dynamic_color: ^1.5.4
   envied: ^0.2.3
   expandable: ^5.0.1
-  firebase_analytics: ^9.3.7
-  firebase_core: ^1.24.0
-  firebase_crashlytics: ^2.8.12
-  firebase_messaging: ^13.0.4
-  firebase_performance: ^0.8.3+2
+  firebase_analytics: ^10.0.2
+  firebase_core: ^2.1.0
+  firebase_crashlytics: ^3.0.2
+  firebase_messaging: ^14.0.2
+  firebase_performance: ^0.9.0+2
   flutter:
     sdk: flutter
   flutter_colorpicker: ^1.0.3
@@ -44,7 +44,7 @@ dependencies:
   fluttertoast: ^8.0.9
   freezed_annotation: ^2.1.0
   geojson: ^1.0.0
-  go_router: ^4.5.1
+  go_router: ^5.1.1
   hooks_riverpod: ^2.0.2
   html: ^0.15.0
   http: ^0.13.5
@@ -53,19 +53,17 @@ dependencies:
   latlong2: ^0.8.1
   logger: ^1.1.0
   oauth1: ^2.0.0
-  package_info_plus: ^1.4.3+1
+  package_info_plus: ^3.0.1
   path_provider: ^2.0.11
-  permission_handler: ^10.0.2
-  realtime_client: ^0.1.15
+  realtime_client: ^1.0.0
   restart_app: ^1.1.0+1
-  settings_ui: ^2.0.2
-  share_plus: ^4.4.0
+  share_plus: ^6.0.1
   shared_preferences: ^2.0.15
   shared_preferences_android: ^2.0.13
   shared_preferences_ios: ^2.1.1
   state_notifier: ^0.7.2+1
-  supabase: ^0.3.6
-  supabase_flutter: ^0.3.3
+  supabase: ^1.0.1
+  supabase_flutter: ^1.0.1
   url_launcher: ^6.1.6
 
 dev_dependencies:

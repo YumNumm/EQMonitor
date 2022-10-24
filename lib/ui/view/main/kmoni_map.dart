@@ -219,7 +219,7 @@ class KmoniStatusWidget extends ConsumerWidget {
                     const SizedBox(width: 8),
                     // WebSocket 接続状態
                     if (ref.watch(developerModeProvider).isDeveloper)
-                      if (eewProvider.subscription?.isJoined() == true)
+                      if (eewProvider.channel?.isJoined == true)
                         InkWell(
                           onLongPress: () async {
                             // SnackBarを表示
@@ -229,7 +229,7 @@ class KmoniStatusWidget extends ConsumerWidget {
                                 duration: Duration(seconds: 1),
                               ),
                             );
-                            eewProvider.subscription?.rejoinUntilConnected();
+                            eewProvider.channel?.rejoinUntilConnected();
                           },
                           child: const Icon(
                             Icons.link,
@@ -246,7 +246,7 @@ class KmoniStatusWidget extends ConsumerWidget {
                                 duration: Duration(seconds: 1),
                               ),
                             );
-                            eewProvider.subscription?.rejoinUntilConnected();
+                            eewProvider.channel?.rejoinUntilConnected();
                           },
                           child: const Icon(
                             Icons.link_off,

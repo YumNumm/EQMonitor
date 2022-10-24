@@ -32,7 +32,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
@@ -52,7 +51,6 @@ Future<void> main() async {
       statusBarColor: Colors.transparent, // transparent status bar
     ),
   );
-  GoRouter.setUrlPathStrategy(UrlPathStrategy.path);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -66,7 +64,7 @@ Future<void> main() async {
   final isCrashLogShareAllowed =
       await CrashLogShareProvider(prefs).loadSettingsFromSharedPrefrences();
   await crashlytics.setUserIdentifier(
-    deviceInfo.fingerprint ?? deviceInfo.board ?? 'Unknown',
+    deviceInfo.fingerprint ,
   );
   await crashlytics.setCrashlyticsCollectionEnabled(
     isCrashLogShareAllowed && kReleaseMode,

@@ -13,6 +13,9 @@ extension OnPrimary on Color {
   }
 }
 
+/// コントラスト比を取得
+/// [color1]と[color2]間のコントラスト比を計算します
+/// 
 double getContrastRatio(Color color1, Color color2) {
   final luminance1 = color1.computeLuminance();
   final luminance2 = color2.computeLuminance();

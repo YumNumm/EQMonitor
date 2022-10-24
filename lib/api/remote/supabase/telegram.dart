@@ -1,7 +1,5 @@
 // ignore_for_file: avoid_classes_with_only_static_members
 
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/schema/remote/supabase/telegram.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -68,13 +66,9 @@ class TelegramApi {
             'depth_condition',
           )
           .order('id')
-          .limit(limit)
-          .execute();
+          .limit(limit);
     }
 
-    if (res.hasError) {
-      throw HttpException(res.error?.message ?? '原因不明のエラー');
-    }
     final telegrams = <Telegram>[];
     for (final telegram in res.data) {
       telegrams.add(Telegram.fromJson(telegram));
@@ -129,16 +123,4 @@ class TelegramApi {
     return telegrams;
   }
 
-  static Future<int> getAllTelegramCount() async {
-    final res = await Supabase.instance.client
-        .from('telegram')
-        .select('id')
-        .order('id')
-        .single()
-        .execute(count: CountOption.exact);
-    if (res.hasError || res.count == null) {
-      throw Exception(res.error?.message);
-    }
-    return res.count!;
-  }
 }

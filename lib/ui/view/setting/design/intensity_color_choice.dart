@@ -27,6 +27,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
               size: 42,
               color: intensityColor.int0,
             ),
+            subtitle: Text(intensityColor.int0.toString()),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () => showDialog<void>(
               context: context,
@@ -53,6 +54,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
               size: 42,
               color: intensityColor.int1,
             ),
+            subtitle: Text(intensityColor.int1.toString()),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () => showDialog<void>(
               context: context,
@@ -79,6 +81,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
               size: 42,
               color: intensityColor.int2,
             ),
+            subtitle: Text(intensityColor.int2.toString()),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () => showDialog<void>(
               context: context,
@@ -105,6 +108,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
               size: 42,
               color: intensityColor.int3,
             ),
+            subtitle: Text(intensityColor.int3.toString()),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () => showDialog<void>(
               context: context,
@@ -131,6 +135,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
               size: 42,
               color: intensityColor.int4,
             ),
+            subtitle: Text(intensityColor.int4.toString()),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () => showDialog<void>(
               context: context,
@@ -157,6 +162,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
               size: 42,
               color: intensityColor.int5Lower,
             ),
+            subtitle: Text(intensityColor.int5Lower.toString()),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () => showDialog<void>(
               context: context,
@@ -183,6 +189,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
               size: 42,
               color: intensityColor.int5Upper,
             ),
+            subtitle: Text(intensityColor.int5Upper.toString()),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () => showDialog<void>(
               context: context,
@@ -209,6 +216,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
               size: 42,
               color: intensityColor.int6Lower,
             ),
+            subtitle: Text(intensityColor.int6Lower.toString()),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () => showDialog<void>(
               context: context,
@@ -235,6 +243,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
               size: 42,
               color: intensityColor.int6Upper,
             ),
+            subtitle: Text(intensityColor.int6Upper.toString()),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () => showDialog<void>(
               context: context,
@@ -261,6 +270,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
               size: 42,
               color: intensityColor.int7,
             ),
+            subtitle: Text(intensityColor.int7.toString()),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () => showDialog<void>(
               context: context,
@@ -287,6 +297,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
               size: 42,
               color: intensityColor.unknown,
             ),
+            subtitle: Text(intensityColor.unknown.toString()),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () => showDialog<void>(
               context: context,
