@@ -55,7 +55,7 @@ class EewEstimatedIntensityWidget extends ConsumerWidget {
             .groupListsBy((element) => element.region.code),
         mapPolygons: ref.watch(mapAreaForecastLocalEProvider),
         colors: ref.watch(jmaIntensityColorProvider),
-        alpha: 0.5,
+        alpha: 0.9,
         isDeveloper: isDeveloper,
       ),
     );
@@ -99,7 +99,7 @@ class EstimatedIntensityPainter extends CustomPainter {
                   );
           final maxJmaIntensity =
               JmaIntensity.toJmaIntensity(intensity: maxIntensity);
-          if (maxIntensity < (isDeveloper ? 0 : 4.5)) {
+          if (maxIntensity < (isDeveloper ? 0 : 3.5)) {
             return;
           }
           for (final mapRegionPolygon in mapRegionPolygons) {

@@ -63,18 +63,7 @@ Future<void> initFirebaseCloudMessaging() async {
 }
 
 enum Topics {
-  /// ## 緊急地震速報
+  /// ## 地震情報
   eew,
-
-  /// ## 震度速報
-  VXSE51,
-
-  /// ## 震源に関する情報
-  VXSE52,
-
-  /// ## 震源・震度に関する情報
-  VXSE53,
-
-  /// ## 利用者全員への緊急連絡
   everyone,
 }

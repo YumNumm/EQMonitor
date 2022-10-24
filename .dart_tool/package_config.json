@@ -543,7 +543,7 @@
     },
     {
       "name": "frontend_server_client",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/frontend_server_client-3.0.0",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/frontend_server_client-3.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -1328,7 +1328,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-10-19T14:22:56.696574Z",
+  "generated": "2022-10-24T05:35:45.571749Z",
   "generator": "pub",
   "generatorVersion": "2.17.6"
 }
