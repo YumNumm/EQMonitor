@@ -83,7 +83,7 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
         ChannelFilter(
           event: '*',
           schema: 'public',
-          table: 'eew_test',
+          table: 'eew',
         ),
         (payload, [ref]) {
           logger
