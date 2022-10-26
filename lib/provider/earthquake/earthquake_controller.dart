@@ -17,7 +17,7 @@ final earthquakeHistoryFutureProvider =
 
     final grouped = [
       ...telegrams,
-      if (kDebugMode) ...testTelegram,
+      if (kDebugMode || ref.read(developerModeProvider).isDeveloper) ...testTelegram,
     ]
         .where(
           (element) => <String>['VXSE51', 'VXSE52', 'VXSE53', 'VXSE61']
