@@ -267,7 +267,7 @@
     },
     {
       "name": "dmdata_telegram_json",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/dmdata_telegram_json-0.0.3",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/dmdata_telegram_json-0.0.4",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -738,6 +738,12 @@
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/logging-1.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "lottie",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/lottie-1.4.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
     },
     {
       "name": "markdown",
@@ -1226,7 +1232,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2022-10-24T16:02:22.924927Z",
+  "generated": "2022-10-26T15:36:22.836954Z",
   "generator": "pub",
   "generatorVersion": "2.18.2"
 }
