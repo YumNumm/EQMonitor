@@ -1,10 +1,50 @@
 // ignore_for_file: avoid_classes_with_only_static_members
 
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
 import 'package:eqmonitor/schema/remote/supabase/telegram.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+class TelegramItem {
+  TelegramItem({
+    required this.telegram,
+    required this.type,
+  });
+  final CommonHead telegram;
+  final String type;
+}
+
 class TelegramApi {
+  static Future<List<TelegramItem>> getTelegramsRangeV2({
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    final res = await Supabase.instance.client
+        .from('telegram')
+        .select('type, data')
+        .eq('type', 'VXSE53')
+        .order('id')
+        .range(offset, offset + limit - 1) as List<dynamic>;
+
+    final telegrams = <TelegramItem>[];
+
+    for (final e in res) {
+      telegrams.add(
+        TelegramItem(
+          telegram: CommonHead.fromJson(
+            jsonDecode((e as Map<String, dynamic>)['data'])
+                as Map<String, dynamic>,
+          ),
+          type: e['type'].toString(),
+        ),
+      );
+    }
+
+    return telegrams;
+  }
+
   /// ## SupabaseからTelegramを取得します
   /// dataは除きます。
   /// [limit] 結果の最大数

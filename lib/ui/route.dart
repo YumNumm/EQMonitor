@@ -1,6 +1,6 @@
-import 'package:eqmonitor/provider/earthquake/earthquake_controller.dart';
 import 'package:eqmonitor/provider/init/shared_preferences.dart';
 import 'package:eqmonitor/provider/setting/developer_mode.dart';
+import 'package:eqmonitor/ui/view/main/earthquake_history.viewmodel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -23,9 +23,12 @@ final routerProvider = Provider<GoRouter>(
             path: 'earthquake_history_item/:eventId',
             builder: (context, state) {
               final eventID = int.tryParse(state.params['eventId']!);
-              final telegrams =
-                  ref.read(earthquakeHistoryFutureProvider).value![eventID]!;
-              return EarthquakeHistoryDetailPage(telegrams: telegrams);
+
+              final data =
+                  ref.read(earthquakeHistoryViewModel).value!.firstWhere(
+                        (element) => element.id == eventID,
+                      );
+              return EarthquakeHistoryDetailPage(item: data);
             },
           ),
           GoRoute(

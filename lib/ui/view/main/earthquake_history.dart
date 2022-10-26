@@ -3,12 +3,12 @@
 import 'dart:developer';
 
 import 'package:eqmonitor/api/remote/supabase/telegram.dart';
-import 'package:eqmonitor/provider/earthquake/earthquake_controller.dart';
 import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
 import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake-information.dart';
 import 'package:eqmonitor/schema/remote/supabase/telegram.dart';
 import 'package:eqmonitor/ui/theme/jma_intensity.dart';
+import 'package:eqmonitor/ui/view/main/earthquake_history.viewmodel.dart';
 import 'package:eqmonitor/ui/view/widget/intensity_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -22,85 +22,166 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final vm = ref.watch(earthquakeHistoryViewModel);
+
     final appBar = AppBar(
       title: const Text('地震履歴'),
       actions: [
         IconButton(
           icon: const Icon(Icons.refresh),
-          onPressed: () async => ref.refresh(earthquakeHistoryFutureProvider),
+          onPressed: () async =>
+              ref.read(earthquakeHistoryViewModel.notifier).refresh(),
         ),
       ],
     );
 
-    return ref.watch(earthquakeHistoryFutureProvider).when<Widget>(
-          loading: () => Scaffold(
-            body: const Center(
-              child: CircularProgressIndicator(),
-            ),
-            appBar: appBar,
-          ),
-          error: (context, error) => Scaffold(
-            appBar: appBar,
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'エラーが発生しました',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(error.toString()),
-                FloatingActionButton.extended(
-                  label: const Text('再読み込みする'),
-                  icon: const Icon(Icons.refresh),
-                  onPressed: () => ref.refresh(earthquakeHistoryFutureProvider),
-                ),
-              ],
-            ),
-          ),
-          data: (data) {
-            return Scaffold(
-              // SliverAppBar
-              body: RefreshIndicator(
-                onRefresh: () async {
-                  log('RELOAD');
-                  ref.refresh(earthquakeHistoryFutureProvider);
-                  return ref.read(earthquakeHistoryFutureProvider.future);
-                },
-                child: CustomScrollView(
-                  slivers: [
-                    SliverAppBar(
-                      floating: true,
-                      stretch: true,
-                      title: const Text('地震履歴'),
-                      actions: [
-                        IconButton(
-                          icon: const Icon(Icons.refresh),
-                          onPressed: () async =>
-                              ref.refresh(earthquakeHistoryFutureProvider),
+    return Scaffold(
+      appBar: appBar,
+      body: vm.when<Widget>(
+        data: (items) {
+          return NotificationListener<ScrollEndNotification>(
+            onNotification: (notification) {
+              if (notification.metrics.extentAfter == 0 &&
+                  (vm.value?.isNotEmpty ?? false)) {
+                ref.read(earthquakeHistoryViewModel.notifier).fetch();
+                return true;
+              }
+              return false;
+            },
+            child: Scrollbar(
+              child: ListView.builder(
+                itemCount: items.length + (vm.isLoading ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index == items.length) {
+                    // InfiniteScroll Indicator
+                    return const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 32),
+                      child: Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      ),
+                    );
+                  }
+                  final item = items[index];
+
+                  final maxInt = JmaIntensity.values.firstWhere(
+                    (e) => e.name == (item.intensity?.maxInt.name),
+                    orElse: () => JmaIntensity.Unknown,
+                  );
+                  final colors = ref.watch(jmaIntensityColorProvider);
+
+                  return DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: maxInt.fromUser(colors).withOpacity(0.3),
+                    ),
+                    child: Stack(
+                      children: [
+                        /*DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.3),
+                          ),
+                          child: const Expanded(
+                            child: Text(
+                              'テスト',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),*/
+                        ListTile(
+                          onTap: () => context
+                              .push('/earthquake_history_item/${item.id}'),
+                          trailing: Text(
+                            (item.component?.magnitude != null)
+                                ? (item.component!.magnitude.condition != null)
+                                    ? item.component!.magnitude.condition!.name
+                                    : (item.component!.magnitude.value != null)
+                                        ? 'M${item.component!.magnitude.value!}'
+                                        : 'M不明'
+                                : '',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          leading: IntensityWidget(
+                            intensity: maxInt,
+                            opacity: 1,
+                            size: 42,
+                          ),
+                          enableFeedback: true,
+                          title: Row(
+                            children: [
+                              Text(
+                                item.component?.hypocenter.name ?? '震源調査中',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              // 速報アイコン
+                              //  if (isSokuhou) const Chip(label: Text('速報')),
+                            ],
+                          ),
+                          subtitle: Wrap(
+                            children: [
+                              Text(
+                                (StringBuffer()
+                                      ..writeAll(
+                                        <String>[
+                                          if (item.component?.originTime !=
+                                              null)
+                                            "${DateFormat('yyyy/MM/dd HH:mm').format(item.component!.originTime.toLocal())}頃 ",
+                                          ' ',
+                                          // 震源の深さ
+                                          if (item.component?.hypocenter
+                                                  .depth !=
+                                              null)
+                                            (item.component?.hypocenter.depth
+                                                        .condition !=
+                                                    null)
+                                                ? '深さ${item.component!.hypocenter.depth.condition!.name.replaceAll('shallow', 'ごく浅い').replaceAll('over700km', '700km以上').replaceAll('unknown', '不明')} '
+                                                : (item.component!.hypocenter
+                                                            .depth.value !=
+                                                        null)
+                                                    ? '深さ${item.component!.hypocenter.depth.value}km'
+                                                    : '深さ不明',
+                                        ],
+                                      ))
+                                    .toString(),
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                    // SliverList
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final key = data.keys.elementAt(index);
-                          final telegrams = data[key]!;
-                          return EarthquakeHistoryTile(
-                            telegrams: telegrams,
-                          );
-                        },
-                        childCount: data.length - 1,
-                      ),
-                    )
-                  ],
-                ),
+                  );
+                },
               ),
-            );
-          },
-        );
+            ),
+          );
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) {
+          log(error.toString());
+          log(stack.toString());
+          return SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('エラーが発生しました'),
+                Text(error.runtimeType.toString()),
+                Text(error.toString()),
+                TextButton(
+                  onPressed: () async =>
+                      ref.read(earthquakeHistoryViewModel.notifier).refresh(),
+                  child: const Text('再読み込み'),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
   }
 }
 

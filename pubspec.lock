@@ -315,7 +315,7 @@ packages:
       name: dmdata_telegram_json
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.3"
+    version: "0.0.4"
   dotenv:
     dependency: transitive
     description:
@@ -854,6 +854,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  lottie:
+    dependency: "direct dev"
+    description:
+      name: lottie
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.4.3"
   markdown:
     dependency: transitive
     description:

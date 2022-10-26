@@ -1,19 +1,18 @@
 import 'dart:developer';
 
+import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
 import 'package:eqmonitor/model/setting/jma_intensity_color_model.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
 import 'package:eqmonitor/provider/init/map_area_information_city_quake.dart';
 import 'package:eqmonitor/provider/init/parameter_earthquake.dart';
 import 'package:eqmonitor/provider/theme_providers.dart';
 import 'package:eqmonitor/schema/local/prefecture/map_polygon.dart';
-import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
-import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake-information.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake-information/intensity/city.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake-information/intensity/region.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake-information/intensity/station.dart';
-import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake.dart';
 import 'package:eqmonitor/schema/remote/dmdata/parameter-earthquake/parameter-earthquake.dart';
 import 'package:eqmonitor/ui/theme/jma_intensity.dart';
+import 'package:eqmonitor/ui/view/main/earthquake_history.viewmodel.dart';
 import 'package:eqmonitor/ui/view/widget/map/base_map.dart';
 import 'package:eqmonitor/utils/map/map_global_offset.dart';
 import 'package:flutter/material.dart';
@@ -23,92 +22,26 @@ import 'package:latlong2/latlong.dart';
 import 'package:logger/logger.dart';
 
 import '../../../../provider/setting/intensity_color_provider.dart';
-import '../../../../schema/remote/supabase/telegram.dart';
 import '../../../view/widget/intensity_widget.dart';
 
 class EarthquakeHistoryDetailPage extends HookConsumerWidget {
-  EarthquakeHistoryDetailPage({
+  const EarthquakeHistoryDetailPage({
     super.key,
-    required this.telegrams,
+    required this.item,
   });
 
-  List<Telegram> telegrams;
+  final EarthquakeHistoryItem item;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = ref.watch(jmaIntensityColorProvider);
-    // 地震情報を解析していきます
-    final vxse51Telegrams = <CommonHead>[];
-    final vxse52Telegrams = <CommonHead>[];
-    final vxse53Telegrams = <CommonHead>[];
-    final vxse61Telegrams = <CommonHead>[];
-    for (final e in telegrams) {
-      switch (e.type) {
-        case 'VXSE51':
-          vxse51Telegrams.add(CommonHead.fromJson(e.data!));
-          break;
-        case 'VXSE52':
-          vxse52Telegrams.add(CommonHead.fromJson(e.data!));
-          break;
-        case 'VXSE53':
-          vxse53Telegrams.add(CommonHead.fromJson(e.data!));
-          break;
-        case 'VXSE61':
-          vxse61Telegrams.add(CommonHead.fromJson(e.data!));
-          break;
-        default:
-      }
-    }
-
-    final latestVxse51Head =
-        (vxse51Telegrams.isEmpty) ? null : vxse51Telegrams.last;
-    final latestVxse51Info = (latestVxse51Head == null)
-        ? null
-        : EarthquakeInformation.fromJson(latestVxse51Head.body);
-    final latestVxse52Head =
-        (vxse52Telegrams.isEmpty) ? null : vxse52Telegrams.last;
-    final latestVxse52Info = (latestVxse52Head == null)
-        ? null
-        : EarthquakeInformation.fromJson(latestVxse52Head.body);
-    final latestVxse53Head =
-        (vxse53Telegrams.isEmpty) ? null : vxse53Telegrams.last;
-    final latestVxse53Info = (latestVxse53Head == null)
-        ? null
-        : EarthquakeInformation.fromJson(latestVxse53Head.body);
-    final latestVxse61Head =
-        (vxse61Telegrams.isEmpty) ? null : vxse61Telegrams.last;
-    final latestVxse61Info = (latestVxse61Head == null)
-        ? null
-        : EarthquakeInformation.fromJson(latestVxse61Head.body);
-
-    /// 速報かどうか
-    final isSokuhou = latestVxse61Head == null && latestVxse53Head == null;
-
-    /// ## 震源要素
-    /// VXSE61 -> VXSE53 -> VXSE52
-    final component = latestVxse61Info?.earthquake ??
-        latestVxse53Info?.earthquake ??
-        latestVxse52Info?.earthquake;
-
-    /// ## 各地の震度
-    /// VXSE53 -> VXSE51
-    final intensity =
-        latestVxse53Info?.intensity ?? latestVxse51Info?.intensity;
     final maxInt = JmaIntensity.values.firstWhere(
-      (e) => e.name == (intensity?.maxInt ?? ''),
+      (e) => e.name == (item.intensity?.maxInt.name),
       orElse: () => JmaIntensity.Unknown,
     );
-
-    /// ## 最新のComment
-    /// VXSE61 -> VXSE53 -> VXSE52 -> VXSE51
-    final comment = latestVxse61Info?.comments ??
-        latestVxse53Info?.comments ??
-        latestVxse52Info?.comments ??
-        latestVxse51Info?.comments;
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('地震${isSokuhou ? "速報" : "情報"}'),
+        title: const Text('地震情報'),
       ),
       body: Column(
         children: <Widget>[
@@ -128,9 +61,9 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                 children: [
                   Row(),
                   // 発生時刻
-                  if (component != null)
+                  if (item.component != null)
                     Text(
-                      '${DateFormat('yyyy/MM/dd HH:mm').format(component.originTime.toLocal())}頃',
+                      '${DateFormat('yyyy/MM/dd HH:mm').format(item.component!.originTime.toLocal())}頃',
                       style: Theme.of(context).textTheme.headline6,
                     ),
                   Row(
@@ -193,7 +126,7 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                                   width: 4,
                                 ),
                                 Text(
-                                  component?.hypoCenter.name ?? '調査中',
+                                  item.component?.hypocenter.name ?? '調査中',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 30,
@@ -201,7 +134,7 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                                 ),
                               ],
                             ),
-                            if (component != null)
+                            if (item.component != null)
                               FittedBox(
                                 child: Row(
                                   mainAxisAlignment:
@@ -211,7 +144,7 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                                   textBaseline: TextBaseline.alphabetic,
                                   children: [
                                     // Magunitude
-                                    if (component.magnitude.condition ==
+                                    if (item.component!.magnitude.condition ==
                                         null) ...[
                                       const Text(
                                         'M',
@@ -221,10 +154,12 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                                         ),
                                       ),
                                       Text(
-                                        (component.magnitude.condition != null)
-                                            ? component.magnitude.condition!
-                                                .description
-                                            : (component.magnitude.value ??
+                                        (item.component?.magnitude.condition !=
+                                                null)
+                                            ? item.component!.magnitude
+                                                .condition!.description
+                                            : (item.component!.magnitude
+                                                        .value ??
                                                     '不明')
                                                 .toString(),
                                         style: const TextStyle(
@@ -235,7 +170,8 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                                     ],
                                     const VerticalDivider(),
                                     // Depth
-                                    if (component.hypoCenter.depth.condition ==
+                                    if (item.component?.hypocenter.depth
+                                            .condition ==
                                         null) ...[
                                       const Text(
                                         '深さ',
@@ -245,11 +181,12 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                                         ),
                                       ),
                                       Text(
-                                        (component.hypoCenter.depth.condition !=
+                                        (item.component?.hypocenter.depth
+                                                    .condition !=
                                                 null)
-                                            ? component.hypoCenter.depth
+                                            ? item.component!.hypocenter.depth
                                                 .condition!.description
-                                            : (component.hypoCenter.depth
+                                            : (item.component!.hypocenter.depth
                                                         .value ??
                                                     '不明')
                                                 .toString(),
@@ -274,8 +211,8 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                                         ),
                                       ),
                                       Text(
-                                        component.hypoCenter.depth.condition!
-                                            .description,
+                                        item.component!.hypocenter.depth
+                                            .condition!.description,
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 45,
@@ -294,22 +231,22 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text(
-              (StringBuffer()
-                    ..writeAll(
-                      <String>[
-                        if (comment?.forecast?.text != null)
-                          comment!.forecast!.text,
-                        if (comment?.comments?.text != null)
-                          '\n${comment!.comments!.text}',
-                        if (comment?.free != null) '\n${comment!.free!}',
-                      ],
-                    ))
-                  .toString(),
-            ),
-          ),
+          //  Padding(
+          //    padding: const EdgeInsets.symmetric(horizontal: 8),
+          //    child: Text(
+          //      (StringBuffer()
+          //            ..writeAll(
+          //              <String>[
+          //                if (comment?.forecast?.text != null)
+          //                  comment!.forecast!.text,
+          //                if (comment?.comments?.text != null)
+          //                  '\n${comment!.comments!.text}',
+          //                if (comment?.free != null) '\n${comment!.free!}',
+          //              ],
+          //            ))
+          //          .toString(),
+          //    ),
+          //  ),
           Expanded(
             child: DecoratedBox(
               decoration: BoxDecoration(
@@ -328,15 +265,18 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                           const BaseMapWidget(),
                           // Region毎の震度
                           MapRegionIntensityWidget(
-                            regions: intensity?.regions ?? <Region>[],
-                            stations: intensity?.stations ?? <Station>[],
-                            cities: intensity?.cities ?? <City>[],
+                            regions: item.intensity?.regions ?? [],
+                            stations: item.intensity?.stations ??
+                                <EarthquakeInformationStation>[],
+                            cities: item.intensity?.cities ??
+                                <EarthquakeInformationCity>[],
                           ),
 
                           // 震央位置
-                          MapHypoCenterMapWidget(
-                            component: component,
-                          ),
+                          if (item.component != null)
+                            MaphypocenterMapWidget(
+                              component: item.component!.hypocenter,
+                            ),
                         ],
                       ),
                     ),
@@ -383,9 +323,9 @@ class MapRegionIntensityWidget extends ConsumerWidget {
     required this.stations,
     required this.cities,
   });
-  final List<Region> regions;
-  final List<Station> stations;
-  final List<City> cities;
+  final List<EarthquakeInformationRegion> regions;
+  final List<EarthquakeInformationStation> stations;
+  final List<EarthquakeInformationCity> cities;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -395,7 +335,7 @@ class MapRegionIntensityWidget extends ConsumerWidget {
         ref.watch(mapAreaInformationCityQuakeProvider);
 
     return CustomPaint(
-      painter: MapRegionIntensityPainter(
+      painter: MapRegionIntensityV2Painter(
         mapPolygons: mapSource,
         regions: regions,
         cities: cities,
@@ -407,6 +347,133 @@ class MapRegionIntensityWidget extends ConsumerWidget {
       ),
       size: Size.infinite,
     );
+  }
+}
+
+class MapRegionIntensityV2Painter extends CustomPainter {
+  MapRegionIntensityV2Painter({
+    required this.mapPolygons,
+    required this.regions,
+    required this.stations,
+    required this.cities,
+    required this.colors,
+    required this.parameterEarthquake,
+    required this.mapAreaInformationCityQuakePolygons,
+    required this.isDarkMode,
+  });
+  final List<MapPolygon> mapPolygons;
+  final List<EarthquakeInformationRegion> regions;
+  final List<EarthquakeInformationStation> stations;
+  final List<EarthquakeInformationCity> cities;
+  final JmaIntensityColorModel colors;
+  final ParameterEarthquake parameterEarthquake;
+  final List<MapAreaInformationCityQuakePolygon>
+      mapAreaInformationCityQuakePolygons;
+  final bool isDarkMode;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    log('Redraw');
+    // Cityの描画
+    for (final city in cities) {
+      // city.codeが一致するMapPolygonを探す
+      try {
+        final mapCityPolygons = mapAreaInformationCityQuakePolygons.where(
+          (element) => element.code == city.code,
+        );
+        for (final mapPolygon in mapCityPolygons) {
+          canvas
+            ..drawPath(
+              mapPolygon.path,
+              Paint()
+                ..color = JmaIntensity.values
+                    .firstWhere(
+                      (e) => e.name == city.maxInt?.name,
+                      orElse: () => JmaIntensity.Error,
+                    )
+                    .fromUser(colors)
+                ..isAntiAlias = true
+                ..strokeCap = StrokeCap.square,
+            )
+            ..drawPath(
+              mapPolygon.path,
+              Paint()
+                ..color = isDarkMode
+                    ? const Color.fromARGB(70, 50, 50, 50)
+                    : const Color.fromARGB(70, 150, 150, 150)
+                ..isAntiAlias = true
+                ..style = PaintingStyle.stroke,
+            );
+        }
+      } on Exception catch (e) {
+        Logger().e(e, city.code);
+      }
+    }
+    // Regionの描画
+    for (final region in regions) {
+      // region.codeが一致するMapPolygonを探す
+      final mapRegionPolygons = mapPolygons.where(
+        (element) => element.code == region.code,
+      );
+      for (final mapPolygon in mapRegionPolygons) {
+        if (cities.isEmpty) {
+          canvas.drawPath(
+            mapPolygon.path,
+            Paint()
+              ..color = JmaIntensity.values
+                  .firstWhere(
+                    (e) => e.name == region.maxInt?.name,
+                    orElse: () => JmaIntensity.Error,
+                  )
+                  .fromUser(colors)
+              ..isAntiAlias = true
+              ..strokeCap = StrokeCap.square,
+          );
+        }
+        canvas.drawPath(
+          mapPolygon.path,
+          Paint()
+            ..color = isDarkMode
+                ? const Color.fromARGB(150, 50, 50, 50)
+                : const Color.fromARGB(150, 150, 150, 150)
+            ..isAntiAlias = true
+            ..style = PaintingStyle.stroke,
+        );
+      }
+    }
+    // TODO(YumNumm): 観測点の描画実装
+    /*for (final station in stations) {
+      final param =
+          parameterEarthquake.items.firstWhere((e) => e.code == station.code);
+      final offset = MapGlobalOffset.latLonToGlobalPoint(
+        LatLng(param.latitude, param.longitude),
+      ).toLocalOffset(const Size(476, 927.4));
+      canvas.drawCircle(
+        offset,
+        1,
+        Paint()
+          ..color = JmaIntensity.values
+              .firstWhere((e) => e.name == station.intensity)
+              .color
+              .withBlue(100)
+          ..isAntiAlias = true
+          ..style = PaintingStyle.fill,
+      );
+    }
+    */
+  }
+
+  @override
+  bool shouldRepaint(MapRegionIntensityV2Painter oldDelegate) {
+    return oldDelegate.mapPolygons != mapPolygons ||
+        oldDelegate.regions != regions ||
+        oldDelegate.colors != colors ||
+        oldDelegate.parameterEarthquake != parameterEarthquake ||
+        oldDelegate.stations != stations ||
+        oldDelegate.cities != cities ||
+        oldDelegate.mapAreaInformationCityQuakePolygons !=
+            mapAreaInformationCityQuakePolygons ||
+        oldDelegate.isDarkMode != isDarkMode;
   }
 }
 
@@ -537,12 +604,12 @@ class MapRegionIntensityPainter extends CustomPainter {
   }
 }
 
-class MapHypoCenterMapWidget extends StatelessWidget {
-  const MapHypoCenterMapWidget({
+class MaphypocenterMapWidget extends StatelessWidget {
+  const MaphypocenterMapWidget({
     super.key,
     required this.component,
   });
-  final EarthQuakeInformationComponent? component;
+  final EarthquakeComponentHypocenter? component;
 
   @override
   Widget build(BuildContext context) {
@@ -550,7 +617,7 @@ class MapHypoCenterMapWidget extends StatelessWidget {
       return const SizedBox.shrink();
     }
     return CustomPaint(
-      painter: MapHypoCenterPainter(
+      painter: MaphypocenterV2Painter(
         component: component!,
       ),
       size: Size.infinite,
@@ -558,20 +625,20 @@ class MapHypoCenterMapWidget extends StatelessWidget {
   }
 }
 
-class MapHypoCenterPainter extends CustomPainter {
-  MapHypoCenterPainter({
+class MaphypocenterV2Painter extends CustomPainter {
+  MaphypocenterV2Painter({
     required this.component,
   });
 
-  final EarthQuakeInformationComponent component;
+  final EarthquakeComponentHypocenter component;
 
   @override
   void paint(Canvas canvas, Size size) {
     {
       final offset = MapGlobalOffset.latLonToGlobalPoint(
         LatLng(
-          component.hypoCenter.coordinateComponent.latitude!.value,
-          component.hypoCenter.coordinateComponent.longitude!.value,
+          component.coordinate.latitude!.value,
+          component.coordinate.longitude!.value,
         ),
       ).toLocalOffset(const Size(476, 927.4));
       // ×印を描く
@@ -642,7 +709,7 @@ class MapHypoCenterPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant MapHypoCenterPainter oldDelegate) =>
+  bool shouldRepaint(covariant MaphypocenterV2Painter oldDelegate) =>
       oldDelegate.component != component;
 }
 
