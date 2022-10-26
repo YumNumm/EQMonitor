@@ -60,8 +60,8 @@ jobs:
       - name: Generate LauncherIcon
         run: flutter pub run flutter_launcher_icons:main
 
-      - name: Generate NativeSplash
-        run: flutter pub run flutter_native_splash:create
+      #- name: Generate NativeSplash
+      #  run: flutter pub run flutter_native_splash:create
 
       - name: Analyze
         run: flutter analyze .
