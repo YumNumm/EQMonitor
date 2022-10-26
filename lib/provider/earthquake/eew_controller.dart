@@ -77,19 +77,21 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
 
   Future<void> startEewStreaming() async {
     // EEWのストリーミングを開始
-    final channel = state.supabase.channel('*')
+    final channel = state.supabase.channel('eew')
       ..on(
         RealtimeListenTypes.postgresChanges,
         ChannelFilter(
           event: '*',
-          schema: '*',
+          schema: 'public',
+          table: 'eew_test',
         ),
         (payload, [ref]) {
           logger
             ..i(payload.runtimeType)
-            ..i('EEW STREAM: ${payload.newRecord}', payload.commitTimestamp);
+            ..i('EEW STREAM: $payload');
           final commonHead = CommonHead.fromJson(
-            payload.newRecord!['data'] as Map<String, dynamic>,
+            ((payload as Map<String, dynamic>)['new']
+                as Map<String, dynamic>)['data'],
           );
           addTelegram(commonHead);
         },
@@ -110,7 +112,7 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
 
     /// 再接続タイマー
     Timer.periodic(
-      const Duration(seconds: 5),
+      const Duration(seconds: 1),
       (_) {
         if (state.channel?.joinedOnce == false) {
           logger.i('EEW STREAM: reconnect');
