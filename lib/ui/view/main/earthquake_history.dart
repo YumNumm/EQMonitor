@@ -138,7 +138,7 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
                                             (item.component?.hypocenter.depth
                                                         .condition !=
                                                     null)
-                                                ? '深さ${item.component!.hypocenter.depth.condition!.name.replaceAll('shallow', 'ごく浅い').replaceAll('over700km', '700km以上').replaceAll('unknown', '不明')} '
+                                                ? '深さ${item.component!.hypocenter.depth.condition!. description} '
                                                 : (item.component!.hypocenter
                                                             .depth.value !=
                                                         null)
