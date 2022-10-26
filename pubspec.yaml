@@ -3,7 +3,7 @@ description: An earthquake monitoring Application
 
 publish_to: "none"
 
-version: 0.5.9+375
+version: 0.6.0+381
 
 environment:
   sdk: ">=2.18.2 <3.0.0"

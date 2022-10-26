@@ -22,9 +22,8 @@ class TelegramApi {
     int offset = 0,
   }) async {
     final res = await Supabase.instance.client
-        .from('telegram')
+        .from('telegram_v2')
         .select('type, data')
-        .eq('type', 'VXSE53')
         .order('id')
         .range(offset, offset + limit - 1) as List<dynamic>;
 
