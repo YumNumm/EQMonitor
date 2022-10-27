@@ -4,7 +4,7 @@
       "isBreakingChange": false,
       "buildId": 381,
       "version": "V0.6.0",
-      "date": "2022-10-27T1:15:00+09:00",
+      "date": "2022-10-27T01:15:00+09:00",
       "comment": "## 緊急地震速報\n- 緊急地震速報用WebSocketとの接続が切断された際に自動で再接続試行するように変更\n- 緊急地震速報用WebSocketの処理を改善\n## 地震履歴\n- 地震履歴の形式を変更\n- 電文解析用のライブラリを新規作成 [`dmdata_telegram_json{](https://pub.dev/packages/dmdata_telegram_json)\n- 遅延読み込みを実装\n## その他\n- 地図の背景色を変更\n- 通知チャンネルの仕様変更\n- 地震・津波に関する情報(`VZSE40`)に関する通知を受信するか選べるように\n- Flutter 3.0.5から3.3.5に更新\n- 各種ライブラリの更新\n- デフォルトの震度配色を変更\n- 震度背景・文字色の変更アルゴリズムの変更\n- Material Youの対応\n",
       "url": "https://github.com/EQMonitor/EQMonitor/releases/tag/v0.6.0-beta"
     },
