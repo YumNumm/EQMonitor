@@ -33,7 +33,7 @@ class TelegramApi {
       telegrams.add(
         TelegramItem(
           telegram: CommonHead.fromJson(
-            jsonDecode((e as Map<String, dynamic>)['data'])
+            (e as Map<String, dynamic>)['data']
                 as Map<String, dynamic>,
           ),
           type: e['type'].toString(),
