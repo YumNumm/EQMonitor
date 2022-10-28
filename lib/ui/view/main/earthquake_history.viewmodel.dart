@@ -55,7 +55,7 @@ class EarthquakeHistoryViewModel
     state = await AsyncValue.guard(() async {
       // Telegramを取得
       final telegrams = await TelegramApi.getTelegramsRangeV2(
-        offset: _telegrams.length + 1,
+        offset: _telegrams.length,
       );
 
       _telegrams.addAll(telegrams);
