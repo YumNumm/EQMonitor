@@ -64,7 +64,7 @@ Future<void> main() async {
   final isCrashLogShareAllowed =
       await CrashLogShareProvider(prefs).loadSettingsFromSharedPrefrences();
   await crashlytics.setUserIdentifier(
-    deviceInfo.fingerprint ,
+    deviceInfo.fingerprint,
   );
   await crashlytics.setCrashlyticsCollectionEnabled(
     isCrashLogShareAllowed && kReleaseMode,
