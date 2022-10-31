@@ -33,10 +33,10 @@ class MainView extends HookConsumerWidget {
                 icon: Icon(Icons.history),
                 label: '地震履歴',
               ),
-              NavigationDestination(
-                icon: Icon(Icons.calculate),
-                label: '震度計算',
-              ),
+              //NavigationDestination(
+              //  icon: Icon(Icons.calculate),
+              //  label: '震度計算',
+              //),
               NavigationDestination(
                 icon: Icon(Icons.settings),
                 label: '設定',
@@ -50,9 +50,9 @@ class MainView extends HookConsumerWidget {
               return KmoniMap();
             case 1:
               return EarthquakeHistoryPage();
+            // case 2:
+            //   return IntensityEstimatePage();
             case 2:
-              return IntensityEstimatePage();
-            case 3:
               return const SettingsPage();
           }
         })(),
