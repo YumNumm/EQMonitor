@@ -32,7 +32,6 @@ Future<void> initFirebaseCloudMessaging() async {
     debug: kDebugMode,
   );
 
-
   Future<void> subscribe() async {
     // TopicをSubscribe
     for (final e in Topics.values) {
