@@ -19,7 +19,7 @@ class MapGlobalOffset extends Offset {
       origin.dy + 0.5 * math.log((1 + siny) / (1 - siny)) * -pixelsPerLonRadian,
     );
   }
-  
+
   static const int tileSize = 256;
   static const pixelsPerLonDegree = tileSize / 360;
   static const pixelsPerLonRadian = tileSize / (2 * math.pi);
