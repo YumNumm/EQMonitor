@@ -138,7 +138,7 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
                                             (item.component?.hypocenter.depth
                                                         .condition !=
                                                     null)
-                                                ? '深さ${item.component!.hypocenter.depth.condition!. description} '
+                                                ? '深さ${item.component!.hypocenter.depth.condition!.description} '
                                                 : (item.component!.hypocenter
                                                             .depth.value !=
                                                         null)

@@ -216,7 +216,7 @@ final List<NotificationChannel> notificationChannels = [
 
 final List<NotificationChannelGroup> channelGroups = [
   NotificationChannelGroup(
-    channelGroupKey:  'eew',
+    channelGroupKey: 'eew',
     channelGroupName: '緊急地震速報',
   ),
   NotificationChannelGroup(
