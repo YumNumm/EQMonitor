@@ -32,7 +32,7 @@ class KyoshinKansokutenPainter extends CustomPainter {
   KyoshinKansokutenPainter({required this.obsPoints});
 
   final List<AnalyzedKoshinKansokuten> obsPoints;
-  final bool isDebug = false || kDebugMode;
+  final bool isDebug = true || kDebugMode;
 
   @override
   void paint(Canvas canvas, Size size) {
