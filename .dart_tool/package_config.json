@@ -8,12 +8,6 @@
       "languageVersion": "2.17"
     },
     {
-      "name": "_flutterfire_internals",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/_flutterfire_internals-1.0.5",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
       "name": "analyzer",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/analyzer-4.7.0",
       "packageUri": "lib/",
@@ -158,18 +152,6 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "cloud_firestore_platform_interface",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/cloud_firestore_platform_interface-5.8.2",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "cloud_firestore_web",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/cloud_firestore_web-3.0.2",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
       "name": "code_builder",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/code_builder-4.3.0",
       "packageUri": "lib/",
@@ -267,7 +249,7 @@
     },
     {
       "name": "dmdata_telegram_json",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/dmdata_telegram_json-0.0.4",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/dmdata_telegram_json-0.0.5",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -326,104 +308,20 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "firebase",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase-9.0.3",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "firebase_analytics",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_analytics-10.0.2",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "firebase_analytics_platform_interface",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_analytics_platform_interface-3.3.10",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "firebase_analytics_web",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_analytics_web-0.5.1+1",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "firebase_core",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_core-2.1.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "firebase_core_platform_interface",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_core_platform_interface-4.5.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "firebase_core_web",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_core_web-2.0.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "firebase_crashlytics",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_crashlytics-3.0.2",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "firebase_crashlytics_platform_interface",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_crashlytics_platform_interface-3.3.3",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "firebase_messaging",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_messaging-14.0.2",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "firebase_messaging_platform_interface",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_messaging_platform_interface-4.2.3",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "firebase_messaging_web",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_messaging_web-3.2.3",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "firebase_performance",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_performance-0.9.0+2",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "firebase_performance_platform_interface",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_performance_platform_interface-0.1.1+22",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "firebase_performance_web",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/firebase_performance_web-0.1.1+11",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
       "name": "fixnum",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/fixnum-1.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
+      "name": "fluent_ui",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/fluent_ui-4.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "flutter",
-      "rootUri": "file:///C:/Users/onory/fvm/default/packages/flutter",
+      "rootUri": "file:///C:/Users/onory/fvm/versions/3.3.7/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -453,7 +351,7 @@
     },
     {
       "name": "flutter_localizations",
-      "rootUri": "file:///C:/Users/onory/fvm/default/packages/flutter_localizations",
+      "rootUri": "file:///C:/Users/onory/fvm/versions/3.3.7/packages/flutter_localizations",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -513,7 +411,7 @@
     },
     {
       "name": "flutter_test",
-      "rootUri": "file:///C:/Users/onory/fvm/default/packages/flutter_test",
+      "rootUri": "file:///C:/Users/onory/fvm/versions/3.3.7/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -525,7 +423,7 @@
     },
     {
       "name": "flutter_web_plugins",
-      "rootUri": "file:///C:/Users/onory/fvm/default/packages/flutter_web_plugins",
+      "rootUri": "file:///C:/Users/onory/fvm/versions/3.3.7/packages/flutter_web_plugins",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -932,6 +830,12 @@
       "languageVersion": "2.14"
     },
     {
+      "name": "recase",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/recase-4.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "restart_app",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/restart_app-1.1.0+1",
       "packageUri": "lib/",
@@ -942,6 +846,12 @@
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/riverpod-2.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.17"
+    },
+    {
+      "name": "scroll_pos",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/scroll_pos-0.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
     },
     {
       "name": "share_plus",
@@ -1017,7 +927,7 @@
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///C:/Users/onory/fvm/default/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///C:/Users/onory/fvm/versions/3.3.7/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -1232,7 +1142,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2022-10-29T13:57:26.846572Z",
+  "generated": "2022-11-03T15:36:41.388026Z",
   "generator": "pub",
-  "generatorVersion": "2.18.2"
+  "generatorVersion": "2.18.4"
 }

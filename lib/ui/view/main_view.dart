@@ -4,7 +4,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'main/earthquake_history.dart';
-import 'main/intensity_estimate.dart';
 import 'main/kmoni_map.dart';
 import 'main/settings.dart';
 

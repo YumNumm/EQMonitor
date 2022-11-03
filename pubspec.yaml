@@ -19,15 +19,11 @@ dependencies:
   device_preview: ^1.1.0
   dio: ^4.0.6
   dio_http2_adapter: ^2.0.0
-  dmdata_telegram_json: ^0.0.4
+  dmdata_telegram_json: ^0.0.5
   dynamic_color: ^1.5.4
   envied: ^0.2.3
   expandable: ^5.0.1
-  firebase_analytics: ^10.0.2
-  firebase_core: ^2.1.0
-  firebase_crashlytics: ^3.0.2
-  firebase_messaging: ^14.0.2
-  firebase_performance: ^0.9.0+2
+  fluent_ui: ^4.0.3
   flutter:
     sdk: flutter
   flutter_colorpicker: ^1.0.3
@@ -35,9 +31,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_markdown: ^0.6.12
-
   flutter_native_splash: ^2.2.9
-
   flutter_riverpod: ^2.0.2
   flutter_secure_storage: ^6.0.0
   flutter_tts: ^3.5.3

@@ -10,8 +10,7 @@ class EewApi {
       SupabaseClient(Env.supabaseS2Url, Env.supabaseS2AnonKey);
 
   Future<List<CommonHead>> getEewTelegrams({int limit = 10}) async {
-    final res =
-        await supabase.from('eew').select().order('id').limit(limit).execute();
+    final res = await supabase.from('eew').select().order('id').limit(limit);
 
     final toReturn = <CommonHead>[];
     for (final r in res.data as List) {

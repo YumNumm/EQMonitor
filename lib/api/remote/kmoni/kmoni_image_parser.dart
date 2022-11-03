@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:eqmonitor/model/analyzed_kyoshin_kansokuten.dart';
 import 'package:eqmonitor/schema/local/kyoshin_kansokuten.dart';
 import 'package:eqmonitor/ui/theme/jma_intensity.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:image/image.dart' as image_lib;
 import 'package:logger/logger.dart';
 
