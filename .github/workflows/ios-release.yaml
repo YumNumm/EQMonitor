@@ -80,15 +80,22 @@ jobs:
         continue-on-error: true
 
       - name: Build ipa
+        if: matrix.os == 'macos-latest'
         run: |
-          flutter build ipa --release --obfuscate --split-debug-info=obfuscate/ios
+          flutter build ios --release --no-codesign
+          mkdir -p Payload
+          mv ./build/ios/iphoneos/Runner.app Payload
+          zip -ry Payload.zip Payload/Runner.app
+          mv Payload.zip Payload.ipa
+          rm -rf Payload
 
-      - name: Upload artifact
+      - name: Upload IPA artifact
+        if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v1.0.0
         with:
           name: release-ipa
-          path: build/ios/ipa
-
+          path: Payload.ipa
+          
       # - uses: codecov/codecov-action@v3
       #   with:
       #     token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
