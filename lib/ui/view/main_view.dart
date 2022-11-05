@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'main/earthquake_history.dart';
-import 'main/intensity_estimate.dart';
 import 'main/kmoni_map.dart';
 import 'main/settings.dart';
 

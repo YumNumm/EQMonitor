@@ -1,9 +1,5 @@
 import 'dart:math';
 
-import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
-import 'package:eqmonitor/schema/remote/dmdata/eew-information/earthquake/accuracy/depth_calculation.dart';
-import 'package:eqmonitor/schema/remote/dmdata/eew-information/earthquake/accuracy/epicCenterAccuracy.dart';
-import 'package:eqmonitor/schema/remote/dmdata/eew-information/earthquake/accuracy/magnitude_calculation.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eew-information/earthquake/accuracy/number_of_magnitude_calculation.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eew-information/intensity/forecast_max_int.dart';
 import 'package:eqmonitor/ui/theme/jma_intensity.dart';
@@ -14,7 +10,11 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../../../provider/earthquake/eew_controller.dart';
 import '../../../../schema/remote/dmdata/eew-information/earthquake/accuracy.dart';
+import '../../../../schema/remote/dmdata/eew-information/earthquake/accuracy/depth_calculation.dart';
+import '../../../../schema/remote/dmdata/eew-information/earthquake/accuracy/epicCenterAccuracy.dart';
+import '../../../../schema/remote/dmdata/eew-information/earthquake/accuracy/magnitude_calculation.dart';
 
 class EewTestPage extends HookConsumerWidget {
   const EewTestPage({super.key});

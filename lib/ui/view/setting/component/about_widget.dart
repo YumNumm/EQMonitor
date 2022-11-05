@@ -1,9 +1,10 @@
-import 'package:eqmonitor/provider/init/device_info.dart';
-import 'package:eqmonitor/provider/package_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../../../../provider/init/device_info.dart';
+import '../../../../provider/package_info.dart';
 
 class AboutWidget extends HookConsumerWidget {
   const AboutWidget({super.key});

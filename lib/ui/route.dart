@@ -1,11 +1,11 @@
-import 'package:eqmonitor/provider/init/shared_preferences.dart';
-import 'package:eqmonitor/provider/setting/developer_mode.dart';
-import 'package:eqmonitor/ui/view/main/earthquake_history.viewmodel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../provider/init/shared_preferences.dart';
+import '../provider/setting/developer_mode.dart';
+import 'view/main/earthquake_history.viewmodel.dart';
 import 'view/views.dart';
 
 final routerProvider = Provider<GoRouter>(

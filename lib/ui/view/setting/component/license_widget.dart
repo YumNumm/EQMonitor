@@ -5,10 +5,6 @@ class LicenseWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const descriptionTextStyle = TextStyle(
-      fontWeight: FontWeight.w400,
-      fontSize: 14,
-    );
     const titleTextStyle = TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.w500,

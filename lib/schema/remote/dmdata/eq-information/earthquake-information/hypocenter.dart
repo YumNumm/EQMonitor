@@ -1,4 +1,4 @@
-import 'package:eqmonitor/utils/extension/japanese_string.dart';
+import '../../../../../utils/extension/japanese_string.dart';
 
 import 'hypocenter/auxiliary.dart';
 import 'hypocenter/coordinate_component.dart';

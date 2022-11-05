@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:eqmonitor/schema/local/prefecture/map_polygon.dart';
-import 'package:eqmonitor/utils/map/map_global_offset.dart';
+import '../../schema/local/prefecture/map_polygon.dart';
+import '../../utils/map/map_global_offset.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:geojson/geojson.dart';

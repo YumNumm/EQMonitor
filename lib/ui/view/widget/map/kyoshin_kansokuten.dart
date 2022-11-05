@@ -1,11 +1,12 @@
-import 'package:eqmonitor/model/analyzed_kyoshin_kansokuten.dart';
-import 'package:eqmonitor/provider/earthquake/kmoni_controller.dart';
-import 'package:eqmonitor/utils/extension/relative_luminance.dart';
 import 'package:eqmonitor/utils/map/map_global_offset.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
+
+import '../../../../model/analyzed_kyoshin_kansokuten.dart';
+import '../../../../provider/earthquake/kmoni_controller.dart';
+import '../../../../utils/extension/relative_luminance.dart';
 
 /// 強震観測点
 class KyoshinKansokutenWidget extends ConsumerWidget {

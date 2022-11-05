@@ -15,4 +15,7 @@ analyzer:
     - "**/l10n*.dart"
     - "**/*.gen.dart"
 
-
+linter:
+  rules:
+    avoid_print: false
+    lines_longer_than_80_chars: false

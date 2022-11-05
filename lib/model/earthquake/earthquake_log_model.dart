@@ -1,5 +1,6 @@
-import 'package:eqmonitor/schema/remote/supabase/telegram.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../../schema/remote/supabase/telegram.dart';
 
 part 'earthquake_log_model.freezed.dart';
 

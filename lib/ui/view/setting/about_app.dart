@@ -1,6 +1,3 @@
-import 'package:eqmonitor/provider/theme_providers.dart';
-import 'package:eqmonitor/ui/view/setting/about_app.viewmodel.dart';
-import 'package:eqmonitor/ui/view/setting/component/about_widget.dart';
 import 'package:eqmonitor/ui/view/setting/component/fcm_token_widget.dart';
 import 'package:eqmonitor/ui/view/setting/component/license_widget.dart';
 import 'package:eqmonitor/ui/view/setting/component/setting_section.dart';
@@ -9,6 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../../../provider/theme_providers.dart';
+import 'about_app.viewmodel.dart';
+import 'component/about_widget.dart';
 
 class AboutAppPage extends HookConsumerWidget {
   const AboutAppPage({super.key});
@@ -43,8 +44,12 @@ class AboutAppPage extends HookConsumerWidget {
                   onLongPressMoveUpdate: (_) => context.go('/full_screen'),
                   onScaleStart: (_) =>
                       viewModel.onDeveloperModeTilePressed(context),
-                  child: Image.asset(
-                    isDarkMode ? 'assets/header-dark.png' : 'assets/header.png',
+                  child: RepaintBoundary(
+                    child: Image.asset(
+                      isDarkMode
+                          ? 'assets/header-dark.png'
+                          : 'assets/header.png',
+                    ),
                   ),
                 ),
               ),

@@ -1,7 +1,7 @@
-import 'package:eqmonitor/provider/theme_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../../provider/theme_providers.dart';
 import '../../../../utils/extension/theme_mode.dart';
 
 class ThemeChoicePage extends HookConsumerWidget {

@@ -2,15 +2,16 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:eqmonitor/env/env.dart';
-import 'package:eqmonitor/provider/init/application_support_dir.dart';
-import 'package:eqmonitor/provider/init/shared_preferences.dart';
-import 'package:eqmonitor/provider/logger.dart';
-import 'package:eqmonitor/schema/remote/dmdata/parameter-earthquake/parameter-earthquake.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:restart_app/restart_app.dart';
+
+import '../../../env/env.dart';
+import '../../../provider/init/application_support_dir.dart';
+import '../../../provider/init/shared_preferences.dart';
+import '../../../provider/logger.dart';
+import '../../../schema/remote/dmdata/parameter-earthquake/parameter-earthquake.dart';
 
 class FilesDownloadWidget extends HookConsumerWidget {
   const FilesDownloadWidget({super.key});

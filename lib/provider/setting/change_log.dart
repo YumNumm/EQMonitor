@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:eqmonitor/schema/local/setting/change_log.dart';
+import '../../schema/local/setting/change_log.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../init/dio.dart';

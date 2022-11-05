@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:eqmonitor/env/env.dart';
@@ -120,12 +121,13 @@ Future<void> main() async {
   FlutterNativeSplash.remove();
   Logger().d('全ての初期化が完了: ${(stopwatch..stop()).elapsedMicroseconds / 1000}ms');
   FlutterError.onError = onFlutterError;
+  DartPluginRegistrant.ensureInitialized();
 
-  // PlatformDispatcher.instance.onError = (error, stackTrace) {
-  //   Logger().e(error, stackTrace);
-  //   crashlytics.recordError(error, stackTrace);
-  //   return true;
-  // };
+  PlatformDispatcher.instance.onError = (error, stackTrace) {
+    Logger().e(error, stackTrace);
+    crashlytics.recordError(error, stackTrace);
+    return true;
+  };
   runApp(
     ProviderScope(
       overrides: [

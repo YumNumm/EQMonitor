@@ -1,10 +1,10 @@
-import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
-import 'package:eqmonitor/ui/theme/jma_intensity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../../provider/setting/intensity_color_provider.dart';
+import '../../../theme/jma_intensity.dart';
 import '../../../view/widget/intensity_widget.dart';
 
 class IntensityColorSettingsPage extends HookConsumerWidget {

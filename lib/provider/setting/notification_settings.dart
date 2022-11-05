@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:eqmonitor/ui/theme/jma_intensity.dart';
+import '../../ui/theme/jma_intensity.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../model/setting/notification_settings_model.dart';

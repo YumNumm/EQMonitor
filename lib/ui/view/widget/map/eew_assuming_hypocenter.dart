@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
-import 'package:eqmonitor/schema/remote/dmdata/eew-information/eew-infomation.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../../../schema/remote/dmdata/commonHeader.dart';
+import '../../../../schema/remote/dmdata/eew-information/eew-infomation.dart';
 import '../../../../utils/map/map_global_offset.dart';
 
 /// PLUM法等の仮定震源要素表示

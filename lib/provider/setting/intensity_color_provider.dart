@@ -1,9 +1,9 @@
-import 'package:eqmonitor/ui/theme/jma_intensity.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/setting/jma_intensity_color_model.dart';
+import '../../ui/theme/jma_intensity.dart';
 import '../init/shared_preferences.dart';
 
 final jmaIntensityColorProvider =

@@ -1,13 +1,18 @@
-import 'package:eqmonitor/provider/init/shared_preferences.dart';
-import 'package:eqmonitor/provider/setting/developer_mode.dart';
-import 'package:eqmonitor/provider/setting/notification_settings.dart';
-import 'package:eqmonitor/ui/theme/jma_intensity.dart';
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:eqmonitor/ui/view/setting/component/custom_switch.dart';
 import 'package:eqmonitor/ui/view/setting/component/setting_section.dart';
 import 'package:eqmonitor/ui/view/setting/notification_setting.viewmodel.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../../../provider/init/shared_preferences.dart';
+import '../../../provider/setting/developer_mode.dart';
+import '../../../provider/setting/notification_settings.dart';
+import '../../theme/jma_intensity.dart';
+import 'component/background_widget.dart';
 
 class NotificationSettingPage extends HookConsumerWidget {
   const NotificationSettingPage({super.key});
@@ -166,7 +171,7 @@ class NotificationSettingPage extends HookConsumerWidget {
                 ),
               ],
             ),
-            if (isDeveloper) ...[
+            if (isDeveloper || kDebugMode) ...[
               const Divider(),
               SettingsSection(
                 title: 'Developer Mode',
@@ -187,6 +192,7 @@ class NotificationSettingPage extends HookConsumerWidget {
                       value: notificationSetting.isRecieveTraining,
                     ),
                   ),
+                  const BackgroundWidget(),
                 ],
               ),
             ],

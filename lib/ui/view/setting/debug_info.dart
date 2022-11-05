@@ -1,16 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
-import 'package:eqmonitor/provider/init/application_support_dir.dart';
-import 'package:eqmonitor/provider/init/device_info.dart';
-import 'package:eqmonitor/provider/init/kyoshin_kansokuten.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
 import 'package:eqmonitor/provider/init/shared_preferences.dart';
 import 'package:eqmonitor/provider/init/travel_time.dart';
 import 'package:eqmonitor/ui/view/setting/component/setting_section.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../../../provider/earthquake/eew_controller.dart';
+import '../../../provider/init/application_support_dir.dart';
+import '../../../provider/init/device_info.dart';
+import '../../../provider/init/kyoshin_kansokuten.dart';
 
 class DeveloperDebugPage extends HookConsumerWidget {
   const DeveloperDebugPage({super.key});
@@ -124,8 +125,8 @@ class DeveloperDebugPage extends HookConsumerWidget {
                 ListTile(
                   title: const Text('androidDeviceInfoProvider'),
                   subtitle: Text(
-                    const JsonEncoder.withIndent(' ')
-                        .convert(ref.watch(androidDeviceInfoProvider).toMap()),
+                    const JsonEncoder.withIndent(' ').convert(
+                        ref.watch(androidDeviceInfoProvider).toString()),
                   ),
                 ),
             ],
