@@ -1,13 +1,14 @@
-import 'package:eqmonitor/model/setting/jma_intensity_color_model.dart';
-import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
-import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
-import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
-import 'package:eqmonitor/schema/local/prefecture/map_polygon.dart';
-import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
-import 'package:eqmonitor/schema/remote/dmdata/eew-information/eew-infomation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
+
+import '../../../../model/setting/jma_intensity_color_model.dart';
+import '../../../../provider/earthquake/eew_controller.dart';
+import '../../../../provider/init/map_area_forecast_local_e.dart';
+import '../../../../provider/setting/intensity_color_provider.dart';
+import '../../../../schema/local/prefecture/map_polygon.dart';
+import '../../../../schema/remote/dmdata/commonHeader.dart';
+import '../../../../schema/remote/dmdata/eew-information/eew-infomation.dart';
 
 /// 緊急地震速報の予想震度
 /// 電文内の予想震度(震度4以上)を表示

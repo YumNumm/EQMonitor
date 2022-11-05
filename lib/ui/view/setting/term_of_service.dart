@@ -24,7 +24,7 @@ class TermOfServicePage extends HookConsumerWidget {
         future: rootBundle.loadString('assets/docs/term_of_service.md'),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            final markdownSource = snapshot.data!.toString();
+            final markdownSource = snapshot.data.toString();
             return SingleChildScrollView(
               child: Markdown(
                 shrinkWrap: true,

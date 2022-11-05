@@ -2,13 +2,14 @@ import 'dart:convert';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:crypto/crypto.dart';
-import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
-import 'package:eqmonitor/provider/earthquake/kmoni_controller.dart';
-import 'package:eqmonitor/provider/setting/developer_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../../../provider/earthquake/eew_controller.dart';
+import '../../../provider/earthquake/kmoni_controller.dart';
+import '../../../provider/setting/developer_mode.dart';
 
 class AboutAppViewModel {
   AboutAppViewModel(this.ref);
@@ -55,8 +56,8 @@ class AboutAppViewModel {
         // パスワードによる検証を行う
         final password = await _showPasswordDialog(context);
         if (password != null) {
-          final _isTruePassword = this._isTruePassword(password);
-          if (_isTruePassword) {
+          final isTruePassword = this._isTruePassword(password);
+          if (isTruePassword) {
             await ref
                 .read(developerModeProvider.notifier)
                 .change(isDeveloper: true);

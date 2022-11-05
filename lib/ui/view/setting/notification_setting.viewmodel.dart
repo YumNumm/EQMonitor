@@ -1,7 +1,8 @@
-import 'package:eqmonitor/provider/setting/notification_settings.dart';
-import 'package:eqmonitor/ui/theme/jma_intensity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../provider/setting/notification_settings.dart';
+import '../../theme/jma_intensity.dart';
 
 @immutable
 class NotificationSettingViewModel {

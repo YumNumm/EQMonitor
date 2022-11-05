@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
-import 'package:eqmonitor/schema/remote/dmdata/parameter-earthquake/parameter-earthquake.dart';
-import 'package:eqmonitor/ui/theme/jma_intensity.dart';
+import '../../schema/remote/dmdata/parameter-earthquake/parameter-earthquake.dart';
+import '../../ui/theme/jma_intensity.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../utils/math_log.dart';

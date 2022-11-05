@@ -1,28 +1,28 @@
 import 'dart:developer';
 
 import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
-import 'package:eqmonitor/model/setting/jma_intensity_color_model.dart';
-import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
-import 'package:eqmonitor/provider/init/map_area_information_city_quake.dart';
-import 'package:eqmonitor/provider/init/parameter_earthquake.dart';
-import 'package:eqmonitor/provider/theme_providers.dart';
-import 'package:eqmonitor/schema/local/prefecture/map_polygon.dart';
-import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake-information/intensity/city.dart';
-import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake-information/intensity/region.dart';
-import 'package:eqmonitor/schema/remote/dmdata/eq-information/earthquake-information/intensity/station.dart';
-import 'package:eqmonitor/schema/remote/dmdata/parameter-earthquake/parameter-earthquake.dart';
-import 'package:eqmonitor/ui/theme/jma_intensity.dart';
-import 'package:eqmonitor/ui/view/main/earthquake_history.viewmodel.dart';
-import 'package:eqmonitor/ui/view/widget/map/base_map.dart';
-import 'package:eqmonitor/utils/map/map_global_offset.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:latlong2/latlong.dart';
 import 'package:logger/logger.dart';
 
+import '../../../../model/setting/jma_intensity_color_model.dart';
+import '../../../../provider/init/map_area_forecast_local_e.dart';
+import '../../../../provider/init/map_area_information_city_quake.dart';
+import '../../../../provider/init/parameter_earthquake.dart';
 import '../../../../provider/setting/intensity_color_provider.dart';
+import '../../../../provider/theme_providers.dart';
+import '../../../../schema/local/prefecture/map_polygon.dart';
+import '../../../../schema/remote/dmdata/eq-information/earthquake-information/intensity/city.dart';
+import '../../../../schema/remote/dmdata/eq-information/earthquake-information/intensity/region.dart';
+import '../../../../schema/remote/dmdata/eq-information/earthquake-information/intensity/station.dart';
+import '../../../../schema/remote/dmdata/parameter-earthquake/parameter-earthquake.dart';
+import '../../../../utils/map/map_global_offset.dart';
+import '../../../theme/jma_intensity.dart';
 import '../../../view/widget/intensity_widget.dart';
+import '../../widget/map/base_map.dart';
+import '../earthquake_history.viewmodel.dart';
 
 class EarthquakeHistoryDetailPage extends HookConsumerWidget {
   const EarthquakeHistoryDetailPage({

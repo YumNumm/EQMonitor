@@ -1,12 +1,13 @@
-import 'package:eqmonitor/provider/logger.dart';
-import 'package:eqmonitor/provider/package_info.dart';
-import 'package:eqmonitor/provider/setting/change_log.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
+import '../../../provider/logger.dart';
+import '../../../provider/package_info.dart';
+import '../../../provider/setting/change_log.dart';
 
 /// アップデートがある場合はアイコンを表示
 /// ない場合はからのWidgetを返す

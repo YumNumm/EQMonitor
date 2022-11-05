@@ -1,4 +1,4 @@
-import 'package:eqmonitor/ui/theme/jma_intensity.dart';
+import '../../../ui/theme/jma_intensity.dart';
 import 'package:intl/intl.dart';
 
 import '../dmdata/commonHeader.dart';

@@ -1,15 +1,16 @@
-import 'package:eqmonitor/model/travel_time_table/travel_time_table.dart';
-import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
-import 'package:eqmonitor/provider/earthquake/kmoni_controller.dart';
-import 'package:eqmonitor/provider/init/travel_time.dart';
-import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
-import 'package:eqmonitor/schema/remote/dmdata/eew-information/earthquake/accuracy/epicCenterAccuracy.dart';
-import 'package:eqmonitor/schema/remote/dmdata/eew-information/eew-infomation.dart';
-import 'package:eqmonitor/ui/view/widget/map/eew_assuming_hypocenter.dart';
-import 'package:eqmonitor/utils/map/map_global_offset.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart' hide Path;
+
+import '../../../../model/travel_time_table/travel_time_table.dart';
+import '../../../../provider/earthquake/eew_controller.dart';
+import '../../../../provider/earthquake/kmoni_controller.dart';
+import '../../../../provider/init/travel_time.dart';
+import '../../../../schema/remote/dmdata/commonHeader.dart';
+import '../../../../schema/remote/dmdata/eew-information/earthquake/accuracy/epicCenterAccuracy.dart';
+import '../../../../schema/remote/dmdata/eew-information/eew-infomation.dart';
+import '../../../../utils/map/map_global_offset.dart';
+import 'eew_assuming_hypocenter.dart';
 
 /// 通常の震央地表示
 class EewHypoCenterWidget extends ConsumerWidget {

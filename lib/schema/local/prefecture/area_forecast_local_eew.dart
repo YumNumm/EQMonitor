@@ -1,5 +1,6 @@
-import 'package:eqmonitor/schema/local/prefecture/map_polygon.dart';
 import 'package:flutter/foundation.dart';
+
+import 'map_polygon.dart';
 
 @immutable
 class AreaForecastLocalEew extends MapPolygon {

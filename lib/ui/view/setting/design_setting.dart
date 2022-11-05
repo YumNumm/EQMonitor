@@ -1,9 +1,10 @@
-import 'package:eqmonitor/provider/theme_providers.dart';
-import 'package:eqmonitor/ui/view/setting/component/setting_section.dart';
-import 'package:eqmonitor/utils/extension/theme_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../provider/theme_providers.dart';
+import '../../../utils/extension/theme_mode.dart';
+import 'component/setting_section.dart';
 
 class DesignSettingsPage extends ConsumerWidget {
   const DesignSettingsPage({super.key});

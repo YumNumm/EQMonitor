@@ -1,8 +1,9 @@
-import 'package:eqmonitor/provider/utils/fcm_token_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
+import '../../../../provider/utils/fcm_token_provider.dart';
 
 class FcmTokenWidget extends ConsumerWidget {
   const FcmTokenWidget({super.key});

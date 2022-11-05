@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:eqmonitor/api/remote/kmoni.dart';
-import 'package:eqmonitor/api/remote/kmoni/kmoni_image_parser.dart';
 import 'package:eqmonitor/api/remote/kmoni/kmoni_web_api_url_generators.dart';
 import 'package:eqmonitor/api/remote/kmoni/real_time_data_type.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
+import '../../api/remote/kmoni.dart';
+import '../../api/remote/kmoni/kmoni_image_parser.dart';
 import '../../model/earthquake/kmoni_model.dart';
 import '../app_lifecycle.dart';
 import '../init/kyoshin_kansokuten.dart';

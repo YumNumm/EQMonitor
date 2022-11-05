@@ -3,7 +3,7 @@ description: An earthquake monitoring Application
 
 publish_to: "none"
 
-version: 0.6.0+381
+version: 0.7.0+392
 
 environment:
   sdk: ">=2.18.2 <3.0.0"
@@ -31,13 +31,12 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_colorpicker: ^1.0.3
+  flutter_foreground_task: ^3.10.0
   flutter_hooks: ^0.18.5+1
   flutter_localizations:
     sdk: flutter
   flutter_markdown: ^0.6.12
-
   flutter_native_splash: ^2.2.9
-
   flutter_riverpod: ^2.0.2
   flutter_secure_storage: ^6.0.0
   flutter_tts: ^3.5.3
@@ -65,6 +64,7 @@ dependencies:
   supabase: ^1.0.1
   supabase_flutter: ^1.0.1
   url_launcher: ^6.1.6
+  web_socket_channel: ^2.2.0
 
 dev_dependencies:
   build_runner: ^2.3.2
