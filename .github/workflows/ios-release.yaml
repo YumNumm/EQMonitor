@@ -41,6 +41,12 @@ jobs:
       - name: Flutter version
         run: flutter --version
 
+      - name: Remove iOS
+        run: rm -rf ./ios
+      
+      - name: Generate iOS
+        run: flutter create . --org com.yumnumm --project-name eqmonitor
+
       - name: Cache pubspec dependencies
         uses: actions/cache@v2
         with:
