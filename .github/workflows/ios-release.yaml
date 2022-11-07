@@ -12,7 +12,7 @@ jobs:
     #ビルド環境
     runs-on: macos-latest
     # タイムアウト時間を設定
-    timeout-minutes: 15
+    timeout-minutes: 30
 
     steps:
       #リポジトリからソースをダンロード
@@ -47,6 +47,9 @@ jobs:
       - name: Generate iOS
         run: flutter create . --org com.yumnumm --project-name eqmonitor
 
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        
       - name: Cache pubspec dependencies
         uses: actions/cache@v2
         with:
