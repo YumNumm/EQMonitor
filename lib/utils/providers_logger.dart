@@ -42,7 +42,7 @@ class ProvidersLogger extends ProviderObserver {
   @override
   void didDisposeProvider(
     ProviderBase<dynamic> provider,
-    ProviderContainer containers,
+    ProviderContainer container,
   ) {
     //super.didDisposeProvider(provider, containers);
 
@@ -50,7 +50,7 @@ class ProvidersLogger extends ProviderObserver {
       '''
     {
       "provider": "${provider.name ?? provider.runtimeType}",
-      "containers": "$containers"
+      "container": "$container"
     }''',
     );
   }

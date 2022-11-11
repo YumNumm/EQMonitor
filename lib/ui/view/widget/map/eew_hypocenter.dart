@@ -54,8 +54,7 @@ class EewHypoCenterNormalMapWidget extends StatefulWidget {
   final DateTime? onTestStarted;
 
   @override
-  _EewHypoCenterNormalMapWidgetState createState() =>
-      _EewHypoCenterNormalMapWidgetState();
+  State<StatefulWidget> createState() => _EewHypoCenterNormalMapWidgetState();
 }
 
 class _EewHypoCenterNormalMapWidgetState

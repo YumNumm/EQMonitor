@@ -1,6 +1,6 @@
-import '../../../ui/theme/jma_intensity.dart';
 import 'package:intl/intl.dart';
 
+import '../../../ui/theme/jma_intensity.dart';
 import '../dmdata/commonHeader.dart';
 import '../dmdata/eew-information/earthquake.dart';
 import '../dmdata/eew-information/earthquake/accuracy.dart';
@@ -154,7 +154,7 @@ class KyoshinEEW {
       schema: CommonHeadSchema(type: 'VXSE4x', version: '0'),
       serialNo: reportNum?.toString(),
       status: isTesting ? CommonHeadStatus.test : CommonHeadStatus.normal,
-      targetDateTime: reportTime!,
+      targetDateTime: reportTime,
       targetDateTimeDubious: '強震モニタ - リプレイ',
       targetDuration: null,
       title: result.message.toString(),

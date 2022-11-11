@@ -61,9 +61,6 @@ class FirstTaskHandler extends TaskHandler {
               return;
             }
 
-            final iconUrl =
-                'asset://assets/intensity/${eew.intensity?.forecastMaxInt.from.name ?? 'unknown'}.PNG';
-
             final msg = StringBuffer();
             final isTesting = commonHead.status != TelegramStatus.normal;
 

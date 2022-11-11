@@ -1,5 +1,3 @@
-import 'dart:isolate';
-
 import 'package:eqmonitor/utils/background_task/task.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
@@ -15,8 +13,6 @@ class BackgroundWidget extends StatefulWidget {
 }
 
 class _BackgroundWidgetState extends State<BackgroundWidget> {
-  ReceivePort? _receivePort;
-
   void _initForegroundTask() => FlutterForegroundTask.init(
         androidNotificationOptions: AndroidNotificationOptions(
           channelId: 'foreground_task',
@@ -71,7 +67,7 @@ class _BackgroundWidgetState extends State<BackgroundWidget> {
   }
 
   Future<bool> _stopForegroundTask() async {
-    return await FlutterForegroundTask.stopService();
+    return FlutterForegroundTask.stopService();
   }
 
   @override
@@ -95,7 +91,6 @@ class _BackgroundWidgetState extends State<BackgroundWidget> {
       fontSize: 18,
       fontWeight: FontWeight.w500,
     );
-    final t = Theme.of(context);
     return ListTile(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),

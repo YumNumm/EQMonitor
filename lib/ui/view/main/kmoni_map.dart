@@ -205,12 +205,12 @@ class KmoniStatusWidget extends ConsumerWidget {
                                 3)
                             ? const Color.fromARGB(255, 255, 17, 0)
                             : null,
-                        fontWeight: ((kmoni.lastUpdateAttempt
+                        fontWeight: (kmoni.lastUpdateAttempt
                                     .difference(
                                       kmoni.lastUpdated ?? DateTime(2000),
                                     )
                                     .inSeconds >
-                                3))
+                                3)
                             ? FontWeight.bold
                             : null,
                         fontFamily: 'CaskaydiaCove',
@@ -219,40 +219,15 @@ class KmoniStatusWidget extends ConsumerWidget {
                     const SizedBox(width: 8),
                     // WebSocket 接続状態
                     if (eewProvider.channel?.isJoined == true)
-                      InkWell(
-                        onTap: () async {
-                          final latency = await ref
-                              .read(eewHistoryProvider.notifier)
-                              .latency();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content:
-                                  Text('緊急地震速報WebSocketサーバとのPing: $latency ms'),
-                            ),
-                          );
-                        },
-                        child: const Icon(
-                          Icons.link,
-                          semanticLabel: 'WebSocket 接続中',
-                        ),
+                      const Icon(
+                        Icons.link,
+                        semanticLabel: 'WebSocket 接続中',
                       )
                     else
-                      InkWell(
-                        onLongPress: () async {
-                          // SnackBarを表示
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('WebSocketに再接続しています...'),
-                              duration: Duration(seconds: 1),
-                            ),
-                          );
-                          eewProvider.channel?.rejoinUntilConnected();
-                        },
-                        child: const Icon(
-                          Icons.link_off,
-                          color: Colors.red,
-                          semanticLabel: 'WebSocket 切断',
-                        ),
+                      const Icon(
+                        Icons.link_off,
+                        color: Colors.red,
+                        semanticLabel: 'WebSocket 切断',
                       ),
                     const SizedBox(width: 8),
 

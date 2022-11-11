@@ -26,7 +26,8 @@ class App extends ConsumerWidget {
               themeModeProvider.useDynamicColor ? lightDynamic : null,
             ),
             darkTheme: darkTheme(
-                themeModeProvider.useDynamicColor ? darkDynamic : null),
+              themeModeProvider.useDynamicColor ? darkDynamic : null,
+            ),
             themeMode: themeModeProvider.themeMode,
             locale: DevicePreview.locale(context),
             localizationsDelegates: const [

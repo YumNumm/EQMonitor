@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import '../../schema/local/setting/change_log.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../schema/local/setting/change_log.dart';
 import '../init/dio.dart';
 
 final changeLogProvider = FutureProvider<ChangeLog>((ref) async {

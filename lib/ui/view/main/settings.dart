@@ -1,9 +1,10 @@
-import '../../../provider/setting/developer_mode.dart';
-import '../setting/component/setting_section.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../provider/setting/developer_mode.dart';
+import '../setting/component/setting_section.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
