@@ -14,8 +14,7 @@ class EewHypoCenterAssumingMapWidget extends StatefulWidget {
   final MapEntry<CommonHead, EEWInformation> eew;
 
   @override
-  _EewHypoCenterAssumingMapWidgetState createState() =>
-      _EewHypoCenterAssumingMapWidgetState();
+  State<StatefulWidget> createState() => _EewHypoCenterAssumingMapWidgetState();
 }
 
 class _EewHypoCenterAssumingMapWidgetState

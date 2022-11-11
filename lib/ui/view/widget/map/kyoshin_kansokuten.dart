@@ -1,5 +1,4 @@
 import 'package:eqmonitor/utils/map/map_global_offset.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
@@ -21,6 +20,7 @@ class KyoshinKansokutenWidget extends ConsumerWidget {
       child: CustomPaint(
         painter: KyoshinKansokutenPainter(
           obsPoints: analyzedKmoniPoints,
+          showIntensityIcon: true,
         ),
         size: const Size(476, 927.4),
       ),
@@ -30,10 +30,13 @@ class KyoshinKansokutenWidget extends ConsumerWidget {
 
 /// 強震観測点描画
 class KyoshinKansokutenPainter extends CustomPainter {
-  KyoshinKansokutenPainter({required this.obsPoints});
+  KyoshinKansokutenPainter({
+    required this.obsPoints,
+    required this.showIntensityIcon,
+  });
 
   final List<AnalyzedKoshinKansokuten> obsPoints;
-  final bool isDebug = true || kDebugMode;
+  final bool showIntensityIcon;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -52,7 +55,7 @@ class KyoshinKansokutenPainter extends CustomPainter {
         paint,
       );
 
-      if (isDebug && (point.shindo ?? -10.0) > 0.5) {
+      if ((point.shindo ?? -10.0) > 0.5) {
         canvas.drawCircle(
           MapGlobalOffset.latLonToGlobalPoint(LatLng(point.lat, point.lon))
               .toLocalOffset(const Size(476, 927.4)),
@@ -67,8 +70,6 @@ class KyoshinKansokutenPainter extends CustomPainter {
           ..color = point.intensity!.color
           ..isAntiAlias = true
           ..style = PaintingStyle.fill;
-        // 枠描画
-        final framePainter = Paint();
         canvas.drawCircle(
           MapGlobalOffset.latLonToGlobalPoint(LatLng(point.lat, point.lon))
               .toLocalOffset(const Size(476, 927.4)),
@@ -102,6 +103,7 @@ class KyoshinKansokutenPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) =>
-      oldDelegate != this;
+  bool shouldRepaint(covariant KyoshinKansokutenPainter oldDelegate) =>
+      oldDelegate.showIntensityIcon != showIntensityIcon ||
+      oldDelegate.obsPoints != obsPoints;
 }

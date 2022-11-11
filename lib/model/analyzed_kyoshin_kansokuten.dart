@@ -1,6 +1,7 @@
+import 'package:flutter/cupertino.dart';
+
 import '../schema/local/kyoshin_kansokuten.dart';
 import '../ui/theme/jma_intensity.dart';
-import 'package:flutter/cupertino.dart';
 
 class AnalyzedKoshinKansokuten extends KyoshinKansokuten {
   const AnalyzedKoshinKansokuten({

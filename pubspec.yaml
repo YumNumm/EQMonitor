@@ -49,6 +49,7 @@ dependencies:
   http: ^0.13.5
   image: ^3.2.0
   intl: ^0.17.0
+  json_annotation: ^4.7.0
   latlong2: ^0.8.1
   logger: ^1.1.0
   oauth1: ^2.0.0

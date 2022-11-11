@@ -727,35 +727,35 @@ class MapStationIntensityWidget extends ConsumerWidget {
     final widgets = <Widget>[];
 
     // 各観測点の処理
-    for (final station in stations) {
-      try {
-        // 緯度経度を取得
-        //final param = allParameterEarthquakeItem.items
-        //    .firstWhere((e) => e.code == station.code);
-        // final offset = MapGlobalOffset.latLonToGlobalPoint(
-        //   LatLng(param.latitude, param.longitude),
-        // ).toLocalOffset(const Size(476, 927.4));
-        // widgets.add(
-        //   DecoratedBox(
-        //     decoration: BoxDecoration(
-        //       border: Border.all(
-        //         color: Colors.red,
-        //       ),
-        //     ),
-        //     child: Positioned(
-        //       left: offset.dx,
-        //       top: offset.dy,
-        //       child: IntensityWidget(
-        //         intensity: JmaIntensity.values
-        //             .firstWhere((e) => e.name == station.intensity),
-        //         size: 2,
-        //         opacity: 1,
-        //       ),
-        //     ),
-        //   ),
-        // );
-      } on Exception catch (_) {}
-    }
+    //for (final station in stations) {
+    //  try {
+    //    // 緯度経度を取得
+    //    //final param = allParameterEarthquakeItem.items
+    //    //    .firstWhere((e) => e.code == station.code);
+    //    // final offset = MapGlobalOffset.latLonToGlobalPoint(
+    //    //   LatLng(param.latitude, param.longitude),
+    //    // ).toLocalOffset(const Size(476, 927.4));
+    //    // widgets.add(
+    //    //   DecoratedBox(
+    //    //     decoration: BoxDecoration(
+    //    //       border: Border.all(
+    //    //         color: Colors.red,
+    //    //       ),
+    //    //     ),
+    //    //     child: Positioned(
+    //    //       left: offset.dx,
+    //    //       top: offset.dy,
+    //    //       child: IntensityWidget(
+    //    //         intensity: JmaIntensity.values
+    //    //             .firstWhere((e) => e.name == station.intensity),
+    //    //         size: 2,
+    //    //         opacity: 1,
+    //    //       ),
+    //    //     ),
+    //    //   ),
+    //    // );
+    //  } on Exception catch (_) {}
+    //}
 
     return Stack(
       children: widgets,

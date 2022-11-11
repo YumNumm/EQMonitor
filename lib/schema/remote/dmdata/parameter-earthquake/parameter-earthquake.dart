@@ -21,9 +21,11 @@ class ParameterEarthquake {
     for (final item in paramItems) {
       final arv = double.parse(
         (paramArvItems.firstWhere(
-          (e) => item['id'] == e['id'],
-          orElse: () => {'arv': '0'},
-        ))['arv'],
+          (e) =>
+              (item as Map<String, dynamic>)['id'] ==
+              (e as Map<String, dynamic>)['id'],
+          orElse: () => <String, dynamic>{'arv': '0'},
+        ) as Map<String, dynamic>)['arv'],
       );
       items.add(
         ParameterEarthquakeItem.fromJsonWithArv(item, arv),

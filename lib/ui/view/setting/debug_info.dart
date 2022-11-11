@@ -126,7 +126,8 @@ class DeveloperDebugPage extends HookConsumerWidget {
                   title: const Text('androidDeviceInfoProvider'),
                   subtitle: Text(
                     const JsonEncoder.withIndent(' ').convert(
-                        ref.watch(androidDeviceInfoProvider).toString()),
+                      ref.watch(androidDeviceInfoProvider).toString(),
+                    ),
                   ),
                 ),
             ],

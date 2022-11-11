@@ -1,12 +1,13 @@
 import 'dart:convert';
 
-import '../../schema/local/prefecture/map_polygon.dart';
-import '../../utils/map/map_global_offset.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:geojson/geojson.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
+
+import '../../schema/local/prefecture/map_polygon.dart';
+import '../../utils/map/map_global_offset.dart';
 
 /// 地震情報／細分区域
 final mapAreaTsunamiForecastProvider = Provider<List<MapPolygon>>((ref) {

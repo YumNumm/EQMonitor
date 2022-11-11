@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_classes_with_only_static_members
 
-
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
 import 'package:eqmonitor/schema/remote/supabase/telegram.dart';
@@ -22,9 +21,9 @@ class TelegramApi {
   }) async {
     final res = await Supabase.instance.client
         .from('telegram_v2')
-        .select('type, data')
+        .select<List<Map<String, dynamic>>>('type, data')
         .order('id')
-        .range(offset, offset + limit - 1) as List<dynamic>;
+        .range(offset, offset + limit - 1);
 
     final telegrams = <TelegramItem>[];
 
@@ -32,7 +31,7 @@ class TelegramApi {
       telegrams.add(
         TelegramItem(
           telegram: CommonHead.fromJson(
-            (e as Map<String, dynamic>)['data'] as Map<String, dynamic>,
+            e['data'] as Map<String, dynamic>,
           ),
           type: e['type'].toString(),
         ),
@@ -58,7 +57,7 @@ class TelegramApi {
     if (limit == null) {
       data = await Supabase.instance.client
           .from('telegram')
-          .select(
+          .select<List<Map<String, dynamic>>>(
             'id,'
             'data, '
             'type,'
@@ -82,7 +81,7 @@ class TelegramApi {
     } else {
       data = await Supabase.instance.client
           .from('telegram')
-          .select(
+          .select<List<Map<String, dynamic>>>(
             'id,'
             'type,'
             'data, '
@@ -127,13 +126,13 @@ class TelegramApi {
     for (final url in urls) {
       futures.add(
         Dio()
-            .get(
+            .get<Map<String, dynamic>>(
               url,
             )
             .then(
               (res) => telegrams.add(
                 Telegram(
-                  data: res.data as Map<String, dynamic>,
+                  data: res.data,
                   type: 'VXSE53',
                   time: DateTime.now(),
                   url: url,

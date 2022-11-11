@@ -64,31 +64,3 @@ enum DmDssTelegramDataType {
   /// 南海トラフ地震関連解説情報(定例)
   VYSE52,
 }
-
-extension on DmDssTelegramDataType {
-  static final toNameStringMap = <DmDssTelegramDataType, String>{
-    DmDssTelegramDataType.VZSE40: '地震・津波に関するお知らせ',
-    DmDssTelegramDataType.VTSE41: '津波警報・注意報・予報',
-    DmDssTelegramDataType.VTSE51: '津波情報',
-    DmDssTelegramDataType.VTSE52: '沖合の津波情報',
-    DmDssTelegramDataType.WEPA60: '国際津波関連情報(国内向け)',
-    DmDssTelegramDataType.VXSE51: '震度速報',
-    DmDssTelegramDataType.VXSE52: '震源に関する情報',
-    DmDssTelegramDataType.VXSE53: '震源・震度に関する情報',
-    DmDssTelegramDataType.VXSE56: '地震の活動状況等に関する情報',
-    DmDssTelegramDataType.VXSE60: '地震回数に関する情報',
-    DmDssTelegramDataType.VXSE61: '顕著な地震の震源要素更新のお知らせ',
-    DmDssTelegramDataType.VXSE62: '長周期地震動に関する観測情報',
-    DmDssTelegramDataType.VYSE50: '南海トラフ地震臨時情報',
-    DmDssTelegramDataType.VYSE51: '南海トラフ地震関連解説情報(定例外)',
-    DmDssTelegramDataType.VYSE52: '南海トラフ地震関連解説情報(定例)',
-  };
-
-  String get ToName {
-    if (toNameStringMap[this] == null) {
-      throw Exception('不明なDataTypeが指定されています。');
-    } else {
-      return toNameStringMap[this]!;
-    }
-  }
-}

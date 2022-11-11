@@ -54,9 +54,10 @@ class AboutAppViewModel {
       final willEnabled = await _showDeveloperModeEnableDialog(context);
       if (willEnabled) {
         // パスワードによる検証を行う
+        // ignore: use_build_context_synchronously
         final password = await _showPasswordDialog(context);
         if (password != null) {
-          final isTruePassword = this._isTruePassword(password);
+          final isTruePassword = _isTruePassword(password);
           if (isTruePassword) {
             await ref
                 .read(developerModeProvider.notifier)

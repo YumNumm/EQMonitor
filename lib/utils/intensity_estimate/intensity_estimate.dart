@@ -1,9 +1,9 @@
 import 'dart:math' as math;
 
-import '../../schema/remote/dmdata/parameter-earthquake/parameter-earthquake.dart';
-import '../../ui/theme/jma_intensity.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../schema/remote/dmdata/parameter-earthquake/parameter-earthquake.dart';
+import '../../ui/theme/jma_intensity.dart';
 import '../../utils/math_log.dart';
 
 /// ## 距離減衰式による震度計算

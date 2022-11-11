@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-
 import 'package:eqmonitor/model/setting/jma_intensity_color_model.dart';
 import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
@@ -15,9 +14,9 @@ import 'package:logger/logger.dart';
 
 /// EEWの震源要素から距離減衰式により計算した予想震度を描画
 class EewEstimatedIntensityWidget extends ConsumerWidget {
-  EewEstimatedIntensityWidget({required this.isDeveloper, super.key});
+  const EewEstimatedIntensityWidget({required this.isDeveloper, super.key});
 
-  bool isDeveloper = false;
+  final bool isDeveloper;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,6 +43,7 @@ class EewEstimatedIntensityWidget extends ConsumerWidget {
             obsPoints: ref.watch(parameterEarthquakeProvider).items,
           ),
         );
+        // ignore: avoid_catches_without_on_clauses
       } catch (_) {}
     }
 

@@ -26,7 +26,7 @@ class Station {
             : List<PrePeriod>.generate(
                 (j['prePeriods'] as List<dynamic>).length,
                 (i) => PrePeriod.fromJson(
-                  j['prePeriods'][i] as Map<String, dynamic>,
+                  (j['prePeriods'] as Map<String, dynamic>)[i] as Map<String, dynamic>,
                 ),
               ),
         revise = (j['revise'] == null)

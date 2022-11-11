@@ -26,7 +26,8 @@ class WebSocketv2Data {
         passing = List<WebSocketv2DataPassing>.generate(
           (j['passing'] as List<dynamic>).length,
           (index) => WebSocketv2DataPassing.fromJson(
-            j['passing'][index] as Map<String, dynamic>,
+            (j['passing'] as Map<String, dynamic>)[index]
+                as Map<String, dynamic>,
           ),
         ),
         head = WebSocketv2DataHead.fromJson(j['head'] as Map<String, dynamic>),
