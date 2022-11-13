@@ -21,7 +21,7 @@ dependencies:
   dio_http2_adapter: ^2.0.0
   dmdata_telegram_json: ^0.0.4
   dynamic_color: ^1.5.4
-  envied: ^0.2.3
+  envied: ^0.2.4
   expandable: ^5.0.1
   firebase_analytics: ^10.0.2
   firebase_core: ^2.1.0
