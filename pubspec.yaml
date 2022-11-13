@@ -19,7 +19,7 @@ dependencies:
   device_preview: ^1.1.0
   dio: ^4.0.6
   dio_http2_adapter: ^2.0.0
-  dmdata_telegram_json: ^0.0.4
+  dmdata_telegram_json: ^0.0.6
   dynamic_color: ^1.5.4
   envied: ^0.2.3
   expandable: ^5.0.1
