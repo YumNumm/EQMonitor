@@ -76,7 +76,7 @@ dev_dependencies:
     sdk: flutter
   freezed: ^2.1.0+1
   go_router_builder: ^1.0.13
-  isar_generator: ^3.0.2
+  isar_generator: ^3.0.3
   json_serializable: ^6.4.1
   lottie: ^1.4.3
   pedantic_mono: ^1.19.2+1

@@ -790,14 +790,14 @@ packages:
       name: isar
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.2"
+    version: "3.0.3"
   isar_generator:
     dependency: "direct dev"
     description:
       name: isar_generator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.2"
+    version: "3.0.3"
   iso:
     dependency: transitive
     description:
