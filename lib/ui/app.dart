@@ -1,6 +1,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -18,6 +19,7 @@ class App extends ConsumerWidget {
     final themeModeProvider = ref.watch(themeProvider);
     final router = ref.watch(routerProvider);
     return DevicePreview(
+      enabled: kDebugMode,
       builder: (context) => DynamicColorBuilder(
         builder: (lightDynamic, darkDynamic) {
           return MaterialApp.router(
