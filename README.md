@@ -16,11 +16,13 @@
 
 
 ## 支援のお願い
-本アプリケーションは、緊急地震速報などの地震情報を迅速に配信するために、外部サービス([Project DM-D.S.S](https://dmdata.jp/))に契約し、VPSに契約しています。  
+本アプリケーションは、緊急地震速報などの地震情報を迅速に配信するために、外部サービス([Project DM-D.S.S](https://dmdata.jp/))やVPSを契約しています。  
 そのため、開発者([@YumNumm](https://github.com/YumNumm))は、月数千円負担する必要があります。  
 ご支援頂けると幸いです。  
 **(本アプリは無料でご利用いただけます。)**  
-<a href="https://www.buymeacoffee.com/OnoueRyotaro" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+
+[![](https://user-images.githubusercontent.com/73390859/201659680-63768eda-b774-4709-9c89-0e71771f6135.jpeg)](https://www.buymeacoffee.com/mgmg)
+
 
 
 
