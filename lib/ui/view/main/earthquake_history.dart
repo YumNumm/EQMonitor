@@ -41,9 +41,10 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
         data: (items) {
           return NotificationListener<ScrollEndNotification>(
             onNotification: (notification) {
-              final scrollPosition = notification.metrics.pixels / notification.metrics.maxScrollExtent;
+              final scrollPosition = notification.metrics.pixels /
+                  notification.metrics.maxScrollExtent;
 
-             if (scrollPosition > 0.8 && (vm.value?.isNotEmpty ?? false)) {
+              if (scrollPosition > 0.8 && (vm.value?.isNotEmpty ?? false)) {
                 ref.read(earthquakeHistoryViewModel.notifier).fetch();
                 return true;
               }
