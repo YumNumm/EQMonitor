@@ -12,9 +12,9 @@ import '../../../../schema/remote/dmdata/eew-information/eew-infomation.dart';
 import '../../../../utils/map/map_global_offset.dart';
 import 'eew_assuming_hypocenter.dart';
 
-/// 通常の震央地表示
-class EewHypoCenterWidget extends ConsumerWidget {
-  const EewHypoCenterWidget({super.key});
+/// 緊急地震速報関連のWidget
+class MapEewWidget extends ConsumerWidget {
+  const MapEewWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
