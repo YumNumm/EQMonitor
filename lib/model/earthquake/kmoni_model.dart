@@ -6,6 +6,7 @@ import '../analyzed_kyoshin_kansokuten.dart';
 
 part 'kmoni_model.freezed.dart';
 
+/// 強震モニタの更新等を管理
 @freezed
 class KmoniModel with _$KmoniModel {
   const factory KmoniModel({

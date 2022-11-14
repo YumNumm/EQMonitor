@@ -39,6 +39,9 @@ class KyoshinImageParser {
       );
       analyzedPoints.add(analyzedPoint);
     }
+    analyzedPoints.sort(
+      (a, b) => (a.shindo ?? -10).compareTo(b.shindo ?? -10),
+    );
     return analyzedPoints;
   }
 
