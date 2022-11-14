@@ -9,7 +9,14 @@ import '../../../../utils/extension/relative_luminance.dart';
 
 /// 強震観測点
 class KyoshinKansokutenWidget extends ConsumerWidget {
-  const KyoshinKansokutenWidget({super.key});
+  const KyoshinKansokutenWidget({
+    required this.showIntensityIcon,
+    required this.showKmoniPoints,
+    super.key,
+  });
+
+  final bool showIntensityIcon;
+  final bool showKmoniPoints;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,7 +27,8 @@ class KyoshinKansokutenWidget extends ConsumerWidget {
       child: CustomPaint(
         painter: KyoshinKansokutenPainter(
           obsPoints: analyzedKmoniPoints,
-          showIntensityIcon: true,
+          showIntensityIcon: showIntensityIcon,
+          showKmoniPoints: showKmoniPoints,
         ),
         size: const Size(476, 927.4),
       ),
@@ -33,10 +41,12 @@ class KyoshinKansokutenPainter extends CustomPainter {
   KyoshinKansokutenPainter({
     required this.obsPoints,
     required this.showIntensityIcon,
+    required this.showKmoniPoints,
   });
 
   final List<AnalyzedKoshinKansokuten> obsPoints;
   final bool showIntensityIcon;
+  final bool showKmoniPoints;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -48,14 +58,18 @@ class KyoshinKansokutenPainter extends CustomPainter {
         ..color = point.shindoColor!
         ..isAntiAlias = true
         ..style = PaintingStyle.fill;
-      canvas.drawCircle(
-        MapGlobalOffset.latLonToGlobalPoint(LatLng(point.lat, point.lon))
-            .toLocalOffset(const Size(476, 927.4)),
-        1.2,
-        paint,
-      );
-
-      if ((point.shindo ?? -10.0) > 0.5) {
+      if (showKmoniPoints) {
+        canvas.drawCircle(
+          MapGlobalOffset.latLonToGlobalPoint(LatLng(point.lat, point.lon))
+              .toLocalOffset(const Size(476, 927.4)),
+          1.2,
+          paint,
+        );
+      }
+      if (point.shindo == null || !showIntensityIcon) {
+        continue;
+      }
+      if (point.shindo! > 0.5) {
         canvas.drawCircle(
           MapGlobalOffset.latLonToGlobalPoint(LatLng(point.lat, point.lon))
               .toLocalOffset(const Size(476, 927.4)),
@@ -98,6 +112,27 @@ class KyoshinKansokutenPainter extends CustomPainter {
             offset.dy - textPainter.height * 0.5,
           ),
         );
+      } else if (point.shindo! > -0.5 && !showKmoniPoints) {
+        canvas
+          ..drawCircle(
+            MapGlobalOffset.latLonToGlobalPoint(LatLng(point.lat, point.lon))
+                .toLocalOffset(const Size(476, 927.4)),
+            1.4,
+            Paint()
+              ..color = const Color.fromARGB(255, 56, 56, 56)
+              ..isAntiAlias = true
+              ..style = PaintingStyle.stroke,
+          )
+          ..drawCircle(
+            MapGlobalOffset.latLonToGlobalPoint(LatLng(point.lat, point.lon))
+                .toLocalOffset(const Size(476, 927.4)),
+            1.4,
+            Paint()
+              ..color =
+                  const Color.fromARGB(255, 110, 110, 110).withOpacity(0.8)
+              ..isAntiAlias = true
+              ..style = PaintingStyle.fill,
+          );
       }
     }
   }
@@ -105,5 +140,6 @@ class KyoshinKansokutenPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant KyoshinKansokutenPainter oldDelegate) =>
       oldDelegate.showIntensityIcon != showIntensityIcon ||
-      oldDelegate.obsPoints != obsPoints;
+      oldDelegate.obsPoints != obsPoints ||
+      oldDelegate.showKmoniPoints != showKmoniPoints;
 }
