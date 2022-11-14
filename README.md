@@ -9,6 +9,12 @@
 
 > **Warning**  [利用規約](https://github.com/EQMonitor/EQMonitor/blob/main/assets/docs/term_of_service.md)を必ずご確認の上ご利用ください。
 
+
+||||
+|---|---|---|
+|![Screenshot_20221114-171045_EQMonitor](https://user-images.githubusercontent.com/73390859/201656094-c98e6942-489d-48dc-9ff5-80aa6d9e6247.png)|![Screenshot_20221114-210650_EQMonitor](https://user-images.githubusercontent.com/73390859/201656208-87ae0eed-bf39-47d4-8003-9745ffba56c2.png)|![Screenshot_20221114-210658_EQMonitor](https://user-images.githubusercontent.com/73390859/201656236-70d20f7c-6870-4d0f-a7d0-17777e6b276b.png)|
+
+
 ## 支援のお願い
 本アプリケーションは、緊急地震速報などの地震情報を迅速に配信するために、外部サービス([Project DM-D.S.S](https://dmdata.jp/))に契約し、VPSに契約しています。  
 そのため、開発者([@YumNumm](https://github.com/YumNumm))は、月数千円負担する必要があります。  
