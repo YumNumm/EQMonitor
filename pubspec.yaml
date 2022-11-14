@@ -62,7 +62,7 @@ dependencies:
   shared_preferences_android: ^2.0.13
   shared_preferences_ios: ^2.1.1
   state_notifier: ^0.7.2+1
-  supabase: ^1.0.1
+  supabase: ^1.1.2
   supabase_flutter: ^1.0.1
   url_launcher: ^6.1.6
   web_socket_channel: ^2.2.0
