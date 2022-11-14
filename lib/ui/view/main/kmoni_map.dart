@@ -3,12 +3,15 @@
 import 'dart:ui';
 
 import 'package:bordered_text/bordered_text.dart';
+import 'package:eqmonitor/model/setting/kmoni_setting_model.dart';
 import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
 import 'package:eqmonitor/provider/earthquake/kmoni_controller.dart';
 import 'package:eqmonitor/provider/package_info.dart';
 import 'package:eqmonitor/provider/setting/developer_mode.dart';
 import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
 import 'package:eqmonitor/provider/theme_providers.dart';
+import 'package:eqmonitor/ui/view/main/kmoni_map/kmoni_map.viewmodel.dart';
+import 'package:eqmonitor/ui/view/main/kmoni_map/layer_selector.dart';
 import 'package:eqmonitor/ui/view/widget/map/eew_hypocenter.dart';
 import 'package:eqmonitor/ui/view/widget/map/kyoshin_kansokuten.dart';
 import 'package:eqmonitor/ui/view/widget/updater.dart';
@@ -37,6 +40,7 @@ class KmoniMap extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDeveloper = ref.watch(developerModeProvider).isDeveloper;
+    final vm = ref.watch(kmoniSettingProvider);
 
     return Scaffold(
       appBar: showAppBar
@@ -73,6 +77,10 @@ class KmoniMap extends HookConsumerWidget {
                   : null,
             )
           : null,
+      floatingActionButton: FloatingActionButton.small(
+        onPressed: () async => showKmoniLayerSelectorAlert(context),
+        child: const Icon(Icons.layers),
+      ),
       body: DecoratedBox(
         decoration: BoxDecoration(
           color: ref.watch(themeProvider.notifier).isDarkMode
@@ -96,19 +104,31 @@ class KmoniMap extends HookConsumerWidget {
                     child: Stack(
                       children: [
                         // マップベース
-                        const BaseMapWidget(),
+                        if (vm.layers.contains(KmoniLayer.baseMap))
+                          const BaseMapWidget(),
                         // EEWの距離減衰式による予想震度
                         if (isDeveloper ||
                             (ref.watch(kmoniProvider).testCaseStartTime !=
-                                null))
+                                null) ||
+                            (vm.layers
+                                .contains(KmoniLayer.distanceDecayIntensity)))
                           EewEstimatedIntensityWidget(isDeveloper: isDeveloper),
 
                         // EEWの予想震度
-                        const EewIntensityWidget(),
+                        if (vm.layers.contains(KmoniLayer.jmaIntensity))
+                          const EewIntensityWidget(),
                         // 観測点
-                        const KyoshinKansokutenWidget(),
+                        if (vm.layers.contains(KmoniLayer.kmoniPoints) ||
+                            vm.layers
+                                .contains(KmoniLayer.realtimeIntensityIcon))
+                          KyoshinKansokutenWidget(
+                            showIntensityIcon: vm.layers
+                                .contains(KmoniLayer.realtimeIntensityIcon),
+                            showKmoniPoints:
+                                vm.layers.contains(KmoniLayer.kmoniPoints),
+                          ),
                         // EEWの震央位置
-                        const EewHypoCenterWidget(),
+                        const MapEewWidget(),
                       ],
                     ),
                   ),
@@ -174,87 +194,84 @@ class KmoniStatusWidget extends ConsumerWidget {
             .shindoColor
         : null;
     return ClipRRect(
-      borderRadius: const BorderRadius.all(Radius.circular(8)),
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: (kmoni.analyzedPoint.length > 100)
-              ? maxShindoColor?.withAlpha(100)
+              ? maxShindoColor?.withOpacity(0.4)
               : null,
-          border: Border.all(
-            color: maxShindoColor ?? Colors.transparent,
-          ),
         ),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: Padding(
             padding: const EdgeInsets.all(8),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      "最終更新: ${(kmoni.lastUpdated != null) ? DateFormat('yyyy/MM/dd HH:mm:ss').format((kmoni.lastUpdated!).toLocal()) : '-'}",
-                      style: TextStyle(
-                        color: (kmoni.lastUpdateAttempt
-                                    .difference(
-                                      kmoni.lastUpdated ?? DateTime(2000),
-                                    )
-                                    .inSeconds >
-                                3)
-                            ? const Color.fromARGB(255, 255, 17, 0)
-                            : null,
-                        fontWeight: (kmoni.lastUpdateAttempt
-                                    .difference(
-                                      kmoni.lastUpdated ?? DateTime(2000),
-                                    )
-                                    .inSeconds >
-                                3)
-                            ? FontWeight.bold
-                            : null,
-                        fontFamily: 'CaskaydiaCove',
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    // WebSocket 接続状態
-                    if (eewProvider.channel?.isJoined == true)
-                      const Icon(
-                        Icons.link,
-                        semanticLabel: 'WebSocket 接続中',
-                      )
-                    else
-                      const Icon(
-                        Icons.link_off,
-                        color: Colors.red,
-                        semanticLabel: 'WebSocket 切断',
-                      ),
-                    const SizedBox(width: 8),
-
-                    /// テストモード時
-                    if (ref.watch(kmoniProvider).testCaseStartTime != null)
-                      const Icon(Icons.bug_report),
-
-                    if (kmoni.isUpdating)
-                      Container(
-                        width: 10,
-                        height: 10,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: const Color.fromARGB(255, 0, 140, 255),
-                          border: Border.all(
-                            color: const Color.fromARGB(255, 0, 69, 125),
-                          ),
+            child: FittedBox(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        "最終更新: ${(kmoni.lastUpdated != null) ? DateFormat('yyyy/MM/dd HH:mm:ss').format((kmoni.lastUpdated!).toLocal()) : '-'}",
+                        style: TextStyle(
+                          color: (kmoni.lastUpdateAttempt
+                                      .difference(
+                                        kmoni.lastUpdated ?? DateTime(2000),
+                                      )
+                                      .inSeconds >
+                                  3)
+                              ? const Color.fromARGB(255, 255, 17, 0)
+                              : null,
+                          fontWeight: (kmoni.lastUpdateAttempt
+                                      .difference(
+                                        kmoni.lastUpdated ?? DateTime(2000),
+                                      )
+                                      .inSeconds >
+                                  3)
+                              ? FontWeight.bold
+                              : null,
+                          fontFamily: 'CaskaydiaCove',
                         ),
-                      )
-                    else
-                      const SizedBox(
-                        width: 10,
-                        height: 10,
                       ),
-                  ],
-                ),
-              ],
+                      const SizedBox(width: 8),
+                      // WebSocket 接続状態
+                      if (eewProvider.channel?.isJoined == true)
+                        const Icon(
+                          Icons.link,
+                          semanticLabel: 'WebSocket 接続中',
+                        )
+                      else
+                        const Icon(
+                          Icons.link_off,
+                          color: Colors.red,
+                          semanticLabel: 'WebSocket 切断',
+                        ),
+                      const SizedBox(width: 8),
+
+                      /// テストモード時
+                      if (ref.watch(kmoniProvider).testCaseStartTime != null)
+                        const Icon(Icons.bug_report),
+
+                      if (kmoni.isUpdating)
+                        Container(
+                          width: 10,
+                          height: 10,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: const Color.fromARGB(255, 0, 140, 255),
+                            border: Border.all(
+                              color: const Color.fromARGB(255, 0, 69, 125),
+                            ),
+                          ),
+                        )
+                      else
+                        const SizedBox(
+                          width: 10,
+                          height: 10,
+                        ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
