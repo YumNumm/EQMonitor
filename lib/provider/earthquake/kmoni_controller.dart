@@ -90,7 +90,7 @@ class KmoniProvider extends StateNotifier<KmoniModel> {
           analyzedPoint: parsedAnalyzedPoint,
           lastUpdated: dt,
         );
-      // ignore: avoid_catches_without_on_clauses
+        // ignore: avoid_catches_without_on_clauses
       } catch (_) {
         // テストケースを終了する
         state = state.copyWith(
