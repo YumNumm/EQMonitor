@@ -21,7 +21,7 @@ class GDEarthquakeList {
         items = List<GDEarthquakeListItem>.generate(
           (j['items'] as List<dynamic>).length,
           (i) => GDEarthquakeListItem.fromJson(
-           ( j['items'] as Map<String,dynamic>)[i] as Map<String, dynamic>,
+            (j['items'] as Map<String, dynamic>)[i] as Map<String, dynamic>,
           ),
         ),
         nextToken = (j['nextToken'] == null) ? null : j['nextToken'].toString(),

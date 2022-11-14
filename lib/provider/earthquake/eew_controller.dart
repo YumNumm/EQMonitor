@@ -248,7 +248,7 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
           if (eew != null) {
             addTelegram(eew);
           }
-        // ignore: avoid_catches_without_on_clauses
+          // ignore: avoid_catches_without_on_clauses
         } catch (e) {
           logger.e('NIED EEW STREAM(TEST): $e');
           // テストケースを終了する
