@@ -54,7 +54,7 @@ class MapBasePainter extends CustomPainter {
           : const Color.fromARGB(255, 50, 50, 50)
       ..isAntiAlias = true
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 0.2;
+      ..strokeWidth = 0.0;
 
     for (final polygon in mapPolygons) {
       if (isFilled) {
