@@ -107,8 +107,7 @@ class KmoniMap extends HookConsumerWidget {
                         if (vm.layers.contains(KmoniLayer.baseMap))
                           const BaseMapWidget(),
                         // EEWの距離減衰式による予想震度
-                        if (isDeveloper ||
-                            (ref.watch(kmoniProvider).testCaseStartTime !=
+                        if ((ref.watch(kmoniProvider).testCaseStartTime !=
                                 null) ||
                             (vm.layers
                                 .contains(KmoniLayer.distanceDecayIntensity)))
