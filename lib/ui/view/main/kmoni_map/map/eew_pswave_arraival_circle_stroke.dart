@@ -53,23 +53,8 @@ class _EewPswaveArraivalCircleStrokePainter extends CustomPainter {
   final List<TravelTimeTable> travelTimeTables;
   final DateTime? onTestStarted;
 
-  final Paint sWavePaint = Paint()
-    ..color = const Color.fromARGB(255, 255, 140, 0)
-    ..isAntiAlias = true
-    ..strokeCap = StrokeCap.square
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 1;
-  final Paint pWavePaint = Paint()
-    ..color = const Color.fromARGB(255, 0, 102, 255)
-    ..isAntiAlias = true
-    ..strokeCap = StrokeCap.square
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 0.0;
-
   @override
   void paint(Canvas canvas, Size size) {
-    final sPath = Path();
-    final pPath = Path();
     for (final eew in eews) {
       if (eew.value.earthQuake?.hypoCenter.coordinateComponent.latitude !=
               null &&
@@ -130,13 +115,32 @@ class _EewPswaveArraivalCircleStrokePainter extends CustomPainter {
             );
           }
         }
+        final isWarning = eew.value.isWarning ??
+            eew.value.comments?.warning?.codes.contains(201) ??
+            false;
         sPath.addPolygon(sOffsets, true);
         pPath.addPolygon(pOffsets, true);
+        canvas
+          ..drawPath(
+              Path()..addPolygon(sOffsets, true),
+              Paint()
+                ..color = isWarning
+                    ? Color.fromARGB(255, 255, 0, 0)
+                    : Color.fromARGB(255, 255, 149, 0)
+                ..isAntiAlias = true
+                ..strokeCap = StrokeCap.square
+                ..style = PaintingStyle.stroke
+                ..strokeWidth = 1)
+          ..drawPath(
+              Path()..addPolygon(pOffsets, true),
+              Paint()
+                ..color = Color.fromARGB(255, 0, 0, 255)
+                ..isAntiAlias = true
+                ..strokeCap = StrokeCap.square
+                ..style = PaintingStyle.stroke
+                ..strokeWidth = 0.0);
       }
     }
-    canvas
-      ..drawPath(sPath, sWavePaint)
-      ..drawPath(pPath, pWavePaint);
   }
 
   @override
