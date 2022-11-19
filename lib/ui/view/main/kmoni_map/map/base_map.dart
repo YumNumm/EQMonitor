@@ -3,7 +3,7 @@ import 'package:eqmonitor/schema/local/prefecture/map_polygon.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../../provider/init/map_area_forecast_local_eew.dart';
+import '../../../../../provider/init/map_area_forecast_local_eew.dart';
 
 /// 日本地図
 class BaseMapWidget extends ConsumerWidget {

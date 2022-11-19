@@ -14,8 +14,8 @@ import 'package:latlong2/latlong.dart';
 import '../../../provider/init/map_area_forecast_local_e.dart';
 import '../../view/widget/intensity_calc/map_eew_hypocenter_painter.dart';
 import '../../view/widget/intensity_widget.dart';
-import '../widget/map/base_map.dart';
-import '../widget/map/eew_estimated_intensity.dart';
+import 'kmoni_map/map/base_map.dart';
+import 'kmoni_map/map/eew_estimated_intensity.dart';
 
 class IntensityEstimatePage extends HookConsumerWidget {
   IntensityEstimatePage({super.key});

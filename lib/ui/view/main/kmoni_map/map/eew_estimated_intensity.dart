@@ -48,6 +48,7 @@ class EewEstimatedIntensityWidget extends ConsumerWidget {
     }
 
     return CustomPaint(
+      isComplex: true,
       painter: EstimatedIntensityPainter(
         estimatedShindoPointsGroupBy: result
             .expand((e) => e)
@@ -55,7 +56,7 @@ class EewEstimatedIntensityWidget extends ConsumerWidget {
             .groupListsBy((element) => element.region.code),
         mapPolygons: ref.watch(mapAreaForecastLocalEProvider),
         colors: ref.watch(jmaIntensityColorProvider),
-        alpha: 0.9,
+        alpha: 0.6,
         isDeveloper: isDeveloper,
       ),
     );
