@@ -21,7 +21,7 @@ import '../../../../schema/remote/dmdata/parameter-earthquake/parameter-earthqua
 import '../../../../utils/map/map_global_offset.dart';
 import '../../../theme/jma_intensity.dart';
 import '../../../view/widget/intensity_widget.dart';
-import '../../widget/map/base_map.dart';
+import '../kmoni_map/map/base_map.dart';
 import '../earthquake_history.viewmodel.dart';
 
 class EarthquakeHistoryDetailPage extends HookConsumerWidget {
@@ -335,6 +335,7 @@ class MapRegionIntensityWidget extends ConsumerWidget {
         ref.watch(mapAreaInformationCityQuakeProvider);
 
     return CustomPaint(
+      isComplex: true,
       painter: MapRegionIntensityV2Painter(
         mapPolygons: mapSource,
         regions: regions,
