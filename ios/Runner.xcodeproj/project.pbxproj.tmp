@@ -203,8 +203,6 @@
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Pods</string>
 			<key>path</key>
 			<string>Pods</string>
 			<key>sourceTree</key>
@@ -269,6 +267,28 @@
 			<string>Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
+		</dict>
+		<key>5A27BB702928F9F100EB068C</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.xml</string>
+			<key>name</key>
+			<string>GoogleService-Info.plist</string>
+			<key>path</key>
+			<string>../../Desktop/GoogleService-Info.plist</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>5A27BB712928F9F100EB068C</key>
+		<dict>
+			<key>fileRef</key>
+			<string>5A27BB702928F9F100EB068C</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
 		</dict>
 		<key>61A408C3E920F177312709C6</key>
 		<dict>
@@ -426,6 +446,7 @@
 		<dict>
 			<key>children</key>
 			<array>
+				<string>5A27BB702928F9F100EB068C</string>
 				<string>9740EEB11CF90186004384FC</string>
 				<string>97C146F01CF9000F007C117D</string>
 				<string>97C146EF1CF9000F007C117D</string>
@@ -534,6 +555,7 @@
 			<array>
 				<string>97C147011CF9000F007C117D</string>
 				<string>3B3967161E833CAA004F5970</string>
+				<string>5A27BB712928F9F100EB068C</string>
 				<string>97C146FE1CF9000F007C117D</string>
 				<string>97C146FC1CF9000F007C117D</string>
 			</array>
