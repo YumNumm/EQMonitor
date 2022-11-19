@@ -1,3 +1,4 @@
+import 'package:eqmonitor/ui/view/setting/update_history_view/update_history_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -78,6 +79,10 @@ final routerProvider = Provider<GoRouter>(
                       state.params['doesShowAcceptButton'] == 'true',
                 ),
               ),
+              GoRoute(
+                path: 'updateHistory',
+                builder: (context, state) => const UpdateHistotyView(),
+              )
             ],
           ),
           GoRoute(
