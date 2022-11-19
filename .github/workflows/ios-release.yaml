@@ -77,7 +77,7 @@ jobs:
 
       - name: Build ipa
         run: |
-          flutter build ios --release --no-codesign
+          flutter build ios --release --no-codesign --obfuscate --split-debug-info=debug-info
           mkdir -p Payload
           mv ./build/ios/iphoneos/Runner.app Payload
           zip -ry Payload.zip Payload/Runner.app
