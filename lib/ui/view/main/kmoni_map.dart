@@ -154,11 +154,11 @@ class KmoniMap extends HookConsumerWidget {
                         strokeWidth: 1,
                         strokeColor: Colors.white,
                         child: const Text(
-                          '訓練',
+                          'TESTING...',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Color.fromARGB(129, 255, 0, 0),
-                            fontSize: 200,
+                            fontSize: 50,
                           ),
                         ),
                       ),
