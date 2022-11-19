@@ -23,11 +23,6 @@ dependencies:
   dynamic_color: ^1.5.4
   envied: ^0.2.3
   expandable: ^5.0.1
-  firebase_analytics: ^10.0.2
-  firebase_core: ^2.1.0
-  firebase_crashlytics: ^3.0.2
-  firebase_messaging: ^14.0.2
-  firebase_performance: ^0.9.0+2
   flutter:
     sdk: flutter
   flutter_colorpicker: ^1.0.3

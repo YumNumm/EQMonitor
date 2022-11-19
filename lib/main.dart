@@ -24,9 +24,6 @@ import 'package:eqmonitor/schema/local/kyoshin_kansokuten.dart';
 import 'package:eqmonitor/schema/local/prefecture/map_polygon.dart';
 import 'package:eqmonitor/schema/remote/dmdata/parameter-earthquake/parameter-earthquake.dart';
 import 'package:eqmonitor/ui/app.dart';
-import 'package:eqmonitor/utils/fcm/firebase_notification_controller.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -39,8 +36,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'firebase_options.dart';
-
 Future<void> main() async {
   final stopwatch = Stopwatch()..start();
   FlutterNativeSplash.preserve(
@@ -52,24 +47,16 @@ Future<void> main() async {
       statusBarColor: Colors.transparent, // transparent status bar
     ),
   );
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
 
   Intl.defaultLocale = 'ja_JP';
-  final crashlytics = FirebaseCrashlytics.instance;
-  final deviceInfo = await DeviceInfoPlugin().androidInfo;
+  try {
+    final deviceInfo = await DeviceInfoPlugin().androidInfo;
+  } catch (_, __) {}
   final prefs = await SharedPreferences.getInstance();
   // final appInfo = await PackageInfo.fromPlatform();
   // クラッシュレポートの初期化
   final isCrashLogShareAllowed =
       await CrashLogShareProvider(prefs).loadSettingsFromSharedPrefrences();
-  await crashlytics.setUserIdentifier(
-    deviceInfo.fingerprint,
-  );
-  await crashlytics.setCrashlyticsCollectionEnabled(
-    isCrashLogShareAllowed && kReleaseMode,
-  );
 
   // ログ出力の初期化
 
@@ -100,8 +87,6 @@ Future<void> main() async {
       anonKey: Env.supabaseS1AnonKey,
       debug: false,
     ),
-    initFirebaseCloudMessaging(),
-    crashlytics.sendUnsentReports(),
     if (Platform.isAndroid)
       DeviceInfoPlugin().androidInfo.then((e) => androidDeviceInfo = e),
     if (Platform.isIOS)
@@ -125,9 +110,7 @@ Future<void> main() async {
 
   PlatformDispatcher.instance.onError = (error, stackTrace) {
     Logger().e(error, stackTrace);
-    if (kReleaseMode) {
-      crashlytics.recordError(error, stackTrace);
-    }
+    if (kReleaseMode) {}
     return true;
   };
   runApp(
@@ -173,5 +156,4 @@ Future<void> main() async {
 Future<void> onFlutterError(FlutterErrorDetails details) async {
   Logger().wtf('Error: ${details.exception}');
   Logger().wtf('Stack: ${details.stack}');
-  await FirebaseCrashlytics.instance.recordFlutterError(details);
 }

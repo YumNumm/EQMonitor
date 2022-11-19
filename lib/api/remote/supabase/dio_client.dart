@@ -5,13 +5,11 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart' hide Response;
 import 'package:dio_http2_adapter/dio_http2_adapter.dart';
-import 'package:eqmonitor/api/dio_firebase_performance.dart';
 import 'package:http/http.dart';
 
 class SupabaseHttpsClientWithDioAndFirebase implements Client {
   final Dio dio = Dio()
     ..options.connectTimeout = 5000
-    ..interceptors.add(DioFirebasePerformanceInterceptor())
     ..httpClientAdapter = Http2Adapter(
       ConnectionManager(
         onClientCreate: (_, config) => config.onBadCertificate = (_) => true,

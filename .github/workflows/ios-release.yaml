@@ -66,6 +66,7 @@ jobs:
       - name: Generate codes with build_runner
         run: |
           echo '${{ secrets.ENV }}' | base64 -d > .env
+          echo '${{ secrets.FIREBASE_IOS }}' | base64 -d > ./ios/Runner/GoogleService-Info.plist
           flutter pub run build_runner build --delete-conflicting-outputs
 
       - name: Generate LauncherIcon
