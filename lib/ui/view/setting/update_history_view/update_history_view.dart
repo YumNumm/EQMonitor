@@ -33,6 +33,8 @@ class UpdateHistotyView extends HookConsumerWidget {
                 Markdown(
                   data: '${item.comment}\n---\nBuild ${item.buildId}',
                   shrinkWrap: true,
+                  selectable: true,
+                  physics: const NeverScrollableScrollPhysics(),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8),
@@ -40,7 +42,10 @@ class UpdateHistotyView extends HookConsumerWidget {
                     onPressed: () async {
                       final url = item.url;
                       if (await canLaunchUrlString(url)) {
-                        await launchUrlString(url);
+                        await launchUrlString(
+                          url,
+                          mode: LaunchMode.externalApplication,
+                        );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
