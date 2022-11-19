@@ -53,7 +53,6 @@ class _EewPswaveArraivalCircleStrokePainter extends CustomPainter {
   final List<TravelTimeTable> travelTimeTables;
   final DateTime? onTestStarted;
 
-
   @override
   void paint(Canvas canvas, Size size) {
     for (final eew in eews) {
@@ -121,27 +120,27 @@ class _EewPswaveArraivalCircleStrokePainter extends CustomPainter {
             false;
         sPath.addPolygon(sOffsets, true);
         pPath.addPolygon(pOffsets, true);
-        canvas..drawPath(
-          Path()..addPolygon(sOffsets,true),
-          Paint()
-    ..color = isWarning ?Color.fromARGB(255, 255, 0, 0) : Color.fromARGB(255, 255, 149, 0)
-    ..isAntiAlias = true
-    ..strokeCap = StrokeCap.square
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 1
-          )
+        canvas
           ..drawPath(
-            Path()..addPolygon(pOffsets,true),
-            Paint()
-    ..color = Color.fromARGB(255, 0, 0, 255)
-    ..isAntiAlias = true
-    ..strokeCap = StrokeCap.square
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 0.0
-    );
+              Path()..addPolygon(sOffsets, true),
+              Paint()
+                ..color = isWarning
+                    ? Color.fromARGB(255, 255, 0, 0)
+                    : Color.fromARGB(255, 255, 149, 0)
+                ..isAntiAlias = true
+                ..strokeCap = StrokeCap.square
+                ..style = PaintingStyle.stroke
+                ..strokeWidth = 1)
+          ..drawPath(
+              Path()..addPolygon(pOffsets, true),
+              Paint()
+                ..color = Color.fromARGB(255, 0, 0, 255)
+                ..isAntiAlias = true
+                ..strokeCap = StrokeCap.square
+                ..style = PaintingStyle.stroke
+                ..strokeWidth = 0.0);
       }
     }
-    
   }
 
   @override
