@@ -123,7 +123,7 @@ class _EewPswaveArraivalCirclesPainter extends CustomPainter {
           }
         }
         final isWarning = eew.value.isWarning ??
-            eew.value.comments?.warning?.codes.contains(100) ??
+            eew.value.comments?.warning?.codes.contains(201) ??
             false;
         canvas.drawPath(
           Path()..addPolygon(sOffsets, true),
