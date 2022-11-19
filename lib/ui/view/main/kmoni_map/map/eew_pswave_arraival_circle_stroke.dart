@@ -118,8 +118,6 @@ class _EewPswaveArraivalCircleStrokePainter extends CustomPainter {
         final isWarning = eew.value.isWarning ??
             eew.value.comments?.warning?.codes.contains(201) ??
             false;
-        sPath.addPolygon(sOffsets, true);
-        pPath.addPolygon(pOffsets, true);
         canvas
           ..drawPath(
               Path()..addPolygon(sOffsets, true),
