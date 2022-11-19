@@ -138,6 +138,7 @@ class _EewPswaveArraivalCircleStrokePainter extends CustomPainter {
     ..strokeCap = StrokeCap.square
     ..style = PaintingStyle.stroke
     ..strokeWidth = 0.0
+    );
       }
     }
     
