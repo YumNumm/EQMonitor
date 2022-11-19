@@ -7,14 +7,14 @@ class ErrorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text('エラーが発生しました')),
+        appBar: AppBar(title: const Text('不正なページ遷移が行われました')),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SelectableText(error.toString()),
               ElevatedButton.icon(
-                onPressed: () => context.push('/'),
+                onPressed: () => context.go('/'),
                 label: const Text('戻る'),
                 icon: const Icon(Icons.arrow_back),
               ),
