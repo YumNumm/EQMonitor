@@ -23,7 +23,6 @@ class EewIntensityWidget extends ConsumerWidget {
     return RepaintBoundary(
       child: CustomPaint(
         isComplex: true,
-
         painter: EewIntensityPainter(
           colors: ref.watch(jmaIntensityColorProvider),
           eews: eews,
