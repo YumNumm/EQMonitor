@@ -125,7 +125,9 @@ Future<void> main() async {
 
   PlatformDispatcher.instance.onError = (error, stackTrace) {
     Logger().e(error, stackTrace);
-    crashlytics.recordError(error, stackTrace);
+    if(kReleaseMode) {
+      crashlytics.recordError(error, stackTrace);
+    }
     return true;
   };
   runApp(
