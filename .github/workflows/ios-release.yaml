@@ -2,18 +2,16 @@ name: Build ipa(release)
 
 #発火条件
 on:
-  #ソースをmainブランチにプッシュする時
-  # push:
-  #   branches: [main]
-
   workflow_dispatch:
+  push:
+    branches: [main,ios,without-firebase]
 
 jobs:
   build:
     #ビルド環境
     runs-on: macos-latest
     # タイムアウト時間を設定
-    timeout-minutes: 15
+    timeout-minutes: 45
 
     steps:
       #リポジトリからソースをダンロード
@@ -66,54 +64,28 @@ jobs:
         run: flutter pub get
 
       - name: Generate codes with build_runner
-        run: flutter pub run build_runner build --delete-conflicting-outputs
+        run: |
+          echo '${{ secrets.ENV }}' | base64 -d > .env
+          flutter pub run build_runner build --delete-conflicting-outputs
 
       - name: Generate LauncherIcon
         run: flutter pub run flutter_launcher_icons:main
 
-      - name: Generate NativeSplash
-        run: flutter pub run flutter_native_splash:create
-
-      - name: Analyze
-        run: flutter analyze .
-        continue-on-error: true
+      #- name: Generate NativeSplash
+      #  run: flutter pub run flutter_native_splash:create
 
       - name: Build ipa
         run: |
-          flutter build ipa --release --obfuscate --split-debug-info=obfuscate/ios
+          flutter build ios --release --no-codesign
+          mkdir -p Payload
+          mv ./build/ios/iphoneos/Runner.app Payload
+          zip -ry Payload.zip Payload/Runner.app
+          mv Payload.zip Payload.ipa
+          rm -rf Payload
 
-      - name: Upload artifact
+      - name: Upload IPA artifact
+        if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v1.0.0
         with:
           name: release-ipa
-          path: build/ios/ipa
-
-      # - uses: codecov/codecov-action@v3
-      #   with:
-      #     token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-      #     fail_ci_if_error: false # optional (default = false)
-      #     verbose: true # optional (default = false)
-      #     file: ~/coverage/lcov.info
-
-      #-- Slack通知 --#
-      # 成功
-      - name: Slack Notification on Success
-        if: ${{ success() }}
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_TITLE: Deploy Success
-          SLACK_COLOR: good
-          SLACK_ICON: https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/assets/icon.png
-          SLACK_USERNAME: EQMonitor
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-      # 失敗
-      - name: Slack Notification on Failure
-        if: ${{ failure() }}
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_TITLE: Deploy Failure
-          SLACK_COLOR: danger
-          SLACK_ICON: https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/assets/icon.png
-          SLACK_USERNAME: EQMonitor
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          path: Payload.ipa
