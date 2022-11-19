@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
-import '../../../../model/setting/jma_intensity_color_model.dart';
-import '../../../../provider/earthquake/eew_controller.dart';
-import '../../../../provider/init/map_area_forecast_local_e.dart';
-import '../../../../provider/setting/intensity_color_provider.dart';
-import '../../../../schema/local/prefecture/map_polygon.dart';
-import '../../../../schema/remote/dmdata/commonHeader.dart';
-import '../../../../schema/remote/dmdata/eew-information/eew-infomation.dart';
+import '../../../../../model/setting/jma_intensity_color_model.dart';
+import '../../../../../provider/earthquake/eew_controller.dart';
+import '../../../../../provider/init/map_area_forecast_local_e.dart';
+import '../../../../../provider/setting/intensity_color_provider.dart';
+import '../../../../../schema/local/prefecture/map_polygon.dart';
+import '../../../../../schema/remote/dmdata/commonHeader.dart';
+import '../../../../../schema/remote/dmdata/eew-information/eew-infomation.dart';
 
 /// 緊急地震速報の予想震度
 /// 電文内の予想震度(震度4以上)を表示
@@ -23,6 +23,7 @@ class EewIntensityWidget extends ConsumerWidget {
     return RepaintBoundary(
       child: CustomPaint(
         isComplex: true,
+
         painter: EewIntensityPainter(
           colors: ref.watch(jmaIntensityColorProvider),
           eews: eews,

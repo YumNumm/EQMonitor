@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../../../../model/analyzed_kyoshin_kansokuten.dart';
-import '../../../../provider/earthquake/kmoni_controller.dart';
-import '../../../../utils/extension/relative_luminance.dart';
+import '../../../../../model/analyzed_kyoshin_kansokuten.dart';
+import '../../../../../provider/earthquake/kmoni_controller.dart';
+import '../../../../../utils/extension/relative_luminance.dart';
 
 /// 強震観測点
 class KyoshinKansokutenWidget extends ConsumerWidget {
@@ -25,6 +25,7 @@ class KyoshinKansokutenWidget extends ConsumerWidget {
 
     return RepaintBoundary(
       child: CustomPaint(
+        isComplex: true,
         painter: KyoshinKansokutenPainter(
           obsPoints: analyzedKmoniPoints,
           showIntensityIcon: showIntensityIcon,

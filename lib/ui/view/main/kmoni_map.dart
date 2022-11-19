@@ -12,8 +12,10 @@ import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
 import 'package:eqmonitor/provider/theme_providers.dart';
 import 'package:eqmonitor/ui/view/main/kmoni_map/kmoni_map.viewmodel.dart';
 import 'package:eqmonitor/ui/view/main/kmoni_map/layer_selector.dart';
-import 'package:eqmonitor/ui/view/widget/map/eew_hypocenter.dart';
-import 'package:eqmonitor/ui/view/widget/map/kyoshin_kansokuten.dart';
+import 'package:eqmonitor/ui/view/main/kmoni_map/map/eew_hypocenter.dart';
+import 'package:eqmonitor/ui/view/main/kmoni_map/map/eew_pswave_arraival_circle.dart';
+import 'package:eqmonitor/ui/view/main/kmoni_map/map/eew_pswave_arraival_circle_stroke.dart';
+import 'package:eqmonitor/ui/view/main/kmoni_map/map/kyoshin_kansokuten.dart';
 import 'package:eqmonitor/ui/view/widget/updater.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Theme;
@@ -22,9 +24,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../view/widget/eew/eew_body_widget.dart';
-import '../widget/map/base_map.dart';
-import '../widget/map/eew_estimated_intensity.dart';
-import '../widget/map/eew_intensity.dart';
+import 'kmoni_map/map/base_map.dart';
+import 'kmoni_map/map/eew_estimated_intensity.dart';
+import 'kmoni_map/map/eew_intensity.dart';
 
 final transformationControllerProvider = Provider(
   (ref) => TransformationController(),
@@ -95,7 +97,7 @@ class KmoniMap extends HookConsumerWidget {
                 child: InteractiveViewer(
                   transformationController:
                       ref.watch(transformationControllerProvider),
-                  maxScale: 15,
+                  maxScale: 10,
                   boundaryMargin: const EdgeInsets.all(100),
                   clipBehavior: Clip.none,
                   child: SizedBox(
@@ -106,6 +108,8 @@ class KmoniMap extends HookConsumerWidget {
                         // マップベース
                         if (vm.layers.contains(KmoniLayer.baseMap))
                           const BaseMapWidget(),
+                        if (vm.layers.contains(KmoniLayer.psWaveArrivalCircle))
+                          const EewPswaveArraivalCirclesWidget(),
                         // EEWの距離減衰式による予想震度
                         if ((ref.watch(kmoniProvider).testCaseStartTime !=
                                 null) ||
@@ -126,8 +130,12 @@ class KmoniMap extends HookConsumerWidget {
                             showKmoniPoints:
                                 vm.layers.contains(KmoniLayer.kmoniPoints),
                           ),
+                        // EEWのP/S波到達予想円 枠
+                        if (vm.layers
+                            .contains(KmoniLayer.psWaveArrivalCircleStroke))
+                          const EewPswaveArraivalCircleStrokeWidgets(),
                         // EEWの震央位置
-                        const MapEewWidget(),
+                        const EewHypocentersWidget(),
                       ],
                     ),
                   ),
@@ -146,7 +154,7 @@ class KmoniMap extends HookConsumerWidget {
                         strokeWidth: 1,
                         strokeColor: Colors.white,
                         child: const Text(
-                          'TEST MODE',
+                          '訓練',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Color.fromARGB(129, 255, 0, 0),
