@@ -2,13 +2,13 @@ name: Flutter build Android(r)
 
 on:
   push:
-    branches: [main]
+     branches: [main,android,without-firebase]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     steps:
       - uses: actions/checkout@v2
@@ -25,7 +25,7 @@ jobs:
           channel: ${{ env.FLUTTER_CHANNEL }}
           cache: true
           cache-key: ${{ env.FLUTTER_VERSION }}-${{ env.FLUTTER_CHANNEL }}
-          
+
       - name: Flutter version
         run: flutter --version
 
@@ -62,10 +62,6 @@ jobs:
 
       #- name: Generate NativeSplash
       #  run: flutter pub run flutter_native_splash:create
-
-      - name: Analyze
-        run: flutter analyze .
-        continue-on-error: true
 
       - name: Accept Android License
         run: yes | flutter doctor --android-licenses
