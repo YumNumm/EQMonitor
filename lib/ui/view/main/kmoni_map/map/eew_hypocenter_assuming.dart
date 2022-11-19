@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../../../../schema/remote/dmdata/commonHeader.dart';
-import '../../../../schema/remote/dmdata/eew-information/eew-infomation.dart';
-import '../../../../utils/map/map_global_offset.dart';
+import '../../../../../schema/remote/dmdata/commonHeader.dart';
+import '../../../../../schema/remote/dmdata/eew-information/eew-infomation.dart';
+import '../../../../../utils/map/map_global_offset.dart';
 
 /// PLUM法等の仮定震源要素表示
 /// ref: Flutter Animation Gallery
@@ -23,7 +23,7 @@ class _EewHypoCenterAssumingMapWidgetState
   late AnimationController firstRippleController;
   late AnimationController secondRippleController;
   late AnimationController thirdRippleController;
-  late AnimationController centerCircleController;
+  late AnimationController centerOpacityController;
   late Animation<double> firstRippleRadiusAnimation;
   late Animation<double> firstRippleOpacityAnimation;
   late Animation<double> firstRippleWidthAnimation;
@@ -33,7 +33,7 @@ class _EewHypoCenterAssumingMapWidgetState
   late Animation<double> thirdRippleRadiusAnimation;
   late Animation<double> thirdRippleOpacityAnimation;
   late Animation<double> thirdRippleWidthAnimation;
-  late Animation<double> centerCircleRadiusAnimation;
+  late Animation<double> centerOpacityAnimation;
 
   @override
   void initState() {
@@ -72,7 +72,7 @@ class _EewHypoCenterAssumingMapWidgetState
         },
       );
 
-    firstRippleWidthAnimation = Tween<double>(begin: 1, end: 0).animate(
+    firstRippleWidthAnimation = Tween<double>(begin: 10, end: 0).animate(
       CurvedAnimation(
         parent: firstRippleController,
         curve: Curves.ease,
@@ -164,7 +164,7 @@ class _EewHypoCenterAssumingMapWidgetState
         },
       );
 
-    thirdRippleWidthAnimation = Tween<double>(begin: 0, end: 10).animate(
+    thirdRippleWidthAnimation = Tween<double>(begin: 10, end: 0).animate(
       CurvedAnimation(
         parent: thirdRippleController,
         curve: Curves.ease,
@@ -175,13 +175,15 @@ class _EewHypoCenterAssumingMapWidgetState
         },
       );
 
-    centerCircleController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    centerOpacityController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
 
-    centerCircleRadiusAnimation = Tween<double>(begin: 2, end: 3).animate(
+    centerOpacityAnimation = Tween<double>(begin: 1, end: 0.2).animate(
       CurvedAnimation(
-        parent: centerCircleController,
-        curve: Curves.fastOutSlowIn,
+        parent: centerOpacityController,
+        curve: Curves.linear,
       ),
     )
       ..addListener(
@@ -192,25 +194,24 @@ class _EewHypoCenterAssumingMapWidgetState
       ..addStatusListener(
         (status) {
           if (status == AnimationStatus.completed) {
-            centerCircleController.reverse();
+            centerOpacityController.reverse();
           } else if (status == AnimationStatus.dismissed) {
-            centerCircleController.forward();
+            centerOpacityController.forward();
           }
         },
       );
 
+    centerOpacityController.forward();
     firstRippleController.forward();
     Timer(
-      const Duration(milliseconds: 765),
+      const Duration(milliseconds: 333),
       () => secondRippleController.forward(),
     );
 
     Timer(
-      const Duration(milliseconds: 1050),
+      const Duration(milliseconds: 667),
       () => thirdRippleController.forward(),
     );
-
-    centerCircleController.forward();
 
     super.initState();
   }
@@ -220,7 +221,7 @@ class _EewHypoCenterAssumingMapWidgetState
     firstRippleController.dispose();
     secondRippleController.dispose();
     thirdRippleController.dispose();
-    centerCircleController.dispose();
+    centerOpacityController.dispose();
     super.dispose();
   }
 
@@ -229,17 +230,19 @@ class _EewHypoCenterAssumingMapWidgetState
     final eew = widget.eew;
 
     return CustomPaint(
+      isComplex: true,
       painter: EewHypoCenterAssumingPainter(
         firstRippleRadiusAnimation.value,
         firstRippleOpacityAnimation.value,
-        firstRippleWidthAnimation.value,
+        firstRippleRadiusAnimation.value,
         secondRippleRadiusAnimation.value,
         secondRippleOpacityAnimation.value,
-        secondRippleWidthAnimation.value,
+        secondRippleRadiusAnimation.value,
         thirdRippleRadiusAnimation.value,
         thirdRippleOpacityAnimation.value,
-        thirdRippleWidthAnimation.value,
-        centerCircleRadiusAnimation.value,
+        thirdRippleRadiusAnimation.value,
+        3,
+        centerOpacityAnimation.value,
         eew,
       ),
     );
@@ -259,6 +262,7 @@ class EewHypoCenterAssumingPainter extends CustomPainter {
     this.thirdRippleOpacity,
     this.thirdRippleStrokeWidth,
     this.centerCircleRadius,
+    this.centerOpacity,
     this.eew,
   );
 
@@ -272,6 +276,7 @@ class EewHypoCenterAssumingPainter extends CustomPainter {
   final double thirdRippleOpacity;
   final double thirdRippleStrokeWidth;
   final double centerCircleRadius;
+  final double centerOpacity;
   final MapEntry<CommonHead, EEWInformation> eew;
 
   @override
@@ -282,26 +287,23 @@ class EewHypoCenterAssumingPainter extends CustomPainter {
         eew.value.earthQuake!.hypoCenter.coordinateComponent.longitude!.value,
       ),
     ).toLocalOffset(const Size(476, 927.4));
-    const myColor = Color.fromARGB(255, 125, 88, 255);
+    const myColor = Color.fromARGB(255, 255, 0, 0);
 
     final firstPaint = Paint()
       ..color = myColor.withOpacity(firstRippleOpacity)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = firstRippleStrokeWidth;
+      ..style = PaintingStyle.fill;
 
     canvas.drawCircle(offset, firstRippleRadius, firstPaint);
 
     final secondPaint = Paint()
       ..color = myColor.withOpacity(secondRippleOpacity)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = secondRippleStrokeWidth;
+      ..style = PaintingStyle.fill;
 
     canvas.drawCircle(offset, secondRippleRadius, secondPaint);
 
     final thirdPaint = Paint()
       ..color = myColor.withOpacity(thirdRippleOpacity)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = thirdRippleStrokeWidth;
+      ..style = PaintingStyle.fill;
 
     canvas.drawCircle(offset, thirdRippleRadius, thirdPaint);
 
@@ -316,13 +318,12 @@ class EewHypoCenterAssumingPainter extends CustomPainter {
         centerCircleRadius,
         fourthPaint
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 0.1
+          ..strokeWidth = .1
           ..color = Colors.white,
       );
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
-  }
+  bool shouldRepaint(covariant EewHypoCenterAssumingPainter oldDelegate) =>
+      true;
 }

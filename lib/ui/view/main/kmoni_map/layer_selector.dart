@@ -21,13 +21,9 @@ class KmoniLayerSelectorAlertDialog extends ConsumerWidget {
         child: Column(
           children: <Widget>[
             for (final layer in KmoniLayer.values)
-              if ([
-                    KmoniLayer.baseMap,
-                    KmoniLayer.psWaveArrivalCircle,
-                    KmoniLayer.psWaveArrivalCircleStroke
-                  ].contains(layer) ||
-                  (layer == KmoniLayer.distanceDecayIntensity &&
-                      !ref.watch(developerModeProvider).isDeveloper))
+              if ([KmoniLayer.baseMap, KmoniLayer.distanceDecayIntensity]
+                      .contains(layer) &&
+                  !ref.watch(developerModeProvider).isDeveloper)
                 const SizedBox.shrink()
               else
                 CheckboxListTile(
