@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
 import '../../../../../model/setting/jma_intensity_color_model.dart';
-import '../../../../../provider/earthquake/eew_controller.dart';
+import '../../../../../provider/earthquake/eew_provider.dart';
 import '../../../../../provider/init/map_area_forecast_local_e.dart';
 import '../../../../../provider/setting/intensity_color_provider.dart';
 import '../../../../../schema/local/prefecture/map_polygon.dart';

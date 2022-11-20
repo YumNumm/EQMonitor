@@ -10,7 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../../../../provider/earthquake/eew_controller.dart';
+import '../../../../provider/earthquake/eew_provider.dart';
 import '../../../../schema/remote/dmdata/eew-information/earthquake/accuracy.dart';
 import '../../../../schema/remote/dmdata/eew-information/earthquake/accuracy/depth_calculation.dart';
 import '../../../../schema/remote/dmdata/eew-information/earthquake/accuracy/epicCenterAccuracy.dart';
