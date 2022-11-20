@@ -1,6 +1,14 @@
 {
   "items": [
     {
+      "isBreakingChange": false,
+      "buildId": 400,
+      "version": "V0.7.1",
+      "date": "2022-11-21T07:53:00+09:00",
+      "comment": "## 変更点\n- 地図の描画を高速化\n- P/S波到達予想円の描画層を変更\n- レイヤーにP/S波到達予想円の枠と塗りつぶしを追加\n- EEWが警報の際に、到達予想円の色を赤で表示するように\n- P/S波到達予想円の塗りつぶしにグラデーション(Shader)を利用するように\n- 精度の低いEEW時の震央表示アニメーションの描画改善\n- 通常EEW時の震央地描画回数を低減\n- アプリの更新履歴を設定>本アプリについて>更新履歴から確認できるようにしました\n- アプリのログを設定>本アプリについて>ログから確認できるようにしました",
+      "url": "https://github.com/EQMonitor/EQMonitor/releases/tag/v0.7.1"
+    },
+    {
       "isBreakingChange": true,
       "buildId": 394,
       "version": "V0.7.0",
