@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart' hide Path;
 
-import '../../../../../provider/earthquake/eew_controller.dart';
+import '../../../../../provider/earthquake/eew_provider.dart';
 import '../../../../../schema/remote/dmdata/eew-information/earthquake/accuracy/epicCenterAccuracy.dart';
 
 /// 緊急地震速報のP・S波到達予想円の枠を表示するWidget
@@ -19,7 +19,7 @@ class EewPswaveArraivalCircleStrokeWidgets extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // 精度が低いEEWを除いたEEWのリスト
     final eews = ref
-        .watch(eewHistoryProvider.select((value) => value.showEews))
+        .watch(eewProvider.select((value) => value.showEews))
         .where(
           (e) =>
               e.value.earthQuake?.isAssuming != true &&
@@ -120,23 +120,25 @@ class _EewPswaveArraivalCircleStrokePainter extends CustomPainter {
             false;
         canvas
           ..drawPath(
-              Path()..addPolygon(sOffsets, true),
-              Paint()
-                ..color = isWarning
-                    ? Color.fromARGB(255, 255, 0, 0)
-                    : Color.fromARGB(255, 255, 149, 0)
-                ..isAntiAlias = true
-                ..strokeCap = StrokeCap.square
-                ..style = PaintingStyle.stroke
-                ..strokeWidth = 1)
+            Path()..addPolygon(sOffsets, true),
+            Paint()
+              ..color = isWarning
+                  ? const Color.fromARGB(255, 255, 0, 0).withOpacity(0.6)
+                  : const Color.fromARGB(255, 255, 149, 0).withOpacity(0.6)
+              ..isAntiAlias = true
+              ..strokeCap = StrokeCap.square
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 1,
+          )
           ..drawPath(
-              Path()..addPolygon(pOffsets, true),
-              Paint()
-                ..color = Color.fromARGB(255, 0, 0, 255)
-                ..isAntiAlias = true
-                ..strokeCap = StrokeCap.square
-                ..style = PaintingStyle.stroke
-                ..strokeWidth = 0.0);
+            Path()..addPolygon(pOffsets, true),
+            Paint()
+              ..color = const Color.fromARGB(255, 0, 0, 255)
+              ..isAntiAlias = true
+              ..strokeCap = StrokeCap.square
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 0.0,
+          );
       }
     }
   }

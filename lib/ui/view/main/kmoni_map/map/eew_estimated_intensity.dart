@@ -1,8 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/model/setting/jma_intensity_color_model.dart';
-import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
+import 'package:eqmonitor/provider/earthquake/eew_provider.dart';
 import 'package:eqmonitor/provider/init/map_area_forecast_local_e.dart';
 import 'package:eqmonitor/provider/init/parameter_earthquake.dart';
+import 'package:eqmonitor/provider/init/talker.dart';
 import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
 import 'package:eqmonitor/schema/local/prefecture/map_polygon.dart';
 import 'package:eqmonitor/ui/theme/jma_intensity.dart';
@@ -10,7 +11,7 @@ import 'package:eqmonitor/utils/intensity_estimate/intensity_estimate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:logger/logger.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 /// EEWの震源要素から距離減衰式により計算した予想震度を描画
 class EewEstimatedIntensityWidget extends ConsumerWidget {
@@ -20,7 +21,7 @@ class EewEstimatedIntensityWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eews = ref.watch(eewHistoryProvider).showEews;
+    final eews = ref.watch(eewProvider.select((value) => value.showEews));
     if (eews.isEmpty ||
         (eews.any(
           (e) => e.value.earthQuake?.isAssuming ?? false,
@@ -58,6 +59,7 @@ class EewEstimatedIntensityWidget extends ConsumerWidget {
         colors: ref.watch(jmaIntensityColorProvider),
         alpha: 0.6,
         isDeveloper: isDeveloper,
+        talker: ref.watch(talkerProvider),
       ),
     );
   }
@@ -73,6 +75,7 @@ class EstimatedIntensityPainter extends CustomPainter {
     required this.isDeveloper,
     this.showIntensityPoint = false,
     this.alpha = 1,
+    required this.talker,
   });
 
   List<MapPolygon> mapPolygons;
@@ -82,6 +85,7 @@ class EstimatedIntensityPainter extends CustomPainter {
   final bool showIntensityPoint;
   final double alpha;
   final bool isDeveloper;
+  final Talker talker;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -122,8 +126,8 @@ class EstimatedIntensityPainter extends CustomPainter {
                   ..style = PaintingStyle.stroke,
               );
           }
-        } on Exception catch (e) {
-          Logger().e(e);
+        } on Exception catch (e, st) {
+          talker.error('EstimatedIntensityPainter', e, st);
         }
       },
     );

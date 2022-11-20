@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/provider/init/parameter_earthquake.dart';
+import 'package:eqmonitor/provider/init/talker.dart';
 import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
 import 'package:eqmonitor/provider/theme_providers.dart';
 import 'package:eqmonitor/ui/theme/jma_intensity.dart';
@@ -173,6 +174,7 @@ class IntensityEstimatePage extends HookConsumerWidget {
                               mapPolygons:
                                   ref.watch(mapAreaForecastLocalEProvider),
                               isDeveloper: true,
+                              talker: ref.watch(talkerProvider),
                             ),
                             size: const Size(476, 927.4),
                           ),

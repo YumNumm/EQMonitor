@@ -32,6 +32,13 @@ class DebugMenuPage extends ConsumerWidget {
               context.push('/settings/debug/eew_test');
             },
           ),
+          ListTile(
+            title: const Text('ログ'),
+            leading: const Icon(Icons.logo_dev),
+            onTap: () {
+              context.push('/settings/debug/log');
+            },
+          ),
         ],
       ),
     );

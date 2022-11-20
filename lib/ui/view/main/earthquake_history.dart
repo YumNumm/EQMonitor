@@ -1,7 +1,5 @@
 // ignore_for_file: lines_longer_than_80_chars
 
-import 'dart:developer';
-
 import 'package:eqmonitor/api/remote/supabase/telegram.dart';
 import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
 import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
@@ -23,7 +21,6 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final vm = ref.watch(earthquakeHistoryViewModel);
-
     final appBar = AppBar(
       title: const Text('地震履歴'),
       actions: [
@@ -164,8 +161,9 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) {
-          log(error.toString());
-          log(stack.toString());
+          ref
+              .read(earthquakeHistoryViewModel.notifier)
+              .logError('地震履歴読み込み中にエラー発生', error, stack);
           return SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

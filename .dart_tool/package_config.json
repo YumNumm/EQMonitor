@@ -20,6 +20,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "ansicolor",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/ansicolor-2.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "app_links",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/app_links-3.3.0",
       "packageUri": "lib/",
@@ -608,6 +614,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "group_button",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/group_button-5.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "hive",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/hive-2.2.3",
       "packageUri": "lib/",
@@ -728,22 +740,10 @@
       "languageVersion": "2.17"
     },
     {
-      "name": "logger",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/logger-1.1.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "logging",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/logging-1.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
-    },
-    {
-      "name": "lottie",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/lottie-1.4.3",
-      "packageUri": "lib/",
-      "languageVersion": "2.18"
     },
     {
       "name": "markdown",
@@ -1100,6 +1100,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "substring_highlight",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/substring_highlight-1.0.33",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "supabase",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/supabase-1.2.0",
       "packageUri": "lib/",
@@ -1108,6 +1114,24 @@
     {
       "name": "supabase_flutter",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/supabase_flutter-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "talker",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/talker-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "talker_flutter",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/talker_flutter-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "talker_logger",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/talker_logger-2.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
@@ -1256,7 +1280,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2022-11-20T16:44:02.333401Z",
+  "generated": "2022-11-20T15:03:39.731354Z",
   "generator": "pub",
   "generatorVersion": "2.18.4"
 }

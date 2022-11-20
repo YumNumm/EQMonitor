@@ -71,6 +71,11 @@ class EewBodyWidget extends ConsumerWidget {
       initialExpanded: ref.watch(eewExpandedProvider)[eew.key.eventId],
     );
 
+    /// 警報かどうか
+    final isWarning = eew.value.isWarning ??
+        eew.value.comments?.warning?.codes.contains(201) ??
+        false;
+
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Padding(
@@ -133,7 +138,7 @@ class EewBodyWidget extends ConsumerWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(8),
                                 child: Text(
-                                  '${(eew.value.comments?.warning?.codes ?? []).contains(201) ? '警報' : ''}'
+                                  '${isWarning ? '警報 ' : ''}'
                                   '${eew.value.isLastInfo ? ' 最終 ' : ''}#${eew.key.serialNo}',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -202,11 +207,16 @@ class EewBodyWidget extends ConsumerWidget {
                                     // 程度以上
                                     if (eew.value.intensity?.maxint.to ==
                                         JmaIntensity.over)
-                                      const Text(
+                                      Text(
                                         '程度以上',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15,
+                                          color: (eew.value.intensity?.maxint
+                                                      .from ??
+                                                  JmaIntensity.Unknown)
+                                              .fromUser(colors)
+                                              .onPrimary,
                                         ),
                                       ),
                                   ],
@@ -258,35 +268,29 @@ class EewBodyWidget extends ConsumerWidget {
                       // ヘッダー・予想最大震度
                       Expanded(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Card(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  FittedBox(
-                                    child: Column(
-                                      children: [
-                                        Row(),
-                                        const Text(
-                                          '緊急地震速報',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          '${(eew.value.comments?.warning?.codes ?? []).contains(201) ? '警報' : '予報'}'
-                                          '${eew.value.isLastInfo ? ' 最終' : ''} #${eew.key.serialNo}',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
+                                  Row(),
+                                  const Text(
+                                    '緊急地震速報',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${isWarning ? '警報' : '予報'}'
+                                    '${eew.value.isLastInfo ? ' 最終' : ''} #${eew.key.serialNo}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-
                             // 予想最大震度
                             Text(
                               '予想最大震度',
@@ -299,16 +303,21 @@ class EewBodyWidget extends ConsumerWidget {
                             ),
                             // 予想最大震度不明の場合
                             if (maxIntensity == JmaIntensity.Unknown)
-                              FittedBox(
-                                child: Text(
-                                  '不明',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 30,
-                                    color: (eew.value.intensity?.maxint.from ??
-                                            JmaIntensity.Unknown)
-                                        .fromUser(colors)
-                                        .onPrimary,
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15),
+                                child: FittedBox(
+                                  child: Text(
+                                    '不明',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 30,
+                                      color:
+                                          (eew.value.intensity?.maxint.from ??
+                                                  JmaIntensity.Unknown)
+                                              .fromUser(colors)
+                                              .onPrimary,
+                                    ),
                                   ),
                                 ),
                               )

@@ -19,8 +19,6 @@ class KyoshinMonitorApi {
       //);
       ;
 
-  // final _logger = Logger();
-
   /// 強震モニタ サーバ側の最新時刻を取得します
   Future<DateTime> getLatestDateTime() async {
     final res = await dio.get<List<int>>(

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/provider/init/talker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -12,7 +13,6 @@ import 'package:restart_app/restart_app.dart';
 import '../../../env/env.dart';
 import '../../../provider/init/application_support_dir.dart';
 import '../../../provider/init/shared_preferences.dart';
-import '../../../provider/logger.dart';
 import '../../../schema/remote/dmdata/parameter-earthquake/parameter-earthquake.dart';
 
 class FilesDownloadWidget extends HookConsumerWidget {
@@ -23,6 +23,9 @@ class FilesDownloadWidget extends HookConsumerWidget {
     final isDownloading = useState<bool>(false);
     final showRetry = useState<bool>(false);
     final downloadingStatus = useState<String>('0%');
+
+    final talker = ref.watch(talkerProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('観測点データの取得'),
@@ -93,12 +96,12 @@ class FilesDownloadWidget extends HookConsumerWidget {
                     downloadingStatus.value = 'ダウンロード中にエラーが発生しました。\n'
                         '${e.message}\n'
                         '${e.response?.data}';
-                    ref.read(loggerProvider).wtf(e.response?.data);
+                    talker.error(e.response?.data);
                     showRetry.value = true;
                   } on Error catch (e) {
                     downloadingStatus.value = 'エラーが発生しました。\n'
                         '$e';
-                    ref.read(loggerProvider).wtf(e);
+                    talker.error(e);
                     showRetry.value = true;
                   }
                 },
@@ -164,12 +167,12 @@ class FilesDownloadWidget extends HookConsumerWidget {
                     downloadingStatus.value = 'ダウンロード中にエラーが発生しました。\n'
                         '${e.message}\n'
                         '${e.response?.data}';
-                    ref.read(loggerProvider).wtf(e.response?.data);
+                    talker.error(e.response?.data);
                     showRetry.value = true;
                   } on Error catch (e) {
                     downloadingStatus.value = 'エラーが発生しました。\n'
                         '$e';
-                    ref.read(loggerProvider).wtf(e);
+                    talker.error(e);
                     showRetry.value = true;
                   }
                 },

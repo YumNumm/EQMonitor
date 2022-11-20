@@ -5,7 +5,7 @@ import 'package:eqmonitor/api/remote/kmoni/real_time_data_type.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logger/logger.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 import '../../api/remote/kmoni.dart';
 import '../../api/remote/kmoni/kmoni_image_parser.dart';
@@ -30,22 +30,23 @@ class KmoniProvider extends StateNotifier<KmoniModel> {
             testCaseStartTime: null,
           ),
         ) {
+    talker = Talker(
+      filter: BaseTalkerFilter(
+        titles: ['KmoniProvider'],
+      ),
+    );
+    kyoshinImageParser = KyoshinImageParser(talker);
     onInit();
   }
 
   final Ref ref;
 
-  final logger = Logger(
-    printer: PrettyPrinter(
-      methodCount: 1,
-      printTime: true,
-    ),
-  );
+  late Talker talker;
 
   final KyoshinMonitorApi kyoshinMonitorApi = KyoshinMonitorApi();
   final KyoshinWebApiUrlGenerator kyoshinWebApiUrlGenerator =
       KyoshinWebApiUrlGenerator();
-  final KyoshinImageParser kyoshinImageParser = KyoshinImageParser();
+  late KyoshinImageParser kyoshinImageParser;
 
   // Kmoniからデータを取得するタイマーを開始
   void onInit() {
@@ -113,7 +114,7 @@ class KmoniProvider extends StateNotifier<KmoniModel> {
       final dt = await kyoshinMonitorApi.getLatestDateTime();
       await updateShindo(dt);
     } on Exception catch (e) {
-      logger.e(e);
+      talker.handleException(e);
     } finally {
       // 更新中フラグを下ろす
       state = state.copyWith(
@@ -150,8 +151,10 @@ class KmoniProvider extends StateNotifier<KmoniModel> {
         analyzedPoint: parsedAnalyzedPoint,
         lastUpdated: dt,
       );
-    } on Exception {
-      logger.e(
+    } on Exception catch (e, stackTrace) {
+      talker.handleException(
+        e,
+        stackTrace,
         'リアルタイム震度画像の取得に失敗しました',
       );
     }
