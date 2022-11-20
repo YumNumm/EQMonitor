@@ -4,7 +4,7 @@ import 'dart:ui';
 
 import 'package:bordered_text/bordered_text.dart';
 import 'package:eqmonitor/model/setting/kmoni_setting_model.dart';
-import 'package:eqmonitor/provider/earthquake/eew_controller.dart';
+import 'package:eqmonitor/provider/earthquake/eew_provider.dart';
 import 'package:eqmonitor/provider/earthquake/kmoni_controller.dart';
 import 'package:eqmonitor/provider/package_info.dart';
 import 'package:eqmonitor/provider/setting/developer_mode.dart';

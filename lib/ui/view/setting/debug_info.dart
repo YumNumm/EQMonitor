@@ -8,7 +8,7 @@ import 'package:eqmonitor/ui/view/setting/component/setting_section.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../provider/earthquake/eew_controller.dart';
+import '../../../provider/earthquake/eew_provider.dart';
 import '../../../provider/init/application_support_dir.dart';
 import '../../../provider/init/device_info.dart';
 import '../../../provider/init/kyoshin_kansokuten.dart';
