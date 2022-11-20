@@ -21,6 +21,7 @@ class UpdateHistotyView extends HookConsumerWidget {
           itemBuilder: (context, index) {
             final item = data.items[index];
             return ExpansionTile(
+              initiallyExpanded: index == 0,
               title: ListTile(
                 title: Text(
                   item.version,
