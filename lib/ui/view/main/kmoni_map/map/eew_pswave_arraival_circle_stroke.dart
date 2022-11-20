@@ -123,8 +123,8 @@ class _EewPswaveArraivalCircleStrokePainter extends CustomPainter {
             Path()..addPolygon(sOffsets, true),
             Paint()
               ..color = isWarning
-                  ? const Color.fromARGB(255, 255, 0, 0)
-                  : const Color.fromARGB(255, 255, 149, 0)
+                  ? const Color.fromARGB(255, 255, 0, 0).withOpacity(0.6)
+                  : const Color.fromARGB(255, 255, 149, 0).withOpacity(0.6)
               ..isAntiAlias = true
               ..strokeCap = StrokeCap.square
               ..style = PaintingStyle.stroke

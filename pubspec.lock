@@ -1272,6 +1272,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
+  substring_highlight:
+    dependency: "direct main"
+    description:
+      name: substring_highlight
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.33"
   supabase:
     dependency: "direct main"
     description:

@@ -71,6 +71,11 @@ class EewBodyWidget extends ConsumerWidget {
       initialExpanded: ref.watch(eewExpandedProvider)[eew.key.eventId],
     );
 
+    /// 警報かどうか
+    final isWarning = eew.value.isWarning ??
+        eew.value.comments?.warning?.codes.contains(201) ??
+        false;
+
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Padding(
@@ -133,7 +138,7 @@ class EewBodyWidget extends ConsumerWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(8),
                                 child: Text(
-                                  '${(eew.value.comments?.warning?.codes ?? []).contains(201) ? '警報' : ''}'
+                                  '${isWarning ? '警報 ' : ''}'
                                   '${eew.value.isLastInfo ? ' 最終 ' : ''}#${eew.key.serialNo}',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -202,11 +207,16 @@ class EewBodyWidget extends ConsumerWidget {
                                     // 程度以上
                                     if (eew.value.intensity?.maxint.to ==
                                         JmaIntensity.over)
-                                      const Text(
+                                      Text(
                                         '程度以上',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15,
+                                          color: (eew.value.intensity?.maxint
+                                                      .from ??
+                                                  JmaIntensity.Unknown)
+                                              .fromUser(colors)
+                                              .onPrimary,
                                         ),
                                       ),
                                   ],
@@ -274,7 +284,7 @@ class EewBodyWidget extends ConsumerWidget {
                                           ),
                                         ),
                                         Text(
-                                          '${(eew.value.comments?.warning?.codes ?? []).contains(201) ? '警報' : '予報'}'
+                                          '${isWarning ? '警報' : '予報'}'
                                           '${eew.value.isLastInfo ? ' 最終' : ''} #${eew.key.serialNo}',
                                           style: const TextStyle(
                                             fontWeight: FontWeight.bold,
