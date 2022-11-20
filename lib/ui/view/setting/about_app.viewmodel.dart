@@ -34,7 +34,7 @@ class AboutAppViewModel {
     GoRouter.of(context).pop();
 
     ref.read(kmoniProvider.notifier).startTestCase();
-    ref.read(eewHistoryProvider.notifier).startTestcase();
+    ref.read(eewProvider.notifier).startTestcase();
   }
 
   /// 開発者向けモードのボタンHandler

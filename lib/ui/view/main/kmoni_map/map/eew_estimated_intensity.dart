@@ -20,7 +20,7 @@ class EewEstimatedIntensityWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eews = ref.watch(eewHistoryProvider).showEews;
+    final eews = ref.watch(eewProvider.select((value) => value.showEews));
     if (eews.isEmpty ||
         (eews.any(
           (e) => e.value.earthQuake?.isAssuming ?? false,

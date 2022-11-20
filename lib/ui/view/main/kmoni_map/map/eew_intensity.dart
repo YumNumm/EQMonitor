@@ -18,8 +18,7 @@ class EewIntensityWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapSource = ref.watch(mapAreaForecastLocalEProvider);
-    final eews =
-        ref.watch(eewHistoryProvider.select((value) => value.showEews));
+    final eews = ref.watch(eewProvider.select((value) => value.showEews));
     return RepaintBoundary(
       child: CustomPaint(
         isComplex: true,

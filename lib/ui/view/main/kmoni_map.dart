@@ -93,51 +93,48 @@ class KmoniMap extends HookConsumerWidget {
           key: mapKey,
           children: [
             GestureDetector(
-              child: Center(
-                child: InteractiveViewer(
-                  transformationController:
-                      ref.watch(transformationControllerProvider),
-                  maxScale: 10,
-                  boundaryMargin: const EdgeInsets.all(100),
-                  clipBehavior: Clip.none,
-                  child: SizedBox(
-                    height: 927.4,
-                    width: 476,
-                    child: Stack(
-                      children: [
-                        // マップベース
-                        if (vm.layers.contains(KmoniLayer.baseMap))
-                          const BaseMapWidget(),
-                        if (vm.layers.contains(KmoniLayer.psWaveArrivalCircle))
-                          const EewPswaveArraivalCirclesWidget(),
-                        // EEWの距離減衰式による予想震度
-                        if ((ref.watch(kmoniProvider).testCaseStartTime !=
-                                null) ||
-                            (vm.layers
-                                .contains(KmoniLayer.distanceDecayIntensity)))
-                          EewEstimatedIntensityWidget(isDeveloper: isDeveloper),
+              child: InteractiveViewer(
+                transformationController:
+                    ref.watch(transformationControllerProvider),
+                maxScale: 10,
+                boundaryMargin: const EdgeInsets.all(100),
+                clipBehavior: Clip.none,
+                child: SizedBox(
+                  height: 927.4,
+                  width: 476,
+                  child: Stack(
+                    children: [
+                      // マップベース
+                      if (vm.layers.contains(KmoniLayer.baseMap))
+                        const BaseMapWidget(),
+                      if (vm.layers.contains(KmoniLayer.psWaveArrivalCircle))
+                        const EewPswaveArraivalCirclesWidget(),
+                      // EEWの距離減衰式による予想震度
+                      if ((ref.watch(kmoniProvider).testCaseStartTime !=
+                              null) ||
+                          (vm.layers
+                              .contains(KmoniLayer.distanceDecayIntensity)))
+                        EewEstimatedIntensityWidget(isDeveloper: isDeveloper),
 
-                        // EEWの予想震度
-                        if (vm.layers.contains(KmoniLayer.jmaIntensity))
-                          const EewIntensityWidget(),
-                        // 観測点
-                        if (vm.layers.contains(KmoniLayer.kmoniPoints) ||
-                            vm.layers
-                                .contains(KmoniLayer.realtimeIntensityIcon))
-                          KyoshinKansokutenWidget(
-                            showIntensityIcon: vm.layers
-                                .contains(KmoniLayer.realtimeIntensityIcon),
-                            showKmoniPoints:
-                                vm.layers.contains(KmoniLayer.kmoniPoints),
-                          ),
-                        // EEWのP/S波到達予想円 枠
-                        if (vm.layers
-                            .contains(KmoniLayer.psWaveArrivalCircleStroke))
-                          const EewPswaveArraivalCircleStrokeWidgets(),
-                        // EEWの震央位置
-                        const EewHypocentersWidget(),
-                      ],
-                    ),
+                      // EEWの予想震度
+                      if (vm.layers.contains(KmoniLayer.jmaIntensity))
+                        const EewIntensityWidget(),
+                      // 観測点
+                      if (vm.layers.contains(KmoniLayer.kmoniPoints) ||
+                          vm.layers.contains(KmoniLayer.realtimeIntensityIcon))
+                        KyoshinKansokutenWidget(
+                          showIntensityIcon: vm.layers
+                              .contains(KmoniLayer.realtimeIntensityIcon),
+                          showKmoniPoints:
+                              vm.layers.contains(KmoniLayer.kmoniPoints),
+                        ),
+                      // EEWのP/S波到達予想円 枠
+                      if (vm.layers
+                          .contains(KmoniLayer.psWaveArrivalCircleStroke))
+                        const EewPswaveArraivalCircleStrokeWidgets(),
+                      // EEWの震央位置
+                      const EewHypocentersWidget(),
+                    ],
                   ),
                 ),
               ),
@@ -190,7 +187,7 @@ class KmoniStatusWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final kmoni = ref.watch(kmoniProvider);
-    final eewProvider = ref.watch(eewHistoryProvider);
+    final eewState = ref.watch(eewProvider);
 
     final maxShindoColor = (kmoni.analyzedPoint.length > 100)
         ? kmoni.analyzedPoint
@@ -241,7 +238,7 @@ class KmoniStatusWidget extends ConsumerWidget {
                       ),
                       const SizedBox(width: 8),
                       // WebSocket 接続状態
-                      if (eewProvider.channel?.isJoined == true)
+                      if (eewState.channel?.isJoined == true)
                         const Icon(
                           Icons.link,
                           semanticLabel: 'WebSocket 接続中',
@@ -298,8 +295,7 @@ class OnEewWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eews =
-        ref.watch(eewHistoryProvider.select((value) => value.showEews));
+    final eews = ref.watch(eewProvider.select((value) => value.showEews));
     return Column(
       children: [
         for (final eew in eews)
