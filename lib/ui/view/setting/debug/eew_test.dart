@@ -10,7 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../../../../provider/earthquake/eew_controller.dart';
+import '../../../../provider/earthquake/eew_provider.dart';
 import '../../../../schema/remote/dmdata/eew-information/earthquake/accuracy.dart';
 import '../../../../schema/remote/dmdata/eew-information/earthquake/accuracy/depth_calculation.dart';
 import '../../../../schema/remote/dmdata/eew-information/earthquake/accuracy/epicCenterAccuracy.dart';
@@ -236,7 +236,7 @@ class EewTestPage extends HookConsumerWidget {
               FloatingActionButton.extended(
                 heroTag: 'send',
                 onPressed: () {
-                  final hash = ref.read(eewHistoryProvider.notifier).addTestEew(
+                  final hash = ref.read(eewProvider.notifier).addTestEew(
                         maxint: ForecastMaxInt(
                           from: maxIntensityFrom.value,
                           to: maxIntensityTo.value,
@@ -259,7 +259,7 @@ class EewTestPage extends HookConsumerWidget {
               FloatingActionButton.extended(
                 heroTag: 'newsend',
                 onPressed: () {
-                  final hash = ref.read(eewHistoryProvider.notifier).addTestEew(
+                  final hash = ref.read(eewProvider.notifier).addTestEew(
                         maxint: ForecastMaxInt(
                           from: maxIntensityFrom.value,
                           to: maxIntensityTo.value,
@@ -283,7 +283,7 @@ class EewTestPage extends HookConsumerWidget {
               FloatingActionButton.extended(
                 heroTag: 'delete',
                 onPressed: () {
-                  ref.read(eewHistoryProvider.notifier).clearTelegrams();
+                  ref.read(eewProvider.notifier).clearTelegrams();
                   GoRouter.of(context).pop();
                   Fluttertoast.showToast(msg: 'EEWを全て削除しました');
                 },

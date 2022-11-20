@@ -2,13 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:eqmonitor/utils/talker_log/log_types.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 import '../../api/remote/supabase/eew.dart';
 import '../../env/env.dart';
@@ -37,13 +38,11 @@ import '../../schema/remote/dmdata/eq-information/earthquake-information/magnitu
 import '../../schema/remote/dmdata/eq-information/earthquake-information/magnitude/magnitude_condition.dart';
 import '../../schema/remote/kmoni/EEW.dart';
 
-final eewHistoryProvider =
-    StateNotifierProvider<EewHistoryProvider, EewHistoryModel>((ref) {
-  return EewHistoryProvider();
-});
+final eewProvider =
+    StateNotifierProvider<EewProvider, EewHistoryModel>(EewProvider.new);
 
-class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
-  EewHistoryProvider()
+class EewProvider extends StateNotifier<EewHistoryModel> {
+  EewProvider(this.ref)
       : super(
           EewHistoryModel(
             supabase: SupabaseClient(Env.supabaseS2Url, Env.supabaseS2AnonKey),
@@ -54,26 +53,22 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
             testCaseStartTime: null,
           ),
         ) {
+    talker = Talker(filter: BaseTalkerFilter(titles: ['EEW']));
     onInit();
   }
 
+  final Ref ref;
   final eewApi = EewApi();
 
-  final logger = Logger(
-    printer: PrettyPrinter(
-      methodCount: 1,
-      printTime: true,
-    ),
-  );
+  late Talker talker;
 
-  void onInit() {
-    startEewStreaming();
-    Timer.periodic(const Duration(seconds: 1), (_) {
-      if (mounted) {
-        checkTelegrams();
-      }
-    });
-  }
+  /// 取得したEEW電文
+  List<CommonHead> eewTelegrams = [];
+
+  /// `eewTelegrams`のうち、`event_id`でグルーピングしたもの
+  Map<int, List<CommonHead>> eewTelegramsGroupByEventId = {};
+
+  void onInit() => startEewStreaming();
 
   Future<void> startEewStreaming() async {
     // EEWのストリーミングを開始
@@ -86,9 +81,7 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
           table: 'eew',
         ),
         (payload, [ref]) {
-          logger
-            ..i(payload.runtimeType)
-            ..i('EEW STREAM: $payload');
+          talker.logTyped(EewProviderLog('EEW STREAM: $payload'));
           final commonHead = CommonHead.fromJson(
             ((payload as Map<String, dynamic>)['new']
                 as Map<String, dynamic>)['data'],
@@ -98,25 +91,29 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
       )
       ..subscribe(
         (p0, [p1]) {
-          logger.i('EEW STREAM: $p0', p1);
+          talker.logTyped(EewProviderLog('EEW STREAM: $p0, $p1'));
         },
-      );
+      )
+      ..onClose(() {
+        talker.handleException(Exception(), null, '緊急地震速報サーバとの接続が切断されました');
+      })
+      ..onError((p0) {
+        talker.handleException(
+          Exception(p0),
+          null,
+          '緊急地震速報サーバとの接続中にエラーが発生しました',
+        );
+      });
     state = state.copyWith(
       channel: channel,
     );
-
-    // Timer.periodic(const Duration(seconds: 5), (_) async {
-    //   final latency = await this.latency();
-    //   logger.i('latency: $latency ms');
-    // });
 
     /// 再接続タイマー
     Timer.periodic(
       const Duration(seconds: 1),
       (_) {
         if (state.channel?.joinedOnce == false) {
-          logger.i('EEW STREAM: reconnect');
-          state.channel?.rejoinUntilConnected();
+          talker.logTyped(EewProviderLog('EEW STREAM: reconnect'));
         }
       },
     );
@@ -141,6 +138,7 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
   }
 
   void addTelegram(CommonHead commonHead) {
+    talker.logTyped(EewProviderLog('EEW電文追加: Event${commonHead.eventId}'));
     // eewTelegramsに追加
     final eewTelegrams = state.eewTelegrams;
 
@@ -213,16 +211,6 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
     }
   }
 
-  Future<double> latency() async {
-    final stopWatch = Stopwatch()..start();
-    await state.channel!.send(
-      type: RealtimeListenTypes.broadcast,
-      payload: {},
-      event: 'latency',
-    );
-    return (stopWatch..stop()).elapsedMicroseconds / 1000;
-  }
-
   void startTestcase() {
     // 時刻設定
     state = state.copyWith(
@@ -250,7 +238,7 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
           }
           // ignore: avoid_catches_without_on_clauses
         } catch (e) {
-          logger.e('NIED EEW STREAM(TEST): $e');
+          talker.info('強震モニタのテストを終了しました');
           // テストケースを終了する
           state = state.copyWith(
             testCaseStartTime: null,
