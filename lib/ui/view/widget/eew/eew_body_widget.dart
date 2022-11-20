@@ -366,15 +366,11 @@ class EewBodyWidget extends ConsumerWidget {
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15,
-                                        color:
-
-                                            (eew.value.intensity?.maxint.from ??
-
-                                                    JmaIntensity.Unknown)
-
-                                                .fromUser(colors)
-
-                                                .onPrimary,
+                                          color: (eew.value.intensity?.maxint
+                                                      .from ??
+                                                  JmaIntensity.Unknown)
+                                              .fromUser(colors)
+                                              .onPrimary,
                                         ),
                                       ),
                                   ],
