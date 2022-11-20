@@ -18,6 +18,7 @@ import 'package:eqmonitor/provider/init/map_area_tsunami_forecast.dart';
 import 'package:eqmonitor/provider/init/parameter_earthquake.dart';
 import 'package:eqmonitor/provider/init/secure_storage.dart';
 import 'package:eqmonitor/provider/init/shared_preferences.dart';
+import 'package:eqmonitor/provider/init/talker.dart';
 import 'package:eqmonitor/provider/init/travel_time.dart';
 import 'package:eqmonitor/provider/setting/crash_log_share.dart';
 import 'package:eqmonitor/schema/local/kyoshin_kansokuten.dart';
@@ -38,6 +39,7 @@ import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 import 'firebase_options.dart';
 
@@ -52,26 +54,25 @@ Future<void> main() async {
       statusBarColor: Colors.transparent, // transparent status bar
     ),
   );
+  final talker = Talker(
+    loggerSettings: TalkerLoggerSettings(
+      enableColors: !Platform.isIOS,
+    ),
+  );
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
   Intl.defaultLocale = 'ja_JP';
   final crashlytics = FirebaseCrashlytics.instance;
-  final deviceInfo = await DeviceInfoPlugin().androidInfo;
   final prefs = await SharedPreferences.getInstance();
   // final appInfo = await PackageInfo.fromPlatform();
   // クラッシュレポートの初期化
   final isCrashLogShareAllowed =
       await CrashLogShareProvider(prefs).loadSettingsFromSharedPrefrences();
-  await crashlytics.setUserIdentifier(
-    deviceInfo.fingerprint,
-  );
   await crashlytics.setCrashlyticsCollectionEnabled(
     isCrashLogShareAllowed && kReleaseMode,
   );
-
-  // ログ出力の初期化
 
   // ファイル等の読み込み
   late List<KyoshinKansokuten> kansokuten;
@@ -125,6 +126,7 @@ Future<void> main() async {
 
   PlatformDispatcher.instance.onError = (error, stackTrace) {
     Logger().e(error, stackTrace);
+    talker.handle(error, stackTrace, 'Uncaught App Exception');
     if (kReleaseMode) {
       crashlytics.recordError(error, stackTrace);
     }
@@ -160,6 +162,7 @@ Future<void> main() async {
           iOSDeviceInfoProvider.overrideWithValue(iosDeviceInfo),
         // if (kDebugMode)
         //   changeLogProvider.overrideWithProvider(changeLogMockProvider),
+        talkerProvider.overrideWithValue(talker),
       ],
       observers: const [
         //if (kDebugMode) ProvidersLogger(),
@@ -171,7 +174,10 @@ Future<void> main() async {
 }
 
 Future<void> onFlutterError(FlutterErrorDetails details) async {
-  Logger().wtf('Error: ${details.exception}');
-  Logger().wtf('Stack: ${details.stack}');
+  Logger()
+    ..wtf('Error: ${details.exception}')
+    ..wtf('Stack: ${details.stack}');
+  Talker()
+      .handle(details.exception, details.stack, 'Uncaught Flutter Exception');
   await FirebaseCrashlytics.instance.recordFlutterError(details);
 }
