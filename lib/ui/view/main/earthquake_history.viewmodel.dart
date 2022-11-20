@@ -3,6 +3,7 @@ import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
 import 'package:eqmonitor/api/remote/supabase/telegram.dart';
 import 'package:eqmonitor/provider/init/talker.dart';
 import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
+import 'package:eqmonitor/utils/talker_log/log_types.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
@@ -162,12 +163,14 @@ class EarthquakeHistoryViewModel
           );
         },
       );
+      talker.logTyped(EarthquakeHistoryLog('地震履歴を${toState.length}件取得しました'));
       return toState;
     });
   }
 
   void refresh() {
     _telegrams.clear();
+      talker.logTyped(EarthquakeHistoryLog('地震履歴をクリアしました'));
     state = const AsyncValue.data([]);
     fetch();
   }
