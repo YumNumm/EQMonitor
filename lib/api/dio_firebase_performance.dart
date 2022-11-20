@@ -34,8 +34,10 @@ class DioFirebasePerformanceInterceptor extends Interceptor {
     try {
       await metric.start();
     } on Exception catch (e) {
-      talker.logTyped(FirebasePerformanceLog(e.toString()),
-          logLevel: LogLevel.error);
+      talker.logTyped(
+        FirebasePerformanceLog(e.toString()),
+        logLevel: LogLevel.error,
+      );
     }
     if (requestContentLength != null) {
       metric.requestPayloadSize = requestContentLength;
