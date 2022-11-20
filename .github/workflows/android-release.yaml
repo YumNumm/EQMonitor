@@ -2,7 +2,7 @@ name: Flutter build Android(r)
 
 on:
   push:
-     branches: [main,android,without-firebase]
+    branches: [main, android, without-firebase]
   workflow_dispatch:
 
 jobs:
@@ -12,6 +12,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      - uses: pocket-apps/action-setup-firebase@v2
+        with:
+          firebase-token: ${{ secrets.FIREBASE_TOKEN }}
 
       # https://github.com/kuhnroyal/flutter-fvm-config-action
       - name: Fetch flutter config
@@ -86,6 +90,10 @@ jobs:
         with:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Upload obfuscate
+        run: |
+          firebase crashlytics:symbols:upload --app=1:179553945248:android:31d2c3e4dcc608f66fabc5 obfuscate/android
 
       # - uses: codecov/codecov-action@v3
       #   with:
