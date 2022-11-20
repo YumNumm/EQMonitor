@@ -176,9 +176,8 @@ Future<void> main() async {
 }
 
 Future<void> onFlutterError(FlutterErrorDetails details) async {
-  talker
-      .handle(details.exception, details.stack, 'Uncaught Flutter Exception');
-  if(kReleaseMode){
+  talker.handle(details.exception, details.stack, 'Uncaught Flutter Exception');
+  if (kReleaseMode) {
     await FirebaseCrashlytics.instance.recordFlutterError(details);
   }
 }
