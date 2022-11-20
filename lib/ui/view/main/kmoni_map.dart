@@ -2,7 +2,6 @@
 
 import 'dart:ui';
 
-import 'package:bordered_text/bordered_text.dart';
 import 'package:eqmonitor/model/setting/kmoni_setting_model.dart';
 import 'package:eqmonitor/provider/earthquake/eew_provider.dart';
 import 'package:eqmonitor/provider/earthquake/kmoni_controller.dart';
@@ -142,21 +141,18 @@ class KmoniMap extends HookConsumerWidget {
 
             // テストモードのオーバレイ
             if (ref.watch(kmoniProvider).testCaseStartTime != null)
-              Center(
-                child: IgnorePointer(
+              const IgnorePointer(
+                child: Align(
+                  alignment: Alignment.bottomRight,
                   child: Padding(
-                    padding: const EdgeInsets.all(8),
+                    padding: EdgeInsets.all(kFloatingActionButtonMargin * 3),
                     child: FittedBox(
-                      child: BorderedText(
-                        strokeWidth: 1,
-                        strokeColor: Colors.white,
-                        child: const Text(
-                          'TESTING...',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(129, 255, 0, 0),
-                            fontSize: 50,
-                          ),
+                      child: Text(
+                        '訓練',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(202, 255, 0, 0),
+                          fontSize: 100,
                         ),
                       ),
                     ),
