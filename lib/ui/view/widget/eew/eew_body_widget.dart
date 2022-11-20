@@ -361,7 +361,7 @@ class EewBodyWidget extends ConsumerWidget {
                                     // 程度以上
                                     if (eew.value.intensity?.maxint.to ==
                                         JmaIntensity.over)
-                                      const Text(
+                                      Text(
                                         '程度以上',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
