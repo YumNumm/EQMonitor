@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
 import 'package:eqmonitor/provider/init/talker.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +13,6 @@ import '../../../../provider/init/parameter_earthquake.dart';
 import '../../../../provider/setting/intensity_color_provider.dart';
 import '../../../../provider/theme_providers.dart';
 import '../../../../schema/local/prefecture/map_polygon.dart';
-import '../../../../schema/remote/dmdata/eq-information/earthquake-information/intensity/city.dart';
-import '../../../../schema/remote/dmdata/eq-information/earthquake-information/intensity/region.dart';
 import '../../../../schema/remote/dmdata/eq-information/earthquake-information/intensity/station.dart';
 import '../../../../schema/remote/dmdata/parameter-earthquake/parameter-earthquake.dart';
 import '../../../../utils/map/map_global_offset.dart';
@@ -378,7 +374,8 @@ class MapRegionIntensityV2Painter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    log('Redraw');
+    final stopWatch = Stopwatch()..start();
+
     // Cityの描画
     for (final city in cities) {
       // city.codeが一致するMapPolygonを探す
@@ -470,138 +467,14 @@ class MapRegionIntensityV2Painter extends CustomPainter {
       );
     }
     */
+
+    talker.debug(
+      'MapRegionIntensityPainter took ${stopWatch.elapsed.inMicroseconds / 1000}ms',
+    );
   }
 
   @override
   bool shouldRepaint(MapRegionIntensityV2Painter oldDelegate) {
-    return oldDelegate.mapPolygons != mapPolygons ||
-        oldDelegate.regions != regions ||
-        oldDelegate.colors != colors ||
-        oldDelegate.parameterEarthquake != parameterEarthquake ||
-        oldDelegate.stations != stations ||
-        oldDelegate.cities != cities ||
-        oldDelegate.mapAreaInformationCityQuakePolygons !=
-            mapAreaInformationCityQuakePolygons ||
-        oldDelegate.isDarkMode != isDarkMode;
-  }
-}
-
-class MapRegionIntensityPainter extends CustomPainter {
-  MapRegionIntensityPainter({
-    required this.mapPolygons,
-    required this.regions,
-    required this.stations,
-    required this.cities,
-    required this.colors,
-    required this.parameterEarthquake,
-    required this.mapAreaInformationCityQuakePolygons,
-    required this.isDarkMode,
-    required this.talker,
-  });
-  final List<MapPolygon> mapPolygons;
-  final List<Region> regions;
-  final List<Station> stations;
-  final List<City> cities;
-  final JmaIntensityColorModel colors;
-  final ParameterEarthquake parameterEarthquake;
-  final List<MapAreaInformationCityQuakePolygon>
-      mapAreaInformationCityQuakePolygons;
-  final bool isDarkMode;
-  final Talker talker;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    // Cityの描画
-    for (final city in cities) {
-      // city.codeが一致するMapPolygonを探す
-      try {
-        final mapCityPolygons = mapAreaInformationCityQuakePolygons.where(
-          (element) => element.code == city.code,
-        );
-        for (final mapPolygon in mapCityPolygons) {
-          canvas
-            ..drawPath(
-              mapPolygon.path,
-              Paint()
-                ..color = JmaIntensity.values
-                    .firstWhere(
-                      (e) => e.name == city.maxInt.toString(),
-                      orElse: () => JmaIntensity.Error,
-                    )
-                    .fromUser(colors)
-                ..isAntiAlias = true
-                ..strokeCap = StrokeCap.square,
-            )
-            ..drawPath(
-              mapPolygon.path,
-              Paint()
-                ..color = isDarkMode
-                    ? const Color.fromARGB(70, 50, 50, 50)
-                    : const Color.fromARGB(70, 150, 150, 150)
-                ..isAntiAlias = true
-                ..style = PaintingStyle.stroke,
-            );
-        }
-      } on Exception catch (e, st) {
-        talker.error('MapRegionIntensityPainter ${city.code}', e, st);
-      }
-    }
-    // Regionの描画
-    for (final region in regions) {
-      // region.codeが一致するMapPolygonを探す
-      final mapRegionPolygons = mapPolygons.where(
-        (element) => element.code == region.code,
-      );
-      for (final mapPolygon in mapRegionPolygons) {
-        if (cities.isEmpty) {
-          canvas.drawPath(
-            mapPolygon.path,
-            Paint()
-              ..color = JmaIntensity.values
-                  .firstWhere(
-                    (e) => e.name == region.maxInt.toString(),
-                    orElse: () => JmaIntensity.Error,
-                  )
-                  .fromUser(colors)
-              ..isAntiAlias = true
-              ..strokeCap = StrokeCap.square,
-          );
-        }
-        canvas.drawPath(
-          mapPolygon.path,
-          Paint()
-            ..color = isDarkMode
-                ? const Color.fromARGB(150, 50, 50, 50)
-                : const Color.fromARGB(150, 150, 150, 150)
-            ..isAntiAlias = true
-            ..style = PaintingStyle.stroke,
-        );
-      }
-    }
-    // TODO(YumNumm): 観測点の描画実装
-    /*for (final station in stations) {
-      final param =
-          parameterEarthquake.items.firstWhere((e) => e.code == station.code);
-      final offset = MapGlobalOffset.latLonToGlobalPoint(
-        LatLng(param.latitude, param.longitude),
-      ).toLocalOffset(const Size(476, 927.4));
-      canvas.drawCircle(
-        offset,
-        1,
-        Paint()
-          ..color = JmaIntensity.values
-              .firstWhere((e) => e.name == station.intensity)
-              .color
-              .withBlue(100)
-          ..isAntiAlias = true
-          ..style = PaintingStyle.fill,
-      );
-    }
-    */
-  }
-
-  @override
-  bool shouldRepaint(MapRegionIntensityPainter oldDelegate) {
     return oldDelegate.mapPolygons != mapPolygons ||
         oldDelegate.regions != regions ||
         oldDelegate.colors != colors ||
