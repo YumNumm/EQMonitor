@@ -54,7 +54,7 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                   width: 2,
                 ),
               ),
-              child: Column(,
+              child: Column(
                 children: [
                   Row(),
                   // 発生時刻
