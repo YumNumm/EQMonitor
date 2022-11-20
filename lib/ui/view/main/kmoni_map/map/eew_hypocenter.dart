@@ -12,8 +12,7 @@ class EewHypocentersWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eews =
-        ref.watch(eewHistoryProvider.select((value) => value.showEews));
+    final eews = ref.watch(eewProvider.select((value) => value.showEews));
 
     return Stack(
       children: <Widget>[

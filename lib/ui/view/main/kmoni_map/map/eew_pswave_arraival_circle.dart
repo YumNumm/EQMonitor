@@ -21,7 +21,7 @@ class EewPswaveArraivalCirclesWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // 精度が低いEEWを除いたEEWのリスト
     final eews = ref
-        .watch(eewHistoryProvider.select((value) => value.showEews))
+        .watch(eewProvider.select((value) => value.showEews))
         .where(
           (e) =>
               e.value.earthQuake?.isAssuming != true &&

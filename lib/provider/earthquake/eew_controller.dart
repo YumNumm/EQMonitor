@@ -37,13 +37,11 @@ import '../../schema/remote/dmdata/eq-information/earthquake-information/magnitu
 import '../../schema/remote/dmdata/eq-information/earthquake-information/magnitude/magnitude_condition.dart';
 import '../../schema/remote/kmoni/EEW.dart';
 
-final eewHistoryProvider =
-    StateNotifierProvider<EewHistoryProvider, EewHistoryModel>((ref) {
-  return EewHistoryProvider();
-});
+final eewProvider =
+    StateNotifierProvider<EewProvider, EewHistoryModel>(EewProvider.new);
 
-class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
-  EewHistoryProvider()
+class EewProvider extends StateNotifier<EewHistoryModel> {
+  EewProvider(this.ref)
       : super(
           EewHistoryModel(
             supabase: SupabaseClient(Env.supabaseS2Url, Env.supabaseS2AnonKey),
@@ -57,6 +55,7 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
     onInit();
   }
 
+  final Ref ref;
   final eewApi = EewApi();
 
   final logger = Logger(
@@ -65,6 +64,9 @@ class EewHistoryProvider extends StateNotifier<EewHistoryModel> {
       printTime: true,
     ),
   );
+
+  List<CommonHead> eewTelegrams = [];
+  Map<int, List<CommonHead>> eewTelegramsGroupByEventId = {};
 
   void onInit() {
     startEewStreaming();
