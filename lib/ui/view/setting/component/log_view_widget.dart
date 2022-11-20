@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class UpdateHistoryButtonWidget extends StatelessWidget {
-  const UpdateHistoryButtonWidget({super.key});
+class LogViewButtonWidget extends StatelessWidget {
+  const LogViewButtonWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +18,12 @@ class UpdateHistoryButtonWidget extends StatelessWidget {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 20),
       title: const Text(
-        '更新履歴',
+        'ログ',
         style: titleTextStyle,
       ),
-      subtitle: const Text('更新履歴を確認する', style: descriptionTextStyle),
-      leading: const Icon(Icons.history),
-      onTap: () => context.push('/settings/appinfo/updateHistory'),
+      subtitle: const Text('ログを確認する', style: descriptionTextStyle),
+      leading: const Icon(Icons.logo_dev),
+      onTap: () => context.push('/settings/debug/log'),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:eqmonitor/ui/view/setting/component/fcm_token_widget.dart';
 import 'package:eqmonitor/ui/view/setting/component/license_widget.dart';
+import 'package:eqmonitor/ui/view/setting/component/log_view_widget.dart';
 import 'package:eqmonitor/ui/view/setting/component/setting_section.dart';
 import 'package:eqmonitor/ui/view/setting/component/thanks_widget.dart';
 import 'package:eqmonitor/ui/view/setting/component/update_history.dart';
@@ -55,6 +56,7 @@ class AboutAppPage extends HookConsumerWidget {
                 ),
               ),
             ),
+            const LogViewButtonWidget(),
             const Divider(),
             const SettingsSection(
               title: 'アプリ情報',
