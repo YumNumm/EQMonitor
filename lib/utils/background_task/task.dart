@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_dynamic_calls
 
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:isolate';
 
@@ -10,7 +11,6 @@ import 'package:dmdata_telegram_json/schema/dmdata/websocket_v2/websocket_v2_dat
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:logger/logger.dart';
 import 'package:web_socket_channel/io.dart';
 
 import '../../env/env.dart';
@@ -19,7 +19,7 @@ import '../../ui/theme/jma_intensity.dart';
 // The callback function should always be a top-level function.
 @pragma('vm:entry-point')
 void startForegroundTask() {
-  Logger().d('startForegroundTask');
+  log('startForegroundTask');
   FlutterForegroundTask.setTaskHandler(FirstTaskHandler());
 }
 

@@ -1,6 +1,7 @@
+import 'package:eqmonitor/provider/init/talker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logger/logger.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 import '../../../../../model/setting/jma_intensity_color_model.dart';
 import '../../../../../provider/earthquake/eew_provider.dart';
@@ -26,6 +27,7 @@ class EewIntensityWidget extends ConsumerWidget {
           colors: ref.watch(jmaIntensityColorProvider),
           eews: eews,
           mapPolygons: mapSource,
+          talker: ref.watch(talkerProvider),
         ),
         size: const Size(476, 927.4),
       ),
@@ -39,10 +41,12 @@ class EewIntensityPainter extends CustomPainter {
     required this.mapPolygons,
     required this.eews,
     required this.colors,
+    required this.talker,
   });
   List<MapPolygon> mapPolygons;
   Iterable<MapEntry<CommonHead, EEWInformation>> eews;
   JmaIntensityColorModel colors;
+  final Talker talker;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -92,8 +96,8 @@ class EewIntensityPainter extends CustomPainter {
               //     );
               // }
             }
-          } on Exception catch (e) {
-            Logger().e(e, region.code);
+          } on Exception catch (e, st) {
+            talker.error('EewIntensityPainter while ${region.code}', e, st);
           }
         }
       }

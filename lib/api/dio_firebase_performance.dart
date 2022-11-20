@@ -1,14 +1,17 @@
 // ignore_for_file: avoid_dynamic_calls
 
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/utils/talker_log/log_types.dart';
 import 'package:firebase_performance/firebase_performance.dart';
-import 'package:logger/logger.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 class DioFirebasePerformanceInterceptor extends Interceptor {
-  DioFirebasePerformanceInterceptor({
+  DioFirebasePerformanceInterceptor(
+    this.talker, {
     this.requestContentLengthMethod = defaultRequestContentLength,
     this.responseContentLengthMethod = defaultResponseContentLength,
   });
+  final Talker talker;
 
   /// key: requestKey hash code, value: ongoing metric
   final _map = <int, HttpMetric>{};
@@ -31,7 +34,8 @@ class DioFirebasePerformanceInterceptor extends Interceptor {
     try {
       await metric.start();
     } on Exception catch (e) {
-      Logger().e(e);
+      talker.logTyped(FirebasePerformanceLog(e.toString()),
+          logLevel: LogLevel.error);
     }
     if (requestContentLength != null) {
       metric.requestPayloadSize = requestContentLength;

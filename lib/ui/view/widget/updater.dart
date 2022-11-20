@@ -1,3 +1,4 @@
+import 'package:eqmonitor/provider/init/talker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -5,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../../../provider/logger.dart';
 import '../../../provider/package_info.dart';
 import '../../../provider/setting/change_log.dart';
 
@@ -15,15 +15,16 @@ class UpdaterButtonWidget extends HookConsumerWidget {
   const UpdaterButtonWidget({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final talker = ref.watch(talkerProvider);
     return ref.watch(changeLogProvider).when<Widget>(
           loading: () => const SizedBox.shrink(),
           error: (err, stack) {
-            ref.read(loggerProvider).e('error', err, stack);
+            talker.error('error', err, stack);
             return kDebugMode ? Text(err.toString()) : const SizedBox.shrink();
           },
           data: (changeLog) => ref.watch(packageInfoProvider).when<Widget>(
                 error: (err, stack) {
-                  ref.read(loggerProvider).e('error', err, stack);
+                  talker.error('error', err, stack);
                   return const SizedBox.shrink();
                 },
                 loading: () => const SizedBox.shrink(),

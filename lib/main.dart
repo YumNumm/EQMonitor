@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_Logger().wtf
+// ignore_for_file: avoid_talker.wdebugtf
 
 import 'dart:async';
 import 'dart:convert';
@@ -26,6 +26,7 @@ import 'package:eqmonitor/schema/local/prefecture/map_polygon.dart';
 import 'package:eqmonitor/schema/remote/dmdata/parameter-earthquake/parameter-earthquake.dart';
 import 'package:eqmonitor/ui/app.dart';
 import 'package:eqmonitor/utils/fcm/firebase_notification_controller.dart';
+import 'package:eqmonitor/utils/talker_log/log_types.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -35,7 +36,6 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart' hide TextDirection;
-import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -54,11 +54,7 @@ Future<void> main() async {
       statusBarColor: Colors.transparent, // transparent status bar
     ),
   );
-  final talker = Talker(
-    loggerSettings: TalkerLoggerSettings(
-      enableColors: !Platform.isIOS,
-    ),
-  );
+  final talker = Talker();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -88,18 +84,19 @@ Future<void> main() async {
   ParameterEarthquake? parameterEarthquake;
 
   final futures = <Future<dynamic>>[
-    loadKyoshinKansokuten().then((e) => kansokuten = e),
-    loadMapAreaTsunamiForecast().then((e) => mapAreaTsunamiForecast = e),
-    loadMapAreaForecastLocalE().then((e) => mapAreaForecastLocalE = e),
-    loadMapAreaForecastLocalEew().then((e) => mapAreaForecastLocalEew = e),
-    loadMapAreaInformationCityQuake()
+    loadKyoshinKansokuten(talker).then((e) => kansokuten = e),
+    loadMapAreaTsunamiForecast(talker).then((e) => mapAreaTsunamiForecast = e),
+    loadMapAreaForecastLocalE(talker).then((e) => mapAreaForecastLocalE = e),
+    loadMapAreaForecastLocalEew(talker)
+        .then((e) => mapAreaForecastLocalEew = e),
+    loadMapAreaInformationCityQuake(talker)
         .then((e) => mapAreaInformationCityQuake = e),
-    loadTravelTimeTable().then((e) => travelTimeTable = e),
+    loadTravelTimeTable(talker).then((e) => travelTimeTable = e),
     getApplicationSupportDirectory().then((e) => dir = e),
     Supabase.initialize(
       url: Env.supabaseS1Url,
       anonKey: Env.supabaseS1AnonKey,
-      debug: false,
+      debug: kDebugMode,
     ),
     initFirebaseCloudMessaging(),
     crashlytics.sendUnsentReports(),
@@ -120,12 +117,15 @@ Future<void> main() async {
 
   //isar = await Isar.open([], directory: dir.path);
   FlutterNativeSplash.remove();
-  Logger().d('全ての初期化が完了: ${(stopwatch..stop()).elapsedMicroseconds / 1000}ms');
+  talker.logTyped(
+    InitializationEventLog(
+      '全ての初期化が完了: ${(stopwatch..stop()).elapsedMicroseconds / 1000}ms',
+    ),
+  );
   FlutterError.onError = onFlutterError;
   DartPluginRegistrant.ensureInitialized();
 
   PlatformDispatcher.instance.onError = (error, stackTrace) {
-    Logger().e(error, stackTrace);
     talker.handle(error, stackTrace, 'Uncaught App Exception');
     if (kReleaseMode) {
       crashlytics.recordError(error, stackTrace);
@@ -174,9 +174,6 @@ Future<void> main() async {
 }
 
 Future<void> onFlutterError(FlutterErrorDetails details) async {
-  Logger()
-    ..wtf('Error: ${details.exception}')
-    ..wtf('Stack: ${details.stack}');
   Talker()
       .handle(details.exception, details.stack, 'Uncaught Flutter Exception');
   await FirebaseCrashlytics.instance.recordFlutterError(details);

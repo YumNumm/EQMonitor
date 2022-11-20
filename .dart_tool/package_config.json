@@ -740,12 +740,6 @@
       "languageVersion": "2.17"
     },
     {
-      "name": "logger",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/logger-1.1.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "logging",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/logging-1.1.0",
       "packageUri": "lib/",
@@ -1280,7 +1274,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2022-11-20T12:01:31.914348Z",
+  "generated": "2022-11-20T14:20:37.003502Z",
   "generator": "pub",
   "generatorVersion": "2.18.4"
 }

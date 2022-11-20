@@ -1,9 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:logger/logger.dart';
 
 @pragma('vm:entry-point')
 void initForegroundTask() {
-  Logger().d('initForegroundTask');
+  log('initForegroundTask');
   FlutterForegroundTask.init(
     androidNotificationOptions: AndroidNotificationOptions(
       channelId: 'foreground_task',

@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:image/image.dart' as image_lib;
-import 'package:logger/logger.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 import '../../../model/analyzed_kyoshin_kansokuten.dart';
 import '../../../schema/local/kyoshin_kansokuten.dart';
@@ -10,12 +10,9 @@ import '../../../ui/theme/jma_intensity.dart';
 import 'real_time_data_type.dart';
 
 class KyoshinImageParser {
-  final Logger logger = Logger(
-    printer: PrettyPrinter(
-      methodCount: 1,
-      printTime: true,
-    ),
-  );
+  KyoshinImageParser(this.talker);
+
+  final Talker talker;
 
   List<AnalyzedKoshinKansokuten> imageParse({
     required List<int> picture,
