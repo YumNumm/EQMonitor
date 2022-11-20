@@ -43,6 +43,8 @@ import 'package:talker_flutter/talker_flutter.dart';
 
 import 'firebase_options.dart';
 
+late Talker talker;
+
 Future<void> main() async {
   final stopwatch = Stopwatch()..start();
   FlutterNativeSplash.preserve(
@@ -54,7 +56,7 @@ Future<void> main() async {
       statusBarColor: Colors.transparent, // transparent status bar
     ),
   );
-  final talker = Talker();
+  talker = Talker();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -174,7 +176,9 @@ Future<void> main() async {
 }
 
 Future<void> onFlutterError(FlutterErrorDetails details) async {
-  Talker()
+  talker
       .handle(details.exception, details.stack, 'Uncaught Flutter Exception');
-  await FirebaseCrashlytics.instance.recordFlutterError(details);
+  if(kReleaseMode){
+    await FirebaseCrashlytics.instance.recordFlutterError(details);
+  }
 }
