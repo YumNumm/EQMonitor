@@ -55,3 +55,14 @@ class EewProviderLog extends FlutterTalkerLog {
   @override
   Color get color => Colors.blueAccent;
 }
+
+/// EarthquakeHistory関連のログ
+class EarthquakeHistoryLog extends FlutterTalkerLog {
+  EarthquakeHistoryLog(super.message);
+
+  @override
+  String get title => 'EarthquakeHistory';
+
+  @override
+  Color get color => Colors.lightBlueAccent;
+}
