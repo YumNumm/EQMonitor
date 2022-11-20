@@ -1,8 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
 import 'package:eqmonitor/api/remote/supabase/telegram.dart';
+import 'package:eqmonitor/provider/init/talker.dart';
 import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 /// EventIDごとにまとめた地震情報
 class EarthquakeHistoryItem {
@@ -39,10 +41,13 @@ final earthquakeHistoryViewModel = StateNotifierProvider<
 class EarthquakeHistoryViewModel
     extends StateNotifier<AsyncValue<List<EarthquakeHistoryItem>>> {
   EarthquakeHistoryViewModel(this.ref) : super(const AsyncValue.loading()) {
+    talker = ref.watch(talkerProvider);
     fetch();
   }
 
   final Ref ref;
+
+  late Talker talker;
 
   /// 電文保管用
   final List<TelegramItem> _telegrams = [];
@@ -165,5 +170,13 @@ class EarthquakeHistoryViewModel
     _telegrams.clear();
     state = const AsyncValue.data([]);
     fetch();
+  }
+
+  void logError(
+    dynamic msg, [
+    Object? exception,
+    StackTrace? stackTrace,
+  ]) {
+    talker.error(msg, exception, stackTrace);
   }
 }

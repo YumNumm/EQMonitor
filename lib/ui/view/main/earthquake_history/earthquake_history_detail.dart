@@ -1,11 +1,12 @@
 import 'dart:developer';
 
 import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
+import 'package:eqmonitor/provider/init/talker.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:latlong2/latlong.dart';
-import 'package:logger/logger.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 import '../../../../model/setting/jma_intensity_color_model.dart';
 import '../../../../provider/init/map_area_forecast_local_e.dart';
@@ -21,8 +22,8 @@ import '../../../../schema/remote/dmdata/parameter-earthquake/parameter-earthqua
 import '../../../../utils/map/map_global_offset.dart';
 import '../../../theme/jma_intensity.dart';
 import '../../../view/widget/intensity_widget.dart';
-import '../kmoni_map/map/base_map.dart';
 import '../earthquake_history.viewmodel.dart';
+import '../kmoni_map/map/base_map.dart';
 
 class EarthquakeHistoryDetailPage extends HookConsumerWidget {
   const EarthquakeHistoryDetailPage({
@@ -345,6 +346,7 @@ class MapRegionIntensityWidget extends ConsumerWidget {
         parameterEarthquake: parameterEarthquake,
         mapAreaInformationCityQuakePolygons: mapAreaInformationCityQuake,
         isDarkMode: ref.watch(themeProvider.notifier).isDarkMode,
+        talker: ref.watch(talkerProvider),
       ),
       size: Size.infinite,
     );
@@ -361,6 +363,7 @@ class MapRegionIntensityV2Painter extends CustomPainter {
     required this.parameterEarthquake,
     required this.mapAreaInformationCityQuakePolygons,
     required this.isDarkMode,
+    required this.talker,
   });
   final List<MapPolygon> mapPolygons;
   final List<EarthquakeInformationRegion> regions;
@@ -371,6 +374,7 @@ class MapRegionIntensityV2Painter extends CustomPainter {
   final List<MapAreaInformationCityQuakePolygon>
       mapAreaInformationCityQuakePolygons;
   final bool isDarkMode;
+  final Talker talker;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -406,8 +410,12 @@ class MapRegionIntensityV2Painter extends CustomPainter {
                 ..style = PaintingStyle.stroke,
             );
         }
-      } on Exception catch (e) {
-        Logger().e(e, city.code);
+      } on Exception catch (e, st) {
+        talker.error(
+          'MapRegionIntensityV2Painter ${city.code}',
+          e,
+          st,
+        );
       }
     }
     // Regionの描画
@@ -488,6 +496,7 @@ class MapRegionIntensityPainter extends CustomPainter {
     required this.parameterEarthquake,
     required this.mapAreaInformationCityQuakePolygons,
     required this.isDarkMode,
+    required this.talker,
   });
   final List<MapPolygon> mapPolygons;
   final List<Region> regions;
@@ -498,10 +507,10 @@ class MapRegionIntensityPainter extends CustomPainter {
   final List<MapAreaInformationCityQuakePolygon>
       mapAreaInformationCityQuakePolygons;
   final bool isDarkMode;
+  final Talker talker;
 
   @override
   void paint(Canvas canvas, Size size) {
-    log('Redraw');
     // Cityの描画
     for (final city in cities) {
       // city.codeが一致するMapPolygonを探す
@@ -533,8 +542,8 @@ class MapRegionIntensityPainter extends CustomPainter {
                 ..style = PaintingStyle.stroke,
             );
         }
-      } on Exception catch (e) {
-        Logger().e(e, city.code);
+      } on Exception catch (e, st) {
+        talker.error('MapRegionIntensityPainter ${city.code}', e, st);
       }
     }
     // Regionの描画

@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:eqmonitor/schema/local/prefecture/map_polygon.dart';
+import 'package:eqmonitor/utils/talker_log/log_types.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:geojson/geojson.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 import '../../utils/map/map_global_offset.dart';
 
@@ -28,10 +29,9 @@ class MapAreaInformationCityQuakePolygon extends MapPolygon {
 }
 
 Future<List<MapAreaInformationCityQuakePolygon>>
-    loadMapAreaInformationCityQuake() async {
+    loadMapAreaInformationCityQuake(Talker talker) async {
   final stopwatch = Stopwatch()..start();
   final geo = GeoJson();
-  final logger = Logger();
 
   final mapPaths = <MapAreaInformationCityQuakePolygon>[];
 
@@ -86,10 +86,12 @@ Future<List<MapAreaInformationCityQuakePolygon>>
   });
   geo.endSignal.listen((_) {
     stopwatch.stop();
-    logger.i(
-      'mapAreaInformationCityQuakeを読み込みました: '
-      '${stopwatch.elapsedMicroseconds / 1000}ms\n'
-      '読み込んだ数: ${mapPaths.length}',
+    talker.logTyped(
+      InitializationEventLog(
+        'mapAreaInformationCityQuakeを読み込みました: '
+        '${stopwatch.elapsedMicroseconds / 1000}ms\n'
+        '読み込んだ数: ${mapPaths.length}',
+      ),
     );
   });
   await geo.parse(
