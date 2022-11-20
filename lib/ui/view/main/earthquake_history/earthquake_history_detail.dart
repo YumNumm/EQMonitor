@@ -55,6 +55,7 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                 ),
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(),
                   // 発生時刻
@@ -224,26 +225,26 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                       ),
                     ],
                   ),
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Text(
+                      (StringBuffer()
+                            ..writeAll(
+                              <String>[
+                                for (final comment in item.comments) ...[
+                                  if (comment.forecast?.text != null)
+                                    comment.forecast!.text,
+                                  if (comment.free != null) '\n${comment.free!}'
+                                ]
+                              ],
+                            ))
+                          .toString(),
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
-          //  Padding(
-          //    padding: const EdgeInsets.symmetric(horizontal: 8),
-          //    child: Text(
-          //      (StringBuffer()
-          //            ..writeAll(
-          //              <String>[
-          //                if (comment?.forecast?.text != null)
-          //                  comment!.forecast!.text,
-          //                if (comment?.comments?.text != null)
-          //                  '\n${comment!.comments!.text}',
-          //                if (comment?.free != null) '\n${comment!.free!}',
-          //              ],
-          //            ))
-          //          .toString(),
-          //    ),
-          //  ),
           Expanded(
             child: DecoratedBox(
               decoration: BoxDecoration(
@@ -284,10 +285,16 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                       padding: const EdgeInsets.all(8),
                       child: Row(
                         children: [
+                          // int1 ~ maxInt
                           for (final i in JmaIntensity.values)
-                            if (i == JmaIntensity.over)
+                            if ([
+                              JmaIntensity.Int0,
+                              JmaIntensity.over,
+                              JmaIntensity.Unknown,
+                              JmaIntensity.Error,
+                            ].contains(i))
                               const SizedBox.shrink()
-                            else
+                            else if (i.intValue <= maxInt.intValue)
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [

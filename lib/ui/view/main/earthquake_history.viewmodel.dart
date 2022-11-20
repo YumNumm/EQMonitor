@@ -141,24 +141,35 @@ class EarthquakeHistoryViewModel
               isSokuhou: isSokuhou,
               component: component,
               intensity: intensity,
-              comments: [
-                if (latestVxse61Info != null &&
-                    latestVxse61Info.comments != null) ...[
-                  latestVxse61Info.comments!
-                ],
+              comments: () {
                 if (latestVxse53Info != null &&
-                    latestVxse53Info.comments != null) ...[
-                  latestVxse53Info.comments!
-                ],
-                if (latestVxse52Info != null &&
-                    latestVxse52Info.comments != null) ...[
-                  latestVxse52Info.comments!
-                ],
-                if (latestVxse51Info != null &&
-                    latestVxse51Info.comments != null) ...[
-                  latestVxse51Info.comments!
-                ],
-              ],
+                    latestVxse53Info.comments != null) {
+                  return [
+                    if (latestVxse61Info != null &&
+                        latestVxse61Info.comments != null)
+                      latestVxse61Info.comments!,
+                    latestVxse53Info.comments!,
+                  ];
+                }
+                return [
+                  if (latestVxse61Info != null &&
+                      latestVxse61Info.comments != null) ...[
+                    latestVxse61Info.comments!
+                  ],
+                  if (latestVxse53Info != null &&
+                      latestVxse53Info.comments != null) ...[
+                    latestVxse53Info.comments!
+                  ],
+                  if (latestVxse52Info != null &&
+                      latestVxse52Info.comments != null) ...[
+                    latestVxse52Info.comments!
+                  ],
+                  if (latestVxse51Info != null &&
+                      latestVxse51Info.comments != null) ...[
+                    latestVxse51Info.comments!
+                  ],
+                ];
+              }(),
             ),
           );
         },
@@ -170,7 +181,7 @@ class EarthquakeHistoryViewModel
 
   void refresh() {
     _telegrams.clear();
-      talker.logTyped(EarthquakeHistoryLog('地震履歴をクリアしました'));
+    talker.logTyped(EarthquakeHistoryLog('地震履歴をクリアしました'));
     state = const AsyncValue.data([]);
     fetch();
   }
