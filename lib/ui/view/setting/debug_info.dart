@@ -8,7 +8,7 @@ import 'package:eqmonitor/ui/view/setting/component/setting_section.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../provider/earthquake/eew_controller.dart';
+import '../../../provider/earthquake/eew_provider.dart';
 import '../../../provider/init/application_support_dir.dart';
 import '../../../provider/init/device_info.dart';
 import '../../../provider/init/kyoshin_kansokuten.dart';
@@ -30,11 +30,7 @@ class DeveloperDebugPage extends HookConsumerWidget {
               ListTile(
                 title: const Text('Join Once'),
                 subtitle: Text(
-                  ref
-                          .watch(eewHistoryProvider)
-                          .channel
-                          ?.joinedOnce
-                          .toString() ??
+                  ref.watch(eewProvider).channel?.joinedOnce.toString() ??
                       'Unknown',
                 ),
               ),
@@ -42,7 +38,7 @@ class DeveloperDebugPage extends HookConsumerWidget {
                 title: const Text('Connection State'),
                 subtitle: Text(
                   ref
-                          .watch(eewHistoryProvider)
+                          .watch(eewProvider)
                           .channel
                           ?.socket
                           .connState
@@ -53,14 +49,14 @@ class DeveloperDebugPage extends HookConsumerWidget {
               ListTile(
                 title: const Text('Topic'),
                 subtitle: Text(
-                  ref.watch(eewHistoryProvider).channel?.topic ?? 'Unknown',
+                  ref.watch(eewProvider).channel?.topic ?? 'Unknown',
                 ),
               ),
               ListTile(
                 title: const Text('HeartbeatInterval(ms)'),
                 subtitle: Text(
                   ref
-                          .watch(eewHistoryProvider)
+                          .watch(eewProvider)
                           .channel
                           ?.socket
                           .heartbeatIntervalMs
@@ -72,7 +68,7 @@ class DeveloperDebugPage extends HookConsumerWidget {
                 title: const Text('LongPoller T/O(ms)'),
                 subtitle: Text(
                   ref
-                          .watch(eewHistoryProvider)
+                          .watch(eewProvider)
                           .channel
                           ?.socket
                           .longpollerTimeout

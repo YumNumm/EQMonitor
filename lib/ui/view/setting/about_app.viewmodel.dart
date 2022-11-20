@@ -7,7 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../provider/earthquake/eew_controller.dart';
+import '../../../provider/earthquake/eew_provider.dart';
 import '../../../provider/earthquake/kmoni_controller.dart';
 import '../../../provider/setting/developer_mode.dart';
 
@@ -34,7 +34,7 @@ class AboutAppViewModel {
     GoRouter.of(context).pop();
 
     ref.read(kmoniProvider.notifier).startTestCase();
-    ref.read(eewHistoryProvider.notifier).startTestcase();
+    ref.read(eewProvider.notifier).startTestcase();
   }
 
   /// 開発者向けモードのボタンHandler

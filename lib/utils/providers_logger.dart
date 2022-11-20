@@ -1,9 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logger/logger.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 /// ref: https://github.com/GitGud31/theme_riverpod_hive/blob/master/lib/log.dart
 class ProvidersLogger extends ProviderObserver {
-  final logger = Logger();
+  ProvidersLogger(this.talker);
+
+  final Talker talker;
 
   @override
   void didAddProvider(
@@ -13,7 +15,7 @@ class ProvidersLogger extends ProviderObserver {
   ) {
     //super.didAddProvider(provider, value, container);
 
-    logger.d(
+    talker.debug(
       '''
     {
       "provider": "${provider.name ?? provider.runtimeType}",
@@ -30,7 +32,7 @@ class ProvidersLogger extends ProviderObserver {
     Object? newValue,
     ProviderContainer container,
   ) {
-    logger.d(
+    talker.debug(
       '''
     {
       "provider": "${provider.name ?? provider.runtimeType}",
@@ -46,7 +48,7 @@ class ProvidersLogger extends ProviderObserver {
   ) {
     //super.didDisposeProvider(provider, containers);
 
-    logger.d(
+    talker.debug(
       '''
     {
       "provider": "${provider.name ?? provider.runtimeType}",

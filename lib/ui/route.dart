@@ -1,4 +1,7 @@
+import 'package:eqmonitor/provider/init/talker.dart';
+import 'package:eqmonitor/ui/view/setting/debug/log_view.dart';
 import 'package:eqmonitor/ui/view/setting/update_history_view/update_history_view.dart';
+import 'package:eqmonitor/utils/talker_log/go_router_talker_observer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -99,7 +102,11 @@ final routerProvider = Provider<GoRouter>(
               GoRoute(
                 path: 'eew_test',
                 builder: (context, state) => const EewTestPage(),
-              )
+              ),
+              GoRoute(
+                path: 'log',
+                builder: (context, state) => const LogView(),
+              ),
             ],
           ),
         ],
@@ -110,7 +117,8 @@ final routerProvider = Provider<GoRouter>(
             ? '/'
             : '/introduction',
     errorBuilder: (context, state) => ErrorScreen(state.error!),
-    debugLogDiagnostics:
-        kDebugMode || ref.watch(developerModeProvider).isDeveloper,
+    observers: [
+      if (kDebugMode) GoRouterTalkerObserver(ref.watch(talkerProvider))
+    ],
   ),
 );

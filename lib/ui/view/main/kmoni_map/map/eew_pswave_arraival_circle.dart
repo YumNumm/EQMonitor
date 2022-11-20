@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart' hide Path;
 
-import '../../../../../provider/earthquake/eew_controller.dart';
+import '../../../../../provider/earthquake/eew_provider.dart';
 import '../../../../../schema/remote/dmdata/eew-information/earthquake/accuracy/epicCenterAccuracy.dart';
 
 /// 緊急地震速報のP・S波到達予想円を表示するWidget
@@ -21,7 +21,7 @@ class EewPswaveArraivalCirclesWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // 精度が低いEEWを除いたEEWのリスト
     final eews = ref
-        .watch(eewHistoryProvider.select((value) => value.showEews))
+        .watch(eewProvider.select((value) => value.showEews))
         .where(
           (e) =>
               e.value.earthQuake?.isAssuming != true &&

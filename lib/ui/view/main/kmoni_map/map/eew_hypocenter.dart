@@ -3,7 +3,7 @@ import 'package:eqmonitor/ui/view/main/kmoni_map/map/eew_hypocenter_normal.dart'
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../../../provider/earthquake/eew_controller.dart';
+import '../../../../../provider/earthquake/eew_provider.dart';
 import '../../../../../schema/remote/dmdata/eew-information/earthquake/accuracy/epicCenterAccuracy.dart';
 
 /// 緊急地震速報関連のWidget
@@ -12,8 +12,7 @@ class EewHypocentersWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eews =
-        ref.watch(eewHistoryProvider.select((value) => value.showEews));
+    final eews = ref.watch(eewProvider.select((value) => value.showEews));
 
     return Stack(
       children: <Widget>[

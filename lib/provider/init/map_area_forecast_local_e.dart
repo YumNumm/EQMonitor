@@ -1,10 +1,11 @@
 import 'dart:convert';
 
+import 'package:eqmonitor/utils/talker_log/log_types.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:geojson/geojson.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 import '../../schema/local/prefecture/map_polygon.dart';
 import '../../utils/map/map_global_offset.dart';
@@ -14,10 +15,9 @@ final mapAreaForecastLocalEProvider = Provider<List<MapPolygon>>((ref) {
   throw UnimplementedError();
 });
 
-Future<List<MapPolygon>> loadMapAreaForecastLocalE() async {
+Future<List<MapPolygon>> loadMapAreaForecastLocalE(Talker talker) async {
   final stopwatch = Stopwatch()..start();
   final geo = GeoJson();
-  final logger = Logger();
 
   final mapPaths = <MapPolygon>[];
 
@@ -70,10 +70,10 @@ Future<List<MapPolygon>> loadMapAreaForecastLocalE() async {
   });
   geo.endSignal.listen((_) {
     stopwatch.stop();
-    logger.i(
+    talker.logTyped(InitializationEventLog(
       'mapAreaForecastLocalEを読み込みました: '
       '${stopwatch.elapsedMicroseconds / 1000}ms',
-    );
+    ));
   });
   await geo.parse(
     utf8.decode(

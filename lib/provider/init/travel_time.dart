@@ -3,7 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 import '../../model/travel_time_table/travel_time_table.dart';
 
@@ -11,8 +11,7 @@ final travelTimeProvider = Provider<List<TravelTimeTable>>((ref) {
   throw UnimplementedError('TravelTimeTableが読み込まれていません');
 });
 
-Future<List<TravelTimeTable>> loadTravelTimeTable() async {
-  final logger = Logger();
+Future<List<TravelTimeTable>> loadTravelTimeTable(Talker talker) async {
   // 走時表読み込み開始
   // ストップウォッチ
   final stopWatch = Stopwatch()..start();
@@ -25,12 +24,12 @@ Future<List<TravelTimeTable>> loadTravelTimeTable() async {
     try {
       travelTimeTable.add(TravelTimeTable.fromList(row.split(',')));
     } on Exception catch (e) {
-      logger.e(e);
+      talker.error(e);
     }
   }
   // 走時表読み込み終了
   stopWatch.stop();
-  logger.d('走時表を読み込みました: ${stopWatch.elapsedMicroseconds / 1000}ms');
+  talker.debug('走時表を読み込みました: ${stopWatch.elapsedMicroseconds / 1000}ms');
   return travelTimeTable;
 }
 

@@ -51,7 +51,6 @@ dependencies:
   intl: ^0.17.0
   json_annotation: ^4.7.0
   latlong2: ^0.8.1
-  logger: ^1.1.0
   oauth1: ^2.0.0
   package_info_plus: ^3.0.1
   path_provider: ^2.0.11
@@ -62,8 +61,10 @@ dependencies:
   shared_preferences_android: ^2.0.13
   shared_preferences_ios: ^2.1.1
   state_notifier: ^0.7.2+1
+  substring_highlight: ^1.0.33
   supabase: ^1.0.1
   supabase_flutter: ^1.0.1
+  talker_flutter: ^2.1.0
   url_launcher: ^6.1.6
   web_socket_channel: ^2.2.0
 
@@ -78,7 +79,6 @@ dev_dependencies:
   go_router_builder: ^1.0.13
   isar_generator: ^3.0.2
   json_serializable: ^6.4.1
-  lottie: ^1.4.3
   pedantic_mono: ^1.19.2+1
 
 flutter:
