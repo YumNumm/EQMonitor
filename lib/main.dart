@@ -100,7 +100,7 @@ Future<void> main() async {
       anonKey: Env.supabaseS1AnonKey,
       debug: kDebugMode,
     ),
-    initFirebaseCloudMessaging(),
+    initFirebaseCloudMessaging(talker),
     crashlytics.sendUnsentReports(),
     if (Platform.isAndroid)
       DeviceInfoPlugin().androidInfo.then((e) => androidDeviceInfo = e),

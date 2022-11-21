@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_catching_errors
 
 import 'package:collection/collection.dart';
+import 'package:eqmonitor/utils/talker_log/log_types.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -29,7 +30,11 @@ Future<List<TravelTimeTable>> loadTravelTimeTable(Talker talker) async {
   }
   // 走時表読み込み終了
   stopWatch.stop();
-  talker.debug('走時表を読み込みました: ${stopWatch.elapsedMicroseconds / 1000}ms');
+  talker.logTyped(
+    InitializationEventLog(
+      '走時表を読み込みました: ${stopWatch.elapsedMicroseconds / 1000}ms',
+    ),
+  );
   return travelTimeTable;
 }
 
