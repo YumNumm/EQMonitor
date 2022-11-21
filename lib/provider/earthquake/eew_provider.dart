@@ -103,6 +103,9 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
           null,
           '緊急地震速報サーバとの接続中にエラーが発生しました',
         );
+      })
+      ..on(RealtimeListenTypes.broadcast, ChannelFilter(), (payload, [ref]) {
+        talker.logTyped(EewProviderLog('EEW STREAM: $payload'));
       });
     state = state.copyWith(
       channel: channel,

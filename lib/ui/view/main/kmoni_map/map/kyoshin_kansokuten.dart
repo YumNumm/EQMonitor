@@ -25,7 +25,7 @@ class KyoshinKansokutenWidget extends ConsumerWidget {
 
     return RepaintBoundary(
       child: CustomPaint(
-        isComplex: true,
+        willChange: true,
         painter: KyoshinKansokutenPainter(
           obsPoints: analyzedKmoniPoints,
           showIntensityIcon: showIntensityIcon,
@@ -55,16 +55,17 @@ class KyoshinKansokutenPainter extends CustomPainter {
       if (point.shindoColor == null) {
         continue;
       }
-      final paint = Paint()
-        ..color = point.shindoColor!
-        ..isAntiAlias = true
-        ..style = PaintingStyle.fill;
+      final offset =
+          MapGlobalOffset.latLonToGlobalPoint(LatLng(point.lat, point.lon))
+              .toLocalOffset(const Size(476, 927.4));
       if (showKmoniPoints) {
         canvas.drawCircle(
-          MapGlobalOffset.latLonToGlobalPoint(LatLng(point.lat, point.lon))
-              .toLocalOffset(const Size(476, 927.4)),
+          offset,
           1.2,
-          paint,
+          Paint()
+            ..color = point.shindoColor!
+            ..isAntiAlias = true
+            ..style = PaintingStyle.fill,
         );
       }
       if (point.shindo == null || !showIntensityIcon) {
@@ -72,52 +73,43 @@ class KyoshinKansokutenPainter extends CustomPainter {
       }
       if (point.shindo! > 0.5) {
         canvas.drawCircle(
-          MapGlobalOffset.latLonToGlobalPoint(LatLng(point.lat, point.lon))
-              .toLocalOffset(const Size(476, 927.4)),
+          offset,
           2,
           Paint()
             ..color = point.shindoColor!
             ..isAntiAlias = true
             ..style = PaintingStyle.fill,
         );
-        // 背景描画
         final paint = Paint()
           ..color = point.intensity!.color
           ..isAntiAlias = true
           ..style = PaintingStyle.fill;
         canvas.drawCircle(
-          MapGlobalOffset.latLonToGlobalPoint(LatLng(point.lat, point.lon))
-              .toLocalOffset(const Size(476, 927.4)),
+          offset,
           1.7,
           paint,
         );
-
+        final textStyle = TextStyle(
+          color: point.intensity!.color.onPrimary,
+          fontSize: 3.5,
+          fontWeight: FontWeight.w700,
+        );
         final textPainter = TextPainter(
           text: TextSpan(
             text: point.intensity!.name,
-            style: TextStyle(
-              color: point.intensity!.color.onPrimary,
-              fontSize: 3,
-              fontWeight: FontWeight.bold,
-            ),
+            style: textStyle,
           ),
           textDirection: TextDirection.ltr,
+          textAlign: TextAlign.center,
         )..layout();
-        final offset =
-            MapGlobalOffset.latLonToGlobalPoint(LatLng(point.lat, point.lon))
-                .toLocalOffset(const Size(476, 927.4));
         textPainter.paint(
           canvas,
-          Offset(
-            offset.dx - textPainter.width * 0.5,
-            offset.dy - textPainter.height * 0.5,
-          ),
+          offset.translate(-textPainter.width / 2, -textPainter.height / 2),
         );
       } else if (point.shindo! > -0.5 && !showKmoniPoints) {
         canvas
           ..drawCircle(
-            MapGlobalOffset.latLonToGlobalPoint(LatLng(point.lat, point.lon))
-                .toLocalOffset(const Size(476, 927.4)),
+            offset,
             1.4,
             Paint()
               ..color = const Color.fromARGB(255, 56, 56, 56)

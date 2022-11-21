@@ -34,6 +34,17 @@ class FirebasePerformanceLog extends FlutterTalkerLog {
   Color get color => Colors.orange;
 }
 
+/// Firebase Cloud Messagingのログ
+class FirebaseCloudMessagingLog extends FlutterTalkerLog {
+  FirebaseCloudMessagingLog(super.message);
+
+  @override
+  String get title => 'Firebase Messaging';
+
+  @override
+  Color get color => Colors.orange;
+}
+
 /// KyoshinImageParserのログ
 class KyoshinImageParserLog extends FlutterTalkerLog {
   KyoshinImageParserLog(super.message);
@@ -62,6 +73,18 @@ class EarthquakeHistoryLog extends FlutterTalkerLog {
 
   @override
   String get title => 'EarthquakeHistory';
+
+  @override
+  Color get color => Colors.lightBlueAccent;
+}
+
+
+/// AppLifeCycle
+class AppLifecycleLog extends FlutterTalkerLog {
+  AppLifecycleLog(super.message);
+
+  @override
+  String get title => 'AppLifecycle';
 
   @override
   Color get color => Colors.lightBlueAccent;
