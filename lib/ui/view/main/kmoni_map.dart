@@ -9,7 +9,7 @@ import 'package:eqmonitor/provider/package_info.dart';
 import 'package:eqmonitor/provider/setting/developer_mode.dart';
 import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
 import 'package:eqmonitor/provider/theme_providers.dart';
-import 'package:eqmonitor/ui/view/main/kmoni_map/kmoni_map.viewmodel.dart';
+import 'package:eqmonitor/ui/view/main/kmoni_map.viewmodel.dart';
 import 'package:eqmonitor/ui/view/main/kmoni_map/layer_selector.dart';
 import 'package:eqmonitor/ui/view/main/kmoni_map/map/eew_hypocenter.dart';
 import 'package:eqmonitor/ui/view/main/kmoni_map/map/eew_pswave_arraival_circle.dart';
