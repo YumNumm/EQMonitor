@@ -1,3 +1,4 @@
+import 'package:eqmonitor/provider/init/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -7,19 +8,22 @@ import '../../model/setting/theme_model.dart';
 
 /// テーマモードを管理するProvider
 class ThemeProvider extends StateNotifier<ThemeModel> {
-  ThemeProvider()
+  ThemeProvider(this.ref)
       : super(
           const ThemeModel(
             themeMode: ThemeMode.system,
           ),
         ) {
+    prefs = ref.watch(sharedPreferencesProvder);
     loadSettingsFromSharedPrefrences();
   }
+
+  final Ref ref;
+  late SharedPreferences prefs;
 
   /// ## SharedPreferencesから設定を取得
   /// デフォルトはThemeMode.system
   Future<void> loadSettingsFromSharedPrefrences() async {
-    final prefs = await SharedPreferences.getInstance();
     final themeMode = prefs.getString('themeMode');
     final themeModeEnum = ThemeMode.values.firstWhere(
       (element) => element.name == themeMode,
@@ -31,11 +35,8 @@ class ThemeProvider extends StateNotifier<ThemeModel> {
   }
 
   /// ## SharedPreferencesに設定を保存する
-  Future<void> _saveSettingsToSharedPrefrences() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    await prefs.setString('themeMode', state.themeMode.name);
-  }
+  Future<void> _saveSettingsToSharedPrefrences() async =>
+      prefs.setString('themeMode', state.themeMode.name);
 
   /// ## テーマを変更
   /// [themeMode] テーマモード

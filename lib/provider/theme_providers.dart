@@ -4,5 +4,5 @@ import '../model/setting/theme_model.dart';
 import 'setting/theme_controller.dart';
 
 final themeProvider = StateNotifierProvider<ThemeProvider, ThemeModel>(
-  (ref) => ThemeProvider(),
+  ThemeProvider.new,
 );
