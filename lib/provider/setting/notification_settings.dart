@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/setting/notification_settings_model.dart';
 import '../../ui/theme/jma_intensity.dart';
@@ -18,12 +19,15 @@ class NotificationSettingsNotifier
           NotificationSettingsModel.loadFromPrefs(
             ref.read(sharedPreferencesProvder),
           ),
-        );
+        ) {
+    prefs = ref.watch(sharedPreferencesProvder);
+  }
 
   final Ref ref;
+  late SharedPreferences prefs;
 
   /// 設定を保存する
-  Future<void> save() async => ref.read(sharedPreferencesProvder).setString(
+  Future<void> save() async => prefs.setString(
         NotificationSettingsModel.key,
         jsonEncode(state.toJson()),
       );

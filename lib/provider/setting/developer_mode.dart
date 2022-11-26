@@ -15,16 +15,18 @@ class DeveloperModeNotifier extends StateNotifier<DeveloperModeModel> {
       : super(
           const DeveloperModeModel(isDeveloper: false),
         ) {
-    _load(ref.read(sharedPreferencesProvder));
+    prefs = ref.watch(sharedPreferencesProvder);
+    _load();
   }
   static const key = 'isDeveloperModeAllowed';
+  late SharedPreferences prefs;
 
-  void _load(SharedPreferences prefs) {
+  void _load() {
     final isDeveloper = prefs.getBool(key) ?? false;
     state = state.copyWith(isDeveloper: isDeveloper);
   }
 
-  bool loadIsDeveloperModeAllowed(SharedPreferences prefs) {
+  bool loadIsDeveloperModeAllowed() {
     state = state.copyWith(isDeveloper: prefs.getBool(key) ?? false);
     return state.isDeveloper;
   }
@@ -32,7 +34,7 @@ class DeveloperModeNotifier extends StateNotifier<DeveloperModeModel> {
   Future<void> change({
     required bool isDeveloper,
   }) async {
-    await ref.read(sharedPreferencesProvder).setBool(key, isDeveloper);
+    await prefs.setBool(key, isDeveloper);
     state = state.copyWith(
       isDeveloper: isDeveloper,
     );

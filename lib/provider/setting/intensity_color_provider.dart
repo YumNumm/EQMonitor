@@ -17,12 +17,14 @@ class JmaIntensityColorProvider extends StateNotifier<JmaIntensityColorModel> {
           loadFromPrefs(
             ref.read(sharedPreferencesProvder),
           ),
-        );
+        ) {
+    prefs = ref.watch(sharedPreferencesProvder);
+  }
 
   final Ref ref;
+  late SharedPreferences prefs;
 
   void load() {
-    final prefs = ref.read(sharedPreferencesProvder);
     final model = loadFromPrefs(prefs);
     state = state.copyWith(
       unknown: model.unknown,
@@ -80,8 +82,6 @@ class JmaIntensityColorProvider extends StateNotifier<JmaIntensityColorModel> {
   }
 
   Future<void> saveAll() async {
-    final prefs = ref.read(sharedPreferencesProvder);
-
     await prefs.setInt(JmaIntensity.Unknown.toString(), state.unknown.value);
     await prefs.setInt(JmaIntensity.Int0.toString(), state.int0.value);
     await prefs.setInt(JmaIntensity.Int1.toString(), state.int1.value);
@@ -132,7 +132,6 @@ class JmaIntensityColorProvider extends StateNotifier<JmaIntensityColorModel> {
   }
 
   Future<void> set(JmaIntensity intensity, Color color) async {
-    final prefs = ref.read(sharedPreferencesProvder);
     await prefs.setInt(
       intensity.toString(),
       color.value,
