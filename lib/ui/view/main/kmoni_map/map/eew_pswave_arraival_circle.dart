@@ -100,7 +100,7 @@ class _EewPswaveArraivalCirclesPainter extends CustomPainter {
         );
 
         if (travel == null) {
-          return;
+          continue;
         }
         final sOffsets = <Offset>[];
 

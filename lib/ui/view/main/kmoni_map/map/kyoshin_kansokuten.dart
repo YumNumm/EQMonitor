@@ -65,6 +65,7 @@ class KyoshinKansokutenPainter extends CustomPainter {
           Paint()
             ..color = point.shindoColor!
             ..isAntiAlias = true
+            ..strokeWidth = 1.2
             ..style = PaintingStyle.fill,
         );
       }
@@ -91,8 +92,8 @@ class KyoshinKansokutenPainter extends CustomPainter {
         );
         final textStyle = TextStyle(
           color: point.intensity!.color.onPrimary,
-          fontSize: 3.5,
-          fontWeight: FontWeight.w700,
+          fontSize: 3,
+          fontWeight: FontWeight.w900,
         );
         final textPainter = TextPainter(
           text: TextSpan(

@@ -9,6 +9,8 @@ import '../../../schema/local/kyoshin_kansokuten.dart';
 import '../../../ui/theme/jma_intensity.dart';
 import 'real_time_data_type.dart';
 
+enum ImageType { png, gif }
+
 class KyoshinImageParser {
   KyoshinImageParser(this.talker);
 
@@ -18,10 +20,15 @@ class KyoshinImageParser {
     required List<int> picture,
     required List<KyoshinKansokuten> obsPoints,
     required RealtimeDataType type,
+    required ImageType imageType,
   }) {
     final analyzedPoints = <AnalyzedKoshinKansokuten>[];
     image_lib.Image? image;
-    image = image_lib.decodeGif(picture);
+    if (imageType == ImageType.png) {
+      image = image_lib.decodePng(picture);
+    } else {
+      image = image_lib.decodeGif(picture);
+    }
     if (image == null) {
       throw Exception('Image was null');
     }

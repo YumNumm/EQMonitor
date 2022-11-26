@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:eqmonitor/provider/init/talker.dart';
 import 'package:eqmonitor/utils/talker_log/log_types.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -53,7 +54,7 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
             testCaseStartTime: null,
           ),
         ) {
-    talker = Talker(filter: BaseTalkerFilter(titles: ['EEW']));
+    talker = ref.watch(talkerProvider);
     onInit();
   }
 
@@ -95,13 +96,10 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
         },
       )
       ..onClose(() {
-        talker.handleException(Exception(), null, '緊急地震速報サーバとの接続が切断されました');
-      })
-      ..onError((p0) {
         talker.handleException(
-          Exception(p0),
-          null,
-          '緊急地震速報サーバとの接続中にエラーが発生しました',
+          Exception('緊急地震速報サーバとの接続が切断されました'),
+          StackTrace.current,
+          '緊急地震速報サーバとの接続が切断されました',
         );
       })
       ..on(RealtimeListenTypes.broadcast, ChannelFilter(), (payload, [ref]) {
@@ -141,7 +139,11 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
   }
 
   void addTelegram(CommonHead commonHead) {
-    talker.logTyped(EewProviderLog('EEW電文追加: Event${commonHead.eventId}'));
+    talker.logTyped(
+      EewProviderLog(
+        'EEW電文追加: Event ${commonHead.eventId} ${commonHead.originalId} ${commonHead.pressDateTime}',
+      ),
+    );
     // eewTelegramsに追加
     final eewTelegrams = state.eewTelegrams;
 

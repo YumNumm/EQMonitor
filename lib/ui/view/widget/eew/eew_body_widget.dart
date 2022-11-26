@@ -68,7 +68,7 @@ class EewBodyWidget extends ConsumerWidget {
       );
     }
     final expandableController = ExpandableController(
-      initialExpanded: ref.watch(eewExpandedProvider)[eew.key.eventId],
+      initialExpanded: true,
     );
 
     /// 警報かどうか

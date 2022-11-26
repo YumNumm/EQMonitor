@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:eqmonitor/api/remote/kmoni/kmoni_web_api_url_generators.dart';
 import 'package:eqmonitor/api/remote/kmoni/real_time_data_type.dart';
+import 'package:eqmonitor/utils/talker_log/log_types.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -60,8 +61,6 @@ class KmoniProvider extends StateNotifier<KmoniModel> {
     if (!mounted) {
       return;
     }
-    // Timerの更新頻度の更新を確認
-
     // バックグラウンドの場合処理しない
     if (ref.read(appLifecycleProvider) == AppLifecycleState.paused) {
       return;
@@ -86,6 +85,7 @@ class KmoniProvider extends StateNotifier<KmoniModel> {
           picture: data,
           obsPoints: ref.read(kyoshinKansokutenProvider),
           type: RealtimeDataType.Shindo,
+          imageType: ImageType.gif,
         );
         state = state.copyWith(
           analyzedPoint: parsedAnalyzedPoint,
@@ -93,6 +93,12 @@ class KmoniProvider extends StateNotifier<KmoniModel> {
         );
         // ignore: avoid_catches_without_on_clauses
       } catch (_) {
+        talker.logTyped(
+          KyoshinImageParserLog(
+            'テストケースの画像の読み込みに失敗しました',
+          ),
+          logLevel: LogLevel.error,
+        );
         // テストケースを終了する
         state = state.copyWith(
           testCaseStartTime: null,
@@ -102,9 +108,11 @@ class KmoniProvider extends StateNotifier<KmoniModel> {
     }
     // 更新中でないことを確認
     if (state.isUpdating) {
-      // logger.v(
-      //   '現在読み込み中の強震モニタ画像があるため、新規取得をスキップします。',
-      // );
+      talker.logTyped(
+        KyoshinImageParserLog(
+          '処理中のため処理をスキップします',
+        ),
+      );
       return;
     }
     // 更新中フラグを立てる
@@ -145,6 +153,7 @@ class KmoniProvider extends StateNotifier<KmoniModel> {
         picture: imageResponse.data!,
         obsPoints: ref.read(kyoshinKansokutenProvider),
         type: RealtimeDataType.Shindo,
+        imageType: ImageType.gif,
       );
 
       state = state.copyWith(

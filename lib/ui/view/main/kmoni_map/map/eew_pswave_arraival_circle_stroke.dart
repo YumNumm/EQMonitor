@@ -76,7 +76,7 @@ class _EewPswaveArraivalCircleStrokePainter extends CustomPainter {
         );
 
         if (travel == null) {
-          return;
+          continue;
         }
         final sOffsets = <Offset>[];
         final pOffsets = <Offset>[];
