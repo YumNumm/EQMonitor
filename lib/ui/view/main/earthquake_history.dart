@@ -107,48 +107,36 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
                             size: 42,
                           ),
                           enableFeedback: true,
-                          title: Row(
-                            children: [
-                              Text(
-                                item.component?.hypocenter.name ?? '震源調査中',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              // 速報アイコン
-                              //  if (isSokuhou) const Chip(label: Text('速報')),
-                            ],
+                          title: Text(
+                            item.component?.hypocenter.name ?? '震源調査中',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          subtitle: Wrap(
-                            children: [
-                              Text(
-                                (StringBuffer()
-                                      ..writeAll(
-                                        <String>[
-                                          if (item.component?.originTime !=
-                                              null)
-                                            "${DateFormat('yyyy/MM/dd HH:mm').format(item.component!.originTime.toLocal())}頃 ",
-                                          ' ',
-                                          // 震源の深さ
-                                          if (item.component?.hypocenter
-                                                  .depth !=
-                                              null)
-                                            (item.component?.hypocenter.depth
-                                                        .condition !=
+                          subtitle: Text(
+                            (StringBuffer()
+                                  ..writeAll(
+                                    <String>[
+                                      if (item.component?.originTime != null)
+                                        "${DateFormat('yyyy/MM/dd HH:mm').format(item.component!.originTime.toLocal())}頃 ",
+                                      ' ',
+                                      // 震源の深さ
+                                      if (item.component?.hypocenter.depth !=
+                                          null)
+                                        (item.component?.hypocenter.depth
+                                                    .condition !=
+                                                null)
+                                            ? '深さ${item.component!.hypocenter.depth.condition!.description} '
+                                            : (item.component!.hypocenter.depth
+                                                        .value !=
                                                     null)
-                                                ? '深さ${item.component!.hypocenter.depth.condition!.description} '
-                                                : (item.component!.hypocenter
-                                                            .depth.value !=
-                                                        null)
-                                                    ? '深さ${item.component!.hypocenter.depth.value}km'
-                                                    : '深さ不明',
-                                        ],
-                                      ))
-                                    .toString(),
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                            ],
+                                                ? '深さ${item.component!.hypocenter.depth.value}km'
+                                                : '深さ不明',
+                                    ],
+                                  ))
+                                .toString(),
+                            style: const TextStyle(fontSize: 14),
                           ),
                         ),
                       ],
