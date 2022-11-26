@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:math' as math;
+
 import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
 import 'package:eqmonitor/provider/init/talker.dart';
 import 'package:flutter/material.dart';
@@ -21,16 +24,69 @@ import '../../../view/widget/intensity_widget.dart';
 import '../earthquake_history.viewmodel.dart';
 import '../kmoni_map/map/base_map.dart';
 
-class EarthquakeHistoryDetailPage extends HookConsumerWidget {
+class EarthquakeHistoryDetailPage extends ConsumerStatefulWidget {
   const EarthquakeHistoryDetailPage({
     super.key,
     required this.item,
   });
-
   final EarthquakeHistoryItem item;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _EarthquakeHistoryDetailPageState();
+}
+
+class _EarthquakeHistoryDetailPageState
+    extends ConsumerState<EarthquakeHistoryDetailPage> {
+  _EarthquakeHistoryDetailPageState();
+
+  late EarthquakeHistoryItem item;
+  final TransformationController transformationController =
+      TransformationController();
+
+  final mapKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    // Widgetの表示領域を取得
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final size = mapKey.currentContext!.size!;
+      // 画面中央の座標
+      final center = Offset(size.width / 2, size.height / 2);
+      // 震央地の座標
+      if (widget.item.component?.hypocenter.coordinate.latitude?.value ==
+          null) {
+        return;
+      }
+      // CustomPainter内で使うOffset
+      final hypoLocalOffset = MapGlobalOffset.latLonToGlobalPoint(
+        LatLng(
+          widget.item.component!.hypocenter.coordinate.latitude!.value,
+          widget.item.component!.hypocenter.coordinate.longitude!.value,
+        ),
+      ).toLocalOffset(const Size(476, 927.4));
+      // 実際のWidgetの座標から見たときの震央地の座標に変換
+      final zoom = math.max(size.width / 476, size.height / 927.4);
+      final hypoOffset = Offset(
+        hypoLocalOffset.dx * zoom,
+        hypoLocalOffset.dy * zoom,
+      );
+      // 画面中央に震央地を表示するための移動量
+      final translate = center - hypoOffset;
+
+      transformationController.value = (Matrix4.identity()
+        ..translate(center.dx, center.dy)
+        ..scale(4.0, 4)
+        ..translate(-center.dx, -center.dy)
+        ..translate(translate.dx, translate.dy));
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    item = widget.item;
+
     final colors = ref.watch(jmaIntensityColorProvider);
     final maxInt = JmaIntensity.values.firstWhere(
       (e) => e.name == (item.intensity?.maxInt.name),
@@ -256,6 +312,8 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
               child: Stack(
                 children: [
                   InteractiveViewer(
+                    key: mapKey,
+                    transformationController: transformationController,
                     maxScale: 20,
                     child: RepaintBoundary(
                       child: Stack(
