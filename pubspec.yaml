@@ -93,6 +93,7 @@ flutter:
     - assets/develop/06301031/acmap_s/
     - assets/develop/06301031/eew/
     - assets/develop/06301031/jma_s/
+    - assets/develop/20110311/
 
   fonts:
     - family: CaskaydiaCove

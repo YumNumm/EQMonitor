@@ -8,7 +8,7 @@ import '../../../schema/remote/dmdata/commonHeader.dart';
 class EewApi {
   final supabase = SupabaseClient(Env.supabaseS1Url, Env.supabaseS1AnonKey);
 
-  Future<List<CommonHead>> getEewTelegrams({int limit = 10}) async {
+  Future<List<CommonHead>> getEewTelegrams({int limit = 3}) async {
     final res = await supabase
         .from('eew')
         .select<List<Map<String, dynamic>>>()
