@@ -55,6 +55,7 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                 ),
               ),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Row(),
                   // 発生時刻
@@ -108,28 +109,29 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                         child: Column(
                           children: [
                             // 震央地
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  '震央地',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
+                            FittedBox(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    '震央地',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 4,
-                                ),
-                                Text(
-                                  item.component?.hypocenter.name ?? '調査中',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 30,
+                                  const SizedBox(
+                                    width: 4,
                                   ),
-                                ),
-                              ],
+                                  Text(
+                                    item.component?.hypocenter.name ?? '調査中',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 30,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                             if (item.component != null)
                               FittedBox(

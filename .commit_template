@@ -1,12 +1,12 @@
-# Prefix
-
-- `fix` バグ修正
-- `hotfix` クリティカルなバグ修正
-- `add` 新機能・ファイル追加
-- `update` バグではない機能修正
-- `change` 仕様変更
-- `clean` リファクタリングなどのコード整理
-- `disable` 機能無効化
-- `remove` 削除(ファイル)
-- `upgrade` バージョンアップ
-- `revert` 変更取り消し
+## Prefix
+#
+#- `fix` バグ修正
+#- `hotfix` クリティカルなバグ修正
+#- `add` 新機能・ファイル追加
+#- `update` バグではない機能修正
+#- `change` 仕様変更
+#- `clean` リファクタリングなどのコード整理
+#- `disable` 機能無効化
+#- `remove` 削除(ファイル)
+#- `upgrade` バージョンアップ
+#- `revert` 変更取り消し
