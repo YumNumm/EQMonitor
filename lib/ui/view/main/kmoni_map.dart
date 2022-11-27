@@ -232,18 +232,18 @@ class KmoniStatusWidget extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      // WebSocket 接続状態
-                      if (eewState.channel?.isJoined == true)
-                        const Icon(
-                          Icons.link,
-                          semanticLabel: 'WebSocket 接続中',
-                        )
-                      else
-                        const Icon(
-                          Icons.link_off,
-                          color: Colors.red,
-                          semanticLabel: 'WebSocket 切断',
-                        ),
+                      // TODO(YumNumm): WebSocket 接続状態
+                      //if (eewState.channel?.isJoined == true)
+                      //  const Icon(
+                      //    Icons.link,
+                      //    semanticLabel: 'WebSocket 接続中',
+                      //  )
+                      //else
+                      //  const Icon(
+                      //    Icons.link_off,
+                      //    color: Colors.red,
+                      //    semanticLabel: 'WebSocket 切断',
+                      //  ),
                       const SizedBox(width: 8),
 
                       /// テストモード時

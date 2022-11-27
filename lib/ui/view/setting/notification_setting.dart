@@ -84,7 +84,7 @@ class NotificationSettingPage extends HookConsumerWidget {
                         ),
                         trailing: Text(
                           (notificationSetting.intensityThreshold ==
-                                  JmaIntensity.Int0)
+                                  JmaIntensity.int0)
                               ? '全て'
                               : '${notificationSetting.intensityThreshold.longName}以上',
                         ),

@@ -3,15 +3,13 @@ import 'dart:ui' as ui;
 import 'package:eqmonitor/model/travel_time_table/travel_time_table.dart';
 import 'package:eqmonitor/provider/earthquake/kmoni_controller.dart';
 import 'package:eqmonitor/provider/init/travel_time.dart';
-import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
-import 'package:eqmonitor/schema/remote/dmdata/eew-information/eew-infomation.dart';
+import 'package:eqmonitor/provider/telegram_service.dart';
 import 'package:eqmonitor/utils/map/map_global_offset.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart' hide Path;
 
 import '../../../../../provider/earthquake/eew_provider.dart';
-import '../../../../../schema/remote/dmdata/eew-information/earthquake/accuracy/epicCenterAccuracy.dart';
 
 /// 緊急地震速報のP・S波到達予想円を表示するWidget
 class EewPswaveArraivalCirclesWidget extends ConsumerWidget {
@@ -24,10 +22,8 @@ class EewPswaveArraivalCirclesWidget extends ConsumerWidget {
         .watch(eewProvider.select((value) => value.showEews))
         .where(
           (e) =>
-              e.value.earthQuake?.isAssuming != true &&
-              e.value.earthQuake?.hypoCenter.accuracy.epicCenterAccuracy
-                      .epicCenterAccuracy !=
-                  EpicCenterAccuracy.f1,
+              e.eew.earthquake?.condition != '仮定震源要素' &&
+              e.eew.earthquake?.hypocenter.accuracy.epicenters[0] != 1,
         )
         .toList();
     final travelTimeTables = ref.watch(travelTimeProvider);
@@ -51,7 +47,7 @@ class _EewPswaveArraivalCirclesPainter extends CustomPainter {
     required this.onTestStarted,
   });
 
-  final List<MapEntry<CommonHead, EEWInformation>> eews;
+  final List<EewTelegram> eews;
   final List<TravelTimeTable> travelTimeTables;
   final DateTime? onTestStarted;
 
@@ -71,29 +67,25 @@ class _EewPswaveArraivalCirclesPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     for (final eew in eews) {
-      if (eew.value.earthQuake?.hypoCenter.coordinateComponent.latitude !=
-              null &&
-          eew.value.earthQuake?.hypoCenter.coordinateComponent.longitude !=
-              null) {
+      if (eew.eew.earthquake?.hypocenter.coordinate.latitude != null &&
+          eew.eew.earthquake?.hypocenter.coordinate.longitude != null) {
         final offset = MapGlobalOffset.latLonToGlobalPoint(
           LatLng(
-            eew.value.earthQuake!.hypoCenter.coordinateComponent.latitude!
-                .value,
-            eew.value.earthQuake!.hypoCenter.coordinateComponent.longitude!
-                .value,
+            eew.eew.earthquake!.hypocenter.coordinate.latitude!.value,
+            eew.eew.earthquake!.hypocenter.coordinate.longitude!.value,
           ),
         ).toLocalOffset(const Size(476, 927.4));
 
         final travel = TravelTimeApi(travelTime: travelTimeTables).getValue(
-          eew.value.earthQuake!.hypoCenter.depth.value!,
+          eew.eew.earthquake!.hypocenter.depth.value!,
           ((onTestStarted != null)
-                      ? eew.value.earthQuake!.originTime!
+                      ? eew.eew.earthquake!.originTime!
                           .add(DateTime.now().difference(onTestStarted!))
                           .difference(
-                            eew.value.earthQuake!.originTime!,
+                            eew.eew.earthquake!.originTime!,
                           )
                       : DateTime.now().difference(
-                          eew.value.earthQuake!.originTime!,
+                          eew.eew.earthquake!.originTime!,
                         ))
                   .inMilliseconds /
               1000,
@@ -110,10 +102,8 @@ class _EewPswaveArraivalCirclesPainter extends CustomPainter {
               MapGlobalOffset.latLonToGlobalPoint(
                 const Distance().offset(
                   LatLng(
-                    eew.value.earthQuake!.hypoCenter.coordinateComponent
-                        .latitude!.value,
-                    eew.value.earthQuake!.hypoCenter.coordinateComponent
-                        .longitude!.value,
+                    eew.eew.earthquake!.hypocenter.coordinate.latitude!.value,
+                    eew.eew.earthquake!.hypocenter.coordinate.longitude!.value,
                   ),
                   (travel.sDistance * 1000).toInt(),
                   bearing,
@@ -122,8 +112,8 @@ class _EewPswaveArraivalCirclesPainter extends CustomPainter {
             );
           }
         }
-        final isWarning = eew.value.isWarning ??
-            eew.value.comments?.warning?.codes.contains(201) ??
+        final isWarning = eew.eew.isWarning ??
+            eew.eew.comments?.warning?.codes.contains(201) ??
             false;
         canvas.drawPath(
           Path()..addPolygon(sOffsets, true),
@@ -133,10 +123,10 @@ class _EewPswaveArraivalCirclesPainter extends CustomPainter {
               (MapGlobalOffset.latLonToGlobalPoint(
                         const Distance().offset(
                           LatLng(
-                            eew.value.earthQuake!.hypoCenter.coordinateComponent
-                                .latitude!.value,
-                            eew.value.earthQuake!.hypoCenter.coordinateComponent
-                                .longitude!.value,
+                            eew.eew.earthquake!.hypocenter.coordinate.latitude!
+                                .value,
+                            eew.eew.earthquake!.hypocenter.coordinate.longitude!
+                                .value,
                           ),
                           (travel.pDistance * 1000).toInt(),
                           0,

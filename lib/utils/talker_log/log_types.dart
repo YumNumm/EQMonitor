@@ -78,13 +78,23 @@ class EarthquakeHistoryLog extends FlutterTalkerLog {
   Color get color => Colors.lightBlueAccent;
 }
 
-
 /// AppLifeCycle
 class AppLifecycleLog extends FlutterTalkerLog {
   AppLifecycleLog(super.message);
 
   @override
   String get title => 'AppLifecycle';
+
+  @override
+  Color get color => Colors.lightBlueAccent;
+}
+
+/// SocketIO
+class SocketIOLog extends FlutterTalkerLog {
+  SocketIOLog(super.message);
+
+  @override
+  String get title => 'SocketIO';
 
   @override
   Color get color => Colors.lightBlueAccent;

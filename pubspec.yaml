@@ -3,7 +3,7 @@ description: An earthquake monitoring Application
 
 publish_to: "none"
 
-version: 0.7.2+403
+version: 0.7.2+405
 
 environment:
   sdk: ">=2.18.2 <3.0.0"
@@ -19,7 +19,7 @@ dependencies:
   device_preview: ^1.1.0
   dio: ^4.0.6
   dio_http2_adapter: ^2.0.0
-  dmdata_telegram_json: ^0.0.4
+  dmdata_telegram_json: ^0.0.11
   dynamic_color: ^1.5.4
   envied: ^0.2.3
   expandable: ^5.0.1
@@ -60,6 +60,7 @@ dependencies:
   shared_preferences: ^2.0.15
   shared_preferences_android: ^2.0.13
   shared_preferences_ios: ^2.1.1
+  socket_io_client: ^2.0.0
   state_notifier: ^0.7.2+1
   substring_highlight: ^1.0.33
   supabase: ^1.0.1

@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:math' as math;
 
 import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
@@ -16,7 +15,6 @@ import '../../../../provider/init/parameter_earthquake.dart';
 import '../../../../provider/setting/intensity_color_provider.dart';
 import '../../../../provider/theme_providers.dart';
 import '../../../../schema/local/prefecture/map_polygon.dart';
-import '../../../../schema/remote/dmdata/eq-information/earthquake-information/intensity/station.dart';
 import '../../../../schema/remote/dmdata/parameter-earthquake/parameter-earthquake.dart';
 import '../../../../utils/map/map_global_offset.dart';
 import '../../../theme/jma_intensity.dart';
@@ -90,7 +88,7 @@ class _EarthquakeHistoryDetailPageState
     final colors = ref.watch(jmaIntensityColorProvider);
     final maxInt = JmaIntensity.values.firstWhere(
       (e) => e.name == (item.intensity?.maxInt.name),
-      orElse: () => JmaIntensity.Unknown,
+      orElse: () => JmaIntensity.unknown,
     );
     return Scaffold(
       appBar: AppBar(
@@ -347,13 +345,12 @@ class _EarthquakeHistoryDetailPageState
                           // int1 ~ maxInt
                           for (final i in JmaIntensity.values)
                             if ([
-                              JmaIntensity.Int0,
+                              JmaIntensity.int0,
                               JmaIntensity.over,
-                              JmaIntensity.Unknown,
-                              JmaIntensity.Error,
+                              JmaIntensity.unknown,
                             ].contains(i))
                               const SizedBox.shrink()
-                            else if (i.intValue <= maxInt.intValue)
+                            else if (i <= maxInt)
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -457,7 +454,7 @@ class MapRegionIntensityV2Painter extends CustomPainter {
                 ..color = JmaIntensity.values
                     .firstWhere(
                       (e) => e.name == city.maxInt?.name,
-                      orElse: () => JmaIntensity.Error,
+                      orElse: () => JmaIntensity.unknown,
                     )
                     .fromUser(colors)
                 ..isAntiAlias = true
@@ -495,7 +492,7 @@ class MapRegionIntensityV2Painter extends CustomPainter {
               ..color = JmaIntensity.values
                   .firstWhere(
                     (e) => e.name == region.maxInt?.name,
-                    orElse: () => JmaIntensity.Error,
+                    orElse: () => JmaIntensity.unknown,
                   )
                   .fromUser(colors)
               ..isAntiAlias = true
@@ -660,54 +657,4 @@ class MaphypocenterV2Painter extends CustomPainter {
   @override
   bool shouldRepaint(covariant MaphypocenterV2Painter oldDelegate) =>
       oldDelegate.component != component;
-}
-
-class MapStationIntensityWidget extends ConsumerWidget {
-  const MapStationIntensityWidget({
-    super.key,
-    required this.stations,
-  });
-  final List<Station> stations;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    //final allParameterEarthquakeItem = ref.watch(parameterEarthquakeProvider);
-
-    final widgets = <Widget>[];
-
-    // 各観測点の処理
-    //for (final station in stations) {
-    //  try {
-    //    // 緯度経度を取得
-    //    //final param = allParameterEarthquakeItem.items
-    //    //    .firstWhere((e) => e.code == station.code);
-    //    // final offset = MapGlobalOffset.latLonToGlobalPoint(
-    //    //   LatLng(param.latitude, param.longitude),
-    //    // ).toLocalOffset(const Size(476, 927.4));
-    //    // widgets.add(
-    //    //   DecoratedBox(
-    //    //     decoration: BoxDecoration(
-    //    //       border: Border.all(
-    //    //         color: Colors.red,
-    //    //       ),
-    //    //     ),
-    //    //     child: Positioned(
-    //    //       left: offset.dx,
-    //    //       top: offset.dy,
-    //    //       child: IntensityWidget(
-    //    //         intensity: JmaIntensity.values
-    //    //             .firstWhere((e) => e.name == station.intensity),
-    //    //         size: 2,
-    //    //         opacity: 1,
-    //    //       ),
-    //    //     ),
-    //    //   ),
-    //    // );
-    //  } on Exception catch (_) {}
-    //}
-
-    return Stack(
-      children: widgets,
-    );
-  }
 }
