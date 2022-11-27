@@ -273,7 +273,7 @@
     },
     {
       "name": "dmdata_telegram_json",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/dmdata_telegram_json-0.0.11",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/dmdata_telegram_json-0.0.12",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -1292,7 +1292,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2022-11-27T15:45:59.867775Z",
+  "generated": "2022-11-27T16:07:17.077245Z",
   "generator": "pub",
   "generatorVersion": "2.18.5"
 }
