@@ -97,7 +97,8 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
       })
       ..on(RealtimeListenTypes.broadcast, ChannelFilter(), (payload, [ref]) {
         talker.logTyped(EewProviderLog('EEW STREAM: $payload'));
-      });
+      })
+      ..subscribe();
     state = state.copyWith(
       channel: channel,
     );
@@ -126,7 +127,7 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
     if (kDebugMode) {
       final res = await http.get(
         Uri.parse(
-          'https://sample.dmdata.jp/eew/20171213b/json/vxse44_rjtd_20171213112257.json',
+          'https://sample.dmdata.jp/conversion/json/schema/eew-information/vxse44_rjtd_20180906031016.json',
         ),
       );
       addTelegram(
@@ -138,14 +139,14 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
   }
 
   void addTelegram(CommonHead commonHead) {
+    final now = DateTime.now();
     talker.logTyped(
       EewProviderLog(
         'EEW電文追加: Event ${commonHead.eventId} ${commonHead.originalId} ${commonHead.pressDateTime}',
       ),
     );
-
-    final toUpdateTelegrams = [...eewTelegrams, commonHead];
-    final toUpdateTelegramsGroupBy = toUpdateTelegrams
+    eewTelegrams.add(commonHead);
+    eewTelegramsGroupByEventId = eewTelegrams
         .toList()
         .groupListsBy((element) => int.parse(element.eventId.toString()));
 
@@ -153,22 +154,25 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
     // 最新のものを取得する
     // eventIdが大きい順
     final showEews = <CommonHead>[];
-    toUpdateTelegramsGroupBy.forEach((key, value) {
+    eewTelegramsGroupByEventId.forEach((key, value) {
       // valueをpressDateTimeが一番新しい順に並び変える
       value.sort((a, b) => b.pressDateTime.compareTo(a.pressDateTime));
-      // 任意の電文が180秒以内に発表されている場合に
       // valueの最初のものをshowEewsに追加する
-
       if (value.any(
-        (element) =>
-            element.pressDateTime.difference(DateTime.now()).inSeconds > -180 ||
-            element.originalId == 'TELEGRAM_ID',
+        (e) => e.originalId == 'TELEGRAM_ID' ||
+                (EEWInformation.fromJson(e.body)
+                            .earthQuake
+                            ?.hypoCenter
+                            .depth
+                            .value ??
+                        0) <
+                    150
+            ? now.difference(e.pressDateTime).inSeconds < 180
+            : now.difference(e.pressDateTime).inSeconds < 300,
       )) {
         showEews.add(value.first);
       }
     });
-    eewTelegrams.add(commonHead);
-    eewTelegramsGroupByEventId = toUpdateTelegramsGroupBy;
 
     state = state.copyWith(
       showEews: showEews
@@ -178,27 +182,17 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
 
   /// 表示する電文を更新
   void checkTelegrams() {
-    final showEews = state.showEews;
-    // showEewsが空の場合は何もしない
-    if (showEews.isEmpty) {
+    if (eewTelegrams.isEmpty) {
       return;
     }
     // 深さが150km未満のものは180秒経過していたら削除
     // それ以外は300秒経過していたら削除
-    final now = DateTime.now();
-    final toUpdateShowEews = showEews
-        .where(
-          (eew) => (eew.value.earthQuake?.hypoCenter.depth.value ?? 0) < 150
-              ? now.difference(eew.key.pressDateTime).inSeconds < 180
-              : now.difference(eew.key.pressDateTime).inSeconds < 300,
-        )
-        .toList();
-    if (toUpdateShowEews == showEews) {
-      return;
-    }
-
     // キャッシュしているEEW電文のうち上記条件を満たさないものを削除
+    final now = DateTime.now();
     eewTelegrams.forEachIndexed((index, e) {
+      if (e.originalId == 'TELEGRAM_ID') {
+        return;
+      }
       final eew = EEWInformation.fromJson(e.body);
       if ((eew.earthQuake?.hypoCenter.depth.value ?? 0) < 150) {
         if (now.difference(e.pressDateTime).inSeconds > 180) {
@@ -220,9 +214,32 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
         }
       }
     });
+    eewTelegramsGroupByEventId = eewTelegrams
+        .toList()
+        .groupListsBy((element) => int.parse(element.eventId.toString()));
+
+    // 180秒以内に発表されていて
+    // 最新のものを取得する
+    // eventIdが大きい順
+    final showEews = <CommonHead>[];
+    eewTelegramsGroupByEventId.forEach((key, value) {
+      // valueをpressDateTimeが一番新しい順に並び変える
+      value.sort((a, b) => b.pressDateTime.compareTo(a.pressDateTime));
+      // 任意の電文が180秒以内に発表されている場合に
+      // valueの最初のものをshowEewsに追加する
+      if (value.any(
+        (e) => e.originalId == 'TELEGRAM_ID',
+      )) {
+        showEews.add(value.first);
+      }
+    });
+    if (showEews == state.showEews.map((e) => e.key).toList()) {
+      return;
+    }
 
     state = state.copyWith(
-      showEews: toUpdateShowEews,
+      showEews: showEews
+          .map((eew) => MapEntry(eew, EEWInformation.fromJson(eew.body))),
     );
   }
 
@@ -275,6 +292,8 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
     state = state.copyWith(
       showEews: [],
     );
+    eewTelegrams.clear();
+    eewTelegramsGroupByEventId.clear();
   }
 
   /// テスト用のEEWを新規作成
@@ -305,7 +324,7 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
       prefectures: [],
       regions: [],
       earthQuake: EarthQuake(
-        originTime: originTime,
+        originTime: originTime ?? DateTime.now(),
         arrivalTime: arrivalTime ?? DateTime.now(),
         isAssuming: isAssuming,
         hypoCenter: HypoCenter(
@@ -367,7 +386,7 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
       infoKind: 'eew-test',
       infoKindVersion: '1.0',
       infoType: CommonHeadInfoType.announcement,
-      originalId: 'TELEGRAM_ID',
+      originalId: 'TEST_TELEGRAM',
       pressDateTime: DateTime.now(),
       publishingOffice: ['テスト'],
       reportDateTime: DateTime.now(),

@@ -243,13 +243,13 @@
     },
     {
       "name": "device_info_plus",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/device_info_plus-7.0.1",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/device_info_plus-8.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "device_info_plus_platform_interface",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/device_info_plus_platform_interface-6.0.1",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/device_info_plus_platform_interface-7.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -447,7 +447,7 @@
     },
     {
       "name": "flutter_launcher_icons",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_launcher_icons-0.10.0",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_launcher_icons-0.11.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -1280,7 +1280,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2022-11-26T13:13:47.443703Z",
+  "generated": "2022-11-26T16:32:59.104784Z",
   "generator": "pub",
   "generatorVersion": "2.18.5"
 }
