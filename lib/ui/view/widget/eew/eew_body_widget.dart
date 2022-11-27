@@ -1,9 +1,10 @@
 // ignore_for_file: lines_longer_than_80_chars
 
+import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
 import 'package:eqmonitor/provider/setting/developer_mode.dart';
 import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
-import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
-import 'package:eqmonitor/schema/remote/dmdata/eew-information/eew-infomation.dart';
+import 'package:eqmonitor/provider/telegram_service.dart';
+import 'package:eqmonitor/ui/theme/jma_intensity.dart';
 import 'package:eqmonitor/ui/view/views.dart';
 import 'package:eqmonitor/ui/view/widget/intensity_widget.dart';
 import 'package:eqmonitor/utils/extension/relative_luminance.dart';
@@ -12,16 +13,13 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../schema/remote/dmdata/eew-information/earthquake/accuracy/epicCenterAccuracy.dart';
-import '../../../theme/jma_intensity.dart';
-
 class EewBodyWidget extends ConsumerStatefulWidget {
   const EewBodyWidget({
     super.key,
     required this.eew,
   });
 
-  final MapEntry<CommonHead, EEWInformation> eew;
+  final EewTelegram eew;
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _EewBodyWidgetState();
 }
@@ -33,7 +31,7 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => ref
           .read(eewExpandedProvider)
-          .putIfAbsent(widget.eew.key.eventId!, () => true),
+          .putIfAbsent(widget.eew.head.eventId!, () => true),
     );
   }
 
@@ -43,17 +41,18 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
     final colors = ref.watch(jmaIntensityColorProvider);
 
     /// 地震発生時刻があるかどうか
-    final hasOriginTime = eew.value.earthQuake?.originTime != null;
+    final hasOriginTime = eew.eew.earthquake?.originTime != null;
 
     /// 最大震度
     /// to がoverなら fromを返す
     /// それ以外はtoを返す
-    final maxIntensity = (eew.value.intensity?.maxint.to == JmaIntensity.over)
-        ? eew.value.intensity!.maxint.from
-        : eew.value.intensity?.maxint.to ?? JmaIntensity.Unknown;
+    final forecastMaxIntensity =
+        (eew.eew.intensity?.forecastMaxInt.to == JmaIntensity.over)
+            ? eew.eew.intensity!.forecastMaxInt.from
+            : eew.eew.intensity?.forecastMaxInt.to ?? JmaIntensity.unknown;
 
     /// 通常報でない場合は、早期Return
-    if (eew.key.infoType != CommonHeadInfoType.announcement) {
+    if (eew.head.infoType != TelegramInfoType.announcement) {
       return SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Card(
@@ -65,7 +64,7 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
             padding: const EdgeInsets.all(8),
             child: FittedBox(
               child: Text(
-                eew.key.headline ?? '先ほどの緊急地震速報は取り消されました',
+                eew.head.headline ?? '先ほどの緊急地震速報は取り消されました',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
@@ -75,13 +74,14 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
         ),
       );
     }
+
     final expandableController = ExpandableController(
-      initialExpanded: ref.watch(eewExpandedProvider)[eew.key.eventId],
+      initialExpanded: ref.watch(eewExpandedProvider)[eew.head.eventId],
     );
 
     /// 警報かどうか
-    final isWarning = eew.value.isWarning ??
-        eew.value.comments?.warning?.codes.contains(201) ??
+    final isWarning = eew.eew.isWarning ??
+        eew.eew.comments?.warning?.codes.contains(201) ??
         false;
 
     return SizedBox(
@@ -93,8 +93,8 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
           child: InkWell(
             onTap: () {
               expandableController.toggle();
-              ref.read(eewExpandedProvider)[eew.key.eventId!] =
-                  !ref.read(eewExpandedProvider)[eew.key.eventId!]!;
+              ref.read(eewExpandedProvider)[eew.head.eventId!] =
+                  !ref.read(eewExpandedProvider)[eew.head.eventId!]!;
             },
             onDoubleTap: () => ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -114,10 +114,9 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
                       ),
                     ),
                     Text(
-                      '震央位置:${eew.value.earthQuake!.hypoCenter.accuracy.epicCenterAccuracy.epicCenterAccuracy.description}\n'
-                      '震源位置: ${eew.value.earthQuake!.hypoCenter.accuracy.epicCenterAccuracy.hypoCenterAccuracy.description}\n'
-                      '深さ: ${eew.value.earthQuake!.hypoCenter.accuracy.depthCalculation.description}\n'
-                      'マグニチュード: ${eew.value.earthQuake!.hypoCenter.accuracy.magnitudeCalculation.description}',
+                      eew.eew.earthquake!.hypocenter.accuracy
+                          .toJson()
+                          .toString(),
                     )
                   ],
                 ),
@@ -131,33 +130,33 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
               collapsed: Card(
                 margin: const EdgeInsets.fromLTRB(0, 0, 0, 3),
                 elevation: 3,
-                color:
-                    (eew.value.intensity?.maxint.from ?? JmaIntensity.Unknown)
-                        .fromUser(colors)
-                        .withOpacity(0.8),
+                color: (eew.eew.intensity?.forecastMaxInt.from ??
+                        JmaIntensity.unknown)
+                    .fromUser(colors)
+                    .withOpacity(0.8),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     // ヘッダー・予想最大震度
                     FittedBox(
                       child: IntensityWidget(
-                        intensity: maxIntensity,
+                        intensity: forecastMaxIntensity,
                         size: 48,
                         opacity: 1,
                       ),
                     ),
 
                     // 詳細情報
-                    if (eew.value.earthQuake != null)
+                    if (eew.eew.earthquake != null)
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Text(
-                          '${eew.value.earthQuake?.hypoCenter.name}',
+                          '${eew.eew.earthquake?.hypocenter.name}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 25,
-                            color: (eew.value.intensity?.maxint.from ??
-                                    JmaIntensity.Unknown)
+                            color: (eew.eew.intensity?.forecastMaxInt.from ??
+                                    JmaIntensity.unknown)
                                 .fromUser(colors)
                                 .onPrimary,
                           ),
@@ -168,10 +167,10 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
               ),
               expanded: Card(
                 margin: EdgeInsets.zero,
-                color:
-                    (eew.value.intensity?.maxint.from ?? JmaIntensity.Unknown)
-                        .fromUser(colors)
-                        .withOpacity(0.8),
+                color: (eew.eew.intensity?.forecastMaxInt.from ??
+                        JmaIntensity.unknown)
+                    .fromUser(colors)
+                    .withOpacity(0.8),
                 child: Row(
                   children: [
                     // ヘッダー・予想最大震度
@@ -192,7 +191,7 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
                                 ),
                                 Text(
                                   '${isWarning ? '警報' : '予報'}'
-                                  '${eew.value.isLastInfo ? ' 最終' : ''} #${eew.key.serialNo}',
+                                  '${eew.eew.isLastInfo ? ' 最終' : ''} #${eew.head.serialNo}',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -204,14 +203,14 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
                           Text(
                             '予想最大震度',
                             style: TextStyle(
-                              color: (eew.value.intensity?.maxint.from ??
-                                      JmaIntensity.Unknown)
+                              color: (eew.eew.intensity?.forecastMaxInt.from ??
+                                      JmaIntensity.unknown)
                                   .fromUser(colors)
                                   .onPrimary,
                             ),
                           ),
                           // 予想最大震度不明の場合
-                          if (maxIntensity == JmaIntensity.Unknown)
+                          if (forecastMaxIntensity == JmaIntensity.unknown)
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 15),
                               child: FittedBox(
@@ -220,8 +219,9 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 30,
-                                    color: (eew.value.intensity?.maxint.from ??
-                                            JmaIntensity.Unknown)
+                                    color: (eew.eew.intensity?.forecastMaxInt
+                                                .from ??
+                                            JmaIntensity.unknown)
                                         .fromUser(colors)
                                         .onPrimary,
                                   ),
@@ -236,47 +236,47 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
                                 children: [
                                   // 数字部分
                                   Text(
-                                    maxIntensity.name
+                                    forecastMaxIntensity.name
                                         .replaceAll(RegExp(r'[^0-9]'), ''),
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 60,
-                                      color:
-                                          (eew.value.intensity?.maxint.from ??
-                                                  JmaIntensity.Unknown)
-                                              .fromUser(colors)
-                                              .onPrimary,
+                                      color: (eew.eew.intensity?.forecastMaxInt
+                                                  .from ??
+                                              JmaIntensity.unknown)
+                                          .fromUser(colors)
+                                          .onPrimary,
                                     ),
                                   ),
                                   // 文字部分
                                   Text(
-                                    maxIntensity.name
+                                    forecastMaxIntensity.name
                                         .replaceAll(RegExp(r'[0-9]'), '')
                                         .replaceAll('+', '強')
                                         .replaceAll('-', '弱'),
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 25,
-                                      color:
-                                          (eew.value.intensity?.maxint.from ??
-                                                  JmaIntensity.Unknown)
-                                              .fromUser(colors)
-                                              .onPrimary,
+                                      color: (eew.eew.intensity?.forecastMaxInt
+                                                  .from ??
+                                              JmaIntensity.unknown)
+                                          .fromUser(colors)
+                                          .onPrimary,
                                     ),
                                   ),
                                   // 程度以上
-                                  if (eew.value.intensity?.maxint.to ==
+                                  if (eew.eew.intensity?.forecastMaxInt.to ==
                                       JmaIntensity.over)
                                     Text(
                                       '程度以上',
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 15,
-                                        color:
-                                            (eew.value.intensity?.maxint.from ??
-                                                    JmaIntensity.Unknown)
-                                                .fromUser(colors)
-                                                .onPrimary,
+                                        color: (eew.eew.intensity
+                                                    ?.forecastMaxInt.from ??
+                                                JmaIntensity.unknown)
+                                            .fromUser(colors)
+                                            .onPrimary,
                                       ),
                                     ),
                                 ],
@@ -295,12 +295,12 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Row(),
-                              if (eew.value.earthQuake != null)
+                              if (eew.eew.earthquake != null)
                                 Column(
                                   children: [
                                     FittedBox(
                                       child: Text(
-                                        '${eew.value.earthQuake?.hypoCenter.name} で地震${hasOriginTime ? '発生' : '検知'}',
+                                        '${eew.eew.earthquake?.hypocenter.name} で地震${hasOriginTime ? '発生' : '検知'}',
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 25,
@@ -308,7 +308,8 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
                                       ),
                                     ),
                                     // M と 深さ
-                                    if (eew.value.earthQuake!.isAssuming)
+                                    if (eew.eew.earthquake!.condition ==
+                                        '仮定震源要素')
                                       const FittedBox(
                                         child: Text(
                                           'PLUM法による検知',
@@ -318,16 +319,11 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
                                           ),
                                         ),
                                       )
-                                    else if (eew.value.earthQuake!.originTime ==
+                                    else if (eew.eew.earthquake!.originTime ==
                                             null &&
-                                        eew
-                                                .value
-                                                .earthQuake!
-                                                .hypoCenter
-                                                .accuracy
-                                                .epicCenterAccuracy
-                                                .epicCenterAccuracy ==
-                                            EpicCenterAccuracy.f1)
+                                        eew.eew.earthquake!.hypocenter.accuracy
+                                                .epicenters[0] ==
+                                            1)
                                       const FittedBox(
                                         child: Text(
                                           'レベル法による検知',
@@ -347,7 +343,7 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
                                           textBaseline: TextBaseline.alphabetic,
                                           children: [
                                             // Magunitude
-                                            if (eew.value.earthQuake!.magnitude
+                                            if (eew.eew.earthquake!.magnitude
                                                     .condition ==
                                                 null)
                                               const Text(
@@ -357,20 +353,16 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
                                                   fontSize: 18,
                                                 ),
                                               ),
-                                            if (eew.value.earthQuake!.hypoCenter
+                                            if (eew.eew.earthquake!.hypocenter
                                                     .depth.condition ==
                                                 null)
                                               Text(
-                                                (eew.value.earthQuake!.magnitude
-                                                            .condition !=
+                                                (eew.eew.earthquake!
+                                                            .magnitude.condition !=
                                                         null)
-                                                    ? eew
-                                                        .value
-                                                        .earthQuake!
-                                                        .magnitude
-                                                        .condition!
-                                                        .description
-                                                    : eew.value.earthQuake
+                                                    ? eew.eew.earthquake!
+                                                        .magnitude.condition!
+                                                    : eew.eew.earthquake
                                                             ?.magnitude.value
                                                             .toString() ??
                                                         '不明',
@@ -381,11 +373,11 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
                                               ),
                                             const VerticalDivider(),
                                             // Depth
-                                            if (eew.value.earthQuake!.hypoCenter
+                                            if (eew.eew.earthquake!.hypocenter
                                                     .depth.condition ==
                                                 null)
                                               Text(
-                                                eew.value.earthQuake?.hypoCenter
+                                                eew.eew.earthquake?.hypocenter
                                                         .depth.type ??
                                                     '深さ',
                                                 style: const TextStyle(
@@ -394,20 +386,20 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
                                                 ),
                                               ),
                                             Text(
-                                              (eew.value.earthQuake!.hypoCenter
-                                                          .depth.condition !=
+                                              (eew.eew.earthquake!.hypocenter.depth
+                                                          .condition !=
                                                       null)
                                                   ? eew
-                                                      .value
-                                                      .earthQuake!
-                                                      .hypoCenter
+                                                      .eew
+                                                      .earthquake!
+                                                      .hypocenter
                                                       .depth
                                                       .condition!
-                                                      .description
+                                                      .name
                                                   : eew
-                                                          .value
-                                                          .earthQuake
-                                                          ?.hypoCenter
+                                                          .eew
+                                                          .earthquake
+                                                          ?.hypocenter
                                                           .depth
                                                           .value
                                                           .toString() ??
@@ -417,11 +409,11 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
                                                 fontSize: 45,
                                               ),
                                             ),
-                                            if (eew.value.earthQuake!.hypoCenter
+                                            if (eew.eew.earthquake!.hypocenter
                                                     .depth.condition ==
                                                 null)
                                               Text(
-                                                eew.value.earthQuake?.hypoCenter
+                                                eew.eew.earthquake?.hypocenter
                                                         .depth.unit ??
                                                     'km',
                                                 style: const TextStyle(
@@ -439,9 +431,9 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
                                           Text(
                                             DateFormat('yyyy/MM/dd HH:mm:ss頃')
                                                     .format(
-                                                  (eew.value.earthQuake!
+                                                  (eew.eew.earthquake!
                                                               .originTime ??
-                                                          eew.value.earthQuake!
+                                                          eew.eew.earthquake!
                                                               .arrivalTime)
                                                       .toLocal(),
                                                 ) +
@@ -469,45 +461,43 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
                                           ),
                                           Text(
                                             (eew
-                                                        .value
-                                                        .earthQuake!
-                                                        .hypoCenter
+                                                        .eew
+                                                        .earthquake!
+                                                        .hypocenter
                                                         .accuracy
-                                                        .epicCenterAccuracy
-                                                        .epicCenterAccuracy ==
-                                                    EpicCenterAccuracy.f1)
-                                                ? eew.value.earthQuake!
-                                                        .isAssuming
+                                                        .epicenters[0] ==
+                                                    1)
+                                                ? eew.eew.earthquake!
+                                                            .condition ==
+                                                        '仮定震源要素'
                                                     ? 'PLUM法'
-                                                    : eew.value.earthQuake!
+                                                    : eew.eew.earthquake!
                                                                 .originTime ==
                                                             null
                                                         ? 'P波/S波レベル越え'
                                                         : 'IPF法(1点)'
-                                                : eew
-                                                    .value
-                                                    .earthQuake!
-                                                    .hypoCenter
-                                                    .accuracy
-                                                    .epicCenterAccuracy
-                                                    .epicCenterAccuracy
-                                                    .description
-                                                    .replaceAll(
-                                                      '(気象庁データ)',
-                                                      '',
-                                                    )
-                                                    .replaceAll(
-                                                      '(Hi-netデータ)',
-                                                      '',
-                                                    )
-                                                    .replaceAll(
-                                                      '(海域,観測網外)',
-                                                      '(海域)',
-                                                    )
-                                                    .replaceAll(
-                                                      '((内陸,観測網内)',
-                                                      '(内陸)',
-                                                    ),
+                                                : eew.eew.earthquake!.hypocenter
+                                                    .accuracy.epicenters[0]
+                                                    .toString(),
+                                            //.epicCenterAccuracy
+                                            //.epicCenterAccuracy
+                                            //.description
+                                            //.replaceAll(
+                                            //  '(気象庁データ)',
+                                            //  '',
+                                            //)
+                                            //.replaceAll(
+                                            //  '(Hi-netデータ)',
+                                            //  '',
+                                            //)
+                                            //.replaceAll(
+                                            //  '(海域,観測網外)',
+                                            //  '(海域)',
+                                            //)
+                                            //.replaceAll(
+                                            //  '((内陸,観測網内)',
+                                            //  '(内陸)',
+                                            //),
                                           ),
                                         ],
                                       ),
@@ -520,7 +510,7 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
                                         child: Column(
                                           children: [
                                             Text(
-                                              'EventID:${eew.key.eventId}',
+                                              'EventID:${eew.head.eventId}',
                                             )
                                           ],
                                         ),

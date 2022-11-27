@@ -273,7 +273,7 @@
     },
     {
       "name": "dmdata_telegram_json",
-      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/dmdata_telegram_json-0.0.6",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/dmdata_telegram_json-0.0.11",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -1046,6 +1046,18 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "socket_io_client",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/socket_io_client-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "socket_io_common",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/socket_io_common-2.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "source_gen",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/source_gen-1.2.6",
       "packageUri": "lib/",
@@ -1280,7 +1292,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2022-11-26T16:32:59.104784Z",
+  "generated": "2022-11-27T15:39:49.400642Z",
   "generator": "pub",
   "generatorVersion": "2.18.5"
 }

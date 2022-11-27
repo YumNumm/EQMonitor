@@ -1,24 +1,23 @@
 import 'dart:async';
 
+import 'package:eqmonitor/provider/telegram_service.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../../../../../schema/remote/dmdata/commonHeader.dart';
-import '../../../../../schema/remote/dmdata/eew-information/eew-infomation.dart';
 import '../../../../../utils/map/map_global_offset.dart';
 
 /// PLUM法等の仮定震源要素表示
 /// ref: Flutter Animation Gallery
-class EewHypoCenterAssumingMapWidget extends StatefulWidget {
-  const EewHypoCenterAssumingMapWidget({required this.eew, super.key});
-  final MapEntry<CommonHead, EEWInformation> eew;
+class EewHypocenterAssumingMapWidget extends StatefulWidget {
+  const EewHypocenterAssumingMapWidget({required this.eew, super.key});
+  final EewTelegram eew;
 
   @override
-  State<StatefulWidget> createState() => _EewHypoCenterAssumingMapWidgetState();
+  State<StatefulWidget> createState() => _EewHypocenterAssumingMapWidgetState();
 }
 
-class _EewHypoCenterAssumingMapWidgetState
-    extends State<EewHypoCenterAssumingMapWidget>
+class _EewHypocenterAssumingMapWidgetState
+    extends State<EewHypocenterAssumingMapWidget>
     with TickerProviderStateMixin {
   late AnimationController firstRippleController;
   late AnimationController secondRippleController;
@@ -231,7 +230,7 @@ class _EewHypoCenterAssumingMapWidgetState
 
     return CustomPaint(
       isComplex: true,
-      painter: EewHypoCenterAssumingPainter(
+      painter: EewHypocenterAssumingPainter(
         firstRippleRadiusAnimation.value,
         firstRippleOpacityAnimation.value,
         firstRippleRadiusAnimation.value,
@@ -250,8 +249,8 @@ class _EewHypoCenterAssumingMapWidgetState
 }
 
 /// PLUM法等の仮定震源要素描画
-class EewHypoCenterAssumingPainter extends CustomPainter {
-  EewHypoCenterAssumingPainter(
+class EewHypocenterAssumingPainter extends CustomPainter {
+  EewHypocenterAssumingPainter(
     this.firstRippleRadius,
     this.firstRippleOpacity,
     this.firstRippleStrokeWidth,
@@ -277,14 +276,14 @@ class EewHypoCenterAssumingPainter extends CustomPainter {
   final double thirdRippleStrokeWidth;
   final double centerCircleRadius;
   final double centerOpacity;
-  final MapEntry<CommonHead, EEWInformation> eew;
+  final EewTelegram eew;
 
   @override
   void paint(Canvas canvas, Size size) {
     final offset = MapGlobalOffset.latLonToGlobalPoint(
       LatLng(
-        eew.value.earthQuake!.hypoCenter.coordinateComponent.latitude!.value,
-        eew.value.earthQuake!.hypoCenter.coordinateComponent.longitude!.value,
+        eew.eew.earthquake!.hypocenter.coordinate.latitude!.value,
+        eew.eew.earthquake!.hypocenter.coordinate.longitude!.value,
       ),
     ).toLocalOffset(const Size(476, 927.4));
     const myColor = Color.fromARGB(255, 255, 0, 0);
@@ -324,6 +323,6 @@ class EewHypoCenterAssumingPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant EewHypoCenterAssumingPainter oldDelegate) =>
+  bool shouldRepaint(covariant EewHypocenterAssumingPainter oldDelegate) =>
       true;
 }

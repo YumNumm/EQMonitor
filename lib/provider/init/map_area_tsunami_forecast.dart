@@ -71,9 +71,11 @@ Future<List<MapAreaTsunami>> loadMapAreaTsunamiForecast(Talker talker) async {
   });
   geo.endSignal.listen((_) {
     stopwatch.stop();
-    talker.logTyped(InitializationEventLog(
-      'MapAreaTsunamiForecastを読み込みました: ${stopwatch.elapsedMicroseconds / 1000}ms',
-    ));
+    talker.logTyped(
+      InitializationEventLog(
+        'MapAreaTsunamiForecastを読み込みました: ${stopwatch.elapsedMicroseconds / 1000}ms',
+      ),
+    );
   });
   await geo.parse(
     utf8.decode(

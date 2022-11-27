@@ -70,10 +70,12 @@ Future<List<MapPolygon>> loadMapAreaForecastLocalE(Talker talker) async {
   });
   geo.endSignal.listen((_) {
     stopwatch.stop();
-    talker.logTyped(InitializationEventLog(
-      'mapAreaForecastLocalEを読み込みました: '
-      '${stopwatch.elapsedMicroseconds / 1000}ms',
-    ));
+    talker.logTyped(
+      InitializationEventLog(
+        'mapAreaForecastLocalEを読み込みました: '
+        '${stopwatch.elapsedMicroseconds / 1000}ms',
+      ),
+    );
   });
   await geo.parse(
     utf8.decode(

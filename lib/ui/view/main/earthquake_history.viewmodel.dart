@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
 import 'package:eqmonitor/api/remote/supabase/telegram.dart';
 import 'package:eqmonitor/provider/init/talker.dart';
-import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
 import 'package:eqmonitor/utils/talker_log/log_types.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -77,10 +76,10 @@ class EarthquakeHistoryViewModel
       // 各EventIdごとに処理していく
       grouped.forEach(
         (eventId, items) {
-          final vxse51Telegrams = <CommonHead>[];
-          final vxse52Telegrams = <CommonHead>[];
-          final vxse53Telegrams = <CommonHead>[];
-          final vxse61Telegrams = <CommonHead>[];
+          final vxse51Telegrams = <TelegramJsonMain>[];
+          final vxse52Telegrams = <TelegramJsonMain>[];
+          final vxse53Telegrams = <TelegramJsonMain>[];
+          final vxse61Telegrams = <TelegramJsonMain>[];
 
           for (final e in items) {
             switch (e.type) {

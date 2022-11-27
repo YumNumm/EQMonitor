@@ -1,7 +1,4 @@
-import '../dmdata/eew-information/earthquake/accuracy.dart';
-import '../dmdata/eew-information/intensity/intensity.dart';
-import '../dmdata/eq-information/earthquake-information/hypocenter/depth/depth_condition.dart';
-import '../dmdata/eq-information/earthquake-information/magnitude/magnitude_condition.dart';
+import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
 
 class EewPayload {
   EewPayload({
@@ -21,34 +18,34 @@ class EewPayload {
     return EewPayload(
       depth: hasDepthCondition ? null : int.tryParse(json['depth'].toString()),
       depthCondition: hasDepthCondition
-          ? DepthCondition.values
+          ? EewDepthCondition.values
               .firstWhere((e) => e.name == json['depth'].toString())
           : null,
       magnitude: hasMagnitudeCondition
           ? null
           : double.tryParse(json['magnitude'].toString()),
       magnitudeCondition: hasMagnitudeCondition
-          ? MagnitudeCondition.values
+          ? EarthquakeComponentMagnitudeCondition.values
               .firstWhere((e) => e.name == json['magnitude'].toString())
           : null,
       accuracy: (json['accuracy'] != null)
-          ? Accuracy.fromJson(json['accuracy'] as Map<String, dynamic>)
+          ? EewAccuracy.fromJson(json['accuracy'] as Map<String, dynamic>)
           : null,
       eventId: int.parse(json['eventId'].toString()),
       intensity: (json['intensity'] != null)
-          ? Intensity.fromJson(json['intensity'] as Map<String, dynamic>)
+          ? EewIntensity.fromJson(json['intensity'] as Map<String, dynamic>)
           : null,
     );
   }
 
   final int? depth;
-  final DepthCondition? depthCondition;
+  final EewDepthCondition? depthCondition;
   final double? magnitude;
-  final MagnitudeCondition? magnitudeCondition;
+  final EarthquakeComponentMagnitudeCondition? magnitudeCondition;
 
-  final Accuracy? accuracy;
+  final EewAccuracy? accuracy;
   final int eventId;
-  final Intensity? intensity;
+  final EewIntensity? intensity;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'depth': (depthCondition != null) ? depthCondition!.name : depth,

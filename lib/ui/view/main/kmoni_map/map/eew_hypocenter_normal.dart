@@ -1,23 +1,22 @@
+import 'package:eqmonitor/provider/telegram_service.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart' hide Path;
 
-import '../../../../../schema/remote/dmdata/commonHeader.dart';
-import '../../../../../schema/remote/dmdata/eew-information/eew-infomation.dart';
 import '../../../../../utils/map/map_global_offset.dart';
 
-class EewHypoCenterNormalMapWidget extends StatefulWidget {
-  const EewHypoCenterNormalMapWidget({
+class EewHypocenterNormalMapWidget extends StatefulWidget {
+  const EewHypocenterNormalMapWidget({
     required this.eew,
     super.key,
   });
-  final MapEntry<CommonHead, EEWInformation> eew;
+  final EewTelegram eew;
 
   @override
-  State<StatefulWidget> createState() => _EewHypoCenterNormalMapWidgetState();
+  State<StatefulWidget> createState() => _EewHypocenterNormalMapWidgetState();
 }
 
-class _EewHypoCenterNormalMapWidgetState
-    extends State<EewHypoCenterNormalMapWidget> with TickerProviderStateMixin {
+class _EewHypocenterNormalMapWidgetState
+    extends State<EewHypocenterNormalMapWidget> with TickerProviderStateMixin {
   late AnimationController opacityController;
   late Animation<double> opacityAnimation;
 
@@ -78,21 +77,20 @@ class _EewHypoCenterNormalMapWidgetState
 }
 
 class EewHypocenterNormalPainter extends CustomPainter {
-  EewHypocenterNormalPainter({
+  const EewHypocenterNormalPainter({
     required this.eew,
   });
 
-  MapEntry<CommonHead, EEWInformation> eew;
+  final EewTelegram eew;
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (eew.value.earthQuake?.hypoCenter.coordinateComponent.latitude != null &&
-        eew.value.earthQuake?.hypoCenter.coordinateComponent.longitude !=
-            null) {
+    if (eew.eew.earthquake?.hypocenter.coordinate.latitude != null &&
+        eew.eew.earthquake?.hypocenter.coordinate.longitude != null) {
       final offset = MapGlobalOffset.latLonToGlobalPoint(
         LatLng(
-          eew.value.earthQuake!.hypoCenter.coordinateComponent.latitude!.value,
-          eew.value.earthQuake!.hypoCenter.coordinateComponent.longitude!.value,
+          eew.eew.earthquake!.hypocenter.coordinate.latitude!.value,
+          eew.eew.earthquake!.hypocenter.coordinate.longitude!.value,
         ),
       ).toLocalOffset(const Size(476, 927.4));
 

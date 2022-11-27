@@ -1,4 +1,6 @@
 import 'package:eqmonitor/provider/init/talker.dart';
+import 'package:eqmonitor/provider/telegram_service.dart';
+import 'package:eqmonitor/ui/theme/jma_intensity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -8,8 +10,6 @@ import '../../../../../provider/earthquake/eew_provider.dart';
 import '../../../../../provider/init/map_area_forecast_local_e.dart';
 import '../../../../../provider/setting/intensity_color_provider.dart';
 import '../../../../../schema/local/prefecture/map_polygon.dart';
-import '../../../../../schema/remote/dmdata/commonHeader.dart';
-import '../../../../../schema/remote/dmdata/eew-information/eew-infomation.dart';
 
 /// 緊急地震速報の予想震度
 /// 電文内の予想震度(震度4以上)を表示
@@ -37,22 +37,22 @@ class EewIntensityWidget extends ConsumerWidget {
 
 /// 緊急地震速報の予想震度を描画
 class EewIntensityPainter extends CustomPainter {
-  EewIntensityPainter({
+  const EewIntensityPainter({
     required this.mapPolygons,
     required this.eews,
     required this.colors,
     required this.talker,
   });
-  List<MapPolygon> mapPolygons;
-  Iterable<MapEntry<CommonHead, EEWInformation>> eews;
-  JmaIntensityColorModel colors;
+  final List<MapPolygon> mapPolygons;
+  final List<EewTelegram> eews;
+  final JmaIntensityColorModel colors;
   final Talker talker;
 
   @override
   void paint(Canvas canvas, Size size) {
     for (final eew in eews) {
-      if (eew.value.intensity?.region != null) {
-        for (final region in eew.value.intensity!.region) {
+      if (eew.eew.intensity?.regions != null) {
+        for (final region in eew.eew.intensity!.regions) {
           // region.codeが一致するMapPolygonを探す
           try {
             final mapRegionPolygons = mapPolygons.where(
