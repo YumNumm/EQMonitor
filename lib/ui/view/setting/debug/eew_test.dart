@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:eqmonitor/schema/remote/dmdata/eew-information/earthquake/accuracy/number_of_magnitude_calculation.dart';
 import 'package:eqmonitor/schema/remote/dmdata/eew-information/intensity/forecast_max_int.dart';
 import 'package:eqmonitor/ui/theme/jma_intensity.dart';
+import 'package:eqmonitor/ui/view/setting/component/custom_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -38,6 +39,9 @@ class EewTestPage extends HookConsumerWidget {
         numberOfMagnitudeCalculation: NumberOfMagnitudeCalculation.f1,
       ),
     );
+    final isCanceled = useState<bool>(false);
+    final isWarning = useState<bool>(false);
+    final isLastInfo = useState<bool>(false);
 
     return Scaffold(
       appBar: AppBar(
@@ -59,7 +63,7 @@ class EewTestPage extends HookConsumerWidget {
                     .map(
                       (e) => DropdownMenuItem(
                         value: e,
-                        child: Text(e.toString()),
+                        child: Text(e.longName),
                       ),
                     )
                     .toList(),
@@ -78,7 +82,7 @@ class EewTestPage extends HookConsumerWidget {
                     .map(
                       (e) => DropdownMenuItem(
                         value: e,
-                        child: Text(e.toString()),
+                        child: Text(e.longName),
                       ),
                     )
                     .toList(),
@@ -186,7 +190,7 @@ class EewTestPage extends HookConsumerWidget {
                           .map(
                             (e) => DropdownMenuItem<DepthCalculation>(
                               value: e,
-                              child: Text(e.description),
+                              child: Text(e.code.toString()),
                             ),
                           )
                           .toList(),
@@ -212,7 +216,7 @@ class EewTestPage extends HookConsumerWidget {
                           .map(
                             (e) => DropdownMenuItem<EpicCenterAccuracy>(
                               value: e,
-                              child: Text(e.description),
+                              child: Text(e.code.toString()),
                             ),
                           )
                           .toList(),
@@ -232,6 +236,39 @@ class EewTestPage extends HookConsumerWidget {
                   ),
                 ],
               ),
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                title: const Text(
+                  'isWarning',
+                ),
+                onTap: () => isWarning.value = !isWarning.value,
+                trailing: CustomSwitch(
+                  onChanged: (_) => isWarning.value = !isWarning.value,
+                  value: isWarning.value,
+                ),
+              ),
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                title: const Text(
+                  'isCanceled',
+                ),
+                onTap: () => isCanceled.value = !isCanceled.value,
+                trailing: CustomSwitch(
+                  onChanged: (_) => isCanceled.value = !isCanceled.value,
+                  value: isCanceled.value,
+                ),
+              ),
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                title: const Text(
+                  'isLastInfo',
+                ),
+                onTap: () => isLastInfo.value = !isLastInfo.value,
+                trailing: CustomSwitch(
+                  onChanged: (_) => isLastInfo.value = !isLastInfo.value,
+                  value: isLastInfo.value,
+                ),
+              ),
               const Divider(),
               FloatingActionButton.extended(
                 heroTag: 'send',
@@ -248,6 +285,9 @@ class EewTestPage extends HookConsumerWidget {
                         accuracy: accuracy.value,
                         arrivalTime: DateTime.now(),
                         originTime: DateTime.now(),
+                        isWarning: isWarning.value,
+                        isCanceled: isCanceled.value,
+                        isLastInfo: isLastInfo.value,
                       );
                   GoRouter.of(context).pop();
                   Fluttertoast.showToast(msg: 'テストEEWを追加しました $hash');

@@ -7,7 +7,6 @@ import 'package:eqmonitor/provider/earthquake/eew_provider.dart';
 import 'package:eqmonitor/provider/earthquake/kmoni_controller.dart';
 import 'package:eqmonitor/provider/package_info.dart';
 import 'package:eqmonitor/provider/setting/developer_mode.dart';
-import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
 import 'package:eqmonitor/provider/theme_providers.dart';
 import 'package:eqmonitor/ui/view/main/kmoni_map.viewmodel.dart';
 import 'package:eqmonitor/ui/view/main/kmoni_map/layer_selector.dart';
@@ -96,7 +95,7 @@ class KmoniMap extends HookConsumerWidget {
                 transformationController:
                     ref.watch(transformationControllerProvider),
                 maxScale: 10,
-                boundaryMargin: const EdgeInsets.all(100),
+                boundaryMargin: const EdgeInsets.all(1000),
                 clipBehavior: Clip.none,
                 child: SizedBox(
                   height: 927.4,
@@ -297,7 +296,6 @@ class OnEewWidget extends ConsumerWidget {
         for (final eew in eews)
           EewBodyWidget(
             eew: eew,
-            colors: ref.watch(jmaIntensityColorProvider),
           ),
       ],
     );
