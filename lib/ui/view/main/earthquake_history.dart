@@ -61,6 +61,7 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
 
                   final maxInt = JmaIntensity.values.firstWhere(
                     (e) => e.name == (item.intensity?.maxInt.name),
+                    orElse: () => JmaIntensity.unknown,
                   );
                   final colors = ref.watch(jmaIntensityColorProvider);
 
