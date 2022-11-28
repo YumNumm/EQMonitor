@@ -310,7 +310,7 @@ class EewTestPage extends HookConsumerWidget {
               FloatingActionButton.extended(
                 heroTag: 'delete',
                 onPressed: () {
-                  //ref.read(eewProvider.notifier).clearTelegrams();
+                  ref.read(eewProvider.notifier).clearTelegrams();
                   GoRouter.of(context).pop();
                   Fluttertoast.showToast(msg: 'EEWを全て削除しました');
                 },
