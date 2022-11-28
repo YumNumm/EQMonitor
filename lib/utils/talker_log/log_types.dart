@@ -78,7 +78,6 @@ class EarthquakeHistoryLog extends FlutterTalkerLog {
   Color get color => Colors.lightBlueAccent;
 }
 
-
 /// AppLifeCycle
 class AppLifecycleLog extends FlutterTalkerLog {
   AppLifecycleLog(super.message);
