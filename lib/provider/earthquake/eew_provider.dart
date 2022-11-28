@@ -1,13 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
 import 'package:eqmonitor/api/remote/supabase/eew.dart';
 import 'package:eqmonitor/provider/init/talker.dart';
 import 'package:eqmonitor/provider/telegram_service.dart';
+import 'package:eqmonitor/schema/remote/kmoni/EEW.dart';
 import 'package:eqmonitor/utils/talker_log/log_types.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 import '../../model/earthquake/eew_history_model.dart';
@@ -34,6 +39,8 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
 
   final Map<int, List<EewTelegram>> _eews = <int, List<EewTelegram>>{};
 
+  DateTime? _onTestCaseStarted;
+
   Future<void> _onInit() async {
     // eewStreamのlistenを開始
     eewStream.whenData(_addEewTelegram);
@@ -53,7 +60,7 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
     }
 
     // 表示電文更新タイマーを開始
-    Timer.periodic(const Duration(seconds: 5), (timer) {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
       _updateShowEews();
     });
   }
@@ -91,16 +98,24 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
           !isDeep && diff < 150 ||
           eew.head.originalId == 'TELEGRAM_ID') {
         showEews.add(eew);
-        talker.logTyped(EewProviderLog('緊急地震速報を表示リストに追加しました $eew'));
       }
     }
-    state = state.copyWith(showEews: showEews);
+    if (!state.showEews.equals(showEews)) {
+      state = state.copyWith(showEews: showEews);
+      talker.logTyped(
+        EewProviderLog(
+          '緊急地震速報表示リストを更新しました。'
+          '${state.showEews.length}件 '
+          '${state.showEews.hashCode}',
+        ),
+      );
+    }
   }
 
   /// DMDATAのEEWテスト電文を読み込む
   Future<void> loadDmdataEewTestPayload() async {
     const url =
-        'https://sample.dmdata.jp/conversion/json/schema/eew-information/vxse43_rjtd_20110311144810.json';
+        'https://sample.dmdata.jp/conversion/json/schema/eew-information/vxse45_rjtd_20110311144810.json';
 
     final payload = await Dio().get<dynamic>(url);
     final data =
@@ -115,35 +130,35 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
 
   void startTestcase() {
     // 時刻設定
-    state = state.copyWith(
-      showEews: [],
-    );
+    _onTestCaseStarted = DateTime.now();
+    clearTelegrams();
+
     // Handlerを開始
     Timer.periodic(
       const Duration(milliseconds: 1000),
       (timer) async {
-        //  if (state.testCaseStartTime == null) {
-        //    timer.cancel();
-        //  }
-        //  final dt = DateTime.parse('2022-06-20T10:31:35')
-        //      .add(DateTime.now().difference(state.testCaseStartTime!));
-        //  final assetUrl =
-        //      "assets/develop/06301031/eew/${DateFormat('yyyyMMddHHmmss').format(dt)}.json";
-        //  try {
-        //    final data = jsonDecode(await rootBundle.loadString(assetUrl));
-        //    final eew = KyoshinEEW.fromJson(data).toDmdataEew(isTesting: true);
-        //    if (eew != null) {
-        //      //addTelegram(eew);
-        //    }
-        //    // ignore: avoid_catches_without_on_clauses
-        //  } catch (e) {
-        //    talker.info('強震モニタのテストを終了しました');
-        //    // テストケースを終了する
-        //    state = state.copyWith(
-        //      showEews: [],
-        //    );
-        //    timer.cancel();
-        //  }
+        if (_onTestCaseStarted == null) {
+          timer.cancel();
+        }
+        final dt = DateTime.parse('2022-06-20T10:31:35')
+            .add(DateTime.now().difference(_onTestCaseStarted!));
+        final assetUrl =
+            "assets/develop/06301031/eew/${DateFormat('yyyyMMddHHmmss').format(dt)}.json";
+        try {
+          final data = jsonDecode(await rootBundle.loadString(assetUrl));
+          final eew = KyoshinEEW.fromJson(data).toDmdataEew(isTesting: true);
+          if (eew != null) {
+            _addEewTelegram(
+              EewTelegram(eew, EewInformation.fromJson(eew.body)),
+            );
+          }
+          // ignore: avoid_catches_without_on_clauses
+        } catch (e) {
+          talker.info('強震モニタのテストを終了しました');
+          // テストケースを終了する
+          clearTelegrams();
+          timer.cancel();
+        }
       },
     );
   }
@@ -256,4 +271,6 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
     //addTelegram(commonHead);
     //return commonHead.hashCode;
   }
+
+  void clearTelegrams() => _eews.clear();
 }
