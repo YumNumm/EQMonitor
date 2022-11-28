@@ -138,3 +138,4 @@ app.*.map.json
 # Firebase Secret Files
 ./android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
+macos/Runner/GoogleService-Info.plist
