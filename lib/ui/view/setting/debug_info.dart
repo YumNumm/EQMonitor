@@ -8,7 +8,6 @@ import 'package:eqmonitor/ui/view/setting/component/setting_section.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../provider/earthquake/eew_provider.dart';
 import '../../../provider/init/application_support_dir.dart';
 import '../../../provider/init/device_info.dart';
 import '../../../provider/init/kyoshin_kansokuten.dart';
@@ -24,58 +23,59 @@ class DeveloperDebugPage extends HookConsumerWidget {
       body: SettingsSection(
         title: 'デバッグ情報',
         children: [
-          SettingsSection(
+          const SettingsSection(
             title: 'EEW WebSocket',
             children: [
               ListTile(
-                title: const Text('Join Once'),
-                subtitle: Text(
-                  ref.watch(eewProvider).channel?.joinedOnce.toString() ??
-                      'Unknown',
-                ),
+                title: Text('Join Once'),
+                // TODO(YumNumm): デバッグ情報(WS)
+                // subtitle: Text(
+                //   ref.watch(eewProvider).channel?.joinedOnce.toString() ??
+                //       'Unknown',
+                // ),
               ),
-              ListTile(
-                title: const Text('Connection State'),
-                subtitle: Text(
-                  ref
-                          .watch(eewProvider)
-                          .channel
-                          ?.socket
-                          .connState
-                          ?.toString() ??
-                      'Unknown',
-                ),
-              ),
-              ListTile(
-                title: const Text('Topic'),
-                subtitle: Text(
-                  ref.watch(eewProvider).channel?.topic ?? 'Unknown',
-                ),
-              ),
-              ListTile(
-                title: const Text('HeartbeatInterval(ms)'),
-                subtitle: Text(
-                  ref
-                          .watch(eewProvider)
-                          .channel
-                          ?.socket
-                          .heartbeatIntervalMs
-                          .toString() ??
-                      'Unknown',
-                ),
-              ),
-              ListTile(
-                title: const Text('LongPoller T/O(ms)'),
-                subtitle: Text(
-                  ref
-                          .watch(eewProvider)
-                          .channel
-                          ?.socket
-                          .longpollerTimeout
-                          .toString() ??
-                      'Unknown',
-                ),
-              ),
+              // ListTile(
+              //   title: const Text('Connection State'),
+              //   subtitle: Text(
+              //     ref
+              //             .watch(eewProvider)
+              //             .channel
+              //             ?.socket
+              //             .connState
+              //             ?.toString() ??
+              //         'Unknown',
+              //   ),
+              // ),
+              // ListTile(
+              //   title: const Text('Topic'),
+              //   subtitle: Text(
+              //     ref.watch(eewProvider).channel?.topic ?? 'Unknown',
+              //   ),
+              // ),
+              // ListTile(
+              //   title: const Text('HeartbeatInterval(ms)'),
+              //   subtitle: Text(
+              //     ref
+              //             .watch(eewProvider)
+              //             .channel
+              //             ?.socket
+              //             .heartbeatIntervalMs
+              //             .toString() ??
+              //         'Unknown',
+              //   ),
+              // ),
+              // ListTile(
+              //   title: const Text('LongPoller T/O(ms)'),
+              //   subtitle: Text(
+              //     ref
+              //             .watch(eewProvider)
+              //             .channel
+              //             ?.socket
+              //             .longpollerTimeout
+              //             .toString() ??
+              //         'Unknown',
+              //   ),
+              // ),
             ],
           ),
           SettingsSection(

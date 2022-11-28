@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
 import 'package:eqmonitor/provider/init/talker.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +15,6 @@ import '../../../../provider/init/parameter_earthquake.dart';
 import '../../../../provider/setting/intensity_color_provider.dart';
 import '../../../../provider/theme_providers.dart';
 import '../../../../schema/local/prefecture/map_polygon.dart';
-import '../../../../schema/remote/dmdata/eq-information/earthquake-information/intensity/station.dart';
 import '../../../../schema/remote/dmdata/parameter-earthquake/parameter-earthquake.dart';
 import '../../../../utils/map/map_global_offset.dart';
 import '../../../theme/jma_intensity.dart';
@@ -21,20 +22,73 @@ import '../../../view/widget/intensity_widget.dart';
 import '../earthquake_history.viewmodel.dart';
 import '../kmoni_map/map/base_map.dart';
 
-class EarthquakeHistoryDetailPage extends HookConsumerWidget {
+class EarthquakeHistoryDetailPage extends ConsumerStatefulWidget {
   const EarthquakeHistoryDetailPage({
     super.key,
     required this.item,
   });
-
   final EarthquakeHistoryItem item;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _EarthquakeHistoryDetailPageState();
+}
+
+class _EarthquakeHistoryDetailPageState
+    extends ConsumerState<EarthquakeHistoryDetailPage> {
+  _EarthquakeHistoryDetailPageState();
+
+  late EarthquakeHistoryItem item;
+  final TransformationController transformationController =
+      TransformationController();
+
+  final mapKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    // Widgetの表示領域を取得
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final size = mapKey.currentContext!.size!;
+      // 画面中央の座標
+      final center = Offset(size.width / 2, size.height / 2);
+      // 震央地の座標
+      if (widget.item.component?.hypocenter.coordinate.latitude?.value ==
+          null) {
+        return;
+      }
+      // CustomPainter内で使うOffset
+      final hypoLocalOffset = MapGlobalOffset.latLonToGlobalPoint(
+        LatLng(
+          widget.item.component!.hypocenter.coordinate.latitude!.value,
+          widget.item.component!.hypocenter.coordinate.longitude!.value,
+        ),
+      ).toLocalOffset(const Size(476, 927.4));
+      // 実際のWidgetの座標から見たときの震央地の座標に変換
+      final zoom = math.max(size.width / 476, size.height / 927.4);
+      final hypoOffset = Offset(
+        hypoLocalOffset.dx * zoom,
+        hypoLocalOffset.dy * zoom,
+      );
+      // 画面中央に震央地を表示するための移動量
+      final translate = center - hypoOffset;
+
+      transformationController.value = (Matrix4.identity()
+        ..translate(center.dx, center.dy)
+        ..scale(4.0, 4)
+        ..translate(-center.dx, -center.dy)
+        ..translate(translate.dx, translate.dy));
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    item = widget.item;
+
     final colors = ref.watch(jmaIntensityColorProvider);
     final maxInt = JmaIntensity.values.firstWhere(
       (e) => e.name == (item.intensity?.maxInt.name),
-      orElse: () => JmaIntensity.Unknown,
+      orElse: () => JmaIntensity.unknown,
     );
     return Scaffold(
       appBar: AppBar(
@@ -55,6 +109,7 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                 ),
               ),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Row(),
                   // 発生時刻
@@ -108,28 +163,29 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                         child: Column(
                           children: [
                             // 震央地
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  '震央地',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
+                            FittedBox(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    '震央地',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 4,
-                                ),
-                                Text(
-                                  item.component?.hypocenter.name ?? '調査中',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 30,
+                                  const SizedBox(
+                                    width: 4,
                                   ),
-                                ),
-                              ],
+                                  Text(
+                                    item.component?.hypocenter.name ?? '調査中',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 30,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                             if (item.component != null)
                               FittedBox(
@@ -254,6 +310,8 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
               child: Stack(
                 children: [
                   InteractiveViewer(
+                    key: mapKey,
+                    transformationController: transformationController,
                     maxScale: 20,
                     child: RepaintBoundary(
                       child: Stack(
@@ -287,13 +345,12 @@ class EarthquakeHistoryDetailPage extends HookConsumerWidget {
                           // int1 ~ maxInt
                           for (final i in JmaIntensity.values)
                             if ([
-                              JmaIntensity.Int0,
+                              JmaIntensity.int0,
                               JmaIntensity.over,
-                              JmaIntensity.Unknown,
-                              JmaIntensity.Error,
+                              JmaIntensity.unknown,
                             ].contains(i))
                               const SizedBox.shrink()
-                            else if (i.intValue <= maxInt.intValue)
+                            else if (i <= maxInt)
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -397,7 +454,7 @@ class MapRegionIntensityV2Painter extends CustomPainter {
                 ..color = JmaIntensity.values
                     .firstWhere(
                       (e) => e.name == city.maxInt?.name,
-                      orElse: () => JmaIntensity.Error,
+                      orElse: () => JmaIntensity.unknown,
                     )
                     .fromUser(colors)
                 ..isAntiAlias = true
@@ -435,7 +492,7 @@ class MapRegionIntensityV2Painter extends CustomPainter {
               ..color = JmaIntensity.values
                   .firstWhere(
                     (e) => e.name == region.maxInt?.name,
-                    orElse: () => JmaIntensity.Error,
+                    orElse: () => JmaIntensity.unknown,
                   )
                   .fromUser(colors)
               ..isAntiAlias = true
@@ -600,54 +657,4 @@ class MaphypocenterV2Painter extends CustomPainter {
   @override
   bool shouldRepaint(covariant MaphypocenterV2Painter oldDelegate) =>
       oldDelegate.component != component;
-}
-
-class MapStationIntensityWidget extends ConsumerWidget {
-  const MapStationIntensityWidget({
-    super.key,
-    required this.stations,
-  });
-  final List<Station> stations;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    //final allParameterEarthquakeItem = ref.watch(parameterEarthquakeProvider);
-
-    final widgets = <Widget>[];
-
-    // 各観測点の処理
-    //for (final station in stations) {
-    //  try {
-    //    // 緯度経度を取得
-    //    //final param = allParameterEarthquakeItem.items
-    //    //    .firstWhere((e) => e.code == station.code);
-    //    // final offset = MapGlobalOffset.latLonToGlobalPoint(
-    //    //   LatLng(param.latitude, param.longitude),
-    //    // ).toLocalOffset(const Size(476, 927.4));
-    //    // widgets.add(
-    //    //   DecoratedBox(
-    //    //     decoration: BoxDecoration(
-    //    //       border: Border.all(
-    //    //         color: Colors.red,
-    //    //       ),
-    //    //     ),
-    //    //     child: Positioned(
-    //    //       left: offset.dx,
-    //    //       top: offset.dy,
-    //    //       child: IntensityWidget(
-    //    //         intensity: JmaIntensity.values
-    //    //             .firstWhere((e) => e.name == station.intensity),
-    //    //         size: 2,
-    //    //         opacity: 1,
-    //    //       ),
-    //    //     ),
-    //    //   ),
-    //    // );
-    //  } on Exception catch (_) {}
-    //}
-
-    return Stack(
-      children: widgets,
-    );
-  }
 }

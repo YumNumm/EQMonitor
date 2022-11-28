@@ -15,6 +15,5 @@ export 'setting/debug_info.dart';
 export 'setting/design/intensity_color_choice.dart';
 export 'setting/design/theme.dart';
 export 'setting/design_setting.dart';
-export 'setting/kmoni_setting.dart';
 export 'setting/notification_setting.dart';
 export 'setting/term_of_service.dart';

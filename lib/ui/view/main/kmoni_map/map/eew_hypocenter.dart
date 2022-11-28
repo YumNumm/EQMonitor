@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../../provider/earthquake/eew_provider.dart';
-import '../../../../../schema/remote/dmdata/eew-information/earthquake/accuracy/epicCenterAccuracy.dart';
 
 /// 緊急地震速報関連のWidget
 class EewHypocentersWidget extends ConsumerWidget {
@@ -17,15 +16,13 @@ class EewHypocentersWidget extends ConsumerWidget {
     return Stack(
       children: <Widget>[
         for (final eew in eews)
-          if (eew.value.earthQuake?.isAssuming == true ||
-              eew.value.earthQuake?.hypoCenter.accuracy.epicCenterAccuracy
-                      .epicCenterAccuracy ==
-                  EpicCenterAccuracy.f1)
-            EewHypoCenterAssumingMapWidget(
+          if (eew.eew.earthquake?.condition == '仮定震源要素' ||
+              eew.eew.earthquake?.hypocenter.accuracy.epicenters[0] == 1)
+            EewHypocenterAssumingMapWidget(
               eew: eew,
             )
           else
-            EewHypoCenterNormalMapWidget(
+            EewHypocenterNormalMapWidget(
               eew: eew,
             ),
       ],

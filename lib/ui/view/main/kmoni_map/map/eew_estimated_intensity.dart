@@ -24,7 +24,7 @@ class EewEstimatedIntensityWidget extends ConsumerWidget {
     final eews = ref.watch(eewProvider.select((value) => value.showEews));
     if (eews.isEmpty ||
         (eews.any(
-          (e) => e.value.earthQuake?.isAssuming ?? false,
+          (e) => e.eew.earthquake?.condition == '仮定震源要素',
         ))) {
       return const SizedBox.shrink();
     }
@@ -33,19 +33,24 @@ class EewEstimatedIntensityWidget extends ConsumerWidget {
       try {
         result.add(
           IntensityEstimateApi().estimateIntensity(
-            jmaMagnitude: eew.value.earthQuake!.magnitude.value!,
-            depth: eew.value.earthQuake!.hypoCenter.depth.value!.toDouble(),
+            jmaMagnitude: eew.eew.earthquake!.magnitude.value!,
+            depth: eew.eew.earthquake!.hypocenter.depth.value!.toDouble(),
             hypocenter: LatLng(
-              eew.value.earthQuake!.hypoCenter.coordinateComponent.latitude!
-                  .value,
-              eew.value.earthQuake!.hypoCenter.coordinateComponent.longitude!
-                  .value,
+              eew.eew.earthquake!.hypocenter.coordinate.latitude!.value,
+              eew.eew.earthquake!.hypocenter.coordinate.longitude!.value,
             ),
             obsPoints: ref.watch(parameterEarthquakeProvider).items,
           ),
         );
         // ignore: avoid_catches_without_on_clauses
-      } catch (_) {}
+      } catch (e, st) {
+        ref.read(talkerProvider).log(
+              'EEW予想震度計算エラー',
+              logLevel: LogLevel.error,
+              exception: e,
+              stackTrace: st,
+            );
+      }
     }
 
     return CustomPaint(

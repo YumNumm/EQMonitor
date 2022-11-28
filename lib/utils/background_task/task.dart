@@ -7,14 +7,12 @@ import 'dart:isolate';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
-import 'package:dmdata_telegram_json/schema/dmdata/websocket_v2/websocket_v2_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:web_socket_channel/io.dart';
 
 import '../../env/env.dart';
-import '../../ui/theme/jma_intensity.dart';
 
 // The callback function should always be a top-level function.
 @pragma('vm:entry-point')

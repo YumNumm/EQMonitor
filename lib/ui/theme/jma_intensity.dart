@@ -2,12 +2,47 @@
 
 import 'dart:ui';
 
+import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
 import 'package:eqmonitor/model/setting/jma_intensity_color_model.dart';
 import 'package:flutter/material.dart';
+export 'package:dmdata_telegram_json/schema/component/jma_intensity.dart';
+
+extension JmaIntensityColor on JmaIntensity {
+  Color fromUser(JmaIntensityColorModel colors) {
+    switch (this) {
+      case JmaIntensity.int0:
+        return colors.int0;
+      case JmaIntensity.int1:
+        return colors.int1;
+      case JmaIntensity.int2:
+        return colors.int2;
+      case JmaIntensity.int3:
+        return colors.int3;
+      case JmaIntensity.int4:
+        return colors.int4;
+      case JmaIntensity.int5Lower:
+        return colors.int5Lower;
+      case JmaIntensity.int5Upper:
+        return colors.int5Upper;
+      case JmaIntensity.int6Lower:
+        return colors.int6Lower;
+      case JmaIntensity.int6Upper:
+        return colors.int6Upper;
+      case JmaIntensity.int7:
+        return colors.int7;
+      case JmaIntensity.unknown:
+        return colors.unknown;
+      case JmaIntensity.over:
+        return colors.over;
+      case JmaIntensity.notRecievedYet:
+        return colors.notRecievedYet;
+    }
+  }
+}
 
 /// 気象庁震度階級 + α
 // ignore_for_file: constant_identifier_names, always_put_control_body_on_new_line, file_names, avoid_classes_with_only_static_members
-
+/*
 enum JmaIntensity {
   /// 震度不明
   Unknown(
@@ -98,16 +133,16 @@ enum JmaIntensity {
     if (intensity == null) {
       return JmaIntensity.Unknown;
     } else {
-      if (intensity < 0.5) return JmaIntensity.Int0;
-      if (intensity < 1.5) return JmaIntensity.Int1;
-      if (intensity < 2.5) return JmaIntensity.Int2;
-      if (intensity < 3.5) return JmaIntensity.Int3;
-      if (intensity < 4.5) return JmaIntensity.Int4;
-      if (intensity < 5.0) return JmaIntensity.Int5Lower;
-      if (intensity < 5.5) return JmaIntensity.Int5Upper;
-      if (intensity < 6.0) return JmaIntensity.Int6Lower;
-      if (intensity < 6.5) return JmaIntensity.Int6Upper;
-      return JmaIntensity.Int7;
+      if (intensity < 0.5) return JmaIntensity.int0;
+      if (intensity < 1.5) return JmaIntensity.int1;
+      if (intensity < 2.5) return JmaIntensity.int2;
+      if (intensity < 3.5) return JmaIntensity.int3;
+      if (intensity < 4.5) return JmaIntensity.int4;
+      if (intensity < 5.0) return JmaIntensity.int5Lower;
+      if (intensity < 5.5) return JmaIntensity.int5Upper;
+      if (intensity < 6.0) return JmaIntensity.int6Lower;
+      if (intensity < 6.5) return JmaIntensity.int6Upper;
+      return JmaIntensity.int7;
     }
   }
 
@@ -116,34 +151,34 @@ enum JmaIntensity {
       case JmaIntensity.Error:
         return '*';
 
-      case JmaIntensity.Int0:
+      case JmaIntensity.int0:
         return '0';
 
-      case JmaIntensity.Int1:
+      case JmaIntensity.int1:
         return '1';
 
-      case JmaIntensity.Int2:
+      case JmaIntensity.int2:
         return '2';
 
-      case JmaIntensity.Int3:
+      case JmaIntensity.int3:
         return '3';
 
-      case JmaIntensity.Int4:
+      case JmaIntensity.int4:
         return '4';
 
-      case JmaIntensity.Int5Lower:
+      case JmaIntensity.int5Lower:
         return '5-';
 
-      case JmaIntensity.Int5Upper:
+      case JmaIntensity.int5Upper:
         return '5+';
 
-      case JmaIntensity.Int6Lower:
+      case JmaIntensity.int6Lower:
         return '6-';
 
-      case JmaIntensity.Int6Upper:
+      case JmaIntensity.int6Upper:
         return '6+';
 
-      case JmaIntensity.Int7:
+      case JmaIntensity.int7:
         return '7';
       case JmaIntensity.Unknown:
         return '-';
@@ -154,25 +189,25 @@ enum JmaIntensity {
 
   Color fromUser(JmaIntensityColorModel colors) {
     switch (this) {
-      case JmaIntensity.Int0:
+      case JmaIntensity.int0:
         return colors.int0;
-      case JmaIntensity.Int1:
+      case JmaIntensity.int1:
         return colors.int1;
-      case JmaIntensity.Int2:
+      case JmaIntensity.int2:
         return colors.int2;
-      case JmaIntensity.Int3:
+      case JmaIntensity.int3:
         return colors.int3;
-      case JmaIntensity.Int4:
+      case JmaIntensity.int4:
         return colors.int4;
-      case JmaIntensity.Int5Lower:
+      case JmaIntensity.int5Lower:
         return colors.int5Lower;
-      case JmaIntensity.Int5Upper:
+      case JmaIntensity.int5Upper:
         return colors.int5Upper;
-      case JmaIntensity.Int6Lower:
+      case JmaIntensity.int6Lower:
         return colors.int6Lower;
-      case JmaIntensity.Int6Upper:
+      case JmaIntensity.int6Upper:
         return colors.int6Upper;
-      case JmaIntensity.Int7:
+      case JmaIntensity.int7:
         return colors.int7;
       case JmaIntensity.Unknown:
         return colors.unknown;
@@ -183,3 +218,4 @@ enum JmaIntensity {
     }
   }
 }
+*/

@@ -23,7 +23,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
           ListTile(
             title: const Text('震度0'),
             leading: IntensityWidget(
-              intensity: JmaIntensity.Int0,
+              intensity: JmaIntensity.int0,
               size: 42,
               color: intensityColor.int0,
             ),
@@ -39,7 +39,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                     onColorChanged: (color) {
                       ref
                           .read(jmaIntensityColorProvider.notifier)
-                          .change(JmaIntensity.Int0, color);
+                          .change(JmaIntensity.int0, color);
                     },
                     hexInputBar: true,
                   ),
@@ -50,7 +50,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
           ListTile(
             title: const Text('震度1'),
             leading: IntensityWidget(
-              intensity: JmaIntensity.Int1,
+              intensity: JmaIntensity.int1,
               size: 42,
               color: intensityColor.int1,
             ),
@@ -66,7 +66,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                     onColorChanged: (color) {
                       ref
                           .read(jmaIntensityColorProvider.notifier)
-                          .change(JmaIntensity.Int1, color);
+                          .change(JmaIntensity.int1, color);
                     },
                     hexInputBar: true,
                   ),
@@ -77,7 +77,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
           ListTile(
             title: const Text('震度2'),
             leading: IntensityWidget(
-              intensity: JmaIntensity.Int2,
+              intensity: JmaIntensity.int2,
               size: 42,
               color: intensityColor.int2,
             ),
@@ -93,7 +93,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                     onColorChanged: (color) {
                       ref
                           .read(jmaIntensityColorProvider.notifier)
-                          .change(JmaIntensity.Int2, color);
+                          .change(JmaIntensity.int2, color);
                     },
                     hexInputBar: true,
                   ),
@@ -104,7 +104,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
           ListTile(
             title: const Text('震度3'),
             leading: IntensityWidget(
-              intensity: JmaIntensity.Int3,
+              intensity: JmaIntensity.int3,
               size: 42,
               color: intensityColor.int3,
             ),
@@ -120,7 +120,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                     onColorChanged: (color) {
                       ref
                           .read(jmaIntensityColorProvider.notifier)
-                          .change(JmaIntensity.Int3, color);
+                          .change(JmaIntensity.int3, color);
                     },
                     hexInputBar: true,
                   ),
@@ -131,7 +131,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
           ListTile(
             title: const Text('震度4'),
             leading: IntensityWidget(
-              intensity: JmaIntensity.Int4,
+              intensity: JmaIntensity.int4,
               size: 42,
               color: intensityColor.int4,
             ),
@@ -147,7 +147,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                     onColorChanged: (color) {
                       ref
                           .read(jmaIntensityColorProvider.notifier)
-                          .change(JmaIntensity.Int4, color);
+                          .change(JmaIntensity.int4, color);
                     },
                     hexInputBar: true,
                   ),
@@ -158,7 +158,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
           ListTile(
             title: const Text('震度5弱'),
             leading: IntensityWidget(
-              intensity: JmaIntensity.Int5Lower,
+              intensity: JmaIntensity.int5Lower,
               size: 42,
               color: intensityColor.int5Lower,
             ),
@@ -174,7 +174,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                     onColorChanged: (color) {
                       ref
                           .read(jmaIntensityColorProvider.notifier)
-                          .change(JmaIntensity.Int5Lower, color);
+                          .change(JmaIntensity.int5Lower, color);
                     },
                     hexInputBar: true,
                   ),
@@ -185,7 +185,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
           ListTile(
             title: const Text('震度5強'),
             leading: IntensityWidget(
-              intensity: JmaIntensity.Int5Upper,
+              intensity: JmaIntensity.int5Upper,
               size: 42,
               color: intensityColor.int5Upper,
             ),
@@ -201,7 +201,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                     onColorChanged: (color) {
                       ref
                           .read(jmaIntensityColorProvider.notifier)
-                          .change(JmaIntensity.Int5Upper, color);
+                          .change(JmaIntensity.int5Upper, color);
                     },
                     hexInputBar: true,
                   ),
@@ -212,7 +212,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
           ListTile(
             title: const Text('震度6弱'),
             leading: IntensityWidget(
-              intensity: JmaIntensity.Int6Lower,
+              intensity: JmaIntensity.int6Lower,
               size: 42,
               color: intensityColor.int6Lower,
             ),
@@ -228,7 +228,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                     onColorChanged: (color) {
                       ref
                           .read(jmaIntensityColorProvider.notifier)
-                          .change(JmaIntensity.Int6Lower, color);
+                          .change(JmaIntensity.int6Lower, color);
                     },
                     hexInputBar: true,
                   ),
@@ -239,7 +239,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
           ListTile(
             title: const Text('震度6強'),
             leading: IntensityWidget(
-              intensity: JmaIntensity.Int6Upper,
+              intensity: JmaIntensity.int6Upper,
               size: 42,
               color: intensityColor.int6Upper,
             ),
@@ -255,7 +255,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                     onColorChanged: (color) {
                       ref
                           .read(jmaIntensityColorProvider.notifier)
-                          .change(JmaIntensity.Int6Upper, color);
+                          .change(JmaIntensity.int6Upper, color);
                     },
                     hexInputBar: true,
                   ),
@@ -266,7 +266,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
           ListTile(
             title: const Text('震度7'),
             leading: IntensityWidget(
-              intensity: JmaIntensity.Int7,
+              intensity: JmaIntensity.int7,
               size: 42,
               color: intensityColor.int7,
             ),
@@ -282,7 +282,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                     onColorChanged: (color) {
                       ref
                           .read(jmaIntensityColorProvider.notifier)
-                          .change(JmaIntensity.Int7, color);
+                          .change(JmaIntensity.int7, color);
                     },
                     hexInputBar: true,
                   ),
@@ -293,7 +293,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
           ListTile(
             title: const Text('震度不明'),
             leading: IntensityWidget(
-              intensity: JmaIntensity.Unknown,
+              intensity: JmaIntensity.unknown,
               size: 42,
               color: intensityColor.unknown,
             ),
@@ -309,7 +309,7 @@ class IntensityColorSettingsPage extends HookConsumerWidget {
                     onColorChanged: (color) {
                       ref
                           .read(jmaIntensityColorProvider.notifier)
-                          .change(JmaIntensity.Unknown, color);
+                          .change(JmaIntensity.unknown, color);
                     },
                     hexInputBar: true,
                   ),

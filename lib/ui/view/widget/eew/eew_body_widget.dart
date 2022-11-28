@@ -1,51 +1,58 @@
 // ignore_for_file: lines_longer_than_80_chars
 
-import 'dart:ui';
-
-import 'package:eqmonitor/model/setting/jma_intensity_color_model.dart';
+import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
 import 'package:eqmonitor/provider/setting/developer_mode.dart';
-import 'package:eqmonitor/schema/remote/dmdata/commonHeader.dart';
-import 'package:eqmonitor/schema/remote/dmdata/eew-information/eew-infomation.dart';
+import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
+import 'package:eqmonitor/provider/telegram_service.dart';
+import 'package:eqmonitor/ui/theme/jma_intensity.dart';
 import 'package:eqmonitor/ui/view/views.dart';
+import 'package:eqmonitor/ui/view/widget/intensity_widget.dart';
 import 'package:eqmonitor/utils/extension/relative_luminance.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../schema/remote/dmdata/eew-information/earthquake/accuracy/epicCenterAccuracy.dart';
-import '../../../theme/jma_intensity.dart';
-
-class EewBodyWidget extends ConsumerWidget {
+class EewBodyWidget extends ConsumerStatefulWidget {
   const EewBodyWidget({
     super.key,
     required this.eew,
-    required this.colors,
   });
 
-  final MapEntry<CommonHead, EEWInformation> eew;
-  final JmaIntensityColorModel colors;
-
+  final EewTelegram eew;
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _EewBodyWidgetState();
+}
+
+class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
+  @override
+  void initState() {
+    super.initState();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => ref
-          .watch(eewExpandedProvider)
-          .putIfAbsent(eew.key.eventId!, () => true),
+          .read(eewExpandedProvider)
+          .putIfAbsent(widget.eew.head.eventId!, () => true),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final eew = widget.eew;
+    final colors = ref.watch(jmaIntensityColorProvider);
 
     /// 地震発生時刻があるかどうか
-    final hasOriginTime = eew.value.earthQuake?.originTime != null;
+    final hasOriginTime = eew.eew.earthquake?.originTime != null;
 
     /// 最大震度
     /// to がoverなら fromを返す
     /// それ以外はtoを返す
-    final maxIntensity = (eew.value.intensity?.maxint.to == JmaIntensity.over)
-        ? eew.value.intensity!.maxint.from
-        : eew.value.intensity?.maxint.to ?? JmaIntensity.Unknown;
+    final forecastMaxIntensity =
+        (eew.eew.intensity?.forecastMaxInt.to == JmaIntensity.over)
+            ? eew.eew.intensity!.forecastMaxInt.from
+            : eew.eew.intensity?.forecastMaxInt.to ?? JmaIntensity.unknown;
 
     /// 通常報でない場合は、早期Return
-    if (eew.key.infoType != CommonHeadInfoType.announcement) {
+    if (eew.head.infoType != TelegramInfoType.announcement) {
       return SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Card(
@@ -57,7 +64,7 @@ class EewBodyWidget extends ConsumerWidget {
             padding: const EdgeInsets.all(8),
             child: FittedBox(
               child: Text(
-                eew.key.headline ?? '先ほどの緊急地震速報は取り消されました',
+                eew.head.headline ?? '先ほどの緊急地震速報は取り消されました',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
@@ -67,14 +74,382 @@ class EewBodyWidget extends ConsumerWidget {
         ),
       );
     }
+
     final expandableController = ExpandableController(
-      initialExpanded: true,
+      initialExpanded: ref.watch(eewExpandedProvider)[eew.head.eventId],
     );
 
     /// 警報かどうか
-    final isWarning = eew.value.isWarning ??
-        eew.value.comments?.warning?.codes.contains(201) ??
+    final isWarning = eew.eew.isWarning ??
+        eew.eew.comments?.warning?.codes.contains(201) ??
         false;
+
+    final collapsedWidget = Card(
+      margin: const EdgeInsets.fromLTRB(0, 0, 0, 3),
+      elevation: 3,
+      color: (eew.eew.intensity?.forecastMaxInt.from ?? JmaIntensity.unknown)
+          .fromUser(colors)
+          .withOpacity(0.8),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // ヘッダー・予想最大震度
+          FittedBox(
+            child: IntensityWidget(
+              intensity: forecastMaxIntensity,
+              size: 48,
+              opacity: 1,
+            ),
+          ),
+
+          // 詳細情報
+          if (eew.eew.earthquake != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Text(
+                '${eew.eew.earthquake?.hypocenter.name}',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                  color: (eew.eew.intensity?.forecastMaxInt.from ??
+                          JmaIntensity.unknown)
+                      .fromUser(colors)
+                      .onPrimary,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+
+    final expandedWidget = Card(
+      margin: EdgeInsets.zero,
+      color: (eew.eew.intensity?.forecastMaxInt.from ?? JmaIntensity.unknown)
+          .fromUser(colors)
+          .withOpacity(0.8),
+      child: Row(
+        children: [
+          // ヘッダー・予想最大震度
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Card(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(),
+                      const Text(
+                        '緊急地震速報',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        '${isWarning ? '警報' : '予報'}'
+                        '${eew.eew.isLastInfo ? ' 最終' : ''} #${eew.head.serialNo}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // 予想最大震度
+                Text(
+                  '予想最大震度',
+                  style: TextStyle(
+                    color: (eew.eew.intensity?.forecastMaxInt.from ??
+                            JmaIntensity.unknown)
+                        .fromUser(colors)
+                        .onPrimary,
+                  ),
+                ),
+                // 予想最大震度不明の場合
+                if (forecastMaxIntensity == JmaIntensity.unknown)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    child: FittedBox(
+                      child: Text(
+                        '不明',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30,
+                          color: (eew.eew.intensity?.forecastMaxInt.from ??
+                                  JmaIntensity.unknown)
+                              .fromUser(colors)
+                              .onPrimary,
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  FittedBox(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        // 数字部分
+                        Text(
+                          forecastMaxIntensity.name
+                              .replaceAll(RegExp(r'[^0-9]'), ''),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 60,
+                            color: (eew.eew.intensity?.forecastMaxInt.from ??
+                                    JmaIntensity.unknown)
+                                .fromUser(colors)
+                                .onPrimary,
+                          ),
+                        ),
+                        // 文字部分
+                        Text(
+                          forecastMaxIntensity.name
+                              .replaceAll(RegExp(r'[0-9]'), '')
+                              .replaceAll('+', '強')
+                              .replaceAll('-', '弱'),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25,
+                            color: (eew.eew.intensity?.forecastMaxInt.from ??
+                                    JmaIntensity.unknown)
+                                .fromUser(colors)
+                                .onPrimary,
+                          ),
+                        ),
+                        // 程度以上
+                        if (eew.eew.intensity?.forecastMaxInt.to ==
+                            JmaIntensity.over)
+                          Text(
+                            '程度以上',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: (eew.eew.intensity?.forecastMaxInt.from ??
+                                      JmaIntensity.unknown)
+                                  .fromUser(colors)
+                                  .onPrimary,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                //if (eew.eew.intensity?.forecastMaxLgInt != null)
+                //  Text(
+                //    '予想長周期地震動最大区分 ${eew.eew.intensity?.forecastMaxLgInt!.from.name}',
+                //  ),
+              ],
+            ),
+          ),
+          // 詳細情報
+          Flexible(
+            flex: 2,
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(4),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(),
+                    if (eew.eew.earthquake != null)
+                      Column(
+                        children: [
+                          FittedBox(
+                            child: Text(
+                              '${eew.eew.earthquake?.hypocenter.name} で地震${hasOriginTime ? '発生' : '検知'}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 25,
+                              ),
+                            ),
+                          ),
+                          // M と 深さ
+                          if (eew.eew.earthquake!.condition == '仮定震源要素')
+                            const FittedBox(
+                              child: Text(
+                                'PLUM法による検知',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            )
+                          else if (eew.eew.earthquake!.originTime == null &&
+                              eew.eew.earthquake!.hypocenter.accuracy
+                                      .epicenters[0] ==
+                                  1)
+                            const FittedBox(
+                              child: Text(
+                                'レベル法による検知',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            )
+                          else
+                            FittedBox(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  // Magunitude
+                                  if (eew.eew.earthquake!.magnitude.condition ==
+                                      null)
+                                    const Text(
+                                      'M',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  if (eew.eew.earthquake!.hypocenter.depth
+                                          .condition ==
+                                      null)
+                                    Text(
+                                      (eew.eew.earthquake!.magnitude.condition !=
+                                              null)
+                                          ? eew.eew.earthquake!.magnitude
+                                              .condition!
+                                          : eew.eew.earthquake?.magnitude.value
+                                                  .toString() ??
+                                              '不明',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 45,
+                                      ),
+                                    ),
+                                  const VerticalDivider(),
+                                  // Depth
+                                  if (eew.eew.earthquake!.hypocenter.depth
+                                          .condition ==
+                                      null)
+                                    Text(
+                                      eew.eew.earthquake?.hypocenter.depth
+                                              .type ??
+                                          '深さ',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  Text(
+                                    (eew.eew.earthquake!.hypocenter.depth
+                                                .condition !=
+                                            null)
+                                        ? eew.eew.earthquake!.hypocenter.depth
+                                            .condition!.name
+                                        : eew.eew.earthquake?.hypocenter.depth
+                                                .value
+                                                .toString() ??
+                                            '不明',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 45,
+                                    ),
+                                  ),
+                                  if (eew.eew.earthquake!.hypocenter.depth
+                                          .condition ==
+                                      null)
+                                    Text(
+                                      eew.eew.earthquake?.hypocenter.depth
+                                              .unit ??
+                                          'km',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          // 発生時刻と震源距離(NEED IMPL)
+                          FittedBox(
+                            child: Row(
+                              children: [
+                                Text(
+                                  DateFormat('yyyy/MM/dd HH:mm:ss頃').format(
+                                        (eew.eew.earthquake!.originTime ??
+                                                eew.eew.earthquake!.arrivalTime)
+                                            .toLocal(),
+                                      ) +
+                                      (hasOriginTime ? '発生' : '検知'),
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          // 震央精度
+                          FittedBox(
+                            child: Row(
+                              textBaseline: TextBaseline.alphabetic,
+                              crossAxisAlignment: CrossAxisAlignment.baseline,
+                              children: [
+                                const Text(
+                                  '震源精度 ',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                Text(
+                                  (eew.eew.earthquake!.hypocenter.accuracy
+                                              .epicenters[0] ==
+                                          1)
+                                      ? eew.eew.earthquake!.condition ==
+                                              '仮定震源要素'
+                                          ? 'PLUM法'
+                                          : eew.eew.earthquake!.originTime ==
+                                                  null
+                                              ? 'P波/S波レベル越え'
+                                              : 'IPF法(1点)'
+                                      : eew.eew.earthquake!.hypocenter.accuracy
+                                          .hypocenterAccuracy
+                                          .replaceAll(
+                                            '(気象庁データ)',
+                                            '',
+                                          )
+                                          .replaceAll(
+                                            '(Hi-netデータ)',
+                                            '',
+                                          )
+                                          .replaceAll(
+                                            '(海域,観測網外)',
+                                            '(海域)',
+                                          )
+                                          .replaceAll(
+                                            '((内陸,観測網内)',
+                                            '(内陸)',
+                                          ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // デバッグ情報
+                          if (ref.watch(developerModeProvider).isDeveloper)
+                            FittedBox(
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'EventID:${eew.head.eventId}',
+                                  )
+                                ],
+                              ),
+                            ),
+                        ],
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
 
     return SizedBox(
       width: MediaQuery.of(context).size.width,
@@ -82,585 +457,45 @@ class EewBodyWidget extends ConsumerWidget {
         padding: const EdgeInsets.all(8),
         child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(16)),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-            child: InkWell(
-              onTap: () {
-                expandableController.toggle();
-                ref.read(eewExpandedProvider)[eew.key.eventId!] =
-                    !ref.read(eewExpandedProvider)[eew.key.eventId!]!;
-              },
-              onDoubleTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  content: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text(
-                        '精度情報',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+          child: InkWell(
+            onTap: () {
+              expandableController.toggle();
+              ref.read(eewExpandedProvider)[eew.head.eventId!] =
+                  !ref.read(eewExpandedProvider)[eew.head.eventId!]!;
+            },
+            onDoubleTap: () => ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                content: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      '精度情報',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
-                      Text(
-                        '震央位置:${eew.value.earthQuake!.hypoCenter.accuracy.epicCenterAccuracy.epicCenterAccuracy.description}\n'
-                        '震源位置: ${eew.value.earthQuake!.hypoCenter.accuracy.epicCenterAccuracy.hypoCenterAccuracy.description}\n'
-                        '深さ: ${eew.value.earthQuake!.hypoCenter.accuracy.depthCalculation.description}\n'
-                        'マグニチュード: ${eew.value.earthQuake!.hypoCenter.accuracy.magnitudeCalculation.description}',
-                      )
-                    ],
-                  ),
+                    ),
+                    Text(
+                      eew.eew.earthquake!.hypocenter.accuracy
+                          .toJson()
+                          .toString(),
+                    )
+                  ],
                 ),
               ),
-              child: ExpandablePanel(
-                controller: expandableController,
-                theme: const ExpandableThemeData(
-                  animationDuration: Duration(milliseconds: 200),
-                ),
-                collapsed: Card(
-                  margin: EdgeInsets.zero,
-                  color:
-                      (eew.value.intensity?.maxint.from ?? JmaIntensity.Unknown)
-                          .fromUser(colors)
-                          .withOpacity(0.8),
-                  child: Row(
-                    children: [
-                      Card(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            FittedBox(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: Text(
-                                  '${isWarning ? '警報 ' : ''}'
-                                  '${eew.value.isLastInfo ? ' 最終 ' : ''}#${eew.key.serialNo}',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // ヘッダー・予想最大震度
-                      Expanded(
-                        child: Column(
-                          children: [
-                            // 予想最大震度不明の場合
-                            if (maxIntensity == JmaIntensity.Unknown)
-                              FittedBox(
-                                child: Text(
-                                  '不明',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 30,
-                                    color: (eew.value.intensity?.maxint.from ??
-                                            JmaIntensity.Unknown)
-                                        .fromUser(colors)
-                                        .onPrimary,
-                                  ),
-                                ),
-                              )
-                            else
-                              FittedBox(
-                                child: Row(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.baseline,
-                                  textBaseline: TextBaseline.alphabetic,
-                                  children: [
-                                    // 数字部分
-                                    Text(
-                                      '震度${maxIntensity.name.replaceAll(RegExp(r'[^0-9]'), '')}',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                        color:
-                                            (eew.value.intensity?.maxint.from ??
-                                                    JmaIntensity.Unknown)
-                                                .fromUser(colors)
-                                                .onPrimary,
-                                      ),
-                                    ),
-                                    // 文字部分
-                                    Text(
-                                      maxIntensity.name
-                                          .replaceAll(RegExp(r'[0-9]'), '')
-                                          .replaceAll('+', '強')
-                                          .replaceAll('-', '弱'),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                        color:
-                                            (eew.value.intensity?.maxint.from ??
-                                                    JmaIntensity.Unknown)
-                                                .fromUser(colors)
-                                                .onPrimary,
-                                      ),
-                                    ),
-                                    // 程度以上
-                                    if (eew.value.intensity?.maxint.to ==
-                                        JmaIntensity.over)
-                                      Text(
-                                        '程度以上',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15,
-                                          color: (eew.value.intensity?.maxint
-                                                      .from ??
-                                                  JmaIntensity.Unknown)
-                                              .fromUser(colors)
-                                              .onPrimary,
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              )
-                          ],
-                        ),
-                      ),
-                      // 詳細情報
-                      Flexible(
-                        flex: 2,
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Row(),
-                                if (eew.value.earthQuake != null)
-                                  Column(
-                                    children: [
-                                      FittedBox(
-                                        child: Text(
-                                          '${eew.value.earthQuake?.hypoCenter.name}',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 25,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                expanded: Card(
-                  margin: EdgeInsets.zero,
-                  color:
-                      (eew.value.intensity?.maxint.from ?? JmaIntensity.Unknown)
-                          .fromUser(colors)
-                          .withOpacity(0.8),
-                  child: Row(
-                    children: [
-                      // ヘッダー・予想最大震度
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Card(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Row(),
-                                  const Text(
-                                    '緊急地震速報',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    '${isWarning ? '警報' : '予報'}'
-                                    '${eew.value.isLastInfo ? ' 最終' : ''} #${eew.key.serialNo}',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            // 予想最大震度
-                            Text(
-                              '予想最大震度',
-                              style: TextStyle(
-                                color: (eew.value.intensity?.maxint.from ??
-                                        JmaIntensity.Unknown)
-                                    .fromUser(colors)
-                                    .onPrimary,
-                              ),
-                            ),
-                            // 予想最大震度不明の場合
-                            if (maxIntensity == JmaIntensity.Unknown)
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 15),
-                                child: FittedBox(
-                                  child: Text(
-                                    '不明',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 30,
-                                      color:
-                                          (eew.value.intensity?.maxint.from ??
-                                                  JmaIntensity.Unknown)
-                                              .fromUser(colors)
-                                              .onPrimary,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            else
-                              FittedBox(
-                                child: Row(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.baseline,
-                                  textBaseline: TextBaseline.alphabetic,
-                                  children: [
-                                    // 数字部分
-                                    Text(
-                                      maxIntensity.name
-                                          .replaceAll(RegExp(r'[^0-9]'), ''),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 60,
-                                        color:
-                                            (eew.value.intensity?.maxint.from ??
-                                                    JmaIntensity.Unknown)
-                                                .fromUser(colors)
-                                                .onPrimary,
-                                      ),
-                                    ),
-                                    // 文字部分
-                                    Text(
-                                      maxIntensity.name
-                                          .replaceAll(RegExp(r'[0-9]'), '')
-                                          .replaceAll('+', '強')
-                                          .replaceAll('-', '弱'),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 25,
-                                        color:
-                                            (eew.value.intensity?.maxint.from ??
-                                                    JmaIntensity.Unknown)
-                                                .fromUser(colors)
-                                                .onPrimary,
-                                      ),
-                                    ),
-                                    // 程度以上
-                                    if (eew.value.intensity?.maxint.to ==
-                                        JmaIntensity.over)
-                                      Text(
-                                        '程度以上',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15,
-                                          color: (eew.value.intensity?.maxint
-                                                      .from ??
-                                                  JmaIntensity.Unknown)
-                                              .fromUser(colors)
-                                              .onPrimary,
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              )
-                          ],
-                        ),
-                      ),
-                      // 詳細情報
-                      Flexible(
-                        flex: 2,
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Row(),
-                                if (eew.value.earthQuake != null)
-                                  Column(
-                                    children: [
-                                      FittedBox(
-                                        child: Text(
-                                          '${eew.value.earthQuake?.hypoCenter.name} で地震${hasOriginTime ? '発生' : '検知'}',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 25,
-                                          ),
-                                        ),
-                                      ),
-                                      // M と 深さ
-                                      if (eew.value.earthQuake!.isAssuming)
-                                        const FittedBox(
-                                          child: Text(
-                                            'PLUM法による検知',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20,
-                                            ),
-                                          ),
-                                        )
-                                      else if (eew.value.earthQuake!
-                                                  .originTime ==
-                                              null &&
-                                          eew
-                                                  .value
-                                                  .earthQuake!
-                                                  .hypoCenter
-                                                  .accuracy
-                                                  .epicCenterAccuracy
-                                                  .epicCenterAccuracy ==
-                                              EpicCenterAccuracy.f1)
-                                        const FittedBox(
-                                          child: Text(
-                                            'レベル法による検知',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20,
-                                            ),
-                                          ),
-                                        )
-                                      else
-                                        FittedBox(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.baseline,
-                                            textBaseline:
-                                                TextBaseline.alphabetic,
-                                            children: [
-                                              // Magunitude
-                                              if (eew.value.earthQuake!
-                                                      .magnitude.condition ==
-                                                  null)
-                                                const Text(
-                                                  'M',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18,
-                                                  ),
-                                                ),
-                                              if (eew
-                                                      .value
-                                                      .earthQuake!
-                                                      .hypoCenter
-                                                      .depth
-                                                      .condition ==
-                                                  null)
-                                                Text(
-                                                  (eew
-                                                              .value
-                                                              .earthQuake!
-                                                              .magnitude
-                                                              .condition !=
-                                                          null)
-                                                      ? eew
-                                                          .value
-                                                          .earthQuake!
-                                                          .magnitude
-                                                          .condition!
-                                                          .description
-                                                      : eew.value.earthQuake
-                                                              ?.magnitude.value
-                                                              .toString() ??
-                                                          '不明',
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 45,
-                                                  ),
-                                                ),
-                                              const VerticalDivider(),
-                                              // Depth
-                                              if (eew
-                                                      .value
-                                                      .earthQuake!
-                                                      .hypoCenter
-                                                      .depth
-                                                      .condition ==
-                                                  null)
-                                                Text(
-                                                  eew
-                                                          .value
-                                                          .earthQuake
-                                                          ?.hypoCenter
-                                                          .depth
-                                                          .type ??
-                                                      '深さ',
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18,
-                                                  ),
-                                                ),
-                                              Text(
-                                                (eew
-                                                            .value
-                                                            .earthQuake!
-                                                            .hypoCenter
-                                                            .depth
-                                                            .condition !=
-                                                        null)
-                                                    ? eew
-                                                        .value
-                                                        .earthQuake!
-                                                        .hypoCenter
-                                                        .depth
-                                                        .condition!
-                                                        .description
-                                                    : eew
-                                                            .value
-                                                            .earthQuake
-                                                            ?.hypoCenter
-                                                            .depth
-                                                            .value
-                                                            .toString() ??
-                                                        '不明',
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 45,
-                                                ),
-                                              ),
-                                              if (eew
-                                                      .value
-                                                      .earthQuake!
-                                                      .hypoCenter
-                                                      .depth
-                                                      .condition ==
-                                                  null)
-                                                Text(
-                                                  eew
-                                                          .value
-                                                          .earthQuake
-                                                          ?.hypoCenter
-                                                          .depth
-                                                          .unit ??
-                                                      'km',
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18,
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
-                                        ),
-                                      // 発生時刻と震源距離(NEED IMPL)
-                                      FittedBox(
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              DateFormat('yyyy/MM/dd HH:mm:ss頃')
-                                                      .format(
-                                                    (eew.value.earthQuake!
-                                                                .originTime ??
-                                                            eew
-                                                                .value
-                                                                .earthQuake!
-                                                                .arrivalTime)
-                                                        .toLocal(),
-                                                  ) +
-                                                  (hasOriginTime ? '発生' : '検知'),
-                                              style: const TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      // 震央精度
-                                      FittedBox(
-                                        child: Row(
-                                          textBaseline: TextBaseline.alphabetic,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.baseline,
-                                          children: [
-                                            const Text(
-                                              '震央精度 ',
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                            Text(
-                                              (eew
-                                                          .value
-                                                          .earthQuake!
-                                                          .hypoCenter
-                                                          .accuracy
-                                                          .epicCenterAccuracy
-                                                          .epicCenterAccuracy ==
-                                                      EpicCenterAccuracy.f1)
-                                                  ? eew.value.earthQuake!
-                                                          .isAssuming
-                                                      ? 'PLUM法'
-                                                      : eew.value.earthQuake!
-                                                                  .originTime ==
-                                                              null
-                                                          ? 'P波/S波レベル越え'
-                                                          : 'IPF法(1点)'
-                                                  : eew
-                                                      .value
-                                                      .earthQuake!
-                                                      .hypoCenter
-                                                      .accuracy
-                                                      .epicCenterAccuracy
-                                                      .epicCenterAccuracy
-                                                      .description
-                                                      .replaceAll(
-                                                        '(気象庁データ)',
-                                                        '',
-                                                      )
-                                                      .replaceAll(
-                                                        '(Hi-netデータ)',
-                                                        '',
-                                                      )
-                                                      .replaceAll(
-                                                        '(海域,観測網外)',
-                                                        '(海域)',
-                                                      )
-                                                      .replaceAll(
-                                                        '((内陸,観測網内)',
-                                                        '(内陸)',
-                                                      ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      // デバッグ情報
-                                      if (ref
-                                          .watch(developerModeProvider)
-                                          .isDeveloper)
-                                        FittedBox(
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                'EventID:${eew.key.eventId}',
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+            ),
+            child: ExpandablePanel(
+              controller: expandableController,
+              theme: const ExpandableThemeData(
+                animationDuration: Duration(milliseconds: 200),
               ),
+              collapsed: collapsedWidget,
+              expanded: expandedWidget,
             ),
           ),
         ),

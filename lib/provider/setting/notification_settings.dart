@@ -47,11 +47,8 @@ class NotificationSettingsNotifier
 
   /// 予想最大震度の閾値を設定
   void setIntensityThreshold(JmaIntensity intensity) {
-    if (<JmaIntensity>[
-      JmaIntensity.Error,
-      JmaIntensity.Unknown,
-      JmaIntensity.over
-    ].contains(intensity)) {
+    if (<JmaIntensity>[JmaIntensity.unknown, JmaIntensity.over]
+        .contains(intensity)) {
       throw ArgumentError('Invalid intensity: $intensity');
     }
     state = state.copyWith(intensityThreshold: intensity);

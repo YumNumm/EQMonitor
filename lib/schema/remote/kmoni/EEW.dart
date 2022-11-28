@@ -1,23 +1,6 @@
+import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
 import 'package:intl/intl.dart';
 
-import '../../../ui/theme/jma_intensity.dart';
-import '../dmdata/commonHeader.dart';
-import '../dmdata/eew-information/earthquake.dart';
-import '../dmdata/eew-information/earthquake/accuracy.dart';
-import '../dmdata/eew-information/earthquake/accuracy/depth_calculation.dart';
-import '../dmdata/eew-information/earthquake/accuracy/epicCenterAccuracy.dart';
-import '../dmdata/eew-information/earthquake/accuracy/magnitude_calculation.dart';
-import '../dmdata/eew-information/earthquake/accuracy/number_of_magnitude_calculation.dart';
-import '../dmdata/eew-information/earthquake/depth.dart';
-import '../dmdata/eew-information/earthquake/hypocenter.dart';
-import '../dmdata/eew-information/earthquake/reduce.dart';
-import '../dmdata/eew-information/eew-infomation.dart';
-import '../dmdata/eew-information/intensity/forecast_max_int.dart';
-import '../dmdata/eew-information/intensity/intensity.dart';
-import '../dmdata/eq-information/earthquake-information/hypocenter/coordinate_component.dart';
-import '../dmdata/eq-information/earthquake-information/hypocenter/coordinate_component/latitude.dart';
-import '../dmdata/eq-information/earthquake-information/hypocenter/coordinate_component/longitude.dart';
-import '../dmdata/eq-information/earthquake-information/magnitude.dart';
 import 'EEWResult.dart';
 
 // GET http://www.kmoni.bosai.go.jp/webservice/hypo/eew/${timestamp}.json
@@ -132,7 +115,7 @@ class KyoshinEEW {
   /// 地震ID
   final int? reportId;
 
-  CommonHead? toDmdataEew({
+  TelegramJsonMain? toDmdataEew({
     bool isTesting = false,
   }) {
     if (!result.hasData) {
@@ -140,77 +123,68 @@ class KyoshinEEW {
     }
 
     // 処理していく
-    return CommonHead(
+    return TelegramJsonMain(
       eventId: reportId.toString(),
       headline: result.message,
-      editoralOffice: '強震モニタ',
+      editorialOffice: '強震モニタ',
       infoKind: '強震モニタ',
-      infoType: CommonHeadInfoType.announcement,
+      infoType: TelegramInfoType.announcement,
       infoKindVersion: '0',
       originalId: 'TELEGRAM_ID',
       pressDateTime: reportTime!,
       publishingOffice: [],
       reportDateTime: reportTime!,
-      schema: CommonHeadSchema(type: 'VXSE4x', version: '0'),
+      schema: TelegramJsonMainSchema(type: 'VXSE4x', version: '0'),
       serialNo: reportNum?.toString(),
-      status: isTesting ? CommonHeadStatus.test : CommonHeadStatus.normal,
+      status: isTesting ? TelegramStatus.test : TelegramStatus.normal,
       targetDateTime: reportTime,
       targetDateTimeDubious: '強震モニタ - リプレイ',
       targetDuration: null,
       title: result.message.toString(),
       type: '強震モニタ',
       validDateTime: null,
-      body: EEWInformation(
+      body: EewInformation(
         isLastInfo: isFinal!,
         isCanceled: isTraining ?? false,
         isWarning: true,
         zones: [],
         prefectures: [],
         regions: [],
-        earthQuake: EarthQuake(
+        earthquake: EewEarthquake(
           originTime: originTime,
           arrivalTime: originTime!,
-          isAssuming: false,
-          hypoCenter: HypoCenter(
+          hypocenter: EewHypocenter(
             name: regionName.toString(),
             code: int.tryParse(regionCode.toString()) ?? 0,
-            coordinateComponent: CoordinateComponent(
+            coordinate: EarthquakeComponentCoordinate(
               latitude: Latitude(text: '', value: latitude!),
               longitude: Longitude(text: '', value: longitude!),
-              height: null,
-              geodeticSystem: null,
-              condition: null,
             ),
-            depth: Depth(
+            depth: EewDepth(
               unit: 'km',
               value: int.parse(depth!.replaceAll('km', '')),
               condition: null,
               type: '深さ',
             ),
-            reduce: Reduce(
+            reduce: EewReduce(
               code: 0,
               name: '',
             ),
-            landOrSea: null,
-            accuracy: Accuracy(
-              depthCalculation: DepthCalculation.f2,
-              epicCenterAccuracy: EpicCenters(
-                epicCenterAccuracy: EpicCenterAccuracy.f2,
-                hypoCenterAccuracy: HypoCenterAccuracy.f2,
-              ),
-              magnitudeCalculation: MagnitudeCalculation.f2,
-              numberOfMagnitudeCalculation: NumberOfMagnitudeCalculation.f2,
+            accuracy: EewAccuracy(
+              depth: 2,
+              epicenters: [2, 2],
+              magnitudeCalculation: 2,
+              numberOfMagnitudeCalculation: 2,
             ),
           ),
-          magnitude: Magnitude(
-            condition: null,
+          magnitude: EewMagnitude(
             type: '',
             unit: 'M',
             value: magnitude,
           ),
         ),
-        intensity: Intensity(
-          maxint: ForecastMaxInt(
+        intensity: EewIntensity(
+          forecastMaxInt: EewIntensityForecastMaxInt(
             from: JmaIntensity.values.firstWhere(
               (e) =>
                   e.name ==
@@ -218,7 +192,6 @@ class KyoshinEEW {
                       .toString()
                       .replaceAll('強', '+')
                       .replaceAll('弱', '-'),
-              orElse: () => JmaIntensity.Error,
             ),
             to: JmaIntensity.values.firstWhere(
               (e) =>
@@ -227,15 +200,17 @@ class KyoshinEEW {
                       .toString()
                       .replaceAll('強', '+')
                       .replaceAll('弱', '-'),
-              orElse: () => JmaIntensity.Error,
             ),
           ),
-          appendix: null,
-          forecastMaxLpgmInt: null,
-          region: [],
+          forecastMaxLgInt: null,
+          regions: [],
+          appendix: EewIntensityAppendix(
+            maxIntChange: EewIntensityMaxIntChange.increase,
+            maxLgIntChange: null,
+            maxIntChangeReason: EewIntensityMaxIntChangeReason.depthChange,
+          ),
         ),
         text: result.message,
-        comments: null,
       ).toJson(),
     );
   }

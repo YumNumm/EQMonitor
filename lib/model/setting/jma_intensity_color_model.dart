@@ -18,6 +18,6 @@ class JmaIntensityColorModel with _$JmaIntensityColorModel {
     required Color int6Upper,
     required Color int7,
     required Color over,
-    required Color error,
+    required Color notRecievedYet,
   }) = _JmaIntensityColorModel;
 }
