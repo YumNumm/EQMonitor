@@ -26,4 +26,6 @@ abstract class Env {
   static final dmdataOrigin = _Env.dmdataOrigin;
   @EnviedField(varName: 'EQMONITOR_WEBSOCKET_URL', obfuscate: true)
   static final eqmonitorWebSocketUrl = _Env.eqmonitorWebSocketUrl;
+  @EnviedField(varName: 'EQMONITOR_WEBSOCKET_PATH', obfuscate: true)
+  static final eqmonitorWebSocketPath = _Env.eqmonitorWebSocketPath;
 }
