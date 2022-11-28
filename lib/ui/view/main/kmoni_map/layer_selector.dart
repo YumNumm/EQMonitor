@@ -1,6 +1,6 @@
 import 'package:eqmonitor/model/setting/kmoni_setting_model.dart';
 import 'package:eqmonitor/provider/setting/developer_mode.dart';
-import 'package:eqmonitor/ui/view/main/kmoni_map/kmoni_map.viewmodel.dart';
+import 'package:eqmonitor/ui/view/main/kmoni_map.viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

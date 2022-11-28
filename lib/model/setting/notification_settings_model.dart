@@ -19,7 +19,7 @@ class NotificationSettingsModel with _$NotificationSettingsModel {
 
     /// 予想最大震度の閾値
     /// この値以上の地震が発生した場合に通知する
-    @Default(JmaIntensity.Int0) JmaIntensity intensityThreshold,
+    @Default(JmaIntensity.int0) JmaIntensity intensityThreshold,
 
     /// TTSのよる読み上げをするかどうか
     @Default(false) bool useTts,

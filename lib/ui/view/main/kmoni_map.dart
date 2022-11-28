@@ -7,9 +7,8 @@ import 'package:eqmonitor/provider/earthquake/eew_provider.dart';
 import 'package:eqmonitor/provider/earthquake/kmoni_controller.dart';
 import 'package:eqmonitor/provider/package_info.dart';
 import 'package:eqmonitor/provider/setting/developer_mode.dart';
-import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
 import 'package:eqmonitor/provider/theme_providers.dart';
-import 'package:eqmonitor/ui/view/main/kmoni_map/kmoni_map.viewmodel.dart';
+import 'package:eqmonitor/ui/view/main/kmoni_map.viewmodel.dart';
 import 'package:eqmonitor/ui/view/main/kmoni_map/layer_selector.dart';
 import 'package:eqmonitor/ui/view/main/kmoni_map/map/eew_hypocenter.dart';
 import 'package:eqmonitor/ui/view/main/kmoni_map/map/eew_pswave_arraival_circle.dart';
@@ -96,7 +95,7 @@ class KmoniMap extends HookConsumerWidget {
                 transformationController:
                     ref.watch(transformationControllerProvider),
                 maxScale: 10,
-                boundaryMargin: const EdgeInsets.all(100),
+                boundaryMargin: const EdgeInsets.all(1000),
                 clipBehavior: Clip.none,
                 child: SizedBox(
                   height: 927.4,
@@ -233,18 +232,18 @@ class KmoniStatusWidget extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      // WebSocket 接続状態
-                      if (eewState.channel?.isJoined == true)
-                        const Icon(
-                          Icons.link,
-                          semanticLabel: 'WebSocket 接続中',
-                        )
-                      else
-                        const Icon(
-                          Icons.link_off,
-                          color: Colors.red,
-                          semanticLabel: 'WebSocket 切断',
-                        ),
+                      // TODO(YumNumm): WebSocket 接続状態
+                      //if (eewState.channel?.isJoined == true)
+                      //  const Icon(
+                      //    Icons.link,
+                      //    semanticLabel: 'WebSocket 接続中',
+                      //  )
+                      //else
+                      //  const Icon(
+                      //    Icons.link_off,
+                      //    color: Colors.red,
+                      //    semanticLabel: 'WebSocket 切断',
+                      //  ),
                       const SizedBox(width: 8),
 
                       /// テストモード時
@@ -297,7 +296,6 @@ class OnEewWidget extends ConsumerWidget {
         for (final eew in eews)
           EewBodyWidget(
             eew: eew,
-            colors: ref.watch(jmaIntensityColorProvider),
           ),
       ],
     );

@@ -4,8 +4,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
+import 'package:dmdata_telegram_json/schema/jma_xml_telegram/telegram_types.dart';
 import 'package:eqmonitor/model/setting/notification_settings_model.dart';
-import 'package:eqmonitor/schema/remote/dmdata/websocketv2/type.dart';
 import 'package:eqmonitor/schema/remote/eqmonitor/eew_payload.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -25,22 +26,22 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   final prefs = await SharedPreferences.getInstance();
   final notificationSettings = NotificationSettingsModel.loadFromPrefs(prefs);
   // EEWかどうか
-  if (message.data['type'].toString() == DmDssTelegramDataType.VXSE44.name) {
+  if (message.data['type'].toString().toLowerCase() ==
+      TelegramType.vxse44.name) {
     final payload = EewPayload.fromJson(
       jsonDecode(message.data['payload'].toString()) as Map<String, dynamic>,
     );
     // 最大震度の確認
     if (payload.intensity != null) {
-      if (payload.intensity!.maxint.from.intValue <
-              notificationSettings.intensityThreshold.intValue &&
+      if (payload.intensity!.forecastMaxInt.from <
+              notificationSettings.intensityThreshold &&
           (payload.magnitude ?? 0.0) <
               notificationSettings.magnitudeThreshold) {
         return;
       }
     }
     if (payload.accuracy != null && !notificationSettings.lowPrecision) {
-      if (payload.accuracy!.epicCenterAccuracy.epicCenterAccuracy.code == 1 &&
-          payload.accuracy!.epicCenterAccuracy.hypoCenterAccuracy.code == 1 &&
+      if (payload.accuracy!.epicenters[0] == 1 &&
           !(message.data['content'] as Map<String, dynamic>)['title']
               .toString()
               .contains('警報')) {

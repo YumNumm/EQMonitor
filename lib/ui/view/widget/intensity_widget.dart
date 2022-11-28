@@ -28,7 +28,7 @@ class IntensityWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final intensityColor = color ??
         intensity
-            .fromUser(ref.read(jmaIntensityColorProvider))
+            .fromUser(ref.watch(jmaIntensityColorProvider))
             .withOpacity(opacity);
     final textColor = isTextColorByBackground ? intensityColor.onPrimary : null;
     return ClipRRect(

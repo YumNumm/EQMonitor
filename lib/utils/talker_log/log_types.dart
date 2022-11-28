@@ -88,3 +88,14 @@ class AppLifecycleLog extends FlutterTalkerLog {
   @override
   Color get color => Colors.lightBlueAccent;
 }
+
+/// SocketIO
+class SocketIOLog extends FlutterTalkerLog {
+  SocketIOLog(super.message);
+
+  @override
+  String get title => 'SocketIO';
+
+  @override
+  Color get color => Colors.lightBlueAccent;
+}

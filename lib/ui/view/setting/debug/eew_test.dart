@@ -1,8 +1,7 @@
 import 'dart:math';
 
-import 'package:eqmonitor/schema/remote/dmdata/eew-information/earthquake/accuracy/number_of_magnitude_calculation.dart';
-import 'package:eqmonitor/schema/remote/dmdata/eew-information/intensity/forecast_max_int.dart';
-import 'package:eqmonitor/ui/theme/jma_intensity.dart';
+import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
+import 'package:eqmonitor/ui/view/setting/component/custom_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -11,33 +10,29 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../../../provider/earthquake/eew_provider.dart';
-import '../../../../schema/remote/dmdata/eew-information/earthquake/accuracy.dart';
-import '../../../../schema/remote/dmdata/eew-information/earthquake/accuracy/depth_calculation.dart';
-import '../../../../schema/remote/dmdata/eew-information/earthquake/accuracy/epicCenterAccuracy.dart';
-import '../../../../schema/remote/dmdata/eew-information/earthquake/accuracy/magnitude_calculation.dart';
 
 class EewTestPage extends HookConsumerWidget {
   const EewTestPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final maxIntensityTo = useState<JmaIntensity>(JmaIntensity.Unknown);
-    final maxIntensityFrom = useState<JmaIntensity>(JmaIntensity.Unknown);
+    final maxIntensityTo = useState<JmaIntensity>(JmaIntensity.int5Lower);
+    final maxIntensityFrom = useState<JmaIntensity>(JmaIntensity.int5Lower);
 
     final magnitude = useState<double>(8);
     final depth = useState<int>(50);
     final hypo = useState<LatLng>(LatLng(35, 135));
-    final accuracy = useState<Accuracy>(
-      Accuracy(
-        depthCalculation: DepthCalculation.f1,
-        epicCenterAccuracy: EpicCenters(
-          epicCenterAccuracy: EpicCenterAccuracy.f1,
-          hypoCenterAccuracy: HypoCenterAccuracy.f1,
-        ),
-        magnitudeCalculation: MagnitudeCalculation.f2,
-        numberOfMagnitudeCalculation: NumberOfMagnitudeCalculation.f1,
+    final accuracy = useState<EewAccuracy>(
+      EewAccuracy(
+        epicenters: [2, 2],
+        depth: 2,
+        magnitudeCalculation: 2,
+        numberOfMagnitudeCalculation: 2,
       ),
     );
+    final isCanceled = useState<bool>(false);
+    final isWarning = useState<bool>(false);
+    final isLastInfo = useState<bool>(false);
 
     return Scaffold(
       appBar: AppBar(
@@ -59,7 +54,7 @@ class EewTestPage extends HookConsumerWidget {
                     .map(
                       (e) => DropdownMenuItem(
                         value: e,
-                        child: Text(e.toString()),
+                        child: Text(e.longName),
                       ),
                     )
                     .toList(),
@@ -78,7 +73,7 @@ class EewTestPage extends HookConsumerWidget {
                     .map(
                       (e) => DropdownMenuItem(
                         value: e,
-                        child: Text(e.toString()),
+                        child: Text(e.longName),
                       ),
                     )
                     .toList(),
@@ -176,23 +171,23 @@ class EewTestPage extends HookConsumerWidget {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.all(8),
-                    child: DropdownButtonFormField<DepthCalculation>(
+                    child: DropdownButtonFormField<int>(
                       key: const Key('depthCalculation'),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         label: Text('深さの精度値'),
                       ),
-                      items: DepthCalculation.values
+                      items: List<int>.generate(10, (index) => index)
                           .map(
-                            (e) => DropdownMenuItem<DepthCalculation>(
+                            (e) => DropdownMenuItem(
                               value: e,
-                              child: Text(e.description),
+                              child: Text(e.toString()),
                             ),
                           )
                           .toList(),
-                      onChanged: (e) => accuracy.value = Accuracy(
-                        depthCalculation: e!,
-                        epicCenterAccuracy: accuracy.value.epicCenterAccuracy,
+                      onChanged: (e) => accuracy.value = EewAccuracy(
+                        depth: e!,
+                        epicenters: accuracy.value.epicenters,
                         magnitudeCalculation:
                             accuracy.value.magnitudeCalculation,
                         numberOfMagnitudeCalculation:
@@ -202,27 +197,23 @@ class EewTestPage extends HookConsumerWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8),
-                    child: DropdownButtonFormField<EpicCenterAccuracy>(
+                    child: DropdownButtonFormField<int>(
                       key: const Key('EpicCenterAccuracy'),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         label: Text('EpicCenterAccuracy'),
                       ),
-                      items: EpicCenterAccuracy.values
+                      items: List<int>.generate(10, (index) => index)
                           .map(
-                            (e) => DropdownMenuItem<EpicCenterAccuracy>(
+                            (e) => DropdownMenuItem(
                               value: e,
-                              child: Text(e.description),
+                              child: Text(e.toString()),
                             ),
                           )
                           .toList(),
-                      onChanged: (e) => accuracy.value = Accuracy(
-                        depthCalculation: accuracy.value.depthCalculation,
-                        epicCenterAccuracy: EpicCenters(
-                          epicCenterAccuracy: e!,
-                          hypoCenterAccuracy: accuracy
-                              .value.epicCenterAccuracy.hypoCenterAccuracy,
-                        ),
+                      onChanged: (e) => accuracy.value = EewAccuracy(
+                        depth: accuracy.value.depth,
+                        epicenters: accuracy.value.epicenters,
                         magnitudeCalculation:
                             accuracy.value.magnitudeCalculation,
                         numberOfMagnitudeCalculation:
@@ -232,12 +223,45 @@ class EewTestPage extends HookConsumerWidget {
                   ),
                 ],
               ),
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                title: const Text(
+                  'isWarning',
+                ),
+                onTap: () => isWarning.value = !isWarning.value,
+                trailing: CustomSwitch(
+                  onChanged: (_) => isWarning.value = !isWarning.value,
+                  value: isWarning.value,
+                ),
+              ),
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                title: const Text(
+                  'isCanceled',
+                ),
+                onTap: () => isCanceled.value = !isCanceled.value,
+                trailing: CustomSwitch(
+                  onChanged: (_) => isCanceled.value = !isCanceled.value,
+                  value: isCanceled.value,
+                ),
+              ),
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                title: const Text(
+                  'isLastInfo',
+                ),
+                onTap: () => isLastInfo.value = !isLastInfo.value,
+                trailing: CustomSwitch(
+                  onChanged: (_) => isLastInfo.value = !isLastInfo.value,
+                  value: isLastInfo.value,
+                ),
+              ),
               const Divider(),
               FloatingActionButton.extended(
                 heroTag: 'send',
                 onPressed: () {
                   final hash = ref.read(eewProvider.notifier).addTestEew(
-                        maxint: ForecastMaxInt(
+                        maxint: EewIntensityForecastMaxInt(
                           from: maxIntensityFrom.value,
                           to: maxIntensityTo.value,
                         ),
@@ -248,6 +272,9 @@ class EewTestPage extends HookConsumerWidget {
                         accuracy: accuracy.value,
                         arrivalTime: DateTime.now(),
                         originTime: DateTime.now(),
+                        isWarning: isWarning.value,
+                        isCanceled: isCanceled.value,
+                        isLastInfo: isLastInfo.value,
                       );
                   GoRouter.of(context).pop();
                   Fluttertoast.showToast(msg: 'テストEEWを追加しました $hash');
@@ -260,7 +287,7 @@ class EewTestPage extends HookConsumerWidget {
                 heroTag: 'newsend',
                 onPressed: () {
                   final hash = ref.read(eewProvider.notifier).addTestEew(
-                        maxint: ForecastMaxInt(
+                        maxint: EewIntensityForecastMaxInt(
                           from: maxIntensityFrom.value,
                           to: maxIntensityTo.value,
                         ),
@@ -288,6 +315,13 @@ class EewTestPage extends HookConsumerWidget {
                   Fluttertoast.showToast(msg: 'EEWを全て削除しました');
                 },
                 label: const Text('EEW全クリア'),
+              ),
+              const Divider(),
+              FloatingActionButton.extended(
+                heroTag: 'loadTest',
+                onPressed: () =>
+                    ref.read(eewProvider.notifier).loadDmdataEewTestPayload(),
+                label: const Text('LOAD_TEST_EEW'),
               )
             ],
           ),

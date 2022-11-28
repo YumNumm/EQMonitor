@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -42,22 +36,26 @@ class DefaultFirebaseOptions {
           'DefaultFirebaseOptions have not been configured for linux - '
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
-      case TargetPlatform.fuchsia:
+      default:
         throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for fuchsia - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+          'DefaultFirebaseOptions are not supported for this platform.',
         );
-
-      //default:
-      //  throw UnsupportedError(
-      //    'DefaultFirebaseOptions are not supported for this platform.',
-      //  );
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyC8GRAlx3f8P6Xpy3g2drzrzvqM7SjH26U',
+    appId: '1:179553945248:web:dc490392d6178e1d6fabc5',
+    messagingSenderId: '179553945248',
+    projectId: 'eqmonitor-main',
+    authDomain: 'eqmonitor-main.firebaseapp.com',
+    storageBucket: 'eqmonitor-main.appspot.com',
+    measurementId: 'G-HTKGZ9J2TC',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBkDpYc8eF_zrLEWPufW0O2A1TvA-gBMa0',
-    appId: '1:179553945248:android:31d2c3e4dcc608f66fabc5',
+    appId: '1:179553945248:android:11ffcfb483c098ad6fabc5',
     messagingSenderId: '179553945248',
     projectId: 'eqmonitor-main',
     storageBucket: 'eqmonitor-main.appspot.com',
@@ -65,14 +63,23 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyARNQCNBeDoGYCzW8iQK_puUgx8IEu33tc',
-    appId: '1:179553945248:ios:c9225a33990bccd36fabc5',
+    appId: '1:179553945248:ios:a738f33a18702c7f6fabc5',
     messagingSenderId: '179553945248',
     projectId: 'eqmonitor-main',
     storageBucket: 'eqmonitor-main.appspot.com',
-    androidClientId:
-        '179553945248-gnhkjhr4feqsv308rf3dlcber84o647i.apps.googleusercontent.com',
-    iosClientId:
-        '179553945248-l0p6vhl8ujr8a6no8irbio8b0jv8ptjo.apps.googleusercontent.com',
-    iosBundleId: 'com.yumnumm.eqmonitor',
+    androidClientId: '179553945248-gnhkjhr4feqsv308rf3dlcber84o647i.apps.googleusercontent.com',
+    iosClientId: '179553945248-hog16qgussjvd0ddqqe973c32n64atm1.apps.googleusercontent.com',
+    iosBundleId: 'net.yumnumm.eqmonitor',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyARNQCNBeDoGYCzW8iQK_puUgx8IEu33tc',
+    appId: '1:179553945248:ios:a738f33a18702c7f6fabc5',
+    messagingSenderId: '179553945248',
+    projectId: 'eqmonitor-main',
+    storageBucket: 'eqmonitor-main.appspot.com',
+    androidClientId: '179553945248-gnhkjhr4feqsv308rf3dlcber84o647i.apps.googleusercontent.com',
+    iosClientId: '179553945248-hog16qgussjvd0ddqqe973c32n64atm1.apps.googleusercontent.com',
+    iosBundleId: 'net.yumnumm.eqmonitor',
   );
 }

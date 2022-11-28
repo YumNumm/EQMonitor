@@ -10,7 +10,6 @@ class UpdateHistotyView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(changeLogProvider);
-    final t = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: const Text('更新履歴')),
       body: state.when<Widget>(
