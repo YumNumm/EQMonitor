@@ -89,6 +89,10 @@ final eewTelegramStreamProvider = StreamProvider<EewTelegram>((ref) async* {
             ),
           ) as Map<String, dynamic>,
         );
+        // 通常報以外を棄却
+        if (telegram.status != TelegramStatus.normal) {
+          return;
+        }
         if (value.classification == 'eew.forecast') {
           final telegrams =
               EewTelegram(telegram, EewInformation.fromJson(telegram.body));
@@ -104,6 +108,9 @@ final eewTelegramStreamProvider = StreamProvider<EewTelegram>((ref) async* {
       }
     },
   );
+  await for (final eew in stream.stream) {
+    yield eew;
+  }
   ref.onDispose(stream.close);
 });
 
