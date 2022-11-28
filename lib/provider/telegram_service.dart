@@ -17,13 +17,13 @@ final isSocketIoConnectedStateProvider = StateProvider<bool>((ref) => false);
 final telegramSocketIoProvider = Provider((ref) {
   final talker = ref.watch(talkerProvider);
   final key = Env.eqmonitorWebSocketUrl.split('=')[1];
+  final path = Env.eqmonitorWebSocketPath;
   final socket = socket_io.io(
-    'https://eqmonitor-db.yumnumm.net?apikey=f0d57694c49bba70037a50b0956b857e861edfad8ff4e18b4c263ce99548184ad6aa8fe3511fb98ca55f897865caf4927f770b60ad2190cac7c60e4534e16aad',
-    //Env.eqmonitorWebSocketUrl,
+    Env.eqmonitorWebSocketUrl,
     socket_io.OptionBuilder()
         .enableForceNew()
         .disableAutoConnect()
-        .setPath('/dmdata/v1/socket.io')
+        .setPath(path)
         .setTransports(['websocket']).build(),
   )
     ..onConnecting((data) => talker.logTyped(SocketIOLog(data ?? '')))
@@ -31,8 +31,13 @@ final telegramSocketIoProvider = Provider((ref) {
       talker.logTyped(SocketIOLog(data ?? ''));
     })
     ..onAny(
-      (event, data) => talker
-          .logTyped(SocketIOLog('$event: $data'.replaceAll(key, '**KEY**'))),
+      (event, data) => talker.logTyped(
+        SocketIOLog(
+          '$event: $data'
+              .replaceAll(key, '**KEY**')
+              .replaceAll(path, '**PATH**'),
+        ),
+      ),
     )
     ..onConnect(
       (data) =>
