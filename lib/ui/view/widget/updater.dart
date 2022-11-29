@@ -29,7 +29,7 @@ class UpdaterButtonWidget extends HookConsumerWidget {
                 },
                 loading: () => const SizedBox.shrink(),
                 data: (packageInfo) {
-                  if ((int.parse(packageInfo.buildNumber) <
+                  if (((int.tryParse(packageInfo.buildNumber) ?? 0) <
                           changeLog.items.first.buildId) ||
                       kDebugMode) {
                     return TextButton.icon(

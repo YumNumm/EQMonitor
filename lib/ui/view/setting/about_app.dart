@@ -29,31 +29,41 @@ class AboutAppPage extends HookConsumerWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(8),
-              child: Card(
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: GestureDetector(
-                  onTap: () {
-                    logoTapCount.value++;
-                    if (logoTapCount.value == 10) {
-                      logoTapCount.value = 0;
-                      viewModel.startKmoniTest(context);
-                    }
-                  },
-                  onLongPressMoveUpdate: (_) => context.go('/full_screen'),
-                  onScaleStart: (_) =>
-                      viewModel.onDeveloperModeTilePressed(context),
-                  child: RepaintBoundary(
-                    child: Image.asset(
-                      isDarkMode
-                          ? 'assets/header-dark.png'
-                          : 'assets/header.png',
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return SizedBox(
+                    width: (constraints.maxWidth >
+                            MediaQuery.of(context).size.height)
+                        ? MediaQuery.of(context).size.height
+                        : constraints.maxWidth * 0.8,
+                    child: Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          logoTapCount.value++;
+                          if (logoTapCount.value == 10) {
+                            logoTapCount.value = 0;
+                            viewModel.startKmoniTest(context);
+                          }
+                        },
+                        onLongPressMoveUpdate: (_) =>
+                            context.go('/full_screen'),
+                        onScaleStart: (_) =>
+                            viewModel.onDeveloperModeTilePressed(context),
+                        child: RepaintBoundary(
+                          child: Image.asset(
+                            isDarkMode
+                                ? 'assets/header-dark.png'
+                                : 'assets/header.png',
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
             ),
             const LogViewButtonWidget(),

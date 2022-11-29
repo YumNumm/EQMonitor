@@ -57,20 +57,29 @@ Future<void> main() async {
     ),
   );
   talker = Talker();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  Intl.defaultLocale = 'ja_JP';
-  final crashlytics = FirebaseCrashlytics.instance;
   final prefs = await SharedPreferences.getInstance();
+  if (Platform.isAndroid || Platform.isIOS) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    final crashlytics = FirebaseCrashlytics.instance;
+
+    // クラッシュレポートの初期化
+    final isCrashLogShareAllowed =
+        await CrashLogShareProvider(prefs).loadSettingsFromSharedPrefrences();
+    await crashlytics.setCrashlyticsCollectionEnabled(
+      isCrashLogShareAllowed && kReleaseMode,
+    );
+    PlatformDispatcher.instance.onError = (error, stackTrace) {
+      talker.handle(error, stackTrace, 'Uncaught App Exception');
+      if (kReleaseMode) {
+        crashlytics.recordError(error, stackTrace);
+      }
+      return true;
+    };
+  }
+  Intl.defaultLocale = 'ja_JP';
   // final appInfo = await PackageInfo.fromPlatform();
-  // クラッシュレポートの初期化
-  final isCrashLogShareAllowed =
-      await CrashLogShareProvider(prefs).loadSettingsFromSharedPrefrences();
-  await crashlytics.setCrashlyticsCollectionEnabled(
-    isCrashLogShareAllowed && kReleaseMode,
-  );
 
   // ファイル等の読み込み
   late List<KyoshinKansokuten> kansokuten;
@@ -100,12 +109,13 @@ Future<void> main() async {
       anonKey: Env.supabaseS1AnonKey,
       debug: kDebugMode,
     ),
-    initFirebaseCloudMessaging(talker),
-    crashlytics.sendUnsentReports(),
-    if (Platform.isAndroid)
-      DeviceInfoPlugin().androidInfo.then((e) => androidDeviceInfo = e),
-    if (Platform.isIOS)
-      DeviceInfoPlugin().iosInfo.then((e) => iosDeviceInfo = e),
+    if (Platform.isAndroid || Platform.isIOS) ...[
+      initFirebaseCloudMessaging(talker),
+      if (Platform.isAndroid)
+        DeviceInfoPlugin().androidInfo.then((e) => androidDeviceInfo = e),
+      if (Platform.isIOS)
+        DeviceInfoPlugin().iosInfo.then((e) => iosDeviceInfo = e),
+    ],
   ];
   await Future.wait(futures);
 
@@ -127,13 +137,6 @@ Future<void> main() async {
   FlutterError.onError = onFlutterError;
   DartPluginRegistrant.ensureInitialized();
 
-  PlatformDispatcher.instance.onError = (error, stackTrace) {
-    talker.handle(error, stackTrace, 'Uncaught App Exception');
-    if (kReleaseMode) {
-      crashlytics.recordError(error, stackTrace);
-    }
-    return true;
-  };
   runApp(
     ProviderScope(
       overrides: [

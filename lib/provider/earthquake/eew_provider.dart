@@ -4,11 +4,11 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
-import 'package:eqmonitor/api/remote/supabase/eew.dart';
-import 'package:eqmonitor/provider/init/talker.dart';
-import 'package:eqmonitor/provider/telegram_service.dart';
-import 'package:eqmonitor/schema/remote/kmoni/EEW.dart';
-import 'package:eqmonitor/utils/talker_log/log_types.dart';
+import '../../api/remote/supabase/eew.dart';
+import '../init/talker.dart';
+import '../telegram_service.dart';
+import '../../schema/remote/kmoni/EEW.dart';
+import '../../utils/talker_log/log_types.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -73,7 +73,7 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
       _eews[eventId] = <EewTelegram>[eew];
       // 情報の発表時刻が新しい順に並び変える
       _eews[eventId]!.sort(
-        (a, b) => b.head.reportDateTime.compareTo(a.head.reportDateTime),
+        (a, b) => a.head.reportDateTime.compareTo(b.head.reportDateTime),
       );
     }
 
