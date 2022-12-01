@@ -114,8 +114,7 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
 
   /// DMDATAのEEWテスト電文を読み込む
   Future<void> loadDmdataEewTestPayload() async {
-    const url =
-        'https://sample.dmdata.jp/eew/tech566/vxse45_1105_2.json';
+    const url = 'https://sample.dmdata.jp/eew/tech566/vxse45_1105_2.json';
 
     final payload = await Dio().get<dynamic>(url);
     final data =
