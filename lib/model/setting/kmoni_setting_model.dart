@@ -17,8 +17,10 @@ class KmoniSettingModel with _$KmoniSettingModel {
         Set<KmoniLayer> layers,
 
     /// EEWUI
-    @Default(false) bool showHypocenterAccuracy,
-    @Default(false) bool showEventId,
+    @Default(false)
+        bool showHypocenterAccuracy,
+    @Default(false)
+        bool showEventId,
   }) = _KmoniSettingModel;
 
   factory KmoniSettingModel.fromJson(Map<String, dynamic> json) =>
