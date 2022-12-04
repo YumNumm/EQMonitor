@@ -3,13 +3,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
-import 'package:eqmonitor/env/env.dart';
-import 'package:eqmonitor/provider/init/talker.dart';
-import 'package:eqmonitor/utils/talker_log/log_types.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket_io;
 import 'package:talker_flutter/talker_flutter.dart';
+
+import '../env/env.dart';
+import '../utils/talker_log/log_types.dart';
+import 'init/talker.dart';
 
 final isSocketIoConnectedStateProvider = StateProvider<bool>((ref) => false);
 
@@ -120,4 +121,7 @@ class EewTelegram {
 
   final TelegramJsonMain head;
   final EewInformation eew;
+  /// 震度速報
+  
+
 }

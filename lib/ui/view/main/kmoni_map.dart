@@ -291,13 +291,16 @@ class OnEewWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final eews = ref.watch(eewProvider.select((value) => value.showEews));
-    return Column(
-      children: [
-        for (final eew in eews)
-          EewBodyWidget(
-            eew: eew,
-          ),
-      ],
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          for (final eew in eews)
+            EewBodyWidget(
+              eew: eew,
+            ),
+        ],
+      ),
     );
   }
 }
