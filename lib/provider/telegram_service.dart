@@ -121,7 +121,7 @@ class EewTelegram {
 
   final TelegramJsonMain head;
   final EewInformation eew;
+
   /// 震度速報
-  
 
 }
