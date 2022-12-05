@@ -14,14 +14,14 @@ class ExponentialBackoff {
   /// 指数バックオフの実装
   /// [maxRetries] は最大リトライ回数
   Future<T> retry<T>(
-    FutureOr<T> Function() callback,
-    {void Function(
+    FutureOr<T> Function() callback, {
+    void Function(
       Exception exception, [
       StackTrace stackTrace,
       int retryCount,
     ])?
-        onError,}
-  ) async {
+        onError,
+  }) async {
     try {
       return await callback();
     } on Exception catch (e, stackTrace) {

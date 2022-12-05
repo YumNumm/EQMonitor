@@ -70,9 +70,8 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
                       color: maxInt.fromUser(colors).withOpacity(0.3),
                     ),
                     child: ListTile(
-                      onTap: () =>
-                          EarthquakeHistoryItemRoute(eventId: item.id)
-                              .go(context),
+                      onTap: () => EarthquakeHistoryItemRoute(eventId: item.id)
+                          .go(context),
                       trailing: Text(
                         (item.component?.magnitude != null)
                             ? (item.component!.magnitude.condition != null)

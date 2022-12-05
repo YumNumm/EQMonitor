@@ -79,7 +79,9 @@ class KyoshinImageParser {
       name: obsPoint.name,
       lat: obsPoint.lat,
       lon: obsPoint.lon,
-      shindo: (type == RealtimeDataType.Shindo && position != null) ? (position * 10) - 3 : null,
+      shindo: (type == RealtimeDataType.Shindo && position != null)
+          ? (position * 10) - 3
+          : null,
       shindoColor: (type == RealtimeDataType.Shindo) ? rgb : null,
       pga: (type == RealtimeDataType.Pga && position != null)
           ? pow(10, (5 * position) - 2).toDouble()

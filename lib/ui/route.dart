@@ -29,7 +29,8 @@ part 'route.g.dart';
       path: '/settings/design/intensity',
     ),
     TypedGoRoute<AboutAppRoute>(path: '/settings/appinfo'),
-    TypedGoRoute<TermOfServiceRoute>(path: '/settings/appinfo/termOfService/:showAcceptButton'),
+    TypedGoRoute<TermOfServiceRoute>(
+        path: '/settings/appinfo/termOfService/:showAcceptButton'),
     TypedGoRoute<UpdateHistoryRoute>(path: '/settings/appinfo/updateHistory'),
     TypedGoRoute<DebugMenuRoute>(path: '/settings/debug'),
     TypedGoRoute<DeveloperDebugRoute>(path: '/settings/debug/info'),

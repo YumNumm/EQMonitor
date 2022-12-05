@@ -62,8 +62,7 @@ class _EarthquakeHistoryDetailPageState
       // 画面中央の座標
       final center = Offset(size.width / 2, size.height / 2);
       // 震央地の座標
-      if (itemTmp.component?.hypocenter.coordinate.latitude?.value ==
-          null) {
+      if (itemTmp.component?.hypocenter.coordinate.latitude?.value == null) {
         return;
       }
       // CustomPainter内で使うOffset
