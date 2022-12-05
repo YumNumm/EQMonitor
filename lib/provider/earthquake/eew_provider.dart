@@ -100,7 +100,6 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
         showEews.add(eew);
       }
     }
-    for (final e in showEews) {}
     if (!state.showEews.equals(showEews)) {
       state = state.copyWith(showEews: showEews);
       talker.logTyped(
@@ -114,18 +113,29 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
   }
 
   /// DMDATAのEEWテスト電文を読み込む
-  Future<void> loadDmdataEewTestPayload() async {
-    const url = 'https://sample.dmdata.jp/eew/tech566/vxse45_1105_2.json';
+  Future<void> loadDmdataEewTestPayload() async =>
+      loadFromUrl('https://sample.dmdata.jp/eew/tech566/vxse45_1105_2.json');
 
-    final payload = await Dio().get<dynamic>(url);
-    final data =
-        TelegramJsonMain.fromJson(payload.data as Map<String, dynamic>);
-    final tmp = EewTelegram(
-      data,
-      EewInformation.fromJson(data.body),
-    );
+  Future<void> loadFromUrl(String url) async {
+    try {
+      final payload = await Dio().get<dynamic>(url);
+      final data =
+          TelegramJsonMain.fromJson(payload.data as Map<String, dynamic>);
+      final tmp = EewTelegram(
+        data,
+        EewInformation.fromJson(data.body),
+      );
 
-    _addEewTelegram(tmp);
+      _addEewTelegram(tmp);
+    } on Exception catch (e, st) {
+      talker.logTyped(
+        EewProviderLog(
+          'EEWテスト電文の読み込みに失敗しました。'
+          '$e'
+          '$st',
+        ),
+      );
+    }
   }
 
   void startTestcase() {
