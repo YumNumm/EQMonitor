@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../provider/init/shared_preferences.dart';
 import '../provider/init/talker.dart';
 import '../utils/talker_log/go_router_talker_observer.dart';
 import 'view/setting/debug/log_view.dart';
@@ -16,25 +15,27 @@ part 'route.g.dart';
 @TypedGoRoute<MainRoute>(
   path: '/',
   routes: <TypedGoRoute<GoRouteData>>[
-    TypedGoRoute<IntroductionRoute>(path: '/introduction'),
+    TypedGoRoute<IntroductionRoute>(path: 'introduction'),
     TypedGoRoute<EarthquakeHistoryItemRoute>(
-      path: '/earthquakeHistoryItem/:eventId',
+      path: 'earthquakeHistoryItem/:eventId',
     ),
-    TypedGoRoute<FullScreenRoute>(path: '/fullScreen'),
-    TypedGoRoute<SettingRoute>(path: '/settings'),
-    TypedGoRoute<NotificationSettingRoute>(path: '/settings/notification'),
-    TypedGoRoute<DesignSettingRoute>(path: '/settings/design'),
-    TypedGoRoute<ThemeSettingRoute>(path: '/settings/design/theme'),
+    TypedGoRoute<FullScreenRoute>(path: 'fullScreen'),
+    TypedGoRoute<SettingRoute>(path: 'settings'),
+    TypedGoRoute<NotificationSettingRoute>(path: 'settings/notification'),
+    TypedGoRoute<DesignSettingRoute>(path: 'settings/design'),
+    TypedGoRoute<ThemeSettingRoute>(path: 'settings/design/theme'),
     TypedGoRoute<IntensityColorSettingRoute>(
-      path: '/settings/design/intensity',
+      path: 'settings/design/intensity',
     ),
-    TypedGoRoute<AboutAppRoute>(path: '/settings/appinfo'),
-    TypedGoRoute<TermOfServiceRoute>(path: '/settings/appinfo/termOfService/:showAcceptButton'),
-    TypedGoRoute<UpdateHistoryRoute>(path: '/settings/appinfo/updateHistory'),
-    TypedGoRoute<DebugMenuRoute>(path: '/settings/debug'),
-    TypedGoRoute<DeveloperDebugRoute>(path: '/settings/debug/info'),
-    TypedGoRoute<EewTestRoute>(path: '/settings/debug/eewTest'),
-    TypedGoRoute<LogRoute>(path: '/settings/debug/log'),
+    TypedGoRoute<AboutAppRoute>(path: 'settings/appinfo'),
+    TypedGoRoute<TermOfServiceRoute>(
+      path: 'settings/appinfo/termOfService/:showAcceptButton',
+    ),
+    TypedGoRoute<UpdateHistoryRoute>(path: 'settings/appinfo/updateHistory'),
+    TypedGoRoute<DebugMenuRoute>(path: 'settings/debug'),
+    TypedGoRoute<DeveloperDebugRoute>(path: 'settings/debug/info'),
+    TypedGoRoute<EewTestRoute>(path: 'settings/debug/eewTest'),
+    TypedGoRoute<LogRoute>(path: 'settings/debug/log'),
   ],
 )
 @immutable
@@ -42,7 +43,7 @@ class MainRoute extends GoRouteData {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-    return KmoniMap();
+    return const MainView();
   }
 }
 
@@ -143,10 +144,6 @@ class LogRoute extends GoRouteData {
 final routerProvider = Provider<GoRouter>(
   (ref) => GoRouter(
     routes: $appRoutes,
-    initialLocation:
-        (ref.read(sharedPreferencesProvder).getBool('isInitializated') ?? false)
-            ? '/'
-            : '/introduction',
     errorBuilder: (context, state) => ErrorScreen(state.error!),
     observers: [
       if (kDebugMode) GoRouterTalkerObserver(ref.watch(talkerProvider))
