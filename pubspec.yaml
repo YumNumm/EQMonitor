@@ -82,6 +82,7 @@ dev_dependencies:
   json_serializable: ^6.4.1
   pedantic_mono: ^1.19.2+1
 
+
 flutter:
   uses-material-design: true
   assets:

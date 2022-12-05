@@ -59,23 +59,32 @@ class KyoshinImageParser {
     required int pixel32,
   }) {
     final rgb = _parsePixel32(pixel32: pixel32);
-    final hsv = (rgb == null) ? null : HSVColor.fromColor(rgb);
-    final position = (hsv == null) ? null : _hsvToPosition(hsv);
+    // 色がない場合(対象の観測点が画像内にない場合)
+    if (rgb == null) {
+      return AnalyzedKoshinKansokuten(
+        code: obsPoint.code,
+        name: obsPoint.name,
+        lat: obsPoint.lat,
+        lon: obsPoint.lon,
+        arv: obsPoint.arv,
+        pref: obsPoint.pref,
+        y: obsPoint.y,
+        x: obsPoint.x,
+      );
+    }
+    final hsv = HSVColor.fromColor(rgb);
+    final position = _hsvToPosition(hsv);
     return AnalyzedKoshinKansokuten(
       code: obsPoint.code,
       name: obsPoint.name,
       lat: obsPoint.lat,
       lon: obsPoint.lon,
-      shindo: (type == RealtimeDataType.Shindo && position != null)
-          ? (position * 10) - 3
-          : null,
-      shindoColor:
-          (type == RealtimeDataType.Shindo && rgb != null) ? rgb : null,
+      shindo: (type == RealtimeDataType.Shindo && position != null) ? (position * 10) - 3 : null,
+      shindoColor: (type == RealtimeDataType.Shindo) ? rgb : null,
       pga: (type == RealtimeDataType.Pga && position != null)
           ? pow(10, (5 * position) - 2).toDouble()
           : null,
-      pgaColor: (type == RealtimeDataType.Pga && rgb != null) ? rgb : null,
-      hadValue: position != null,
+      pgaColor: (type == RealtimeDataType.Pga) ? rgb : null,
       intensity: (type == RealtimeDataType.Shindo && position != null)
           ? JmaIntensity.toJmaIntensity(
               intensity: (position * 10) - 3,
