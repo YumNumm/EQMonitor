@@ -2,11 +2,11 @@
 
 import 'package:eqmonitor/api/remote/supabase/telegram.dart';
 import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
+import 'package:eqmonitor/ui/route.dart';
 import 'package:eqmonitor/ui/theme/jma_intensity.dart';
 import 'package:eqmonitor/ui/view/main/earthquake_history.viewmodel.dart';
 import 'package:eqmonitor/ui/view/widget/intensity_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -71,7 +71,8 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
                     ),
                     child: ListTile(
                       onTap: () =>
-                          context.push('/earthquake_history_item/${item.id}'),
+                          EarthquakeHistoryItemRoute(eventId: item.id)
+                              .go(context),
                       trailing: Text(
                         (item.component?.magnitude != null)
                             ? (item.component!.magnitude.condition != null)

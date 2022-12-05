@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 
 import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
-import 'package:eqmonitor/provider/init/talker.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart' hide TextDirection;
@@ -12,6 +11,7 @@ import '../../../../model/setting/jma_intensity_color_model.dart';
 import '../../../../provider/init/map_area_forecast_local_e.dart';
 import '../../../../provider/init/map_area_information_city_quake.dart';
 import '../../../../provider/init/parameter_earthquake.dart';
+import '../../../../provider/init/talker.dart';
 import '../../../../provider/setting/intensity_color_provider.dart';
 import '../../../../provider/theme_providers.dart';
 import '../../../../schema/local/prefecture/map_polygon.dart';
@@ -23,11 +23,11 @@ import '../earthquake_history.viewmodel.dart';
 import '../kmoni_map/map/base_map.dart';
 
 class EarthquakeHistoryDetailPage extends ConsumerStatefulWidget {
-  const EarthquakeHistoryDetailPage({
+  const EarthquakeHistoryDetailPage(
+    this.eventId, {
     super.key,
-    required this.item,
   });
-  final EarthquakeHistoryItem item;
+  final int eventId;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -49,19 +49,28 @@ class _EarthquakeHistoryDetailPageState
     super.initState();
     // Widgetの表示領域を取得
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      final itemTmp = ref
+          .read(earthquakeHistoryViewModel)
+          .value
+          ?.firstWhere((e) => widget.eventId == e.id);
+      if (itemTmp == null) {
+        ref.read(earthquakeHistoryViewModel.notifier).refresh();
+        return;
+      }
+
       final size = mapKey.currentContext!.size!;
       // 画面中央の座標
       final center = Offset(size.width / 2, size.height / 2);
       // 震央地の座標
-      if (widget.item.component?.hypocenter.coordinate.latitude?.value ==
+      if (itemTmp.component?.hypocenter.coordinate.latitude?.value ==
           null) {
         return;
       }
       // CustomPainter内で使うOffset
       final hypoLocalOffset = MapGlobalOffset.latLonToGlobalPoint(
         LatLng(
-          widget.item.component!.hypocenter.coordinate.latitude!.value,
-          widget.item.component!.hypocenter.coordinate.longitude!.value,
+          itemTmp.component!.hypocenter.coordinate.latitude!.value,
+          itemTmp.component!.hypocenter.coordinate.longitude!.value,
         ),
       ).toLocalOffset(const Size(476, 927.4));
       // 実際のWidgetの座標から見たときの震央地の座標に変換
@@ -83,7 +92,20 @@ class _EarthquakeHistoryDetailPageState
 
   @override
   Widget build(BuildContext context) {
-    item = widget.item;
+    // EarthquakeHistoryItemを取得
+    final targetEventId = widget.eventId;
+    final itemTmp = ref
+        .read(earthquakeHistoryViewModel)
+        .value
+        ?.firstWhere((e) => targetEventId == e.id);
+
+    if (itemTmp == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
 
     final colors = ref.watch(jmaIntensityColorProvider);
     final maxInt = JmaIntensity.values.firstWhere(

@@ -8,6 +8,7 @@ import 'package:eqmonitor/provider/earthquake/kmoni_controller.dart';
 import 'package:eqmonitor/provider/package_info.dart';
 import 'package:eqmonitor/provider/setting/developer_mode.dart';
 import 'package:eqmonitor/provider/theme_providers.dart';
+import 'package:eqmonitor/ui/route.dart';
 import 'package:eqmonitor/ui/view/main/kmoni_map.viewmodel.dart';
 import 'package:eqmonitor/ui/view/main/kmoni_map/layer_selector.dart';
 import 'package:eqmonitor/ui/view/main/kmoni_map/map/eew_hypocenter.dart';
@@ -34,7 +35,6 @@ class KmoniMap extends HookConsumerWidget {
   KmoniMap({this.showAppBar = true, super.key});
 
   final bool showAppBar;
-
   final mapKey = GlobalKey();
 
   @override
@@ -68,7 +68,7 @@ class KmoniMap extends HookConsumerWidget {
                     ref.watch(developerModeProvider).isDeveloper == true)
                   IconButton(
                     icon: const Icon(Icons.settings_ethernet),
-                    onPressed: () => context.push('/settings/debug/eew_test'),
+                    onPressed: () => EewTestRoute().push(context),
                   ),
                 const UpdaterButtonWidget(),
               ],

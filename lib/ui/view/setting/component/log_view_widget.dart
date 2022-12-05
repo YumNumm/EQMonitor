@@ -1,3 +1,4 @@
+import '../../../route.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -23,7 +24,7 @@ class LogViewButtonWidget extends StatelessWidget {
       ),
       subtitle: const Text('ログを確認する', style: descriptionTextStyle),
       leading: const Icon(Icons.logo_dev),
-      onTap: () => context.push('/settings/debug/log'),
+      onTap: () => LogRoute().push(context),
     );
   }
 }
