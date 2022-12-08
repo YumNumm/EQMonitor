@@ -44,7 +44,7 @@ class IntensityWidget extends ConsumerWidget {
             style: TextStyle(
               fontSize: size * 0.8,
               color: textColor,
-              fontFamily: FontFamily.trnaNumbersFont,
+              fontFamily: FontFamily.caskaydiaCove,
               fontFamilyFallback: const [FontFamily.caskaydiaCove],
               fontWeight: FontWeight.bold,
             ),

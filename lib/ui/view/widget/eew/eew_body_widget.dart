@@ -1,7 +1,6 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
-import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:eqmonitor/provider/setting/developer_mode.dart';
 import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
 import 'package:eqmonitor/provider/telegram_service.dart';
@@ -200,8 +199,8 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 60,
-                          fontFamily: FontFamily.trnaNumbersFont,
-                          fontFamilyFallback: const [FontFamily.caskaydiaCove],
+                          //fontFamily: FontFamily.caskaydiaCove,
+                          //fontFamilyFallback: const [FontFamily.caskaydiaCove],
                           color: (eew.eew.intensity?.forecastMaxInt.from ??
                                   JmaIntensity.unknown)
                               .fromUser(colors)
@@ -217,8 +216,8 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 25,
-                          fontFamily: FontFamily.trnaNumbersFont,
-                          fontFamilyFallback: const [FontFamily.caskaydiaCove],
+                          // fontFamily: FontFamily.caskaydiaCove,
+                          // fontFamilyFallback: const [FontFamily.caskaydiaCove],
                           color: (eew.eew.intensity?.forecastMaxInt.from ??
                                   JmaIntensity.unknown)
                               .fromUser(colors)
@@ -467,8 +466,6 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
         child: InkWell(
           onTap: () {
             isExpanded.value = !isExpanded.value;
-            ref.read(eewExpandedProvider)[eew.head.eventId!] =
-                !ref.read(eewExpandedProvider)[eew.head.eventId!]!;
           },
           onDoubleTap: () => ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -503,7 +500,16 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
           //  expanded: expandedWidget,
           //),
           child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 500),
+            layoutBuilder: (currentChild, previousChildren) {
+              return Stack(
+                alignment: Alignment.topLeft,
+                children: <Widget>[
+                  ...previousChildren,
+                  if (currentChild != null) currentChild,
+                ],
+              );
+            },
+            duration: const Duration(milliseconds: 250),
             key: ValueKey(eew.head.eventId.toString()),
             transitionBuilder: (child, animation) => FadeTransition(
               opacity: animation,

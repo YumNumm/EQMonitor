@@ -25,6 +25,7 @@ import 'package:eqmonitor/schema/local/kyoshin_kansokuten.dart';
 import 'package:eqmonitor/schema/local/prefecture/map_polygon.dart';
 import 'package:eqmonitor/schema/remote/dmdata/parameter-earthquake/parameter-earthquake.dart';
 import 'package:eqmonitor/ui/app.dart';
+import 'package:eqmonitor/ui/route.dart';
 import 'package:eqmonitor/utils/fcm/firebase_notification_controller.dart';
 import 'package:eqmonitor/utils/talker_log/log_types.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -93,6 +94,7 @@ Future<void> main() async {
   late AndroidDeviceInfo androidDeviceInfo;
   late IosDeviceInfo iosDeviceInfo;
   ParameterEarthquake? parameterEarthquake;
+  var isNeedDownloadParam = true;
 
   final futures = <Future<dynamic>>[
     loadKyoshinKansokuten(talker).then((e) => kansokuten = e),
@@ -120,11 +122,11 @@ Future<void> main() async {
   await Future.wait(futures);
 
   if (File('${dir.path}/parameter-earthquake-with-arv.json').existsSync()) {
+    isNeedDownloadParam = false;
     final paramData = json.decode(
       await File('${dir.path}/parameter-earthquake-with-arv.json')
           .readAsString(),
-    );
-    // TODO(YumNumm): Parameter-Earthquakeの読み込み
+    ) as Map<String, dynamic>;
     parameterEarthquake = ParameterEarthquake.fromJson(paramData);
   }
 
@@ -169,6 +171,8 @@ Future<void> main() async {
         // if (kDebugMode)
         //   changeLogProvider.overrideWithProvider(changeLogMockProvider),
         talkerProvider.overrideWithValue(talker),
+        initialRouteProvider
+            .overrideWithValue(isNeedDownloadParam ? '/introduction' : '/'),
       ],
       observers: const [
         //if (kDebugMode) ProvidersLogger(),

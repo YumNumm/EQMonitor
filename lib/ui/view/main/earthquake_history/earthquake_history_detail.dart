@@ -47,6 +47,17 @@ class _EarthquakeHistoryDetailPageState
   @override
   void initState() {
     super.initState();
+
+    final itemTmp = ref
+        .read(earthquakeHistoryViewModel)
+        .value
+        ?.firstWhere((e) => widget.eventId == e.id);
+    if (itemTmp == null) {
+      ref.read(earthquakeHistoryViewModel.notifier).refresh();
+      return;
+    }
+    item = itemTmp;
+
     // Widgetの表示領域を取得
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final itemTmp = ref

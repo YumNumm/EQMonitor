@@ -158,9 +158,14 @@ class LogRoute extends GoRouteData {
 final routerProvider = Provider<GoRouter>(
   (ref) => GoRouter(
     routes: $appRoutes,
+    initialLocation: ref.watch(initialRouteProvider),
     errorBuilder: (context, state) => ErrorScreen(state.error!),
     observers: [
       if (kDebugMode) GoRouterTalkerObserver(ref.watch(talkerProvider))
     ],
   ),
 );
+
+final initialRouteProvider = Provider<String>((ref) {
+  return '/';
+});
