@@ -75,7 +75,8 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
                       trailing: Text(
                         (item.component?.magnitude != null)
                             ? (item.component!.magnitude.condition != null)
-                                ? item.component!.magnitude.condition!.name
+                                ? item
+                                    .component!.magnitude.condition!.description
                                 : (item.component!.magnitude.value != null)
                                     ? 'M${item.component!.magnitude.value!}'
                                     : 'M不明'
