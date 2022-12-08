@@ -16,10 +16,10 @@
 
 
 ## 支援のお願い
-本アプリケーションは、緊急地震速報などの地震情報を迅速に配信するために、外部サービス([Project DM-D.S.S](https://dmdata.jp/))やVPSを契約しています。  
-そのため、開発者([@YumNumm](https://github.com/YumNumm))は、月数千円負担する必要があります。  
-ご支援頂けると幸いです。  
-**(本アプリは無料でご利用いただけます。)**  
+本アプリケーションは、緊急地震速報などの地震情報を迅速に配信するために、外部サービス([Project DM-D.S.S](https://dmdata.jp/))やVPSを契約しています。
+そのため、開発者([@YumNumm](https://github.com/YumNumm))は、月数千円負担する必要があります。
+ご支援頂けると幸いです。
+**(本アプリは無料でご利用いただけます。)**
 
 [![](https://user-images.githubusercontent.com/73390859/201659680-63768eda-b774-4709-9c89-0e71771f6135.jpeg)](https://www.buymeacoffee.com/mgmg)
 
@@ -32,7 +32,7 @@
 `android/app/google-service.json`にFirebase証明書を配置してください。
 
 ```bash
-git clone https://github.com/EQMonitor/EQMonitor.git --depth 1 
+git clone https://github.com/EQMonitor/EQMonitor.git --depth 1 --recursive
 cd EQMonitor
 mv .env.example .env
 

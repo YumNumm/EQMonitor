@@ -18,10 +18,10 @@ import 'package:eqmonitor/ui/view/main/kmoni_map/map/kyoshin_kansokuten.dart';
 import 'package:eqmonitor/ui/view/widget/updater.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Theme;
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../gen/fonts.gen.dart';
 import '../../view/widget/eew/eew_body_widget.dart';
 import 'kmoni_map/map/base_map.dart';
 import 'kmoni_map/map/eew_estimated_intensity.dart';
@@ -228,7 +228,7 @@ class KmoniStatusWidget extends ConsumerWidget {
                                   3)
                               ? FontWeight.bold
                               : null,
-                          fontFamily: 'CaskaydiaCove',
+                          fontFamily: FontFamily.caskaydiaCove ,
                         ),
                       ),
                       const SizedBox(width: 8),

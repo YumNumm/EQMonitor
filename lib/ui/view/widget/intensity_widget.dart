@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../gen/fonts.gen.dart';
 import '../../../provider/setting/intensity_color_provider.dart';
 import '../../../utils/extension/relative_luminance.dart';
 import '../../theme/jma_intensity.dart';
@@ -43,7 +44,8 @@ class IntensityWidget extends ConsumerWidget {
             style: TextStyle(
               fontSize: size * 0.8,
               color: textColor,
-              fontFamily: 'CaskaydiaCove',
+              fontFamily: FontFamily.trnaNumbersFont,
+              fontFamilyFallback: const [FontFamily.caskaydiaCove],
               fontWeight: FontWeight.bold,
             ),
           ),

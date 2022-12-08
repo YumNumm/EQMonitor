@@ -3,7 +3,7 @@ description: An earthquake monitoring Application
 
 publish_to: "none"
 
-version: 0.7.2+410
+version: 0.7.2+412
 
 environment:
   sdk: ">=2.18.2 <3.0.0"
@@ -72,6 +72,7 @@ dependencies:
 dev_dependencies:
   build_runner: ^2.3.2
   envied_generator: ^0.2.3
+  flutter_gen_runner: ^5.1.0+1
   flutter_launcher_icons: ^0.11.0
   flutter_lints: ^2.0.1
   flutter_test:
@@ -81,7 +82,6 @@ dev_dependencies:
   isar_generator: ^3.0.2
   json_serializable: ^6.4.1
   pedantic_mono: ^1.19.2+1
-
 
 flutter:
   uses-material-design: true
@@ -100,6 +100,9 @@ flutter:
     - family: CaskaydiaCove
       fonts:
         - asset: fonts/Caskaydia_Cove_Nerd_Font_Mono.ttf
+    - family: TrnaNumbersFont
+      fonts:
+        - asset: fonts/TrtaNumbersRounded.ttf
 
 flutter_native_splash:
   #? flutter pub run flutter_native_splash:create
@@ -109,7 +112,7 @@ flutter_native_splash:
   # the leading # character.
   # The image parameter allows you to specify an image used in the splash screen.  It must be a
   # png file and should be sized for 4x pixel density.
-  image: assets/icon.png
+  image: assets/icon_foreground.png
 
   # This property allows you to specify an image used as branding in the splash screen. It must be
   # a png file. Currently, it is only supported for Android and iOS.
@@ -154,12 +157,6 @@ flutter_native_splash:
   #       WidgetsFlutterBinding.ensureInitialized();
   #       SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom, SystemUiOverlay.top]);
   fullscreen: true
-  # If you have changed the name(s) of your info.plist file(s), you can specify the filename(s)
-  # with the info_plist_files parameter.  Remove only the # characters in the three lines below,
-  # do not remove any spaces:
-  #info_plist_files:
-  #  - 'ios/Runner/Info-Debug.plist'
-  #  - 'ios/Runner/Info-Release.plist'
 
 flutter_icons:
   #? flutter pub run flutter_launcher_icons:main
@@ -169,3 +166,7 @@ flutter_icons:
   adaptive_icon_background: "#011C30"
   adaptive_icon_foreground: "assets/icon_foreground.png"
   remove_alpha_ios: true
+
+flutter_gen:
+  assets:
+    enabled: false
