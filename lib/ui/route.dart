@@ -20,22 +20,36 @@ part 'route.g.dart';
       path: 'earthquakeHistoryItem/:eventId',
     ),
     TypedGoRoute<FullScreenRoute>(path: 'fullScreen'),
-    TypedGoRoute<SettingRoute>(path: 'settings'),
-    TypedGoRoute<NotificationSettingRoute>(path: 'settings/notification'),
-    TypedGoRoute<DesignSettingRoute>(path: 'settings/design'),
-    TypedGoRoute<ThemeSettingRoute>(path: 'settings/design/theme'),
-    TypedGoRoute<IntensityColorSettingRoute>(
-      path: 'settings/design/intensity',
+    TypedGoRoute<SettingRoute>(
+      path: 'settings',
+      routes: [
+        TypedGoRoute<NotificationSettingRoute>(path: 'notification'),
+        TypedGoRoute<DesignSettingRoute>(
+          path: 'design',
+          routes: [
+            TypedGoRoute<ThemeSettingRoute>(path: 'theme'),
+            TypedGoRoute<IntensityColorSettingRoute>(path: 'intensity'),
+          ],
+        ),
+        TypedGoRoute<AboutAppRoute>(
+          path: 'appinfo',
+          routes: [
+            TypedGoRoute<TermOfServiceRoute>(
+              path: 'termOfService/:showAcceptButton',
+            ),
+            TypedGoRoute<UpdateHistoryRoute>(path: 'updateHistory'),
+          ],
+        ),
+        TypedGoRoute<DebugMenuRoute>(
+          path: 'debug',
+          routes: [
+            TypedGoRoute<DeveloperDebugRoute>(path: 'info'),
+            TypedGoRoute<EewTestRoute>(path: 'eewTest'),
+            TypedGoRoute<LogRoute>(path: 'log'),
+          ],
+        ),
+      ],
     ),
-    TypedGoRoute<AboutAppRoute>(path: 'settings/appinfo'),
-    TypedGoRoute<TermOfServiceRoute>(
-      path: 'settings/appinfo/termOfService/:showAcceptButton',
-    ),
-    TypedGoRoute<UpdateHistoryRoute>(path: 'settings/appinfo/updateHistory'),
-    TypedGoRoute<DebugMenuRoute>(path: 'settings/debug'),
-    TypedGoRoute<DeveloperDebugRoute>(path: 'settings/debug/info'),
-    TypedGoRoute<EewTestRoute>(path: 'settings/debug/eewTest'),
-    TypedGoRoute<LogRoute>(path: 'settings/debug/log'),
   ],
 )
 @immutable

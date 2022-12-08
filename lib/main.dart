@@ -124,6 +124,7 @@ Future<void> main() async {
       await File('${dir.path}/parameter-earthquake-with-arv.json')
           .readAsString(),
     );
+    // TODO(YumNumm): Parameter-Earthquakeの読み込み
     parameterEarthquake = ParameterEarthquake.fromJson(paramData);
   }
 
