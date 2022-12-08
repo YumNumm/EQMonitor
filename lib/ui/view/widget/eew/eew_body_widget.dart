@@ -28,11 +28,6 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => ref
-          .read(eewExpandedProvider)
-          .putIfAbsent(widget.eew.head.eventId!, () => true),
-    );
   }
 
   @override
@@ -40,7 +35,7 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
     final eew = widget.eew;
     final colors = ref.watch(jmaIntensityColorProvider);
     final isExpanded = useState<bool>(
-      ref.read(eewExpandedProvider)[eew.head.eventId.toString()] ?? false,
+      ref.read(eewExpandedProvider)[eew.head.eventId.toString()] ?? true,
     );
 
     /// 地震発生時刻があるかどうか
@@ -263,12 +258,21 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
                     Column(
                       children: [
                         FittedBox(
-                          child: Text(
-                            '${eew.eew.earthquake?.hypocenter.name} で地震${hasOriginTime ? '発生' : '検知'}',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 25,
-                            ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.baseline,
+                            textBaseline: TextBaseline.alphabetic,
+                            children: [
+                              Text(
+                                '${eew.eew.earthquake?.hypocenter.name}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 25,
+                                ),
+                              ),
+                              Text(
+                                'で地震${hasOriginTime ? '発生' : '検知'}',
+                              ),
+                            ],
                           ),
                         ),
                         // M と 深さ
@@ -375,17 +379,19 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
                           child: Row(
                             children: [
                               Text(
-                                DateFormat('yyyy/MM/dd HH:mm:ss頃').format(
-                                      (eew.eew.earthquake!.originTime ??
-                                              eew.eew.earthquake!.arrivalTime)
-                                          .toLocal(),
-                                    ) +
-                                    (hasOriginTime ? '発生' : '検知'),
+                                DateFormat('yyyy/MM/dd HH:mm:ss').format(
+                                  (eew.eew.earthquake!.originTime ??
+                                          eew.eew.earthquake!.arrivalTime)
+                                      .toLocal(),
+                                ),
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
-                              )
+                              ),
+                              Text(
+                                "頃${hasOriginTime ? '発生' : '検知'}",
+                              ),
                             ],
                           ),
                         ),
@@ -421,12 +427,8 @@ class _EewBodyWidgetState extends ConsumerState<EewBodyWidget> {
                                           '',
                                         )
                                         .replaceAll(
-                                          '(海域,観測網外)',
-                                          '(海域)',
-                                        )
-                                        .replaceAll(
-                                          '((内陸,観測網内)',
-                                          '(内陸)',
+                                          '震源とマグニチュードに基づく震度予測手法での精度が',
+                                          '',
                                         ),
                               ),
                             ],
