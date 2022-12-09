@@ -65,6 +65,30 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
                   );
                   final colors = ref.watch(jmaIntensityColorProvider);
 
+                  if (item.isVolcano) {
+                    return ListTile(
+                      onTap: () => EarthquakeHistoryItemRoute(eventId: item.id)
+                          .go(context),
+                      trailing: const Text(
+                        '大規模な噴火',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      title: Text(
+                        item.component?.hypocenter.name ?? '震源調査中',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        (item.component?.originTime != null)
+                            ? "${DateFormat('yyyy/MM/dd HH:mm').format(item.component!.originTime.toLocal())}頃"
+                            : '',
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    );
+                  }
+
                   return DecoratedBox(
                     decoration: BoxDecoration(
                       color: maxInt.fromUser(colors).withOpacity(0.3),
