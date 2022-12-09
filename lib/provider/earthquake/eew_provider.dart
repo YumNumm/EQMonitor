@@ -4,18 +4,18 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
-import 'package:eqmonitor/api/remote/supabase/eew.dart';
-import 'package:eqmonitor/provider/init/talker.dart';
-import 'package:eqmonitor/provider/telegram_service.dart';
-import 'package:eqmonitor/schema/remote/kmoni/EEW.dart';
-import 'package:eqmonitor/utils/talker_log/log_types.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
+import '../../api/remote/supabase/eew.dart';
 import '../../model/earthquake/eew_history_model.dart';
+import '../../schema/remote/kmoni/EEW.dart';
+import '../../utils/talker_log/log_types.dart';
+import '../init/talker.dart';
+import '../telegram_service.dart';
 
 final eewProvider =
     StateNotifierProvider<EewProvider, EewHistoryModel>(EewProvider.new);
@@ -73,7 +73,7 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
       _eews[eventId] = <EewTelegram>[eew];
       // 情報の発表時刻が新しい順に並び変える
       _eews[eventId]!.sort(
-        (a, b) => b.head.reportDateTime.compareTo(a.head.reportDateTime),
+        (a, b) => a.head.reportDateTime.compareTo(b.head.reportDateTime),
       );
     }
 
@@ -113,19 +113,29 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
   }
 
   /// DMDATAのEEWテスト電文を読み込む
-  Future<void> loadDmdataEewTestPayload() async {
-    const url =
-        'https://sample.dmdata.jp/conversion/json/schema/eew-information/vxse45_rjtd_20110311144810.json';
+  Future<void> loadDmdataEewTestPayload() async =>
+      loadFromUrl('https://sample.dmdata.jp/eew/tech566/vxse45_1105_2.json');
 
-    final payload = await Dio().get<dynamic>(url);
-    final data =
-        TelegramJsonMain.fromJson(payload.data as Map<String, dynamic>);
-    final tmp = EewTelegram(
-      data,
-      EewInformation.fromJson(data.body),
-    );
+  Future<void> loadFromUrl(String url) async {
+    try {
+      final payload = await Dio().get<dynamic>(url);
+      final data =
+          TelegramJsonMain.fromJson(payload.data as Map<String, dynamic>);
+      final tmp = EewTelegram(
+        data,
+        EewInformation.fromJson(data.body),
+      );
 
-    _addEewTelegram(tmp);
+      _addEewTelegram(tmp);
+    } on Exception catch (e, st) {
+      talker.logTyped(
+        EewProviderLog(
+          'EEWテスト電文の読み込みに失敗しました。'
+          '$e'
+          '$st',
+        ),
+      );
+    }
   }
 
   void startTestcase() {
@@ -183,93 +193,87 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
     int eventId = 0,
     int serialNo = 1,
   }) {
-    throw UnimplementedError();
-    //final eew = EEWInformation(
-    //  isLastInfo: isLastInfo,
-    //  isCanceled: isCanceled,
-    //  isWarning: isWarning,
-    //  zones: [],
-    //  prefectures: [],
-    //  regions: [],
-    //  earthQuake: EarthQuake(
-    //    originTime: originTime ?? DateTime.now(),
-    //    arrivalTime: arrivalTime ?? DateTime.now(),
-    //    isAssuming: isAssuming,
-    //    hypoCenter: HypoCenter(
-    //      name: hypoName,
-    //      code: 100,
-    //      coordinateComponent: CoordinateComponent(
-    //        latitude: Latitude(text: lat.toString(), value: lat),
-    //        longitude: Longitude(text: lon.toString(), value: lon),
-    //        height: Height(type: '高さ', unit: 'm', value: 0),
-    //        geodeticSystem: GeodeticSystem.japaneseGeodeticSystem,
-    //        condition: null,
-    //      ),
-    //      depth: Depth(
-    //        type: '深さ',
-    //        unit: 'km',
-    //        value: depth,
-    //        condition: depthCondition,
-    //      ),
-    //      reduce: Reduce(code: 0, name: ''),
-    //      landOrSea: '内陸',
-    //      accuracy: accuracy ??
-    //          Accuracy(
-    //            depthCalculation: DepthCalculation.f1,
-    //            epicCenterAccuracy: EpicCenters(
-    //              epicCenterAccuracy: EpicCenterAccuracy.f1,
-    //              hypoCenterAccuracy: HypoCenterAccuracy.f1,
-    //            ),
-    //            magnitudeCalculation: MagnitudeCalculation.f2,
-    //            numberOfMagnitudeCalculation: NumberOfMagnitudeCalculation.f1,
-    //          ),
-    //    ),
-    //    magnitude: Magnitude(
-    //      type: 'マグニチュード',
-    //      unit: 'M',
-    //      value: magnitude,
-    //      condition: magnitudeCondition,
-    //    ),
-    //  ),
-    //  intensity: Intensity(
-    //    maxint: maxint,
-    //    forecastMaxLpgmInt: null,
-    //    appendix: null,
-    //    region: [],
-    //  ),
-    //  text: null,
-    //  comments: Comments(
-    //    free: 'これはアプリ内で生成されたテスト電文です',
-    //    warning: Warning(
-    //      codes: [],
-    //      text: 'これはアプリ内で生成されたテスト電文です',
-    //    ),
-    //  ),
-    //);
-    //final commonHead = CommonHead(
-    //  body: eew.toJson(),
-    //  editoralOffice: 'テスト',
-    //  eventId: eventId.toString(),
-    //  headline: 'テスト電文',
-    //  infoKind: 'eew-test',
-    //  infoKindVersion: '1.0',
-    //  infoType: CommonHeadInfoType.announcement,
-    //  originalId: 'TELEGRAM_ID',
-    //  pressDateTime: DateTime.now(),
-    //  publishingOffice: ['テスト'],
-    //  reportDateTime: DateTime.now(),
-    //  schema: CommonHeadSchema(type: 'eew-test', version: '1.0'),
-    //  serialNo: serialNo.toString(),
-    //  status: CommonHeadStatus.training,
-    //  targetDateTime: DateTime.now(),
-    //  targetDateTimeDubious: '',
-    //  targetDuration: null,
-    //  title: '緊急地震速報テスト',
-    //  type: '',
-    //  validDateTime: null,
-    //);
-    //addTelegram(commonHead);
-    //return commonHead.hashCode;
+    final eew = EewInformation(
+      isLastInfo: isLastInfo,
+      isCanceled: isCanceled,
+      isWarning: isWarning,
+      zones: [],
+      prefectures: [],
+      regions: [],
+      earthquake: EewEarthquake(
+        originTime: originTime ?? DateTime.now(),
+        arrivalTime: arrivalTime ?? DateTime.now(),
+        condition: isAssuming ? '仮定震源要素' : null,
+        hypocenter: EewHypocenter(
+          name: hypoName,
+          code: 100,
+          coordinate: EarthquakeComponentCoordinate(
+            latitude: Latitude(text: lat.toString(), value: lat),
+            longitude: Longitude(text: lon.toString(), value: lon),
+            height: Height(type: '高さ', unit: 'm', value: 0),
+            geodeticSystem:
+                EarthquakeComponentGeodeticSystem.japanGeodeticSystem,
+          ),
+          depth: EewDepth(
+            type: '深さ',
+            unit: 'km',
+            value: depth,
+            condition: depthCondition,
+          ),
+          reduce: EewReduce(code: 0, name: ''),
+          landOrSea: '内陸',
+          accuracy: accuracy ??
+              EewAccuracy(
+                depth: 2,
+                epicenters: [2, 2],
+                magnitudeCalculation: 2,
+                numberOfMagnitudeCalculation: 2,
+              ),
+        ),
+        magnitude: EewMagnitude(
+          type: 'マグニチュード',
+          unit: 'M',
+          value: magnitude,
+        ),
+      ),
+      intensity: EewIntensity(
+        forecastMaxInt: maxint,
+        forecastMaxLgInt: null,
+        appendix: null,
+        regions: [],
+      ),
+      comments: EewComments(
+        free: 'これはアプリ内で生成されたテスト電文です',
+        warning: EewCommentsWarning(
+          codes: [],
+          text: 'これはアプリ内で生成されたテスト電文です',
+        ),
+      ),
+    );
+    final telegramJsonMain = TelegramJsonMain(
+      body: eew.toJson(),
+      editorialOffice: 'テスト',
+      eventId: eventId.toString(),
+      headline: 'テスト電文',
+      infoKind: 'eew-test',
+      infoKindVersion: '1.0',
+      infoType: TelegramInfoType.announcement,
+      originalId: 'TELEGRAM_ID',
+      pressDateTime: DateTime.now(),
+      publishingOffice: ['テスト'],
+      reportDateTime: DateTime.now(),
+      schema: TelegramJsonMainSchema(type: 'eew-test', version: '1.0'),
+      serialNo: serialNo.toString(),
+      status: TelegramStatus.training,
+      targetDateTime: DateTime.now(),
+      targetDateTimeDubious: '',
+      targetDuration: null,
+      title: '緊急地震速報テスト',
+      type: '',
+      validDateTime: null,
+    );
+    _addEewTelegram(EewTelegram(telegramJsonMain, eew));
+    return telegramJsonMain.hashCode;
   }
 
   void clearTelegrams() => _eews.clear();

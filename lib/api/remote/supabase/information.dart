@@ -1,5 +1,6 @@
-import 'package:eqmonitor/model/database/information/information.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../../model/database/information/information.dart';
 
 /// Information テーブルから情報を取得
 class SupabaseInformationApi {
@@ -9,7 +10,7 @@ class SupabaseInformationApi {
   /// [limit] 結果の最大数
   /// [offset] 結果のオフセット
   static Future<List<Information>> getInformation({
-    int limit = 20,
+    int limit = 10,
     int offset = 0,
   }) async {
     final res = await Supabase.instance.client
@@ -27,5 +28,21 @@ class SupabaseInformationApi {
     await Supabase.instance.client
         .from('information')
         .insert(information.toJson());
+  }
+
+  /// ## Informationの総数を取得
+  static Future<int> getAllInformationsCount() async {
+    final res = await Supabase.instance.client
+        .from('information')
+        .select<PostgrestListResponse>(
+          'id',
+          const FetchOptions(count: CountOption.exact),
+        )
+        .limit(0);
+    final count = res.count;
+    if (count == null) {
+      throw Exception('Informationの総数の取得に失敗しました');
+    }
+    return count;
   }
 }

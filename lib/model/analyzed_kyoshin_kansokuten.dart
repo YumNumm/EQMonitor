@@ -5,12 +5,11 @@ import '../ui/theme/jma_intensity.dart';
 
 class AnalyzedKoshinKansokuten extends KyoshinKansokuten {
   const AnalyzedKoshinKansokuten({
-    required this.shindo,
-    required this.shindoColor,
-    required this.pga,
-    required this.pgaColor,
-    required this.hadValue,
-    required this.intensity,
+    this.shindo,
+    this.shindoColor,
+    this.pga,
+    this.pgaColor,
+    this.intensity,
     required super.code,
     required super.name,
     required super.pref,
@@ -25,6 +24,7 @@ class AnalyzedKoshinKansokuten extends KyoshinKansokuten {
   final Color? shindoColor;
   final double? pga;
   final Color? pgaColor;
-  final bool hadValue;
   final JmaIntensity? intensity;
+
+  bool get hasValue => shindo != null || pga != null;
 }

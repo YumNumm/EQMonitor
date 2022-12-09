@@ -2,11 +2,11 @@
 
 import 'package:eqmonitor/api/remote/supabase/telegram.dart';
 import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
+import 'package:eqmonitor/ui/route.dart';
 import 'package:eqmonitor/ui/theme/jma_intensity.dart';
 import 'package:eqmonitor/ui/view/main/earthquake_history.viewmodel.dart';
 import 'package:eqmonitor/ui/view/widget/intensity_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -37,7 +37,6 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
             onNotification: (notification) {
               final scrollPosition = notification.metrics.pixels /
                   notification.metrics.maxScrollExtent;
-
               if (scrollPosition > 0.8 && (vm.value?.isNotEmpty ?? false)) {
                 ref.read(earthquakeHistoryViewModel.notifier).fetch();
                 return true;
@@ -45,6 +44,7 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
               return false;
             },
             child: Scrollbar(
+              interactive: true,
               child: ListView.builder(
                 itemCount: items.length + (vm.isLoading ? 1 : 0),
                 itemBuilder: (context, index) {
@@ -65,78 +65,84 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
                   );
                   final colors = ref.watch(jmaIntensityColorProvider);
 
+                  if (item.isVolcano) {
+                    return ListTile(
+                      onTap: () => EarthquakeHistoryItemRoute(eventId: item.id)
+                          .go(context),
+                      trailing: const Text(
+                        '大規模な噴火',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      title: Text(
+                        item.component?.hypocenter.name ?? '震源調査中',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        (item.component?.originTime != null)
+                            ? "${DateFormat('yyyy/MM/dd HH:mm').format(item.component!.originTime.toLocal())}頃"
+                            : '',
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    );
+                  }
+
                   return DecoratedBox(
                     decoration: BoxDecoration(
                       color: maxInt.fromUser(colors).withOpacity(0.3),
                     ),
-                    child: Stack(
-                      children: [
-                        /*DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.3),
-                          ),
-                          child: const Expanded(
-                            child: Text(
-                              'テスト',
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),*/
-                        ListTile(
-                          onTap: () => context
-                              .push('/earthquake_history_item/${item.id}'),
-                          trailing: Text(
-                            (item.component?.magnitude != null)
-                                ? (item.component!.magnitude.condition != null)
-                                    ? item.component!.magnitude.condition!.name
-                                    : (item.component!.magnitude.value != null)
-                                        ? 'M${item.component!.magnitude.value!}'
-                                        : 'M不明'
-                                : '',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          leading: IntensityWidget(
-                            intensity: maxInt,
-                            opacity: 1,
-                            size: 42,
-                          ),
-                          enableFeedback: true,
-                          title: Text(
-                            item.component?.hypocenter.name ?? '震源調査中',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          subtitle: Text(
-                            (StringBuffer()
-                                  ..writeAll(
-                                    <String>[
-                                      if (item.component?.originTime != null)
-                                        "${DateFormat('yyyy/MM/dd HH:mm').format(item.component!.originTime.toLocal())}頃 ",
-                                      ' ',
-                                      // 震源の深さ
-                                      if (item.component?.hypocenter.depth !=
-                                          null)
-                                        (item.component?.hypocenter.depth
-                                                    .condition !=
-                                                null)
-                                            ? '深さ${item.component!.hypocenter.depth.condition!.description} '
-                                            : (item.component!.hypocenter.depth
-                                                        .value !=
-                                                    null)
-                                                ? '深さ${item.component!.hypocenter.depth.value}km'
-                                                : '深さ不明',
-                                    ],
-                                  ))
-                                .toString(),
-                            style: const TextStyle(fontSize: 14),
-                          ),
+                    child: ListTile(
+                      onTap: () => EarthquakeHistoryItemRoute(eventId: item.id)
+                          .go(context),
+                      trailing: Text(
+                        (item.component?.magnitude != null)
+                            ? (item.component!.magnitude.condition != null)
+                                ? item
+                                    .component!.magnitude.condition!.description
+                                : (item.component!.magnitude.value != null)
+                                    ? 'M${item.component!.magnitude.value!}'
+                                    : 'M不明'
+                            : '',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      leading: IntensityWidget(
+                        intensity: maxInt,
+                        opacity: 1,
+                        size: 42,
+                      ),
+                      enableFeedback: true,
+                      title: Text(
+                        item.component?.hypocenter.name ?? '震源調査中',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
+                      ),
+                      subtitle: Text(
+                        (StringBuffer()
+                              ..writeAll(
+                                <String>[
+                                  if (item.component?.originTime != null)
+                                    "${DateFormat('yyyy/MM/dd HH:mm').format(item.component!.originTime.toLocal())}頃 ",
+                                  ' ',
+                                  // 震源の深さ
+                                  if (item.component?.hypocenter.depth != null)
+                                    (item.component?.hypocenter.depth
+                                                .condition !=
+                                            null)
+                                        ? '深さ${item.component!.hypocenter.depth.condition!.description} '
+                                        : (item.component!.hypocenter.depth
+                                                    .value !=
+                                                null)
+                                            ? '深さ${item.component!.hypocenter.depth.value}km'
+                                            : '深さ不明',
+                                ],
+                              ))
+                            .toString(),
+                        style: const TextStyle(fontSize: 14),
+                      ),
                     ),
                   );
                 },

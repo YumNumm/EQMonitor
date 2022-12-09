@@ -16,9 +16,11 @@ class KmoniSettingModel with _$KmoniSettingModel {
     })
         Set<KmoniLayer> layers,
 
-    /// EEW時 自動ズーム有効
+    /// EEWUI
     @Default(false)
-        bool useEewAutoZoom,
+        bool showHypocenterAccuracy,
+    @Default(false)
+        bool showEventId,
   }) = _KmoniSettingModel;
 
   factory KmoniSettingModel.fromJson(Map<String, dynamic> json) =>

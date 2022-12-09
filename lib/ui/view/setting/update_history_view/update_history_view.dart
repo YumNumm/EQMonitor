@@ -1,12 +1,13 @@
-import 'package:eqmonitor/provider/setting/change_log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class UpdateHistotyView extends HookConsumerWidget {
-  const UpdateHistotyView({super.key});
+import '../../../../provider/setting/change_log.dart';
+
+class UpdateHistoryView extends HookConsumerWidget {
+  const UpdateHistoryView({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(changeLogProvider);

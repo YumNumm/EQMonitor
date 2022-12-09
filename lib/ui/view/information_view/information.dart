@@ -1,6 +1,7 @@
-import 'package:eqmonitor/ui/view/information_view/information.viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import 'information.viewmodel.dart';
 
 class InformationView extends HookConsumerWidget {
   const InformationView({super.key});
@@ -16,7 +17,6 @@ class InformationView extends HookConsumerWidget {
       appBar: appBar,
       body: vm.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        // TODO(YumNumm): お知らせのエラーハンドリング
         error: (error, stack) => Center(child: Text(error.toString())),
         data: (items) {
           return NotificationListener<ScrollEndNotification>(

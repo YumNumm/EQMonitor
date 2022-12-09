@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../provider/theme_providers.dart';
 import '../../../utils/extension/theme_mode.dart';
+import '../../route.dart';
 import 'component/setting_section.dart';
 
 class DesignSettingsPage extends ConsumerWidget {
@@ -28,13 +28,13 @@ class DesignSettingsPage extends ConsumerWidget {
                   title: const Text('テーマ設定'),
                   leading: const Icon(Icons.design_services),
                   subtitle: Text(currentThemeMode.title),
-                  onTap: () => context.push('/settings/design/theme'),
+                  onTap: () => ThemeSettingRoute().push(context),
                 ),
                 ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                   title: const Text('震度配色'),
                   leading: const Icon(Icons.color_lens),
-                  onTap: () => context.push('/settings/design/intensity'),
+                  onTap: () => IntensityColorSettingRoute().push(context),
                 ),
               ],
             ),
