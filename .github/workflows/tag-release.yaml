@@ -97,6 +97,7 @@ jobs:
               --split-debug-info=obfuscate/android \
               --target-platform=${{ matrix.target }}
           fi
+          mv build/app/outputs/flutter-apk/app-release.apk EQMonitor-${{ matrix.target }}.apk
         env:
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
