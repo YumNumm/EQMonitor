@@ -1,12 +1,14 @@
-name: Flutter build Android(r)
+name: Release
 
 on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
+
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
@@ -101,7 +103,6 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           ALIAS: ${{ secrets.ALIAS }}
           KEY_PATH: key.jks
-        with:
           target-platform: ${{ matrix.target }}
 
       - name: Upload artifact
