@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:collection/collection.dart';
 import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -7,6 +8,7 @@ import 'package:intl/intl.dart' hide TextDirection;
 import 'package:latlong2/latlong.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
+import '../../../../gen/fonts.gen.dart';
 import '../../../../model/setting/jma_intensity_color_model.dart';
 import '../../../../provider/init/map_area_forecast_local_e.dart';
 import '../../../../provider/init/map_area_information_city_quake.dart';
@@ -16,6 +18,8 @@ import '../../../../provider/setting/intensity_color_provider.dart';
 import '../../../../provider/theme_providers.dart';
 import '../../../../schema/local/prefecture/map_polygon.dart';
 import '../../../../schema/remote/dmdata/parameter-earthquake/parameter-earthquake.dart';
+import '../../../../utils/extension/japanese_string.dart';
+import '../../../../utils/extension/relative_luminance.dart';
 import '../../../../utils/map/map_global_offset.dart';
 import '../../../theme/jma_intensity.dart';
 import '../../../view/widget/intensity_widget.dart';
@@ -122,6 +126,12 @@ class _EarthquakeHistoryDetailPageState
       (e) => e.name == (item.intensity?.maxInt.name),
       orElse: () => JmaIntensity.unknown,
     );
+
+    final stations =
+        (item.intensity?.stations ?? <EarthquakeInformationStation>[]).sorted(
+      (a, b) => (a.intensity?.index ?? 0) - (b.intensity?.index ?? 0),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('地震情報'),
@@ -197,17 +207,15 @@ class _EarthquakeHistoryDetailPageState
                             // 震央地
                             FittedBox(
                               child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   const Text(
-                                    '震央地',
+                                    '震央地 ',
                                     style: TextStyle(
                                       fontSize: 18,
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    width: 4,
                                   ),
                                   Text(
                                     item.component?.hypocenter.name ?? '調査中',
@@ -312,22 +320,6 @@ class _EarthquakeHistoryDetailPageState
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Text(
-                      (StringBuffer()
-                            ..writeAll(
-                              <String>[
-                                for (final comment in item.comments) ...[
-                                  if (comment.forecast?.text != null)
-                                    comment.forecast!.text,
-                                  if (comment.free != null) '\n${comment.free!}'
-                                ]
-                              ],
-                            ))
-                          .toString(),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -344,7 +336,7 @@ class _EarthquakeHistoryDetailPageState
                   InteractiveViewer(
                     key: mapKey,
                     transformationController: transformationController,
-                    maxScale: 20,
+                    maxScale: 15,
                     child: RepaintBoundary(
                       child: Stack(
                         children: [
@@ -353,8 +345,7 @@ class _EarthquakeHistoryDetailPageState
                           // Region毎の震度
                           MapRegionIntensityWidget(
                             regions: item.intensity?.regions ?? [],
-                            stations: item.intensity?.stations ??
-                                <EarthquakeInformationStation>[],
+                            stations: stations,
                             cities: item.intensity?.cities ??
                                 <EarthquakeInformationCity>[],
                           ),
@@ -368,34 +359,62 @@ class _EarthquakeHistoryDetailPageState
                       ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Row(
-                        children: [
-                          // int1 ~ maxInt
-                          for (final i in JmaIntensity.values)
-                            if ([
-                              JmaIntensity.int0,
-                              JmaIntensity.over,
-                              JmaIntensity.unknown,
-                            ].contains(i))
-                              const SizedBox.shrink()
-                            else if (i <= maxInt)
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IntensityWidget(
-                                    intensity: i,
-                                    size: 25,
-                                    opacity: 1,
+                  SafeArea(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Row(
+                            children: [
+                              // int1 ~ maxInt
+                              for (final i in JmaIntensity.values)
+                                if ([
+                                  JmaIntensity.int0,
+                                  JmaIntensity.over,
+                                  JmaIntensity.unknown,
+                                ].contains(i))
+                                  const SizedBox.shrink()
+                                else if (i <= maxInt)
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IntensityWidget(
+                                        intensity: i,
+                                        size: 25,
+                                        opacity: 1,
+                                      ),
+                                      const SizedBox(width: 5),
+                                    ],
                                   ),
-                                  const SizedBox(width: 5),
-                                ],
-                              ),
-                        ],
-                      ),
+                            ],
+                          ),
+                        ),
+                        Card(
+                          elevation: 0,
+                          color: Theme.of(context).cardColor.withOpacity(0.8),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: Text(
+                              (StringBuffer()
+                                    ..writeAll(
+                                      <String>[
+                                        for (final comment
+                                            in item.comments) ...[
+                                          if (comment.forecast?.text != null)
+                                            comment.forecast!.text,
+                                          if (comment.free != null)
+                                            comment.free!
+                                        ]
+                                      ],
+                                    ))
+                                  .toString()
+                                  .alphanumericToHalfLength(),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -455,11 +474,16 @@ class MapRegionIntensityV2Painter extends CustomPainter {
     required this.mapAreaInformationCityQuakePolygons,
     required this.isDarkMode,
     required this.talker,
+    this.showOnlyStations = false,
   });
   final List<MapPolygon> mapPolygons;
   final List<EarthquakeInformationRegion> regions;
-  final List<EarthquakeInformationStation> stations;
   final List<EarthquakeInformationCity> cities;
+  final List<EarthquakeInformationStation> stations;
+
+  /// 地域ではなく、観測点の震度を表示するか
+  final bool showOnlyStations;
+
   final JmaIntensityColorModel colors;
   final ParameterEarthquake parameterEarthquake;
   final List<MapAreaInformationCityQuakePolygon>
@@ -470,98 +494,155 @@ class MapRegionIntensityV2Painter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final stopWatch = Stopwatch()..start();
-
-    // Cityの描画
-    for (final city in cities) {
-      // city.codeが一致するMapPolygonを探す
-      try {
-        final mapCityPolygons = mapAreaInformationCityQuakePolygons.where(
-          (element) => element.code == city.code,
-        );
-        for (final mapPolygon in mapCityPolygons) {
+    if (showOnlyStations) {
+      for (final station in stations) {
+        try {
+          final param = parameterEarthquake.items
+              .firstWhere((e) => e.code == station.code);
+          final offset = MapGlobalOffset.latLonToGlobalPoint(
+            LatLng(param.latitude, param.longitude),
+          ).toLocalOffset(const Size(476, 927.4));
+          final intensity = JmaIntensity.values
+              .firstWhere((e) => e.name == station.intensity?.name);
           canvas
-            ..drawPath(
-              mapPolygon.path,
+            ..drawCircle(
+              offset,
+              1.5,
               Paint()
-                ..color = JmaIntensity.values
-                    .firstWhere(
-                      (e) => e.name == city.maxInt?.name,
-                      orElse: () => JmaIntensity.unknown,
-                    )
-                    .fromUser(colors)
+                ..color = intensity.color
                 ..isAntiAlias = true
-                ..strokeCap = StrokeCap.square,
+                ..style = PaintingStyle.fill,
             )
-            ..drawPath(
-              mapPolygon.path,
+            ..drawCircle(
+              offset,
+              1.5,
               Paint()
-                ..color = isDarkMode
-                    ? const Color.fromARGB(70, 50, 50, 50)
-                    : const Color.fromARGB(70, 150, 150, 150)
+                ..color = Colors.black
                 ..isAntiAlias = true
                 ..style = PaintingStyle.stroke,
             );
-        }
-      } on Exception catch (e, st) {
-        talker.error(
-          'MapRegionIntensityV2Painter ${city.code}',
-          e,
-          st,
-        );
-      }
-    }
-    // Regionの描画
-    for (final region in regions) {
-      // region.codeが一致するMapPolygonを探す
-      final mapRegionPolygons = mapPolygons.where(
-        (element) => element.code == region.code,
-      );
-      for (final mapPolygon in mapRegionPolygons) {
-        if (cities.isEmpty) {
-          canvas.drawPath(
-            mapPolygon.path,
+
+          final textPainter = TextPainter(
+            text: TextSpan(
+              text: intensity.name,
+              style: TextStyle(
+                color: intensity.color.onPrimary,
+                fontSize: 1.5,
+                fontWeight: FontWeight.bold,
+                fontFamily: FontFamily.caskaydiaCove,
+              ),
+            ),
+            textDirection: TextDirection.ltr,
+            textAlign: TextAlign.center,
+            textHeightBehavior: const TextHeightBehavior(
+              applyHeightToFirstAscent: false,
+              applyHeightToLastDescent: false,
+            ),
+          )..layout();
+          textPainter.paint(
+            canvas,
+            offset - Offset(textPainter.width / 2, textPainter.height / 2),
+          );
+
+          // TextPainerに枠をつける
+          canvas.drawRect(
+            Rect.fromLTWH(
+              offset.dx - textPainter.width / 2,
+              offset.dy - textPainter.height / 2,
+              textPainter.width,
+              textPainter.height,
+            ),
             Paint()
-              ..color = JmaIntensity.values
-                  .firstWhere(
-                    (e) => e.name == region.maxInt?.name,
-                    orElse: () => JmaIntensity.unknown,
-                  )
-                  .fromUser(colors)
+              ..color = Colors.black
               ..isAntiAlias = true
-              ..strokeCap = StrokeCap.square,
+              ..style = PaintingStyle.stroke,
+          );
+          // ignore: avoid_catches_without_on_clauses
+        } catch (e, st) {
+          talker.error(
+            'MapRegionIntensityV2Painter ${station.code}',
+            e,
+            st,
           );
         }
-        canvas.drawPath(
-          mapPolygon.path,
-          Paint()
-            ..color = isDarkMode
-                ? const Color.fromARGB(150, 50, 50, 50)
-                : const Color.fromARGB(150, 150, 150, 150)
-            ..isAntiAlias = true
-            ..style = PaintingStyle.stroke,
-        );
+      }
+    } else {
+      // Cityの描画
+      if (cities.isNotEmpty) {
+        for (final city in cities) {
+          // city.codeが一致するMapPolygonを探す
+          try {
+            final mapCityPolygons = mapAreaInformationCityQuakePolygons.where(
+              (element) => element.code == city.code,
+            );
+            for (final mapPolygon in mapCityPolygons) {
+              canvas
+                ..drawPath(
+                  mapPolygon.path,
+                  Paint()
+                    ..color = JmaIntensity.values
+                        .firstWhere(
+                          (e) => e.name == city.maxInt?.name,
+                          orElse: () => JmaIntensity.unknown,
+                        )
+                        .fromUser(colors)
+                    ..isAntiAlias = true
+                    ..strokeCap = StrokeCap.square,
+                )
+                ..drawPath(
+                  mapPolygon.path,
+                  Paint()
+                    ..color = isDarkMode
+                        ? const Color.fromARGB(70, 50, 50, 50)
+                        : const Color.fromARGB(70, 150, 150, 150)
+                    ..isAntiAlias = true
+                    ..style = PaintingStyle.stroke,
+                );
+            }
+          } on Exception catch (e, st) {
+            talker.error(
+              'MapRegionIntensityV2Painter ${city.code}',
+              e,
+              st,
+            );
+          }
+        }
+      } else {
+        if (regions.isNotEmpty) {
+          for (final region in regions) {
+            // region.codeが一致するMapPolygonを探す
+            final mapRegionPolygons = mapPolygons.where(
+              (element) => element.code == region.code,
+            );
+            for (final mapPolygon in mapRegionPolygons) {
+              if (cities.isEmpty) {
+                canvas.drawPath(
+                  mapPolygon.path,
+                  Paint()
+                    ..color = JmaIntensity.values
+                        .firstWhere(
+                          (e) => e.name == region.maxInt?.name,
+                          orElse: () => JmaIntensity.unknown,
+                        )
+                        .fromUser(colors)
+                    ..isAntiAlias = true
+                    ..strokeCap = StrokeCap.square,
+                );
+              }
+              canvas.drawPath(
+                mapPolygon.path,
+                Paint()
+                  ..color = isDarkMode
+                      ? const Color.fromARGB(150, 50, 50, 50)
+                      : const Color.fromARGB(150, 150, 150, 150)
+                  ..isAntiAlias = true
+                  ..style = PaintingStyle.stroke,
+              );
+            }
+          }
+        }
       }
     }
-    // TODO(YumNumm): 観測点の描画実装
-    /*for (final station in stations) {
-      final param =
-          parameterEarthquake.items.firstWhere((e) => e.code == station.code);
-      final offset = MapGlobalOffset.latLonToGlobalPoint(
-        LatLng(param.latitude, param.longitude),
-      ).toLocalOffset(const Size(476, 927.4));
-      canvas.drawCircle(
-        offset,
-        1,
-        Paint()
-          ..color = JmaIntensity.values
-              .firstWhere((e) => e.name == station.intensity)
-              .color
-              .withBlue(100)
-          ..isAntiAlias = true
-          ..style = PaintingStyle.fill,
-      );
-    }
-    */
 
     talker.debug(
       'MapRegionIntensityPainter took ${stopWatch.elapsed.inMicroseconds / 1000}ms',

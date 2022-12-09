@@ -63,7 +63,7 @@ final telegramStreamProvider = StreamProvider<WebSocketV2Data>((ref) async* {
     try {
       final wsData = WebSocketV2Data.fromJson(value as Map<String, dynamic>);
       yield wsData;
-    } catch (e, st) {
+    } on Exception catch (e, st) {
       talker.log(
         e,
         exception: e,
@@ -99,7 +99,7 @@ final eewTelegramStreamProvider = StreamProvider<EewTelegram>((ref) async* {
               EewTelegram(telegram, EewInformation.fromJson(telegram.body));
           stream.sink.add(telegrams);
         }
-      } catch (e, st) {
+      } on Exception catch (e, st) {
         talker.log(
           e,
           exception: e,
