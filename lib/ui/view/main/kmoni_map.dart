@@ -228,7 +228,7 @@ class KmoniStatusWidget extends ConsumerWidget {
                                   3)
                               ? FontWeight.bold
                               : null,
-                          fontFamily: FontFamily.caskaydiaCove ,
+                          fontFamily: FontFamily.caskaydiaCove,
                         ),
                       ),
                       const SizedBox(width: 8),
