@@ -330,13 +330,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.15"
-  dotenv:
-    dependency: transitive
-    description:
-      name: dotenv
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.0.1"
   dynamic_color:
     dependency: "direct main"
     description:
@@ -350,14 +343,14 @@ packages:
       name: envied
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.4"
+    version: "0.3.0"
   envied_generator:
     dependency: "direct dev"
     description:
       name: envied_generator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.3+1"
+    version: "0.3.0"
   expandable:
     dependency: "direct main"
     description:
