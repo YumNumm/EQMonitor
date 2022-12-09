@@ -8,6 +8,7 @@ import 'package:eqmonitor/provider/earthquake/kmoni_controller.dart';
 import 'package:eqmonitor/provider/package_info.dart';
 import 'package:eqmonitor/provider/setting/developer_mode.dart';
 import 'package:eqmonitor/provider/theme_providers.dart';
+import 'package:eqmonitor/ui/route.dart';
 import 'package:eqmonitor/ui/view/main/kmoni_map.viewmodel.dart';
 import 'package:eqmonitor/ui/view/main/kmoni_map/layer_selector.dart';
 import 'package:eqmonitor/ui/view/main/kmoni_map/map/eew_hypocenter.dart';
@@ -17,10 +18,10 @@ import 'package:eqmonitor/ui/view/main/kmoni_map/map/kyoshin_kansokuten.dart';
 import 'package:eqmonitor/ui/view/widget/updater.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Theme;
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../gen/fonts.gen.dart';
 import '../../view/widget/eew/eew_body_widget.dart';
 import 'kmoni_map/map/base_map.dart';
 import 'kmoni_map/map/eew_estimated_intensity.dart';
@@ -34,7 +35,6 @@ class KmoniMap extends HookConsumerWidget {
   KmoniMap({this.showAppBar = true, super.key});
 
   final bool showAppBar;
-
   final mapKey = GlobalKey();
 
   @override
@@ -68,7 +68,7 @@ class KmoniMap extends HookConsumerWidget {
                     ref.watch(developerModeProvider).isDeveloper == true)
                   IconButton(
                     icon: const Icon(Icons.settings_ethernet),
-                    onPressed: () => context.push('/settings/debug/eew_test'),
+                    onPressed: () => EewTestRoute().push(context),
                   ),
                 const UpdaterButtonWidget(),
               ],
@@ -228,7 +228,7 @@ class KmoniStatusWidget extends ConsumerWidget {
                                   3)
                               ? FontWeight.bold
                               : null,
-                          fontFamily: 'CaskaydiaCove',
+                          fontFamily: FontFamily.caskaydiaCove,
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -291,13 +291,16 @@ class OnEewWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final eews = ref.watch(eewProvider.select((value) => value.showEews));
-    return Column(
-      children: [
-        for (final eew in eews)
-          EewBodyWidget(
-            eew: eew,
-          ),
-      ],
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          for (final eew in eews)
+            EewBodyWidget(
+              eew: eew,
+            ),
+        ],
+      ),
     );
   }
 }

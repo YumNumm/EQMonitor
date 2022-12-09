@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+
+import '../../../route.dart';
 
 class UpdateHistoryButtonWidget extends StatelessWidget {
   const UpdateHistoryButtonWidget({super.key});
@@ -23,7 +24,7 @@ class UpdateHistoryButtonWidget extends StatelessWidget {
       ),
       subtitle: const Text('更新履歴を確認する', style: descriptionTextStyle),
       leading: const Icon(Icons.history),
-      onTap: () => context.push('/settings/appinfo/updateHistory'),
+      onTap: () => UpdateHistoryRoute().push(context),
     );
   }
 }

@@ -1,15 +1,16 @@
 import 'dart:math';
 
 import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
-import 'package:eqmonitor/ui/view/setting/component/custom_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../../provider/earthquake/eew_provider.dart';
+import '../component/custom_switch.dart';
 
 class EewTestPage extends HookConsumerWidget {
   const EewTestPage({super.key});
@@ -322,7 +323,35 @@ class EewTestPage extends HookConsumerWidget {
                 onPressed: () =>
                     ref.read(eewProvider.notifier).loadDmdataEewTestPayload(),
                 label: const Text('LOAD_TEST_EEW'),
-              )
+              ),
+              FloatingActionButton.extended(
+                onPressed: () async {
+                  final controller = TextEditingController();
+                  // URLを入力するダイアログを表示
+                  await showDialog<void>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('URLを入力してください'),
+                      content: TextField(
+                        controller: controller,
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                  final url = controller.text;
+                  if (await canLaunchUrlString(url)) {
+                    await ref.read(eewProvider.notifier).loadFromUrl(url);
+                  } else {
+                    throw Exception('URLが不正です');
+                  }
+                },
+                label: const Text('LOAD_EEW_FROM_URL'),
+              ),
             ],
           ),
         ),

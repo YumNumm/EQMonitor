@@ -20,6 +20,17 @@ extension JapaneseString on String {
           ? String.fromCharCode(rune - _fullLengthCode)
           : char;
     });
-    return string.join();
+    return string
+        .join()
+        .replaceAll('（', '(')
+        .replaceAll('）', ')')
+        .replaceAll('＋', '+')
+        .replaceAll('－', '-')
+        .replaceAll('＝', '=')
+        .replaceAll('～', '~')
+        .replaceAll('｜', '|')
+        .replaceAll('［', '[')
+        .replaceAll('］', ']')
+        .replaceAll('／', '/');
   }
 }

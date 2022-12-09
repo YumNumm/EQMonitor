@@ -1,10 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
-import 'package:eqmonitor/api/remote/supabase/telegram.dart';
-import 'package:eqmonitor/provider/init/talker.dart';
-import 'package:eqmonitor/utils/talker_log/log_types.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+
+import '../../../api/remote/supabase/telegram.dart';
+import '../../../provider/init/talker.dart';
+import '../../../utils/talker_log/log_types.dart';
 
 /// EventIDごとにまとめた地震情報
 class EarthquakeHistoryItem {
@@ -31,6 +32,13 @@ class EarthquakeHistoryItem {
 
   /// コメント
   final List<EarthquakeInformationComments> comments;
+
+  /// 大規模噴火かどうか
+  bool get isVolcano => comments.any(
+        (e) =>
+            (e.free?.contains('大規模な噴火が発生しました') ?? false) &&
+            (e.free?.contains('実際には、規模の大きな地震は発生していない点に留意') ?? false),
+      );
 }
 
 final earthquakeHistoryViewModel = StateNotifierProvider<
@@ -81,7 +89,10 @@ class EarthquakeHistoryViewModel
           final vxse53Telegrams = <TelegramJsonMain>[];
           final vxse61Telegrams = <TelegramJsonMain>[];
 
-          for (final e in items) {
+          for (final e in items.sorted(
+            (a, b) =>
+                a.telegram.reportDateTime.compareTo(b.telegram.reportDateTime),
+          )) {
             switch (e.type) {
               case 'VXSE51':
                 vxse51Telegrams.add(e.telegram);

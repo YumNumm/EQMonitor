@@ -25,6 +25,7 @@ import 'package:eqmonitor/schema/local/kyoshin_kansokuten.dart';
 import 'package:eqmonitor/schema/local/prefecture/map_polygon.dart';
 import 'package:eqmonitor/schema/remote/dmdata/parameter-earthquake/parameter-earthquake.dart';
 import 'package:eqmonitor/ui/app.dart';
+import 'package:eqmonitor/ui/route.dart';
 import 'package:eqmonitor/utils/fcm/firebase_notification_controller.dart';
 import 'package:eqmonitor/utils/talker_log/log_types.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -57,20 +58,29 @@ Future<void> main() async {
     ),
   );
   talker = Talker();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  Intl.defaultLocale = 'ja_JP';
-  final crashlytics = FirebaseCrashlytics.instance;
   final prefs = await SharedPreferences.getInstance();
+  if (Platform.isAndroid || Platform.isIOS) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    final crashlytics = FirebaseCrashlytics.instance;
+
+    // クラッシュレポートの初期化
+    final isCrashLogShareAllowed =
+        await CrashLogShareProvider(prefs).loadSettingsFromSharedPrefrences();
+    await crashlytics.setCrashlyticsCollectionEnabled(
+      isCrashLogShareAllowed && kReleaseMode,
+    );
+    PlatformDispatcher.instance.onError = (error, stackTrace) {
+      talker.handle(error, stackTrace, 'Uncaught App Exception');
+      if (kReleaseMode) {
+        crashlytics.recordError(error, stackTrace);
+      }
+      return true;
+    };
+  }
+  Intl.defaultLocale = 'ja_JP';
   // final appInfo = await PackageInfo.fromPlatform();
-  // クラッシュレポートの初期化
-  final isCrashLogShareAllowed =
-      await CrashLogShareProvider(prefs).loadSettingsFromSharedPrefrences();
-  await crashlytics.setCrashlyticsCollectionEnabled(
-    isCrashLogShareAllowed && kReleaseMode,
-  );
 
   // ファイル等の読み込み
   late List<KyoshinKansokuten> kansokuten;
@@ -84,6 +94,7 @@ Future<void> main() async {
   late AndroidDeviceInfo androidDeviceInfo;
   late IosDeviceInfo iosDeviceInfo;
   ParameterEarthquake? parameterEarthquake;
+  var isNeedDownloadParam = true;
 
   final futures = <Future<dynamic>>[
     loadKyoshinKansokuten(talker).then((e) => kansokuten = e),
@@ -100,20 +111,22 @@ Future<void> main() async {
       anonKey: Env.supabaseS1AnonKey,
       debug: kDebugMode,
     ),
-    initFirebaseCloudMessaging(talker),
-    crashlytics.sendUnsentReports(),
-    if (Platform.isAndroid)
-      DeviceInfoPlugin().androidInfo.then((e) => androidDeviceInfo = e),
-    if (Platform.isIOS)
-      DeviceInfoPlugin().iosInfo.then((e) => iosDeviceInfo = e),
+    if (Platform.isAndroid || Platform.isIOS) ...[
+      initFirebaseCloudMessaging(talker),
+      if (Platform.isAndroid)
+        DeviceInfoPlugin().androidInfo.then((e) => androidDeviceInfo = e),
+      if (Platform.isIOS)
+        DeviceInfoPlugin().iosInfo.then((e) => iosDeviceInfo = e),
+    ],
   ];
   await Future.wait(futures);
 
   if (File('${dir.path}/parameter-earthquake-with-arv.json').existsSync()) {
+    isNeedDownloadParam = false;
     final paramData = json.decode(
       await File('${dir.path}/parameter-earthquake-with-arv.json')
           .readAsString(),
-    );
+    ) as Map<String, dynamic>;
     parameterEarthquake = ParameterEarthquake.fromJson(paramData);
   }
 
@@ -127,13 +140,6 @@ Future<void> main() async {
   FlutterError.onError = onFlutterError;
   DartPluginRegistrant.ensureInitialized();
 
-  PlatformDispatcher.instance.onError = (error, stackTrace) {
-    talker.handle(error, stackTrace, 'Uncaught App Exception');
-    if (kReleaseMode) {
-      crashlytics.recordError(error, stackTrace);
-    }
-    return true;
-  };
   runApp(
     ProviderScope(
       overrides: [
@@ -165,6 +171,8 @@ Future<void> main() async {
         // if (kDebugMode)
         //   changeLogProvider.overrideWithProvider(changeLogMockProvider),
         talkerProvider.overrideWithValue(talker),
+        initialRouteProvider
+            .overrideWithValue(isNeedDownloadParam ? '/introduction' : '/'),
       ],
       observers: const [
         //if (kDebugMode) ProvidersLogger(),

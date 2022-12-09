@@ -1,6 +1,14 @@
 {
   "items": [
     {
+      "isBreakingChange": true,
+      "buildId": 415,
+      "version": "V0.7.2",
+      "date": "2022-12-09T21:30:00+09:00",
+      "comment": "## 変更点\n- 大規模な噴火へ対応\n- 地震履歴詳細画面のコメント表示改善\n- 地震履歴詳細画面で震源地名がオーバーフローする問題を解消\n- [BREAK] `applicationId`の変更\n- 電文解析に`dmdata-telegram-parser`を利用するように\n- 地震履歴で一部マグニチュードがunknownになっていた問題を解消\n- Flutter 3.3.9へアップデート\n- 各種ライブラリのアップデート\n- ページ生成に`GoRouterBuilder`を利用するように\n",
+      "url": "https://github.com/EQMonitor/EQMonitor/releases/tag/v0.7.2"
+    },
+    {
       "isBreakingChange": false,
       "buildId": 400,
       "version": "V0.7.1",

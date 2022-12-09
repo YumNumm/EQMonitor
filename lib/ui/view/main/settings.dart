@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../provider/setting/developer_mode.dart';
+import '../../route.dart';
 import '../setting/component/setting_section.dart';
 
 class SettingsPage extends ConsumerWidget {
@@ -40,7 +40,7 @@ class SettingsPage extends ConsumerWidget {
                     '通知の条件設定などを行うことができます',
                     style: descriptionTextStyle,
                   ),
-                  onTap: () => context.push('/settings/notification'),
+                  onTap: () => NotificationSettingRoute().push(context),
                 ),
                 ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 20),
@@ -53,7 +53,7 @@ class SettingsPage extends ConsumerWidget {
                     'テーマや配色を選択できます',
                     style: descriptionTextStyle,
                   ),
-                  onTap: () => context.push('/settings/design'),
+                  onTap: () => DesignSettingRoute().push(context),
                 ),
                 ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 20),
@@ -66,7 +66,7 @@ class SettingsPage extends ConsumerWidget {
                     'ライセンスやアプリの情報を確認できます',
                     style: descriptionTextStyle,
                   ),
-                  onTap: () => context.push('/settings/appinfo'),
+                  onTap: () => AboutAppRoute().push(context),
                 ),
                 if (kDebugMode ||
                     ref.watch(developerModeProvider).isDeveloper) ...[
@@ -82,7 +82,7 @@ class SettingsPage extends ConsumerWidget {
                       'WebSocketのステータスやEEWのテストを行えます',
                       style: descriptionTextStyle,
                     ),
-                    onTap: () => context.push('/settings/debug'),
+                    onTap: () => DebugMenuRoute().push(context),
                   )
                 ],
               ]

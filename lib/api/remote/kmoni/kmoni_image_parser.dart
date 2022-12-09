@@ -50,14 +50,30 @@ class KyoshinImageParser {
   }
 
   /// 任意のPixelからAnalyzedPointを生成する
+  /// [obsPoint] 観測点の位置データ
+  /// [type] リアルタイム画像の種別(RealtimeDataType)
+  /// [pixel32] 観測点のピクセル
   AnalyzedKoshinKansokuten _parsePixelToAnalyzedPoint({
     required KyoshinKansokuten obsPoint,
     required RealtimeDataType type,
     required int pixel32,
   }) {
     final rgb = _parsePixel32(pixel32: pixel32);
-    final hsv = (rgb == null) ? null : _rgbToHsv(rgb);
-    final position = (hsv == null) ? null : _hsvToPosition(hsv);
+    // 色がない場合(対象の観測点が画像内にない場合)
+    if (rgb == null) {
+      return AnalyzedKoshinKansokuten(
+        code: obsPoint.code,
+        name: obsPoint.name,
+        lat: obsPoint.lat,
+        lon: obsPoint.lon,
+        arv: obsPoint.arv,
+        pref: obsPoint.pref,
+        y: obsPoint.y,
+        x: obsPoint.x,
+      );
+    }
+    final hsv = HSVColor.fromColor(rgb);
+    final position = _hsvToPosition(hsv);
     return AnalyzedKoshinKansokuten(
       code: obsPoint.code,
       name: obsPoint.name,
@@ -66,16 +82,11 @@ class KyoshinImageParser {
       shindo: (type == RealtimeDataType.Shindo && position != null)
           ? (position * 10) - 3
           : null,
-      shindoColor: (type == RealtimeDataType.Shindo && rgb != null)
-          ? Color.fromRGBO(rgb[0], rgb[1], rgb[2], 1)
-          : null,
+      shindoColor: (type == RealtimeDataType.Shindo) ? rgb : null,
       pga: (type == RealtimeDataType.Pga && position != null)
           ? pow(10, (5 * position) - 2).toDouble()
           : null,
-      pgaColor: (type == RealtimeDataType.Pga && rgb != null)
-          ? Color.fromRGBO(rgb[0], rgb[1], rgb[2], 1)
-          : null,
-      hadValue: position != null,
+      pgaColor: (type == RealtimeDataType.Pga) ? rgb : null,
       intensity: (type == RealtimeDataType.Shindo && position != null)
           ? JmaIntensity.toJmaIntensity(
               intensity: (position * 10) - 3,
@@ -95,15 +106,15 @@ class KyoshinImageParser {
   /// h | 360
   /// s | 100
   /// v | 100
-
-  double? _hsvToPosition(List<double> hsv) {
-    final h = hsv[0] / 360;
-    final s = hsv[1] / 100;
-    final v = hsv[2] / 100;
+  /// ref: https://qiita.com/NoneType1/items/a4d2cf932e20b56ca444
+  double? _hsvToPosition(HSVColor hsv) {
+    final h = hsv.hue / 360;
+    final s = hsv.saturation;
+    final v = hsv.value;
     if (s <= 0.5) {
       return null;
     }
-    var p = 0.toDouble();
+    var p = 0.0;
     if (v > 0.1 && s > 0.75) {
       if (h > 0.1476) {
         p = 280.31 * pow(h, 6) -
@@ -132,7 +143,7 @@ class KyoshinImageParser {
   }
 
   /// pixel32の値からARGBを算出する データがない場合は`null`
-  List<int>? _parsePixel32({required int pixel32}) {
+  Color? _parsePixel32({required int pixel32}) {
     // 16進数のカラーコード
     final hex = _abgrToArgb(pixel32).toRadixString(16);
     // hex[0,1] = a, [2,3] = r, [4,5] = g, [6.7] =b
@@ -142,48 +153,8 @@ class KyoshinImageParser {
       final r = int.parse(hex[2] + hex[3], radix: 16);
       final g = int.parse(hex[4] + hex[5], radix: 16);
       final b = int.parse(hex[6] + hex[7], radix: 16);
-      return [r, g, b];
+      return Color.fromARGB(255, r, g, b);
     }
-  }
-
-  /// RGB値からHSV値に変換する
-  List<double> _rgbToHsv(List<num> rgb) {
-    final r = rgb[0] / 255;
-    final g = rgb[1] / 255;
-    final b = rgb[2] / 255;
-
-    final min_ = min(min(r, g), b);
-    final max_ = max(max(r, g), b);
-    final delta = max_ - min_;
-    double? h;
-
-    if (max_ == min_) {
-      h = 0;
-    } else if (r == max_) {
-      h = (g - b) / delta;
-    } else if (g == max_) {
-      h = 2 + (b - r) / delta;
-    } else if (b == max_) {
-      h = 4 + (r - g) / delta;
-    }
-
-    h = min(h! * 60, 360);
-
-    if (h < 0) {
-      h += 360;
-    }
-
-    final l = (min_ + max_) / 2;
-    double s;
-    if (max_ == min_) {
-      s = 0;
-    } else if (l <= 0.5) {
-      s = delta / (max_ + min_);
-    } else {
-      s = delta / (2 - max_ - min_);
-    }
-
-    return [h, s * 100, l * 100];
   }
 
   /// ## abgrColor -> argbColorにする
