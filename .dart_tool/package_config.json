@@ -782,6 +782,12 @@
       "languageVersion": "2.13"
     },
     {
+      "name": "messagepack",
+      "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/messagepack-0.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "meta",
       "rootUri": "file:///C:/Users/onory/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/meta-1.8.0",
       "packageUri": "lib/",
@@ -1316,7 +1322,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2022-12-09T12:49:49.613667Z",
+  "generated": "2022-12-10T12:34:08.741035Z",
   "generator": "pub",
   "generatorVersion": "2.18.5"
 }

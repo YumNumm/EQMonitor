@@ -51,6 +51,7 @@ dependencies:
   intl: ^0.17.0
   json_annotation: ^4.7.0
   latlong2: ^0.8.1
+  messagepack: ^0.2.1
   oauth1: ^2.0.0
   package_info_plus: ^3.0.1
   path_provider: ^2.0.11

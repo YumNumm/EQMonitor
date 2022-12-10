@@ -903,6 +903,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.5"
+  messagepack:
+    dependency: "direct main"
+    description:
+      name: messagepack
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.1"
   meta:
     dependency: transitive
     description:
