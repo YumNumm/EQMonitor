@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:dmdata_telegram_json/dmdata_telegram_json.dart';
 import 'package:flutter/foundation.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:messagepack/messagepack.dart';
 
 import '../../provider/telegram_service.dart';
+import '../../utils/extension/japanese_string.dart';
 
 class EqmEew {
   EqmEew({
@@ -17,9 +20,14 @@ class EqmEew {
     this.depth,
     this.depthCondition,
     this.accuracy,
-    this.isWarning = false,
-    this.isCanceled = false,
-    this.isLastInfo = false,
+    this.isWarning,
+    required this.isCanceled,
+    required this.isLastInfo,
+    this.isPlum,
+    this.headline,
+    this.text,
+    this.forecastMaxInt,
+    this.forecastMaxLgInt,
     this.regions = const [],
   });
 
@@ -41,9 +49,25 @@ class EqmEew {
         accuracy: json['accuracy'] != null
             ? EewAccuracy.fromJson(json['accuracy'] as Map<String, dynamic>)
             : null,
-        isWarning: json['isWarning'] as bool,
+        isWarning: json['isWarning'] as bool?,
         isCanceled: json['isCanceled'] as bool,
         isLastInfo: json['isLastInfo'] as bool,
+        isPlum: json['isPlum'] as bool?,
+        headline: json['headline'] as String?,
+        text: json['text'] as String?,
+        forecastMaxInt: (json['forecastMaxInt'] != null)
+            ? EewIntensityForecastMaxInt.fromJson(
+                json['forecastMaxInt'] as Map<String, dynamic>,
+              )
+            : null,
+        forecastMaxLgInt: (json['forecastMaxLgInt'] != null)
+            ? EewIntensityForecastMaxLgInt.fromJson(
+                json['forecastMaxLgInt'] as Map<String, dynamic>,
+              )
+            : null,
+        regions: (json['regions'] as List<dynamic>)
+            .map((e) => EewIntensityRegion.fromJson(e as Map<String, dynamic>))
+            .toList(),
       );
 
   factory EqmEew.fromMessagePack(Uint8List bytes) {
@@ -65,9 +89,28 @@ class EqmEew {
     final accuracy = (accuracyBinary.isNotEmpty)
         ? Uint8List.fromList(accuracyBinary).toEewAccuracy()
         : null;
-    final isWarning = u.unpackBool()!;
+    final isWarning = u.unpackBool();
     final isCanceled = u.unpackBool()!;
     final isLastInfo = u.unpackBool()!;
+    final isPlum = u.unpackBool();
+    final headline = u.unpackString();
+    final text = u.unpackString();
+    final maxIntFrom = u.unpackInt();
+    final maxIntTo = u.unpackInt();
+    final maxInt = (maxIntFrom != null && maxIntTo != null)
+        ? EewIntensityForecastMaxInt(
+            from: JmaIntensity.values[maxIntFrom],
+            to: JmaIntensity.values[maxIntTo],
+          )
+        : null;
+    final maxLgIntFrom = u.unpackInt();
+    final maxLgIntTo = u.unpackInt();
+    final maxLgInt = (maxLgIntFrom != null && maxLgIntTo != null)
+        ? EewIntensityForecastMaxLgInt(
+            from: JmaLgIntensity.values[maxLgIntFrom],
+            to: JmaLgIntensity.values[maxLgIntTo],
+          )
+        : null;
     final regions = u
         .unpackList()
         .map((e) => Uint8List.fromList(e! as List<int>).toEewIntensityRegion())
@@ -89,6 +132,11 @@ class EqmEew {
       isWarning: isWarning,
       isCanceled: isCanceled,
       isLastInfo: isLastInfo,
+      isPlum: isPlum,
+      headline: headline,
+      text: text,
+      forecastMaxInt: maxInt,
+      forecastMaxLgInt: maxLgInt,
       regions: regions,
     );
   }
@@ -112,12 +160,33 @@ class EqmEew {
     final accuracy = (accuracyBinary.isNotEmpty)
         ? Uint8List.fromList(accuracyBinary).toEewAccuracy()
         : null;
-    final isWarning = u.unpackBool()!;
+    final isWarning = u.unpackBool();
     final isCanceled = u.unpackBool()!;
     final isLastInfo = u.unpackBool()!;
+    final isPlum = u.unpackBool();
+    final headline = u.unpackString();
+    final text = u.unpackString();
+    final maxIntFrom = u.unpackInt();
+    final maxIntTo = u.unpackInt();
+    final maxInt = (maxIntFrom != null && maxIntTo != null)
+        ? EewIntensityForecastMaxInt(
+            from: JmaIntensity.values[maxIntFrom],
+            to: JmaIntensity.values[maxIntTo],
+          )
+        : null;
+    final maxLgIntFrom = u.unpackInt();
+    final maxLgIntTo = u.unpackInt();
+    final maxLgInt = (maxLgIntFrom != null && maxLgIntTo != null)
+        ? EewIntensityForecastMaxLgInt(
+            from: JmaLgIntensity.values[maxLgIntFrom],
+            to: JmaLgIntensity.values[maxLgIntTo],
+          )
+        : null;
     final regions = u
         .unpackList()
-        .map((e) => Uint8List.fromList(e! as List<int>).toEewIntensityRegionFcm())
+        .map(
+          (e) => Uint8List.fromList(e! as List<int>).toEewIntensityRegionFcm(),
+        )
         .toList();
 
     return EqmEew(
@@ -136,6 +205,11 @@ class EqmEew {
       isWarning: isWarning,
       isCanceled: isCanceled,
       isLastInfo: isLastInfo,
+      isPlum: isPlum,
+      headline: headline,
+      text: text,
+      forecastMaxInt: maxInt,
+      forecastMaxLgInt: maxLgInt,
       regions: regions,
     );
   }
@@ -163,6 +237,12 @@ class EqmEew {
         isWarning: telegram.eew.isWarning,
         isCanceled: telegram.eew.isCanceled,
         isLastInfo: telegram.eew.isLastInfo,
+        isPlum: telegram.eew.earthquake?.condition == '仮定震源要素',
+        headline: telegram.head.headline,
+        text: '${(telegram.eew.text != null) ? '${telegram.eew.text}\n' : ''}'
+            '${telegram.eew.comments?.free ?? ''}',
+        forecastMaxInt: telegram.eew.intensity?.forecastMaxInt,
+        forecastMaxLgInt: telegram.eew.intensity?.forecastMaxLgInt,
         regions: telegram.eew.intensity?.regions ?? [],
       );
 
@@ -177,8 +257,13 @@ class EqmEew {
   final EewDepthCondition? depthCondition;
   final EewAccuracy? accuracy;
   final bool? isWarning;
-  final bool? isCanceled;
-  final bool? isLastInfo;
+  final bool isCanceled;
+  final bool isLastInfo;
+  final bool? isPlum;
+  final String? headline;
+  final String? text;
+  final EewIntensityForecastMaxInt? forecastMaxInt;
+  final EewIntensityForecastMaxLgInt? forecastMaxLgInt;
   final List<EewIntensityRegion> regions;
 
   Uint8List toMessagePack() {
@@ -197,12 +282,20 @@ class EqmEew {
       ..packBool(isWarning)
       ..packBool(isCanceled)
       ..packBool(isLastInfo)
+      ..packBool(isPlum)
+      ..packString(headline)
+      ..packString(text)
+      ..packInt(forecastMaxInt?.from.index)
+      ..packInt(forecastMaxInt?.to.index)
+      ..packInt(forecastMaxLgInt?.from.index)
+      ..packInt(forecastMaxLgInt?.to.index)
       ..packListLength(regions.length);
     for (final region in regions) {
       p.packBinary(region.toMessagePack());
     }
     return p.takeBytes();
   }
+
   Uint8List toMessagePackFcm() {
     final p = Packer()
       ..packInt(eventId)
@@ -219,6 +312,13 @@ class EqmEew {
       ..packBool(isWarning)
       ..packBool(isCanceled)
       ..packBool(isLastInfo)
+      ..packBool(isPlum)
+      ..packString(headline)
+      ..packString(text)
+      ..packInt(forecastMaxInt?.from.index)
+      ..packInt(forecastMaxInt?.to.index)
+      ..packInt(forecastMaxLgInt?.from.index)
+      ..packInt(forecastMaxLgInt?.to.index)
       ..packListLength(regions.length);
     for (final region in regions) {
       p.packBinary(region.toMessagePackFcm());
@@ -241,7 +341,78 @@ class EqmEew {
         'isWarning': isWarning,
         'isCanceled': isCanceled,
         'isLastInfo': isLastInfo,
+        'isPlum': isPlum,
+        'headline': headline,
+        'text': text,
+        'forecastMaxInt': forecastMaxInt?.toJson(),
+        'forecastMaxLgInt': forecastMaxLgInt?.toJson(),
+        'regions': regions.map((e) => e.toJson()).toList(),
       };
+
+  String get notificationTitle {
+    switch (infoType) {
+      case TelegramInfoType.announcement:
+        return "${(status != TelegramStatus.normal) ? '[${jsonEncode(status.name)}] ' : ''}"
+            '緊急地震速報(${(isWarning ?? false) ? '警報' : '予報'}'
+            '${(isPlum ?? false) ? ' - PLUM法' : ''}'
+            ' '
+            '${isLastInfo ? '最終' : ''}第$serialNo報)';
+
+      case TelegramInfoType.correction:
+        return (headline != null) ? '先ほどの緊急地震速報は訂正されました' : headline!;
+      case TelegramInfoType.delay:
+        throw StateError('Delay is not supported.');
+      case TelegramInfoType.cancel:
+        return (headline != null) ? '先ほどの緊急地震速報は取消されました' : headline!;
+    }
+  }
+
+  String get notificationBody {
+    if (infoType == TelegramInfoType.cancel) {
+      return text ?? '';
+    }
+    return (StringBuffer()
+          ..writeAll(
+            <String>[
+              '$hypoNameで地震発生 ',
+              if (forecastMaxInt != null) ...[
+                '予想最大震度',
+                ((forecastMaxInt!.to == JmaIntensity.over)
+                        ? '${forecastMaxInt!.from.name}程度以上'
+                        : (forecastMaxInt!.from == forecastMaxInt!.to)
+                            ? '${forecastMaxInt?.from.name}'
+                            : '${forecastMaxInt?.from.name}〜${forecastMaxInt?.to.name}')
+                    .replaceAll('+', '強')
+                    .replaceAll('-', '弱'),
+                ' \n'
+              ],
+              if (forecastMaxLgInt != null) ...[
+                '予想最大',
+                ((forecastMaxLgInt!.to == JmaLgIntensity.over)
+                        ? '${forecastMaxLgInt!.from.longName}程度以上'
+                        : (forecastMaxLgInt!.from == forecastMaxLgInt!.to)
+                            ? '${forecastMaxLgInt?.from.longName}'
+                            : '${forecastMaxLgInt?.from.longName}〜'
+                                '${forecastMaxLgInt?.to.longName.replaceAll('長周期地震動階級', '')}')
+                    .replaceAll('+', '強')
+                    .replaceAll('-', '弱'),
+                ' \n'
+              ],
+              '',
+              if (isPlum ?? false)
+                'PLUM法による予測 '
+              else ...[
+                'M$magnitude ',
+                if (depthCondition != null)
+                  '深さ${jsonEncode(depthCondition).alphanumericToHalfLength} '
+                else if (depth != null)
+                  '深さ${depth}km ',
+              ],
+              text ?? '',
+            ],
+          ))
+        .toString();
+  }
 }
 
 extension EewAccuracyPacker on EewAccuracy {
@@ -289,7 +460,8 @@ extension EewIntensityRegionPacker on EewIntensityRegion {
       ..packStringEmptyIsNull(arrivalTime?.toIso8601String());
     return p.takeBytes();
   }
-    Uint8List toMessagePackFcm() {
+
+  Uint8List toMessagePackFcm() {
     final p = Packer()
       ..packInt(code)
       ..packString(name)
