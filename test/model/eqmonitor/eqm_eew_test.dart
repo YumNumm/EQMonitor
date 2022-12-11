@@ -132,27 +132,10 @@ void main() {
         expect(region.forecastMaxLgInt?.to, region2.forecastMaxLgInt?.to);
       }
     });
-     test(
-        '通知メッセージ 地震動予報 和歌山沖',
-        () async {
-          const url = 'https://sample.dmdata.jp/eew/tech566/vxse45_1105_2.json';
-          final res = await http.get(Uri.parse(url));
-
-          final json = jsonDecode(utf8.decode(res.bodyBytes));
-          final head = TelegramJsonMain.fromJson(json);
-          final eewBody = EewInformation.fromJson(head.body);
-          final eewTelegram = EewTelegram(head, eewBody);
-
-          final eew = EqmEew.fromEew(eewTelegram);
-          print(eew.notificationTitle);
-          print(eew.notificationBody);
-        },
-      );
-
-       test(
-      '通知メッセージ 警報 三陸沖',
+    test(
+      '通知メッセージ 地震動予報 和歌山沖',
       () async {
-        const url = 'https://sample.dmdata.jp/conversion/json/schema/eew-information/vxse43_rjtd_20110311144810.json';
+        const url = 'https://sample.dmdata.jp/eew/tech566/vxse45_1105_2.json';
         final res = await http.get(Uri.parse(url));
 
         final json = jsonDecode(utf8.decode(res.bodyBytes));
@@ -166,7 +149,25 @@ void main() {
       },
     );
 
-      test(
+    test(
+      '通知メッセージ 警報 三陸沖',
+      () async {
+        const url =
+            'https://sample.dmdata.jp/conversion/json/schema/eew-information/vxse43_rjtd_20110311144810.json';
+        final res = await http.get(Uri.parse(url));
+
+        final json = jsonDecode(utf8.decode(res.bodyBytes));
+        final head = TelegramJsonMain.fromJson(json);
+        final eewBody = EewInformation.fromJson(head.body);
+        final eewTelegram = EewTelegram(head, eewBody);
+
+        final eew = EqmEew.fromEew(eewTelegram);
+        print(eew.notificationTitle);
+        print(eew.notificationBody);
+      },
+    );
+
+    test(
       '通知メッセージ 予報 胆振地方',
       () async {
         const url =
@@ -184,7 +185,7 @@ void main() {
       },
     );
 
-     test(
+    test(
       '通知メッセージ 予報 PLUM法 熊本',
       () async {
         const url =
@@ -201,6 +202,5 @@ void main() {
         print(eew.notificationBody);
       },
     );
-
   });
 }

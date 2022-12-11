@@ -14,5 +14,3 @@ enum EqmPayloadType {
   eew,
   earthquake,
 }
-
-
