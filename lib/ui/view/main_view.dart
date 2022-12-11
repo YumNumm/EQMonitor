@@ -76,9 +76,9 @@ class MainView extends HookConsumerWidget {
                 child: (() {
                   switch (selectedIndex.value) {
                     case 0:
-                      return KmoniMap();
+                      return const KmoniMap();
                     case 1:
-                      return EarthquakeHistoryPage();
+                      return const EarthquakeHistoryPage();
                     // case 2:
                     //   return IntensityEstimatePage();
                     case 2:

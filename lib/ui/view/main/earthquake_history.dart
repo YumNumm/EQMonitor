@@ -1,6 +1,5 @@
 // ignore_for_file: lines_longer_than_80_chars
 
-import 'package:eqmonitor/api/remote/supabase/telegram.dart';
 import 'package:eqmonitor/provider/setting/intensity_color_provider.dart';
 import 'package:eqmonitor/ui/route.dart';
 import 'package:eqmonitor/ui/theme/jma_intensity.dart';
@@ -10,10 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class EarthquakeHistoryPage extends HookConsumerWidget {
-  EarthquakeHistoryPage({super.key});
-
-  final TelegramApi telegramApi = TelegramApi();
+class EarthquakeHistoryPage extends ConsumerWidget {
+  const EarthquakeHistoryPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

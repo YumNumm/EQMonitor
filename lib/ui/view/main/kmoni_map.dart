@@ -31,11 +31,10 @@ final transformationControllerProvider = Provider(
   (ref) => TransformationController(),
 );
 
-class KmoniMap extends HookConsumerWidget {
-  KmoniMap({this.showAppBar = true, super.key});
+class KmoniMap extends ConsumerWidget {
+  const KmoniMap({this.showAppBar = true, super.key});
 
   final bool showAppBar;
-  final mapKey = GlobalKey();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -88,7 +87,6 @@ class KmoniMap extends HookConsumerWidget {
               : const Color.fromARGB(255, 207, 219, 255),
         ),
         child: Stack(
-          key: mapKey,
           children: [
             GestureDetector(
               child: InteractiveViewer(
