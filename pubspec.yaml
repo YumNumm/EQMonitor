@@ -24,7 +24,7 @@ dependencies:
   envied: ^0.2.3
   expandable: ^5.0.1
   firebase_analytics: ^10.0.6
-  firebase_core: ^2.3.0
+  firebase_core: ^2.4.0
   firebase_crashlytics: ^3.0.2
   firebase_messaging: ^14.1.2
   firebase_performance: ^0.9.0+2
