@@ -7,7 +7,7 @@ import '../init/dio.dart';
 
 final changeLogProvider = FutureProvider<ChangeLog>((ref) async {
   final res = await ref.read(dioProvider).get<dynamic>(
-        'https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/changelog.json',
+        'https://raw.githubusercontent.com/YumNumm/EQMonitor/main/changelog.json',
       );
   return ChangeLog.fromJson(json.decode(res.data));
 });
