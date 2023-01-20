@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="time">xxxx/xx/xx xx:xx頃</string>
+    <string name="place">おうち</string>
+    <string name="magnitude">M0.0</string>
+    <string name="max_intensity">震度不明</string>
+    <string name="description">直近の地震情報を表示します</string>
+    <color name="background">#213528</color>
+    <color name="foreground">#FFFFFF</color>
+</resources>
