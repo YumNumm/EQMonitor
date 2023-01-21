@@ -47,7 +47,9 @@ class NotificationSettingsModel with _$NotificationSettingsModel {
     if (json == null) {
       return const NotificationSettingsModel();
     }
-    return NotificationSettingsModel.fromJson(jsonDecode(json));
+    return NotificationSettingsModel.fromJson(
+      jsonDecode(json) as Map<String, dynamic>,
+    );
   }
 
   factory NotificationSettingsModel.fromJson(Map<String, dynamic> json) =>

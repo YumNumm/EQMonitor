@@ -55,7 +55,7 @@ part 'route.g.dart';
 @immutable
 class MainRoute extends GoRouteData {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, GoRouterState state) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     return const MainView();
   }
@@ -63,7 +63,8 @@ class MainRoute extends GoRouteData {
 
 class IntroductionRoute extends GoRouteData {
   @override
-  Widget build(BuildContext context) => const IntroductionView();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const IntroductionView();
 }
 
 class EarthquakeHistoryItemRoute extends GoRouteData {
@@ -73,14 +74,15 @@ class EarthquakeHistoryItemRoute extends GoRouteData {
   final int eventId;
 
   @override
-  Widget build(BuildContext context) => EarthquakeHistoryDetailPage(eventId);
+  Widget build(BuildContext context, GoRouterState state) =>
+      EarthquakeHistoryDetailPage(eventId);
 }
 
 class FullScreenRoute extends GoRouteData {
   FullScreenRoute();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, GoRouterState state) {
     SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.immersive,
       overlays: [],
@@ -91,32 +93,38 @@ class FullScreenRoute extends GoRouteData {
 
 class SettingRoute extends GoRouteData {
   @override
-  Widget build(BuildContext context) => const SettingsPage();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const SettingsPage();
 }
 
 class NotificationSettingRoute extends GoRouteData {
   @override
-  Widget build(BuildContext context) => const NotificationSettingPage();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const NotificationSettingPage();
 }
 
 class DesignSettingRoute extends GoRouteData {
   @override
-  Widget build(BuildContext context) => const DesignSettingsPage();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const DesignSettingsPage();
 }
 
 class ThemeSettingRoute extends GoRouteData {
   @override
-  Widget build(BuildContext context) => const ThemeChoicePage();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const ThemeChoicePage();
 }
 
 class IntensityColorSettingRoute extends GoRouteData {
   @override
-  Widget build(BuildContext context) => const IntensityColorSettingsPage();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const IntensityColorSettingsPage();
 }
 
 class AboutAppRoute extends GoRouteData {
   @override
-  Widget build(BuildContext context) => const AboutAppPage();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const AboutAppPage();
 }
 
 class TermOfServiceRoute extends GoRouteData {
@@ -125,34 +133,38 @@ class TermOfServiceRoute extends GoRouteData {
   });
   final bool showAcceptButton;
   @override
-  Widget build(BuildContext context) => TermOfServicePage(
+  Widget build(BuildContext context, GoRouterState state) => TermOfServicePage(
         showAcceptButton: showAcceptButton,
       );
 }
 
 class UpdateHistoryRoute extends GoRouteData {
   @override
-  Widget build(BuildContext context) => const UpdateHistoryView();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const UpdateHistoryView();
 }
 
 class DebugMenuRoute extends GoRouteData {
   @override
-  Widget build(BuildContext context) => const DebugMenuPage();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const DebugMenuPage();
 }
 
 class DeveloperDebugRoute extends GoRouteData {
   @override
-  Widget build(BuildContext context) => const DeveloperDebugPage();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const DeveloperDebugPage();
 }
 
 class EewTestRoute extends GoRouteData {
   @override
-  Widget build(BuildContext context) => const EewTestPage();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const EewTestPage();
 }
 
 class LogRoute extends GoRouteData {
   @override
-  Widget build(BuildContext context) => const LogView();
+  Widget build(BuildContext context, GoRouterState state) => const LogView();
 }
 
 final routerProvider = Provider<GoRouter>(

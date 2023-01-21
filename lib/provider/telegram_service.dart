@@ -27,9 +27,9 @@ final telegramSocketIoProvider = Provider((ref) {
         .setPath(path)
         .setTransports(['websocket']).build(),
   )
-    ..onConnecting((data) => talker.logTyped(SocketIOLog(data ?? '')))
+    ..onConnecting((data) => talker.logTyped(SocketIOLog(data.toString())))
     ..onConnect((data) {
-      talker.logTyped(SocketIOLog(data ?? ''));
+      talker.logTyped(SocketIOLog(data.toString()));
     })
     ..onAny(
       (event, data) => talker.logTyped(

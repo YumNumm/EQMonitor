@@ -9,7 +9,7 @@
     },
     {
       "name": "_flutterfire_internals",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/_flutterfire_internals-1.0.9",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/_flutterfire_internals-1.0.12",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
@@ -27,31 +27,13 @@
     },
     {
       "name": "app_links",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/app_links-3.3.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "app_links_macos",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/app_links_macos-1.0.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/app_links-3.4.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "app_links_platform_interface",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/app_links_platform_interface-1.0.2",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "app_links_web",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/app_links_web-1.0.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "app_links_windows",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/app_links_windows-1.0.1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/app_links_platform_interface-1.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -63,9 +45,9 @@
     },
     {
       "name": "args",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/args-2.3.1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/args-2.3.2",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.18"
     },
     {
       "name": "async",
@@ -117,7 +99,7 @@
     },
     {
       "name": "build_runner",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/build_runner-2.3.2",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/build_runner-2.3.3",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -135,7 +117,7 @@
     },
     {
       "name": "built_value",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/built_value-8.4.2",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/built_value-8.4.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -147,9 +129,9 @@
     },
     {
       "name": "checked_yaml",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/checked_yaml-2.0.1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/checked_yaml-2.0.2",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.18"
     },
     {
       "name": "cli_util",
@@ -164,20 +146,8 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "cloud_firestore_platform_interface",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/cloud_firestore_platform_interface-5.9.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "cloud_firestore_web",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/cloud_firestore_web-3.1.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
       "name": "code_builder",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/code_builder-4.3.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/code_builder-4.4.0",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -284,12 +254,6 @@
       "languageVersion": "2.18"
     },
     {
-      "name": "dotenv",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/dotenv-4.0.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
       "name": "dynamic_color",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/dynamic_color-1.5.4",
       "packageUri": "lib/",
@@ -297,13 +261,13 @@
     },
     {
       "name": "envied",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/envied-0.2.4",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/envied-0.3.0",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "envied_generator",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/envied_generator-0.2.3+1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/envied_generator-0.3.0",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -339,25 +303,25 @@
     },
     {
       "name": "firebase_analytics",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-10.0.6",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-10.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
     {
       "name": "firebase_analytics_platform_interface",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_analytics_platform_interface-3.3.14",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_analytics_platform_interface-3.3.17",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
     {
       "name": "firebase_analytics_web",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_analytics_web-0.5.1+5",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_analytics_web-0.5.1+8",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
     {
       "name": "firebase_core",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_core-2.3.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_core-2.4.1",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
@@ -369,55 +333,55 @@
     },
     {
       "name": "firebase_core_web",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-2.0.1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-2.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
     {
       "name": "firebase_crashlytics",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_crashlytics-3.0.6",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_crashlytics-3.0.11",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
     {
       "name": "firebase_crashlytics_platform_interface",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_crashlytics_platform_interface-3.3.7",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_crashlytics_platform_interface-3.3.11",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
     {
       "name": "firebase_messaging",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-14.1.3",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-14.2.1",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
     {
       "name": "firebase_messaging_platform_interface",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_messaging_platform_interface-4.2.7",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_messaging_platform_interface-4.2.10",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
     {
       "name": "firebase_messaging_web",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_messaging_web-3.2.8",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_messaging_web-3.2.11",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
     {
       "name": "firebase_performance",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_performance-0.9.0+6",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_performance-0.9.0+10",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
     {
       "name": "firebase_performance_platform_interface",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_performance_platform_interface-0.1.1+26",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_performance_platform_interface-0.1.1+29",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
     {
       "name": "firebase_performance_web",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_performance_web-0.1.1+15",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/firebase_performance_web-0.1.1+18",
       "packageUri": "lib/",
       "languageVersion": "2.16"
     },
@@ -501,13 +465,13 @@
     },
     {
       "name": "flutter_riverpod",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/flutter_riverpod-2.1.1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/flutter_riverpod-2.1.3",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "flutter_secure_storage",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/flutter_secure_storage-6.1.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/flutter_secure_storage-7.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -519,7 +483,7 @@
     },
     {
       "name": "flutter_secure_storage_macos",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/flutter_secure_storage_macos-1.1.2",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/flutter_secure_storage_macos-2.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -549,7 +513,7 @@
     },
     {
       "name": "flutter_tts",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/flutter_tts-3.6.2",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/flutter_tts-3.6.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -561,7 +525,7 @@
     },
     {
       "name": "fluttertoast",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/fluttertoast-8.1.1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/fluttertoast-8.1.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -585,7 +549,7 @@
     },
     {
       "name": "functions_client",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/functions_client-1.0.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/functions_client-1.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
@@ -615,19 +579,19 @@
     },
     {
       "name": "go_router",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/go_router-5.2.2",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/go_router-6.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "go_router_builder",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/go_router_builder-1.0.15",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/go_router_builder-1.0.16",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "gotrue",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/gotrue-1.2.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/gotrue-1.4.2",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -657,7 +621,7 @@
     },
     {
       "name": "hooks_riverpod",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/hooks_riverpod-2.1.1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/hooks_riverpod-2.1.3",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -693,7 +657,7 @@
     },
     {
       "name": "image",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/image-3.2.2",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/image-3.3.0",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
@@ -705,7 +669,7 @@
     },
     {
       "name": "io",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/io-1.0.3",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/io-1.0.4",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -735,15 +699,15 @@
     },
     {
       "name": "json_annotation",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/json_annotation-4.7.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/json_annotation-4.8.0",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.18"
     },
     {
       "name": "json_serializable",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/json_serializable-6.5.4",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/json_serializable-6.6.0",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.18"
     },
     {
       "name": "jwt_decode",
@@ -766,6 +730,30 @@
     {
       "name": "logging",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/logging-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "maplibre_gl",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/git/flutter-maplibre-gl-7e6b575001b5d9ab5a976cd8753501db415502e2/",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "maplibre_gl_dart",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/git/maplibre-gl-dart-24a48ecec0d07e02a0c51ced68a05f543d871583/",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "maplibre_gl_platform_interface",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/git/flutter-maplibre-gl-7e6b575001b5d9ab5a976cd8753501db415502e2/maplibre_gl_platform_interface",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "maplibre_gl_web",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/git/flutter-maplibre-gl-7e6b575001b5d9ab5a976cd8753501db415502e2/maplibre_gl_web",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -795,9 +783,9 @@
     },
     {
       "name": "mime",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/mime-1.0.3",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/mime-1.0.4",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.18"
     },
     {
       "name": "nested",
@@ -861,7 +849,7 @@
     },
     {
       "name": "path_provider_macos",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/path_provider_macos-2.0.6",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/path_provider_macos-2.0.7",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -891,7 +879,7 @@
     },
     {
       "name": "pedantic_mono",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/pedantic_mono-1.20.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/pedantic_mono-1.20.1",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -939,7 +927,7 @@
     },
     {
       "name": "provider",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/provider-6.0.4",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/provider-6.0.5",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -957,13 +945,13 @@
     },
     {
       "name": "realtime_client",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/realtime_client-1.0.1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/realtime_client-1.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "restart_app",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/restart_app-1.1.1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/restart_app-1.1.1+1",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -975,7 +963,7 @@
     },
     {
       "name": "riverpod",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/riverpod-2.1.1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/riverpod-2.1.3",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -999,7 +987,7 @@
     },
     {
       "name": "shared_preferences",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/shared_preferences-2.0.15",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/shared_preferences-2.0.16",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -1010,6 +998,12 @@
       "languageVersion": "2.14"
     },
     {
+      "name": "shared_preferences_foundation",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/shared_preferences_foundation-2.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "shared_preferences_ios",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/shared_preferences_ios-2.1.1",
       "packageUri": "lib/",
@@ -1017,13 +1011,7 @@
     },
     {
       "name": "shared_preferences_linux",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/shared_preferences_linux-2.1.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "shared_preferences_macos",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/shared_preferences_macos-2.0.4",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/shared_preferences_linux-2.1.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -1041,7 +1029,7 @@
     },
     {
       "name": "shared_preferences_windows",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/shared_preferences_windows-2.1.1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/shared_preferences_windows-2.1.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -1071,7 +1059,7 @@
     },
     {
       "name": "socket_io_client",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/socket_io_client-2.0.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/socket_io_client-2.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -1119,7 +1107,7 @@
     },
     {
       "name": "storage_client",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/storage_client-1.1.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/storage_client-1.2.1",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
@@ -1149,31 +1137,37 @@
     },
     {
       "name": "supabase",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/supabase-1.2.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/supabase-1.4.0",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
     {
       "name": "supabase_flutter",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/supabase_flutter-1.2.2",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/supabase_flutter-1.3.1",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
     {
       "name": "talker",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/talker-2.1.0+1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/talker-2.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "talker_dio_logger",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/talker_dio_logger-1.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
     {
       "name": "talker_flutter",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/talker_flutter-2.1.1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/talker_flutter-2.2.1",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
     {
       "name": "talker_logger",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/talker_logger-2.1.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/talker_logger-2.2.1",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
@@ -1197,9 +1191,9 @@
     },
     {
       "name": "timing",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/timing-1.0.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/timing-1.0.1",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.14"
     },
     {
       "name": "typed_data",
@@ -1281,19 +1275,19 @@
     },
     {
       "name": "web_socket_channel",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/web_socket_channel-2.2.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/web_socket_channel-2.3.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "win32",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/win32-3.1.2",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/win32-3.1.3",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "xdg_directories",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/xdg_directories-0.2.0+2",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/xdg_directories-0.2.0+3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -1317,7 +1311,7 @@
     },
     {
       "name": "yet_another_json_isolate",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/yet_another_json_isolate-1.0.1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dartlang.org/yet_another_json_isolate-1.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
@@ -1328,7 +1322,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2023-01-20T00:00:40.743630Z",
+  "generated": "2023-01-21T18:32:44.882405Z",
   "generator": "pub",
   "generatorVersion": "2.18.6"
 }

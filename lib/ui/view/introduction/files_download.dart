@@ -79,8 +79,8 @@ class FilesDownloadWidget extends HookConsumerWidget {
                       '${ref.read(applicationSupportDirectoryProvider).path}/arv.json',
                     ).readAsString();
                     final data = ParameterEarthquake.fromTwoJson(
-                      json.decode(param),
-                      json.decode(arv),
+                      json.decode(param) as Map<String, dynamic>,
+                      json.decode(arv) as Map<String, dynamic>,
                     );
                     await File(
                       '${ref.read(applicationSupportDirectoryProvider).path}/parameter-earthquake-with-arv.json',
@@ -150,8 +150,8 @@ class FilesDownloadWidget extends HookConsumerWidget {
                       '${ref.read(applicationSupportDirectoryProvider).path}/arv.json',
                     ).readAsString();
                     final data = ParameterEarthquake.fromTwoJson(
-                      json.decode(param),
-                      json.decode(arv),
+                      json.decode(param) as Map<String, dynamic>,
+                      json.decode(arv) as Map<String, dynamic>
                     );
                     await File(
                       '${ref.read(applicationSupportDirectoryProvider).path}/parameter-earthquake-with-arv.json',

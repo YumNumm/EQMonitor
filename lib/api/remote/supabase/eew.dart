@@ -18,7 +18,7 @@ class EewApi {
     final toReturn = <EewTelegram>[];
     for (final r in res) {
       final payload = TelegramJsonMain.fromJson(
-        jsonDecode(r['data']) as Map<String, dynamic>,
+        jsonDecode(r['data'].toString()) as Map<String, dynamic>,
       );
       toReturn.add(
         EewTelegram(payload, EewInformation.fromJson(payload.body)),

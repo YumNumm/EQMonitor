@@ -1,7 +1,8 @@
-import 'package:eqmonitor/firebase_options_dev.dart';
 import 'package:eqmonitor/flavors.dart';
-import 'package:eqmonitor/helper/firebase/firebase_options_prod.dart';
 import 'package:firebase_core/firebase_core.dart';
+
+import 'firebase_options_dev.dart';
+import 'firebase_options_prod.dart';
 
 // ignore: avoid_classes_with_only_static_members
 class FirebaseOptionsWrapper {
