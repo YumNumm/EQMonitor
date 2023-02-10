@@ -41,7 +41,7 @@ dependencies:
   flutter_riverpod: ^2.0.2
   flutter_secure_storage: ^7.0.1
   flutter_tts: ^3.6.2
-  fluttertoast: ^8.0.9
+  fluttertoast: 8.1.2
   freezed_annotation: ^2.1.0
   geojson: ^1.0.0
   go_router: ^6.0.1
