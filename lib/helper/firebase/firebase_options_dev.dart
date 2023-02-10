@@ -52,7 +52,8 @@ class FirebaseOptionsDev {
     messagingSenderId: '885756014256',
     projectId: 'eqmonitor-dev',
     storageBucket: 'eqmonitor-dev.appspot.com',
-    iosClientId: '885756014256-v8keka86cudkttofm2esmbvbrre8bf47.apps.googleusercontent.com',
+    iosClientId:
+        '885756014256-v8keka86cudkttofm2esmbvbrre8bf47.apps.googleusercontent.com',
     iosBundleId: 'net.yumnumm.eqmonitor',
   );
 }
