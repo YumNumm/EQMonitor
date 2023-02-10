@@ -16,21 +16,22 @@ class ParameterEarthquake {
     Map<String, dynamic> paramArv,
   ) {
     final items = <ParameterEarthquakeItem>[];
-    final paramItems = param['items'] as List<dynamic>;
-    final paramArvItems = paramArv['items'] as List<dynamic>;
-    for (final item in paramItems) {
-      final arv = (paramArvItems.firstWhere(
-        (e) =>
-            (item as Map<String, dynamic>)['id'] ==
-            (e as Map<String, dynamic>)['id'],
-        orElse: () => <String, dynamic>{'arv': '0'},
-      ) as Map<String, dynamic>)['arv'] as double;
-      items.add(
-        ParameterEarthquakeItem.fromJsonWithArv(
-          item as Map<String, dynamic>,
-          arv,
-        ),
+    final parameterItems = param['items'] as List;
+    final parameterArvItems = paramArv['items'] as List;
+
+    for (final item in parameterItems) {
+      final arvItem = parameterArvItems.firstWhere(
+        (e) => e['code'] == item['code'],
+        orElse: () => null,
       );
+      if (arvItem != null) {
+        items.add(
+          ParameterEarthquakeItem.fromJsonWithArv(
+            item as Map<String, dynamic>,
+            double.parse(arvItem['arv'].toString()),
+          ),
+        );
+      }
     }
     return ParameterEarthquake(
       responseId: param['responseId'].toString(),
