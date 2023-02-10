@@ -63,8 +63,10 @@ class FirebaseOptionsProd {
     messagingSenderId: '179553945248',
     projectId: 'eqmonitor-main',
     storageBucket: 'eqmonitor-main.appspot.com',
-    androidClientId: '179553945248-gnhkjhr4feqsv308rf3dlcber84o647i.apps.googleusercontent.com',
-    iosClientId: '179553945248-hog16qgussjvd0ddqqe973c32n64atm1.apps.googleusercontent.com',
+    androidClientId:
+        '179553945248-gnhkjhr4feqsv308rf3dlcber84o647i.apps.googleusercontent.com',
+    iosClientId:
+        '179553945248-hog16qgussjvd0ddqqe973c32n64atm1.apps.googleusercontent.com',
     iosBundleId: 'net.yumnumm.eqmonitor',
   );
 }
