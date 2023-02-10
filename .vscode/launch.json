@@ -5,21 +5,21 @@
       "name": "Develop Debug",
       "type": "dart",
       "request": "launch",
-      "program": "lib/main.dart",
+      "program": "lib/main_dev.dart",
       "args": ["--debug", "--flavor", "dev"]
     },
     {
       "name": "Develop Release",
       "type": "dart",
       "request": "launch",
-      "program": "lib/main.dart",
+      "program": "lib/main_dev.dart",
       "args": ["--release", "--flavor", "dev"]
     },
     {
       "name": "Production Release",
       "type": "dart",
       "request": "launch",
-      "program": "lib/main.dart",
+      "program": "lib/main_prod.dart",
       "args": ["--release", "--flavor", "prod"]
     }
   ]

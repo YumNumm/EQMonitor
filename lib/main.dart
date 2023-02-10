@@ -46,7 +46,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 
 late Talker talker;
 
-Future<void> main() async {
+Future<void> commonMain() async {
   WidgetsFlutterBinding.ensureInitialized();
   F.appFlavor = Flavor.DEV;
   await Firebase.initializeApp(

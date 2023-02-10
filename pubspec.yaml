@@ -3,7 +3,7 @@ description: An earthquake monitoring Application
 
 publish_to: "none"
 
-version: 0.7.3+418
+version: 0.8.0+450
 
 environment:
   sdk: ">=2.18.2 <3.0.0"
@@ -52,10 +52,6 @@ dependencies:
   intl: ^0.17.0
   json_annotation: ^4.7.0
   latlong2: ^0.8.1
-  maplibre_gl:
-    git:
-      url: https://github.com/m0nac0/flutter-maplibre-gl.git
-      ref: main
   oauth1: ^2.0.0
   package_info_plus: ^3.0.1
   path_provider: ^2.0.11
