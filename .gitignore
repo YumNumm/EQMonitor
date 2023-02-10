@@ -1,6 +1,9 @@
 .fvm/flutter_sdk
 .crashlytics
 
+GoogleService-Info.plist
+google-services.json
+
 # Code generation related
 *.g.dart
 *.*.*.dart

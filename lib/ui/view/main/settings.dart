@@ -72,7 +72,8 @@ class SettingsPage extends ConsumerWidget {
                     ref.watch(developerModeProvider).isDeveloper) ...[
                   const Divider(),
                   ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                    contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 20),
                     leading: const Icon(Icons.bug_report),
                     title: const Text(
                       'デバッグメニュー',

@@ -26,7 +26,9 @@ class KmoniSettingNotifier extends StateNotifier<KmoniSettingModel> {
     final kmoniSettings = prefs.getString(prefsKey);
     if (kmoniSettings != null) {
       try {
-        state = KmoniSettingModel.fromJson(jsonDecode(kmoniSettings));
+        state = KmoniSettingModel.fromJson(
+          jsonDecode(kmoniSettings) as Map<String, dynamic>,
+        );
         return;
         // ignore: avoid_catches_without_on_clauses
       } catch (e) {

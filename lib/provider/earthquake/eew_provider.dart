@@ -155,7 +155,8 @@ class EewProvider extends StateNotifier<EewHistoryModel> {
         final assetUrl =
             "assets/develop/06301031/eew/${DateFormat('yyyyMMddHHmmss').format(dt)}.json";
         try {
-          final data = jsonDecode(await rootBundle.loadString(assetUrl));
+          final data = jsonDecode(await rootBundle.loadString(assetUrl))
+              as Map<String, dynamic>;
           final eew = KyoshinEEW.fromJson(data).toDmdataEew(isTesting: true);
           if (eew != null) {
             _addEewTelegram(

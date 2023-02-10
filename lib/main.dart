@@ -7,6 +7,8 @@ import 'dart:ui';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:eqmonitor/env/env.dart';
+import 'package:eqmonitor/flavors.dart';
+import 'package:eqmonitor/helper/firebase/firebase_options.dart';
 import 'package:eqmonitor/model/travel_time_table/travel_time_table.dart';
 import 'package:eqmonitor/provider/init/application_support_dir.dart';
 import 'package:eqmonitor/provider/init/device_info.dart';
@@ -42,11 +44,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
-import 'firebase_options.dart';
-
 late Talker talker;
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  F.appFlavor = Flavor.DEV;
+  await Firebase.initializeApp(
+    options: FirebaseOptionsWrapper.currentPlatform,
+  );
   final stopwatch = Stopwatch()..start();
   FlutterNativeSplash.preserve(
     widgetsBinding: WidgetsFlutterBinding.ensureInitialized(),
@@ -60,9 +65,6 @@ Future<void> main() async {
   talker = Talker();
   final prefs = await SharedPreferences.getInstance();
   if (Platform.isAndroid || Platform.isIOS) {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
     final crashlytics = FirebaseCrashlytics.instance;
 
     // クラッシュレポートの初期化

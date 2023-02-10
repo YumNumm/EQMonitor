@@ -16,20 +16,22 @@ class ParameterEarthquake {
     Map<String, dynamic> paramArv,
   ) {
     final items = <ParameterEarthquakeItem>[];
-    final paramItems = param['items'] as List<dynamic>;
-    final paramArvItems = paramArv['items'] as List<dynamic>;
-    for (final item in paramItems) {
-      final arv = double.parse(
-        (paramArvItems.firstWhere(
-          (e) =>
-              (item as Map<String, dynamic>)['id'] ==
-              (e as Map<String, dynamic>)['id'],
-          orElse: () => <String, dynamic>{'arv': '0'},
-        ) as Map<String, dynamic>)['arv'],
+    final parameterItems = param['items'] as List;
+    final parameterArvItems = paramArv['items'] as List;
+
+    for (final item in parameterItems) {
+      final arvItem = parameterArvItems.firstWhere(
+        (e) => e['code'] == item['code'],
+        orElse: () => null,
       );
-      items.add(
-        ParameterEarthquakeItem.fromJsonWithArv(item, arv),
-      );
+      if (arvItem != null) {
+        items.add(
+          ParameterEarthquakeItem.fromJsonWithArv(
+            item as Map<String, dynamic>,
+            double.parse(arvItem['arv'].toString()),
+          ),
+        );
+      }
     }
     return ParameterEarthquake(
       responseId: param['responseId'].toString(),
@@ -92,8 +94,8 @@ class ParameterEarthquakeItem {
     double arv,
   ) {
     return ParameterEarthquakeItem(
-      region: Region.fromJson(param['region']),
-      city: City.fromJson(param['city']),
+      region: Region.fromJson(param['region'] as Map<String, dynamic>),
+      city: City.fromJson(param['city'] as Map<String, dynamic>),
       noCode: int.parse(param['noCode'].toString()),
       code: int.parse(param['code'].toString()),
       name: param['name'].toString(),
@@ -108,8 +110,8 @@ class ParameterEarthquakeItem {
 
   factory ParameterEarthquakeItem.fromJson(Map<String, dynamic> j) =>
       ParameterEarthquakeItem(
-        region: Region.fromJson(j['region']),
-        city: City.fromJson(j['city']),
+        region: Region.fromJson(j['region'] as Map<String, dynamic>),
+        city: City.fromJson(j['city'] as Map<String, dynamic>),
         noCode: int.parse(j['noCode'].toString()),
         code: int.parse(j['code'].toString()),
         name: j['name'].toString(),

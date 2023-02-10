@@ -9,7 +9,8 @@ final changeLogProvider = FutureProvider<ChangeLog>((ref) async {
   final res = await ref.read(dioProvider).get<dynamic>(
         'https://raw.githubusercontent.com/YumNumm/EQMonitor/main/changelog.json',
       );
-  return ChangeLog.fromJson(json.decode(res.data));
+  return ChangeLog.fromJson(
+      json.decode(res.data.toString()) as Map<String, dynamic>);
 });
 
 final changeLogMockProvider = FutureProvider<ChangeLog>((ref) async {

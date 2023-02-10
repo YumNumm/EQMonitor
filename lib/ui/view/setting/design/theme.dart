@@ -14,28 +14,25 @@ class ThemeChoicePage extends HookConsumerWidget {
       appBar: AppBar(
         title: const Text('テーマ設定'),
       ),
-      body: Column(
-        children: [
-          // テーマ設定
-          ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: ThemeMode.values.length,
-            itemBuilder: (context, index) {
-              final themeMode = ThemeMode.values[index];
-              return RadioListTile(
-                title: Text(themeMode.title),
-                subtitle: Text(themeMode.description),
-                value: themeMode.name,
-                selected: themeMode.name == currentThemeMode.name,
-                groupValue: currentThemeMode.name,
-                onChanged: (_) {
-                  ref.read(themeProvider.notifier).setTheme(themeMode);
-                },
-              );
-            },
-          ),
-        ],
+      body: SafeArea(
+        child: ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: ThemeMode.values.length,
+          itemBuilder: (context, index) {
+            final themeMode = ThemeMode.values[index];
+            return RadioListTile(
+              title: Text(themeMode.title),
+              subtitle: Text(themeMode.description),
+              value: themeMode.name,
+              selected: themeMode.name == currentThemeMode.name,
+              groupValue: currentThemeMode.name,
+              onChanged: (_) {
+                ref.read(themeProvider.notifier).setTheme(themeMode);
+              },
+            );
+          },
+        ),
       ),
     );
   }

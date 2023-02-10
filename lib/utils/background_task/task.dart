@@ -40,7 +40,7 @@ class FirstTaskHandler extends TaskHandler {
       }
       if (json['type'] == 'data') {
         // 電文解析
-        final wsdata = WebSocketV2Data.fromJson(json);
+        final wsdata = WebSocketV2Data.fromJson(json as Map<String,dynamic>);
         switch (wsdata.head.type) {
           case 'VXSE44':
             // 緊急地震速報(予報)
