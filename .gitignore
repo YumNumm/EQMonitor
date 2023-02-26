@@ -143,3 +143,4 @@ app.*.map.json
 ios/Runner/GoogleService-Info.plist
 macos/Runner/GoogleService-Info.plist
 macos/Runner/GoogleService-Info.plist
+ios/GoogleService-Info.plist
