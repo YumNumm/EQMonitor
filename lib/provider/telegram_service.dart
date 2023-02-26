@@ -123,5 +123,4 @@ class EewTelegram {
   final EewInformation eew;
 
   /// 震度速報
-
 }
