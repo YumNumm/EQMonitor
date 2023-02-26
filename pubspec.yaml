@@ -44,7 +44,7 @@ dependencies:
   freezed_annotation: ^2.1.0
   geojson: ^1.0.0
   go_router: ^5.2.0
-  hooks_riverpod: ^2.0.2
+  hooks_riverpod: ^2.2.0
   html: ^0.15.0
   http: ^0.13.5
   image: ^3.2.0
