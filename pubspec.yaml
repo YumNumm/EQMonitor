@@ -35,7 +35,7 @@ dependencies:
   flutter_hooks: ^0.18.5+1
   flutter_localizations:
     sdk: flutter
-  flutter_markdown: ^0.6.12
+  flutter_markdown: ^0.6.14
   flutter_native_splash: ^2.2.16
   flutter_riverpod: ^2.0.2
   flutter_secure_storage: ^6.1.0
