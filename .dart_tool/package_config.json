@@ -147,9 +147,9 @@
     },
     {
       "name": "pedantic_mono",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/pedantic_mono-1.20.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/pedantic_mono-1.21.1",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "2.19"
     },
     {
       "name": "platform",
@@ -254,7 +254,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2023-04-12T14:51:22.639291Z",
+  "generated": "2023-04-12T14:57:02.779534Z",
   "generator": "pub",
   "generatorVersion": "2.19.6"
 }
