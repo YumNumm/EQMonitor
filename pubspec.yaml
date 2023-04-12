@@ -20,6 +20,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/
 
 flutter_native_splash:
   #? flutter pub run flutter_native_splash:create
