@@ -11,7 +11,7 @@
 > **Warning** [利用規約](https://github.com/EQMonitor/EQMonitor/blob/main/assets/docs/term_of_service.md)を必ずご確認の上ご利用ください。
 
 |                                                                                                                                                |                                                                                                                                                |                                                                                                                                                |
-| ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+|------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
 | ![Screenshot_20221114-171045_EQMonitor](https://user-images.githubusercontent.com/73390859/201656094-c98e6942-489d-48dc-9ff5-80aa6d9e6247.png) | ![Screenshot_20221114-210650_EQMonitor](https://user-images.githubusercontent.com/73390859/201656208-87ae0eed-bf39-47d4-8003-9745ffba56c2.png) | ![Screenshot_20221114-210658_EQMonitor](https://user-images.githubusercontent.com/73390859/201656236-70d20f7c-6870-4d0f-a7d0-17777e6b276b.png) |
 
 ## 支援のお願い
@@ -28,22 +28,20 @@
 `android/app/google-service.json`に Firebase 証明書を配置してください。
 
 ```bash
-git clone https://github.com/EQMonitor/EQMonitor.git --depth 1 --recursive
+# リポジトリをクローン
+git clone https://github.com/YumNumm/EQMonitor.git
 cd EQMonitor
-mv .env.example .env
 
-# FVM未導入の場合
-dart pub global activate fvm
+# FVMをインストール
+brew tap leoafarias/fvm
+brew install fvm
+fvm use
 
-fvm use # yesと入力
+
+# Lefthookをインストール(コミット時にフォーマットを実行するため)
+brew install lefthook
+lefthook install
+
+# パッケージをインストール
 fvm flutter pub get
-fvm flutter pub run build_runner build -d
-fvm flutter pub run flutter_launcher_icons:main
-fvm flutter pub run flutter_native_splash:create
-
-# RELEASE BUILD
-flutter build apk --release
-
-# DEBUG BUILD
-flutter build apk --debug
 ```
