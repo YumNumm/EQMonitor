@@ -18,7 +18,11 @@ class ActionButton extends StatelessWidget {
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(8)),
         color: Color.fromARGB(255, 22, 125, 225),
-        border: Border.fromBorderSide(BorderSide(color: Colors.white)),
+        border: Border.fromBorderSide(
+          BorderSide(
+            color: Colors.grey,
+          ),
+        ),
       ),
       child: child,
     );
@@ -26,7 +30,11 @@ class ActionButton extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(8)),
         color: Colors.white.withOpacity(0.75),
-        border: const Border.fromBorderSide(BorderSide(color: Colors.white)),
+        border: const Border.fromBorderSide(
+          BorderSide(
+            color: Colors.grey,
+          ),
+        ),
       ),
       child: child,
     );
