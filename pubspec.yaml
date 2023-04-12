@@ -3,7 +3,7 @@ description: An earthquake monitoring Application
 
 publish_to: "none"
 
-version: 0.7.2+415
+version: 2.0.0+1000
 
 environment:
   sdk: ">=2.18.2 <3.0.0"
@@ -16,7 +16,7 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
-  pedantic_mono: ^1.19.2+1
+  pedantic_mono: ^1.21.1
 
 flutter:
   uses-material-design: true
