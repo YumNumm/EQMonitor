@@ -1,14 +1,16 @@
 import 'dart:ui';
 
+import 'package:eqmonitor/common/component/button/action_button.dart';
+import 'package:eqmonitor/common/component/container/blur_container.dart';
 import 'package:flutter/material.dart';
 
 class IntroductionPage extends StatelessWidget {
   const IntroductionPage({
-    this.onNext,
+    required this.onNext,
     super.key,
   });
 
-  final void Function()? onNext;
+  final void Function() onNext;
 
   @override
   Widget build(BuildContext context) {
@@ -26,39 +28,34 @@ class IntroductionPage extends StatelessWidget {
             ),
           ),
         ),
-        // 画面上部の説明文
-        Container(
-          margin: const EdgeInsets.only(top: 10),
-          child: const Text(
-            'Earthquake Monitor',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-            ),
-          ),
-        ),
-        // 画面中央の説明文
-        Container(
-          margin: const EdgeInsets.only(top: 50),
-          child: const Text(
-            '地震の発生を通知します',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-            ),
+
+        const Spacer(),
+        const BlurContainer(
+          child: Padding(
+            padding: EdgeInsets.all(100),
+            child: Text('EQMonitor'),
           ),
         ),
         // 画面下部のボタン
-        Container(
-          margin: const EdgeInsets.only(top: 50),
-          child: ElevatedButton(
-            onPressed: () {
-              // 画面遷移
-              Navigator.pushNamed(context, '/setup');
-            },
-            child: const Text('はじめる'),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: ActionButton(
+            isEnabled: true,
+            onPressed: onNext,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: SizedBox(
+                width: double.infinity,
+                child: Center(
+                  child: Text(
+                    'はじめる',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ),
+              ),
+            ),
           ),
-        ),
+        )
       ],
     );
 
