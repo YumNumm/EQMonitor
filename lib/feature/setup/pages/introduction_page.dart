@@ -42,14 +42,16 @@ class IntroductionPage extends StatelessWidget {
           child: ActionButton(
             isEnabled: true,
             onPressed: onNext,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(vertical: 12),
               child: SizedBox(
                 width: double.infinity,
                 child: Center(
                   child: Text(
                     'はじめる',
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

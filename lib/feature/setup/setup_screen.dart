@@ -15,7 +15,6 @@ class SetupScreen extends HookConsumerWidget {
       itemBuilder: (context, index) {
         switch (index) {
           case 0:
-          case 1:
             return IntroductionPage(
               onNext: () => pageController.nextPage(
                 duration: const Duration(milliseconds: 100),
