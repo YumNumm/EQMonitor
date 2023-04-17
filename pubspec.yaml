@@ -23,7 +23,7 @@ dependencies:
   dynamic_color: ^1.5.4
   envied: ^0.2.3
   expandable: ^5.0.1
-  firebase_analytics: ^10.0.6
+  firebase_analytics: ^10.2.0
   firebase_core: ^2.3.0
   firebase_crashlytics: ^3.0.2
   firebase_messaging: ^14.1.2
