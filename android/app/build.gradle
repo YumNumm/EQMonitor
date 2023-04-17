@@ -65,9 +65,11 @@ android {
             shrinkResources true
             multiDexEnabled true
             versionNameSuffix '.r'
+            resValue "string", "app_name", "EQMonitor"
         }
         debug {
             versionNameSuffix '.d'
+            resValue "string", "app_name", "EQMonitor (Debug)"
         }
     }
     buildToolsVersion '33.0.0'
@@ -84,15 +86,16 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:multidex:1.0.3'
     // Import the BoM for the Firebase platform
-    implementation platform('com.google.firebase:firebase-bom:31.0.2')
+    implementation platform('com.google.firebase:firebase-bom:31.5.0')
 
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-perf'
     implementation 'com.google.firebase:firebase-messaging'
-    implementation 'com.google.android.material:material:1.7.0-rc01'
-    implementation 'androidx.core:core-ktx:1.9.0-rc01'
-    implementation 'androidx.work:work-runtime-ktx:2.8.0-alpha03'
+    implementation 'com.google.android.material:material:1.9.0-rc01'
+    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.work:work-runtime-ktx:2.8.1'
+    implementation 'androidx.core:core-splashscreen:1.0.0'
 }
 
 apply plugin: 'com.google.firebase.crashlytics'
