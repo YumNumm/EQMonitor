@@ -65,7 +65,7 @@ dependencies:
   substring_highlight: ^1.0.33
   supabase: ^1.0.1
   supabase_flutter: ^1.2.2
-  talker_flutter: ^2.1.0
+  talker_flutter: ^2.4.0
   url_launcher: ^6.1.7
   web_socket_channel: ^2.2.0
 
