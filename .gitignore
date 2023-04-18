@@ -150,3 +150,5 @@ ios/Runner/GoogleService-Info.plist
 macos/Runner/GoogleService-Info.plist
 macos/Runner/GoogleService-Info.plist
 ios/GoogleService-Info.plist
+.envrc
+ios/production_net.yumnumm.eqmonitor_ios*
