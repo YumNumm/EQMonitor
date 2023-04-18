@@ -9,6 +9,4 @@ class KmoniDataSource {
       'https://www.data.jma.go.jp/developer/xml/feed/eqvol.xml',
     );
   }
-
-
 }
