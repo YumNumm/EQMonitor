@@ -12,6 +12,7 @@ dependencies:
   collection: ^1.16.0
   cupertino_icons: ^1.0.5
   device_preview: ^1.1.0
+  dio: ^5.1.1
   flutter:
     sdk: flutter
   flutter_hooks: ^0.18.6

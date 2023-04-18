@@ -14,17 +14,20 @@ class ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final enabledWidget = DecoratedBox(
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(8)),
-        color: Color.fromARGB(255, 22, 125, 225),
-        border: Border.fromBorderSide(
-          BorderSide(
-            color: Colors.grey,
+    final enabledWidget = InkWell(
+      onTap: onPressed,
+      child: DecoratedBox(
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+          color: Color.fromARGB(255, 22, 125, 225),
+          border: Border.fromBorderSide(
+            BorderSide(
+              color: Colors.grey,
+            ),
           ),
         ),
+        child: child,
       ),
-      child: child,
     );
     final disabledWidget = DecoratedBox(
       decoration: BoxDecoration(
