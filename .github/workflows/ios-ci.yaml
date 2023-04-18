@@ -1,11 +1,9 @@
-name: Build ipa(release)
-
+name: iOS CI
 #発火条件
 on:
   workflow_dispatch:
   push:
-    branches: [main,ios,without-firebase]
-
+    branches: [main]
 jobs:
   build:
     #ビルド環境
@@ -83,9 +81,10 @@ jobs:
           mv Payload.zip Payload.ipa
           rm -rf Payload
 
-      - name: Upload IPA artifact
-        if: matrix.os == 'macos-latest'
-        uses: actions/upload-artifact@v1.0.0
-        with:
-          name: release-ipa
-          path: Payload.ipa
+      # ipa ファイルの出力
+      - name: Create ipa file
+        run: flutter build ipa --export-options-plist=ExportOptions.plist --build-number ${GITHUB_RUN_NUMBER}
+
+      # AppStoreConnect にアップロードする
+      - name: Upload to AppStoreConnect
+        run: xcrun altool --upload-app -f "./build/ios/ipa/github_actios_sample.ipa" -u "${{ secrets.APPLE_ID }}" -p "${{ secrets.APPLE_APP_PASS }}"
