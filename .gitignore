@@ -7,6 +7,12 @@
 *.freezed.dart
 .env
 
+
+*.ipa
+*.dSYM.zip
+
+vendor/*
+
 # Screenshot
 *.skp
 
