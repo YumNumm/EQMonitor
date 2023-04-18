@@ -188,6 +188,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "dio",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/dio-5.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
       "name": "ffi",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/ffi-2.0.1",
       "packageUri": "lib/",
@@ -686,7 +692,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2023-04-17T14:40:30.658612Z",
+  "generated": "2023-04-18T06:20:55.870816Z",
   "generator": "pub",
   "generatorVersion": "2.19.6"
 }
