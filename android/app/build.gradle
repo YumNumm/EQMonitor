@@ -76,6 +76,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+    namespace 'net.yumnumm.eqmonitor'
 }
 
 flutter {
