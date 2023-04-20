@@ -19,8 +19,8 @@ class App extends StatelessWidget {
       child: MaterialApp(
         title: 'EQMonitor',
         home: const SetupScreen(),
+        theme: lightTheme,
         darkTheme: darkTheme,
-        themeMode: ThemeMode.dark,
       ),
     );
   }
