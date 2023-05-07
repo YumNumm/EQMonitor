@@ -31,7 +31,7 @@ class QuickGuideAboutEew extends StatelessWidget {
                 onPressed: onNext,
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 12),
-                  child: SizedBox(
+                  child: SizedBox( 
                     width: double.infinity,
                     child: Center(
                       child: Text(
