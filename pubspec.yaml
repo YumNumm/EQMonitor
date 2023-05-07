@@ -3,21 +3,27 @@ description: An earthquake monitoring Application
 
 publish_to: "none"
 
-version: 2.0.0+1
+version: 2.0.0+1010
 
 environment:
   sdk: ">=2.18.2 <3.0.0"
 
 dependencies:
+  awesome_notifications: ^0.7.4+1
+  awesome_notifications_fcm: ^0.7.3
   collection: ^1.16.0
   cupertino_icons: ^1.0.5
   device_preview: ^1.1.0
   dio: ^5.1.1
+  firebase_analytics: ^10.3.0
+  firebase_core: ^2.11.0
+  firebase_messaging: ^14.5.0
   flutter:
     sdk: flutter
   flutter_hooks: ^0.18.6
   flutter_launcher_icons: ^0.13.0
   hooks_riverpod: ^2.3.4
+  permission_handler: ^10.2.0
   riverpod_annotation: ^2.0.4
 
 dev_dependencies:

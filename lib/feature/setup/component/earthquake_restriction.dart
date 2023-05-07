@@ -12,9 +12,6 @@ class EarthquakeRestrictionWidget extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(16)),
-          border: Border.all(
-            color: Colors.white.withOpacity(0.75),
-          ),
           color: theme.cardColor,
         ),
         child: Padding(
@@ -38,15 +35,12 @@ class EarthquakeRestrictionWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Flexible(child: earthquakeImageWidget),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16),
+          const Padding(
+            padding: EdgeInsets.only(bottom: 16),
             child: Text(
               '・通知が強い揺れの到達に間に合わない可能性があります\n'
               '・予想に大きな誤差が発生する場合があります\n'
               '・予想には誤差が伴います',
-              style: textTheme.titleMedium!.copyWith(
-                color: Colors.white,
-              ),
             ),
           ),
         ],
