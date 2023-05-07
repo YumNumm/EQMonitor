@@ -4,7 +4,6 @@ import 'package:eqmonitor/feature/home/kmoni/model/kmoni_web_api_url_generator.d
 import 'package:eqmonitor/feature/home/kmoni/model/realtime_data_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-
 // TODO
 class KmoniDataSource {
   KmoniDataSource(this.dio);
