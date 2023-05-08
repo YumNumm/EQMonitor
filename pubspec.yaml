@@ -13,7 +13,7 @@ dependencies:
   bordered_text: ^2.0.0
   collection: ^1.16.0
   crypto: ^3.0.2
-  csv: ^5.0.1
+  csv: ^5.0.2
   cupertino_icons: ^1.0.5
   device_info_plus: ^8.0.0
   device_preview: ^1.1.0
