@@ -55,7 +55,7 @@ dependencies:
   package_info_plus: ^3.0.1
   path_provider: ^2.0.11
   realtime_client: ^1.0.0
-  restart_app: ^1.1.1
+  restart_app: ^1.1.2
   share_plus: ^6.0.1
   shared_preferences: ^2.0.15
   shared_preferences_android: ^2.0.13
