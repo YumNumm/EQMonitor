@@ -39,7 +39,7 @@
     },
     {
       "name": "async",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/async-2.10.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/async-2.11.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -111,7 +111,7 @@
     },
     {
       "name": "characters",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/characters-1.2.1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/characters-1.3.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -147,9 +147,9 @@
     },
     {
       "name": "collection",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/collection-1.17.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/collection-1.17.1",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.18"
     },
     {
       "name": "convert",
@@ -192,18 +192,6 @@
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/dart_style-2.3.1",
       "packageUri": "lib/",
       "languageVersion": "2.19"
-    },
-    {
-      "name": "device_frame",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/device_frame-1.1.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "device_preview",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/device_preview-1.1.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
     },
     {
       "name": "dio",
@@ -291,9 +279,9 @@
     },
     {
       "name": "flutter",
-      "rootUri": "file:///Users/r_onoue/fvm/versions/3.7.12/packages/flutter",
+      "rootUri": "file:///Users/r_onoue/fvm/versions/3.10.0/packages/flutter",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.0"
     },
     {
       "name": "flutter_hooks",
@@ -314,12 +302,6 @@
       "languageVersion": "2.17"
     },
     {
-      "name": "flutter_localizations",
-      "rootUri": "file:///Users/r_onoue/fvm/versions/3.7.12/packages/flutter_localizations",
-      "packageUri": "lib/",
-      "languageVersion": "2.17"
-    },
-    {
       "name": "flutter_riverpod",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/flutter_riverpod-2.3.6",
       "packageUri": "lib/",
@@ -327,13 +309,19 @@
     },
     {
       "name": "flutter_test",
-      "rootUri": "file:///Users/r_onoue/fvm/versions/3.7.12/packages/flutter_test",
+      "rootUri": "file:///Users/r_onoue/fvm/versions/3.10.0/packages/flutter_test",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.0"
     },
     {
       "name": "flutter_web_plugins",
-      "rootUri": "file:///Users/r_onoue/fvm/versions/3.7.12/packages/flutter_web_plugins",
+      "rootUri": "file:///Users/r_onoue/fvm/versions/3.10.0/packages/flutter_web_plugins",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "freezed",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/freezed-2.3.3",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -354,6 +342,18 @@
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/glob-2.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.15"
+    },
+    {
+      "name": "go_router",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/go_router-7.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "go_router_builder",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/go_router_builder-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
     },
     {
       "name": "graphs",
@@ -405,13 +405,19 @@
     },
     {
       "name": "js",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/js-0.6.5",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/js-0.6.7",
       "packageUri": "lib/",
-      "languageVersion": "2.16"
+      "languageVersion": "2.19"
     },
     {
       "name": "json_annotation",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/json_annotation-4.8.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "json_serializable",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/json_serializable-6.6.2",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
@@ -429,7 +435,7 @@
     },
     {
       "name": "matcher",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/matcher-0.12.13",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/matcher-0.12.15",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -441,7 +447,7 @@
     },
     {
       "name": "meta",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/meta-1.8.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/meta-1.9.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -452,8 +458,8 @@
       "languageVersion": "2.18"
     },
     {
-      "name": "nested",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/nested-1.0.0",
+      "name": "ntp",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/ntp-2.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -465,7 +471,7 @@
     },
     {
       "name": "path",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/path-1.8.2",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/path-1.8.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -486,6 +492,12 @@
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/path_provider_windows-2.1.6",
       "packageUri": "lib/",
       "languageVersion": "2.17"
+    },
+    {
+      "name": "path_to_regexp",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/path_to_regexp-0.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "pedantic_mono",
@@ -560,12 +572,6 @@
       "languageVersion": "2.14"
     },
     {
-      "name": "provider",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/provider-6.0.5",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "pub_semver",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/pub_semver-2.1.4",
       "packageUri": "lib/",
@@ -615,7 +621,7 @@
     },
     {
       "name": "shared_preferences",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/shared_preferences-2.1.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/shared_preferences-2.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -669,15 +675,21 @@
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///Users/r_onoue/fvm/versions/3.7.12/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///Users/r_onoue/fvm/versions/3.10.0/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.0"
     },
     {
       "name": "source_gen",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/source_gen-1.3.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
+    },
+    {
+      "name": "source_helper",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/source_helper-1.3.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "source_span",
@@ -723,7 +735,7 @@
     },
     {
       "name": "test_api",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/test_api-0.4.16",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/test_api-0.5.1",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -797,10 +809,10 @@
       "name": "eqmonitor",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-05-07T16:20:53.166543Z",
+  "generated": "2023-05-10T16:27:51.128649Z",
   "generator": "pub",
-  "generatorVersion": "2.19.6"
+  "generatorVersion": "3.0.0"
 }
