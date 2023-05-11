@@ -315,6 +315,7 @@
 			files = (
 			);
 			inputPaths = (
+				"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}",
 			);
 			name = "Thin Binary";
 			outputPaths = (
@@ -547,7 +548,7 @@
 				CODE_SIGN_ENTITLEMENTS = FcmServiceExtension/FcmServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1004;
 				DEVELOPMENT_TEAM = CPL7H8SHVM;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -555,7 +556,7 @@
 				INFOPLIST_FILE = FcmServiceExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = FcmServiceExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -589,7 +590,7 @@
 				CODE_SIGN_ENTITLEMENTS = FcmServiceExtension/FcmServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1004;
 				DEVELOPMENT_TEAM = CPL7H8SHVM;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -597,7 +598,7 @@
 				INFOPLIST_FILE = FcmServiceExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = FcmServiceExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -628,7 +629,7 @@
 				CODE_SIGN_ENTITLEMENTS = FcmServiceExtension/FcmServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1004;
 				DEVELOPMENT_TEAM = CPL7H8SHVM;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -636,7 +637,7 @@
 				INFOPLIST_FILE = FcmServiceExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = FcmServiceExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

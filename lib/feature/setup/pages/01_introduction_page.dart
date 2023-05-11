@@ -56,6 +56,7 @@ class IntroductionPage extends StatelessWidget {
                     'クイックガイドを開始',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
                 ),

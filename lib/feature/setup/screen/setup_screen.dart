@@ -1,8 +1,14 @@
+import 'dart:async';
+
+import 'package:eqmonitor/common/provider/shared_preferences.dart';
+import 'package:eqmonitor/common/router/router.dart';
 import 'package:eqmonitor/feature/setup/pages/01_introduction_page.dart';
-import 'package:eqmonitor/feature/setup/pages/02_quick_guide_about_eew.dart';
+import 'package:eqmonitor/feature/setup/pages/03_notification_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../pages/02_quick_guide_about_eew copy.dart';
 
 class SetupScreen extends HookConsumerWidget {
   const SetupScreen({super.key});
@@ -21,11 +27,16 @@ class SetupScreen extends HookConsumerWidget {
       IntroductionPage(
         onNext: next,
       ),
-      QuickGuideAboutEew(
+      QuickGuideAboutEewPage(
         onNext: next,
       ),
-      IntroductionPage(
-        onNext: next,
+      NotificationSettingPage(
+        onNext: () async {
+          unawaited(
+            ref.read(sharedPreferencesProvider).setBool('isInitialized', true),
+          );
+          const HomeRoute().pushReplacement(context);
+        },
       ),
     ];
     return PageView.builder(

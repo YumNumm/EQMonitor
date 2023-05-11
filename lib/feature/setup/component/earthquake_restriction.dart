@@ -6,7 +6,6 @@ class EarthquakeRestrictionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
     final earthquakeImageWidget = Padding(
       padding: const EdgeInsets.all(16),
       child: DecoratedBox(

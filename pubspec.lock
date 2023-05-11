@@ -265,6 +265,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.1"
+  extra_pedantic:
+    dependency: transitive
+    description:
+      name: extra_pedantic
+      sha256: eb9cc0842dc1c980f00fd226364456d2169d54f7118b8ae16443188063edce0b
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.0"
   fake_async:
     dependency: transitive
     description:
@@ -440,6 +448,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.0"
+  geodesy:
+    dependency: transitive
+    description:
+      name: geodesy
+      sha256: d9959000de938adf760f946546ccbf9ebdff8f4f6d0b5c54e8b8b1ed350b1028
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.0-nullsafety.0"
+  geojson:
+    dependency: "direct main"
+    description:
+      name: geojson
+      sha256: "8aab8116d074e92ef2d1ade25ec5ae90ea8bf024a920ab46703c433ffe08878f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
+  geopoint:
+    dependency: transitive
+    description:
+      name: geopoint
+      sha256: "594afb50a689e6584b80b7de8332c83a78e50725dc4324b2c014d19c56de5e3f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   glob:
     dependency: transitive
     description:
@@ -528,6 +560,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  iso:
+    dependency: transitive
+    description:
+      name: iso
+      sha256: "7030a1a096f7924deb6cccde6c7d80473dddd54eeedf20402e3d6e51b1672b27"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   js:
     dependency: transitive
     description:
@@ -552,6 +592,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.6.2"
+  latlong2:
+    dependency: transitive
+    description:
+      name: latlong2
+      sha256: "408993a0e3f46e79ce1f129e4cb0386eef6d48dfa6394939ecacfbd7049154ec"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.1"
   lints:
     dependency: transitive
     description:
@@ -656,6 +704,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.0"
+  pedantic:
+    dependency: transitive
+    description:
+      name: pedantic
+      sha256: "67fc27ed9639506c856c840ccce7594d0bdcd91bc8d53d6e52359449a1d50602"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.11.1"
   pedantic_mono:
     dependency: "direct dev"
     description:
@@ -893,6 +949,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  slugify:
+    dependency: transitive
+    description:
+      name: slugify
+      sha256: b272501565cb28050cac2d96b7bf28a2d24c8dae359280361d124f3093d337c3
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   source_gen:
     dependency: transitive
     description:

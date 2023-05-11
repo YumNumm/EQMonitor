@@ -22,6 +22,7 @@ dependencies:
   flutter_hooks: ^0.18.6
   flutter_launcher_icons: ^0.13.0
   freezed_annotation: ^2.2.0
+  geojson: ^1.0.0
   go_router: ^7.0.0
   hooks_riverpod: ^2.3.6
   json_annotation: ^4.8.1
