@@ -5,6 +5,10 @@ class HomeView extends ConsumerWidget {
   const HomeView({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Scaffold();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('EQMonitor'),
+      ),
+    );
   }
 }

@@ -1,13 +1,14 @@
+import 'package:eqmonitor/common/router/router.dart';
 import 'package:eqmonitor/common/theme/dark_theme.dart';
-import 'package:eqmonitor/feature/setup/screen/setup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class App extends StatelessWidget {
+class App extends ConsumerWidget {
   const App({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.light,
@@ -16,11 +17,11 @@ class App extends StatelessWidget {
         systemNavigationBarColor: Colors.transparent,
         systemNavigationBarIconBrightness: Brightness.dark,
       ),
-      child: MaterialApp(
+      child: MaterialApp.router(
         title: 'EQMonitor',
-        home: const SetupScreen(),
-        theme: lightTheme,
+        theme: darkTheme,
         darkTheme: darkTheme,
+        routerConfig: ref.read(goRouterProvider),
       ),
     );
   }
