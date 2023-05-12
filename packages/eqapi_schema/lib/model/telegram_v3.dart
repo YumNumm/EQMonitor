@@ -1,56 +1,23 @@
-import 'package:eqmonitor/feature/api/model/components/accuracy.dart';
-import 'package:eqmonitor/feature/api/model/components/comments.dart';
-import 'package:eqmonitor/feature/api/model/components/earthquake.dart';
-import 'package:eqmonitor/feature/api/model/components/eew_hypocenter.dart';
-import 'package:eqmonitor/feature/api/model/components/eew_intensity.dart';
-import 'package:eqmonitor/feature/api/model/components/eew_region.dart';
-import 'package:eqmonitor/feature/api/model/components/intensity.dart';
-import 'package:eqmonitor/feature/api/model/components/tsunami_information/comments.dart';
-import 'package:eqmonitor/feature/api/model/components/tsunami_information/vtse41.dart';
-import 'package:eqmonitor/feature/api/model/components/tsunami_information/vtse51.dart';
-import 'package:eqmonitor/feature/api/model/components/tsunami_information/vtse52.dart';
+import 'package:eqapi_schema/extension/int_to_string.dart';
+import 'package:eqapi_schema/model/components/accuracy.dart';
+import 'package:eqapi_schema/model/components/comments.dart';
+import 'package:eqapi_schema/model/components/earthquake-explanation/naming.dart';
+import 'package:eqapi_schema/model/components/earthquake-nankai/earthquake_info.dart';
+import 'package:eqapi_schema/model/components/earthquake.dart';
+import 'package:eqapi_schema/model/components/eew_hypocenter.dart';
+import 'package:eqapi_schema/model/components/eew_intensity.dart';
+import 'package:eqapi_schema/model/components/eew_region.dart';
+import 'package:eqapi_schema/model/components/intensity.dart';
+import 'package:eqapi_schema/model/components/tsunami-information/comments.dart';
+import 'package:eqapi_schema/model/components/tsunami-information/vtse41.dart';
+import 'package:eqapi_schema/model/components/tsunami-information/vtse51.dart';
+import 'package:eqapi_schema/model/components/tsunami-information/vtse52.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'telegram_v3.freezed.dart';
 part 'telegram_v3.g.dart';
 
 class TelegramV3 {
-  /*     id?: number
-    hash?: string
-    eventId: number
-    type:
-      | '緊急地震速報（地震動予報）'
-      | '津波警報・注意報・予報a'
-      | '津波情報a'
-      | '各地の満潮時刻・津波到達予想時刻に関する情報'
-      | '津波観測に関する情報'
-      | '沖合の津波観測に関する情報'
-      | '震度速報' // VXSE51
-      | '震源に関する情報' // VXSE52
-      | '震源・震度に関する情報' // VXSE53
-      | '遠地地震に関する情報' // VXSE53
-      | '地震の活動状況等に関する情報'
-      | '地震回数に関する情報'
-      | '顕著な地震の震源要素更新のお知らせ'
-      | '長周期地震動に関する観測情報'
-      | '南海トラフ地震臨時情報'
-    schemaType:
-      | 'eew-information'
-      | 'earthquake-information'
-      | 'earthquake-explanation'
-      | 'earthquake-counts'
-      | 'earthquake-hypocenter-update'
-      | 'earthquake-nankai'
-      | 'tsunami-information'
-    status: '通常' | '訓練' | '試験'
-    infoType: '発表' | '訂正' | '遅延' | '取消'
-    pressTime: string
-    reportTime?: string
-    validTime?: string
-    serialNo?: number
-    headline?: string
-    body: Object*/
-
   const TelegramV3({
     this.id,
     this.hash,
@@ -66,6 +33,15 @@ class TelegramV3 {
     this.headline,
     required this.body,
   });
+
+  factory TelegramV3.fromJsonAndEventID(
+    Map<String, dynamic> json,
+    String eventId,
+  ) =>
+      TelegramV3.fromJson({
+        ...json,
+        'eventId': eventId,
+      });
 
   factory TelegramV3.fromJson(Map<String, dynamic> json) {
     final base = TelegramV3Base.fromJson(json);
@@ -91,31 +67,49 @@ class TelegramV3 {
         }
       case TelegramType.vtse41:
         if (base.infoType == TelegramInfoType.cancel) {
-          body = TsunamiCancelBody.fromJson(base.body);
+          body = TelegramCancelBody.fromJson(base.body);
         } else {
           body = TelegramVtse41Body.fromJson(base.body);
         }
       case TelegramType.vtse51:
         if (base.infoType == TelegramInfoType.cancel) {
-          body = TsunamiCancelBody.fromJson(base.body);
+          body = TelegramCancelBody.fromJson(base.body);
         } else {
           body = TelegramVtse51Body.fromJson(base.body);
         }
       case TelegramType.vtse52:
         if (base.infoType == TelegramInfoType.cancel) {
-          body = TsunamiCancelBody.fromJson(base.body);
+          body = TelegramCancelBody.fromJson(base.body);
         } else {
           body = TelegramVtse52Body.fromJson(base.body);
         }
       case TelegramType.vtse52Cancel:
       case TelegramType.vtse52Cancel2:
-        body = TsunamiCancelBody.fromJson(base.body);
-      case TelegramType.vxse56:
-      case TelegramType.vxse60:
+        body = TelegramCancelBody.fromJson(base.body);
+      // 顕著な地震の震源要素更新のお知らせ
       case TelegramType.vxse61:
+        if (base.infoType == TelegramInfoType.cancel) {
+          body = TelegramCancelBody.fromJson(base.body);
+        } else {
+          body = TelegramVtse61Body.fromJson(base.body);
+        }
+
+      /// 南海トラフ地震臨時情報
       case TelegramType.vyse50:
       case TelegramType.vyse51:
       case TelegramType.vyse52:
+        if (base.infoType == TelegramInfoType.cancel) {
+          body = TelegramCancelBody.fromJson(base.body);
+        } else {
+          body = EarthquakeNankaiBody.fromJson(base.body);
+        }
+      case TelegramType.vxse56:
+        if (base.infoType == TelegramInfoType.cancel) {
+          body = TelegramCancelBody.fromJson(base.body);
+        } else {
+          body = EarthquakeExplanationBody.fromJson(base.body);
+        }
+      case TelegramType.vxse60:
         throw UnimplementedError();
     }
 
@@ -197,7 +191,8 @@ class TelegramV3Base with _$TelegramV3Base {
   const factory TelegramV3Base({
     required int? id,
     required String? hash,
-    required int eventId,
+    // ignore: invalid_annotation_target
+    @JsonKey(fromJson: stringToInt, toJson: stringFromInt) required int eventId,
     required TelegramType type,
     required SchemaType schemaType,
     required TelegramStatus status,
@@ -220,7 +215,7 @@ sealed class TelegramV3Body {}
 class TelegramVxse51Body with _$TelegramVxse51Body implements TelegramV3Body {
   const factory TelegramVxse51Body({
     required Intensity? intensity,
-    required String text,
+    required String? text,
     required CommentsOmitVar comment,
   }) = _TelegramVxse51Body;
 
@@ -232,7 +227,7 @@ class TelegramVxse51Body with _$TelegramVxse51Body implements TelegramV3Body {
 class TelegramVxse52Body with _$TelegramVxse52Body implements TelegramV3Body {
   const factory TelegramVxse52Body({
     required Earthquake earthquake,
-    required String text,
+    required String? text,
     required CommentsOmitVar comment,
   }) = _TelegramVxse52Body;
 
@@ -245,7 +240,7 @@ class TelegramVxse53Body with _$TelegramVxse53Body implements TelegramV3Body {
   const factory TelegramVxse53Body({
     required Earthquake earthquake,
     required Intensity? intensity,
-    required String text,
+    required String? text,
     required CommentsOmitVar comment,
   }) = _TelegramVxse53Body;
 
@@ -258,7 +253,7 @@ class TelegramVxse62Body with _$TelegramVxse62Body implements TelegramV3Body {
   const factory TelegramVxse62Body({
     required Earthquake earthquake,
     required Intensity? intensity,
-    required String text,
+    required String? text,
     required CommentsOmitVar comment,
   }) = _TelegramVxse62Body;
 
@@ -306,13 +301,53 @@ class TelegramVtse52Body with _$TelegramVtse52Body implements TelegramV3Body {
 }
 
 @freezed
-class TsunamiCancelBody with _$TsunamiCancelBody implements TelegramV3Body {
-  const factory TsunamiCancelBody({
-    required String text,
-  }) = _TsunamiCancelBody;
+class TelegramVtse61Body with _$TelegramVtse61Body implements TelegramV3Body {
+  const factory TelegramVtse61Body({
+    required Earthquake earthquake,
+    required String? text,
+    required CommentsOnlyFree? comments,
+  }) = _TelegramVtse61Body;
 
-  factory TsunamiCancelBody.fromJson(Map<String, dynamic> json) =>
-      _$TsunamiCancelBodyFromJson(json);
+  factory TelegramVtse61Body.fromJson(Map<String, dynamic> json) =>
+      _$TelegramVtse61BodyFromJson(json);
+}
+
+@freezed
+class EarthquakeNankaiBody
+    with _$EarthquakeNankaiBody
+    implements TelegramV3Body {
+  const factory EarthquakeNankaiBody({
+    required EarthquakeNankaiInfo? earthquakeInfo,
+    required String? nextAdvisory,
+    required String? text,
+  }) = _EarthquakeNankaiBody;
+
+  factory EarthquakeNankaiBody.fromJson(Map<String, dynamic> json) =>
+      _$EarthquakeNankaiBodyFromJson(json);
+}
+
+@freezed
+class EarthquakeExplanationBody
+    with _$EarthquakeExplanationBody
+    implements TelegramV3Body {
+  const factory EarthquakeExplanationBody({
+    required Naming? naming,
+    required String text,
+    required CommentsOnlyFree? comments,
+  }) = _EarthquakeExplanationBody;
+
+  factory EarthquakeExplanationBody.fromJson(Map<String, dynamic> json) =>
+      _$EarthquakeExplanationBodyFromJson(json);
+}
+
+@freezed
+class TelegramCancelBody with _$TelegramCancelBody implements TelegramV3Body {
+  const factory TelegramCancelBody({
+    required String text,
+  }) = _TelegramCancelBody;
+
+  factory TelegramCancelBody.fromJson(Map<String, dynamic> json) =>
+      _$TelegramCancelBodyFromJson(json);
 }
 
 sealed class Vxse45 {}

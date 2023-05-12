@@ -1,11 +1,11 @@
 {
-  "Freezed class template": {
+  "Freezed class with import": {
     "prefix": "frzclass",
     "description": "Create a Freezed class",
     "body": [
       "import 'package:freezed_annotation/freezed_annotation.dart';",
-      "import 'package:flutter/foundation.dart';",
       "part '${TM_FILENAME_BASE}.freezed.dart';",
+      "part '${TM_FILENAME_BASE}.g.dart';",
       "",
       "@freezed",
       "class ${1:DataClass} with _$${1:DataClass} {",
@@ -15,6 +15,35 @@
       "\n",
       "\tfactory ${1:DataClass}.fromJson(Map<String, dynamic> json) =>",
       "\t\t_$${1:DataClass}FromJson(json);",
+      "}"
+    ]
+  },
+  "Freezed class without import ": {
+    "prefix": "frz",
+    "description": "Create a Freezed class without import",
+    "body": [
+      "@freezed",
+      "class ${1:DataClass} with _$${1:DataClass} {",
+      "\tconst factory ${1:DataClass}({",
+      "\t\t@Default(0) int counter, // Add your fields here",
+      "\t}) = _${1:DataClass};",
+      "",
+      "\tfactory ${1:DataClass}.fromJson(Map<String, dynamic> json) =>",
+      "\t\t\t_$${1:DataClass}FromJson(json);",
+      "}",
+      ""
+    ]
+  },
+  "JsonEnum": {
+    "prefix": "jsonEnum",
+    "description": "Create a JsonEnum",
+    "body": [
+      "@JsonEnum(valueField: '${2:ValueField}')",
+      "enum ${1:Type} {",
+      "\tsample('exmple');",
+      "",
+      "\tconst ${1:Type}(this.${2:ValueField});",
+      "\tfinal String ${2:ValueField};",
       "}"
     ]
   }

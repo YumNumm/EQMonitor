@@ -6,7 +6,7 @@ analyzer:
     strict-casts: true
     strict-inference: true
     strict-raw-types: true
-    
+
   exclude:
     - "**/generated_plugin_registrant.dart"
     - "**/build/**"
