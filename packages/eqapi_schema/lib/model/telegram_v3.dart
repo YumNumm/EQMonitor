@@ -208,7 +208,7 @@ class TelegramV3Base with _$TelegramV3Base {
     required int? id,
     required String? hash,
     // ignore: invalid_annotation_target
-    @JsonKey(fromJson: stringToInt, toJson: stringFromInt) required int eventId,
+    required int eventId,
     required TelegramType type,
     required SchemaType schemaType,
     required TelegramStatus status,
