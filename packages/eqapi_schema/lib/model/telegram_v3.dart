@@ -90,7 +90,7 @@ class TelegramV3 {
         if (base.infoType == TelegramInfoType.cancel) {
           body = TelegramCancelBody.fromJson(base.body);
         } else {
-          body = TelegramVtse61Body.fromJson(base.body);
+          body = TelegramVxse61Body.fromJson(base.body);
         }
 
       /// 南海トラフ地震臨時情報
@@ -106,7 +106,7 @@ class TelegramV3 {
         if (base.infoType == TelegramInfoType.cancel) {
           body = TelegramCancelBody.fromJson(base.body);
         } else {
-          body = EarthquakeExplanationBody.fromJson(base.body);
+          body = TelegramVxse56Body.fromJson(base.body);
         }
       case TelegramType.vxse60:
         throw UnimplementedError();
@@ -318,15 +318,15 @@ class TelegramVtse52Body with _$TelegramVtse52Body implements TelegramV3Body {
 }
 
 @freezed
-class TelegramVtse61Body with _$TelegramVtse61Body implements TelegramV3Body {
-  const factory TelegramVtse61Body({
+class TelegramVxse61Body with _$TelegramVxse61Body implements TelegramV3Body {
+  const factory TelegramVxse61Body({
     required Earthquake earthquake,
     required String? text,
     required CommentsOnlyFree? comments,
-  }) = _TelegramVtse61Body;
+  }) = _TelegramVxse61Body;
 
-  factory TelegramVtse61Body.fromJson(Map<String, dynamic> json) =>
-      _$TelegramVtse61BodyFromJson(json);
+  factory TelegramVxse61Body.fromJson(Map<String, dynamic> json) =>
+      _$TelegramVxse61BodyFromJson(json);
 }
 
 @freezed
@@ -344,17 +344,15 @@ class EarthquakeNankaiBody
 }
 
 @freezed
-class EarthquakeExplanationBody
-    with _$EarthquakeExplanationBody
-    implements TelegramV3Body {
-  const factory EarthquakeExplanationBody({
+class TelegramVxse56Body with _$TelegramVxse56Body implements TelegramV3Body {
+  const factory TelegramVxse56Body({
     required Naming? naming,
     required String text,
     required CommentsOnlyFree? comments,
-  }) = _EarthquakeExplanationBody;
+  }) = _TelegramVxse56Body;
 
-  factory EarthquakeExplanationBody.fromJson(Map<String, dynamic> json) =>
-      _$EarthquakeExplanationBodyFromJson(json);
+  factory TelegramVxse56Body.fromJson(Map<String, dynamic> json) =>
+      _$TelegramVxse56BodyFromJson(json);
 }
 
 @freezed
