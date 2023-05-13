@@ -1,4 +1,3 @@
-import 'package:eqapi_schema/extension/int_to_string.dart';
 import 'package:eqapi_schema/model/components/accuracy.dart';
 import 'package:eqapi_schema/model/components/comments.dart';
 import 'package:eqapi_schema/model/components/earthquake-explanation/naming.dart';
@@ -36,7 +35,7 @@ class TelegramV3 {
 
   factory TelegramV3.fromJsonAndEventID(
     Map<String, dynamic> json,
-    String eventId,
+    int eventId,
   ) =>
       TelegramV3.fromJson({
         ...json,
@@ -368,7 +367,12 @@ class TelegramCancelBody with _$TelegramCancelBody implements TelegramV3Body {
       _$TelegramCancelBodyFromJson(json);
 }
 
-sealed class Vxse45 {}
+sealed class Vxse45 {
+  factory Vxse45.fromJson(Map<String, dynamic> _) {
+    throw UnimplementedError();
+  }
+  Map<String, dynamic> toJson();
+}
 
 @freezed
 class TelegramVxse45Body
@@ -447,7 +451,7 @@ enum SchemaType {
 @JsonEnum(valueField: 'type')
 enum TelegramStatus {
   normal('通常'),
-  cancel('取消'),
+  training('訓練'),
   test('試験');
 
   const TelegramStatus(this.type);
