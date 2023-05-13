@@ -150,6 +150,22 @@ class TelegramV3 {
   final String? headline;
   final TelegramV3Body body;
 
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'hash': hash,
+        'eventId': eventId,
+        'type': type,
+        'schemaType': schemaType,
+        'status': status,
+        'infoType': infoType,
+        'pressTime': pressTime.toIso8601String(),
+        'reportTime': reportTime?.toIso8601String(),
+        'validTime': validTime?.toIso8601String(),
+        'serialNo': serialNo,
+        'headline': headline,
+        'body': body.toJson(),
+      };
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -209,7 +225,9 @@ class TelegramV3Base with _$TelegramV3Base {
       _$TelegramV3BaseFromJson(json);
 }
 
-sealed class TelegramV3Body {}
+sealed class TelegramV3Body {
+  Map<String, dynamic> toJson();
+}
 
 @freezed
 class TelegramVxse51Body with _$TelegramVxse51Body implements TelegramV3Body {
