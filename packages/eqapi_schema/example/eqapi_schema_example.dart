@@ -14,9 +14,12 @@ Future<List<TelegramV3>> main() async {
     final telegrams = value as List<dynamic>;
     for (final e in telegrams) {
       final telegram =
-          TelegramV3.fromJsonAndEventID(e as Map<String, dynamic>, eventId);
+          TelegramV3.fromJsonAndEventID(e as Map<String, dynamic>, int.parse(eventId));
       results.add(telegram);
     }
   });
+  for (final e in results) {
+    print('${e.runtimeType}: ${e.body is TelegramVxse53Body}');
+  }
   return results;
 }
