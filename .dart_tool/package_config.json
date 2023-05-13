@@ -200,6 +200,12 @@
       "languageVersion": "2.15"
     },
     {
+      "name": "eqapi_schema",
+      "rootUri": "../packages/eqapi_schema",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "extra_pedantic",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/extra_pedantic-1.5.0",
       "packageUri": "lib/",
@@ -860,7 +866,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-05-10T16:35:33.889542Z",
+  "generated": "2023-05-13T09:53:44.300573Z",
   "generator": "pub",
   "generatorVersion": "3.0.0"
 }
