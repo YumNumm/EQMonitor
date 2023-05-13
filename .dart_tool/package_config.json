@@ -200,6 +200,18 @@
       "languageVersion": "2.15"
     },
     {
+      "name": "envied",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/envied-0.3.0+3",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "envied_generator",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/envied_generator-0.3.0+3",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "eqapi_schema",
       "rootUri": "../packages/eqapi_schema",
       "packageUri": "lib/",
@@ -836,6 +848,12 @@
       "languageVersion": "2.15"
     },
     {
+      "name": "web_socket_client",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/web_socket_client-0.1.0-dev.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "win32",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/win32-4.1.4",
       "packageUri": "lib/",
@@ -866,7 +884,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-05-13T09:53:44.300573Z",
+  "generated": "2023-05-13T11:39:57.126990Z",
   "generator": "pub",
   "generatorVersion": "3.0.0"
 }
