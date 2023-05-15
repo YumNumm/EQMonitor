@@ -12,6 +12,7 @@ class App extends ConsumerWidget {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.light,
+        
         statusBarBrightness: Brightness.dark,
         statusBarColor: Colors.transparent,
         systemNavigationBarColor: Colors.transparent,
@@ -19,9 +20,9 @@ class App extends ConsumerWidget {
       ),
       child: MaterialApp.router(
         title: 'EQMonitor',
-        theme: darkTheme,
+        theme: lightTheme,
         darkTheme: darkTheme,
-        routerConfig: ref.read(goRouterProvider),
+        routerConfig: ref.watch(goRouterProvider),
       ),
     );
   }
