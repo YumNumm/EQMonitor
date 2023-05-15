@@ -25,6 +25,7 @@ Future<void> main() async {
   }
   unawaited(FirebaseMessaging.instance.subscribeToTopic('eew-all'));
   unawaited(FirebaseMessaging.instance.subscribeToTopic('earthquake-all'));
+  unawaited(FirebaseMessaging.instance.subscribeToTopic('everyone'));
 
   return runApp(
     ProviderScope(
