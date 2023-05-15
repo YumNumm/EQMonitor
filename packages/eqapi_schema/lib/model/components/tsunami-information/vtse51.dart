@@ -8,8 +8,8 @@ part 'vtse51.g.dart';
 @freezed
 class PublicBodyVtse51Tsunami with _$PublicBodyVtse51Tsunami {
   const factory PublicBodyVtse51Tsunami({
-    required List<TsunamiForecast> forecast,
-    required List<TsunamiObservation>? observation,
+    required List<TsunamiForecast> forecasts,
+    required List<TsunamiObservation>? observations,
   }) = _PublicBodyVtse51Tsunami;
 
   factory PublicBodyVtse51Tsunami.fromJson(Map<String, dynamic> json) =>
