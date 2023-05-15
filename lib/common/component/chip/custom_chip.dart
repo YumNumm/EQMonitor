@@ -14,12 +14,10 @@ class CustomChip extends StatelessWidget {
           Radius.circular(8),
         ),
         side: BorderSide(
-          color: Colors.white,
           width: 0,
         ),
       ),
       side: const BorderSide(
-        color: Colors.white,
         width: 0,
       ),
       padding: EdgeInsets.zero,

@@ -15,20 +15,19 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
   const EarthquakeHistoryPage({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(earthquakeHistoryViewModelProvider);
     final scrollController = useScrollController();
     useEffect(
       () {
         WidgetsBinding.instance.endOfFrame.then(
           (_) async {
-            // 表示領域の0.9に到達したら次のページを読み込む
-            scrollController.addListener(() {
-              if (scrollController.position.extentAfter <
-                  scrollController.position.viewportDimension * 0.9) {
-                ref
-                    .read(earthquakeHistoryViewModelProvider.notifier)
-                    .loadMore();
-              }
-            });
+            scrollController.addListener(
+              () => ref
+                  .read(earthquakeHistoryViewModelProvider.notifier)
+                  .onScrollPositionChanged(
+                    scrollController,
+                  ),
+            );
             // 初回読み込みを行う
             await ref
                 .read(earthquakeHistoryViewModelProvider.notifier)
@@ -39,51 +38,25 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
       },
       [],
     );
-    final state = ref.watch(earthquakeHistoryViewModelProvider);
     final body = CustomScrollView(
+      controller: scrollController,
       slivers: [
         SliverAppBar.medium(
           title: const Text('地震の履歴'),
         ),
-        /*+ SliverList(
-                // Use a delegate to build items as they're scrolled on screen.
-                delegate: SliverChildBuilderDelegate(
-                  // The builder function returns a ListTile with a title that
-                  // displays the index of the current item.
-                  (context, index) => ListTile(title: Text('Item #$index')),
-                  // Builds 1000 ListTiles
-                  childCount: 1000,
-                ),
-              ),*/
         state.when(
           data: (data) {
-            if (data.isEmpty) {
-              return SliverFillRemaining(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      '地震履歴がありません。',
-                    ),
-                    FilledButton.tonal(
-                      onPressed: ref
-                          .read(
-                            earthquakeHistoryViewModelProvider.notifier,
-                          )
-                          .reload,
-                      child: const Text('読み込む'),
-                    ),
-                  ],
-                ),
-              );
-            }
-            return _earthquakeHistorySliverList(data, ref);
+            return EarthquakeHistoryListView(
+              data: data,
+            );
           },
           error: (error, stackTrace) {
             // dataがある場合にはそれを表示
             if (state.hasValue) {
               final data = state.value!;
-              return _earthquakeHistorySliverList(data, ref);
+              return EarthquakeHistoryListView(
+                data: data,
+              );
             }
             return SliverFillRemaining(
               child: Column(
@@ -113,7 +86,10 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
                 Text(
                   '地震履歴を取得中です。',
                 ),
-                CircularProgressIndicator(),
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: CircularProgressIndicator.adaptive(),
+                ),
               ],
             ),
           ),
@@ -121,27 +97,97 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
       ],
     );
     return Scaffold(
-      body: body,
+      body: RefreshIndicator.adaptive(
+        onRefresh: ref.read(earthquakeHistoryViewModelProvider.notifier).reload,
+        edgeOffset: 112,
+        child: body,
+      ),
     );
   }
 }
 
-Widget _earthquakeHistorySliverList(
-  List<EarthquakeHistoryItem> data,
-  WidgetRef ref,
-) =>
-    RefreshIndicator.adaptive(
-      onRefresh: ref.read(earthquakeHistoryViewModelProvider.notifier).loadMore,
-      child: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          childCount: data.length,
-          (context, index) {
-            final item = data[index];
-            return EarthquakeHistoryTileWidget(item: item);
-          },
+class EarthquakeHistoryListView extends StatelessWidget {
+  const EarthquakeHistoryListView({
+    super.key,
+    required this.data,
+  });
+
+  final List<EarthquakeHistoryItem> data;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        childCount: data.length + 1,
+        (context, index) {
+          if (index == data.length) {
+            return const _ListBottomWidget();
+          }
+          final item = data[index];
+          return EarthquakeHistoryTileWidget(item: item);
+        },
+      ),
+    );
+  }
+}
+
+class _ListBottomWidget extends ConsumerWidget {
+  const _ListBottomWidget();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(earthquakeHistoryViewModelProvider);
+    return state.map(
+      data: (data) {
+        if (state.isLoading || state.isRefreshing || state.isReloading) {
+          return const Padding(
+            padding: EdgeInsets.all(24),
+            child: CircularProgressIndicator.adaptive(),
+          );
+        }
+        return const SizedBox.shrink();
+      },
+      error: (error) {
+        if (state.isLoading || state.isRefreshing || state.isReloading) {
+          return const Padding(
+            padding: EdgeInsets.all(24),
+            child: CircularProgressIndicator.adaptive(),
+          );
+        }
+        return Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 40,
+            horizontal: 10,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                '地震履歴の取得中にエラーが発生しました。',
+              ),
+              // 再読み込み
+              FilledButton.tonal(
+                onPressed: () => ref
+                    .read(earthquakeHistoryViewModelProvider.notifier)
+                    .fetch(isLoadMore: true),
+                child: const Text('再読み込み'),
+              ),
+              Text(
+                '${error.error}',
+              ),
+            ],
+          ),
+        );
+      },
+      loading: (data) => const Center(
+        child: Padding(
+          padding: EdgeInsets.all(24),
+          child: CircularProgressIndicator.adaptive(),
         ),
       ),
     );
+  }
+}
 
 class EarthquakeHistoryTileWidget extends ConsumerWidget {
   const EarthquakeHistoryTileWidget({
@@ -238,6 +284,9 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
     return ListTile(
       title: Text(
         title.toString(),
+        style: theme.textTheme.titleMedium?.copyWith(
+          fontWeight: FontWeight.bold,
+        ),
       ),
       subtitle: Wrap(
         crossAxisAlignment: WrapCrossAlignment.center,
@@ -253,7 +302,7 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
               child: Text(
                 '津波情報',
                 style: TextStyle(
-                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -262,7 +311,7 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
               child: Text(
                 '長周期地震動 最大階級${item.earthquake.intensity!.maxLgInt}',
                 style: const TextStyle(
-                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -272,7 +321,7 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
                 child: Text(
                   '大規模な火山',
                   style: TextStyle(
-                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               )
@@ -281,7 +330,7 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
                 child: Text(
                   '遠地地震',
                   style: TextStyle(
-                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               )
@@ -292,7 +341,7 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
                 child: Text(
                   '震度速報',
                   style: TextStyle(
-                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -301,7 +350,7 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
                 child: Text(
                   '震度速報+震源情報',
                   style: TextStyle(
-                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),

@@ -7,8 +7,10 @@ import 'package:eqapi_schema/model/components/tsunami-information/tsunami_estima
 import 'package:eqapi_schema/model/components/tsunami-information/tsunami_forecast.dart';
 import 'package:eqapi_schema/model/components/tsunami-information/tsunami_observations.dart';
 import 'package:eqapi_schema/model/telegram_v3.dart';
+import 'package:eqmonitor/common/extension/async_value.dart';
 import 'package:eqmonitor/feature/home/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/home/earthquake_history/use_case/earthquake_history_use_case.dart';
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_history_view_model.g.dart';
@@ -22,41 +24,50 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
   }
 
   late final EarthquakeHistoryUseCase _useCase;
-
   // state
   bool includeTestTelegrams = false;
 
   Future<void> reload() async {
-    // Loadingにする
-    state = const AsyncData([]);
-    // 処理開始
-    await loadMore();
+    await fetch();
   }
 
   Future<void> loadIfNull() async {
-    // Fetch中なら、何もしない
-    if (state.isLoading) {
-      return;
-    }
     // stateがnullなら、loadMoreを呼ぶ
     if ((state.value ?? []).isEmpty) {
-      return loadMore();
+      return fetch(isLoadMore: true);
     }
   }
 
-  Future<void> loadMore({
-    int limit = 10,
-  }) async {
-    assert(limit > 0 && limit < 100, 'limit must be between 0 and 100');
-    // 既にFetch中なら return
-    if (state.isLoading) {
+  Future<void> forceRefresh() async {
+    state = const AsyncLoading<List<EarthquakeHistoryItem>>();
+    await fetch();
+  }
+
+  void onScrollPositionChanged(ScrollController controller) {
+    // エラー発生時・リロード中は何もしない
+    if (state.hasError || state.isRefreshing || state.isReloading) {
       return;
     }
-    state = const AsyncLoading<List<EarthquakeHistoryItem>>()
-        .copyWithPrevious(state);
+    if (controller.position.maxScrollExtent - controller.position.pixels < 20) {
+      fetch(isLoadMore: true);
+    }
+  }
 
+  Future<void> fetch({
+    bool isLoadMore = false,
+    int limit = 50,
+  }) async {
+    if (state.isLoading || state.isRefreshing || state.isReloading) {
+      return;
+    }
+    if (isLoadMore) {
+      state = const AsyncLoading<List<EarthquakeHistoryItem>>()
+          .copyWithPrevious(state);
+    } else {
+      state = const AsyncLoading<List<EarthquakeHistoryItem>>();
+    }
     // 処理開始
-    try {
+    state = await state.guardPlus(() async {
       final offset = state.asData?.value.length ?? 0;
       final result = await _useCase.getEarthquakeHistory(
         limit: limit,
@@ -67,14 +78,11 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
         result,
         includeTestTelegrams: includeTestTelegrams,
       );
-      state = AsyncData(<EarthquakeHistoryItem>[
+      return <EarthquakeHistoryItem>[
         ...state.asData?.value ?? [],
         ...items,
-      ]);
-    } on Exception catch (e, stack) {
-      state = AsyncError<List<EarthquakeHistoryItem>>(e, stack)
-          .copyWithPrevious(state);
-    }
+      ];
+    });
   }
 
   List<EarthquakeHistoryItem> _toEarthquakeHistoryItem(
