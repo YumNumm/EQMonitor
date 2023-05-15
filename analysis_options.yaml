@@ -17,3 +17,7 @@ analyzer:
     - "**/*.gr.dart"
     - "**/l10n*.dart"
     - "**/*.gen.dart"
+
+linter:
+  rules:
+    invalid_annotation: false

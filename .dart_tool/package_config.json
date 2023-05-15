@@ -494,6 +494,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "material_button_assist",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/material_button_assist-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "material_color_utilities",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/material_color_utilities-0.2.0",
       "packageUri": "lib/",
@@ -722,6 +728,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "sheet",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/sheet-0.0.4+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "shelf",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/shelf-1.4.1",
       "packageUri": "lib/",
@@ -884,7 +896,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-05-13T11:39:57.126990Z",
+  "generated": "2023-05-14T14:01:25.748432Z",
   "generator": "pub",
   "generatorVersion": "3.0.0"
 }

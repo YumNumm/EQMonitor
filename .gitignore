@@ -7,6 +7,7 @@
 *.freezed.dart
 .env
 
+~$*
 
 *.ipa
 *.dSYM.zip
