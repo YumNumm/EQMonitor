@@ -484,6 +484,9 @@ enum JmaIntensity {
 
   const JmaIntensity(this.type);
   final String type;
+
+  @override
+  String toString() => type.replaceAll('+', '強').replaceAll('-', '弱');
 }
 
 @JsonEnum(valueField: 'type')
@@ -549,6 +552,9 @@ enum JmaLgIntensity {
 
   const JmaLgIntensity(this.type);
   final String type;
+
+  @override
+  String toString() => type;
 }
 
 @JsonEnum(valueField: 'type')
