@@ -6,4 +6,9 @@ class LatLng {
 
   final double lat;
   final double lon;
+
+  @override
+  String toString() {
+    return 'LatLng(lat: $lat, lon: $lon)';
+  }
 }

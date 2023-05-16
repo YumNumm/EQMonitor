@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 extension AsyncValueExt<T> on AsyncValue<T> {
@@ -14,5 +13,4 @@ extension AsyncValueExt<T> on AsyncValue<T> {
       return AsyncValue<T>.error(e, st).copyWithPrevious(this);
     }
   }
-
 }
