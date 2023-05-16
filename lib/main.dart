@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:eqmonitor/app.dart';
@@ -18,15 +19,18 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   final prefs = await SharedPreferences.getInstance();
-  final fcmToken = await getFirebaseMessagingToken();
-  log('Firebase token: $fcmToken');
-  if (kDebugMode) {
-    unawaited(FirebaseMessaging.instance.subscribeToTopic('config-developer'));
+  if (Platform.isAndroid || Platform.isIOS) {
+    final fcmToken = await getFirebaseMessagingToken();
+    log('Firebase token: $fcmToken');
+    if (kDebugMode) {
+      unawaited(
+        FirebaseMessaging.instance.subscribeToTopic('config-developer'),
+      );
+    }
+    unawaited(FirebaseMessaging.instance.subscribeToTopic('eew-all'));
+    unawaited(FirebaseMessaging.instance.subscribeToTopic('earthquake-all'));
+    unawaited(FirebaseMessaging.instance.subscribeToTopic('everyone'));
   }
-  unawaited(FirebaseMessaging.instance.subscribeToTopic('eew-all'));
-  unawaited(FirebaseMessaging.instance.subscribeToTopic('earthquake-all'));
-  unawaited(FirebaseMessaging.instance.subscribeToTopic('everyone'));
-
   return runApp(
     ProviderScope(
       overrides: [

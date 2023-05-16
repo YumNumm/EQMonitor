@@ -1,6 +1,6 @@
 import 'package:eqmonitor/common/provider/ntp/ntp_provider.dart';
-import 'package:eqmonitor/feature/home/kmoni/data/asset/kmoni_observation_point.dart';
-import 'package:eqmonitor/feature/home/kmoni/viewmodel/kmoni_view_model_state.dart';
+import 'package:eqmonitor/feature/debug/kmoni/data/asset/kmoni_observation_point.dart';
+import 'package:eqmonitor/feature/debug/kmoni/viewmodel/kmoni_view_model_state.dart';
 import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

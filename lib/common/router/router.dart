@@ -1,6 +1,7 @@
 import 'package:eqmonitor/common/provider/shared_preferences.dart';
-import 'package:eqmonitor/feature/home/earthquake_history/page/earthquake_history.dart';
-import 'package:eqmonitor/feature/home/home_view.dart';
+import 'package:eqmonitor/feature/debug/debug_home_view.dart';
+import 'package:eqmonitor/feature/debug/earthquake_history/page/earthquake_history.dart';
+import 'package:eqmonitor/feature/home/view/home_view.dart';
 import 'package:eqmonitor/feature/setup/screen/setup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -17,7 +18,7 @@ GoRouter goRouter(GoRouterRef ref) => GoRouter(
       initialLocation:
           (ref.read(sharedPreferencesProvider).getBool('isInitialized') ??
                   false)
-              ? const HomeRoute().location
+              ? const DebugHomeRoute().location
               : const SetupRoute().location,
     );
 
@@ -31,11 +32,12 @@ class SetupRoute extends GoRouteData {
       const SetupScreen();
 }
 
-@TypedGoRoute<HomeRoute>(path: '/')
-class HomeRoute extends GoRouteData {
-  const HomeRoute();
+@TypedGoRoute<DebugHomeRoute>(path: '/debug')
+class DebugHomeRoute extends GoRouteData {
+  const DebugHomeRoute();
   @override
-  Widget build(BuildContext context, GoRouterState state) => const HomeView();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const DebugHomeView();
 }
 
 @TypedGoRoute<EarthquakeHistoryRoute>(path: '/earthquake-history')
@@ -44,4 +46,11 @@ class EarthquakeHistoryRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const EarthquakeHistoryPage();
+}
+
+@TypedGoRoute<HomeRoute>(path: '/home')
+class HomeRoute extends GoRouteData {
+  const HomeRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state) => const HomeView();
 }

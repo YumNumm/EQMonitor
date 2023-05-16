@@ -35,7 +35,7 @@ class SetupScreen extends HookConsumerWidget {
           unawaited(
             ref.read(sharedPreferencesProvider).setBool('isInitialized', true),
           );
-          const HomeRoute().pushReplacement(context);
+          const DebugHomeRoute().pushReplacement(context);
         },
       ),
     ];
