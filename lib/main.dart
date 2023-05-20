@@ -27,9 +27,9 @@ Future<void> main() async {
         FirebaseMessaging.instance.subscribeToTopic('config-developer'),
       );
     }
-    unawaited(FirebaseMessaging.instance.subscribeToTopic('eew-all'));
-    unawaited(FirebaseMessaging.instance.subscribeToTopic('earthquake-all'));
     unawaited(FirebaseMessaging.instance.subscribeToTopic('everyone'));
+    unawaited(FirebaseMessaging.instance.subscribeToTopic('eew'));
+    unawaited(FirebaseMessaging.instance.subscribeToTopic('earthquake'));
   }
   return runApp(
     ProviderScope(
