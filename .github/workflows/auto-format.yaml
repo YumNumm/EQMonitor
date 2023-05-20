@@ -37,7 +37,7 @@ jobs:
         run: flutter --version
 
       - name: Format
-        run: flutter format $FORMAT_PATHS
+        run: dart format $FORMAT_PATHS
 
       # 変更が発生した場合は プルリクエストを作成
       - name: Create pull request

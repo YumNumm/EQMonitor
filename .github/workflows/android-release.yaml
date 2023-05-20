@@ -59,7 +59,7 @@ jobs:
       - name: Generate codes with build_runner
         run: |
           echo '${{ secrets.ENV }}' | base64 -d > .env
-          flutter pub run build_runner build --delete-conflicting-outputs
+          flutter pub run build_runner build -d
 
       - name: Generate LauncherIcon
         run: flutter pub run flutter_launcher_icons:main
