@@ -250,16 +250,17 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
           DateFormat('yyyy/MM/dd HH:mm')
               .format(item.earthquake.earthquake!.originTime.toLocal()),
         )
-        ..write('頃')
-        ..write(' 深さ');
+        ..write('頃');
       // 深さ
       switch (item.earthquake.earthquake!.hypocenter.depth) {
         case 0:
-          body.write('ごく浅い');
+          body.write('深さ ごく浅い');
         case 700:
-          body.write('やや深い');
+          body.write('深さ 700km以上');
+        case null:
+          break;
         case _:
-          body.write('${item.earthquake.earthquake!.hypocenter.depth}km');
+          body.write('深さ ${item.earthquake.earthquake!.hypocenter.depth}km');
       }
     }
     var trailing = '';
