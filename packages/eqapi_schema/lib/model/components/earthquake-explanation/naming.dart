@@ -9,7 +9,5 @@ class Naming with _$Naming {
     required String? en,
   }) = _Naming;
 
-
-  factory Naming.fromJson(Map<String, dynamic> json) =>
-    _$NamingFromJson(json);
+  factory Naming.fromJson(Map<String, dynamic> json) => _$NamingFromJson(json);
 }

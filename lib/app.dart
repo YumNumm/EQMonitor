@@ -12,7 +12,6 @@ class App extends ConsumerWidget {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.light,
-        
         statusBarBrightness: Brightness.dark,
         statusBarColor: Colors.transparent,
         systemNavigationBarColor: Colors.transparent,
