@@ -3,7 +3,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'earthquake.freezed.dart';
 part 'earthquake.g.dart';
 
-
 @freezed
 class Earthquake with _$Earthquake {
   const factory Earthquake({
@@ -13,9 +12,8 @@ class Earthquake with _$Earthquake {
     required EarthquakeMagnitude magnitude,
   }) = _Earthquake;
 
-
   factory Earthquake.fromJson(Map<String, dynamic> json) =>
-    _$EarthquakeFromJson(json);
+      _$EarthquakeFromJson(json);
 }
 
 @freezed
@@ -32,8 +30,7 @@ class EarthquakeHypocenter with _$EarthquakeHypocenter {
   }) = _EarthquakeHypocenter;
 
   factory EarthquakeHypocenter.fromJson(Map<String, dynamic> json) =>
-    _$EarthquakeHypocenterFromJson(json);
-
+      _$EarthquakeHypocenterFromJson(json);
 }
 
 @freezed
@@ -44,7 +41,7 @@ class EarthquakeHypocenterDetailed with _$EarthquakeHypocenterDetailed {
   }) = _EarthquakeHypocenterDetailed;
 
   factory EarthquakeHypocenterDetailed.fromJson(Map<String, dynamic> json) =>
-    _$EarthquakeHypocenterDetailedFromJson(json);
+      _$EarthquakeHypocenterDetailedFromJson(json);
 }
 
 @freezed
@@ -55,5 +52,5 @@ class EarthquakeMagnitude with _$EarthquakeMagnitude {
   }) = _EarthquakeMagnitude;
 
   factory EarthquakeMagnitude.fromJson(Map<String, dynamic> json) =>
-    _$EarthquakeMagnitudeFromJson(json);
+      _$EarthquakeMagnitudeFromJson(json);
 }

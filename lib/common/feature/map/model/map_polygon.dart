@@ -44,7 +44,7 @@ class MultiLineMapData<T> {
   final T properties;
 }
 
-class MapPolyline{
+class MapPolyline {
   MapPolyline._(this.points, this.boundary);
 
   factory MapPolyline.fromList(List<LatLng> points) {
