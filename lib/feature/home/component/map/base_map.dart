@@ -54,22 +54,23 @@ class BaseMapWidget extends HookConsumerWidget {
           color: const Color.fromARGB(255, 203, 211, 255),
         ),
         GestureDetector(
-          //onPanUpdate: ref.read(baseMapViewModelProvider.notifier).handlePanUpdate,
           onScaleUpdate:
               ref.read(baseMapViewModelProvider.notifier).handleScaleUpdate,
           onScaleStart:
               ref.read(baseMapViewModelProvider.notifier).handleScaleStart,
           onScaleEnd:
               ref.read(baseMapViewModelProvider.notifier).handleScaleEnd,
-          child: CustomPaint(
-            willChange: true,
-            isComplex: true,
-            painter: BaseMapPainter(
-              state: state,
-              mapData: mapData,
-              point: state.focalPoint,
+          child: ClipRRect(
+            child: CustomPaint(
+              willChange: true,
+              isComplex: true,
+              painter: BaseMapPainter(
+                state: state,
+                mapData: mapData,
+                point: state.focalPoint,
+              ),
+              size: Size.infinite,
             ),
-            size: Size.infinite,
           ),
         ),
         // 初期値に戻す
