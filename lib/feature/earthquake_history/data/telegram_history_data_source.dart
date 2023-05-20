@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:eqapi_schema/eqapi_schema.dart';
 import 'package:eqmonitor/common/provider/dio_provider.dart';
-import 'package:eqmonitor/feature/debug/earthquake_history/model/data/telegram_history.dart';
+import 'package:eqmonitor/feature/earthquake_history/model/data/telegram_history.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:web_socket_client/web_socket_client.dart';
 

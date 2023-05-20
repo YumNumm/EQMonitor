@@ -2,7 +2,7 @@ name: Flutter build Android(r)
 
 on:
   push:
-    branches: [main, android, without-firebase]
+    branches: [main, android, feature/v2]
   workflow_dispatch:
 
 jobs:
@@ -95,12 +95,6 @@ jobs:
         run: |
           firebase crashlytics:symbols:upload --app=1:179553945248:android:31d2c3e4dcc608f66fabc5 obfuscate/android
 
-      # - uses: codecov/codecov-action@v3
-      #   with:
-      #     token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-      #     fail_ci_if_error: false # optional (default = false)
-      #     verbose: true # optional (default = false)
-      #     file: ~/coverage/lcov.info
 
       #-- Slack通知 --#
       # 成功
