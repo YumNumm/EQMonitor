@@ -1,5 +1,7 @@
+import 'package:eqmonitor/common/provider/fcm_token.dart';
 import 'package:eqmonitor/common/router/router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DebugHomeView extends ConsumerWidget {
@@ -23,6 +25,33 @@ class DebugHomeView extends ConsumerWidget {
               title: const Text('ホーム画面に戻る'),
               onTap: () => const HomeRoute().push<void>(context),
               leading: const Icon(Icons.home),
+            ),
+            ListTile(
+              title: const Text('FCM Token'),
+              leading: const Icon(Icons.notifications),
+              onTap: () async {
+                final token = ref.read(fcmTokenProvider);
+                await showDialog<void>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('FCM Token'),
+                    content: Text(token),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: token));
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Copy'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
           ],
         ),
