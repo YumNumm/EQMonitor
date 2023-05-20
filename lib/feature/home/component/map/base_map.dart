@@ -29,10 +29,17 @@ class BaseMapWidget extends HookConsumerWidget {
       () {
         WidgetsBinding.instance.endOfFrame.then(
           (_) => Future(
-            () =>
-                ref.read(baseMapViewModelProvider.notifier).registerWidgetSize(
-                      context.size!,
-                    ),
+            () {
+              ref.read(baseMapViewModelProvider.notifier).registerWidgetSize(
+                    context.size!,
+                  );
+              ref.read(baseMapViewModelProvider.notifier).fitBounds(
+                [
+                  const LatLng(45.85, 149.33),
+                  const LatLng(28.71, 124.92),
+                ],
+              );
+            },
           ),
         );
         return null;
