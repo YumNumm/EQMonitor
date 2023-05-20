@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'dart:math' hide log;
+import 'dart:math' as math;
 
 import 'package:eqmonitor/common/feature/map/model/lat_lng.dart';
 import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart';
@@ -12,54 +12,61 @@ part 'base_map_viemwodel.g.dart';
 @riverpod
 class BaseMapViewModel extends _$BaseMapViewModel {
   @override
-  MapState build() => const MapState(
-        offset: Offset.zero,
-        zoomLevel: 1,
-      );
+  MapState build() {
+    ref.listenSelf((previous, next) {
+      log(next.toString());
+    });
+    return const MapState(
+      offset: Offset.zero,
+      zoomLevel: 1,
+      focalPoint: null,
+    );
+  }
 
   double? _scaleStart;
-  Offset? _referenceFocalPoint;
+  GlobalPoint? _referenceFocalPoint;
   Size? _widgetSize;
+  LatLng? _scaleStartedLatLng;
 
   void handleScaleStart(ScaleStartDetails details) {
     if (details.pointerCount == 1) {
       return;
     }
     _scaleStart = state.zoomLevel;
-    _referenceFocalPoint = state.globalPointToOffset(
-      Point(details.localFocalPoint.dx, details.localFocalPoint.dy),
+    _referenceFocalPoint = state.offsetToGlobalPoint(
+      details.focalPoint,
     );
+    _scaleStartedLatLng = WebMercatorProjection().unproject(
+      _referenceFocalPoint!,
+    );
+    log('handleScaleStart: $_scaleStartedLatLng');
   }
 
   void handleScaleUpdate(ScaleUpdateDetails details) {
-    log(_widgetSize.toString());
-    var mapState = state;
+    state = state.copyWith(
+      focalPoint: state.offsetToGlobalPoint(
+        details.focalPoint,
+      ),
+    );
+    final scale = state.zoomLevel;
     if (details.pointerCount == 1) {
       debugPrint('handleScaleUpdate: ${details.focalPointDelta}');
       handlePanUpdate(
-        Offset(details.focalPointDelta.dx, details.focalPointDelta.dy),
+        Offset(details.focalPointDelta.dx, details.focalPointDelta.dy) /
+            state.zoomLevel,
       );
       return;
     }
-    assert(_scaleStart != null);
-    // FocalPointのGlobalPointを取得
-    final focalGlobalPoint = state.offsetToGlobalPoint(
-      details.localFocalPoint,
-    );
-    // scale
-    final desiredScale = _scaleStart! * details.scale;
-    mapState = mapState.setScale(
-      desiredScale,
-    );
-    // focalPointを中心にズーム
-    final newFocalPoint = mapState.offsetToGlobalPoint(details.localFocalPoint);
-    // ズレた分を計算
-    final focalPointDelta = focalGlobalPoint - newFocalPoint;
-    log('focalPointDelta: $focalPointDelta');
-    // ズレた分を戻す
 
-    // move
-    state = mapState;
+    assert(_scaleStart != null);
+    final desiredScale = _scaleStart! * details.scale;
+    // スケール中に ユーザの2本指はシーン内で同じ位置にあるはず
+    // つまり、FocalPointのシーン内の位置はスケーリングの前後で変化しない
+
+    // _scaleStartedLatLngの位置を保ったまま、スケーリングする
+    state = state
+        .setScale(desiredScale, focalPoint: details.focalPoint)
+        .move(details.focalPointDelta / scale);
   }
 
   void handleScaleEnd(ScaleEndDetails details) {
@@ -76,6 +83,7 @@ class BaseMapViewModel extends _$BaseMapViewModel {
     state = const MapState(
       offset: Offset.zero,
       zoomLevel: 1,
+      focalPoint: null,
     );
   }
 
@@ -99,54 +107,63 @@ class BaseMapViewModel extends _$BaseMapViewModel {
     state = state.move(offset);
   }
 
-  set centerLatLng(LatLng latLng) {
-    final centerPoint = WebMercatorProjection().project(latLng);
-    final offset = state.globalPointToOffset(centerPoint);
-    final widgetCenter =
-        Offset(_widgetSize!.width / 2, _widgetSize!.height / 2);
-    final newOffset = widgetCenter - offset;
-    state = state.move(newOffset);
+  LatLng get centerLatLng {
+    final centerPoint = state.offsetToGlobalPoint(
+      Offset(_widgetSize!.width / 2, _widgetSize!.height / 2),
+    );
+    return WebMercatorProjection().unproject(centerPoint);
   }
 
+  set centerLatLng(LatLng latLng) => state = state.setCenterLatLng(
+        latLng,
+        _widgetSize!,
+      );
+
   set zoomLevel(double zoom) {
-    state = state.setScale(zoom);
+    state = state.setScale(
+      zoom,
+      focalPoint: Offset(_widgetSize!.width / 2, _widgetSize!.height / 2),
+    );
   }
 
   /// [latLngs]を含む最小の矩形を表示する
   void fitBounds(List<LatLng> latLngs) {
     final points = latLngs.map((e) => WebMercatorProjection().project(e));
-    final bounds = _getBounds(points);
-    final topLeft =
-        state.globalPointToOffset(Point(bounds.topLeft.dx, bounds.topLeft.dy));
-    final bottomRight = state.globalPointToOffset(
-      Point(bounds.bottomRight.dx, bounds.bottomRight.dy),
+    final (min, max) = _getBounds(points);
+    final center = GlobalPoint(
+      (min.x + max.x) / 2,
+      (min.y + max.y) / 2,
     );
-    final widgetSize = _widgetSize!;
-    final widgetCenter = Offset(widgetSize.width / 2, widgetSize.height / 2);
-    final newOffset = widgetCenter - (topLeft + bottomRight) / 2;
-    final newZoom = min(
-      widgetSize.width / (bottomRight.dx - topLeft.dx),
-      widgetSize.height / (bottomRight.dy - topLeft.dy),
+    final size = _widgetSize!;
+
+    final scale = math.min(
+      size.width / (max.x - min.x),
+      size.height / (max.y - min.y),
     );
-    state = state
-        .move(newOffset)
-        .setScale(newZoom)
-        .move(Offset(widgetSize.width / 2, widgetSize.height / 2));
+    state = state.setScale(
+      scale,
+    );
+
+    state = state.setCenter(
+      center,
+      _widgetSize!,
+    );
   }
 
   /// [points]を含む最小の矩形を返す
-  Rect _getBounds(Iterable<Point> points) {
+  (
+    GlobalPoint min,
+    GlobalPoint max,
+  ) _getBounds(Iterable<GlobalPoint> points) {
     final xs = points.map((e) => e.x);
     final ys = points.map((e) => e.y);
-    final minX = xs.reduce(min);
-    final maxX = xs.reduce(max);
-    final minY = ys.reduce(min);
-    final maxY = ys.reduce(max);
-    return Rect.fromLTRB(
-      minX.toDouble(),
-      minY.toDouble(),
-      maxX.toDouble(),
-      maxY.toDouble(),
+    final minX = xs.reduce(math.min);
+    final maxX = xs.reduce(math.max);
+    final minY = ys.reduce(math.min);
+    final maxY = ys.reduce(math.max);
+    return (
+      GlobalPoint(minX, minY),
+      GlobalPoint(maxX, maxY),
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:eqmonitor/common/provider/shared_preferences.dart';
 import 'package:eqmonitor/feature/debug/debug_home_view.dart';
-import 'package:eqmonitor/feature/debug/earthquake_history/page/earthquake_history.dart';
+import 'package:eqmonitor/feature/earthquake_history/page/earthquake_history.dart';
 import 'package:eqmonitor/feature/home/view/home_view.dart';
 import 'package:eqmonitor/feature/setup/screen/setup_screen.dart';
 import 'package:flutter/material.dart';

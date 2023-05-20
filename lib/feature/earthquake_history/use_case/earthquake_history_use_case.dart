@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:eqapi_schema/model/telegram_v3.dart';
-import 'package:eqmonitor/feature/debug/earthquake_history/data/telegram_history_data_source.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/telegram_history_data_source.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_history_use_case.g.dart';

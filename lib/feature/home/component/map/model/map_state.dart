@@ -14,6 +14,11 @@ class MapState with _$MapState {
     @JsonKey(fromJson: _offsetFromJson, toJson: _offsetToJson)
         required Offset offset,
     required double zoomLevel,
+    @JsonKey(
+      fromJson: _globalPointFromJson,
+      toJson: _globalPointToJson,
+    )
+        required GlobalPoint? focalPoint,
   }) = _MapState;
 
   factory MapState.fromJson(Map<String, dynamic> json) =>
@@ -32,20 +37,33 @@ Map<String, dynamic> _offsetToJson(Offset instance) => <String, dynamic>{
       'dy': instance.dy,
     };
 
+Map<String, dynamic> _globalPointToJson(GlobalPoint? instance) =>
+    <String, dynamic>{
+      'x': instance?.x,
+      'y': instance?.y,
+    };
+
+GlobalPoint? _globalPointFromJson(Map<String, dynamic> json) {
+  return GlobalPoint(
+    json['x'] as double,
+    json['y'] as double,
+  );
+}
+
 extension MapStateProjection on MapState {
   /// GlobalPointをOffsetに変換する
   Offset globalPointToOffset(GlobalPoint point) {
     return Offset(
-      point.x * zoomLevel + offset.dx,
-      point.y * zoomLevel + offset.dy,
+      (point.x - offset.dx) * zoomLevel,
+      (point.y - offset.dy) * zoomLevel,
     );
   }
 
   /// 画面座標OffsetをGlobalPointに変換する
   GlobalPoint offsetToGlobalPoint(Offset offset) {
-    return Point(
-      offset.dx / zoomLevel - this.offset.dx,
-      offset.dy / zoomLevel - this.offset.dy,
+    return GlobalPoint(
+      offset.dx / zoomLevel + this.offset.dx,
+      offset.dy / zoomLevel + this.offset.dy,
     );
   }
 
@@ -57,7 +75,7 @@ extension MapStateProjection on MapState {
 
   MapState move(Offset offset) {
     return copyWith(
-      offset: this.offset + offset,
+      offset: this.offset - offset,
     );
   }
 
@@ -67,24 +85,33 @@ extension MapStateProjection on MapState {
     );
   }
 
-  MapState moveCenter(Point<double> offset, Size size) {
-    // 中心を移動する
-    final focalPoint = globalPointToOffset(offset);
-    final newOffset = focalPoint;
-    debugPrint('focalPoint: $focalPoint');
-    return move(newOffset);
+  /// 中心座標を[latLng]にする
+  MapState setCenterLatLng(LatLng latLng, Size size) {
+    final globalPoint = WebMercatorProjection().project(latLng);
+    return copyWith(
+      offset: Offset(globalPoint.x, globalPoint.y),
+      focalPoint: focalPoint,
+    ).move(Offset(size.width / 2, size.height / 2) / zoomLevel);
   }
 
-  MapState scale(double scale) {
+  /// 中心座標を[point]にする
+  MapState setCenter(GlobalPoint point, Size size) {
     return copyWith(
-      zoomLevel: scale,
-    );
+      offset: Offset(point.x, point.y),
+      focalPoint: focalPoint,
+    ).move(Offset(size.width / 2, size.height / 2) / zoomLevel);
   }
 
-  MapState setScale(double scale) {
-    return copyWith(
+  /// 中心座標を維持して拡大縮小する
+  MapState setScale(double scale, {Offset focalPoint = Offset.zero}) {
+    var mapState = this;
+    final beforeFocalPoint = mapState.offsetToGlobalPoint(focalPoint);
+    mapState = mapState.copyWith(
       zoomLevel: scale,
     );
+    final afterFocalPoint = mapState.offsetToGlobalPoint(focalPoint);
+    final diff = afterFocalPoint - beforeFocalPoint;
+    return mapState.move(diff.toOffset() / zoomLevel).move(diff.toOffset());
   }
 }
 

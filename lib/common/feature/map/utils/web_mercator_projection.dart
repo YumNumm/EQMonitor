@@ -33,4 +33,19 @@ class WebMercatorProjection {
   }
 }
 
-typedef GlobalPoint = Point<double>;
+class GlobalPoint extends Point<double> {
+  const GlobalPoint(super.x, super.y);
+
+  factory GlobalPoint.fromLatlng(LatLng latLng) {
+    return WebMercatorProjection().project(latLng);
+  }
+
+  LatLng toLatLng() {
+    return WebMercatorProjection().unproject(this);
+  }
+
+  @override
+  String toString() {
+    return 'GlobalPoint($x, $y)';
+  }
+}

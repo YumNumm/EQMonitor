@@ -4,8 +4,10 @@ import 'package:eqmonitor/common/feature/map/model/lat_lng.dart';
 import 'package:eqmonitor/common/feature/map/model/map_type.dart';
 import 'package:eqmonitor/common/feature/map/model/state/map_data_state.dart';
 import 'package:eqmonitor/common/feature/map/provider/map_data_provider.dart';
+import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart';
 import 'package:eqmonitor/feature/home/component/map/model/map_state.dart';
 import 'package:eqmonitor/feature/home/component/map/view_model/base_map_viemwodel.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -58,6 +60,7 @@ class BaseMapWidget extends HookConsumerWidget {
             painter: BaseMapPainter(
               state: state,
               mapData: mapData,
+              point: state.focalPoint,
             ),
             size: Size.infinite,
           ),
@@ -91,6 +94,17 @@ class BaseMapWidget extends HookConsumerWidget {
                   icon: const Icon(Icons.home),
                   label: const Text('set zoomLevel 20'),
                 ),
+                FilledButton.tonalIcon(
+                  onPressed: () =>
+                      ref.read(baseMapViewModelProvider.notifier).fitBounds(
+                    [
+                      const LatLng(20, 120),
+                      const LatLng(45, 150),
+                    ],
+                  ),
+                  icon: const Icon(Icons.home),
+                  label: const Text('Fit Bounds 20,120 ~ 45,150'),
+                ),
               ],
             ),
           ),
@@ -104,10 +118,12 @@ class BaseMapPainter extends CustomPainter {
   BaseMapPainter({
     required this.state,
     required this.mapData,
+    this.point,
   });
 
   final MapState state;
   final MapProjectedData mapData;
+  final GlobalPoint? point;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -146,6 +162,14 @@ class BaseMapPainter extends CustomPainter {
             ..style = PaintingStyle.stroke,
           null,
         ),
+      );
+    }
+    if (kDebugMode && point != null) {
+      final offset = state.globalPointToOffset(point!);
+      canvas.drawCircle(
+        offset,
+        10,
+        Paint()..color = Colors.blueAccent,
       );
     }
   }
