@@ -1,10 +1,7 @@
 .fvm/flutter_sdk
 .crashlytics
 
-# Code generation related
-*.g.dart
-*.*.*.dart
-*.freezed.dart
+
 .env
 
 ~$*
