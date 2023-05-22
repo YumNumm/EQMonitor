@@ -9,6 +9,7 @@ environment:
   sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
+  app_settings: ^4.2.0
   awesome_notifications: ^0.7.4+1
   awesome_notifications_fcm: ^0.7.3
   collection: ^1.17.1
@@ -19,6 +20,7 @@ dependencies:
     path: packages/eqapi_schema
   firebase_analytics: ^10.3.0
   firebase_core: ^2.11.0
+  firebase_crashlytics: ^3.3.1
   firebase_messaging: ^14.5.0
   flutter:
     sdk: flutter
