@@ -15,10 +15,8 @@ class CustomChip extends StatelessWidget {
         ),
         side: BorderSide(
           width: 0,
+          color: Colors.grey,
         ),
-      ),
-      side: const BorderSide(
-        width: 0,
       ),
       padding: EdgeInsets.zero,
     );
