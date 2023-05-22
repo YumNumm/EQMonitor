@@ -25,7 +25,7 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
 
   late final EarthquakeHistoryUseCase _useCase;
   // state
-  bool includeTestTelegrams = false;
+  final bool _includeTestTelegrams = false;
 
   Future<void> reload() async {
     await fetch();
@@ -76,7 +76,7 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
       );
       final items = _toEarthquakeHistoryItem(
         result,
-        includeTestTelegrams: includeTestTelegrams,
+        includeTestTelegrams: _includeTestTelegrams,
       );
       return <EarthquakeHistoryItem>[
         ...state.asData?.value ?? [],
@@ -96,29 +96,29 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
       final vxse51 = telegrams.firstWhereOrNull(
         (e) =>
             e.type == TelegramType.vxse51 &&
-            (includeTestTelegrams || e.status == TelegramStatus.normal),
+            (_includeTestTelegrams || e.status == TelegramStatus.normal),
       );
       final vxse52 = telegrams.firstWhereOrNull(
         (e) =>
             e.type == TelegramType.vxse52 &&
-            (includeTestTelegrams || e.status == TelegramStatus.normal),
+            (_includeTestTelegrams || e.status == TelegramStatus.normal),
       );
       final vxse53 = telegrams.firstWhereOrNull(
         (e) =>
             e.type == TelegramType.vxse53 &&
-            (includeTestTelegrams || e.status == TelegramStatus.normal),
+            (_includeTestTelegrams || e.status == TelegramStatus.normal),
       );
       // 顕著な地震の震源要素更新のお知らせ
       final vxse61 = telegrams.firstWhereOrNull(
         (e) =>
             e.type == TelegramType.vxse61 &&
-            (includeTestTelegrams || e.status == TelegramStatus.normal),
+            (_includeTestTelegrams || e.status == TelegramStatus.normal),
       );
       // 長周期地震動に関する観測情報
       final vxse62 = telegrams.firstWhereOrNull(
         (e) =>
             e.type == TelegramType.vxse62 &&
-            (includeTestTelegrams || e.status == TelegramStatus.normal),
+            (_includeTestTelegrams || e.status == TelegramStatus.normal),
       );
       Earthquake? earthquake;
       if (vxse61 != null) {
@@ -173,17 +173,17 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
       final vtse41 = telegrams.firstWhereOrNull(
         (e) =>
             e.type == TelegramType.vtse41 &&
-            (includeTestTelegrams || e.status == TelegramStatus.normal),
+            (_includeTestTelegrams || e.status == TelegramStatus.normal),
       );
       final vtse51 = telegrams.firstWhereOrNull(
         (e) =>
             e.type == TelegramType.vtse51 &&
-            (includeTestTelegrams || e.status == TelegramStatus.normal),
+            (_includeTestTelegrams || e.status == TelegramStatus.normal),
       );
       final vtse52 = telegrams.firstWhereOrNull(
         (e) =>
             e.type == TelegramType.vtse52 &&
-            (includeTestTelegrams || e.status == TelegramStatus.normal),
+            (_includeTestTelegrams || e.status == TelegramStatus.normal),
       );
       List<TsunamiForecast>? forecasts;
       if (vtse51 != null) {
