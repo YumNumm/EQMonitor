@@ -9,7 +9,7 @@ def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-} 
+}
 
 def flutterRoot = localProperties.getProperty('flutter.sdk')
 if (flutterRoot == null) {
@@ -23,6 +23,7 @@ apply plugin: 'kotlin-android'
 
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
+    namespace "net.yumnmm.eqmonitor"
     compileSdk 33
 
     compileOptions {
@@ -94,9 +95,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-perf'
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.android.material:material:1.9.0-rc01'
-    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.work:work-runtime-ktx:2.8.1'
-    implementation 'androidx.core:core-splashscreen:1.0.0'
+    implementation 'androidx.core:core-splashscreen:1.0.1'
 }
 
 apply plugin: 'com.google.firebase.crashlytics'

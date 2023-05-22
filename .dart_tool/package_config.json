@@ -26,6 +26,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "app_settings",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/app_settings-4.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "archive",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/archive-3.3.7",
       "packageUri": "lib/",
@@ -908,7 +914,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-05-20T11:56:02.665453Z",
+  "generated": "2023-05-20T15:00:13.562714Z",
   "generator": "pub",
   "generatorVersion": "3.0.1"
 }

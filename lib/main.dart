@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:eqmonitor/app.dart';
-import 'package:eqmonitor/common/provider/fcm_token.dart';
 import 'package:eqmonitor/common/provider/shared_preferences.dart';
 import 'package:eqmonitor/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,6 +12,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
@@ -33,24 +33,27 @@ Future<void> main() async {
   String? fcmToken;
   if (Platform.isAndroid || Platform.isIOS) {
     fcmToken = await getFirebaseMessagingToken();
-
     unawaited(() async {
+      await Permission.notification.request();
       log('Firebase token: $fcmToken');
       if (kDebugMode) {
         unawaited(
           FirebaseMessaging.instance.subscribeToTopic('config-developer'),
         );
+        log('config-developer OK ');
       }
       await FirebaseMessaging.instance.subscribeToTopic('everyone');
+      log('everyone OK');
       await FirebaseMessaging.instance.subscribeToTopic('eew');
+      log('eew OK');
       await FirebaseMessaging.instance.subscribeToTopic('earthquake');
+      log('earthquake OK');
     }());
   }
   return runApp(
     ProviderScope(
       overrides: [
         sharedPreferencesProvider.overrideWithValue(prefs),
-        if (fcmToken != null) fcmTokenProvider.overrideWithValue(fcmToken),
       ],
       child: const App(),
     ),

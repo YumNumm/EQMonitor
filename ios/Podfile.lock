@@ -1,4 +1,6 @@
 PODS:
+  - "app_settings (3.0.0+1)":
+    - Flutter
   - awesome_notifications (0.0.5):
     - Flutter
     - IosAwnCore (= 0.7.3)
@@ -157,6 +159,7 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
+  - app_settings (from `.symlinks/plugins/app_settings/ios`)
   - awesome_notifications (from `.symlinks/plugins/awesome_notifications/ios`)
   - awesome_notifications_fcm (from `.symlinks/plugins/awesome_notifications_fcm/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
@@ -188,6 +191,8 @@ SPEC REPOS:
     - PromisesSwift
 
 EXTERNAL SOURCES:
+  app_settings:
+    :path: ".symlinks/plugins/app_settings/ios"
   awesome_notifications:
     :path: ".symlinks/plugins/awesome_notifications/ios"
   awesome_notifications_fcm:
@@ -208,6 +213,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
 
 SPEC CHECKSUMS:
+  app_settings: d103828c9f5d515c4df9ee754dabd443f7cedcf3
   awesome_notifications: d63d9a25f126860f9a600850d99772237895b3ba
   awesome_notifications_fcm: 7e2d7ab4ca1826fe3a9a5ca96771ace73e05db48
   Firebase: bd152f0f3d278c4060c5c71359db08ebcfd5a3e2
