@@ -1,2 +1,4 @@
-*.freezed.dart
+# Code generation related
 *.g.dart
+*.*.*.dart
+*.freezed.dart
