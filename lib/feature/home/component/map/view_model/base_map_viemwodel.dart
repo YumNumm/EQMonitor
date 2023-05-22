@@ -31,8 +31,6 @@ class BaseMapViewModel extends _$BaseMapViewModel {
   Animation<double>? moveAnimation = null;
   Animation<double>? scaleAnimation = null;
 
-
-
   void handleScaleStart(ScaleStartDetails details) {
     if (details.pointerCount == 1) {
       return;
