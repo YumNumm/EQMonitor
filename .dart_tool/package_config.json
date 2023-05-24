@@ -51,15 +51,15 @@
     },
     {
       "name": "awesome_notifications",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/awesome_notifications-0.7.4+1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/awesome_notifications-0.7.5-dev.2+1",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.19"
     },
     {
       "name": "awesome_notifications_fcm",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/awesome_notifications_fcm-0.7.4+1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/awesome_notifications_fcm-0.7.5-dev.2+1",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.19"
     },
     {
       "name": "boolean_selector",
@@ -356,6 +356,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "flutter_tts",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/flutter_tts-3.6.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_web_plugins",
       "rootUri": "file:///Users/r_onoue/fvm/versions/3.10.1/packages/flutter_web_plugins",
       "packageUri": "lib/",
@@ -453,7 +459,7 @@
     },
     {
       "name": "intl",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/intl-0.17.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/intl-0.18.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -534,6 +540,12 @@
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/mime-1.0.4",
       "packageUri": "lib/",
       "languageVersion": "2.18"
+    },
+    {
+      "name": "native_shared_preferences",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/native_shared_preferences-2.0.7",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "ntp",
@@ -728,6 +740,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "shared_preferences_macos",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/shared_preferences_macos-2.0.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "shared_preferences_platform_interface",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/shared_preferences_platform_interface-2.2.0",
       "packageUri": "lib/",
@@ -914,7 +932,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-05-22T13:53:45.260799Z",
+  "generated": "2023-05-23T17:39:38.132760Z",
   "generator": "pub",
   "generatorVersion": "3.0.1"
 }

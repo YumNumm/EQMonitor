@@ -1,4 +1,4 @@
-import 'package:eqmonitor/common/provider/fcm_token.dart';
+import 'package:eqmonitor/common/fcm/silent_data_handle.dart';
 import 'package:eqmonitor/common/router/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,7 +30,7 @@ class DebugHomeView extends ConsumerWidget {
               title: const Text('FCM Token'),
               leading: const Icon(Icons.notifications),
               onTap: () async {
-                final token = ref.read(fcmTokenProvider);
+                final token = NotificationController().firebaseToken;
                 await showDialog<void>(
                   context: context,
                   builder: (context) => AlertDialog(
