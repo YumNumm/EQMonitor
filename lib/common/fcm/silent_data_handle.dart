@@ -61,8 +61,7 @@ class NotificationController extends ChangeNotifier {
       onFcmSilentDataHandle: NotificationController.mySilentDataHandle,
       onFcmTokenHandle: NotificationController.myFcmTokenHandle,
       onNativeTokenHandle: NotificationController.myNativeTokenHandle,
-      licenseKeys:
-          [
+      licenseKeys: [
         // net.yumnumm.eqmonitor
         // ignore: no_adjacent_strings_in_list
         'LsyxBtb1EycLGKVXBrTeOOrvXFK+QayEXEn5Zw4+z7h/+BxzT50I8m5uhlsRlfCjSE'
