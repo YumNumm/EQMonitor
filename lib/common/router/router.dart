@@ -1,3 +1,4 @@
+import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/common/provider/shared_preferences.dart';
 import 'package:eqmonitor/feature/debug/debug_home_view.dart';
 import 'package:eqmonitor/feature/earthquake_history/page/earthquake_history.dart';
@@ -15,6 +16,7 @@ final isInitializedStateProvider = StateProvider<bool>((ref) => false);
 @Riverpod(keepAlive: true)
 GoRouter goRouter(GoRouterRef ref) => GoRouter(
       routes: $appRoutes,
+      navigatorKey: App.navigatorKey,
       initialLocation:
           (ref.read(sharedPreferencesProvider).getBool('isInitialized') ??
                   false)

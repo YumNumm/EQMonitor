@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:eqmonitor/app.dart';
+import 'package:eqmonitor/common/fcm/silent_data_handle.dart';
 import 'package:eqmonitor/common/provider/shared_preferences.dart';
 import 'package:eqmonitor/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,8 +13,8 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
@@ -21,45 +22,49 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FlutterTts().speak('これはテスト');
+  await FlutterTts().awaitSpeakCompletion(true);
 
+  await NotificationController.initializeLocalNotifications(debug: kDebugMode);
+  await NotificationController.initializeRemoteNotifications(debug: kDebugMode);
   // Pass all uncaught "fatal" errors from the framework to Crashlytics
   FlutterError.onError = (error) {
-    AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: error.hashCode ~/ 100,
-        channelKey: 'error',
-        title: 'キャッチされなかった例外: ${error.summary}${error.library}',
-        body: '${error.exception}',
-        category: NotificationCategory.Error,
-        criticalAlert: true,
-      ),
-    );
+    try {
+      AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: error.hashCode ~/ 100,
+          channelKey: 'fromdev',
+          title: 'キャッチされなかった例外: ${error.summary}${error.library}',
+          body: '${error.exception}',
+          category: NotificationCategory.Error,
+          criticalAlert: true,
+        ),
+      );
+    } catch (_) {}
     FirebaseCrashlytics.instance.recordFlutterFatalError(error);
   };
   // Pass all uncaught asynchronous errors that aren't handled
   // by the Flutter framework to Crashlytics
   PlatformDispatcher.instance.onError = (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: error.hashCode ~/ 100,
-        channelKey: 'error',
-        title: '例外発生: PlatformDispatcher',
-        body: '$error\n$stack',
-        category: NotificationCategory.Error,
-        criticalAlert: true,
-      ),
-    );
+    try {
+      AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: error.hashCode ~/ 100,
+          channelKey: 'fromdev',
+          title: '例外発生: PlatformDispatcher',
+          body: '$error\n$stack',
+          category: NotificationCategory.Error,
+          criticalAlert: true,
+        ),
+      );
+    } catch (_) {}
     return true;
   };
 
   final prefs = await SharedPreferences.getInstance();
-  String? fcmToken;
   if (Platform.isAndroid || Platform.isIOS) {
-    fcmToken = await getFirebaseMessagingToken();
     unawaited(() async {
-      await Permission.notification.request();
-      log('Firebase token: $fcmToken');
       if (kDebugMode) {
         unawaited(
           FirebaseMessaging.instance.subscribeToTopic('config-developer'),
@@ -74,7 +79,7 @@ Future<void> main() async {
       log('earthquake OK');
     }());
   }
-  return runApp(
+  runApp(
     ProviderScope(
       overrides: [
         sharedPreferencesProvider.overrideWithValue(prefs),
