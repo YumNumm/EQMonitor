@@ -85,11 +85,6 @@ jobs:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
 
-      - name: Upload obfuscate
-        run: |
-          firebase crashlytics:symbols:upload --app=1:179553945248:android:31d2c3e4dcc608f66fabc5 obfuscate/android
-
-
       #-- Slack通知 --#
       # 成功
       - name: Slack Notification on Success
