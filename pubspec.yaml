@@ -15,6 +15,7 @@ dependencies:
   collection: ^1.17.1
   cupertino_icons: ^1.0.5
   dio: ^5.1.1
+  dio_http2_adapter: ^2.2.0
   envied: ^0.3.0+3
   eqapi_schema:
     path: packages/eqapi_schema
@@ -36,6 +37,7 @@ dependencies:
   native_shared_preferences: ^2.0.7
   ntp: ^2.0.0
   permission_handler: ^10.2.0
+  retrofit: ^4.0.1
   riverpod_annotation: ^2.1.1
   shared_preferences: ^2.1.1
   sheet: ^0.0.4+1
@@ -51,6 +53,7 @@ dev_dependencies:
   json_serializable: ^6.6.2
   material_button_assist: ^1.0.0
   pedantic_mono: ^1.21.1
+  retrofit_generator: ^6.0.0+3
   riverpod_generator: ^2.2.1
   riverpod_lint: ^1.3.1
 

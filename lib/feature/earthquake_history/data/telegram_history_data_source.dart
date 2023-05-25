@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:eqapi_schema/eqapi_schema.dart';
 import 'package:eqmonitor/common/provider/dio_provider.dart';
@@ -38,10 +40,8 @@ class TelegramHistoryDataSource {
         'limit': limit,
         'offset': offset,
       },
-      options: Options(
-        validateStatus: (status) => status! == 200,
-      ),
     );
+    log(response.toString());
     return TelegramHistoryV3.fromJson(response.data!);
   }
 
