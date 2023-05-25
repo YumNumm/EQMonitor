@@ -206,6 +206,12 @@
       "languageVersion": "2.15"
     },
     {
+      "name": "dio_http2_adapter",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/dio_http2_adapter-2.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
       "name": "envied",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/envied-0.3.0+3",
       "packageUri": "lib/",
@@ -438,6 +444,12 @@
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/hotreloader-3.0.6",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "http2",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/http2-2.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
     },
     {
       "name": "http_multi_server",
@@ -680,6 +692,18 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "retrofit",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/retrofit-4.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "retrofit_generator",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/retrofit_generator-6.0.0+3",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
       "name": "riverpod",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/riverpod-2.3.6",
       "packageUri": "lib/",
@@ -860,6 +884,12 @@
       "languageVersion": "2.14"
     },
     {
+      "name": "tuple",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/tuple-2.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
       "name": "typed_data",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/typed_data-1.3.1",
       "packageUri": "lib/",
@@ -932,7 +962,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-05-23T17:39:38.132760Z",
+  "generated": "2023-05-25T18:41:21.625402Z",
   "generator": "pub",
   "generatorVersion": "3.0.1"
 }

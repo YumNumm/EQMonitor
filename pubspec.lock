@@ -273,6 +273,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.1"
+  dio_http2_adapter:
+    dependency: "direct main"
+    description:
+      name: dio_http2_adapter
+      sha256: b06a02faaff972c4809c4ada7a2f71f6c74ce21f0feee79b357f2a9590c049d4
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0"
   envied:
     dependency: "direct main"
     description:
@@ -575,6 +583,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.6"
+  http2:
+    dependency: transitive
+    description:
+      name: http2
+      sha256: "58805ebc6513eed3b98ee0a455a8357e61d187bf2e0fdc1e53120770f78de258"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   http_multi_server:
     dependency: transitive
     description:
@@ -895,6 +911,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.3"
+  retrofit:
+    dependency: "direct main"
+    description:
+      name: retrofit
+      sha256: "5eedbd8f73697f190dabc88520e0bcf2d3b2d9b9ad5c837f1dbb3ee6172d7709"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.1"
+  retrofit_generator:
+    dependency: "direct dev"
+    description:
+      name: retrofit_generator
+      sha256: ba40c4b34a865976b426c59e2731962ac10ce9b36c92a0f3633c5417e272a287
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.0.0+3"
   riverpod:
     dependency: transitive
     description:
@@ -1132,6 +1164,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  tuple:
+    dependency: transitive
+    description:
+      name: tuple
+      sha256: "0ea99cd2f9352b2586583ab2ce6489d1f95a5f6de6fb9492faaf97ae2060f0aa"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   typed_data:
     dependency: transitive
     description:
