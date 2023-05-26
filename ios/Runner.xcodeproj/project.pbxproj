@@ -536,7 +536,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1011;
+				CURRENT_PROJECT_VERSION = 1022;
 				DEVELOPMENT_TEAM = CPL7H8SHVM;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -569,7 +569,7 @@
 				CODE_SIGN_ENTITLEMENTS = FcmServiceExtension/FcmServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1011;
+				CURRENT_PROJECT_VERSION = 1022;
 				DEVELOPMENT_TEAM = CPL7H8SHVM;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -611,7 +611,7 @@
 				CODE_SIGN_ENTITLEMENTS = FcmServiceExtension/FcmServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1011;
+				CURRENT_PROJECT_VERSION = 1022;
 				DEVELOPMENT_TEAM = CPL7H8SHVM;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -650,7 +650,7 @@
 				CODE_SIGN_ENTITLEMENTS = FcmServiceExtension/FcmServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1011;
+				CURRENT_PROJECT_VERSION = 1022;
 				DEVELOPMENT_TEAM = CPL7H8SHVM;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -798,7 +798,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1011;
+				CURRENT_PROJECT_VERSION = 1022;
 				DEVELOPMENT_TEAM = CPL7H8SHVM;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -829,7 +829,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1011;
+				CURRENT_PROJECT_VERSION = 1022;
 				DEVELOPMENT_TEAM = CPL7H8SHVM;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;

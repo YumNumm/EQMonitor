@@ -3,15 +3,15 @@ description: An earthquake monitoring Application
 
 publish_to: "none"
 
-version: 2.0.0+1010
+version: 2.0.0+1020
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   app_settings: ^4.2.0
-  awesome_notifications: 0.7.5-dev.2+1
-  awesome_notifications_fcm: 0.7.5-dev.2+1
+  awesome_notifications: 0.7.4+1
+  awesome_notifications_fcm: 0.7.4+1
   collection: ^1.17.1
   cupertino_icons: ^1.0.5
   dio: ^5.1.1
@@ -32,7 +32,7 @@ dependencies:
   geojson: ^1.0.0
   go_router: ^7.0.0
   hooks_riverpod: ^2.3.6
-  intl: ^0.18.1
+  intl: ^0.17.0
   json_annotation: ^4.8.1
   native_shared_preferences: ^2.0.7
   ntp: ^2.0.0
