@@ -1,25 +1,23 @@
 import 'dart:math';
 
+import 'package:eqmonitor/common/component/map/model/map_state.dart';
+import 'package:eqmonitor/common/component/map/view_model/map_viemwodel.dart';
 import 'package:eqmonitor/common/feature/map/model/lat_lng.dart';
 import 'package:eqmonitor/common/feature/map/model/map_type.dart';
 import 'package:eqmonitor/common/feature/map/model/state/map_data_state.dart';
 import 'package:eqmonitor/common/feature/map/provider/map_data_provider.dart';
-import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart';
-import 'package:eqmonitor/feature/home/component/map/model/map_state.dart';
-import 'package:eqmonitor/feature/home/component/map/view_model/base_map_viemwodel.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// 各種マップのベースマップ
-/// baseMapViewModelProviderからMapStateを取得すること
-class BaseMapWidget extends HookConsumerWidget {
-  const BaseMapWidget({super.key});
+/// mapViewModelProviderからMapStateを取得すること
+class MapWidget extends HookConsumerWidget {
+  const MapWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(baseMapViewModelProvider);
+    final state = ref.watch(mapViewModelProvider);
     final mapData = ref.read(mapDataProvider.notifier).mapProjectedData;
     final theme = Theme.of(context);
     Animation<Offset>? animation;
@@ -32,15 +30,20 @@ class BaseMapWidget extends HookConsumerWidget {
         WidgetsBinding.instance.endOfFrame.then(
           (_) => Future(
             () {
-              ref.read(baseMapViewModelProvider.notifier).registerWidgetSize(
-                    context.size!,
-                  );
-              ref.read(baseMapViewModelProvider.notifier).fitBounds(
-                [
-                  const LatLng(45.85, 149.33),
-                  const LatLng(28.71, 124.92),
-                ],
-              );
+              ref.read(mapViewModelProvider.notifier)
+                ..registerWidgetSize(
+                  context.size!,
+                )
+                ..registerAnimationControllers(
+                  controller: controller,
+                  scaleController: scaleController,
+                )
+                ..fitBounds(
+                  [
+                    const LatLng(45.3, 145.1),
+                    const LatLng(30, 128.8),
+                  ],
+                );
             },
           ),
         );
@@ -57,19 +60,17 @@ class BaseMapWidget extends HookConsumerWidget {
         ),
         GestureDetector(
           onScaleUpdate:
-              ref.read(baseMapViewModelProvider.notifier).handleScaleUpdate,
+              ref.read(mapViewModelProvider.notifier).handleScaleUpdate,
           onScaleStart:
-              ref.read(baseMapViewModelProvider.notifier).handleScaleStart,
-          onScaleEnd:
-              ref.read(baseMapViewModelProvider.notifier).handleScaleEnd,
+              ref.read(mapViewModelProvider.notifier).handleScaleStart,
+          onScaleEnd: ref.read(mapViewModelProvider.notifier).handleScaleEnd,
           child: ClipRRect(
             child: CustomPaint(
               willChange: true,
               isComplex: true,
-              painter: BaseMapPainter(
+              painter: MapPainter(
                 state: state,
                 mapData: mapData,
-                point: state.focalPoint,
               ),
               size: Size.infinite,
             ),
@@ -86,34 +87,33 @@ class BaseMapWidget extends HookConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 FilledButton.tonalIcon(
-                  onPressed: ref.read(baseMapViewModelProvider.notifier).reset,
+                  onPressed: ref.read(mapViewModelProvider.notifier).reset,
                   icon: const Icon(Icons.refresh),
                   label: const Text('init'),
                 ),
                 FilledButton.tonalIcon(
                   onPressed: () => ref
-                      .read(baseMapViewModelProvider.notifier)
+                      .read(mapViewModelProvider.notifier)
                       .centerLatLng = const LatLng(35, 135),
                   icon: const Icon(Icons.home),
                   label: const Text('set center 35,135'),
                 ),
                 FilledButton.tonalIcon(
-                  onPressed: () => ref
-                      .read(baseMapViewModelProvider.notifier)
-                      .zoomLevel = 20,
+                  onPressed: () =>
+                      ref.read(mapViewModelProvider.notifier).zoomLevel = 20,
                   icon: const Icon(Icons.home),
                   label: const Text('set zoomLevel 20'),
                 ),
                 FilledButton.tonalIcon(
                   onPressed: () =>
-                      ref.read(baseMapViewModelProvider.notifier).fitBounds(
+                      ref.read(mapViewModelProvider.notifier).fitBounds(
                     [
-                      const LatLng(20, 120),
-                      const LatLng(45, 150),
+                      const LatLng(45.6, 145.1),
+                      const LatLng(30, 128.8),
                     ],
                   ),
                   icon: const Icon(Icons.home),
-                  label: const Text('Fit Bounds 20,120 ~ 45,150'),
+                  label: const Text('Fit Japan Map'),
                 ),
               ],
             ),
@@ -124,16 +124,14 @@ class BaseMapWidget extends HookConsumerWidget {
   }
 }
 
-class BaseMapPainter extends CustomPainter {
-  BaseMapPainter({
+class MapPainter extends CustomPainter {
+  MapPainter({
     required this.state,
     required this.mapData,
-    this.point,
   });
 
   final MapState state;
   final MapProjectedData mapData;
-  final GlobalPoint? point;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -172,14 +170,6 @@ class BaseMapPainter extends CustomPainter {
             ..style = PaintingStyle.stroke,
           null,
         ),
-      );
-    }
-    if (kDebugMode && point != null) {
-      final offset = state.globalPointToOffset(point!);
-      canvas.drawCircle(
-        offset,
-        10,
-        Paint()..color = Colors.blueAccent,
       );
     }
   }

@@ -14,11 +14,6 @@ class MapState with _$MapState {
     @JsonKey(fromJson: _offsetFromJson, toJson: _offsetToJson)
     required Offset offset,
     required double zoomLevel,
-    @JsonKey(
-      fromJson: _globalPointFromJson,
-      toJson: _globalPointToJson,
-    )
-    required GlobalPoint? focalPoint,
   }) = _MapState;
 
   factory MapState.fromJson(Map<String, dynamic> json) =>
@@ -90,7 +85,6 @@ extension MapStateProjection on MapState {
     final globalPoint = WebMercatorProjection().project(latLng);
     return copyWith(
       offset: Offset(globalPoint.x, globalPoint.y),
-      focalPoint: focalPoint,
     ).move(Offset(size.width / 2, size.height / 2) / zoomLevel);
   }
 
@@ -98,7 +92,6 @@ extension MapStateProjection on MapState {
   MapState setCenter(GlobalPoint point, Size size) {
     return copyWith(
       offset: Offset(point.x, point.y),
-      focalPoint: focalPoint,
     ).move(Offset(size.width / 2, size.height / 2) / zoomLevel);
   }
 
