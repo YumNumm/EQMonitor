@@ -59,7 +59,7 @@ class _KmoniPainter extends CustomPainter {
       );
       // 画面外の場合は描画しない
       if (offset.dx < -10 ||
-          offset.dx > size.width +10 ||
+          offset.dx > size.width + 10 ||
           offset.dy < -10 ||
           offset.dy > size.height + 10) {
         continue;
