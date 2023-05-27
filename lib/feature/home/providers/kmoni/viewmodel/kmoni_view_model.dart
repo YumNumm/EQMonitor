@@ -27,7 +27,6 @@ class KmoniViewModel extends _$KmoniViewModel {
     (_) {},
   );
 
-
   Future<void> initialize() async {
     // ファイルの読み込み
     final file = await rootBundle.loadString('assets/kmoni/kansokuten.csv');

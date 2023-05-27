@@ -12,5 +12,4 @@ class KmoniUseCase {
   KmoniUseCase(this.dataSource);
 
   final KmoniDataSource dataSource;
-
 }
