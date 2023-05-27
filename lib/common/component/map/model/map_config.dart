@@ -1,4 +1,4 @@
-import 'package:eqmonitor/common/feature/map/model/lat_lng.dart';
+import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

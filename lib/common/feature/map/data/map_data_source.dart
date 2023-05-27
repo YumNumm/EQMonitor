@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_catches_without_on_clauses, empty_catches
 
+import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:eqmonitor/common/feature/map/model/jma_map_property.dart';
-import 'package:eqmonitor/common/feature/map/model/lat_lng.dart';
 import 'package:eqmonitor/common/feature/map/model/map_polygon.dart';
 import 'package:eqmonitor/common/feature/map/model/world_map_property.dart';
 import 'package:flutter/services.dart';

@@ -1,17 +1,14 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/feature/earthquake_history/viewmodel/earthquake_history_view_model.dart';
+import 'package:eqmonitor/feature/earthquake_history_details/component/eq_map.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class EarthquakeHistoryDetailsPage extends ConsumerWidget {
-  EarthquakeHistoryDetailsPage({
+  const EarthquakeHistoryDetailsPage({
     required this.eventId,
     super.key,
-  }) : super() {
-    mapKey = GlobalKey(debugLabel: 'eq-history-details-$eventId');
-  }
-
-  late final mapKey;
+  });
 
   final int eventId;
 
@@ -34,10 +31,10 @@ class EarthquakeHistoryDetailsPage extends ConsumerWidget {
       appBar: AppBar(
         title: Text(eventId.toString()),
       ),
-      body: SingleChildScrollView(
-        child: Text(
-          data.toString(),
-        ),
+      body: Stack(
+        children: [
+          EarthquakeHistoryMap(item: data),
+        ],
       ),
     );
   }

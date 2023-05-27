@@ -399,7 +399,7 @@
     },
     {
       "name": "geojson",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/geojson-1.0.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/git/geojson-7f0e305450014e264f6d0f5bf5b1a62501afc6c2/",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -962,7 +962,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-05-26T15:32:46.941762Z",
+  "generated": "2023-05-27T05:08:28.281984Z",
   "generator": "pub",
   "generatorVersion": "3.0.2"
 }

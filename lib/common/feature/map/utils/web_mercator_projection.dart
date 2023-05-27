@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'dart:math' as math;
 
-import 'package:eqmonitor/common/feature/map/model/lat_lng.dart';
+import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:flutter/services.dart';
 
 class WebMercatorProjection {

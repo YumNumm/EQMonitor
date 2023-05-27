@@ -20,8 +20,7 @@ EewHypocenter _$EewHypocenterFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$EewHypocenter {
-  double? get latitude => throw _privateConstructorUsedError;
-  double? get longitude => throw _privateConstructorUsedError;
+  LatLng? get coordinate => throw _privateConstructorUsedError;
   String get code => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
 
@@ -37,7 +36,7 @@ abstract class $EewHypocenterCopyWith<$Res> {
           EewHypocenter value, $Res Function(EewHypocenter) then) =
       _$EewHypocenterCopyWithImpl<$Res, EewHypocenter>;
   @useResult
-  $Res call({double? latitude, double? longitude, String code, String name});
+  $Res call({LatLng? coordinate, String code, String name});
 }
 
 /// @nodoc
@@ -53,20 +52,15 @@ class _$EewHypocenterCopyWithImpl<$Res, $Val extends EewHypocenter>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? latitude = freezed,
-    Object? longitude = freezed,
+    Object? coordinate = freezed,
     Object? code = null,
     Object? name = null,
   }) {
     return _then(_value.copyWith(
-      latitude: freezed == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      longitude: freezed == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double?,
+      coordinate: freezed == coordinate
+          ? _value.coordinate
+          : coordinate // ignore: cast_nullable_to_non_nullable
+              as LatLng?,
       code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
@@ -87,7 +81,7 @@ abstract class _$$_EewHypocenterCopyWith<$Res>
       __$$_EewHypocenterCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({double? latitude, double? longitude, String code, String name});
+  $Res call({LatLng? coordinate, String code, String name});
 }
 
 /// @nodoc
@@ -101,20 +95,15 @@ class __$$_EewHypocenterCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? latitude = freezed,
-    Object? longitude = freezed,
+    Object? coordinate = freezed,
     Object? code = null,
     Object? name = null,
   }) {
     return _then(_$_EewHypocenter(
-      latitude: freezed == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      longitude: freezed == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double?,
+      coordinate: freezed == coordinate
+          ? _value.coordinate
+          : coordinate // ignore: cast_nullable_to_non_nullable
+              as LatLng?,
       code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
@@ -131,18 +120,13 @@ class __$$_EewHypocenterCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_EewHypocenter implements _EewHypocenter {
   const _$_EewHypocenter(
-      {required this.latitude,
-      required this.longitude,
-      required this.code,
-      required this.name});
+      {required this.coordinate, required this.code, required this.name});
 
   factory _$_EewHypocenter.fromJson(Map<String, dynamic> json) =>
       _$$_EewHypocenterFromJson(json);
 
   @override
-  final double? latitude;
-  @override
-  final double? longitude;
+  final LatLng? coordinate;
   @override
   final String code;
   @override
@@ -150,7 +134,7 @@ class _$_EewHypocenter implements _EewHypocenter {
 
   @override
   String toString() {
-    return 'EewHypocenter(latitude: $latitude, longitude: $longitude, code: $code, name: $name)';
+    return 'EewHypocenter(coordinate: $coordinate, code: $code, name: $name)';
   }
 
   @override
@@ -158,17 +142,15 @@ class _$_EewHypocenter implements _EewHypocenter {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_EewHypocenter &&
-            (identical(other.latitude, latitude) ||
-                other.latitude == latitude) &&
-            (identical(other.longitude, longitude) ||
-                other.longitude == longitude) &&
+            (identical(other.coordinate, coordinate) ||
+                other.coordinate == coordinate) &&
             (identical(other.code, code) || other.code == code) &&
             (identical(other.name, name) || other.name == name));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, latitude, longitude, code, name);
+  int get hashCode => Object.hash(runtimeType, coordinate, code, name);
 
   @JsonKey(ignore: true)
   @override
@@ -186,8 +168,7 @@ class _$_EewHypocenter implements _EewHypocenter {
 
 abstract class _EewHypocenter implements EewHypocenter {
   const factory _EewHypocenter(
-      {required final double? latitude,
-      required final double? longitude,
+      {required final LatLng? coordinate,
       required final String code,
       required final String name}) = _$_EewHypocenter;
 
@@ -195,9 +176,7 @@ abstract class _EewHypocenter implements EewHypocenter {
       _$_EewHypocenter.fromJson;
 
   @override
-  double? get latitude;
-  @override
-  double? get longitude;
+  LatLng? get coordinate;
   @override
   String get code;
   @override
