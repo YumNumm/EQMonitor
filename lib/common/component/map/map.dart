@@ -52,14 +52,16 @@ class MapTouchHandlerWidget extends HookConsumerWidget {
     return Stack(
       children: [
         Listener(
-          onPointerSignal:
-              ref.read(mapViewModelProvider(key).notifier).recievedPointerSignal,
+          onPointerSignal: ref
+              .read(mapViewModelProvider(key).notifier)
+              .recievedPointerSignal,
           child: GestureDetector(
             onScaleUpdate:
                 ref.read(mapViewModelProvider(key).notifier).handleScaleUpdate,
             onScaleStart:
                 ref.read(mapViewModelProvider(key).notifier).handleScaleStart,
-            onScaleEnd: ref.read(mapViewModelProvider(key).notifier).handleScaleEnd,
+            onScaleEnd:
+                ref.read(mapViewModelProvider(key).notifier).handleScaleEnd,
           ),
         ),
         // 初期値に戻す
@@ -78,11 +80,12 @@ class MapTouchHandlerWidget extends HookConsumerWidget {
                   label: const Text('init'),
                 ),
                 FilledButton.tonalIcon(
-                  onPressed: () =>
-                      ref.read(mapViewModelProvider(key).notifier).animatedMoveTo(
-                            const LatLng(35, 135),
-                            duration: const Duration(milliseconds: 250),
-                          ),
+                  onPressed: () => ref
+                      .read(mapViewModelProvider(key).notifier)
+                      .animatedMoveTo(
+                        const LatLng(35, 135),
+                        duration: const Duration(milliseconds: 250),
+                      ),
                   icon: const Icon(Icons.home),
                   label: const Text('Animated Move To 35,135'),
                 ),
@@ -94,8 +97,9 @@ class MapTouchHandlerWidget extends HookConsumerWidget {
                   label: const Text('Animated Zoom To Lv.20'),
                 ),
                 FilledButton.tonalIcon(
-                  onPressed: () =>
-                      ref.read(mapViewModelProvider(key).notifier).animatedBounds(
+                  onPressed: () => ref
+                      .read(mapViewModelProvider(key).notifier)
+                      .animatedBounds(
                     [
                       const LatLng(45.6, 145.1),
                       const LatLng(30, 128.8),
