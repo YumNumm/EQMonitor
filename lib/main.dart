@@ -21,9 +21,6 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FlutterTts().speak('これはテスト');
-  await FlutterTts().awaitSpeakCompletion(true);
-
   await NotificationController.initializeLocalNotifications(debug: kDebugMode);
   await NotificationController.initializeRemoteNotifications(debug: kDebugMode);
   // Pass all uncaught "fatal" errors from the framework to Crashlytics
