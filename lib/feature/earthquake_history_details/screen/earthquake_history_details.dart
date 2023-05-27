@@ -29,7 +29,11 @@ class EarthquakeHistoryDetailsPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(eventId.toString()),
+        title: Text(
+          "${data.earthquake.earthquake?.hypocenter.name ?? ''} "
+          'M${data.earthquake.earthquake?.magnitude.value ?? ''} '
+          '${data.earthquake.earthquake?.hypocenter.depth ?? ''}km',
+        ),
       ),
       body: Stack(
         children: [
