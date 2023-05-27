@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:eqmonitor/common/component/map/map.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_viemwodel.dart';
@@ -16,6 +18,16 @@ class HomeView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(mapDataProvider);
     if (state.projectedData == null) {
+      useEffect(
+        () {
+          WidgetsBinding.instance.endOfFrame.then((_) {
+            ref.read(mapDataProvider.notifier).initialize();
+            ref.read(kmoniViewModelProvider.notifier).initialize();
+          });
+          return null;
+        },
+        [],
+      );
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator.adaptive(),
@@ -38,7 +50,7 @@ class HomeView extends HookConsumerWidget {
                 scaleController: scaleController,
               )
               ..fitBounds([
-                const LatLng(45.3, 145.1),
+                const LatLng(45.8, 145.1),
                 const LatLng(30, 128.8),
               ]);
           });
@@ -47,15 +59,20 @@ class HomeView extends HookConsumerWidget {
         });
         return null;
       },
-      [],
+      [mapKey],
     );
-
+    final brightness = MediaQuery.of(context).platformBrightness;
+    log('brightness: $brightness');
     return Scaffold(
       body: Stack(
         children: [
           // background
           Container(
-            color: const Color.fromARGB(255, 179, 230, 255),
+            color: Color.lerp(
+              Theme.of(context).colorScheme.background,
+              Colors.blue,
+              brightness == Brightness.light ? 0.3 : 0.15,
+            ),
           ),
           ClipRRect(
             child: Stack(

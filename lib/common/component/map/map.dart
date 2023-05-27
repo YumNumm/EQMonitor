@@ -18,13 +18,6 @@ class MapTouchHandlerWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    useEffect(
-      () {
-        return null;
-      },
-      [],
-    );
-
     return Listener(
       onPointerSignal:
           ref.read(mapViewModelProvider(mapKey).notifier).recievedPointerSignal,
@@ -70,6 +63,10 @@ class BaseMapWidget extends HookConsumerWidget {
         state: state,
         mapData: mapData,
         onlyBorder: onlyBorder,
+        colors: (
+          Theme.of(context).colorScheme.onSurface,
+          Theme.of(context).colorScheme.surface,
+        ),
       ),
       size: Size.infinite,
     );
@@ -81,14 +78,99 @@ class _BaseMapPainter extends CustomPainter {
     required this.state,
     required this.mapData,
     required this.onlyBorder,
+    required this.colors,
   });
 
   final MapState state;
   final MapProjectedData mapData;
   final bool onlyBorder;
+  final (Color foreground, Color background) colors;
 
   @override
   void paint(Canvas canvas, Size size) {
+    final fg = colors.$1;
+    final bg = colors.$2;
+
+    void drawJmaMap({
+      required Canvas canvas,
+      required Size size,
+      required MapDataType type,
+      required (Paint? foregroundPainter, Paint? backgroundPainter) paints,
+    }) {
+      final data = mapData.jmaMap[type];
+      final foregroundPainter = paints.$1;
+      final backgroundPainter = paints.$2;
+      if (data == null) {
+        return;
+      }
+      for (final area in data) {
+        for (final polygon in area.polygons) {
+          final path = Path()
+            ..addPolygon(
+              polygon.points.map(state.globalPointToOffset).toList(),
+              true,
+            );
+          // 画面外の場合は描画しない
+          if (!path
+              .getBounds()
+              .overlaps(Rect.fromLTWH(0, 0, size.width, size.height))) {
+            continue;
+          }
+          if (foregroundPainter != null) {
+            canvas.drawPath(path, foregroundPainter);
+          }
+          if (backgroundPainter != null) {
+            canvas.drawPath(path, backgroundPainter);
+          }
+        }
+      }
+    }
+
+    void drawWorldMap({
+      required Canvas canvas,
+      required Size size,
+      required bool ignoreJapan,
+    }) {
+      final data = mapData.worldMap;
+
+      final outlinePaint = Paint()
+        ..color = fg
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1;
+
+      final fillPaint = Paint()
+        ..style = PaintingStyle.fill
+        ..color = bg;
+
+      for (final area in data) {
+        if (ignoreJapan && area.properties.name == 'Japan') {
+          continue;
+        }
+        for (final polygon in area.polygons) {
+          final path = Path()
+            ..addPolygon(
+              polygon.points.map(state.globalPointToOffset).toList(),
+              true,
+            );
+          // 画面外の場合は描画しない
+          if (!path
+              .getBounds()
+              .overlaps(Rect.fromLTWH(0, 0, size.width, size.height))) {
+            continue;
+          }
+          canvas
+            ..drawPath(
+              path,
+              outlinePaint,
+            )
+            ..drawPath(
+              path,
+              fillPaint,
+            );
+        }
+      }
+    }
+
     if (onlyBorder) {
       drawJmaMap(
         canvas: canvas,
@@ -97,7 +179,7 @@ class _BaseMapPainter extends CustomPainter {
         paints: (
           Paint()
             ..style = PaintingStyle.stroke
-            ..color = const Color.fromARGB(255, 156, 156, 156)
+            ..color = fg
             ..strokeWidth = max(1, state.zoomLevel / 500)
             ..isAntiAlias = true,
           null,
@@ -119,12 +201,12 @@ class _BaseMapPainter extends CustomPainter {
         paints: (
           Paint()
             ..style = PaintingStyle.stroke
-            ..color = const Color.fromARGB(255, 156, 156, 156)
+            ..color = fg
             ..strokeWidth = max(1, state.zoomLevel / 500)
             ..isAntiAlias = true,
           Paint()
             ..style = PaintingStyle.fill
-            ..color = const Color.fromARGB(255, 255, 255, 255)
+            ..color = bg
             ..isAntiAlias = true,
         ),
       );
@@ -136,91 +218,11 @@ class _BaseMapPainter extends CustomPainter {
         type: MapDataType.areaForecastLoadlE,
         paints: (
           Paint()
-            ..color = const Color.fromARGB(255, 199, 199, 199)
+            ..color = fg
             ..style = PaintingStyle.stroke,
           null,
         ),
       );
-    }
-  }
-
-  void drawJmaMap({
-    required Canvas canvas,
-    required Size size,
-    required MapDataType type,
-    required (Paint? foregroundPainter, Paint? backgroundPainter) paints,
-  }) {
-    final data = mapData.jmaMap[type];
-    final foregroundPainter = paints.$1;
-    final backgroundPainter = paints.$2;
-    if (data == null) {
-      return;
-    }
-    for (final area in data) {
-      for (final polygon in area.polygons) {
-        final path = Path()
-          ..addPolygon(
-            polygon.points.map(state.globalPointToOffset).toList(),
-            true,
-          );
-        // 画面外の場合は描画しない
-        if (!path
-            .getBounds()
-            .overlaps(Rect.fromLTWH(0, 0, size.width, size.height))) {
-          continue;
-        }
-        if (foregroundPainter != null) {
-          canvas.drawPath(path, foregroundPainter);
-        }
-        if (backgroundPainter != null) {
-          canvas.drawPath(path, backgroundPainter);
-        }
-      }
-    }
-  }
-
-  void drawWorldMap({
-    required Canvas canvas,
-    required Size size,
-    required bool ignoreJapan,
-  }) {
-    final data = mapData.worldMap;
-
-    final outlinePaint = Paint()
-      ..color = const Color.fromARGB(255, 189, 189, 189)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
-
-    final fillPaint = Paint()
-      ..style = PaintingStyle.fill
-      ..color = Colors.white;
-
-    for (final area in data) {
-      if (ignoreJapan && area.properties.name == 'Japan') {
-        continue;
-      }
-      for (final polygon in area.polygons) {
-        final path = Path()
-          ..addPolygon(
-            polygon.points.map(state.globalPointToOffset).toList(),
-            true,
-          );
-        // 画面外の場合は描画しない
-        if (!path
-            .getBounds()
-            .overlaps(Rect.fromLTWH(0, 0, size.width, size.height))) {
-          continue;
-        }
-        canvas
-          ..drawPath(
-            path,
-            outlinePaint,
-          )
-          ..drawPath(
-            path,
-            fillPaint,
-          );
-      }
     }
   }
 

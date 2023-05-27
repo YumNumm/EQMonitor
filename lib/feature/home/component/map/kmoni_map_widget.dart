@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:eqmonitor/common/component/map/model/map_state.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_viemwodel.dart';
@@ -45,7 +47,8 @@ class _KmoniPainter extends CustomPainter {
     }
     final circleSize = switch (state.zoomLevel) {
       < 30 => 2.0,
-      > 60 => 5.0,
+      > 60 => min(state.zoomLevel / 20.0, 10),
+      > 120 => 8.0,
       _ => 3.0,
     };
     for (final e in kmoniState!) {
@@ -55,10 +58,10 @@ class _KmoniPainter extends CustomPainter {
         ),
       );
       // 画面外の場合は描画しない
-      if (offset.dx < 0 ||
-          offset.dx > size.width ||
-          offset.dy < 0 ||
-          offset.dy > size.height) {
+      if (offset.dx < -10 ||
+          offset.dx > size.width +10 ||
+          offset.dy < -10 ||
+          offset.dy > size.height + 10) {
         continue;
       }
       final paint = Paint()
@@ -66,7 +69,7 @@ class _KmoniPainter extends CustomPainter {
         ..style = PaintingStyle.fill;
       canvas.drawCircle(
         offset,
-        circleSize,
+        circleSize.toDouble(),
         paint,
       );
     }
