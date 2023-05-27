@@ -1,0 +1,19 @@
+name: Auto Format
+
+# ref: https://qiita.com/blendthink/items/48e6c4b2c0f016da8c72
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  auto-format:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Loxcan
+        uses: siketyan/loxcan@v0.8.0
