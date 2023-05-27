@@ -1,6 +1,8 @@
+import 'dart:async';
+
 import 'package:eqmonitor/common/provider/ntp/ntp_provider.dart';
-import 'package:eqmonitor/feature/debug/kmoni/data/asset/kmoni_observation_point.dart';
-import 'package:eqmonitor/feature/debug/kmoni/viewmodel/kmoni_view_model_state.dart';
+import 'package:eqmonitor/feature/home/providers/kmoni/data/asset/kmoni_observation_point.dart';
+import 'package:eqmonitor/feature/home/providers/kmoni/viewmodel/kmoni_view_model_state.dart';
 import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,6 +21,13 @@ class KmoniViewModel extends _$KmoniViewModel {
 
   List<KmoniObservationPoint>? _observationPoints;
 
+  /// 画像取得タイマー
+  final Timer _timer = Timer.periodic(
+    const Duration(seconds: 1),
+    (_) {},
+  );
+
+
   Future<void> initialize() async {
     // ファイルの読み込み
     final file = await rootBundle.loadString('assets/kmoni/kansokuten.csv');
@@ -35,5 +44,14 @@ class KmoniViewModel extends _$KmoniViewModel {
     state = state.copyWith(
       isInitialized: true,
     );
+    // Timer開始
+  }
+
+  Future<void> update() async {
+    // 画像取得
+    // 画像更新
+    // state = state.copyWith(
+    //   lastUpdatedAt: DateTime.now(),
+    // );
   }
 }

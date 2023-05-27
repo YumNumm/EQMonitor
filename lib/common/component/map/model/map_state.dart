@@ -109,7 +109,11 @@ extension MapStateProjection on MapState {
   }
 
   /// [latLngs]を含む最小の矩形を表示する
-  MapState fitBounds(List<LatLng> latLngs, Size widgetSize) {
+  MapState fitBounds(
+    List<LatLng> latLngs,
+    Size widgetSize, {
+    double maxZoom = 300,
+  }) {
     final points = latLngs.map((e) => WebMercatorProjection().project(e));
     final (min, max) = _getBounds(points);
     final center = GlobalPoint(
@@ -119,8 +123,11 @@ extension MapStateProjection on MapState {
     final size = widgetSize;
 
     final scale = math.min(
-      size.width / (max.x - min.x),
-      size.height / (max.y - min.y),
+      maxZoom,
+      math.min(
+        size.width / (max.x - min.x),
+        size.height / (max.y - min.y),
+      ),
     );
     return setScale(
       scale,

@@ -9,7 +9,7 @@ class KmoniViewModelState with _$KmoniViewModelState {
     required bool isInitialized,
     required DateTime? lastUpdatedAt,
 
-    /// 現在時刻からの遅れ
+    /// 現在時刻からのち円
     required Duration? delay,
   }) = _KmoniViewModelState;
 }

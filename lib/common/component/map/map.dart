@@ -18,9 +18,6 @@ class MapTouchHandlerWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = useAnimationController();
-    final scaleController = useAnimationController();
-
     useEffect(
       () {
         return null;
@@ -44,8 +41,13 @@ class MapTouchHandlerWidget extends HookConsumerWidget {
 }
 
 class BaseMapWidget extends HookConsumerWidget {
-  const BaseMapWidget({super.key, required this.mapKey});
+  const BaseMapWidget({
+    super.key,
+    required this.mapKey,
+    this.onlyBorder = false,
+  });
   final Key mapKey;
+  final bool onlyBorder;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -64,26 +66,45 @@ class BaseMapWidget extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
     return CustomPaint(
-      painter: MapPainter(
+      painter: _BaseMapPainter(
         state: state,
         mapData: mapData,
+        onlyBorder: onlyBorder,
       ),
       size: Size.infinite,
     );
   }
 }
 
-class MapPainter extends CustomPainter {
-  MapPainter({
+class _BaseMapPainter extends CustomPainter {
+  _BaseMapPainter({
     required this.state,
     required this.mapData,
+    required this.onlyBorder,
   });
 
   final MapState state;
   final MapProjectedData mapData;
+  final bool onlyBorder;
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (onlyBorder) {
+      drawJmaMap(
+        canvas: canvas,
+        size: size,
+        type: MapDataType.areaForecastLocalEew,
+        paints: (
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..color = const Color.fromARGB(255, 156, 156, 156)
+            ..strokeWidth = max(1, state.zoomLevel / 500)
+            ..isAntiAlias = true,
+          null,
+        ),
+      );
+      return;
+    }
     drawWorldMap(
       canvas: canvas,
       size: size,
@@ -204,6 +225,6 @@ class MapPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant MapPainter oldDelegate) =>
+  bool shouldRepaint(covariant _BaseMapPainter oldDelegate) =>
       oldDelegate.state != state || oldDelegate.mapData != mapData;
 }

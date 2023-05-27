@@ -186,4 +186,9 @@ class GlobalPointBoundary {
   String toString() {
     return 'GlobalPointBoundary{min: $min, max: $max}';
   }
+
+  LatLng get center => LatLng(
+        (min.x + max.x) / 2,
+        (min.y + max.y) / 2,
+      );
 }

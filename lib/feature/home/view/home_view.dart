@@ -1,4 +1,6 @@
+import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:eqmonitor/common/component/map/map.dart';
+import 'package:eqmonitor/common/component/map/view_model/map_viemwodel.dart';
 import 'package:eqmonitor/common/feature/map/provider/map_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -10,9 +12,25 @@ class HomeView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final moveController = useAnimationController();
+    final scaleController = useAnimationController();
     useEffect(
       () {
-        ref.read(mapDataProvider.notifier).initialize();
+        WidgetsBinding.instance.endOfFrame.then((_) {
+          ref.read(mapDataProvider.notifier).initialize();
+          ref.read(mapViewModelProvider(mapKey).notifier)
+            ..registerWidgetSize(
+              context.size!,
+            )
+            ..registerAnimationControllers(
+              moveController: moveController,
+              scaleController: scaleController,
+            )
+            ..fitBounds([
+              const LatLng(45.3, 145.1),
+              const LatLng(30, 128.8),
+            ]);
+        });
         return null;
       },
       [],

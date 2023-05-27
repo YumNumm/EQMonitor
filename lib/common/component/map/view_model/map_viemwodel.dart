@@ -451,25 +451,15 @@ class MapViewModel extends _$MapViewModel {
   }
 
   /// [latLngs]を含む最小の矩形を表示する
-  void fitBounds(List<LatLng> latLngs) =>
-      state = state.fitBounds(latLngs, _widgetSize!);
-
-  /// [points]を含む最小の矩形を返す
-  (
-    GlobalPoint min,
-    GlobalPoint max,
-  ) _getBounds(Iterable<GlobalPoint> points) {
-    final xs = points.map((e) => e.x);
-    final ys = points.map((e) => e.y);
-    final minX = xs.reduce(math.min);
-    final maxX = xs.reduce(math.max);
-    final minY = ys.reduce(math.min);
-    final maxY = ys.reduce(math.max);
-    return (
-      GlobalPoint(minX, minY),
-      GlobalPoint(maxX, maxY),
-    );
-  }
+  void fitBounds(
+    List<LatLng> latLngs, {
+    double maxZoom = 200,
+  }) =>
+      state = state.fitBounds(
+        latLngs,
+        _widgetSize!,
+        maxZoom: maxZoom,
+      );
 }
 
 // A classification of relevant user gestures. Each contiguous user gesture is

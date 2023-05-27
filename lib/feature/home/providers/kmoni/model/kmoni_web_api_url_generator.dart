@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_classes_with_only_static_members
 
-import 'package:eqmonitor/feature/debug/kmoni/model/realtime_data_type.dart';
+import 'package:eqmonitor/feature/home/providers/kmoni/model/realtime_data_type.dart';
 import 'package:intl/intl.dart';
 
 final DateFormat _ymdhms = DateFormat('yyyyMMddHHmmss');
