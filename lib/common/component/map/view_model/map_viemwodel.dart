@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:eqmonitor/common/component/map/model/map_state.dart';
 import 'package:eqmonitor/common/feature/map/model/lat_lng.dart';
 import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -13,9 +14,9 @@ part 'map_viemwodel.g.dart';
 @riverpod
 class MapViewModel extends _$MapViewModel {
   @override
-  MapState build() {
+  MapState build(Key key) {
     ref.listenSelf((previous, next) {
-      //log(next.toString());
+      log(next.toString());
     });
     return const MapState(
       offset: Offset.zero,
@@ -24,16 +25,14 @@ class MapViewModel extends _$MapViewModel {
   }
 
   double? _scaleStart;
-  GlobalPoint? _referenceFocalPoint;
   Size? _widgetSize;
-  LatLng? _scaleStartedLatLng;
 
-  Animation<Offset>? moveAnimation;
-  Animation<double>? scaleAnimation;
-  late AnimationController controller;
-  late AnimationController scaleController;
+  Animation<Offset>? _moveAnimation;
+  Animation<double>? _scaleAnimation;
+  late AnimationController _moveController;
+  late AnimationController _scaleController;
 
-  double interactionEndFrictionCoefficient = 0.0000135;
+  final double _interactionEndFrictionCoefficient = 0.0000135;
 
   _GestureType? _gestureType;
 
@@ -46,28 +45,28 @@ class MapViewModel extends _$MapViewModel {
   /// all supported platforms.
   static const double kDefaultMouseScrollToScaleFactor = 200;
 
-  /// moveAnimationのリスナー
+  /// _moveAnimationのリスナー
   void _onMoveAnimation() {
-    if (!controller.isAnimating) {
-      moveAnimation?.removeListener(_onMoveAnimation);
-      moveAnimation = null;
-      controller.reset();
+    if (!_moveController.isAnimating) {
+      _moveAnimation?.removeListener(_onMoveAnimation);
+      _moveAnimation = null;
+      _moveController.reset();
       return;
     }
     state = state.copyWith(
-      offset: moveAnimation!.value,
+      offset: _moveAnimation!.value,
     );
   }
 
   void _onScaleAnimation() {
-    if (!scaleController.isAnimating) {
-      scaleAnimation?.removeListener(_onScaleAnimation);
-      scaleAnimation = null;
-      scaleController.reset();
+    if (!_scaleController.isAnimating) {
+      _scaleAnimation?.removeListener(_onScaleAnimation);
+      _scaleAnimation = null;
+      _scaleController.reset();
       return;
     }
     state = state.copyWith(
-      zoomLevel: scaleAnimation!.value,
+      zoomLevel: _scaleAnimation!.value,
     );
   }
 
@@ -88,27 +87,21 @@ class MapViewModel extends _$MapViewModel {
   }
 
   void handleScaleStart(ScaleStartDetails details) {
-    if (controller.isAnimating) {
-      controller
+    if (_moveController.isAnimating) {
+      _moveController
         ..stop()
         ..reset();
-      moveAnimation?.removeListener(_onMoveAnimation);
+      _moveAnimation?.removeListener(_onMoveAnimation);
     }
-    if (scaleController.isAnimating) {
-      scaleController
+    if (_scaleController.isAnimating) {
+      _scaleController
         ..stop()
         ..reset();
-      scaleAnimation?.removeListener(_onScaleAnimation);
+      _scaleAnimation?.removeListener(_onScaleAnimation);
     }
     _gestureType = null;
 
     _scaleStart = state.zoomLevel;
-    _referenceFocalPoint = state.offsetToGlobalPoint(
-      details.focalPoint,
-    );
-    _scaleStartedLatLng = WebMercatorProjection().unproject(
-      _referenceFocalPoint!,
-    );
   }
 
   void handleScaleUpdate(ScaleUpdateDetails details) {
@@ -119,38 +112,46 @@ class MapViewModel extends _$MapViewModel {
       // being marked as a pan.
       _gestureType = _getGestureType(details);
     } else {
-      _gestureType ??= _getGestureType(details);
+      _gestureType = _getGestureType(details);
     }
     final scale = state.zoomLevel;
-    if (details.pointerCount == 1) {
-      debugPrint('handleScaleUpdate: ${details.focalPointDelta}');
-      handlePanUpdate(
-        Offset(details.focalPointDelta.dx, details.focalPointDelta.dy) /
-            state.zoomLevel,
-      );
-      return;
+    switch (_gestureType) {
+      case _GestureType.pan:
+        // details may have a change in scale here when scaleEnabled is false.
+        // In an effort to keep the behavior similar whether or not scaleEnabled
+        // is true, these gestures are thrown away.
+        if (details.scale != 1.0) {
+          return;
+        }
+        debugPrint('handleScaleUpdate: ${details.focalPointDelta}');
+        state = state.move(
+          Offset(details.focalPointDelta.dx, details.focalPointDelta.dy) /
+              state.zoomLevel,
+        );
+      case _GestureType.scale:
+        assert(_scaleStart != null);
+        final desiredScale = _scaleStart! * details.scale;
+        // スケール中に ユーザの2本指はシーン内で同じ位置にあるはず
+        // つまり、FocalPointのシーン内の位置はスケーリングの前後で変化しない
+
+        state = state
+            .setScale(desiredScale, focalPoint: details.focalPoint)
+            .move(details.focalPointDelta / scale);
+      default:
+        break;
     }
-
-    assert(_scaleStart != null);
-    final desiredScale = _scaleStart! * details.scale;
-    // スケール中に ユーザの2本指はシーン内で同じ位置にあるはず
-    // つまり、FocalPointのシーン内の位置はスケーリングの前後で変化しない
-
-    // _scaleStartedLatLngの位置を保ったまま、スケーリングする
-    state = state
-        .setScale(desiredScale, focalPoint: details.focalPoint)
-        .move(details.focalPointDelta / scale);
   }
 
   void handleScaleEnd(ScaleEndDetails details) {
     //  state = state.copyWith(
     //    zoomLevel: _scaleStart,
     //  );
-    moveAnimation?.removeListener(_onMoveAnimation);
-    scaleAnimation?.removeListener(_onScaleAnimation);
+    _moveAnimation?.removeListener(_onMoveAnimation);
+    _scaleAnimation?.removeListener(_onScaleAnimation);
 
-    controller.reset();
-    scaleController.reset();
+    _moveController.reset();
+    _scaleController.reset();
+    _scaleStart = null;
 
     log(_gestureType.toString(), name: 'GestureType');
 
@@ -161,31 +162,32 @@ class MapViewModel extends _$MapViewModel {
       // log('MOVE ANIMATION!');
       final translation = state.offset;
       final frictionSimulationX = FrictionSimulation(
-        interactionEndFrictionCoefficient,
+        _interactionEndFrictionCoefficient,
         translation.dx,
         -details.velocity.pixelsPerSecond.dx / state.zoomLevel,
       );
       final frictionSimulationY = FrictionSimulation(
-        interactionEndFrictionCoefficient,
+        _interactionEndFrictionCoefficient,
         translation.dy,
         -details.velocity.pixelsPerSecond.dy / state.zoomLevel,
       );
       final tFinal = _getFinalTime(
         details.velocity.pixelsPerSecond.distance,
-        interactionEndFrictionCoefficient,
+        _interactionEndFrictionCoefficient,
       );
-      moveAnimation = Tween<Offset>(
+      _moveAnimation = Tween<Offset>(
         begin: translation,
         end: Offset(frictionSimulationX.finalX, frictionSimulationY.finalX),
       ).animate(
         CurvedAnimation(
-          parent: controller,
+          parent: _moveController,
           curve: Curves.decelerate,
         ),
       );
-      controller.duration = Duration(milliseconds: (tFinal * 1000).round());
-      moveAnimation!.addListener(_onMoveAnimation);
-      controller.forward();
+      _moveController.duration =
+          Duration(milliseconds: (tFinal * 1000).round());
+      _moveAnimation!.addListener(_onMoveAnimation);
+      _moveController.forward();
     } else if (_gestureType == _GestureType.scale) {
       if (details.scaleVelocity.abs() < 0.1) {
         return;
@@ -193,33 +195,33 @@ class MapViewModel extends _$MapViewModel {
       // log('SCALE ANIMATION!');
       final scale = state.zoomLevel;
       final frictionSimulation = FrictionSimulation(
-        interactionEndFrictionCoefficient * kDefaultMouseScrollToScaleFactor,
+        _interactionEndFrictionCoefficient * kDefaultMouseScrollToScaleFactor,
         scale,
         details.scaleVelocity / 10,
       );
       final tFinal = _getFinalTime(
         details.scaleVelocity.abs(),
-        interactionEndFrictionCoefficient * kDefaultMouseScrollToScaleFactor,
+        _interactionEndFrictionCoefficient * kDefaultMouseScrollToScaleFactor,
         effectivelyMotionless: 0.1,
       );
-      scaleAnimation = Tween<double>(
+      _scaleAnimation = Tween<double>(
         begin: scale,
         end: frictionSimulation.x(tFinal),
       ).animate(
         CurvedAnimation(
-          parent: scaleController,
+          parent: _scaleController,
           curve: Curves.decelerate,
         ),
       );
-      scaleController.duration =
+      _scaleController.duration =
           Duration(milliseconds: (tFinal * 1000).round());
-      scaleAnimation!.addListener(_onScaleAnimation);
-      scaleController.forward();
+      _scaleAnimation!.addListener(_onScaleAnimation);
+      _scaleController.forward();
     }
   }
 
   // Given a velocity and drag, calculate the time at which motion will come to
-// a stop, within the margin of effectivelyMotionless.
+  // a stop, within the margin of effectivelyMotionless.
   double _getFinalTime(
     double velocity,
     double drag, {
@@ -228,8 +230,56 @@ class MapViewModel extends _$MapViewModel {
     return math.log(effectivelyMotionless / velocity) / math.log(drag / 100);
   }
 
-  void handlePanUpdate(Offset delta) {
-    state = state.move(delta);
+  void recievedPointerSignal(PointerSignalEvent event) {
+    final double scaleChange;
+    log(event.runtimeType.toString());
+    if (event is PointerScrollEvent) {
+      if (event.kind == PointerDeviceKind.trackpad) {
+        // トラックパッドのスクロールなので Pan として扱う
+        handleScaleStart(
+          ScaleStartDetails(
+            focalPoint: event.position,
+            localFocalPoint: event.localPosition,
+          ),
+        );
+
+        final localDelta = PointerEvent.transformDeltaViaPositions(
+          untransformedEndPosition: event.position + event.scrollDelta,
+          untransformedDelta: event.scrollDelta,
+          transform: event.transform,
+        );
+
+        state = state.move(localDelta / state.zoomLevel);
+        return;
+      }
+
+      // Ignore left and right mouse wheel scroll.
+      if (event.scrollDelta.dy == 0.0) {
+        return;
+      }
+      scaleChange =
+          math.exp(-event.scrollDelta.dy / kDefaultMouseScrollToScaleFactor);
+    } else if (event is PointerScaleEvent) {
+      scaleChange = event.scale;
+    } else {
+      return;
+    }
+    handleScaleStart(
+      ScaleStartDetails(
+        focalPoint: event.position,
+        localFocalPoint: event.localPosition,
+      ),
+    );
+    handleScaleUpdate(
+      ScaleUpdateDetails(
+        focalPoint: event.position,
+        localFocalPoint: event.localPosition,
+        scale: scaleChange,
+      ),
+    );
+    handleScaleEnd(
+      ScaleEndDetails(),
+    );
   }
 
   void reset() {
@@ -239,17 +289,145 @@ class MapViewModel extends _$MapViewModel {
     );
   }
 
+  Future<void> animatedMoveTo(
+    LatLng target, {
+    Duration duration = const Duration(milliseconds: 500),
+    Curve curve = Curves.easeOutCirc,
+  }) async {
+    // 既存のAnimationがあったらキャンセルする
+    _moveAnimation?.removeListener(_onMoveAnimation);
+    _scaleAnimation?.removeListener(_onScaleAnimation);
+    _moveController.reset();
+    _scaleController.reset();
+
+    final start = state.offset;
+    final after = state.setCenterLatLng(target, _widgetSize!).offset;
+
+    final animation = Tween<Offset>(
+      begin: start,
+      end: after,
+    ).animate(
+      CurvedAnimation(
+        parent: _moveController,
+        curve: curve,
+      ),
+    );
+    _moveController.duration = duration;
+    _moveAnimation = animation;
+    _moveAnimation!.addListener(_onMoveAnimation);
+    await _moveController.forward();
+  }
+
+  Future<void> animatedZoomTo(
+    double target, {
+    Duration duration = const Duration(milliseconds: 500),
+    Curve curve = Curves.easeOutCirc,
+  }) async {
+    // 既存のAnimationがあったらキャンセルする
+    _moveAnimation?.removeListener(_onMoveAnimation);
+    _scaleAnimation?.removeListener(_onScaleAnimation);
+    _moveController.reset();
+    _scaleController.reset();
+
+    final start = state;
+    final after = state.setScale(
+      target,
+      focalPoint: Offset(_widgetSize!.width / 2, _widgetSize!.height / 2) /
+          state.zoomLevel,
+    );
+    // moveAnimation
+    final animation = Tween<Offset>(
+      begin: start.offset,
+      end: after.offset,
+    ).animate(
+      CurvedAnimation(
+        parent: _moveController,
+        curve: curve,
+      ),
+    );
+    _moveController.duration = duration;
+    _moveAnimation = animation;
+    _moveAnimation!.addListener(_onMoveAnimation);
+    // scaleAnimation
+    final scaleAnimation = Tween<double>(
+      begin: start.zoomLevel,
+      end: after.zoomLevel,
+    ).animate(
+      CurvedAnimation(
+        parent: _scaleController,
+        curve: curve,
+      ),
+    );
+    _scaleController.duration = duration;
+    _scaleAnimation = scaleAnimation;
+    _scaleAnimation!.addListener(_onScaleAnimation);
+    await (
+      _moveController.forward(),
+      _scaleController.forward(),
+    ).wait;
+  }
+
+  Future<void> animatedBounds(
+    List<LatLng> bounds, {
+    Duration duration = const Duration(milliseconds: 500),
+    Curve curve = Curves.easeOutCirc,
+  }) async {
+    // 既存のAnimationがあったらキャンセルする
+    _moveAnimation?.removeListener(_onMoveAnimation);
+    _scaleAnimation?.removeListener(_onScaleAnimation);
+    _moveController.reset();
+    _scaleController.reset();
+
+    final start = state;
+    final after = state.fitBounds(bounds, _widgetSize!);
+
+    // moveAnimation
+    final animation = Tween<Offset>(
+      begin: start.offset,
+      end: after.offset,
+    ).animate(
+      CurvedAnimation(
+        parent: _moveController,
+        curve: curve,
+      ),
+    );
+    _moveController.duration = duration;
+    _moveAnimation = animation;
+    _moveAnimation!.addListener(_onMoveAnimation);
+
+    // scaleAnimation
+    final scaleAnimation = Tween<double>(
+      begin: start.zoomLevel,
+      end: after.zoomLevel,
+    ).animate(
+      CurvedAnimation(
+        parent: _scaleController,
+        curve: curve,
+      ),
+    );
+    _scaleController.duration = duration;
+    _scaleAnimation = scaleAnimation;
+    _scaleAnimation!.addListener(_onScaleAnimation);
+
+    await (
+      _moveController.forward(),
+      _scaleController.forward(),
+    ).wait;
+  }
+
+  void _onLatLngAnimation() {}
+
   void registerWidgetSize(Size size) {
     log(size.toString());
     _widgetSize = size;
   }
 
   void registerAnimationControllers({
-    required AnimationController controller,
+    required AnimationController moveController,
     required AnimationController scaleController,
   }) {
-    this.controller = controller;
-    this.scaleController = scaleController;
+    _moveController = moveController;
+    _scaleController = scaleController;
   }
 
   // 左上の緯度経度
@@ -282,33 +460,14 @@ class MapViewModel extends _$MapViewModel {
   set zoomLevel(double zoom) {
     state = state.setScale(
       zoom,
-      focalPoint: Offset(_widgetSize!.width / 2, _widgetSize!.height / 2),
+      focalPoint: Offset(_widgetSize!.width / 2, _widgetSize!.height / 2) /
+          state.zoomLevel,
     );
   }
 
   /// [latLngs]を含む最小の矩形を表示する
-  void fitBounds(List<LatLng> latLngs) {
-    final points = latLngs.map((e) => WebMercatorProjection().project(e));
-    final (min, max) = _getBounds(points);
-    final center = GlobalPoint(
-      (min.x + max.x) / 2,
-      (min.y + max.y) / 2,
-    );
-    final size = _widgetSize!;
-
-    final scale = math.min(
-      size.width / (max.x - min.x),
-      size.height / (max.y - min.y),
-    );
-    state = state.setScale(
-      scale,
-    );
-
-    state = state.setCenter(
-      center,
-      _widgetSize!,
-    );
-  }
+  void fitBounds(List<LatLng> latLngs) =>
+      state = state.fitBounds(latLngs, _widgetSize!);
 
   /// [points]を含む最小の矩形を返す
   (

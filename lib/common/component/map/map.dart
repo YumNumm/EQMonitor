@@ -10,18 +10,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-/// 各種マップのベースマップ
+/// タッチ操作をハンドルするWidget
 /// mapViewModelProviderからMapStateを取得すること
-class MapWidget extends HookConsumerWidget {
-  const MapWidget({super.key});
+class MapTouchHandlerWidget extends HookConsumerWidget {
+  const MapTouchHandlerWidget({required this.key});
+
+  final GlobalKey key;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(mapViewModelProvider);
-    final mapData = ref.read(mapDataProvider.notifier).mapProjectedData;
-    final theme = Theme.of(context);
-    Animation<Offset>? animation;
-    Animation<double>? scaleAnimation;
     final controller = useAnimationController();
     final scaleController = useAnimationController();
 
@@ -30,12 +27,12 @@ class MapWidget extends HookConsumerWidget {
         WidgetsBinding.instance.endOfFrame.then(
           (_) => Future(
             () {
-              ref.read(mapViewModelProvider.notifier)
+              ref.read(mapViewModelProvider(key).notifier)
                 ..registerWidgetSize(
                   context.size!,
                 )
                 ..registerAnimationControllers(
-                  controller: controller,
+                  moveController: controller,
                   scaleController: scaleController,
                 )
                 ..fitBounds(
@@ -54,26 +51,15 @@ class MapWidget extends HookConsumerWidget {
 
     return Stack(
       children: [
-        // 背景色
-        Container(
-          color: const Color.fromARGB(255, 203, 211, 255),
-        ),
-        GestureDetector(
-          onScaleUpdate:
-              ref.read(mapViewModelProvider.notifier).handleScaleUpdate,
-          onScaleStart:
-              ref.read(mapViewModelProvider.notifier).handleScaleStart,
-          onScaleEnd: ref.read(mapViewModelProvider.notifier).handleScaleEnd,
-          child: ClipRRect(
-            child: CustomPaint(
-              willChange: true,
-              isComplex: true,
-              painter: MapPainter(
-                state: state,
-                mapData: mapData,
-              ),
-              size: Size.infinite,
-            ),
+        Listener(
+          onPointerSignal:
+              ref.read(mapViewModelProvider(key).notifier).recievedPointerSignal,
+          child: GestureDetector(
+            onScaleUpdate:
+                ref.read(mapViewModelProvider(key).notifier).handleScaleUpdate,
+            onScaleStart:
+                ref.read(mapViewModelProvider(key).notifier).handleScaleStart,
+            onScaleEnd: ref.read(mapViewModelProvider(key).notifier).handleScaleEnd,
           ),
         ),
         // 初期値に戻す
@@ -87,33 +73,36 @@ class MapWidget extends HookConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 FilledButton.tonalIcon(
-                  onPressed: ref.read(mapViewModelProvider.notifier).reset,
+                  onPressed: ref.read(mapViewModelProvider(key).notifier).reset,
                   icon: const Icon(Icons.refresh),
                   label: const Text('init'),
                 ),
                 FilledButton.tonalIcon(
+                  onPressed: () =>
+                      ref.read(mapViewModelProvider(key).notifier).animatedMoveTo(
+                            const LatLng(35, 135),
+                            duration: const Duration(milliseconds: 250),
+                          ),
+                  icon: const Icon(Icons.home),
+                  label: const Text('Animated Move To 35,135'),
+                ),
+                FilledButton.tonalIcon(
                   onPressed: () => ref
-                      .read(mapViewModelProvider.notifier)
-                      .centerLatLng = const LatLng(35, 135),
+                      .read(mapViewModelProvider(key).notifier)
+                      .animatedZoomTo(20),
                   icon: const Icon(Icons.home),
-                  label: const Text('set center 35,135'),
+                  label: const Text('Animated Zoom To Lv.20'),
                 ),
                 FilledButton.tonalIcon(
                   onPressed: () =>
-                      ref.read(mapViewModelProvider.notifier).zoomLevel = 20,
-                  icon: const Icon(Icons.home),
-                  label: const Text('set zoomLevel 20'),
-                ),
-                FilledButton.tonalIcon(
-                  onPressed: () =>
-                      ref.read(mapViewModelProvider.notifier).fitBounds(
+                      ref.read(mapViewModelProvider(key).notifier).animatedBounds(
                     [
                       const LatLng(45.6, 145.1),
                       const LatLng(30, 128.8),
                     ],
                   ),
                   icon: const Icon(Icons.home),
-                  label: const Text('Fit Japan Map'),
+                  label: const Text('Animated Fit Japan Map'),
                 ),
               ],
             ),

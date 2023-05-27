@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/common/fcm/silent_data_handle.dart';
@@ -29,36 +28,12 @@ Future<void> main() async {
   await NotificationController.initializeRemoteNotifications(debug: kDebugMode);
   // Pass all uncaught "fatal" errors from the framework to Crashlytics
   FlutterError.onError = (error) {
-    try {
-      AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          id: error.hashCode ~/ 100,
-          channelKey: 'fromdev',
-          title: 'キャッチされなかった例外: ${error.summary}${error.library}',
-          body: '${error.exception}',
-          category: NotificationCategory.Error,
-          criticalAlert: true,
-        ),
-      );
-    } catch (_) {}
     FirebaseCrashlytics.instance.recordFlutterFatalError(error);
   };
   // Pass all uncaught asynchronous errors that aren't handled
   // by the Flutter framework to Crashlytics
   PlatformDispatcher.instance.onError = (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    try {
-      AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          id: error.hashCode ~/ 100,
-          channelKey: 'fromdev',
-          title: '例外発生: PlatformDispatcher',
-          body: '$error\n$stack',
-          category: NotificationCategory.Error,
-          criticalAlert: true,
-        ),
-      );
-    } catch (_) {}
     return true;
   };
 

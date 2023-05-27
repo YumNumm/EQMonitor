@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:math' as math;
 
 import 'package:eqmonitor/common/feature/map/model/lat_lng.dart';
 import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart';
@@ -105,6 +106,45 @@ extension MapStateProjection on MapState {
     final afterFocalPoint = mapState.offsetToGlobalPoint(focalPoint);
     final diff = afterFocalPoint - beforeFocalPoint;
     return mapState.move(diff.toOffset() / zoomLevel).move(diff.toOffset());
+  }
+
+  /// [latLngs]を含む最小の矩形を表示する
+  MapState fitBounds(List<LatLng> latLngs, Size widgetSize) {
+    final points = latLngs.map((e) => WebMercatorProjection().project(e));
+    final (min, max) = _getBounds(points);
+    final center = GlobalPoint(
+      (min.x + max.x) / 2,
+      (min.y + max.y) / 2,
+    );
+    final size = widgetSize;
+
+    final scale = math.min(
+      size.width / (max.x - min.x),
+      size.height / (max.y - min.y),
+    );
+    return setScale(
+      scale,
+    ).setCenter(
+      center,
+      widgetSize,
+    );
+  }
+
+  /// [points]を含む最小の矩形を返す
+  (
+    GlobalPoint min,
+    GlobalPoint max,
+  ) _getBounds(Iterable<GlobalPoint> points) {
+    final xs = points.map((e) => e.x);
+    final ys = points.map((e) => e.y);
+    final minX = xs.reduce(min);
+    final maxX = xs.reduce(max);
+    final minY = ys.reduce(min);
+    final maxY = ys.reduce(max);
+    return (
+      GlobalPoint(minX, minY),
+      GlobalPoint(maxX, maxY),
+    );
   }
 }
 
