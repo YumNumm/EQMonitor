@@ -40,14 +40,19 @@ class EarthquakeHistoryMap extends HookConsumerWidget {
         });
         return null;
       },
-      [],
+      [mapKey],
     );
+    final brightness = Theme.of(context).brightness;
     return ClipRRect(
       child: Stack(
         children: [
           // background
           Container(
-            color: const Color.fromARGB(255, 179, 230, 255),
+            color: Color.lerp(
+              Theme.of(context).colorScheme.background,
+              Colors.blue,
+              brightness == Brightness.light ? 0.3 : 0.15,
+            ),
           ),
           ClipRRect(
             child: Stack(

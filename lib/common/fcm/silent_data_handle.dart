@@ -157,66 +157,61 @@ class NotificationController extends ChangeNotifier {
   static Future<bool> displayNotificationRationale() async {
     var userAuthorized = false;
     final context = App.navigatorKey.currentContext!;
-    await showDialog<void>(
-      context: context,
-      builder: (BuildContext ctx) {
-        return AlertDialog(
-          title: Text(
-            'Get Notified!',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Image.asset(
-                      'assets/animated-bell.gif',
-                      height: MediaQuery.of(context).size.height * 0.3,
-                      fit: BoxFit.fitWidth,
-                    ),
-                  ),
-                ],
+    // 既に許可されている場合は何もしない
+    if (await AwesomeNotifications().isNotificationAllowed()) {
+      return userAuthorized;
+    }
+    if (context.mounted) {
+      await showDialog<void>(
+        context: context,
+        builder: (BuildContext ctx) {
+          return AlertDialog(
+            title: Text(
+              '通知を許可しますか?',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            content: const Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '緊急地震速報などの地震情報をお知らせします',
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+                child: Text(
+                  '拒否',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(color: Colors.red),
+                ),
               ),
-              const SizedBox(height: 20),
-              const Text(
-                'Allow Awesome Notifications to send you beautiful notifications!',
+              TextButton(
+                onPressed: () async {
+                  userAuthorized = true;
+                  Navigator.of(ctx).pop();
+                },
+                child: Text(
+                  '許可',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(color: Colors.deepPurple),
+                ),
               ),
             ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(ctx).pop();
-              },
-              child: Text(
-                'Deny',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(color: Colors.red),
-              ),
-            ),
-            TextButton(
-              onPressed: () async {
-                userAuthorized = true;
-                Navigator.of(ctx).pop();
-              },
-              child: Text(
-                'Allow',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(color: Colors.deepPurple),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-    return userAuthorized &&
-        await AwesomeNotifications().requestPermissionToSendNotifications();
+          );
+        },
+      );
+      return userAuthorized &&
+          await AwesomeNotifications().requestPermissionToSendNotifications();
+    }
+    return false;
   }
 
   static Future<void> resetBadge() async {
