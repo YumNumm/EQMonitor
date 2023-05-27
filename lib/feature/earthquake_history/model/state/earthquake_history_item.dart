@@ -29,6 +29,7 @@ class EarthquakeData with _$EarthquakeData {
   const factory EarthquakeData({
     required Earthquake? earthquake,
     required Intensity? intensity,
+    required Intensity? lgIntensity,
     required CommentsOmitVar? comment,
     required bool isVolcano,
   }) = _EarthquakeData;

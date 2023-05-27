@@ -129,9 +129,7 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
         earthquake = (vxse52.body as TelegramVxse52Body).earthquake;
       }
       Intensity? intensity;
-      if (vxse62 != null) {
-        intensity = (vxse62.body as TelegramVxse62Body).intensity;
-      } else if (vxse53 != null) {
+      if (vxse53 != null) {
         intensity = (vxse53.body as TelegramVxse53Body).intensity;
       } else if (vxse51 != null) {
         intensity = (vxse51.body as TelegramVxse51Body).intensity;
@@ -166,6 +164,9 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
       final earthquakeData = EarthquakeData(
         earthquake: earthquake,
         intensity: intensity,
+        lgIntensity: vxse62 != null
+            ? (vxse62.body as TelegramVxse62Body).intensity
+            : null,
         comment: comment,
         isVolcano: isVolcano,
       );

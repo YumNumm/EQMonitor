@@ -13,9 +13,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 /// タッチ操作をハンドルするWidget
 /// mapViewModelProviderからMapStateを取得すること
 class MapTouchHandlerWidget extends HookConsumerWidget {
-  const MapTouchHandlerWidget({required this.key});
+  const MapTouchHandlerWidget({super.key, required this.mapKey});
 
-  final GlobalKey key;
+  final Key mapKey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,7 +27,7 @@ class MapTouchHandlerWidget extends HookConsumerWidget {
         WidgetsBinding.instance.endOfFrame.then(
           (_) => Future(
             () {
-              ref.read(mapViewModelProvider(key).notifier)
+              ref.read(mapViewModelProvider(mapKey).notifier)
                 ..registerWidgetSize(
                   context.size!,
                 )
@@ -49,66 +49,39 @@ class MapTouchHandlerWidget extends HookConsumerWidget {
       [],
     );
 
-    return Stack(
-      children: [
-        Listener(
-          onPointerSignal:
-              ref.read(mapViewModelProvider(key).notifier).recievedPointerSignal,
-          child: GestureDetector(
-            onScaleUpdate:
-                ref.read(mapViewModelProvider(key).notifier).handleScaleUpdate,
-            onScaleStart:
-                ref.read(mapViewModelProvider(key).notifier).handleScaleStart,
-            onScaleEnd: ref.read(mapViewModelProvider(key).notifier).handleScaleEnd,
-          ),
-        ),
-        // 初期値に戻す
+    return Listener(
+      onPointerSignal:
+          ref.read(mapViewModelProvider(mapKey).notifier).recievedPointerSignal,
+      child: GestureDetector(
+        onScaleUpdate:
+            ref.read(mapViewModelProvider(mapKey).notifier).handleScaleUpdate,
+        onScaleStart:
+            ref.read(mapViewModelProvider(mapKey).notifier).handleScaleStart,
+        onScaleEnd:
+            ref.read(mapViewModelProvider(mapKey).notifier).handleScaleEnd,
+      ),
+    );
+  }
+}
 
-        Positioned(
-          bottom: 0,
-          right: 0,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                FilledButton.tonalIcon(
-                  onPressed: ref.read(mapViewModelProvider(key).notifier).reset,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('init'),
-                ),
-                FilledButton.tonalIcon(
-                  onPressed: () =>
-                      ref.read(mapViewModelProvider(key).notifier).animatedMoveTo(
-                            const LatLng(35, 135),
-                            duration: const Duration(milliseconds: 250),
-                          ),
-                  icon: const Icon(Icons.home),
-                  label: const Text('Animated Move To 35,135'),
-                ),
-                FilledButton.tonalIcon(
-                  onPressed: () => ref
-                      .read(mapViewModelProvider(key).notifier)
-                      .animatedZoomTo(20),
-                  icon: const Icon(Icons.home),
-                  label: const Text('Animated Zoom To Lv.20'),
-                ),
-                FilledButton.tonalIcon(
-                  onPressed: () =>
-                      ref.read(mapViewModelProvider(key).notifier).animatedBounds(
-                    [
-                      const LatLng(45.6, 145.1),
-                      const LatLng(30, 128.8),
-                    ],
-                  ),
-                  icon: const Icon(Icons.home),
-                  label: const Text('Animated Fit Japan Map'),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
+class BaseMapWidget extends ConsumerWidget {
+  const BaseMapWidget({super.key, required this.mapKey});
+  final Key mapKey;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(MapViewModelProvider(mapKey));
+    final mapData =
+        ref.watch(mapDataProvider.select((value) => value.projectedData));
+    if (mapData == null) {
+      throw Exception('mapData is null');
+    }
+    return CustomPaint(
+      painter: MapPainter(
+        state: state,
+        mapData: mapData,
+      ),
+      size: Size.infinite,
     );
   }
 }
@@ -244,5 +217,6 @@ class MapPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant MapPainter oldDelegate) =>
+      oldDelegate.state != state || oldDelegate.mapData != mapData;
 }

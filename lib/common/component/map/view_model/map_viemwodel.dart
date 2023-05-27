@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:math' as math;
 
 import 'package:eqmonitor/common/component/map/model/map_state.dart';
@@ -15,9 +14,6 @@ part 'map_viemwodel.g.dart';
 class MapViewModel extends _$MapViewModel {
   @override
   MapState build(Key key) {
-    ref.listenSelf((previous, next) {
-      log(next.toString());
-    });
     return const MapState(
       offset: Offset.zero,
       zoomLevel: 1,
@@ -123,7 +119,6 @@ class MapViewModel extends _$MapViewModel {
         if (details.scale != 1.0) {
           return;
         }
-        debugPrint('handleScaleUpdate: ${details.focalPointDelta}');
         state = state.move(
           Offset(details.focalPointDelta.dx, details.focalPointDelta.dy) /
               state.zoomLevel,
@@ -153,13 +148,10 @@ class MapViewModel extends _$MapViewModel {
     _scaleController.reset();
     _scaleStart = null;
 
-    log(_gestureType.toString(), name: 'GestureType');
-
     if (_gestureType == _GestureType.pan) {
       if (details.velocity.pixelsPerSecond.distance < kMinFlingVelocity) {
         return;
       }
-      // log('MOVE ANIMATION!');
       final translation = state.offset;
       final frictionSimulationX = FrictionSimulation(
         _interactionEndFrictionCoefficient,
@@ -192,7 +184,6 @@ class MapViewModel extends _$MapViewModel {
       if (details.scaleVelocity.abs() < 0.1) {
         return;
       }
-      // log('SCALE ANIMATION!');
       final scale = state.zoomLevel;
       final frictionSimulation = FrictionSimulation(
         _interactionEndFrictionCoefficient * kDefaultMouseScrollToScaleFactor,
@@ -232,7 +223,6 @@ class MapViewModel extends _$MapViewModel {
 
   void recievedPointerSignal(PointerSignalEvent event) {
     final double scaleChange;
-    log(event.runtimeType.toString());
     if (event is PointerScrollEvent) {
       if (event.kind == PointerDeviceKind.trackpad) {
         // トラックパッドのスクロールなので Pan として扱う
@@ -415,10 +405,7 @@ class MapViewModel extends _$MapViewModel {
     ).wait;
   }
 
-  void _onLatLngAnimation() {}
-
   void registerWidgetSize(Size size) {
-    log(size.toString());
     _widgetSize = size;
   }
 
@@ -439,9 +426,7 @@ class MapViewModel extends _$MapViewModel {
   // setter
   set topLeftLatLng(LatLng latLng) {
     final topLeftPoint = WebMercatorProjection().project(latLng);
-    debugPrint('topLeftPoint: $topLeftPoint');
     final offset = state.globalPointToOffset(topLeftPoint);
-    debugPrint('offset: $offset');
     state = state.move(offset);
   }
 

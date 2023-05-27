@@ -8,21 +8,22 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 @immutable
 class MapDataState {
   const MapDataState({
-    required this.isReady,
     this.data,
+    this.projectedData,
   });
 
-  final bool isReady;
   final MapDataFromSource? data;
+  final MapProjectedData? projectedData;
 
   // copywith
   MapDataState copyWith({
     bool? isReady,
     MapDataFromSource? data,
+    MapProjectedData? projectedData,
   }) {
     return MapDataState(
-      isReady: isReady ?? this.isReady,
       data: data ?? this.data,
+      projectedData: projectedData ?? this.projectedData,
     );
   }
 }
