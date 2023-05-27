@@ -1,3 +1,4 @@
+import 'package:eqmonitor/feature/home/providers/kmoni/data/asset/kmoni_observation_point.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'kmoni_view_model_state.freezed.dart';
@@ -9,7 +10,8 @@ class KmoniViewModelState with _$KmoniViewModelState {
     required bool isInitialized,
     required DateTime? lastUpdatedAt,
 
-    /// 現在時刻からのち円
+    /// 現在時刻からの遅延
     required Duration? delay,
+    required List<AnalyzedKmoniObservationPoint>? analyzedPoints,
   }) = _KmoniViewModelState;
 }
