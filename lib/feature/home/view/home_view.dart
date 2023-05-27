@@ -5,7 +5,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class HomeView extends HookConsumerWidget {
-  const HomeView({super.key});
+  HomeView({super.key});
+  final mapKey = GlobalKey(debugLabel: 'HomeView');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -17,14 +18,31 @@ class HomeView extends HookConsumerWidget {
       [],
     );
     final state = ref.watch(mapDataProvider);
-    if (state.isReady) {
-    } else {
+    if (state.projectedData == null) {
       return const Scaffold(
         body: Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator.adaptive(),
+        ),
+      );
+    } else {
+      return Scaffold(
+        body: Stack(
+          children: [
+            // background
+            Container(
+              color: const Color.fromARGB(255, 179, 230, 255),
+            ),
+            ClipRRect(
+              child: Stack(
+                children: [
+                  BaseMapWidget(mapKey: mapKey),
+                ],
+              ),
+            ),
+            MapTouchHandlerWidget(mapKey: mapKey),
+          ],
         ),
       );
     }
-    throw Exception();
   }
 }

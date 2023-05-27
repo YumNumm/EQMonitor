@@ -1,7 +1,9 @@
+import 'package:eqmonitor/common/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/viewmodel/earthquake_history_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../component/earthquake_history_tile_widget.dart';
@@ -119,7 +121,12 @@ class EarthquakeHistoryListView extends StatelessWidget {
             return const _ListBottomWidget();
           }
           final item = data[index];
-          return EarthquakeHistoryTileWidget(item: item);
+          return EarthquakeHistoryTileWidget(
+            item: item,
+            onTap: (p0) => context.push(
+              EarthquakeHistoryDetailsRoute(p0.eventId).location,
+            ),
+          );
         },
       ),
     );
@@ -137,7 +144,9 @@ class _ListBottomWidget extends ConsumerWidget {
         if (state.isLoading || state.isRefreshing || state.isReloading) {
           return const Padding(
             padding: EdgeInsets.all(24),
-            child: CircularProgressIndicator.adaptive(),
+            child: Center(
+              child: CircularProgressIndicator.adaptive(),
+            ),
           );
         }
         return const SizedBox.shrink();
@@ -146,7 +155,7 @@ class _ListBottomWidget extends ConsumerWidget {
         if (state.isLoading || state.isRefreshing || state.isReloading) {
           return const Padding(
             padding: EdgeInsets.all(24),
-            child: CircularProgressIndicator.adaptive(),
+            child: Center(child: CircularProgressIndicator.adaptive()),
           );
         }
         return Padding(

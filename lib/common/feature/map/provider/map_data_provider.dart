@@ -15,18 +15,21 @@ part 'map_data_provider.g.dart';
 @Riverpod(keepAlive: true)
 class MapData extends _$MapData {
   @override
-  MapDataState build() => const MapDataState(
-        isReady: false,
-      );
+  MapDataState build() => const MapDataState();
 
-  MapDataFromSource? _mapDataFromSource;
-  MapProjectedData? _mapProjectedData;
   Future<void> initialize() async {
-    _mapDataFromSource ??= await _mapData();
-    _mapProjectedData ??= await _projectMap();
-    state = state.copyWith(
-      isReady: true,
-    );
+    if (state.data == null) {
+      final data = await _mapData();
+      state = state.copyWith(
+        data: data,
+      );
+    }
+    if (state.projectedData == null) {
+      final projectedData = await _projectMap();
+      state = state.copyWith(
+        projectedData: projectedData,
+      );
+    }
   }
 
   Future<MapDataFromSource> _mapData() async {
@@ -74,7 +77,7 @@ class MapData extends _$MapData {
   }
 
   Future<MapProjectedData> _projectMap() async {
-    if (_mapDataFromSource == null) {
+    if (state.data == null) {
       throw Error();
     }
     final jmaProjectedMap =
@@ -84,7 +87,7 @@ class MapData extends _$MapData {
       if (type == MapDataType.worldMap) {
         continue;
       }
-      final map = _mapDataFromSource!.jmaMap[type]!;
+      final map = state.data!.jmaMap[type]!;
       final projectedMap = <MultiPolygonProjectedMapData<JmaMapProperty>>[];
       for (final e in map) {
         projectedMap.add(
@@ -99,7 +102,7 @@ class MapData extends _$MapData {
 
     final worldProjectedMap =
         <MultiPolygonProjectedMapData<WorldMapProperty>>[];
-    for (final e in _mapDataFromSource!.worldMap) {
+    for (final e in state.data!.worldMap) {
       worldProjectedMap.add(
         MultiPolygonProjectedMapData.fromMapData(
           e,
@@ -109,7 +112,7 @@ class MapData extends _$MapData {
     }
 
     final tsunamiProjectedLine = <MultiLineProjectedMapData<JmaMapProperty>>[];
-    for (final e in _mapDataFromSource!.tsunamiLine) {
+    for (final e in state.data!.tsunamiLine) {
       tsunamiProjectedLine.add(
         MultiLineProjectedMapData.fromLineData(
           e,
@@ -123,12 +126,5 @@ class MapData extends _$MapData {
       worldMap: worldProjectedMap,
       tsunamiLine: tsunamiProjectedLine,
     );
-  }
-
-  MapProjectedData get mapProjectedData {
-    if (_mapProjectedData == null) {
-      throw Error();
-    }
-    return _mapProjectedData!;
   }
 }

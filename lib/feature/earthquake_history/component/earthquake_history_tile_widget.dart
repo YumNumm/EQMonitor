@@ -12,10 +12,12 @@ import 'package:intl/intl.dart';
 class EarthquakeHistoryTileWidget extends ConsumerWidget {
   const EarthquakeHistoryTileWidget({
     required this.item,
+    this.onTap,
     super.key,
   });
 
   final EarthquakeHistoryItem item;
+  final void Function(EarthquakeHistoryItem)? onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,8 +37,6 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
           (e) => e.type == TelegramType.vxse51,
         ) &&
         item.telegrams.every((e) => e.type == TelegramType.vxse52);
-    // 長周期地震動に関する観測情報があるかどうか
-    final hasVxse62 = item.telegrams.any((e) => e.type == TelegramType.vxse62);
 
     // ! title
     final title = StringBuffer();
@@ -127,10 +127,10 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
                 ),
               ),
             ),
-          if (hasVxse62)
+          if (item.earthquake.lgIntensity != null)
             CustomChip(
               child: Text(
-                '長周期地震動 最大階級${item.earthquake.intensity!.maxLgInt}',
+                '長周期地震動 最大階級${item.earthquake.lgIntensity!.maxLgInt}',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
@@ -197,6 +197,9 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
                 )
               : null,
       tileColor: backgroundColor?.withOpacity(0.4),
+      onTap: () => onTap?.call(
+        item,
+      ),
     );
   }
 }

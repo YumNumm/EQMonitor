@@ -2,6 +2,7 @@ import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/common/provider/shared_preferences.dart';
 import 'package:eqmonitor/feature/debug/debug_home_view.dart';
 import 'package:eqmonitor/feature/earthquake_history/page/earthquake_history.dart';
+import 'package:eqmonitor/feature/earthquake_history_details/screen/earthquake_history_details.dart';
 import 'package:eqmonitor/feature/home/view/home_view.dart';
 import 'package:eqmonitor/feature/setup/screen/setup_screen.dart';
 import 'package:flutter/material.dart';
@@ -50,9 +51,23 @@ class EarthquakeHistoryRoute extends GoRouteData {
       const EarthquakeHistoryPage();
 }
 
+@TypedGoRoute<EarthquakeHistoryDetailsRoute>(
+  path: '/earthquake-history/:eventId',
+)
+class EarthquakeHistoryDetailsRoute extends GoRouteData {
+  const EarthquakeHistoryDetailsRoute(this.eventId);
+  final int eventId;
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return EarthquakeHistoryDetailsPage(
+      eventId: eventId,
+    );
+  }
+}
+
 @TypedGoRoute<HomeRoute>(path: '/home')
 class HomeRoute extends GoRouteData {
   const HomeRoute();
   @override
-  Widget build(BuildContext context, GoRouterState state) => const HomeView();
+  Widget build(BuildContext context, GoRouterState state) => HomeView();
 }
