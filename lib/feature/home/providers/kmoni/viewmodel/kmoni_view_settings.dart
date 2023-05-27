@@ -1,0 +1,74 @@
+import 'dart:convert';
+
+import 'package:eqmonitor/common/provider/shared_preferences.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+part 'kmoni_view_settings.freezed.dart';
+part 'kmoni_view_settings.g.dart';
+
+@freezed
+class KmoniSettingsState with _$KmoniSettingsState {
+  const factory KmoniSettingsState({
+    // 設定
+    /// 震度0以上のみ表示するかどうか
+    /// 震度0-1: グレーで表示
+    /// 震度1-: isShowIntensityIcon が true の場合はアイコンを表示
+    /// 震度1-: isShowIntensityIcon が false の場合は色で表示
+    @Default(false) bool isUpper0Only,
+
+    /// 震度アイコンを表示するかどうか
+    @Default(true) bool isShowIntensityIcon,
+  }) = _KmoniSettingsState;
+
+  factory KmoniSettingsState.fromJson(Map<String, dynamic> json) =>
+      _$KmoniSettingsStateFromJson(json);
+}
+
+@riverpod
+class KmoniSettings extends _$KmoniSettings {
+  @override
+  KmoniSettingsState build() {
+    _prefs = ref.watch(sharedPreferencesProvider);
+    ref.listenSelf((_, __) => _save());
+    final result = _loadFromPrefs();
+    if (result != null) {
+      return result;
+    }
+
+    return const KmoniSettingsState();
+  }
+
+  static const _prefsKey = 'kmoni_settings';
+  late final SharedPreferences _prefs;
+
+  KmoniSettingsState? _loadFromPrefs() {
+    final json = _prefs.getString(_prefsKey);
+    if (json == null) {
+      return null;
+    }
+    return KmoniSettingsState.fromJson(
+      jsonDecode(json) as Map<String, dynamic>,
+    );
+  }
+
+  Future<void> _save() async {
+    await _prefs.setString(
+      _prefsKey,
+      jsonEncode(state.toJson()),
+    );
+  }
+
+  void toggleIsUpper0Only() {
+    state = state.copyWith(
+      isUpper0Only: !state.isUpper0Only,
+    );
+  }
+
+  void toggleIsShowIntensityIcon() {
+    state = state.copyWith(
+      isShowIntensityIcon: !state.isShowIntensityIcon,
+    );
+  }
+}

@@ -8,7 +8,6 @@ class KmoniConfig with _$KmoniConfig {
     @Default(0) int counter, // Add your fields here
   }) = _KmoniConfig;
 
-
   factory KmoniConfig.fromJson(Map<String, dynamic> json) =>
-    _$KmoniConfigFromJson(json);
+      _$KmoniConfigFromJson(json);
 }

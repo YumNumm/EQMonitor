@@ -44,7 +44,7 @@ class AnalyzedKmoniObservationPoint with _$AnalyzedKmoniObservationPoint {
     required int y,
     required double arv,
     // ここから
-     double? intensityValue,
+    double? intensityValue,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
     Color? intensityColor,
     double? pga,

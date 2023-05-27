@@ -17,17 +17,17 @@ class HomeView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(mapDataProvider);
+    useEffect(
+      () {
+        WidgetsBinding.instance.endOfFrame.then((_) {
+          ref.read(mapDataProvider.notifier).initialize();
+          ref.read(kmoniViewModelProvider.notifier).initialize();
+        });
+        return null;
+      },
+      [],
+    );
     if (state.projectedData == null) {
-      useEffect(
-        () {
-          WidgetsBinding.instance.endOfFrame.then((_) {
-            ref.read(mapDataProvider.notifier).initialize();
-            ref.read(kmoniViewModelProvider.notifier).initialize();
-          });
-          return null;
-        },
-        [],
-      );
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator.adaptive(),
