@@ -487,7 +487,7 @@ enum JmaIntensity {
 
   @override
   String toString() => type.replaceAll('+', '強').replaceAll('-', '弱');
-  
+
   bool operator >(JmaIntensity other) {
     return type.compareTo(other.type) > 0;
   }
