@@ -1,4 +1,4 @@
-import 'package:eqmonitor/feature/debug/kmoni/data/kmoni_data_source.dart';
+import 'package:eqmonitor/feature/home/providers/kmoni/data/kmoni_data_source.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kmoni_use_case.g.dart';
@@ -12,4 +12,5 @@ class KmoniUseCase {
   KmoniUseCase(this.dataSource);
 
   final KmoniDataSource dataSource;
+
 }
