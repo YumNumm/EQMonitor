@@ -6,9 +6,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kmoni_data_source.g.dart';
 
-@Riverpod(dependencies: [dio])
+@Riverpod(dependencies: [dio], keepAlive: true)
 KmoniDataSource kmoniDataSource(KmoniDataSourceRef ref) =>
-    KmoniDataSource(ref.read(dioProvider));
+    KmoniDataSource(Dio());
 
 class KmoniDataSource {
   KmoniDataSource(this.dio);
