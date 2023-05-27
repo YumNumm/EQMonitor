@@ -1,3 +1,4 @@
+import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake.freezed.dart';
@@ -27,6 +28,7 @@ class EarthquakeHypocenter with _$EarthquakeHypocenter {
     /// null: 不明
     required int? depth,
     required EarthquakeHypocenterDetailed? detailed,
+    required LatLng? coordinate,
   }) = _EarthquakeHypocenter;
 
   factory EarthquakeHypocenter.fromJson(Map<String, dynamic> json) =>

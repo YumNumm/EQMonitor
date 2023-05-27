@@ -522,10 +522,11 @@ packages:
   geojson:
     dependency: "direct main"
     description:
-      name: geojson
-      sha256: "8aab8116d074e92ef2d1ade25ec5ae90ea8bf024a920ab46703c433ffe08878f"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: "7f0e305450014e264f6d0f5bf5b1a62501afc6c2"
+      resolved-ref: "7f0e305450014e264f6d0f5bf5b1a62501afc6c2"
+      url: "git@github.com:FaFre/geojson.git"
+    source: git
     version: "1.0.0"
   geopoint:
     dependency: transitive

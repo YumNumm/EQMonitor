@@ -6,6 +6,7 @@ class EarthquakeRestrictionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
     final earthquakeImageWidget = Padding(
       padding: const EdgeInsets.all(16),
       child: DecoratedBox(
@@ -17,7 +18,11 @@ class EarthquakeRestrictionWidget extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(16)),
-            child: Image.asset('assets/images/earthquake_happened.png'),
+            child: Image.asset(
+              'assets/images/earthquake_happened.png',
+              fit: BoxFit.scaleDown,
+              width: size.width * 0.8,
+            ),
           ),
         ),
       ),

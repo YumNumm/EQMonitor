@@ -49,6 +49,11 @@ _$_EarthquakeHypocenter _$$_EarthquakeHypocenterFromJson(
                   ? null
                   : EarthquakeHypocenterDetailed.fromJson(
                       v as Map<String, dynamic>)),
+          coordinate: $checkedConvert(
+              'coordinate',
+              (v) => v == null
+                  ? null
+                  : LatLng.fromJson(v as Map<String, dynamic>)),
         );
         return val;
       },
@@ -61,6 +66,7 @@ Map<String, dynamic> _$$_EarthquakeHypocenterToJson(
       'code': instance.code,
       'depth': instance.depth,
       'detailed': instance.detailed,
+      'coordinate': instance.coordinate,
     };
 
 _$_EarthquakeHypocenterDetailed _$$_EarthquakeHypocenterDetailedFromJson(
