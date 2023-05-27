@@ -258,6 +258,7 @@ mixin _$EarthquakeHypocenter {
   int? get depth => throw _privateConstructorUsedError;
   EarthquakeHypocenterDetailed? get detailed =>
       throw _privateConstructorUsedError;
+  LatLng? get coordinate => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -275,7 +276,8 @@ abstract class $EarthquakeHypocenterCopyWith<$Res> {
       {String name,
       String code,
       int? depth,
-      EarthquakeHypocenterDetailed? detailed});
+      EarthquakeHypocenterDetailed? detailed,
+      LatLng? coordinate});
 
   $EarthquakeHypocenterDetailedCopyWith<$Res>? get detailed;
 }
@@ -298,6 +300,7 @@ class _$EarthquakeHypocenterCopyWithImpl<$Res,
     Object? code = null,
     Object? depth = freezed,
     Object? detailed = freezed,
+    Object? coordinate = freezed,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -316,6 +319,10 @@ class _$EarthquakeHypocenterCopyWithImpl<$Res,
           ? _value.detailed
           : detailed // ignore: cast_nullable_to_non_nullable
               as EarthquakeHypocenterDetailed?,
+      coordinate: freezed == coordinate
+          ? _value.coordinate
+          : coordinate // ignore: cast_nullable_to_non_nullable
+              as LatLng?,
     ) as $Val);
   }
 
@@ -345,7 +352,8 @@ abstract class _$$_EarthquakeHypocenterCopyWith<$Res>
       {String name,
       String code,
       int? depth,
-      EarthquakeHypocenterDetailed? detailed});
+      EarthquakeHypocenterDetailed? detailed,
+      LatLng? coordinate});
 
   @override
   $EarthquakeHypocenterDetailedCopyWith<$Res>? get detailed;
@@ -366,6 +374,7 @@ class __$$_EarthquakeHypocenterCopyWithImpl<$Res>
     Object? code = null,
     Object? depth = freezed,
     Object? detailed = freezed,
+    Object? coordinate = freezed,
   }) {
     return _then(_$_EarthquakeHypocenter(
       name: null == name
@@ -384,6 +393,10 @@ class __$$_EarthquakeHypocenterCopyWithImpl<$Res>
           ? _value.detailed
           : detailed // ignore: cast_nullable_to_non_nullable
               as EarthquakeHypocenterDetailed?,
+      coordinate: freezed == coordinate
+          ? _value.coordinate
+          : coordinate // ignore: cast_nullable_to_non_nullable
+              as LatLng?,
     ));
   }
 }
@@ -395,7 +408,8 @@ class _$_EarthquakeHypocenter implements _EarthquakeHypocenter {
       {required this.name,
       required this.code,
       required this.depth,
-      required this.detailed});
+      required this.detailed,
+      required this.coordinate});
 
   factory _$_EarthquakeHypocenter.fromJson(Map<String, dynamic> json) =>
       _$$_EarthquakeHypocenterFromJson(json);
@@ -412,10 +426,12 @@ class _$_EarthquakeHypocenter implements _EarthquakeHypocenter {
   final int? depth;
   @override
   final EarthquakeHypocenterDetailed? detailed;
+  @override
+  final LatLng? coordinate;
 
   @override
   String toString() {
-    return 'EarthquakeHypocenter(name: $name, code: $code, depth: $depth, detailed: $detailed)';
+    return 'EarthquakeHypocenter(name: $name, code: $code, depth: $depth, detailed: $detailed, coordinate: $coordinate)';
   }
 
   @override
@@ -427,12 +443,15 @@ class _$_EarthquakeHypocenter implements _EarthquakeHypocenter {
             (identical(other.code, code) || other.code == code) &&
             (identical(other.depth, depth) || other.depth == depth) &&
             (identical(other.detailed, detailed) ||
-                other.detailed == detailed));
+                other.detailed == detailed) &&
+            (identical(other.coordinate, coordinate) ||
+                other.coordinate == coordinate));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, name, code, depth, detailed);
+  int get hashCode =>
+      Object.hash(runtimeType, name, code, depth, detailed, coordinate);
 
   @JsonKey(ignore: true)
   @override
@@ -451,11 +470,11 @@ class _$_EarthquakeHypocenter implements _EarthquakeHypocenter {
 
 abstract class _EarthquakeHypocenter implements EarthquakeHypocenter {
   const factory _EarthquakeHypocenter(
-          {required final String name,
-          required final String code,
-          required final int? depth,
-          required final EarthquakeHypocenterDetailed? detailed}) =
-      _$_EarthquakeHypocenter;
+      {required final String name,
+      required final String code,
+      required final int? depth,
+      required final EarthquakeHypocenterDetailed? detailed,
+      required final LatLng? coordinate}) = _$_EarthquakeHypocenter;
 
   factory _EarthquakeHypocenter.fromJson(Map<String, dynamic> json) =
       _$_EarthquakeHypocenter.fromJson;
@@ -472,6 +491,8 @@ abstract class _EarthquakeHypocenter implements EarthquakeHypocenter {
   int? get depth;
   @override
   EarthquakeHypocenterDetailed? get detailed;
+  @override
+  LatLng? get coordinate;
   @override
   @JsonKey(ignore: true)
   _$$_EarthquakeHypocenterCopyWith<_$_EarthquakeHypocenter> get copyWith =>

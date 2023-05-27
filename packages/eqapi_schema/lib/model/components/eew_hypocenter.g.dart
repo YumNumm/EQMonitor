@@ -12,9 +12,11 @@ _$_EewHypocenter _$$_EewHypocenterFromJson(Map<String, dynamic> json) =>
       json,
       ($checkedConvert) {
         final val = _$_EewHypocenter(
-          latitude: $checkedConvert('latitude', (v) => (v as num?)?.toDouble()),
-          longitude:
-              $checkedConvert('longitude', (v) => (v as num?)?.toDouble()),
+          coordinate: $checkedConvert(
+              'coordinate',
+              (v) => v == null
+                  ? null
+                  : LatLng.fromJson(v as Map<String, dynamic>)),
           code: $checkedConvert('code', (v) => v as String),
           name: $checkedConvert('name', (v) => v as String),
         );
@@ -24,8 +26,7 @@ _$_EewHypocenter _$$_EewHypocenterFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$_EewHypocenterToJson(_$_EewHypocenter instance) =>
     <String, dynamic>{
-      'latitude': instance.latitude,
-      'longitude': instance.longitude,
+      'coordinate': instance.coordinate,
       'code': instance.code,
       'name': instance.name,
     };

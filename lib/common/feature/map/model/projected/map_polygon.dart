@@ -1,4 +1,4 @@
-import 'package:eqmonitor/common/feature/map/model/lat_lng.dart';
+import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:eqmonitor/common/feature/map/model/map_polygon.dart';
 import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart';
 

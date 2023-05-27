@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:eqmonitor/common/component/map/model/map_state.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_viemwodel.dart';
-import 'package:eqmonitor/common/feature/map/model/lat_lng.dart';
 import 'package:eqmonitor/common/feature/map/model/map_type.dart';
 import 'package:eqmonitor/common/feature/map/model/state/map_data_state.dart';
 import 'package:eqmonitor/common/feature/map/provider/map_data_provider.dart';
@@ -24,26 +23,6 @@ class MapTouchHandlerWidget extends HookConsumerWidget {
 
     useEffect(
       () {
-        WidgetsBinding.instance.endOfFrame.then(
-          (_) => Future(
-            () {
-              ref.read(mapViewModelProvider(mapKey).notifier)
-                ..registerWidgetSize(
-                  context.size!,
-                )
-                ..registerAnimationControllers(
-                  moveController: controller,
-                  scaleController: scaleController,
-                )
-                ..fitBounds(
-                  [
-                    const LatLng(45.3, 145.1),
-                    const LatLng(30, 128.8),
-                  ],
-                );
-            },
-          ),
-        );
         return null;
       },
       [],
@@ -64,17 +43,25 @@ class MapTouchHandlerWidget extends HookConsumerWidget {
   }
 }
 
-class BaseMapWidget extends ConsumerWidget {
+class BaseMapWidget extends HookConsumerWidget {
   const BaseMapWidget({super.key, required this.mapKey});
   final Key mapKey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    useEffect(
+      () {
+        ref.read(mapDataProvider.notifier).initialize();
+        return null;
+      },
+      [],
+    );
     final state = ref.watch(MapViewModelProvider(mapKey));
     final mapData =
         ref.watch(mapDataProvider.select((value) => value.projectedData));
     if (mapData == null) {
-      throw Exception('mapData is null');
+      debugPrint('mapData is null');
+      return const SizedBox.shrink();
     }
     return CustomPaint(
       painter: MapPainter(
