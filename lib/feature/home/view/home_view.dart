@@ -25,8 +25,6 @@ class HomeView extends HookConsumerWidget {
         ),
       );
     }
-    return const Scaffold(
-      body: MapWidget(),
-    );
+    throw Exception();
   }
 }
