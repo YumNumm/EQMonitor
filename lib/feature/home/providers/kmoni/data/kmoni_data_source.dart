@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/common/provider/dio_provider.dart';
-import 'package:eqmonitor/feature/home/providers/kmoni/model/kmoni_web_api_url_generator.dart';
-import 'package:eqmonitor/feature/home/providers/kmoni/model/realtime_data_type.dart';
+import 'package:eqmonitor/feature/home/providers/kmoni/util/kmoni_web_api_url_generator.dart';
+import 'package:eqmonitor/feature/home/providers/kmoni/util/realtime_data_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kmoni_data_source.g.dart';

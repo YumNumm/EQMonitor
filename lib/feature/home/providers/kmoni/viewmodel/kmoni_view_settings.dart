@@ -48,9 +48,14 @@ class KmoniSettings extends _$KmoniSettings {
     if (json == null) {
       return null;
     }
-    return KmoniSettingsState.fromJson(
-      jsonDecode(json) as Map<String, dynamic>,
-    );
+    try {
+      return KmoniSettingsState.fromJson(
+        jsonDecode(json) as Map<String, dynamic>,
+      );
+      // ignore: avoid_catches_without_on_clauses
+    } catch (_) {
+      return null;
+    }
   }
 
   Future<void> _save() async {

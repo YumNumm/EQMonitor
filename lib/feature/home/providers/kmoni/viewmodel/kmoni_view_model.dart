@@ -3,8 +3,8 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/feature/home/providers/kmoni/data/asset/kmoni_observation_point.dart';
+import 'package:eqmonitor/feature/home/providers/kmoni/model/kmoni_view_model_state.dart';
 import 'package:eqmonitor/feature/home/providers/kmoni/use_case/kmoni_use_case.dart';
-import 'package:eqmonitor/feature/home/providers/kmoni/viewmodel/kmoni_view_model_state.dart';
 import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
