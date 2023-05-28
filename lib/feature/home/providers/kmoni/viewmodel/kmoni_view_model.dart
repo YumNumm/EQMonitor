@@ -18,7 +18,7 @@ class KmoniViewModel extends _$KmoniViewModel {
     return const KmoniViewModelState(
       isInitialized: false,
       lastUpdatedAt: null,
-      delay: null,
+      delay: Duration(seconds: 1),
       analyzedPoints: null,
     );
   }
