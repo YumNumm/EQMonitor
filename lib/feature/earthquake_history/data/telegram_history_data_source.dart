@@ -4,17 +4,20 @@ import 'package:dio/dio.dart';
 import 'package:eqapi_schema/eqapi_schema.dart';
 import 'package:eqmonitor/common/provider/dio_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/data/telegram_history.dart';
+import 'package:eqmonitor/feature/home/providers/telegram_url/provider/telegram_url_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:web_socket_client/web_socket_client.dart';
 
 part 'telegram_history_data_source.g.dart';
 
-@Riverpod(keepAlive: true)
+@Riverpod(
+  keepAlive: true,
+  dependencies: [],
+)
 TelegramHistoryDataSource telegramHistoryDataSource(
   TelegramHistoryDataSourceRef ref,
 ) =>
     TelegramHistoryDataSource(
-      host: 'https://api.eqmonitor.app',
+      host: ref.watch(telegramUrlProvider).restApiUrl,
       dio: ref.watch(dioProvider),
     );
 
@@ -59,18 +62,5 @@ class TelegramHistoryDataSource {
     return lists
         .map((e) => TelegramV3.fromJson(e as Map<String, dynamic>))
         .toList();
-  }
-
-  /// 電文リアルタイム取得エンドポイントへの接続
-  /// [timeOut] は接続タイムアウト時間（秒）
-  WebSocket connectToTelegramWebSocketV3({
-    int timeOut = 10,
-  }) {
-    final url = '$host/v3/realtime';
-    final webSocket = WebSocket(
-      Uri.parse(url),
-      timeout: Duration(seconds: timeOut),
-    );
-    return webSocket;
   }
 }

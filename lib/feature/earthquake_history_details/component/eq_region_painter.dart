@@ -111,7 +111,7 @@ class _IntensityPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     late final List<_DrawItem> items;
-    if (citiesItem != null && state.zoomLevel > 300) {
+    if (citiesItem != null) {
       items = citiesItem!;
     } else {
       items = regionsItem;
