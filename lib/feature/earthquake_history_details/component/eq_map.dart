@@ -13,14 +13,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class EarthquakeHistoryMap extends HookConsumerWidget {
-  EarthquakeHistoryMap({required this.item, super.key}) : super() {
-    mapKey = GlobalKey(debugLabel: 'eq-history-map-${item.eventId}');
-  }
+  const EarthquakeHistoryMap({required this.item, super.key});
   final EarthquakeHistoryItem item;
-  late final Key mapKey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final mapKey = useMemoized(
+      () => GlobalKey(debugLabel: 'eq-history-map-${item.eventId}'),
+    );
     final moveController = useAnimationController();
     final scaleController = useAnimationController();
     useEffect(
@@ -43,6 +43,11 @@ class EarthquakeHistoryMap extends HookConsumerWidget {
       [mapKey],
     );
     final brightness = Theme.of(context).brightness;
+    if (ref.watch(mapDataProvider).projectedData == null) {
+      return const Center(
+        child: CircularProgressIndicator.adaptive(),
+      );
+    }
     return ClipRRect(
       child: Stack(
         children: [

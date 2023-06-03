@@ -61,8 +61,9 @@ class MapViewModel extends _$MapViewModel {
       _scaleController.reset();
       return;
     }
-    state = state.copyWith(
-      zoomLevel: _scaleAnimation!.value,
+    state = state.setScale(
+      _scaleAnimation!.value,
+      focalPoint: Offset(_widgetSize!.width / 2, _widgetSize!.height / 2),
     );
   }
 
@@ -399,10 +400,7 @@ class MapViewModel extends _$MapViewModel {
     _scaleAnimation = scaleAnimation;
     _scaleAnimation!.addListener(_onScaleAnimation);
 
-    await (
-      _moveController.forward(),
-      _scaleController.forward(),
-    ).wait;
+    await (_scaleController.forward(), _moveController.forward()).wait;
   }
 
   void registerWidgetSize(Size size) {

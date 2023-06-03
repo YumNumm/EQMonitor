@@ -5,6 +5,7 @@ import 'package:eqmonitor/feature/earthquake_history/page/earthquake_history.dar
 import 'package:eqmonitor/feature/earthquake_history_details/screen/earthquake_history_details.dart';
 import 'package:eqmonitor/feature/home/view/home_view.dart';
 import 'package:eqmonitor/feature/setup/screen/setup_screen.dart';
+import 'package:eqmonitor/feature/talker/talker_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -65,9 +66,16 @@ class EarthquakeHistoryDetailsRoute extends GoRouteData {
   }
 }
 
-@TypedGoRoute<HomeRoute>(path: '/home')
+@TypedGoRoute<HomeRoute>(path: '/')
 class HomeRoute extends GoRouteData {
   const HomeRoute();
   @override
   Widget build(BuildContext context, GoRouterState state) => HomeView();
+}
+
+@TypedGoRoute<TalkerRoute>(path: '/talker')
+class TalkerRoute extends GoRouteData {
+  const TalkerRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state) => const TalkerPage();
 }
