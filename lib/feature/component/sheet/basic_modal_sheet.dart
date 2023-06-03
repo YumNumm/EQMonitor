@@ -2,16 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:sheet/sheet.dart';
 
 class BasicModalSheet extends StatelessWidget {
-  const BasicModalSheet({super.key, required this.controller});
+  const BasicModalSheet({
+    super.key,
+    required this.controller,
+    required this.children,
+  });
   final SheetController controller;
+  final List<Widget> children;
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Sheet(
       backgroundColor: Colors.transparent,
       initialExtent: 120,
       controller: controller,
       physics: const SnapSheetPhysics(
-        stops: <double>[0, 0.1, 0.3, 1],
+        stops: <double>[0.1, 0.3, 1],
       ),
       /*   snap: true,
                 stops: [0, 0.1, 0.3, 0.5, 1], */
@@ -42,7 +49,7 @@ class BasicModalSheet extends StatelessWidget {
                       topLeft: Radius.circular(radius),
                       topRight: Radius.circular(radius),
                     ),
-                    color: Colors.white,
+                    color: theme.colorScheme.surface,
                     boxShadow: <BoxShadow>[
                       BoxShadow(color: shadow!, blurRadius: 12),
                     ],
@@ -58,28 +65,8 @@ class BasicModalSheet extends StatelessWidget {
                       ),
                       Expanded(
                         child: ListView(
-                          shrinkWrap: true,
-                          primary: true,
-                          physics: const BouncingScrollPhysics(),
-                          children: ListTile.divideTiles(
-                            context: context,
-                            tiles: List<Widget>.generate(100, (int index) {
-                              if (index == 0) {
-                                return Container(
-                                  padding: const EdgeInsets.all(20),
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Latest near you',
-                                    style:
-                                        Theme.of(context).textTheme.titleLarge,
-                                  ),
-                                );
-                              }
-                              return ListTile(
-                                title: Text('Item $index'),
-                              );
-                            }),
-                          ).toList(),
+                          padding: const EdgeInsets.all(8),
+                          children: children,
                         ),
                       ),
                     ],
