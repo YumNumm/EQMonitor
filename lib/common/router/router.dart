@@ -22,7 +22,7 @@ GoRouter goRouter(GoRouterRef ref) => GoRouter(
       initialLocation:
           (ref.read(sharedPreferencesProvider).getBool('isInitialized') ??
                   false)
-              ? const DebugHomeRoute().location
+              ? const HomeRoute().location
               : const SetupRoute().location,
     );
 
@@ -70,7 +70,7 @@ class EarthquakeHistoryDetailsRoute extends GoRouteData {
 class HomeRoute extends GoRouteData {
   const HomeRoute();
   @override
-  Widget build(BuildContext context, GoRouterState state) => HomeView();
+  Widget build(BuildContext context, GoRouterState state) => const HomeView();
 }
 
 @TypedGoRoute<TalkerRoute>(path: '/talker')

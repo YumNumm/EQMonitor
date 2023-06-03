@@ -1,11 +1,10 @@
 import 'dart:math';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:sheet/sheet.dart';
 
-class FloatingButtons extends StatelessWidget {
-  const FloatingButtons({
+class SheetFloatingActionButtons extends StatelessWidget {
+  const SheetFloatingActionButtons({
     super.key,
     required this.controller,
     required this.fab,
@@ -32,21 +31,10 @@ class FloatingButtons extends StatelessWidget {
           right: 0,
           bottom: height * min(0.3, controller.animation.value),
           child: Container(
-            margin: const EdgeInsets.all(20),
+            margin: const EdgeInsets.all(10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
-              children: fab
-                  .mapIndexed(
-                    (index, e) => [
-                      e,
-                      if (index != fab.length - 1)
-                        const SizedBox(
-                          height: 10,
-                        ),
-                    ],
-                  )
-                  .flattened
-                  .toList(),
+              children: fab,
             ),
           ),
         );

@@ -18,6 +18,13 @@ class EarthquakeHistoryMap extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final brightness = Theme.of(context).brightness;
+    // 地図データがない場合はローディング
+    if (ref.watch(mapDataProvider).projectedData == null) {
+      return const Center(
+        child: CircularProgressIndicator.adaptive(),
+      );
+    }
     final mapKey = useMemoized(
       () => GlobalKey(debugLabel: 'eq-history-map-${item.eventId}'),
     );
@@ -26,9 +33,11 @@ class EarthquakeHistoryMap extends HookConsumerWidget {
     useEffect(
       () {
         WidgetsBinding.instance.endOfFrame.then((_) {
+          final renderBox =
+              mapKey.currentContext!.findRenderObject()! as RenderBox;
           ref.read(mapViewModelProvider(mapKey).notifier)
-            ..registerWidgetSize(
-              context.size!,
+            ..registerRenderBox(
+              renderBox,
             )
             ..registerAnimationControllers(
               moveController: moveController,
@@ -42,12 +51,6 @@ class EarthquakeHistoryMap extends HookConsumerWidget {
       },
       [mapKey],
     );
-    final brightness = Theme.of(context).brightness;
-    if (ref.watch(mapDataProvider).projectedData == null) {
-      return const Center(
-        child: CircularProgressIndicator.adaptive(),
-      );
-    }
     return ClipRRect(
       child: Stack(
         children: [
@@ -60,6 +63,7 @@ class EarthquakeHistoryMap extends HookConsumerWidget {
             ),
           ),
           ClipRRect(
+            key: mapKey,
             child: Stack(
               children: [
                 BaseMapWidget(mapKey: mapKey),
