@@ -58,9 +58,9 @@ class _KmoniPainter extends CustomPainter {
     }
     final circleSize = switch (state.zoomLevel) {
       < 30 => 2.0,
-      > 60 => min(state.zoomLevel / 20.0, 10),
+      > 60 => min(state.zoomLevel / 30.0, 10),
       > 120 => 8.0,
-      _ => 3.0,
+      _ => 2.0,
     };
 
     for (final e in kmoniState!) {
