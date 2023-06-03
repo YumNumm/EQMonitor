@@ -20,8 +20,6 @@ class BasicModalSheet extends StatelessWidget {
       physics: const SnapSheetPhysics(
         stops: <double>[0.1, 0.3, 1],
       ),
-      /*   snap: true,
-                stops: [0, 0.1, 0.3, 0.5, 1], */
       child: AnimatedBuilder(
         animation: controller.animation,
         builder: (BuildContext context, Widget? child) {

@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:eqmonitor/common/component/map/map.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_viemwodel.dart';
+import 'package:eqmonitor/common/component/sheet/basic_modal_sheet.dart';
+import 'package:eqmonitor/common/component/sheet/sheet_floating_action_buttons.dart';
+import 'package:eqmonitor/common/component/sheet/sheet_item.dart';
 import 'package:eqmonitor/common/feature/map/provider/map_data_provider.dart';
 import 'package:eqmonitor/common/hook/use_sheet_controller.dart';
 import 'package:eqmonitor/common/provider/log/talker.dart';
-import 'package:eqmonitor/common/component/sheet/basic_modal_sheet.dart';
-import 'package:eqmonitor/common/component/sheet/sheet_item.dart';
+import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
 import 'package:eqmonitor/feature/home/component/map/kmoni_map_widget.dart';
 import 'package:eqmonitor/feature/home/providers/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/providers/telegram_ws/provider/eew_telegram_provider.dart';
@@ -90,17 +92,6 @@ class HomeView extends HookConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('EQMonitor'),
-          actions: [
-            IconButton(
-              onPressed: () {
-                ref.read(mapViewModelProvider(mapKey).notifier).animatedBounds([
-                  const LatLng(45.8, 145.1),
-                  const LatLng(30, 128.8),
-                ]);
-              },
-              icon: const Icon(Icons.zoom_out_map),
-            ),
-          ],
         ),
         body: _HomeBodyWidget(mapKey: mapKey),
       ),
@@ -124,9 +115,12 @@ class _HomeBodyWidget extends HookConsumerWidget {
     useEffect(
       () {
         WidgetsBinding.instance.endOfFrame.then((_) {
+          // Widgetのサイズを登録
+          final renderBox =
+              mapKey.currentContext!.findRenderObject()! as RenderBox;
           ref.read(mapViewModelProvider(mapKey).notifier)
-            ..registerWidgetSize(
-              context.size!,
+            ..registerRenderBox(
+              renderBox,
             )
             ..registerAnimationControllers(
               moveController: moveController,
@@ -148,11 +142,12 @@ class _HomeBodyWidget extends HookConsumerWidget {
         Container(
           color: Color.lerp(
             Theme.of(context).colorScheme.background,
-            Colors.blue,
+            Colors.blueAccent,
             brightness == Brightness.light ? 0.3 : 0.15,
           ),
         ),
         ClipRRect(
+          key: mapKey,
           child: Stack(
             children: [
               BaseMapWidget(mapKey: mapKey),
@@ -166,15 +161,41 @@ class _HomeBodyWidget extends HookConsumerWidget {
             onPressed: () {
               ref.read(telegramWsProvider.notifier).requestSample();
             },
-            icon: const Icon(Icons.abc),
-            label: const Text('abc'),
+            label: const Text('request Sample Telegram'),
+            icon: const Icon(Icons.send),
           ),
+        ),
+        SheetFloatingActionButtons(
+          controller: sheetController,
+          fab: [
+            FloatingActionButton.small(
+              onPressed: () {
+                ref.read(mapViewModelProvider(mapKey).notifier).animatedBounds([
+                  const LatLng(45.8, 145.1),
+                  const LatLng(30, 128.8),
+                ]);
+              },
+              backgroundColor: Colors.blueGrey,
+              child: const Icon(Icons.home),
+            ),
+          ],
         ),
         // Sheet
         BasicModalSheet(
           controller: sheetController,
-          children: const [
-            SheetItem(child: Text('test')),
+          children: [
+            const SheetItem(child: Text('test')),
+            SheetItem(
+              child: ListTile(
+                title: const Text('強震モニタ設定'),
+                onTap: () {
+                  showDialog<void>(
+                    context: context,
+                    builder: (context) => const KmoniSettingsDialogWidget(),
+                  );
+                },
+              ),
+            )
           ],
         ),
       ],

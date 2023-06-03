@@ -21,7 +21,6 @@ class MapViewModel extends _$MapViewModel {
   }
 
   double? _scaleStart;
-  Size? _widgetSize;
 
   Animation<Offset>? _moveAnimation;
   Animation<double>? _scaleAnimation;
@@ -31,6 +30,8 @@ class MapViewModel extends _$MapViewModel {
   final double _interactionEndFrictionCoefficient = 0.0000135;
 
   _GestureType? _gestureType;
+
+  RenderBox? _renderBox;
 
   /// The minimum velocity for a touch to consider that touch to trigger a fling
   /// gesture.
@@ -63,7 +64,7 @@ class MapViewModel extends _$MapViewModel {
     }
     state = state.setScale(
       _scaleAnimation!.value,
-      focalPoint: Offset(_widgetSize!.width / 2, _widgetSize!.height / 2),
+      focalPoint: _renderBox!.size.center(Offset.zero),
     );
   }
 
@@ -131,9 +132,14 @@ class MapViewModel extends _$MapViewModel {
         // つまり、FocalPointのシーン内の位置はスケーリングの前後で変化しない
 
         state = state
-            .setScale(desiredScale, focalPoint: details.focalPoint)
+            .setScale(
+              desiredScale,
+              focalPoint:
+                  details.focalPoint - _renderBox!.localToGlobal(Offset.zero),
+            )
             .move(details.focalPointDelta / scale);
-      default:
+      case _GestureType.rotate:
+      case null:
         break;
     }
   }
@@ -292,7 +298,7 @@ class MapViewModel extends _$MapViewModel {
     _scaleController.reset();
 
     final start = state.offset;
-    final after = state.setCenterLatLng(target, _widgetSize!).offset;
+    final after = state.setCenterLatLng(target, _renderBox!.size).offset;
 
     final animation = Tween<Offset>(
       begin: start,
@@ -323,8 +329,7 @@ class MapViewModel extends _$MapViewModel {
     final start = state;
     final after = state.setScale(
       target,
-      focalPoint: Offset(_widgetSize!.width / 2, _widgetSize!.height / 2) /
-          state.zoomLevel,
+      focalPoint: _renderBox!.size.center(Offset.zero) / state.zoomLevel,
     );
     // moveAnimation
     final animation = Tween<Offset>(
@@ -370,7 +375,7 @@ class MapViewModel extends _$MapViewModel {
     _scaleController.reset();
 
     final start = state;
-    final after = state.fitBounds(bounds, _widgetSize!);
+    final after = state.fitBounds(bounds, _renderBox!.size);
 
     // moveAnimation
     final animation = Tween<Offset>(
@@ -403,8 +408,8 @@ class MapViewModel extends _$MapViewModel {
     await (_scaleController.forward(), _moveController.forward()).wait;
   }
 
-  void registerWidgetSize(Size size) {
-    _widgetSize = size;
+  void registerRenderBox(RenderBox renderBox) {
+    _renderBox = renderBox;
   }
 
   void registerAnimationControllers({
@@ -430,21 +435,20 @@ class MapViewModel extends _$MapViewModel {
 
   LatLng get centerLatLng {
     final centerPoint = state.offsetToGlobalPoint(
-      Offset(_widgetSize!.width / 2, _widgetSize!.height / 2),
+      _renderBox!.size.center(Offset.zero),
     );
     return WebMercatorProjection().unproject(centerPoint);
   }
 
   set centerLatLng(LatLng latLng) => state = state.setCenterLatLng(
         latLng,
-        _widgetSize!,
+        _renderBox!.size,
       );
 
   set zoomLevel(double zoom) {
     state = state.setScale(
       zoom,
-      focalPoint: Offset(_widgetSize!.width / 2, _widgetSize!.height / 2) /
-          state.zoomLevel,
+      focalPoint: _renderBox!.size.center(Offset.zero) / state.zoomLevel,
     );
   }
 
@@ -455,7 +459,7 @@ class MapViewModel extends _$MapViewModel {
   }) =>
       state = state.fitBounds(
         latLngs,
-        _widgetSize!,
+        _renderBox!.size,
         maxZoom: maxZoom,
       );
 }
