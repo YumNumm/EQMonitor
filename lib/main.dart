@@ -1,23 +1,23 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/common/fcm/silent_data_handle.dart';
+import 'package:eqmonitor/common/provider/log/talker.dart';
 import 'package:eqmonitor/common/provider/shared_preferences.dart';
 import 'package:eqmonitor/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final talker = TalkerFlutter.init();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -25,12 +25,12 @@ Future<void> main() async {
   await NotificationController.initializeRemoteNotifications(debug: kDebugMode);
   // Pass all uncaught "fatal" errors from the framework to Crashlytics
   FlutterError.onError = (error) {
-    FirebaseCrashlytics.instance.recordFlutterFatalError(error);
+    talker.handle(error.exception, error.stack, 'Uncaught fatal exception');
   };
   // Pass all uncaught asynchronous errors that aren't handled
   // by the Flutter framework to Crashlytics
   PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    talker.handle(error, stack, 'Uncaught async exception');
     return true;
   };
 
@@ -41,20 +41,22 @@ Future<void> main() async {
         unawaited(
           FirebaseMessaging.instance.subscribeToTopic('config-developer'),
         );
-        log('config-developer OK ');
+        talker.log('config-developer OK ');
       }
       await FirebaseMessaging.instance.subscribeToTopic('everyone');
-      log('everyone OK');
+      talker.log('everyone OK');
       await FirebaseMessaging.instance.subscribeToTopic('eew');
-      log('eew OK');
+      talker.log('eew OK');
       await FirebaseMessaging.instance.subscribeToTopic('earthquake');
-      log('earthquake OK');
+      talker.log('earthquake OK');
     }());
   }
+
   runApp(
     ProviderScope(
       overrides: [
         sharedPreferencesProvider.overrideWithValue(prefs),
+        talkerProvider.overrideWithValue(talker),
       ],
       child: const App(),
     ),
@@ -62,17 +64,17 @@ Future<void> main() async {
 }
 
 // Request FCM token to Firebase
-Future<String> getFirebaseMessagingToken() async {
+Future<String> getFirebaseMessagingToken(Talker talker) async {
   var firebaseAppToken = '';
   if (await AwesomeNotificationsFcm().isFirebaseAvailable) {
     try {
       firebaseAppToken =
           await AwesomeNotificationsFcm().requestFirebaseAppToken();
     } on Exception catch (exception) {
-      log('$exception');
+      talker.log('$exception');
     }
   } else {
-    log('Firebase is not available on this project');
+    talker.log('Firebase is not available on this project');
   }
   return firebaseAppToken;
 }
