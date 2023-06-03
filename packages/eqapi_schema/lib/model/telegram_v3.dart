@@ -156,7 +156,7 @@ class TelegramV3 {
         'type': type.type,
         'schemaType': schemaType.type,
         'status': status.type,
-        'infoType': infoType,
+        'infoType': infoType.type,
         'pressTime': pressTime.toIso8601String(),
         'reportTime': reportTime?.toIso8601String(),
         'validTime': validTime?.toIso8601String(),
