@@ -6,9 +6,8 @@ import 'package:eqmonitor/common/component/map/view_model/map_viemwodel.dart';
 import 'package:eqmonitor/common/feature/map/provider/map_data_provider.dart';
 import 'package:eqmonitor/common/hook/use_sheet_controller.dart';
 import 'package:eqmonitor/common/provider/log/talker.dart';
-import 'package:eqmonitor/feature/component/sheet/basic_modal_sheet.dart';
-import 'package:eqmonitor/feature/component/sheet/sheet_item.dart';
-import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
+import 'package:eqmonitor/common/component/sheet/basic_modal_sheet.dart';
+import 'package:eqmonitor/common/component/sheet/sheet_item.dart';
 import 'package:eqmonitor/feature/home/component/map/kmoni_map_widget.dart';
 import 'package:eqmonitor/feature/home/providers/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/providers/telegram_ws/provider/eew_telegram_provider.dart';
@@ -102,14 +101,6 @@ class HomeView extends HookConsumerWidget {
               icon: const Icon(Icons.zoom_out_map),
             ),
           ],
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () => showDialog<void>(
-            context: context,
-            builder: (context) => const KmoniSettingsDialogWidget(),
-          ),
-          label: const Text('Kmoni Settings'),
-          icon: const Icon(Icons.settings),
         ),
         body: _HomeBodyWidget(mapKey: mapKey),
       ),
