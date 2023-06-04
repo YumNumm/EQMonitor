@@ -50,5 +50,4 @@ class TelegramUrl extends _$TelegramUrl {
 
   // ignore: avoid_setters_without_getters
   set setState(TelegramUrlModel model) => state = model;
-
 }
