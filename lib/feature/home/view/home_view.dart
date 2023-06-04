@@ -11,6 +11,7 @@ import 'package:eqmonitor/common/hook/use_sheet_controller.dart';
 import 'package:eqmonitor/common/provider/log/talker.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
 import 'package:eqmonitor/feature/home/component/map/kmoni_map_widget.dart';
+import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
 import 'package:eqmonitor/feature/home/providers/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/providers/telegram_ws/provider/eew_telegram_provider.dart';
 import 'package:eqmonitor/feature/home/providers/telegram_ws/provider/telegram_provider.dart';
@@ -184,7 +185,8 @@ class _HomeBodyWidget extends HookConsumerWidget {
         BasicModalSheet(
           controller: sheetController,
           children: [
-            const SheetItem(child: Text('test')),
+            const SheetStatusWidget(),
+            const SizedBox(height: 4),
             SheetItem(
               child: ListTile(
                 title: const Text('強震モニタ設定'),

@@ -31,6 +31,12 @@ class KmoniWebApiUrlGenerator {
   /// 予想震度のURL
   String estShindoBase(DateTime dateTime) =>
       'http://www.kmoni.bosai.go.jp/data/map_img/EstShindoImg/eew/${_ymd.format(dateTime)}/${_ymdhms.format(dateTime)}.eew.gif';
+
+  String maintenanceMessage() =>
+      'http://www.kmoni.bosai.go.jp/webservice/maintenance/message.json';
+
+  String latestDataTime() =>
+      'http://www.kmoni.bosai.go.jp/webservice/server/pros/latest.json';
 }
 
 enum GroundType {

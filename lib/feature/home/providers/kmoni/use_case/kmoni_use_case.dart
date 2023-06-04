@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:eqmonitor/feature/home/providers/kmoni/data/asset/kmoni_observation_point.dart';
 import 'package:eqmonitor/feature/home/providers/kmoni/data/kmoni_data_source.dart';
+import 'package:eqmonitor/feature/home/providers/kmoni/model/kmoni_maintenance_message_model.dart';
 import 'package:eqmonitor/feature/home/providers/kmoni/util/kmoni_web_api_url_generator.dart';
 import 'package:eqmonitor/feature/home/providers/kmoni/util/realtime_data_type.dart';
 import 'package:flutter/rendering.dart';
@@ -38,6 +39,14 @@ class KmoniUseCase {
       obsPoints: obsPoints,
       type: RealtimeDataType.shindo,
     );
+  }
+
+  Future<DateTime> getLatestDataTime() async {
+    return dataSource.getLatestDataTime();
+  }
+
+  Future<KmoniMaintenanceMessageModel> getMaintenanceMessage() async {
+    return dataSource.getMaintenanceMessage();
   }
 
   List<AnalyzedKmoniObservationPoint> _imageParse({

@@ -16,6 +16,7 @@ dependencies:
   cupertino_icons: ^1.0.5
   dio: ^5.1.1
   dio_http2_adapter: ^2.2.0
+  dynamic_color: ^1.6.5
   envied: ^0.3.0+3
   eqapi_schema:
     path: packages/eqapi_schema

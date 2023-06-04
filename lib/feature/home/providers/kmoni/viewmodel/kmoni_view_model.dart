@@ -27,7 +27,13 @@ class KmoniViewModel extends _$KmoniViewModel {
   late final KmoniUseCase _useCase;
 
   /// 画像取得タイマー
-  Timer _timer = Timer.periodic(
+  Timer _kmoniFetchTimer = Timer.periodic(
+    const Duration(seconds: 1),
+    (_) {},
+  );
+
+  /// 時刻更新タイマー
+  Timer _kmoniSyncTimer = Timer.periodic(
     const Duration(seconds: 1),
     (_) {},
   );
@@ -46,23 +52,24 @@ class KmoniViewModel extends _$KmoniViewModel {
     }
     _observationPoints = result;
 
-    // assetの読み込み
+    // Timer開始
+    while (true) {
+      try {
+        await syncDelayWithKmoni();
+      } catch (e) {
+        log('error $e');
+        continue;
+      }
+      break;
+    }
     state = state.copyWith(
       isInitialized: true,
     );
-    // Timer開始
-    // 00msになるまで待機
-    final now = DateTime.now();
-    final delay = Duration(
-      milliseconds: 1000 - now.millisecond,
-      microseconds: 1000 - now.microsecond,
-    );
-    await Future<void>.delayed(delay);
 
-    _timer.cancel();
-    _timer = Timer.periodic(
-      const Duration(seconds: 1),
-      (_) => _update(),
+    // 1分おきに遅延を更新
+    _kmoniSyncTimer = Timer.periodic(
+      const Duration(minutes: 1),
+      (_) => syncDelayWithKmoni(),
     );
   }
 
@@ -89,5 +96,31 @@ class KmoniViewModel extends _$KmoniViewModel {
         );
       }
     }
+  }
+
+  Future<void> syncDelayWithKmoni() async {
+    // kmoniから現在時刻を取得
+    final firstDateTime = await _useCase.getLatestDataTime();
+    var latestDataTime = firstDateTime;
+    // 変わるまで100msごとに取得
+    while (true) {
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      latestDataTime = await _useCase.getLatestDataTime();
+      if (latestDataTime != firstDateTime) {
+        break;
+      }
+    }
+    // 現在時刻との差分を取得
+    final diff = DateTime.now().difference(latestDataTime);
+    // 適用
+    state = state.copyWith(
+      delay: diff,
+    );
+    // タイマー再起動
+    _kmoniFetchTimer.cancel();
+    _kmoniFetchTimer = Timer.periodic(
+      const Duration(seconds: 1),
+      (_) => _update(),
+    );
   }
 }
