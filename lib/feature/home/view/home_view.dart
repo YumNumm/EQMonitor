@@ -2,15 +2,15 @@ import 'dart:convert';
 
 import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:eqmonitor/common/component/map/map.dart';
-import 'package:eqmonitor/common/component/map/view_model/map_viemwodel.dart';
+import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/common/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/common/component/sheet/sheet_floating_action_buttons.dart';
-import 'package:eqmonitor/common/component/sheet/sheet_item.dart';
 import 'package:eqmonitor/common/feature/map/provider/map_data_provider.dart';
 import 'package:eqmonitor/common/hook/use_sheet_controller.dart';
 import 'package:eqmonitor/common/provider/log/talker.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
 import 'package:eqmonitor/feature/home/component/map/kmoni_map_widget.dart';
+import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
 import 'package:eqmonitor/feature/home/providers/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/providers/telegram_ws/provider/eew_telegram_provider.dart';
@@ -112,6 +112,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
     final brightness = MediaQuery.of(context).platformBrightness;
     final moveController = useAnimationController();
     final scaleController = useAnimationController();
+    final globalPointAndZoomLevelController = useAnimationController();
     // * mapViewModelへWidgetの各情報を登録しながら 初期化
     useEffect(
       () {
@@ -126,11 +127,14 @@ class _HomeBodyWidget extends HookConsumerWidget {
             ..registerAnimationControllers(
               moveController: moveController,
               scaleController: scaleController,
+              globalPointAndZoomLevelController:
+                  globalPointAndZoomLevelController,
             )
             ..fitBounds([
               const LatLng(45.8, 145.1),
               const LatLng(30, 128.8),
-            ]);
+            ])
+            ..applyBounds();
         });
         return null;
       },
@@ -158,12 +162,41 @@ class _HomeBodyWidget extends HookConsumerWidget {
           ),
         ),
         SafeArea(
-          child: ElevatedButton.icon(
-            onPressed: () {
-              ref.read(telegramWsProvider.notifier).requestSample();
-            },
-            label: const Text('request Sample Telegram'),
-            icon: const Icon(Icons.send),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ElevatedButton.icon(
+                onPressed: () {
+                  ref.read(telegramWsProvider.notifier).requestSample();
+                },
+                label: const Text('request Sample Telegram'),
+                icon: const Icon(Icons.send),
+              ),
+              const SizedBox(height: 8),
+              // PoCを変更
+              ElevatedButton.icon(
+                onPressed: () {
+                  ref.read(mapViewModelProvider(mapKey).notifier)
+                    ..setBounds([
+                      const LatLng(35, 135),
+                      const LatLng(36, 137),
+                    ])
+                    ..animatedApplyBounds();
+                },
+                icon: const Icon(Icons.settings),
+                label: const Text('表示領域を変更'),
+              ),
+              // 表示領域をリセット
+              ElevatedButton.icon(
+                onPressed: () {
+                  ref.read(mapViewModelProvider(mapKey).notifier)
+                    ..reset()
+                    ..animatedApplyBounds();
+                },
+                icon: const Icon(Icons.home),
+                label: const Text('表示領域をリセット'),
+              ),
+            ],
           ),
         ),
         SheetFloatingActionButtons(
@@ -171,10 +204,9 @@ class _HomeBodyWidget extends HookConsumerWidget {
           fab: [
             FloatingActionButton.small(
               onPressed: () {
-                ref.read(mapViewModelProvider(mapKey).notifier).animatedBounds([
-                  const LatLng(45.8, 145.1),
-                  const LatLng(30, 128.8),
-                ]);
+                ref
+                    .read(mapViewModelProvider(mapKey).notifier)
+                    .animatedApplyBounds();
               },
               backgroundColor: Colors.blueGrey,
               child: const Icon(Icons.home),
@@ -187,17 +219,16 @@ class _HomeBodyWidget extends HookConsumerWidget {
           children: [
             const SheetStatusWidget(),
             const SizedBox(height: 4),
-            SheetItem(
-              child: ListTile(
-                title: const Text('強震モニタ設定'),
-                onTap: () {
-                  showDialog<void>(
-                    context: context,
-                    builder: (context) => const KmoniSettingsDialogWidget(),
-                  );
-                },
-              ),
-            )
+            const EarthquakeHistorySheetWidget(),
+            ListTile(
+              title: const Text('強震モニタ設定'),
+              onTap: () {
+                showDialog<void>(
+                  context: context,
+                  builder: (context) => const KmoniSettingsDialogWidget(),
+                );
+              },
+            ),
           ],
         ),
       ],

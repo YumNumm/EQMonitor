@@ -114,7 +114,36 @@ extension MapStateProjection on MapState {
     Size widgetSize, {
     double maxZoom = 300,
   }) {
-    final points = latLngs.map((e) => WebMercatorProjection().project(e));
+    if (latLngs.isEmpty) {
+      throw ArgumentError('latLngs must not be empty');
+    }
+    var minLat = double.negativeInfinity;
+    var minLng = double.negativeInfinity;
+    var maxLat = double.infinity;
+    var maxLng = double.infinity;
+    for (final latLng in latLngs) {
+      minLat = math.max(minLat, latLng.lat);
+      minLng = math.max(minLng, latLng.lon);
+      maxLat = math.min(maxLat, latLng.lat);
+      maxLng = math.min(maxLng, latLng.lon);
+    }
+    final points = [
+      LatLng(minLat, minLng),
+      LatLng(maxLat, maxLng),
+    ].map((e) => WebMercatorProjection().project(e));
+
+    return fitBoundsByGlobalPoints(
+      points.toList(),
+      widgetSize,
+      maxZoom: maxZoom,
+    );
+  }
+
+  MapState fitBoundsByGlobalPoints(
+    List<GlobalPoint> points,
+    Size widgetSize, {
+    double maxZoom = 300,
+  }) {
     final (min, max) = _getBounds(points);
     final center = GlobalPoint(
       (min.x + max.x) / 2,

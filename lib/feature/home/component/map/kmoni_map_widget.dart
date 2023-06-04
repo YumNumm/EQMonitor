@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:eqapi_schema/model/telegram_v3.dart';
 import 'package:eqmonitor/common/component/map/model/map_state.dart';
-import 'package:eqmonitor/common/component/map/view_model/map_viemwodel.dart';
+import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart';
 import 'package:eqmonitor/common/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/common/provider/config/theme/intensity_color/model/intensity_color_model.dart';

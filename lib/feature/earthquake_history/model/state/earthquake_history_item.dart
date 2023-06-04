@@ -18,6 +18,7 @@ class EarthquakeHistoryItem with _$EarthquakeHistoryItem {
     required TsunamiData tsunami,
     required List<TelegramV3> telegrams,
     required int eventId,
+    required Vxse45? latestEew,
   }) = _EarthquakeHistoryItem;
 
   factory EarthquakeHistoryItem.fromJson(Map<String, dynamic> json) =>

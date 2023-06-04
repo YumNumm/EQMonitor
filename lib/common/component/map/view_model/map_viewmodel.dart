@@ -1,16 +1,18 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:eqmonitor/common/component/map/model/map_state.dart';
+import 'package:eqmonitor/common/component/map/util/global_point_and_zoom_level_tween.dart';
 import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'map_viemwodel.g.dart';
+part 'map_viewmodel.g.dart';
 
-@riverpod
+@Riverpod()
 class MapViewModel extends _$MapViewModel {
   @override
   MapState build(Key key) {
@@ -24,14 +26,78 @@ class MapViewModel extends _$MapViewModel {
 
   Animation<Offset>? _moveAnimation;
   Animation<double>? _scaleAnimation;
+  Animation<(GlobalPoint, double zoomLevel)>? _globalPointAndZoomLevelAnimation;
   late AnimationController _moveController;
   late AnimationController _scaleController;
+  late AnimationController _globalPointAndZoomLevelController;
 
   final double _interactionEndFrictionCoefficient = 0.0000135;
 
   _GestureType? _gestureType;
 
   RenderBox? _renderBox;
+
+  // * MapController周りの実装
+  (LatLng, LatLng) _currentPoC = (
+    const LatLng(45.8, 145.1),
+    const LatLng(30, 128.8),
+  );
+
+  /// デフォルトの表示領域に戻す
+  void reset() => _currentPoC = (
+        const LatLng(45.8, 145.1),
+        const LatLng(30, 128.8),
+      );
+
+  /// 表示領域を変更する
+  void applyBounds() {
+    if (_renderBox == null) {
+      return;
+    }
+    final points = _currentPoC.toGlobalPoints();
+    state =
+        state.fitBoundsByGlobalPoints([points.$1, points.$2], _renderBox!.size);
+  }
+
+  Future<void> animatedApplyBounds({
+    Duration duration = const Duration(milliseconds: 500),
+    Curve curve = Curves.easeOutCirc,
+  }) {
+    if (_renderBox == null) {
+      return Future.value();
+    }
+    final points = _currentPoC.toGlobalPoints();
+    return animatedBoundsByGlobalPoints(
+      [points.$1, points.$2],
+      curve: curve,
+      duration: duration,
+    );
+  }
+
+  /// 表示領域をセットし、表示領域を変更する
+  void setBounds(List<LatLng> latLngs) {
+    if (latLngs.isEmpty) {
+      throw ArgumentError('latLngs must not be empty');
+    }
+    var minLat = double.negativeInfinity;
+    var minLng = double.negativeInfinity;
+    var maxLat = double.infinity;
+    var maxLng = double.infinity;
+    for (final latLng in latLngs) {
+      minLat = math.max(minLat, latLng.lat);
+      minLng = math.max(minLng, latLng.lon);
+      maxLat = math.min(maxLat, latLng.lat);
+      maxLng = math.min(maxLng, latLng.lon);
+    }
+    _currentPoC = (
+      LatLng(minLat, minLng),
+      LatLng(maxLat, maxLng),
+    );
+  }
+
+  void setBoundsByGlobalPoints(GlobalPoint $1, GlobalPoint $2) {
+    applyBounds();
+  }
 
   /// The minimum velocity for a touch to consider that touch to trigger a fling
   /// gesture.
@@ -53,6 +119,23 @@ class MapViewModel extends _$MapViewModel {
     state = state.copyWith(
       offset: _moveAnimation!.value,
     );
+  }
+
+  void _onGlobalPointAndZoomLevelAnimation() {
+    if (!_globalPointAndZoomLevelController.isAnimating) {
+      _globalPointAndZoomLevelAnimation
+          ?.removeListener(_onGlobalPointAndZoomLevelAnimation);
+      _globalPointAndZoomLevelAnimation = null;
+      _globalPointAndZoomLevelController.reset();
+      return;
+    }
+    final (GlobalPoint point, double zoomLevel) =
+        _globalPointAndZoomLevelAnimation!.value;
+
+    state = state.setCenter(point, _renderBox!.size).setScale(
+          zoomLevel,
+          focalPoint: _renderBox!.size.center(Offset.zero),
+        );
   }
 
   void _onScaleAnimation() {
@@ -279,13 +362,6 @@ class MapViewModel extends _$MapViewModel {
     );
   }
 
-  void reset() {
-    state = const MapState(
-      offset: Offset.zero,
-      zoomLevel: 1,
-    );
-  }
-
   Future<void> animatedMoveTo(
     LatLng target, {
     Duration duration = const Duration(milliseconds: 500),
@@ -368,44 +444,89 @@ class MapViewModel extends _$MapViewModel {
     Duration duration = const Duration(milliseconds: 500),
     Curve curve = Curves.easeOutCirc,
   }) async {
+    if (_renderBox == null) {
+      throw Exception('MapController is not initialized.');
+    }
     // 既存のAnimationがあったらキャンセルする
     _moveAnimation?.removeListener(_onMoveAnimation);
     _scaleAnimation?.removeListener(_onScaleAnimation);
+    _globalPointAndZoomLevelAnimation
+        ?.removeListener(_onGlobalPointAndZoomLevelAnimation);
     _moveController.reset();
     _scaleController.reset();
+    _globalPointAndZoomLevelController.reset();
 
     final start = state;
+    final startCenterGlobalPoint =
+        state.offsetToGlobalPoint(_renderBox!.size.center(Offset.zero));
+    final startZoomLevel = state.zoomLevel;
+
     final after = state.fitBounds(bounds, _renderBox!.size);
+    final afterCenterGlobalPoint =
+        after.offsetToGlobalPoint(_renderBox!.size.center(Offset.zero));
+    final afterZoomLevel = after.zoomLevel;
 
     // moveAnimation
-    final animation = Tween<Offset>(
-      begin: start.offset,
-      end: after.offset,
+    final animation = GlobalPointAndZoomLevelTween(
+      begin: (startCenterGlobalPoint, startZoomLevel),
+      end: (afterCenterGlobalPoint, afterZoomLevel),
     ).animate(
       CurvedAnimation(
-        parent: _moveController,
+        parent: _globalPointAndZoomLevelController,
         curve: curve,
       ),
     );
-    _moveController.duration = duration;
-    _moveAnimation = animation;
-    _moveAnimation!.addListener(_onMoveAnimation);
+    _globalPointAndZoomLevelController.duration = duration;
+    _globalPointAndZoomLevelAnimation = animation;
+    _globalPointAndZoomLevelAnimation!
+        .addListener(_onGlobalPointAndZoomLevelAnimation);
 
-    // scaleAnimation
-    final scaleAnimation = Tween<double>(
-      begin: start.zoomLevel,
-      end: after.zoomLevel,
+    await _globalPointAndZoomLevelController.forward();
+  }
+
+  Future<void> animatedBoundsByGlobalPoints(
+    List<GlobalPoint> globalPoints, {
+    Duration duration = const Duration(milliseconds: 500),
+    Curve curve = Curves.easeOutCirc,
+  }) async {
+    if (_renderBox == null) {
+      throw Exception('MapController is not initialized.');
+    }
+    // 既存のAnimationがあったらキャンセルする
+    _moveAnimation?.removeListener(_onMoveAnimation);
+    _scaleAnimation?.removeListener(_onScaleAnimation);
+    _globalPointAndZoomLevelAnimation
+        ?.removeListener(_onGlobalPointAndZoomLevelAnimation);
+    _moveController.reset();
+    _scaleController.reset();
+    _globalPointAndZoomLevelController.reset();
+
+    final start = state;
+    final startCenterGlobalPoint =
+        state.offsetToGlobalPoint(_renderBox!.size.center(Offset.zero));
+    final startZoomLevel = state.zoomLevel;
+
+    final after = state.fitBoundsByGlobalPoints(globalPoints, _renderBox!.size);
+    final afterCenterGlobalPoint =
+        after.offsetToGlobalPoint(_renderBox!.size.center(Offset.zero));
+    final afterZoomLevel = after.zoomLevel;
+
+    // moveAnimation
+    final animation = GlobalPointAndZoomLevelTween(
+      begin: (startCenterGlobalPoint, startZoomLevel),
+      end: (afterCenterGlobalPoint, afterZoomLevel),
     ).animate(
       CurvedAnimation(
-        parent: _scaleController,
+        parent: _globalPointAndZoomLevelController,
         curve: curve,
       ),
     );
-    _scaleController.duration = duration;
-    _scaleAnimation = scaleAnimation;
-    _scaleAnimation!.addListener(_onScaleAnimation);
+    _globalPointAndZoomLevelController.duration = duration;
+    _globalPointAndZoomLevelAnimation = animation;
+    _globalPointAndZoomLevelAnimation!
+        .addListener(_onGlobalPointAndZoomLevelAnimation);
 
-    await (_scaleController.forward(), _moveController.forward()).wait;
+    await _globalPointAndZoomLevelController.forward();
   }
 
   void registerRenderBox(RenderBox renderBox) {
@@ -415,9 +536,11 @@ class MapViewModel extends _$MapViewModel {
   void registerAnimationControllers({
     required AnimationController moveController,
     required AnimationController scaleController,
+    required AnimationController globalPointAndZoomLevelController,
   }) {
     _moveController = moveController;
     _scaleController = scaleController;
+    _globalPointAndZoomLevelController = globalPointAndZoomLevelController;
   }
 
   // 左上の緯度経度
@@ -462,6 +585,8 @@ class MapViewModel extends _$MapViewModel {
         _renderBox!.size,
         maxZoom: maxZoom,
       );
+
+  double get actualZoomLevel => math.pow(1 / 2, state.zoomLevel).toDouble();
 }
 
 // A classification of relevant user gestures. Each contiguous user gesture is

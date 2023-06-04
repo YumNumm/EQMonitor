@@ -1,18 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:sheet/sheet.dart';
 
-class BasicModalSheet extends StatelessWidget {
+class BasicModalSheet extends HookWidget {
   const BasicModalSheet({
     super.key,
     required this.controller,
     required this.children,
+    this.mapKey,
   });
   final SheetController controller;
   final List<Widget> children;
+  final Key? mapKey;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    final barWidget = Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      width: 36,
+      height: 4,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        color: theme.colorScheme.onBackground,
+        boxShadow: const <BoxShadow>[
+          BoxShadow(color: Colors.black12, blurRadius: 12),
+        ],
+      ),
+    );
+
     return Sheet(
       backgroundColor: Colors.transparent,
       initialExtent: 120,
@@ -23,20 +41,20 @@ class BasicModalSheet extends StatelessWidget {
       child: AnimatedBuilder(
         animation: controller.animation,
         builder: (BuildContext context, Widget? child) {
-          final sheetBar = controller.animation.value > 0.95;
+          final showSheetBar = controller.animation.value > 0.95;
           return TweenAnimationBuilder<double>(
-            tween: Tween<double>(begin: 0, end: sheetBar ? 1 : 0),
+            tween: Tween<double>(begin: 0, end: showSheetBar ? 1 : 0),
             duration: const Duration(milliseconds: 200),
             builder: (BuildContext context, double t, Widget? child) {
               final radius = Tween<double>(begin: 16, end: 0).transform(t);
 
               final shadow = ColorTween(
-                begin: Colors.black26,
-                end: Colors.black26.withOpacity(0),
+                begin: Colors.black12,
+                end: Colors.black12.withOpacity(0),
               ).transform(t);
               final barColor = ColorTween(
-                begin: Colors.grey[200],
-                end: Colors.grey[200]?.withOpacity(0),
+                begin: Colors.grey[400],
+                end: Colors.grey[400]?.withOpacity(0),
               ).transform(t);
               return MediaQuery.removePadding(
                 context: context,
@@ -54,16 +72,10 @@ class BasicModalSheet extends StatelessWidget {
                   ),
                   child: Column(
                     children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        width: 36,
-                        height: 4,
-                        color: barColor,
-                        alignment: Alignment.center,
-                      ),
+                      barWidget,
                       Expanded(
                         child: ListView(
-                          padding: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(4),
                           children: children,
                         ),
                       ),

@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:eqapi_schema/model/components/intensity.dart';
 import 'package:eqapi_schema/model/components/region_intensity.dart';
 import 'package:eqmonitor/common/component/map/model/map_state.dart';
-import 'package:eqmonitor/common/component/map/view_model/map_viemwodel.dart';
+import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/common/feature/map/model/map_type.dart';
 import 'package:eqmonitor/common/feature/map/model/projected/map_polygon.dart';
 import 'package:eqmonitor/common/feature/map/provider/map_data_provider.dart';

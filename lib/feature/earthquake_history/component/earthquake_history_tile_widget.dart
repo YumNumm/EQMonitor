@@ -14,10 +14,12 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
     required this.item,
     this.onTap,
     super.key,
+    this.showBackgroundColor = true,
   });
 
   final EarthquakeHistoryItem item;
   final void Function(EarthquakeHistoryItem)? onTap;
+  final bool showBackgroundColor;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -196,7 +198,7 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
                   type: IntensityIconType.filled,
                 )
               : null,
-      tileColor: backgroundColor?.withOpacity(0.4),
+      tileColor: showBackgroundColor ? backgroundColor?.withOpacity(0.4) : null,
       onTap: () => onTap?.call(
         item,
       ),
