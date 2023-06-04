@@ -224,6 +224,12 @@
       "languageVersion": "2.15"
     },
     {
+      "name": "dynamic_color",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/dynamic_color-1.6.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.16"
+    },
+    {
       "name": "envied",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/envied-0.3.0+3",
       "packageUri": "lib/",
@@ -1070,7 +1076,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-06-03T15:22:08.973348Z",
+  "generated": "2023-06-04T02:58:56.399777Z",
   "generator": "pub",
   "generatorVersion": "3.0.3"
 }

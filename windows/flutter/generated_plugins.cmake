@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   awesome_notifications
+  dynamic_color
   firebase_core
   flutter_tts
   permission_handler_windows
