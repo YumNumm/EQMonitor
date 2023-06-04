@@ -10,14 +10,6 @@ class MapConfig with _$MapConfig {
   const factory MapConfig({
     @Default(0.8) double minScale,
     @Default(20) double maxScale,
-    @JsonKey(toJson: colorToJson, fromJson: colorFromJson)
-    @Default(Color.fromARGB(255, 203, 211, 255))
-    Color backgroundColor,
-    @Default([
-      LatLng(45.3, 145.1),
-      LatLng(30, 128.8),
-    ])
-    List<LatLng> initialBounds,
   }) = _MapConfig;
 
   factory MapConfig.fromJson(Map<String, dynamic> json) =>

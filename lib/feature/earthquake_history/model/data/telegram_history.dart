@@ -31,10 +31,9 @@ Map<String, List<TelegramV3>>? _telegramHistoryV3DataFromJson(
     final eventId = int.parse(key);
     final value = (json[key] as List<dynamic>)
         .map(
-          (e) => TelegramV3.fromJson(<String, dynamic>{
-            'eventId': eventId,
-            ...e as Map<String, dynamic>,
-          }),
+          (e) => TelegramV3.fromJson(
+            {...e as Map<String, dynamic>, 'eventId': eventId},
+          ),
         )
         .toList();
     result.addAll({

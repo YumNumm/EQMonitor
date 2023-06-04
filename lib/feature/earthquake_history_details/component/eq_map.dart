@@ -1,7 +1,7 @@
 import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:eqapi_schema/model/telegram_v3.dart';
 import 'package:eqmonitor/common/component/map/map.dart';
-import 'package:eqmonitor/common/component/map/view_model/map_viemwodel.dart';
+import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/common/feature/map/model/map_type.dart';
 import 'package:eqmonitor/common/feature/map/model/state/map_data_state.dart';
 import 'package:eqmonitor/common/feature/map/provider/map_data_provider.dart';
@@ -30,6 +30,7 @@ class EarthquakeHistoryMap extends HookConsumerWidget {
     );
     final moveController = useAnimationController();
     final scaleController = useAnimationController();
+    final globalPointAndZoomLevelController = useAnimationController();
     useEffect(
       () {
         WidgetsBinding.instance.endOfFrame.then((_) {
@@ -42,6 +43,8 @@ class EarthquakeHistoryMap extends HookConsumerWidget {
             ..registerAnimationControllers(
               moveController: moveController,
               scaleController: scaleController,
+              globalPointAndZoomLevelController:
+                  globalPointAndZoomLevelController,
             )
             ..fitBounds(
               _getShowBounds(item, ref.read(mapDataProvider).data!),
