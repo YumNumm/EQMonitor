@@ -328,14 +328,6 @@ packages:
       relative: true
     source: path
     version: "1.0.0"
-  extra_pedantic:
-    dependency: transitive
-    description:
-      name: extra_pedantic
-      sha256: eb9cc0842dc1c980f00fd226364456d2169d54f7118b8ae16443188063edce0b
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.5.0"
   fake_async:
     dependency: transitive
     description:
@@ -535,31 +527,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.0"
-  geodesy:
-    dependency: transitive
-    description:
-      name: geodesy
-      sha256: d9959000de938adf760f946546ccbf9ebdff8f4f6d0b5c54e8b8b1ed350b1028
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.0-nullsafety.0"
-  geojson:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: "7f0e305450014e264f6d0f5bf5b1a62501afc6c2"
-      resolved-ref: "7f0e305450014e264f6d0f5bf5b1a62501afc6c2"
-      url: "git@github.com:FaFre/geojson.git"
-    source: git
-    version: "1.0.0"
-  geopoint:
-    dependency: transitive
-    description:
-      name: geopoint
-      sha256: "594afb50a689e6584b80b7de8332c83a78e50725dc4324b2c014d19c56de5e3f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   glob:
     dependency: transitive
     description:
@@ -664,14 +631,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
-  iso:
-    dependency: transitive
-    description:
-      name: iso
-      sha256: "7030a1a096f7924deb6cccde6c7d80473dddd54eeedf20402e3d6e51b1672b27"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   js:
     dependency: transitive
     description:
@@ -696,14 +655,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.6.2"
-  latlong2:
-    dependency: transitive
-    description:
-      name: latlong2
-      sha256: "08ef7282ba9f76e8495e49e2dc4d653015ac929dce5f92b375a415d30b407ea0"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.8.2"
   lints:
     dependency: transitive
     description:
@@ -848,14 +799,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.0"
-  pedantic:
-    dependency: transitive
-    description:
-      name: pedantic
-      sha256: "67fc27ed9639506c856c840ccce7594d0bdcd91bc8d53d6e52359449a1d50602"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.11.1"
   pedantic_mono:
     dependency: "direct dev"
     description:
@@ -1141,14 +1084,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
-  slugify:
-    dependency: transitive
-    description:
-      name: slugify
-      sha256: b272501565cb28050cac2d96b7bf28a2d24c8dae359280361d124f3093d337c3
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
   socket_io_client:
     dependency: "direct main"
     description:
@@ -1287,6 +1222,20 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  topo_map:
+    dependency: "direct main"
+    description:
+      path: "packages/topo_map"
+      relative: true
+    source: path
+    version: "1.0.0"
+  topojson:
+    dependency: "direct main"
+    description:
+      path: "packages/topojson"
+      relative: true
+    source: path
+    version: "1.0.0"
   tuple:
     dependency: transitive
     description:
@@ -1416,5 +1365,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.0.0 <4.0.0"
+  dart: ">=3.0.3 <4.0.0"
   flutter: ">=3.7.0"
