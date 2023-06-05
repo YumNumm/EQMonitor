@@ -761,10 +761,10 @@ packages:
     dependency: transitive
     description:
       name: functions_client
-      sha256: "1cd3af45489d397de11c9049193466766fdc63834b7e7a135e89c1bbaea586d3"
+      sha256: "5df22810b8a638e6eeac3ccc538f28e421d938af24acbfc9f6c2cf377e5d686d"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.3.1"
   geodesy:
     dependency: transitive
     description:
@@ -817,10 +817,10 @@ packages:
     dependency: transitive
     description:
       name: gotrue
-      sha256: c218c1ba6339a0a50c39ee0553517f7b011a5b0d36a1129fed80fa6eb0f1c33f
+      sha256: f6908650406da86bf5dd05968ed361f8a6c1953451c7f9b5eedab5e64223d31c
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "1.8.1"
   graphs:
     dependency: transitive
     description:
@@ -1217,10 +1217,10 @@ packages:
     dependency: transitive
     description:
       name: postgrest
-      sha256: d640aad1d31d3ac87d963d4d8c5363f5dd95678df390afeb038acdcfc04bb530
+      sha256: "36b401983777468655bd56b2892171c582ae66207ecca39880bbd10b3a67e23c"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.1"
+    version: "1.3.1"
   process:
     dependency: transitive
     description:
@@ -1257,10 +1257,10 @@ packages:
     dependency: "direct main"
     description:
       name: realtime_client
-      sha256: "870e09b74a6c8a390b41632ad73d0126b6bac5c8e13b8ac3193370ed1c37f7a4"
+      sha256: "13f6a62244bca7562b47658e3f92e5eeeb79a46d58ad4a97ad536e4ba5e97086"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1"
+    version: "1.1.0"
   restart_app:
     dependency: "direct main"
     description:
@@ -1462,10 +1462,10 @@ packages:
     dependency: transitive
     description:
       name: storage_client
-      sha256: "028862c8355b1e8b75b34cff25fb6086aa80232d25a34c81baef6a35ab2c2a06"
+      sha256: "8323f84a9a81c7b03cff27870fe573e64faaa4915bc0dceb99c5b9cdcf31fd07"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.4.1"
   stream_channel:
     dependency: transitive
     description:
@@ -1502,10 +1502,10 @@ packages:
     dependency: "direct main"
     description:
       name: supabase
-      sha256: a2f4e974be5bad58bc6623fba62dfc674c4af8e4bf5507bc7077c0f706276a56
+      sha256: b69e425e73a9dc87d6db7441601d4f024adca6e946766d4b5aa3fe41d8c2ad9b
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "1.9.1"
   supabase_flutter:
     dependency: "direct main"
     description:
@@ -1678,10 +1678,10 @@ packages:
     dependency: "direct main"
     description:
       name: web_socket_channel
-      sha256: "3a969ddcc204a3e34e863d204b29c0752716f78b6f9cc8235083208d268a4ccd"
+      sha256: d88238e5eac9a42bb43ca4e721edba3c08c6354d4a53063afaa568516217621b
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "2.4.0"
   win32:
     dependency: transitive
     description:
@@ -1726,10 +1726,10 @@ packages:
     dependency: transitive
     description:
       name: yet_another_json_isolate
-      sha256: "05d01a9981fd7ab48b6fd901485128f72b0fbce301dcb8bde7484ecc0a95c87d"
+      sha256: "7809f6517bafd0a7b3d0be63cd5f952ae5c030d682250e8aa9ed7002eaac5ff8"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1"
+    version: "1.1.0"
 sdks:
   dart: ">=2.18.4 <3.0.0"
   flutter: ">=3.3.0"
