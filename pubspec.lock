@@ -377,14 +377,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.15"
-  dotenv:
-    dependency: transitive
-    description:
-      name: dotenv
-      sha256: "301007cddf9995f8e4430d2f4840045dfbd57a5720b1a88ecd4ff9085ce2be79"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.1"
   dynamic_color:
     dependency: "direct main"
     description:
@@ -397,18 +389,18 @@ packages:
     dependency: "direct main"
     description:
       name: envied
-      sha256: "2545198df33f6ecb701af530bcc4f85385950d9c71a75882c16c85d0f95d0928"
+      sha256: "60d3f5606c7b35bc6ef493e650d916b34351d8af2e58b7ac45881ba59dfcf039"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.4"
+    version: "0.3.0+3"
   envied_generator:
     dependency: "direct dev"
     description:
       name: envied_generator
-      sha256: ebcf7d808a563383aa683899b212357dda7a2c4fa087a0c287b69dceee740f46
+      sha256: dfdbe5dc52863e54c036a4c4042afbdf1bd528cb4c1e638ecba26228ba72e9e5
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.3+1"
+    version: "0.3.0+3"
   expandable:
     dependency: "direct main"
     description:
