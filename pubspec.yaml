@@ -47,18 +47,7 @@ dependencies:
   shared_preferences: ^2.1.1
   sheet: ^1.0.0-pre
   socket_io_client: ^2.0.2
-  talker_dio_logger:
-    git:
-      url: git@github.com:Frezyx/talker.git
-      branch: dev
-      ref: 6425594b611b5f44ad88258cc97641ff96aba014
-      path: packages/talker_dio_logger
-  talker_flutter:
-    git:
-      url: git@github.com:Frezyx/talker.git
-      branch: dev
-      ref: 6425594b611b5f44ad88258cc97641ff96aba014
-      path: packages/talker_flutter
+  talker_flutter: ^3.0.1
   vector_math: ^2.1.4
   web_socket_client: ^0.1.0-dev.3
 
