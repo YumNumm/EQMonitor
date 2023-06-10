@@ -5,7 +5,6 @@ import 'package:dio_http2_adapter/dio_http2_adapter.dart';
 import 'package:eqmonitor/feature/home/providers/telegram_url/provider/telegram_url_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
 
 part 'dio_provider.g.dart';
 
@@ -29,8 +28,5 @@ Dio dio(DioRef ref) {
             config.onBadCertificate = (_) => kDebugMode,
       ),
     );
-  if (kDebugMode) {
-    dio.interceptors.add(TalkerDioLogger());
-  }
   return dio;
 }

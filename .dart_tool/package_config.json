@@ -933,25 +933,19 @@
     },
     {
       "name": "talker",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/talker-3.0.0-dev.13",
-      "packageUri": "lib/",
-      "languageVersion": "2.15"
-    },
-    {
-      "name": "talker_dio_logger",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/git/talker-6425594b611b5f44ad88258cc97641ff96aba014/packages/talker_dio_logger",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/talker-3.0.0+1",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
     {
       "name": "talker_flutter",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/git/talker-6425594b611b5f44ad88258cc97641ff96aba014/packages/talker_flutter",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/talker_flutter-3.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
     {
       "name": "talker_logger",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/talker_logger-3.0.0-dev.5",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/talker_logger-3.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
@@ -1076,7 +1070,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-06-04T09:09:27.973239Z",
+  "generated": "2023-06-10T17:25:21.885275Z",
   "generator": "pub",
   "generatorVersion": "3.0.3"
 }
