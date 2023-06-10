@@ -5,6 +5,7 @@ import 'package:eqapi_schema/eqapi_schema.dart';
 import 'package:eqmonitor/common/provider/dio_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/data/telegram_history.dart';
 import 'package:eqmonitor/feature/home/providers/telegram_url/provider/telegram_url_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'telegram_history_data_source.g.dart';
@@ -44,8 +45,15 @@ class TelegramHistoryDataSource {
         'offset': offset,
       },
     );
+    final data = response.data;
+    if (data == null) {
+      throw Exception('data is null');
+    }
     log(response.toString());
-    return TelegramHistoryV3.fromJson(response.data!);
+    return compute(
+      TelegramHistoryV3.fromJson,
+      data,
+    );
   }
 
   /// EventIdで指定した電文を取得する
