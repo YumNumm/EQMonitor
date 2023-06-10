@@ -36,7 +36,7 @@ Map<String, List<TelegramV3>>? _telegramHistoryV3DataFromJson(
               return TelegramV3.fromJson(
                 {...e as Map<String, dynamic>, 'eventId': eventId},
               );
-            // ignore: avoid_catches_without_on_clauses
+              // ignore: avoid_catches_without_on_clauses
             } catch (_) {
               return null;
             }
