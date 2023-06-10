@@ -1,11 +1,11 @@
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:eqmonitor/feature/home/providers/kmoni/data/asset/kmoni_observation_point.dart';
 import 'package:eqmonitor/feature/home/providers/kmoni/data/kmoni_data_source.dart';
 import 'package:eqmonitor/feature/home/providers/kmoni/model/kmoni_maintenance_message_model.dart';
 import 'package:eqmonitor/feature/home/providers/kmoni/util/kmoni_web_api_url_generator.dart';
 import 'package:eqmonitor/feature/home/providers/kmoni/util/realtime_data_type.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image/image.dart' as Image;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -31,13 +31,32 @@ class KmoniUseCase {
       dataType: RealtimeDataType.shindo,
       groundType: GroundType.aboveGround,
     );
-    if (imageResponse.data == null) {
+    final data = imageResponse.data;
+    if (data == null) {
       throw Exception('画像取得失敗');
     }
-    return _imageParse(
-      picture: imageResponse.data!,
-      obsPoints: obsPoints,
-      type: RealtimeDataType.shindo,
+    List<AnalyzedKmoniObservationPoint> _imageParseThread(
+      (
+        List<int> picture,
+        List<KmoniObservationPoint> obsPoints,
+        RealtimeDataType type
+      ) arg,
+    ) =>
+        _imageParse(
+          picture: arg.$1,
+          obsPoints: arg.$2,
+          type: arg.$3,
+        );
+
+    return compute<
+        (
+          List<int> picture,
+          List<KmoniObservationPoint> obsPoints,
+          RealtimeDataType type
+        ),
+        List<AnalyzedKmoniObservationPoint>>(
+      _imageParseThread,
+      (data, obsPoints, RealtimeDataType.shindo),
     );
   }
 
