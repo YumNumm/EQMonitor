@@ -64,11 +64,13 @@ class App extends HookConsumerWidget {
             colorScheme: lightColorScheme,
             extensions: [lightCustomColors],
             useMaterial3: true,
+            fontFamily: 'NotoSansJP',
           ),
           darkTheme: ThemeData(
             colorScheme: darkColorScheme,
             extensions: [darkCustomColors],
             useMaterial3: true,
+            fontFamily: 'NotoSansJP',
           ),
           builder: (context, child) {
             if (kDebugMode) {
