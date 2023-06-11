@@ -1,5 +1,6 @@
 import 'package:eqmonitor/feature/home/providers/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/providers/telegram_ws/provider/telegram_provider.dart';
+import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -40,6 +41,9 @@ class SheetStatusWidget extends ConsumerWidget {
             if (isInitialized && latestTime != null)
               Text(
                 DateFormat('yyyy/MM/dd HH:mm:ss').format(latestTime),
+                style: theme.textTheme.bodyMedium!.copyWith(
+                  fontFamily: FontFamily.jetBrainsMono,
+                ),
               )
             else
               const CircularProgressIndicator.adaptive(),
