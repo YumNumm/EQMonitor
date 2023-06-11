@@ -2,6 +2,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eqmonitor/common/fcm/silent_data_handle.dart';
 import 'package:eqmonitor/common/router/router.dart';
 import 'package:eqmonitor/common/theme/custom_colors.dart';
+import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -64,13 +65,13 @@ class App extends HookConsumerWidget {
             colorScheme: lightColorScheme,
             extensions: [lightCustomColors],
             useMaterial3: true,
-            fontFamily: 'NotoSansJP',
+            fontFamily: FontFamily.notoSansJP,
           ),
           darkTheme: ThemeData(
             colorScheme: darkColorScheme,
             extensions: [darkCustomColors],
             useMaterial3: true,
-            fontFamily: 'NotoSansJP',
+            fontFamily: FontFamily.notoSansJP,
           ),
           builder: (context, child) {
             if (kDebugMode) {
