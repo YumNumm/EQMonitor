@@ -446,6 +446,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "google_fonts",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/google_fonts-5.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
       "name": "graphs",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/graphs-2.3.1",
       "packageUri": "lib/",
@@ -468,6 +474,12 @@
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/hotreloader-3.0.6",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "http",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/http-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "http2",
@@ -1076,7 +1088,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-06-11T16:44:02.928494Z",
+  "generated": "2023-06-11T17:40:36.084995Z",
   "generator": "pub",
   "generatorVersion": "3.0.3"
 }
