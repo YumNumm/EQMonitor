@@ -46,7 +46,7 @@ class TelegramWs extends _$TelegramWs {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class SocketStatus extends _$SocketStatus {
   @override
   SocketStatusModel build() => const SocketStatusModel();

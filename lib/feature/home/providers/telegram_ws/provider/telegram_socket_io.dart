@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:developer';
 
 import 'package:eqmonitor/common/provider/log/talker.dart';
@@ -9,17 +8,15 @@ import 'package:socket_io_client/socket_io_client.dart';
 
 part 'telegram_socket_io.g.dart';
 
-@Riverpod(keepAlive: true)
+@Riverpod(keepAlive: true, dependencies: [SocketStatus])
 Socket telegramSocketIo(TelegramSocketIoRef ref) {
   final talker = ref.watch(talkerProvider);
-  const url =
-      'wss://ws.api.eqmonitor.app'; //ref.watch(telegramUrlProvider).wsApiUrl;
+  final url = ref.watch(telegramUrlProvider).wsApiUrl;
   final authorization = ref.watch(telegramUrlProvider).apiAuthorization ?? '';
   final socket = io(
     url,
     OptionBuilder()
         .setTransports(['websocket'])
-        .disableAutoConnect()
         .enableReconnection()
         .enableForceNew()
         .setQuery({'key': authorization})
@@ -35,12 +32,16 @@ Socket telegramSocketIo(TelegramSocketIoRef ref) {
     ..onDisconnect((data) {
       talker.logTyped(TelegramWebSocketLog('Disconnected ($data)'));
       ref.read(socketStatusProvider.notifier).onDisconnect();
+      // 再接続
     })
-    ..connect()
     ..onAny((event, data) {
       talker.logTyped(TelegramWebSocketLog('Event: $event ($data)'));
       log('Event: $event ($data)');
-    });
+    })
+    ..onPing((data) {
+      log('Ping: $data');
+    })
+    ..connect();
 
   return socket;
 }

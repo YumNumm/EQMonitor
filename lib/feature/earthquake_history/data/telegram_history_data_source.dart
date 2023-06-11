@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:eqapi_schema/eqapi_schema.dart';
 import 'package:eqmonitor/common/provider/dio_provider.dart';
@@ -49,7 +47,6 @@ class TelegramHistoryDataSource {
     if (data == null) {
       throw Exception('data is null');
     }
-    log(response.toString());
     return compute(
       TelegramHistoryV3.fromJson,
       data,
