@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:collection/collection.dart';
 import 'package:eqapi_schema/model/components/comments.dart';
 import 'package:eqapi_schema/model/components/earthquake.dart';
@@ -10,6 +12,8 @@ import 'package:eqapi_schema/model/telegram_v3.dart';
 import 'package:eqmonitor/common/extension/async_value.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/use_case/earthquake_history_use_case.dart';
+import 'package:eqmonitor/feature/home/providers/telegram_ws/provider/filtered_telegram_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -20,6 +24,13 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
   @override
   AsyncValue<List<EarthquakeHistoryItem>> build() {
     _useCase = ref.watch(earthquakeHistoryUseCaseProvider);
+    // start listen telegram ws
+    ref.listen(filteredWsTelegramProvider, (previous, next) {
+      final data = next.value;
+      if (data != null) {
+        _upsertTelegram(data);
+      }
+    });
     return const AsyncData([]);
   }
 
@@ -93,7 +104,7 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
 
   List<EarthquakeHistoryItem> _toEarthquakeHistoryItem(
     Map<String, List<TelegramV3>> data, {
-    bool includeTestTelegrams = false,
+    bool includeTestTelegrams = kDebugMode,
   }) {
     final result = <EarthquakeHistoryItem>[];
     data.forEach((eventId, telegrams) {
@@ -239,5 +250,23 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
       );
     });
     return result;
+  }
+
+  void _upsertTelegram(TelegramV3 telegram) {
+    // 既に同一EventIDのTelegramが存在する場合は、上書きする
+    final data = state.value ?? [];
+    final index = data.indexWhere((e) => e.eventId == telegram.eventId);
+    if (index != -1) {
+      data[index] = data[index].copyWith(
+        telegrams: [...data[index].telegrams, telegram],
+      );
+    } else {
+      _toEarthquakeHistoryItem(
+        {
+          telegram.eventId.toString(): [telegram]
+        },
+      ).forEach(data.add);
+    }
+    log('upserted: ${telegram.eventId}');
   }
 }
