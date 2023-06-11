@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
-		1C4E12EB8338B33DEF495F7D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5E90EF92FFEAF93CC7208852 /* GoogleService-Info.plist */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		4AD51BD85D920295BAACE7CA /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 109251CD4C4FFD1A07B9BD24 /* Pods_Runner.framework */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
+		850762A82A35E2BD0020E727 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 850762A72A35E2BD0020E727 /* GoogleService-Info.plist */; };
 		8523B04A2A138D5800F00AFF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8523B0492A138D5800F00AFF /* Assets.xcassets */; };
 		857BA5502A08071F00A4E344 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 857BA54F2A08071F00A4E344 /* NotificationService.swift */; };
 		857BA5542A08071F00A4E344 /* FcmServiceExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 857BA54D2A08071F00A4E344 /* FcmServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -63,11 +63,11 @@
 		2E7146A35744A9645352D3D7 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		5A966FB66900A3C0ED96227B /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
-		5E90EF92FFEAF93CC7208852 /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		70B650DB04A7C3013572EC3A /* Pods-EQMonitorFcmServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EQMonitorFcmServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-EQMonitorFcmServiceExtension/Pods-EQMonitorFcmServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
+		850762A72A35E2BD0020E727 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8523B0492A138D5800F00AFF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../macos/Assets.xcassets; sourceTree = "<group>"; };
 		85534547DDB22ADD06897F39 /* Pods-EQMonitorFcmServiceExtension.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EQMonitorFcmServiceExtension.profile.xcconfig"; path = "Target Support Files/Pods-EQMonitorFcmServiceExtension/Pods-EQMonitorFcmServiceExtension.profile.xcconfig"; sourceTree = "<group>"; };
 		857BA50D2A07959B00A4E344 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
@@ -153,12 +153,12 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
+				850762A72A35E2BD0020E727 /* GoogleService-Info.plist */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				857BA54E2A08071F00A4E344 /* FcmServiceExtension */,
 				97C146EF1CF9000F007C117D /* Products */,
 				84C5AC6305EC630FF3147831 /* Pods */,
-				5E90EF92FFEAF93CC7208852 /* GoogleService-Info.plist */,
 				E76FD8A8362B8C665145D0EC /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -232,9 +232,9 @@
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
-				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				850B5A972A078E1400B1021F /* Embed Foundation Extensions */,
 				93B6D551E0AE59E754BC2620 /* [CP] Embed Pods Frameworks */,
+				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				F745DF47A31C648624529237 /* [firebase_crashlytics] Crashlytics Upload Symbols */,
 			);
 			buildRules = (
@@ -300,9 +300,9 @@
 			files = (
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
+				850762A82A35E2BD0020E727 /* GoogleService-Info.plist in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
 				8523B04A2A138D5800F00AFF /* Assets.xcassets in Resources */,
-				1C4E12EB8338B33DEF495F7D /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
