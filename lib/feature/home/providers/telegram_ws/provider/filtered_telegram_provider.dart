@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'filtered_telegram_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class FilteredWsTelegram extends _$FilteredWsTelegram {
   @override
   Stream<TelegramV3> build() {
