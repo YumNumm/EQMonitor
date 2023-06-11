@@ -15,6 +15,7 @@ import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
 import 'package:eqmonitor/feature/home/providers/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/providers/telegram_ws/provider/eew_telegram_provider.dart';
 import 'package:eqmonitor/feature/home/providers/telegram_ws/provider/telegram_provider.dart';
+import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -91,7 +92,25 @@ class HomeView extends HookConsumerWidget {
       talker: ref.watch(talkerProvider),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('EQMonitor'),
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(
+                'EQMonitor',
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              Text(
+                'Beta',
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      fontFamily: FontFamily.jetBrainsMono,
+                    ),
+              ),
+            ],
+          ),
           forceMaterialTransparency: true,
         ),
         body: _HomeBodyWidget(mapKey: mapKey),
