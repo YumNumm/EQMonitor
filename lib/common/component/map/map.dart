@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:eqmonitor/common/component/map/model/map_state.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
-import 'package:eqmonitor/common/feature/map/model/map_type.dart';
-import 'package:eqmonitor/common/feature/map/model/state/map_data_state.dart';
+import 'package:eqmonitor/common/feature/map/data/model/map_type.dart';
+import 'package:eqmonitor/common/feature/map/data/model/state/map_data_state.dart';
 import 'package:eqmonitor/common/feature/map/provider/map_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';

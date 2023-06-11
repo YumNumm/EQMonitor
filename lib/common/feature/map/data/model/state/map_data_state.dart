@@ -1,8 +1,8 @@
-import 'package:eqmonitor/common/feature/map/model/jma_map_property.dart';
-import 'package:eqmonitor/common/feature/map/model/map_polygon.dart';
-import 'package:eqmonitor/common/feature/map/model/map_type.dart';
-import 'package:eqmonitor/common/feature/map/model/projected/map_polygon.dart';
-import 'package:eqmonitor/common/feature/map/model/world_map_property.dart';
+import 'package:eqmonitor/common/feature/map/data/model/jma_map_property.dart';
+import 'package:eqmonitor/common/feature/map/data/model/map_polygon.dart';
+import 'package:eqmonitor/common/feature/map/data/model/map_type.dart';
+import 'package:eqmonitor/common/feature/map/data/model/projected/map_polygon.dart';
+import 'package:eqmonitor/common/feature/map/data/model/world_map_property.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 @immutable
