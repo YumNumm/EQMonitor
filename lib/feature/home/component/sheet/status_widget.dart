@@ -1,4 +1,5 @@
 import 'package:eqmonitor/feature/home/providers/kmoni/viewmodel/kmoni_view_model.dart';
+import 'package:eqmonitor/feature/home/providers/telegram_ws/provider/telegram_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -13,6 +14,7 @@ class SheetStatusWidget extends ConsumerWidget {
     final latestTime = ref.watch(
       kmoniViewModelProvider.select((value) => value.lastUpdatedAt?.toLocal()),
     );
+    final socketStatus = ref.watch(socketStatusProvider);
     final theme = Theme.of(context);
 
     return Card(
@@ -38,16 +40,26 @@ class SheetStatusWidget extends ConsumerWidget {
             if (isInitialized && latestTime != null)
               Text(
                 DateFormat('yyyy/MM/dd HH:mm:ss').format(latestTime),
-                style: TextStyle(
-                  color: (theme.textTheme.bodyLarge?.color ?? Colors.green)
-                      .withOpacity(0.9),
-                ),
               )
             else
               const CircularProgressIndicator.adaptive(),
             const Spacer(),
             // WS接続状態
-            // TODO(YumNumm): ここで接続状態を表示する
+            if (socketStatus.connected) ...[
+              const Icon(
+                Icons.cloud_sync_rounded,
+                color: Colors.green,
+              ),
+              const SizedBox(width: 4),
+              const Text('接続済み'),
+            ] else ...[
+              const Icon(
+                Icons.cloud_off_rounded,
+                color: Colors.red,
+              ),
+              const SizedBox(width: 4),
+              const Text('接続試行中...')
+            ],
           ],
         ),
       ),

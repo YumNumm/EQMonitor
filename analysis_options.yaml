@@ -8,12 +8,3 @@ analyzer:
     strict-raw-types: true
   plugins:
     - custom_lint
-  exclude:
-    - "**/generated_plugin_registrant.dart"
-    - "**/build/**"
-    - "**/generated_*.dart"
-    - "**/*.g.dart"
-    - "**/*.freezed.dart"
-    - "**/*.gr.dart"
-    - "**/l10n*.dart"
-    - "**/*.gen.dart"

@@ -746,6 +746,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "retry",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/retry-3.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "riverpod",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/riverpod-2.3.6",
       "packageUri": "lib/",
@@ -1070,7 +1076,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-06-11T10:36:57.375059Z",
+  "generated": "2023-06-11T16:44:02.928494Z",
   "generator": "pub",
   "generatorVersion": "3.0.3"
 }
