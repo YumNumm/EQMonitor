@@ -53,9 +53,15 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
             ),
             ...state.when(
               data: (data) {
-                // 上から3つのみ表示
-                final items = data.take(3).toList();
-                print(items);
+                // 地震情報を持つもののうち上から3つのみ表示
+                final items = data
+                    .where(
+                      (e) =>
+                          e.earthquake.earthquake != null ||
+                          e.earthquake.intensity != null,
+                    )
+                    .take(3)
+                    .toList();
                 return [
                   for (final item in items)
                     EarthquakeHistoryTileWidget(

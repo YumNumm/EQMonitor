@@ -87,12 +87,12 @@ class HomeView extends HookConsumerWidget {
         ),
       );
     }
-
     return TalkerWrapper(
       talker: ref.watch(talkerProvider),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('EQMonitor'),
+          forceMaterialTransparency: true,
         ),
         body: _HomeBodyWidget(mapKey: mapKey),
       ),
@@ -165,13 +165,14 @@ class _HomeBodyWidget extends HookConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  ref.read(telegramWsProvider.notifier).requestSample();
-                },
-                label: const Text('request Sample Telegram'),
-                icon: const Icon(Icons.send),
-              ),
+              if (kDebugMode)
+                ElevatedButton.icon(
+                  onPressed: () {
+                    ref.read(telegramWsProvider.notifier).requestSample();
+                  },
+                  label: const Text('request Sample Telegram'),
+                  icon: const Icon(Icons.send),
+                ),
               const SizedBox(height: 8),
               // PoCを変更
               ElevatedButton.icon(
