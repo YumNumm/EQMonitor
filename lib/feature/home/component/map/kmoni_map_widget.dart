@@ -10,6 +10,7 @@ import 'package:eqmonitor/common/provider/config/theme/intensity_color/model/int
 import 'package:eqmonitor/feature/home/providers/kmoni/data/asset/kmoni_observation_point.dart';
 import 'package:eqmonitor/feature/home/providers/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/providers/kmoni/viewmodel/kmoni_view_settings.dart';
+import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -56,11 +57,11 @@ class _KmoniPainter extends CustomPainter {
     if (kmoniState == null) {
       return;
     }
-    final circleSize = switch (state.zoomLevel) {
-      < 30 => 2.0,
-      > 60 => min(state.zoomLevel / 30.0, 10),
-      > 120 => 8.0,
-      _ => 2.0,
+    final zoomLevel = pow(state.zoomLevel, 1 / 2);
+    final circleSize = switch (zoomLevel) {
+      < 3 => 2.0,
+      > 20 => min(zoomLevel, 10),
+      _ => zoomLevel * 0.4,
     };
 
     for (final e in kmoniState!) {
@@ -80,6 +81,7 @@ class _KmoniPainter extends CustomPainter {
           offset.dy > size.height + 10) {
         continue;
       }
+      // 任意のどれか
       final intensity = e.intensityValue!.toJmaForecastIntensity;
 
       if (settingsState.isUpper0Only) {
@@ -89,7 +91,7 @@ class _KmoniPainter extends CustomPainter {
         if (intensity == JmaForecastIntensity.zero) {
           // グレーの枠
           final paint = Paint()
-            ..color = Colors.white.withOpacity(0.8)
+            ..color = Colors.grey.withOpacity(0.8)
             ..style = PaintingStyle.fill;
           canvas.drawCircle(
             offset,
@@ -115,22 +117,23 @@ class _KmoniPainter extends CustomPainter {
         canvas
           ..drawCircle(
             offset,
-            circleSize.toDouble() + 2,
+            circleSize.toDouble() * 1.5,
             Paint()
               ..color = e.intensityColor ?? Colors.transparent
               ..style = PaintingStyle.fill,
           )
           ..drawCircle(
             offset,
-            circleSize.toDouble(),
+            circleSize.toDouble() * 1.3,
             Paint()
               ..color = bg
               ..style = PaintingStyle.fill,
           );
         final textStyle = TextStyle(
           color: fg,
-          fontSize: circleSize.toDouble() * 1.5,
-          fontWeight: FontWeight.w900,
+          fontSize: circleSize.toDouble() * 2,
+          fontWeight: FontWeight.w800,
+          fontFamily: FontFamily.jetBrainsMono,
         );
         final textPainter = TextPainter(
           text: TextSpan(
