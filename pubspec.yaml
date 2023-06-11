@@ -57,6 +57,7 @@ dev_dependencies:
   build_runner: ^2.3.3
   custom_lint: ^0.3.4
   envied_generator: ^0.3.0+3
+  flutter_gen_runner: ^5.3.1
   freezed: ^2.3.3
   go_router_builder: ^2.0.0
   json_serializable: ^6.6.2
@@ -111,8 +112,3 @@ flutter:
           weight: 700
         - asset: assets/fonts/JetBrainsMono-ExtraBold.ttf
           weight: 800
-        - asset: assets/fonts/JetBrainsMono-Black.ttf
-          weight: 900
-flutter_gen:
-  assets:
-    enabled: false
