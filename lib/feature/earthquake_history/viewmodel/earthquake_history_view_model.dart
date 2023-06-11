@@ -79,9 +79,14 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
         result,
         includeTestTelegrams: _includeTestTelegrams,
       );
+      final filteredItems = items.where(
+        (e) => e.telegrams.every(
+          (telegram) => telegram.status == TelegramStatus.normal,
+        ),
+      );
       return <EarthquakeHistoryItem>[
         ...state.asData?.value ?? [],
-        ...items,
+        ...filteredItems,
       ];
     });
   }

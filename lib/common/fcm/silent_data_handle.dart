@@ -5,10 +5,6 @@ import 'package:eqmonitor/common/fcm/channels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
-///  *********************************************
-///     NOTIFICATION CONTROLLER
-///  *********************************************
-
 class NotificationController extends ChangeNotifier {
   factory NotificationController() {
     return _instance;
@@ -16,16 +12,8 @@ class NotificationController extends ChangeNotifier {
 
   NotificationController._internal();
 
-  /// *********************************************
-  ///   SINGLETON PATTERN
-  /// *********************************************
-
   static final NotificationController _instance =
       NotificationController._internal();
-
-  /// *********************************************
-  ///  OBSERVER PATTERN
-  /// *********************************************
 
   String _firebaseToken = '';
   String get firebaseToken => _firebaseToken;
@@ -63,17 +51,10 @@ class NotificationController extends ChangeNotifier {
       onNativeTokenHandle: NotificationController.myNativeTokenHandle,
       licenseKeys: [
         // net.yumnumm.eqmonitor
-        // ignore: no_adjacent_strings_in_list
-        'LsyxBtb1EycLGKVXBrTeOOrvXFK+QayEXEn5Zw4+z7h/+BxzT50I8m5uhlsRlfCjSE'
-            'aVoPCi6EskM/9l9YYQZDsS+iIZEHUMv1mcxKofceoPIsRmu5kfuKKK/Cudeo9T8cRR'
-            'GQRDQm9YAZY+kCk5ic/85+GNXqBl8apuPWFkb78=',
+        'LsyxBtb1EycLGKVXBrTeOOrvXFK+QayEXEn5Zw4+z7h/+BxzT50I8m5uhlsRlfCjSEaVoPCi6EskM/9l9YYQZDsS+iIZEHUMv1mcxKofceoPIsRmu5kfuKKK/Cudeo9T8cRRGQRDQm9YAZY+kCk5ic/85+GNXqBl8apuPWFkb78=',
 
         // net.yumnumm.eqmonitor.dev
-        // ignore: no_adjacent_strings_in_list
-        'BlmPtVdPWrH6oPhmyQe7/C+8bGeuA3JSYSkNg2F6EhZ7/yvOBA/LWPYP7hrNO2pF3o5'
-            // ignore: lines_longer_than_80_chars
-            'seo9c+jQmgY9GEIN1w6AlR3Ew6CSVntYWFAXeqZFiB0JaNXCdPqGAq++Jf0jEqLg47s'
-            '+He7YeKdYc5AujYlKHgvcON3guBYuMl7W7yy4= ',
+        'BlmPtVdPWrH6oPhmyQe7/C+8bGeuA3JSYSkNg2F6EhZ7/yvOBA/LWPYP7hrNO2pF3o5seo9c+jQmgY9GEIN1w6AlR3Ew6CSVntYWFAXeqZFiB0JaNXCdPqGAq++Jf0jEqLg47s+He7YeKdYc5AujYlKHgvcON3guBYuMl7W7yy4= ',
       ],
       debug: debug,
     );
@@ -91,8 +72,9 @@ class NotificationController extends ChangeNotifier {
   static Future<void> getInitialNotificationAction() async {
     final receivedAction = await AwesomeNotifications()
         .getInitialNotificationAction(removeFromActionEvents: true);
-    if (receivedAction == null) return;
-
+    if (receivedAction == null) {
+      return;
+    }
     // Fluttertoast.showToast(
     //     msg: 'Notification action launched app: $receivedAction',
     //   backgroundColor: Colors.deepPurple

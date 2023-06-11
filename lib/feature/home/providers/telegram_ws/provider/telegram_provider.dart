@@ -4,6 +4,7 @@ import 'package:eqapi_schema/model/telegram_v3.dart';
 import 'package:eqmonitor/common/provider/log/talker.dart';
 import 'package:eqmonitor/feature/home/providers/telegram_ws/model/socket_status.dart';
 import 'package:eqmonitor/feature/home/providers/telegram_ws/provider/telegram_socket_io.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -27,6 +28,10 @@ class TelegramWs extends _$TelegramWs {
         _talker.logTyped(TelegramWebSocketLog('Data received: $data'));
         final payload = data as Map<String, dynamic>;
         final telegram = TelegramV3.fromJson(payload);
+        // check type
+        if (telegram.status != TelegramStatus.normal && !kDebugMode) {
+          return;
+        }
         stream.add(telegram);
         // ignore: avoid_catches_without_on_clauses
       } catch (error, stackTrace) {

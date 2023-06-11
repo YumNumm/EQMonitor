@@ -35,29 +35,9 @@ class KmoniUseCase {
     if (data == null) {
       throw Exception('画像取得失敗');
     }
-    List<AnalyzedKmoniObservationPoint> _imageParseThread(
-      (
-        List<int> picture,
-        List<KmoniObservationPoint> obsPoints,
-        RealtimeDataType type
-      ) arg,
-    ) =>
-        _imageParse(
-          picture: arg.$1,
-          obsPoints: arg.$2,
-          type: arg.$3,
-        );
 
-    return compute<
-        (
-          List<int> picture,
-          List<KmoniObservationPoint> obsPoints,
-          RealtimeDataType type
-        ),
-        List<AnalyzedKmoniObservationPoint>>(
-      _imageParseThread,
-      (data, obsPoints, RealtimeDataType.shindo),
-    );
+    return _imageParse(
+        picture: data, obsPoints: obsPoints, type: RealtimeDataType.shindo);
   }
 
   Future<DateTime> getLatestDataTime() async {
@@ -177,4 +157,11 @@ class KmoniUseCase {
     }
     return p;
   }
+}
+
+class KmoniIsolateArg {
+  KmoniIsolateArg(this.$1, this.$2, this.$3);
+  final List<int> $1;
+  final List<KmoniObservationPoint> $2;
+  final RealtimeDataType $3;
 }

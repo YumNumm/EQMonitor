@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:isolate';
 
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/feature/home/providers/kmoni/data/asset/kmoni_observation_point.dart';
