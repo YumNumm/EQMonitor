@@ -7,14 +7,13 @@ part 'kmoni_maintenance_message_model.g.dart';
 @freezed
 class KmoniMaintenanceMessageModel with _$KmoniMaintenanceMessageModel {
   const factory KmoniMaintenanceMessageModel({
-    @Default('')
-        String message,
+    @Default('') String message,
     @JsonKey(
       fromJson: KmoniMaintenanceMessageTypeFromJson,
       toJson: KmoniMaintenanceMessageTypeToJson,
     )
     @Default(KmoniMaintenanceMessageType.non)
-        KmoniMaintenanceMessageType type,
+    KmoniMaintenanceMessageType type,
   }) = _KmoniMaintenanceMessageModel;
 
   factory KmoniMaintenanceMessageModel.fromJson(Map<String, dynamic> json) =>
