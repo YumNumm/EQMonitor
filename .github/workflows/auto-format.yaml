@@ -44,10 +44,11 @@ jobs:
         uses: peter-evans/create-pull-request@v4
         with:
           delete-branch: true
+          # base branch name (GITHUB_REF_NAME)
           commit-message: "Auto format"
           committer: "GitHub Actions <noreply@github.com>"
           branch: "auto-format/${{ github.sha }}"
-          title: "Auto format by GitHub Actions"
-          body: "Auto format by GitHub Actions on ${{ github.sha }}"
+          title: "Auto format - ref: ${{ github.ref_name }}"
+          body: "Auto format by GitHub Actions on ${{ github.sha }}\nby: ${{github.actor}}"
 
 
