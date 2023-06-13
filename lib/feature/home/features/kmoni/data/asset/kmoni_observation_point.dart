@@ -46,9 +46,10 @@ class AnalyzedKmoniObservationPoint with _$AnalyzedKmoniObservationPoint {
     // ここから
     double? intensityValue,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    Color? intensityColor,
+        Color? intensityColor,
     double? pga,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? pgaColor,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+        Color? pgaColor,
   }) = _AnalyzedKmoniObservationPoint;
 
   factory AnalyzedKmoniObservationPoint.fromJson(Map<String, dynamic> json) =>

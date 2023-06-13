@@ -1,6 +1,7 @@
-import 'package:eqmonitor/feature/home/providers/kmoni/viewmodel/kmoni_view_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../../features/kmoni/viewmodel/kmoni_view_settings.dart';
 
 class KmoniSettingsDialogWidget extends ConsumerWidget {
   const KmoniSettingsDialogWidget({super.key});

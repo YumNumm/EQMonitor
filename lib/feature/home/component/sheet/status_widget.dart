@@ -1,5 +1,5 @@
-import 'package:eqmonitor/feature/home/providers/kmoni/viewmodel/kmoni_view_model.dart';
-import 'package:eqmonitor/feature/home/providers/telegram_ws/provider/telegram_provider.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
+import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

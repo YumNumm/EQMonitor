@@ -13,7 +13,7 @@ part 'map_state.g.dart';
 class MapState with _$MapState {
   const factory MapState({
     @JsonKey(fromJson: _offsetFromJson, toJson: _offsetToJson)
-    required Offset offset,
+        required Offset offset,
     required double zoomLevel,
   }) = _MapState;
 

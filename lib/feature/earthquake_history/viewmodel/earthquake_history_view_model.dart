@@ -12,10 +12,11 @@ import 'package:eqapi_schema/model/telegram_v3.dart';
 import 'package:eqmonitor/common/extension/async_value.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/use_case/earthquake_history_use_case.dart';
-import 'package:eqmonitor/feature/home/providers/telegram_ws/provider/filtered_telegram_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../home/features/telegram_ws/provider/filtered_telegram_provider.dart';
 
 part 'earthquake_history_view_model.g.dart';
 
@@ -239,13 +240,23 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
         comments: comments,
       );
 
+      // 最新のEEW
+      final latestEew = telegrams
+          .where(
+            (e) =>
+                e.type == TelegramType.vxse45 &&
+                (_includeTestTelegrams || e.status == TelegramStatus.normal),
+          )
+          .sorted((a, b) => (a.serialNo ?? 0).compareTo(b.serialNo ?? 0))
+          .lastOrNull;
+
       result.add(
         EarthquakeHistoryItem(
           eventId: int.parse(eventId),
           telegrams: telegrams,
           earthquake: earthquakeData,
           tsunami: tsunamiData,
-          latestEew: null,
+          latestEew: latestEew == null ? null : latestEew.body as Vxse45,
         ),
       );
     });
@@ -267,6 +278,7 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
         },
       ).forEach(data.add);
     }
-    log('upserted: ${telegram.eventId}');
+    state = AsyncValue.data(data);
+    log('UPDATED');
   }
 }

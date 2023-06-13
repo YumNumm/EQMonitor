@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:eqapi_schema/model/telegram_v3.dart';
 import 'package:eqmonitor/common/provider/log/talker.dart';
-import 'package:eqmonitor/feature/home/providers/telegram_ws/model/socket_status.dart';
-import 'package:eqmonitor/feature/home/providers/telegram_ws/provider/telegram_socket_io.dart';
+import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_socket_io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+
+import '../model/socket_status.dart';
 
 part 'telegram_provider.g.dart';
 
