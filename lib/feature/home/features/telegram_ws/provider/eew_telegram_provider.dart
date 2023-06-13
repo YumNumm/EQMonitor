@@ -1,10 +1,9 @@
 import 'dart:async';
 
 import 'package:eqapi_schema/eqapi_schema.dart';
+import 'package:eqmonitor/feature/home/features/telegram_ws/model/eew_model.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../model/eew_model.dart';
 
 part 'eew_telegram_provider.g.dart';
 

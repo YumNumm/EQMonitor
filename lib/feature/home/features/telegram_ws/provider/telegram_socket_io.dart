@@ -1,11 +1,10 @@
 import 'dart:developer';
 
 import 'package:eqmonitor/common/provider/log/talker.dart';
+import 'package:eqmonitor/feature/home/features/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:socket_io_client/socket_io_client.dart';
-
-import '../../telegram_url/provider/telegram_url_provider.dart';
 
 part 'telegram_socket_io.g.dart';
 

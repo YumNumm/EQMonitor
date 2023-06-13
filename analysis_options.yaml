@@ -8,3 +8,7 @@ analyzer:
     strict-raw-types: true
   plugins:
     - custom_lint
+
+linter:
+  rules:
+    always_use_package_imports: true
