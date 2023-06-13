@@ -12,11 +12,10 @@ import 'package:eqapi_schema/model/telegram_v3.dart';
 import 'package:eqmonitor/common/extension/async_value.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/use_case/earthquake_history_use_case.dart';
+import 'package:eqmonitor/feature/home/features/telegram_ws/provider/filtered_telegram_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../../home/features/telegram_ws/provider/filtered_telegram_provider.dart';
 
 part 'earthquake_history_view_model.g.dart';
 

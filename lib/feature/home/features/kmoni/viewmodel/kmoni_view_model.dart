@@ -2,12 +2,11 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/data/asset/kmoni_observation_point.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/model/kmoni_view_model_state.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/use_case/kmoni_use_case.dart';
 import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../data/asset/kmoni_observation_point.dart';
-import '../model/kmoni_view_model_state.dart';
-import '../use_case/kmoni_use_case.dart';
 
 part 'kmoni_view_model.g.dart';
 
@@ -16,6 +15,15 @@ class KmoniViewModel extends _$KmoniViewModel {
   @override
   KmoniViewModelState build() {
     _useCase = ref.watch(kmoniUseCaseProvider);
+    ref.listenSelf((previous, next) {
+      if (previous == null) {
+        return;
+      }
+      if (previous.analyzedPoints == next.analyzedPoints) {
+        return;
+      }
+      log(next.toString(), name: 'KmoniViewModel');
+    });
     return const KmoniViewModelState(
       isInitialized: false,
       lastUpdatedAt: null,
