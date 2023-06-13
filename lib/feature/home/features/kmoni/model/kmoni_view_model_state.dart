@@ -1,4 +1,4 @@
-import 'package:eqmonitor/feature/home/providers/kmoni/data/asset/kmoni_observation_point.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/data/asset/kmoni_observation_point.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'kmoni_view_model_state.freezed.dart';

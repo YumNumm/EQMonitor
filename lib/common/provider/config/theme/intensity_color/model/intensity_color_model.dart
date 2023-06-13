@@ -12,69 +12,69 @@ class IntensityColorModel with _$IntensityColorModel {
   const factory IntensityColorModel({
     /// 震度不明
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityUnknownFront,
+        required Color intensityUnknownFront,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityUnknownBack,
+        required Color intensityUnknownBack,
 
     /// 震度0
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityZeroFront,
+        required Color intensityZeroFront,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityZeroBack,
+        required Color intensityZeroBack,
 
     /// 震度1
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityOneFront,
+        required Color intensityOneFront,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityOneBack,
+        required Color intensityOneBack,
 
     /// 震度2
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityTwoFront,
+        required Color intensityTwoFront,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityTwoBack,
+        required Color intensityTwoBack,
 
     /// 震度3
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityThreeFront,
+        required Color intensityThreeFront,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityThreeBack,
+        required Color intensityThreeBack,
 
     /// 震度4
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityFourFront,
+        required Color intensityFourFront,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityFourBack,
+        required Color intensityFourBack,
 
     /// 震度5弱
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityFiveLowerFront,
+        required Color intensityFiveLowerFront,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityFiveLowerBack,
+        required Color intensityFiveLowerBack,
 
     /// 震度5強
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityFiveUpperFront,
+        required Color intensityFiveUpperFront,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityFiveUpperBack,
+        required Color intensityFiveUpperBack,
 
     /// 震度6弱
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensitySixLowerFront,
+        required Color intensitySixLowerFront,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensitySixLowerBack,
+        required Color intensitySixLowerBack,
 
     /// 震度6強
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensitySixUpperFront,
+        required Color intensitySixUpperFront,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensitySixUpperBack,
+        required Color intensitySixUpperBack,
 
     /// 震度7
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensitySevenFront,
+        required Color intensitySevenFront,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensitySevenBack,
+        required Color intensitySevenBack,
   }) = _IntensityColorModel;
 
   factory IntensityColorModel.fromJson(Map<String, dynamic> json) =>

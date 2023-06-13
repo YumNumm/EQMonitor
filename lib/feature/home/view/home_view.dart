@@ -12,15 +12,17 @@ import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dar
 import 'package:eqmonitor/feature/home/component/map/kmoni_map_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
-import 'package:eqmonitor/feature/home/providers/kmoni/viewmodel/kmoni_view_model.dart';
-import 'package:eqmonitor/feature/home/providers/telegram_ws/provider/eew_telegram_provider.dart';
-import 'package:eqmonitor/feature/home/providers/telegram_ws/provider/telegram_provider.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+
+import '../features/eew/eew_provider.dart';
+import '../features/kmoni/viewmodel/kmoni_view_model.dart';
+import '../features/telegram_ws/provider/eew_telegram_provider.dart';
+import '../features/telegram_ws/provider/telegram_provider.dart';
 
 class HomeView extends HookConsumerWidget {
   const HomeView({super.key});
@@ -240,6 +242,9 @@ class _HomeBodyWidget extends HookConsumerWidget {
             const SheetStatusWidget(),
             const SizedBox(height: 4),
             const EarthquakeHistorySheetWidget(),
+            Text(
+              ref.watch(eewTelegramProviderProvider).toString(),
+            ),
             ListTile(
               title: const Text('強震モニタ設定'),
               onTap: () {

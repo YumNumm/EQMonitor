@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:isolate';
 
 import 'package:dio/dio.dart';
-import 'package:eqmonitor/feature/home/providers/kmoni/data/asset/kmoni_observation_point.dart';
-import 'package:eqmonitor/feature/home/providers/kmoni/model/kmoni_view_model_state.dart';
-import 'package:eqmonitor/feature/home/providers/kmoni/use_case/kmoni_use_case.dart';
 import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../data/asset/kmoni_observation_point.dart';
+import '../model/kmoni_view_model_state.dart';
+import '../use_case/kmoni_use_case.dart';
 
 part 'kmoni_view_model.g.dart';
 

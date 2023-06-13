@@ -1,4 +1,5 @@
 /// ## リアルタイム画像の種類
+library;
 
 enum RealtimeDataType {
   /// 震度
