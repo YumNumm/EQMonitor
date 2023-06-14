@@ -34,7 +34,7 @@ class BasicModalSheet extends HookWidget {
       initialExtent: 120,
       controller: controller,
       physics: const SnapSheetPhysics(
-        stops: <double>[0.1, 0.3, 1],
+        stops: <double>[0.1, 0.3, 0.5, 0.95, 1],
       ),
       child: DecoratedBox(
         decoration: BoxDecoration(
