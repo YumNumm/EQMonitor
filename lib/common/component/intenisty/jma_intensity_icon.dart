@@ -2,6 +2,7 @@ import 'package:eqapi_schema/eqapi_schema.dart';
 import 'package:eqmonitor/common/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/common/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/common/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -54,7 +55,8 @@ class JmaIntensityIcon extends ConsumerWidget {
                     style: TextStyle(
                       color: fg,
                       fontSize: 100,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w900,
+                      fontFamily: FontFamily.jetBrainsMono,
                     ),
                   )
                 else ...[
@@ -63,7 +65,8 @@ class JmaIntensityIcon extends ConsumerWidget {
                     style: TextStyle(
                       color: fg,
                       fontSize: 100,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w900,
+                      fontFamily: FontFamily.jetBrainsMono,
                     ),
                   ),
                   Text(
@@ -71,7 +74,9 @@ class JmaIntensityIcon extends ConsumerWidget {
                     style: TextStyle(
                       color: fg,
                       fontSize: 50,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w900,
+                      fontFamily: FontFamily.jetBrainsMono,
+                      fontFamilyFallback: const [FontFamily.notoSansJP],
                     ),
                   ),
                 ]
