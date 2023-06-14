@@ -22,13 +22,21 @@ class KmoniViewModel extends _$KmoniViewModel {
       if (previous.analyzedPoints == next.analyzedPoints) {
         return;
       }
-      log(next.toString(), name: 'KmoniViewModel');
+      return;
+      log(
+        next.copyWith(
+          analyzedPoints: [],
+        ).toString(),
+        name: 'KmoniViewModel',
+      );
     });
     return const KmoniViewModelState(
       isInitialized: false,
       lastUpdatedAt: null,
       delay: Duration(seconds: 1),
       analyzedPoints: null,
+      status: KmoniStatus.none,
+      isDelayAdjusting: false,
     );
   }
 
@@ -65,8 +73,10 @@ class KmoniViewModel extends _$KmoniViewModel {
     while (true) {
       try {
         await syncDelayWithKmoni();
+        // ignore: avoid_catches_without_on_clauses
       } catch (e) {
         log('error $e');
+        await Future<void>.delayed(const Duration(milliseconds: 1000));
         continue;
       }
       break;
@@ -93,6 +103,7 @@ class KmoniViewModel extends _$KmoniViewModel {
       state = state.copyWith(
         lastUpdatedAt: now,
         analyzedPoints: result,
+        status: KmoniStatus.realtime,
       );
     } on DioError catch (e) {
       final dioError = e;
@@ -100,36 +111,49 @@ class KmoniViewModel extends _$KmoniViewModel {
         log('404');
         state = state.copyWith(
           delay: state.delay == null
-              ? const Duration(milliseconds: 200)
-              : state.delay! + const Duration(milliseconds: 200),
+              ? const Duration(milliseconds: 100)
+              : state.delay! + const Duration(milliseconds: 100),
+          status: KmoniStatus.delay,
         );
       }
     }
   }
 
-  Future<void> syncDelayWithKmoni() async {
-    // kmoniから現在時刻を取得
-    final firstDateTime = await _useCase.getLatestDataTime();
-    var latestDataTime = firstDateTime;
-    // 変わるまで100msごとに取得
-    while (true) {
-      await Future<void>.delayed(const Duration(milliseconds: 100));
-      latestDataTime = await _useCase.getLatestDataTime();
-      if (latestDataTime != firstDateTime) {
-        break;
-      }
+  Future<Duration> syncDelayWithKmoni() async {
+    if (state.isDelayAdjusting) {
+      return state.delay!;
     }
-    // 現在時刻との差分を取得
-    final diff = DateTime.now().difference(latestDataTime);
-    // 適用
-    state = state.copyWith(
-      delay: diff,
-    );
-    // タイマー再起動
-    _kmoniFetchTimer.cancel();
-    _kmoniFetchTimer = Timer.periodic(
-      const Duration(seconds: 1),
-      (_) => _update(),
-    );
+    state = state.copyWith(isDelayAdjusting: true);
+    try {
+      // kmoniから現在時刻を取得
+      final firstDateTime = await _useCase.getLatestDataTime();
+      var latestDataTime = firstDateTime;
+      // 変わるまで100msごとに取得
+      while (true) {
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+        latestDataTime = await _useCase.getLatestDataTime();
+        if (latestDataTime != firstDateTime) {
+          break;
+        }
+      }
+      // 現在時刻との差分を取得
+      final diff = DateTime.now().difference(latestDataTime);
+      // 適用
+      state = state.copyWith(
+        delay: diff,
+        isDelayAdjusting: false,
+      );
+      // タイマー再起動
+      _kmoniFetchTimer.cancel();
+      _kmoniFetchTimer = Timer.periodic(
+        const Duration(seconds: 1),
+        (_) => _update(),
+      );
+      return diff;
+    } catch (e) {
+      log('error $e', name: 'KmoniViewModel');
+      state = state.copyWith(isDelayAdjusting: false);
+      rethrow;
+    }
   }
 }
