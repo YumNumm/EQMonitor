@@ -15,8 +15,41 @@ class SheetStatusWidget extends ConsumerWidget {
     final latestTime = ref.watch(
       kmoniViewModelProvider.select((value) => value.lastUpdatedAt?.toLocal()),
     );
+    final isDelayAdjusting = ref.watch(
+      kmoniViewModelProvider.select((value) => value.isDelayAdjusting),
+    );
     final socketStatus = ref.watch(socketStatusProvider);
     final theme = Theme.of(context);
+
+    Future<void> adjustKmoniDelay() async {
+      // 遅延調整の実行
+      try {
+        final result = await ref
+            .read(kmoniViewModelProvider.notifier)
+            .syncDelayWithKmoni();
+        // showSnackbar
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                '[強震モニタ] 遅延調整を実行しました (${result.inMilliseconds}ms)',
+              ),
+              showCloseIcon: true,
+            ),
+          );
+        }
+      } on Exception {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('強震モニタ 遅延調整中にエラーが発生しました'),
+              showCloseIcon: true,
+            ),
+          );
+          return;
+        }
+      }
+    }
 
     return Card(
       margin: const EdgeInsets.all(4),
@@ -37,16 +70,37 @@ class SheetStatusWidget extends ConsumerWidget {
         ),
         child: Row(
           children: [
-            // 現在時刻
-            if (isInitialized && latestTime != null)
-              Text(
-                DateFormat('yyyy/MM/dd HH:mm:ss').format(latestTime),
-                style: theme.textTheme.bodyMedium!.copyWith(
-                  fontFamily: FontFamily.jetBrainsMono,
+            // kmoni
+            InkWell(
+              borderRadius: BorderRadius.circular(8),
+              onTap: adjustKmoniDelay,
+              child: Padding(
+                padding: const EdgeInsets.all(2),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // 現在時刻
+                    if (isInitialized && latestTime != null)
+                      Text(
+                        DateFormat('yyyy/MM/dd HH:mm:ss').format(latestTime),
+                        style: theme.textTheme.bodyMedium!.copyWith(
+                          fontFamily: FontFamily.jetBrainsMono,
+                        ),
+                      )
+                    else
+                      const CircularProgressIndicator.adaptive(),
+                    if (isDelayAdjusting) ...[
+                      const SizedBox(width: 4),
+                      const SizedBox(
+                        height: 16,
+                        width: 16,
+                        child: CircularProgressIndicator.adaptive(),
+                      ),
+                    ],
+                  ],
                 ),
-              )
-            else
-              const CircularProgressIndicator.adaptive(),
+              ),
+            ),
             const Spacer(),
             // WS接続状態
             if (socketStatus.connected) ...[

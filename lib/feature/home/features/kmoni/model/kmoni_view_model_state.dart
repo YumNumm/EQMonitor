@@ -12,6 +12,23 @@ class KmoniViewModelState with _$KmoniViewModelState {
 
     /// 現在時刻からの遅延
     required Duration? delay,
+    required KmoniStatus status,
     required List<AnalyzedKmoniObservationPoint>? analyzedPoints,
+    /// 遅延調整中かどうか
+    required bool isDelayAdjusting,
   }) = _KmoniViewModelState;
+}
+
+enum KmoniStatus {
+  /// リアルタイム
+  realtime,
+
+  /// 遅延
+  delay,
+
+  /// プレイバック
+  playback,
+
+  /// 未取得
+  none,
 }
