@@ -71,6 +71,7 @@ class HomeView extends HookConsumerWidget {
                       fontWeight: FontWeight.bold,
                     ),
               ),
+              const SizedBox(width: 4),
               Text(
                 'Beta',
                 style: Theme.of(context).textTheme.titleSmall!.copyWith(
