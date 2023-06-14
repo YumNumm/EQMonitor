@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/common/provider/log/talker.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/data/asset/kmoni_observation_point.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/model/kmoni_view_model_state.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/use_case/kmoni_use_case.dart';
 import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 part 'kmoni_view_model.g.dart';
 
@@ -30,6 +32,7 @@ class KmoniViewModel extends _$KmoniViewModel {
         name: 'KmoniViewModel',
       );
     });
+    _talker = ref.watch(talkerProvider);
     return const KmoniViewModelState(
       isInitialized: false,
       lastUpdatedAt: null,
@@ -42,6 +45,7 @@ class KmoniViewModel extends _$KmoniViewModel {
 
   List<KmoniObservationPoint>? _observationPoints;
   late final KmoniUseCase _useCase;
+  late final Talker _talker;
 
   /// 画像取得タイマー
   Timer _kmoniFetchTimer = Timer.periodic(
@@ -149,9 +153,14 @@ class KmoniViewModel extends _$KmoniViewModel {
         const Duration(seconds: 1),
         (_) => _update(),
       );
+      _talker.logTyped(
+        KmoniLog('遅延調整を行いました ${diff.inMicroseconds / 1000}ms'),
+      );
       return diff;
     } catch (e) {
-      log('error $e', name: 'KmoniViewModel');
+      _talker.logTyped(
+        KmoniLog('遅延調整失敗 $e'),
+      );
       state = state.copyWith(isDelayAdjusting: false);
       rethrow;
     }

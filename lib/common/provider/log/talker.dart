@@ -31,6 +31,16 @@ class DioLog extends TalkerLog {
   final pen = AnsiPen()..blue();
 }
 
+class KmoniLog extends TalkerLog {
+  KmoniLog(super.message);
+
+  @override
+  String get title => 'Kmoni';
+
+  @override
+  final pen = AnsiPen()..yellow();
+}
+
 class CrashlitycsTalkerObserver extends TalkerObserver {
   CrashlitycsTalkerObserver();
 
