@@ -5,6 +5,7 @@ import 'package:eqmonitor/common/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/common/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/common/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
+import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -109,6 +110,8 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
         title.toString(),
         style: theme.textTheme.titleMedium?.copyWith(
           fontWeight: FontWeight.bold,
+          fontFamily: FontFamily.jetBrainsMono,
+          fontFamilyFallback: [FontFamily.notoSansJP],
         ),
       ),
       subtitle: Wrap(
@@ -117,6 +120,10 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
         children: [
           Text(
             body.toString(),
+            style: const TextStyle(
+              fontFamily: FontFamily.jetBrainsMono,
+              fontFamilyFallback: [FontFamily.notoSansJP],
+            ),
           ),
           if (item.tsunami.forecasts != null ||
               item.tsunami.observations != null ||
@@ -135,6 +142,7 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
                 '長周期地震動 最大階級${item.earthquake.lgIntensity!.maxLgInt}',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
+                  fontFamily: FontFamily.jetBrainsMono,
                 ),
               ),
             ),
@@ -183,7 +191,9 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
       trailing: Text(
         trailing,
         style: theme.textTheme.labelLarge!.copyWith(
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w900,
+          fontFamily: FontFamily.jetBrainsMono,
+          fontFamilyFallback: [FontFamily.notoSansJP],
         ),
       ),
       leading: isFar
