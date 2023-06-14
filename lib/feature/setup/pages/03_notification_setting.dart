@@ -1,14 +1,17 @@
 import 'package:eqmonitor/common/component/button/action_button.dart';
 import 'package:eqmonitor/feature/setup/component/background_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class NotificationSettingPage extends StatelessWidget {
+class NotificationSettingPage extends HookWidget {
   const NotificationSettingPage({required this.onNext, super.key});
   final void Function() onNext;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    
 
     return Scaffold(
       body: SetupBackgroundImageWidget(

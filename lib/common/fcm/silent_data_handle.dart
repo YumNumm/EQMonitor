@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:eqmonitor/app.dart';
@@ -31,7 +33,7 @@ class NotificationController extends ChangeNotifier {
     required bool debug,
   }) async {
     await AwesomeNotifications().initialize(
-      null, //'resource://drawable/res_app_icon',//
+      (Platform.isAndroid) ? 'resource://drawable/res_app_icon' : null,
       notificationChannels,
       debug: debug,
       channelGroups: notificationChannelGroups,
@@ -52,7 +54,6 @@ class NotificationController extends ChangeNotifier {
       licenseKeys: [
         // net.yumnumm.eqmonitor
         'LsyxBtb1EycLGKVXBrTeOOrvXFK+QayEXEn5Zw4+z7h/+BxzT50I8m5uhlsRlfCjSEaVoPCi6EskM/9l9YYQZDsS+iIZEHUMv1mcxKofceoPIsRmu5kfuKKK/Cudeo9T8cRRGQRDQm9YAZY+kCk5ic/85+GNXqBl8apuPWFkb78=',
-
         // net.yumnumm.eqmonitor.dev
         'BlmPtVdPWrH6oPhmyQe7/C+8bGeuA3JSYSkNg2F6EhZ7/yvOBA/LWPYP7hrNO2pF3o5seo9c+jQmgY9GEIN1w6AlR3Ew6CSVntYWFAXeqZFiB0JaNXCdPqGAq++Jf0jEqLg47s+He7YeKdYc5AujYlKHgvcON3guBYuMl7W7yy4= ',
       ],

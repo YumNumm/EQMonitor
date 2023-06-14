@@ -1,5 +1,4 @@
 import 'package:dynamic_color/dynamic_color.dart';
-import 'package:eqmonitor/common/fcm/silent_data_handle.dart';
 import 'package:eqmonitor/common/router/router.dart';
 import 'package:eqmonitor/common/theme/custom_colors.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
@@ -17,8 +16,6 @@ class App extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useEffect(
       () {
-        WidgetsBinding.instance.endOfFrame
-            .then((_) => NotificationController.displayNotificationRationale());
         return null;
       },
       [],
