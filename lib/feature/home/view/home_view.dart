@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:eqmonitor/common/component/map/map.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
@@ -14,7 +12,6 @@ import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
 import 'package:eqmonitor/feature/home/features/eew/eew_provider.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
-import 'package:eqmonitor/feature/home/features/telegram_ws/provider/eew_telegram_provider.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/foundation.dart';
@@ -29,6 +26,7 @@ class HomeView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapKey = useMemoized(() => GlobalKey(debugLabel: 'HomeView'));
+
     final state = ref.watch(mapDataProvider);
     useEffect(
       () {
@@ -40,37 +38,6 @@ class HomeView extends HookConsumerWidget {
       },
       [],
     );
-    // デバッグ用
-    // EEW WSが来た時にダイアログを表示
-    if (kDebugMode) {
-      ref.listen(eewWsTelegramProvider, (previous, next) {
-        final data = next.value;
-        if (data != null) {
-          // show dialog
-          showDialog<void>(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: const Text('電文を受信しました'),
-                content: SingleChildScrollView(
-                  child: Text(
-                    const JsonEncoder.withIndent(' ').convert(data.toJson()),
-                  ),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('OK'),
-                  ),
-                ],
-              );
-            },
-          );
-        }
-      });
-    }
     useEffect(
       () {
         WidgetsBinding.instance.endOfFrame.then((_) {

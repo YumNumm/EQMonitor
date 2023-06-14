@@ -693,7 +693,7 @@
     },
     {
       "name": "permission_handler",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/permission_handler-10.2.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/permission_handler-10.3.0",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
@@ -705,13 +705,13 @@
     },
     {
       "name": "permission_handler_apple",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/permission_handler_apple-9.0.8",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/permission_handler_apple-9.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
     {
       "name": "permission_handler_platform_interface",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/permission_handler_platform_interface-3.9.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/permission_handler_platform_interface-3.10.0",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -1118,7 +1118,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-06-13T16:29:22.114124Z",
+  "generated": "2023-06-14T08:15:25.836402Z",
   "generator": "pub",
   "generatorVersion": "3.0.3"
 }

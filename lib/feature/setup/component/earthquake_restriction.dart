@@ -39,12 +39,23 @@ class EarthquakeRestrictionWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Flexible(child: earthquakeImageWidget),
-          const Padding(
-            padding: EdgeInsets.only(bottom: 16),
-            child: Text(
-              '・通知が強い揺れの到達に間に合わない可能性があります\n'
-              '・予想に大きな誤差が発生する場合があります\n'
-              '・予想には誤差が伴います',
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '・デバイスの状態、アプリケーションの状態、ネットワークの状態によっては、通知が届かない場合があります。',
+                  style: theme.textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Text(
+                  '・通知が強い揺れの到達に間に合わない可能性があります\n'
+                  '・予想に大きな誤差が発生する場合があります\n'
+                  '・予想には誤差が伴います',
+                ),
+              ],
             ),
           ),
         ],
