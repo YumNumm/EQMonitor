@@ -28,7 +28,10 @@ class EewWidgets extends ConsumerWidget {
           child: Column(
             children: state
                 .mapIndexed(
-                  (index, element) => EewWidget(item: element, index: index),
+                  (index, element) => EewWidget(
+                    item: element,
+                    index: state.length > 1 ? index : null,
+                  ),
                 )
                 .toList(),
           ),
@@ -83,9 +86,10 @@ class EewWidget extends ConsumerWidget {
     }
     if (eew is TelegramVxse45Body) {
       final maxIntensity =
-          eew.forecastMaxInt?.to == JmaForecastIntensityOver.over
-              ? eew.forecastMaxInt?.from
-              : eew.forecastMaxInt?.to.toJmaForecastIntensity;
+          (eew.forecastMaxInt?.to == JmaForecastIntensityOver.over
+                  ? eew.forecastMaxInt?.from
+                  : eew.forecastMaxInt?.to.toJmaForecastIntensity) ??
+              JmaForecastIntensity.unknown;
 
       // 「緊急地震速報 警報 [SPACE] #5(最終)」
       final isWarning = (telegram.headline ?? '').contains('強い揺れ');
@@ -114,8 +118,8 @@ class EewWidget extends ConsumerWidget {
           ],
         ),
       );
-      final (backgroundColor, foregroundColor) =
-          intensityColorScheme.fromJmaForecastIntensity(maxIntensity!);
+      final (foregroundColor, backgroundColor) =
+          intensityColorScheme.fromJmaForecastIntensity(maxIntensity);
       final maxIntensityWidget = Column(
         children: [
           JmaForecastIntensityWidget(
@@ -149,7 +153,9 @@ class EewWidget extends ConsumerWidget {
 
       // 地震発生時刻
       final timeWidget = Text(
-        '${DateFormat('yyyy/MM/dd HH:mm:ss').format(eew.originTime ?? eew.arrivalTime)}'
+        '${DateFormat('yyyy/MM/dd HH:mm:ss').format(
+          (eew.originTime ?? eew.arrivalTime).toLocal(),
+        )}'
         ' '
         '${eew.originTime == null ? "検知" : "発生"}',
       );
@@ -159,10 +165,6 @@ class EewWidget extends ConsumerWidget {
         children: [
           maxIntensityWidget,
           hypoWidget,
-          const Text(
-            'Mx.x / 深さ xxx km',
-          ),
-          timeWidget,
         ],
       );
       final card = Card(
@@ -192,6 +194,14 @@ class EewWidget extends ConsumerWidget {
                   body,
                 ],
               ),
+              Row(
+                children: [
+                  const Text(
+                    'Mx.x / 深さ xxx km',
+                  ),
+                  timeWidget,
+                ],
+              ),
             ],
           ),
         ),
@@ -199,7 +209,6 @@ class EewWidget extends ConsumerWidget {
       if (index != null) {
         return LayoutBuilder(
           builder: (context, constraints) {
-            print(constraints);
             return SizedBox(
               width: constraints.maxWidth,
               child: Stack(
@@ -226,7 +235,6 @@ class EewWidget extends ConsumerWidget {
       }
       return LayoutBuilder(
         builder: (context, constraints) {
-          print(constraints);
           return SizedBox(
             width: constraints.maxWidth,
             child: card,
