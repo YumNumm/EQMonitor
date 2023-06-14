@@ -1,15 +1,13 @@
 import 'dart:math';
 
-import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:eqapi_schema/model/telegram_v3.dart';
 import 'package:eqmonitor/common/component/map/model/map_state.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
-import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart';
 import 'package:eqmonitor/common/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/common/provider/config/theme/intensity_color/model/intensity_color_model.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/data/asset/kmoni_observation_point.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
+import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/kmoni_observation_point.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -70,9 +68,7 @@ class _KmoniPainter extends CustomPainter {
       }
 
       final offset = state.globalPointToOffset(
-        WebMercatorProjection().project(
-          LatLng(e.lat, e.lon),
-        ),
+        e.point.globalPoint,
       );
       // 画面外の場合は描画しない
       if (offset.dx < -10 ||

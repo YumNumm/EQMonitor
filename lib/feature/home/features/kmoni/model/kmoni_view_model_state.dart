@@ -1,4 +1,4 @@
-import 'package:eqmonitor/feature/home/features/kmoni/data/asset/kmoni_observation_point.dart';
+import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/kmoni_observation_point.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'kmoni_view_model_state.freezed.dart';
@@ -14,6 +14,7 @@ class KmoniViewModelState with _$KmoniViewModelState {
     required Duration? delay,
     required KmoniStatus status,
     required List<AnalyzedKmoniObservationPoint>? analyzedPoints,
+
     /// 遅延調整中かどうか
     required bool isDelayAdjusting,
   }) = _KmoniViewModelState;

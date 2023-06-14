@@ -1,8 +1,9 @@
+import 'package:eqapi_schema/model/lat_lng.dart';
+import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'kmoni_observation_point.freezed.dart';
-part 'kmoni_observation_point.g.dart';
 
 @freezed
 class KmoniObservationPoint with _$KmoniObservationPoint {
@@ -10,21 +11,25 @@ class KmoniObservationPoint with _$KmoniObservationPoint {
     required String code,
     required String prefecture,
     required String name,
-    required double lat,
-    required double lon,
+    required LatLng latLng,
+    required GlobalPoint globalPoint,
     required int x,
     required int y,
     required double arv,
   }) = _KmoniObservationPoint;
-  const KmoniObservationPoint._();
 
-  factory KmoniObservationPoint.fromList(List<String> list) {
+  factory KmoniObservationPoint.fromList(
+    List<String> list, {
+    required WebMercatorProjection projection,
+  }) {
+    final latLng = LatLng(double.parse(list[3]), double.parse(list[4]));
+    final globalPoint = projection.project(latLng);
     return KmoniObservationPoint(
       code: list[0],
       prefecture: list[1],
       name: list[2],
-      lat: double.parse(list[3]),
-      lon: double.parse(list[4]),
+      latLng: latLng,
+      globalPoint: globalPoint,
       x: int.parse(list[5]),
       y: int.parse(list[6]),
       arv: double.parse(list[7]),
@@ -35,14 +40,7 @@ class KmoniObservationPoint with _$KmoniObservationPoint {
 @freezed
 class AnalyzedKmoniObservationPoint with _$AnalyzedKmoniObservationPoint {
   const factory AnalyzedKmoniObservationPoint({
-    required String code,
-    required String prefecture,
-    required String name,
-    required double lat,
-    required double lon,
-    required int x,
-    required int y,
-    required double arv,
+    required KmoniObservationPoint point,
     // ここから
     double? intensityValue,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
@@ -50,9 +48,6 @@ class AnalyzedKmoniObservationPoint with _$AnalyzedKmoniObservationPoint {
     double? pga,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? pgaColor,
   }) = _AnalyzedKmoniObservationPoint;
-
-  factory AnalyzedKmoniObservationPoint.fromJson(Map<String, dynamic> json) =>
-      _$AnalyzedKmoniObservationPointFromJson(json);
 }
 
 String? colorToJson(Color? color) {

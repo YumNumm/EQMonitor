@@ -3,35 +3,20 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/common/provider/log/talker.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/data/asset/kmoni_observation_point.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/model/kmoni_view_model_state.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/use_case/kmoni_use_case.dart';
-import 'package:flutter/services.dart';
+import 'package:eqmonitor/feature/home/features/kmoni_observation_points/provider/kmoni_observation_points_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 part 'kmoni_view_model.g.dart';
 
-@Riverpod(keepAlive: true, dependencies: [kmoniUseCase])
+@Riverpod(keepAlive: true)
 class KmoniViewModel extends _$KmoniViewModel {
   @override
   KmoniViewModelState build() {
+    print('KmoniViewModel build');
     _useCase = ref.watch(kmoniUseCaseProvider);
-    ref.listenSelf((previous, next) {
-      if (previous == null) {
-        return;
-      }
-      if (previous.analyzedPoints == next.analyzedPoints) {
-        return;
-      }
-      return;
-      log(
-        next.copyWith(
-          analyzedPoints: [],
-        ).toString(),
-        name: 'KmoniViewModel',
-      );
-    });
     _talker = ref.watch(talkerProvider);
     return const KmoniViewModelState(
       isInitialized: false,
@@ -43,7 +28,6 @@ class KmoniViewModel extends _$KmoniViewModel {
     );
   }
 
-  List<KmoniObservationPoint>? _observationPoints;
   late final KmoniUseCase _useCase;
   late final Talker _talker;
 
@@ -60,18 +44,8 @@ class KmoniViewModel extends _$KmoniViewModel {
   );
 
   Future<void> initialize() async {
-    // ファイルの読み込み
-    final file = await rootBundle.loadString('assets/kmoni/kansokuten.csv');
-    final lines = file.split('\n');
-    final result = <KmoniObservationPoint>[];
-    for (final line in lines) {
-      try {
-        result.add(KmoniObservationPoint.fromList(line.split(',')));
-      } on Exception catch (e) {
-        log('error $e');
-      }
-    }
-    _observationPoints = result;
+    // 観測点取得
+    final observations = ref.read(kmoniObservationPointsProvider);
 
     // Timer開始
     while (true) {
@@ -102,7 +76,7 @@ class KmoniViewModel extends _$KmoniViewModel {
       final now = DateTime.now().subtract(state.delay ?? Duration.zero);
       final result = await _useCase.fetchRealtimeShindo(
         now,
-        obsPoints: _observationPoints!,
+        obsPoints: ref.read(kmoniObservationPointsProvider).valueOrNull ?? [],
       );
       state = state.copyWith(
         lastUpdatedAt: now,
