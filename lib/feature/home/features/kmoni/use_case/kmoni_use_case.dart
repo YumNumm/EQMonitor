@@ -1,10 +1,10 @@
 import 'dart:math';
 
-import 'package:eqmonitor/feature/home/features/kmoni/data/asset/kmoni_observation_point.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/data/kmoni_data_source.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/model/kmoni_maintenance_message_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/util/kmoni_web_api_url_generator.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/util/realtime_data_type.dart';
+import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/kmoni_observation_point.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image/image.dart' as Image;
@@ -98,10 +98,7 @@ class KmoniUseCase {
     );
     final position = _hsvToPosition(hsv);
     return AnalyzedKmoniObservationPoint(
-      code: obsPoint.code,
-      name: obsPoint.name,
-      lat: obsPoint.lat,
-      lon: obsPoint.lon,
+      point: obsPoint,
       intensityColor: (type == RealtimeDataType.shindo && position != null)
           ? hsv.toColor()
           : null,
@@ -111,10 +108,6 @@ class KmoniUseCase {
       pga: (type == RealtimeDataType.pga && position != null)
           ? pow(10, (5 * position) - 2).toDouble()
           : null,
-      arv: obsPoint.arv,
-      prefecture: obsPoint.prefecture,
-      y: obsPoint.y,
-      x: obsPoint.x,
     );
   }
 
