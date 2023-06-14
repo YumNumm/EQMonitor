@@ -6,11 +6,11 @@ import 'package:eqmonitor/common/component/sheet/sheet_floating_action_buttons.d
 import 'package:eqmonitor/common/feature/map/provider/map_data_provider.dart';
 import 'package:eqmonitor/common/hook/use_sheet_controller.dart';
 import 'package:eqmonitor/common/provider/log/talker.dart';
+import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
 import 'package:eqmonitor/feature/home/component/map/kmoni_map_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
-import 'package:eqmonitor/feature/home/features/eew/eew_provider.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
@@ -206,12 +206,10 @@ class _HomeBodyWidget extends HookConsumerWidget {
         BasicModalSheet(
           controller: sheetController,
           children: [
+            const EewWidgets(),
             const SheetStatusWidget(),
             const SizedBox(height: 4),
             const EarthquakeHistorySheetWidget(),
-            Text(
-              ref.watch(eewTelegramProviderProvider).toString(),
-            ),
             ListTile(
               title: const Text('強震モニタ設定'),
               onTap: () {

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:collection/collection.dart';
@@ -10,30 +11,30 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'eew_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-class EewTelegramProvider extends _$EewTelegramProvider {
+class EewTelegram extends _$EewTelegram {
   @override
   List<EarthquakeHistoryItem> build() {
     ref.listen(earthquakeHistoryViewModelProvider, (previous, next) {
-      log(
-        'listen earthquakeHistoryViewModelProvider',
-        name: 'EewTelegramProvider',
-      );
-      for (final item in next.value ?? <EarthquakeHistoryItem>[]) {
-        if (item.latestEew == null) {
-          continue;
-        }
-        log('item: ${item.eventId}', name: 'EewTelegramProvider');
+      for (final item in (next.value ?? <EarthquakeHistoryItem>[])
+          .where((e) => e.latestEew != null)) {
         if (_shouldShow(item)) {
-          log('show EEW: ${item.eventId}', name: 'EewTelegramProvider');
-          _upsert(item);
+          upsert(item);
         }
       }
     });
 
+    /// 古くなったEEWを棄却するタイマー
+    Timer.periodic(
+      const Duration(seconds: 2),
+      (_) {
+        state = state.where(_shouldShow).toList();
+      },
+    );
+
     return [];
   }
 
-  void _upsert(EarthquakeHistoryItem item) {
+  void upsert(EarthquakeHistoryItem item) {
     final data = state;
     // EventIdが同じものがあれば、置き換える
     final index = data.indexWhere((e) => e.eventId == item.eventId);

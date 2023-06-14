@@ -256,6 +256,7 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
           earthquake: earthquakeData,
           tsunami: tsunamiData,
           latestEew: latestEew == null ? null : latestEew.body as Vxse45,
+          latestEewTelegram: latestEew,
         ),
       );
     });
