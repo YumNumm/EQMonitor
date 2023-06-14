@@ -1,9 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:sheet/sheet.dart';
 
-class SheetFloatingActionButtons extends StatelessWidget {
+class SheetFloatingActionButtons extends HookWidget {
   const SheetFloatingActionButtons({
     super.key,
     required this.controller,
@@ -21,9 +22,13 @@ class SheetFloatingActionButtons extends StatelessWidget {
   final SheetController controller;
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    final height =
-        mediaQuery.size.height - mediaQuery.padding.top - kToolbarHeight;
+    final mediaQuery = useMemoized(
+      () => MediaQuery.of(context),
+      [context],
+    );
+    final height = mediaQuery.size.height -
+        (mediaQuery.padding.top + mediaQuery.padding.bottom) -
+        kToolbarHeight;
     return AnimatedBuilder(
       animation: controller.animation,
       builder: (BuildContext context, Widget? child) {
