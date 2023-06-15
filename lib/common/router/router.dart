@@ -71,8 +71,8 @@ class EarthquakeHistoryDetailsRoute extends GoRouteData {
 class ColorSchemeConfigRoute extends GoRouteData {
   const ColorSchemeConfigRoute();
   @override
-  Widget build(BuildContext context, GoRouterState state)
-    =>  ColorSchemeConfigPage();
+  Widget build(BuildContext context, GoRouterState state) =>
+      ColorSchemeConfigPage();
 }
 
 @TypedGoRoute<HomeRoute>(path: '/')

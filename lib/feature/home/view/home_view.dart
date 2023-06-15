@@ -199,7 +199,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
                     .read(mapViewModelProvider(mapKey).notifier)
                     .animatedApplyBounds();
               },
-              elevation: 1,
+              elevation: 4,
               child: const Icon(Icons.home),
             ),
           ],

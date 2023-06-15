@@ -11,7 +11,7 @@ class TelegramHistoryV3 with _$TelegramHistoryV3 {
       fromJson: _telegramHistoryV3DataFromJson,
       toJson: _telegramHistoryV3DataToJson,
     )
-    required Map<String, List<TelegramV3>>? results,
+        required Map<String, List<TelegramV3>>? results,
     required bool success,
     required D1DbExecutionResult meta,
   }) = _TelegramHistoryV3;
