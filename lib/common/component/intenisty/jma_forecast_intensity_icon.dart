@@ -59,6 +59,19 @@ class JmaForecastIntensityWidget extends ConsumerWidget {
                       fontFamily: FontFamily.jetBrainsMono,
                     ),
                   )
+                else if (intensity == JmaForecastIntensity.unknown)
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      intensityMainText,
+                      style: TextStyle(
+                        color: fg,
+                        fontSize: 100,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: FontFamily.notoSansJP,
+                      ),
+                    ),
+                  )
                 else ...[
                   Text(
                     intensityMainText,
