@@ -109,7 +109,8 @@ class _KmoniPainter extends CustomPainter {
           );
           continue;
         }
-        final (fg, bg) = colorModel.fromJmaForecastIntensity(intensity);
+        final colorScheme = colorModel.fromJmaForecastIntensity(intensity);
+        final (fg, bg) = (colorScheme.foreground, colorScheme.background);
         canvas
           ..drawCircle(
             offset,

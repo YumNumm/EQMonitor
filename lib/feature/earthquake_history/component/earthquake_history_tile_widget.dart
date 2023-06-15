@@ -103,7 +103,7 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
     final (intensityColor) = maxIntenisty != null
         ? ref.watch(intensityColorProvider).fromJmaIntensity(maxIntenisty)
         : null;
-    final backgroundColor = intensityColor?.$2;
+    final backgroundColor = intensityColor?.background;
 
     return ListTile(
       title: Text(

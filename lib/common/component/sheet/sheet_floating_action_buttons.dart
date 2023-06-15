@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:sheet/sheet.dart';
@@ -34,7 +32,7 @@ class SheetFloatingActionButtons extends HookWidget {
       builder: (BuildContext context, Widget? child) {
         return Positioned(
           right: 0,
-          bottom: height * min(0.3, controller.animation.value),
+          bottom: height * controller.animation.value,
           child: Container(
             margin: const EdgeInsets.all(10),
             child: Column(

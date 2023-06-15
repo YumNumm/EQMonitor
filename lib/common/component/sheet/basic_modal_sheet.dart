@@ -29,7 +29,6 @@ class BasicModalSheet extends HookWidget {
     );
     return LayoutBuilder(
       builder: (context, constraints) {
-        print(constraints);
         final isTablet = constraints.maxWidth > 600 &&
             constraints.maxHeight < constraints.maxWidth;
 
