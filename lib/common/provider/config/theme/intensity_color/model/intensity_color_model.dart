@@ -171,9 +171,9 @@ class IntensityColorModel with _$IntensityColorModel {
 class TextColorModel with _$TextColorModel {
   const factory TextColorModel({
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color foreground,
+        required Color foreground,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color background,
+        required Color background,
   }) = _TextColorModel;
 
   factory TextColorModel.fromJson(Map<String, dynamic> json) =>
