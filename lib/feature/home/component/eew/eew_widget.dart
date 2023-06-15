@@ -124,6 +124,12 @@ class EewWidget extends ConsumerWidget {
                       '1点観測点による検出',
                     ),
                   ),
+                if (eew.isPlum)
+                  const CustomChip(
+                    child: Text(
+                      'PLUM法',
+                    ),
+                  ),
               ],
             ),
             Text(
@@ -256,14 +262,27 @@ class EewWidget extends ConsumerWidget {
         children: [
           const Row(),
           hypoWidget,
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              magnitudeWidget,
-              const SizedBox(width: 4),
-              depthWidget,
-            ],
-          ),
+          if (eew.isPlum) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Text(
+                'PLUM法による仮定震源要素(強い地震)',
+                style: theme.textTheme.titleMedium!.copyWith(
+                  fontWeight: FontWeight.w900,
+                  fontFamily: FontFamily.notoSansJP,
+                  fontFamilyFallback: [FontFamily.notoSansJP],
+                ),
+              ),
+            ),
+          ] else
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                magnitudeWidget,
+                const SizedBox(width: 4),
+                depthWidget,
+              ],
+            ),
           timeWidget,
         ],
       );

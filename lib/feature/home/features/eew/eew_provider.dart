@@ -52,9 +52,9 @@ class EewTelegram extends _$EewTelegram {
   bool _shouldShow(EarthquakeHistoryItem item) {
     final eew = item.latestEew;
     if (eew == null) {
-      log('eew is null');
       return false;
     }
+    return true;
     if (eew is TelegramVxse45Body) {
       log('eew is TelegramVxse45Body');
       if (item.eventId == 20110311144640 && kDebugMode) {
