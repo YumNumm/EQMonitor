@@ -5,7 +5,6 @@ import 'package:collection/collection.dart';
 import 'package:eqapi_schema/model/telegram_v3.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/viewmodel/earthquake_history_view_model.dart';
-import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'eew_provider.g.dart';
@@ -57,7 +56,7 @@ class EewTelegram extends _$EewTelegram {
     return true;
     if (eew is TelegramVxse45Body) {
       log('eew is TelegramVxse45Body');
-      if (item.eventId == 20110311144640 && kDebugMode) {
+      if (item.eventId == 20110311144640) {
         return true;
       }
       final time = eew.originTime ?? eew.arrivalTime;

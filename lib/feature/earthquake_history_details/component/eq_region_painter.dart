@@ -118,8 +118,9 @@ class _IntensityPainter extends CustomPainter {
     }
     for (final e in items) {
       try {
+        final colorScheme = colorModel.fromJmaIntensity(e.intensity.maxInt!);
         final (fgColor, color) =
-            colorModel.fromJmaIntensity(e.intensity.maxInt!);
+            (colorScheme.foreground, colorScheme.background);
         final paint = Paint()
           ..color = color
           ..style = PaintingStyle.fill;

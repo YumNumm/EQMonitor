@@ -6,6 +6,7 @@ import 'package:eqmonitor/common/component/sheet/sheet_floating_action_buttons.d
 import 'package:eqmonitor/common/feature/map/provider/map_data_provider.dart';
 import 'package:eqmonitor/common/hook/use_sheet_controller.dart';
 import 'package:eqmonitor/common/provider/log/talker.dart';
+import 'package:eqmonitor/common/router/router.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
 import 'package:eqmonitor/feature/home/component/map/kmoni_map_widget.dart';
@@ -17,6 +18,7 @@ import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
@@ -197,7 +199,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
                     .read(mapViewModelProvider(mapKey).notifier)
                     .animatedApplyBounds();
               },
-              backgroundColor: Colors.blueGrey,
+              elevation: 1,
               child: const Icon(Icons.home),
             ),
           ],
@@ -212,12 +214,19 @@ class _HomeBodyWidget extends HookConsumerWidget {
             const EarthquakeHistorySheetWidget(),
             ListTile(
               title: const Text('強震モニタ設定'),
+              leading: const Icon(Icons.settings),
               onTap: () {
                 showDialog<void>(
                   context: context,
                   builder: (context) => const KmoniSettingsDialogWidget(),
                 );
               },
+            ),
+            ListTile(
+              title: const Text('震度配色設定'),
+              leading: const Icon(Icons.color_lens),
+              onTap: () =>
+                  context.push(const ColorSchemeConfigRoute().location),
             ),
           ],
         ),

@@ -1,5 +1,6 @@
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/common/provider/shared_preferences.dart';
+import 'package:eqmonitor/feature/config/color_scheme/color_scheme_config_page.dart';
 import 'package:eqmonitor/feature/debug/debug_home_view.dart';
 import 'package:eqmonitor/feature/earthquake_history/page/earthquake_history.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/screen/earthquake_history_details.dart';
@@ -64,6 +65,14 @@ class EarthquakeHistoryDetailsRoute extends GoRouteData {
       eventId: eventId,
     );
   }
+}
+
+@TypedGoRoute<ColorSchemeConfigRoute>(path: '/config')
+class ColorSchemeConfigRoute extends GoRouteData {
+  const ColorSchemeConfigRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state)
+    =>  ColorSchemeConfigPage();
 }
 
 @TypedGoRoute<HomeRoute>(path: '/')

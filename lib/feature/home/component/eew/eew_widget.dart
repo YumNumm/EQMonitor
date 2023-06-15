@@ -3,6 +3,8 @@ import 'package:eqapi_schema/eqapi_schema.dart';
 import 'package:eqapi_schema/extension/telegram_v3.dart';
 import 'package:eqmonitor/common/component/chip/custom_chip.dart';
 import 'package:eqmonitor/common/component/intenisty/jma_forecast_intensity_icon.dart';
+import 'package:eqmonitor/common/extension/safe_list_access.dart';
+import 'package:eqmonitor/common/extension/string.dart';
 import 'package:eqmonitor/common/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/common/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
@@ -30,7 +32,7 @@ class EewWidgets extends ConsumerWidget {
                 .mapIndexed(
                   (index, element) => EewWidget(
                     item: element,
-                    index: (state.length > 1) ? index + 1 : null,
+                    index: (state.length > 1) ? '${index + 1}' : null,
                   ),
                 )
                 .toList(),
@@ -49,15 +51,16 @@ class EewWidget extends ConsumerWidget {
   });
 
   final EarthquakeHistoryItem item;
-  final int? index;
+  final String? index;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
     assert(item.latestEew != null && item.latestEewTelegram != null);
     final eew = item.latestEew!;
     final telegram = item.latestEewTelegram!;
     final intensityColorScheme = ref.watch(intensityColorProvider);
-    final theme = Theme.of(context);
     if (eew is TelegramVxse45Cancel) {
       return Card(
         margin: const EdgeInsets.all(4),
@@ -90,9 +93,10 @@ class EewWidget extends ConsumerWidget {
                   ? eew.forecastMaxInt?.from
                   : eew.forecastMaxInt?.to.toJmaForecastIntensity) ??
               JmaForecastIntensity.unknown;
-      final (foregroundColor, backgroundColor) =
+      final intensityScheme =
           intensityColorScheme.fromJmaForecastIntensity(maxIntensity);
-
+      final (foregroundColor, backgroundColor) =
+          (intensityScheme.foreground, intensityScheme.background);
       // 「緊急地震速報 警報 [SPACE] #5(最終)」
       final isWarning = (telegram.headline ?? '').contains('強い揺れ');
       final header = Padding(
@@ -108,7 +112,7 @@ class EewWidget extends ConsumerWidget {
               children: [
                 Text(
                   '緊急地震速報 ${isWarning ? "警報" : "予報"}',
-                  style: theme.textTheme.titleMedium!.copyWith(
+                  style: textTheme.titleMedium!.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -134,8 +138,8 @@ class EewWidget extends ConsumerWidget {
             ),
             Text(
               '#${telegram.serialNo}'
-              '${eew.isLastInfo ? "(最終報)" : ""}',
-              style: theme.textTheme.titleMedium!.copyWith(
+              '${eew.isLastInfo ? "(最終)" : ""}',
+              style: textTheme.titleMedium!.copyWith(
                 fontWeight: FontWeight.bold,
                 fontFamily: FontFamily.jetBrainsMono,
                 fontFamilyFallback: [FontFamily.notoSansJP],
@@ -162,15 +166,15 @@ class EewWidget extends ConsumerWidget {
         children: [
           Text(
             (eew.isPlum || eew.isLevelEew) ? '検知観測点' : '震源地',
-            style: theme.textTheme.bodyMedium!.copyWith(
+            style: textTheme.bodyMedium!.copyWith(
               fontWeight: FontWeight.bold,
-              color: theme.textTheme.bodyMedium!.color!.withOpacity(0.7),
+              color: textTheme.bodyMedium!.color!.withOpacity(0.7),
             ),
           ),
           const SizedBox(width: 4),
           Text(
             eew.hypocenter?.name ?? '不明',
-            style: theme.textTheme.headlineMedium!.copyWith(
+            style: textTheme.headlineMedium!.copyWith(
               fontWeight: FontWeight.w900,
             ),
           ),
@@ -188,7 +192,7 @@ class EewWidget extends ConsumerWidget {
             )}'
             ' '
             '${eew.originTime == null ? "検知" : "発生"}',
-            style: theme.textTheme.bodyMedium!.copyWith(
+            style: textTheme.bodyMedium!.copyWith(
               fontFamily: FontFamily.jetBrainsMono,
               fontFamilyFallback: [FontFamily.notoSansJP],
             ),
@@ -204,13 +208,13 @@ class EewWidget extends ConsumerWidget {
         children: [
           Text(
             'M',
-            style: theme.textTheme.titleMedium!.copyWith(
-              color: theme.textTheme.titleMedium!.color!.withOpacity(0.7),
+            style: textTheme.titleMedium!.copyWith(
+              color: textTheme.titleMedium!.color!.withOpacity(0.7),
             ),
           ),
           Text(
             (eew.magnitude ?? '不明').toString(),
-            style: theme.textTheme.displaySmall!.copyWith(
+            style: textTheme.displaySmall!.copyWith(
               fontWeight: FontWeight.w900,
               fontFamily: FontFamily.notoSansJP,
               fontFamilyFallback: [FontFamily.notoSansJP],
@@ -225,14 +229,14 @@ class EewWidget extends ConsumerWidget {
         children: [
           Text(
             '深さ',
-            style: theme.textTheme.titleMedium!.copyWith(
-              color: theme.textTheme.titleMedium!.color!.withOpacity(0.7),
+            style: textTheme.titleMedium!.copyWith(
+              color: textTheme.titleMedium!.color!.withOpacity(0.7),
             ),
           ),
           if (eew.depth != null) ...[
             Text(
               eew.depth.toString(),
-              style: theme.textTheme.displaySmall!.copyWith(
+              style: textTheme.displaySmall!.copyWith(
                 fontWeight: FontWeight.w900,
                 fontFamily: FontFamily.notoSansJP,
                 fontFamilyFallback: [FontFamily.notoSansJP],
@@ -240,14 +244,14 @@ class EewWidget extends ConsumerWidget {
             ),
             Text(
               'km',
-              style: theme.textTheme.titleMedium!.copyWith(
-                color: theme.textTheme.titleMedium!.color!.withOpacity(0.7),
+              style: textTheme.titleMedium!.copyWith(
+                color: textTheme.titleMedium!.color!.withOpacity(0.7),
               ),
             ),
           ] else
             Text(
               '不明',
-              style: theme.textTheme.displaySmall!.copyWith(
+              style: textTheme.displaySmall!.copyWith(
                 fontWeight: FontWeight.w900,
                 fontFamily: FontFamily.jetBrainsMono,
                 fontFamilyFallback: [FontFamily.notoSansJP],
@@ -266,8 +270,8 @@ class EewWidget extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: Text(
-                'PLUM法による仮定震源要素(強い地震)',
-                style: theme.textTheme.titleMedium!.copyWith(
+                'PLUM法による仮定震源要素',
+                style: textTheme.titleMedium!.copyWith(
                   fontWeight: FontWeight.w900,
                   fontFamily: FontFamily.notoSansJP,
                   fontFamilyFallback: [FontFamily.notoSansJP],
@@ -275,17 +279,33 @@ class EewWidget extends ConsumerWidget {
               ),
             ),
           ] else
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                magnitudeWidget,
-                const SizedBox(width: 4),
-                depthWidget,
-              ],
+            AnimatedOpacity(
+              opacity: (eew.isIpfOnePoint || eew.isLevelEew) ? 0.6 : 1,
+              duration: const Duration(milliseconds: 400),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  magnitudeWidget,
+                  const SizedBox(width: 4),
+                  depthWidget,
+                ],
+              ),
             ),
           timeWidget,
         ],
       );
+      final headline = telegram.headline?.toString().toHalfWidth();
+      final warningMessageWidget = (headline != null)
+          ? [
+              Text(
+                headline.split('で地震 ').getOrNull(1) ?? headline,
+                style: textTheme.titleMedium!.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Divider(),
+            ]
+          : null;
       final card = Card(
         margin: const EdgeInsets.all(4),
         elevation: 0,
@@ -307,6 +327,7 @@ class EewWidget extends ConsumerWidget {
           child: Column(
             children: [
               header,
+              if (warningMessageWidget != null) ...warningMessageWidget,
               const SizedBox(height: 2),
               Row(
                 children: [
@@ -326,9 +347,7 @@ class EewWidget extends ConsumerWidget {
               width: constraints.maxWidth,
               child: Stack(
                 alignment: Alignment.center,
-                fit: StackFit.passthrough,
                 children: [
-                  card,
                   Center(
                     child: FittedBox(
                       child: Text(
@@ -337,12 +356,13 @@ class EewWidget extends ConsumerWidget {
                           fontSize: 100,
                           fontWeight: FontWeight.w900,
                           fontFamily: FontFamily.jetBrainsMono,
-                          color: theme.textTheme.bodyMedium!.color!
-                              .withOpacity(0.3),
+                          fontFamilyFallback: const [FontFamily.notoSansJP],
+                          color: textTheme.bodyMedium!.color!.withOpacity(0.3),
                         ),
                       ),
                     ),
                   ),
+                  card,
                 ],
               ),
             );

@@ -11,6 +11,7 @@ class JmaForecastIntensityWidget extends ConsumerWidget {
     required this.intensity,
     this.type = IntensityIconType.filled,
     this.customText,
+    this.colorModel,
     super.key,
     this.size = 50,
   });
@@ -18,11 +19,14 @@ class JmaForecastIntensityWidget extends ConsumerWidget {
   final IntensityIconType type;
   final double size;
   final String? customText;
+  final IntensityColorModel? colorModel;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final intensityColorModel = ref.watch(intensityColorProvider);
-    final (fg, bg) = intensityColorModel.fromJmaForecastIntensity(intensity);
+    final intensityColorModel =
+        (colorModel ?? ref.watch(intensityColorProvider))!;
+    final colorScheme = intensityColorModel.fromJmaForecastIntensity(intensity);
+    final (fg, bg) = (colorScheme.foreground, colorScheme.background);
     // 震度の整数部分
     final intensityMainText =
         intensity.type.replaceAll('-', '').replaceAll('+', '');

@@ -22,7 +22,8 @@ class JmaIntensityIcon extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final intensityColorModel = ref.watch(intensityColorProvider);
-    final (fg, bg) = intensityColorModel.fromJmaIntensity(intensity);
+    final colorScheme = intensityColorModel.fromJmaIntensity(intensity);
+    final (fg, bg) = (colorScheme.foreground, colorScheme.background);
     // 震度の整数部分
     final intensityMainText =
         intensity.type.replaceAll('-', '').replaceAll('+', '');
