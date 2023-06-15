@@ -1,7 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'package:eqapi_schema/eqapi_schema.dart';
-import 'package:flutter/rendering.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'intensity_color_model.freezed.dart';
@@ -10,128 +10,227 @@ part 'intensity_color_model.g.dart';
 @freezed
 class IntensityColorModel with _$IntensityColorModel {
   const factory IntensityColorModel({
-    /// 震度不明
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityUnknownFront,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityUnknownBack,
-
-    /// 震度0
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityZeroFront,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityZeroBack,
-
-    /// 震度1
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityOneFront,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityOneBack,
-
-    /// 震度2
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityTwoFront,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityTwoBack,
-
-    /// 震度3
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityThreeFront,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityThreeBack,
-
-    /// 震度4
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityFourFront,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityFourBack,
-
-    /// 震度5弱
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityFiveLowerFront,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityFiveLowerBack,
-
-    /// 震度5強
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityFiveUpperFront,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensityFiveUpperBack,
-
-    /// 震度6弱
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensitySixLowerFront,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensitySixLowerBack,
-
-    /// 震度6強
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensitySixUpperFront,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensitySixUpperBack,
-
-    /// 震度7
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensitySevenFront,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color intensitySevenBack,
+    required TextColorModel unknown,
+    required TextColorModel zero,
+    required TextColorModel one,
+    required TextColorModel two,
+    required TextColorModel three,
+    required TextColorModel four,
+    required TextColorModel fiveLower,
+    required TextColorModel fiveUpper,
+    required TextColorModel sixLower,
+    required TextColorModel sixUpper,
+    required TextColorModel seven,
   }) = _IntensityColorModel;
 
   factory IntensityColorModel.fromJson(Map<String, dynamic> json) =>
       _$IntensityColorModelFromJson(json);
+
+  factory IntensityColorModel.jma() => const IntensityColorModel(
+        zero: TextColorModel(
+          foreground: Colors.black,
+          background: Color.fromARGB(255, 255, 255, 255),
+        ),
+        one: TextColorModel(
+          foreground: Colors.black,
+          background: Color.fromARGB(255, 242, 242, 242),
+        ),
+        two: TextColorModel(
+          foreground: Colors.black,
+          background: Color.fromARGB(255, 0, 170, 255),
+        ),
+        three: TextColorModel(
+          foreground: Colors.white,
+          background: Color.fromARGB(255, 0, 65, 255),
+        ),
+        four: TextColorModel(
+          foreground: Colors.black,
+          background: Color.fromARGB(255, 250, 230, 160),
+        ),
+        fiveLower: TextColorModel(
+          foreground: Colors.black,
+          background: Color.fromARGB(255, 255, 230, 0),
+        ),
+        fiveUpper: TextColorModel(
+          foreground: Colors.black,
+          background: Color.fromARGB(255, 255, 153, 0),
+        ),
+        sixLower: TextColorModel(
+          foreground: Colors.white,
+          background: Color.fromARGB(255, 255, 40, 0),
+        ),
+        sixUpper: TextColorModel(
+          foreground: Colors.white,
+          background: Color.fromARGB(255, 165, 0, 33),
+        ),
+        seven: TextColorModel(
+          foreground: Colors.white,
+          background: Color.fromARGB(255, 180, 0, 104),
+        ),
+        unknown: TextColorModel(
+          foreground: Colors.white,
+          background: Colors.black,
+        ),
+      );
+  factory IntensityColorModel.eqmonitor() => IntensityColorModel(
+        zero: const TextColorModel(
+          foreground: Colors.black,
+          background: Colors.white,
+        ),
+        one: const TextColorModel(
+          foreground: Colors.black,
+          background: Colors.lightBlueAccent,
+        ),
+        two: TextColorModel(
+          foreground: Colors.black,
+          background: Colors.greenAccent.shade200,
+        ),
+        three: const TextColorModel(
+          foreground: Colors.black,
+          background: Colors.limeAccent,
+        ),
+        four: const TextColorModel(
+          foreground: Colors.black,
+          background: Colors.orange,
+        ),
+        fiveLower: const TextColorModel(
+          foreground: Colors.white,
+          background: Colors.red,
+        ),
+        fiveUpper: const TextColorModel(
+          foreground: Colors.white,
+          background: Colors.red,
+        ),
+        sixLower: const TextColorModel(
+          foreground: Colors.white,
+          background: Color.fromARGB(255, 165, 0, 33),
+        ),
+        sixUpper: const TextColorModel(
+          foreground: Colors.white,
+          background: Color.fromARGB(255, 165, 0, 33),
+        ),
+        seven: TextColorModel(
+          foreground: Colors.white,
+          background: Colors.pinkAccent.shade400,
+        ),
+        unknown: const TextColorModel(
+          foreground: Colors.white,
+          background: Colors.black,
+        ),
+      );
+
+  factory IntensityColorModel.earthQuickly() => const IntensityColorModel(
+        zero: TextColorModel(
+          foreground: Colors.white,
+          background: Color.fromARGB(255, 48, 48, 48),
+        ),
+        one: TextColorModel(
+          foreground: Colors.white,
+          background: Color.fromARGB(255, 32, 80, 112),
+        ),
+        two: TextColorModel(
+          foreground: Colors.white,
+          background: Color.fromARGB(255, 48, 143, 191),
+        ),
+        three: TextColorModel(
+          foreground: Colors.black,
+          background: Color.fromARGB(255, 132, 211, 132),
+        ),
+        four: TextColorModel(
+          foreground: Colors.black,
+          background: Color.fromARGB(255, 255, 231, 48),
+        ),
+        fiveLower: TextColorModel(
+          foreground: Colors.black,
+          background: Color.fromARGB(255, 255, 160, 48),
+        ),
+        fiveUpper: TextColorModel(
+          foreground: Colors.black,
+          background: Color.fromARGB(255, 239, 100, 0),
+        ),
+        sixLower: TextColorModel(
+          foreground: Colors.white,
+          background: Color.fromARGB(255, 207, 16, 16),
+        ),
+        sixUpper: TextColorModel(
+          foreground: Colors.white,
+          background: Color.fromARGB(255, 112, 16, 16),
+        ),
+        seven: TextColorModel(
+          foreground: Colors.white,
+          background: Color.fromARGB(255, 171, 32, 178),
+        ),
+        unknown: TextColorModel(
+          foreground: Colors.white,
+          background: Color.fromARGB(255, 47, 79, 79),
+        ),
+      );
+}
+
+@freezed
+class TextColorModel with _$TextColorModel {
+  const factory TextColorModel({
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+    required Color foreground,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+    required Color background,
+  }) = _TextColorModel;
+
+  factory TextColorModel.fromJson(Map<String, dynamic> json) =>
+      _$TextColorModelFromJson(json);
 }
 
 extension IntensityColorModelExt on IntensityColorModel {
-  (Color front, Color background) fromJmaIntensity(JmaIntensity intensity) {
+  TextColorModel fromJmaIntensity(JmaIntensity intensity) {
     switch (intensity) {
       case JmaIntensity.one:
-        return (intensityOneFront, intensityOneBack);
+        return one;
       case JmaIntensity.two:
-        return (intensityTwoFront, intensityTwoBack);
+        return two;
       case JmaIntensity.three:
-        return (intensityThreeFront, intensityThreeBack);
+        return three;
       case JmaIntensity.four:
-        return (intensityFourFront, intensityFourBack);
+        return four;
       case JmaIntensity.fiveUpperNoInput:
       case JmaIntensity.fiveLower:
-        return (intensityFiveLowerFront, intensityFiveLowerBack);
+        return fiveLower;
       case JmaIntensity.fiveUpper:
-        return (intensityFiveUpperFront, intensityFiveUpperBack);
+        return fiveUpper;
       case JmaIntensity.sixLower:
-        return (intensitySixLowerFront, intensitySixLowerBack);
+        return sixLower;
       case JmaIntensity.sixUpper:
-        return (intensitySixUpperFront, intensitySixUpperBack);
+        return sixUpper;
       case JmaIntensity.seven:
-        return (intensitySevenFront, intensitySevenBack);
+        return seven;
     }
   }
 
-  (Color front, Color background) fromJmaForecastIntensity(
+  TextColorModel fromJmaForecastIntensity(
     JmaForecastIntensity intensity,
   ) {
     switch (intensity) {
       case JmaForecastIntensity.zero:
-        return (intensityZeroFront, intensityZeroBack);
+        return zero;
       case JmaForecastIntensity.one:
-        return (intensityOneFront, intensityOneBack);
+        return one;
       case JmaForecastIntensity.two:
-        return (intensityTwoFront, intensityTwoBack);
+        return two;
       case JmaForecastIntensity.three:
-        return (intensityThreeFront, intensityThreeBack);
+        return three;
       case JmaForecastIntensity.four:
-        return (intensityFourFront, intensityFourBack);
+        return four;
       case JmaForecastIntensity.fiveLower:
-        return (intensityFiveLowerFront, intensityFiveLowerBack);
+        return fiveLower;
       case JmaForecastIntensity.fiveUpper:
-        return (intensityFiveUpperFront, intensityFiveUpperBack);
+        return fiveUpper;
       case JmaForecastIntensity.sixLower:
-        return (intensitySixLowerFront, intensitySixLowerBack);
+        return sixLower;
       case JmaForecastIntensity.sixUpper:
-        return (intensitySixUpperFront, intensitySixUpperBack);
+        return sixUpper;
       case JmaForecastIntensity.seven:
-        return (intensitySevenFront, intensitySevenBack);
+        return seven;
       case JmaForecastIntensity.unknown:
-        return (intensityUnknownFront, intensityUnknownBack);
+        return unknown;
     }
   }
 }
