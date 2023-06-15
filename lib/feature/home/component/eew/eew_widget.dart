@@ -1,5 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:eqapi_schema/eqapi_schema.dart';
+import 'package:eqapi_schema/extension/telegram_v3.dart';
+import 'package:eqmonitor/common/component/chip/custom_chip.dart';
 import 'package:eqmonitor/common/component/intenisty/jma_forecast_intensity_icon.dart';
 import 'package:eqmonitor/common/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/common/provider/config/theme/intensity_color/model/intensity_color_model.dart';
@@ -90,25 +92,45 @@ class EewWidget extends ConsumerWidget {
                   ? eew.forecastMaxInt?.from
                   : eew.forecastMaxInt?.to.toJmaForecastIntensity) ??
               JmaForecastIntensity.unknown;
+      final (foregroundColor, backgroundColor) =
+          intensityColorScheme.fromJmaForecastIntensity(maxIntensity);
 
       // 「緊急地震速報 警報 [SPACE] #5(最終)」
       final isWarning = (telegram.headline ?? '').contains('強い揺れ');
       final header = Padding(
         padding: const EdgeInsets.all(2),
-        child: Row(
+        child: Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            FittedBox(
-              child: Text(
-                '緊急地震速報 ${isWarning ? "警報" : "予報"}',
-                style: theme.textTheme.titleMedium!.copyWith(
-                  fontWeight: FontWeight.bold,
+            const Row(),
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 4,
+              children: [
+                Text(
+                  '緊急地震速報 ${isWarning ? "警報" : "予報"}',
+                  style: theme.textTheme.titleMedium!.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
+                if (eew.isLevelEew)
+                  const CustomChip(
+                    child: Text(
+                      'レベル法',
+                    ),
+                  ),
+                if (eew.isIpfOnePoint)
+                  const CustomChip(
+                    child: Text(
+                      '1点観測点による検出',
+                    ),
+                  ),
+              ],
             ),
-            const Spacer(),
             Text(
               '#${telegram.serialNo}'
-              '${eew.isLastInfo ? "(最終)" : ""}',
+              '${eew.isLastInfo ? "(最終報)" : ""}',
               style: theme.textTheme.titleMedium!.copyWith(
                 fontWeight: FontWeight.bold,
                 fontFamily: FontFamily.jetBrainsMono,
@@ -118,27 +140,27 @@ class EewWidget extends ConsumerWidget {
           ],
         ),
       );
-      final (foregroundColor, backgroundColor) =
-          intensityColorScheme.fromJmaForecastIntensity(maxIntensity);
       final maxIntensityWidget = Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
+          const Text('最大震度'),
           JmaForecastIntensityWidget(
             size: 60,
             intensity: maxIntensity,
           ),
-          const Text('最大震度')
         ],
       );
       // 「[MaxInt, 震源地, 規模」
       final hypoWidget = Row(
         crossAxisAlignment: CrossAxisAlignment.baseline,
         textBaseline: TextBaseline.ideographic,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            '震源地',
+            (eew.isPlum || eew.isLevelEew) ? '検知観測点' : '震源地',
             style: theme.textTheme.bodyMedium!.copyWith(
               fontWeight: FontWeight.bold,
-              color: theme.textTheme.bodyMedium!.color!.withOpacity(0.6),
+              color: theme.textTheme.bodyMedium!.color!.withOpacity(0.7),
             ),
           ),
           const SizedBox(width: 4),
@@ -152,19 +174,98 @@ class EewWidget extends ConsumerWidget {
       );
 
       // 地震発生時刻
-      final timeWidget = Text(
-        '${DateFormat('yyyy/MM/dd HH:mm:ss').format(
-          (eew.originTime ?? eew.arrivalTime).toLocal(),
-        )}'
-        ' '
-        '${eew.originTime == null ? "検知" : "発生"}',
+      final timeWidget = Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Text(
+            '${DateFormat('yyyy/MM/dd HH:mm:ss').format(
+              (eew.originTime ?? eew.arrivalTime).toLocal(),
+            )}'
+            ' '
+            '${eew.originTime == null ? "検知" : "発生"}',
+            style: theme.textTheme.bodyMedium!.copyWith(
+              fontFamily: FontFamily.jetBrainsMono,
+              fontFamilyFallback: [FontFamily.notoSansJP],
+            ),
+          ),
+        ],
+      );
+
+      // 「M 8.0 / 深さ100km」
+      final magnitudeWidget = Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.baseline,
+        textBaseline: TextBaseline.alphabetic,
+        children: [
+          Text(
+            'M',
+            style: theme.textTheme.titleMedium!.copyWith(
+              color: theme.textTheme.titleMedium!.color!.withOpacity(0.7),
+            ),
+          ),
+          Text(
+            (eew.magnitude ?? '不明').toString(),
+            style: theme.textTheme.displaySmall!.copyWith(
+              fontWeight: FontWeight.w900,
+              fontFamily: FontFamily.jetBrainsMono,
+              fontFamilyFallback: [FontFamily.notoSansJP],
+            ),
+          ),
+        ],
+      );
+      final depthWidget = Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.baseline,
+        textBaseline: TextBaseline.alphabetic,
+        children: [
+          Text(
+            '深さ',
+            style: theme.textTheme.titleMedium!.copyWith(
+              color: theme.textTheme.titleMedium!.color!.withOpacity(0.7),
+            ),
+          ),
+          if (eew.depth != null) ...[
+            Text(
+              eew.depth.toString(),
+              style: theme.textTheme.displaySmall!.copyWith(
+                fontWeight: FontWeight.w900,
+                fontFamily: FontFamily.jetBrainsMono,
+                fontFamilyFallback: [FontFamily.notoSansJP],
+              ),
+            ),
+            Text(
+              'km',
+              style: theme.textTheme.titleMedium!.copyWith(
+                color: theme.textTheme.titleMedium!.color!.withOpacity(0.7),
+              ),
+            ),
+          ] else
+            Text(
+              '不明',
+              style: theme.textTheme.displaySmall!.copyWith(
+                fontWeight: FontWeight.w900,
+                fontFamily: FontFamily.jetBrainsMono,
+                fontFamilyFallback: [FontFamily.notoSansJP],
+              ),
+            ),
+        ],
       );
       final body = Wrap(
-        crossAxisAlignment: WrapCrossAlignment.center,
         spacing: 8,
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: [
+          const Row(),
           maxIntensityWidget,
           hypoWidget,
+          Row(
+            children: [
+              magnitudeWidget,
+              const SizedBox(width: 4),
+              depthWidget,
+            ],
+          ),
+          timeWidget,
         ],
       );
       final card = Card(
@@ -189,19 +290,7 @@ class EewWidget extends ConsumerWidget {
             children: [
               header,
               const SizedBox(height: 2),
-              Row(
-                children: [
-                  body,
-                ],
-              ),
-              Row(
-                children: [
-                  const Text(
-                    'Mx.x / 深さ xxx km',
-                  ),
-                  timeWidget,
-                ],
-              ),
+              body,
             ],
           ),
         ),
@@ -212,14 +301,16 @@ class EewWidget extends ConsumerWidget {
             return SizedBox(
               width: constraints.maxWidth,
               child: Stack(
+                alignment: Alignment.center,
+                fit: StackFit.passthrough,
                 children: [
                   card,
-                  const Center(
+                  Center(
                     child: FittedBox(
                       child: Text(
-                        '1',
-                        style: TextStyle(
-                          fontSize: 200,
+                        index.toString(),
+                        style: const TextStyle(
+                          fontSize: 100,
                           fontWeight: FontWeight.w900,
                           fontFamily: FontFamily.jetBrainsMono,
                           color: Colors.white24,
