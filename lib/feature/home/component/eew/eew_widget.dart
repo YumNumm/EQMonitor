@@ -23,8 +23,6 @@ class EewWidgets extends ConsumerWidget {
     }
     return LayoutBuilder(
       builder: (context, constraints) {
-        print(constraints);
-
         return SizedBox(
           width: constraints.maxWidth,
           child: Column(
@@ -32,7 +30,7 @@ class EewWidgets extends ConsumerWidget {
                 .mapIndexed(
                   (index, element) => EewWidget(
                     item: element,
-                    index: state.length > 1 ? index : null,
+                    index: (state.length > 1) ? index + 1 : null,
                   ),
                 )
                 .toList(),
@@ -208,7 +206,7 @@ class EewWidget extends ConsumerWidget {
             (eew.magnitude ?? '不明').toString(),
             style: theme.textTheme.displaySmall!.copyWith(
               fontWeight: FontWeight.w900,
-              fontFamily: FontFamily.jetBrainsMono,
+              fontFamily: FontFamily.notoSansJP,
               fontFamilyFallback: [FontFamily.notoSansJP],
             ),
           ),
@@ -230,7 +228,7 @@ class EewWidget extends ConsumerWidget {
               eew.depth.toString(),
               style: theme.textTheme.displaySmall!.copyWith(
                 fontWeight: FontWeight.w900,
-                fontFamily: FontFamily.jetBrainsMono,
+                fontFamily: FontFamily.notoSansJP,
                 fontFamilyFallback: [FontFamily.notoSansJP],
               ),
             ),
@@ -254,11 +252,12 @@ class EewWidget extends ConsumerWidget {
       final body = Wrap(
         spacing: 8,
         crossAxisAlignment: WrapCrossAlignment.center,
+        alignment: WrapAlignment.center,
         children: [
           const Row(),
-          maxIntensityWidget,
           hypoWidget,
           Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               magnitudeWidget,
               const SizedBox(width: 4),
@@ -290,7 +289,13 @@ class EewWidget extends ConsumerWidget {
             children: [
               header,
               const SizedBox(height: 2),
-              body,
+              Row(
+                children: [
+                  maxIntensityWidget,
+                  const SizedBox(width: 4),
+                  Expanded(child: body),
+                ],
+              ),
             ],
           ),
         ),
@@ -308,12 +313,13 @@ class EewWidget extends ConsumerWidget {
                   Center(
                     child: FittedBox(
                       child: Text(
-                        index.toString(),
-                        style: const TextStyle(
+                        (index).toString(),
+                        style: TextStyle(
                           fontSize: 100,
                           fontWeight: FontWeight.w900,
                           fontFamily: FontFamily.jetBrainsMono,
-                          color: Colors.white24,
+                          color: theme.textTheme.bodyMedium!.color!
+                              .withOpacity(0.3),
                         ),
                       ),
                     ),
