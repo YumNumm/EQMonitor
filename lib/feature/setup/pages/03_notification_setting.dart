@@ -11,8 +11,6 @@ class NotificationSettingPage extends HookWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    
-
     return Scaffold(
       body: SetupBackgroundImageWidget(
         child: Column(
