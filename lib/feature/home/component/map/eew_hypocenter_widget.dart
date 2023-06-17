@@ -23,7 +23,7 @@ class EewHypocenterWidget extends HookConsumerWidget {
     final opacityAnimation = useAnimation(
       Tween<double>(
         begin: 1,
-        end: 0.2,
+        end: 0.4,
       ).animate(opacityController),
     );
 
@@ -73,14 +73,15 @@ class EewHypocenterWidget extends HookConsumerWidget {
           .toList(),
       [eewTelegrams],
     );
-    final hypoWidget = RepaintBoundary(
-      child: CustomPaint(
-        painter: _HypocenterPainter(
-          state: state,
-          hypocenters: hypocenters,
-        ),
-        size: Size.infinite,
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final hypoWidget = CustomPaint(
+      painter: _HypocenterPainter(
+        state: state,
+        hypocenters: hypocenters,
+        textColor: isDark ? Colors.white : Colors.black,
       ),
+      size: Size.infinite,
     );
     return Opacity(
       opacity: opacityAnimation,
@@ -93,10 +94,12 @@ class _HypocenterPainter extends CustomPainter {
   _HypocenterPainter({
     required this.state,
     required this.hypocenters,
+    required this.textColor,
   });
 
   final MapState state;
   final List<_HypoModel> hypocenters;
+  final Color textColor;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -230,11 +233,11 @@ class _HypocenterPainter extends CustomPainter {
         final textPainter = TextPainter(
           text: TextSpan(
             text: 'M${hypo.magnitude}',
-            style: const TextStyle(
-              color: Color.fromARGB(255, 255, 0, 0),
+            style: TextStyle(
               fontSize: 15,
               fontFamily: FontFamily.jetBrainsMono,
               fontWeight: FontWeight.w900,
+              color: textColor,
             ),
           ),
           textDirection: TextDirection.ltr,
