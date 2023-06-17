@@ -20,3 +20,10 @@ class TravelTimeTable with _$TravelTimeTable {
     );
   }
 }
+
+@freezed
+class TravelTimeTables with _$TravelTimeTables {
+  const factory TravelTimeTables({
+    required List<TravelTimeTable> table,
+  }) = _TravelTimeTables;
+}

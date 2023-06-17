@@ -9,6 +9,7 @@ import 'package:eqmonitor/common/router/router.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
 import 'package:eqmonitor/feature/home/component/map/eew_hypocenter_widget.dart';
+import 'package:eqmonitor/feature/home/component/map/eew_pswave_arrival_circle.dart';
 import 'package:eqmonitor/feature/home/component/map/kmoni_map_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
@@ -153,6 +154,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
           child: Stack(
             children: [
               BaseMapWidget(mapKey: mapKey),
+              EewPsWaveArrivalCircleWidget(mapKey: mapKey),
               KmoniMapWidget(mapKey: mapKey),
               EewHypocenterWidget(mapKey: mapKey),
               MapTouchHandlerWidget(mapKey: mapKey),
