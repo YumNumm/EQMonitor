@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-
 class EewHypocenterWidget extends HookConsumerWidget {
   const EewHypocenterWidget({required this.mapKey, super.key});
 
@@ -18,7 +17,6 @@ class EewHypocenterWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     final state = ref.watch(MapViewModelProvider(mapKey));
     final eewTelegrams = ref.watch(eewTelegramProvider);
     final hypocenters = useMemoized(
@@ -68,8 +66,7 @@ class _HypocenterPainter extends CustomPainter {
   final List<_HypoModel> hypocenters;
 
   @override
-  void paint(Canvas canvas, Size size) {
-  }
+  void paint(Canvas canvas, Size size) {}
 
   @override
   bool shouldRepaint(covariant _HypocenterPainter oldDelegate) =>
