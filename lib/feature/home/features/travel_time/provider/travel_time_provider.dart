@@ -8,17 +8,19 @@ part 'travel_time_provider.g.dart';
 @Riverpod(keepAlive: true)
 class TravelTime extends _$TravelTime {
   @override
-  List<TravelTimeTable> build() {
+  TravelTimeTables build() {
     _dataSource = ref.watch(travelTimeDataSourceProvider);
     initialize();
-    return [];
+    return const TravelTimeTables(table: []);
   }
 
   late TravelTimeDataSource _dataSource;
 
-  Future<List<TravelTimeTable>> initialize() async =>
-      state = await _dataSource.loadTables();
+  Future<TravelTimeTables> initialize() async =>
+      state = TravelTimeTables(table: await _dataSource.loadTables());
+}
 
+extension TravelTimeTablesCalc on TravelTimeTables {
   /// 走時を求めます
   /// [depth]: 震源の深さ(km)
   /// [time]: 地震発生からの経過時間(sec)
@@ -27,19 +29,19 @@ class TravelTime extends _$TravelTime {
     if (depth > 700 || time > 2000) {
       return TravelTimeResult(null, null);
     }
-    final table = state.where((e) => e.depth == depth).toList();
-    if (table.isEmpty) {
+    final lists = table.where((e) => e.depth == depth).toList();
+    if (lists.isEmpty) {
       return TravelTimeResult(null, null);
     }
-    final p1 = table.firstWhereOrNull((e) => e.p <= time);
-    final p2 = table.lastWhereOrNull((e) => e.p >= time);
+    final p1 = lists.firstWhereOrNull((e) => e.p <= time);
+    final p2 = lists.lastWhereOrNull((e) => e.p >= time);
     if (p1 == null || p2 == null) {
       return TravelTimeResult(null, null);
     }
     final p = (time - p1.p) / (p2.p - p1.p) * (p2.distance - p1.distance) +
         p1.distance;
-    final s1 = table.firstWhereOrNull((e) => e.s <= time);
-    final s2 = table.lastWhereOrNull((e) => e.s >= time);
+    final s1 = lists.firstWhereOrNull((e) => e.s <= time);
+    final s2 = lists.lastWhereOrNull((e) => e.s >= time);
     if (s1 == null || s2 == null) {
       return TravelTimeResult(null, p);
     }
