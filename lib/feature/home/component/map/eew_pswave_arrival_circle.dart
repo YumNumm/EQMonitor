@@ -121,7 +121,7 @@ class _HypocenterPainter extends CustomPainter {
         eew.depth!,
         DateTime.now()
                 .difference(
-                  DateTime(2023, 6, 18, 1, 22).toLocal(),
+                  eew.originTime!.toLocal(),
                 )
                 .inMilliseconds /
             1000,
