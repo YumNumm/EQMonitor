@@ -10,8 +10,8 @@ class KmoniMaintenanceMessageModel with _$KmoniMaintenanceMessageModel {
     @Default('')
         String message,
     @JsonKey(
-      fromJson: KmoniMaintenanceMessageTypeFromJson,
-      toJson: KmoniMaintenanceMessageTypeToJson,
+      fromJson: kmoniMaintenanceMessageTypeFromJson,
+      toJson: kmoniMaintenanceMessageTypeToJson,
     )
     @Default(KmoniMaintenanceMessageType.non)
         KmoniMaintenanceMessageType type,
@@ -31,10 +31,10 @@ enum KmoniMaintenanceMessageType {
   final String type;
 }
 
-String KmoniMaintenanceMessageTypeToJson(KmoniMaintenanceMessageType type) =>
+String kmoniMaintenanceMessageTypeToJson(KmoniMaintenanceMessageType type) =>
     type.type;
 
-KmoniMaintenanceMessageType KmoniMaintenanceMessageTypeFromJson(
+KmoniMaintenanceMessageType kmoniMaintenanceMessageTypeFromJson(
   String type,
 ) =>
     KmoniMaintenanceMessageType.values.firstWhereOrNull(

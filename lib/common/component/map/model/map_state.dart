@@ -13,7 +13,7 @@ part 'map_state.g.dart';
 class MapState with _$MapState {
   const factory MapState({
     @JsonKey(fromJson: _offsetFromJson, toJson: _offsetToJson)
-        required Offset offset,
+    required Offset offset,
     required double zoomLevel,
   }) = _MapState;
 
@@ -32,19 +32,6 @@ Map<String, dynamic> _offsetToJson(Offset instance) => <String, dynamic>{
       'dx': instance.dx,
       'dy': instance.dy,
     };
-
-Map<String, dynamic> _globalPointToJson(GlobalPoint? instance) =>
-    <String, dynamic>{
-      'x': instance?.x,
-      'y': instance?.y,
-    };
-
-GlobalPoint? _globalPointFromJson(Map<String, dynamic> json) {
-  return GlobalPoint(
-    json['x'] as double,
-    json['y'] as double,
-  );
-}
 
 extension MapStateProjection on MapState {
   /// GlobalPointをOffsetに変換する

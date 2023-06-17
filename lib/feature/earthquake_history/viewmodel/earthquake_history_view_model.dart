@@ -269,8 +269,14 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
     final index = data.indexWhere((e) => e.eventId == telegram.eventId);
     if (index != -1) {
       data[index] = data[index].copyWith(
-        telegrams: [...data[index].telegrams, telegram],
+        telegrams: [
+          telegram,
+          ...data[index].telegrams,
+        ],
       );
+      data[index] = _toEarthquakeHistoryItem({
+        telegram.eventId.toString(): data[index].telegrams,
+      }).first;
     } else {
       _toEarthquakeHistoryItem(
         {
