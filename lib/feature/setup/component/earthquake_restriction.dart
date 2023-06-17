@@ -7,26 +7,6 @@ class EarthquakeRestrictionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
-    final earthquakeImageWidget = Padding(
-      padding: const EdgeInsets.all(16),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(16)),
-          color: theme.cardColor,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(16)),
-            child: Image.asset(
-              'assets/images/earthquake_happened.png',
-              fit: BoxFit.scaleDown,
-              width: size.width * 0.8,
-            ),
-          ),
-        ),
-      ),
-    );
     return DecoratedBox(
       decoration: BoxDecoration(
         border: Border.all(
@@ -38,9 +18,8 @@ class EarthquakeRestrictionWidget extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Flexible(child: earthquakeImageWidget),
           Padding(
-            padding: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 4),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
