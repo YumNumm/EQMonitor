@@ -31,20 +31,5 @@ class CustomChip extends StatelessWidget {
         ),
       ),
     );
-    return Chip(
-      label: child,
-      backgroundColor: backgroundColor,
-      elevation: 0,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(8),
-        ),
-        side: BorderSide(
-          width: 0,
-          color: Colors.grey,
-        ),
-      ),
-      padding: EdgeInsets.zero,
-    );
   }
 }
