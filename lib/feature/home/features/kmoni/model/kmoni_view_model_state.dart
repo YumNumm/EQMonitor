@@ -32,4 +32,7 @@ enum KmoniStatus {
 
   /// 未取得
   none,
+
+  /// 停止中
+  stopped,
 }
