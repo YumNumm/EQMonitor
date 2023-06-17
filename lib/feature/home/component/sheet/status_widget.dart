@@ -1,3 +1,4 @@
+import 'package:eqmonitor/feature/home/features/kmoni/model/kmoni_view_model_state.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
@@ -15,6 +16,8 @@ class SheetStatusWidget extends ConsumerWidget {
     final latestTime = ref.watch(
       kmoniViewModelProvider.select((value) => value.lastUpdatedAt?.toLocal()),
     );
+    final status =
+        ref.watch(kmoniViewModelProvider.select((value) => value.status));
     final isDelayAdjusting = ref.watch(
       kmoniViewModelProvider.select((value) => value.isDelayAdjusting),
     );
@@ -80,7 +83,19 @@ class SheetStatusWidget extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     // 現在時刻
-                    if (isInitialized && latestTime != null)
+                    if (status == KmoniStatus.stopped) ...[
+                      const Icon(
+                        Icons.access_time_rounded,
+                        size: 16,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '一時停止中',
+                        style: theme.textTheme.bodyMedium!.copyWith(
+                          fontFamily: FontFamily.jetBrainsMono,
+                        ),
+                      )
+                    ] else if (isInitialized && latestTime != null)
                       Text(
                         DateFormat('yyyy/MM/dd HH:mm:ss').format(latestTime),
                         style: theme.textTheme.bodyMedium!.copyWith(
