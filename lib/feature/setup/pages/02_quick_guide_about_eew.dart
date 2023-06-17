@@ -18,9 +18,19 @@ class QuickGuideAboutEewPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(16),
               child: Text(
-                '緊急地震速報の限界について',
+                '4つの注意事項',
                 style: theme.textTheme.titleLarge!.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                'EQMonitorでは、緊急地震速報をはじめとする様々な地震情報をお伝えします。\n'
+                'ただし、以下の点に注意してください。',
+                style: theme.textTheme.titleMedium!.copyWith(
                   color: Colors.white,
                 ),
               ),
