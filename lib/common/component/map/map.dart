@@ -18,7 +18,7 @@ class MapTouchHandlerWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Listener(
+    final widget = Listener(
       onPointerSignal:
           ref.read(mapViewModelProvider(mapKey).notifier).recievedPointerSignal,
       child: GestureDetector(
@@ -30,6 +30,7 @@ class MapTouchHandlerWidget extends HookConsumerWidget {
             ref.read(mapViewModelProvider(mapKey).notifier).handleScaleEnd,
       ),
     );
+    return widget;
   }
 }
 

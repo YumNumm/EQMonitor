@@ -23,12 +23,13 @@ class EewTelegram extends _$EewTelegram {
     });
 
     /// 古くなったEEWを棄却するタイマー
-    Timer.periodic(
-      const Duration(seconds: 2),
-      (_) {
-        state = state.where(_shouldShow).toList();
-      },
-    );
+    Timer.periodic(const Duration(seconds: 2), (_) {
+      final result = state.where(_shouldShow).toList();
+      if (result.length != state.length) {
+        log('UPDATE');
+        state = result;
+      }
+    });
 
     return [];
   }
@@ -53,7 +54,6 @@ class EewTelegram extends _$EewTelegram {
     if (eew == null) {
       return false;
     }
-    return true;
     if (eew is TelegramVxse45Body) {
       log('eew is TelegramVxse45Body');
       if (item.eventId == 20110311144640) {

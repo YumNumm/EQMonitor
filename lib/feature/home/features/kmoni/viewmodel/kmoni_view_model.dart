@@ -15,7 +15,6 @@ part 'kmoni_view_model.g.dart';
 class KmoniViewModel extends _$KmoniViewModel {
   @override
   KmoniViewModelState build() {
-    print('KmoniViewModel build');
     _useCase = ref.watch(kmoniUseCaseProvider);
     _talker = ref.watch(talkerProvider);
     return const KmoniViewModelState(
@@ -38,15 +37,13 @@ class KmoniViewModel extends _$KmoniViewModel {
   );
 
   /// 時刻更新タイマー
+  // ignore: unused_field
   Timer _kmoniSyncTimer = Timer.periodic(
     const Duration(seconds: 1),
     (_) {},
   );
 
   Future<void> initialize() async {
-    // 観測点取得
-    final observations = ref.read(kmoniObservationPointsProvider);
-
     // Timer開始
     while (true) {
       try {
@@ -131,6 +128,7 @@ class KmoniViewModel extends _$KmoniViewModel {
         KmoniLog('遅延調整を行いました ${diff.inMicroseconds / 1000}ms'),
       );
       return diff;
+      // ignore: avoid_catches_without_on_clauses
     } catch (e) {
       _talker.logTyped(
         KmoniLog('遅延調整失敗 $e'),

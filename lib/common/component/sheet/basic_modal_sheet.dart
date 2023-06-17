@@ -20,7 +20,7 @@ class BasicModalSheet extends HookWidget {
       height: 4,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(8),
         color: theme.colorScheme.onBackground,
         boxShadow: const <BoxShadow>[
           BoxShadow(color: Colors.black12, blurRadius: 12),
@@ -55,7 +55,7 @@ class BasicModalSheet extends HookWidget {
                 barWidget,
                 Expanded(
                   child: ListView(
-                    padding: const EdgeInsets.all(4),
+                    padding: const EdgeInsets.all(2),
                     children: children,
                   ),
                 ),
@@ -68,9 +68,12 @@ class BasicModalSheet extends HookWidget {
             alignment: Alignment.bottomRight,
             child: SafeArea(
               bottom: false,
-              child: SizedBox(
-                width: constraints.maxWidth / 2,
-                child: sheet,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: SizedBox(
+                  width: constraints.maxWidth / 2,
+                  child: sheet,
+                ),
               ),
             ),
           );

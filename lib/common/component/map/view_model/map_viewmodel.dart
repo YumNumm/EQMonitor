@@ -62,6 +62,7 @@ class MapViewModel extends _$MapViewModel {
   Future<void> animatedApplyBounds({
     Duration duration = const Duration(milliseconds: 500),
     Curve curve = Curves.easeOutCirc,
+    EdgeInsetsGeometry padding = EdgeInsets.zero,
   }) {
     if (_renderBox == null) {
       return Future.value();
@@ -71,6 +72,7 @@ class MapViewModel extends _$MapViewModel {
       [points.$1, points.$2],
       curve: curve,
       duration: duration,
+      padding: padding,
     );
   }
 
@@ -436,8 +438,7 @@ class MapViewModel extends _$MapViewModel {
     await (
       _moveController.forward(),
       _scaleController.forward(),
-    )
-        .wait;
+    ).wait;
   }
 
   Future<void> animatedBounds(
@@ -489,6 +490,7 @@ class MapViewModel extends _$MapViewModel {
     List<GlobalPoint> globalPoints, {
     Duration duration = const Duration(milliseconds: 500),
     Curve curve = Curves.easeOutCirc,
+    EdgeInsetsGeometry padding = EdgeInsets.zero,
   }) async {
     if (_renderBox == null) {
       throw Exception('MapController is not initialized.');
@@ -506,8 +508,10 @@ class MapViewModel extends _$MapViewModel {
     final startCenterGlobalPoint =
         state.offsetToGlobalPoint(_renderBox!.size.center(Offset.zero));
     final startZoomLevel = state.zoomLevel;
-
-    final after = state.fitBoundsByGlobalPoints(globalPoints, _renderBox!.size);
+    final after = state.fitBoundsByGlobalPoints(
+      globalPoints,
+      padding.deflateSize(_renderBox!.size),
+    );
     final afterCenterGlobalPoint =
         after.offsetToGlobalPoint(_renderBox!.size.center(Offset.zero));
     final afterZoomLevel = after.zoomLevel;

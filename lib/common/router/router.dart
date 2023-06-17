@@ -72,7 +72,7 @@ class ColorSchemeConfigRoute extends GoRouteData {
   const ColorSchemeConfigRoute();
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      ColorSchemeConfigPage();
+      const ColorSchemeConfigPage();
 }
 
 @TypedGoRoute<HomeRoute>(path: '/')
