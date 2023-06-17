@@ -72,3 +72,13 @@ class EstimatedIntensityLog extends TalkerLog {
   @override
   final pen = AnsiPen()..magenta();
 }
+
+class AppLifeCycleLog extends TalkerLog {
+  AppLifeCycleLog(super.message);
+
+  @override
+  String get title => 'AppLifeCycle';
+
+  @override
+  final pen = AnsiPen()..cyan();
+}

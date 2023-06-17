@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/common/provider/app_lifecycle.dart';
 import 'package:eqmonitor/common/provider/log/talker.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/model/kmoni_view_model_state.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/use_case/kmoni_use_case.dart';
@@ -17,6 +19,20 @@ class KmoniViewModel extends _$KmoniViewModel {
   KmoniViewModelState build() {
     _useCase = ref.watch(kmoniUseCaseProvider);
     _talker = ref.watch(talkerProvider);
+    ref.listen(appLifecycleProvider, (_, next) async {
+      if (next == AppLifecycleState.resumed) {
+        state = state.copyWith(
+          status: KmoniStatus.none,
+        );
+        await syncDelayWithKmoni();
+        await _update();
+        return;
+      }
+      // 停止
+      state = state.copyWith(
+        status: KmoniStatus.stopped,
+      );
+    });
     return const KmoniViewModelState(
       isInitialized: false,
       lastUpdatedAt: null,
@@ -69,6 +85,9 @@ class KmoniViewModel extends _$KmoniViewModel {
 
   /// 画像取得
   Future<void> _update() async {
+    if (state.status == KmoniStatus.stopped) {
+      return;
+    }
     try {
       final now = DateTime.now().subtract(state.delay ?? Duration.zero);
       final result = await _useCase.fetchRealtimeShindo(

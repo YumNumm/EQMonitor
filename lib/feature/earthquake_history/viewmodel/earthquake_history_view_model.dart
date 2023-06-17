@@ -10,6 +10,7 @@ import 'package:eqapi_schema/model/components/tsunami-information/tsunami_foreca
 import 'package:eqapi_schema/model/components/tsunami-information/tsunami_observations.dart';
 import 'package:eqapi_schema/model/telegram_v3.dart';
 import 'package:eqmonitor/common/extension/async_value.dart';
+import 'package:eqmonitor/common/provider/app_lifecycle.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/use_case/earthquake_history_use_case.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/filtered_telegram_provider.dart';
@@ -25,12 +26,20 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
   AsyncValue<List<EarthquakeHistoryItem>> build() {
     _useCase = ref.watch(earthquakeHistoryUseCaseProvider);
     // start listen telegram ws
-    ref.listen(filteredWsTelegramProvider, (previous, next) {
-      final data = next.value;
-      if (data != null) {
-        _upsertTelegram(data);
-      }
-    });
+    ref
+      ..listen(filteredWsTelegramProvider, (previous, next) {
+        final data = next.value;
+        if (data != null) {
+          _upsertTelegram(data);
+        }
+      })
+      // listen app lifecycle
+      ..listen(appLifecycleProvider, (previous, next) {
+        if (next.isResumed) {
+          // アプリが復帰したら、再読み込みさせる
+          reload();
+        }
+      });
     return const AsyncData([]);
   }
 
@@ -47,11 +56,6 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
     if ((state.value ?? []).isEmpty) {
       return fetch(isLoadMore: true);
     }
-  }
-
-  Future<void> forceRefresh() async {
-    state = const AsyncLoading<List<EarthquakeHistoryItem>>();
-    await fetch();
   }
 
   void onScrollPositionChanged(ScrollController controller) {

@@ -1,6 +1,6 @@
 // Flutter imports:
+import 'package:eqmonitor/common/provider/log/talker.dart';
 import 'package:flutter/widgets.dart';
-
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -9,8 +9,13 @@ final appLifecycleProvider = Provider<AppLifecycleState>((ref) {
   final observer = _AppLifecycleObserver((value) => ref.state = value, ref);
 
   final binding = WidgetsBinding.instance..addObserver(observer);
-  ref.onDispose(() => binding.removeObserver(observer));
-
+  ref
+    ..onDispose(() => binding.removeObserver(observer))
+    ..listenSelf(
+      (previous, next) => ref
+          .read(talkerProvider)
+          .logTyped(AppLifeCycleLog('$previous -> $next')),
+    );
   return AppLifecycleState.resumed;
 });
 

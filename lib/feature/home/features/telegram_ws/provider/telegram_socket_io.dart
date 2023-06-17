@@ -1,5 +1,7 @@
 import 'dart:developer';
+import 'dart:ui';
 
+import 'package:eqmonitor/common/provider/app_lifecycle.dart';
 import 'package:eqmonitor/common/provider/log/talker.dart';
 import 'package:eqmonitor/feature/home/features/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
@@ -42,6 +44,17 @@ Socket telegramSocketIo(TelegramSocketIoRef ref) {
       log('Ping: $data');
     })
     ..connect();
+
+  // バックグラウンドに入ったら切断
+  ref.listen(appLifecycleProvider, (_, next) {
+    if (next == AppLifecycleState.paused ||
+        next == AppLifecycleState.inactive) {
+      socket.disconnect();
+    }
+    if (next == AppLifecycleState.resumed) {
+      socket.connect();
+    }
+  });
 
   return socket;
 }
