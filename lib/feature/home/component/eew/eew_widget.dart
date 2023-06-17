@@ -110,20 +110,12 @@ class EewWidget extends ConsumerWidget {
               crossAxisAlignment: WrapCrossAlignment.center,
               spacing: 4,
               children: [
-                Card(
-                  color: backgroundColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  margin: const EdgeInsets.symmetric(vertical: 3),
-                  child: Padding(
-                    padding: const EdgeInsets.all(2),
-                    child: Text(
-                      '緊急地震速報 ${isWarning ? "警報" : "予報"}',
-                      style: textTheme.titleLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: foregroundColor,
-                      ),
+                Padding(
+                  padding: const EdgeInsets.all(2),
+                  child: Text(
+                    '緊急地震速報 ${isWarning ? "警報" : "予報"}',
+                    style: textTheme.titleLarge!.copyWith(
+                      fontWeight: FontWeight.w900,
                     ),
                   ),
                 ),
@@ -131,18 +123,30 @@ class EewWidget extends ConsumerWidget {
                   const CustomChip(
                     child: Text(
                       'レベル法',
+                      style: TextStyle(
+                        fontFamily: FontFamily.jetBrainsMono,
+                        fontFamilyFallback: [FontFamily.notoSansJP],
+                      ),
                     ),
                   ),
                 if (eew.isIpfOnePoint)
                   const CustomChip(
                     child: Text(
                       '1点観測点による検出',
+                      style: TextStyle(
+                        fontFamily: FontFamily.jetBrainsMono,
+                        fontFamilyFallback: [FontFamily.notoSansJP],
+                      ),
                     ),
                   ),
                 if (eew.isPlum)
                   const CustomChip(
                     child: Text(
                       'PLUM法',
+                      style: TextStyle(
+                        fontFamily: FontFamily.jetBrainsMono,
+                        fontFamilyFallback: [FontFamily.notoSansJP],
+                      ),
                     ),
                   ),
               ],
