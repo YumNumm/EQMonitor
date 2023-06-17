@@ -4,16 +4,17 @@ import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/common/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/common/component/sheet/sheet_floating_action_buttons.dart';
 import 'package:eqmonitor/common/feature/map/provider/map_data_provider.dart';
-import 'package:eqmonitor/common/hook/use_sheet_controller.dart';
 import 'package:eqmonitor/common/provider/log/talker.dart';
 import 'package:eqmonitor/common/router/router.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
+import 'package:eqmonitor/feature/home/component/map/eew_hypocenter_widget.dart';
 import 'package:eqmonitor/feature/home/component/map/kmoni_map_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
+import 'package:eqmonitor/feature/home/viewmodel/home_viewmodel.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -27,19 +28,10 @@ class HomeView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mapKey = useMemoized(() => GlobalKey(debugLabel: 'HomeView'));
+    final vm = ref.watch(homeViewModelProvider);
+    final mapKey = vm.mapKey;
 
     final state = ref.watch(mapDataProvider);
-    useEffect(
-      () {
-        WidgetsBinding.instance.endOfFrame.then((_) {
-          ref.read(mapDataProvider.notifier).initialize();
-          ref.read(kmoniViewModelProvider.notifier).initialize();
-        });
-        return null;
-      },
-      [],
-    );
     useEffect(
       () {
         WidgetsBinding.instance.endOfFrame.then((_) {
@@ -99,6 +91,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final vm = ref.watch(homeViewModelProvider);
     final brightness = MediaQuery.of(context).platformBrightness;
     final moveController = useAnimationController();
     final scaleController = useAnimationController();
@@ -130,7 +123,21 @@ class _HomeBodyWidget extends HookConsumerWidget {
       },
       [mapKey],
     );
-    final sheetController = useSheetController();
+    final sheetController = vm.sheetController;
+    final mediaQuery = useMemoized(
+      () => MediaQuery.of(context),
+      [context],
+    );
+
+    useEffect(
+      () {
+        ref.read(homeViewModelProvider).height = mediaQuery.size.height -
+            (mediaQuery.padding.top + mediaQuery.padding.bottom) -
+            kToolbarHeight;
+        return null;
+      },
+      [context],
+    );
     return Stack(
       children: [
         // background
@@ -147,15 +154,16 @@ class _HomeBodyWidget extends HookConsumerWidget {
             children: [
               BaseMapWidget(mapKey: mapKey),
               KmoniMapWidget(mapKey: mapKey),
+              EewHypocenterWidget(mapKey: mapKey),
               MapTouchHandlerWidget(mapKey: mapKey),
             ],
           ),
         ),
-        SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (kDebugMode)
+        if (kDebugMode)
+          SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 ElevatedButton.icon(
                   onPressed: () {
                     ref.read(telegramWsProvider.notifier).requestSample();
@@ -163,41 +171,26 @@ class _HomeBodyWidget extends HookConsumerWidget {
                   label: const Text('request Sample Telegram'),
                   icon: const Icon(Icons.send),
                 ),
-              const SizedBox(height: 8),
-              // PoCを変更
-              ElevatedButton.icon(
-                onPressed: () {
-                  ref.read(mapViewModelProvider(mapKey).notifier)
-                    ..setBounds([
-                      const LatLng(35, 135),
-                      const LatLng(36, 137),
-                    ])
-                    ..animatedApplyBounds();
-                },
-                icon: const Icon(Icons.settings),
-                label: const Text('表示領域を変更'),
-              ),
-              // 表示領域をリセット
-              ElevatedButton.icon(
-                onPressed: () {
-                  ref.read(mapViewModelProvider(mapKey).notifier)
-                    ..reset()
-                    ..animatedApplyBounds();
-                },
-                icon: const Icon(Icons.home),
-                label: const Text('表示領域をリセット'),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
         SheetFloatingActionButtons(
           controller: sheetController,
           fab: [
             FloatingActionButton.small(
               onPressed: () {
+                final height = mediaQuery.size.height -
+                    (mediaQuery.padding.top + mediaQuery.padding.bottom) -
+                    kToolbarHeight;
                 ref
                     .read(mapViewModelProvider(mapKey).notifier)
-                    .animatedApplyBounds();
+                    .animatedApplyBounds(
+                      padding: const EdgeInsets.all(8).add(
+                        EdgeInsets.only(
+                          bottom: height * sheetController.animation.value,
+                        ),
+                      ),
+                    );
               },
               elevation: 4,
               child: const Icon(Icons.home),
@@ -210,7 +203,6 @@ class _HomeBodyWidget extends HookConsumerWidget {
           children: [
             const EewWidgets(),
             const SheetStatusWidget(),
-            const SizedBox(height: 4),
             const EarthquakeHistorySheetWidget(),
             ListTile(
               title: const Text('強震モニタ設定'),

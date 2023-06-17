@@ -62,3 +62,13 @@ class CrashlitycsTalkerObserver extends TalkerObserver {
     );
   }
 }
+
+class EstimatedIntensityLog extends TalkerLog {
+  EstimatedIntensityLog(super.message);
+
+  @override
+  String get title => 'EstimatedIntensity';
+
+  @override
+  final pen = AnsiPen()..magenta();
+}

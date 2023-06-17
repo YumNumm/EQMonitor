@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_annotation_target
+
 import 'package:eqapi_schema/model/telegram_v3.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -8,7 +10,7 @@ part 'telegram_ws_model.g.dart';
 class TelegramWsModel with _$TelegramWsModel {
   const factory TelegramWsModel({
     @JsonKey(fromJson: telegramWsModelFromJson, toJson: telegramWsModelToJson)
-        required Stream<TelegramV3> telegramStream,
+    required Stream<TelegramV3> telegramStream,
   }) = _TelegramWsModel;
 
   factory TelegramWsModel.fromJson(Map<String, dynamic> json) =>

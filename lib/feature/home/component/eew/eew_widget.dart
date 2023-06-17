@@ -68,7 +68,7 @@ class EewWidget extends ConsumerWidget {
         shadowColor: Colors.transparent,
         // 角丸にして Border
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(16),
           side: BorderSide(
             color: theme.dividerColor.withOpacity(0.6),
             width: 0,
@@ -110,10 +110,21 @@ class EewWidget extends ConsumerWidget {
               crossAxisAlignment: WrapCrossAlignment.center,
               spacing: 4,
               children: [
-                Text(
-                  '緊急地震速報 ${isWarning ? "警報" : "予報"}',
-                  style: textTheme.titleMedium!.copyWith(
-                    fontWeight: FontWeight.bold,
+                Card(
+                  color: backgroundColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  margin: const EdgeInsets.symmetric(vertical: 3),
+                  child: Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: Text(
+                      '緊急地震速報 ${isWarning ? "警報" : "予報"}',
+                      style: textTheme.titleLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: foregroundColor,
+                      ),
+                    ),
                   ),
                 ),
                 if (eew.isLevelEew)
@@ -140,9 +151,10 @@ class EewWidget extends ConsumerWidget {
               '#${telegram.serialNo}'
               '${eew.isLastInfo ? "(最終)" : ""}',
               style: textTheme.titleMedium!.copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w900,
                 fontFamily: FontFamily.jetBrainsMono,
                 fontFamilyFallback: [FontFamily.notoSansJP],
+                color: textTheme.titleMedium!.color!.withOpacity(0.8),
               ),
             ),
           ],
@@ -312,7 +324,7 @@ class EewWidget extends ConsumerWidget {
         shadowColor: Colors.transparent,
         // 角丸にして Border
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(16),
           side: BorderSide(
             color: foregroundColor,
             width: 0,

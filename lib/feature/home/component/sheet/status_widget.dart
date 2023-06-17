@@ -57,7 +57,7 @@ class SheetStatusWidget extends ConsumerWidget {
       shadowColor: Colors.transparent,
       // 角丸にして Border
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(16),
         side: BorderSide(
           color: theme.dividerColor.withOpacity(0.6),
           width: 0,
