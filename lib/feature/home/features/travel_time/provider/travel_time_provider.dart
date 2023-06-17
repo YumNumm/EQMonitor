@@ -3,10 +3,10 @@ import 'package:eqmonitor/feature/home/features/travel_time/data/travel_time_dat
 import 'package:eqmonitor/feature/home/features/travel_time/model/travel_time_table.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'travel_time_repository.g.dart';
+part 'travel_time_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-class TravelTimeRepository extends _$TravelTimeRepository {
+class TravelTime extends _$TravelTime {
   @override
   List<TravelTimeTable> build() {
     _dataSource = ref.watch(travelTimeDataSourceProvider);
