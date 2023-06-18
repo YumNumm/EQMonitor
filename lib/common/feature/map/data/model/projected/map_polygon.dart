@@ -1,5 +1,3 @@
-import 'package:eqmonitor/common/feature/map/data/model/map_polygon.dart';
-import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart';
 import 'package:lat_lng/lat_lng.dart';
 
 class MultiPolygonProjectedMapData<T> {
