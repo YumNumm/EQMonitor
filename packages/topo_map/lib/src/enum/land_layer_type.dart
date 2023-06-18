@@ -16,4 +16,6 @@ enum LandLayerType {
         LandLayerType.earthquakeInformationSubdivisionArea => 10,
         LandLayerType.tsunamiForecastArea => 1,
       };
+
+  String toJson() => name;
 }

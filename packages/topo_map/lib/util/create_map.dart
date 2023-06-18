@@ -25,13 +25,13 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
             TopologyPolygon(
               arcs: arcs,
               areaCode: int.tryParse(
-                    (geo.properties).getOrNull("code").toString(),
+                    (geo.properties)?.getOrNull("code").toString() ?? "",
                   ) ??
                   int.tryParse(
-                    (geo.properties).getOrNull("regioncode").toString(),
+                    (geo.properties)?.getOrNull("regioncode").toString() ?? "",
                   ) ??
                   int.tryParse(
-                    (geo.properties).getOrNull("ISO_N3").toString(),
+                    (geo.properties)?.getOrNull("ISO_N3").toString() ?? "",
                   ),
             ),
           );
@@ -41,13 +41,14 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
               TopologyPolygon(
                 arcs: arcs,
                 areaCode: int.tryParse(
-                      (geo.properties).getOrNull("code").toString(),
+                      (geo.properties)?.getOrNull("code").toString() ?? "",
                     ) ??
                     int.tryParse(
-                      (geo.properties).getOrNull("regioncode").toString(),
+                      (geo.properties)?.getOrNull("regioncode").toString() ??
+                          "",
                     ) ??
                     int.tryParse(
-                      (geo.properties).getOrNull("ISO_N3").toString(),
+                      (geo.properties)?.getOrNull("ISO_N3").toString() ?? "",
                     ),
               ),
             );
@@ -60,21 +61,23 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
             TopologyPolygon(
               arcs: [arcs],
               areaCode: int.tryParse(
-                (geo.properties).getOrNull("code").toString(),
+                (geo.properties)?.getOrNull("code").toString() ?? "",
               ),
             ),
           );
         case TopoJsonGeometryType.multiLineString
             when layerType == LandLayerType.tsunamiForecastArea:
-          final arcs = (geo as LineString).arcs;
-          resultPolygons.add(
-            TopologyPolygon(
-              arcs: [arcs],
-              areaCode: int.tryParse(
-                (geo.properties).getOrNull("code").toString(),
+          for (final arcs in (geo as MultiLineString).arcs) {
+            resultPolygons.add(
+              TopologyPolygon(
+                arcs: [arcs],
+                areaCode: int.tryParse(
+                  (geo.properties)?.getOrNull("code").toString() ?? "",
+                ),
               ),
-            ),
-          );
+            );
+          }
+
         default:
           break;
       }
