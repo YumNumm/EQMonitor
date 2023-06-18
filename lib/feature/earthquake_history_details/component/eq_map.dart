@@ -1,4 +1,5 @@
-import 'package:eqapi_schema/model/lat_lng.dart';
+import 'package:lat_lng/lat_lng.dart';
+
 import 'package:eqapi_schema/model/telegram_v3.dart';
 import 'package:eqmonitor/common/component/map/map.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';

@@ -536,6 +536,12 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "lat_lng",
+      "rootUri": "../packages/lat_lng",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "latlong2",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/latlong2-0.8.2",
       "packageUri": "lib/",
@@ -1094,7 +1100,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-06-18T02:25:01.221305Z",
+  "generated": "2023-06-18T02:39:57.704321Z",
   "generator": "pub",
   "generatorVersion": "3.0.5"
 }

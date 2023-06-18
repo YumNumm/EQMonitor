@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'dart:math' as math;
 
-import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:flutter/services.dart';
+import 'package:lat_lng/lat_lng.dart';
 
 class WebMercatorProjection {
   static const int tileSize = 256;

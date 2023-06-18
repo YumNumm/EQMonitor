@@ -1,7 +1,7 @@
-import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:lat_lng/lat_lng.dart';
 
 part 'kmoni_observation_point.freezed.dart';
 

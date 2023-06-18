@@ -43,8 +43,10 @@ class TopologyPolygon with _$TopologyPolygon {
 enum TopologyArcType {
   /// 海岸線
   coastline("coastline"),
+
   /// 県境
   admin("admin"),
+
   /// 一次細分化区域
   area("area");
 

@@ -1,4 +1,3 @@
-import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:eqmonitor/common/component/map/map.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/common/component/sheet/basic_modal_sheet.dart';
@@ -22,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:lat_lng/lat_lng.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 class HomeView extends HookConsumerWidget {
