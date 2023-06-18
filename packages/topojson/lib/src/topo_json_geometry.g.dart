@@ -10,13 +10,9 @@ _$_LineString _$$_LineStringFromJson(Map<String, dynamic> json) =>
     _$_LineString(
       type: $enumDecode(_$TopoJsonGeometryTypeEnumMap, json['type']),
       arcs: (json['arcs'] as List<dynamic>).map((e) => e as int).toList(),
-<<<<<<< HEAD
-      properties: Map<String, String>.from(json['properties'] as Map),
-=======
       properties: (json['properties'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as String),
       ),
->>>>>>> feature/topojson
     );
 
 Map<String, dynamic> _$$_LineStringToJson(_$_LineString instance) =>
@@ -40,13 +36,9 @@ _$_MultiLineString _$$_MultiLineStringFromJson(Map<String, dynamic> json) =>
       arcs: (json['arcs'] as List<dynamic>)
           .map((e) => (e as List<dynamic>).map((e) => e as int).toList())
           .toList(),
-<<<<<<< HEAD
-      properties: Map<String, String>.from(json['properties'] as Map),
-=======
       properties: (json['properties'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as String),
       ),
->>>>>>> feature/topojson
     );
 
 Map<String, dynamic> _$$_MultiLineStringToJson(_$_MultiLineString instance) =>
@@ -61,13 +53,9 @@ _$_Polygon _$$_PolygonFromJson(Map<String, dynamic> json) => _$_Polygon(
       arcs: (json['arcs'] as List<dynamic>)
           .map((e) => (e as List<dynamic>).map((e) => e as int).toList())
           .toList(),
-<<<<<<< HEAD
-      properties: Map<String, String>.from(json['properties'] as Map),
-=======
       properties: (json['properties'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as String),
       ),
->>>>>>> feature/topojson
     );
 
 Map<String, dynamic> _$$_PolygonToJson(_$_Polygon instance) =>
@@ -85,13 +73,9 @@ _$_MultiPolygon _$$_MultiPolygonFromJson(Map<String, dynamic> json) =>
               .map((e) => (e as List<dynamic>).map((e) => e as int).toList())
               .toList())
           .toList(),
-<<<<<<< HEAD
-      properties: Map<String, String>.from(json['properties'] as Map),
-=======
       properties: (json['properties'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as String),
       ),
->>>>>>> feature/topojson
     );
 
 Map<String, dynamic> _$$_MultiPolygonToJson(_$_MultiPolygon instance) =>
