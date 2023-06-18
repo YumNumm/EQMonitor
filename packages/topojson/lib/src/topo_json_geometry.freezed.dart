@@ -22,7 +22,11 @@ LineString _$LineStringFromJson(Map<String, dynamic> json) {
 mixin _$LineString {
   TopoJsonGeometryType get type => throw _privateConstructorUsedError;
   List<int> get arcs => throw _privateConstructorUsedError;
+<<<<<<< HEAD
   Map<String, String> get properties => throw _privateConstructorUsedError;
+=======
+  Map<String, String>? get properties => throw _privateConstructorUsedError;
+>>>>>>> feature/topojson
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -39,7 +43,11 @@ abstract class $LineStringCopyWith<$Res> {
   $Res call(
       {TopoJsonGeometryType type,
       List<int> arcs,
+<<<<<<< HEAD
       Map<String, String> properties});
+=======
+      Map<String, String>? properties});
+>>>>>>> feature/topojson
 }
 
 /// @nodoc
@@ -57,7 +65,11 @@ class _$LineStringCopyWithImpl<$Res, $Val extends LineString>
   $Res call({
     Object? type = null,
     Object? arcs = null,
+<<<<<<< HEAD
     Object? properties = null,
+=======
+    Object? properties = freezed,
+>>>>>>> feature/topojson
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -68,10 +80,17 @@ class _$LineStringCopyWithImpl<$Res, $Val extends LineString>
           ? _value.arcs
           : arcs // ignore: cast_nullable_to_non_nullable
               as List<int>,
+<<<<<<< HEAD
       properties: null == properties
           ? _value.properties
           : properties // ignore: cast_nullable_to_non_nullable
               as Map<String, String>,
+=======
+      properties: freezed == properties
+          ? _value.properties
+          : properties // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>?,
+>>>>>>> feature/topojson
     ) as $Val);
   }
 }
@@ -87,7 +106,11 @@ abstract class _$$_LineStringCopyWith<$Res>
   $Res call(
       {TopoJsonGeometryType type,
       List<int> arcs,
+<<<<<<< HEAD
       Map<String, String> properties});
+=======
+      Map<String, String>? properties});
+>>>>>>> feature/topojson
 }
 
 /// @nodoc
@@ -103,7 +126,11 @@ class __$$_LineStringCopyWithImpl<$Res>
   $Res call({
     Object? type = null,
     Object? arcs = null,
+<<<<<<< HEAD
     Object? properties = null,
+=======
+    Object? properties = freezed,
+>>>>>>> feature/topojson
   }) {
     return _then(_$_LineString(
       type: null == type
@@ -114,10 +141,17 @@ class __$$_LineStringCopyWithImpl<$Res>
           ? _value._arcs
           : arcs // ignore: cast_nullable_to_non_nullable
               as List<int>,
+<<<<<<< HEAD
       properties: null == properties
           ? _value._properties
           : properties // ignore: cast_nullable_to_non_nullable
               as Map<String, String>,
+=======
+      properties: freezed == properties
+          ? _value._properties
+          : properties // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>?,
+>>>>>>> feature/topojson
     ));
   }
 }
@@ -128,7 +162,11 @@ class _$_LineString implements _LineString {
   const _$_LineString(
       {required this.type,
       required final List<int> arcs,
+<<<<<<< HEAD
       required final Map<String, String> properties})
+=======
+      required final Map<String, String>? properties})
+>>>>>>> feature/topojson
       : _arcs = arcs,
         _properties = properties;
 
@@ -145,12 +183,23 @@ class _$_LineString implements _LineString {
     return EqualUnmodifiableListView(_arcs);
   }
 
+<<<<<<< HEAD
   final Map<String, String> _properties;
   @override
   Map<String, String> get properties {
     if (_properties is EqualUnmodifiableMapView) return _properties;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_properties);
+=======
+  final Map<String, String>? _properties;
+  @override
+  Map<String, String>? get properties {
+    final value = _properties;
+    if (value == null) return null;
+    if (_properties is EqualUnmodifiableMapView) return _properties;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+>>>>>>> feature/topojson
   }
 
   @override
@@ -195,7 +244,11 @@ abstract class _LineString implements LineString {
   const factory _LineString(
       {required final TopoJsonGeometryType type,
       required final List<int> arcs,
+<<<<<<< HEAD
       required final Map<String, String> properties}) = _$_LineString;
+=======
+      required final Map<String, String>? properties}) = _$_LineString;
+>>>>>>> feature/topojson
 
   factory _LineString.fromJson(Map<String, dynamic> json) =
       _$_LineString.fromJson;
@@ -205,7 +258,11 @@ abstract class _LineString implements LineString {
   @override
   List<int> get arcs;
   @override
+<<<<<<< HEAD
   Map<String, String> get properties;
+=======
+  Map<String, String>? get properties;
+>>>>>>> feature/topojson
   @override
   @JsonKey(ignore: true)
   _$$_LineStringCopyWith<_$_LineString> get copyWith =>
@@ -220,7 +277,11 @@ MultiLineString _$MultiLineStringFromJson(Map<String, dynamic> json) {
 mixin _$MultiLineString {
   TopoJsonGeometryType get type => throw _privateConstructorUsedError;
   List<List<int>> get arcs => throw _privateConstructorUsedError;
+<<<<<<< HEAD
   Map<String, String> get properties => throw _privateConstructorUsedError;
+=======
+  Map<String, String>? get properties => throw _privateConstructorUsedError;
+>>>>>>> feature/topojson
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -237,7 +298,11 @@ abstract class $MultiLineStringCopyWith<$Res> {
   $Res call(
       {TopoJsonGeometryType type,
       List<List<int>> arcs,
+<<<<<<< HEAD
       Map<String, String> properties});
+=======
+      Map<String, String>? properties});
+>>>>>>> feature/topojson
 }
 
 /// @nodoc
@@ -255,7 +320,11 @@ class _$MultiLineStringCopyWithImpl<$Res, $Val extends MultiLineString>
   $Res call({
     Object? type = null,
     Object? arcs = null,
+<<<<<<< HEAD
     Object? properties = null,
+=======
+    Object? properties = freezed,
+>>>>>>> feature/topojson
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -266,10 +335,17 @@ class _$MultiLineStringCopyWithImpl<$Res, $Val extends MultiLineString>
           ? _value.arcs
           : arcs // ignore: cast_nullable_to_non_nullable
               as List<List<int>>,
+<<<<<<< HEAD
       properties: null == properties
           ? _value.properties
           : properties // ignore: cast_nullable_to_non_nullable
               as Map<String, String>,
+=======
+      properties: freezed == properties
+          ? _value.properties
+          : properties // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>?,
+>>>>>>> feature/topojson
     ) as $Val);
   }
 }
@@ -285,7 +361,11 @@ abstract class _$$_MultiLineStringCopyWith<$Res>
   $Res call(
       {TopoJsonGeometryType type,
       List<List<int>> arcs,
+<<<<<<< HEAD
       Map<String, String> properties});
+=======
+      Map<String, String>? properties});
+>>>>>>> feature/topojson
 }
 
 /// @nodoc
@@ -301,7 +381,11 @@ class __$$_MultiLineStringCopyWithImpl<$Res>
   $Res call({
     Object? type = null,
     Object? arcs = null,
+<<<<<<< HEAD
     Object? properties = null,
+=======
+    Object? properties = freezed,
+>>>>>>> feature/topojson
   }) {
     return _then(_$_MultiLineString(
       type: null == type
@@ -312,10 +396,17 @@ class __$$_MultiLineStringCopyWithImpl<$Res>
           ? _value._arcs
           : arcs // ignore: cast_nullable_to_non_nullable
               as List<List<int>>,
+<<<<<<< HEAD
       properties: null == properties
           ? _value._properties
           : properties // ignore: cast_nullable_to_non_nullable
               as Map<String, String>,
+=======
+      properties: freezed == properties
+          ? _value._properties
+          : properties // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>?,
+>>>>>>> feature/topojson
     ));
   }
 }
@@ -326,7 +417,11 @@ class _$_MultiLineString implements _MultiLineString {
   const _$_MultiLineString(
       {required this.type,
       required final List<List<int>> arcs,
+<<<<<<< HEAD
       required final Map<String, String> properties})
+=======
+      required final Map<String, String>? properties})
+>>>>>>> feature/topojson
       : _arcs = arcs,
         _properties = properties;
 
@@ -343,12 +438,23 @@ class _$_MultiLineString implements _MultiLineString {
     return EqualUnmodifiableListView(_arcs);
   }
 
+<<<<<<< HEAD
   final Map<String, String> _properties;
   @override
   Map<String, String> get properties {
     if (_properties is EqualUnmodifiableMapView) return _properties;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_properties);
+=======
+  final Map<String, String>? _properties;
+  @override
+  Map<String, String>? get properties {
+    final value = _properties;
+    if (value == null) return null;
+    if (_properties is EqualUnmodifiableMapView) return _properties;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+>>>>>>> feature/topojson
   }
 
   @override
@@ -393,7 +499,11 @@ abstract class _MultiLineString implements MultiLineString {
   const factory _MultiLineString(
       {required final TopoJsonGeometryType type,
       required final List<List<int>> arcs,
+<<<<<<< HEAD
       required final Map<String, String> properties}) = _$_MultiLineString;
+=======
+      required final Map<String, String>? properties}) = _$_MultiLineString;
+>>>>>>> feature/topojson
 
   factory _MultiLineString.fromJson(Map<String, dynamic> json) =
       _$_MultiLineString.fromJson;
@@ -403,7 +513,11 @@ abstract class _MultiLineString implements MultiLineString {
   @override
   List<List<int>> get arcs;
   @override
+<<<<<<< HEAD
   Map<String, String> get properties;
+=======
+  Map<String, String>? get properties;
+>>>>>>> feature/topojson
   @override
   @JsonKey(ignore: true)
   _$$_MultiLineStringCopyWith<_$_MultiLineString> get copyWith =>
@@ -418,7 +532,11 @@ Polygon _$PolygonFromJson(Map<String, dynamic> json) {
 mixin _$Polygon {
   TopoJsonGeometryType get type => throw _privateConstructorUsedError;
   List<List<int>> get arcs => throw _privateConstructorUsedError;
+<<<<<<< HEAD
   Map<String, String> get properties => throw _privateConstructorUsedError;
+=======
+  Map<String, String>? get properties => throw _privateConstructorUsedError;
+>>>>>>> feature/topojson
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -433,7 +551,11 @@ abstract class $PolygonCopyWith<$Res> {
   $Res call(
       {TopoJsonGeometryType type,
       List<List<int>> arcs,
+<<<<<<< HEAD
       Map<String, String> properties});
+=======
+      Map<String, String>? properties});
+>>>>>>> feature/topojson
 }
 
 /// @nodoc
@@ -451,7 +573,11 @@ class _$PolygonCopyWithImpl<$Res, $Val extends Polygon>
   $Res call({
     Object? type = null,
     Object? arcs = null,
+<<<<<<< HEAD
     Object? properties = null,
+=======
+    Object? properties = freezed,
+>>>>>>> feature/topojson
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -462,10 +588,17 @@ class _$PolygonCopyWithImpl<$Res, $Val extends Polygon>
           ? _value.arcs
           : arcs // ignore: cast_nullable_to_non_nullable
               as List<List<int>>,
+<<<<<<< HEAD
       properties: null == properties
           ? _value.properties
           : properties // ignore: cast_nullable_to_non_nullable
               as Map<String, String>,
+=======
+      properties: freezed == properties
+          ? _value.properties
+          : properties // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>?,
+>>>>>>> feature/topojson
     ) as $Val);
   }
 }
@@ -480,7 +613,11 @@ abstract class _$$_PolygonCopyWith<$Res> implements $PolygonCopyWith<$Res> {
   $Res call(
       {TopoJsonGeometryType type,
       List<List<int>> arcs,
+<<<<<<< HEAD
       Map<String, String> properties});
+=======
+      Map<String, String>? properties});
+>>>>>>> feature/topojson
 }
 
 /// @nodoc
@@ -495,7 +632,11 @@ class __$$_PolygonCopyWithImpl<$Res>
   $Res call({
     Object? type = null,
     Object? arcs = null,
+<<<<<<< HEAD
     Object? properties = null,
+=======
+    Object? properties = freezed,
+>>>>>>> feature/topojson
   }) {
     return _then(_$_Polygon(
       type: null == type
@@ -506,10 +647,17 @@ class __$$_PolygonCopyWithImpl<$Res>
           ? _value._arcs
           : arcs // ignore: cast_nullable_to_non_nullable
               as List<List<int>>,
+<<<<<<< HEAD
       properties: null == properties
           ? _value._properties
           : properties // ignore: cast_nullable_to_non_nullable
               as Map<String, String>,
+=======
+      properties: freezed == properties
+          ? _value._properties
+          : properties // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>?,
+>>>>>>> feature/topojson
     ));
   }
 }
@@ -520,7 +668,11 @@ class _$_Polygon implements _Polygon {
   const _$_Polygon(
       {required this.type,
       required final List<List<int>> arcs,
+<<<<<<< HEAD
       required final Map<String, String> properties})
+=======
+      required final Map<String, String>? properties})
+>>>>>>> feature/topojson
       : _arcs = arcs,
         _properties = properties;
 
@@ -537,12 +689,23 @@ class _$_Polygon implements _Polygon {
     return EqualUnmodifiableListView(_arcs);
   }
 
+<<<<<<< HEAD
   final Map<String, String> _properties;
   @override
   Map<String, String> get properties {
     if (_properties is EqualUnmodifiableMapView) return _properties;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_properties);
+=======
+  final Map<String, String>? _properties;
+  @override
+  Map<String, String>? get properties {
+    final value = _properties;
+    if (value == null) return null;
+    if (_properties is EqualUnmodifiableMapView) return _properties;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+>>>>>>> feature/topojson
   }
 
   @override
@@ -587,7 +750,11 @@ abstract class _Polygon implements Polygon {
   const factory _Polygon(
       {required final TopoJsonGeometryType type,
       required final List<List<int>> arcs,
+<<<<<<< HEAD
       required final Map<String, String> properties}) = _$_Polygon;
+=======
+      required final Map<String, String>? properties}) = _$_Polygon;
+>>>>>>> feature/topojson
 
   factory _Polygon.fromJson(Map<String, dynamic> json) = _$_Polygon.fromJson;
 
@@ -596,7 +763,11 @@ abstract class _Polygon implements Polygon {
   @override
   List<List<int>> get arcs;
   @override
+<<<<<<< HEAD
   Map<String, String> get properties;
+=======
+  Map<String, String>? get properties;
+>>>>>>> feature/topojson
   @override
   @JsonKey(ignore: true)
   _$$_PolygonCopyWith<_$_Polygon> get copyWith =>
@@ -611,7 +782,11 @@ MultiPolygon _$MultiPolygonFromJson(Map<String, dynamic> json) {
 mixin _$MultiPolygon {
   TopoJsonGeometryType get type => throw _privateConstructorUsedError;
   List<List<List<int>>> get arcs => throw _privateConstructorUsedError;
+<<<<<<< HEAD
   Map<String, String> get properties => throw _privateConstructorUsedError;
+=======
+  Map<String, String>? get properties => throw _privateConstructorUsedError;
+>>>>>>> feature/topojson
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -628,7 +803,11 @@ abstract class $MultiPolygonCopyWith<$Res> {
   $Res call(
       {TopoJsonGeometryType type,
       List<List<List<int>>> arcs,
+<<<<<<< HEAD
       Map<String, String> properties});
+=======
+      Map<String, String>? properties});
+>>>>>>> feature/topojson
 }
 
 /// @nodoc
@@ -646,7 +825,11 @@ class _$MultiPolygonCopyWithImpl<$Res, $Val extends MultiPolygon>
   $Res call({
     Object? type = null,
     Object? arcs = null,
+<<<<<<< HEAD
     Object? properties = null,
+=======
+    Object? properties = freezed,
+>>>>>>> feature/topojson
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -657,10 +840,17 @@ class _$MultiPolygonCopyWithImpl<$Res, $Val extends MultiPolygon>
           ? _value.arcs
           : arcs // ignore: cast_nullable_to_non_nullable
               as List<List<List<int>>>,
+<<<<<<< HEAD
       properties: null == properties
           ? _value.properties
           : properties // ignore: cast_nullable_to_non_nullable
               as Map<String, String>,
+=======
+      properties: freezed == properties
+          ? _value.properties
+          : properties // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>?,
+>>>>>>> feature/topojson
     ) as $Val);
   }
 }
@@ -676,7 +866,11 @@ abstract class _$$_MultiPolygonCopyWith<$Res>
   $Res call(
       {TopoJsonGeometryType type,
       List<List<List<int>>> arcs,
+<<<<<<< HEAD
       Map<String, String> properties});
+=======
+      Map<String, String>? properties});
+>>>>>>> feature/topojson
 }
 
 /// @nodoc
@@ -692,7 +886,11 @@ class __$$_MultiPolygonCopyWithImpl<$Res>
   $Res call({
     Object? type = null,
     Object? arcs = null,
+<<<<<<< HEAD
     Object? properties = null,
+=======
+    Object? properties = freezed,
+>>>>>>> feature/topojson
   }) {
     return _then(_$_MultiPolygon(
       type: null == type
@@ -703,10 +901,17 @@ class __$$_MultiPolygonCopyWithImpl<$Res>
           ? _value._arcs
           : arcs // ignore: cast_nullable_to_non_nullable
               as List<List<List<int>>>,
+<<<<<<< HEAD
       properties: null == properties
           ? _value._properties
           : properties // ignore: cast_nullable_to_non_nullable
               as Map<String, String>,
+=======
+      properties: freezed == properties
+          ? _value._properties
+          : properties // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>?,
+>>>>>>> feature/topojson
     ));
   }
 }
@@ -717,7 +922,11 @@ class _$_MultiPolygon implements _MultiPolygon {
   const _$_MultiPolygon(
       {required this.type,
       required final List<List<List<int>>> arcs,
+<<<<<<< HEAD
       required final Map<String, String> properties})
+=======
+      required final Map<String, String>? properties})
+>>>>>>> feature/topojson
       : _arcs = arcs,
         _properties = properties;
 
@@ -734,12 +943,23 @@ class _$_MultiPolygon implements _MultiPolygon {
     return EqualUnmodifiableListView(_arcs);
   }
 
+<<<<<<< HEAD
   final Map<String, String> _properties;
   @override
   Map<String, String> get properties {
     if (_properties is EqualUnmodifiableMapView) return _properties;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_properties);
+=======
+  final Map<String, String>? _properties;
+  @override
+  Map<String, String>? get properties {
+    final value = _properties;
+    if (value == null) return null;
+    if (_properties is EqualUnmodifiableMapView) return _properties;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+>>>>>>> feature/topojson
   }
 
   @override
@@ -784,7 +1004,11 @@ abstract class _MultiPolygon implements MultiPolygon {
   const factory _MultiPolygon(
       {required final TopoJsonGeometryType type,
       required final List<List<List<int>>> arcs,
+<<<<<<< HEAD
       required final Map<String, String> properties}) = _$_MultiPolygon;
+=======
+      required final Map<String, String>? properties}) = _$_MultiPolygon;
+>>>>>>> feature/topojson
 
   factory _MultiPolygon.fromJson(Map<String, dynamic> json) =
       _$_MultiPolygon.fromJson;
@@ -794,7 +1018,11 @@ abstract class _MultiPolygon implements MultiPolygon {
   @override
   List<List<List<int>>> get arcs;
   @override
+<<<<<<< HEAD
   Map<String, String> get properties;
+=======
+  Map<String, String>? get properties;
+>>>>>>> feature/topojson
   @override
   @JsonKey(ignore: true)
   _$$_MultiPolygonCopyWith<_$_MultiPolygon> get copyWith =>

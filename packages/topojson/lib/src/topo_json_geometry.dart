@@ -69,7 +69,7 @@ class LineString with _$LineString implements TopoJsonGeometryObject {
   const factory LineString({
     required TopoJsonGeometryType type,
     required ArcIndexes arcs,
-    required Map<String, String> properties,
+    required Map<String, String>? properties,
   }) = _LineString;
 
   factory LineString.fromJson(Map<String, dynamic> json) =>
@@ -81,7 +81,7 @@ class MultiLineString with _$MultiLineString implements TopoJsonGeometryObject {
   const factory MultiLineString({
     required TopoJsonGeometryType type,
     required List<ArcIndexes> arcs,
-    required Map<String, String> properties,
+    required Map<String, String>? properties,
   }) = _MultiLineString;
 
   factory MultiLineString.fromJson(Map<String, dynamic> json) =>
@@ -93,7 +93,7 @@ class Polygon with _$Polygon implements TopoJsonGeometryObject {
   const factory Polygon({
     required TopoJsonGeometryType type,
     required List<ArcIndexes> arcs,
-    required Map<String, String> properties,
+    required Map<String, String>? properties,
   }) = _Polygon;
 
   factory Polygon.fromJson(Map<String, dynamic> json) =>
@@ -105,7 +105,7 @@ class MultiPolygon with _$MultiPolygon implements TopoJsonGeometryObject {
   const factory MultiPolygon({
     required TopoJsonGeometryType type,
     required List<List<ArcIndexes>> arcs,
-    required Map<String, String> properties,
+    required Map<String, String>? properties,
   }) = _MultiPolygon;
 
   factory MultiPolygon.fromJson(Map<String, dynamic> json) =>
