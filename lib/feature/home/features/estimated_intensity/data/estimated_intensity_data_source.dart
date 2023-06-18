@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
-import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/kmoni_observation_point.dart';
+import 'package:lat_lng/lat_lng.dart';
 import 'package:latlong2/latlong.dart' as latLong2;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

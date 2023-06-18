@@ -1,10 +1,10 @@
-import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:eqapi_schema/model/telegram_v3.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/feature/home/features/eew/eew_provider.dart';
 import 'package:eqmonitor/feature/home/features/estimated_intensity/provider/estimated_intensity_provider.dart';
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/kmoni_observation_point.dart';
 import 'package:flutter/material.dart';
+import 'package:lat_lng/lat_lng.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sheet/sheet.dart';
 

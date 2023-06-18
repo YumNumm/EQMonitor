@@ -1,4 +1,4 @@
-import 'package:eqapi_schema/model/lat_lng.dart';
+import 'package:lat_lng/lat_lng.dart';
 
 class MultiPolygonMapData<T> {
   factory MultiPolygonMapData.fromList(

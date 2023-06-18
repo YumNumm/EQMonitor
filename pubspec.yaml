@@ -19,6 +19,8 @@ dependencies:
   envied: ^0.3.0+3
   eqapi_schema:
     path: packages/eqapi_schema
+  lat_lng:
+    path: packages/lat_lng
   firebase_analytics: ^10.3.0
   firebase_core: ^2.11.0
   firebase_crashlytics: ^3.3.1

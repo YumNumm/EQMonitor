@@ -1,5 +1,5 @@
-import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:lat_lng/lat_lng.dart';
 
 part 'earthquake.freezed.dart';
 part 'earthquake.g.dart';

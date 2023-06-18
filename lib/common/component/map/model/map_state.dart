@@ -1,10 +1,10 @@
 import 'dart:math';
 import 'dart:math' as math;
 
-import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:lat_lng/lat_lng.dart';
 
 part 'map_state.freezed.dart';
 part 'map_state.g.dart';
@@ -13,7 +13,7 @@ part 'map_state.g.dart';
 class MapState with _$MapState {
   const factory MapState({
     @JsonKey(fromJson: _offsetFromJson, toJson: _offsetToJson)
-    required Offset offset,
+        required Offset offset,
     required double zoomLevel,
   }) = _MapState;
 

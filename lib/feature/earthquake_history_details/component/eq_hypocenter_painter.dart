@@ -1,4 +1,3 @@
-import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:eqmonitor/common/component/map/model/map_state.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/common/feature/map/provider/map_data_provider.dart';
@@ -6,6 +5,7 @@ import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:lat_lng/lat_lng.dart';
 
 class EarthquakeHypocenterMapWidget extends HookConsumerWidget {
   const EarthquakeHypocenterMapWidget({

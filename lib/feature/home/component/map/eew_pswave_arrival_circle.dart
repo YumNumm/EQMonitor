@@ -1,7 +1,6 @@
 import 'dart:ui' as ui;
 
 import 'package:eqapi_schema/extension/telegram_v3.dart';
-import 'package:eqapi_schema/model/lat_lng.dart';
 import 'package:eqapi_schema/model/telegram_v3.dart';
 import 'package:eqmonitor/common/component/map/model/map_state.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
@@ -12,6 +11,7 @@ import 'package:eqmonitor/feature/home/features/travel_time/provider/travel_time
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:lat_lng/lat_lng.dart';
 import 'package:latlong2/latlong.dart' as latlong2;
 
 class EewPsWaveArrivalCircleWidget extends StatefulHookConsumerWidget {
