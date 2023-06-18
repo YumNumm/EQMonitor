@@ -344,6 +344,13 @@ packages:
       relative: true
     source: path
     version: "1.0.0"
+  extensions:
+    dependency: "direct main"
+    description:
+      path: "packages/extensions"
+      relative: true
+    source: path
+    version: "1.0.0"
   fake_async:
     dependency: transitive
     description:

@@ -53,3 +53,4 @@ enum TopologyArcType {
   const TopologyArcType(this.type);
   final String type;
 }
+
