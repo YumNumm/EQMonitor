@@ -2,7 +2,6 @@ import 'package:eqmonitor/common/component/map/map.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/common/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/common/component/sheet/sheet_floating_action_buttons.dart';
-import 'package:eqmonitor/common/feature/map/provider/map_data_provider.dart';
 import 'package:eqmonitor/common/provider/log/talker.dart';
 import 'package:eqmonitor/common/router/router.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
@@ -32,11 +31,9 @@ class HomeView extends HookConsumerWidget {
     final vm = ref.watch(homeViewModelProvider);
     final mapKey = vm.mapKey;
 
-    final state = ref.watch(mapDataProvider);
     useEffect(
       () {
         WidgetsBinding.instance.endOfFrame.then((_) {
-          ref.read(mapDataProvider.notifier).initialize();
           ref.read(kmoniViewModelProvider.notifier).initialize();
         });
         return null;
@@ -44,13 +41,7 @@ class HomeView extends HookConsumerWidget {
       [mapKey],
     );
     // * 地図データが読み込まれるまでローディングを表示
-    if (state.projectedData == null) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator.adaptive(),
-        ),
-      );
-    }
+
     return TalkerWrapper(
       talker: ref.watch(talkerProvider),
       child: Scaffold(

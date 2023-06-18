@@ -1,11 +1,7 @@
-import 'package:collection/collection.dart';
 import 'package:eqapi_schema/model/components/intensity.dart';
 import 'package:eqapi_schema/model/components/region_intensity.dart';
 import 'package:eqmonitor/common/component/map/model/map_state.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
-import 'package:eqmonitor/common/feature/map/data/model/map_type.dart';
-import 'package:eqmonitor/common/feature/map/data/model/projected/map_polygon.dart';
-import 'package:eqmonitor/common/feature/map/provider/map_data_provider.dart';
 import 'package:eqmonitor/common/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/common/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:flutter/material.dart';
@@ -25,33 +21,19 @@ class EarthquakeIntensityMapWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    useEffect(
-      () {
-        ref.read(mapDataProvider.notifier).initialize();
-        return null;
-      },
-      [],
-    );
-    if (ref.watch(mapDataProvider).projectedData == null) {
-      return const SizedBox.shrink();
-    }
     final citiesItem = useMemoized<List<_DrawItem>?>(() {
       // cities
       if (intensity.cities != null) {
         final cities = intensity.cities!;
-        final map = ref
-            .watch(mapDataProvider)
-            .projectedData!
-            .jmaMap[MapDataType.areaInformationCityQuake]!;
         final result = <_DrawItem>[];
-        for (final e in map) {
-          final cityIntensity = cities.firstWhereOrNull(
-            (cityIntensity) => cityIntensity.code == e.properties.code,
-          );
-          if (cityIntensity != null) {
-            result.add(_DrawItem(polygon: e, intensity: cityIntensity));
-          }
-        }
+        //  for (final e in map) {
+        //    final cityIntensity = cities.firstWhereOrNull(
+        //      (cityIntensity) => cityIntensity.code == e.properties.code,
+        //    );
+        //    if (cityIntensity != null) {
+        //      result.add(_DrawItem(polygon: e, intensity: cityIntensity));
+        //    }
+        //  }
         return result;
       }
       return null;
@@ -60,29 +42,25 @@ class EarthquakeIntensityMapWidget extends HookConsumerWidget {
       // regionsの探索
       {
         final regions = intensity.regions;
-        final map = ref
-            .watch(mapDataProvider)
-            .projectedData!
-            .jmaMap[MapDataType.areaForecastLoadlE]!;
+        //   final map = ref
+        //       .watch(mapDataProvider)
+        //       .projectedData!
+        //       .jmaMap[MapDataType.areaForecastLoadlE]!;
         final result = <_DrawItem>[];
-        for (final e in map) {
-          final regionIntensity = regions.firstWhereOrNull(
-            (regionIntensity) => regionIntensity.code == e.properties.code,
-          );
-          if (regionIntensity != null) {
-            result.add(_DrawItem(polygon: e, intensity: regionIntensity));
-          }
-        }
+        //   for (final e in map) {
+        //     final regionIntensity = regions.firstWhereOrNull(
+        //       (regionIntensity) => regionIntensity.code == e.properties.code,
+        //     );
+        //     if (regionIntensity != null) {
+        //       result.add(_DrawItem(polygon: e, intensity: regionIntensity));
+        //     }
+        //   }
         return result;
       }
     });
 
     final state = ref.watch(MapViewModelProvider(mapKey));
-    final mapData =
-        ref.watch(mapDataProvider.select((value) => value.projectedData));
-    if (mapData == null) {
-      return const SizedBox.shrink();
-    }
+
     return CustomPaint(
       painter: _IntensityPainter(
         state: state,
@@ -124,7 +102,7 @@ class _IntensityPainter extends CustomPainter {
         final paint = Paint()
           ..color = color
           ..style = PaintingStyle.fill;
-        for (final polygon in e.polygon.polygons) {
+        /*for (final polygon in e.polygon.polygons) {
           final path = Path()
             ..addPolygon(
               polygon.points.map(state.globalPointToOffset).toList(),
@@ -139,8 +117,7 @@ class _IntensityPainter extends CustomPainter {
                 ..color = fgColor.withOpacity(0.2)
                 ..style = PaintingStyle.stroke,
             );
-        }
-        final center = e.polygon.boundary.center;
+        }*/
       } on Exception catch (_) {}
     }
   }
@@ -152,10 +129,8 @@ class _IntensityPainter extends CustomPainter {
 @immutable
 class _DrawItem {
   const _DrawItem({
-    required this.polygon,
     required this.intensity,
   });
 
-  final MultiPolygonProjectedMapData<dynamic> polygon;
   final RegionIntensity intensity;
 }

@@ -1,9 +1,7 @@
 import 'package:eqmonitor/common/component/map/model/map_state.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
-import 'package:eqmonitor/common/feature/map/provider/map_data_provider.dart';
 import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart';
 
@@ -18,20 +16,9 @@ class EarthquakeHypocenterMapWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    useEffect(
-      () {
-        ref.read(mapDataProvider.notifier).initialize();
-        return null;
-      },
-      [],
-    );
+
     final state = ref.watch(MapViewModelProvider(mapKey));
-    final mapData =
-        ref.watch(mapDataProvider.select((value) => value.projectedData));
-    if (mapData == null) {
-      debugPrint('mapData is null');
-      return const SizedBox.shrink();
-    }
+
     return CustomPaint(
       painter: _HypocenterPainter(
         state: state,

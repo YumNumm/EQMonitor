@@ -1,17 +1,14 @@
-import 'package:lat_lng/lat_lng.dart';
-
 import 'package:eqapi_schema/model/telegram_v3.dart';
 import 'package:eqmonitor/common/component/map/map.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/common/feature/map/data/model/map_type.dart';
-import 'package:eqmonitor/common/feature/map/data/model/state/map_data_state.dart';
-import 'package:eqmonitor/common/feature/map/provider/map_data_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/eq_hypocenter_painter.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/eq_region_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:lat_lng/lat_lng.dart';
 
 class EarthquakeHistoryMap extends HookConsumerWidget {
   const EarthquakeHistoryMap({required this.item, super.key});
@@ -21,11 +18,7 @@ class EarthquakeHistoryMap extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final brightness = Theme.of(context).brightness;
     // 地図データがない場合はローディング
-    if (ref.watch(mapDataProvider).projectedData == null) {
-      return const Center(
-        child: CircularProgressIndicator.adaptive(),
-      );
-    }
+
     final mapKey = useMemoized(
       () => GlobalKey(debugLabel: 'eq-history-map-${item.eventId}'),
     );
@@ -46,10 +39,10 @@ class EarthquakeHistoryMap extends HookConsumerWidget {
               scaleController: scaleController,
               globalPointAndZoomLevelController:
                   globalPointAndZoomLevelController,
-            )
-            ..fitBounds(
-              _getShowBounds(item, ref.read(mapDataProvider).data!),
             );
+          //  ..fitBounds(
+          //  _getShowBounds(item, ref.read(mapDataProvider).data!),
+          //);
         });
         return null;
       },
@@ -98,23 +91,22 @@ class EarthquakeHistoryMap extends HookConsumerWidget {
 
 List<LatLng> _getShowBounds(
   EarthquakeHistoryItem item,
-  MapDataFromSource mapData,
 ) {
   if (item.earthquake.intensity != null) {
-    final map = mapData.jmaMap[MapDataType.areaForecastLoadlE]!;
+    //final map = mapData.jmaMap[MapDataType.areaForecastLoadlE]!;
     final result = <LatLng>[];
-    if (item.earthquake.intensity!.maxInt > JmaIntensity.four) {
-      for (final region in item.earthquake.intensity!.regions
-          .where((element) => element.maxInt! > JmaIntensity.four)) {
-        final e = map.firstWhere((e) => e.properties.code == region.code);
-        result.addAll([e.boundary.northEast, e.boundary.southWest]);
-      }
-      return result;
-    }
-    for (final region in item.earthquake.intensity!.regions) {
-      final e = map.firstWhere((e) => e.properties.code == region.code);
-      result.addAll([e.boundary.northEast, e.boundary.southWest]);
-    }
+    //if (item.earthquake.intensity!.maxInt > JmaIntensity.four) {
+    //  for (final region in item.earthquake.intensity!.regions
+    //      .where((element) => element.maxInt! > JmaIntensity.four)) {
+    //    final e = map.firstWhere((e) => e.properties.code == region.code);
+    //    result.addAll([e.boundary.northEast, e.boundary.southWest]);
+    //  }
+    //  return result;
+    //}
+    //for (final region in item.earthquake.intensity!.regions) {
+    //  final e = map.firstWhere((e) => e.properties.code == region.code);
+    //  result.addAll([e.boundary.northEast, e.boundary.southWest]);
+    //}
     return result;
   }
   if (item.earthquake.earthquake != null &&
