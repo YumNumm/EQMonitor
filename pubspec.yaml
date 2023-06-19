@@ -57,7 +57,7 @@ dependencies:
   realtime_client: ^1.0.0
   restart_app: ^1.1.1
   share_plus: ^6.0.1
-  shared_preferences: ^2.0.15
+  shared_preferences: ^2.1.2
   shared_preferences_android: ^2.0.13
   shared_preferences_ios: ^2.1.1
   socket_io_client: ^2.0.0
