@@ -17,7 +17,7 @@ dependencies:
   cupertino_icons: ^1.0.5
   device_info_plus: ^8.0.0
   device_preview: ^1.1.0
-  dio: ^4.0.6
+  dio: ^5.2.1+1
   dio_http2_adapter: ^2.0.0
   dmdata_telegram_json: ^0.0.15
   dynamic_color: ^1.5.4
