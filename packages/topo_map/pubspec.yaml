@@ -22,4 +22,3 @@ dev_dependencies:
 
 executables:
   topojsonconverter:
-    script: bin/topo_json_converter.dart
