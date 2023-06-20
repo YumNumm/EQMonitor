@@ -11,8 +11,8 @@ extension ListIntVector on List<IntVector> {
     for (final e in this) {
       result.add(
         LatLng(
-          (x += e.x) + map.scale.x + map.translate.x,
-          (y += e.y) + map.scale.y + map.translate.y,
+          (x += e.x) * map.scale.x + map.translate.x,
+          (y += e.y) * map.scale.y + map.translate.y,
         ),
       );
     }

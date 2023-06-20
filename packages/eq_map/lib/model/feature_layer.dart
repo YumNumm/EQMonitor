@@ -15,16 +15,17 @@ class FeatureLayer {
   });
 
   factory FeatureLayer.fromTopologyMap(TopologyMap map) {
-    final lineFeatures = <PolylineFeature>[];
-    map.arcs.mapIndexed(
-      (index, _) => lineFeatures.add(PolylineFeature.fromTopoMap(map, index)),
-    );
-    final polygonFeatures = <PolygonFeature>[];
-    map.polygons.mapIndexed((index, element) {
-      polygonFeatures.add(
-        PolygonFeature.fromTopoMap(map, lineFeatures, element),
-      );
-    });
+    final lineFeatures = map.arcs
+        .mapIndexed(
+          (index, _) => PolylineFeature.fromTopoMap(map, index),
+        )
+        .toList();
+    final polygonFeatures = map.polygons
+        .mapIndexed(
+          (_, polygon) =>
+              PolygonFeature.fromTopoMap(map, lineFeatures, polygon),
+        )
+        .toList();
     return FeatureLayer._(
       basedMap: map,
       lineFeatures: lineFeatures,
