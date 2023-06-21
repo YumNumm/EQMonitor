@@ -9,3 +9,15 @@ extension SafeListAccess on List {
     return this[index] as T;
   }
 }
+
+
+extension SafeMapAccess on Map{
+  /// 指定したキーの要素を取得する
+  /// キーが存在しない場合はnullを返す
+  T? getOrNull<T>(String key) {
+    if (!containsKey(key)) {
+      return null;
+    }
+    return this[key] as T;
+  }
+}

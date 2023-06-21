@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:topo_map/src/enum/land_layer_type.dart';
 import 'package:topo_map/src/model/topology_map.dart';
 import 'package:topojson/topojson.dart';
+import 'package:extensions/extensions.dart';
 
 TopologyMap createMap(TopoJson json, LandLayerType layerType) {
   final base = TopologyMap(
