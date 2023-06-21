@@ -1,15 +1,17 @@
 import 'dart:math';
 import 'dart:math' as math;
 
+import 'package:eqmonitor/common/feature/map/utils/projection.dart';
 import 'package:flutter/services.dart';
 import 'package:lat_lng/lat_lng.dart';
 
-class WebMercatorProjection {
+class WebMercatorProjection implements Projection {
   static const int tileSize = 256;
   static const pixelsPerLonDegree = tileSize / 360;
   static const pixelsPerLonRadian = tileSize / (2 * math.pi);
   static const origin = Offset(128, 128);
 
+  @override
   GlobalPoint project(LatLng latLng) {
     final siny = math.min(
       math.max(
@@ -24,6 +26,7 @@ class WebMercatorProjection {
     );
   }
 
+  @override
   LatLng unproject(GlobalPoint point) {
     final lng = point.x - origin.dx / pixelsPerLonDegree;
     final latRadians = (point.y - origin.dy) / -pixelsPerLonRadian;
