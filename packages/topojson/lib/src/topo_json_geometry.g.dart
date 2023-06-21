@@ -11,7 +11,7 @@ _$_LineString _$$_LineStringFromJson(Map<String, dynamic> json) =>
       type: $enumDecode(_$TopoJsonGeometryTypeEnumMap, json['type']),
       arcs: (json['arcs'] as List<dynamic>).map((e) => e as int).toList(),
       properties: (json['properties'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, e as String),
+        (k, e) => MapEntry(k, e as String?),
       ),
     );
 
@@ -37,7 +37,7 @@ _$_MultiLineString _$$_MultiLineStringFromJson(Map<String, dynamic> json) =>
           .map((e) => (e as List<dynamic>).map((e) => e as int).toList())
           .toList(),
       properties: (json['properties'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, e as String),
+        (k, e) => MapEntry(k, e as String?),
       ),
     );
 
@@ -54,7 +54,7 @@ _$_Polygon _$$_PolygonFromJson(Map<String, dynamic> json) => _$_Polygon(
           .map((e) => (e as List<dynamic>).map((e) => e as int).toList())
           .toList(),
       properties: (json['properties'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, e as String),
+        (k, e) => MapEntry(k, e as String?),
       ),
     );
 
@@ -74,7 +74,7 @@ _$_MultiPolygon _$$_MultiPolygonFromJson(Map<String, dynamic> json) =>
               .toList())
           .toList(),
       properties: (json['properties'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, e as String),
+        (k, e) => MapEntry(k, e as String?),
       ),
     );
 
@@ -94,7 +94,7 @@ _$_GeometryCollection _$$_GeometryCollectionFromJson(
               (e) => TopoJsonGeometryObject.fromJson(e as Map<String, dynamic>))
           .toList(),
       properties: (json['properties'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, e as String),
+        (k, e) => MapEntry(k, e as String?),
       ),
     );
 
@@ -111,7 +111,7 @@ _$_NullGeometryObject _$$_NullGeometryObjectFromJson(
     _$_NullGeometryObject(
       type: $enumDecodeNullable(_$TopoJsonGeometryTypeEnumMap, json['type']),
       properties: (json['properties'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, e as String),
+        (k, e) => MapEntry(k, e as String?),
       ),
     );
 

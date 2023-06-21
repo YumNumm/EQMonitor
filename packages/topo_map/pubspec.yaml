@@ -12,6 +12,8 @@ dependencies:
   json_annotation: ^4.8.1
   topojson:
     path: ../topojson
+  extensions:
+    path: ../extensions
 
 dev_dependencies:
   build_runner: ^2.4.4
