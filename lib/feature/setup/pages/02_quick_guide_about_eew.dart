@@ -26,7 +26,7 @@ class QuickGuideAboutEewPage extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(8),
               child: Text(
                 'EQMonitorでは、緊急地震速報をはじめとする様々な地震情報をお伝えします。\n'
                 'ただし、以下の点に注意してください。',
