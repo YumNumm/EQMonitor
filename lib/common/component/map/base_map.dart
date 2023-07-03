@@ -14,7 +14,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:topo_map/topo_map.dart';
 
-
 class BaseMapWidget extends HookConsumerWidget {
   const BaseMapWidget({
     super.key,
