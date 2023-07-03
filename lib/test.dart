@@ -1,2 +1,1 @@
-Future<void> main() async{
-}
+Future<void> main() async {}
