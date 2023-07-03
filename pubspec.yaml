@@ -63,7 +63,7 @@ dependencies:
   socket_io_client: ^2.0.0
   state_notifier: ^0.7.2+1
   substring_highlight: ^1.0.33
-  supabase: ^1.0.1
+  supabase: ^1.9.5
   supabase_flutter: ^1.2.2
   talker_flutter: ^2.1.0
   url_launcher: ^6.1.7
