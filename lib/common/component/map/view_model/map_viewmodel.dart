@@ -438,8 +438,7 @@ class MapViewModel extends _$MapViewModel {
     await (
       _moveController.forward(),
       _scaleController.forward(),
-    )
-        .wait;
+    ).wait;
   }
 
   Future<void> animatedBounds(
