@@ -14,8 +14,11 @@ class EewTelegram extends _$EewTelegram {
   @override
   List<EarthquakeHistoryItem> build() {
     ref.listen(earthquakeHistoryViewModelProvider, (previous, next) {
+      print('EEW PROVIDER NEW DATA');
       for (final item in (next.value ?? <EarthquakeHistoryItem>[])
           .where((e) => e.latestEew != null)) {
+        if (item.eventId.toString().contains('203')) {
+        }
         if (_shouldShow(item)) {
           upsert(item);
         }
@@ -48,7 +51,7 @@ class EewTelegram extends _$EewTelegram {
   }
 
   /// EEWを表示するかどうかの判定
-  /// 地震発生から180秒以内のものは表示する
+  /// 地震発生から210秒以内のものは表示する
   /// ただし、M6.0以上の場合は300秒以内
   bool _shouldShow(EarthquakeHistoryItem item) {
     final eew = item.latestEew;

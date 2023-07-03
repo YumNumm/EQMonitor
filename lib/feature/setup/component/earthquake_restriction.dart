@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 class EarthquakeRestrictionWidget extends StatelessWidget {
@@ -6,39 +7,61 @@ class EarthquakeRestrictionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.white.withOpacity(0.75),
-        ),
-        borderRadius: const BorderRadius.all(Radius.circular(16)),
-        color: theme.cardColor.withOpacity(0.8),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 4),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '・デバイスの状態、アプリケーションの状態、ネットワークの状態によっては、通知が届かない場合があります。',
-                  style: theme.textTheme.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.bold,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            'デバイスの状態、アプリケーションの状態、ネットワークの状態によっては、通知が届かない場合があります。',
+            '通知が強い揺れの到達に間に合わない可能性があります',
+            '予想に大きな誤差が発生する場合があります',
+            '予想には誤差が伴います'
+          ]
+              .mapIndexed(
+                (index, e) => Card(
+                  elevation: 0,
+                  // border
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: theme.colorScheme.onSurface.withOpacity(0.2),
+                      width: 0,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        const DecoratedBox(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: SizedBox(
+                            width: 8,
+                            height: 8,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Flexible(
+                          child: Text(
+                            e,
+                            style: theme.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                const Text(
-                  '・通知が強い揺れの到達に間に合わない可能性があります\n'
-                  '・予想に大きな誤差が発生する場合があります\n'
-                  '・予想には誤差が伴います',
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+              )
+              .toList(),
+        ),
+      ],
     );
   }
 }

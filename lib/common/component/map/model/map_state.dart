@@ -13,7 +13,7 @@ part 'map_state.g.dart';
 class MapState with _$MapState {
   const factory MapState({
     @JsonKey(fromJson: _offsetFromJson, toJson: _offsetToJson)
-        required Offset offset,
+    required Offset offset,
     required double zoomLevel,
   }) = _MapState;
 
@@ -48,6 +48,54 @@ extension MapStateProjection on MapState {
       offset.dx / zoomLevel + this.offset.dx,
       offset.dy / zoomLevel + this.offset.dy,
     );
+  }
+
+  /// [intercept] ZoomLevelのみ適用したList<Point>を引数とし、中間処理を行う。
+  /// その後、Offsetを適用する
+  List<Offset>? globalPointsToOffsetsIntercepted({
+    required List<GlobalPoint> points,
+    required String id,
+    required List<GlobalPoint>? Function({
+      required List<GlobalPoint> points,
+      required int zoomLevel,
+      required String id,
+    }) intercept,
+  }) {
+    final globalPoints = intercept(
+      points: points,
+      zoomLevel: sqrt(zoomLevel).toInt(),
+      id: id,
+    );
+    return globalPoints
+        ?.map(
+          globalPointToOffset,
+        )
+        .toList();
+  }
+
+  List<List<Offset>> globalPointsToOffsetsFeaturesIntercepted({
+    required List<List<GlobalPoint>> features,
+    required String id,
+    required List<List<GlobalPoint>> Function({
+      required List<List<GlobalPoint>> points,
+      required int zoomLevel,
+      required String id,
+    }) intercept,
+  }) {
+    final globalPoints = intercept(
+      points: features,
+      zoomLevel: zoomLevel.toInt(),
+      id: id,
+    );
+    return globalPoints
+        .map(
+          (e) => e
+              .map(
+                globalPointToOffset,
+              )
+              .toList(),
+        )
+        .toList();
   }
 
   Offset latLngToOffset(LatLng latLng) {
