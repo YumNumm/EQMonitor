@@ -3,7 +3,7 @@ import 'dart:math' as math;
 
 import 'package:eqmonitor/common/component/map/model/map_state.dart';
 import 'package:eqmonitor/common/component/map/util/global_point_and_zoom_level_tween.dart';
-import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart';
+import 'package:eqmonitor/common/component/map/utils/web_mercator_projection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';

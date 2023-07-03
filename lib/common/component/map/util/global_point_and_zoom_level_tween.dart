@@ -1,4 +1,4 @@
-import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart';
+import 'package:eqmonitor/common/component/map/utils/web_mercator_projection.dart';
 import 'package:flutter/material.dart';
 
 class GlobalPointAndZoomLevelTween

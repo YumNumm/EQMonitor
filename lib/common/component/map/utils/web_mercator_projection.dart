@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'dart:math' as math;
 
-import 'package:eqmonitor/common/feature/map/utils/projection.dart';
+import 'package:eqmonitor/common/component/map/utils/projection.dart';
 import 'package:flutter/services.dart';
 import 'package:lat_lng/lat_lng.dart';
 

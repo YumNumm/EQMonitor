@@ -1,7 +1,6 @@
 import 'package:eqapi_schema/model/telegram_v3.dart';
 import 'package:eqmonitor/common/component/map/map.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
-import 'package:eqmonitor/common/feature/map/data/model/map_type.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/eq_hypocenter_painter.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/eq_region_painter.dart';

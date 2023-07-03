@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart';
+import 'package:eqmonitor/common/component/map/utils/web_mercator_projection.dart';
 import 'package:extensions/extensions.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:simplify/simplify.dart';

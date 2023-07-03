@@ -1,11 +1,13 @@
+import 'dart:developer';
+
 import 'package:eq_map/eq_map.dart';
 import 'package:eqmonitor/common/component/map/model/map_config.dart';
 import 'package:eqmonitor/common/component/map/model/map_state.dart';
 import 'package:eqmonitor/common/component/map/model/projected_feature_layer.dart';
+import 'package:eqmonitor/common/component/map/utils/web_mercator_projection.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_config.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_shrinker_viewmodel.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
-import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart';
 import 'package:eqmonitor/common/provider/topology_map/provider/topology_maps.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -52,13 +54,13 @@ class BaseMapWidget extends HookConsumerWidget {
     final map = ref.watch(mapDataProvider);
     final mapData = map.valueOrNull;
     if (mapData == null || mapData.maps == null) {
-      print('mapData is null');
-      return Container();
+      return const Center(
+        child: CircularProgressIndicator.adaptive(),
+      );
     }
     final projectedFeatureLayer =
         useMemoized<Map<LandLayerType, ProjectedFeatureLayer>?>(
       () {
-        print('useMemoized');
         return mapData.maps!.map((key, value) {
           final projected = ProjectedFeatureLayer.fromFeatureLayer(
             layer: value,
@@ -152,8 +154,8 @@ class _BaseMapPainter extends CustomPainter {
             ..color = colorScheme.japanLandColor
             ..isAntiAlias = true,
         );
-      } catch (e) {
-        print(e);
+      } on Exception catch (e) {
+        log(e.toString());
       }
     }
   }
@@ -194,8 +196,8 @@ class _BaseMapPainter extends CustomPainter {
             ..strokeWidth = 1
             ..isAntiAlias = true,
         );
-      } catch (e) {
-        print(e);
+      } on Exception catch (e) {
+        log(e.toString());
       }
     }
   }
@@ -232,8 +234,8 @@ class _BaseMapPainter extends CustomPainter {
             ..color = colorScheme.worldLandColor
             ..isAntiAlias = true,
         );
-      } catch (e) {
-        print(e);
+      } on Exception catch (e) {
+        log(e.toString());
       }
     }
   }
@@ -270,8 +272,8 @@ class _BaseMapPainter extends CustomPainter {
             ..color = colorScheme.worldLandColor
             ..isAntiAlias = true,
         );
-      } catch (e) {
-        print(e);
+      } on Exception catch (e) {
+        log(e.toString());
       }
     }
   }
@@ -312,8 +314,8 @@ class _BaseMapPainter extends CustomPainter {
             ..strokeWidth = 1
             ..isAntiAlias = true,
         );
-      } catch (e) {
-        print(e);
+      } on Exception catch (e) {
+        log(e.toString());
       }
     }
   }
