@@ -1,4 +1,5 @@
-import 'package:eqmonitor/common/component/map/map.dart';
+import 'package:eqmonitor/common/component/map/base_map.dart';
+import 'package:eqmonitor/common/component/map/map_touch_handler_widget.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/common/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/common/component/sheet/sheet_floating_action_buttons.dart';
@@ -8,6 +9,7 @@ import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
 import 'package:eqmonitor/feature/home/component/map/eew_hypocenter_widget.dart';
 import 'package:eqmonitor/feature/home/component/map/eew_pswave_arrival_circle.dart';
+import 'package:eqmonitor/feature/home/component/map/kmoni_map_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
@@ -137,7 +139,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
             children: [
               BaseMapWidget(mapKey: mapKey),
               EewPsWaveArrivalCircleWidget(mapKey: mapKey),
-              //KmoniMapWidget(mapKey: mapKey),
+              KmoniMapWidget(mapKey: mapKey),
               EewHypocenterWidget(mapKey: mapKey),
               MapTouchHandlerWidget(mapKey: mapKey),
             ],
