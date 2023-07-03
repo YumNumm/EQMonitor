@@ -53,11 +53,12 @@ class BaseMapWidget extends HookConsumerWidget {
     }
     final colorScheme = Theme.of(context).colorScheme;
     final mapConfig = ref.watch(mapConfigStateProvider(ThemeMode.light));
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return CustomPaint(
       painter: _BaseMapPainter(
         state: state,
         onlyBorder: onlyBorder,
-        colorScheme: MapColorScheme.light(),
+        colorScheme: isDark ? MapColorScheme.dark() : MapColorScheme.light(),
         // colorScheme: mapConfig.colorScheme,
         maps: projectedFeatureLayer,
         shrinker: ref.watch(mapShrinkerProvider),
