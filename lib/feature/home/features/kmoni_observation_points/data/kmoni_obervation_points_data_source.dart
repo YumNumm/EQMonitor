@@ -1,4 +1,4 @@
-import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart';
+import 'package:eqmonitor/common/component/map/utils/web_mercator_projection.dart';
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/kmoni_observation_point.dart';
 import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

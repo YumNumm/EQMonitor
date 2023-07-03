@@ -1,6 +1,6 @@
 import 'package:eq_map/eq_map.dart';
-import 'package:eqmonitor/common/feature/map/utils/projection.dart';
-import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart';
+import 'package:eqmonitor/common/component/map/utils/projection.dart';
+import 'package:eqmonitor/common/component/map/utils/web_mercator_projection.dart';
 import 'package:lat_lng/lat_lng.dart';
 
 class ProjectedFeatureLayer {

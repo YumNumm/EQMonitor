@@ -1,4 +1,4 @@
-import 'package:eqmonitor/common/feature/map/utils/web_mercator_projection.dart';
+import 'package:eqmonitor/common/component/map/utils/web_mercator_projection.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:lat_lng/lat_lng.dart';
@@ -44,10 +44,9 @@ class AnalyzedKmoniObservationPoint with _$AnalyzedKmoniObservationPoint {
     // ここから
     double? intensityValue,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-        Color? intensityColor,
+    Color? intensityColor,
     double? pga,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-        Color? pgaColor,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? pgaColor,
   }) = _AnalyzedKmoniObservationPoint;
 }
 
