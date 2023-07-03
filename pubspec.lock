@@ -337,6 +337,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.0+3"
+  eq_map:
+    dependency: "direct main"
+    description:
+      path: "packages/eq_map"
+      relative: true
+    source: path
+    version: "1.0.0"
   eqapi_schema:
     dependency: "direct main"
     description:
@@ -1157,6 +1164,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  simplify:
+    dependency: "direct main"
+    description:
+      name: simplify
+      sha256: "2826e8e785995791cadcd743da88c5fe56bbd71656472cb4c9101a87d7bbd535"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   sky_engine:
     dependency: transitive
     description: flutter
