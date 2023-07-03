@@ -14,12 +14,10 @@ class EewTelegram extends _$EewTelegram {
   @override
   List<EarthquakeHistoryItem> build() {
     ref.listen(earthquakeHistoryViewModelProvider, (previous, next) {
-      print('EEW PROVIDER NEW DATA');
       for (final item in (next.value ?? <EarthquakeHistoryItem>[])
           .where((e) => e.latestEew != null)) {
-        if (item.eventId.toString().contains('203')) {
-        }
         if (_shouldShow(item)) {
+          print('upsert ${item.eventId}');
           upsert(item);
         }
       }
@@ -35,18 +33,26 @@ class EewTelegram extends _$EewTelegram {
       }
     });
 
+    ref.listenSelf((previous, next) {
+      log(next.toString());
+    });
+
     return [];
   }
 
   void upsert(EarthquakeHistoryItem item) {
-    final data = state;
     // EventIdが同じものがあれば、置き換える
-    final index = data.indexWhere((e) => e.eventId == item.eventId);
+    final index = state.indexWhere((e) => e.eventId == item.eventId);
+
     if (index >= 0) {
+      state[index] = item;
+      final data = state;
       data[index] = item;
       state = data;
+      print('update ${item.latestEewTelegram?.serialNo}');
+      return;
     } else {
-      state = [...data, item];
+      state = [item, ...state];
     }
   }
 
@@ -60,8 +66,11 @@ class EewTelegram extends _$EewTelegram {
     }
     if (eew is TelegramVxse45Body) {
       log('eew is TelegramVxse45Body');
-
       final time = eew.originTime ?? eew.arrivalTime;
+      if (!item.eventId.toString().startsWith('2023')) {
+        return true;
+      }
+
       return DateTime.now().difference(time).inSeconds <=
           switch (eew.magnitude) {
             null => 210,
@@ -85,4 +94,11 @@ class EewTelegram extends _$EewTelegram {
     log('eew is unknown');
     return true;
   }
+
+  @override
+  bool updateShouldNotify(
+    List<EarthquakeHistoryItem> previous,
+    List<EarthquakeHistoryItem> next,
+  ) =>
+      true;
 }
