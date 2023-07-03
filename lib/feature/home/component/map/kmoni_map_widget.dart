@@ -33,6 +33,7 @@ class KmoniMapWidget extends HookConsumerWidget {
         colorModel: ref.watch(intensityColorProvider),
       ),
       size: Size.infinite,
+      willChange: true,
     );
   }
 }
