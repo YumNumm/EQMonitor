@@ -44,33 +44,30 @@ class EewHypocenterWidget extends HookConsumerWidget {
 
     final state = ref.watch(MapViewModelProvider(mapKey));
     final eewTelegrams = ref.watch(eewTelegramProvider);
-    final hypocenters = useMemoized(
-      () => eewTelegrams
-          .where(
-            (e) => e.latestEew != null && e.latestEew is TelegramVxse45Body,
-          )
-          .map((e) => e.latestEew! as TelegramVxse45Body)
-          .map(
-            (e) => _HypoModel(
-              type: (e.isPlum || e.isIpfOnePoint || e.isLevelEew)
-                  ? _HypocenterType.lowPrecise
-                  : _HypocenterType.normal,
-              globalPoint: e.hypocenter?.coordinate != null
-                  ? WebMercatorProjection().project(e.hypocenter!.coordinate!)
-                  : null,
-              magnitude: e.magnitude,
-              depth: e.depth,
-            ),
-          )
-          .toList(),
-      [eewTelegrams],
-    );
+
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final hypoWidget = CustomPaint(
       painter: _HypocenterPainter(
         state: state,
-        hypocenters: hypocenters,
+        hypocenters: eewTelegrams
+            .where(
+              (e) => e.latestEew != null && e.latestEew is TelegramVxse45Body,
+            )
+            .map((e) => e.latestEew! as TelegramVxse45Body)
+            .map(
+              (e) => _HypoModel(
+                type: (e.isPlum || e.isIpfOnePoint || e.isLevelEew)
+                    ? _HypocenterType.lowPrecise
+                    : _HypocenterType.normal,
+                globalPoint: e.hypocenter?.coordinate != null
+                    ? WebMercatorProjection().project(e.hypocenter!.coordinate!)
+                    : null,
+                magnitude: e.magnitude,
+                depth: e.depth,
+              ),
+            )
+            .toList(),
         textColor: isDark ? Colors.white : Colors.black,
       ),
       size: Size.infinite,
@@ -246,8 +243,7 @@ class _HypocenterPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _HypocenterPainter oldDelegate) =>
-      oldDelegate.hypocenters != hypocenters || oldDelegate.state != state;
+  bool shouldRepaint(covariant _HypocenterPainter oldDelegate) => true;
 }
 
 enum _HypocenterType {
