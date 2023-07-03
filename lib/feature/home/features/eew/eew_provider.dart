@@ -26,7 +26,8 @@ class EewTelegram extends _$EewTelegram {
     Timer.periodic(const Duration(seconds: 2), (_) {
       final result = state.where(_shouldShow).toList();
       if (result.length != state.length) {
-        log('UPDATE');
+        log('UPDATE EEW LIST(${result.length})');
+
         state = result;
       }
     });
@@ -56,14 +57,14 @@ class EewTelegram extends _$EewTelegram {
     }
     if (eew is TelegramVxse45Body) {
       log('eew is TelegramVxse45Body');
-      if (item.eventId == 20110311144640) {
-        return true;
-      }
+
       final time = eew.originTime ?? eew.arrivalTime;
-      if ((eew.magnitude ?? 0) >= 6.0) {
-        return DateTime.now().difference(time).inSeconds <= 300;
-      }
-      return DateTime.now().difference(time).inSeconds <= 180;
+      return DateTime.now().difference(time).inSeconds <=
+          switch (eew.magnitude) {
+            null => 210,
+            >= 6.0 => 300,
+            _ => 210,
+          };
     }
     if (eew is TelegramVxse45Cancel) {
       log('eew is TelegramVxse45Cancel');
@@ -76,6 +77,7 @@ class EewTelegram extends _$EewTelegram {
       if (latest == null) {
         return false;
       }
+      return DateTime.now().difference(latest.pressTime).inSeconds <= 210;
     }
     log('eew is unknown');
     return true;
