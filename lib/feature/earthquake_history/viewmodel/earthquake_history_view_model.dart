@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:collection/collection.dart';
 import 'package:eqapi_schema/model/components/comments.dart';
 import 'package:eqapi_schema/model/components/earthquake.dart';
@@ -248,7 +246,7 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
           .where(
             (e) =>
                 e.type == TelegramType.vxse45 &&
-                (_includeTestTelegrams || e.status == TelegramStatus.normal),
+                (kDebugMode || e.status == TelegramStatus.normal),
           )
           .sorted((a, b) => (a.serialNo ?? 0).compareTo(b.serialNo ?? 0))
           .lastOrNull;
@@ -274,8 +272,8 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
     if (index != -1) {
       data[index] = data[index].copyWith(
         telegrams: [
-          ...data[index].telegrams,
           telegram,
+          ...data[index].telegrams,
         ],
       );
       data[index] = _toEarthquakeHistoryItem({

@@ -1,4 +1,3 @@
-import 'package:eqapi_schema/model/telegram_v3.dart';
 import 'package:eqmonitor/common/component/map/base_map.dart';
 import 'package:eqmonitor/common/component/map/map_touch_handler_widget.dart';
 import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
@@ -30,6 +29,7 @@ class EarthquakeHistoryMap extends HookConsumerWidget {
         WidgetsBinding.instance.endOfFrame.then((_) {
           final renderBox =
               mapKey.currentContext!.findRenderObject()! as RenderBox;
+          // Widgetのサイズを登録
           ref.read(mapViewModelProvider(mapKey).notifier)
             ..registerRenderBox(
               renderBox,
@@ -39,7 +39,11 @@ class EarthquakeHistoryMap extends HookConsumerWidget {
               scaleController: scaleController,
               globalPointAndZoomLevelController:
                   globalPointAndZoomLevelController,
-            );
+            )
+            ..fitBounds(
+              _getShowBounds(item),
+            )
+            ..applyBounds();
           //  ..fitBounds(
           //  _getShowBounds(item, ref.read(mapDataProvider).data!),
           //);
@@ -51,14 +55,6 @@ class EarthquakeHistoryMap extends HookConsumerWidget {
     return ClipRRect(
       child: Stack(
         children: [
-          // background
-          Container(
-            color: Color.lerp(
-              Theme.of(context).colorScheme.background,
-              Colors.blue,
-              brightness == Brightness.light ? 0.3 : 0.15,
-            ),
-          ),
           ClipRRect(
             key: mapKey,
             child: Stack(
@@ -94,7 +90,7 @@ List<LatLng> _getShowBounds(
 ) {
   if (item.earthquake.intensity != null) {
     //final map = mapData.jmaMap[MapDataType.areaForecastLoadlE]!;
-    final result = <LatLng>[];
+    //final result = <LatLng>[];
     //if (item.earthquake.intensity!.maxInt > JmaIntensity.four) {
     //  for (final region in item.earthquake.intensity!.regions
     //      .where((element) => element.maxInt! > JmaIntensity.four)) {
@@ -107,7 +103,7 @@ List<LatLng> _getShowBounds(
     //  final e = map.firstWhere((e) => e.properties.code == region.code);
     //  result.addAll([e.boundary.northEast, e.boundary.southWest]);
     //}
-    return result;
+    //return result;
   }
   if (item.earthquake.earthquake != null &&
       item.earthquake.earthquake!.hypocenter.coordinate != null) {
