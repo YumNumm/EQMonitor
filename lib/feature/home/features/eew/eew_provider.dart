@@ -17,8 +17,7 @@ class EewTelegram extends _$EewTelegram {
       print('EEW PROVIDER NEW DATA');
       for (final item in (next.value ?? <EarthquakeHistoryItem>[])
           .where((e) => e.latestEew != null)) {
-        if (item.eventId.toString().contains('203')) {
-        }
+        if (item.eventId.toString().contains('203')) {}
         if (_shouldShow(item)) {
           upsert(item);
         }
