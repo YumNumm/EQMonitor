@@ -10,8 +10,7 @@ extension SafeListAccess on List {
   }
 }
 
-
-extension SafeMapAccess on Map{
+extension SafeMapAccess on Map {
   /// 指定したキーの要素を取得する
   /// キーが存在しない場合はnullを返す
   T? getOrNull<T>(dynamic key) {
