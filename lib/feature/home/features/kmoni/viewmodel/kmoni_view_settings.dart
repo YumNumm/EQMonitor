@@ -19,7 +19,10 @@ class KmoniSettingsState with _$KmoniSettingsState {
     @Default(false) bool isUpper0Only,
 
     /// 震度アイコンを表示するかどうか
-    @Default(true) bool isShowIntensityIcon,
+    @Default(false) bool isShowIntensityIcon,
+
+    /// 強震モニタを使用するかどうか
+    @Default(false) bool useKmoni,
   }) = _KmoniSettingsState;
 
   factory KmoniSettingsState.fromJson(Map<String, dynamic> json) =>
@@ -40,7 +43,7 @@ class KmoniSettings extends _$KmoniSettings {
     return const KmoniSettingsState();
   }
 
-  static const _prefsKey = 'kmoni_settings';
+  static const _prefsKey = '_kmoni_settings';
   late final SharedPreferences _prefs;
 
   KmoniSettingsState? _loadFromPrefs() {
@@ -74,6 +77,12 @@ class KmoniSettings extends _$KmoniSettings {
   void toggleIsShowIntensityIcon() {
     state = state.copyWith(
       isShowIntensityIcon: !state.isShowIntensityIcon,
+    );
+  }
+
+  void toggleUseKmoni() {
+    state = state.copyWith(
+      useKmoni: !state.useKmoni,
     );
   }
 }

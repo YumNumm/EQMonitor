@@ -503,7 +503,6 @@ class MapViewModel extends _$MapViewModel {
     _scaleController.reset();
     _globalPointAndZoomLevelController.reset();
 
-    final start = state;
     final startCenterGlobalPoint =
         state.offsetToGlobalPoint(_renderBox!.size.center(Offset.zero));
     final startZoomLevel = state.zoomLevel;
