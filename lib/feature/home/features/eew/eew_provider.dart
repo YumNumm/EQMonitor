@@ -106,10 +106,7 @@ class EewTelegram extends _$EewTelegram {
 @Riverpod(keepAlive: true)
 class EewEstimatedIntensity extends _$EewEstimatedIntensity {
   @override
- List<(int code, JmaForecastIntensity intensity)>  build() {
-  
+  List<(int code, JmaForecastIntensity intensity)> build() {
     return [];
   }
-
-
 }
