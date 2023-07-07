@@ -4,6 +4,7 @@ import 'package:eqmonitor/feature/config/color_scheme/color_scheme_config_page.d
 import 'package:eqmonitor/feature/debug/debug_home_view.dart';
 import 'package:eqmonitor/feature/earthquake_history/page/earthquake_history.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/screen/earthquake_history_details.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/page/kmoni_settings_page.dart';
 import 'package:eqmonitor/feature/home/view/home_view.dart';
 import 'package:eqmonitor/feature/setup/screen/setup_screen.dart';
 import 'package:eqmonitor/feature/talker/talker_page.dart';
@@ -87,4 +88,13 @@ class TalkerRoute extends GoRouteData {
   const TalkerRoute();
   @override
   Widget build(BuildContext context, GoRouterState state) => const TalkerPage();
+}
+
+@TypedGoRoute<KmoniRoute>(path: '/kmoni_config')
+class KmoniRoute extends GoRouteData {
+  const KmoniRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const KmoniSettingsPage();
 }

@@ -68,7 +68,7 @@ class HomeViewModel {
     }
     final max = filtered.first.intensityValue!;
     // しきい値
-    final threshold = max - 3;
+    final threshold = max - 2;
     final filteredPoints =
         filtered.where((e) => e.intensityValue! >= threshold);
     if (filteredPoints.isEmpty) {

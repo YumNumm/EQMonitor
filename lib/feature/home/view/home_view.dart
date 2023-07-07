@@ -6,7 +6,6 @@ import 'package:eqmonitor/common/component/sheet/sheet_floating_action_buttons.d
 import 'package:eqmonitor/common/provider/log/talker.dart';
 import 'package:eqmonitor/common/router/router.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
-import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
 import 'package:eqmonitor/feature/home/component/map/eew_hypocenter_widget.dart';
 import 'package:eqmonitor/feature/home/component/map/eew_pswave_arrival_circle.dart';
 import 'package:eqmonitor/feature/home/component/map/kmoni_map_widget.dart';
@@ -193,12 +192,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
             ListTile(
               title: const Text('強震モニタ設定'),
               leading: const Icon(Icons.settings),
-              onTap: () {
-                showDialog<void>(
-                  context: context,
-                  builder: (context) => const KmoniSettingsDialogWidget(),
-                );
-              },
+              onTap: () => context.push(const KmoniRoute().location),
             ),
             ListTile(
               title: const Text('震度配色設定'),
