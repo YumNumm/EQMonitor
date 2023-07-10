@@ -112,7 +112,7 @@ class _BaseMapPainter extends CustomPainter {
         .projectedPolygonFeatures) {
       // bbox check
       //if (bbox.containsBbox(e.boundaryBox!)) {
-     //   continue;
+      //   continue;
       //}
 
       /*
