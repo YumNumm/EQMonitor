@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math' as math;
 
 import 'package:eq_map/eq_map.dart';
 import 'package:eqmonitor/common/component/map/model/map_config.dart';
@@ -54,6 +55,7 @@ class BaseMapWidget extends HookConsumerWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final mapConfig = ref.watch(mapConfigStateProvider(ThemeMode.light));
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return CustomPaint(
       painter: _BaseMapPainter(
         state: state,
@@ -92,7 +94,7 @@ class _BaseMapPainter extends CustomPainter {
     drawWorldPolygon(canvas, size, colorScheme);
     drawWorldPolyline(canvas, size, colorScheme);
     if (state.zoomLevel > 400) {
-      drawJapanDetailedPolyline(canvas, size, colorScheme);
+      //  drawJapanDetailedPolyline(canvas, size, colorScheme);
     }
 
     return;
@@ -103,17 +105,27 @@ class _BaseMapPainter extends CustomPainter {
     Size size,
     MapColorScheme colorScheme,
   ) {
+    // bbox
+    final bbox = state.getLatLngBoundary(size);
+
     for (final e in maps[LandLayerType.earthquakeInformationSubdivisionArea]!
         .projectedPolygonFeatures) {
-      final globalPoints = e.points;
+      // bbox check
+      //if (bbox.containsBbox(e.boundaryBox!)) {
+     //   continue;
+      //}
 
-      // apply DP
+      /*
+      final path = shrinker.applyShrinkerToPolygonFeature(
+        zoom: state.zoomLevel.toInt(),
+        feature: e,
+      );*/
+      // shrink
       final offsets = state.globalPointsToOffsetsIntercepted(
-        points: globalPoints,
-        id: 'LandLayerType.earthquakeInformationSubdivisionArea-polygon-${e.hashCode}',
+        points: e.points,
+        id: 'LandLayerType.earthquakeInformationSubdivisionArea-polyline-${e.hashCode}',
         intercept: shrinker.applyShrinker,
       );
-
       if (offsets == null) {
         continue;
       }
@@ -122,9 +134,16 @@ class _BaseMapPainter extends CustomPainter {
       )) {
         continue;
       }
+
+      final path = Path()
+        ..addPolygon(
+          offsets,
+          true,
+        );
+
       try {
         canvas.drawPath(
-          Path()..addPolygon(offsets, true),
+          path,
           Paint()
             ..style = PaintingStyle.fill
             ..color = colorScheme.japanLandColor
@@ -153,11 +172,6 @@ class _BaseMapPainter extends CustomPainter {
       );
 
       if (offsets == null) {
-        continue;
-      }
-      if (!offsets.any(
-        (e) => e.dx > 0 && e.dy > 0 && e.dx < size.width && e.dy < size.height,
-      )) {
         continue;
       }
       try {

@@ -63,7 +63,7 @@ extension MapStateProjection on MapState {
   }) {
     final globalPoints = intercept(
       points: points,
-      zoomLevel: sqrt(zoomLevel).toInt(),
+      zoomLevel: zoomLevel.truncate(),
       id: id,
     );
     return globalPoints
@@ -129,6 +129,17 @@ extension MapStateProjection on MapState {
     return copyWith(
       offset: Offset(point.x, point.y),
     ).move(Offset(size.width / 2, size.height / 2) / zoomLevel);
+  }
+
+  LatLngBoundary getLatLngBoundary(Size size) {
+    final topLeft = offsetToGlobalPoint(Offset.zero);
+    final bottomRight = offsetToGlobalPoint(size.bottomRight(Offset.zero));
+    final topLeftLatLng = WebMercatorProjection().unproject(topLeft);
+    final bottomRightLatLng = WebMercatorProjection().unproject(bottomRight);
+    return LatLngBoundary.fromTwo(
+      topLeftLatLng,
+      bottomRightLatLng,
+    );
   }
 
   /// 中心座標を維持して拡大縮小する
