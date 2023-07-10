@@ -586,10 +586,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_foreground_task
-      sha256: "5eb81adfd98c77f4d4803ae80d7e0573fd35f706fce6aaa7376656a15ba2d1e0"
+      sha256: "9d71e28c0f9657b7366d5c769a25b4c6efe1bb4080ee4c74764295e419036000"
       url: "https://pub.dev"
     source: hosted
-    version: "3.10.0"
+    version: "6.0.0+1"
   flutter_gen_core:
     dependency: transitive
     description:
@@ -1313,10 +1313,10 @@ packages:
     dependency: "direct main"
     description:
       name: shared_preferences
-      sha256: "76917b7d4b9526b2ba416808a7eb9fb2863c1a09cf63ec85f1453da240fa818a"
+      sha256: "78528fd87d0d08ffd3e69551173c026e8eacc7b7079c82eb6a77413957b7e394"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.15"
+    version: "2.0.20"
   shared_preferences_android:
     dependency: "direct main"
     description:
@@ -1325,6 +1325,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.14"
+  shared_preferences_foundation:
+    dependency: transitive
+    description:
+      name: shared_preferences_foundation
+      sha256: "1e755f8583229f185cfca61b1d80fb2344c9d660e1c69ede5450d8f478fa5310"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.5"
   shared_preferences_ios:
     dependency: "direct main"
     description:
@@ -1341,14 +1349,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
-  shared_preferences_macos:
-    dependency: transitive
-    description:
-      name: shared_preferences_macos
-      sha256: fbb94bf296576f49be37a1496d5951796211a8db0aa22cc0d68c46440dad808c
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.4"
   shared_preferences_platform_interface:
     dependency: transitive
     description:

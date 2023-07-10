@@ -31,7 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_colorpicker: ^1.0.3
-  flutter_foreground_task: ^3.10.0
+  flutter_foreground_task: ^6.0.0+1
   flutter_hooks: ^0.18.5+1
   flutter_localizations:
     sdk: flutter
