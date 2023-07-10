@@ -121,7 +121,6 @@ class _HypocenterPainter extends CustomPainter {
       final travel = travelTimeTables.getValue(
         eew.depth!,
         DateTime.now()
-                .subtract(const Duration(hours: 48681, minutes: 5))
                 .difference(
                   eew.originTime!.toLocal(),
                 )
