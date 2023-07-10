@@ -92,7 +92,6 @@ class _EewPsWaveArrivalCircleWidgetState
   }
 }
 
-
 class _HypocenterPainter extends CustomPainter {
   _HypocenterPainter({
     required this.state,
