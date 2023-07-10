@@ -1,7 +1,7 @@
 import 'package:lat_lng/src/lat_lng.dart';
 
 class LatLngBoundary {
-  LatLngBoundary(this.northEast, this.southWest);
+  LatLngBoundary._(this.northEast, this.southWest);
 
   final LatLng northEast;
   final LatLng southWest;
@@ -15,7 +15,7 @@ class LatLngBoundary {
       one.lat < two.lat ? one.lat : two.lat,
       one.lon < two.lon ? one.lon : two.lon,
     );
-    return LatLngBoundary(northEast, southWest);
+    return LatLngBoundary._(northEast, southWest);
   }
 
   factory LatLngBoundary.merge(List<LatLngBoundary> boundaries) {
@@ -35,26 +35,35 @@ class LatLngBoundary {
           .map((e) => e.southWest.lon)
           .reduce((value, element) => value < element ? value : element),
     );
-    return LatLngBoundary(northEast, southWest);
+    return LatLngBoundary._(northEast, southWest);
   }
 
   factory LatLngBoundary.fromList(List<LatLng> points) {
-    final northEast = LatLng(
-      points
-          .map((e) => e.lat)
-          .reduce((value, element) => value > element ? value : element),
-      points
-          .map((e) => e.lon)
-          .reduce((value, element) => value > element ? value : element),
-    );
-    final southWest = LatLng(
-      points
-          .map((e) => e.lat)
-          .reduce((value, element) => value < element ? value : element),
-      points
-          .map((e) => e.lon)
-          .reduce((value, element) => value < element ? value : element),
-    );
-    return LatLngBoundary(northEast, southWest);
+    assert(points.isNotEmpty && points.length > 1);
+    var northEastLat = double.negativeInfinity;
+    var northEastLon = double.negativeInfinity;
+    var southWestLat = double.infinity;
+    var southWestLon = double.infinity;
+    for (final point in points) {
+      northEastLat = northEastLat > point.lat ? northEastLat : point.lat;
+      northEastLon = northEastLon > point.lon ? northEastLon : point.lon;
+      southWestLat = southWestLat < point.lat ? southWestLat : point.lat;
+      southWestLon = southWestLon < point.lon ? southWestLon : point.lon;
+    }
+    final northEast = LatLng(northEastLat, northEastLon);
+    final southWest = LatLng(southWestLat, southWestLon);
+    return LatLngBoundary._(northEast, southWest);
+  }
+
+  bool containsBbox(LatLngBoundary other) {
+    return northEast.lat >= other.northEast.lat &&
+        northEast.lon >= other.northEast.lon &&
+        southWest.lat <= other.southWest.lat &&
+        southWest.lon <= other.southWest.lon;
+  }
+
+  @override
+  String toString() {
+    return 'LatLngBoundary(northEast: $northEast, southWest: $southWest)';
   }
 }

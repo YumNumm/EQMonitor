@@ -10,7 +10,7 @@ import 'package:socket_io_client/socket_io_client.dart';
 
 part 'telegram_socket_io.g.dart';
 
-@Riverpod(keepAlive: true, dependencies: [SocketStatus])
+@Riverpod(keepAlive: true, dependencies: [])
 Socket telegramSocketIo(TelegramSocketIoRef ref) {
   final talker = ref.watch(talkerProvider);
   final url = ref.watch(telegramUrlProvider).wsApiUrl;

@@ -12,7 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kmoni_use_case.g.dart';
 
-@Riverpod(dependencies: [kmoniDataSource], keepAlive: true)
+@Riverpod(keepAlive: true)
 KmoniUseCase kmoniUseCase(KmoniUseCaseRef ref) => KmoniUseCase(
       ref.watch(kmoniDataSourceProvider),
     );
