@@ -8,7 +8,11 @@ on:
 
 
 jobs:
-  release:
+  release-ios:
+    runs-on: macos-latest
+    timeout-minutes: 45
+
+  release-android:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
@@ -88,7 +92,7 @@ jobs:
             flutter build apk \
               --release \
               --obfuscate \
-              --split-debug-info=obfuscate/android 
+              --split-debug-info=obfuscate/android
           else
             flutter build apk \
               --release \
@@ -124,13 +128,6 @@ jobs:
       - name: Upload obfuscate
         run: |
           firebase crashlytics:symbols:upload --app=1:179553945248:android:11ffcfb483c098ad6fabc5 obfuscate/android
-
-      # - uses: codecov/codecov-action@v3
-      #   with:
-      #     token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-      #     fail_ci_if_error: false # optional (default = false)
-      #     verbose: true # optional (default = false)
-      #     file: ~/coverage/lcov.info
 
       #-- Slack通知 --#
       # 成功
