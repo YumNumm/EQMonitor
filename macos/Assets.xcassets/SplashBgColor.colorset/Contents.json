@@ -15,8 +15,8 @@
         }
       ],
       "color" : {
-        "platform" : "osx",
-        "reference" : "linkColor"
+        "platform" : "ios",
+        "reference" : "opaqueSeparatorColor"
       },
       "idiom" : "universal"
     }
