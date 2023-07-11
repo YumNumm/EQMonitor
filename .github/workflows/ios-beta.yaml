@@ -3,7 +3,7 @@ name: iOS CI
 on:
   workflow_dispatch:
   push:
-    branches: [main, develop]
+    branches: [main, release/*]
 
 jobs:
   build:
@@ -15,6 +15,15 @@ jobs:
     steps:
       #リポジトリからソースをダンロード
       - uses: actions/checkout@v2
+
+      - name: Set up ssh
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_ID_ED25519" | base64 -d > ~/.ssh/id_ed25519
+          chmod 700 ~/.ssh/id_ed25519
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/id_ed25519
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 
       - name: Install brew packages
         run: brew bundle

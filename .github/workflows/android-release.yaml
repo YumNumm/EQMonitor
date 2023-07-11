@@ -2,7 +2,7 @@ name: Flutter build Android(r)
 
 on:
   push:
-    branches: [main]
+    branches: [main, release/*]
   workflow_dispatch:
 
 jobs:
@@ -12,6 +12,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Set up ssh
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_ID_ED25519" | base64 -d > ~/.ssh/id_ed25519
+          chmod 700 ~/.ssh/id_ed25519
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/id_ed25519
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 
       - uses: pocket-apps/action-setup-firebase@v2
         with:
