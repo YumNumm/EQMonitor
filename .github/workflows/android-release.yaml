@@ -16,7 +16,7 @@ jobs:
       - name: Set up ssh
         run: |
           mkdir -p ~/.ssh
-          echo "$SSH_ID_ED25519" | base64 -d > ~/.ssh/id_ed25519
+          echo ${{ secrets.SSH_ID_ED25519 }} | base64 -d > ~/.ssh/id_ed25519
           chmod 700 ~/.ssh/id_ed25519
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/id_ed25519
