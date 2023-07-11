@@ -53,6 +53,19 @@ jobs:
           echo '${{ secrets.ENV }}' | base64 -d > .env
           flutter pub run build_runner build -d
 
+      - name: Cache Pods
+        uses: actions/cache@v2
+        with:
+          path: ios/Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Install CocoaPods
+        run: |
+          cd ios
+          pod install
+
       - name: build
         run: |
           echo '${{ secrets.FIREBASE_IOS }}' | base64 -d > ios/GoogleService-Info.plist
@@ -68,6 +81,7 @@ jobs:
           MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
           SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA: true
+          APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_KEY }}
           LANG: ja_JP.UTF-8
 
         run: |
