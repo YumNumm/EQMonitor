@@ -1,54 +1,49 @@
 name: Auto Format
 
-# ref: https://qiita.com/blendthink/items/48e6c4b2c0f016da8c72
-
 on:
-  push:
   pull_request:
 
-env:
-  # フォーマット対象のパス
-  FORMAT_PATHS: "."
-
 jobs:
-  auto-format:
+  format:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      # https://github.com/kuhnroyal/flutter-fvm-config-action
       - name: Fetch flutter config
         uses: kuhnroyal/flutter-fvm-config-action@v1
-
-      # https://github.com/subosito/flutter-action
-      - name: Set up flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: ${{ env.FLUTTER_CHANNEL }}
           cache: true
-          cache-key: ${{ env.FLUTTER_VERSION }}-${{ env.FLUTTER_CHANNEL }}
-
-      - name: Flutter version
-        run: flutter --version
+      - name: Install dependencies
+        run: |
+          flutter pub get
 
       - name: Format
-        run: dart format $FORMAT_PATHS
+        run: |
+          files=$(find lib test -name "*.dart" -not \( -name "*.*freezed.dart" -o -name "*.*g.dart" -o -name "*.gen.dart" \))
+          for file in $files; do
+            # limit jobs to 5
+            if [ "$(jobs -r | wc -l)" -ge 5 ]; then
+              wait "$(jobs -r -p | head -1)"
+            fi
+            dart fix --apply "$file" &
+          done
+          wait
+
+          dart format "$files"
 
       # 変更が発生した場合は プルリクエストを作成
       - name: Create pull request
         uses: peter-evans/create-pull-request@v4
         with:
           delete-branch: true
-          # base branch name (GITHUB_REF_NAME)
           commit-message: "Auto format"
           committer: "GitHub Actions <noreply@github.com>"
+          base: ${{ github.head_ref }}
           branch: "auto-format/${{ github.sha }}"
           title: "Auto format - ref: ${{ github.ref_name }}"
           body: "Auto format by GitHub Actions on ${{ github.sha }}\nby: ${{github.actor}}"
-
-

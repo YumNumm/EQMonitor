@@ -2,7 +2,7 @@ name: Flutter build Android(r)
 
 on:
   push:
-    branches: [main, android, feature/v2]
+    branches: [main]
   workflow_dispatch:
 
 jobs:

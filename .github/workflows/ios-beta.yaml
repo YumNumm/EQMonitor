@@ -1,0 +1,62 @@
+name: iOS CI
+#発火条件
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, develop]
+
+jobs:
+  build:
+    #ビルド環境
+    runs-on: macos-latest
+    # タイムアウト時間を設定
+    timeout-minutes: 45
+
+    steps:
+      #リポジトリからソースをダンロード
+      - uses: actions/checkout@v2
+
+      - name: Install brew packages
+        run: brew bundle
+
+      - name: Restore direnv to use fastlane
+        run: |
+          echo 'eval "$(direnv hook bash)"' >> ~/.bash_profile
+          source ~/.bash_profile
+          echo ${{ secrets.ENVRC }} | base64 -d > .envrc
+          direnv allow .
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Fetch flutter config
+        uses: kuhnroyal/flutter-fvm-config-action@v1
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
+
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Flutter dependencies install
+        run: flutter pub get
+
+      - name: Generate codes with build_runner
+        run: |
+          echo '${{ secrets.ENV }}' | base64 -d > .env
+          flutter pub run build_runner build -d
+
+      - name: build
+        run: flutter build ios --release --no-codesign --obfuscate --split-debug-info=obfuscate/android
+
+      - name: fastlane
+        run: cd ios && bundle exec fastlane beta
