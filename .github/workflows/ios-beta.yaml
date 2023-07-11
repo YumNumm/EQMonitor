@@ -25,16 +25,6 @@ jobs:
           echo "Host github.com \n\tIdentityFile ~/.ssh/id_ed25519\n\tUser git\n\tIdentityiesOnly yes" >> ~/.ssh/config
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 
-      - name: Install brew packages
-        run: brew bundle
-
-      - name: Restore direnv to use fastlane
-        run: |
-          echo 'eval "$(direnv hook bash)"' >> ~/.bash_profile
-          source ~/.bash_profile
-          echo ${{ secrets.ENVRC }} | base64 -d > .envrc
-          direnv allow .
-
       - uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: latest-stable
@@ -52,7 +42,6 @@ jobs:
           channel: ${{ env.FLUTTER_CHANNEL }}
           cache: true
 
-
       - name: Flutter version
         run: flutter --version
 
@@ -65,7 +54,15 @@ jobs:
           flutter pub run build_runner build -d
 
       - name: build
-        run: flutter build ios --release --no-codesign --obfuscate --split-debug-info=obfuscate/android
+        run: flutter build ios --release --no-codesign 
 
       - name: fastlane
+        env:
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          MATCH_USERNAME: ${{ secrets.MATCH_USERNAME }}
+          PRODUCE_USERNAME: ${{ secrets.PRODUCE_USERNAME }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
         run: cd ios && bundle exec fastlane beta
