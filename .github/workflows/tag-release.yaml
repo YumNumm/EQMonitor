@@ -29,7 +29,7 @@ jobs:
           echo "$SSH_ID_ED25519" | base64 -d > ~/.ssh/id_ed25519
           chmod 700 ~/.ssh/id_ed25519
           eval $(ssh-agent -s)
-          ssh-add ~/.ssh/id_ed25519
+          echo "Host github.com \n\tIdentityFile ~/.ssh/id_ed25519\n\tUser git\n\tIdentityiesOnly yes" >> ~/.ssh/config
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 
       - uses: pocket-apps/action-setup-firebase@v2
