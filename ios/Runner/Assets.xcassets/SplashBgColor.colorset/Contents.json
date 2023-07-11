@@ -1,0 +1,28 @@
+{
+  "colors" : [
+    {
+      "color" : {
+        "platform" : "osx",
+        "reference" : "selectedControlColor"
+      },
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "color" : {
+        "platform" : "ios",
+        "reference" : "opaqueSeparatorColor"
+      },
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
