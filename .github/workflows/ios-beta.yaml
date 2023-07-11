@@ -54,7 +54,10 @@ jobs:
           flutter pub run build_runner build -d
 
       - name: build
-        run: flutter build ios --release --no-codesign
+        run: |
+          echo '${{ secrets.FIREBASE_IOS }}' | base64 -d > ios/GoogleService-Info.plist
+          flutter build ios --release --no-codesign
+
 
       - name: fastlane
         env:
@@ -66,3 +69,41 @@ jobs:
           MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
         run: cd ios && bundle exec fastlane beta
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
