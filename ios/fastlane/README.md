@@ -13,17 +13,6 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 # Available Actions
 
-### prepare
-
-```sh
-[bundle exec] fastlane prepare
-```
-
-Prepare the iOS app for dev or build
-
-----
-
-
 ## iOS
 
 ### ios beta
@@ -33,14 +22,6 @@ Prepare the iOS app for dev or build
 ```
 
 Push a new beta build to TestFlight
-
-### ios deploy
-
-```sh
-[bundle exec] fastlane ios deploy
-```
-
-
 
 ----
 
