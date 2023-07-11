@@ -23,7 +23,9 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1038</string>
+	<string>1039</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
@@ -42,8 +44,6 @@
 	</dict>
 	<key>UILaunchStoryboardName</key>
 	<string></string>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
