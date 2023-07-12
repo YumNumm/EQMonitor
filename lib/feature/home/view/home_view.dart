@@ -8,13 +8,14 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
 import 'package:eqmonitor/feature/home/component/map/eew_hypocenter_widget.dart';
 import 'package:eqmonitor/feature/home/component/map/eew_pswave_arrival_circle.dart';
+import 'package:eqmonitor/feature/home/component/map/kmoni_map_widget.dart';
+import 'package:eqmonitor/feature/home/component/sheet/debug_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
-import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
 import 'package:eqmonitor/feature/home/viewmodel/home_viewmodel.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -131,33 +132,23 @@ class _HomeBodyWidget extends HookConsumerWidget {
     );
     return Stack(
       children: [
-        ClipRRect(
-          key: mapKey,
-          child: Stack(
-            children: [
-              BaseMapWidget(mapKey: mapKey),
-              EewPsWaveArrivalCircleWidget(mapKey: mapKey),
-              // KmoniMapWidget(mapKey: mapKey),
-              EewHypocenterWidget(mapKey: mapKey),
-              MapTouchHandlerWidget(mapKey: mapKey),
-            ],
-          ),
-        ),
-        if (kDebugMode)
-          SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        RepaintBoundary(
+          child: ClipRRect(
+            key: mapKey,
+            child: Stack(
               children: [
-                ElevatedButton.icon(
-                  onPressed: () {
-                    ref.read(telegramWsProvider.notifier).requestSample();
-                  },
-                  label: const Text('request Sample Telegram'),
-                  icon: const Icon(Icons.send),
-                ),
+                BaseMapWidget(mapKey: mapKey),
+                EewPsWaveArrivalCircleWidget(mapKey: mapKey),
+                if (ref.watch(
+                  kmoniSettingsProvider.select((value) => value.useKmoni),
+                ))
+                  KmoniMapWidget(mapKey: mapKey),
+                EewHypocenterWidget(mapKey: mapKey),
+                MapTouchHandlerWidget(mapKey: mapKey),
               ],
             ),
           ),
+        ),
         SheetFloatingActionButtons(
           controller: sheetController,
           fab: [
@@ -199,6 +190,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
               onTap: () =>
                   context.push(const ColorSchemeConfigRoute().location),
             ),
+            const DebugWidget(),
           ],
         ),
       ],

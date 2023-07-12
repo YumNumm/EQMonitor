@@ -1,12 +1,11 @@
 import 'dart:developer';
 
 import 'package:eq_map/eq_map.dart';
+import 'package:eqmonitor/core/component/map/data/model/mutable_projected_feature_layer.dart';
 import 'package:eqmonitor/core/component/map/model/map_config.dart';
 import 'package:eqmonitor/core/component/map/model/map_state.dart';
-import 'package:eqmonitor/core/component/map/model/projected_feature_layer.dart';
+import 'package:eqmonitor/core/component/map/model/mutable/projected_feature_layer.dart';
 import 'package:eqmonitor/core/component/map/utils/web_mercator_projection.dart';
-import 'package:eqmonitor/core/component/map/view_model/map_config.dart';
-import 'package:eqmonitor/core/component/map/view_model/map_shrinker_viewmodel.dart';
 import 'package:eqmonitor/core/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/core/provider/topology_map/provider/topology_maps.dart';
 import 'package:flutter/material.dart';
@@ -33,26 +32,26 @@ class BaseMapWidget extends HookConsumerWidget {
         child: CircularProgressIndicator.adaptive(),
       );
     }
-    final projectedFeatureLayer =
-        useMemoized<Map<LandLayerType, ProjectedFeatureLayer>?>(
-      () {
-        return mapData.maps!.map((key, value) {
-          final projected = ProjectedFeatureLayer.fromFeatureLayer(
-            layer: value,
-            projection: WebMercatorProjection(),
-          );
-          return MapEntry(key, projected);
-        });
-      },
+    final zoomCachedProjectedFeatureLayer =
+        useMemoized<Map<LandLayerType, ZoomCachedProjectedFeatureLayer>?>(
+      () => mapData.maps!.map(
+        (key, value) => MapEntry(
+          key,
+          ZoomCachedProjectedFeatureLayer.fromProjectedFeatureLayer(
+            ProjectedFeatureLayer.fromFeatureLayer(
+              layer: value,
+              projection: WebMercatorProjection(),
+            ),
+          ),
+        ),
+      ),
       [mapData],
     );
-    if (projectedFeatureLayer == null) {
+    if (zoomCachedProjectedFeatureLayer == null) {
       return const Center(
         child: CircularProgressIndicator.adaptive(),
       );
     }
-    final colorScheme = Theme.of(context).colorScheme;
-    final mapConfig = ref.watch(mapConfigStateProvider(ThemeMode.light));
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return CustomPaint(
@@ -61,8 +60,7 @@ class BaseMapWidget extends HookConsumerWidget {
         onlyBorder: onlyBorder,
         colorScheme: isDark ? MapColorScheme.dark() : MapColorScheme.light(),
         // colorScheme: mapConfig.colorScheme,
-        maps: projectedFeatureLayer,
-        shrinker: ref.watch(mapShrinkerProvider),
+        maps: zoomCachedProjectedFeatureLayer,
       ),
       size: Size.infinite,
     );
@@ -75,14 +73,12 @@ class _BaseMapPainter extends CustomPainter {
     required this.onlyBorder,
     required this.colorScheme,
     required this.maps,
-    required this.shrinker,
   });
 
   final MapState state;
   final bool onlyBorder;
   final MapColorScheme colorScheme;
-  final Map<LandLayerType, ProjectedFeatureLayer> maps;
-  final MapShrinker shrinker;
+  final Map<LandLayerType, ZoomCachedProjectedFeatureLayer> maps;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -104,35 +100,17 @@ class _BaseMapPainter extends CustomPainter {
     Size size,
     MapColorScheme colorScheme,
   ) {
-    // bbox
     final bbox = state.getLatLngBoundary(size);
 
     for (final e in maps[LandLayerType.earthquakeInformationSubdivisionArea]!
         .projectedPolygonFeatures) {
       // bbox check
-      //if (bbox.containsBbox(e.boundaryBox!)) {
-      //   continue;
-      //}
+      if (!bbox.containsBbox(e.bbox)) {
+        //  continue;
+      }
 
-      /*
-      final path = shrinker.applyShrinkerToPolygonFeature(
-        zoom: state.zoomLevel.toInt(),
-        feature: e,
-      );*/
-      // shrink
-      final offsets = state.globalPointsToOffsetsIntercepted(
-        points: e.points,
-        id: 'LandLayerType.earthquakeInformationSubdivisionArea-polyline-${e.hashCode}',
-        intercept: shrinker.applyShrinker,
-      );
-      if (offsets == null) {
-        continue;
-      }
-      if (!offsets.any(
-        (e) => e.dx > 0 && e.dy > 0 && e.dx < size.width && e.dy < size.height,
-      )) {
-        continue;
-      }
+      final points = e.getPoints(state.zoomLevel.truncate());
+      final offsets = points.map(state.globalPointToOffset).toList();
 
       final path = Path()
         ..addPolygon(
@@ -159,20 +137,18 @@ class _BaseMapPainter extends CustomPainter {
     Size size,
     MapColorScheme colorScheme,
   ) {
+    final bbox = state.getLatLngBoundary(size);
+
     for (final e in maps[LandLayerType.earthquakeInformationSubdivisionArea]!
         .projectedPolylineFeatures) {
-      final globalPoints = e.points;
-
-      // apply DP
-      final offsets = state.globalPointsToOffsetsIntercepted(
-        points: globalPoints,
-        id: 'LandLayerType.earthquakeInformationSubdivisionArea-polyline-${e.hashCode}',
-        intercept: shrinker.applyShrinker,
-      );
-
-      if (offsets == null) {
-        continue;
+      // bbox check
+      if (!bbox.containsBbox(e.bbox)) {
+        //continue;
       }
+
+      final points = e.getPoints(state.zoomLevel.truncate());
+      final offsets = points.map(state.globalPointToOffset).toList();
+
       try {
         canvas.drawPath(
           Path()..addPolygon(offsets, false),
@@ -196,25 +172,18 @@ class _BaseMapPainter extends CustomPainter {
     Size size,
     MapColorScheme colorScheme,
   ) {
+    final bbox = state.getLatLngBoundary(size);
+
     for (final e in maps[LandLayerType.municipalityEarthquakeTsunamiArea]!
         .projectedPolylineFeatures) {
-      final globalPoints = e.points;
-
-      // apply DP
-      final offsets = state.globalPointsToOffsetsIntercepted(
-        points: globalPoints,
-        id: 'LandLayerType.municipalityEarthquakeTsunamiArea-polyline-${e.hashCode}',
-        intercept: shrinker.applyShrinker,
-      );
-
-      if (offsets == null) {
-        continue;
+      // bbox check
+      if (!bbox.containsBbox(e.bbox)) {
+        //  continue;
       }
-      if (!offsets.any(
-        (e) => e.dx > 0 && e.dy > 0 && e.dx < size.width && e.dy < size.height,
-      )) {
-        continue;
-      }
+
+      final points = e.getPoints(state.zoomLevel.truncate());
+      final offsets = points.map(state.globalPointToOffset).toList();
+
       try {
         canvas.drawPath(
           Path()..addPolygon(offsets, false),
@@ -234,25 +203,17 @@ class _BaseMapPainter extends CustomPainter {
     Size size,
     MapColorScheme colorScheme,
   ) {
+    final bbox = state.getLatLngBoundary(size);
     for (final e
         in maps[LandLayerType.worldWithoutJapan]!.projectedPolygonFeatures) {
-      final globalPoints = e.points;
-
-      // apply DP
-      final offsets = state.globalPointsToOffsetsIntercepted(
-        points: globalPoints,
-        id: 'LandLayerType.worldWithoutJapan-polygon-${e.hashCode}',
-        intercept: shrinker.applyShrinker,
-      );
-
-      if (offsets == null) {
-        continue;
+      // bbox check
+      if (!bbox.containsBbox(e.bbox)) {
+        //continue;
       }
-      if (!offsets.any(
-        (e) => e.dx > 0 && e.dy > 0 && e.dx < size.width && e.dy < size.height,
-      )) {
-        continue;
-      }
+
+      final points = e.getPoints(state.zoomLevel.truncate());
+      final offsets = points.map(state.globalPointToOffset).toList();
+
       try {
         canvas.drawPath(
           Path()..addPolygon(offsets, true),
@@ -272,16 +233,16 @@ class _BaseMapPainter extends CustomPainter {
     Size size,
     MapColorScheme colorScheme,
   ) {
+    final bbox = state.getLatLngBoundary(size);
     for (final e
         in maps[LandLayerType.worldWithoutJapan]!.projectedPolylineFeatures) {
-      final globalPoints = e.points;
+      // bbox check
+      if (!bbox.containsBbox(e.bbox)) {
+        // continue;
+      }
 
-      // apply DP
-      final offsets = state.globalPointsToOffsetsIntercepted(
-        points: globalPoints,
-        id: 'LandLayerType.worldWithoutJapan-polyline-${e.hashCode}',
-        intercept: shrinker.applyShrinker,
-      );
+      final points = e.getPoints(state.zoomLevel.truncate());
+      final offsets = points.map(state.globalPointToOffset).toList();
 
       if (offsets == null) {
         continue;
@@ -318,6 +279,5 @@ class _BaseMapPainter extends CustomPainter {
       oldDelegate.state != state ||
       oldDelegate.colorScheme != colorScheme ||
       oldDelegate.onlyBorder != onlyBorder ||
-      oldDelegate.maps != maps ||
-      oldDelegate.shrinker != shrinker;
+      oldDelegate.maps != maps;
 }
