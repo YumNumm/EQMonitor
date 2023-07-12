@@ -7,12 +7,12 @@ import 'package:topo_map/topo_map.dart';
 class PolygonFeature {
   PolygonFeature._({
     required this.code,
-    required this.boundaryBox,
+    required this.bbox,
     required this.points,
   });
 
   final int? code;
-  final LatLngBoundary? boundaryBox;
+  final LatLngBoundary? bbox;
   final List<LatLng> points;
 
   factory PolygonFeature.fromTopoMap(
@@ -50,10 +50,10 @@ class PolygonFeature {
         );
       }
     }
-    final boundaryBox = LatLngBoundary.fromList(points);
+    final bbox = LatLngBoundary.fromList(points);
     return PolygonFeature._(
       code: topologyPolygon.areaCode,
-      boundaryBox: boundaryBox,
+      bbox: bbox,
       points: points,
     );
   }

@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:eq_map/eq_map.dart';
 import 'package:eqmonitor/core/component/map/model/map_config.dart';
 import 'package:eqmonitor/core/component/map/model/map_state.dart';
-import 'package:eqmonitor/core/component/map/model/projected_feature_layer.dart';
+import 'package:eqmonitor/core/component/map/model/mutable/projected_feature_layer.dart';
 import 'package:eqmonitor/core/component/map/utils/web_mercator_projection.dart';
 import 'package:eqmonitor/core/component/map/view_model/map_config.dart';
 import 'package:eqmonitor/core/component/map/view_model/map_shrinker_viewmodel.dart';
@@ -110,7 +110,7 @@ class _BaseMapPainter extends CustomPainter {
     for (final e in maps[LandLayerType.earthquakeInformationSubdivisionArea]!
         .projectedPolygonFeatures) {
       // bbox check
-      //if (bbox.containsBbox(e.boundaryBox!)) {
+      //if (bbox.containsBbox(e.bbox!)) {
       //   continue;
       //}
 
