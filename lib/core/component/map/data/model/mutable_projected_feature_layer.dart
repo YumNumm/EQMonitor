@@ -1,7 +1,7 @@
 import 'package:eq_map/eq_map.dart';
 import 'package:eqmonitor/core/component/map/model/mutable/projected_feature_layer.dart';
 import 'package:eqmonitor/core/component/map/utils/web_mercator_projection.dart';
-import 'package:eqmonitor/core/component/map/view_model/map_shrinker_viewmodel.dart';
+import 'package:eqmonitor/core/component/map/utils/map_shrinker.dart';
 import 'package:lat_lng/lat_lng.dart';
 
 class ZoomCachedProjectedFeatureLayer {
@@ -58,13 +58,12 @@ class ZoomCachedProjectedPolylineFeature {
   final Map<int, List<GlobalPoint>> _cache = {};
 
   /// [zoomLevel]を適用したList<Point>を返す
-  List<GlobalPoint> _applyZoomLevel(int zoomLevel, MapShrinker shrinker) =>
-      _cache[zoomLevel] =
-          MapShrinker.shrink(zoomLevel: zoomLevel, points: points);
+  List<GlobalPoint> _applyZoomLevel(int zoomLevel) => _cache[zoomLevel] =
+      MapShrinker.shrink(zoomLevel: zoomLevel, points: points);
 
   /// キャッシュがある場合はそれを返し、ない場合は[zoomLevel]を適用したList<Point>を返す
-  List<GlobalPoint> getPoints(int zoomLevel, MapShrinker shrinker) =>
-      _cache[zoomLevel] ??= _applyZoomLevel(zoomLevel, shrinker);
+  List<GlobalPoint> getPoints(int zoomLevel) =>
+      _cache[zoomLevel] ??= _applyZoomLevel(zoomLevel);
 
   /// キャッシュをクリアする
   void clearCache() => _cache.clear();
@@ -94,13 +93,12 @@ class ZoomCachedProjectedPolygonFeature {
   final Map<int, List<GlobalPoint>> _cache = {};
 
   /// [zoomLevel]を適用したList<Point>を返す
-  List<GlobalPoint> _applyZoomLevel(int zoomLevel, MapShrinker shrinker) =>
-      _cache[zoomLevel] =
-          MapShrinker.shrink(zoomLevel: zoomLevel, points: points);
+  List<GlobalPoint> _applyZoomLevel(int zoomLevel) => _cache[zoomLevel] =
+      MapShrinker.shrink(zoomLevel: zoomLevel, points: points);
 
   /// キャッシュがある場合はそれを返し、ない場合は[zoomLevel]を適用したList<Point>を返す
-  List<GlobalPoint> getPoints(int zoomLevel, MapShrinker shrinker) =>
-      _cache[zoomLevel] ??= _applyZoomLevel(zoomLevel, shrinker);
+  List<GlobalPoint> getPoints(int zoomLevel) =>
+      _cache[zoomLevel] ??= _applyZoomLevel(zoomLevel);
 
   /// キャッシュをクリアする
   void clearCache() => _cache.clear();
