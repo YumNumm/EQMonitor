@@ -8,10 +8,6 @@ on:
 
 
 jobs:
-  release-ios:
-    runs-on: macos-latest
-    timeout-minutes: 45
-
   release-android:
     runs-on: ubuntu-latest
     strategy:
