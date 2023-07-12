@@ -50,16 +50,18 @@ class BasicModalSheet extends HookWidget {
                 BoxShadow(color: Colors.black12, blurRadius: 12),
               ],
             ),
-            child: Column(
-              children: <Widget>[
-                barWidget,
-                Expanded(
-                  child: ListView(
-                    padding: const EdgeInsets.all(2),
-                    children: children,
+            child: SafeArea(
+              child: Column(
+                children: <Widget>[
+                  barWidget,
+                  Expanded(
+                    child: ListView(
+                      padding: const EdgeInsets.all(2),
+                      children: children,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
