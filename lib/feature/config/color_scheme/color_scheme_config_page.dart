@@ -1,7 +1,7 @@
 import 'package:eqapi_schema/eqapi_schema.dart';
-import 'package:eqmonitor/common/component/intenisty/jma_forecast_intensity_icon.dart';
-import 'package:eqmonitor/common/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/common/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
+import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
+import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

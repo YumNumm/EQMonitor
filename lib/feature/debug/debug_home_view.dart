@@ -1,5 +1,5 @@
-import 'package:eqmonitor/common/fcm/silent_data_handle.dart';
-import 'package:eqmonitor/common/router/router.dart';
+import 'package:eqmonitor/core/fcm/silent_data_handle.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

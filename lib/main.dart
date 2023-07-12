@@ -3,9 +3,9 @@ import 'dart:io';
 
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:eqmonitor/app.dart';
-import 'package:eqmonitor/common/fcm/silent_data_handle.dart';
-import 'package:eqmonitor/common/provider/log/talker.dart';
-import 'package:eqmonitor/common/provider/shared_preferences.dart';
+import 'package:eqmonitor/core/fcm/silent_data_handle.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';

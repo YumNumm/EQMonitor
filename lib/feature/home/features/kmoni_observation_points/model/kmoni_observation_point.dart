@@ -1,4 +1,4 @@
-import 'package:eqmonitor/common/component/map/utils/web_mercator_projection.dart';
+import 'package:eqmonitor/core/component/map/utils/web_mercator_projection.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:lat_lng/lat_lng.dart';

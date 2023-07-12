@@ -1,6 +1,6 @@
-import 'package:eqmonitor/common/component/map/model/map_state.dart';
-import 'package:eqmonitor/common/component/map/utils/web_mercator_projection.dart';
-import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
+import 'package:eqmonitor/core/component/map/model/map_state.dart';
+import 'package:eqmonitor/core/component/map/utils/web_mercator_projection.dart';
+import 'package:eqmonitor/core/component/map/view_model/map_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart';

@@ -1,5 +1,5 @@
 import 'package:eqapi_schema/model/telegram_v3.dart';
-import 'package:eqmonitor/common/provider/log/talker.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/home/features/eew/eew_provider.dart';
 import 'package:eqmonitor/feature/home/features/estimated_intensity/data/estimated_intensity_data_source.dart';

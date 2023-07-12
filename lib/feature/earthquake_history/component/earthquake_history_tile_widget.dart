@@ -1,9 +1,9 @@
 import 'package:eqapi_schema/eqapi_schema.dart';
-import 'package:eqmonitor/common/component/chip/custom_chip.dart';
-import 'package:eqmonitor/common/component/intenisty/intensity_icon_type.dart';
-import 'package:eqmonitor/common/component/intenisty/jma_intensity_icon.dart';
-import 'package:eqmonitor/common/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/common/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/component/chip/custom_chip.dart';
+import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
+import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';

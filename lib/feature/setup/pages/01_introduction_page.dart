@@ -1,4 +1,4 @@
-import 'package:eqmonitor/common/component/button/action_button.dart';
+import 'package:eqmonitor/core/component/button/action_button.dart';
 import 'package:eqmonitor/feature/setup/component/background_image.dart';
 import 'package:flutter/material.dart';
 

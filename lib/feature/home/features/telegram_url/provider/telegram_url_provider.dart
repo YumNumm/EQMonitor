@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:eqmonitor/common/provider/shared_preferences.dart';
+import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/env/env.dart';
 import 'package:eqmonitor/feature/home/features/telegram_url/model/telegram_url_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
