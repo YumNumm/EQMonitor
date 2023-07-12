@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
+import 'package:extensions/extensions.dart';
 import 'package:topo_map/src/enum/land_layer_type.dart';
 import 'package:topo_map/src/model/topology_map.dart';
 import 'package:topojson/topojson.dart';
-import 'package:extensions/extensions.dart';
 
 TopologyMap createMap(TopoJson json, LandLayerType layerType) {
   final base = TopologyMap(
@@ -15,7 +15,6 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
   );
   print("ポリゴンの処理を開始");
   final resultPolygons = <TopologyPolygon>[];
-  final resultArcs = <TopologyArc>[];
 
   for (final obj in json.objects.values) {
     for (final geo in (obj as GeometryCollection).geometries) {
@@ -89,8 +88,7 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
   print("$layerType: 境界線を処理しています...");
 
   // 境界線の処理
-  json.getArcs.forEachIndexed((index, arc) {
-    final TopologyArcType arcType;
+  final resultArcs = json.getArcs.mapIndexed((index, arc) {
     // 当該するPolyLineを利用しているポリゴンを取得
     final refPolygons = resultPolygons
         .where(
@@ -99,14 +97,15 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
           ),
         )
         .toList();
+    final TopologyArcType arcType;
     // 1つのみだったら海岸線
     if (refPolygons.length <= 1) {
       arcType = TopologyArcType.coastline;
-    } else if (layerType.multiareaGroupNo == 1 ||
+    } else if (layerType.multiAreaGroupNo == 1 ||
         refPolygons
                 .where((polygon) => polygon.areaCode != null)
                 .groupListsBy(
-                    (poly) => poly.areaCode! / layerType.multiareaGroupNo)
+                    (poly) => poly.areaCode! / layerType.multiAreaGroupNo)
                 .length >
             1) {
       // ポリゴン自体が結合不可もしくは使用しているポリゴンがAreaCodeがnullでないかつ上3桁が違うものであれば県境
@@ -115,13 +114,11 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
       // そうでもないなら一次細分区域
       arcType = TopologyArcType.area;
     }
-    resultArcs.add(
-      TopologyArc(
-        arc: arc,
-        type: arcType,
-      ),
+    return TopologyArc(
+      arc: arc,
+      type: arcType,
     );
-  });
+  }).toList();
 
   return base.copyWith(
     polygons: resultPolygons,
