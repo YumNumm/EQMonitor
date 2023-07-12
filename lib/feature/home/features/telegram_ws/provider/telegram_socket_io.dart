@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'dart:ui';
 
-import 'package:eqmonitor/common/provider/app_lifecycle.dart';
-import 'package:eqmonitor/common/provider/log/talker.dart';
+import 'package:eqmonitor/core/provider/app_lifecycle.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/home/features/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

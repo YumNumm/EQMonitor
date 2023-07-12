@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:eqmonitor/common/provider/shared_preferences.dart';
-import 'package:eqmonitor/common/router/router.dart';
+import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/setup/pages/01_introduction_page.dart';
 import 'package:eqmonitor/feature/setup/pages/02_quick_guide_about_eew.dart';
 import 'package:eqmonitor/feature/setup/pages/03_kmoni_warn.dart';

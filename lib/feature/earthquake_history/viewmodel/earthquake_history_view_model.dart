@@ -7,8 +7,8 @@ import 'package:eqapi_schema/model/components/tsunami-information/tsunami_estima
 import 'package:eqapi_schema/model/components/tsunami-information/tsunami_forecast.dart';
 import 'package:eqapi_schema/model/components/tsunami-information/tsunami_observations.dart';
 import 'package:eqapi_schema/model/telegram_v3.dart';
-import 'package:eqmonitor/common/extension/async_value.dart';
-import 'package:eqmonitor/common/provider/app_lifecycle.dart';
+import 'package:eqmonitor/core/extension/async_value.dart';
+import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/use_case/earthquake_history_use_case.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';

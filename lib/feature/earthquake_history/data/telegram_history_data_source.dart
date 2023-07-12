@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:eqapi_schema/eqapi_schema.dart';
-import 'package:eqmonitor/common/provider/dio_provider.dart';
+import 'package:eqmonitor/core/provider/dio_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/data/telegram_history.dart';
 import 'package:eqmonitor/feature/home/features/telegram_url/provider/telegram_url_provider.dart';
 import 'package:flutter/foundation.dart';

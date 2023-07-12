@@ -1,6 +1,6 @@
 import 'package:dynamic_color/dynamic_color.dart';
-import 'package:eqmonitor/common/router/router.dart';
-import 'package:eqmonitor/common/theme/custom_colors.dart';
+import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/theme/custom_colors.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

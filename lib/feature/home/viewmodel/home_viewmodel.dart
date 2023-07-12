@@ -1,5 +1,5 @@
 import 'package:eqapi_schema/model/telegram_v3.dart';
-import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
+import 'package:eqmonitor/core/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/feature/home/features/eew/eew_provider.dart';
 import 'package:eqmonitor/feature/home/features/estimated_intensity/provider/estimated_intensity_provider.dart';
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/kmoni_observation_point.dart';

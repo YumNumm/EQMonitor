@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:dio/dio.dart';
-import 'package:eqmonitor/common/provider/app_lifecycle.dart';
-import 'package:eqmonitor/common/provider/log/talker.dart';
+import 'package:eqmonitor/core/provider/app_lifecycle.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/model/kmoni_view_model_state.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/use_case/kmoni_use_case.dart';
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/provider/kmoni_observation_points_provider.dart';

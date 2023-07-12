@@ -1,6 +1,6 @@
-import 'package:eqmonitor/common/component/map/base_map.dart';
-import 'package:eqmonitor/common/component/map/map_touch_handler_widget.dart';
-import 'package:eqmonitor/common/component/map/view_model/map_viewmodel.dart';
+import 'package:eqmonitor/core/component/map/base_map.dart';
+import 'package:eqmonitor/core/component/map/map_touch_handler_widget.dart';
+import 'package:eqmonitor/core/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/eq_hypocenter_painter.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/eq_region_painter.dart';
