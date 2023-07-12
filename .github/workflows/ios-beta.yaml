@@ -1,5 +1,4 @@
 name: iOS CI
-#発火条件
 on:
   workflow_dispatch:
   push:
@@ -7,10 +6,10 @@ on:
 
 jobs:
   build:
-    #ビルド環境
     runs-on: macos-latest
-    # タイムアウト時間を設定
-    timeout-minutes: 45
+    timeout-minutes: 60
+    env:
+      TZ: Asia/Tokyo
 
     steps:
       #リポジトリからソースをダンロード
@@ -27,7 +26,7 @@ jobs:
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: latest-stable
+          xcode-version: latest
 
       - name: Show Xcode version
         run: xcodebuild -version
@@ -82,7 +81,6 @@ jobs:
           SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA: false
           APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_KEY }}
           LANG: ja_JP.UTF-8
-
         run: |
           cd ios
           echo '${{ secrets.APP_STORE_CONNECT_KEY }}' | base64 -d > AuthKey_HAZX33F4T7.p8
