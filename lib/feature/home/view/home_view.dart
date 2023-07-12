@@ -130,22 +130,23 @@ class _HomeBodyWidget extends HookConsumerWidget {
       },
       [context],
     );
-    print('REBUILD');
     return Stack(
       children: [
-        ClipRRect(
-          key: mapKey,
-          child: Stack(
-            children: [
-              BaseMapWidget(mapKey: mapKey),
-              EewPsWaveArrivalCircleWidget(mapKey: mapKey),
-              if (ref.watch(
-                kmoniSettingsProvider.select((value) => value.useKmoni),
-              ))
-                KmoniMapWidget(mapKey: mapKey),
-              EewHypocenterWidget(mapKey: mapKey),
-              MapTouchHandlerWidget(mapKey: mapKey),
-            ],
+        RepaintBoundary(
+          child: ClipRRect(
+            key: mapKey,
+            child: Stack(
+              children: [
+                BaseMapWidget(mapKey: mapKey),
+                EewPsWaveArrivalCircleWidget(mapKey: mapKey),
+                if (ref.watch(
+                  kmoniSettingsProvider.select((value) => value.useKmoni),
+                ))
+                  KmoniMapWidget(mapKey: mapKey),
+                EewHypocenterWidget(mapKey: mapKey),
+                MapTouchHandlerWidget(mapKey: mapKey),
+              ],
+            ),
           ),
         ),
         SheetFloatingActionButtons(
