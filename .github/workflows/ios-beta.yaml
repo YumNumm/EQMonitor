@@ -85,5 +85,5 @@ jobs:
 
         run: |
           cd ios
-          echo '${{ secrets.APP_STORE_CONNECT_KEY }}' | base64 -d > AppStoreConnectKey.p8
+          echo '${{ secrets.APP_STORE_CONNECT_KEY }}' | base64 -d > AuthKey_HAZX33F4T7.p8
           bundle exec fastlane beta
