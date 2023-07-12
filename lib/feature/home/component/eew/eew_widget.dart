@@ -355,44 +355,43 @@ class EewWidget extends ConsumerWidget {
           ),
         ),
       );
-      if (index != null) {
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            return SizedBox(
-              width: constraints.maxWidth,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Center(
-                    child: FittedBox(
-                      child: Text(
-                        (index).toString(),
-                        style: TextStyle(
-                          fontSize: 100,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: FontFamily.jetBrainsMono,
-                          fontFamilyFallback: const [FontFamily.notoSansJP],
-                          color: textTheme.bodyMedium!.color!.withOpacity(0.3),
-                        ),
-                      ),
-                    ),
+      return Stack(
+        alignment: Alignment.center,
+        children: [
+          if (index != null)
+            Center(
+              child: FittedBox(
+                child: Text(
+                  (index).toString(),
+                  style: TextStyle(
+                    fontSize: 100,
+                    fontWeight: FontWeight.w900,
+                    fontFamily: FontFamily.jetBrainsMono,
+                    fontFamilyFallback: const [FontFamily.notoSansJP],
+                    color: textTheme.bodyMedium!.color!.withOpacity(0.3),
                   ),
-                  card,
-                ],
+                ),
               ),
-            );
-          },
-        );
-      }
-      return LayoutBuilder(
-        builder: (context, constraints) {
-          return SizedBox(
-            width: constraints.maxWidth,
-            child: card,
-          );
-        },
+            ),
+          card,
+          if (telegram.status != TelegramStatus.normal)
+            Center(
+              child: FittedBox(
+                child: Text(
+                  telegram.status.type,
+                  style: TextStyle(
+                    fontSize: 100,
+                    fontWeight: FontWeight.w900,
+                    fontFamily: FontFamily.jetBrainsMono,
+                    fontFamilyFallback: const [FontFamily.notoSansJP],
+                    color: textTheme.bodyMedium!.color!.withOpacity(0.4),
+                  ),
+                ),
+              ),
+            ),
+        ],
       );
     }
-    throw Exception('不明なタイプの緊急地震速報を受信しました ${eew.runtimeType}');
+    return Text('不明なタイプの緊急地震速報を受信しました ${eew.runtimeType}');
   }
 }

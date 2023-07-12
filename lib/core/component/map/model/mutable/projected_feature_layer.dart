@@ -44,6 +44,7 @@ class ProjectedPolylineFeature {
     required this.points,
     required this.type,
     required this.isClosed,
+    required this.bbox,
   });
 
   factory ProjectedPolylineFeature.fromPolylineFeature({
@@ -54,17 +55,19 @@ class ProjectedPolylineFeature {
         points: feature.points.map(projection.project).toList(),
         type: feature.type,
         isClosed: feature.isClosed,
+        bbox: LatLngBoundary.fromList(feature.points),
       );
 
   final List<GlobalPoint> points;
   final PolylineType type;
   final bool isClosed;
+  final LatLngBoundary bbox;
 }
 
 class ProjectedPolygonFeature {
   ProjectedPolygonFeature._({
     required this.code,
-    required this.boundaryBox,
+    required this.bbox,
     required this.points,
   });
 
@@ -74,11 +77,11 @@ class ProjectedPolygonFeature {
   }) =>
       ProjectedPolygonFeature._(
         code: feature.code,
-        boundaryBox: feature.boundaryBox,
+        bbox: feature.bbox ?? LatLngBoundary.fromList(feature.points),
         points: feature.points.map(projection.project).toList(),
       );
 
   final int? code;
-  final LatLngBoundary? boundaryBox;
+  final LatLngBoundary bbox;
   final List<GlobalPoint> points;
 }
