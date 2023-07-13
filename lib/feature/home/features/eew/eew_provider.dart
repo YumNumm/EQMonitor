@@ -45,7 +45,6 @@ class EewTelegram extends _$EewTelegram {
     final index = state.indexWhere((e) => e.eventId == item.eventId);
 
     if (index >= 0) {
-      state[index] = item;
       final data = state;
       data[index] = item;
       state = data;
