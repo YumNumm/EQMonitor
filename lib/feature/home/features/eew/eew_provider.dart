@@ -67,9 +67,6 @@ class EewTelegram extends _$EewTelegram {
     if (eew is TelegramVxse45Body) {
       log('eew is TelegramVxse45Body');
       final time = eew.originTime ?? eew.arrivalTime;
-      if (!item.eventId.toString().startsWith('2023')) {
-        return true;
-      }
 
       return DateTime.now().difference(time).inSeconds <=
           switch (eew.magnitude) {
