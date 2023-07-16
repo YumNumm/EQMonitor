@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:flutter/material.dart';
 
 class EarthquakeRestrictionWidget extends StatelessWidget {
@@ -19,43 +20,29 @@ class EarthquakeRestrictionWidget extends StatelessWidget {
             '予想には誤差が伴います'
           ]
               .mapIndexed(
-                (index, e) => Card(
-                  elevation: 0,
-                  // border
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                      color: theme.colorScheme.onSurface.withOpacity(0.2),
-                      width: 0,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      children: [
-                        const DecoratedBox(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                          ),
-                          child: SizedBox(
-                            width: 8,
-                            height: 8,
+                (index, e) => BorderedContainer(
+                  child: Row(
+                    children: [
+                      const DecoratedBox(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                        ),
+                        child: SizedBox(
+                          width: 8,
+                          height: 8,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Flexible(
+                        child: Text(
+                          e,
+                          style: theme.textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(width: 16),
-                        Flexible(
-                          child: Text(
-                            e,
-                            style: theme.textTheme.bodyMedium!.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               )

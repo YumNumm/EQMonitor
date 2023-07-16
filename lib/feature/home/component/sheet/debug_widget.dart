@@ -1,6 +1,9 @@
+
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DebugWidget extends ConsumerWidget {
@@ -36,6 +39,11 @@ class DebugWidget extends ConsumerWidget {
               subtitle: const Text('EventID: 20171213112000'),
               leading: const Icon(Icons.send),
               onTap: ref.read(telegramWsProvider.notifier).requestSample,
+            ),
+            ListTile(
+              title: const Text('ログ'),
+              leading: const Icon(Icons.list),
+              onTap: () => context.push(const TalkerRoute().location),
             ),
           ],
         ),
