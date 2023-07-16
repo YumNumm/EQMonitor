@@ -173,25 +173,27 @@ class _HomeBodyWidget extends HookConsumerWidget {
           ],
         ),
         // Sheet
-        BasicModalSheet(
-          controller: sheetController,
-          children: [
-            const EewWidgets(),
-            const SheetStatusWidget(),
-            const EarthquakeHistorySheetWidget(),
-            ListTile(
-              title: const Text('強震モニタ設定'),
-              leading: const Icon(Icons.settings),
-              onTap: () => context.push(const KmoniRoute().location),
-            ),
-            ListTile(
-              title: const Text('震度配色設定'),
-              leading: const Icon(Icons.color_lens),
-              onTap: () =>
-                  context.push(const ColorSchemeConfigRoute().location),
-            ),
-            const DebugWidget(),
-          ],
+        RepaintBoundary(
+          child: BasicModalSheet(
+            controller: sheetController,
+            children: [
+              const EewWidgets(),
+              const SheetStatusWidget(),
+              const EarthquakeHistorySheetWidget(),
+              ListTile(
+                title: const Text('強震モニタ設定'),
+                leading: const Icon(Icons.settings),
+                onTap: () => context.push(const KmoniRoute().location),
+              ),
+              ListTile(
+                title: const Text('震度配色設定'),
+                leading: const Icon(Icons.color_lens),
+                onTap: () =>
+                    context.push(const ColorSchemeConfigRoute().location),
+              ),
+              const DebugWidget(),
+            ],
+          ),
         ),
       ],
     );
