@@ -45,7 +45,6 @@ class EewTelegram extends _$EewTelegram {
     final index = state.indexWhere((e) => e.eventId == item.eventId);
 
     if (index >= 0) {
-      state[index] = item;
       final data = state;
       data[index] = item;
       state = data;
@@ -67,9 +66,6 @@ class EewTelegram extends _$EewTelegram {
     if (eew is TelegramVxse45Body) {
       log('eew is TelegramVxse45Body');
       final time = eew.originTime ?? eew.arrivalTime;
-      if (!item.eventId.toString().startsWith('2023')) {
-        return true;
-      }
 
       return DateTime.now().difference(time).inSeconds <=
           switch (eew.magnitude) {
