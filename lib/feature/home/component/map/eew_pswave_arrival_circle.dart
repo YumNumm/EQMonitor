@@ -32,25 +32,22 @@ class _EewPsWaveArrivalCircleWidgetState
     final state = ref.watch(MapViewModelProvider(mapKey));
     final travelTimeTables = ref.watch(travelTimeProvider);
     final eewTelegrams = ref.watch(eewTelegramProvider);
-    final eews = useMemoized(
-      () => eewTelegrams
-          .where(
-            (e) => e.latestEew != null && e.latestEew is TelegramVxse45Body,
-          )
-          .map(
-            (e) => (e.latestEew! as TelegramVxse45Body, e.latestEewTelegram!),
-          )
-          .where(
-        (e) {
-          final eew = e.$1;
-          return eew.magnitude != null &&
-              eew.magnitude != null &&
-              eew.hypocenter != null &&
-              !(eew.isLevelEew && eew.isPlum && eew.isIpfOnePoint);
-        },
-      ).toList(),
-      [eewTelegrams],
-    );
+    final eews = eewTelegrams
+        .where(
+          (e) => e.latestEew != null && e.latestEew is TelegramVxse45Body,
+        )
+        .map(
+          (e) => (e.latestEew! as TelegramVxse45Body, e.latestEewTelegram!),
+        )
+        .where(
+      (e) {
+        final eew = e.$1;
+        return eew.magnitude != null &&
+            eew.magnitude != null &&
+            eew.hypocenter != null &&
+            !(eew.isLevelEew && eew.isPlum && eew.isIpfOnePoint);
+      },
+    ).toList();
 
     final controller = useAnimationController(
       duration: const Duration(microseconds: 1000),
