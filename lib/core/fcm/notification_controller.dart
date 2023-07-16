@@ -8,9 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 class NotificationController extends ChangeNotifier {
-  factory NotificationController() {
-    return _instance;
-  }
+  factory NotificationController() => _instance;
 
   NotificationController._internal();
 
@@ -196,6 +194,22 @@ class NotificationController extends ChangeNotifier {
     }
     return false;
   }
+
+  static Future<bool> requestPermission() async =>
+      AwesomeNotifications().requestPermissionToSendNotifications(
+        permissions: [
+          NotificationPermission.Alert,
+          NotificationPermission.Badge,
+          NotificationPermission.Sound,
+          NotificationPermission.Vibration,
+        ],
+      ).then(
+        (value) => AwesomeNotifications().requestPermissionToSendNotifications(
+          permissions: [
+            NotificationPermission.CriticalAlert,
+          ],
+        ),
+      );
 
   static Future<void> resetBadge() async {
     await AwesomeNotifications().resetGlobalBadge();
