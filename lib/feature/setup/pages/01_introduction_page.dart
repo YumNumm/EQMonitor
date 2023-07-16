@@ -13,6 +13,7 @@ class IntroductionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     final body = Column(
       children: [
         // アプリアイコン
@@ -42,28 +43,15 @@ class IntroductionPage extends StatelessWidget {
         ),
         const Spacer(),
         // 画面下部のボタン
+
         Padding(
           padding: const EdgeInsets.all(16),
-          child: ActionButton(
-            isEnabled: true,
+          child: ActionButton.text(
+            context: context,
+            text: 'クイックガイドを開始',
             onPressed: onNext,
-            child: const Padding(
-              padding: EdgeInsets.symmetric(vertical: 12),
-              child: SizedBox(
-                width: double.infinity,
-                child: Center(
-                  child: Text(
-                    'クイックガイドを開始',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ),
           ),
-        ),
+        )
       ],
     );
 

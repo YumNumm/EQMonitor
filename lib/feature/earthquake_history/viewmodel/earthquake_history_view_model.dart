@@ -106,7 +106,7 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
 
   List<EarthquakeHistoryItem> _toEarthquakeHistoryItem(
     Map<String, List<TelegramV3>> data, {
-    bool includeTestTelegrams = kDebugMode,
+    bool includeTestTelegrams = true,
   }) {
     final result = <EarthquakeHistoryItem>[];
     data.forEach((eventId, telegrams) {
@@ -244,9 +244,7 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
       // 最新のEEW
       final latestEew = telegrams
           .where(
-            (e) =>
-                e.type == TelegramType.vxse45 &&
-                (kDebugMode || e.status == TelegramStatus.normal),
+            (e) => e.type == TelegramType.vxse45,
           )
           .sorted((a, b) => (a.serialNo ?? 0).compareTo(b.serialNo ?? 0))
           .lastOrNull;

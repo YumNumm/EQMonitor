@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/component/button/action_button.dart';
+import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/feature/setup/component/background_image.dart';
 import 'package:flutter/material.dart';
 
@@ -38,50 +39,35 @@ class KmoniWarnPage extends StatelessWidget {
             Column(
               children: [
                 '防災科研へ本アプリの問い合わせを行わないでください',
+                '強震モニタは、揺れの様子を直感的に捉えることを目的としています',
                 '強震モニタではリアルタイムで観測値を処理しているため、ノイズや障害により観測値が変動する可能性があります',
               ]
                   .mapIndexed(
-                    (index, e) => Card(
-                      elevation: 0,
-                      color: (index == 0) ? Colors.red[900] : theme.cardColor,
-                      // border
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: theme.colorScheme.onSurface,
-                          width: 0,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-
-                      margin: const EdgeInsets.symmetric(
-                        vertical: 4,
-                        horizontal: 8,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Row(
-                          children: [
-                            const DecoratedBox(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white,
-                              ),
-                              child: SizedBox(
-                                width: 8,
-                                height: 8,
+                    (index, e) => BorderedContainer(
+                      accentColor:
+                          index == 0 ? Colors.redAccent.withOpacity(0.2) : null,
+                      child: Row(
+                        children: [
+                          const DecoratedBox(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                            ),
+                            child: SizedBox(
+                              width: 8,
+                              height: 8,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Flexible(
+                            child: Text(
+                              e,
+                              style: theme.textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(width: 16),
-                            Flexible(
-                              child: Text(
-                                e,
-                                style: theme.textTheme.bodyMedium!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   )
@@ -90,24 +76,10 @@ class KmoniWarnPage extends StatelessWidget {
             const Spacer(),
             Padding(
               padding: const EdgeInsets.all(16),
-              child: ActionButton(
-                isEnabled: true,
+              child: ActionButton.text(
+                context: context,
+                text: '次へ',
                 onPressed: onNext,
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Center(
-                      child: Text(
-                        '次へ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
               ),
             )
           ],

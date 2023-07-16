@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:eqmonitor/app.dart';
-import 'package:eqmonitor/core/fcm/silent_data_handle.dart';
+import 'package:eqmonitor/core/fcm/notification_controller.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/firebase_options.dart';
@@ -61,20 +60,4 @@ Future<void> main() async {
       child: const App(),
     ),
   );
-}
-
-// Request FCM token to Firebase
-Future<String> getFirebaseMessagingToken(Talker talker) async {
-  var firebaseAppToken = '';
-  if (await AwesomeNotificationsFcm().isFirebaseAvailable) {
-    try {
-      firebaseAppToken =
-          await AwesomeNotificationsFcm().requestFirebaseAppToken();
-    } on Exception catch (exception) {
-      talker.log('$exception');
-    }
-  } else {
-    talker.log('Firebase is not available on this project');
-  }
-  return firebaseAppToken;
 }

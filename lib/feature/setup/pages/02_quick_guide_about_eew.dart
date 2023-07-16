@@ -42,26 +42,12 @@ class QuickGuideAboutEewPage extends StatelessWidget {
             const Spacer(),
             Padding(
               padding: const EdgeInsets.all(16),
-              child: ActionButton(
-                isEnabled: true,
+              child: ActionButton.text(
+                context: context,
+                text: '次へ',
                 onPressed: onNext,
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Center(
-                      child: Text(
-                        '次へ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
               ),
-            )
+            ),
           ],
         ),
       ),
