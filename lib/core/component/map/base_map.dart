@@ -111,7 +111,11 @@ class _BaseMapPainter extends CustomPainter {
 
       final points = e.getPoints(state.zoomLevel.truncate());
       final offsets = points.map(state.globalPointToOffset).toList();
-
+      if (!offsets.any(
+        (e) => e.dx > 0 && e.dy > 0 && e.dx < size.width && e.dy < size.height,
+      )) {
+        continue;
+      }
       final path = Path()
         ..addPolygon(
           offsets,
@@ -148,7 +152,11 @@ class _BaseMapPainter extends CustomPainter {
 
       final points = e.getPoints(state.zoomLevel.truncate());
       final offsets = points.map(state.globalPointToOffset).toList();
-
+      if (!offsets.any(
+        (e) => e.dx > 0 && e.dy > 0 && e.dx < size.width && e.dy < size.height,
+      )) {
+        continue;
+      }
       try {
         canvas.drawPath(
           Path()..addPolygon(offsets, false),
@@ -183,7 +191,11 @@ class _BaseMapPainter extends CustomPainter {
 
       final points = e.getPoints(state.zoomLevel.truncate());
       final offsets = points.map(state.globalPointToOffset).toList();
-
+      if (!offsets.any(
+        (e) => e.dx > 0 && e.dy > 0 && e.dx < size.width && e.dy < size.height,
+      )) {
+        continue;
+      }
       try {
         canvas.drawPath(
           Path()..addPolygon(offsets, false),
@@ -208,12 +220,17 @@ class _BaseMapPainter extends CustomPainter {
         in maps[LandLayerType.worldWithoutJapan]!.projectedPolygonFeatures) {
       // bbox check
       if (!bbox.containsBbox(e.bbox)) {
-        //continue;
+        //  continue;
       }
 
       final points = e.getPoints(state.zoomLevel.truncate());
       final offsets = points.map(state.globalPointToOffset).toList();
 
+      if (!offsets.any(
+        (e) => e.dx > 0 && e.dy > 0 && e.dx < size.width && e.dy < size.height,
+      )) {
+        continue;
+      }
       try {
         canvas.drawPath(
           Path()..addPolygon(offsets, true),
@@ -244,9 +261,6 @@ class _BaseMapPainter extends CustomPainter {
       final points = e.getPoints(state.zoomLevel.truncate());
       final offsets = points.map(state.globalPointToOffset).toList();
 
-      if (offsets == null) {
-        continue;
-      }
       if (!offsets.any(
         (e) => e.dx > 0 && e.dy > 0 && e.dx < size.width && e.dy < size.height,
       )) {
