@@ -31,20 +31,23 @@ class MapViewModel extends _$MapViewModel {
   late AnimationController _scaleController;
   late AnimationController _globalPointAndZoomLevelController;
 
-  final double _interactionEndFrictionCoefficient = 0.0000135;
+  static const double _interactionEndFrictionCoefficient = 0.0000135;
 
   _GestureType? _gestureType;
 
   RenderBox? _renderBox;
 
   // * MapController周りの実装
-  (LatLng, LatLng) _currentPoC = (
+  (LatLng, LatLng) _currencPoi = (
     const LatLng(45.8, 145.1),
     const LatLng(30, 128.8),
   );
 
+  /// POI適用後に移動したかどうか
+  bool _isMarkedAsMoved = false;
+
   /// デフォルトの表示領域に戻す
-  void reset() => _currentPoC = (
+  void reset() => _currencPoi = (
         const LatLng(45.8, 145.1),
         const LatLng(30, 128.8),
       );
@@ -54,10 +57,24 @@ class MapViewModel extends _$MapViewModel {
     if (_renderBox == null) {
       return;
     }
-    final points = _currentPoC.toGlobalPoints();
+    final points = _currencPoi.toGlobalPoints();
     state =
         state.fitBoundsByGlobalPoints([points.$1, points.$2], _renderBox!.size);
   }
+
+  Future<void> animatedApplyBoundsIfNeeded({
+    Duration duration = const Duration(milliseconds: 500),
+    Curve curve = Curves.easeOutCirc,
+    EdgeInsetsGeometry padding = EdgeInsets.zero,
+  }) async =>
+      switch (_isMarkedAsMoved) {
+        false => animatedApplyBounds(
+            duration: duration,
+            curve: curve,
+            padding: padding,
+          ),
+        true => {},
+      };
 
   Future<void> animatedApplyBounds({
     Duration duration = const Duration(milliseconds: 500),
@@ -65,9 +82,9 @@ class MapViewModel extends _$MapViewModel {
     EdgeInsetsGeometry padding = EdgeInsets.zero,
   }) {
     if (_renderBox == null) {
-      return Future.value();
+      throw Exception('MapController is not initialized.');
     }
-    final points = _currentPoC.toGlobalPoints();
+    final points = _currencPoi.toGlobalPoints();
     return animatedBoundsByGlobalPoints(
       [points.$1, points.$2],
       curve: curve,
@@ -91,15 +108,13 @@ class MapViewModel extends _$MapViewModel {
       maxLat = math.min(maxLat, latLng.lat);
       maxLng = math.min(maxLng, latLng.lon);
     }
-    _currentPoC = (
+    _currencPoi = (
       LatLng(minLat, minLng),
       LatLng(maxLat, maxLng),
     );
   }
 
-  void setBoundsByGlobalPoints(GlobalPoint $1, GlobalPoint $2) {
-    applyBounds();
-  }
+  void resetMarkAsMoved() => _isMarkedAsMoved = false;
 
   /// The minimum velocity for a touch to consider that touch to trigger a fling
   /// gesture.
@@ -188,11 +203,12 @@ class MapViewModel extends _$MapViewModel {
   }
 
   void handleScaleUpdate(ScaleUpdateDetails details) {
+    _isMarkedAsMoved = true;
     if (_gestureType == _GestureType.pan) {
-      // When a gesture first starts, it sometimes has no change in scale and
-      // rotation despite being a two-finger gesture. Here the gesture is
-      // allowed to be reinterpreted as its correct type after originally
-      // being marked as a pan.
+      // ジェスチャーが最初に開始されたとき、2本の指で行うジェスチャーでも、
+      // スケールや回転に変化がない場合がある。
+      // ここでは、最初にpanとしてマークされた後、
+      // 正しいタイプとして再解釈できるようにしています。
       _gestureType = _getGestureType(details);
     } else {
       _gestureType = _getGestureType(details);
@@ -200,9 +216,6 @@ class MapViewModel extends _$MapViewModel {
     final scale = state.zoomLevel;
     switch (_gestureType) {
       case _GestureType.pan:
-        // details may have a change in scale here when scaleEnabled is false.
-        // In an effort to keep the behavior similar whether or not scaleEnabled
-        // is true, these gestures are thrown away.
         if (details.scale != 1.0) {
           return;
         }
@@ -215,7 +228,6 @@ class MapViewModel extends _$MapViewModel {
         final desiredScale = _scaleStart! * details.scale;
         // スケール中に ユーザの2本指はシーン内で同じ位置にあるはず
         // つまり、FocalPointのシーン内の位置はスケーリングの前後で変化しない
-
         state = state
             .setScale(
               desiredScale,
@@ -485,6 +497,7 @@ class MapViewModel extends _$MapViewModel {
     await _globalPointAndZoomLevelController.forward();
   }
 
+  /// [globalPoints]を含む最小の矩形を表示する
   Future<void> animatedBoundsByGlobalPoints(
     List<GlobalPoint> globalPoints, {
     Duration duration = const Duration(milliseconds: 500),
@@ -546,38 +559,6 @@ class MapViewModel extends _$MapViewModel {
     _globalPointAndZoomLevelController = globalPointAndZoomLevelController;
   }
 
-  // 左上の緯度経度
-  LatLng get topLeftLatLng {
-    final topLeftPoint = state.offsetToGlobalPoint(Offset.zero);
-    return WebMercatorProjection().unproject(topLeftPoint);
-  }
-
-  // setter
-  set topLeftLatLng(LatLng latLng) {
-    final topLeftPoint = WebMercatorProjection().project(latLng);
-    final offset = state.globalPointToOffset(topLeftPoint);
-    state = state.move(offset);
-  }
-
-  LatLng get centerLatLng {
-    final centerPoint = state.offsetToGlobalPoint(
-      _renderBox!.size.center(Offset.zero),
-    );
-    return WebMercatorProjection().unproject(centerPoint);
-  }
-
-  set centerLatLng(LatLng latLng) => state = state.setCenterLatLng(
-        latLng,
-        _renderBox!.size,
-      );
-
-  set zoomLevel(double zoom) {
-    state = state.setScale(
-      zoom,
-      focalPoint: _renderBox!.size.center(Offset.zero) / state.zoomLevel,
-    );
-  }
-
   /// [latLngs]を含む最小の矩形を表示する
   void fitBounds(
     List<LatLng> latLngs, {
@@ -589,7 +570,7 @@ class MapViewModel extends _$MapViewModel {
         maxZoom: maxZoom,
       );
 
-  double get actualZoomLevel => math.pow(1 / 2, state.zoomLevel).toDouble();
+  double get actualZoomLevel => math.sqrt(state.zoomLevel);
 }
 
 // A classification of relevant user gestures. Each contiguous user gesture is

@@ -20,18 +20,16 @@ class SheetFloatingActionButtons extends HookWidget {
   final SheetController controller;
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = useMemoized(
-      () => MediaQuery.of(context),
-      [context],
-    );
-    final height = mediaQuery.size.height -
-        (mediaQuery.padding.top + mediaQuery.padding.bottom) -
-        kToolbarHeight;
+    final size = MediaQuery.sizeOf(context);
+    final padding = MediaQuery.paddingOf(context);
+    final height =
+        size.height - (padding.top + padding.bottom) - kToolbarHeight;
     return AnimatedBuilder(
       animation: controller.animation,
       builder: (BuildContext context, Widget? child) {
         return Positioned(
-          right: 0,
+          right: padding.right,
+          left: padding.left,
           bottom: height * controller.animation.value,
           child: Container(
             margin: const EdgeInsets.all(10),

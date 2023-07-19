@@ -22,7 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:lat_lng/lat_lng.dart';
+import 'package:sheet/src/sheet.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 class HomeView extends HookConsumerWidget {
@@ -86,42 +86,35 @@ class _HomeBodyWidget extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final vm = ref.watch(homeViewModelProvider);
-    final brightness = MediaQuery.of(context).platformBrightness;
     final moveController = useAnimationController();
     final scaleController = useAnimationController();
     final globalPointAndZoomLevelController = useAnimationController();
     // * mapViewModelへWidgetの各情報を登録しながら 初期化
+    void init() {
+      // Widgetのサイズを登録
+      final renderBox = mapKey.currentContext!.findRenderObject()! as RenderBox;
+      ref.read(mapViewModelProvider(mapKey).notifier)
+        ..registerRenderBox(
+          renderBox,
+        )
+        ..registerAnimationControllers(
+          moveController: moveController,
+          scaleController: scaleController,
+          globalPointAndZoomLevelController: globalPointAndZoomLevelController,
+        )
+        ..resetMarkAsMoved()
+        ..applyBounds();
+    }
+
     useEffect(
       () {
-        WidgetsBinding.instance.endOfFrame.then((_) {
-          // Widgetのサイズを登録
-          final renderBox =
-              mapKey.currentContext!.findRenderObject()! as RenderBox;
-          ref.read(mapViewModelProvider(mapKey).notifier)
-            ..registerRenderBox(
-              renderBox,
-            )
-            ..registerAnimationControllers(
-              moveController: moveController,
-              scaleController: scaleController,
-              globalPointAndZoomLevelController:
-                  globalPointAndZoomLevelController,
-            )
-            ..fitBounds([
-              const LatLng(45.8, 145.1),
-              const LatLng(30, 128.8),
-            ])
-            ..applyBounds();
-        });
+        WidgetsBinding.instance.endOfFrame.then((_) => init());
         return null;
       },
-      [mapKey],
+      [],
     );
     final sheetController = vm.sheetController;
-    final mediaQuery = useMemoized(
-      () => MediaQuery.of(context),
-      [context],
-    );
+    final mediaQuery = MediaQuery.of(context);
 
     useEffect(
       () {
@@ -137,7 +130,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
         (isDark ? MapColorScheme.dark() : MapColorScheme.light())
             .backgroundColor;
 
-    return Stack(
+    final child = Stack(
       children: [
         // background color
         Container(
@@ -175,15 +168,18 @@ class _HomeBodyWidget extends HookConsumerWidget {
                 final height = mediaQuery.size.height -
                     (mediaQuery.padding.top + mediaQuery.padding.bottom) -
                     kToolbarHeight;
-                ref
-                    .read(mapViewModelProvider(mapKey).notifier)
-                    .animatedApplyBounds(
-                      padding: const EdgeInsets.all(8).add(
-                        EdgeInsets.only(
-                          bottom: height * sheetController.animation.value,
-                        ),
+                ref.read(mapViewModelProvider(mapKey).notifier)
+                  ..resetMarkAsMoved()
+                  ..animatedApplyBounds(
+                    padding: const EdgeInsets.all(8).add(
+                      EdgeInsets.only(
+                        bottom: switch (sheetController.animation.value) {
+                          < 0.3 => height * sheetController.animation.value,
+                          _ => height * 0.3,
+                        },
                       ),
-                    );
+                    ),
+                  );
               },
               elevation: 4,
               child: const Icon(Icons.home),
@@ -191,29 +187,55 @@ class _HomeBodyWidget extends HookConsumerWidget {
           ],
         ),
         // Sheet
-        RepaintBoundary(
-          child: BasicModalSheet(
-            controller: sheetController,
-            children: [
-              const EewWidgets(),
-              const SheetStatusWidget(),
-              const EarthquakeHistorySheetWidget(),
-              ListTile(
-                title: const Text('強震モニタ設定'),
-                leading: const Icon(Icons.settings),
-                onTap: () => context.push(const KmoniRoute().location),
-              ),
-              ListTile(
-                title: const Text('震度配色設定'),
-                leading: const Icon(Icons.color_lens),
-                onTap: () =>
-                    context.push(const ColorSchemeConfigRoute().location),
-              ),
-              const DebugWidget(),
-            ],
-          ),
-        ),
+        _Sheet(sheetController: sheetController),
       ],
+    );
+
+    return NotificationListener<SizeChangedLayoutNotification>(
+      onNotification: (notification) {
+        WidgetsBinding.instance.endOfFrame.then(
+          (_) => ref.read(mapViewModelProvider(mapKey).notifier)
+            ..resetMarkAsMoved()
+            ..applyBounds(),
+        );
+        return false;
+      },
+      child: SizeChangedLayoutNotifier(
+        child: child,
+      ),
+    );
+  }
+}
+
+class _Sheet extends StatelessWidget {
+  const _Sheet({
+    required this.sheetController,
+  });
+
+  final SheetController sheetController;
+
+  @override
+  Widget build(BuildContext context) {
+    return RepaintBoundary(
+      child: BasicModalSheet(
+        controller: sheetController,
+        children: [
+          const EewWidgets(),
+          const SheetStatusWidget(),
+          const EarthquakeHistorySheetWidget(),
+          ListTile(
+            title: const Text('強震モニタ設定'),
+            leading: const Icon(Icons.settings),
+            onTap: () => context.push(const KmoniRoute().location),
+          ),
+          ListTile(
+            title: const Text('震度配色設定'),
+            leading: const Icon(Icons.color_lens),
+            onTap: () => context.push(const ColorSchemeConfigRoute().location),
+          ),
+          const DebugWidget(),
+        ],
+      ),
     );
   }
 }
