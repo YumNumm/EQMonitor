@@ -20,11 +20,17 @@ class Permission extends _$Permission {
 
   Future<bool> _notificationPermission() async {
     final status = await handler.Permission.notification.status;
+
     return status == handler.PermissionStatus.granted;
   }
 
   Future<void> requestNotificationPermission() async {
     final status = await handler.Permission.notification.request();
+    await AwesomeNotifications().requestPermissionToSendNotifications(
+      permissions: [
+        NotificationPermission.CriticalAlert,
+      ],
+    );
     if (status != handler.PermissionStatus.granted) {
       // 通知設定の画面を開く
       await AwesomeNotifications().showNotificationConfigPage();
