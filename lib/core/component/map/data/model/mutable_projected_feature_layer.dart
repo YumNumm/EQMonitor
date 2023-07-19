@@ -1,7 +1,9 @@
+import 'dart:math';
+
 import 'package:eq_map/eq_map.dart';
 import 'package:eqmonitor/core/component/map/model/mutable/projected_feature_layer.dart';
-import 'package:eqmonitor/core/component/map/utils/web_mercator_projection.dart';
 import 'package:eqmonitor/core/component/map/utils/map_shrinker.dart';
+import 'package:eqmonitor/core/component/map/utils/web_mercator_projection.dart';
 import 'package:lat_lng/lat_lng.dart';
 
 class ZoomCachedProjectedFeatureLayer {
@@ -62,8 +64,10 @@ class ZoomCachedProjectedPolylineFeature {
       MapShrinker.shrink(zoomLevel: zoomLevel, points: points);
 
   /// キャッシュがある場合はそれを返し、ない場合は[zoomLevel]を適用したList<Point>を返す
-  List<GlobalPoint> getPoints(int zoomLevel) =>
-      _cache[zoomLevel] ??= _applyZoomLevel(zoomLevel);
+  List<GlobalPoint> getPoints(int zoomLevel) {
+    final value = pow(2, sqrt(zoomLevel).toInt()).toInt();
+    return _cache[value] ??= _applyZoomLevel(value);
+  }
 
   /// キャッシュをクリアする
   void clearCache() => _cache.clear();
@@ -97,8 +101,10 @@ class ZoomCachedProjectedPolygonFeature {
       MapShrinker.shrink(zoomLevel: zoomLevel, points: points);
 
   /// キャッシュがある場合はそれを返し、ない場合は[zoomLevel]を適用したList<Point>を返す
-  List<GlobalPoint> getPoints(int zoomLevel) =>
-      _cache[zoomLevel] ??= _applyZoomLevel(zoomLevel);
+  List<GlobalPoint> getPoints(int zoomLevel) {
+    final value = pow(2, sqrt(zoomLevel).toInt()).toInt();
+    return _cache[value] ??= _applyZoomLevel(value);
+  }
 
   /// キャッシュをクリアする
   void clearCache() => _cache.clear();
