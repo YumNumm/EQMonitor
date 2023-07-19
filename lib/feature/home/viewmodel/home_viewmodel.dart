@@ -20,43 +20,58 @@ class HomeViewModel {
   }
 
   final HomeViewModelRef ref;
-  final mapKey = GlobalKey(debugLabel: 'HomeView');
+  final mapKey = const GlobalObjectKey(MapViewModel);
 
   double height = 0;
 
   SheetController sheetController = SheetController();
 
+  int _lastEstimatedIntensityChangedEewsLength = -1;
+
   void onEstimatedIntensityChanged(
     List<AnalyzedKmoniObservationPoint> points,
   ) {
     final filtered = _getTargets(points);
+    // EEWの要素数が変化したかチェック
+    final length = ref.read(eewTelegramProvider).length;
+    if (_lastEstimatedIntensityChangedEewsLength != length) {
+      _lastEstimatedIntensityChangedEewsLength = length;
+      ref.read(mapViewModelProvider(mapKey).notifier).resetMarkAsMoved();
+    }
     if (filtered == null) {
-      _resetPoC();
-      ref.read(MapViewModelProvider(mapKey).notifier).animatedApplyBounds(
+      ref
+          .read(mapViewModelProvider(mapKey).notifier)
+          .animatedApplyBoundsIfNeeded(
             padding: const EdgeInsets.all(8).add(
               EdgeInsets.only(
-                bottom: height * sheetController.animation.value,
+                bottom: switch (sheetController.animation.value) {
+                  < 0.3 => height * sheetController.animation.value,
+                  _ => height * 0.3,
+                },
               ),
             ),
           );
       return;
     }
     // 表示領域を変える
-    ref.read(MapViewModelProvider(mapKey).notifier)
+    ref.read(mapViewModelProvider(mapKey).notifier)
       ..setBounds(
         filtered,
       )
-      ..animatedApplyBounds(
+      ..animatedApplyBoundsIfNeeded(
         padding: const EdgeInsets.all(8).add(
           EdgeInsets.only(
-            bottom: height * sheetController.animation.value,
+            bottom: switch (sheetController.animation.value) {
+              < 0.3 => height * sheetController.animation.value,
+              _ => height * 0.3,
+            },
           ),
         ),
       );
   }
 
   void _resetPoC() {
-    ref.read(MapViewModelProvider(mapKey).notifier).reset();
+    ref.read(mapViewModelProvider(mapKey).notifier).reset();
   }
 
   /// 震度1以上の観測点のうち、震度が最大~最大-1の観測点を含むLatLngの配列を返す
