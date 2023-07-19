@@ -1,6 +1,5 @@
 import 'dart:ui' as ui;
 
-import 'package:eqapi_schema/extension/telegram_v3.dart';
 import 'package:eqapi_schema/model/telegram_v3.dart';
 import 'package:eqmonitor/core/component/map/model/map_state.dart';
 import 'package:eqmonitor/core/component/map/utils/web_mercator_projection.dart';
@@ -14,66 +13,26 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart';
 import 'package:latlong2/latlong.dart' as latlong2;
 
-class EewPsWaveArrivalCircleWidget extends StatefulHookConsumerWidget {
+class EewPsWaveArrivalCircleWidget extends HookConsumerWidget {
   const EewPsWaveArrivalCircleWidget({required this.mapKey, super.key});
-
   final Key mapKey;
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _EewPsWaveArrivalCircleWidgetState();
-}
 
-class _EewPsWaveArrivalCircleWidgetState
-    extends ConsumerState<EewPsWaveArrivalCircleWidget> {
   @override
-  Widget build(BuildContext context) {
-    final mapKey = widget.mapKey;
-
-    final state = ref.watch(MapViewModelProvider(mapKey));
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(mapViewModelProvider(mapKey));
     final travelTimeTables = ref.watch(travelTimeProvider);
-    final eewTelegrams = ref.watch(eewTelegramProvider);
-    final eews = eewTelegrams
-        .where(
-          (e) => e.latestEew != null && e.latestEew is TelegramVxse45Body,
-        )
-        .map(
-          (e) => (e.latestEew! as TelegramVxse45Body, e.latestEewTelegram!),
-        )
-        .where(
-      (e) {
-        final eew = e.$1;
-        return eew.magnitude != null &&
-            eew.magnitude != null &&
-            eew.hypocenter != null &&
-            !(eew.isLevelEew && eew.isPlum && eew.isIpfOnePoint);
-      },
-    ).toList();
+    final eews = ref.watch(eewFilteredTelegramProvider);
 
     final controller = useAnimationController(
-      duration: const Duration(microseconds: 1000),
+      duration: const Duration(microseconds: 78000),
     );
-    final tween = Tween<double>(
-      begin: 0,
-      end: 1,
-    );
-    useMemoized(
+    useAnimation(controller);
+    useEffect(
       () {
-        final animation = tween.animate(controller)
-          ..addListener(
-            () => setState(() {}),
-          )
-          ..addStatusListener((status) {
-            if (status == AnimationStatus.completed) {
-              controller.reverse();
-            } else if (status == AnimationStatus.dismissed) {
-              controller.forward();
-            }
-          });
-        controller.forward();
-
-        return animation;
+        controller.repeat();
+        return null;
       },
-      [state],
+      [],
     );
 
     final hypoWidget = CustomPaint(
@@ -206,20 +165,4 @@ class _HypocenterPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _HypocenterPainter oldDelegate) => true;
-}
-
-enum _HypocenterType {
-  normal,
-  lowPrecise,
-  ;
-}
-
-class _HypoWithTravelTime {
-  _HypoWithTravelTime({
-    required this.globalPoint,
-    required this.result,
-  });
-
-  final GlobalPoint? globalPoint;
-  final TravelTimeResult result;
 }

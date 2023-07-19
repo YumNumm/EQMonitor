@@ -111,7 +111,7 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
                   '地震履歴を取得中です。',
                 ),
                 const Padding(
-                  padding: EdgeInsets.all(16),
+                  padding: EdgeInsets.all(8),
                   child: CircularProgressIndicator.adaptive(),
                 ),
               ],

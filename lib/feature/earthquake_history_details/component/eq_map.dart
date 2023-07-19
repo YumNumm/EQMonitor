@@ -59,17 +59,14 @@ class EarthquakeHistoryMap extends HookConsumerWidget {
             key: mapKey,
             child: Stack(
               children: [
-                BaseMapWidget(mapKey: mapKey),
+                BaseMapWidget.polygon(mapKey),
                 if (item.earthquake.intensity != null)
                   EarthquakeIntensityMapWidget(
                     intensity: item.earthquake.intensity!,
                     mapKey: mapKey,
                     showIntensityIcon: true,
                   ),
-                BaseMapWidget(
-                  mapKey: mapKey,
-                  onlyBorder: true,
-                ),
+                BaseMapWidget.polyline(mapKey),
                 if (item.earthquake.earthquake?.hypocenter.coordinate != null)
                   EarthquakeHypocenterMapWidget(
                     latLng: item.earthquake.earthquake!.hypocenter.coordinate!,

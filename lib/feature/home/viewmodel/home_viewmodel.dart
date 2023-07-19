@@ -1,4 +1,3 @@
-import 'package:eqapi_schema/model/telegram_v3.dart';
 import 'package:eqmonitor/core/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/feature/home/features/eew/eew_provider.dart';
 import 'package:eqmonitor/feature/home/features/estimated_intensity/provider/estimated_intensity_provider.dart';
@@ -77,13 +76,8 @@ class HomeViewModel {
     final latLngs = filteredPoints.map((e) => e.point.latLng).toList()
       ..addAll(
         ref
-            .read(eewTelegramProvider)
-            .where(
-              (e) => e.latestEew is TelegramVxse45Body,
-            )
-            .map((e) => e.latestEew)
-            .cast<TelegramVxse45Body>()
-            .map((e) => e.hypocenter!.coordinate!),
+            .read(eewNormalTelegramProvider)
+            .map((e) => e.$1.hypocenter!.coordinate!),
       );
     return latLngs;
   }

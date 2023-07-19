@@ -23,12 +23,12 @@ class EarthquakeRestrictionWidget extends StatelessWidget {
                 (index, e) => BorderedContainer(
                   child: Row(
                     children: [
-                      const DecoratedBox(
+                      DecoratedBox(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.white,
+                          color: theme.colorScheme.onPrimaryContainer,
                         ),
-                        child: SizedBox(
+                        child: const SizedBox(
                           width: 8,
                           height: 8,
                         ),

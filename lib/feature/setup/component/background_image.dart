@@ -4,19 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class SetupBackgroundImageWidget extends HookWidget {
-  SetupBackgroundImageWidget({
+  const SetupBackgroundImageWidget({
     required this.child,
     super.key,
   });
   final Widget child;
 
-  int _startTime = 0;
-
-  double get _elapsedTimeInSeconds =>
-      (_startTime - DateTime.now().millisecondsSinceEpoch) / 1000;
-
   @override
   Widget build(BuildContext context) {
+    final startTime = useState(0);
+
+    double elapsedTimeInSeconds() =>
+        (DateTime.now().millisecondsSinceEpoch - startTime.value) / 1000;
     final shader = useFuture(
       FragmentProgram.fromAsset(
         'shaders/introduction.glsl',
@@ -25,10 +24,10 @@ class SetupBackgroundImageWidget extends HookWidget {
     final animationController = useAnimationController(
       duration: const Duration(seconds: 1),
     )..repeat();
+    useAnimation(animationController);
     useEffect(
       () {
-        _startTime = DateTime.now().millisecondsSinceEpoch;
-
+        startTime.value = DateTime.now().millisecondsSinceEpoch;
         return null;
       },
       [context],
@@ -39,7 +38,7 @@ class SetupBackgroundImageWidget extends HookWidget {
         builder: (context, _) {
           final data = shader.data!.fragmentShader();
           return CustomPaint(
-            painter: _ShaderPainter(data, _elapsedTimeInSeconds),
+            painter: _ShaderPainter(data, elapsedTimeInSeconds()),
             child: Scaffold(
               backgroundColor: Colors.transparent,
               body: SafeArea(child: child),

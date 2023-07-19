@@ -1,11 +1,13 @@
 import 'package:eqmonitor/core/component/map/base_map.dart';
 import 'package:eqmonitor/core/component/map/map_touch_handler_widget.dart';
+import 'package:eqmonitor/core/component/map/model/map_config.dart';
 import 'package:eqmonitor/core/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
+import 'package:eqmonitor/feature/home/component/map/eew_estimated_intensity_widget.dart';
 import 'package:eqmonitor/feature/home/component/map/eew_hypocenter_widget.dart';
 import 'package:eqmonitor/feature/home/component/map/eew_pswave_arrival_circle.dart';
 import 'package:eqmonitor/feature/home/component/map/kmoni_map_widget.dart';
@@ -130,20 +132,33 @@ class _HomeBodyWidget extends HookConsumerWidget {
       },
       [context],
     );
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final backgroundColor =
+        (isDark ? MapColorScheme.dark() : MapColorScheme.light())
+            .backgroundColor;
+
     return Stack(
       children: [
+        // background color
+        Container(
+          color: backgroundColor,
+        ),
         RepaintBoundary(
           child: ClipRRect(
             key: mapKey,
             child: Stack(
               children: [
-                BaseMapWidget(mapKey: mapKey),
-                EewPsWaveArrivalCircleWidget(mapKey: mapKey),
+                RepaintBoundary(child: BaseMapWidget.polygon(mapKey)),
+                EewEstimatedIntensityWidget(mapKey: mapKey),
+                RepaintBoundary(
+                  child: EewPsWaveArrivalCircleWidget(mapKey: mapKey),
+                ),
+                RepaintBoundary(child: BaseMapWidget.polyline(mapKey)),
                 if (ref.watch(
                   kmoniSettingsProvider.select((value) => value.useKmoni),
                 ))
-                  KmoniMapWidget(mapKey: mapKey),
-                EewHypocenterWidget(mapKey: mapKey),
+                  RepaintBoundary(child: KmoniMapWidget(mapKey: mapKey)),
+                RepaintBoundary(child: EewHypocenterWidget(mapKey: mapKey)),
                 MapTouchHandlerWidget(mapKey: mapKey),
               ],
             ),
