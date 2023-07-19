@@ -31,7 +31,7 @@ class MapViewModel extends _$MapViewModel {
   late AnimationController _scaleController;
   late AnimationController _globalPointAndZoomLevelController;
 
-  final double _interactionEndFrictionCoefficient = 0.0000135;
+  static const double _interactionEndFrictionCoefficient = 0.0000135;
 
   _GestureType? _gestureType;
 
@@ -42,6 +42,9 @@ class MapViewModel extends _$MapViewModel {
     const LatLng(45.8, 145.1),
     const LatLng(30, 128.8),
   );
+
+  /// POI適用後に移動したかどうか
+  bool _isMarkedAsMoved = false;
 
   /// デフォルトの表示領域に戻す
   void reset() => _currencPoi = (
@@ -59,13 +62,27 @@ class MapViewModel extends _$MapViewModel {
         state.fitBoundsByGlobalPoints([points.$1, points.$2], _renderBox!.size);
   }
 
+  Future<void> animatedApplyBoundsIfNeeded({
+    Duration duration = const Duration(milliseconds: 500),
+    Curve curve = Curves.easeOutCirc,
+    EdgeInsetsGeometry padding = EdgeInsets.zero,
+  }) async =>
+      switch (_isMarkedAsMoved) {
+        false => animatedApplyBounds(
+            duration: duration,
+            curve: curve,
+            padding: padding,
+          ),
+        true => {},
+      };
+
   Future<void> animatedApplyBounds({
     Duration duration = const Duration(milliseconds: 500),
     Curve curve = Curves.easeOutCirc,
     EdgeInsetsGeometry padding = EdgeInsets.zero,
   }) {
     if (_renderBox == null) {
-      return Future.value();
+      throw Exception('MapController is not initialized.');
     }
     final points = _currencPoi.toGlobalPoints();
     return animatedBoundsByGlobalPoints(
@@ -97,9 +114,7 @@ class MapViewModel extends _$MapViewModel {
     );
   }
 
-  void setBoundsByGlobalPoints(GlobalPoint $1, GlobalPoint $2) {
-    applyBounds();
-  }
+  void resetMarkAsMoved() => _isMarkedAsMoved = false;
 
   /// The minimum velocity for a touch to consider that touch to trigger a fling
   /// gesture.
@@ -188,6 +203,7 @@ class MapViewModel extends _$MapViewModel {
   }
 
   void handleScaleUpdate(ScaleUpdateDetails details) {
+    _isMarkedAsMoved = true;
     if (_gestureType == _GestureType.pan) {
       // ジェスチャーが最初に開始されたとき、2本の指で行うジェスチャーでも、
       // スケールや回転に変化がない場合がある。
@@ -532,7 +548,6 @@ class MapViewModel extends _$MapViewModel {
   void registerRenderBox(RenderBox renderBox) {
     _renderBox = renderBox;
   }
-
 
   void registerAnimationControllers({
     required AnimationController moveController,
