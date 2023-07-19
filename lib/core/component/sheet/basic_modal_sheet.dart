@@ -51,16 +51,19 @@ class BasicModalSheet extends HookWidget {
               ],
             ),
             child: SafeArea(
-              child: Column(
-                children: <Widget>[
-                  barWidget,
-                  Expanded(
-                    child: ListView(
-                      padding: const EdgeInsets.all(2),
-                      children: children,
+              bottom: false,
+              child: RepaintBoundary(
+                child: Column(
+                  children: <Widget>[
+                    barWidget,
+                    Expanded(
+                      child: ListView(
+                        padding: const EdgeInsets.all(2),
+                        children: children,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
