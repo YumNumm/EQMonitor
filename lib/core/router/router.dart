@@ -1,7 +1,6 @@
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/feature/config/color_scheme/color_scheme_config_page.dart';
-import 'package:eqmonitor/feature/debug/debug_home_view.dart';
 import 'package:eqmonitor/feature/earthquake_history/page/earthquake_history.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/screen/earthquake_history_details.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/page/kmoni_settings_page.dart';
@@ -36,14 +35,6 @@ class SetupRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const SetupScreen();
-}
-
-@TypedGoRoute<DebugHomeRoute>(path: '/debug')
-class DebugHomeRoute extends GoRouteData {
-  const DebugHomeRoute();
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const DebugHomeView();
 }
 
 @TypedGoRoute<EarthquakeHistoryRoute>(path: '/earthquake-history')
