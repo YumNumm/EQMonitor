@@ -4,10 +4,12 @@ class CustomChip extends StatelessWidget {
   const CustomChip({
     required this.child,
     this.backgroundColor,
+    this.borderWidth = 0,
     super.key,
   });
   final Widget child;
   final Color? backgroundColor;
+  final double borderWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class CustomChip extends StatelessWidget {
           color: backgroundColor ?? Theme.of(context).colorScheme.background,
           border: Border.all(
             color: Theme.of(context).colorScheme.onSurface,
-            width: 0,
+            width: borderWidth,
           ),
         ),
         child: Padding(
