@@ -98,70 +98,76 @@ class EewWidget extends ConsumerWidget {
           (intensityScheme.foreground, intensityScheme.background);
       // 「緊急地震速報 警報 [SPACE] #5(最終)」
       final isWarning = (telegram.headline ?? '').contains('強い揺れ');
-      final header = Padding(
-        padding: const EdgeInsets.all(2),
-        child: Wrap(
-          alignment: WrapAlignment.spaceBetween,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            const Row(),
-            Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: 4,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(2),
+      final header = Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          const Row(),
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 4,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(2),
+                child: Text(
+                  '緊急地震速報 ${isWarning ? "警報" : "予報"}',
+                  style: textTheme.titleLarge!.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              if (eew.isLevelEew)
+                const CustomChip(
+                  borderWidth: 1,
+                  backgroundColor: Colors.transparent,
                   child: Text(
-                    '緊急地震速報 ${isWarning ? "警報" : "予報"}',
-                    style: textTheme.titleLarge!.copyWith(
+                    'レベル法',
+                    style: TextStyle(
+                      fontFamily: FontFamily.jetBrainsMono,
+                      fontFamilyFallback: [FontFamily.notoSansJP],
                       fontWeight: FontWeight.w900,
                     ),
                   ),
                 ),
-                if (eew.isLevelEew)
-                  const CustomChip(
-                    child: Text(
-                      'レベル法',
-                      style: TextStyle(
-                        fontFamily: FontFamily.jetBrainsMono,
-                        fontFamilyFallback: [FontFamily.notoSansJP],
-                      ),
+              if (eew.isIpfOnePoint)
+                const CustomChip(
+                  borderWidth: 1,
+                  backgroundColor: Colors.transparent,
+                  child: Text(
+                    '1点観測点による検知',
+                    style: TextStyle(
+                      fontFamily: FontFamily.jetBrainsMono,
+                      fontFamilyFallback: [FontFamily.notoSansJP],
+                      fontWeight: FontWeight.w900,
                     ),
                   ),
-                if (eew.isIpfOnePoint)
-                  const CustomChip(
-                    child: Text(
-                      '1点観測点による検出',
-                      style: TextStyle(
-                        fontFamily: FontFamily.jetBrainsMono,
-                        fontFamilyFallback: [FontFamily.notoSansJP],
-                      ),
+                ),
+              if (eew.isPlum)
+                const CustomChip(
+                  borderWidth: 1,
+                  backgroundColor: Colors.transparent,
+                  child: Text(
+                    'PLUM法',
+                    style: TextStyle(
+                      fontFamily: FontFamily.jetBrainsMono,
+                      fontFamilyFallback: [FontFamily.notoSansJP],
+                      fontWeight: FontWeight.w900,
                     ),
                   ),
-                if (eew.isPlum)
-                  const CustomChip(
-                    child: Text(
-                      'PLUM法',
-                      style: TextStyle(
-                        fontFamily: FontFamily.jetBrainsMono,
-                        fontFamilyFallback: [FontFamily.notoSansJP],
-                      ),
-                    ),
-                  ),
-              ],
+                ),
+            ],
+          ),
+          Text(
+            '#${telegram.serialNo}'
+            '${eew.isLastInfo ? "(最終)" : ""}',
+            style: textTheme.titleMedium!.copyWith(
+              fontWeight: FontWeight.bold,
+              fontFamily: FontFamily.jetBrainsMono,
+              fontFamilyFallback: [FontFamily.notoSansJP],
+              color: textTheme.titleMedium!.color!.withOpacity(0.8),
             ),
-            Text(
-              '#${telegram.serialNo}'
-              '${eew.isLastInfo ? "(最終)" : ""}',
-              style: textTheme.titleMedium!.copyWith(
-                fontWeight: FontWeight.w900,
-                fontFamily: FontFamily.jetBrainsMono,
-                fontFamilyFallback: [FontFamily.notoSansJP],
-                color: textTheme.titleMedium!.color!.withOpacity(0.8),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       );
       final maxIntensityWidget = Column(
         mainAxisSize: MainAxisSize.min,
@@ -183,7 +189,7 @@ class EewWidget extends ConsumerWidget {
             (eew.isPlum || eew.isLevelEew) ? '検知観測点' : '震源地',
             style: textTheme.bodyMedium!.copyWith(
               fontWeight: FontWeight.bold,
-              color: textTheme.bodyMedium!.color!.withOpacity(0.7),
+              color: textTheme.bodyMedium!.color!.withOpacity(0.8),
             ),
           ),
           const SizedBox(width: 4),
@@ -224,7 +230,7 @@ class EewWidget extends ConsumerWidget {
           Text(
             'M',
             style: textTheme.titleMedium!.copyWith(
-              color: textTheme.titleMedium!.color!.withOpacity(0.7),
+              color: textTheme.titleMedium!.color!.withOpacity(0.8),
             ),
           ),
           Text(
@@ -245,7 +251,7 @@ class EewWidget extends ConsumerWidget {
           Text(
             '深さ',
             style: textTheme.titleMedium!.copyWith(
-              color: textTheme.titleMedium!.color!.withOpacity(0.7),
+              color: textTheme.titleMedium!.color!.withOpacity(0.8),
             ),
           ),
           if (eew.depth != null) ...[
@@ -260,7 +266,7 @@ class EewWidget extends ConsumerWidget {
             Text(
               'km',
               style: textTheme.titleMedium!.copyWith(
-                color: textTheme.titleMedium!.color!.withOpacity(0.7),
+                color: textTheme.titleMedium!.color!.withOpacity(0.8),
               ),
             ),
           ] else
@@ -286,6 +292,18 @@ class EewWidget extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: Text(
                 'PLUM法による仮定震源要素',
+                style: textTheme.titleMedium!.copyWith(
+                  fontWeight: FontWeight.w900,
+                  fontFamily: FontFamily.notoSansJP,
+                  fontFamilyFallback: [FontFamily.notoSansJP],
+                ),
+              ),
+            ),
+          ] else if (eew.isLevelEew) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Text(
+                'レベル法による仮定震源要素',
                 style: textTheme.titleMedium!.copyWith(
                   fontWeight: FontWeight.w900,
                   fontFamily: FontFamily.notoSansJP,
