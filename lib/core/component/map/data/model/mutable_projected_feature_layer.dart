@@ -65,7 +65,7 @@ class ZoomCachedProjectedPolylineFeature {
 
   /// キャッシュがある場合はそれを返し、ない場合は[zoomLevel]を適用したList<Point>を返す
   List<GlobalPoint> getPoints(int zoomLevel) {
-    final value = pow(2, sqrt(zoomLevel).toInt()).toInt();
+    final value = pow(2, sqrt(max(100, zoomLevel) / 3).toInt()).toInt() * 3;
     return _cache[value] ??= _applyZoomLevel(value);
   }
 
@@ -102,7 +102,7 @@ class ZoomCachedProjectedPolygonFeature {
 
   /// キャッシュがある場合はそれを返し、ない場合は[zoomLevel]を適用したList<Point>を返す
   List<GlobalPoint> getPoints(int zoomLevel) {
-    final value = pow(2, sqrt(zoomLevel).toInt()).toInt();
+    final value = pow(2, sqrt(max(100, zoomLevel) / 3).toInt()).toInt() * 3;
     return _cache[value] ??= _applyZoomLevel(value);
   }
 
