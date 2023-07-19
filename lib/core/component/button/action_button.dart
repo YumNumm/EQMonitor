@@ -7,8 +7,10 @@ class ActionButton extends StatelessWidget {
     required this.isEnabled,
     required this.child,
     this.padding = const EdgeInsets.all(16),
+    this.accentColor,
     super.key,
   });
+
   factory ActionButton.enabled({
     required void Function() onPressed,
     required Widget child,
@@ -37,9 +39,11 @@ class ActionButton extends StatelessWidget {
     required void Function() onPressed,
     required String text,
     required BuildContext context,
+    Color? accentColor,
   }) =>
       ActionButton(
         onPressed: onPressed,
+        accentColor: accentColor,
         isEnabled: true,
         padding: const EdgeInsets.symmetric(
           vertical: 4,
@@ -59,17 +63,44 @@ class ActionButton extends StatelessWidget {
         ),
       );
 
+  factory ActionButton.textOutline({
+    required void Function() onPressed,
+    required String text,
+    required BuildContext context,
+    Color? textColor,
+  }) =>
+      ActionButton(
+        onPressed: onPressed,
+        accentColor: Colors.transparent,
+        isEnabled: true,
+        padding: const EdgeInsets.symmetric(
+          vertical: 4,
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: textColor,
+                  letterSpacing: 1.1,
+                ),
+          ),
+        ),
+      );
+
   final void Function() onPressed;
   final bool isEnabled;
   final Widget child;
   final EdgeInsets padding;
+  final Color? accentColor;
 
   @override
   Widget build(BuildContext context) {
-    final enabledWidget = InkWell(
+    // ripple effectは必要ないので`GesutreDetector`
+    final enabledWidget = GestureDetector(
       onTap: onPressed,
       child: BorderedContainer(
-        accentColor: Colors.blue[800],
+        accentColor: accentColor ?? Colors.blue[800]!,
         child: Padding(
           padding: padding,
           child: child,
