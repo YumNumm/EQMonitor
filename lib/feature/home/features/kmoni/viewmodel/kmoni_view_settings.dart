@@ -85,4 +85,10 @@ class KmoniSettings extends _$KmoniSettings {
       useKmoni: !state.useKmoni,
     );
   }
+
+  void setUseKmoni({required bool value}) {
+    state = state.copyWith(
+      useKmoni: value,
+    );
+  }
 }

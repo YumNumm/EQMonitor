@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:collection/collection.dart';
+import 'package:eqapi_schema/extension/telegram_v3.dart';
+import 'package:eqapi_schema/model/components/eew_intensity.dart';
 import 'package:eqapi_schema/model/telegram_v3.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/viewmodel/earthquake_history_view_model.dart';
@@ -17,7 +19,6 @@ class EewTelegram extends _$EewTelegram {
       for (final item in (next.value ?? <EarthquakeHistoryItem>[])
           .where((e) => e.latestEew != null)) {
         if (_shouldShow(item)) {
-          print('upsert ${item.eventId}');
           upsert(item);
         }
       }
@@ -108,5 +109,104 @@ class EewEstimatedIntensity extends _$EewEstimatedIntensity {
   @override
   List<(int code, JmaForecastIntensity intensity)> build() {
     return [];
+  }
+}
+
+/// キャンセル報を除いた最新のEEW
+@riverpod
+class EewNormalTelegram extends _$EewNormalTelegram {
+  @override
+  List<
+      (
+        TelegramVxse45Body body,
+        TelegramV3 telegram,
+      )> build() {
+    ref.listen(eewTelegramProvider, (_, next) => state = _build(next));
+
+    return _build(ref.read(eewTelegramProvider));
+  }
+
+  List<
+      (
+        TelegramVxse45Body body,
+        TelegramV3 telegram,
+      )> _build(List<EarthquakeHistoryItem> data) => data
+      .where(
+        (e) => e.latestEew != null && e.latestEew is TelegramVxse45Body,
+      )
+      .map(
+        (e) => (e.latestEew! as TelegramVxse45Body, e.latestEewTelegram!),
+      )
+      .toList();
+}
+
+/// レベル法・PLUM法・IPF1点のEEWを 除いた最新のEEW
+@riverpod
+class EewFilteredTelegram extends _$EewFilteredTelegram {
+  @override
+  List<
+      (
+        TelegramVxse45Body body,
+        TelegramV3 telegram,
+      )> build() {
+    ref.listen(eewNormalTelegramProvider, (_, next) => state = _build(next));
+
+    return _build(ref.read(eewNormalTelegramProvider));
+  }
+
+  List<
+      (
+        TelegramVxse45Body body,
+        TelegramV3 telegram,
+      )> _build(
+    List<
+            (
+              TelegramVxse45Body body,
+              TelegramV3 telegram,
+            )>
+        data,
+  ) =>
+      data.where(
+        (e) {
+          final eew = e.$1;
+          return eew.magnitude != null &&
+              eew.magnitude != null &&
+              eew.hypocenter != null &&
+              !(eew.isLevelEew && eew.isPlum && eew.isIpfOnePoint);
+        },
+      ).toList();
+}
+
+/// EEWの予想震度のリスト
+@riverpod
+class EewEstimatedIntensityList extends _$EewEstimatedIntensityList {
+  @override
+  List<(int code, JmaForecastIntensity intensity)> build() {
+    ref.listen(eewNormalTelegramProvider, (_, next) => state = _build(next));
+    return _build(ref.read(eewNormalTelegramProvider));
+  }
+
+  List<(int code, JmaForecastIntensity intensity)> _build(
+    List<
+            (
+              TelegramVxse45Body body,
+              TelegramV3 telegram,
+            )>
+        eews,
+  ) {
+    final regions = eews.map((e) => e.$1.regions ?? []).flattened;
+    final result = <(int, JmaForecastIntensity)>[];
+    regions
+        .groupListsBy((e) => int.tryParse(e.code) ?? 0)
+        .forEach((key, value) {
+      final maxIntensity = value
+          .map((e) => e.forecastMaxInt.toDisplayMaxInt())
+          .sorted((a, b) => b.$1.compareTo(a.$1))
+          .firstOrNull;
+      if (maxIntensity != null) {
+        result.add((key, maxIntensity.$1));
+      }
+    });
+    return result;
   }
 }
