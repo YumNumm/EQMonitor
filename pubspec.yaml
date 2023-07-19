@@ -94,6 +94,9 @@ flutter:
     - assets/maps/
     - assets/fonts/
 
+  shaders:
+    - shaders/introduction.glsl
+
   fonts:
     - family: NotoSansJP
       fonts:
