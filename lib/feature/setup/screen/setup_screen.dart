@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/setup/component/background_image.dart';
 import 'package:eqmonitor/feature/setup/pages/01_introduction_page.dart';
 import 'package:eqmonitor/feature/setup/pages/02_quick_guide_about_eew.dart';
 import 'package:eqmonitor/feature/setup/pages/03_kmoni_warn.dart';
@@ -40,17 +41,22 @@ class SetupScreen extends HookConsumerWidget {
         },
       ),
     ];
-    return PageView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      controller: pageController,
-      itemCount: pages.length,
-      itemBuilder: (context, index) {
-        // pages配列内にWidgetがある場合はそれを返す
-        if (pages.length > index) {
-          return pages[index];
-        }
-        throw Exception('Invalid index: $index');
-      },
+    return SetupBackgroundImageWidget(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: PageView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          controller: pageController,
+          itemCount: pages.length,
+          itemBuilder: (context, index) {
+            // pages配列内にWidgetがある場合はそれを返す
+            if (pages.length > index) {
+              return pages[index];
+            }
+            throw Exception('Invalid index: $index');
+          },
+        ),
+      ),
     );
   }
 }
