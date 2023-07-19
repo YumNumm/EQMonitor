@@ -55,6 +55,6 @@ class IntroductionPage extends StatelessWidget {
       ],
     );
 
-    return SetupBackgroundImageWidget(child: body);
+    return body;
   }
 }
