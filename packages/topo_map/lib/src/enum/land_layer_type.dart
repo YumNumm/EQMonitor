@@ -12,8 +12,8 @@ enum LandLayerType {
 
   int get multiAreaGroupNo => switch (this) {
         LandLayerType.worldWithoutJapan => 1,
-        LandLayerType.municipalityEarthquakeTsunamiArea => 100000,
-        LandLayerType.earthquakeInformationSubdivisionArea => 10,
+        LandLayerType.municipalityEarthquakeTsunamiArea => 1000,
+        LandLayerType.earthquakeInformationSubdivisionArea => 1,
         LandLayerType.tsunamiForecastArea => 1,
       };
 

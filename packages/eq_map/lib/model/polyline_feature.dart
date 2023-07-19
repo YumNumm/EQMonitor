@@ -21,7 +21,7 @@ class PolylineFeature {
     }
     final type = switch (arc.type) {
       TopologyArcType.coastline => PolylineType.coastLine,
-      TopologyArcType.admin => PolylineType.administrativeBoundary,
+      TopologyArcType.admin => PolylineType.admin,
       TopologyArcType.area => PolylineType.city,
     };
     final points = arc.arc.toLocations(map);
@@ -40,7 +40,7 @@ enum PolylineType {
   coastLine,
 
   /// 行政境界
-  administrativeBoundary,
+  admin,
 
   /// 市区町村
   city,

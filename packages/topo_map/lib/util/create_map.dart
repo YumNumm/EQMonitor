@@ -89,7 +89,7 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
 
   // 境界線の処理
   final resultArcs = json.getArcs.mapIndexed((index, arc) {
-    // 当該するPolyLineを利用しているポリゴンを取得
+    // 当該するPolylineを利用しているポリゴンを取得
     final refPolygons = resultPolygons
         .where(
           (e) => e.arcs.any(
@@ -97,23 +97,24 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
           ),
         )
         .toList();
+    print(refPolygons.map((e) => e.areaCode));
     final TopologyArcType arcType;
-    // 1つのみだったら海岸線
+    // このPolylineを利用しているポリゴンが1つのみだったら 海岸線
     if (refPolygons.length <= 1) {
       arcType = TopologyArcType.coastline;
-    } else if (layerType.multiAreaGroupNo == 1 ||
-        refPolygons
-                .where((polygon) => polygon.areaCode != null)
-                .groupListsBy(
-                    (poly) => poly.areaCode! / layerType.multiAreaGroupNo)
-                .length >
-            1) {
-      // ポリゴン自体が結合不可もしくは使用しているポリゴンがAreaCodeがnullでないかつ上3桁が違うものであれば県境
+    } else if (refPolygons
+            .where((polygon) => polygon.areaCode != null)
+            .groupListsBy(
+                (polygon) => polygon.areaCode! ~/ layerType.multiAreaGroupNo)
+            .length >=
+        2) {
+      // このPolylineを参照しているポリゴンのcode すべて一致するなら 県境
       arcType = TopologyArcType.admin;
     } else {
-      // そうでもないなら一次細分区域
+      // そうでもないなら 一次細分区域
       arcType = TopologyArcType.area;
     }
+    print(arcType);
     return TopologyArc(
       arc: arc,
       type: arcType,
