@@ -149,15 +149,18 @@ class _HomeBodyWidget extends HookConsumerWidget {
             child: Stack(
               children: [
                 RepaintBoundary(child: BaseMapWidget.polygon(mapKey)),
-                EewEstimatedIntensityWidget(mapKey: mapKey),
                 RepaintBoundary(
-                  child: EewPsWaveArrivalCircleWidget(mapKey: mapKey),
+                  child: EewPsWaveArrivalCircleWidget.gradient(mapKey: mapKey),
                 ),
+                EewEstimatedIntensityWidget(mapKey: mapKey),
                 RepaintBoundary(child: BaseMapWidget.polyline(mapKey)),
                 if (ref.watch(
                   kmoniSettingsProvider.select((value) => value.useKmoni),
                 ))
                   RepaintBoundary(child: KmoniMapWidget(mapKey: mapKey)),
+                RepaintBoundary(
+                  child: EewPsWaveArrivalCircleWidget.border(mapKey: mapKey),
+                ),
                 RepaintBoundary(child: EewHypocenterWidget(mapKey: mapKey)),
                 MapTouchHandlerWidget(mapKey: mapKey),
               ],

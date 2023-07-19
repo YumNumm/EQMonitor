@@ -14,8 +14,30 @@ import 'package:lat_lng/lat_lng.dart';
 import 'package:latlong2/latlong.dart' as latlong2;
 
 class EewPsWaveArrivalCircleWidget extends HookConsumerWidget {
-  const EewPsWaveArrivalCircleWidget({required this.mapKey, super.key});
+  factory EewPsWaveArrivalCircleWidget.border({
+    required Key mapKey,
+  }) =>
+      EewPsWaveArrivalCircleWidget._(
+        mapKey: mapKey,
+        drawBorder: true,
+      );
+
+  factory EewPsWaveArrivalCircleWidget.gradient({
+    required Key mapKey,
+  }) =>
+      EewPsWaveArrivalCircleWidget._(
+        mapKey: mapKey,
+        drawGradient: true,
+      );
+
+  const EewPsWaveArrivalCircleWidget._({
+    required this.mapKey,
+    this.drawBorder = false,
+    this.drawGradient = false,
+  });
   final Key mapKey;
+  final bool drawBorder;
+  final bool drawGradient;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,6 +63,8 @@ class EewPsWaveArrivalCircleWidget extends HookConsumerWidget {
         state: state,
         eews: eews,
         travelTimeTables: travelTimeTables,
+        drawBorder: drawBorder,
+        drawGradient: drawGradient,
       ),
       size: Size.infinite,
     );
@@ -53,11 +77,16 @@ class _HypocenterPainter extends CustomPainter {
     required this.state,
     required this.eews,
     required this.travelTimeTables,
+    required this.drawBorder,
+    required this.drawGradient,
   });
 
   final MapState state;
   List<(TelegramVxse45Body, TelegramV3)> eews;
   final TravelTimeTables travelTimeTables;
+
+  final bool drawBorder;
+  final bool drawGradient;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -103,8 +132,8 @@ class _HypocenterPainter extends CustomPainter {
         }
         final isWarning = telegram.headline?.contains('強い揺れ') ?? false;
         final sPath = Path()..addPolygon(sOffsets, true);
-        canvas
-          ..drawPath(
+        if (drawGradient) {
+          canvas.drawPath(
             sPath,
             Paint()
               ..shader = ui.Gradient.radial(
@@ -121,19 +150,24 @@ class _HypocenterPainter extends CustomPainter {
                             .withOpacity(0.3),
                       ],
               ),
-          )
-          ..drawPath(
+          );
+        }
+        if (drawBorder) {
+          canvas.drawPath(
             sPath,
             Paint()
-              ..color = isWarning ? Colors.red : Colors.orange
+              ..color = isWarning
+                  ? const ui.Color.fromARGB(255, 255, 0, 0)
+                  : const ui.Color.fromARGB(255, 255, 89, 0)
               ..isAntiAlias = true
               ..strokeCap = StrokeCap.square
               ..style = PaintingStyle.stroke
               ..strokeWidth = 1,
           );
+        }
       }
       // Pwave
-      if (travel.pDistance != null) {
+      if (travel.pDistance != null && drawBorder) {
         final pOffsets = <Offset>[];
         for (final bearing in List<int>.generate(360, (index) => index)) {
           final result = const latlong2.Distance().offset(
@@ -153,11 +187,11 @@ class _HypocenterPainter extends CustomPainter {
         canvas.drawPath(
           pPath,
           Paint()
-            ..color = Colors.blueAccent
+            ..color = const ui.Color.fromARGB(255, 0, 0, 255)
             ..isAntiAlias = true
             ..strokeCap = StrokeCap.square
             ..style = PaintingStyle.stroke
-            ..strokeWidth = 1,
+            ..strokeWidth = 0,
         );
       }
     }
