@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/model/kmoni_view_model_state.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
@@ -54,87 +55,77 @@ class SheetStatusWidget extends ConsumerWidget {
       }
     }
 
-    return Card(
-      margin: const EdgeInsets.all(4),
+    return BorderedContainer(
       elevation: 1,
-      shadowColor: Colors.transparent,
-      // 角丸にして Border
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(
-          color: theme.dividerColor.withOpacity(0.6),
-          width: 0,
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8,
-          vertical: 4,
-        ),
-        child: Row(
-          children: [
-            // kmoni
-            InkWell(
-              borderRadius: BorderRadius.circular(8),
-              onTap: adjustKmoniDelay,
-              child: Padding(
-                padding: const EdgeInsets.all(2),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // 現在時刻
-                    if (status == KmoniStatus.stopped) ...[
-                      const Icon(
-                        Icons.access_time_rounded,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '一時停止中',
-                        style: theme.textTheme.bodyMedium!.copyWith(
-                          fontFamily: FontFamily.jetBrainsMono,
+      padding: const EdgeInsets.all(8),
+      child: Row(
+        children: [
+          // kmoni
+          InkWell(
+            borderRadius: BorderRadius.circular(8),
+            onTap: adjustKmoniDelay,
+            child: Padding(
+              padding: const EdgeInsets.all(2),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // 現在時刻
+                  ...switch (status) {
+                    KmoniStatus.stopped => [
+                        const Icon(
+                          Icons.access_time_rounded,
+                          size: 16,
                         ),
-                      )
-                    ] else if (isInitialized && latestTime != null)
-                      Text(
-                        DateFormat('yyyy/MM/dd HH:mm:ss').format(latestTime),
-                        style: theme.textTheme.bodyMedium!.copyWith(
-                          fontFamily: FontFamily.jetBrainsMono,
+                        const SizedBox(width: 4),
+                        Text(
+                          '強震モニタ 停止中',
+                          style: theme.textTheme.bodyMedium!.copyWith(
+                            fontFamily: FontFamily.jetBrainsMono,
+                          ),
+                        )
+                      ],
+                    _ when isDelayAdjusting && latestTime != null => [
+                        Text(
+                          DateFormat('yyyy/MM/dd HH:mm:ss').format(latestTime),
+                          style: theme.textTheme.bodyMedium!.copyWith(
+                            fontFamily: FontFamily.jetBrainsMono,
+                          ),
                         ),
-                      )
-                    else
-                      const CircularProgressIndicator.adaptive(),
-                    if (isDelayAdjusting) ...[
-                      const SizedBox(width: 4),
-                      const SizedBox(
-                        height: 16,
-                        width: 16,
-                        child: CircularProgressIndicator.adaptive(),
-                      ),
-                    ],
-                  ],
-                ),
+                        const SizedBox(width: 4),
+                        const CircularProgressIndicator.adaptive()
+                      ],
+                    _ when isInitialized && latestTime != null => [
+                        Text(
+                          DateFormat('yyyy/MM/dd HH:mm:ss').format(latestTime),
+                          style: theme.textTheme.bodyMedium!.copyWith(
+                            fontFamily: FontFamily.jetBrainsMono,
+                          ),
+                        )
+                      ],
+                    _ => [const CircularProgressIndicator.adaptive()],
+                  },
+                ],
               ),
             ),
-            const Spacer(),
-            // WS接続状態
-            if (socketStatus.connected) ...[
-              const Icon(
-                Icons.cloud_sync_rounded,
-                color: Colors.green,
-              ),
-              const SizedBox(width: 4),
-              const Text('接続済み'),
-            ] else ...[
-              const Icon(
-                Icons.cloud_off_rounded,
-                color: Colors.red,
-              ),
-              const SizedBox(width: 4),
-              const Text('接続試行中...')
-            ],
+          ),
+          const Spacer(),
+          // WS接続状態
+          if (socketStatus.connected) ...[
+            const Icon(
+              Icons.cloud_sync_rounded,
+              color: Colors.green,
+            ),
+            const SizedBox(width: 4),
+            const Text('接続済み'),
+          ] else ...[
+            const Icon(
+              Icons.cloud_off_rounded,
+              color: Colors.red,
+            ),
+            const SizedBox(width: 4),
+            const Text('接続試行中...')
           ],
-        ),
+        ],
       ),
     );
   }

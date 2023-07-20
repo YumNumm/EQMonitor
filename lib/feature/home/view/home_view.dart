@@ -16,6 +16,7 @@ import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_widget.dart';
 import 'package:eqmonitor/feature/home/viewmodel/home_viewmodel.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
@@ -222,6 +223,7 @@ class _Sheet extends StatelessWidget {
         children: [
           const EewWidgets(),
           const SheetStatusWidget(),
+          const KmoniMaintenanceWidget(),
           const EarthquakeHistorySheetWidget(),
           ListTile(
             title: const Text('強震モニタ設定'),

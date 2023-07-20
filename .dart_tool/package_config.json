@@ -188,6 +188,12 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "csslib",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/csslib-0.17.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "cupertino_icons",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/cupertino_icons-1.0.5",
       "packageUri": "lib/",
@@ -386,6 +392,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "flutter_html",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/flutter_html-3.0.0-beta.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "flutter_launcher_icons",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/flutter_launcher_icons-0.13.1",
       "packageUri": "lib/",
@@ -488,6 +500,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "html",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/html-0.15.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "http",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/http-1.0.0",
       "packageUri": "lib/",
@@ -564,6 +582,12 @@
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/lints-2.1.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "list_counter",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/list_counter-1.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
     },
     {
       "name": "logging",
@@ -1118,7 +1142,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-07-19T16:58:40.371930Z",
+  "generated": "2023-07-20T04:18:30.144918Z",
   "generator": "pub",
   "generatorVersion": "3.0.6"
 }
