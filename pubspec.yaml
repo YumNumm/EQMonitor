@@ -30,6 +30,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_hooks: ^0.18.6
+  flutter_html: ^3.0.0-beta.2
   flutter_launcher_icons: ^0.13.0
   flutter_tts: ^3.6.3
   freezed_annotation: ^2.2.0

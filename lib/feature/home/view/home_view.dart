@@ -16,6 +16,8 @@ import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_widget.dart';
+import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
 import 'package:eqmonitor/feature/home/viewmodel/home_viewmodel.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
@@ -165,6 +167,13 @@ class _HomeBodyWidget extends HookConsumerWidget {
           fab: [
             FloatingActionButton.small(
               onPressed: () {
+                ref.read(telegramWsProvider.notifier).requestSample();
+              },
+              elevation: 4,
+              child: const Icon(Icons.send),
+            ),
+            FloatingActionButton.small(
+              onPressed: () {
                 final height = mediaQuery.size.height -
                     (mediaQuery.padding.top + mediaQuery.padding.bottom) -
                     kToolbarHeight;
@@ -222,6 +231,7 @@ class _Sheet extends StatelessWidget {
         children: [
           const EewWidgets(),
           const SheetStatusWidget(),
+          const KmoniMaintenanceWidget(),
           const EarthquakeHistorySheetWidget(),
           ListTile(
             title: const Text('強震モニタ設定'),

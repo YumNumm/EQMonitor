@@ -5,13 +5,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 /// タッチ操作をハンドルするWidget
 /// mapViewModelProviderからMapStateを取得すること
 class MapTouchHandlerWidget extends HookConsumerWidget {
-  const MapTouchHandlerWidget({super.key, required this.mapKey});
-
+  const MapTouchHandlerWidget({
+    super.key,
+    required this.mapKey,
+  });
   final Key mapKey;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final widget = Listener(
+    return Listener(
       onPointerSignal:
           ref.read(mapViewModelProvider(mapKey).notifier).recievedPointerSignal,
       child: GestureDetector(
@@ -23,6 +24,5 @@ class MapTouchHandlerWidget extends HookConsumerWidget {
             ref.read(mapViewModelProvider(mapKey).notifier).handleScaleEnd,
       ),
     );
-    return widget;
   }
 }
