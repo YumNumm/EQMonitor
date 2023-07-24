@@ -57,7 +57,10 @@ class SheetStatusWidget extends ConsumerWidget {
 
     return BorderedContainer(
       elevation: 1,
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 8,
+        vertical: 4,
+      ),
       child: Row(
         children: [
           // kmoni

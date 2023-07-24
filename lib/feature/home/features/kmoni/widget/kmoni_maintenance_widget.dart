@@ -19,7 +19,10 @@ class KmoniMaintenanceWidget extends ConsumerWidget {
             accentColor: data.type == KmoniMaintenanceMessageType.highLight
                 ? Colors.orangeAccent.withOpacity(0.2)
                 : null,
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8,
+              vertical: 4,
+            ),
             child: Column(
               children: [
                 const SheetHeader(title: '強震モニタからのお知らせ'),

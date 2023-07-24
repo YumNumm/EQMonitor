@@ -100,20 +100,15 @@ class _BaseMapPainter extends CustomPainter {
     Size size,
     MapColorScheme colorScheme,
   ) {
-    final bbox = state.getLatLngBoundary(size);
-
     for (final e in maps[LandLayerType.earthquakeInformationSubdivisionArea]!
         .projectedPolygonFeatures) {
-      // bbox check
-      if (!bbox.containsBbox(e.bbox)) {
-        //  continue;
-      }
-
       final points = e.getPoints(state.zoomLevel.truncate());
       final offsets = points.map(state.globalPointToOffset).toList();
-      if (!offsets.any(
-        (e) => e.dx > 0 && e.dy > 0 && e.dx < size.width && e.dy < size.height,
-      )) {
+      if (offsets.length < 4 ||
+          !offsets.any(
+            (e) =>
+                e.dx > 0 && e.dy > 0 && e.dx < size.width && e.dy < size.height,
+          )) {
         continue;
       }
       final path = Path()
@@ -164,7 +159,9 @@ class _BaseMapPainter extends CustomPainter {
             ..style = PaintingStyle.stroke
             ..color = switch (e.type) {
               PolylineType.coastLine => colorScheme.japanCoastlineColor,
-              _ => colorScheme.japanBorderLineColor,
+              PolylineType.admin => colorScheme.japanBorderLineColor,
+              PolylineType.city =>
+                colorScheme.japanBorderLineColor.withOpacity(0.8),
             }
             ..strokeWidth = 1
             ..isAntiAlias = true,
