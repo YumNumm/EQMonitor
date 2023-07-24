@@ -66,7 +66,7 @@ class MapColorScheme with _$MapColorScheme {
         worldCoastlineColor: Colors.white.withOpacity(0.3),
         worldBorderLineColor: Colors.white.withOpacity(0.3),
         japanLandColor: const Color(0xFF1a1c1e),
-        japanCoastlineColor: Colors.white.withOpacity(0.4),
-        japanBorderLineColor: Colors.grey.withOpacity(0.6),
+        japanCoastlineColor: Colors.grey.shade400,
+        japanBorderLineColor: Colors.grey,
       );
 }

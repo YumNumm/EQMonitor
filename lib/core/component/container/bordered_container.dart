@@ -9,19 +9,21 @@ class BorderedContainer extends StatelessWidget {
       vertical: 4,
       horizontal: 8,
     ),
+    this.elevation = 0,
     super.key,
   });
   final Widget child;
   final Color? accentColor;
   final EdgeInsetsGeometry padding;
   final EdgeInsetsGeometry margin;
+  final double elevation;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return Card(
-      elevation: 0,
+      elevation: elevation,
       color: accentColor ?? theme.cardColor,
       // border
       shape: RoundedRectangleBorder(
@@ -33,7 +35,7 @@ class BorderedContainer extends StatelessWidget {
       ),
       margin: margin,
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: padding,
         child: child,
       ),
     );

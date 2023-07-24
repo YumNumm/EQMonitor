@@ -56,16 +56,13 @@ class KmoniDataSource {
 
   Future<KmoniMaintenanceMessageModel> getMaintenanceMessage() async {
     final url = _urlGenerator.maintenanceMessage();
-    final res = await dio.get<KmoniMaintenanceMessageModel>(
+    final res = await dio.get<Map<String, dynamic>>(
       url,
-      options: Options(
-        responseType: ResponseType.json,
-      ),
     );
     final data = res.data;
     if (data == null) {
       throw Exception('data was null');
     }
-    return data;
+    return KmoniMaintenanceMessageModel.fromJson(data);
   }
 }
