@@ -43,10 +43,10 @@ extension MapStateProjection on MapState {
   }
 
   /// 画面座標OffsetをGlobalPointに変換する
-  GlobalPoint offsetToGlobalPoint(Offset offset) {
+  GlobalPoint offsetToGlobalPoint(Offset point) {
     return GlobalPoint(
-      offset.dx / zoomLevel + this.offset.dx,
-      offset.dy / zoomLevel + this.offset.dy,
+      (point.dx / zoomLevel) + offset.dx,
+      point.dy / zoomLevel + offset.dy,
     );
   }
 
@@ -188,7 +188,8 @@ extension MapStateProjection on MapState {
   MapState fitBoundsByGlobalPoints(
     List<GlobalPoint> points,
     Size widgetSize, {
-    double maxZoom = 300,
+    double maxZoom = 14 * 14,
+    EdgeInsetsGeometry padding = EdgeInsets.zero,
   }) {
     final (min, max) = _getBounds(points);
     final center = GlobalPoint(

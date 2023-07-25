@@ -19,7 +19,7 @@ class KmoniViewModel extends _$KmoniViewModel {
   KmoniViewModelState build() {
     _useCase = ref.watch(kmoniUseCaseProvider);
     _talker = ref.watch(talkerProvider);
-    ref.listen(appLifecycleProvider, (_, next) async {
+    ref.listen(appLifeCycleProvider, (_, next) async {
       if (next == AppLifecycleState.resumed) {
         state = state.copyWith(
           status: KmoniStatus.none,

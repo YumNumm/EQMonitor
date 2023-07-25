@@ -47,7 +47,7 @@ class BaseMapWidget extends HookConsumerWidget {
         ),
       final data => CustomPaint(
           painter: _BaseMapPainter(
-            state: ref.watch(MapViewModelProvider(mapKey)),
+            state: ref.watch(mapViewModelProvider(mapKey)),
             drawPolyline: drawPolyline,
             drawPolygon: drawPolygon,
             colorScheme:
@@ -136,15 +136,8 @@ class _BaseMapPainter extends CustomPainter {
     Size size,
     MapColorScheme colorScheme,
   ) {
-    final bbox = state.getLatLngBoundary(size);
-
     for (final e in maps[LandLayerType.earthquakeInformationSubdivisionArea]!
         .projectedPolylineFeatures) {
-      // bbox check
-      if (!bbox.containsBbox(e.bbox)) {
-        //continue;
-      }
-
       final points = e.getPoints(state.zoomLevel.truncate());
       final offsets = points.map(state.globalPointToOffset).toList();
       if (!offsets.any(
@@ -160,8 +153,12 @@ class _BaseMapPainter extends CustomPainter {
             ..color = switch (e.type) {
               PolylineType.coastLine => colorScheme.japanCoastlineColor,
               PolylineType.admin => colorScheme.japanBorderLineColor,
-              PolylineType.city =>
-                colorScheme.japanBorderLineColor.withOpacity(0.8),
+              PolylineType.city => Color.lerp(
+                  colorScheme.japanBorderLineColor,
+                  colorScheme.japanLandColor,
+                  0.4,
+                )!
+                    .withOpacity(0.4),
             }
             ..strokeWidth = 1
             ..isAntiAlias = true,
