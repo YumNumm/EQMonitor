@@ -4,10 +4,6 @@ import 'package:eq_map/model/polyline_feature.dart';
 import 'package:topo_map/topo_map.dart';
 
 class FeatureLayer {
-  final TopologyMap basedMap;
-  final List<PolylineFeature> lineFeatures;
-  final List<PolygonFeature> polygonFeatures;
-
   FeatureLayer._({
     required this.basedMap,
     required this.lineFeatures,
@@ -22,8 +18,7 @@ class FeatureLayer {
         .toList();
     final polygonFeatures = map.polygons
         .mapIndexed(
-          (_, polygon) =>
-              PolygonFeature.fromTopoMap(map, lineFeatures, polygon),
+          (_, polygon) => PolygonFeature.fromTopoMap(map, polygon),
         )
         .toList();
     return FeatureLayer._(
@@ -32,6 +27,9 @@ class FeatureLayer {
       polygonFeatures: polygonFeatures,
     );
   }
+  final TopologyMap basedMap;
+  final List<PolylineFeature> lineFeatures;
+  final List<PolygonFeature> polygonFeatures;
 
   List<PolygonFeature> getPolygonsByCode(int code) =>
       polygonFeatures.where((e) => e.code == code).toList();

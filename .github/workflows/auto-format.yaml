@@ -15,26 +15,19 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: ${{ env.FLUTTER_CHANNEL }}
           cache: true
       - name: Install dependencies
-        run: |
-          flutter pub get
+        run: flutter pub get
+      - name: Install Melos
+        run: pub global activate melos && melos bootstrap
 
-      - name: Format
+      - name: build_runner
         run: |
-          files=$(find lib test -name "*.dart" -not \( -name "*.*freezed.dart" -o -name "*.*g.dart" -o -name "*.gen.dart" \))
-          for file in $files; do
-            # limit jobs to 5
-            if [ "$(jobs -r | wc -l)" -ge 5 ]; then
-              wait "$(jobs -r -p | head -1)"
-            fi
-            dart fix --apply "$file" &
-          done
-          wait
+          echo '${{ secrets.ENV }}' | base64 -d > .env
+          melos run build_runner
 
-          dart format "$files"
+      - name: format
+        run: melos run format
 
       # 変更が発生した場合は プルリクエストを作成
       - name: Create pull request

@@ -1,26 +1,43 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
+// ignore_for_file: type=lint
+
 part of 'topo_json.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_TopoJson _$$_TopoJsonFromJson(Map<String, dynamic> json) => _$_TopoJson(
-      type: json['type'] as String,
-      transform: json['transform'] == null
-          ? null
-          : TopoJsonTransform.fromJson(
-              json['transform'] as Map<String, dynamic>),
-      objects: (json['objects'] as Map<String, dynamic>).map(
-        (k, e) => MapEntry(
-            k, TopoJsonGeometryObject.fromJson(e as Map<String, dynamic>)),
-      ),
-      arcs: (json['arcs'] as List<dynamic>)
-          .map((e) => (e as List<dynamic>)
-              .map((e) => (e as List<dynamic>).map((e) => e as int).toList())
-              .toList())
-          .toList(),
+_$_TopoJson _$$_TopoJsonFromJson(Map<String, dynamic> json) => $checkedCreate(
+      r'_$_TopoJson',
+      json,
+      ($checkedConvert) {
+        final val = _$_TopoJson(
+          type: $checkedConvert('type', (v) => v as String),
+          transform: $checkedConvert(
+              'transform',
+              (v) => v == null
+                  ? null
+                  : TopoJsonTransform.fromJson(v as Map<String, dynamic>)),
+          objects: $checkedConvert(
+              'objects',
+              (v) => (v as Map<String, dynamic>).map(
+                    (k, e) => MapEntry(
+                        k,
+                        TopoJsonGeometryObject.fromJson(
+                            e as Map<String, dynamic>)),
+                  )),
+          arcs: $checkedConvert(
+              'arcs',
+              (v) => (v as List<dynamic>)
+                  .map((e) => (e as List<dynamic>)
+                      .map((e) =>
+                          (e as List<dynamic>).map((e) => e as int).toList())
+                      .toList())
+                  .toList()),
+        );
+        return val;
+      },
     );
 
 Map<String, dynamic> _$$_TopoJsonToJson(_$_TopoJson instance) =>

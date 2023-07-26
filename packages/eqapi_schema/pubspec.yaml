@@ -1,6 +1,7 @@
 name: eqapi_schema
 description: EQApi API Schema
-version: 1.0.0
+version: 1.0.1
+publish_to: "none"
 
 environment:
   sdk: ^3.0.0
@@ -11,7 +12,9 @@ dependencies:
   freezed_annotation: ^2.2.0
   json_annotation: ^4.8.1
   lat_lng:
-    path: ../lat_lng
+    git:
+      url: https://github.com/YumNumm/EQMonitor.git
+      path: packages/lat_lng
 
 dev_dependencies:
   build_runner: ^2.4.2

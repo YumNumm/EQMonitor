@@ -1,0 +1,4 @@
+# melos_managed_dependency_overrides: lat_lng
+dependency_overrides:
+  lat_lng:
+    path: ../lat_lng
