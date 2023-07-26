@@ -2,7 +2,7 @@ name: Flutter build Android(r)
 
 on:
   push:
-    branches: [main, release/*]
+    branches: [main, develop, release/*]
   workflow_dispatch:
 
 jobs:
@@ -29,15 +29,6 @@ jobs:
       # https://github.com/kuhnroyal/flutter-fvm-config-action
       - name: Fetch flutter config
         uses: kuhnroyal/flutter-fvm-config-action@v1
-
-      - name: find dart sdk
-        run: |
-          echo "Dart SDK Path: $(which dart)"
-          # の2階層上にあるdart-sdkを指定
-          echo 'MELOS_SDK_PATH=$(which dart | xargs dirname | xargs dirname)' >> $GITHUB_ENV
-          echo "Dart SDK Version: $(dart --version)"
-          echo "Flutter SDK Path: $(which flutter)"
-          echo "Flutter SDK Version: $(flutter --version)"
 
       # https://github.com/subosito/flutter-action
       - name: Set up flutter
