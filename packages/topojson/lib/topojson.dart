@@ -1,4 +1,3 @@
-library;
 
 export 'src/topo_json.dart';
 export 'src/topo_json_geometry.dart';
