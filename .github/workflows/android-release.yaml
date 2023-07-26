@@ -66,7 +66,7 @@ jobs:
         run: flutter pub get
 
       - name: Install Melos
-        run: pub global activate melos && melos bootstrap
+        run: dart pub global activate melos && melos bootstrap
 
       - name: build_runner
         run: |

@@ -6,14 +6,13 @@ on:
       - "v*"
   workflow_dispatch:
 
-
 jobs:
   release-android:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
-        target: ["android-arm","android-arm64","android-x64", "android-all"]
+        target: ["android-arm", "android-arm64", "android-x64", "android-all"]
     timeout-minutes: 45
 
     steps:
@@ -72,13 +71,12 @@ jobs:
         run: flutter pub get
 
       - name: Install Melos
-        run: pub global activate melos && melos bootstrap
+        run: dart pub global activate melos && melos bootstrap
 
       - name: build_runner
         run: |
           echo '${{ secrets.ENV }}' | base64 -d > .env
           melos run build_runner
-
 
       - name: Generate LauncherIcon
         run: flutter pub run flutter_launcher_icons:main
@@ -132,7 +130,6 @@ jobs:
           name: v${{ env.CI_ACTION_REF_NAME }}
           draft: true
           prerelease: true
-
 
       - name: Upload obfuscate
         run: |
