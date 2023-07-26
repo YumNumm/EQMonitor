@@ -2,7 +2,7 @@ name: iOS CI
 on:
   workflow_dispatch:
   push:
-    branches: [main, release/*]
+    branches: [main, develop, release/*]
 
 jobs:
   build:
@@ -34,10 +34,14 @@ jobs:
       - name: Fetch flutter config
         uses: kuhnroyal/flutter-fvm-config-action@v1
 
-      - name: Setup Flutter
+      # https://github.com/subosito/flutter-action
+      - name: Set up flutter
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
           cache: true
+          cache-key: ${{ env.FLUTTER_VERSION }}-${{ env.FLUTTER_CHANNEL }}
 
       - name: Flutter version
         run: flutter --version
