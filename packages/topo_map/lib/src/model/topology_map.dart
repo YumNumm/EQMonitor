@@ -42,13 +42,13 @@ class TopologyPolygon with _$TopologyPolygon {
 @JsonEnum(valueField: 'type')
 enum TopologyArcType {
   /// 海岸線
-  coastline("coastline"),
+  coastline('coastline'),
 
   /// 県境
-  admin("admin"),
+  admin('admin'),
 
   /// 一次細分化区域
-  area("area");
+  area('area');
 
   const TopologyArcType(this.type);
   final String type;
