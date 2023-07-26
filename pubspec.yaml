@@ -5,7 +5,7 @@ publish_to: "none"
 version: 2.0.0+1020
 
 environment:
-  sdk: ">=3.0.3 <4.0.0"
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   app_settings: ^4.2.0
@@ -81,6 +81,7 @@ dev_dependencies:
   go_router_builder: ^2.0.0
   json_serializable: ^6.6.2
   material_button_assist: ^1.0.0
+  melos: ^3.1.1
   pedantic_mono: ^1.21.1
   retrofit_generator: ^6.0.0+3
   riverpod_generator: ^2.2.1
