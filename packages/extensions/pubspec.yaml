@@ -4,3 +4,5 @@ version: 1.0.0
 
 environment:
   sdk: ^3.0.5
+dev_dependencies:
+  pedantic_mono: ^1.23.0

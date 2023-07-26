@@ -1,23 +1,12 @@
 import 'package:eq_map/extension/list_int_vector.dart';
-import 'package:eq_map/model/polyline_feature.dart';
 import 'package:extensions/extensions.dart';
 import 'package:lat_lng/lat_lng.dart';
 import 'package:topo_map/topo_map.dart';
 
 class PolygonFeature {
-  PolygonFeature._({
-    required this.code,
-    required this.bbox,
-    required this.points,
-  });
-
-  final int? code;
-  final LatLngBoundary? bbox;
-  final List<LatLng> points;
 
   factory PolygonFeature.fromTopoMap(
     TopologyMap map,
-    List<PolylineFeature> lineFeatures,
     TopologyPolygon topologyPolygon,
   ) {
     final polyIndexes = topologyPolygon.arcs;
@@ -57,4 +46,13 @@ class PolygonFeature {
       points: points,
     );
   }
+  PolygonFeature._({
+    required this.code,
+    required this.bbox,
+    required this.points,
+  });
+
+  final int? code;
+  final LatLngBoundary? bbox;
+  final List<LatLng> points;
 }

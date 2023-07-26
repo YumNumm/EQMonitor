@@ -9,11 +9,11 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
     scale:
         DoubleVector(x: json.transform!.scale[1], y: json.transform!.scale[0]),
     translate: DoubleVector(
-        x: json.transform!.translate[1], y: json.transform!.translate[0]),
+        x: json.transform!.translate[1], y: json.transform!.translate[0],),
     polygons: [],
     arcs: [],
   );
-  print("ポリゴンの処理を開始");
+  print('ポリゴンの処理を開始');
   final resultPolygons = <TopologyPolygon>[];
 
   for (final obj in json.objects.values) {
@@ -25,13 +25,13 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
             TopologyPolygon(
               arcs: arcs,
               areaCode: int.tryParse(
-                    (geo.properties)?.getOrNull("code").toString() ?? "",
+                    (geo.properties)?.getOrNull('code').toString() ?? '',
                   ) ??
                   int.tryParse(
-                    (geo.properties)?.getOrNull("regioncode").toString() ?? "",
+                    (geo.properties)?.getOrNull('regioncode').toString() ?? '',
                   ) ??
                   int.tryParse(
-                    (geo.properties)?.getOrNull("ISO_N3").toString() ?? "",
+                    (geo.properties)?.getOrNull('ISO_N3').toString() ?? '',
                   ),
             ),
           );
@@ -41,14 +41,14 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
               TopologyPolygon(
                 arcs: arcs,
                 areaCode: int.tryParse(
-                      (geo.properties)?.getOrNull("code").toString() ?? "",
+                      (geo.properties)?.getOrNull('code').toString() ?? '',
                     ) ??
                     int.tryParse(
-                      (geo.properties)?.getOrNull("regioncode").toString() ??
-                          "",
+                      (geo.properties)?.getOrNull('regioncode').toString() ??
+                          '',
                     ) ??
                     int.tryParse(
-                      (geo.properties)?.getOrNull("ISO_N3").toString() ?? "",
+                      (geo.properties)?.getOrNull('ISO_N3').toString() ?? '',
                     ),
               ),
             );
@@ -61,7 +61,7 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
             TopologyPolygon(
               arcs: [arcs],
               areaCode: int.tryParse(
-                (geo.properties)?.getOrNull("code").toString() ?? "",
+                (geo.properties)?.getOrNull('code').toString() ?? '',
               ),
             ),
           );
@@ -72,7 +72,7 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
               TopologyPolygon(
                 arcs: [arcs],
                 areaCode: int.tryParse(
-                  (geo.properties)?.getOrNull("code").toString() ?? "",
+                  (geo.properties)?.getOrNull('code').toString() ?? '',
                 ),
               ),
             );
@@ -84,8 +84,8 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
     }
   }
 
-  print("$layerType: ${resultPolygons.length}個のポリゴンが処理されました");
-  print("$layerType: 境界線を処理しています...");
+  print('$layerType: ${resultPolygons.length}個のポリゴンが処理されました');
+  print('$layerType: 境界線を処理しています...');
 
   // 境界線の処理
   final resultArcs = json.getArcs.mapIndexed((index, arc) {
@@ -105,7 +105,7 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
     } else if (refPolygons
             .where((polygon) => polygon.areaCode != null)
             .groupListsBy(
-                (polygon) => polygon.areaCode! ~/ layerType.multiAreaGroupNo)
+                (polygon) => polygon.areaCode! ~/ layerType.multiAreaGroupNo,)
             .length >=
         2) {
       // このPolylineを参照しているポリゴンのcode すべて一致するなら 県境

@@ -24,7 +24,6 @@ class EarthquakeHistoryMap extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final brightness = Theme.of(context).brightness;
     // 地図データがない場合はローディング
 
     final mapData =
