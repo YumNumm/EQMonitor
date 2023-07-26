@@ -1,0 +1,10 @@
+# melos_managed_dependency_overrides: extensions,lat_lng,topo_map,topojson
+dependency_overrides:
+  extensions:
+    path: ../extensions
+  lat_lng:
+    path: ../lat_lng
+  topo_map:
+    path: ../topo_map
+  topojson:
+    path: ../topojson

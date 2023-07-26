@@ -1,0 +1,10 @@
+name: eqmonitor
+git: https://github.com/YumNumm/EQMonitor
+sdkPath: .fvm/flutter_sdk
+
+command:
+
+
+packages:
+  - packages/*
+  - .
