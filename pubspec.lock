@@ -779,7 +779,7 @@ packages:
       path: "packages/lat_lng"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.0.1"
   latlong2:
     dependency: "direct main"
     description:
@@ -960,10 +960,10 @@ packages:
     dependency: "direct dev"
     description:
       name: pedantic_mono
-      sha256: f06b0d77589c9af90a54867a39761ebad9f867a746a270982cdd6ee370b2ea27
+      sha256: "1637a362bbc2eee00ee9314509463c0ec03e6495109583491a5f848448e6d12d"
       url: "https://pub.dev"
     source: hosted
-    version: "1.22.0"
+    version: "1.23.0"
   permission_handler:
     dependency: "direct main"
     description:
