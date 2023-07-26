@@ -6,7 +6,6 @@ import 'package:eqmonitor/feature/home/features/telegram_ws/model/socket_status.
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_socket_io.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:socket_io_client/socket_io_client.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 
 part 'telegram_provider.g.dart';
 

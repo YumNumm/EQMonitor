@@ -6,8 +6,6 @@ part 'topo_json_geometry.freezed.dart';
 part 'topo_json_geometry.g.dart';
 
 sealed class TopoJsonGeometryObject {
-  final TopoJsonGeometryType? type;
-  final Map<String, String?>? properties;
 
   const TopoJsonGeometryObject({
     this.type,
@@ -32,6 +30,8 @@ sealed class TopoJsonGeometryObject {
         return NullGeometryObject.fromJson(json);
     }
   }
+  final TopoJsonGeometryType? type;
+  final Map<String, String?>? properties;
 
   Map<String, dynamic> toJson() {
     switch (type) {
@@ -48,8 +48,8 @@ sealed class TopoJsonGeometryObject {
       case null:
         return {
           if (properties != null)
-            "properties": (properties as dynamic).toJson(),
-          "type": null,
+            'properties': (properties as dynamic).toJson(),
+          'type': null,
         };
     }
   }

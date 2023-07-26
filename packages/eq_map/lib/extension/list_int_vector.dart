@@ -6,8 +6,8 @@ extension ListIntVector on List<IntVector> {
   /// [IntVector]のリストを[LatLng]のリストに変換する
   List<LatLng> toLocations(TopologyMap map) {
     final result = <LatLng>[];
-    double x = 0;
-    double y = 0;
+    var x = 0;
+    var y = 0;
     for (final e in this) {
       result.add(
         LatLng(

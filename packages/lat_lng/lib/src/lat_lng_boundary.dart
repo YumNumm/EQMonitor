@@ -1,10 +1,6 @@
 import 'package:lat_lng/src/lat_lng.dart';
 
 class LatLngBoundary {
-  LatLngBoundary._(this.northEast, this.southWest);
-
-  final LatLng northEast;
-  final LatLng southWest;
 
   factory LatLngBoundary.fromTwo(LatLng one, LatLng two) {
     final northEast = LatLng(
@@ -54,6 +50,10 @@ class LatLngBoundary {
     final southWest = LatLng(southWestLat, southWestLon);
     return LatLngBoundary._(northEast, southWest);
   }
+  LatLngBoundary._(this.northEast, this.southWest);
+
+  final LatLng northEast;
+  final LatLng southWest;
 
   bool containsBbox(LatLngBoundary other) {
     return northEast.lat >= other.northEast.lat &&

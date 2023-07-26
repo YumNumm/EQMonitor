@@ -4,9 +4,6 @@ import 'package:lat_lng/lat_lng.dart';
 import 'package:topo_map/topo_map.dart';
 
 class PolylineFeature {
-  final List<LatLng> points;
-  final PolylineType type;
-  final bool isClosed;
 
   PolylineFeature._({
     required this.points,
@@ -33,6 +30,9 @@ class PolylineFeature {
       isClosed: isClosed,
     );
   }
+  final List<LatLng> points;
+  final PolylineType type;
+  final bool isClosed;
 }
 
 enum PolylineType {
