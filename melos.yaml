@@ -1,10 +1,44 @@
 name: eqmonitor
-git: https://github.com/YumNumm/EQMonitor
+repository: https://github.com/YumNumm/EQMonitor
 sdkPath: .fvm/flutter_sdk
 
 command:
+  version:
+    includeCommitId: true
+    linkToCommits: true
 
+scripts:
+  analyze:
+    # We are setting the concurrency to 1 because a higher concurrency can crash
+    # the analysis server on low performance machines (like GitHub Actions).
+    run: |
+      melos exec -c 1 -- \
+        dart analyze . --fatal-infos
+    description: |
+      Run `dart analyze` in all packages.
+       - Note: you can also rely on your IDEs Dart Analysis / Issues window.
+
+  build_runner:
+    exec: flutter pub run build_runner build -d
+    packageFilters:
+      dependsOn: build_runner
+  pub_get:
+    exec: dart pub get
+  format:
+    exec: |
+      SCRIPT_DIR=$(cd $(dirname $0); pwd)
+      echo $SCRIPT_DIR
+      files=$(find lib -name "*.dart" -not \( -name "*.*freezed.dart" -o -name "*.*g.dart" -o -name "*.gen.dart" \))
+      for file in $files; do
+        # limit jobs to 5
+        if [ "$(jobs -r | wc -l)" -ge 5 ]; then
+          wait "$(jobs -r -p | head -1)"
+        fi
+        dart fix --apply "$file" &
+      done
+      wait
+      dart format "$files"
 
 packages:
-  - packages/*
   - .
+  - packages/*
