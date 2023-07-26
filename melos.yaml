@@ -22,8 +22,6 @@ scripts:
     exec: flutter pub run build_runner build -d
     packageFilters:
       dependsOn: build_runner
-  pub:get:
-    exec: dart pub get
   format:
     exec: $PWD/util/shell/format.sh
 

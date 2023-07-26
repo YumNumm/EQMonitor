@@ -383,14 +383,14 @@ packages:
       path: "packages/eq_map"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.0.1"
   eqapi_schema:
     dependency: "direct main"
     description:
       path: "packages/eqapi_schema"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.0.1"
   extensions:
     dependency: "direct main"
     description:
@@ -1441,14 +1441,14 @@ packages:
       path: "packages/topo_map"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.0.1"
   topojson:
     dependency: "direct main"
     description:
       path: "packages/topojson"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.0.1"
   tuple:
     dependency: transitive
     description:
