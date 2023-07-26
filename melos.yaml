@@ -22,22 +22,10 @@ scripts:
     exec: flutter pub run build_runner build -d
     packageFilters:
       dependsOn: build_runner
-  pub_get:
+  pub:get:
     exec: dart pub get
   format:
-    exec: |
-      SCRIPT_DIR=$(cd $(dirname $0); pwd)
-      echo $SCRIPT_DIR
-      files=$(find lib -name "*.dart" -not \( -name "*.*freezed.dart" -o -name "*.*g.dart" -o -name "*.gen.dart" \))
-      for file in $files; do
-        # limit jobs to 5
-        if [ "$(jobs -r | wc -l)" -ge 5 ]; then
-          wait "$(jobs -r -p | head -1)"
-        fi
-        dart fix --apply "$file" &
-      done
-      wait
-      dart format "$files"
+    exec: $PWD/util/shell/format.sh
 
 packages:
   - .
