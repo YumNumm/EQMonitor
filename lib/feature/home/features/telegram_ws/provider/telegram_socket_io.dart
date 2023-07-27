@@ -46,11 +46,7 @@ Socket telegramSocketIo(TelegramSocketIoRef ref) {
     ..connect();
 
   // バックグラウンドに入ったら切断
-  ref.listen(appLifecycleProvider, (_, next) {
-    if (next == AppLifecycleState.paused ||
-        next == AppLifecycleState.inactive) {
-      socket.disconnect();
-    }
+  ref.listen(appLifeCycleProvider, (_, next) {
     if (next == AppLifecycleState.resumed) {
       socket.connect();
     }

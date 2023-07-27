@@ -579,6 +579,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.6"
+  flutter_smart_watch_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_smart_watch_platform_interface
+      sha256: "66e49a77764294a5d9816be548ffab33acac54bc51292d8d01e9e07455571a2b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   flutter_test:
     dependency: transitive
     description: flutter
@@ -592,6 +600,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.6.3"
+  flutter_watch_os_connectivity:
+    dependency: "direct main"
+    description:
+      name: flutter_watch_os_connectivity
+      sha256: fc6b49c0cdcdab07c5b93f23230184fd6adb212d6feb6de0d7dd1d64f0c5ffc2
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
