@@ -34,7 +34,7 @@ class BasicModalSheet extends HookWidget {
 
         final sheet = Sheet(
           backgroundColor: Colors.transparent,
-          initialExtent: 120,
+          initialExtent: constraints.maxHeight * 0.3,
           controller: controller,
           physics: const SnapSheetPhysics(
             stops: <double>[0.1, 0.3, 0.5, 0.95, 1],

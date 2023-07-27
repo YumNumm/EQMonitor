@@ -440,6 +440,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "flutter_smart_watch_platform_interface",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/flutter_smart_watch_platform_interface-0.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "flutter_test",
       "rootUri": "file:///Users/r_onoue/fvm/versions/3.10.6/packages/flutter_test",
       "packageUri": "lib/",
@@ -450,6 +456,12 @@
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/flutter_tts-3.6.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_watch_os_connectivity",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/flutter_watch_os_connectivity-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "flutter_web_plugins",

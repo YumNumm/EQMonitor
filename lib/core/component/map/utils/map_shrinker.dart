@@ -13,5 +13,6 @@ class MapShrinker {
       simplify(
         points.map((e) => Point(e.x * zoomLevel, e.y * zoomLevel)).toList(),
         tolerance: 1,
+        highestQuality: false,
       ).map((e) => GlobalPoint(e.x / zoomLevel, e.y / zoomLevel)).toList();
 }

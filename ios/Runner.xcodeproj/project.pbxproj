@@ -42,6 +42,16 @@
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 1;
 		};
+		853216312A6F9570002F798E /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -225,9 +235,10 @@
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				850B5A972A078E1400B1021F /* Embed Foundation Extensions */,
+				853216312A6F9570002F798E /* Embed Watch Content */,
+				851D0C2BA6486747962E13F1 /* [CP] Embed Pods Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				F745DF47A31C648624529237 /* [firebase_crashlytics] Crashlytics Upload Symbols */,
-				851D0C2BA6486747962E13F1 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -246,7 +257,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastSwiftUpdateCheck = 1430;
+				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1300;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {

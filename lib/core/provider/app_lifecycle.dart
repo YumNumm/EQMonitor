@@ -3,9 +3,13 @@ import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:flutter/widgets.dart';
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'app_lifecycle.g.dart';
 
 /// ref: https://zenn.dev/riscait/books/flutter-riverpod-practical-introduction/viewer/v2-app-lifecycle
-final appLifecycleProvider = Provider<AppLifecycleState>((ref) {
+@Riverpod(keepAlive: true)
+AppLifecycleState appLifeCycle(AppLifeCycleRef ref) {
   final observer = _AppLifecycleObserver((value) => ref.state = value, ref);
 
   final binding = WidgetsBinding.instance..addObserver(observer);
@@ -17,7 +21,7 @@ final appLifecycleProvider = Provider<AppLifecycleState>((ref) {
           .logTyped(AppLifeCycleLog('$previous -> $next')),
     );
   return AppLifecycleState.resumed;
-});
+}
 
 class _AppLifecycleObserver extends WidgetsBindingObserver {
   _AppLifecycleObserver(this._didChangeState, this.ref);

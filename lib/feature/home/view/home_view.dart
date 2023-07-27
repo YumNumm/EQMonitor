@@ -166,6 +166,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
           controller: sheetController,
           fab: [
             FloatingActionButton.small(
+              heroTag: 'request',
               onPressed: () {
                 ref.read(telegramWsProvider.notifier).requestSample();
               },
@@ -173,6 +174,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
               child: const Icon(Icons.send),
             ),
             FloatingActionButton.small(
+              heroTag: 'home',
               onPressed: () {
                 final height = mediaQuery.size.height -
                     (mediaQuery.padding.top + mediaQuery.padding.bottom) -

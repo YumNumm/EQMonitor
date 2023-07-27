@@ -53,13 +53,24 @@ class MapViewModel extends _$MapViewModel {
       );
 
   /// 表示領域を変更する
-  void applyBounds() {
+  void applyBounds({
+    EdgeInsetsGeometry padding = EdgeInsets.zero,
+    double bottom = 0,
+  }) {
     if (_renderBox == null) {
       return;
     }
     final points = _currencPoi.toGlobalPoints();
-    state =
-        state.fitBoundsByGlobalPoints([points.$1, points.$2], _renderBox!.size);
+    state = state.fitBoundsByGlobalPoints(
+      [points.$1, points.$2],
+      padding
+          .add(
+            EdgeInsets.only(
+              bottom: _renderBox!.size.height * bottom,
+            ),
+          )
+          .deflateSize(_renderBox!.size),
+    );
   }
 
   Future<void> animatedApplyBoundsIfNeeded({
@@ -80,6 +91,7 @@ class MapViewModel extends _$MapViewModel {
     Duration duration = const Duration(milliseconds: 500),
     Curve curve = Curves.easeOutCirc,
     EdgeInsetsGeometry padding = EdgeInsets.zero,
+    double bottom = 0,
   }) {
     if (_renderBox == null) {
       throw Exception('MapController is not initialized.');
@@ -90,6 +102,7 @@ class MapViewModel extends _$MapViewModel {
       curve: curve,
       duration: duration,
       padding: padding,
+      bottom: bottom,
     );
   }
 
@@ -503,6 +516,7 @@ class MapViewModel extends _$MapViewModel {
     Duration duration = const Duration(milliseconds: 500),
     Curve curve = Curves.easeOutCirc,
     EdgeInsetsGeometry padding = EdgeInsets.zero,
+    double bottom = 0,
   }) async {
     if (_renderBox == null) {
       throw Exception('MapController is not initialized.');
@@ -521,7 +535,13 @@ class MapViewModel extends _$MapViewModel {
     final startZoomLevel = state.zoomLevel;
     final after = state.fitBoundsByGlobalPoints(
       globalPoints,
-      padding.deflateSize(_renderBox!.size),
+      padding
+          .add(
+            EdgeInsets.only(
+              bottom: _renderBox!.size.height * bottom,
+            ),
+          )
+          .deflateSize(_renderBox!.size),
     );
     final afterCenterGlobalPoint =
         after.offsetToGlobalPoint(_renderBox!.size.center(Offset.zero));
@@ -558,17 +578,6 @@ class MapViewModel extends _$MapViewModel {
     _scaleController = scaleController;
     _globalPointAndZoomLevelController = globalPointAndZoomLevelController;
   }
-
-  /// [latLngs]を含む最小の矩形を表示する
-  void fitBounds(
-    List<LatLng> latLngs, {
-    double maxZoom = 200,
-  }) =>
-      state = state.fitBounds(
-        latLngs,
-        _renderBox!.size,
-        maxZoom: maxZoom,
-      );
 
   double get actualZoomLevel => math.sqrt(state.zoomLevel);
 }
