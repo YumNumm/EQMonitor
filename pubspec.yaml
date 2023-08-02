@@ -8,6 +8,7 @@ environment:
   sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
+  animations: ^2.0.7
   app_settings: ^4.2.0
   awesome_notifications: 0.7.4+1
   awesome_notifications_fcm: 0.7.4+1

@@ -581,6 +581,10 @@ enum JmaForecastLgIntensity {
 
   const JmaForecastLgIntensity(this.type);
   final String type;
+
+  bool operator >(JmaLgIntensity other) {
+    return type.compareTo(other.type) > 0;
+  }
 }
 
 @JsonEnum(valueField: 'type')
