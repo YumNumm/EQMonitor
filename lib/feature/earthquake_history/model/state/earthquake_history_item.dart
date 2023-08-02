@@ -26,6 +26,12 @@ class EarthquakeHistoryItem with _$EarthquakeHistoryItem {
       _$EarthquakeHistoryItemFromJson(json);
 }
 
+extension EarthquakeHistoryItemExtension on EarthquakeHistoryItem {
+  List<TelegramV3> get eewList => telegrams
+      .where((element) => element.type == TelegramType.vxse45)
+      .toList(growable: false);
+}
+
 @freezed
 class EarthquakeData with _$EarthquakeData {
   const factory EarthquakeData({

@@ -9,7 +9,9 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
     scale:
         DoubleVector(x: json.transform!.scale[1], y: json.transform!.scale[0]),
     translate: DoubleVector(
-        x: json.transform!.translate[1], y: json.transform!.translate[0],),
+      x: json.transform!.translate[1],
+      y: json.transform!.translate[0],
+    ),
     polygons: [],
     arcs: [],
   );
@@ -105,7 +107,8 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
     } else if (refPolygons
             .where((polygon) => polygon.areaCode != null)
             .groupListsBy(
-                (polygon) => polygon.areaCode! ~/ layerType.multiAreaGroupNo,)
+              (polygon) => polygon.areaCode! ~/ layerType.multiAreaGroupNo,
+            )
             .length >=
         2) {
       // このPolylineを参照しているポリゴンのcode すべて一致するなら 県境

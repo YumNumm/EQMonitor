@@ -1,6 +1,12 @@
+import 'package:animations/animations.dart';
 import 'package:collection/collection.dart';
 import 'package:eqapi_schema/eqapi_schema.dart';
+import 'package:eqapi_schema/extension/telegram_v3.dart';
+import 'package:eqapi_schema/model/components/eew_intensity.dart';
+import 'package:eqmonitor/core/component/chip/custom_chip.dart';
+import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
@@ -100,7 +106,165 @@ class _Sheet extends StatelessWidget {
         controller: sheetController,
         children: [
           EarthquakeHypoInfoWidget(item: item),
+          const Divider(),
+          EarthquakeCommentWidget(item: item),
+          if (item.latestEewTelegram != null)
+            OpenContainer(
+              closedColor: Colors.transparent,
+              closedElevation: 0,
+              openColor: Colors.transparent,
+              openElevation: 0,
+              closedBuilder: (context, action) => ListTile(
+                title: const Text('この地震に関する緊急地震速報'),
+                subtitle: Text('${item.eewList.length}件'),
+              ),
+              openBuilder: (context, action) => _EewListView(item.eewList),
+            ),
         ],
+      ),
+    );
+  }
+}
+
+class _EewListView extends ConsumerWidget {
+  const _EewListView(this.eewList);
+  final List<TelegramV3> eewList;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final intensityColorScheme = ref.watch(intensityColorProvider);
+    final textTheme = theme.textTheme;
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('緊急地震速報の履歴'),
+      ),
+      body: ListView.builder(
+        itemCount: eewList.length,
+        itemBuilder: (context, index) {
+          final eew = (
+            telegram: eewList[index],
+            body: eewList[index].body as Vxse45,
+          );
+          final isCanceled = eew.body is TelegramVxse45Cancel;
+          if (isCanceled) {
+            return ListTile(
+              title: Text(
+                '第${eew.telegram.serialNo}報 ',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text(
+                'キャンセル報',
+                style: theme.textTheme.bodyMedium!.copyWith(
+                  color: Colors.redAccent,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            );
+          }
+          final body = eew.body as TelegramVxse45Body;
+          final forecastMaxInt = body.forecastMaxInt?.toDisplayMaxInt();
+          final forecastMaxIntColor = forecastMaxInt != null
+              ? intensityColorScheme.fromJmaForecastIntensity(forecastMaxInt.$1)
+              : null;
+          final isWarning = (eew.telegram.headline ?? '').contains('強い揺れ');
+          return ListTile(
+            tileColor: forecastMaxIntColor?.background.withOpacity(0.3),
+            leading: JmaForecastIntensityWidget(
+              intensity: forecastMaxInt?.$1 ?? JmaForecastIntensity.unknown,
+            ),
+            trailing: Text(
+              '#${eew.telegram.serialNo}'
+              '${body.isLastInfo ? '(最終)' : ''}',
+              style: textTheme.bodyMedium!.copyWith(
+                fontWeight: FontWeight.bold,
+                fontFamily: FontFamily.jetBrainsMono,
+              ),
+            ),
+            title: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 4,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(2),
+                  child: Text(
+                    '緊急地震速報 ${isWarning ? "警報" : ""}',
+                    style: textTheme.titleMedium!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                if (body.forecastMaxLgInt != null &&
+                    body.forecastMaxLgInt?.from !=
+                        JmaForecastLgIntensity.zero &&
+                    body.forecastMaxLgInt?.from !=
+                        JmaForecastLgIntensity.unknown)
+                  CustomChip(
+                    borderWidth: 1,
+                    child: Text(
+                      () {
+                        final lpgm = body.forecastMaxLgInt!.toDisplayMaxLgInt();
+                        return '予想最大長周期地震動階級${lpgm.$1?.type}${lpgm.$2 ? '程度以上' : ''}';
+                      }(),
+                      style: const TextStyle(
+                        fontFamily: FontFamily.jetBrainsMono,
+                        fontFamilyFallback: [FontFamily.notoSansJP],
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                if (body.isLevelEew)
+                  const CustomChip(
+                    borderWidth: 1,
+                    backgroundColor: Colors.transparent,
+                    child: Text(
+                      'レベル法',
+                      style: TextStyle(
+                        fontFamily: FontFamily.jetBrainsMono,
+                        fontFamilyFallback: [FontFamily.notoSansJP],
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                if (body.isIpfOnePoint)
+                  const CustomChip(
+                    borderWidth: 1,
+                    backgroundColor: Colors.transparent,
+                    child: Text(
+                      '1点観測点による検知',
+                      style: TextStyle(
+                        fontFamily: FontFamily.jetBrainsMono,
+                        fontFamilyFallback: [FontFamily.notoSansJP],
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                if (body.isPlum)
+                  const CustomChip(
+                    borderWidth: 1,
+                    backgroundColor: Colors.transparent,
+                    child: Text(
+                      'PLUM法',
+                      style: TextStyle(
+                        fontFamily: FontFamily.jetBrainsMono,
+                        fontFamilyFallback: [FontFamily.notoSansJP],
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            subtitle: Text(
+              "${(body.isPlum || body.isLevelEew) ? '検知観測点' : '震源地'}: ${body.hypocenter?.name ?? "不明"}\n"
+                      '発表: ${DateFormat.Hms().format(eew.telegram.pressTime.toLocal())} (検知から+${eew.telegram.pressTime.difference(body.arrivalTime).inSeconds}秒経過)' +
+                  switch (body.isLevelEew || body.isPlum) {
+                    true => '',
+                    false =>
+                      '\nM${body.magnitude ?? "不明"} 深さ ${body.depth ?? "不明"}km'
+                  },
+            ),
+          );
+        },
       ),
     );
   }
@@ -131,7 +295,8 @@ class EarthquakeHypoInfoWidget extends ConsumerWidget {
         ? Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('最大震度'),
+              const Text('最大震度', style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 4),
               JmaIntensityIcon(
                 type: IntensityIconType.filled,
                 size: 60,
@@ -202,6 +367,10 @@ class EarthquakeHypoInfoWidget extends ConsumerWidget {
           )) {
             (final String cond, _) => cond,
             (_, final double value) => value.toString(),
+            _
+                when item.telegrams
+                    .any((element) => element.type == TelegramType.vxse53) =>
+              '不明',
             _ => '調査中',
           },
           style: textTheme.displaySmall!.copyWith(
@@ -245,6 +414,10 @@ class EarthquakeHypoInfoWidget extends ConsumerWidget {
             switch (eq.earthquake?.hypocenter.depth) {
               0 => 'ごく浅い',
               700 => '700km以上',
+              _
+                  when item.telegrams
+                      .any((element) => element.type == TelegramType.vxse53) =>
+                '不明',
               _ => '調査中',
             },
             style: textTheme.displaySmall!.copyWith(
@@ -301,5 +474,30 @@ class EarthquakeHypoInfoWidget extends ConsumerWidget {
       ),
     );
     return card;
+  }
+}
+
+class EarthquakeCommentWidget extends StatelessWidget {
+  const EarthquakeCommentWidget({required this.item, super.key});
+
+  final EarthquakeHistoryItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    final comment = item.earthquake.comment;
+    if (comment != null) {
+      return BorderedContainer(
+        padding: const EdgeInsets.all(8),
+        child: Text(
+          switch ((comment.forecast?.text, comment.free)) {
+            (final String text, _) => text,
+            (_, final String free) => free,
+            _ => '',
+          },
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      );
+    }
+    return Container();
   }
 }

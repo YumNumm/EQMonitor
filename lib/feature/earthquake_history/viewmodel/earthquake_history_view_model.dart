@@ -79,11 +79,10 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
     // 処理開始
     state = await state.guardPlus(() async {
       final offset = state.asData?.value.length ?? 0;
-      // 初回読み込みのみEEWも取得する
       final result = await _useCase.getEarthquakeHistory(
         limit: limit,
         offset: offset,
-        includeEew: offset == 0,
+        includeEew: true,
       );
       final items = _toEarthquakeHistoryItem(
         result,
