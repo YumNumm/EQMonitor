@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/feature/config/color_scheme/color_scheme_config_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/page/earthquake_history.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/screen/earthquake_history_details.dart';
+import 'package:eqmonitor/feature/eew_detailed_history/eew_detailed_history_screen.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/page/kmoni_settings_page.dart';
 import 'package:eqmonitor/feature/home/view/home_view.dart';
 import 'package:eqmonitor/feature/setup/screen/setup_screen.dart';
@@ -57,6 +58,19 @@ class EarthquakeHistoryDetailsRoute extends GoRouteData {
       eventId: eventId,
     );
   }
+}
+
+@TypedGoRoute<EewDetailedHistoryRoute>(
+  path: '/eew-detailed-history/:eventId',
+)
+class EewDetailedHistoryRoute extends GoRouteData {
+  const EewDetailedHistoryRoute(this.eventId);
+  final int eventId;
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      EewDetailedHistoryScreen(
+        eventId: eventId,
+      );
 }
 
 @TypedGoRoute<ColorSchemeConfigRoute>(path: '/config')

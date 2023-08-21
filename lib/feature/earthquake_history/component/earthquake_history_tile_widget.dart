@@ -61,7 +61,7 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
         '最大震度${intensity.maxInt}を',
         maxIntensityPrefs.firstOrNull?.name ?? '不明な地域',
         if (maxIntensityPrefs.length > 1) 'など',
-        'で観測'
+        'で観測',
       ]);
     }
     // ! body
@@ -185,7 +185,7 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
                   ),
                 ),
               ),
-          ]
+          ],
         ],
       ),
       trailing: Text(
