@@ -261,7 +261,7 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
 
   void _upsertTelegram(TelegramV3 telegram) {
     // 既に同一EventIDのTelegramが存在する場合は、上書きする
-    final data = state.value ?? [];
+    var data = state.value ?? [];
     final index = data.indexWhere((e) => e.eventId == telegram.eventId);
     if (index != -1) {
       data[index] = data[index].copyWith(
@@ -274,11 +274,14 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
         telegram.eventId.toString(): data[index].telegrams,
       }).first;
     } else {
-      _toEarthquakeHistoryItem(
-        {
-          telegram.eventId.toString(): [telegram]
-        },
-      ).forEach(data.add);
+      data = [
+        ..._toEarthquakeHistoryItem(
+          {
+            telegram.eventId.toString(): [telegram],
+          },
+        ),
+        ...data,
+      ];
     }
     state = AsyncValue.data(data);
   }
