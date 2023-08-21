@@ -71,6 +71,7 @@ dependencies:
     path: ./packages/topo_map
   topojson:
     path: ./packages/topojson
+  two_dimensional_scrollables: ^0.0.1
   vector_math: ^2.1.4
   web_socket_client: ^0.1.0-dev.3
 
