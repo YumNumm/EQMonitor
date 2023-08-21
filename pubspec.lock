@@ -1279,10 +1279,11 @@ packages:
   sheet:
     dependency: "direct main"
     description:
-      name: sheet
-      sha256: "4007db1db1c7000889d80efca8ab8009dd0ebe618dd77b5ed76cd9bda56763c0"
-      url: "https://pub.dev"
-    source: hosted
+      path: sheet
+      ref: HEAD
+      resolved-ref: "427917b54ad8fe70a22ba6776865c33d765f7a35"
+      url: "git@github.com:YumNumm/modal_bottom_sheet.git"
+    source: git
     version: "1.0.0-pre"
   shelf:
     dependency: transitive

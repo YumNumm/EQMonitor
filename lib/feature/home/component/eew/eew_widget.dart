@@ -5,11 +5,13 @@ import 'package:eqmonitor/core/component/chip/custom_chip.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/home/features/eew/eew_provider.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -339,37 +341,41 @@ class EewWidget extends ConsumerWidget {
               const Divider(),
             ]
           : null;
-      final card = Card(
-        margin: const EdgeInsets.all(4),
-        elevation: 0,
-        shadowColor: Colors.transparent,
-        // 角丸にして Border
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: BorderSide(
-            color: foregroundColor,
-            width: 0,
+      final card = InkWell(
+        onLongPress: () =>
+            context.push(EewDetailedHistoryRoute(telegram.eventId).location),
+        child: Card(
+          margin: const EdgeInsets.all(4),
+          elevation: 0,
+          shadowColor: Colors.transparent,
+          // 角丸にして Border
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(
+              color: foregroundColor,
+              width: 0,
+            ),
           ),
-        ),
-        color: backgroundColor.withOpacity(0.3),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 8,
-            vertical: 4,
-          ),
-          child: Column(
-            children: [
-              header,
-              if (warningMessageWidget != null) ...warningMessageWidget,
-              const SizedBox(height: 2),
-              Row(
-                children: [
-                  maxIntensityWidget,
-                  const SizedBox(width: 4),
-                  Expanded(child: body),
-                ],
-              ),
-            ],
+          color: backgroundColor.withOpacity(0.3),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8,
+              vertical: 4,
+            ),
+            child: Column(
+              children: [
+                header,
+                if (warningMessageWidget != null) ...warningMessageWidget,
+                const SizedBox(height: 2),
+                Row(
+                  children: [
+                    maxIntensityWidget,
+                    const SizedBox(width: 4),
+                    Expanded(child: body),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       );

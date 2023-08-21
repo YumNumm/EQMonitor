@@ -52,7 +52,11 @@ dependencies:
   retry: ^3.1.2
   riverpod_annotation: ^2.1.1
   shared_preferences: ^2.1.1
-  sheet: ^1.0.0-pre
+  sheet:
+    git:
+      url: git@github.com:YumNumm/modal_bottom_sheet.git
+      branch: main
+      path: sheet
   simplify: ^1.0.2
   socket_io_client: ^2.0.2
   talker_dio_logger:

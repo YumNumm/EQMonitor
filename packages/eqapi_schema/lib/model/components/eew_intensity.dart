@@ -28,11 +28,11 @@ class ForecastMaxLgInt with _$ForecastMaxLgInt {
 
 extension ForecastMaxIntDisplay on ForecastMaxInt {
   // 表示する最大震度
-  (JmaForecastIntensity maxInt, bool isOver) toDisplayMaxInt() {
+  ({JmaForecastIntensity maxInt, bool isOver}) toDisplayMaxInt() {
     if (to == JmaForecastIntensityOver.over) {
-      return (from, true);
+      return (maxInt: from, isOver: true);
     } else {
-      return (to.toJmaForecastIntensity, false);
+      return (maxInt: to.toJmaForecastIntensity, isOver: false);
     }
   }
 }
@@ -41,13 +41,10 @@ extension ForecastMaxLgIntDisplay on ForecastMaxLgInt {
   /// 表示する最大震度
   /// 推定最大長周期地震動階級0の場合、nullを返す
   /// 0以上の場合、推定最大長周期地震動階級を返す
-  (JmaForecastLgIntensity? maxInt, bool isOver) toDisplayMaxLgInt() {
+  ({JmaForecastLgIntensity? maxLgInt, bool isOver}) toDisplayMaxLgInt() {
     if (to == JmaForecastLgIntensityOver.over) {
-      return (from, true);
+      return (maxLgInt: from, isOver: true);
     }
-    if (to == JmaForecastLgIntensityOver.zero) {
-      return (null, false);
-    }
-    return (to.toJmaForecastLgIntensity, false);
+    return (maxLgInt: to.toJmaForecastLgIntensity, isOver: false);
   }
 }

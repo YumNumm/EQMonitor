@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:collection/collection.dart';
 import 'package:eqapi_schema/eqapi_schema.dart';
 import 'package:eqapi_schema/extension/telegram_v3.dart';
@@ -13,6 +12,7 @@ import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/viewmodel/earthquake_history_view_model.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/eq_map.dart';
@@ -20,6 +20,7 @@ import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:sheet/sheet.dart';
@@ -47,7 +48,6 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
       );
     }
     final sheetController = SheetController();
-    final mediaQuery = MediaQuery.of(context);
 
     final mapKey = useMemoized(
       () => GlobalKey(debugLabel: 'eq-history-map-${data.eventId}'),
@@ -109,16 +109,14 @@ class _Sheet extends StatelessWidget {
           const Divider(),
           EarthquakeCommentWidget(item: item),
           if (item.latestEewTelegram != null)
-            OpenContainer(
-              closedColor: Colors.transparent,
-              closedElevation: 0,
-              openColor: Colors.transparent,
-              openElevation: 0,
-              closedBuilder: (context, action) => ListTile(
-                title: const Text('この地震に関する緊急地震速報'),
-                subtitle: Text('${item.eewList.length}件'),
+            ListTile(
+              title: const Text('この地震に関する緊急地震速報'),
+              subtitle: Text('${item.eewList.length}件'),
+              onTap: () => context.push(
+                EewDetailedHistoryRoute(
+                  item.eventId,
+                ).location,
               ),
-              openBuilder: (context, action) => _EewListView(item.eewList),
             ),
         ],
       ),
@@ -165,13 +163,14 @@ class _EewListView extends ConsumerWidget {
           final body = eew.body as TelegramVxse45Body;
           final forecastMaxInt = body.forecastMaxInt?.toDisplayMaxInt();
           final forecastMaxIntColor = forecastMaxInt != null
-              ? intensityColorScheme.fromJmaForecastIntensity(forecastMaxInt.$1)
+              ? intensityColorScheme
+                  .fromJmaForecastIntensity(forecastMaxInt.maxInt)
               : null;
           final isWarning = (eew.telegram.headline ?? '').contains('強い揺れ');
           return ListTile(
             tileColor: forecastMaxIntColor?.background.withOpacity(0.3),
             leading: JmaForecastIntensityWidget(
-              intensity: forecastMaxInt?.$1 ?? JmaForecastIntensity.unknown,
+              intensity: forecastMaxInt?.maxInt ?? JmaForecastIntensity.unknown,
             ),
             trailing: Text(
               '#${eew.telegram.serialNo}'
@@ -204,7 +203,7 @@ class _EewListView extends ConsumerWidget {
                     child: Text(
                       () {
                         final lpgm = body.forecastMaxLgInt!.toDisplayMaxLgInt();
-                        return '予想最大長周期地震動階級${lpgm.$1?.type}${lpgm.$2 ? '程度以上' : ''}';
+                        return '予想最大長周期地震動階級${lpgm.maxLgInt?.type}${lpgm.isOver ? '程度以上' : ''}';
                       }(),
                       style: const TextStyle(
                         fontFamily: FontFamily.jetBrainsMono,

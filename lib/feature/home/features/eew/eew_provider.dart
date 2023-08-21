@@ -201,10 +201,10 @@ class EewEstimatedIntensityList extends _$EewEstimatedIntensityList {
         .forEach((key, value) {
       final maxIntensity = value
           .map((e) => e.forecastMaxInt.toDisplayMaxInt())
-          .sorted((a, b) => b.$1.compareTo(a.$1))
+          .sorted((a, b) => b.maxInt.compareTo(a.maxInt))
           .firstOrNull;
       if (maxIntensity != null) {
-        result.add((key, maxIntensity.$1));
+        result.add((key, maxIntensity.maxInt));
       }
     });
     return result;
