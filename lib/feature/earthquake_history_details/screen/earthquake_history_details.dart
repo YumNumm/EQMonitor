@@ -1,11 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:eqapi_schema/eqapi_schema.dart';
-import 'package:eqapi_schema/extension/telegram_v3.dart';
-import 'package:eqapi_schema/model/components/eew_intensity.dart';
-import 'package:eqmonitor/core/component/chip/custom_chip.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
-import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
@@ -16,6 +12,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/viewmodel/earthquake_history_view_model.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/eq_map.dart';
+import 'package:eqmonitor/feature/earthquake_history_details/component/prefecture_intensity.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
@@ -61,28 +58,36 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
       ),
       body: Stack(
         children: [
-          EarthquakeHistoryMap(item: data, mapKey: mapKey),
-          SheetFloatingActionButtons(
-            controller: sheetController,
-            fab: [
-              FloatingActionButton.small(
-                heroTag: 'home',
-                onPressed: () {
-                  ref
-                      .read(mapViewModelProvider(mapKey).notifier)
-                      .animatedApplyBounds(
-                        bottom: 0.3,
-                      );
-                },
-                elevation: 4,
-                child: const Icon(Icons.home),
-              ),
-            ],
+          RepaintBoundary(
+            child: EarthquakeHistoryMap(item: data, mapKey: mapKey),
           ),
-          // Sheet
-          _Sheet(
-            sheetController: sheetController,
-            item: data,
+          RepaintBoundary(
+            child: Stack(
+              children: [
+                SheetFloatingActionButtons(
+                  controller: sheetController,
+                  fab: [
+                    FloatingActionButton.small(
+                      heroTag: 'home',
+                      onPressed: () {
+                        ref
+                            .read(mapViewModelProvider(mapKey).notifier)
+                            .animatedApplyBounds(
+                              bottom: 0.3,
+                            );
+                      },
+                      elevation: 4,
+                      child: const Icon(Icons.home),
+                    ),
+                  ],
+                ),
+                // Sheet
+                _Sheet(
+                  sheetController: sheetController,
+                  item: data,
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -105,9 +110,10 @@ class _Sheet extends StatelessWidget {
       child: BasicModalSheet(
         controller: sheetController,
         children: [
-          EarthquakeHypoInfoWidget(item: item),
+          _EarthquakeHypoInfoWidget(item: item),
           const Divider(),
-          EarthquakeCommentWidget(item: item),
+          _EarthquakeCommentWidget(item: item),
+          PrefectureIntensityWidget(item: item),
           if (item.latestEewTelegram != null)
             ListTile(
               title: const Text('この地震に関する緊急地震速報'),
@@ -124,155 +130,9 @@ class _Sheet extends StatelessWidget {
   }
 }
 
-class _EewListView extends ConsumerWidget {
-  const _EewListView(this.eewList);
-  final List<TelegramV3> eewList;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final intensityColorScheme = ref.watch(intensityColorProvider);
-    final textTheme = theme.textTheme;
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('緊急地震速報の履歴'),
-      ),
-      body: ListView.builder(
-        itemCount: eewList.length,
-        itemBuilder: (context, index) {
-          final eew = (
-            telegram: eewList[index],
-            body: eewList[index].body as Vxse45,
-          );
-          final isCanceled = eew.body is TelegramVxse45Cancel;
-          if (isCanceled) {
-            return ListTile(
-              title: Text(
-                '第${eew.telegram.serialNo}報 ',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text(
-                'キャンセル報',
-                style: theme.textTheme.bodyMedium!.copyWith(
-                  color: Colors.redAccent,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            );
-          }
-          final body = eew.body as TelegramVxse45Body;
-          final forecastMaxInt = body.forecastMaxInt?.toDisplayMaxInt();
-          final forecastMaxIntColor = forecastMaxInt != null
-              ? intensityColorScheme
-                  .fromJmaForecastIntensity(forecastMaxInt.maxInt)
-              : null;
-          final isWarning = (eew.telegram.headline ?? '').contains('強い揺れ');
-          return ListTile(
-            tileColor: forecastMaxIntColor?.background.withOpacity(0.3),
-            leading: JmaForecastIntensityWidget(
-              intensity: forecastMaxInt?.maxInt ?? JmaForecastIntensity.unknown,
-            ),
-            trailing: Text(
-              '#${eew.telegram.serialNo}'
-              '${body.isLastInfo ? '(最終)' : ''}',
-              style: textTheme.bodyMedium!.copyWith(
-                fontWeight: FontWeight.bold,
-                fontFamily: FontFamily.jetBrainsMono,
-              ),
-            ),
-            title: Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: 4,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(2),
-                  child: Text(
-                    '緊急地震速報 ${isWarning ? "警報" : ""}',
-                    style: textTheme.titleMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                if (body.forecastMaxLgInt != null &&
-                    body.forecastMaxLgInt?.from !=
-                        JmaForecastLgIntensity.zero &&
-                    body.forecastMaxLgInt?.from !=
-                        JmaForecastLgIntensity.unknown)
-                  CustomChip(
-                    borderWidth: 1,
-                    child: Text(
-                      () {
-                        final lpgm = body.forecastMaxLgInt!.toDisplayMaxLgInt();
-                        return '予想最大長周期地震動階級${lpgm.maxLgInt?.type}${lpgm.isOver ? '程度以上' : ''}';
-                      }(),
-                      style: const TextStyle(
-                        fontFamily: FontFamily.jetBrainsMono,
-                        fontFamilyFallback: [FontFamily.notoSansJP],
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                if (body.isLevelEew)
-                  const CustomChip(
-                    borderWidth: 1,
-                    backgroundColor: Colors.transparent,
-                    child: Text(
-                      'レベル法',
-                      style: TextStyle(
-                        fontFamily: FontFamily.jetBrainsMono,
-                        fontFamilyFallback: [FontFamily.notoSansJP],
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ),
-                if (body.isIpfOnePoint)
-                  const CustomChip(
-                    borderWidth: 1,
-                    backgroundColor: Colors.transparent,
-                    child: Text(
-                      '1点観測点による検知',
-                      style: TextStyle(
-                        fontFamily: FontFamily.jetBrainsMono,
-                        fontFamilyFallback: [FontFamily.notoSansJP],
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ),
-                if (body.isPlum)
-                  const CustomChip(
-                    borderWidth: 1,
-                    backgroundColor: Colors.transparent,
-                    child: Text(
-                      'PLUM法',
-                      style: TextStyle(
-                        fontFamily: FontFamily.jetBrainsMono,
-                        fontFamilyFallback: [FontFamily.notoSansJP],
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            subtitle: Text(
-              "${(body.isPlum || body.isLevelEew) ? '検知観測点' : '震源地'}: ${body.hypocenter?.name ?? "不明"}\n"
-                      '発表: ${DateFormat.Hms().format(eew.telegram.pressTime.toLocal())} (検知から+${eew.telegram.pressTime.difference(body.arrivalTime).inSeconds}秒経過)' +
-                  switch (body.isLevelEew || body.isPlum) {
-                    true => '',
-                    false =>
-                      '\nM${body.magnitude ?? "不明"} 深さ ${body.depth ?? "不明"}km'
-                  },
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class EarthquakeHypoInfoWidget extends ConsumerWidget {
-  const EarthquakeHypoInfoWidget({
+class _EarthquakeHypoInfoWidget extends ConsumerWidget {
+  const _EarthquakeHypoInfoWidget({
     required this.item,
-    super.key,
   });
 
   final EarthquakeHistoryItem item;
@@ -328,12 +188,8 @@ class EarthquakeHypoInfoWidget extends ConsumerWidget {
     );
 
     // 地震発生時刻
-    final timeWidget = Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        if (eq.earthquake != null)
-          Text(
+    final timeWidget = eq.earthquake != null
+        ? Text(
             '${DateFormat('yyyy/MM/dd HH:mm頃').format(
               eq.earthquake!.originTime.toLocal(),
             )}'
@@ -343,9 +199,8 @@ class EarthquakeHypoInfoWidget extends ConsumerWidget {
               fontFamily: FontFamily.jetBrainsMono,
               fontFamilyFallback: [FontFamily.notoSansJP],
             ),
-          ),
-      ],
-    );
+          )
+        : null;
 
     // 「M 8.0 / 深さ100km」
     final magnitudeWidget = Row(
@@ -436,7 +291,7 @@ class EarthquakeHypoInfoWidget extends ConsumerWidget {
         magnitudeWidget,
         depthWidget,
         hypoWidget,
-        timeWidget,
+        if (timeWidget != null) timeWidget,
       ],
     );
 
@@ -476,8 +331,8 @@ class EarthquakeHypoInfoWidget extends ConsumerWidget {
   }
 }
 
-class EarthquakeCommentWidget extends StatelessWidget {
-  const EarthquakeCommentWidget({required this.item, super.key});
+class _EarthquakeCommentWidget extends StatelessWidget {
+  const _EarthquakeCommentWidget({required this.item});
 
   final EarthquakeHistoryItem item;
 
@@ -487,6 +342,7 @@ class EarthquakeCommentWidget extends StatelessWidget {
     if (comment != null) {
       return BorderedContainer(
         padding: const EdgeInsets.all(8),
+        elevation: 1,
         child: Text(
           switch ((comment.forecast?.text, comment.free)) {
             (final String text, _) => text,

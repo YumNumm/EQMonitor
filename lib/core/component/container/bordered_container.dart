@@ -10,6 +10,7 @@ class BorderedContainer extends StatelessWidget {
       horizontal: 8,
     ),
     this.elevation = 0,
+    this.borderRadius = const BorderRadius.all(Radius.circular(16)),
     super.key,
   });
   final Widget child;
@@ -17,6 +18,7 @@ class BorderedContainer extends StatelessWidget {
   final EdgeInsetsGeometry padding;
   final EdgeInsetsGeometry margin;
   final double elevation;
+  final BorderRadiusGeometry borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class BorderedContainer extends StatelessWidget {
           color: theme.colorScheme.onSurface,
           width: 0,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: borderRadius,
       ),
       margin: margin,
       child: Padding(
