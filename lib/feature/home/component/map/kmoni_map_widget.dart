@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/component/map/model/map_state.dart';
 import 'package:eqmonitor/core/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/has_eew_provider.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/kmoni_observation_point.dart';
@@ -25,12 +26,14 @@ class KmoniMapWidget extends HookConsumerWidget {
     final kmoniState = ref
         .watch(kmoniViewModelProvider.select((value) => value.analyzedPoints));
     final kmoniSettingsState = ref.watch(kmoniSettingsProvider);
+    final hasEew = ref.watch(hasEewProvider);
     return CustomPaint(
       painter: _KmoniPainter(
         state: state,
         kmoniState: kmoniState,
         settingsState: kmoniSettingsState,
         colorModel: ref.watch(intensityColorProvider),
+        drawBorder: hasEew,
       ),
       size: Size.infinite,
       willChange: true,
@@ -44,12 +47,14 @@ class _KmoniPainter extends CustomPainter {
     required this.kmoniState,
     required this.settingsState,
     required this.colorModel,
+    required this.drawBorder,
   });
 
   final MapState state;
   final List<AnalyzedKmoniObservationPoint>? kmoniState;
   final KmoniSettingsState settingsState;
   final IntensityColorModel colorModel;
+  final bool drawBorder;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -86,7 +91,7 @@ class _KmoniPainter extends CustomPainter {
           continue;
         }
         if (intensity == JmaForecastIntensity.zero) {
-          // グレーの枠
+          // グレー
           final paint = Paint()
             ..color = Colors.grey.withOpacity(0.8)
             ..style = PaintingStyle.fill;
@@ -95,6 +100,17 @@ class _KmoniPainter extends CustomPainter {
             circleSize.toDouble(),
             paint,
           );
+          if (drawBorder) {
+            final paint = Paint()
+              ..color = Colors.white.withOpacity(0.8)
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 1;
+            canvas.drawCircle(
+              offset,
+              circleSize.toDouble(),
+              paint,
+            );
+          }
           continue;
         }
       }
@@ -156,6 +172,17 @@ class _KmoniPainter extends CustomPainter {
         circleSize.toDouble(),
         paint,
       );
+      if (drawBorder) {
+        final paint = Paint()
+          ..color = Colors.grey.withOpacity(0.8)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1;
+        canvas.drawCircle(
+          offset,
+          circleSize.toDouble(),
+          paint,
+        );
+      }
     }
   }
 
