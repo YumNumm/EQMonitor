@@ -33,6 +33,7 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
       elevation: 1,
       padding: const EdgeInsets.symmetric(
         horizontal: 8,
+        vertical: 4,
       ),
       child: Column(
         children: [

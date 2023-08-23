@@ -147,7 +147,9 @@ class _HomeBodyWidget extends HookConsumerWidget {
                 RepaintBoundary(
                   child: EewPsWaveArrivalCircleWidget.gradient(mapKey: mapKey),
                 ),
-                EewEstimatedIntensityWidget(mapKey: mapKey),
+                RepaintBoundary(
+                  child: EewEstimatedIntensityWidget(mapKey: mapKey),
+                ),
                 RepaintBoundary(child: BaseMapWidget.polyline(mapKey)),
                 if (ref.watch(
                   kmoniSettingsProvider.select((value) => value.useKmoni),
@@ -162,43 +164,50 @@ class _HomeBodyWidget extends HookConsumerWidget {
             ),
           ),
         ),
-        SheetFloatingActionButtons(
-          controller: sheetController,
-          fab: [
-            FloatingActionButton.small(
-              heroTag: 'request',
-              onPressed: () {
-                ref.read(telegramWsProvider.notifier).requestSample();
-              },
-              elevation: 4,
-              child: const Icon(Icons.send),
-            ),
-            FloatingActionButton.small(
-              heroTag: 'home',
-              onPressed: () {
-                final height = mediaQuery.size.height -
-                    (mediaQuery.padding.top + mediaQuery.padding.bottom) -
-                    kToolbarHeight;
-                ref.read(mapViewModelProvider(mapKey).notifier)
-                  ..resetMarkAsMoved()
-                  ..animatedApplyBounds(
-                    padding: const EdgeInsets.all(8).add(
-                      EdgeInsets.only(
-                        bottom: switch (sheetController.animation.value) {
-                          < 0.3 => height * sheetController.animation.value,
-                          _ => height * 0.3,
-                        },
-                      ),
-                    ),
-                  );
-              },
-              elevation: 4,
-              child: const Icon(Icons.home),
-            ),
-          ],
+        RepaintBoundary(
+          child: Stack(
+            children: [
+              SheetFloatingActionButtons(
+                controller: sheetController,
+                fab: [
+                  FloatingActionButton.small(
+                    heroTag: 'request',
+                    onPressed: () {
+                      ref.read(telegramWsProvider.notifier).requestSample();
+                    },
+                    elevation: 4,
+                    child: const Icon(Icons.send),
+                  ),
+                  FloatingActionButton.small(
+                    heroTag: 'home',
+                    onPressed: () {
+                      final height = mediaQuery.size.height -
+                          (mediaQuery.padding.top + mediaQuery.padding.bottom) -
+                          kToolbarHeight;
+                      ref.read(mapViewModelProvider(mapKey).notifier)
+                        ..resetMarkAsMoved()
+                        ..animatedApplyBounds(
+                          padding: const EdgeInsets.all(8).add(
+                            EdgeInsets.only(
+                              bottom: switch (sheetController.animation.value) {
+                                < 0.3 =>
+                                  height * sheetController.animation.value,
+                                _ => height * 0.3,
+                              },
+                            ),
+                          ),
+                        );
+                    },
+                    elevation: 4,
+                    child: const Icon(Icons.home),
+                  ),
+                ],
+              ),
+              // Sheet
+              _Sheet(sheetController: sheetController),
+            ],
+          ),
         ),
-        // Sheet
-        _Sheet(sheetController: sheetController),
       ],
     );
 
