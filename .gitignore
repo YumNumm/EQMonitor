@@ -167,3 +167,5 @@ macos/GoogleService-Info.plist
 
 # app store connect api related file
 ios/*.p8
+
+pubspec_overrides.yaml
