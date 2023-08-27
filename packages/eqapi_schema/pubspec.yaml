@@ -15,6 +15,7 @@ dependencies:
     git:
       url: https://github.com/YumNumm/EQMonitor.git
       path: packages/lat_lng
+      ref: develop
 
 dev_dependencies:
   build_runner: ^2.4.2
