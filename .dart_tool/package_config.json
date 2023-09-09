@@ -399,7 +399,7 @@
     },
     {
       "name": "flutter",
-      "rootUri": "file:///Users/r_onoue/fvm/versions/3.13.0/packages/flutter",
+      "rootUri": "file:///Users/r_onoue/fvm/versions/3.13.2/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -453,7 +453,7 @@
     },
     {
       "name": "flutter_test",
-      "rootUri": "file:///Users/r_onoue/fvm/versions/3.13.0/packages/flutter_test",
+      "rootUri": "file:///Users/r_onoue/fvm/versions/3.13.2/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -471,7 +471,7 @@
     },
     {
       "name": "flutter_web_plugins",
-      "rootUri": "file:///Users/r_onoue/fvm/versions/3.13.0/packages/flutter_web_plugins",
+      "rootUri": "file:///Users/r_onoue/fvm/versions/3.13.2/packages/flutter_web_plugins",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -615,9 +615,9 @@
     },
     {
       "name": "latlong2",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/latlong2-0.8.2",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/latlong2-0.9.0",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.0"
     },
     {
       "name": "lints",
@@ -636,6 +636,24 @@
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/logging-1.2.0",
       "packageUri": "lib/",
       "languageVersion": "2.19"
+    },
+    {
+      "name": "maplibre_gl",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/git/flutter-maplibre-gl-2faef3fb69c3f03c843a626cc47f1b5a615f80de/",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "maplibre_gl_platform_interface",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/git/flutter-maplibre-gl-2faef3fb69c3f03c843a626cc47f1b5a615f80de/maplibre_gl_platform_interface",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "maplibre_gl_web",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/git/flutter-maplibre-gl-2faef3fb69c3f03c843a626cc47f1b5a615f80de/maplibre_gl_web",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "matcher",
@@ -993,7 +1011,7 @@
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///Users/r_onoue/fvm/versions/3.13.0/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///Users/r_onoue/fvm/versions/3.13.2/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -1244,7 +1262,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-09-05T16:01:21.945538Z",
+  "generated": "2023-09-09T09:05:51.449279Z",
   "generator": "pub",
   "generatorVersion": "3.1.0"
 }

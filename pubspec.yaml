@@ -44,7 +44,11 @@ dependencies:
   json_annotation: ^4.8.1
   lat_lng:
     path: packages/lat_lng
-  latlong2: ^0.8.1
+  latlong2: ^0.9.0
+  maplibre_gl:
+    git:
+      url: git@github.com:maplibre/flutter-maplibre-gl.git
+      ref: main
   native_shared_preferences: ^2.0.7
   ntp: ^2.0.0
   permission_handler: ^10.3.0
