@@ -80,7 +80,7 @@ class JmaIntensityIcon extends ConsumerWidget {
                       fontFamilyFallback: const [FontFamily.notoSansJP],
                     ),
                   ),
-                ]
+                ],
               ],
             ),
           ),

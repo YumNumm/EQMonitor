@@ -37,8 +37,8 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
     final body = CustomScrollView(
       controller: scrollController,
       slivers: [
-        SliverAppBar.medium(
-          title: const Text('地震の履歴'),
+        const SliverAppBar.medium(
+          title: Text('地震の履歴'),
         ),
         state.when(
           data: (data) {

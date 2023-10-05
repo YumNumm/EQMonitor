@@ -50,7 +50,7 @@ class IntroductionPage extends StatelessWidget {
             text: 'クイックガイドを開始',
             onPressed: onNext,
           ),
-        )
+        ),
       ],
     );
 

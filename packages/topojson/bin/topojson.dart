@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:topojson/src/topo_json_geometry.dart';
-import 'package:topojson/src/topo_json_geometry_type.dart';
 import 'package:topojson/topojson.dart';
 
 Future<void> main() async {
-  final data = File("sample.json").readAsStringSync();
-  final Stopwatch stopwatch = Stopwatch()..start();
+  final data = File('sample.json').readAsStringSync();
+  final stopwatch = Stopwatch()..start();
 
   final json = jsonDecode(data) as Map<String, dynamic>;
   final topoJson = TopoJson.fromJson(json);
@@ -16,15 +14,15 @@ Future<void> main() async {
   topoJson.objects.forEach((key, value) {
     if (value.type == TopoJsonGeometryType.geometryCollection) {
       final geometryCollection = value as GeometryCollection;
-      print("*****  loop  *****");
-      for (var element in geometryCollection.geometries) {
+      print('*****  loop  *****');
+      for (final element in geometryCollection.geometries) {
         print(element.type);
       }
       print(
-          "*****  end (items: ${geometryCollection.geometries.length}) *****");
+          '*****  end (items: ${geometryCollection.geometries.length}) *****',);
     }
   });
-  print("");
+  print('');
   print(
-      "*****  parse end (time: ${stopwatch.elapsedMicroseconds / 1000} ms) *****");
+      '*****  parse end (time: ${stopwatch.elapsedMicroseconds / 1000} ms) *****',);
 }
