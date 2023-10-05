@@ -17,7 +17,7 @@ class EarthquakeRestrictionWidget extends StatelessWidget {
             'デバイスの状態、アプリケーションの状態、ネットワークの状態によっては、通知が届かない場合があります。',
             '通知が強い揺れの到達に間に合わない可能性があります',
             '予想に大きな誤差が発生する場合があります',
-            '予想には誤差が伴います'
+            '予想には誤差が伴います',
           ]
               .mapIndexed(
                 (index, e) => BorderedContainer(

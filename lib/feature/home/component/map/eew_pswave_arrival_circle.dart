@@ -142,7 +142,7 @@ class _HypocenterPainter extends CustomPainter {
                 isWarning
                     ? [
                         const ui.Color.fromARGB(255, 255, 0, 0).withOpacity(0),
-                        const ui.Color.fromARGB(255, 255, 0, 0).withOpacity(0.3)
+                        const ui.Color.fromARGB(255, 255, 0, 0).withOpacity(0.3),
                       ]
                     : [
                         const ui.Color.fromARGB(255, 255, 89, 0).withOpacity(0),

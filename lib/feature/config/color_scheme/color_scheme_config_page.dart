@@ -66,7 +66,7 @@ class ColorSchemeConfigPage extends ConsumerWidget {
             ),
             const SizedBox(
               height: kFloatingActionButtonMargin * 4,
-            )
+            ),
           ],
         ),
       ),

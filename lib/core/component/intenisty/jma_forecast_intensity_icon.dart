@@ -96,7 +96,7 @@ class JmaForecastIntensityWidget extends ConsumerWidget {
                       fontFamilyFallback: const [FontFamily.notoSansJP],
                     ),
                   ),
-                ]
+                ],
               ],
             ),
           ),

@@ -16,6 +16,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   final talker = TalkerFlutter.init();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
