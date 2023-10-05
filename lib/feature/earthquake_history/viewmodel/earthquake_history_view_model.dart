@@ -219,7 +219,8 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
       if (vtse51 != null) {
         if (observations == null ||
             (vtse52?.pressTime ?? (DateTime(1900))).isAfter(vtse51.pressTime)) {
-          observations = (vtse51.body as TelegramVtse51Body).tsunami.observations;
+          observations =
+              (vtse51.body as TelegramVtse51Body).tsunami.observations;
         }
       }
       TsunamiComments? comments;
