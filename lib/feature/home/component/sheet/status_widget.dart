@@ -85,7 +85,7 @@ class SheetStatusWidget extends ConsumerWidget {
                           style: theme.textTheme.bodyMedium!.copyWith(
                             fontFamily: FontFamily.jetBrainsMono,
                           ),
-                        )
+                        ),
                       ],
                     _ when isDelayAdjusting && latestTime != null => [
                         Text(
@@ -95,7 +95,7 @@ class SheetStatusWidget extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(width: 4),
-                        const CircularProgressIndicator.adaptive()
+                        const CircularProgressIndicator.adaptive(),
                       ],
                     _ when isInitialized && latestTime != null => [
                         Text(
@@ -103,7 +103,7 @@ class SheetStatusWidget extends ConsumerWidget {
                           style: theme.textTheme.bodyMedium!.copyWith(
                             fontFamily: FontFamily.jetBrainsMono,
                           ),
-                        )
+                        ),
                       ],
                     _ => [const CircularProgressIndicator.adaptive()],
                   },
@@ -126,7 +126,7 @@ class SheetStatusWidget extends ConsumerWidget {
               color: Colors.red,
             ),
             const SizedBox(width: 4),
-            const Text('接続試行中...')
+            const Text('接続試行中...'),
           ],
         ],
       ),
