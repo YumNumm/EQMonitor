@@ -35,7 +35,10 @@ class EarthquakeIntensityMapWidget extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final earthquake = item.earthquake;
-    final intensity = earthquake.intensity!;
+    final intensity = earthquake.intensity;
+    if (intensity == null) {
+      return const SizedBox();
+    }
     final colorModel = ref.watch(intensityColorProvider);
     final citiesItem = useMemoized(() {
       // cities
