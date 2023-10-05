@@ -71,7 +71,7 @@ class KmoniWarnPage extends ConsumerWidget {
               ),
             ],
           ),
-        )
+        ),
       ],
     );
   }

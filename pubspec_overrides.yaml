@@ -12,3 +12,5 @@ dependency_overrides:
     path: packages/topo_map
   topojson:
     path: packages/topojson
+  maplibre_gl:
+   path: ../flutter-maplibre-gl
