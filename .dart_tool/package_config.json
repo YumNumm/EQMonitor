@@ -3,7 +3,7 @@
   "packages": [
     {
       "name": "_fe_analyzer_shared",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/_fe_analyzer_shared-58.0.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/_fe_analyzer_shared-61.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -15,7 +15,7 @@
     },
     {
       "name": "analyzer",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/analyzer-5.10.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/analyzer-5.13.0",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
@@ -45,9 +45,9 @@
     },
     {
       "name": "app_settings",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/app_settings-4.3.1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/app_settings-5.1.1",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.18"
     },
     {
       "name": "archive",
@@ -69,15 +69,15 @@
     },
     {
       "name": "awesome_notifications",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/awesome_notifications-0.7.4+1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/awesome_notifications-0.8.2",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.19"
     },
     {
       "name": "awesome_notifications_fcm",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/awesome_notifications_fcm-0.7.4+1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/awesome_notifications_fcm-0.8.0",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.19"
     },
     {
       "name": "boolean_selector",
@@ -105,9 +105,9 @@
     },
     {
       "name": "build_resolvers",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/build_resolvers-2.2.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/build_resolvers-2.4.1",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "3.0"
     },
     {
       "name": "build_runner",
@@ -117,7 +117,7 @@
     },
     {
       "name": "build_runner_core",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/build_runner_core-7.2.10",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/build_runner_core-7.2.11",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
@@ -231,25 +231,25 @@
     },
     {
       "name": "custom_lint",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/custom_lint-0.3.4",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/custom_lint-0.5.3",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "custom_lint_builder",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/custom_lint_builder-0.3.4",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/custom_lint_builder-0.5.3",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
     {
       "name": "custom_lint_core",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/custom_lint_core-0.3.4",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/custom_lint_core-0.5.3",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
     {
       "name": "dart_style",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/dart_style-2.3.1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/dart_style-2.3.2",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
@@ -417,7 +417,7 @@
     },
     {
       "name": "flutter_hooks",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/flutter_hooks-0.18.6",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/flutter_hooks-0.20.2",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -477,7 +477,7 @@
     },
     {
       "name": "freezed",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/freezed-2.3.3",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/freezed-2.4.1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -501,9 +501,9 @@
     },
     {
       "name": "go_router",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/go_router-7.1.1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/go_router-11.1.2",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "2.19"
     },
     {
       "name": "go_router_builder",
@@ -513,7 +513,7 @@
     },
     {
       "name": "google_fonts",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/google_fonts-5.1.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/google_fonts-6.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -579,7 +579,7 @@
     },
     {
       "name": "intl",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/intl-0.17.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/intl-0.18.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -603,9 +603,9 @@
     },
     {
       "name": "json_serializable",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/json_serializable-6.6.2",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/json_serializable-6.7.1",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.0"
     },
     {
       "name": "lat_lng",
@@ -660,12 +660,6 @@
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/matcher-0.12.16",
       "packageUri": "lib/",
       "languageVersion": "2.18"
-    },
-    {
-      "name": "material_button_assist",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/material_button_assist-1.0.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.17"
     },
     {
       "name": "material_color_utilities",
@@ -765,13 +759,13 @@
     },
     {
       "name": "permission_handler",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/permission_handler-10.4.5",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/permission_handler-11.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
     {
       "name": "permission_handler_android",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/permission_handler_android-10.3.6",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/permission_handler_android-11.0.5",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
@@ -836,6 +830,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "protobuf",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/protobuf-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "pub_semver",
       "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/pub_semver-2.1.4",
       "packageUri": "lib/",
@@ -873,9 +873,9 @@
     },
     {
       "name": "retrofit_generator",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/retrofit_generator-6.0.0+3",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/retrofit_generator-8.0.0",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "2.19"
     },
     {
       "name": "retry",
@@ -891,9 +891,9 @@
     },
     {
       "name": "riverpod_analyzer_utils",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/riverpod_analyzer_utils-0.3.0",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/riverpod_analyzer_utils-0.3.4",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "3.0"
     },
     {
       "name": "riverpod_annotation",
@@ -903,13 +903,13 @@
     },
     {
       "name": "riverpod_generator",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/riverpod_generator-2.2.2",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/riverpod_generator-2.3.3",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "riverpod_lint",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/riverpod_lint-1.3.1",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/riverpod_lint-2.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
@@ -1029,9 +1029,9 @@
     },
     {
       "name": "source_helper",
-      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/source_helper-1.3.3",
+      "rootUri": "file:///Users/r_onoue/.pub-cache/hosted/pub.dev/source_helper-1.3.4",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.19"
     },
     {
       "name": "source_span",
@@ -1256,7 +1256,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-10-08T16:04:19.753690Z",
+  "generated": "2023-10-08T16:11:54.008035Z",
   "generator": "pub",
   "generatorVersion": "3.1.3"
 }
