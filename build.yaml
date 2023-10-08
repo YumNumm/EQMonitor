@@ -5,6 +5,7 @@ targets:
         options:
           ignore_for_file:
             - type=lint
+            - duplicate_ignore
       json_serializable:
         options:
           checked: true
