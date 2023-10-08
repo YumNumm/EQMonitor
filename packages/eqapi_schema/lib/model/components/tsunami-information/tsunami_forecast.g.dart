@@ -8,12 +8,13 @@ part of 'tsunami_forecast.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_TsunamiForecast _$$_TsunamiForecastFromJson(Map<String, dynamic> json) =>
+_$TsunamiForecastImpl _$$TsunamiForecastImplFromJson(
+        Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TsunamiForecast',
+      r'_$TsunamiForecastImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TsunamiForecast(
+        final val = _$TsunamiForecastImpl(
           code: $checkedConvert('code', (v) => v as String),
           name: $checkedConvert('name', (v) => v as String),
           kind: $checkedConvert('kind', (v) => v as String),
@@ -41,7 +42,8 @@ _$_TsunamiForecast _$$_TsunamiForecastFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_TsunamiForecastToJson(_$_TsunamiForecast instance) =>
+Map<String, dynamic> _$$TsunamiForecastImplToJson(
+        _$TsunamiForecastImpl instance) =>
     <String, dynamic>{
       'code': instance.code,
       'name': instance.name,
@@ -52,13 +54,13 @@ Map<String, dynamic> _$$_TsunamiForecastToJson(_$_TsunamiForecast instance) =>
       'stations': instance.stations,
     };
 
-_$_TsunamiForecastFirstHeight _$$_TsunamiForecastFirstHeightFromJson(
+_$TsunamiForecastFirstHeightImpl _$$TsunamiForecastFirstHeightImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TsunamiForecastFirstHeight',
+      r'_$TsunamiForecastFirstHeightImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TsunamiForecastFirstHeight(
+        final val = _$TsunamiForecastFirstHeightImpl(
           arrivalTime: $checkedConvert('arrivalTime',
               (v) => v == null ? null : DateTime.parse(v as String)),
           condition: $checkedConvert('condition',
@@ -68,8 +70,8 @@ _$_TsunamiForecastFirstHeight _$$_TsunamiForecastFirstHeightFromJson(
       },
     );
 
-Map<String, dynamic> _$$_TsunamiForecastFirstHeightToJson(
-        _$_TsunamiForecastFirstHeight instance) =>
+Map<String, dynamic> _$$TsunamiForecastFirstHeightImplToJson(
+        _$TsunamiForecastFirstHeightImpl instance) =>
     <String, dynamic>{
       'arrivalTime': instance.arrivalTime?.toIso8601String(),
       'condition': _$TsunamiForecastConditionEnumMap[instance.condition],
@@ -81,13 +83,13 @@ const _$TsunamiForecastConditionEnumMap = {
   TsunamiForecastCondition.tsunamiImminent: 'ただちに津波来襲と予測',
 };
 
-_$_TsunamiForecastMaxHeight _$$_TsunamiForecastMaxHeightFromJson(
+_$TsunamiForecastMaxHeightImpl _$$TsunamiForecastMaxHeightImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TsunamiForecastMaxHeight',
+      r'_$TsunamiForecastMaxHeightImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TsunamiForecastMaxHeight(
+        final val = _$TsunamiForecastMaxHeightImpl(
           value: $checkedConvert('value', (v) => (v as num?)?.toDouble()),
           isOver: $checkedConvert('isOver', (v) => v as bool?),
           condition: $checkedConvert(
@@ -99,8 +101,8 @@ _$_TsunamiForecastMaxHeight _$$_TsunamiForecastMaxHeightFromJson(
       },
     );
 
-Map<String, dynamic> _$$_TsunamiForecastMaxHeightToJson(
-        _$_TsunamiForecastMaxHeight instance) =>
+Map<String, dynamic> _$$TsunamiForecastMaxHeightImplToJson(
+        _$TsunamiForecastMaxHeightImpl instance) =>
     <String, dynamic>{
       'value': instance.value,
       'isOver': instance.isOver,
@@ -113,13 +115,13 @@ const _$TsunamiForecastMaxHeightConditionEnumMap = {
   TsunamiForecastMaxHeightCondition.huge: '莫大',
 };
 
-_$_TsunamiForecastStation _$$_TsunamiForecastStationFromJson(
+_$TsunamiForecastStationImpl _$$TsunamiForecastStationImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TsunamiForecastStation',
+      r'_$TsunamiForecastStationImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TsunamiForecastStation(
+        final val = _$TsunamiForecastStationImpl(
           code: $checkedConvert('code', (v) => v as String),
           name: $checkedConvert('name', (v) => v as String),
           highTideTime: $checkedConvert(
@@ -135,8 +137,8 @@ _$_TsunamiForecastStation _$$_TsunamiForecastStationFromJson(
       },
     );
 
-Map<String, dynamic> _$$_TsunamiForecastStationToJson(
-        _$_TsunamiForecastStation instance) =>
+Map<String, dynamic> _$$TsunamiForecastStationImplToJson(
+        _$TsunamiForecastStationImpl instance) =>
     <String, dynamic>{
       'code': instance.code,
       'name': instance.name,

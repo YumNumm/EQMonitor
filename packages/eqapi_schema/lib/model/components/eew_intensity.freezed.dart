@@ -68,22 +68,22 @@ class _$ForecastMaxIntCopyWithImpl<$Res, $Val extends ForecastMaxInt>
 }
 
 /// @nodoc
-abstract class _$$_ForecastMaxIntCopyWith<$Res>
+abstract class _$$ForecastMaxIntImplCopyWith<$Res>
     implements $ForecastMaxIntCopyWith<$Res> {
-  factory _$$_ForecastMaxIntCopyWith(
-          _$_ForecastMaxInt value, $Res Function(_$_ForecastMaxInt) then) =
-      __$$_ForecastMaxIntCopyWithImpl<$Res>;
+  factory _$$ForecastMaxIntImplCopyWith(_$ForecastMaxIntImpl value,
+          $Res Function(_$ForecastMaxIntImpl) then) =
+      __$$ForecastMaxIntImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({JmaForecastIntensity from, JmaForecastIntensityOver to});
 }
 
 /// @nodoc
-class __$$_ForecastMaxIntCopyWithImpl<$Res>
-    extends _$ForecastMaxIntCopyWithImpl<$Res, _$_ForecastMaxInt>
-    implements _$$_ForecastMaxIntCopyWith<$Res> {
-  __$$_ForecastMaxIntCopyWithImpl(
-      _$_ForecastMaxInt _value, $Res Function(_$_ForecastMaxInt) _then)
+class __$$ForecastMaxIntImplCopyWithImpl<$Res>
+    extends _$ForecastMaxIntCopyWithImpl<$Res, _$ForecastMaxIntImpl>
+    implements _$$ForecastMaxIntImplCopyWith<$Res> {
+  __$$ForecastMaxIntImplCopyWithImpl(
+      _$ForecastMaxIntImpl _value, $Res Function(_$ForecastMaxIntImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -92,7 +92,7 @@ class __$$_ForecastMaxIntCopyWithImpl<$Res>
     Object? from = null,
     Object? to = null,
   }) {
-    return _then(_$_ForecastMaxInt(
+    return _then(_$ForecastMaxIntImpl(
       from: null == from
           ? _value.from
           : from // ignore: cast_nullable_to_non_nullable
@@ -107,11 +107,11 @@ class __$$_ForecastMaxIntCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ForecastMaxInt implements _ForecastMaxInt {
-  const _$_ForecastMaxInt({required this.from, required this.to});
+class _$ForecastMaxIntImpl implements _ForecastMaxInt {
+  const _$ForecastMaxIntImpl({required this.from, required this.to});
 
-  factory _$_ForecastMaxInt.fromJson(Map<String, dynamic> json) =>
-      _$$_ForecastMaxIntFromJson(json);
+  factory _$ForecastMaxIntImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ForecastMaxIntImplFromJson(json);
 
   @override
   final JmaForecastIntensity from;
@@ -127,7 +127,7 @@ class _$_ForecastMaxInt implements _ForecastMaxInt {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ForecastMaxInt &&
+            other is _$ForecastMaxIntImpl &&
             (identical(other.from, from) || other.from == from) &&
             (identical(other.to, to) || other.to == to));
   }
@@ -139,12 +139,13 @@ class _$_ForecastMaxInt implements _ForecastMaxInt {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ForecastMaxIntCopyWith<_$_ForecastMaxInt> get copyWith =>
-      __$$_ForecastMaxIntCopyWithImpl<_$_ForecastMaxInt>(this, _$identity);
+  _$$ForecastMaxIntImplCopyWith<_$ForecastMaxIntImpl> get copyWith =>
+      __$$ForecastMaxIntImplCopyWithImpl<_$ForecastMaxIntImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ForecastMaxIntToJson(
+    return _$$ForecastMaxIntImplToJson(
       this,
     );
   }
@@ -153,10 +154,10 @@ class _$_ForecastMaxInt implements _ForecastMaxInt {
 abstract class _ForecastMaxInt implements ForecastMaxInt {
   const factory _ForecastMaxInt(
       {required final JmaForecastIntensity from,
-      required final JmaForecastIntensityOver to}) = _$_ForecastMaxInt;
+      required final JmaForecastIntensityOver to}) = _$ForecastMaxIntImpl;
 
   factory _ForecastMaxInt.fromJson(Map<String, dynamic> json) =
-      _$_ForecastMaxInt.fromJson;
+      _$ForecastMaxIntImpl.fromJson;
 
   @override
   JmaForecastIntensity get from;
@@ -164,7 +165,7 @@ abstract class _ForecastMaxInt implements ForecastMaxInt {
   JmaForecastIntensityOver get to;
   @override
   @JsonKey(ignore: true)
-  _$$_ForecastMaxIntCopyWith<_$_ForecastMaxInt> get copyWith =>
+  _$$ForecastMaxIntImplCopyWith<_$ForecastMaxIntImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -222,22 +223,22 @@ class _$ForecastMaxLgIntCopyWithImpl<$Res, $Val extends ForecastMaxLgInt>
 }
 
 /// @nodoc
-abstract class _$$_ForecastMaxLgIntCopyWith<$Res>
+abstract class _$$ForecastMaxLgIntImplCopyWith<$Res>
     implements $ForecastMaxLgIntCopyWith<$Res> {
-  factory _$$_ForecastMaxLgIntCopyWith(
-          _$_ForecastMaxLgInt value, $Res Function(_$_ForecastMaxLgInt) then) =
-      __$$_ForecastMaxLgIntCopyWithImpl<$Res>;
+  factory _$$ForecastMaxLgIntImplCopyWith(_$ForecastMaxLgIntImpl value,
+          $Res Function(_$ForecastMaxLgIntImpl) then) =
+      __$$ForecastMaxLgIntImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({JmaForecastLgIntensity from, JmaForecastLgIntensityOver to});
 }
 
 /// @nodoc
-class __$$_ForecastMaxLgIntCopyWithImpl<$Res>
-    extends _$ForecastMaxLgIntCopyWithImpl<$Res, _$_ForecastMaxLgInt>
-    implements _$$_ForecastMaxLgIntCopyWith<$Res> {
-  __$$_ForecastMaxLgIntCopyWithImpl(
-      _$_ForecastMaxLgInt _value, $Res Function(_$_ForecastMaxLgInt) _then)
+class __$$ForecastMaxLgIntImplCopyWithImpl<$Res>
+    extends _$ForecastMaxLgIntCopyWithImpl<$Res, _$ForecastMaxLgIntImpl>
+    implements _$$ForecastMaxLgIntImplCopyWith<$Res> {
+  __$$ForecastMaxLgIntImplCopyWithImpl(_$ForecastMaxLgIntImpl _value,
+      $Res Function(_$ForecastMaxLgIntImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -246,7 +247,7 @@ class __$$_ForecastMaxLgIntCopyWithImpl<$Res>
     Object? from = null,
     Object? to = null,
   }) {
-    return _then(_$_ForecastMaxLgInt(
+    return _then(_$ForecastMaxLgIntImpl(
       from: null == from
           ? _value.from
           : from // ignore: cast_nullable_to_non_nullable
@@ -261,11 +262,11 @@ class __$$_ForecastMaxLgIntCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ForecastMaxLgInt implements _ForecastMaxLgInt {
-  const _$_ForecastMaxLgInt({required this.from, required this.to});
+class _$ForecastMaxLgIntImpl implements _ForecastMaxLgInt {
+  const _$ForecastMaxLgIntImpl({required this.from, required this.to});
 
-  factory _$_ForecastMaxLgInt.fromJson(Map<String, dynamic> json) =>
-      _$$_ForecastMaxLgIntFromJson(json);
+  factory _$ForecastMaxLgIntImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ForecastMaxLgIntImplFromJson(json);
 
   @override
   final JmaForecastLgIntensity from;
@@ -281,7 +282,7 @@ class _$_ForecastMaxLgInt implements _ForecastMaxLgInt {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ForecastMaxLgInt &&
+            other is _$ForecastMaxLgIntImpl &&
             (identical(other.from, from) || other.from == from) &&
             (identical(other.to, to) || other.to == to));
   }
@@ -293,12 +294,13 @@ class _$_ForecastMaxLgInt implements _ForecastMaxLgInt {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ForecastMaxLgIntCopyWith<_$_ForecastMaxLgInt> get copyWith =>
-      __$$_ForecastMaxLgIntCopyWithImpl<_$_ForecastMaxLgInt>(this, _$identity);
+  _$$ForecastMaxLgIntImplCopyWith<_$ForecastMaxLgIntImpl> get copyWith =>
+      __$$ForecastMaxLgIntImplCopyWithImpl<_$ForecastMaxLgIntImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ForecastMaxLgIntToJson(
+    return _$$ForecastMaxLgIntImplToJson(
       this,
     );
   }
@@ -307,10 +309,10 @@ class _$_ForecastMaxLgInt implements _ForecastMaxLgInt {
 abstract class _ForecastMaxLgInt implements ForecastMaxLgInt {
   const factory _ForecastMaxLgInt(
       {required final JmaForecastLgIntensity from,
-      required final JmaForecastLgIntensityOver to}) = _$_ForecastMaxLgInt;
+      required final JmaForecastLgIntensityOver to}) = _$ForecastMaxLgIntImpl;
 
   factory _ForecastMaxLgInt.fromJson(Map<String, dynamic> json) =
-      _$_ForecastMaxLgInt.fromJson;
+      _$ForecastMaxLgIntImpl.fromJson;
 
   @override
   JmaForecastLgIntensity get from;
@@ -318,6 +320,6 @@ abstract class _ForecastMaxLgInt implements ForecastMaxLgInt {
   JmaForecastLgIntensityOver get to;
   @override
   @JsonKey(ignore: true)
-  _$$_ForecastMaxLgIntCopyWith<_$_ForecastMaxLgInt> get copyWith =>
+  _$$ForecastMaxLgIntImplCopyWith<_$ForecastMaxLgIntImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -8,11 +8,12 @@ part of 'eew_region.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_EewRegion _$$_EewRegionFromJson(Map<String, dynamic> json) => $checkedCreate(
-      r'_$_EewRegion',
+_$EewRegionImpl _$$EewRegionImplFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      r'_$EewRegionImpl',
       json,
       ($checkedConvert) {
-        final val = _$_EewRegion(
+        final val = _$EewRegionImpl(
           code: $checkedConvert('code', (v) => v as String),
           name: $checkedConvert('name', (v) => v as String),
           isPlum: $checkedConvert('isPlum', (v) => v as bool),
@@ -31,7 +32,7 @@ _$_EewRegion _$$_EewRegionFromJson(Map<String, dynamic> json) => $checkedCreate(
       },
     );
 
-Map<String, dynamic> _$$_EewRegionToJson(_$_EewRegion instance) =>
+Map<String, dynamic> _$$EewRegionImplToJson(_$EewRegionImpl instance) =>
     <String, dynamic>{
       'code': instance.code,
       'name': instance.name,

@@ -66,19 +66,21 @@ class _$NamingCopyWithImpl<$Res, $Val extends Naming>
 }
 
 /// @nodoc
-abstract class _$$_NamingCopyWith<$Res> implements $NamingCopyWith<$Res> {
-  factory _$$_NamingCopyWith(_$_Naming value, $Res Function(_$_Naming) then) =
-      __$$_NamingCopyWithImpl<$Res>;
+abstract class _$$NamingImplCopyWith<$Res> implements $NamingCopyWith<$Res> {
+  factory _$$NamingImplCopyWith(
+          _$NamingImpl value, $Res Function(_$NamingImpl) then) =
+      __$$NamingImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String text, String? en});
 }
 
 /// @nodoc
-class __$$_NamingCopyWithImpl<$Res>
-    extends _$NamingCopyWithImpl<$Res, _$_Naming>
-    implements _$$_NamingCopyWith<$Res> {
-  __$$_NamingCopyWithImpl(_$_Naming _value, $Res Function(_$_Naming) _then)
+class __$$NamingImplCopyWithImpl<$Res>
+    extends _$NamingCopyWithImpl<$Res, _$NamingImpl>
+    implements _$$NamingImplCopyWith<$Res> {
+  __$$NamingImplCopyWithImpl(
+      _$NamingImpl _value, $Res Function(_$NamingImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -87,7 +89,7 @@ class __$$_NamingCopyWithImpl<$Res>
     Object? text = null,
     Object? en = freezed,
   }) {
-    return _then(_$_Naming(
+    return _then(_$NamingImpl(
       text: null == text
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
@@ -102,11 +104,11 @@ class __$$_NamingCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Naming implements _Naming {
-  const _$_Naming({required this.text, required this.en});
+class _$NamingImpl implements _Naming {
+  const _$NamingImpl({required this.text, required this.en});
 
-  factory _$_Naming.fromJson(Map<String, dynamic> json) =>
-      _$$_NamingFromJson(json);
+  factory _$NamingImpl.fromJson(Map<String, dynamic> json) =>
+      _$$NamingImplFromJson(json);
 
   @override
   final String text;
@@ -122,7 +124,7 @@ class _$_Naming implements _Naming {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Naming &&
+            other is _$NamingImpl &&
             (identical(other.text, text) || other.text == text) &&
             (identical(other.en, en) || other.en == en));
   }
@@ -134,12 +136,12 @@ class _$_Naming implements _Naming {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_NamingCopyWith<_$_Naming> get copyWith =>
-      __$$_NamingCopyWithImpl<_$_Naming>(this, _$identity);
+  _$$NamingImplCopyWith<_$NamingImpl> get copyWith =>
+      __$$NamingImplCopyWithImpl<_$NamingImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_NamingToJson(
+    return _$$NamingImplToJson(
       this,
     );
   }
@@ -147,9 +149,9 @@ class _$_Naming implements _Naming {
 
 abstract class _Naming implements Naming {
   const factory _Naming(
-      {required final String text, required final String? en}) = _$_Naming;
+      {required final String text, required final String? en}) = _$NamingImpl;
 
-  factory _Naming.fromJson(Map<String, dynamic> json) = _$_Naming.fromJson;
+  factory _Naming.fromJson(Map<String, dynamic> json) = _$NamingImpl.fromJson;
 
   @override
   String get text;
@@ -157,6 +159,6 @@ abstract class _Naming implements Naming {
   String? get en;
   @override
   @JsonKey(ignore: true)
-  _$$_NamingCopyWith<_$_Naming> get copyWith =>
+  _$$NamingImplCopyWith<_$NamingImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

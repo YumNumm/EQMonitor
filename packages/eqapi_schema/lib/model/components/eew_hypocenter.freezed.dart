@@ -74,22 +74,22 @@ class _$EewHypocenterCopyWithImpl<$Res, $Val extends EewHypocenter>
 }
 
 /// @nodoc
-abstract class _$$_EewHypocenterCopyWith<$Res>
+abstract class _$$EewHypocenterImplCopyWith<$Res>
     implements $EewHypocenterCopyWith<$Res> {
-  factory _$$_EewHypocenterCopyWith(
-          _$_EewHypocenter value, $Res Function(_$_EewHypocenter) then) =
-      __$$_EewHypocenterCopyWithImpl<$Res>;
+  factory _$$EewHypocenterImplCopyWith(
+          _$EewHypocenterImpl value, $Res Function(_$EewHypocenterImpl) then) =
+      __$$EewHypocenterImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({LatLng? coordinate, String code, String name});
 }
 
 /// @nodoc
-class __$$_EewHypocenterCopyWithImpl<$Res>
-    extends _$EewHypocenterCopyWithImpl<$Res, _$_EewHypocenter>
-    implements _$$_EewHypocenterCopyWith<$Res> {
-  __$$_EewHypocenterCopyWithImpl(
-      _$_EewHypocenter _value, $Res Function(_$_EewHypocenter) _then)
+class __$$EewHypocenterImplCopyWithImpl<$Res>
+    extends _$EewHypocenterCopyWithImpl<$Res, _$EewHypocenterImpl>
+    implements _$$EewHypocenterImplCopyWith<$Res> {
+  __$$EewHypocenterImplCopyWithImpl(
+      _$EewHypocenterImpl _value, $Res Function(_$EewHypocenterImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -99,7 +99,7 @@ class __$$_EewHypocenterCopyWithImpl<$Res>
     Object? code = null,
     Object? name = null,
   }) {
-    return _then(_$_EewHypocenter(
+    return _then(_$EewHypocenterImpl(
       coordinate: freezed == coordinate
           ? _value.coordinate
           : coordinate // ignore: cast_nullable_to_non_nullable
@@ -118,12 +118,12 @@ class __$$_EewHypocenterCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_EewHypocenter implements _EewHypocenter {
-  const _$_EewHypocenter(
+class _$EewHypocenterImpl implements _EewHypocenter {
+  const _$EewHypocenterImpl(
       {required this.coordinate, required this.code, required this.name});
 
-  factory _$_EewHypocenter.fromJson(Map<String, dynamic> json) =>
-      _$$_EewHypocenterFromJson(json);
+  factory _$EewHypocenterImpl.fromJson(Map<String, dynamic> json) =>
+      _$$EewHypocenterImplFromJson(json);
 
   @override
   final LatLng? coordinate;
@@ -141,7 +141,7 @@ class _$_EewHypocenter implements _EewHypocenter {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_EewHypocenter &&
+            other is _$EewHypocenterImpl &&
             (identical(other.coordinate, coordinate) ||
                 other.coordinate == coordinate) &&
             (identical(other.code, code) || other.code == code) &&
@@ -155,12 +155,12 @@ class _$_EewHypocenter implements _EewHypocenter {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_EewHypocenterCopyWith<_$_EewHypocenter> get copyWith =>
-      __$$_EewHypocenterCopyWithImpl<_$_EewHypocenter>(this, _$identity);
+  _$$EewHypocenterImplCopyWith<_$EewHypocenterImpl> get copyWith =>
+      __$$EewHypocenterImplCopyWithImpl<_$EewHypocenterImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_EewHypocenterToJson(
+    return _$$EewHypocenterImplToJson(
       this,
     );
   }
@@ -170,10 +170,10 @@ abstract class _EewHypocenter implements EewHypocenter {
   const factory _EewHypocenter(
       {required final LatLng? coordinate,
       required final String code,
-      required final String name}) = _$_EewHypocenter;
+      required final String name}) = _$EewHypocenterImpl;
 
   factory _EewHypocenter.fromJson(Map<String, dynamic> json) =
-      _$_EewHypocenter.fromJson;
+      _$EewHypocenterImpl.fromJson;
 
   @override
   LatLng? get coordinate;
@@ -183,6 +183,6 @@ abstract class _EewHypocenter implements EewHypocenter {
   String get name;
   @override
   @JsonKey(ignore: true)
-  _$$_EewHypocenterCopyWith<_$_EewHypocenter> get copyWith =>
+  _$$EewHypocenterImplCopyWith<_$EewHypocenterImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

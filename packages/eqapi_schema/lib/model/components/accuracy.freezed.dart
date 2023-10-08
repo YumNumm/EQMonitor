@@ -84,11 +84,11 @@ class _$EewAccuracyCopyWithImpl<$Res, $Val extends EewAccuracy>
 }
 
 /// @nodoc
-abstract class _$$_EewAccuracyCopyWith<$Res>
+abstract class _$$EewAccuracyImplCopyWith<$Res>
     implements $EewAccuracyCopyWith<$Res> {
-  factory _$$_EewAccuracyCopyWith(
-          _$_EewAccuracy value, $Res Function(_$_EewAccuracy) then) =
-      __$$_EewAccuracyCopyWithImpl<$Res>;
+  factory _$$EewAccuracyImplCopyWith(
+          _$EewAccuracyImpl value, $Res Function(_$EewAccuracyImpl) then) =
+      __$$EewAccuracyImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -99,11 +99,11 @@ abstract class _$$_EewAccuracyCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_EewAccuracyCopyWithImpl<$Res>
-    extends _$EewAccuracyCopyWithImpl<$Res, _$_EewAccuracy>
-    implements _$$_EewAccuracyCopyWith<$Res> {
-  __$$_EewAccuracyCopyWithImpl(
-      _$_EewAccuracy _value, $Res Function(_$_EewAccuracy) _then)
+class __$$EewAccuracyImplCopyWithImpl<$Res>
+    extends _$EewAccuracyCopyWithImpl<$Res, _$EewAccuracyImpl>
+    implements _$$EewAccuracyImplCopyWith<$Res> {
+  __$$EewAccuracyImplCopyWithImpl(
+      _$EewAccuracyImpl _value, $Res Function(_$EewAccuracyImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -114,7 +114,7 @@ class __$$_EewAccuracyCopyWithImpl<$Res>
     Object? magnitudeCalculation = null,
     Object? numberOfMagnitudeCalculation = null,
   }) {
-    return _then(_$_EewAccuracy(
+    return _then(_$EewAccuracyImpl(
       epicenters: null == epicenters
           ? _value._epicenters
           : epicenters // ignore: cast_nullable_to_non_nullable
@@ -137,16 +137,16 @@ class __$$_EewAccuracyCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_EewAccuracy implements _EewAccuracy {
-  const _$_EewAccuracy(
+class _$EewAccuracyImpl implements _EewAccuracy {
+  const _$EewAccuracyImpl(
       {required final List<String> epicenters,
       required this.depth,
       required this.magnitudeCalculation,
       required this.numberOfMagnitudeCalculation})
       : _epicenters = epicenters;
 
-  factory _$_EewAccuracy.fromJson(Map<String, dynamic> json) =>
-      _$$_EewAccuracyFromJson(json);
+  factory _$EewAccuracyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$EewAccuracyImplFromJson(json);
 
   final List<String> _epicenters;
   @override
@@ -172,7 +172,7 @@ class _$_EewAccuracy implements _EewAccuracy {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_EewAccuracy &&
+            other is _$EewAccuracyImpl &&
             const DeepCollectionEquality()
                 .equals(other._epicenters, _epicenters) &&
             (identical(other.depth, depth) || other.depth == depth) &&
@@ -196,12 +196,12 @@ class _$_EewAccuracy implements _EewAccuracy {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_EewAccuracyCopyWith<_$_EewAccuracy> get copyWith =>
-      __$$_EewAccuracyCopyWithImpl<_$_EewAccuracy>(this, _$identity);
+  _$$EewAccuracyImplCopyWith<_$EewAccuracyImpl> get copyWith =>
+      __$$EewAccuracyImplCopyWithImpl<_$EewAccuracyImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_EewAccuracyToJson(
+    return _$$EewAccuracyImplToJson(
       this,
     );
   }
@@ -212,10 +212,10 @@ abstract class _EewAccuracy implements EewAccuracy {
       {required final List<String> epicenters,
       required final String depth,
       required final String magnitudeCalculation,
-      required final String numberOfMagnitudeCalculation}) = _$_EewAccuracy;
+      required final String numberOfMagnitudeCalculation}) = _$EewAccuracyImpl;
 
   factory _EewAccuracy.fromJson(Map<String, dynamic> json) =
-      _$_EewAccuracy.fromJson;
+      _$EewAccuracyImpl.fromJson;
 
   @override
   List<String> get epicenters;
@@ -227,6 +227,6 @@ abstract class _EewAccuracy implements EewAccuracy {
   String get numberOfMagnitudeCalculation;
   @override
   @JsonKey(ignore: true)
-  _$$_EewAccuracyCopyWith<_$_EewAccuracy> get copyWith =>
+  _$$EewAccuracyImplCopyWith<_$EewAccuracyImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

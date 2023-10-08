@@ -89,11 +89,11 @@ class _$EarthquakeNankaiInfoCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_EarthquakeNankaiInfoCopyWith<$Res>
+abstract class _$$EarthquakeNankaiInfoImplCopyWith<$Res>
     implements $EarthquakeNankaiInfoCopyWith<$Res> {
-  factory _$$_EarthquakeNankaiInfoCopyWith(_$_EarthquakeNankaiInfo value,
-          $Res Function(_$_EarthquakeNankaiInfo) then) =
-      __$$_EarthquakeNankaiInfoCopyWithImpl<$Res>;
+  factory _$$EarthquakeNankaiInfoImplCopyWith(_$EarthquakeNankaiInfoImpl value,
+          $Res Function(_$EarthquakeNankaiInfoImpl) then) =
+      __$$EarthquakeNankaiInfoImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String text, String? appendix, EarthquakeNankaiKind? kind});
@@ -103,11 +103,11 @@ abstract class _$$_EarthquakeNankaiInfoCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_EarthquakeNankaiInfoCopyWithImpl<$Res>
-    extends _$EarthquakeNankaiInfoCopyWithImpl<$Res, _$_EarthquakeNankaiInfo>
-    implements _$$_EarthquakeNankaiInfoCopyWith<$Res> {
-  __$$_EarthquakeNankaiInfoCopyWithImpl(_$_EarthquakeNankaiInfo _value,
-      $Res Function(_$_EarthquakeNankaiInfo) _then)
+class __$$EarthquakeNankaiInfoImplCopyWithImpl<$Res>
+    extends _$EarthquakeNankaiInfoCopyWithImpl<$Res, _$EarthquakeNankaiInfoImpl>
+    implements _$$EarthquakeNankaiInfoImplCopyWith<$Res> {
+  __$$EarthquakeNankaiInfoImplCopyWithImpl(_$EarthquakeNankaiInfoImpl _value,
+      $Res Function(_$EarthquakeNankaiInfoImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -117,7 +117,7 @@ class __$$_EarthquakeNankaiInfoCopyWithImpl<$Res>
     Object? appendix = freezed,
     Object? kind = freezed,
   }) {
-    return _then(_$_EarthquakeNankaiInfo(
+    return _then(_$EarthquakeNankaiInfoImpl(
       text: null == text
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
@@ -136,12 +136,12 @@ class __$$_EarthquakeNankaiInfoCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_EarthquakeNankaiInfo implements _EarthquakeNankaiInfo {
-  const _$_EarthquakeNankaiInfo(
+class _$EarthquakeNankaiInfoImpl implements _EarthquakeNankaiInfo {
+  const _$EarthquakeNankaiInfoImpl(
       {required this.text, required this.appendix, required this.kind});
 
-  factory _$_EarthquakeNankaiInfo.fromJson(Map<String, dynamic> json) =>
-      _$$_EarthquakeNankaiInfoFromJson(json);
+  factory _$EarthquakeNankaiInfoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$EarthquakeNankaiInfoImplFromJson(json);
 
   @override
   final String text;
@@ -159,7 +159,7 @@ class _$_EarthquakeNankaiInfo implements _EarthquakeNankaiInfo {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_EarthquakeNankaiInfo &&
+            other is _$EarthquakeNankaiInfoImpl &&
             (identical(other.text, text) || other.text == text) &&
             (identical(other.appendix, appendix) ||
                 other.appendix == appendix) &&
@@ -173,13 +173,14 @@ class _$_EarthquakeNankaiInfo implements _EarthquakeNankaiInfo {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_EarthquakeNankaiInfoCopyWith<_$_EarthquakeNankaiInfo> get copyWith =>
-      __$$_EarthquakeNankaiInfoCopyWithImpl<_$_EarthquakeNankaiInfo>(
-          this, _$identity);
+  _$$EarthquakeNankaiInfoImplCopyWith<_$EarthquakeNankaiInfoImpl>
+      get copyWith =>
+          __$$EarthquakeNankaiInfoImplCopyWithImpl<_$EarthquakeNankaiInfoImpl>(
+              this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_EarthquakeNankaiInfoToJson(
+    return _$$EarthquakeNankaiInfoImplToJson(
       this,
     );
   }
@@ -189,10 +190,10 @@ abstract class _EarthquakeNankaiInfo implements EarthquakeNankaiInfo {
   const factory _EarthquakeNankaiInfo(
       {required final String text,
       required final String? appendix,
-      required final EarthquakeNankaiKind? kind}) = _$_EarthquakeNankaiInfo;
+      required final EarthquakeNankaiKind? kind}) = _$EarthquakeNankaiInfoImpl;
 
   factory _EarthquakeNankaiInfo.fromJson(Map<String, dynamic> json) =
-      _$_EarthquakeNankaiInfo.fromJson;
+      _$EarthquakeNankaiInfoImpl.fromJson;
 
   @override
   String get text;
@@ -202,8 +203,8 @@ abstract class _EarthquakeNankaiInfo implements EarthquakeNankaiInfo {
   EarthquakeNankaiKind? get kind;
   @override
   @JsonKey(ignore: true)
-  _$$_EarthquakeNankaiInfoCopyWith<_$_EarthquakeNankaiInfo> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$EarthquakeNankaiInfoImplCopyWith<_$EarthquakeNankaiInfoImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 EarthquakeNankaiKind _$EarthquakeNankaiKindFromJson(Map<String, dynamic> json) {
@@ -261,22 +262,22 @@ class _$EarthquakeNankaiKindCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_EarthquakeNankaiKindCopyWith<$Res>
+abstract class _$$EarthquakeNankaiKindImplCopyWith<$Res>
     implements $EarthquakeNankaiKindCopyWith<$Res> {
-  factory _$$_EarthquakeNankaiKindCopyWith(_$_EarthquakeNankaiKind value,
-          $Res Function(_$_EarthquakeNankaiKind) then) =
-      __$$_EarthquakeNankaiKindCopyWithImpl<$Res>;
+  factory _$$EarthquakeNankaiKindImplCopyWith(_$EarthquakeNankaiKindImpl value,
+          $Res Function(_$EarthquakeNankaiKindImpl) then) =
+      __$$EarthquakeNankaiKindImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String code, String name});
 }
 
 /// @nodoc
-class __$$_EarthquakeNankaiKindCopyWithImpl<$Res>
-    extends _$EarthquakeNankaiKindCopyWithImpl<$Res, _$_EarthquakeNankaiKind>
-    implements _$$_EarthquakeNankaiKindCopyWith<$Res> {
-  __$$_EarthquakeNankaiKindCopyWithImpl(_$_EarthquakeNankaiKind _value,
-      $Res Function(_$_EarthquakeNankaiKind) _then)
+class __$$EarthquakeNankaiKindImplCopyWithImpl<$Res>
+    extends _$EarthquakeNankaiKindCopyWithImpl<$Res, _$EarthquakeNankaiKindImpl>
+    implements _$$EarthquakeNankaiKindImplCopyWith<$Res> {
+  __$$EarthquakeNankaiKindImplCopyWithImpl(_$EarthquakeNankaiKindImpl _value,
+      $Res Function(_$EarthquakeNankaiKindImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -285,7 +286,7 @@ class __$$_EarthquakeNankaiKindCopyWithImpl<$Res>
     Object? code = null,
     Object? name = null,
   }) {
-    return _then(_$_EarthquakeNankaiKind(
+    return _then(_$EarthquakeNankaiKindImpl(
       code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
@@ -300,11 +301,11 @@ class __$$_EarthquakeNankaiKindCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_EarthquakeNankaiKind implements _EarthquakeNankaiKind {
-  const _$_EarthquakeNankaiKind({required this.code, required this.name});
+class _$EarthquakeNankaiKindImpl implements _EarthquakeNankaiKind {
+  const _$EarthquakeNankaiKindImpl({required this.code, required this.name});
 
-  factory _$_EarthquakeNankaiKind.fromJson(Map<String, dynamic> json) =>
-      _$$_EarthquakeNankaiKindFromJson(json);
+  factory _$EarthquakeNankaiKindImpl.fromJson(Map<String, dynamic> json) =>
+      _$$EarthquakeNankaiKindImplFromJson(json);
 
   @override
   final String code;
@@ -320,7 +321,7 @@ class _$_EarthquakeNankaiKind implements _EarthquakeNankaiKind {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_EarthquakeNankaiKind &&
+            other is _$EarthquakeNankaiKindImpl &&
             (identical(other.code, code) || other.code == code) &&
             (identical(other.name, name) || other.name == name));
   }
@@ -332,13 +333,14 @@ class _$_EarthquakeNankaiKind implements _EarthquakeNankaiKind {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_EarthquakeNankaiKindCopyWith<_$_EarthquakeNankaiKind> get copyWith =>
-      __$$_EarthquakeNankaiKindCopyWithImpl<_$_EarthquakeNankaiKind>(
-          this, _$identity);
+  _$$EarthquakeNankaiKindImplCopyWith<_$EarthquakeNankaiKindImpl>
+      get copyWith =>
+          __$$EarthquakeNankaiKindImplCopyWithImpl<_$EarthquakeNankaiKindImpl>(
+              this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_EarthquakeNankaiKindToJson(
+    return _$$EarthquakeNankaiKindImplToJson(
       this,
     );
   }
@@ -347,10 +349,10 @@ class _$_EarthquakeNankaiKind implements _EarthquakeNankaiKind {
 abstract class _EarthquakeNankaiKind implements EarthquakeNankaiKind {
   const factory _EarthquakeNankaiKind(
       {required final String code,
-      required final String name}) = _$_EarthquakeNankaiKind;
+      required final String name}) = _$EarthquakeNankaiKindImpl;
 
   factory _EarthquakeNankaiKind.fromJson(Map<String, dynamic> json) =
-      _$_EarthquakeNankaiKind.fromJson;
+      _$EarthquakeNankaiKindImpl.fromJson;
 
   @override
   String get code;
@@ -358,6 +360,6 @@ abstract class _EarthquakeNankaiKind implements EarthquakeNankaiKind {
   String get name;
   @override
   @JsonKey(ignore: true)
-  _$$_EarthquakeNankaiKindCopyWith<_$_EarthquakeNankaiKind> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$EarthquakeNankaiKindImplCopyWith<_$EarthquakeNankaiKindImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

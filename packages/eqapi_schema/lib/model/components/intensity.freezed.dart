@@ -104,10 +104,11 @@ class _$IntensityCopyWithImpl<$Res, $Val extends Intensity>
 }
 
 /// @nodoc
-abstract class _$$_IntensityCopyWith<$Res> implements $IntensityCopyWith<$Res> {
-  factory _$$_IntensityCopyWith(
-          _$_Intensity value, $Res Function(_$_Intensity) then) =
-      __$$_IntensityCopyWithImpl<$Res>;
+abstract class _$$IntensityImplCopyWith<$Res>
+    implements $IntensityCopyWith<$Res> {
+  factory _$$IntensityImplCopyWith(
+          _$IntensityImpl value, $Res Function(_$IntensityImpl) then) =
+      __$$IntensityImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -121,11 +122,11 @@ abstract class _$$_IntensityCopyWith<$Res> implements $IntensityCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_IntensityCopyWithImpl<$Res>
-    extends _$IntensityCopyWithImpl<$Res, _$_Intensity>
-    implements _$$_IntensityCopyWith<$Res> {
-  __$$_IntensityCopyWithImpl(
-      _$_Intensity _value, $Res Function(_$_Intensity) _then)
+class __$$IntensityImplCopyWithImpl<$Res>
+    extends _$IntensityCopyWithImpl<$Res, _$IntensityImpl>
+    implements _$$IntensityImplCopyWith<$Res> {
+  __$$IntensityImplCopyWithImpl(
+      _$IntensityImpl _value, $Res Function(_$IntensityImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -139,7 +140,7 @@ class __$$_IntensityCopyWithImpl<$Res>
     Object? cities = freezed,
     Object? stations = freezed,
   }) {
-    return _then(_$_Intensity(
+    return _then(_$IntensityImpl(
       maxInt: null == maxInt
           ? _value.maxInt
           : maxInt // ignore: cast_nullable_to_non_nullable
@@ -174,8 +175,8 @@ class __$$_IntensityCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Intensity implements _Intensity {
-  const _$_Intensity(
+class _$IntensityImpl implements _Intensity {
+  const _$IntensityImpl(
       {required this.maxInt,
       this.maxLgInt = null,
       this.lgCategory = null,
@@ -188,8 +189,8 @@ class _$_Intensity implements _Intensity {
         _cities = cities,
         _stations = stations;
 
-  factory _$_Intensity.fromJson(Map<String, dynamic> json) =>
-      _$$_IntensityFromJson(json);
+  factory _$IntensityImpl.fromJson(Map<String, dynamic> json) =>
+      _$$IntensityImplFromJson(json);
 
   @override
   final JmaIntensity maxInt;
@@ -244,7 +245,7 @@ class _$_Intensity implements _Intensity {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Intensity &&
+            other is _$IntensityImpl &&
             (identical(other.maxInt, maxInt) || other.maxInt == maxInt) &&
             (identical(other.maxLgInt, maxLgInt) ||
                 other.maxLgInt == maxLgInt) &&
@@ -272,12 +273,12 @@ class _$_Intensity implements _Intensity {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_IntensityCopyWith<_$_Intensity> get copyWith =>
-      __$$_IntensityCopyWithImpl<_$_Intensity>(this, _$identity);
+  _$$IntensityImplCopyWith<_$IntensityImpl> get copyWith =>
+      __$$IntensityImplCopyWithImpl<_$IntensityImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_IntensityToJson(
+    return _$$IntensityImplToJson(
       this,
     );
   }
@@ -291,10 +292,10 @@ abstract class _Intensity implements Intensity {
       required final List<RegionIntensity> prefectures,
       required final List<RegionIntensity> regions,
       required final List<RegionIntensity>? cities,
-      required final List<RegionIntensity>? stations}) = _$_Intensity;
+      required final List<RegionIntensity>? stations}) = _$IntensityImpl;
 
   factory _Intensity.fromJson(Map<String, dynamic> json) =
-      _$_Intensity.fromJson;
+      _$IntensityImpl.fromJson;
 
   @override
   JmaIntensity get maxInt;
@@ -312,6 +313,6 @@ abstract class _Intensity implements Intensity {
   List<RegionIntensity>? get stations;
   @override
   @JsonKey(ignore: true)
-  _$$_IntensityCopyWith<_$_Intensity> get copyWith =>
+  _$$IntensityImplCopyWith<_$IntensityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

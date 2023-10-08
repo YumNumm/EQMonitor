@@ -103,11 +103,11 @@ class _$EarthquakeCopyWithImpl<$Res, $Val extends Earthquake>
 }
 
 /// @nodoc
-abstract class _$$_EarthquakeCopyWith<$Res>
+abstract class _$$EarthquakeImplCopyWith<$Res>
     implements $EarthquakeCopyWith<$Res> {
-  factory _$$_EarthquakeCopyWith(
-          _$_Earthquake value, $Res Function(_$_Earthquake) then) =
-      __$$_EarthquakeCopyWithImpl<$Res>;
+  factory _$$EarthquakeImplCopyWith(
+          _$EarthquakeImpl value, $Res Function(_$EarthquakeImpl) then) =
+      __$$EarthquakeImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -123,11 +123,11 @@ abstract class _$$_EarthquakeCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_EarthquakeCopyWithImpl<$Res>
-    extends _$EarthquakeCopyWithImpl<$Res, _$_Earthquake>
-    implements _$$_EarthquakeCopyWith<$Res> {
-  __$$_EarthquakeCopyWithImpl(
-      _$_Earthquake _value, $Res Function(_$_Earthquake) _then)
+class __$$EarthquakeImplCopyWithImpl<$Res>
+    extends _$EarthquakeCopyWithImpl<$Res, _$EarthquakeImpl>
+    implements _$$EarthquakeImplCopyWith<$Res> {
+  __$$EarthquakeImplCopyWithImpl(
+      _$EarthquakeImpl _value, $Res Function(_$EarthquakeImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -138,7 +138,7 @@ class __$$_EarthquakeCopyWithImpl<$Res>
     Object? hypocenter = null,
     Object? magnitude = null,
   }) {
-    return _then(_$_Earthquake(
+    return _then(_$EarthquakeImpl(
       originTime: null == originTime
           ? _value.originTime
           : originTime // ignore: cast_nullable_to_non_nullable
@@ -161,15 +161,15 @@ class __$$_EarthquakeCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Earthquake implements _Earthquake {
-  const _$_Earthquake(
+class _$EarthquakeImpl implements _Earthquake {
+  const _$EarthquakeImpl(
       {required this.originTime,
       required this.arrivalTime,
       required this.hypocenter,
       required this.magnitude});
 
-  factory _$_Earthquake.fromJson(Map<String, dynamic> json) =>
-      _$$_EarthquakeFromJson(json);
+  factory _$EarthquakeImpl.fromJson(Map<String, dynamic> json) =>
+      _$$EarthquakeImplFromJson(json);
 
   @override
   final DateTime originTime;
@@ -189,7 +189,7 @@ class _$_Earthquake implements _Earthquake {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Earthquake &&
+            other is _$EarthquakeImpl &&
             (identical(other.originTime, originTime) ||
                 other.originTime == originTime) &&
             (identical(other.arrivalTime, arrivalTime) ||
@@ -208,12 +208,12 @@ class _$_Earthquake implements _Earthquake {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_EarthquakeCopyWith<_$_Earthquake> get copyWith =>
-      __$$_EarthquakeCopyWithImpl<_$_Earthquake>(this, _$identity);
+  _$$EarthquakeImplCopyWith<_$EarthquakeImpl> get copyWith =>
+      __$$EarthquakeImplCopyWithImpl<_$EarthquakeImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_EarthquakeToJson(
+    return _$$EarthquakeImplToJson(
       this,
     );
   }
@@ -224,10 +224,10 @@ abstract class _Earthquake implements Earthquake {
       {required final DateTime originTime,
       required final DateTime arrivalTime,
       required final EarthquakeHypocenter hypocenter,
-      required final EarthquakeMagnitude magnitude}) = _$_Earthquake;
+      required final EarthquakeMagnitude magnitude}) = _$EarthquakeImpl;
 
   factory _Earthquake.fromJson(Map<String, dynamic> json) =
-      _$_Earthquake.fromJson;
+      _$EarthquakeImpl.fromJson;
 
   @override
   DateTime get originTime;
@@ -239,7 +239,7 @@ abstract class _Earthquake implements Earthquake {
   EarthquakeMagnitude get magnitude;
   @override
   @JsonKey(ignore: true)
-  _$$_EarthquakeCopyWith<_$_Earthquake> get copyWith =>
+  _$$EarthquakeImplCopyWith<_$EarthquakeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -341,11 +341,11 @@ class _$EarthquakeHypocenterCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_EarthquakeHypocenterCopyWith<$Res>
+abstract class _$$EarthquakeHypocenterImplCopyWith<$Res>
     implements $EarthquakeHypocenterCopyWith<$Res> {
-  factory _$$_EarthquakeHypocenterCopyWith(_$_EarthquakeHypocenter value,
-          $Res Function(_$_EarthquakeHypocenter) then) =
-      __$$_EarthquakeHypocenterCopyWithImpl<$Res>;
+  factory _$$EarthquakeHypocenterImplCopyWith(_$EarthquakeHypocenterImpl value,
+          $Res Function(_$EarthquakeHypocenterImpl) then) =
+      __$$EarthquakeHypocenterImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -360,11 +360,11 @@ abstract class _$$_EarthquakeHypocenterCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_EarthquakeHypocenterCopyWithImpl<$Res>
-    extends _$EarthquakeHypocenterCopyWithImpl<$Res, _$_EarthquakeHypocenter>
-    implements _$$_EarthquakeHypocenterCopyWith<$Res> {
-  __$$_EarthquakeHypocenterCopyWithImpl(_$_EarthquakeHypocenter _value,
-      $Res Function(_$_EarthquakeHypocenter) _then)
+class __$$EarthquakeHypocenterImplCopyWithImpl<$Res>
+    extends _$EarthquakeHypocenterCopyWithImpl<$Res, _$EarthquakeHypocenterImpl>
+    implements _$$EarthquakeHypocenterImplCopyWith<$Res> {
+  __$$EarthquakeHypocenterImplCopyWithImpl(_$EarthquakeHypocenterImpl _value,
+      $Res Function(_$EarthquakeHypocenterImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -376,7 +376,7 @@ class __$$_EarthquakeHypocenterCopyWithImpl<$Res>
     Object? detailed = freezed,
     Object? coordinate = freezed,
   }) {
-    return _then(_$_EarthquakeHypocenter(
+    return _then(_$EarthquakeHypocenterImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -403,16 +403,16 @@ class __$$_EarthquakeHypocenterCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_EarthquakeHypocenter implements _EarthquakeHypocenter {
-  const _$_EarthquakeHypocenter(
+class _$EarthquakeHypocenterImpl implements _EarthquakeHypocenter {
+  const _$EarthquakeHypocenterImpl(
       {required this.name,
       required this.code,
       required this.depth,
       required this.detailed,
       required this.coordinate});
 
-  factory _$_EarthquakeHypocenter.fromJson(Map<String, dynamic> json) =>
-      _$$_EarthquakeHypocenterFromJson(json);
+  factory _$EarthquakeHypocenterImpl.fromJson(Map<String, dynamic> json) =>
+      _$$EarthquakeHypocenterImplFromJson(json);
 
   @override
   final String name;
@@ -438,7 +438,7 @@ class _$_EarthquakeHypocenter implements _EarthquakeHypocenter {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_EarthquakeHypocenter &&
+            other is _$EarthquakeHypocenterImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.code, code) || other.code == code) &&
             (identical(other.depth, depth) || other.depth == depth) &&
@@ -456,13 +456,14 @@ class _$_EarthquakeHypocenter implements _EarthquakeHypocenter {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_EarthquakeHypocenterCopyWith<_$_EarthquakeHypocenter> get copyWith =>
-      __$$_EarthquakeHypocenterCopyWithImpl<_$_EarthquakeHypocenter>(
-          this, _$identity);
+  _$$EarthquakeHypocenterImplCopyWith<_$EarthquakeHypocenterImpl>
+      get copyWith =>
+          __$$EarthquakeHypocenterImplCopyWithImpl<_$EarthquakeHypocenterImpl>(
+              this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_EarthquakeHypocenterToJson(
+    return _$$EarthquakeHypocenterImplToJson(
       this,
     );
   }
@@ -474,10 +475,10 @@ abstract class _EarthquakeHypocenter implements EarthquakeHypocenter {
       required final String code,
       required final int? depth,
       required final EarthquakeHypocenterDetailed? detailed,
-      required final LatLng? coordinate}) = _$_EarthquakeHypocenter;
+      required final LatLng? coordinate}) = _$EarthquakeHypocenterImpl;
 
   factory _EarthquakeHypocenter.fromJson(Map<String, dynamic> json) =
-      _$_EarthquakeHypocenter.fromJson;
+      _$EarthquakeHypocenterImpl.fromJson;
 
   @override
   String get name;
@@ -495,8 +496,8 @@ abstract class _EarthquakeHypocenter implements EarthquakeHypocenter {
   LatLng? get coordinate;
   @override
   @JsonKey(ignore: true)
-  _$$_EarthquakeHypocenterCopyWith<_$_EarthquakeHypocenter> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$EarthquakeHypocenterImplCopyWith<_$EarthquakeHypocenterImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 EarthquakeHypocenterDetailed _$EarthquakeHypocenterDetailedFromJson(
@@ -557,25 +558,25 @@ class _$EarthquakeHypocenterDetailedCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_EarthquakeHypocenterDetailedCopyWith<$Res>
+abstract class _$$EarthquakeHypocenterDetailedImplCopyWith<$Res>
     implements $EarthquakeHypocenterDetailedCopyWith<$Res> {
-  factory _$$_EarthquakeHypocenterDetailedCopyWith(
-          _$_EarthquakeHypocenterDetailed value,
-          $Res Function(_$_EarthquakeHypocenterDetailed) then) =
-      __$$_EarthquakeHypocenterDetailedCopyWithImpl<$Res>;
+  factory _$$EarthquakeHypocenterDetailedImplCopyWith(
+          _$EarthquakeHypocenterDetailedImpl value,
+          $Res Function(_$EarthquakeHypocenterDetailedImpl) then) =
+      __$$EarthquakeHypocenterDetailedImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String code, String name});
 }
 
 /// @nodoc
-class __$$_EarthquakeHypocenterDetailedCopyWithImpl<$Res>
+class __$$EarthquakeHypocenterDetailedImplCopyWithImpl<$Res>
     extends _$EarthquakeHypocenterDetailedCopyWithImpl<$Res,
-        _$_EarthquakeHypocenterDetailed>
-    implements _$$_EarthquakeHypocenterDetailedCopyWith<$Res> {
-  __$$_EarthquakeHypocenterDetailedCopyWithImpl(
-      _$_EarthquakeHypocenterDetailed _value,
-      $Res Function(_$_EarthquakeHypocenterDetailed) _then)
+        _$EarthquakeHypocenterDetailedImpl>
+    implements _$$EarthquakeHypocenterDetailedImplCopyWith<$Res> {
+  __$$EarthquakeHypocenterDetailedImplCopyWithImpl(
+      _$EarthquakeHypocenterDetailedImpl _value,
+      $Res Function(_$EarthquakeHypocenterDetailedImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -584,7 +585,7 @@ class __$$_EarthquakeHypocenterDetailedCopyWithImpl<$Res>
     Object? code = null,
     Object? name = null,
   }) {
-    return _then(_$_EarthquakeHypocenterDetailed(
+    return _then(_$EarthquakeHypocenterDetailedImpl(
       code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
@@ -599,12 +600,14 @@ class __$$_EarthquakeHypocenterDetailedCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_EarthquakeHypocenterDetailed implements _EarthquakeHypocenterDetailed {
-  const _$_EarthquakeHypocenterDetailed(
+class _$EarthquakeHypocenterDetailedImpl
+    implements _EarthquakeHypocenterDetailed {
+  const _$EarthquakeHypocenterDetailedImpl(
       {required this.code, required this.name});
 
-  factory _$_EarthquakeHypocenterDetailed.fromJson(Map<String, dynamic> json) =>
-      _$$_EarthquakeHypocenterDetailedFromJson(json);
+  factory _$EarthquakeHypocenterDetailedImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$EarthquakeHypocenterDetailedImplFromJson(json);
 
   @override
   final String code;
@@ -620,7 +623,7 @@ class _$_EarthquakeHypocenterDetailed implements _EarthquakeHypocenterDetailed {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_EarthquakeHypocenterDetailed &&
+            other is _$EarthquakeHypocenterDetailedImpl &&
             (identical(other.code, code) || other.code == code) &&
             (identical(other.name, name) || other.name == name));
   }
@@ -632,13 +635,14 @@ class _$_EarthquakeHypocenterDetailed implements _EarthquakeHypocenterDetailed {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_EarthquakeHypocenterDetailedCopyWith<_$_EarthquakeHypocenterDetailed>
-      get copyWith => __$$_EarthquakeHypocenterDetailedCopyWithImpl<
-          _$_EarthquakeHypocenterDetailed>(this, _$identity);
+  _$$EarthquakeHypocenterDetailedImplCopyWith<
+          _$EarthquakeHypocenterDetailedImpl>
+      get copyWith => __$$EarthquakeHypocenterDetailedImplCopyWithImpl<
+          _$EarthquakeHypocenterDetailedImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_EarthquakeHypocenterDetailedToJson(
+    return _$$EarthquakeHypocenterDetailedImplToJson(
       this,
     );
   }
@@ -648,10 +652,10 @@ abstract class _EarthquakeHypocenterDetailed
     implements EarthquakeHypocenterDetailed {
   const factory _EarthquakeHypocenterDetailed(
       {required final String code,
-      required final String name}) = _$_EarthquakeHypocenterDetailed;
+      required final String name}) = _$EarthquakeHypocenterDetailedImpl;
 
   factory _EarthquakeHypocenterDetailed.fromJson(Map<String, dynamic> json) =
-      _$_EarthquakeHypocenterDetailed.fromJson;
+      _$EarthquakeHypocenterDetailedImpl.fromJson;
 
   @override
   String get code;
@@ -659,7 +663,8 @@ abstract class _EarthquakeHypocenterDetailed
   String get name;
   @override
   @JsonKey(ignore: true)
-  _$$_EarthquakeHypocenterDetailedCopyWith<_$_EarthquakeHypocenterDetailed>
+  _$$EarthquakeHypocenterDetailedImplCopyWith<
+          _$EarthquakeHypocenterDetailedImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -717,22 +722,22 @@ class _$EarthquakeMagnitudeCopyWithImpl<$Res, $Val extends EarthquakeMagnitude>
 }
 
 /// @nodoc
-abstract class _$$_EarthquakeMagnitudeCopyWith<$Res>
+abstract class _$$EarthquakeMagnitudeImplCopyWith<$Res>
     implements $EarthquakeMagnitudeCopyWith<$Res> {
-  factory _$$_EarthquakeMagnitudeCopyWith(_$_EarthquakeMagnitude value,
-          $Res Function(_$_EarthquakeMagnitude) then) =
-      __$$_EarthquakeMagnitudeCopyWithImpl<$Res>;
+  factory _$$EarthquakeMagnitudeImplCopyWith(_$EarthquakeMagnitudeImpl value,
+          $Res Function(_$EarthquakeMagnitudeImpl) then) =
+      __$$EarthquakeMagnitudeImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({double? value, String? condition});
 }
 
 /// @nodoc
-class __$$_EarthquakeMagnitudeCopyWithImpl<$Res>
-    extends _$EarthquakeMagnitudeCopyWithImpl<$Res, _$_EarthquakeMagnitude>
-    implements _$$_EarthquakeMagnitudeCopyWith<$Res> {
-  __$$_EarthquakeMagnitudeCopyWithImpl(_$_EarthquakeMagnitude _value,
-      $Res Function(_$_EarthquakeMagnitude) _then)
+class __$$EarthquakeMagnitudeImplCopyWithImpl<$Res>
+    extends _$EarthquakeMagnitudeCopyWithImpl<$Res, _$EarthquakeMagnitudeImpl>
+    implements _$$EarthquakeMagnitudeImplCopyWith<$Res> {
+  __$$EarthquakeMagnitudeImplCopyWithImpl(_$EarthquakeMagnitudeImpl _value,
+      $Res Function(_$EarthquakeMagnitudeImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -741,7 +746,7 @@ class __$$_EarthquakeMagnitudeCopyWithImpl<$Res>
     Object? value = freezed,
     Object? condition = freezed,
   }) {
-    return _then(_$_EarthquakeMagnitude(
+    return _then(_$EarthquakeMagnitudeImpl(
       value: freezed == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -756,11 +761,12 @@ class __$$_EarthquakeMagnitudeCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_EarthquakeMagnitude implements _EarthquakeMagnitude {
-  const _$_EarthquakeMagnitude({required this.value, required this.condition});
+class _$EarthquakeMagnitudeImpl implements _EarthquakeMagnitude {
+  const _$EarthquakeMagnitudeImpl(
+      {required this.value, required this.condition});
 
-  factory _$_EarthquakeMagnitude.fromJson(Map<String, dynamic> json) =>
-      _$$_EarthquakeMagnitudeFromJson(json);
+  factory _$EarthquakeMagnitudeImpl.fromJson(Map<String, dynamic> json) =>
+      _$$EarthquakeMagnitudeImplFromJson(json);
 
   @override
   final double? value;
@@ -776,7 +782,7 @@ class _$_EarthquakeMagnitude implements _EarthquakeMagnitude {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_EarthquakeMagnitude &&
+            other is _$EarthquakeMagnitudeImpl &&
             (identical(other.value, value) || other.value == value) &&
             (identical(other.condition, condition) ||
                 other.condition == condition));
@@ -789,13 +795,13 @@ class _$_EarthquakeMagnitude implements _EarthquakeMagnitude {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_EarthquakeMagnitudeCopyWith<_$_EarthquakeMagnitude> get copyWith =>
-      __$$_EarthquakeMagnitudeCopyWithImpl<_$_EarthquakeMagnitude>(
+  _$$EarthquakeMagnitudeImplCopyWith<_$EarthquakeMagnitudeImpl> get copyWith =>
+      __$$EarthquakeMagnitudeImplCopyWithImpl<_$EarthquakeMagnitudeImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_EarthquakeMagnitudeToJson(
+    return _$$EarthquakeMagnitudeImplToJson(
       this,
     );
   }
@@ -804,10 +810,10 @@ class _$_EarthquakeMagnitude implements _EarthquakeMagnitude {
 abstract class _EarthquakeMagnitude implements EarthquakeMagnitude {
   const factory _EarthquakeMagnitude(
       {required final double? value,
-      required final String? condition}) = _$_EarthquakeMagnitude;
+      required final String? condition}) = _$EarthquakeMagnitudeImpl;
 
   factory _EarthquakeMagnitude.fromJson(Map<String, dynamic> json) =
-      _$_EarthquakeMagnitude.fromJson;
+      _$EarthquakeMagnitudeImpl.fromJson;
 
   @override
   double? get value;
@@ -815,6 +821,6 @@ abstract class _EarthquakeMagnitude implements EarthquakeMagnitude {
   String? get condition;
   @override
   @JsonKey(ignore: true)
-  _$$_EarthquakeMagnitudeCopyWith<_$_EarthquakeMagnitude> get copyWith =>
+  _$$EarthquakeMagnitudeImplCopyWith<_$EarthquakeMagnitudeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
