@@ -104,10 +104,11 @@ class _$CommentsCopyWithImpl<$Res, $Val extends Comments>
 }
 
 /// @nodoc
-abstract class _$$_CommentsCopyWith<$Res> implements $CommentsCopyWith<$Res> {
-  factory _$$_CommentsCopyWith(
-          _$_Comments value, $Res Function(_$_Comments) then) =
-      __$$_CommentsCopyWithImpl<$Res>;
+abstract class _$$CommentsImplCopyWith<$Res>
+    implements $CommentsCopyWith<$Res> {
+  factory _$$CommentsImplCopyWith(
+          _$CommentsImpl value, $Res Function(_$CommentsImpl) then) =
+      __$$CommentsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -122,11 +123,11 @@ abstract class _$$_CommentsCopyWith<$Res> implements $CommentsCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_CommentsCopyWithImpl<$Res>
-    extends _$CommentsCopyWithImpl<$Res, _$_Comments>
-    implements _$$_CommentsCopyWith<$Res> {
-  __$$_CommentsCopyWithImpl(
-      _$_Comments _value, $Res Function(_$_Comments) _then)
+class __$$CommentsImplCopyWithImpl<$Res>
+    extends _$CommentsCopyWithImpl<$Res, _$CommentsImpl>
+    implements _$$CommentsImplCopyWith<$Res> {
+  __$$CommentsImplCopyWithImpl(
+      _$CommentsImpl _value, $Res Function(_$CommentsImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -136,7 +137,7 @@ class __$$_CommentsCopyWithImpl<$Res>
     Object? forecast = freezed,
     Object? varComments = freezed,
   }) {
-    return _then(_$_Comments(
+    return _then(_$CommentsImpl(
       free: freezed == free
           ? _value.free
           : free // ignore: cast_nullable_to_non_nullable
@@ -155,14 +156,14 @@ class __$$_CommentsCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Comments implements _Comments {
-  const _$_Comments(
+class _$CommentsImpl implements _Comments {
+  const _$CommentsImpl(
       {required this.free,
       required this.forecast,
       @JsonValue('var') required this.varComments});
 
-  factory _$_Comments.fromJson(Map<String, dynamic> json) =>
-      _$$_CommentsFromJson(json);
+  factory _$CommentsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CommentsImplFromJson(json);
 
   @override
   final String? free;
@@ -181,7 +182,7 @@ class _$_Comments implements _Comments {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Comments &&
+            other is _$CommentsImpl &&
             (identical(other.free, free) || other.free == free) &&
             (identical(other.forecast, forecast) ||
                 other.forecast == forecast) &&
@@ -196,12 +197,12 @@ class _$_Comments implements _Comments {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_CommentsCopyWith<_$_Comments> get copyWith =>
-      __$$_CommentsCopyWithImpl<_$_Comments>(this, _$identity);
+  _$$CommentsImplCopyWith<_$CommentsImpl> get copyWith =>
+      __$$CommentsImplCopyWithImpl<_$CommentsImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_CommentsToJson(
+    return _$$CommentsImplToJson(
       this,
     );
   }
@@ -209,11 +210,13 @@ class _$_Comments implements _Comments {
 
 abstract class _Comments implements Comments {
   const factory _Comments(
-      {required final String? free,
-      required final ForecastComments? forecast,
-      @JsonValue('var') required final VarComments? varComments}) = _$_Comments;
+          {required final String? free,
+          required final ForecastComments? forecast,
+          @JsonValue('var') required final VarComments? varComments}) =
+      _$CommentsImpl;
 
-  factory _Comments.fromJson(Map<String, dynamic> json) = _$_Comments.fromJson;
+  factory _Comments.fromJson(Map<String, dynamic> json) =
+      _$CommentsImpl.fromJson;
 
   @override
   String? get free;
@@ -224,7 +227,7 @@ abstract class _Comments implements Comments {
   VarComments? get varComments;
   @override
   @JsonKey(ignore: true)
-  _$$_CommentsCopyWith<_$_Comments> get copyWith =>
+  _$$CommentsImplCopyWith<_$CommentsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -296,11 +299,11 @@ class _$CommentsOmitVarCopyWithImpl<$Res, $Val extends CommentsOmitVar>
 }
 
 /// @nodoc
-abstract class _$$_CommentsOmitVarCopyWith<$Res>
+abstract class _$$CommentsOmitVarImplCopyWith<$Res>
     implements $CommentsOmitVarCopyWith<$Res> {
-  factory _$$_CommentsOmitVarCopyWith(
-          _$_CommentsOmitVar value, $Res Function(_$_CommentsOmitVar) then) =
-      __$$_CommentsOmitVarCopyWithImpl<$Res>;
+  factory _$$CommentsOmitVarImplCopyWith(_$CommentsOmitVarImpl value,
+          $Res Function(_$CommentsOmitVarImpl) then) =
+      __$$CommentsOmitVarImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String? free, ForecastComments? forecast});
@@ -310,11 +313,11 @@ abstract class _$$_CommentsOmitVarCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_CommentsOmitVarCopyWithImpl<$Res>
-    extends _$CommentsOmitVarCopyWithImpl<$Res, _$_CommentsOmitVar>
-    implements _$$_CommentsOmitVarCopyWith<$Res> {
-  __$$_CommentsOmitVarCopyWithImpl(
-      _$_CommentsOmitVar _value, $Res Function(_$_CommentsOmitVar) _then)
+class __$$CommentsOmitVarImplCopyWithImpl<$Res>
+    extends _$CommentsOmitVarCopyWithImpl<$Res, _$CommentsOmitVarImpl>
+    implements _$$CommentsOmitVarImplCopyWith<$Res> {
+  __$$CommentsOmitVarImplCopyWithImpl(
+      _$CommentsOmitVarImpl _value, $Res Function(_$CommentsOmitVarImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -323,7 +326,7 @@ class __$$_CommentsOmitVarCopyWithImpl<$Res>
     Object? free = freezed,
     Object? forecast = freezed,
   }) {
-    return _then(_$_CommentsOmitVar(
+    return _then(_$CommentsOmitVarImpl(
       free: freezed == free
           ? _value.free
           : free // ignore: cast_nullable_to_non_nullable
@@ -338,11 +341,11 @@ class __$$_CommentsOmitVarCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_CommentsOmitVar implements _CommentsOmitVar {
-  const _$_CommentsOmitVar({required this.free, required this.forecast});
+class _$CommentsOmitVarImpl implements _CommentsOmitVar {
+  const _$CommentsOmitVarImpl({required this.free, required this.forecast});
 
-  factory _$_CommentsOmitVar.fromJson(Map<String, dynamic> json) =>
-      _$$_CommentsOmitVarFromJson(json);
+  factory _$CommentsOmitVarImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CommentsOmitVarImplFromJson(json);
 
   @override
   final String? free;
@@ -358,7 +361,7 @@ class _$_CommentsOmitVar implements _CommentsOmitVar {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_CommentsOmitVar &&
+            other is _$CommentsOmitVarImpl &&
             (identical(other.free, free) || other.free == free) &&
             (identical(other.forecast, forecast) ||
                 other.forecast == forecast));
@@ -371,12 +374,13 @@ class _$_CommentsOmitVar implements _CommentsOmitVar {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_CommentsOmitVarCopyWith<_$_CommentsOmitVar> get copyWith =>
-      __$$_CommentsOmitVarCopyWithImpl<_$_CommentsOmitVar>(this, _$identity);
+  _$$CommentsOmitVarImplCopyWith<_$CommentsOmitVarImpl> get copyWith =>
+      __$$CommentsOmitVarImplCopyWithImpl<_$CommentsOmitVarImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_CommentsOmitVarToJson(
+    return _$$CommentsOmitVarImplToJson(
       this,
     );
   }
@@ -385,10 +389,10 @@ class _$_CommentsOmitVar implements _CommentsOmitVar {
 abstract class _CommentsOmitVar implements CommentsOmitVar {
   const factory _CommentsOmitVar(
       {required final String? free,
-      required final ForecastComments? forecast}) = _$_CommentsOmitVar;
+      required final ForecastComments? forecast}) = _$CommentsOmitVarImpl;
 
   factory _CommentsOmitVar.fromJson(Map<String, dynamic> json) =
-      _$_CommentsOmitVar.fromJson;
+      _$CommentsOmitVarImpl.fromJson;
 
   @override
   String? get free;
@@ -396,7 +400,7 @@ abstract class _CommentsOmitVar implements CommentsOmitVar {
   ForecastComments? get forecast;
   @override
   @JsonKey(ignore: true)
-  _$$_CommentsOmitVarCopyWith<_$_CommentsOmitVar> get copyWith =>
+  _$$CommentsOmitVarImplCopyWith<_$CommentsOmitVarImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -454,22 +458,22 @@ class _$ForecastCommentsCopyWithImpl<$Res, $Val extends ForecastComments>
 }
 
 /// @nodoc
-abstract class _$$_ForecastCommentsCopyWith<$Res>
+abstract class _$$ForecastCommentsImplCopyWith<$Res>
     implements $ForecastCommentsCopyWith<$Res> {
-  factory _$$_ForecastCommentsCopyWith(
-          _$_ForecastComments value, $Res Function(_$_ForecastComments) then) =
-      __$$_ForecastCommentsCopyWithImpl<$Res>;
+  factory _$$ForecastCommentsImplCopyWith(_$ForecastCommentsImpl value,
+          $Res Function(_$ForecastCommentsImpl) then) =
+      __$$ForecastCommentsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String text, List<String> codes});
 }
 
 /// @nodoc
-class __$$_ForecastCommentsCopyWithImpl<$Res>
-    extends _$ForecastCommentsCopyWithImpl<$Res, _$_ForecastComments>
-    implements _$$_ForecastCommentsCopyWith<$Res> {
-  __$$_ForecastCommentsCopyWithImpl(
-      _$_ForecastComments _value, $Res Function(_$_ForecastComments) _then)
+class __$$ForecastCommentsImplCopyWithImpl<$Res>
+    extends _$ForecastCommentsCopyWithImpl<$Res, _$ForecastCommentsImpl>
+    implements _$$ForecastCommentsImplCopyWith<$Res> {
+  __$$ForecastCommentsImplCopyWithImpl(_$ForecastCommentsImpl _value,
+      $Res Function(_$ForecastCommentsImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -478,7 +482,7 @@ class __$$_ForecastCommentsCopyWithImpl<$Res>
     Object? text = null,
     Object? codes = null,
   }) {
-    return _then(_$_ForecastComments(
+    return _then(_$ForecastCommentsImpl(
       text: null == text
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
@@ -493,13 +497,13 @@ class __$$_ForecastCommentsCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ForecastComments implements _ForecastComments {
-  const _$_ForecastComments(
+class _$ForecastCommentsImpl implements _ForecastComments {
+  const _$ForecastCommentsImpl(
       {required this.text, required final List<String> codes})
       : _codes = codes;
 
-  factory _$_ForecastComments.fromJson(Map<String, dynamic> json) =>
-      _$$_ForecastCommentsFromJson(json);
+  factory _$ForecastCommentsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ForecastCommentsImplFromJson(json);
 
   @override
   final String text;
@@ -520,7 +524,7 @@ class _$_ForecastComments implements _ForecastComments {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ForecastComments &&
+            other is _$ForecastCommentsImpl &&
             (identical(other.text, text) || other.text == text) &&
             const DeepCollectionEquality().equals(other._codes, _codes));
   }
@@ -533,12 +537,13 @@ class _$_ForecastComments implements _ForecastComments {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ForecastCommentsCopyWith<_$_ForecastComments> get copyWith =>
-      __$$_ForecastCommentsCopyWithImpl<_$_ForecastComments>(this, _$identity);
+  _$$ForecastCommentsImplCopyWith<_$ForecastCommentsImpl> get copyWith =>
+      __$$ForecastCommentsImplCopyWithImpl<_$ForecastCommentsImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ForecastCommentsToJson(
+    return _$$ForecastCommentsImplToJson(
       this,
     );
   }
@@ -547,10 +552,10 @@ class _$_ForecastComments implements _ForecastComments {
 abstract class _ForecastComments implements ForecastComments {
   const factory _ForecastComments(
       {required final String text,
-      required final List<String> codes}) = _$_ForecastComments;
+      required final List<String> codes}) = _$ForecastCommentsImpl;
 
   factory _ForecastComments.fromJson(Map<String, dynamic> json) =
-      _$_ForecastComments.fromJson;
+      _$ForecastCommentsImpl.fromJson;
 
   @override
   String get text;
@@ -558,7 +563,7 @@ abstract class _ForecastComments implements ForecastComments {
   List<String> get codes;
   @override
   @JsonKey(ignore: true)
-  _$$_ForecastCommentsCopyWith<_$_ForecastComments> get copyWith =>
+  _$$ForecastCommentsImplCopyWith<_$ForecastCommentsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -616,22 +621,22 @@ class _$VarCommentsCopyWithImpl<$Res, $Val extends VarComments>
 }
 
 /// @nodoc
-abstract class _$$_VarCommentsCopyWith<$Res>
+abstract class _$$VarCommentsImplCopyWith<$Res>
     implements $VarCommentsCopyWith<$Res> {
-  factory _$$_VarCommentsCopyWith(
-          _$_VarComments value, $Res Function(_$_VarComments) then) =
-      __$$_VarCommentsCopyWithImpl<$Res>;
+  factory _$$VarCommentsImplCopyWith(
+          _$VarCommentsImpl value, $Res Function(_$VarCommentsImpl) then) =
+      __$$VarCommentsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String text, List<String> codes});
 }
 
 /// @nodoc
-class __$$_VarCommentsCopyWithImpl<$Res>
-    extends _$VarCommentsCopyWithImpl<$Res, _$_VarComments>
-    implements _$$_VarCommentsCopyWith<$Res> {
-  __$$_VarCommentsCopyWithImpl(
-      _$_VarComments _value, $Res Function(_$_VarComments) _then)
+class __$$VarCommentsImplCopyWithImpl<$Res>
+    extends _$VarCommentsCopyWithImpl<$Res, _$VarCommentsImpl>
+    implements _$$VarCommentsImplCopyWith<$Res> {
+  __$$VarCommentsImplCopyWithImpl(
+      _$VarCommentsImpl _value, $Res Function(_$VarCommentsImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -640,7 +645,7 @@ class __$$_VarCommentsCopyWithImpl<$Res>
     Object? text = null,
     Object? codes = null,
   }) {
-    return _then(_$_VarComments(
+    return _then(_$VarCommentsImpl(
       text: null == text
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
@@ -655,12 +660,13 @@ class __$$_VarCommentsCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_VarComments implements _VarComments {
-  const _$_VarComments({required this.text, required final List<String> codes})
+class _$VarCommentsImpl implements _VarComments {
+  const _$VarCommentsImpl(
+      {required this.text, required final List<String> codes})
       : _codes = codes;
 
-  factory _$_VarComments.fromJson(Map<String, dynamic> json) =>
-      _$$_VarCommentsFromJson(json);
+  factory _$VarCommentsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$VarCommentsImplFromJson(json);
 
   @override
   final String text;
@@ -681,7 +687,7 @@ class _$_VarComments implements _VarComments {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_VarComments &&
+            other is _$VarCommentsImpl &&
             (identical(other.text, text) || other.text == text) &&
             const DeepCollectionEquality().equals(other._codes, _codes));
   }
@@ -694,12 +700,12 @@ class _$_VarComments implements _VarComments {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_VarCommentsCopyWith<_$_VarComments> get copyWith =>
-      __$$_VarCommentsCopyWithImpl<_$_VarComments>(this, _$identity);
+  _$$VarCommentsImplCopyWith<_$VarCommentsImpl> get copyWith =>
+      __$$VarCommentsImplCopyWithImpl<_$VarCommentsImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_VarCommentsToJson(
+    return _$$VarCommentsImplToJson(
       this,
     );
   }
@@ -708,10 +714,10 @@ class _$_VarComments implements _VarComments {
 abstract class _VarComments implements VarComments {
   const factory _VarComments(
       {required final String text,
-      required final List<String> codes}) = _$_VarComments;
+      required final List<String> codes}) = _$VarCommentsImpl;
 
   factory _VarComments.fromJson(Map<String, dynamic> json) =
-      _$_VarComments.fromJson;
+      _$VarCommentsImpl.fromJson;
 
   @override
   String get text;
@@ -719,7 +725,7 @@ abstract class _VarComments implements VarComments {
   List<String> get codes;
   @override
   @JsonKey(ignore: true)
-  _$$_VarCommentsCopyWith<_$_VarComments> get copyWith =>
+  _$$VarCommentsImplCopyWith<_$VarCommentsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -771,22 +777,22 @@ class _$CommentsOnlyFreeCopyWithImpl<$Res, $Val extends CommentsOnlyFree>
 }
 
 /// @nodoc
-abstract class _$$_CommentsOnlyFreeCopyWith<$Res>
+abstract class _$$CommentsOnlyFreeImplCopyWith<$Res>
     implements $CommentsOnlyFreeCopyWith<$Res> {
-  factory _$$_CommentsOnlyFreeCopyWith(
-          _$_CommentsOnlyFree value, $Res Function(_$_CommentsOnlyFree) then) =
-      __$$_CommentsOnlyFreeCopyWithImpl<$Res>;
+  factory _$$CommentsOnlyFreeImplCopyWith(_$CommentsOnlyFreeImpl value,
+          $Res Function(_$CommentsOnlyFreeImpl) then) =
+      __$$CommentsOnlyFreeImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String free});
 }
 
 /// @nodoc
-class __$$_CommentsOnlyFreeCopyWithImpl<$Res>
-    extends _$CommentsOnlyFreeCopyWithImpl<$Res, _$_CommentsOnlyFree>
-    implements _$$_CommentsOnlyFreeCopyWith<$Res> {
-  __$$_CommentsOnlyFreeCopyWithImpl(
-      _$_CommentsOnlyFree _value, $Res Function(_$_CommentsOnlyFree) _then)
+class __$$CommentsOnlyFreeImplCopyWithImpl<$Res>
+    extends _$CommentsOnlyFreeCopyWithImpl<$Res, _$CommentsOnlyFreeImpl>
+    implements _$$CommentsOnlyFreeImplCopyWith<$Res> {
+  __$$CommentsOnlyFreeImplCopyWithImpl(_$CommentsOnlyFreeImpl _value,
+      $Res Function(_$CommentsOnlyFreeImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -794,7 +800,7 @@ class __$$_CommentsOnlyFreeCopyWithImpl<$Res>
   $Res call({
     Object? free = null,
   }) {
-    return _then(_$_CommentsOnlyFree(
+    return _then(_$CommentsOnlyFreeImpl(
       free: null == free
           ? _value.free
           : free // ignore: cast_nullable_to_non_nullable
@@ -805,11 +811,11 @@ class __$$_CommentsOnlyFreeCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_CommentsOnlyFree implements _CommentsOnlyFree {
-  const _$_CommentsOnlyFree({required this.free});
+class _$CommentsOnlyFreeImpl implements _CommentsOnlyFree {
+  const _$CommentsOnlyFreeImpl({required this.free});
 
-  factory _$_CommentsOnlyFree.fromJson(Map<String, dynamic> json) =>
-      _$$_CommentsOnlyFreeFromJson(json);
+  factory _$CommentsOnlyFreeImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CommentsOnlyFreeImplFromJson(json);
 
   @override
   final String free;
@@ -823,7 +829,7 @@ class _$_CommentsOnlyFree implements _CommentsOnlyFree {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_CommentsOnlyFree &&
+            other is _$CommentsOnlyFreeImpl &&
             (identical(other.free, free) || other.free == free));
   }
 
@@ -834,12 +840,13 @@ class _$_CommentsOnlyFree implements _CommentsOnlyFree {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_CommentsOnlyFreeCopyWith<_$_CommentsOnlyFree> get copyWith =>
-      __$$_CommentsOnlyFreeCopyWithImpl<_$_CommentsOnlyFree>(this, _$identity);
+  _$$CommentsOnlyFreeImplCopyWith<_$CommentsOnlyFreeImpl> get copyWith =>
+      __$$CommentsOnlyFreeImplCopyWithImpl<_$CommentsOnlyFreeImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_CommentsOnlyFreeToJson(
+    return _$$CommentsOnlyFreeImplToJson(
       this,
     );
   }
@@ -847,15 +854,15 @@ class _$_CommentsOnlyFree implements _CommentsOnlyFree {
 
 abstract class _CommentsOnlyFree implements CommentsOnlyFree {
   const factory _CommentsOnlyFree({required final String free}) =
-      _$_CommentsOnlyFree;
+      _$CommentsOnlyFreeImpl;
 
   factory _CommentsOnlyFree.fromJson(Map<String, dynamic> json) =
-      _$_CommentsOnlyFree.fromJson;
+      _$CommentsOnlyFreeImpl.fromJson;
 
   @override
   String get free;
   @override
   @JsonKey(ignore: true)
-  _$$_CommentsOnlyFreeCopyWith<_$_CommentsOnlyFree> get copyWith =>
+  _$$CommentsOnlyFreeImplCopyWith<_$CommentsOnlyFreeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

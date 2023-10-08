@@ -121,11 +121,11 @@ class _$TsunamiEstimationCopyWithImpl<$Res, $Val extends TsunamiEstimation>
 }
 
 /// @nodoc
-abstract class _$$_TsunamiEstimationCopyWith<$Res>
+abstract class _$$TsunamiEstimationImplCopyWith<$Res>
     implements $TsunamiEstimationCopyWith<$Res> {
-  factory _$$_TsunamiEstimationCopyWith(_$_TsunamiEstimation value,
-          $Res Function(_$_TsunamiEstimation) then) =
-      __$$_TsunamiEstimationCopyWithImpl<$Res>;
+  factory _$$TsunamiEstimationImplCopyWith(_$TsunamiEstimationImpl value,
+          $Res Function(_$TsunamiEstimationImpl) then) =
+      __$$TsunamiEstimationImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -141,11 +141,11 @@ abstract class _$$_TsunamiEstimationCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TsunamiEstimationCopyWithImpl<$Res>
-    extends _$TsunamiEstimationCopyWithImpl<$Res, _$_TsunamiEstimation>
-    implements _$$_TsunamiEstimationCopyWith<$Res> {
-  __$$_TsunamiEstimationCopyWithImpl(
-      _$_TsunamiEstimation _value, $Res Function(_$_TsunamiEstimation) _then)
+class __$$TsunamiEstimationImplCopyWithImpl<$Res>
+    extends _$TsunamiEstimationCopyWithImpl<$Res, _$TsunamiEstimationImpl>
+    implements _$$TsunamiEstimationImplCopyWith<$Res> {
+  __$$TsunamiEstimationImplCopyWithImpl(_$TsunamiEstimationImpl _value,
+      $Res Function(_$TsunamiEstimationImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -161,7 +161,7 @@ class __$$_TsunamiEstimationCopyWithImpl<$Res>
     Object? maxHeightCondition = freezed,
     Object? isObserving = freezed,
   }) {
-    return _then(_$_TsunamiEstimation(
+    return _then(_$TsunamiEstimationImpl(
       code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
@@ -204,8 +204,8 @@ class __$$_TsunamiEstimationCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TsunamiEstimation implements _TsunamiEstimation {
-  const _$_TsunamiEstimation(
+class _$TsunamiEstimationImpl implements _TsunamiEstimation {
+  const _$TsunamiEstimationImpl(
       {required this.code,
       required this.name,
       required this.firstHeightTime,
@@ -216,8 +216,8 @@ class _$_TsunamiEstimation implements _TsunamiEstimation {
       required this.maxHeightCondition,
       required this.isObserving});
 
-  factory _$_TsunamiEstimation.fromJson(Map<String, dynamic> json) =>
-      _$$_TsunamiEstimationFromJson(json);
+  factory _$TsunamiEstimationImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TsunamiEstimationImplFromJson(json);
 
   @override
   final String code;
@@ -247,7 +247,7 @@ class _$_TsunamiEstimation implements _TsunamiEstimation {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TsunamiEstimation &&
+            other is _$TsunamiEstimationImpl &&
             (identical(other.code, code) || other.code == code) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.firstHeightTime, firstHeightTime) ||
@@ -283,13 +283,13 @@ class _$_TsunamiEstimation implements _TsunamiEstimation {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TsunamiEstimationCopyWith<_$_TsunamiEstimation> get copyWith =>
-      __$$_TsunamiEstimationCopyWithImpl<_$_TsunamiEstimation>(
+  _$$TsunamiEstimationImplCopyWith<_$TsunamiEstimationImpl> get copyWith =>
+      __$$TsunamiEstimationImplCopyWithImpl<_$TsunamiEstimationImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TsunamiEstimationToJson(
+    return _$$TsunamiEstimationImplToJson(
       this,
     );
   }
@@ -306,10 +306,10 @@ abstract class _TsunamiEstimation implements TsunamiEstimation {
       required final double? maxHeightValue,
       required final bool? maxHeightIsOver,
       required final TsunamiEstimationMaxHeightCondition? maxHeightCondition,
-      required final bool? isObserving}) = _$_TsunamiEstimation;
+      required final bool? isObserving}) = _$TsunamiEstimationImpl;
 
   factory _TsunamiEstimation.fromJson(Map<String, dynamic> json) =
-      _$_TsunamiEstimation.fromJson;
+      _$TsunamiEstimationImpl.fromJson;
 
   @override
   String get code;
@@ -331,6 +331,6 @@ abstract class _TsunamiEstimation implements TsunamiEstimation {
   bool? get isObserving;
   @override
   @JsonKey(ignore: true)
-  _$$_TsunamiEstimationCopyWith<_$_TsunamiEstimation> get copyWith =>
+  _$$TsunamiEstimationImplCopyWith<_$TsunamiEstimationImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

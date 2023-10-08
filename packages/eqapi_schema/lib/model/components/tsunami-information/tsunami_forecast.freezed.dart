@@ -137,11 +137,11 @@ class _$TsunamiForecastCopyWithImpl<$Res, $Val extends TsunamiForecast>
 }
 
 /// @nodoc
-abstract class _$$_TsunamiForecastCopyWith<$Res>
+abstract class _$$TsunamiForecastImplCopyWith<$Res>
     implements $TsunamiForecastCopyWith<$Res> {
-  factory _$$_TsunamiForecastCopyWith(
-          _$_TsunamiForecast value, $Res Function(_$_TsunamiForecast) then) =
-      __$$_TsunamiForecastCopyWithImpl<$Res>;
+  factory _$$TsunamiForecastImplCopyWith(_$TsunamiForecastImpl value,
+          $Res Function(_$TsunamiForecastImpl) then) =
+      __$$TsunamiForecastImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -160,11 +160,11 @@ abstract class _$$_TsunamiForecastCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TsunamiForecastCopyWithImpl<$Res>
-    extends _$TsunamiForecastCopyWithImpl<$Res, _$_TsunamiForecast>
-    implements _$$_TsunamiForecastCopyWith<$Res> {
-  __$$_TsunamiForecastCopyWithImpl(
-      _$_TsunamiForecast _value, $Res Function(_$_TsunamiForecast) _then)
+class __$$TsunamiForecastImplCopyWithImpl<$Res>
+    extends _$TsunamiForecastCopyWithImpl<$Res, _$TsunamiForecastImpl>
+    implements _$$TsunamiForecastImplCopyWith<$Res> {
+  __$$TsunamiForecastImplCopyWithImpl(
+      _$TsunamiForecastImpl _value, $Res Function(_$TsunamiForecastImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -178,7 +178,7 @@ class __$$_TsunamiForecastCopyWithImpl<$Res>
     Object? maxHeight = freezed,
     Object? stations = freezed,
   }) {
-    return _then(_$_TsunamiForecast(
+    return _then(_$TsunamiForecastImpl(
       code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
@@ -213,8 +213,8 @@ class __$$_TsunamiForecastCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TsunamiForecast implements _TsunamiForecast {
-  const _$_TsunamiForecast(
+class _$TsunamiForecastImpl implements _TsunamiForecast {
+  const _$TsunamiForecastImpl(
       {required this.code,
       required this.name,
       required this.kind,
@@ -224,8 +224,8 @@ class _$_TsunamiForecast implements _TsunamiForecast {
       required final List<TsunamiForecastStation>? stations})
       : _stations = stations;
 
-  factory _$_TsunamiForecast.fromJson(Map<String, dynamic> json) =>
-      _$$_TsunamiForecastFromJson(json);
+  factory _$TsunamiForecastImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TsunamiForecastImplFromJson(json);
 
   @override
   final String code;
@@ -260,7 +260,7 @@ class _$_TsunamiForecast implements _TsunamiForecast {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TsunamiForecast &&
+            other is _$TsunamiForecastImpl &&
             (identical(other.code, code) || other.code == code) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.kind, kind) || other.kind == kind) &&
@@ -281,12 +281,13 @@ class _$_TsunamiForecast implements _TsunamiForecast {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TsunamiForecastCopyWith<_$_TsunamiForecast> get copyWith =>
-      __$$_TsunamiForecastCopyWithImpl<_$_TsunamiForecast>(this, _$identity);
+  _$$TsunamiForecastImplCopyWith<_$TsunamiForecastImpl> get copyWith =>
+      __$$TsunamiForecastImplCopyWithImpl<_$TsunamiForecastImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TsunamiForecastToJson(
+    return _$$TsunamiForecastImplToJson(
       this,
     );
   }
@@ -301,10 +302,10 @@ abstract class _TsunamiForecast implements TsunamiForecast {
           required final TsunamiForecastFirstHeight? firstHeight,
           required final TsunamiForecastMaxHeight? maxHeight,
           required final List<TsunamiForecastStation>? stations}) =
-      _$_TsunamiForecast;
+      _$TsunamiForecastImpl;
 
   factory _TsunamiForecast.fromJson(Map<String, dynamic> json) =
-      _$_TsunamiForecast.fromJson;
+      _$TsunamiForecastImpl.fromJson;
 
   @override
   String get code;
@@ -324,7 +325,7 @@ abstract class _TsunamiForecast implements TsunamiForecast {
   List<TsunamiForecastStation>? get stations;
   @override
   @JsonKey(ignore: true)
-  _$$_TsunamiForecastCopyWith<_$_TsunamiForecast> get copyWith =>
+  _$$TsunamiForecastImplCopyWith<_$TsunamiForecastImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -385,25 +386,25 @@ class _$TsunamiForecastFirstHeightCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_TsunamiForecastFirstHeightCopyWith<$Res>
+abstract class _$$TsunamiForecastFirstHeightImplCopyWith<$Res>
     implements $TsunamiForecastFirstHeightCopyWith<$Res> {
-  factory _$$_TsunamiForecastFirstHeightCopyWith(
-          _$_TsunamiForecastFirstHeight value,
-          $Res Function(_$_TsunamiForecastFirstHeight) then) =
-      __$$_TsunamiForecastFirstHeightCopyWithImpl<$Res>;
+  factory _$$TsunamiForecastFirstHeightImplCopyWith(
+          _$TsunamiForecastFirstHeightImpl value,
+          $Res Function(_$TsunamiForecastFirstHeightImpl) then) =
+      __$$TsunamiForecastFirstHeightImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({DateTime? arrivalTime, TsunamiForecastCondition? condition});
 }
 
 /// @nodoc
-class __$$_TsunamiForecastFirstHeightCopyWithImpl<$Res>
+class __$$TsunamiForecastFirstHeightImplCopyWithImpl<$Res>
     extends _$TsunamiForecastFirstHeightCopyWithImpl<$Res,
-        _$_TsunamiForecastFirstHeight>
-    implements _$$_TsunamiForecastFirstHeightCopyWith<$Res> {
-  __$$_TsunamiForecastFirstHeightCopyWithImpl(
-      _$_TsunamiForecastFirstHeight _value,
-      $Res Function(_$_TsunamiForecastFirstHeight) _then)
+        _$TsunamiForecastFirstHeightImpl>
+    implements _$$TsunamiForecastFirstHeightImplCopyWith<$Res> {
+  __$$TsunamiForecastFirstHeightImplCopyWithImpl(
+      _$TsunamiForecastFirstHeightImpl _value,
+      $Res Function(_$TsunamiForecastFirstHeightImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -412,7 +413,7 @@ class __$$_TsunamiForecastFirstHeightCopyWithImpl<$Res>
     Object? arrivalTime = freezed,
     Object? condition = freezed,
   }) {
-    return _then(_$_TsunamiForecastFirstHeight(
+    return _then(_$TsunamiForecastFirstHeightImpl(
       arrivalTime: freezed == arrivalTime
           ? _value.arrivalTime
           : arrivalTime // ignore: cast_nullable_to_non_nullable
@@ -427,12 +428,13 @@ class __$$_TsunamiForecastFirstHeightCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TsunamiForecastFirstHeight implements _TsunamiForecastFirstHeight {
-  const _$_TsunamiForecastFirstHeight(
+class _$TsunamiForecastFirstHeightImpl implements _TsunamiForecastFirstHeight {
+  const _$TsunamiForecastFirstHeightImpl(
       {required this.arrivalTime, required this.condition});
 
-  factory _$_TsunamiForecastFirstHeight.fromJson(Map<String, dynamic> json) =>
-      _$$_TsunamiForecastFirstHeightFromJson(json);
+  factory _$TsunamiForecastFirstHeightImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$TsunamiForecastFirstHeightImplFromJson(json);
 
   @override
   final DateTime? arrivalTime;
@@ -448,7 +450,7 @@ class _$_TsunamiForecastFirstHeight implements _TsunamiForecastFirstHeight {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TsunamiForecastFirstHeight &&
+            other is _$TsunamiForecastFirstHeightImpl &&
             (identical(other.arrivalTime, arrivalTime) ||
                 other.arrivalTime == arrivalTime) &&
             (identical(other.condition, condition) ||
@@ -462,13 +464,13 @@ class _$_TsunamiForecastFirstHeight implements _TsunamiForecastFirstHeight {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TsunamiForecastFirstHeightCopyWith<_$_TsunamiForecastFirstHeight>
-      get copyWith => __$$_TsunamiForecastFirstHeightCopyWithImpl<
-          _$_TsunamiForecastFirstHeight>(this, _$identity);
+  _$$TsunamiForecastFirstHeightImplCopyWith<_$TsunamiForecastFirstHeightImpl>
+      get copyWith => __$$TsunamiForecastFirstHeightImplCopyWithImpl<
+          _$TsunamiForecastFirstHeightImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TsunamiForecastFirstHeightToJson(
+    return _$$TsunamiForecastFirstHeightImplToJson(
       this,
     );
   }
@@ -479,10 +481,10 @@ abstract class _TsunamiForecastFirstHeight
   const factory _TsunamiForecastFirstHeight(
           {required final DateTime? arrivalTime,
           required final TsunamiForecastCondition? condition}) =
-      _$_TsunamiForecastFirstHeight;
+      _$TsunamiForecastFirstHeightImpl;
 
   factory _TsunamiForecastFirstHeight.fromJson(Map<String, dynamic> json) =
-      _$_TsunamiForecastFirstHeight.fromJson;
+      _$TsunamiForecastFirstHeightImpl.fromJson;
 
   @override
   DateTime? get arrivalTime;
@@ -490,7 +492,7 @@ abstract class _TsunamiForecastFirstHeight
   TsunamiForecastCondition? get condition;
   @override
   @JsonKey(ignore: true)
-  _$$_TsunamiForecastFirstHeightCopyWith<_$_TsunamiForecastFirstHeight>
+  _$$TsunamiForecastFirstHeightImplCopyWith<_$TsunamiForecastFirstHeightImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -560,12 +562,12 @@ class _$TsunamiForecastMaxHeightCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_TsunamiForecastMaxHeightCopyWith<$Res>
+abstract class _$$TsunamiForecastMaxHeightImplCopyWith<$Res>
     implements $TsunamiForecastMaxHeightCopyWith<$Res> {
-  factory _$$_TsunamiForecastMaxHeightCopyWith(
-          _$_TsunamiForecastMaxHeight value,
-          $Res Function(_$_TsunamiForecastMaxHeight) then) =
-      __$$_TsunamiForecastMaxHeightCopyWithImpl<$Res>;
+  factory _$$TsunamiForecastMaxHeightImplCopyWith(
+          _$TsunamiForecastMaxHeightImpl value,
+          $Res Function(_$TsunamiForecastMaxHeightImpl) then) =
+      __$$TsunamiForecastMaxHeightImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -575,12 +577,13 @@ abstract class _$$_TsunamiForecastMaxHeightCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TsunamiForecastMaxHeightCopyWithImpl<$Res>
+class __$$TsunamiForecastMaxHeightImplCopyWithImpl<$Res>
     extends _$TsunamiForecastMaxHeightCopyWithImpl<$Res,
-        _$_TsunamiForecastMaxHeight>
-    implements _$$_TsunamiForecastMaxHeightCopyWith<$Res> {
-  __$$_TsunamiForecastMaxHeightCopyWithImpl(_$_TsunamiForecastMaxHeight _value,
-      $Res Function(_$_TsunamiForecastMaxHeight) _then)
+        _$TsunamiForecastMaxHeightImpl>
+    implements _$$TsunamiForecastMaxHeightImplCopyWith<$Res> {
+  __$$TsunamiForecastMaxHeightImplCopyWithImpl(
+      _$TsunamiForecastMaxHeightImpl _value,
+      $Res Function(_$TsunamiForecastMaxHeightImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -590,7 +593,7 @@ class __$$_TsunamiForecastMaxHeightCopyWithImpl<$Res>
     Object? isOver = freezed,
     Object? condition = freezed,
   }) {
-    return _then(_$_TsunamiForecastMaxHeight(
+    return _then(_$TsunamiForecastMaxHeightImpl(
       value: freezed == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -609,12 +612,12 @@ class __$$_TsunamiForecastMaxHeightCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TsunamiForecastMaxHeight implements _TsunamiForecastMaxHeight {
-  const _$_TsunamiForecastMaxHeight(
+class _$TsunamiForecastMaxHeightImpl implements _TsunamiForecastMaxHeight {
+  const _$TsunamiForecastMaxHeightImpl(
       {required this.value, required this.isOver, required this.condition});
 
-  factory _$_TsunamiForecastMaxHeight.fromJson(Map<String, dynamic> json) =>
-      _$$_TsunamiForecastMaxHeightFromJson(json);
+  factory _$TsunamiForecastMaxHeightImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TsunamiForecastMaxHeightImplFromJson(json);
 
   @override
   final double? value;
@@ -632,7 +635,7 @@ class _$_TsunamiForecastMaxHeight implements _TsunamiForecastMaxHeight {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TsunamiForecastMaxHeight &&
+            other is _$TsunamiForecastMaxHeightImpl &&
             (identical(other.value, value) || other.value == value) &&
             (identical(other.isOver, isOver) || other.isOver == isOver) &&
             (identical(other.condition, condition) ||
@@ -646,13 +649,13 @@ class _$_TsunamiForecastMaxHeight implements _TsunamiForecastMaxHeight {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TsunamiForecastMaxHeightCopyWith<_$_TsunamiForecastMaxHeight>
-      get copyWith => __$$_TsunamiForecastMaxHeightCopyWithImpl<
-          _$_TsunamiForecastMaxHeight>(this, _$identity);
+  _$$TsunamiForecastMaxHeightImplCopyWith<_$TsunamiForecastMaxHeightImpl>
+      get copyWith => __$$TsunamiForecastMaxHeightImplCopyWithImpl<
+          _$TsunamiForecastMaxHeightImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TsunamiForecastMaxHeightToJson(
+    return _$$TsunamiForecastMaxHeightImplToJson(
       this,
     );
   }
@@ -663,10 +666,10 @@ abstract class _TsunamiForecastMaxHeight implements TsunamiForecastMaxHeight {
           {required final double? value,
           required final bool? isOver,
           required final TsunamiForecastMaxHeightCondition? condition}) =
-      _$_TsunamiForecastMaxHeight;
+      _$TsunamiForecastMaxHeightImpl;
 
   factory _TsunamiForecastMaxHeight.fromJson(Map<String, dynamic> json) =
-      _$_TsunamiForecastMaxHeight.fromJson;
+      _$TsunamiForecastMaxHeightImpl.fromJson;
 
   @override
   double? get value;
@@ -676,7 +679,7 @@ abstract class _TsunamiForecastMaxHeight implements TsunamiForecastMaxHeight {
   TsunamiForecastMaxHeightCondition? get condition;
   @override
   @JsonKey(ignore: true)
-  _$$_TsunamiForecastMaxHeightCopyWith<_$_TsunamiForecastMaxHeight>
+  _$$TsunamiForecastMaxHeightImplCopyWith<_$TsunamiForecastMaxHeightImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -760,11 +763,12 @@ class _$TsunamiForecastStationCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_TsunamiForecastStationCopyWith<$Res>
+abstract class _$$TsunamiForecastStationImplCopyWith<$Res>
     implements $TsunamiForecastStationCopyWith<$Res> {
-  factory _$$_TsunamiForecastStationCopyWith(_$_TsunamiForecastStation value,
-          $Res Function(_$_TsunamiForecastStation) then) =
-      __$$_TsunamiForecastStationCopyWithImpl<$Res>;
+  factory _$$TsunamiForecastStationImplCopyWith(
+          _$TsunamiForecastStationImpl value,
+          $Res Function(_$TsunamiForecastStationImpl) then) =
+      __$$TsunamiForecastStationImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -776,12 +780,13 @@ abstract class _$$_TsunamiForecastStationCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TsunamiForecastStationCopyWithImpl<$Res>
+class __$$TsunamiForecastStationImplCopyWithImpl<$Res>
     extends _$TsunamiForecastStationCopyWithImpl<$Res,
-        _$_TsunamiForecastStation>
-    implements _$$_TsunamiForecastStationCopyWith<$Res> {
-  __$$_TsunamiForecastStationCopyWithImpl(_$_TsunamiForecastStation _value,
-      $Res Function(_$_TsunamiForecastStation) _then)
+        _$TsunamiForecastStationImpl>
+    implements _$$TsunamiForecastStationImplCopyWith<$Res> {
+  __$$TsunamiForecastStationImplCopyWithImpl(
+      _$TsunamiForecastStationImpl _value,
+      $Res Function(_$TsunamiForecastStationImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -793,7 +798,7 @@ class __$$_TsunamiForecastStationCopyWithImpl<$Res>
     Object? firstHeightTime = freezed,
     Object? condition = freezed,
   }) {
-    return _then(_$_TsunamiForecastStation(
+    return _then(_$TsunamiForecastStationImpl(
       code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
@@ -820,16 +825,16 @@ class __$$_TsunamiForecastStationCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TsunamiForecastStation implements _TsunamiForecastStation {
-  const _$_TsunamiForecastStation(
+class _$TsunamiForecastStationImpl implements _TsunamiForecastStation {
+  const _$TsunamiForecastStationImpl(
       {required this.code,
       required this.name,
       required this.highTideTime,
       required this.firstHeightTime,
       required this.condition});
 
-  factory _$_TsunamiForecastStation.fromJson(Map<String, dynamic> json) =>
-      _$$_TsunamiForecastStationFromJson(json);
+  factory _$TsunamiForecastStationImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TsunamiForecastStationImplFromJson(json);
 
   @override
   final String code;
@@ -851,7 +856,7 @@ class _$_TsunamiForecastStation implements _TsunamiForecastStation {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TsunamiForecastStation &&
+            other is _$TsunamiForecastStationImpl &&
             (identical(other.code, code) || other.code == code) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.highTideTime, highTideTime) ||
@@ -870,13 +875,13 @@ class _$_TsunamiForecastStation implements _TsunamiForecastStation {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TsunamiForecastStationCopyWith<_$_TsunamiForecastStation> get copyWith =>
-      __$$_TsunamiForecastStationCopyWithImpl<_$_TsunamiForecastStation>(
-          this, _$identity);
+  _$$TsunamiForecastStationImplCopyWith<_$TsunamiForecastStationImpl>
+      get copyWith => __$$TsunamiForecastStationImplCopyWithImpl<
+          _$TsunamiForecastStationImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TsunamiForecastStationToJson(
+    return _$$TsunamiForecastStationImplToJson(
       this,
     );
   }
@@ -889,10 +894,10 @@ abstract class _TsunamiForecastStation implements TsunamiForecastStation {
           required final DateTime highTideTime,
           required final DateTime? firstHeightTime,
           required final TsunamiForecastStationCondition? condition}) =
-      _$_TsunamiForecastStation;
+      _$TsunamiForecastStationImpl;
 
   factory _TsunamiForecastStation.fromJson(Map<String, dynamic> json) =
-      _$_TsunamiForecastStation.fromJson;
+      _$TsunamiForecastStationImpl.fromJson;
 
   @override
   String get code;
@@ -906,6 +911,6 @@ abstract class _TsunamiForecastStation implements TsunamiForecastStation {
   TsunamiForecastStationCondition? get condition;
   @override
   @JsonKey(ignore: true)
-  _$$_TsunamiForecastStationCopyWith<_$_TsunamiForecastStation> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$TsunamiForecastStationImplCopyWith<_$TsunamiForecastStationImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

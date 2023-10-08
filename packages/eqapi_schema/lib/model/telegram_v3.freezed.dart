@@ -148,11 +148,11 @@ class _$TelegramV3BaseCopyWithImpl<$Res, $Val extends TelegramV3Base>
 }
 
 /// @nodoc
-abstract class _$$_TelegramV3BaseCopyWith<$Res>
+abstract class _$$TelegramV3BaseImplCopyWith<$Res>
     implements $TelegramV3BaseCopyWith<$Res> {
-  factory _$$_TelegramV3BaseCopyWith(
-          _$_TelegramV3Base value, $Res Function(_$_TelegramV3Base) then) =
-      __$$_TelegramV3BaseCopyWithImpl<$Res>;
+  factory _$$TelegramV3BaseImplCopyWith(_$TelegramV3BaseImpl value,
+          $Res Function(_$TelegramV3BaseImpl) then) =
+      __$$TelegramV3BaseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -172,11 +172,11 @@ abstract class _$$_TelegramV3BaseCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TelegramV3BaseCopyWithImpl<$Res>
-    extends _$TelegramV3BaseCopyWithImpl<$Res, _$_TelegramV3Base>
-    implements _$$_TelegramV3BaseCopyWith<$Res> {
-  __$$_TelegramV3BaseCopyWithImpl(
-      _$_TelegramV3Base _value, $Res Function(_$_TelegramV3Base) _then)
+class __$$TelegramV3BaseImplCopyWithImpl<$Res>
+    extends _$TelegramV3BaseCopyWithImpl<$Res, _$TelegramV3BaseImpl>
+    implements _$$TelegramV3BaseImplCopyWith<$Res> {
+  __$$TelegramV3BaseImplCopyWithImpl(
+      _$TelegramV3BaseImpl _value, $Res Function(_$TelegramV3BaseImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -196,7 +196,7 @@ class __$$_TelegramV3BaseCopyWithImpl<$Res>
     Object? headline = freezed,
     Object? body = null,
   }) {
-    return _then(_$_TelegramV3Base(
+    return _then(_$TelegramV3BaseImpl(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -255,8 +255,8 @@ class __$$_TelegramV3BaseCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TelegramV3Base implements _TelegramV3Base {
-  const _$_TelegramV3Base(
+class _$TelegramV3BaseImpl implements _TelegramV3Base {
+  const _$TelegramV3BaseImpl(
       {required this.id,
       required this.hash,
       required this.eventId,
@@ -272,8 +272,8 @@ class _$_TelegramV3Base implements _TelegramV3Base {
       required final Map<String, dynamic> body})
       : _body = body;
 
-  factory _$_TelegramV3Base.fromJson(Map<String, dynamic> json) =>
-      _$$_TelegramV3BaseFromJson(json);
+  factory _$TelegramV3BaseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TelegramV3BaseImplFromJson(json);
 
   @override
   final int? id;
@@ -317,7 +317,7 @@ class _$_TelegramV3Base implements _TelegramV3Base {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TelegramV3Base &&
+            other is _$TelegramV3BaseImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.hash, hash) || other.hash == hash) &&
             (identical(other.eventId, eventId) || other.eventId == eventId) &&
@@ -361,12 +361,13 @@ class _$_TelegramV3Base implements _TelegramV3Base {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TelegramV3BaseCopyWith<_$_TelegramV3Base> get copyWith =>
-      __$$_TelegramV3BaseCopyWithImpl<_$_TelegramV3Base>(this, _$identity);
+  _$$TelegramV3BaseImplCopyWith<_$TelegramV3BaseImpl> get copyWith =>
+      __$$TelegramV3BaseImplCopyWithImpl<_$TelegramV3BaseImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TelegramV3BaseToJson(
+    return _$$TelegramV3BaseImplToJson(
       this,
     );
   }
@@ -386,10 +387,10 @@ abstract class _TelegramV3Base implements TelegramV3Base {
       required final DateTime? validTime,
       required final int? serialNo,
       required final String? headline,
-      required final Map<String, dynamic> body}) = _$_TelegramV3Base;
+      required final Map<String, dynamic> body}) = _$TelegramV3BaseImpl;
 
   factory _TelegramV3Base.fromJson(Map<String, dynamic> json) =
-      _$_TelegramV3Base.fromJson;
+      _$TelegramV3BaseImpl.fromJson;
 
   @override
   int? get id;
@@ -419,7 +420,7 @@ abstract class _TelegramV3Base implements TelegramV3Base {
   Map<String, dynamic> get body;
   @override
   @JsonKey(ignore: true)
-  _$$_TelegramV3BaseCopyWith<_$_TelegramV3Base> get copyWith =>
+  _$$TelegramV3BaseImplCopyWith<_$TelegramV3BaseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -506,11 +507,11 @@ class _$TelegramVxse51BodyCopyWithImpl<$Res, $Val extends TelegramVxse51Body>
 }
 
 /// @nodoc
-abstract class _$$_TelegramVxse51BodyCopyWith<$Res>
+abstract class _$$TelegramVxse51BodyImplCopyWith<$Res>
     implements $TelegramVxse51BodyCopyWith<$Res> {
-  factory _$$_TelegramVxse51BodyCopyWith(_$_TelegramVxse51Body value,
-          $Res Function(_$_TelegramVxse51Body) then) =
-      __$$_TelegramVxse51BodyCopyWithImpl<$Res>;
+  factory _$$TelegramVxse51BodyImplCopyWith(_$TelegramVxse51BodyImpl value,
+          $Res Function(_$TelegramVxse51BodyImpl) then) =
+      __$$TelegramVxse51BodyImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({Intensity? intensity, String? text, CommentsOmitVar comment});
@@ -522,11 +523,11 @@ abstract class _$$_TelegramVxse51BodyCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TelegramVxse51BodyCopyWithImpl<$Res>
-    extends _$TelegramVxse51BodyCopyWithImpl<$Res, _$_TelegramVxse51Body>
-    implements _$$_TelegramVxse51BodyCopyWith<$Res> {
-  __$$_TelegramVxse51BodyCopyWithImpl(
-      _$_TelegramVxse51Body _value, $Res Function(_$_TelegramVxse51Body) _then)
+class __$$TelegramVxse51BodyImplCopyWithImpl<$Res>
+    extends _$TelegramVxse51BodyCopyWithImpl<$Res, _$TelegramVxse51BodyImpl>
+    implements _$$TelegramVxse51BodyImplCopyWith<$Res> {
+  __$$TelegramVxse51BodyImplCopyWithImpl(_$TelegramVxse51BodyImpl _value,
+      $Res Function(_$TelegramVxse51BodyImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -536,7 +537,7 @@ class __$$_TelegramVxse51BodyCopyWithImpl<$Res>
     Object? text = freezed,
     Object? comment = null,
   }) {
-    return _then(_$_TelegramVxse51Body(
+    return _then(_$TelegramVxse51BodyImpl(
       intensity: freezed == intensity
           ? _value.intensity
           : intensity // ignore: cast_nullable_to_non_nullable
@@ -555,12 +556,12 @@ class __$$_TelegramVxse51BodyCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TelegramVxse51Body implements _TelegramVxse51Body {
-  const _$_TelegramVxse51Body(
+class _$TelegramVxse51BodyImpl implements _TelegramVxse51Body {
+  const _$TelegramVxse51BodyImpl(
       {required this.intensity, required this.text, required this.comment});
 
-  factory _$_TelegramVxse51Body.fromJson(Map<String, dynamic> json) =>
-      _$$_TelegramVxse51BodyFromJson(json);
+  factory _$TelegramVxse51BodyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TelegramVxse51BodyImplFromJson(json);
 
   @override
   final Intensity? intensity;
@@ -578,7 +579,7 @@ class _$_TelegramVxse51Body implements _TelegramVxse51Body {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TelegramVxse51Body &&
+            other is _$TelegramVxse51BodyImpl &&
             (identical(other.intensity, intensity) ||
                 other.intensity == intensity) &&
             (identical(other.text, text) || other.text == text) &&
@@ -592,13 +593,13 @@ class _$_TelegramVxse51Body implements _TelegramVxse51Body {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TelegramVxse51BodyCopyWith<_$_TelegramVxse51Body> get copyWith =>
-      __$$_TelegramVxse51BodyCopyWithImpl<_$_TelegramVxse51Body>(
+  _$$TelegramVxse51BodyImplCopyWith<_$TelegramVxse51BodyImpl> get copyWith =>
+      __$$TelegramVxse51BodyImplCopyWithImpl<_$TelegramVxse51BodyImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TelegramVxse51BodyToJson(
+    return _$$TelegramVxse51BodyImplToJson(
       this,
     );
   }
@@ -608,10 +609,10 @@ abstract class _TelegramVxse51Body implements TelegramVxse51Body {
   const factory _TelegramVxse51Body(
       {required final Intensity? intensity,
       required final String? text,
-      required final CommentsOmitVar comment}) = _$_TelegramVxse51Body;
+      required final CommentsOmitVar comment}) = _$TelegramVxse51BodyImpl;
 
   factory _TelegramVxse51Body.fromJson(Map<String, dynamic> json) =
-      _$_TelegramVxse51Body.fromJson;
+      _$TelegramVxse51BodyImpl.fromJson;
 
   @override
   Intensity? get intensity;
@@ -621,7 +622,7 @@ abstract class _TelegramVxse51Body implements TelegramVxse51Body {
   CommentsOmitVar get comment;
   @override
   @JsonKey(ignore: true)
-  _$$_TelegramVxse51BodyCopyWith<_$_TelegramVxse51Body> get copyWith =>
+  _$$TelegramVxse51BodyImplCopyWith<_$TelegramVxse51BodyImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -704,11 +705,11 @@ class _$TelegramVxse52BodyCopyWithImpl<$Res, $Val extends TelegramVxse52Body>
 }
 
 /// @nodoc
-abstract class _$$_TelegramVxse52BodyCopyWith<$Res>
+abstract class _$$TelegramVxse52BodyImplCopyWith<$Res>
     implements $TelegramVxse52BodyCopyWith<$Res> {
-  factory _$$_TelegramVxse52BodyCopyWith(_$_TelegramVxse52Body value,
-          $Res Function(_$_TelegramVxse52Body) then) =
-      __$$_TelegramVxse52BodyCopyWithImpl<$Res>;
+  factory _$$TelegramVxse52BodyImplCopyWith(_$TelegramVxse52BodyImpl value,
+          $Res Function(_$TelegramVxse52BodyImpl) then) =
+      __$$TelegramVxse52BodyImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({Earthquake earthquake, String? text, CommentsOmitVar comment});
@@ -720,11 +721,11 @@ abstract class _$$_TelegramVxse52BodyCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TelegramVxse52BodyCopyWithImpl<$Res>
-    extends _$TelegramVxse52BodyCopyWithImpl<$Res, _$_TelegramVxse52Body>
-    implements _$$_TelegramVxse52BodyCopyWith<$Res> {
-  __$$_TelegramVxse52BodyCopyWithImpl(
-      _$_TelegramVxse52Body _value, $Res Function(_$_TelegramVxse52Body) _then)
+class __$$TelegramVxse52BodyImplCopyWithImpl<$Res>
+    extends _$TelegramVxse52BodyCopyWithImpl<$Res, _$TelegramVxse52BodyImpl>
+    implements _$$TelegramVxse52BodyImplCopyWith<$Res> {
+  __$$TelegramVxse52BodyImplCopyWithImpl(_$TelegramVxse52BodyImpl _value,
+      $Res Function(_$TelegramVxse52BodyImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -734,7 +735,7 @@ class __$$_TelegramVxse52BodyCopyWithImpl<$Res>
     Object? text = freezed,
     Object? comment = null,
   }) {
-    return _then(_$_TelegramVxse52Body(
+    return _then(_$TelegramVxse52BodyImpl(
       earthquake: null == earthquake
           ? _value.earthquake
           : earthquake // ignore: cast_nullable_to_non_nullable
@@ -753,12 +754,12 @@ class __$$_TelegramVxse52BodyCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TelegramVxse52Body implements _TelegramVxse52Body {
-  const _$_TelegramVxse52Body(
+class _$TelegramVxse52BodyImpl implements _TelegramVxse52Body {
+  const _$TelegramVxse52BodyImpl(
       {required this.earthquake, required this.text, required this.comment});
 
-  factory _$_TelegramVxse52Body.fromJson(Map<String, dynamic> json) =>
-      _$$_TelegramVxse52BodyFromJson(json);
+  factory _$TelegramVxse52BodyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TelegramVxse52BodyImplFromJson(json);
 
   @override
   final Earthquake earthquake;
@@ -776,7 +777,7 @@ class _$_TelegramVxse52Body implements _TelegramVxse52Body {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TelegramVxse52Body &&
+            other is _$TelegramVxse52BodyImpl &&
             (identical(other.earthquake, earthquake) ||
                 other.earthquake == earthquake) &&
             (identical(other.text, text) || other.text == text) &&
@@ -790,13 +791,13 @@ class _$_TelegramVxse52Body implements _TelegramVxse52Body {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TelegramVxse52BodyCopyWith<_$_TelegramVxse52Body> get copyWith =>
-      __$$_TelegramVxse52BodyCopyWithImpl<_$_TelegramVxse52Body>(
+  _$$TelegramVxse52BodyImplCopyWith<_$TelegramVxse52BodyImpl> get copyWith =>
+      __$$TelegramVxse52BodyImplCopyWithImpl<_$TelegramVxse52BodyImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TelegramVxse52BodyToJson(
+    return _$$TelegramVxse52BodyImplToJson(
       this,
     );
   }
@@ -806,10 +807,10 @@ abstract class _TelegramVxse52Body implements TelegramVxse52Body {
   const factory _TelegramVxse52Body(
       {required final Earthquake earthquake,
       required final String? text,
-      required final CommentsOmitVar comment}) = _$_TelegramVxse52Body;
+      required final CommentsOmitVar comment}) = _$TelegramVxse52BodyImpl;
 
   factory _TelegramVxse52Body.fromJson(Map<String, dynamic> json) =
-      _$_TelegramVxse52Body.fromJson;
+      _$TelegramVxse52BodyImpl.fromJson;
 
   @override
   Earthquake get earthquake;
@@ -819,7 +820,7 @@ abstract class _TelegramVxse52Body implements TelegramVxse52Body {
   CommentsOmitVar get comment;
   @override
   @JsonKey(ignore: true)
-  _$$_TelegramVxse52BodyCopyWith<_$_TelegramVxse52Body> get copyWith =>
+  _$$TelegramVxse52BodyImplCopyWith<_$TelegramVxse52BodyImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -925,11 +926,11 @@ class _$TelegramVxse53BodyCopyWithImpl<$Res, $Val extends TelegramVxse53Body>
 }
 
 /// @nodoc
-abstract class _$$_TelegramVxse53BodyCopyWith<$Res>
+abstract class _$$TelegramVxse53BodyImplCopyWith<$Res>
     implements $TelegramVxse53BodyCopyWith<$Res> {
-  factory _$$_TelegramVxse53BodyCopyWith(_$_TelegramVxse53Body value,
-          $Res Function(_$_TelegramVxse53Body) then) =
-      __$$_TelegramVxse53BodyCopyWithImpl<$Res>;
+  factory _$$TelegramVxse53BodyImplCopyWith(_$TelegramVxse53BodyImpl value,
+          $Res Function(_$TelegramVxse53BodyImpl) then) =
+      __$$TelegramVxse53BodyImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -947,11 +948,11 @@ abstract class _$$_TelegramVxse53BodyCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TelegramVxse53BodyCopyWithImpl<$Res>
-    extends _$TelegramVxse53BodyCopyWithImpl<$Res, _$_TelegramVxse53Body>
-    implements _$$_TelegramVxse53BodyCopyWith<$Res> {
-  __$$_TelegramVxse53BodyCopyWithImpl(
-      _$_TelegramVxse53Body _value, $Res Function(_$_TelegramVxse53Body) _then)
+class __$$TelegramVxse53BodyImplCopyWithImpl<$Res>
+    extends _$TelegramVxse53BodyCopyWithImpl<$Res, _$TelegramVxse53BodyImpl>
+    implements _$$TelegramVxse53BodyImplCopyWith<$Res> {
+  __$$TelegramVxse53BodyImplCopyWithImpl(_$TelegramVxse53BodyImpl _value,
+      $Res Function(_$TelegramVxse53BodyImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -962,7 +963,7 @@ class __$$_TelegramVxse53BodyCopyWithImpl<$Res>
     Object? text = freezed,
     Object? comment = null,
   }) {
-    return _then(_$_TelegramVxse53Body(
+    return _then(_$TelegramVxse53BodyImpl(
       earthquake: null == earthquake
           ? _value.earthquake
           : earthquake // ignore: cast_nullable_to_non_nullable
@@ -985,15 +986,15 @@ class __$$_TelegramVxse53BodyCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TelegramVxse53Body implements _TelegramVxse53Body {
-  const _$_TelegramVxse53Body(
+class _$TelegramVxse53BodyImpl implements _TelegramVxse53Body {
+  const _$TelegramVxse53BodyImpl(
       {required this.earthquake,
       required this.intensity,
       required this.text,
       required this.comment});
 
-  factory _$_TelegramVxse53Body.fromJson(Map<String, dynamic> json) =>
-      _$$_TelegramVxse53BodyFromJson(json);
+  factory _$TelegramVxse53BodyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TelegramVxse53BodyImplFromJson(json);
 
   @override
   final Earthquake earthquake;
@@ -1013,7 +1014,7 @@ class _$_TelegramVxse53Body implements _TelegramVxse53Body {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TelegramVxse53Body &&
+            other is _$TelegramVxse53BodyImpl &&
             (identical(other.earthquake, earthquake) ||
                 other.earthquake == earthquake) &&
             (identical(other.intensity, intensity) ||
@@ -1030,13 +1031,13 @@ class _$_TelegramVxse53Body implements _TelegramVxse53Body {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TelegramVxse53BodyCopyWith<_$_TelegramVxse53Body> get copyWith =>
-      __$$_TelegramVxse53BodyCopyWithImpl<_$_TelegramVxse53Body>(
+  _$$TelegramVxse53BodyImplCopyWith<_$TelegramVxse53BodyImpl> get copyWith =>
+      __$$TelegramVxse53BodyImplCopyWithImpl<_$TelegramVxse53BodyImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TelegramVxse53BodyToJson(
+    return _$$TelegramVxse53BodyImplToJson(
       this,
     );
   }
@@ -1047,10 +1048,10 @@ abstract class _TelegramVxse53Body implements TelegramVxse53Body {
       {required final Earthquake earthquake,
       required final Intensity? intensity,
       required final String? text,
-      required final CommentsOmitVar comment}) = _$_TelegramVxse53Body;
+      required final CommentsOmitVar comment}) = _$TelegramVxse53BodyImpl;
 
   factory _TelegramVxse53Body.fromJson(Map<String, dynamic> json) =
-      _$_TelegramVxse53Body.fromJson;
+      _$TelegramVxse53BodyImpl.fromJson;
 
   @override
   Earthquake get earthquake;
@@ -1062,7 +1063,7 @@ abstract class _TelegramVxse53Body implements TelegramVxse53Body {
   CommentsOmitVar get comment;
   @override
   @JsonKey(ignore: true)
-  _$$_TelegramVxse53BodyCopyWith<_$_TelegramVxse53Body> get copyWith =>
+  _$$TelegramVxse53BodyImplCopyWith<_$TelegramVxse53BodyImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1168,11 +1169,11 @@ class _$TelegramVxse62BodyCopyWithImpl<$Res, $Val extends TelegramVxse62Body>
 }
 
 /// @nodoc
-abstract class _$$_TelegramVxse62BodyCopyWith<$Res>
+abstract class _$$TelegramVxse62BodyImplCopyWith<$Res>
     implements $TelegramVxse62BodyCopyWith<$Res> {
-  factory _$$_TelegramVxse62BodyCopyWith(_$_TelegramVxse62Body value,
-          $Res Function(_$_TelegramVxse62Body) then) =
-      __$$_TelegramVxse62BodyCopyWithImpl<$Res>;
+  factory _$$TelegramVxse62BodyImplCopyWith(_$TelegramVxse62BodyImpl value,
+          $Res Function(_$TelegramVxse62BodyImpl) then) =
+      __$$TelegramVxse62BodyImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -1190,11 +1191,11 @@ abstract class _$$_TelegramVxse62BodyCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TelegramVxse62BodyCopyWithImpl<$Res>
-    extends _$TelegramVxse62BodyCopyWithImpl<$Res, _$_TelegramVxse62Body>
-    implements _$$_TelegramVxse62BodyCopyWith<$Res> {
-  __$$_TelegramVxse62BodyCopyWithImpl(
-      _$_TelegramVxse62Body _value, $Res Function(_$_TelegramVxse62Body) _then)
+class __$$TelegramVxse62BodyImplCopyWithImpl<$Res>
+    extends _$TelegramVxse62BodyCopyWithImpl<$Res, _$TelegramVxse62BodyImpl>
+    implements _$$TelegramVxse62BodyImplCopyWith<$Res> {
+  __$$TelegramVxse62BodyImplCopyWithImpl(_$TelegramVxse62BodyImpl _value,
+      $Res Function(_$TelegramVxse62BodyImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1205,7 +1206,7 @@ class __$$_TelegramVxse62BodyCopyWithImpl<$Res>
     Object? text = freezed,
     Object? comment = null,
   }) {
-    return _then(_$_TelegramVxse62Body(
+    return _then(_$TelegramVxse62BodyImpl(
       earthquake: null == earthquake
           ? _value.earthquake
           : earthquake // ignore: cast_nullable_to_non_nullable
@@ -1228,15 +1229,15 @@ class __$$_TelegramVxse62BodyCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TelegramVxse62Body implements _TelegramVxse62Body {
-  const _$_TelegramVxse62Body(
+class _$TelegramVxse62BodyImpl implements _TelegramVxse62Body {
+  const _$TelegramVxse62BodyImpl(
       {required this.earthquake,
       required this.intensity,
       required this.text,
       required this.comment});
 
-  factory _$_TelegramVxse62Body.fromJson(Map<String, dynamic> json) =>
-      _$$_TelegramVxse62BodyFromJson(json);
+  factory _$TelegramVxse62BodyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TelegramVxse62BodyImplFromJson(json);
 
   @override
   final Earthquake earthquake;
@@ -1256,7 +1257,7 @@ class _$_TelegramVxse62Body implements _TelegramVxse62Body {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TelegramVxse62Body &&
+            other is _$TelegramVxse62BodyImpl &&
             (identical(other.earthquake, earthquake) ||
                 other.earthquake == earthquake) &&
             (identical(other.intensity, intensity) ||
@@ -1273,13 +1274,13 @@ class _$_TelegramVxse62Body implements _TelegramVxse62Body {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TelegramVxse62BodyCopyWith<_$_TelegramVxse62Body> get copyWith =>
-      __$$_TelegramVxse62BodyCopyWithImpl<_$_TelegramVxse62Body>(
+  _$$TelegramVxse62BodyImplCopyWith<_$TelegramVxse62BodyImpl> get copyWith =>
+      __$$TelegramVxse62BodyImplCopyWithImpl<_$TelegramVxse62BodyImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TelegramVxse62BodyToJson(
+    return _$$TelegramVxse62BodyImplToJson(
       this,
     );
   }
@@ -1290,10 +1291,10 @@ abstract class _TelegramVxse62Body implements TelegramVxse62Body {
       {required final Earthquake earthquake,
       required final Intensity? intensity,
       required final String? text,
-      required final CommentsOmitVar comment}) = _$_TelegramVxse62Body;
+      required final CommentsOmitVar comment}) = _$TelegramVxse62BodyImpl;
 
   factory _TelegramVxse62Body.fromJson(Map<String, dynamic> json) =
-      _$_TelegramVxse62Body.fromJson;
+      _$TelegramVxse62BodyImpl.fromJson;
 
   @override
   Earthquake get earthquake;
@@ -1305,7 +1306,7 @@ abstract class _TelegramVxse62Body implements TelegramVxse62Body {
   CommentsOmitVar get comment;
   @override
   @JsonKey(ignore: true)
-  _$$_TelegramVxse62BodyCopyWith<_$_TelegramVxse62Body> get copyWith =>
+  _$$TelegramVxse62BodyImplCopyWith<_$TelegramVxse62BodyImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1402,11 +1403,11 @@ class _$TelegramVtse41BodyCopyWithImpl<$Res, $Val extends TelegramVtse41Body>
 }
 
 /// @nodoc
-abstract class _$$_TelegramVtse41BodyCopyWith<$Res>
+abstract class _$$TelegramVtse41BodyImplCopyWith<$Res>
     implements $TelegramVtse41BodyCopyWith<$Res> {
-  factory _$$_TelegramVtse41BodyCopyWith(_$_TelegramVtse41Body value,
-          $Res Function(_$_TelegramVtse41Body) then) =
-      __$$_TelegramVtse41BodyCopyWithImpl<$Res>;
+  factory _$$TelegramVtse41BodyImplCopyWith(_$TelegramVtse41BodyImpl value,
+          $Res Function(_$TelegramVtse41BodyImpl) then) =
+      __$$TelegramVtse41BodyImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -1422,11 +1423,11 @@ abstract class _$$_TelegramVtse41BodyCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TelegramVtse41BodyCopyWithImpl<$Res>
-    extends _$TelegramVtse41BodyCopyWithImpl<$Res, _$_TelegramVtse41Body>
-    implements _$$_TelegramVtse41BodyCopyWith<$Res> {
-  __$$_TelegramVtse41BodyCopyWithImpl(
-      _$_TelegramVtse41Body _value, $Res Function(_$_TelegramVtse41Body) _then)
+class __$$TelegramVtse41BodyImplCopyWithImpl<$Res>
+    extends _$TelegramVtse41BodyCopyWithImpl<$Res, _$TelegramVtse41BodyImpl>
+    implements _$$TelegramVtse41BodyImplCopyWith<$Res> {
+  __$$TelegramVtse41BodyImplCopyWithImpl(_$TelegramVtse41BodyImpl _value,
+      $Res Function(_$TelegramVtse41BodyImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1437,7 +1438,7 @@ class __$$_TelegramVtse41BodyCopyWithImpl<$Res>
     Object? text = freezed,
     Object? comments = freezed,
   }) {
-    return _then(_$_TelegramVtse41Body(
+    return _then(_$TelegramVtse41BodyImpl(
       tsunami: null == tsunami
           ? _value.tsunami
           : tsunami // ignore: cast_nullable_to_non_nullable
@@ -1460,16 +1461,16 @@ class __$$_TelegramVtse41BodyCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TelegramVtse41Body implements _TelegramVtse41Body {
-  const _$_TelegramVtse41Body(
+class _$TelegramVtse41BodyImpl implements _TelegramVtse41Body {
+  const _$TelegramVtse41BodyImpl(
       {required this.tsunami,
       required final List<Earthquake> earthquakes,
       required this.text,
       required this.comments})
       : _earthquakes = earthquakes;
 
-  factory _$_TelegramVtse41Body.fromJson(Map<String, dynamic> json) =>
-      _$$_TelegramVtse41BodyFromJson(json);
+  factory _$TelegramVtse41BodyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TelegramVtse41BodyImplFromJson(json);
 
   @override
   final PublicBodyVtse41Tsunami tsunami;
@@ -1495,7 +1496,7 @@ class _$_TelegramVtse41Body implements _TelegramVtse41Body {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TelegramVtse41Body &&
+            other is _$TelegramVtse41BodyImpl &&
             (identical(other.tsunami, tsunami) || other.tsunami == tsunami) &&
             const DeepCollectionEquality()
                 .equals(other._earthquakes, _earthquakes) &&
@@ -1512,13 +1513,13 @@ class _$_TelegramVtse41Body implements _TelegramVtse41Body {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TelegramVtse41BodyCopyWith<_$_TelegramVtse41Body> get copyWith =>
-      __$$_TelegramVtse41BodyCopyWithImpl<_$_TelegramVtse41Body>(
+  _$$TelegramVtse41BodyImplCopyWith<_$TelegramVtse41BodyImpl> get copyWith =>
+      __$$TelegramVtse41BodyImplCopyWithImpl<_$TelegramVtse41BodyImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TelegramVtse41BodyToJson(
+    return _$$TelegramVtse41BodyImplToJson(
       this,
     );
   }
@@ -1529,10 +1530,10 @@ abstract class _TelegramVtse41Body implements TelegramVtse41Body {
       {required final PublicBodyVtse41Tsunami tsunami,
       required final List<Earthquake> earthquakes,
       required final String? text,
-      required final TsunamiComments? comments}) = _$_TelegramVtse41Body;
+      required final TsunamiComments? comments}) = _$TelegramVtse41BodyImpl;
 
   factory _TelegramVtse41Body.fromJson(Map<String, dynamic> json) =
-      _$_TelegramVtse41Body.fromJson;
+      _$TelegramVtse41BodyImpl.fromJson;
 
   @override
   PublicBodyVtse41Tsunami get tsunami;
@@ -1544,7 +1545,7 @@ abstract class _TelegramVtse41Body implements TelegramVtse41Body {
   TsunamiComments? get comments;
   @override
   @JsonKey(ignore: true)
-  _$$_TelegramVtse41BodyCopyWith<_$_TelegramVtse41Body> get copyWith =>
+  _$$TelegramVtse41BodyImplCopyWith<_$TelegramVtse41BodyImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1641,11 +1642,11 @@ class _$TelegramVtse51BodyCopyWithImpl<$Res, $Val extends TelegramVtse51Body>
 }
 
 /// @nodoc
-abstract class _$$_TelegramVtse51BodyCopyWith<$Res>
+abstract class _$$TelegramVtse51BodyImplCopyWith<$Res>
     implements $TelegramVtse51BodyCopyWith<$Res> {
-  factory _$$_TelegramVtse51BodyCopyWith(_$_TelegramVtse51Body value,
-          $Res Function(_$_TelegramVtse51Body) then) =
-      __$$_TelegramVtse51BodyCopyWithImpl<$Res>;
+  factory _$$TelegramVtse51BodyImplCopyWith(_$TelegramVtse51BodyImpl value,
+          $Res Function(_$TelegramVtse51BodyImpl) then) =
+      __$$TelegramVtse51BodyImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -1661,11 +1662,11 @@ abstract class _$$_TelegramVtse51BodyCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TelegramVtse51BodyCopyWithImpl<$Res>
-    extends _$TelegramVtse51BodyCopyWithImpl<$Res, _$_TelegramVtse51Body>
-    implements _$$_TelegramVtse51BodyCopyWith<$Res> {
-  __$$_TelegramVtse51BodyCopyWithImpl(
-      _$_TelegramVtse51Body _value, $Res Function(_$_TelegramVtse51Body) _then)
+class __$$TelegramVtse51BodyImplCopyWithImpl<$Res>
+    extends _$TelegramVtse51BodyCopyWithImpl<$Res, _$TelegramVtse51BodyImpl>
+    implements _$$TelegramVtse51BodyImplCopyWith<$Res> {
+  __$$TelegramVtse51BodyImplCopyWithImpl(_$TelegramVtse51BodyImpl _value,
+      $Res Function(_$TelegramVtse51BodyImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1676,7 +1677,7 @@ class __$$_TelegramVtse51BodyCopyWithImpl<$Res>
     Object? text = freezed,
     Object? comments = freezed,
   }) {
-    return _then(_$_TelegramVtse51Body(
+    return _then(_$TelegramVtse51BodyImpl(
       tsunami: null == tsunami
           ? _value.tsunami
           : tsunami // ignore: cast_nullable_to_non_nullable
@@ -1699,16 +1700,16 @@ class __$$_TelegramVtse51BodyCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TelegramVtse51Body implements _TelegramVtse51Body {
-  const _$_TelegramVtse51Body(
+class _$TelegramVtse51BodyImpl implements _TelegramVtse51Body {
+  const _$TelegramVtse51BodyImpl(
       {required this.tsunami,
       required final List<Earthquake> earthquakes,
       required this.text,
       required this.comments})
       : _earthquakes = earthquakes;
 
-  factory _$_TelegramVtse51Body.fromJson(Map<String, dynamic> json) =>
-      _$$_TelegramVtse51BodyFromJson(json);
+  factory _$TelegramVtse51BodyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TelegramVtse51BodyImplFromJson(json);
 
   @override
   final PublicBodyVtse51Tsunami tsunami;
@@ -1734,7 +1735,7 @@ class _$_TelegramVtse51Body implements _TelegramVtse51Body {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TelegramVtse51Body &&
+            other is _$TelegramVtse51BodyImpl &&
             (identical(other.tsunami, tsunami) || other.tsunami == tsunami) &&
             const DeepCollectionEquality()
                 .equals(other._earthquakes, _earthquakes) &&
@@ -1751,13 +1752,13 @@ class _$_TelegramVtse51Body implements _TelegramVtse51Body {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TelegramVtse51BodyCopyWith<_$_TelegramVtse51Body> get copyWith =>
-      __$$_TelegramVtse51BodyCopyWithImpl<_$_TelegramVtse51Body>(
+  _$$TelegramVtse51BodyImplCopyWith<_$TelegramVtse51BodyImpl> get copyWith =>
+      __$$TelegramVtse51BodyImplCopyWithImpl<_$TelegramVtse51BodyImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TelegramVtse51BodyToJson(
+    return _$$TelegramVtse51BodyImplToJson(
       this,
     );
   }
@@ -1768,10 +1769,10 @@ abstract class _TelegramVtse51Body implements TelegramVtse51Body {
       {required final PublicBodyVtse51Tsunami tsunami,
       required final List<Earthquake> earthquakes,
       required final String? text,
-      required final TsunamiComments? comments}) = _$_TelegramVtse51Body;
+      required final TsunamiComments? comments}) = _$TelegramVtse51BodyImpl;
 
   factory _TelegramVtse51Body.fromJson(Map<String, dynamic> json) =
-      _$_TelegramVtse51Body.fromJson;
+      _$TelegramVtse51BodyImpl.fromJson;
 
   @override
   PublicBodyVtse51Tsunami get tsunami;
@@ -1783,7 +1784,7 @@ abstract class _TelegramVtse51Body implements TelegramVtse51Body {
   TsunamiComments? get comments;
   @override
   @JsonKey(ignore: true)
-  _$$_TelegramVtse51BodyCopyWith<_$_TelegramVtse51Body> get copyWith =>
+  _$$TelegramVtse51BodyImplCopyWith<_$TelegramVtse51BodyImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1880,11 +1881,11 @@ class _$TelegramVtse52BodyCopyWithImpl<$Res, $Val extends TelegramVtse52Body>
 }
 
 /// @nodoc
-abstract class _$$_TelegramVtse52BodyCopyWith<$Res>
+abstract class _$$TelegramVtse52BodyImplCopyWith<$Res>
     implements $TelegramVtse52BodyCopyWith<$Res> {
-  factory _$$_TelegramVtse52BodyCopyWith(_$_TelegramVtse52Body value,
-          $Res Function(_$_TelegramVtse52Body) then) =
-      __$$_TelegramVtse52BodyCopyWithImpl<$Res>;
+  factory _$$TelegramVtse52BodyImplCopyWith(_$TelegramVtse52BodyImpl value,
+          $Res Function(_$TelegramVtse52BodyImpl) then) =
+      __$$TelegramVtse52BodyImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -1900,11 +1901,11 @@ abstract class _$$_TelegramVtse52BodyCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TelegramVtse52BodyCopyWithImpl<$Res>
-    extends _$TelegramVtse52BodyCopyWithImpl<$Res, _$_TelegramVtse52Body>
-    implements _$$_TelegramVtse52BodyCopyWith<$Res> {
-  __$$_TelegramVtse52BodyCopyWithImpl(
-      _$_TelegramVtse52Body _value, $Res Function(_$_TelegramVtse52Body) _then)
+class __$$TelegramVtse52BodyImplCopyWithImpl<$Res>
+    extends _$TelegramVtse52BodyCopyWithImpl<$Res, _$TelegramVtse52BodyImpl>
+    implements _$$TelegramVtse52BodyImplCopyWith<$Res> {
+  __$$TelegramVtse52BodyImplCopyWithImpl(_$TelegramVtse52BodyImpl _value,
+      $Res Function(_$TelegramVtse52BodyImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1915,7 +1916,7 @@ class __$$_TelegramVtse52BodyCopyWithImpl<$Res>
     Object? text = freezed,
     Object? comments = freezed,
   }) {
-    return _then(_$_TelegramVtse52Body(
+    return _then(_$TelegramVtse52BodyImpl(
       tsunami: null == tsunami
           ? _value.tsunami
           : tsunami // ignore: cast_nullable_to_non_nullable
@@ -1938,16 +1939,16 @@ class __$$_TelegramVtse52BodyCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TelegramVtse52Body implements _TelegramVtse52Body {
-  const _$_TelegramVtse52Body(
+class _$TelegramVtse52BodyImpl implements _TelegramVtse52Body {
+  const _$TelegramVtse52BodyImpl(
       {required this.tsunami,
       required final List<Earthquake> earthquakes,
       required this.text,
       required this.comments})
       : _earthquakes = earthquakes;
 
-  factory _$_TelegramVtse52Body.fromJson(Map<String, dynamic> json) =>
-      _$$_TelegramVtse52BodyFromJson(json);
+  factory _$TelegramVtse52BodyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TelegramVtse52BodyImplFromJson(json);
 
   @override
   final PublicBodyVtse52Tsunami tsunami;
@@ -1973,7 +1974,7 @@ class _$_TelegramVtse52Body implements _TelegramVtse52Body {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TelegramVtse52Body &&
+            other is _$TelegramVtse52BodyImpl &&
             (identical(other.tsunami, tsunami) || other.tsunami == tsunami) &&
             const DeepCollectionEquality()
                 .equals(other._earthquakes, _earthquakes) &&
@@ -1990,13 +1991,13 @@ class _$_TelegramVtse52Body implements _TelegramVtse52Body {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TelegramVtse52BodyCopyWith<_$_TelegramVtse52Body> get copyWith =>
-      __$$_TelegramVtse52BodyCopyWithImpl<_$_TelegramVtse52Body>(
+  _$$TelegramVtse52BodyImplCopyWith<_$TelegramVtse52BodyImpl> get copyWith =>
+      __$$TelegramVtse52BodyImplCopyWithImpl<_$TelegramVtse52BodyImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TelegramVtse52BodyToJson(
+    return _$$TelegramVtse52BodyImplToJson(
       this,
     );
   }
@@ -2007,10 +2008,10 @@ abstract class _TelegramVtse52Body implements TelegramVtse52Body {
       {required final PublicBodyVtse52Tsunami tsunami,
       required final List<Earthquake> earthquakes,
       required final String? text,
-      required final TsunamiComments? comments}) = _$_TelegramVtse52Body;
+      required final TsunamiComments? comments}) = _$TelegramVtse52BodyImpl;
 
   factory _TelegramVtse52Body.fromJson(Map<String, dynamic> json) =
-      _$_TelegramVtse52Body.fromJson;
+      _$TelegramVtse52BodyImpl.fromJson;
 
   @override
   PublicBodyVtse52Tsunami get tsunami;
@@ -2022,7 +2023,7 @@ abstract class _TelegramVtse52Body implements TelegramVtse52Body {
   TsunamiComments? get comments;
   @override
   @JsonKey(ignore: true)
-  _$$_TelegramVtse52BodyCopyWith<_$_TelegramVtse52Body> get copyWith =>
+  _$$TelegramVtse52BodyImplCopyWith<_$TelegramVtse52BodyImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -2109,11 +2110,11 @@ class _$TelegramVxse61BodyCopyWithImpl<$Res, $Val extends TelegramVxse61Body>
 }
 
 /// @nodoc
-abstract class _$$_TelegramVxse61BodyCopyWith<$Res>
+abstract class _$$TelegramVxse61BodyImplCopyWith<$Res>
     implements $TelegramVxse61BodyCopyWith<$Res> {
-  factory _$$_TelegramVxse61BodyCopyWith(_$_TelegramVxse61Body value,
-          $Res Function(_$_TelegramVxse61Body) then) =
-      __$$_TelegramVxse61BodyCopyWithImpl<$Res>;
+  factory _$$TelegramVxse61BodyImplCopyWith(_$TelegramVxse61BodyImpl value,
+          $Res Function(_$TelegramVxse61BodyImpl) then) =
+      __$$TelegramVxse61BodyImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({Earthquake earthquake, String? text, CommentsOnlyFree? comments});
@@ -2125,11 +2126,11 @@ abstract class _$$_TelegramVxse61BodyCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TelegramVxse61BodyCopyWithImpl<$Res>
-    extends _$TelegramVxse61BodyCopyWithImpl<$Res, _$_TelegramVxse61Body>
-    implements _$$_TelegramVxse61BodyCopyWith<$Res> {
-  __$$_TelegramVxse61BodyCopyWithImpl(
-      _$_TelegramVxse61Body _value, $Res Function(_$_TelegramVxse61Body) _then)
+class __$$TelegramVxse61BodyImplCopyWithImpl<$Res>
+    extends _$TelegramVxse61BodyCopyWithImpl<$Res, _$TelegramVxse61BodyImpl>
+    implements _$$TelegramVxse61BodyImplCopyWith<$Res> {
+  __$$TelegramVxse61BodyImplCopyWithImpl(_$TelegramVxse61BodyImpl _value,
+      $Res Function(_$TelegramVxse61BodyImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -2139,7 +2140,7 @@ class __$$_TelegramVxse61BodyCopyWithImpl<$Res>
     Object? text = freezed,
     Object? comments = freezed,
   }) {
-    return _then(_$_TelegramVxse61Body(
+    return _then(_$TelegramVxse61BodyImpl(
       earthquake: null == earthquake
           ? _value.earthquake
           : earthquake // ignore: cast_nullable_to_non_nullable
@@ -2158,12 +2159,12 @@ class __$$_TelegramVxse61BodyCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TelegramVxse61Body implements _TelegramVxse61Body {
-  const _$_TelegramVxse61Body(
+class _$TelegramVxse61BodyImpl implements _TelegramVxse61Body {
+  const _$TelegramVxse61BodyImpl(
       {required this.earthquake, required this.text, required this.comments});
 
-  factory _$_TelegramVxse61Body.fromJson(Map<String, dynamic> json) =>
-      _$$_TelegramVxse61BodyFromJson(json);
+  factory _$TelegramVxse61BodyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TelegramVxse61BodyImplFromJson(json);
 
   @override
   final Earthquake earthquake;
@@ -2181,7 +2182,7 @@ class _$_TelegramVxse61Body implements _TelegramVxse61Body {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TelegramVxse61Body &&
+            other is _$TelegramVxse61BodyImpl &&
             (identical(other.earthquake, earthquake) ||
                 other.earthquake == earthquake) &&
             (identical(other.text, text) || other.text == text) &&
@@ -2196,13 +2197,13 @@ class _$_TelegramVxse61Body implements _TelegramVxse61Body {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TelegramVxse61BodyCopyWith<_$_TelegramVxse61Body> get copyWith =>
-      __$$_TelegramVxse61BodyCopyWithImpl<_$_TelegramVxse61Body>(
+  _$$TelegramVxse61BodyImplCopyWith<_$TelegramVxse61BodyImpl> get copyWith =>
+      __$$TelegramVxse61BodyImplCopyWithImpl<_$TelegramVxse61BodyImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TelegramVxse61BodyToJson(
+    return _$$TelegramVxse61BodyImplToJson(
       this,
     );
   }
@@ -2212,10 +2213,10 @@ abstract class _TelegramVxse61Body implements TelegramVxse61Body {
   const factory _TelegramVxse61Body(
       {required final Earthquake earthquake,
       required final String? text,
-      required final CommentsOnlyFree? comments}) = _$_TelegramVxse61Body;
+      required final CommentsOnlyFree? comments}) = _$TelegramVxse61BodyImpl;
 
   factory _TelegramVxse61Body.fromJson(Map<String, dynamic> json) =
-      _$_TelegramVxse61Body.fromJson;
+      _$TelegramVxse61BodyImpl.fromJson;
 
   @override
   Earthquake get earthquake;
@@ -2225,7 +2226,7 @@ abstract class _TelegramVxse61Body implements TelegramVxse61Body {
   CommentsOnlyFree? get comments;
   @override
   @JsonKey(ignore: true)
-  _$$_TelegramVxse61BodyCopyWith<_$_TelegramVxse61Body> get copyWith =>
+  _$$TelegramVxse61BodyImplCopyWith<_$TelegramVxse61BodyImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -2308,11 +2309,11 @@ class _$EarthquakeNankaiBodyCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_EarthquakeNankaiBodyCopyWith<$Res>
+abstract class _$$EarthquakeNankaiBodyImplCopyWith<$Res>
     implements $EarthquakeNankaiBodyCopyWith<$Res> {
-  factory _$$_EarthquakeNankaiBodyCopyWith(_$_EarthquakeNankaiBody value,
-          $Res Function(_$_EarthquakeNankaiBody) then) =
-      __$$_EarthquakeNankaiBodyCopyWithImpl<$Res>;
+  factory _$$EarthquakeNankaiBodyImplCopyWith(_$EarthquakeNankaiBodyImpl value,
+          $Res Function(_$EarthquakeNankaiBodyImpl) then) =
+      __$$EarthquakeNankaiBodyImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -2325,11 +2326,11 @@ abstract class _$$_EarthquakeNankaiBodyCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_EarthquakeNankaiBodyCopyWithImpl<$Res>
-    extends _$EarthquakeNankaiBodyCopyWithImpl<$Res, _$_EarthquakeNankaiBody>
-    implements _$$_EarthquakeNankaiBodyCopyWith<$Res> {
-  __$$_EarthquakeNankaiBodyCopyWithImpl(_$_EarthquakeNankaiBody _value,
-      $Res Function(_$_EarthquakeNankaiBody) _then)
+class __$$EarthquakeNankaiBodyImplCopyWithImpl<$Res>
+    extends _$EarthquakeNankaiBodyCopyWithImpl<$Res, _$EarthquakeNankaiBodyImpl>
+    implements _$$EarthquakeNankaiBodyImplCopyWith<$Res> {
+  __$$EarthquakeNankaiBodyImplCopyWithImpl(_$EarthquakeNankaiBodyImpl _value,
+      $Res Function(_$EarthquakeNankaiBodyImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -2339,7 +2340,7 @@ class __$$_EarthquakeNankaiBodyCopyWithImpl<$Res>
     Object? nextAdvisory = freezed,
     Object? text = freezed,
   }) {
-    return _then(_$_EarthquakeNankaiBody(
+    return _then(_$EarthquakeNankaiBodyImpl(
       earthquakeInfo: freezed == earthquakeInfo
           ? _value.earthquakeInfo
           : earthquakeInfo // ignore: cast_nullable_to_non_nullable
@@ -2358,14 +2359,14 @@ class __$$_EarthquakeNankaiBodyCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_EarthquakeNankaiBody implements _EarthquakeNankaiBody {
-  const _$_EarthquakeNankaiBody(
+class _$EarthquakeNankaiBodyImpl implements _EarthquakeNankaiBody {
+  const _$EarthquakeNankaiBodyImpl(
       {required this.earthquakeInfo,
       required this.nextAdvisory,
       required this.text});
 
-  factory _$_EarthquakeNankaiBody.fromJson(Map<String, dynamic> json) =>
-      _$$_EarthquakeNankaiBodyFromJson(json);
+  factory _$EarthquakeNankaiBodyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$EarthquakeNankaiBodyImplFromJson(json);
 
   @override
   final EarthquakeNankaiInfo? earthquakeInfo;
@@ -2383,7 +2384,7 @@ class _$_EarthquakeNankaiBody implements _EarthquakeNankaiBody {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_EarthquakeNankaiBody &&
+            other is _$EarthquakeNankaiBodyImpl &&
             (identical(other.earthquakeInfo, earthquakeInfo) ||
                 other.earthquakeInfo == earthquakeInfo) &&
             (identical(other.nextAdvisory, nextAdvisory) ||
@@ -2399,13 +2400,14 @@ class _$_EarthquakeNankaiBody implements _EarthquakeNankaiBody {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_EarthquakeNankaiBodyCopyWith<_$_EarthquakeNankaiBody> get copyWith =>
-      __$$_EarthquakeNankaiBodyCopyWithImpl<_$_EarthquakeNankaiBody>(
-          this, _$identity);
+  _$$EarthquakeNankaiBodyImplCopyWith<_$EarthquakeNankaiBodyImpl>
+      get copyWith =>
+          __$$EarthquakeNankaiBodyImplCopyWithImpl<_$EarthquakeNankaiBodyImpl>(
+              this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_EarthquakeNankaiBodyToJson(
+    return _$$EarthquakeNankaiBodyImplToJson(
       this,
     );
   }
@@ -2415,10 +2417,10 @@ abstract class _EarthquakeNankaiBody implements EarthquakeNankaiBody {
   const factory _EarthquakeNankaiBody(
       {required final EarthquakeNankaiInfo? earthquakeInfo,
       required final String? nextAdvisory,
-      required final String? text}) = _$_EarthquakeNankaiBody;
+      required final String? text}) = _$EarthquakeNankaiBodyImpl;
 
   factory _EarthquakeNankaiBody.fromJson(Map<String, dynamic> json) =
-      _$_EarthquakeNankaiBody.fromJson;
+      _$EarthquakeNankaiBodyImpl.fromJson;
 
   @override
   EarthquakeNankaiInfo? get earthquakeInfo;
@@ -2428,8 +2430,8 @@ abstract class _EarthquakeNankaiBody implements EarthquakeNankaiBody {
   String? get text;
   @override
   @JsonKey(ignore: true)
-  _$$_EarthquakeNankaiBodyCopyWith<_$_EarthquakeNankaiBody> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$EarthquakeNankaiBodyImplCopyWith<_$EarthquakeNankaiBodyImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 TelegramVxse56Body _$TelegramVxse56BodyFromJson(Map<String, dynamic> json) {
@@ -2519,11 +2521,11 @@ class _$TelegramVxse56BodyCopyWithImpl<$Res, $Val extends TelegramVxse56Body>
 }
 
 /// @nodoc
-abstract class _$$_TelegramVxse56BodyCopyWith<$Res>
+abstract class _$$TelegramVxse56BodyImplCopyWith<$Res>
     implements $TelegramVxse56BodyCopyWith<$Res> {
-  factory _$$_TelegramVxse56BodyCopyWith(_$_TelegramVxse56Body value,
-          $Res Function(_$_TelegramVxse56Body) then) =
-      __$$_TelegramVxse56BodyCopyWithImpl<$Res>;
+  factory _$$TelegramVxse56BodyImplCopyWith(_$TelegramVxse56BodyImpl value,
+          $Res Function(_$TelegramVxse56BodyImpl) then) =
+      __$$TelegramVxse56BodyImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({Naming? naming, String text, CommentsOnlyFree? comments});
@@ -2535,11 +2537,11 @@ abstract class _$$_TelegramVxse56BodyCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TelegramVxse56BodyCopyWithImpl<$Res>
-    extends _$TelegramVxse56BodyCopyWithImpl<$Res, _$_TelegramVxse56Body>
-    implements _$$_TelegramVxse56BodyCopyWith<$Res> {
-  __$$_TelegramVxse56BodyCopyWithImpl(
-      _$_TelegramVxse56Body _value, $Res Function(_$_TelegramVxse56Body) _then)
+class __$$TelegramVxse56BodyImplCopyWithImpl<$Res>
+    extends _$TelegramVxse56BodyCopyWithImpl<$Res, _$TelegramVxse56BodyImpl>
+    implements _$$TelegramVxse56BodyImplCopyWith<$Res> {
+  __$$TelegramVxse56BodyImplCopyWithImpl(_$TelegramVxse56BodyImpl _value,
+      $Res Function(_$TelegramVxse56BodyImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -2549,7 +2551,7 @@ class __$$_TelegramVxse56BodyCopyWithImpl<$Res>
     Object? text = null,
     Object? comments = freezed,
   }) {
-    return _then(_$_TelegramVxse56Body(
+    return _then(_$TelegramVxse56BodyImpl(
       naming: freezed == naming
           ? _value.naming
           : naming // ignore: cast_nullable_to_non_nullable
@@ -2568,12 +2570,12 @@ class __$$_TelegramVxse56BodyCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TelegramVxse56Body implements _TelegramVxse56Body {
-  const _$_TelegramVxse56Body(
+class _$TelegramVxse56BodyImpl implements _TelegramVxse56Body {
+  const _$TelegramVxse56BodyImpl(
       {required this.naming, required this.text, required this.comments});
 
-  factory _$_TelegramVxse56Body.fromJson(Map<String, dynamic> json) =>
-      _$$_TelegramVxse56BodyFromJson(json);
+  factory _$TelegramVxse56BodyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TelegramVxse56BodyImplFromJson(json);
 
   @override
   final Naming? naming;
@@ -2591,7 +2593,7 @@ class _$_TelegramVxse56Body implements _TelegramVxse56Body {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TelegramVxse56Body &&
+            other is _$TelegramVxse56BodyImpl &&
             (identical(other.naming, naming) || other.naming == naming) &&
             (identical(other.text, text) || other.text == text) &&
             (identical(other.comments, comments) ||
@@ -2605,13 +2607,13 @@ class _$_TelegramVxse56Body implements _TelegramVxse56Body {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TelegramVxse56BodyCopyWith<_$_TelegramVxse56Body> get copyWith =>
-      __$$_TelegramVxse56BodyCopyWithImpl<_$_TelegramVxse56Body>(
+  _$$TelegramVxse56BodyImplCopyWith<_$TelegramVxse56BodyImpl> get copyWith =>
+      __$$TelegramVxse56BodyImplCopyWithImpl<_$TelegramVxse56BodyImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TelegramVxse56BodyToJson(
+    return _$$TelegramVxse56BodyImplToJson(
       this,
     );
   }
@@ -2621,10 +2623,10 @@ abstract class _TelegramVxse56Body implements TelegramVxse56Body {
   const factory _TelegramVxse56Body(
       {required final Naming? naming,
       required final String text,
-      required final CommentsOnlyFree? comments}) = _$_TelegramVxse56Body;
+      required final CommentsOnlyFree? comments}) = _$TelegramVxse56BodyImpl;
 
   factory _TelegramVxse56Body.fromJson(Map<String, dynamic> json) =
-      _$_TelegramVxse56Body.fromJson;
+      _$TelegramVxse56BodyImpl.fromJson;
 
   @override
   Naming? get naming;
@@ -2634,7 +2636,7 @@ abstract class _TelegramVxse56Body implements TelegramVxse56Body {
   CommentsOnlyFree? get comments;
   @override
   @JsonKey(ignore: true)
-  _$$_TelegramVxse56BodyCopyWith<_$_TelegramVxse56Body> get copyWith =>
+  _$$TelegramVxse56BodyImplCopyWith<_$TelegramVxse56BodyImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -2686,22 +2688,22 @@ class _$TelegramCancelBodyCopyWithImpl<$Res, $Val extends TelegramCancelBody>
 }
 
 /// @nodoc
-abstract class _$$_TelegramCancelBodyCopyWith<$Res>
+abstract class _$$TelegramCancelBodyImplCopyWith<$Res>
     implements $TelegramCancelBodyCopyWith<$Res> {
-  factory _$$_TelegramCancelBodyCopyWith(_$_TelegramCancelBody value,
-          $Res Function(_$_TelegramCancelBody) then) =
-      __$$_TelegramCancelBodyCopyWithImpl<$Res>;
+  factory _$$TelegramCancelBodyImplCopyWith(_$TelegramCancelBodyImpl value,
+          $Res Function(_$TelegramCancelBodyImpl) then) =
+      __$$TelegramCancelBodyImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String text});
 }
 
 /// @nodoc
-class __$$_TelegramCancelBodyCopyWithImpl<$Res>
-    extends _$TelegramCancelBodyCopyWithImpl<$Res, _$_TelegramCancelBody>
-    implements _$$_TelegramCancelBodyCopyWith<$Res> {
-  __$$_TelegramCancelBodyCopyWithImpl(
-      _$_TelegramCancelBody _value, $Res Function(_$_TelegramCancelBody) _then)
+class __$$TelegramCancelBodyImplCopyWithImpl<$Res>
+    extends _$TelegramCancelBodyCopyWithImpl<$Res, _$TelegramCancelBodyImpl>
+    implements _$$TelegramCancelBodyImplCopyWith<$Res> {
+  __$$TelegramCancelBodyImplCopyWithImpl(_$TelegramCancelBodyImpl _value,
+      $Res Function(_$TelegramCancelBodyImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -2709,7 +2711,7 @@ class __$$_TelegramCancelBodyCopyWithImpl<$Res>
   $Res call({
     Object? text = null,
   }) {
-    return _then(_$_TelegramCancelBody(
+    return _then(_$TelegramCancelBodyImpl(
       text: null == text
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
@@ -2720,11 +2722,11 @@ class __$$_TelegramCancelBodyCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TelegramCancelBody implements _TelegramCancelBody {
-  const _$_TelegramCancelBody({required this.text});
+class _$TelegramCancelBodyImpl implements _TelegramCancelBody {
+  const _$TelegramCancelBodyImpl({required this.text});
 
-  factory _$_TelegramCancelBody.fromJson(Map<String, dynamic> json) =>
-      _$$_TelegramCancelBodyFromJson(json);
+  factory _$TelegramCancelBodyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TelegramCancelBodyImplFromJson(json);
 
   @override
   final String text;
@@ -2738,7 +2740,7 @@ class _$_TelegramCancelBody implements _TelegramCancelBody {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TelegramCancelBody &&
+            other is _$TelegramCancelBodyImpl &&
             (identical(other.text, text) || other.text == text));
   }
 
@@ -2749,13 +2751,13 @@ class _$_TelegramCancelBody implements _TelegramCancelBody {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TelegramCancelBodyCopyWith<_$_TelegramCancelBody> get copyWith =>
-      __$$_TelegramCancelBodyCopyWithImpl<_$_TelegramCancelBody>(
+  _$$TelegramCancelBodyImplCopyWith<_$TelegramCancelBodyImpl> get copyWith =>
+      __$$TelegramCancelBodyImplCopyWithImpl<_$TelegramCancelBodyImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TelegramCancelBodyToJson(
+    return _$$TelegramCancelBodyImplToJson(
       this,
     );
   }
@@ -2763,16 +2765,16 @@ class _$_TelegramCancelBody implements _TelegramCancelBody {
 
 abstract class _TelegramCancelBody implements TelegramCancelBody {
   const factory _TelegramCancelBody({required final String text}) =
-      _$_TelegramCancelBody;
+      _$TelegramCancelBodyImpl;
 
   factory _TelegramCancelBody.fromJson(Map<String, dynamic> json) =
-      _$_TelegramCancelBody.fromJson;
+      _$TelegramCancelBodyImpl.fromJson;
 
   @override
   String get text;
   @override
   @JsonKey(ignore: true)
-  _$$_TelegramCancelBodyCopyWith<_$_TelegramCancelBody> get copyWith =>
+  _$$TelegramCancelBodyImplCopyWith<_$TelegramCancelBodyImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -2944,11 +2946,11 @@ class _$TelegramVxse45BodyCopyWithImpl<$Res, $Val extends TelegramVxse45Body>
 }
 
 /// @nodoc
-abstract class _$$_TelegramVxse45BodyCopyWith<$Res>
+abstract class _$$TelegramVxse45BodyImplCopyWith<$Res>
     implements $TelegramVxse45BodyCopyWith<$Res> {
-  factory _$$_TelegramVxse45BodyCopyWith(_$_TelegramVxse45Body value,
-          $Res Function(_$_TelegramVxse45Body) then) =
-      __$$_TelegramVxse45BodyCopyWithImpl<$Res>;
+  factory _$$TelegramVxse45BodyImplCopyWith(_$TelegramVxse45BodyImpl value,
+          $Res Function(_$TelegramVxse45BodyImpl) then) =
+      __$$TelegramVxse45BodyImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -2975,11 +2977,11 @@ abstract class _$$_TelegramVxse45BodyCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TelegramVxse45BodyCopyWithImpl<$Res>
-    extends _$TelegramVxse45BodyCopyWithImpl<$Res, _$_TelegramVxse45Body>
-    implements _$$_TelegramVxse45BodyCopyWith<$Res> {
-  __$$_TelegramVxse45BodyCopyWithImpl(
-      _$_TelegramVxse45Body _value, $Res Function(_$_TelegramVxse45Body) _then)
+class __$$TelegramVxse45BodyImplCopyWithImpl<$Res>
+    extends _$TelegramVxse45BodyCopyWithImpl<$Res, _$TelegramVxse45BodyImpl>
+    implements _$$TelegramVxse45BodyImplCopyWith<$Res> {
+  __$$TelegramVxse45BodyImplCopyWithImpl(_$TelegramVxse45BodyImpl _value,
+      $Res Function(_$TelegramVxse45BodyImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -2997,7 +2999,7 @@ class __$$_TelegramVxse45BodyCopyWithImpl<$Res>
     Object? isPlum = null,
     Object? isLastInfo = null,
   }) {
-    return _then(_$_TelegramVxse45Body(
+    return _then(_$TelegramVxse45BodyImpl(
       magnitude: freezed == magnitude
           ? _value.magnitude
           : magnitude // ignore: cast_nullable_to_non_nullable
@@ -3048,8 +3050,8 @@ class __$$_TelegramVxse45BodyCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TelegramVxse45Body implements _TelegramVxse45Body {
-  const _$_TelegramVxse45Body(
+class _$TelegramVxse45BodyImpl implements _TelegramVxse45Body {
+  const _$TelegramVxse45BodyImpl(
       {required this.magnitude,
       required this.hypocenter,
       required this.depth,
@@ -3063,8 +3065,8 @@ class _$_TelegramVxse45Body implements _TelegramVxse45Body {
       required this.isLastInfo})
       : _regions = regions;
 
-  factory _$_TelegramVxse45Body.fromJson(Map<String, dynamic> json) =>
-      _$$_TelegramVxse45BodyFromJson(json);
+  factory _$TelegramVxse45BodyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TelegramVxse45BodyImplFromJson(json);
 
   @override
   final double? magnitude;
@@ -3106,7 +3108,7 @@ class _$_TelegramVxse45Body implements _TelegramVxse45Body {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TelegramVxse45Body &&
+            other is _$TelegramVxse45BodyImpl &&
             (identical(other.magnitude, magnitude) ||
                 other.magnitude == magnitude) &&
             (identical(other.hypocenter, hypocenter) ||
@@ -3147,13 +3149,13 @@ class _$_TelegramVxse45Body implements _TelegramVxse45Body {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TelegramVxse45BodyCopyWith<_$_TelegramVxse45Body> get copyWith =>
-      __$$_TelegramVxse45BodyCopyWithImpl<_$_TelegramVxse45Body>(
+  _$$TelegramVxse45BodyImplCopyWith<_$TelegramVxse45BodyImpl> get copyWith =>
+      __$$TelegramVxse45BodyImplCopyWithImpl<_$TelegramVxse45BodyImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TelegramVxse45BodyToJson(
+    return _$$TelegramVxse45BodyImplToJson(
       this,
     );
   }
@@ -3171,10 +3173,10 @@ abstract class _TelegramVxse45Body implements TelegramVxse45Body {
       required final DateTime arrivalTime,
       required final EewAccuracy accuracy,
       required final bool isPlum,
-      required final bool isLastInfo}) = _$_TelegramVxse45Body;
+      required final bool isLastInfo}) = _$TelegramVxse45BodyImpl;
 
   factory _TelegramVxse45Body.fromJson(Map<String, dynamic> json) =
-      _$_TelegramVxse45Body.fromJson;
+      _$TelegramVxse45BodyImpl.fromJson;
 
   @override
   double? get magnitude;
@@ -3200,7 +3202,7 @@ abstract class _TelegramVxse45Body implements TelegramVxse45Body {
   bool get isLastInfo;
   @override
   @JsonKey(ignore: true)
-  _$$_TelegramVxse45BodyCopyWith<_$_TelegramVxse45Body> get copyWith =>
+  _$$TelegramVxse45BodyImplCopyWith<_$TelegramVxse45BodyImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -3265,25 +3267,25 @@ class _$TelegramVxse45CancelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_EarthquakeInformationBodyCopyWith<$Res>
+abstract class _$$EarthquakeInformationBodyImplCopyWith<$Res>
     implements $TelegramVxse45CancelCopyWith<$Res> {
-  factory _$$_EarthquakeInformationBodyCopyWith(
-          _$_EarthquakeInformationBody value,
-          $Res Function(_$_EarthquakeInformationBody) then) =
-      __$$_EarthquakeInformationBodyCopyWithImpl<$Res>;
+  factory _$$EarthquakeInformationBodyImplCopyWith(
+          _$EarthquakeInformationBodyImpl value,
+          $Res Function(_$EarthquakeInformationBodyImpl) then) =
+      __$$EarthquakeInformationBodyImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool isLastInfo, bool isCanceled, String text});
 }
 
 /// @nodoc
-class __$$_EarthquakeInformationBodyCopyWithImpl<$Res>
+class __$$EarthquakeInformationBodyImplCopyWithImpl<$Res>
     extends _$TelegramVxse45CancelCopyWithImpl<$Res,
-        _$_EarthquakeInformationBody>
-    implements _$$_EarthquakeInformationBodyCopyWith<$Res> {
-  __$$_EarthquakeInformationBodyCopyWithImpl(
-      _$_EarthquakeInformationBody _value,
-      $Res Function(_$_EarthquakeInformationBody) _then)
+        _$EarthquakeInformationBodyImpl>
+    implements _$$EarthquakeInformationBodyImplCopyWith<$Res> {
+  __$$EarthquakeInformationBodyImplCopyWithImpl(
+      _$EarthquakeInformationBodyImpl _value,
+      $Res Function(_$EarthquakeInformationBodyImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -3293,7 +3295,7 @@ class __$$_EarthquakeInformationBodyCopyWithImpl<$Res>
     Object? isCanceled = null,
     Object? text = null,
   }) {
-    return _then(_$_EarthquakeInformationBody(
+    return _then(_$EarthquakeInformationBodyImpl(
       isLastInfo: null == isLastInfo
           ? _value.isLastInfo
           : isLastInfo // ignore: cast_nullable_to_non_nullable
@@ -3312,12 +3314,12 @@ class __$$_EarthquakeInformationBodyCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_EarthquakeInformationBody implements _EarthquakeInformationBody {
-  const _$_EarthquakeInformationBody(
+class _$EarthquakeInformationBodyImpl implements _EarthquakeInformationBody {
+  const _$EarthquakeInformationBodyImpl(
       {required this.isLastInfo, required this.isCanceled, required this.text});
 
-  factory _$_EarthquakeInformationBody.fromJson(Map<String, dynamic> json) =>
-      _$$_EarthquakeInformationBodyFromJson(json);
+  factory _$EarthquakeInformationBodyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$EarthquakeInformationBodyImplFromJson(json);
 
   @override
   final bool isLastInfo;
@@ -3335,7 +3337,7 @@ class _$_EarthquakeInformationBody implements _EarthquakeInformationBody {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_EarthquakeInformationBody &&
+            other is _$EarthquakeInformationBodyImpl &&
             (identical(other.isLastInfo, isLastInfo) ||
                 other.isLastInfo == isLastInfo) &&
             (identical(other.isCanceled, isCanceled) ||
@@ -3350,13 +3352,13 @@ class _$_EarthquakeInformationBody implements _EarthquakeInformationBody {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_EarthquakeInformationBodyCopyWith<_$_EarthquakeInformationBody>
-      get copyWith => __$$_EarthquakeInformationBodyCopyWithImpl<
-          _$_EarthquakeInformationBody>(this, _$identity);
+  _$$EarthquakeInformationBodyImplCopyWith<_$EarthquakeInformationBodyImpl>
+      get copyWith => __$$EarthquakeInformationBodyImplCopyWithImpl<
+          _$EarthquakeInformationBodyImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_EarthquakeInformationBodyToJson(
+    return _$$EarthquakeInformationBodyImplToJson(
       this,
     );
   }
@@ -3366,10 +3368,10 @@ abstract class _EarthquakeInformationBody implements TelegramVxse45Cancel {
   const factory _EarthquakeInformationBody(
       {required final bool isLastInfo,
       required final bool isCanceled,
-      required final String text}) = _$_EarthquakeInformationBody;
+      required final String text}) = _$EarthquakeInformationBodyImpl;
 
   factory _EarthquakeInformationBody.fromJson(Map<String, dynamic> json) =
-      _$_EarthquakeInformationBody.fromJson;
+      _$EarthquakeInformationBodyImpl.fromJson;
 
   @override
   bool get isLastInfo;
@@ -3379,6 +3381,6 @@ abstract class _EarthquakeInformationBody implements TelegramVxse45Cancel {
   String get text;
   @override
   @JsonKey(ignore: true)
-  _$$_EarthquakeInformationBodyCopyWith<_$_EarthquakeInformationBody>
+  _$$EarthquakeInformationBodyImplCopyWith<_$EarthquakeInformationBodyImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -8,12 +8,12 @@ part of 'telegram_v3.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_TelegramV3Base _$$_TelegramV3BaseFromJson(Map<String, dynamic> json) =>
+_$TelegramV3BaseImpl _$$TelegramV3BaseImplFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TelegramV3Base',
+      r'_$TelegramV3BaseImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TelegramV3Base(
+        final val = _$TelegramV3BaseImpl(
           id: $checkedConvert('id', (v) => v as int?),
           hash: $checkedConvert('hash', (v) => v as String?),
           eventId: $checkedConvert('eventId', (v) => v as int),
@@ -39,7 +39,8 @@ _$_TelegramV3Base _$$_TelegramV3BaseFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_TelegramV3BaseToJson(_$_TelegramV3Base instance) =>
+Map<String, dynamic> _$$TelegramV3BaseImplToJson(
+        _$TelegramV3BaseImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'hash': instance.hash,
@@ -99,13 +100,13 @@ const _$TelegramInfoTypeEnumMap = {
   TelegramInfoType.cancel: '取消',
 };
 
-_$_TelegramVxse51Body _$$_TelegramVxse51BodyFromJson(
+_$TelegramVxse51BodyImpl _$$TelegramVxse51BodyImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TelegramVxse51Body',
+      r'_$TelegramVxse51BodyImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TelegramVxse51Body(
+        final val = _$TelegramVxse51BodyImpl(
           intensity: $checkedConvert(
               'intensity',
               (v) => v == null
@@ -119,21 +120,21 @@ _$_TelegramVxse51Body _$$_TelegramVxse51BodyFromJson(
       },
     );
 
-Map<String, dynamic> _$$_TelegramVxse51BodyToJson(
-        _$_TelegramVxse51Body instance) =>
+Map<String, dynamic> _$$TelegramVxse51BodyImplToJson(
+        _$TelegramVxse51BodyImpl instance) =>
     <String, dynamic>{
       'intensity': instance.intensity,
       'text': instance.text,
       'comment': instance.comment,
     };
 
-_$_TelegramVxse52Body _$$_TelegramVxse52BodyFromJson(
+_$TelegramVxse52BodyImpl _$$TelegramVxse52BodyImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TelegramVxse52Body',
+      r'_$TelegramVxse52BodyImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TelegramVxse52Body(
+        final val = _$TelegramVxse52BodyImpl(
           earthquake: $checkedConvert('earthquake',
               (v) => Earthquake.fromJson(v as Map<String, dynamic>)),
           text: $checkedConvert('text', (v) => v as String?),
@@ -144,52 +145,21 @@ _$_TelegramVxse52Body _$$_TelegramVxse52BodyFromJson(
       },
     );
 
-Map<String, dynamic> _$$_TelegramVxse52BodyToJson(
-        _$_TelegramVxse52Body instance) =>
+Map<String, dynamic> _$$TelegramVxse52BodyImplToJson(
+        _$TelegramVxse52BodyImpl instance) =>
     <String, dynamic>{
       'earthquake': instance.earthquake,
       'text': instance.text,
       'comment': instance.comment,
     };
 
-_$_TelegramVxse53Body _$$_TelegramVxse53BodyFromJson(
+_$TelegramVxse53BodyImpl _$$TelegramVxse53BodyImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TelegramVxse53Body',
+      r'_$TelegramVxse53BodyImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TelegramVxse53Body(
-          earthquake: $checkedConvert('earthquake',
-              (v) => Earthquake.fromJson(v as Map<String, dynamic>)),
-          intensity: $checkedConvert(
-              'intensity',
-              (v) => v == null
-                  ? null
-                  : Intensity.fromJson(v as Map<String, dynamic>)),
-          text: $checkedConvert('text', (v) => v as String?),
-          comment: $checkedConvert('comment',
-              (v) => CommentsOmitVar.fromJson(v as Map<String, dynamic>)),
-        );
-        return val;
-      },
-    );
-
-Map<String, dynamic> _$$_TelegramVxse53BodyToJson(
-        _$_TelegramVxse53Body instance) =>
-    <String, dynamic>{
-      'earthquake': instance.earthquake,
-      'intensity': instance.intensity,
-      'text': instance.text,
-      'comment': instance.comment,
-    };
-
-_$_TelegramVxse62Body _$$_TelegramVxse62BodyFromJson(
-        Map<String, dynamic> json) =>
-    $checkedCreate(
-      r'_$_TelegramVxse62Body',
-      json,
-      ($checkedConvert) {
-        final val = _$_TelegramVxse62Body(
+        final val = _$TelegramVxse53BodyImpl(
           earthquake: $checkedConvert('earthquake',
               (v) => Earthquake.fromJson(v as Map<String, dynamic>)),
           intensity: $checkedConvert(
@@ -205,8 +175,8 @@ _$_TelegramVxse62Body _$$_TelegramVxse62BodyFromJson(
       },
     );
 
-Map<String, dynamic> _$$_TelegramVxse62BodyToJson(
-        _$_TelegramVxse62Body instance) =>
+Map<String, dynamic> _$$TelegramVxse53BodyImplToJson(
+        _$TelegramVxse53BodyImpl instance) =>
     <String, dynamic>{
       'earthquake': instance.earthquake,
       'intensity': instance.intensity,
@@ -214,13 +184,44 @@ Map<String, dynamic> _$$_TelegramVxse62BodyToJson(
       'comment': instance.comment,
     };
 
-_$_TelegramVtse41Body _$$_TelegramVtse41BodyFromJson(
+_$TelegramVxse62BodyImpl _$$TelegramVxse62BodyImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TelegramVtse41Body',
+      r'_$TelegramVxse62BodyImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TelegramVtse41Body(
+        final val = _$TelegramVxse62BodyImpl(
+          earthquake: $checkedConvert('earthquake',
+              (v) => Earthquake.fromJson(v as Map<String, dynamic>)),
+          intensity: $checkedConvert(
+              'intensity',
+              (v) => v == null
+                  ? null
+                  : Intensity.fromJson(v as Map<String, dynamic>)),
+          text: $checkedConvert('text', (v) => v as String?),
+          comment: $checkedConvert('comment',
+              (v) => CommentsOmitVar.fromJson(v as Map<String, dynamic>)),
+        );
+        return val;
+      },
+    );
+
+Map<String, dynamic> _$$TelegramVxse62BodyImplToJson(
+        _$TelegramVxse62BodyImpl instance) =>
+    <String, dynamic>{
+      'earthquake': instance.earthquake,
+      'intensity': instance.intensity,
+      'text': instance.text,
+      'comment': instance.comment,
+    };
+
+_$TelegramVtse41BodyImpl _$$TelegramVtse41BodyImplFromJson(
+        Map<String, dynamic> json) =>
+    $checkedCreate(
+      r'_$TelegramVtse41BodyImpl',
+      json,
+      ($checkedConvert) {
+        final val = _$TelegramVtse41BodyImpl(
           tsunami: $checkedConvert(
               'tsunami',
               (v) =>
@@ -241,8 +242,8 @@ _$_TelegramVtse41Body _$$_TelegramVtse41BodyFromJson(
       },
     );
 
-Map<String, dynamic> _$$_TelegramVtse41BodyToJson(
-        _$_TelegramVtse41Body instance) =>
+Map<String, dynamic> _$$TelegramVtse41BodyImplToJson(
+        _$TelegramVtse41BodyImpl instance) =>
     <String, dynamic>{
       'tsunami': instance.tsunami,
       'earthquakes': instance.earthquakes,
@@ -250,13 +251,13 @@ Map<String, dynamic> _$$_TelegramVtse41BodyToJson(
       'comments': instance.comments,
     };
 
-_$_TelegramVtse51Body _$$_TelegramVtse51BodyFromJson(
+_$TelegramVtse51BodyImpl _$$TelegramVtse51BodyImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TelegramVtse51Body',
+      r'_$TelegramVtse51BodyImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TelegramVtse51Body(
+        final val = _$TelegramVtse51BodyImpl(
           tsunami: $checkedConvert(
               'tsunami',
               (v) =>
@@ -277,8 +278,8 @@ _$_TelegramVtse51Body _$$_TelegramVtse51BodyFromJson(
       },
     );
 
-Map<String, dynamic> _$$_TelegramVtse51BodyToJson(
-        _$_TelegramVtse51Body instance) =>
+Map<String, dynamic> _$$TelegramVtse51BodyImplToJson(
+        _$TelegramVtse51BodyImpl instance) =>
     <String, dynamic>{
       'tsunami': instance.tsunami,
       'earthquakes': instance.earthquakes,
@@ -286,13 +287,13 @@ Map<String, dynamic> _$$_TelegramVtse51BodyToJson(
       'comments': instance.comments,
     };
 
-_$_TelegramVtse52Body _$$_TelegramVtse52BodyFromJson(
+_$TelegramVtse52BodyImpl _$$TelegramVtse52BodyImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TelegramVtse52Body',
+      r'_$TelegramVtse52BodyImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TelegramVtse52Body(
+        final val = _$TelegramVtse52BodyImpl(
           tsunami: $checkedConvert(
               'tsunami',
               (v) =>
@@ -313,8 +314,8 @@ _$_TelegramVtse52Body _$$_TelegramVtse52BodyFromJson(
       },
     );
 
-Map<String, dynamic> _$$_TelegramVtse52BodyToJson(
-        _$_TelegramVtse52Body instance) =>
+Map<String, dynamic> _$$TelegramVtse52BodyImplToJson(
+        _$TelegramVtse52BodyImpl instance) =>
     <String, dynamic>{
       'tsunami': instance.tsunami,
       'earthquakes': instance.earthquakes,
@@ -322,13 +323,13 @@ Map<String, dynamic> _$$_TelegramVtse52BodyToJson(
       'comments': instance.comments,
     };
 
-_$_TelegramVxse61Body _$$_TelegramVxse61BodyFromJson(
+_$TelegramVxse61BodyImpl _$$TelegramVxse61BodyImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TelegramVxse61Body',
+      r'_$TelegramVxse61BodyImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TelegramVxse61Body(
+        final val = _$TelegramVxse61BodyImpl(
           earthquake: $checkedConvert('earthquake',
               (v) => Earthquake.fromJson(v as Map<String, dynamic>)),
           text: $checkedConvert('text', (v) => v as String?),
@@ -342,21 +343,21 @@ _$_TelegramVxse61Body _$$_TelegramVxse61BodyFromJson(
       },
     );
 
-Map<String, dynamic> _$$_TelegramVxse61BodyToJson(
-        _$_TelegramVxse61Body instance) =>
+Map<String, dynamic> _$$TelegramVxse61BodyImplToJson(
+        _$TelegramVxse61BodyImpl instance) =>
     <String, dynamic>{
       'earthquake': instance.earthquake,
       'text': instance.text,
       'comments': instance.comments,
     };
 
-_$_EarthquakeNankaiBody _$$_EarthquakeNankaiBodyFromJson(
+_$EarthquakeNankaiBodyImpl _$$EarthquakeNankaiBodyImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_EarthquakeNankaiBody',
+      r'_$EarthquakeNankaiBodyImpl',
       json,
       ($checkedConvert) {
-        final val = _$_EarthquakeNankaiBody(
+        final val = _$EarthquakeNankaiBodyImpl(
           earthquakeInfo: $checkedConvert(
               'earthquakeInfo',
               (v) => v == null
@@ -369,21 +370,21 @@ _$_EarthquakeNankaiBody _$$_EarthquakeNankaiBodyFromJson(
       },
     );
 
-Map<String, dynamic> _$$_EarthquakeNankaiBodyToJson(
-        _$_EarthquakeNankaiBody instance) =>
+Map<String, dynamic> _$$EarthquakeNankaiBodyImplToJson(
+        _$EarthquakeNankaiBodyImpl instance) =>
     <String, dynamic>{
       'earthquakeInfo': instance.earthquakeInfo,
       'nextAdvisory': instance.nextAdvisory,
       'text': instance.text,
     };
 
-_$_TelegramVxse56Body _$$_TelegramVxse56BodyFromJson(
+_$TelegramVxse56BodyImpl _$$TelegramVxse56BodyImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TelegramVxse56Body',
+      r'_$TelegramVxse56BodyImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TelegramVxse56Body(
+        final val = _$TelegramVxse56BodyImpl(
           naming: $checkedConvert(
               'naming',
               (v) => v == null
@@ -400,40 +401,40 @@ _$_TelegramVxse56Body _$$_TelegramVxse56BodyFromJson(
       },
     );
 
-Map<String, dynamic> _$$_TelegramVxse56BodyToJson(
-        _$_TelegramVxse56Body instance) =>
+Map<String, dynamic> _$$TelegramVxse56BodyImplToJson(
+        _$TelegramVxse56BodyImpl instance) =>
     <String, dynamic>{
       'naming': instance.naming,
       'text': instance.text,
       'comments': instance.comments,
     };
 
-_$_TelegramCancelBody _$$_TelegramCancelBodyFromJson(
+_$TelegramCancelBodyImpl _$$TelegramCancelBodyImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TelegramCancelBody',
+      r'_$TelegramCancelBodyImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TelegramCancelBody(
+        final val = _$TelegramCancelBodyImpl(
           text: $checkedConvert('text', (v) => v as String),
         );
         return val;
       },
     );
 
-Map<String, dynamic> _$$_TelegramCancelBodyToJson(
-        _$_TelegramCancelBody instance) =>
+Map<String, dynamic> _$$TelegramCancelBodyImplToJson(
+        _$TelegramCancelBodyImpl instance) =>
     <String, dynamic>{
       'text': instance.text,
     };
 
-_$_TelegramVxse45Body _$$_TelegramVxse45BodyFromJson(
+_$TelegramVxse45BodyImpl _$$TelegramVxse45BodyImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TelegramVxse45Body',
+      r'_$TelegramVxse45BodyImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TelegramVxse45Body(
+        final val = _$TelegramVxse45BodyImpl(
           magnitude:
               $checkedConvert('magnitude', (v) => (v as num?)?.toDouble()),
           hypocenter: $checkedConvert(
@@ -470,8 +471,8 @@ _$_TelegramVxse45Body _$$_TelegramVxse45BodyFromJson(
       },
     );
 
-Map<String, dynamic> _$$_TelegramVxse45BodyToJson(
-        _$_TelegramVxse45Body instance) =>
+Map<String, dynamic> _$$TelegramVxse45BodyImplToJson(
+        _$TelegramVxse45BodyImpl instance) =>
     <String, dynamic>{
       'magnitude': instance.magnitude,
       'hypocenter': instance.hypocenter,
@@ -486,13 +487,13 @@ Map<String, dynamic> _$$_TelegramVxse45BodyToJson(
       'isLastInfo': instance.isLastInfo,
     };
 
-_$_EarthquakeInformationBody _$$_EarthquakeInformationBodyFromJson(
+_$EarthquakeInformationBodyImpl _$$EarthquakeInformationBodyImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_EarthquakeInformationBody',
+      r'_$EarthquakeInformationBodyImpl',
       json,
       ($checkedConvert) {
-        final val = _$_EarthquakeInformationBody(
+        final val = _$EarthquakeInformationBodyImpl(
           isLastInfo: $checkedConvert('isLastInfo', (v) => v as bool),
           isCanceled: $checkedConvert('isCanceled', (v) => v as bool),
           text: $checkedConvert('text', (v) => v as String),
@@ -501,8 +502,8 @@ _$_EarthquakeInformationBody _$$_EarthquakeInformationBodyFromJson(
       },
     );
 
-Map<String, dynamic> _$$_EarthquakeInformationBodyToJson(
-        _$_EarthquakeInformationBody instance) =>
+Map<String, dynamic> _$$EarthquakeInformationBodyImplToJson(
+        _$EarthquakeInformationBodyImpl instance) =>
     <String, dynamic>{
       'isLastInfo': instance.isLastInfo,
       'isCanceled': instance.isCanceled,

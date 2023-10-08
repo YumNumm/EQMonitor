@@ -8,13 +8,13 @@ part of 'vtse41.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_PublicBodyVtse41Tsunami _$$_PublicBodyVtse41TsunamiFromJson(
+_$PublicBodyVtse41TsunamiImpl _$$PublicBodyVtse41TsunamiImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_PublicBodyVtse41Tsunami',
+      r'_$PublicBodyVtse41TsunamiImpl',
       json,
       ($checkedConvert) {
-        final val = _$_PublicBodyVtse41Tsunami(
+        final val = _$PublicBodyVtse41TsunamiImpl(
           forecasts: $checkedConvert(
               'forecasts',
               (v) => (v as List<dynamic>)
@@ -26,8 +26,8 @@ _$_PublicBodyVtse41Tsunami _$$_PublicBodyVtse41TsunamiFromJson(
       },
     );
 
-Map<String, dynamic> _$$_PublicBodyVtse41TsunamiToJson(
-        _$_PublicBodyVtse41Tsunami instance) =>
+Map<String, dynamic> _$$PublicBodyVtse41TsunamiImplToJson(
+        _$PublicBodyVtse41TsunamiImpl instance) =>
     <String, dynamic>{
       'forecasts': instance.forecasts,
     };

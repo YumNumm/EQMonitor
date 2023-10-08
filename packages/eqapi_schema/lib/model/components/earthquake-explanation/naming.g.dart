@@ -8,11 +8,11 @@ part of 'naming.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Naming _$$_NamingFromJson(Map<String, dynamic> json) => $checkedCreate(
-      r'_$_Naming',
+_$NamingImpl _$$NamingImplFromJson(Map<String, dynamic> json) => $checkedCreate(
+      r'_$NamingImpl',
       json,
       ($checkedConvert) {
-        final val = _$_Naming(
+        final val = _$NamingImpl(
           text: $checkedConvert('text', (v) => v as String),
           en: $checkedConvert('en', (v) => v as String?),
         );
@@ -20,7 +20,8 @@ _$_Naming _$$_NamingFromJson(Map<String, dynamic> json) => $checkedCreate(
       },
     );
 
-Map<String, dynamic> _$$_NamingToJson(_$_Naming instance) => <String, dynamic>{
+Map<String, dynamic> _$$NamingImplToJson(_$NamingImpl instance) =>
+    <String, dynamic>{
       'text': instance.text,
       'en': instance.en,
     };

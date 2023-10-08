@@ -73,11 +73,12 @@ class _$PublicBodyVtse52TsunamiCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_PublicBodyVtse52TsunamiCopyWith<$Res>
+abstract class _$$PublicBodyVtse52TsunamiImplCopyWith<$Res>
     implements $PublicBodyVtse52TsunamiCopyWith<$Res> {
-  factory _$$_PublicBodyVtse52TsunamiCopyWith(_$_PublicBodyVtse52Tsunami value,
-          $Res Function(_$_PublicBodyVtse52Tsunami) then) =
-      __$$_PublicBodyVtse52TsunamiCopyWithImpl<$Res>;
+  factory _$$PublicBodyVtse52TsunamiImplCopyWith(
+          _$PublicBodyVtse52TsunamiImpl value,
+          $Res Function(_$PublicBodyVtse52TsunamiImpl) then) =
+      __$$PublicBodyVtse52TsunamiImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -86,12 +87,13 @@ abstract class _$$_PublicBodyVtse52TsunamiCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_PublicBodyVtse52TsunamiCopyWithImpl<$Res>
+class __$$PublicBodyVtse52TsunamiImplCopyWithImpl<$Res>
     extends _$PublicBodyVtse52TsunamiCopyWithImpl<$Res,
-        _$_PublicBodyVtse52Tsunami>
-    implements _$$_PublicBodyVtse52TsunamiCopyWith<$Res> {
-  __$$_PublicBodyVtse52TsunamiCopyWithImpl(_$_PublicBodyVtse52Tsunami _value,
-      $Res Function(_$_PublicBodyVtse52Tsunami) _then)
+        _$PublicBodyVtse52TsunamiImpl>
+    implements _$$PublicBodyVtse52TsunamiImplCopyWith<$Res> {
+  __$$PublicBodyVtse52TsunamiImplCopyWithImpl(
+      _$PublicBodyVtse52TsunamiImpl _value,
+      $Res Function(_$PublicBodyVtse52TsunamiImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -100,7 +102,7 @@ class __$$_PublicBodyVtse52TsunamiCopyWithImpl<$Res>
     Object? observations = freezed,
     Object? estimations = null,
   }) {
-    return _then(_$_PublicBodyVtse52Tsunami(
+    return _then(_$PublicBodyVtse52TsunamiImpl(
       observations: freezed == observations
           ? _value._observations
           : observations // ignore: cast_nullable_to_non_nullable
@@ -115,15 +117,15 @@ class __$$_PublicBodyVtse52TsunamiCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_PublicBodyVtse52Tsunami implements _PublicBodyVtse52Tsunami {
-  const _$_PublicBodyVtse52Tsunami(
+class _$PublicBodyVtse52TsunamiImpl implements _PublicBodyVtse52Tsunami {
+  const _$PublicBodyVtse52TsunamiImpl(
       {required final List<TsunamiObservation>? observations,
       required final List<TsunamiEstimation> estimations})
       : _observations = observations,
         _estimations = estimations;
 
-  factory _$_PublicBodyVtse52Tsunami.fromJson(Map<String, dynamic> json) =>
-      _$$_PublicBodyVtse52TsunamiFromJson(json);
+  factory _$PublicBodyVtse52TsunamiImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PublicBodyVtse52TsunamiImplFromJson(json);
 
   final List<TsunamiObservation>? _observations;
   @override
@@ -152,7 +154,7 @@ class _$_PublicBodyVtse52Tsunami implements _PublicBodyVtse52Tsunami {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_PublicBodyVtse52Tsunami &&
+            other is _$PublicBodyVtse52TsunamiImpl &&
             const DeepCollectionEquality()
                 .equals(other._observations, _observations) &&
             const DeepCollectionEquality()
@@ -169,14 +171,13 @@ class _$_PublicBodyVtse52Tsunami implements _PublicBodyVtse52Tsunami {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_PublicBodyVtse52TsunamiCopyWith<_$_PublicBodyVtse52Tsunami>
-      get copyWith =>
-          __$$_PublicBodyVtse52TsunamiCopyWithImpl<_$_PublicBodyVtse52Tsunami>(
-              this, _$identity);
+  _$$PublicBodyVtse52TsunamiImplCopyWith<_$PublicBodyVtse52TsunamiImpl>
+      get copyWith => __$$PublicBodyVtse52TsunamiImplCopyWithImpl<
+          _$PublicBodyVtse52TsunamiImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PublicBodyVtse52TsunamiToJson(
+    return _$$PublicBodyVtse52TsunamiImplToJson(
       this,
     );
   }
@@ -186,10 +187,10 @@ abstract class _PublicBodyVtse52Tsunami implements PublicBodyVtse52Tsunami {
   const factory _PublicBodyVtse52Tsunami(
           {required final List<TsunamiObservation>? observations,
           required final List<TsunamiEstimation> estimations}) =
-      _$_PublicBodyVtse52Tsunami;
+      _$PublicBodyVtse52TsunamiImpl;
 
   factory _PublicBodyVtse52Tsunami.fromJson(Map<String, dynamic> json) =
-      _$_PublicBodyVtse52Tsunami.fromJson;
+      _$PublicBodyVtse52TsunamiImpl.fromJson;
 
   @override
   List<TsunamiObservation>? get observations;
@@ -197,6 +198,6 @@ abstract class _PublicBodyVtse52Tsunami implements PublicBodyVtse52Tsunami {
   List<TsunamiEstimation> get estimations;
   @override
   @JsonKey(ignore: true)
-  _$$_PublicBodyVtse52TsunamiCopyWith<_$_PublicBodyVtse52Tsunami>
+  _$$PublicBodyVtse52TsunamiImplCopyWith<_$PublicBodyVtse52TsunamiImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -8,12 +8,12 @@ part of 'accuracy.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_EewAccuracy _$$_EewAccuracyFromJson(Map<String, dynamic> json) =>
+_$EewAccuracyImpl _$$EewAccuracyImplFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_EewAccuracy',
+      r'_$EewAccuracyImpl',
       json,
       ($checkedConvert) {
-        final val = _$_EewAccuracy(
+        final val = _$EewAccuracyImpl(
           epicenters: $checkedConvert('epicenters',
               (v) => (v as List<dynamic>).map((e) => e as String).toList()),
           depth: $checkedConvert('depth', (v) => v as String),
@@ -26,7 +26,7 @@ _$_EewAccuracy _$$_EewAccuracyFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_EewAccuracyToJson(_$_EewAccuracy instance) =>
+Map<String, dynamic> _$$EewAccuracyImplToJson(_$EewAccuracyImpl instance) =>
     <String, dynamic>{
       'epicenters': instance.epicenters,
       'depth': instance.depth,

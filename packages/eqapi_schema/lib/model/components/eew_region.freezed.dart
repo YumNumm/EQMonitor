@@ -130,10 +130,11 @@ class _$EewRegionCopyWithImpl<$Res, $Val extends EewRegion>
 }
 
 /// @nodoc
-abstract class _$$_EewRegionCopyWith<$Res> implements $EewRegionCopyWith<$Res> {
-  factory _$$_EewRegionCopyWith(
-          _$_EewRegion value, $Res Function(_$_EewRegion) then) =
-      __$$_EewRegionCopyWithImpl<$Res>;
+abstract class _$$EewRegionImplCopyWith<$Res>
+    implements $EewRegionCopyWith<$Res> {
+  factory _$$EewRegionImplCopyWith(
+          _$EewRegionImpl value, $Res Function(_$EewRegionImpl) then) =
+      __$$EewRegionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -152,11 +153,11 @@ abstract class _$$_EewRegionCopyWith<$Res> implements $EewRegionCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_EewRegionCopyWithImpl<$Res>
-    extends _$EewRegionCopyWithImpl<$Res, _$_EewRegion>
-    implements _$$_EewRegionCopyWith<$Res> {
-  __$$_EewRegionCopyWithImpl(
-      _$_EewRegion _value, $Res Function(_$_EewRegion) _then)
+class __$$EewRegionImplCopyWithImpl<$Res>
+    extends _$EewRegionCopyWithImpl<$Res, _$EewRegionImpl>
+    implements _$$EewRegionImplCopyWith<$Res> {
+  __$$EewRegionImplCopyWithImpl(
+      _$EewRegionImpl _value, $Res Function(_$EewRegionImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -170,7 +171,7 @@ class __$$_EewRegionCopyWithImpl<$Res>
     Object? forecastMaxLgInt = freezed,
     Object? arrivalTime = freezed,
   }) {
-    return _then(_$_EewRegion(
+    return _then(_$EewRegionImpl(
       code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
@@ -205,8 +206,8 @@ class __$$_EewRegionCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_EewRegion implements _EewRegion {
-  const _$_EewRegion(
+class _$EewRegionImpl implements _EewRegion {
+  const _$EewRegionImpl(
       {required this.code,
       required this.name,
       required this.isPlum,
@@ -215,8 +216,8 @@ class _$_EewRegion implements _EewRegion {
       required this.forecastMaxLgInt,
       required this.arrivalTime});
 
-  factory _$_EewRegion.fromJson(Map<String, dynamic> json) =>
-      _$$_EewRegionFromJson(json);
+  factory _$EewRegionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$EewRegionImplFromJson(json);
 
   @override
   final String code;
@@ -245,7 +246,7 @@ class _$_EewRegion implements _EewRegion {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_EewRegion &&
+            other is _$EewRegionImpl &&
             (identical(other.code, code) || other.code == code) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.isPlum, isPlum) || other.isPlum == isPlum) &&
@@ -267,12 +268,12 @@ class _$_EewRegion implements _EewRegion {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_EewRegionCopyWith<_$_EewRegion> get copyWith =>
-      __$$_EewRegionCopyWithImpl<_$_EewRegion>(this, _$identity);
+  _$$EewRegionImplCopyWith<_$EewRegionImpl> get copyWith =>
+      __$$EewRegionImplCopyWithImpl<_$EewRegionImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_EewRegionToJson(
+    return _$$EewRegionImplToJson(
       this,
     );
   }
@@ -286,10 +287,10 @@ abstract class _EewRegion implements EewRegion {
       required final bool isWarning,
       required final ForecastMaxInt forecastMaxInt,
       required final ForecastMaxLgInt? forecastMaxLgInt,
-      required final DateTime? arrivalTime}) = _$_EewRegion;
+      required final DateTime? arrivalTime}) = _$EewRegionImpl;
 
   factory _EewRegion.fromJson(Map<String, dynamic> json) =
-      _$_EewRegion.fromJson;
+      _$EewRegionImpl.fromJson;
 
   @override
   String get code;
@@ -310,6 +311,6 @@ abstract class _EewRegion implements EewRegion {
   DateTime? get arrivalTime;
   @override
   @JsonKey(ignore: true)
-  _$$_EewRegionCopyWith<_$_EewRegion> get copyWith =>
+  _$$EewRegionImplCopyWith<_$EewRegionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

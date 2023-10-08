@@ -8,11 +8,12 @@ part of 'intensity.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Intensity _$$_IntensityFromJson(Map<String, dynamic> json) => $checkedCreate(
-      r'_$_Intensity',
+_$IntensityImpl _$$IntensityImplFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      r'_$IntensityImpl',
       json,
       ($checkedConvert) {
-        final val = _$_Intensity(
+        final val = _$IntensityImpl(
           maxInt: $checkedConvert(
               'maxInt', (v) => $enumDecode(_$JmaIntensityEnumMap, v)),
           maxLgInt: $checkedConvert('maxLgInt',
@@ -48,7 +49,7 @@ _$_Intensity _$$_IntensityFromJson(Map<String, dynamic> json) => $checkedCreate(
       },
     );
 
-Map<String, dynamic> _$$_IntensityToJson(_$_Intensity instance) =>
+Map<String, dynamic> _$$IntensityImplToJson(_$IntensityImpl instance) =>
     <String, dynamic>{
       'maxInt': _$JmaIntensityEnumMap[instance.maxInt]!,
       'maxLgInt': _$JmaLgIntensityEnumMap[instance.maxLgInt],
