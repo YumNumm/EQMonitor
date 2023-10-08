@@ -8,12 +8,13 @@ part of 'comments.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_TsunamiComments _$$_TsunamiCommentsFromJson(Map<String, dynamic> json) =>
+_$TsunamiCommentsImpl _$$TsunamiCommentsImplFromJson(
+        Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TsunamiComments',
+      r'_$TsunamiCommentsImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TsunamiComments(
+        final val = _$TsunamiCommentsImpl(
           free: $checkedConvert('free', (v) => v as String?),
           warning: $checkedConvert(
               'warning',
@@ -26,29 +27,30 @@ _$_TsunamiComments _$$_TsunamiCommentsFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_TsunamiCommentsToJson(_$_TsunamiComments instance) =>
+Map<String, dynamic> _$$TsunamiCommentsImplToJson(
+        _$TsunamiCommentsImpl instance) =>
     <String, dynamic>{
       'free': instance.free,
       'warning': instance.warning,
     };
 
-_$_TsunamiForecastCommentWarning _$$_TsunamiForecastCommentWarningFromJson(
-        Map<String, dynamic> json) =>
-    $checkedCreate(
-      r'_$_TsunamiForecastCommentWarning',
-      json,
-      ($checkedConvert) {
-        final val = _$_TsunamiForecastCommentWarning(
-          text: $checkedConvert('text', (v) => v as String),
-          codes: $checkedConvert('codes',
-              (v) => (v as List<dynamic>).map((e) => e as String).toList()),
+_$TsunamiForecastCommentWarningImpl
+    _$$TsunamiForecastCommentWarningImplFromJson(Map<String, dynamic> json) =>
+        $checkedCreate(
+          r'_$TsunamiForecastCommentWarningImpl',
+          json,
+          ($checkedConvert) {
+            final val = _$TsunamiForecastCommentWarningImpl(
+              text: $checkedConvert('text', (v) => v as String),
+              codes: $checkedConvert('codes',
+                  (v) => (v as List<dynamic>).map((e) => e as String).toList()),
+            );
+            return val;
+          },
         );
-        return val;
-      },
-    );
 
-Map<String, dynamic> _$$_TsunamiForecastCommentWarningToJson(
-        _$_TsunamiForecastCommentWarning instance) =>
+Map<String, dynamic> _$$TsunamiForecastCommentWarningImplToJson(
+        _$TsunamiForecastCommentWarningImpl instance) =>
     <String, dynamic>{
       'text': instance.text,
       'codes': instance.codes,

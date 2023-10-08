@@ -8,11 +8,12 @@ part of 'comments.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Comments _$$_CommentsFromJson(Map<String, dynamic> json) => $checkedCreate(
-      r'_$_Comments',
+_$CommentsImpl _$$CommentsImplFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      r'_$CommentsImpl',
       json,
       ($checkedConvert) {
-        final val = _$_Comments(
+        final val = _$CommentsImpl(
           free: $checkedConvert('free', (v) => v as String?),
           forecast: $checkedConvert(
               'forecast',
@@ -29,19 +30,20 @@ _$_Comments _$$_CommentsFromJson(Map<String, dynamic> json) => $checkedCreate(
       },
     );
 
-Map<String, dynamic> _$$_CommentsToJson(_$_Comments instance) =>
+Map<String, dynamic> _$$CommentsImplToJson(_$CommentsImpl instance) =>
     <String, dynamic>{
       'free': instance.free,
       'forecast': instance.forecast,
       'varComments': instance.varComments,
     };
 
-_$_CommentsOmitVar _$$_CommentsOmitVarFromJson(Map<String, dynamic> json) =>
+_$CommentsOmitVarImpl _$$CommentsOmitVarImplFromJson(
+        Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_CommentsOmitVar',
+      r'_$CommentsOmitVarImpl',
       json,
       ($checkedConvert) {
-        final val = _$_CommentsOmitVar(
+        final val = _$CommentsOmitVarImpl(
           free: $checkedConvert('free', (v) => v as String?),
           forecast: $checkedConvert(
               'forecast',
@@ -53,18 +55,20 @@ _$_CommentsOmitVar _$$_CommentsOmitVarFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_CommentsOmitVarToJson(_$_CommentsOmitVar instance) =>
+Map<String, dynamic> _$$CommentsOmitVarImplToJson(
+        _$CommentsOmitVarImpl instance) =>
     <String, dynamic>{
       'free': instance.free,
       'forecast': instance.forecast,
     };
 
-_$_ForecastComments _$$_ForecastCommentsFromJson(Map<String, dynamic> json) =>
+_$ForecastCommentsImpl _$$ForecastCommentsImplFromJson(
+        Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_ForecastComments',
+      r'_$ForecastCommentsImpl',
       json,
       ($checkedConvert) {
-        final val = _$_ForecastComments(
+        final val = _$ForecastCommentsImpl(
           text: $checkedConvert('text', (v) => v as String),
           codes: $checkedConvert('codes',
               (v) => (v as List<dynamic>).map((e) => e as String).toList()),
@@ -73,18 +77,19 @@ _$_ForecastComments _$$_ForecastCommentsFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_ForecastCommentsToJson(_$_ForecastComments instance) =>
+Map<String, dynamic> _$$ForecastCommentsImplToJson(
+        _$ForecastCommentsImpl instance) =>
     <String, dynamic>{
       'text': instance.text,
       'codes': instance.codes,
     };
 
-_$_VarComments _$$_VarCommentsFromJson(Map<String, dynamic> json) =>
+_$VarCommentsImpl _$$VarCommentsImplFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_VarComments',
+      r'_$VarCommentsImpl',
       json,
       ($checkedConvert) {
-        final val = _$_VarComments(
+        final val = _$VarCommentsImpl(
           text: $checkedConvert('text', (v) => v as String),
           codes: $checkedConvert('codes',
               (v) => (v as List<dynamic>).map((e) => e as String).toList()),
@@ -93,25 +98,27 @@ _$_VarComments _$$_VarCommentsFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_VarCommentsToJson(_$_VarComments instance) =>
+Map<String, dynamic> _$$VarCommentsImplToJson(_$VarCommentsImpl instance) =>
     <String, dynamic>{
       'text': instance.text,
       'codes': instance.codes,
     };
 
-_$_CommentsOnlyFree _$$_CommentsOnlyFreeFromJson(Map<String, dynamic> json) =>
+_$CommentsOnlyFreeImpl _$$CommentsOnlyFreeImplFromJson(
+        Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_CommentsOnlyFree',
+      r'_$CommentsOnlyFreeImpl',
       json,
       ($checkedConvert) {
-        final val = _$_CommentsOnlyFree(
+        final val = _$CommentsOnlyFreeImpl(
           free: $checkedConvert('free', (v) => v as String),
         );
         return val;
       },
     );
 
-Map<String, dynamic> _$$_CommentsOnlyFreeToJson(_$_CommentsOnlyFree instance) =>
+Map<String, dynamic> _$$CommentsOnlyFreeImplToJson(
+        _$CommentsOnlyFreeImpl instance) =>
     <String, dynamic>{
       'free': instance.free,
     };

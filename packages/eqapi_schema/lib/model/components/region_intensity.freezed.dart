@@ -84,11 +84,11 @@ class _$RegionIntensityCopyWithImpl<$Res, $Val extends RegionIntensity>
 }
 
 /// @nodoc
-abstract class _$$_RegionIntensityCopyWith<$Res>
+abstract class _$$RegionIntensityImplCopyWith<$Res>
     implements $RegionIntensityCopyWith<$Res> {
-  factory _$$_RegionIntensityCopyWith(
-          _$_RegionIntensity value, $Res Function(_$_RegionIntensity) then) =
-      __$$_RegionIntensityCopyWithImpl<$Res>;
+  factory _$$RegionIntensityImplCopyWith(_$RegionIntensityImpl value,
+          $Res Function(_$RegionIntensityImpl) then) =
+      __$$RegionIntensityImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -99,11 +99,11 @@ abstract class _$$_RegionIntensityCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_RegionIntensityCopyWithImpl<$Res>
-    extends _$RegionIntensityCopyWithImpl<$Res, _$_RegionIntensity>
-    implements _$$_RegionIntensityCopyWith<$Res> {
-  __$$_RegionIntensityCopyWithImpl(
-      _$_RegionIntensity _value, $Res Function(_$_RegionIntensity) _then)
+class __$$RegionIntensityImplCopyWithImpl<$Res>
+    extends _$RegionIntensityCopyWithImpl<$Res, _$RegionIntensityImpl>
+    implements _$$RegionIntensityImplCopyWith<$Res> {
+  __$$RegionIntensityImplCopyWithImpl(
+      _$RegionIntensityImpl _value, $Res Function(_$RegionIntensityImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -114,7 +114,7 @@ class __$$_RegionIntensityCopyWithImpl<$Res>
     Object? maxInt = freezed,
     Object? maxLgInt = freezed,
   }) {
-    return _then(_$_RegionIntensity(
+    return _then(_$RegionIntensityImpl(
       code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
@@ -137,15 +137,15 @@ class __$$_RegionIntensityCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_RegionIntensity implements _RegionIntensity {
-  const _$_RegionIntensity(
+class _$RegionIntensityImpl implements _RegionIntensity {
+  const _$RegionIntensityImpl(
       {required this.code,
       required this.name,
       required this.maxInt,
       required this.maxLgInt});
 
-  factory _$_RegionIntensity.fromJson(Map<String, dynamic> json) =>
-      _$$_RegionIntensityFromJson(json);
+  factory _$RegionIntensityImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RegionIntensityImplFromJson(json);
 
   @override
   final String code;
@@ -165,7 +165,7 @@ class _$_RegionIntensity implements _RegionIntensity {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_RegionIntensity &&
+            other is _$RegionIntensityImpl &&
             (identical(other.code, code) || other.code == code) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.maxInt, maxInt) || other.maxInt == maxInt) &&
@@ -180,12 +180,13 @@ class _$_RegionIntensity implements _RegionIntensity {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_RegionIntensityCopyWith<_$_RegionIntensity> get copyWith =>
-      __$$_RegionIntensityCopyWithImpl<_$_RegionIntensity>(this, _$identity);
+  _$$RegionIntensityImplCopyWith<_$RegionIntensityImpl> get copyWith =>
+      __$$RegionIntensityImplCopyWithImpl<_$RegionIntensityImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_RegionIntensityToJson(
+    return _$$RegionIntensityImplToJson(
       this,
     );
   }
@@ -196,10 +197,10 @@ abstract class _RegionIntensity implements RegionIntensity {
       {required final String code,
       required final String name,
       required final JmaIntensity? maxInt,
-      required final JmaLgIntensity? maxLgInt}) = _$_RegionIntensity;
+      required final JmaLgIntensity? maxLgInt}) = _$RegionIntensityImpl;
 
   factory _RegionIntensity.fromJson(Map<String, dynamic> json) =
-      _$_RegionIntensity.fromJson;
+      _$RegionIntensityImpl.fromJson;
 
   @override
   String get code;
@@ -211,6 +212,6 @@ abstract class _RegionIntensity implements RegionIntensity {
   JmaLgIntensity? get maxLgInt;
   @override
   @JsonKey(ignore: true)
-  _$$_RegionIntensityCopyWith<_$_RegionIntensity> get copyWith =>
+  _$$RegionIntensityImplCopyWith<_$RegionIntensityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

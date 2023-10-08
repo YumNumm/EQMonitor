@@ -8,12 +8,12 @@ part of 'earthquake.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Earthquake _$$_EarthquakeFromJson(Map<String, dynamic> json) =>
+_$EarthquakeImpl _$$EarthquakeImplFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_Earthquake',
+      r'_$EarthquakeImpl',
       json,
       ($checkedConvert) {
-        final val = _$_Earthquake(
+        final val = _$EarthquakeImpl(
           originTime:
               $checkedConvert('originTime', (v) => DateTime.parse(v as String)),
           arrivalTime: $checkedConvert(
@@ -27,7 +27,7 @@ _$_Earthquake _$$_EarthquakeFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_EarthquakeToJson(_$_Earthquake instance) =>
+Map<String, dynamic> _$$EarthquakeImplToJson(_$EarthquakeImpl instance) =>
     <String, dynamic>{
       'originTime': instance.originTime.toIso8601String(),
       'arrivalTime': instance.arrivalTime.toIso8601String(),
@@ -35,13 +35,13 @@ Map<String, dynamic> _$$_EarthquakeToJson(_$_Earthquake instance) =>
       'magnitude': instance.magnitude,
     };
 
-_$_EarthquakeHypocenter _$$_EarthquakeHypocenterFromJson(
+_$EarthquakeHypocenterImpl _$$EarthquakeHypocenterImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_EarthquakeHypocenter',
+      r'_$EarthquakeHypocenterImpl',
       json,
       ($checkedConvert) {
-        final val = _$_EarthquakeHypocenter(
+        final val = _$EarthquakeHypocenterImpl(
           name: $checkedConvert('name', (v) => v as String),
           code: $checkedConvert('code', (v) => v as String),
           depth: $checkedConvert('depth', (v) => v as int?),
@@ -61,8 +61,8 @@ _$_EarthquakeHypocenter _$$_EarthquakeHypocenterFromJson(
       },
     );
 
-Map<String, dynamic> _$$_EarthquakeHypocenterToJson(
-        _$_EarthquakeHypocenter instance) =>
+Map<String, dynamic> _$$EarthquakeHypocenterImplToJson(
+        _$EarthquakeHypocenterImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
@@ -71,13 +71,13 @@ Map<String, dynamic> _$$_EarthquakeHypocenterToJson(
       'coordinate': instance.coordinate,
     };
 
-_$_EarthquakeHypocenterDetailed _$$_EarthquakeHypocenterDetailedFromJson(
+_$EarthquakeHypocenterDetailedImpl _$$EarthquakeHypocenterDetailedImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_EarthquakeHypocenterDetailed',
+      r'_$EarthquakeHypocenterDetailedImpl',
       json,
       ($checkedConvert) {
-        final val = _$_EarthquakeHypocenterDetailed(
+        final val = _$EarthquakeHypocenterDetailedImpl(
           code: $checkedConvert('code', (v) => v as String),
           name: $checkedConvert('name', (v) => v as String),
         );
@@ -85,20 +85,20 @@ _$_EarthquakeHypocenterDetailed _$$_EarthquakeHypocenterDetailedFromJson(
       },
     );
 
-Map<String, dynamic> _$$_EarthquakeHypocenterDetailedToJson(
-        _$_EarthquakeHypocenterDetailed instance) =>
+Map<String, dynamic> _$$EarthquakeHypocenterDetailedImplToJson(
+        _$EarthquakeHypocenterDetailedImpl instance) =>
     <String, dynamic>{
       'code': instance.code,
       'name': instance.name,
     };
 
-_$_EarthquakeMagnitude _$$_EarthquakeMagnitudeFromJson(
+_$EarthquakeMagnitudeImpl _$$EarthquakeMagnitudeImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_EarthquakeMagnitude',
+      r'_$EarthquakeMagnitudeImpl',
       json,
       ($checkedConvert) {
-        final val = _$_EarthquakeMagnitude(
+        final val = _$EarthquakeMagnitudeImpl(
           value: $checkedConvert('value', (v) => (v as num?)?.toDouble()),
           condition: $checkedConvert('condition', (v) => v as String?),
         );
@@ -106,8 +106,8 @@ _$_EarthquakeMagnitude _$$_EarthquakeMagnitudeFromJson(
       },
     );
 
-Map<String, dynamic> _$$_EarthquakeMagnitudeToJson(
-        _$_EarthquakeMagnitude instance) =>
+Map<String, dynamic> _$$EarthquakeMagnitudeImplToJson(
+        _$EarthquakeMagnitudeImpl instance) =>
     <String, dynamic>{
       'value': instance.value,
       'condition': instance.condition,

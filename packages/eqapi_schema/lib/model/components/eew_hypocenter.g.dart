@@ -8,12 +8,12 @@ part of 'eew_hypocenter.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_EewHypocenter _$$_EewHypocenterFromJson(Map<String, dynamic> json) =>
+_$EewHypocenterImpl _$$EewHypocenterImplFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_EewHypocenter',
+      r'_$EewHypocenterImpl',
       json,
       ($checkedConvert) {
-        final val = _$_EewHypocenter(
+        final val = _$EewHypocenterImpl(
           coordinate: $checkedConvert(
               'coordinate',
               (v) => v == null
@@ -26,7 +26,7 @@ _$_EewHypocenter _$$_EewHypocenterFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_EewHypocenterToJson(_$_EewHypocenter instance) =>
+Map<String, dynamic> _$$EewHypocenterImplToJson(_$EewHypocenterImpl instance) =>
     <String, dynamic>{
       'coordinate': instance.coordinate,
       'code': instance.code,

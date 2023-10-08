@@ -8,13 +8,13 @@ part of 'vtse52.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_PublicBodyVtse52Tsunami _$$_PublicBodyVtse52TsunamiFromJson(
+_$PublicBodyVtse52TsunamiImpl _$$PublicBodyVtse52TsunamiImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_PublicBodyVtse52Tsunami',
+      r'_$PublicBodyVtse52TsunamiImpl',
       json,
       ($checkedConvert) {
-        final val = _$_PublicBodyVtse52Tsunami(
+        final val = _$PublicBodyVtse52TsunamiImpl(
           observations: $checkedConvert(
               'observations',
               (v) => (v as List<dynamic>?)
@@ -32,8 +32,8 @@ _$_PublicBodyVtse52Tsunami _$$_PublicBodyVtse52TsunamiFromJson(
       },
     );
 
-Map<String, dynamic> _$$_PublicBodyVtse52TsunamiToJson(
-        _$_PublicBodyVtse52Tsunami instance) =>
+Map<String, dynamic> _$$PublicBodyVtse52TsunamiImplToJson(
+        _$PublicBodyVtse52TsunamiImpl instance) =>
     <String, dynamic>{
       'observations': instance.observations,
       'estimations': instance.estimations,

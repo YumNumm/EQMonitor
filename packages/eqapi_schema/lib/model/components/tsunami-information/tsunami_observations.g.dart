@@ -8,13 +8,13 @@ part of 'tsunami_observations.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_TsunamiObservation _$$_TsunamiObservationFromJson(
+_$TsunamiObservationImpl _$$TsunamiObservationImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TsunamiObservation',
+      r'_$TsunamiObservationImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TsunamiObservation(
+        final val = _$TsunamiObservationImpl(
           code: $checkedConvert('code', (v) => v as String?),
           name: $checkedConvert('name', (v) => v as String?),
           stations: $checkedConvert(
@@ -28,21 +28,21 @@ _$_TsunamiObservation _$$_TsunamiObservationFromJson(
       },
     );
 
-Map<String, dynamic> _$$_TsunamiObservationToJson(
-        _$_TsunamiObservation instance) =>
+Map<String, dynamic> _$$TsunamiObservationImplToJson(
+        _$TsunamiObservationImpl instance) =>
     <String, dynamic>{
       'code': instance.code,
       'name': instance.name,
       'stations': instance.stations,
     };
 
-_$_TsunamiObservationStation _$$_TsunamiObservationStationFromJson(
+_$TsunamiObservationStationImpl _$$TsunamiObservationStationImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TsunamiObservationStation',
+      r'_$TsunamiObservationStationImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TsunamiObservationStation(
+        final val = _$TsunamiObservationStationImpl(
           code: $checkedConvert('code', (v) => v as String),
           name: $checkedConvert('name', (v) => v as String),
           firstHeightArrivalTime: $checkedConvert('firstHeightArrivalTime',
@@ -68,8 +68,8 @@ _$_TsunamiObservationStation _$$_TsunamiObservationStationFromJson(
       },
     );
 
-Map<String, dynamic> _$$_TsunamiObservationStationToJson(
-        _$_TsunamiObservationStation instance) =>
+Map<String, dynamic> _$$TsunamiObservationStationImplToJson(
+        _$TsunamiObservationStationImpl instance) =>
     <String, dynamic>{
       'code': instance.code,
       'name': instance.name,

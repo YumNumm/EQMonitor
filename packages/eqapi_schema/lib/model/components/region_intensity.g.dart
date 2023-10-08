@@ -8,12 +8,13 @@ part of 'region_intensity.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_RegionIntensity _$$_RegionIntensityFromJson(Map<String, dynamic> json) =>
+_$RegionIntensityImpl _$$RegionIntensityImplFromJson(
+        Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_RegionIntensity',
+      r'_$RegionIntensityImpl',
       json,
       ($checkedConvert) {
-        final val = _$_RegionIntensity(
+        final val = _$RegionIntensityImpl(
           code: $checkedConvert('code', (v) => v as String),
           name: $checkedConvert('name', (v) => v as String),
           maxInt: $checkedConvert(
@@ -25,7 +26,8 @@ _$_RegionIntensity _$$_RegionIntensityFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_RegionIntensityToJson(_$_RegionIntensity instance) =>
+Map<String, dynamic> _$$RegionIntensityImplToJson(
+        _$RegionIntensityImpl instance) =>
     <String, dynamic>{
       'code': instance.code,
       'name': instance.name,

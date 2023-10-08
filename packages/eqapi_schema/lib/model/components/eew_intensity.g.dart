@@ -8,12 +8,12 @@ part of 'eew_intensity.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_ForecastMaxInt _$$_ForecastMaxIntFromJson(Map<String, dynamic> json) =>
+_$ForecastMaxIntImpl _$$ForecastMaxIntImplFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_ForecastMaxInt',
+      r'_$ForecastMaxIntImpl',
       json,
       ($checkedConvert) {
-        final val = _$_ForecastMaxInt(
+        final val = _$ForecastMaxIntImpl(
           from: $checkedConvert(
               'from', (v) => $enumDecode(_$JmaForecastIntensityEnumMap, v)),
           to: $checkedConvert(
@@ -23,7 +23,8 @@ _$_ForecastMaxInt _$$_ForecastMaxIntFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_ForecastMaxIntToJson(_$_ForecastMaxInt instance) =>
+Map<String, dynamic> _$$ForecastMaxIntImplToJson(
+        _$ForecastMaxIntImpl instance) =>
     <String, dynamic>{
       'from': _$JmaForecastIntensityEnumMap[instance.from]!,
       'to': _$JmaForecastIntensityOverEnumMap[instance.to]!,
@@ -58,12 +59,13 @@ const _$JmaForecastIntensityOverEnumMap = {
   JmaForecastIntensityOver.over: 'over',
 };
 
-_$_ForecastMaxLgInt _$$_ForecastMaxLgIntFromJson(Map<String, dynamic> json) =>
+_$ForecastMaxLgIntImpl _$$ForecastMaxLgIntImplFromJson(
+        Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_ForecastMaxLgInt',
+      r'_$ForecastMaxLgIntImpl',
       json,
       ($checkedConvert) {
-        final val = _$_ForecastMaxLgInt(
+        final val = _$ForecastMaxLgIntImpl(
           from: $checkedConvert(
               'from', (v) => $enumDecode(_$JmaForecastLgIntensityEnumMap, v)),
           to: $checkedConvert(
@@ -73,7 +75,8 @@ _$_ForecastMaxLgInt _$$_ForecastMaxLgIntFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_ForecastMaxLgIntToJson(_$_ForecastMaxLgInt instance) =>
+Map<String, dynamic> _$$ForecastMaxLgIntImplToJson(
+        _$ForecastMaxLgIntImpl instance) =>
     <String, dynamic>{
       'from': _$JmaForecastLgIntensityEnumMap[instance.from]!,
       'to': _$JmaForecastLgIntensityOverEnumMap[instance.to]!,

@@ -8,12 +8,13 @@ part of 'tsunami_estimation.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_TsunamiEstimation _$$_TsunamiEstimationFromJson(Map<String, dynamic> json) =>
+_$TsunamiEstimationImpl _$$TsunamiEstimationImplFromJson(
+        Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TsunamiEstimation',
+      r'_$TsunamiEstimationImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TsunamiEstimation(
+        final val = _$TsunamiEstimationImpl(
           code: $checkedConvert('code', (v) => v as String),
           name: $checkedConvert('name', (v) => v as String),
           firstHeightTime: $checkedConvert('firstHeightTime',
@@ -38,8 +39,8 @@ _$_TsunamiEstimation _$$_TsunamiEstimationFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_TsunamiEstimationToJson(
-        _$_TsunamiEstimation instance) =>
+Map<String, dynamic> _$$TsunamiEstimationImplToJson(
+        _$TsunamiEstimationImpl instance) =>
     <String, dynamic>{
       'code': instance.code,
       'name': instance.name,

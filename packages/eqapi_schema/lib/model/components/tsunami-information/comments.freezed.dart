@@ -84,11 +84,11 @@ class _$TsunamiCommentsCopyWithImpl<$Res, $Val extends TsunamiComments>
 }
 
 /// @nodoc
-abstract class _$$_TsunamiCommentsCopyWith<$Res>
+abstract class _$$TsunamiCommentsImplCopyWith<$Res>
     implements $TsunamiCommentsCopyWith<$Res> {
-  factory _$$_TsunamiCommentsCopyWith(
-          _$_TsunamiComments value, $Res Function(_$_TsunamiComments) then) =
-      __$$_TsunamiCommentsCopyWithImpl<$Res>;
+  factory _$$TsunamiCommentsImplCopyWith(_$TsunamiCommentsImpl value,
+          $Res Function(_$TsunamiCommentsImpl) then) =
+      __$$TsunamiCommentsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String? free, TsunamiForecastCommentWarning? warning});
@@ -98,11 +98,11 @@ abstract class _$$_TsunamiCommentsCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TsunamiCommentsCopyWithImpl<$Res>
-    extends _$TsunamiCommentsCopyWithImpl<$Res, _$_TsunamiComments>
-    implements _$$_TsunamiCommentsCopyWith<$Res> {
-  __$$_TsunamiCommentsCopyWithImpl(
-      _$_TsunamiComments _value, $Res Function(_$_TsunamiComments) _then)
+class __$$TsunamiCommentsImplCopyWithImpl<$Res>
+    extends _$TsunamiCommentsCopyWithImpl<$Res, _$TsunamiCommentsImpl>
+    implements _$$TsunamiCommentsImplCopyWith<$Res> {
+  __$$TsunamiCommentsImplCopyWithImpl(
+      _$TsunamiCommentsImpl _value, $Res Function(_$TsunamiCommentsImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -111,7 +111,7 @@ class __$$_TsunamiCommentsCopyWithImpl<$Res>
     Object? free = freezed,
     Object? warning = freezed,
   }) {
-    return _then(_$_TsunamiComments(
+    return _then(_$TsunamiCommentsImpl(
       free: freezed == free
           ? _value.free
           : free // ignore: cast_nullable_to_non_nullable
@@ -126,11 +126,11 @@ class __$$_TsunamiCommentsCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TsunamiComments implements _TsunamiComments {
-  const _$_TsunamiComments({required this.free, required this.warning});
+class _$TsunamiCommentsImpl implements _TsunamiComments {
+  const _$TsunamiCommentsImpl({required this.free, required this.warning});
 
-  factory _$_TsunamiComments.fromJson(Map<String, dynamic> json) =>
-      _$$_TsunamiCommentsFromJson(json);
+  factory _$TsunamiCommentsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TsunamiCommentsImplFromJson(json);
 
   @override
   final String? free;
@@ -146,7 +146,7 @@ class _$_TsunamiComments implements _TsunamiComments {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TsunamiComments &&
+            other is _$TsunamiCommentsImpl &&
             (identical(other.free, free) || other.free == free) &&
             (identical(other.warning, warning) || other.warning == warning));
   }
@@ -158,12 +158,13 @@ class _$_TsunamiComments implements _TsunamiComments {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TsunamiCommentsCopyWith<_$_TsunamiComments> get copyWith =>
-      __$$_TsunamiCommentsCopyWithImpl<_$_TsunamiComments>(this, _$identity);
+  _$$TsunamiCommentsImplCopyWith<_$TsunamiCommentsImpl> get copyWith =>
+      __$$TsunamiCommentsImplCopyWithImpl<_$TsunamiCommentsImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TsunamiCommentsToJson(
+    return _$$TsunamiCommentsImplToJson(
       this,
     );
   }
@@ -173,10 +174,10 @@ abstract class _TsunamiComments implements TsunamiComments {
   const factory _TsunamiComments(
           {required final String? free,
           required final TsunamiForecastCommentWarning? warning}) =
-      _$_TsunamiComments;
+      _$TsunamiCommentsImpl;
 
   factory _TsunamiComments.fromJson(Map<String, dynamic> json) =
-      _$_TsunamiComments.fromJson;
+      _$TsunamiCommentsImpl.fromJson;
 
   @override
   String? get free;
@@ -184,7 +185,7 @@ abstract class _TsunamiComments implements TsunamiComments {
   TsunamiForecastCommentWarning? get warning;
   @override
   @JsonKey(ignore: true)
-  _$$_TsunamiCommentsCopyWith<_$_TsunamiComments> get copyWith =>
+  _$$TsunamiCommentsImplCopyWith<_$TsunamiCommentsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -246,25 +247,25 @@ class _$TsunamiForecastCommentWarningCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_TsunamiForecastCommentWarningCopyWith<$Res>
+abstract class _$$TsunamiForecastCommentWarningImplCopyWith<$Res>
     implements $TsunamiForecastCommentWarningCopyWith<$Res> {
-  factory _$$_TsunamiForecastCommentWarningCopyWith(
-          _$_TsunamiForecastCommentWarning value,
-          $Res Function(_$_TsunamiForecastCommentWarning) then) =
-      __$$_TsunamiForecastCommentWarningCopyWithImpl<$Res>;
+  factory _$$TsunamiForecastCommentWarningImplCopyWith(
+          _$TsunamiForecastCommentWarningImpl value,
+          $Res Function(_$TsunamiForecastCommentWarningImpl) then) =
+      __$$TsunamiForecastCommentWarningImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String text, List<String> codes});
 }
 
 /// @nodoc
-class __$$_TsunamiForecastCommentWarningCopyWithImpl<$Res>
+class __$$TsunamiForecastCommentWarningImplCopyWithImpl<$Res>
     extends _$TsunamiForecastCommentWarningCopyWithImpl<$Res,
-        _$_TsunamiForecastCommentWarning>
-    implements _$$_TsunamiForecastCommentWarningCopyWith<$Res> {
-  __$$_TsunamiForecastCommentWarningCopyWithImpl(
-      _$_TsunamiForecastCommentWarning _value,
-      $Res Function(_$_TsunamiForecastCommentWarning) _then)
+        _$TsunamiForecastCommentWarningImpl>
+    implements _$$TsunamiForecastCommentWarningImplCopyWith<$Res> {
+  __$$TsunamiForecastCommentWarningImplCopyWithImpl(
+      _$TsunamiForecastCommentWarningImpl _value,
+      $Res Function(_$TsunamiForecastCommentWarningImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -273,7 +274,7 @@ class __$$_TsunamiForecastCommentWarningCopyWithImpl<$Res>
     Object? text = null,
     Object? codes = null,
   }) {
-    return _then(_$_TsunamiForecastCommentWarning(
+    return _then(_$TsunamiForecastCommentWarningImpl(
       text: null == text
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
@@ -288,15 +289,15 @@ class __$$_TsunamiForecastCommentWarningCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TsunamiForecastCommentWarning
+class _$TsunamiForecastCommentWarningImpl
     implements _TsunamiForecastCommentWarning {
-  const _$_TsunamiForecastCommentWarning(
+  const _$TsunamiForecastCommentWarningImpl(
       {required this.text, required final List<String> codes})
       : _codes = codes;
 
-  factory _$_TsunamiForecastCommentWarning.fromJson(
+  factory _$TsunamiForecastCommentWarningImpl.fromJson(
           Map<String, dynamic> json) =>
-      _$$_TsunamiForecastCommentWarningFromJson(json);
+      _$$TsunamiForecastCommentWarningImplFromJson(json);
 
   @override
   final String text;
@@ -317,7 +318,7 @@ class _$_TsunamiForecastCommentWarning
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TsunamiForecastCommentWarning &&
+            other is _$TsunamiForecastCommentWarningImpl &&
             (identical(other.text, text) || other.text == text) &&
             const DeepCollectionEquality().equals(other._codes, _codes));
   }
@@ -330,13 +331,14 @@ class _$_TsunamiForecastCommentWarning
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TsunamiForecastCommentWarningCopyWith<_$_TsunamiForecastCommentWarning>
-      get copyWith => __$$_TsunamiForecastCommentWarningCopyWithImpl<
-          _$_TsunamiForecastCommentWarning>(this, _$identity);
+  _$$TsunamiForecastCommentWarningImplCopyWith<
+          _$TsunamiForecastCommentWarningImpl>
+      get copyWith => __$$TsunamiForecastCommentWarningImplCopyWithImpl<
+          _$TsunamiForecastCommentWarningImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TsunamiForecastCommentWarningToJson(
+    return _$$TsunamiForecastCommentWarningImplToJson(
       this,
     );
   }
@@ -346,10 +348,10 @@ abstract class _TsunamiForecastCommentWarning
     implements TsunamiForecastCommentWarning {
   const factory _TsunamiForecastCommentWarning(
       {required final String text,
-      required final List<String> codes}) = _$_TsunamiForecastCommentWarning;
+      required final List<String> codes}) = _$TsunamiForecastCommentWarningImpl;
 
   factory _TsunamiForecastCommentWarning.fromJson(Map<String, dynamic> json) =
-      _$_TsunamiForecastCommentWarning.fromJson;
+      _$TsunamiForecastCommentWarningImpl.fromJson;
 
   @override
   String get text;
@@ -357,6 +359,7 @@ abstract class _TsunamiForecastCommentWarning
   List<String> get codes;
   @override
   @JsonKey(ignore: true)
-  _$$_TsunamiForecastCommentWarningCopyWith<_$_TsunamiForecastCommentWarning>
+  _$$TsunamiForecastCommentWarningImplCopyWith<
+          _$TsunamiForecastCommentWarningImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
