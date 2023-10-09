@@ -68,22 +68,22 @@ class _$TopoJsonTransformCopyWithImpl<$Res, $Val extends TopoJsonTransform>
 }
 
 /// @nodoc
-abstract class _$$_TopoJsonTransformCopyWith<$Res>
+abstract class _$$TopoJsonTransformImplCopyWith<$Res>
     implements $TopoJsonTransformCopyWith<$Res> {
-  factory _$$_TopoJsonTransformCopyWith(_$_TopoJsonTransform value,
-          $Res Function(_$_TopoJsonTransform) then) =
-      __$$_TopoJsonTransformCopyWithImpl<$Res>;
+  factory _$$TopoJsonTransformImplCopyWith(_$TopoJsonTransformImpl value,
+          $Res Function(_$TopoJsonTransformImpl) then) =
+      __$$TopoJsonTransformImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<double> scale, List<double> translate});
 }
 
 /// @nodoc
-class __$$_TopoJsonTransformCopyWithImpl<$Res>
-    extends _$TopoJsonTransformCopyWithImpl<$Res, _$_TopoJsonTransform>
-    implements _$$_TopoJsonTransformCopyWith<$Res> {
-  __$$_TopoJsonTransformCopyWithImpl(
-      _$_TopoJsonTransform _value, $Res Function(_$_TopoJsonTransform) _then)
+class __$$TopoJsonTransformImplCopyWithImpl<$Res>
+    extends _$TopoJsonTransformCopyWithImpl<$Res, _$TopoJsonTransformImpl>
+    implements _$$TopoJsonTransformImplCopyWith<$Res> {
+  __$$TopoJsonTransformImplCopyWithImpl(_$TopoJsonTransformImpl _value,
+      $Res Function(_$TopoJsonTransformImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -92,7 +92,7 @@ class __$$_TopoJsonTransformCopyWithImpl<$Res>
     Object? scale = null,
     Object? translate = null,
   }) {
-    return _then(_$_TopoJsonTransform(
+    return _then(_$TopoJsonTransformImpl(
       scale: null == scale
           ? _value._scale
           : scale // ignore: cast_nullable_to_non_nullable
@@ -107,15 +107,15 @@ class __$$_TopoJsonTransformCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TopoJsonTransform implements _TopoJsonTransform {
-  const _$_TopoJsonTransform(
+class _$TopoJsonTransformImpl implements _TopoJsonTransform {
+  const _$TopoJsonTransformImpl(
       {required final List<double> scale,
       required final List<double> translate})
       : _scale = scale,
         _translate = translate;
 
-  factory _$_TopoJsonTransform.fromJson(Map<String, dynamic> json) =>
-      _$$_TopoJsonTransformFromJson(json);
+  factory _$TopoJsonTransformImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TopoJsonTransformImplFromJson(json);
 
   final List<double> _scale;
   @override
@@ -142,7 +142,7 @@ class _$_TopoJsonTransform implements _TopoJsonTransform {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TopoJsonTransform &&
+            other is _$TopoJsonTransformImpl &&
             const DeepCollectionEquality().equals(other._scale, _scale) &&
             const DeepCollectionEquality()
                 .equals(other._translate, _translate));
@@ -158,13 +158,13 @@ class _$_TopoJsonTransform implements _TopoJsonTransform {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TopoJsonTransformCopyWith<_$_TopoJsonTransform> get copyWith =>
-      __$$_TopoJsonTransformCopyWithImpl<_$_TopoJsonTransform>(
+  _$$TopoJsonTransformImplCopyWith<_$TopoJsonTransformImpl> get copyWith =>
+      __$$TopoJsonTransformImplCopyWithImpl<_$TopoJsonTransformImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TopoJsonTransformToJson(
+    return _$$TopoJsonTransformImplToJson(
       this,
     );
   }
@@ -173,10 +173,10 @@ class _$_TopoJsonTransform implements _TopoJsonTransform {
 abstract class _TopoJsonTransform implements TopoJsonTransform {
   const factory _TopoJsonTransform(
       {required final List<double> scale,
-      required final List<double> translate}) = _$_TopoJsonTransform;
+      required final List<double> translate}) = _$TopoJsonTransformImpl;
 
   factory _TopoJsonTransform.fromJson(Map<String, dynamic> json) =
-      _$_TopoJsonTransform.fromJson;
+      _$TopoJsonTransformImpl.fromJson;
 
   @override
   List<double> get scale;
@@ -184,6 +184,6 @@ abstract class _TopoJsonTransform implements TopoJsonTransform {
   List<double> get translate;
   @override
   @JsonKey(ignore: true)
-  _$$_TopoJsonTransformCopyWith<_$_TopoJsonTransform> get copyWith =>
+  _$$TopoJsonTransformImplCopyWith<_$TopoJsonTransformImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

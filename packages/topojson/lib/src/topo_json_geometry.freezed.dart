@@ -77,11 +77,11 @@ class _$LineStringCopyWithImpl<$Res, $Val extends LineString>
 }
 
 /// @nodoc
-abstract class _$$_LineStringCopyWith<$Res>
+abstract class _$$LineStringImplCopyWith<$Res>
     implements $LineStringCopyWith<$Res> {
-  factory _$$_LineStringCopyWith(
-          _$_LineString value, $Res Function(_$_LineString) then) =
-      __$$_LineStringCopyWithImpl<$Res>;
+  factory _$$LineStringImplCopyWith(
+          _$LineStringImpl value, $Res Function(_$LineStringImpl) then) =
+      __$$LineStringImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -91,11 +91,11 @@ abstract class _$$_LineStringCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_LineStringCopyWithImpl<$Res>
-    extends _$LineStringCopyWithImpl<$Res, _$_LineString>
-    implements _$$_LineStringCopyWith<$Res> {
-  __$$_LineStringCopyWithImpl(
-      _$_LineString _value, $Res Function(_$_LineString) _then)
+class __$$LineStringImplCopyWithImpl<$Res>
+    extends _$LineStringCopyWithImpl<$Res, _$LineStringImpl>
+    implements _$$LineStringImplCopyWith<$Res> {
+  __$$LineStringImplCopyWithImpl(
+      _$LineStringImpl _value, $Res Function(_$LineStringImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -105,7 +105,7 @@ class __$$_LineStringCopyWithImpl<$Res>
     Object? arcs = null,
     Object? properties = freezed,
   }) {
-    return _then(_$_LineString(
+    return _then(_$LineStringImpl(
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -124,16 +124,16 @@ class __$$_LineStringCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_LineString implements _LineString {
-  const _$_LineString(
+class _$LineStringImpl implements _LineString {
+  const _$LineStringImpl(
       {required this.type,
       required final List<int> arcs,
       required final Map<String, String?>? properties})
       : _arcs = arcs,
         _properties = properties;
 
-  factory _$_LineString.fromJson(Map<String, dynamic> json) =>
-      _$$_LineStringFromJson(json);
+  factory _$LineStringImpl.fromJson(Map<String, dynamic> json) =>
+      _$$LineStringImplFromJson(json);
 
   @override
   final TopoJsonGeometryType type;
@@ -164,7 +164,7 @@ class _$_LineString implements _LineString {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_LineString &&
+            other is _$LineStringImpl &&
             (identical(other.type, type) || other.type == type) &&
             const DeepCollectionEquality().equals(other._arcs, _arcs) &&
             const DeepCollectionEquality()
@@ -182,12 +182,12 @@ class _$_LineString implements _LineString {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_LineStringCopyWith<_$_LineString> get copyWith =>
-      __$$_LineStringCopyWithImpl<_$_LineString>(this, _$identity);
+  _$$LineStringImplCopyWith<_$LineStringImpl> get copyWith =>
+      __$$LineStringImplCopyWithImpl<_$LineStringImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_LineStringToJson(
+    return _$$LineStringImplToJson(
       this,
     );
   }
@@ -197,10 +197,10 @@ abstract class _LineString implements LineString {
   const factory _LineString(
       {required final TopoJsonGeometryType type,
       required final List<int> arcs,
-      required final Map<String, String?>? properties}) = _$_LineString;
+      required final Map<String, String?>? properties}) = _$LineStringImpl;
 
   factory _LineString.fromJson(Map<String, dynamic> json) =
-      _$_LineString.fromJson;
+      _$LineStringImpl.fromJson;
 
   @override
   TopoJsonGeometryType get type;
@@ -210,7 +210,7 @@ abstract class _LineString implements LineString {
   Map<String, String?>? get properties;
   @override
   @JsonKey(ignore: true)
-  _$$_LineStringCopyWith<_$_LineString> get copyWith =>
+  _$$LineStringImplCopyWith<_$LineStringImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -277,11 +277,11 @@ class _$MultiLineStringCopyWithImpl<$Res, $Val extends MultiLineString>
 }
 
 /// @nodoc
-abstract class _$$_MultiLineStringCopyWith<$Res>
+abstract class _$$MultiLineStringImplCopyWith<$Res>
     implements $MultiLineStringCopyWith<$Res> {
-  factory _$$_MultiLineStringCopyWith(
-          _$_MultiLineString value, $Res Function(_$_MultiLineString) then) =
-      __$$_MultiLineStringCopyWithImpl<$Res>;
+  factory _$$MultiLineStringImplCopyWith(_$MultiLineStringImpl value,
+          $Res Function(_$MultiLineStringImpl) then) =
+      __$$MultiLineStringImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -291,11 +291,11 @@ abstract class _$$_MultiLineStringCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_MultiLineStringCopyWithImpl<$Res>
-    extends _$MultiLineStringCopyWithImpl<$Res, _$_MultiLineString>
-    implements _$$_MultiLineStringCopyWith<$Res> {
-  __$$_MultiLineStringCopyWithImpl(
-      _$_MultiLineString _value, $Res Function(_$_MultiLineString) _then)
+class __$$MultiLineStringImplCopyWithImpl<$Res>
+    extends _$MultiLineStringCopyWithImpl<$Res, _$MultiLineStringImpl>
+    implements _$$MultiLineStringImplCopyWith<$Res> {
+  __$$MultiLineStringImplCopyWithImpl(
+      _$MultiLineStringImpl _value, $Res Function(_$MultiLineStringImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -305,7 +305,7 @@ class __$$_MultiLineStringCopyWithImpl<$Res>
     Object? arcs = null,
     Object? properties = freezed,
   }) {
-    return _then(_$_MultiLineString(
+    return _then(_$MultiLineStringImpl(
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -324,16 +324,16 @@ class __$$_MultiLineStringCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_MultiLineString implements _MultiLineString {
-  const _$_MultiLineString(
+class _$MultiLineStringImpl implements _MultiLineString {
+  const _$MultiLineStringImpl(
       {required this.type,
       required final List<List<int>> arcs,
       required final Map<String, String?>? properties})
       : _arcs = arcs,
         _properties = properties;
 
-  factory _$_MultiLineString.fromJson(Map<String, dynamic> json) =>
-      _$$_MultiLineStringFromJson(json);
+  factory _$MultiLineStringImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MultiLineStringImplFromJson(json);
 
   @override
   final TopoJsonGeometryType type;
@@ -364,7 +364,7 @@ class _$_MultiLineString implements _MultiLineString {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_MultiLineString &&
+            other is _$MultiLineStringImpl &&
             (identical(other.type, type) || other.type == type) &&
             const DeepCollectionEquality().equals(other._arcs, _arcs) &&
             const DeepCollectionEquality()
@@ -382,12 +382,13 @@ class _$_MultiLineString implements _MultiLineString {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_MultiLineStringCopyWith<_$_MultiLineString> get copyWith =>
-      __$$_MultiLineStringCopyWithImpl<_$_MultiLineString>(this, _$identity);
+  _$$MultiLineStringImplCopyWith<_$MultiLineStringImpl> get copyWith =>
+      __$$MultiLineStringImplCopyWithImpl<_$MultiLineStringImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MultiLineStringToJson(
+    return _$$MultiLineStringImplToJson(
       this,
     );
   }
@@ -397,10 +398,10 @@ abstract class _MultiLineString implements MultiLineString {
   const factory _MultiLineString(
       {required final TopoJsonGeometryType type,
       required final List<List<int>> arcs,
-      required final Map<String, String?>? properties}) = _$_MultiLineString;
+      required final Map<String, String?>? properties}) = _$MultiLineStringImpl;
 
   factory _MultiLineString.fromJson(Map<String, dynamic> json) =
-      _$_MultiLineString.fromJson;
+      _$MultiLineStringImpl.fromJson;
 
   @override
   TopoJsonGeometryType get type;
@@ -410,7 +411,7 @@ abstract class _MultiLineString implements MultiLineString {
   Map<String, String?>? get properties;
   @override
   @JsonKey(ignore: true)
-  _$$_MultiLineStringCopyWith<_$_MultiLineString> get copyWith =>
+  _$$MultiLineStringImplCopyWith<_$MultiLineStringImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -475,10 +476,10 @@ class _$PolygonCopyWithImpl<$Res, $Val extends Polygon>
 }
 
 /// @nodoc
-abstract class _$$_PolygonCopyWith<$Res> implements $PolygonCopyWith<$Res> {
-  factory _$$_PolygonCopyWith(
-          _$_Polygon value, $Res Function(_$_Polygon) then) =
-      __$$_PolygonCopyWithImpl<$Res>;
+abstract class _$$PolygonImplCopyWith<$Res> implements $PolygonCopyWith<$Res> {
+  factory _$$PolygonImplCopyWith(
+          _$PolygonImpl value, $Res Function(_$PolygonImpl) then) =
+      __$$PolygonImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -488,10 +489,11 @@ abstract class _$$_PolygonCopyWith<$Res> implements $PolygonCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_PolygonCopyWithImpl<$Res>
-    extends _$PolygonCopyWithImpl<$Res, _$_Polygon>
-    implements _$$_PolygonCopyWith<$Res> {
-  __$$_PolygonCopyWithImpl(_$_Polygon _value, $Res Function(_$_Polygon) _then)
+class __$$PolygonImplCopyWithImpl<$Res>
+    extends _$PolygonCopyWithImpl<$Res, _$PolygonImpl>
+    implements _$$PolygonImplCopyWith<$Res> {
+  __$$PolygonImplCopyWithImpl(
+      _$PolygonImpl _value, $Res Function(_$PolygonImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -501,7 +503,7 @@ class __$$_PolygonCopyWithImpl<$Res>
     Object? arcs = null,
     Object? properties = freezed,
   }) {
-    return _then(_$_Polygon(
+    return _then(_$PolygonImpl(
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -520,16 +522,16 @@ class __$$_PolygonCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Polygon implements _Polygon {
-  const _$_Polygon(
+class _$PolygonImpl implements _Polygon {
+  const _$PolygonImpl(
       {required this.type,
       required final List<List<int>> arcs,
       required final Map<String, String?>? properties})
       : _arcs = arcs,
         _properties = properties;
 
-  factory _$_Polygon.fromJson(Map<String, dynamic> json) =>
-      _$$_PolygonFromJson(json);
+  factory _$PolygonImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PolygonImplFromJson(json);
 
   @override
   final TopoJsonGeometryType type;
@@ -560,7 +562,7 @@ class _$_Polygon implements _Polygon {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Polygon &&
+            other is _$PolygonImpl &&
             (identical(other.type, type) || other.type == type) &&
             const DeepCollectionEquality().equals(other._arcs, _arcs) &&
             const DeepCollectionEquality()
@@ -578,12 +580,12 @@ class _$_Polygon implements _Polygon {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_PolygonCopyWith<_$_Polygon> get copyWith =>
-      __$$_PolygonCopyWithImpl<_$_Polygon>(this, _$identity);
+  _$$PolygonImplCopyWith<_$PolygonImpl> get copyWith =>
+      __$$PolygonImplCopyWithImpl<_$PolygonImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PolygonToJson(
+    return _$$PolygonImplToJson(
       this,
     );
   }
@@ -593,9 +595,9 @@ abstract class _Polygon implements Polygon {
   const factory _Polygon(
       {required final TopoJsonGeometryType type,
       required final List<List<int>> arcs,
-      required final Map<String, String?>? properties}) = _$_Polygon;
+      required final Map<String, String?>? properties}) = _$PolygonImpl;
 
-  factory _Polygon.fromJson(Map<String, dynamic> json) = _$_Polygon.fromJson;
+  factory _Polygon.fromJson(Map<String, dynamic> json) = _$PolygonImpl.fromJson;
 
   @override
   TopoJsonGeometryType get type;
@@ -605,7 +607,7 @@ abstract class _Polygon implements Polygon {
   Map<String, String?>? get properties;
   @override
   @JsonKey(ignore: true)
-  _$$_PolygonCopyWith<_$_Polygon> get copyWith =>
+  _$$PolygonImplCopyWith<_$PolygonImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -672,11 +674,11 @@ class _$MultiPolygonCopyWithImpl<$Res, $Val extends MultiPolygon>
 }
 
 /// @nodoc
-abstract class _$$_MultiPolygonCopyWith<$Res>
+abstract class _$$MultiPolygonImplCopyWith<$Res>
     implements $MultiPolygonCopyWith<$Res> {
-  factory _$$_MultiPolygonCopyWith(
-          _$_MultiPolygon value, $Res Function(_$_MultiPolygon) then) =
-      __$$_MultiPolygonCopyWithImpl<$Res>;
+  factory _$$MultiPolygonImplCopyWith(
+          _$MultiPolygonImpl value, $Res Function(_$MultiPolygonImpl) then) =
+      __$$MultiPolygonImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -686,11 +688,11 @@ abstract class _$$_MultiPolygonCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_MultiPolygonCopyWithImpl<$Res>
-    extends _$MultiPolygonCopyWithImpl<$Res, _$_MultiPolygon>
-    implements _$$_MultiPolygonCopyWith<$Res> {
-  __$$_MultiPolygonCopyWithImpl(
-      _$_MultiPolygon _value, $Res Function(_$_MultiPolygon) _then)
+class __$$MultiPolygonImplCopyWithImpl<$Res>
+    extends _$MultiPolygonCopyWithImpl<$Res, _$MultiPolygonImpl>
+    implements _$$MultiPolygonImplCopyWith<$Res> {
+  __$$MultiPolygonImplCopyWithImpl(
+      _$MultiPolygonImpl _value, $Res Function(_$MultiPolygonImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -700,7 +702,7 @@ class __$$_MultiPolygonCopyWithImpl<$Res>
     Object? arcs = null,
     Object? properties = freezed,
   }) {
-    return _then(_$_MultiPolygon(
+    return _then(_$MultiPolygonImpl(
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -719,16 +721,16 @@ class __$$_MultiPolygonCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_MultiPolygon implements _MultiPolygon {
-  const _$_MultiPolygon(
+class _$MultiPolygonImpl implements _MultiPolygon {
+  const _$MultiPolygonImpl(
       {required this.type,
       required final List<List<List<int>>> arcs,
       required final Map<String, String?>? properties})
       : _arcs = arcs,
         _properties = properties;
 
-  factory _$_MultiPolygon.fromJson(Map<String, dynamic> json) =>
-      _$$_MultiPolygonFromJson(json);
+  factory _$MultiPolygonImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MultiPolygonImplFromJson(json);
 
   @override
   final TopoJsonGeometryType type;
@@ -759,7 +761,7 @@ class _$_MultiPolygon implements _MultiPolygon {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_MultiPolygon &&
+            other is _$MultiPolygonImpl &&
             (identical(other.type, type) || other.type == type) &&
             const DeepCollectionEquality().equals(other._arcs, _arcs) &&
             const DeepCollectionEquality()
@@ -777,12 +779,12 @@ class _$_MultiPolygon implements _MultiPolygon {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_MultiPolygonCopyWith<_$_MultiPolygon> get copyWith =>
-      __$$_MultiPolygonCopyWithImpl<_$_MultiPolygon>(this, _$identity);
+  _$$MultiPolygonImplCopyWith<_$MultiPolygonImpl> get copyWith =>
+      __$$MultiPolygonImplCopyWithImpl<_$MultiPolygonImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MultiPolygonToJson(
+    return _$$MultiPolygonImplToJson(
       this,
     );
   }
@@ -792,10 +794,10 @@ abstract class _MultiPolygon implements MultiPolygon {
   const factory _MultiPolygon(
       {required final TopoJsonGeometryType type,
       required final List<List<List<int>>> arcs,
-      required final Map<String, String?>? properties}) = _$_MultiPolygon;
+      required final Map<String, String?>? properties}) = _$MultiPolygonImpl;
 
   factory _MultiPolygon.fromJson(Map<String, dynamic> json) =
-      _$_MultiPolygon.fromJson;
+      _$MultiPolygonImpl.fromJson;
 
   @override
   TopoJsonGeometryType get type;
@@ -805,7 +807,7 @@ abstract class _MultiPolygon implements MultiPolygon {
   Map<String, String?>? get properties;
   @override
   @JsonKey(ignore: true)
-  _$$_MultiPolygonCopyWith<_$_MultiPolygon> get copyWith =>
+  _$$MultiPolygonImplCopyWith<_$MultiPolygonImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -873,11 +875,11 @@ class _$GeometryCollectionCopyWithImpl<$Res, $Val extends GeometryCollection>
 }
 
 /// @nodoc
-abstract class _$$_GeometryCollectionCopyWith<$Res>
+abstract class _$$GeometryCollectionImplCopyWith<$Res>
     implements $GeometryCollectionCopyWith<$Res> {
-  factory _$$_GeometryCollectionCopyWith(_$_GeometryCollection value,
-          $Res Function(_$_GeometryCollection) then) =
-      __$$_GeometryCollectionCopyWithImpl<$Res>;
+  factory _$$GeometryCollectionImplCopyWith(_$GeometryCollectionImpl value,
+          $Res Function(_$GeometryCollectionImpl) then) =
+      __$$GeometryCollectionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -887,11 +889,11 @@ abstract class _$$_GeometryCollectionCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_GeometryCollectionCopyWithImpl<$Res>
-    extends _$GeometryCollectionCopyWithImpl<$Res, _$_GeometryCollection>
-    implements _$$_GeometryCollectionCopyWith<$Res> {
-  __$$_GeometryCollectionCopyWithImpl(
-      _$_GeometryCollection _value, $Res Function(_$_GeometryCollection) _then)
+class __$$GeometryCollectionImplCopyWithImpl<$Res>
+    extends _$GeometryCollectionCopyWithImpl<$Res, _$GeometryCollectionImpl>
+    implements _$$GeometryCollectionImplCopyWith<$Res> {
+  __$$GeometryCollectionImplCopyWithImpl(_$GeometryCollectionImpl _value,
+      $Res Function(_$GeometryCollectionImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -901,7 +903,7 @@ class __$$_GeometryCollectionCopyWithImpl<$Res>
     Object? geometries = null,
     Object? properties = freezed,
   }) {
-    return _then(_$_GeometryCollection(
+    return _then(_$GeometryCollectionImpl(
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -920,16 +922,16 @@ class __$$_GeometryCollectionCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_GeometryCollection implements _GeometryCollection {
-  const _$_GeometryCollection(
+class _$GeometryCollectionImpl implements _GeometryCollection {
+  const _$GeometryCollectionImpl(
       {required this.type,
       required final List<TopoJsonGeometryObject> geometries,
       required final Map<String, String?>? properties})
       : _geometries = geometries,
         _properties = properties;
 
-  factory _$_GeometryCollection.fromJson(Map<String, dynamic> json) =>
-      _$$_GeometryCollectionFromJson(json);
+  factory _$GeometryCollectionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$GeometryCollectionImplFromJson(json);
 
   @override
   final TopoJsonGeometryType type;
@@ -960,7 +962,7 @@ class _$_GeometryCollection implements _GeometryCollection {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_GeometryCollection &&
+            other is _$GeometryCollectionImpl &&
             (identical(other.type, type) || other.type == type) &&
             const DeepCollectionEquality()
                 .equals(other._geometries, _geometries) &&
@@ -979,13 +981,13 @@ class _$_GeometryCollection implements _GeometryCollection {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_GeometryCollectionCopyWith<_$_GeometryCollection> get copyWith =>
-      __$$_GeometryCollectionCopyWithImpl<_$_GeometryCollection>(
+  _$$GeometryCollectionImplCopyWith<_$GeometryCollectionImpl> get copyWith =>
+      __$$GeometryCollectionImplCopyWithImpl<_$GeometryCollectionImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_GeometryCollectionToJson(
+    return _$$GeometryCollectionImplToJson(
       this,
     );
   }
@@ -993,12 +995,13 @@ class _$_GeometryCollection implements _GeometryCollection {
 
 abstract class _GeometryCollection implements GeometryCollection {
   const factory _GeometryCollection(
-      {required final TopoJsonGeometryType type,
-      required final List<TopoJsonGeometryObject> geometries,
-      required final Map<String, String?>? properties}) = _$_GeometryCollection;
+          {required final TopoJsonGeometryType type,
+          required final List<TopoJsonGeometryObject> geometries,
+          required final Map<String, String?>? properties}) =
+      _$GeometryCollectionImpl;
 
   factory _GeometryCollection.fromJson(Map<String, dynamic> json) =
-      _$_GeometryCollection.fromJson;
+      _$GeometryCollectionImpl.fromJson;
 
   @override
   TopoJsonGeometryType get type;
@@ -1008,7 +1011,7 @@ abstract class _GeometryCollection implements GeometryCollection {
   Map<String, String?>? get properties;
   @override
   @JsonKey(ignore: true)
-  _$$_GeometryCollectionCopyWith<_$_GeometryCollection> get copyWith =>
+  _$$GeometryCollectionImplCopyWith<_$GeometryCollectionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1066,22 +1069,22 @@ class _$NullGeometryObjectCopyWithImpl<$Res, $Val extends NullGeometryObject>
 }
 
 /// @nodoc
-abstract class _$$_NullGeometryObjectCopyWith<$Res>
+abstract class _$$NullGeometryObjectImplCopyWith<$Res>
     implements $NullGeometryObjectCopyWith<$Res> {
-  factory _$$_NullGeometryObjectCopyWith(_$_NullGeometryObject value,
-          $Res Function(_$_NullGeometryObject) then) =
-      __$$_NullGeometryObjectCopyWithImpl<$Res>;
+  factory _$$NullGeometryObjectImplCopyWith(_$NullGeometryObjectImpl value,
+          $Res Function(_$NullGeometryObjectImpl) then) =
+      __$$NullGeometryObjectImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({TopoJsonGeometryType? type, Map<String, String?>? properties});
 }
 
 /// @nodoc
-class __$$_NullGeometryObjectCopyWithImpl<$Res>
-    extends _$NullGeometryObjectCopyWithImpl<$Res, _$_NullGeometryObject>
-    implements _$$_NullGeometryObjectCopyWith<$Res> {
-  __$$_NullGeometryObjectCopyWithImpl(
-      _$_NullGeometryObject _value, $Res Function(_$_NullGeometryObject) _then)
+class __$$NullGeometryObjectImplCopyWithImpl<$Res>
+    extends _$NullGeometryObjectCopyWithImpl<$Res, _$NullGeometryObjectImpl>
+    implements _$$NullGeometryObjectImplCopyWith<$Res> {
+  __$$NullGeometryObjectImplCopyWithImpl(_$NullGeometryObjectImpl _value,
+      $Res Function(_$NullGeometryObjectImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1090,7 +1093,7 @@ class __$$_NullGeometryObjectCopyWithImpl<$Res>
     Object? type = freezed,
     Object? properties = freezed,
   }) {
-    return _then(_$_NullGeometryObject(
+    return _then(_$NullGeometryObjectImpl(
       type: freezed == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -1105,13 +1108,13 @@ class __$$_NullGeometryObjectCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_NullGeometryObject implements _NullGeometryObject {
-  const _$_NullGeometryObject(
+class _$NullGeometryObjectImpl implements _NullGeometryObject {
+  const _$NullGeometryObjectImpl(
       {required this.type, required final Map<String, String?>? properties})
       : _properties = properties;
 
-  factory _$_NullGeometryObject.fromJson(Map<String, dynamic> json) =>
-      _$$_NullGeometryObjectFromJson(json);
+  factory _$NullGeometryObjectImpl.fromJson(Map<String, dynamic> json) =>
+      _$$NullGeometryObjectImplFromJson(json);
 
   @override
   final TopoJsonGeometryType? type;
@@ -1134,7 +1137,7 @@ class _$_NullGeometryObject implements _NullGeometryObject {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_NullGeometryObject &&
+            other is _$NullGeometryObjectImpl &&
             (identical(other.type, type) || other.type == type) &&
             const DeepCollectionEquality()
                 .equals(other._properties, _properties));
@@ -1148,13 +1151,13 @@ class _$_NullGeometryObject implements _NullGeometryObject {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_NullGeometryObjectCopyWith<_$_NullGeometryObject> get copyWith =>
-      __$$_NullGeometryObjectCopyWithImpl<_$_NullGeometryObject>(
+  _$$NullGeometryObjectImplCopyWith<_$NullGeometryObjectImpl> get copyWith =>
+      __$$NullGeometryObjectImplCopyWithImpl<_$NullGeometryObjectImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_NullGeometryObjectToJson(
+    return _$$NullGeometryObjectImplToJson(
       this,
     );
   }
@@ -1162,11 +1165,12 @@ class _$_NullGeometryObject implements _NullGeometryObject {
 
 abstract class _NullGeometryObject implements NullGeometryObject {
   const factory _NullGeometryObject(
-      {required final TopoJsonGeometryType? type,
-      required final Map<String, String?>? properties}) = _$_NullGeometryObject;
+          {required final TopoJsonGeometryType? type,
+          required final Map<String, String?>? properties}) =
+      _$NullGeometryObjectImpl;
 
   factory _NullGeometryObject.fromJson(Map<String, dynamic> json) =
-      _$_NullGeometryObject.fromJson;
+      _$NullGeometryObjectImpl.fromJson;
 
   @override
   TopoJsonGeometryType? get type;
@@ -1174,6 +1178,6 @@ abstract class _NullGeometryObject implements NullGeometryObject {
   Map<String, String?>? get properties;
   @override
   @JsonKey(ignore: true)
-  _$$_NullGeometryObjectCopyWith<_$_NullGeometryObject> get copyWith =>
+  _$$NullGeometryObjectImplCopyWith<_$NullGeometryObjectImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

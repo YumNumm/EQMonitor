@@ -307,10 +307,9 @@ abstract class $AnalyzedKmoniObservationPointCopyWith<$Res> {
       {KmoniObservationPoint point,
       double? intensityValue,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color? intensityColor,
+      Color? intensityColor,
       double? pga,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color? pgaColor});
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? pgaColor});
 
   $KmoniObservationPointCopyWith<$Res> get point;
 }
@@ -381,10 +380,9 @@ abstract class _$$_AnalyzedKmoniObservationPointCopyWith<$Res>
       {KmoniObservationPoint point,
       double? intensityValue,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color? intensityColor,
+      Color? intensityColor,
       double? pga,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color? pgaColor});
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? pgaColor});
 
   @override
   $KmoniObservationPointCopyWith<$Res> get point;
@@ -442,10 +440,9 @@ class _$_AnalyzedKmoniObservationPoint
       {required this.point,
       this.intensityValue,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          this.intensityColor,
+      this.intensityColor,
       this.pga,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          this.pgaColor});
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) this.pgaColor});
 
   @override
   final KmoniObservationPoint point;
@@ -499,10 +496,10 @@ abstract class _AnalyzedKmoniObservationPoint
       {required final KmoniObservationPoint point,
       final double? intensityValue,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          final Color? intensityColor,
+      final Color? intensityColor,
       final double? pga,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          final Color? pgaColor}) = _$_AnalyzedKmoniObservationPoint;
+      final Color? pgaColor}) = _$_AnalyzedKmoniObservationPoint;
 
   @override
   KmoniObservationPoint get point;

@@ -37,6 +37,8 @@ extension $SetupRouteExtension on SetupRoute {
 
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $earthquakeHistoryRoute => GoRouteData.$route(
@@ -58,6 +60,8 @@ extension $EarthquakeHistoryRouteExtension on EarthquakeHistoryRoute {
 
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $earthquakeHistoryDetailsRoute => GoRouteData.$route(
@@ -82,6 +86,8 @@ extension $EarthquakeHistoryDetailsRouteExtension
 
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $eewDetailedHistoryRoute => GoRouteData.$route(
@@ -105,6 +111,8 @@ extension $EewDetailedHistoryRouteExtension on EewDetailedHistoryRoute {
 
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $colorSchemeConfigRoute => GoRouteData.$route(
@@ -126,6 +134,8 @@ extension $ColorSchemeConfigRouteExtension on ColorSchemeConfigRoute {
 
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $homeRoute => GoRouteData.$route(
@@ -146,6 +156,8 @@ extension $HomeRouteExtension on HomeRoute {
 
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $talkerRoute => GoRouteData.$route(
@@ -166,6 +178,8 @@ extension $TalkerRouteExtension on TalkerRoute {
 
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $kmoniRoute => GoRouteData.$route(
@@ -186,6 +200,8 @@ extension $KmoniRouteExtension on KmoniRoute {
 
   void pushReplacement(BuildContext context) =>
       context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
 }
 
 // **************************************************************************
@@ -206,4 +222,5 @@ final goRouterProvider = Provider<GoRouter>.internal(
 );
 
 typedef GoRouterRef = ProviderRef<GoRouter>;
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

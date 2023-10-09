@@ -71,7 +71,7 @@ jobs:
       - name: build_runner
         run: |
           echo '${{ secrets.ENV }}' | base64 -d > .env
-          melos run build_runner
+          melos generate
 
       - name: Accept Android License
         run: yes | flutter doctor --android-licenses

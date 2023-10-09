@@ -98,10 +98,11 @@ class _$TopoJsonCopyWithImpl<$Res, $Val extends TopoJson>
 }
 
 /// @nodoc
-abstract class _$$_TopoJsonCopyWith<$Res> implements $TopoJsonCopyWith<$Res> {
-  factory _$$_TopoJsonCopyWith(
-          _$_TopoJson value, $Res Function(_$_TopoJson) then) =
-      __$$_TopoJsonCopyWithImpl<$Res>;
+abstract class _$$TopoJsonImplCopyWith<$Res>
+    implements $TopoJsonCopyWith<$Res> {
+  factory _$$TopoJsonImplCopyWith(
+          _$TopoJsonImpl value, $Res Function(_$TopoJsonImpl) then) =
+      __$$TopoJsonImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -115,11 +116,11 @@ abstract class _$$_TopoJsonCopyWith<$Res> implements $TopoJsonCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_TopoJsonCopyWithImpl<$Res>
-    extends _$TopoJsonCopyWithImpl<$Res, _$_TopoJson>
-    implements _$$_TopoJsonCopyWith<$Res> {
-  __$$_TopoJsonCopyWithImpl(
-      _$_TopoJson _value, $Res Function(_$_TopoJson) _then)
+class __$$TopoJsonImplCopyWithImpl<$Res>
+    extends _$TopoJsonCopyWithImpl<$Res, _$TopoJsonImpl>
+    implements _$$TopoJsonImplCopyWith<$Res> {
+  __$$TopoJsonImplCopyWithImpl(
+      _$TopoJsonImpl _value, $Res Function(_$TopoJsonImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -130,7 +131,7 @@ class __$$_TopoJsonCopyWithImpl<$Res>
     Object? objects = null,
     Object? arcs = null,
   }) {
-    return _then(_$_TopoJson(
+    return _then(_$TopoJsonImpl(
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -153,8 +154,8 @@ class __$$_TopoJsonCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TopoJson implements _TopoJson {
-  const _$_TopoJson(
+class _$TopoJsonImpl implements _TopoJson {
+  const _$TopoJsonImpl(
       {required this.type,
       required this.transform,
       required final Map<String, TopoJsonGeometryObject> objects,
@@ -162,8 +163,8 @@ class _$_TopoJson implements _TopoJson {
       : _objects = objects,
         _arcs = arcs;
 
-  factory _$_TopoJson.fromJson(Map<String, dynamic> json) =>
-      _$$_TopoJsonFromJson(json);
+  factory _$TopoJsonImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TopoJsonImplFromJson(json);
 
   @override
   final String type;
@@ -194,7 +195,7 @@ class _$_TopoJson implements _TopoJson {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TopoJson &&
+            other is _$TopoJsonImpl &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.transform, transform) ||
                 other.transform == transform) &&
@@ -214,12 +215,12 @@ class _$_TopoJson implements _TopoJson {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TopoJsonCopyWith<_$_TopoJson> get copyWith =>
-      __$$_TopoJsonCopyWithImpl<_$_TopoJson>(this, _$identity);
+  _$$TopoJsonImplCopyWith<_$TopoJsonImpl> get copyWith =>
+      __$$TopoJsonImplCopyWithImpl<_$TopoJsonImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TopoJsonToJson(
+    return _$$TopoJsonImplToJson(
       this,
     );
   }
@@ -230,9 +231,10 @@ abstract class _TopoJson implements TopoJson {
       {required final String type,
       required final TopoJsonTransform? transform,
       required final Map<String, TopoJsonGeometryObject> objects,
-      required final List<List<List<int>>> arcs}) = _$_TopoJson;
+      required final List<List<List<int>>> arcs}) = _$TopoJsonImpl;
 
-  factory _TopoJson.fromJson(Map<String, dynamic> json) = _$_TopoJson.fromJson;
+  factory _TopoJson.fromJson(Map<String, dynamic> json) =
+      _$TopoJsonImpl.fromJson;
 
   @override
   String get type;
@@ -244,6 +246,6 @@ abstract class _TopoJson implements TopoJson {
   List<List<List<int>>> get arcs;
   @override
   @JsonKey(ignore: true)
-  _$$_TopoJsonCopyWith<_$_TopoJson> get copyWith =>
+  _$$TopoJsonImplCopyWith<_$TopoJsonImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

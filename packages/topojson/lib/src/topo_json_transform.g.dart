@@ -8,12 +8,13 @@ part of 'topo_json_transform.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_TopoJsonTransform _$$_TopoJsonTransformFromJson(Map<String, dynamic> json) =>
+_$TopoJsonTransformImpl _$$TopoJsonTransformImplFromJson(
+        Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TopoJsonTransform',
+      r'_$TopoJsonTransformImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TopoJsonTransform(
+        final val = _$TopoJsonTransformImpl(
           scale: $checkedConvert(
               'scale',
               (v) => (v as List<dynamic>)
@@ -29,8 +30,8 @@ _$_TopoJsonTransform _$$_TopoJsonTransformFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_TopoJsonTransformToJson(
-        _$_TopoJsonTransform instance) =>
+Map<String, dynamic> _$$TopoJsonTransformImplToJson(
+        _$TopoJsonTransformImpl instance) =>
     <String, dynamic>{
       'scale': instance.scale,
       'translate': instance.translate,

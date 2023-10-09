@@ -8,12 +8,12 @@ part of 'topology_map.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_TopologyMap _$$_TopologyMapFromJson(Map<String, dynamic> json) =>
+_$TopologyMapImpl _$$TopologyMapImplFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TopologyMap',
+      r'_$TopologyMapImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TopologyMap(
+        final val = _$TopologyMapImpl(
           scale: $checkedConvert(
               'scale', (v) => DoubleVector.fromJson(v as Map<String, dynamic>)),
           translate: $checkedConvert('translate',
@@ -34,7 +34,7 @@ _$_TopologyMap _$$_TopologyMapFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_TopologyMapToJson(_$_TopologyMap instance) =>
+Map<String, dynamic> _$$TopologyMapImplToJson(_$TopologyMapImpl instance) =>
     <String, dynamic>{
       'scale': instance.scale,
       'translate': instance.translate,
@@ -42,12 +42,12 @@ Map<String, dynamic> _$$_TopologyMapToJson(_$_TopologyMap instance) =>
       'arcs': instance.arcs,
     };
 
-_$_TopologyArc _$$_TopologyArcFromJson(Map<String, dynamic> json) =>
+_$TopologyArcImpl _$$TopologyArcImplFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TopologyArc',
+      r'_$TopologyArcImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TopologyArc(
+        final val = _$TopologyArcImpl(
           arc: $checkedConvert(
               'arc',
               (v) => (v as List<dynamic>)
@@ -60,7 +60,7 @@ _$_TopologyArc _$$_TopologyArcFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_TopologyArcToJson(_$_TopologyArc instance) =>
+Map<String, dynamic> _$$TopologyArcImplToJson(_$TopologyArcImpl instance) =>
     <String, dynamic>{
       'arc': instance.arc,
       'type': _$TopologyArcTypeEnumMap[instance.type]!,
@@ -72,12 +72,13 @@ const _$TopologyArcTypeEnumMap = {
   TopologyArcType.area: 'area',
 };
 
-_$_TopologyPolygon _$$_TopologyPolygonFromJson(Map<String, dynamic> json) =>
+_$TopologyPolygonImpl _$$TopologyPolygonImplFromJson(
+        Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TopologyPolygon',
+      r'_$TopologyPolygonImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TopologyPolygon(
+        final val = _$TopologyPolygonImpl(
           arcs: $checkedConvert(
               'arcs',
               (v) => (v as List<dynamic>)
@@ -90,7 +91,8 @@ _$_TopologyPolygon _$$_TopologyPolygonFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_TopologyPolygonToJson(_$_TopologyPolygon instance) =>
+Map<String, dynamic> _$$TopologyPolygonImplToJson(
+        _$TopologyPolygonImpl instance) =>
     <String, dynamic>{
       'arcs': instance.arcs,
       'areaCode': instance.areaCode,

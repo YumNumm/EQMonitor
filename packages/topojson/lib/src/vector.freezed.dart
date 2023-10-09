@@ -68,22 +68,22 @@ class _$DoubleVectorCopyWithImpl<$Res, $Val extends DoubleVector>
 }
 
 /// @nodoc
-abstract class _$$_DoubleVectorCopyWith<$Res>
+abstract class _$$DoubleVectorImplCopyWith<$Res>
     implements $DoubleVectorCopyWith<$Res> {
-  factory _$$_DoubleVectorCopyWith(
-          _$_DoubleVector value, $Res Function(_$_DoubleVector) then) =
-      __$$_DoubleVectorCopyWithImpl<$Res>;
+  factory _$$DoubleVectorImplCopyWith(
+          _$DoubleVectorImpl value, $Res Function(_$DoubleVectorImpl) then) =
+      __$$DoubleVectorImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({double x, double y});
 }
 
 /// @nodoc
-class __$$_DoubleVectorCopyWithImpl<$Res>
-    extends _$DoubleVectorCopyWithImpl<$Res, _$_DoubleVector>
-    implements _$$_DoubleVectorCopyWith<$Res> {
-  __$$_DoubleVectorCopyWithImpl(
-      _$_DoubleVector _value, $Res Function(_$_DoubleVector) _then)
+class __$$DoubleVectorImplCopyWithImpl<$Res>
+    extends _$DoubleVectorCopyWithImpl<$Res, _$DoubleVectorImpl>
+    implements _$$DoubleVectorImplCopyWith<$Res> {
+  __$$DoubleVectorImplCopyWithImpl(
+      _$DoubleVectorImpl _value, $Res Function(_$DoubleVectorImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -92,7 +92,7 @@ class __$$_DoubleVectorCopyWithImpl<$Res>
     Object? x = null,
     Object? y = null,
   }) {
-    return _then(_$_DoubleVector(
+    return _then(_$DoubleVectorImpl(
       x: null == x
           ? _value.x
           : x // ignore: cast_nullable_to_non_nullable
@@ -107,11 +107,11 @@ class __$$_DoubleVectorCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_DoubleVector implements _DoubleVector {
-  const _$_DoubleVector({required this.x, required this.y});
+class _$DoubleVectorImpl implements _DoubleVector {
+  const _$DoubleVectorImpl({required this.x, required this.y});
 
-  factory _$_DoubleVector.fromJson(Map<String, dynamic> json) =>
-      _$$_DoubleVectorFromJson(json);
+  factory _$DoubleVectorImpl.fromJson(Map<String, dynamic> json) =>
+      _$$DoubleVectorImplFromJson(json);
 
   @override
   final double x;
@@ -127,7 +127,7 @@ class _$_DoubleVector implements _DoubleVector {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_DoubleVector &&
+            other is _$DoubleVectorImpl &&
             (identical(other.x, x) || other.x == x) &&
             (identical(other.y, y) || other.y == y));
   }
@@ -139,12 +139,12 @@ class _$_DoubleVector implements _DoubleVector {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_DoubleVectorCopyWith<_$_DoubleVector> get copyWith =>
-      __$$_DoubleVectorCopyWithImpl<_$_DoubleVector>(this, _$identity);
+  _$$DoubleVectorImplCopyWith<_$DoubleVectorImpl> get copyWith =>
+      __$$DoubleVectorImplCopyWithImpl<_$DoubleVectorImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_DoubleVectorToJson(
+    return _$$DoubleVectorImplToJson(
       this,
     );
   }
@@ -152,10 +152,10 @@ class _$_DoubleVector implements _DoubleVector {
 
 abstract class _DoubleVector implements DoubleVector {
   const factory _DoubleVector(
-      {required final double x, required final double y}) = _$_DoubleVector;
+      {required final double x, required final double y}) = _$DoubleVectorImpl;
 
   factory _DoubleVector.fromJson(Map<String, dynamic> json) =
-      _$_DoubleVector.fromJson;
+      _$DoubleVectorImpl.fromJson;
 
   @override
   double get x;
@@ -163,7 +163,7 @@ abstract class _DoubleVector implements DoubleVector {
   double get y;
   @override
   @JsonKey(ignore: true)
-  _$$_DoubleVectorCopyWith<_$_DoubleVector> get copyWith =>
+  _$$DoubleVectorImplCopyWith<_$DoubleVectorImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -220,21 +220,22 @@ class _$IntVectorCopyWithImpl<$Res, $Val extends IntVector>
 }
 
 /// @nodoc
-abstract class _$$_IntVectorCopyWith<$Res> implements $IntVectorCopyWith<$Res> {
-  factory _$$_IntVectorCopyWith(
-          _$_IntVector value, $Res Function(_$_IntVector) then) =
-      __$$_IntVectorCopyWithImpl<$Res>;
+abstract class _$$IntVectorImplCopyWith<$Res>
+    implements $IntVectorCopyWith<$Res> {
+  factory _$$IntVectorImplCopyWith(
+          _$IntVectorImpl value, $Res Function(_$IntVectorImpl) then) =
+      __$$IntVectorImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int x, int y});
 }
 
 /// @nodoc
-class __$$_IntVectorCopyWithImpl<$Res>
-    extends _$IntVectorCopyWithImpl<$Res, _$_IntVector>
-    implements _$$_IntVectorCopyWith<$Res> {
-  __$$_IntVectorCopyWithImpl(
-      _$_IntVector _value, $Res Function(_$_IntVector) _then)
+class __$$IntVectorImplCopyWithImpl<$Res>
+    extends _$IntVectorCopyWithImpl<$Res, _$IntVectorImpl>
+    implements _$$IntVectorImplCopyWith<$Res> {
+  __$$IntVectorImplCopyWithImpl(
+      _$IntVectorImpl _value, $Res Function(_$IntVectorImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -243,7 +244,7 @@ class __$$_IntVectorCopyWithImpl<$Res>
     Object? x = null,
     Object? y = null,
   }) {
-    return _then(_$_IntVector(
+    return _then(_$IntVectorImpl(
       x: null == x
           ? _value.x
           : x // ignore: cast_nullable_to_non_nullable
@@ -258,11 +259,11 @@ class __$$_IntVectorCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_IntVector implements _IntVector {
-  const _$_IntVector({required this.x, required this.y});
+class _$IntVectorImpl implements _IntVector {
+  const _$IntVectorImpl({required this.x, required this.y});
 
-  factory _$_IntVector.fromJson(Map<String, dynamic> json) =>
-      _$$_IntVectorFromJson(json);
+  factory _$IntVectorImpl.fromJson(Map<String, dynamic> json) =>
+      _$$IntVectorImplFromJson(json);
 
   @override
   final int x;
@@ -278,7 +279,7 @@ class _$_IntVector implements _IntVector {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_IntVector &&
+            other is _$IntVectorImpl &&
             (identical(other.x, x) || other.x == x) &&
             (identical(other.y, y) || other.y == y));
   }
@@ -290,12 +291,12 @@ class _$_IntVector implements _IntVector {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_IntVectorCopyWith<_$_IntVector> get copyWith =>
-      __$$_IntVectorCopyWithImpl<_$_IntVector>(this, _$identity);
+  _$$IntVectorImplCopyWith<_$IntVectorImpl> get copyWith =>
+      __$$IntVectorImplCopyWithImpl<_$IntVectorImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_IntVectorToJson(
+    return _$$IntVectorImplToJson(
       this,
     );
   }
@@ -303,10 +304,10 @@ class _$_IntVector implements _IntVector {
 
 abstract class _IntVector implements IntVector {
   const factory _IntVector({required final int x, required final int y}) =
-      _$_IntVector;
+      _$IntVectorImpl;
 
   factory _IntVector.fromJson(Map<String, dynamic> json) =
-      _$_IntVector.fromJson;
+      _$IntVectorImpl.fromJson;
 
   @override
   int get x;
@@ -314,6 +315,6 @@ abstract class _IntVector implements IntVector {
   int get y;
   @override
   @JsonKey(ignore: true)
-  _$$_IntVectorCopyWith<_$_IntVector> get copyWith =>
+  _$$IntVectorImplCopyWith<_$IntVectorImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

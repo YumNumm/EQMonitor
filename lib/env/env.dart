@@ -10,9 +10,9 @@ part 'env.g.dart';
 )
 abstract class Env {
   @EnviedField(varName: 'REST_API_URL')
-  static final restApiUrl = _Env.restApiUrl;
+  static final String restApiUrl = _Env.restApiUrl;
   @EnviedField(varName: 'WS_API_URL')
-  static final wsApiUrl = _Env.wsApiUrl;
+  static final String wsApiUrl = _Env.wsApiUrl;
   @EnviedField(varName: 'API_AUTHORIZATION')
-  static final apiAuthorization = _Env.apiAuthorization;
+  static final String apiAuthorization = _Env.apiAuthorization;
 }
