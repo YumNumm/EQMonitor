@@ -3,7 +3,6 @@ repository: https://github.com/YumNumm/EQMonitor
 
 command:
   version:
-    includeCommitId: true
     linkToCommits: true
 
 scripts:
@@ -18,8 +17,16 @@ scripts:
        - Note: you can also rely on your IDEs Dart Analysis / Issues window.
 
   generate:
-    run: melos exec -c 1 --depends-on="build_runner" -- "dart run build_runner build --delete-conflicting-outputs"
-    description: Build all generated files for packages in this project.
+    run: melos run generate:dart && melos run generate:flutter
+    description: Build all generated files for Dart & Flutter packages in this project.
+
+  generate:dart:
+    run: melos exec -c 1 --depends-on="build_runner" --no-flutter --ignore="riverpod_lint_flutter_test" -- "dart run build_runner build --delete-conflicting-outputs"
+    description: Build all generated files for Dart packages in this project.
+
+  generate:flutter:
+    run: melos exec -c 1 --depends-on="build_runner" --flutter -- "flutter pub run build_runner build --delete-conflicting-outputs"
+    description: Build all generated files for Flutter packages in this project.
 
   format:
     exec: $PWD/util/shell/format.sh
