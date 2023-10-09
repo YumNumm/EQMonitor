@@ -3,20 +3,19 @@ import 'package:eqapi_schema/eqapi_schema.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
-import 'package:eqmonitor/core/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/provider/topology_map/provider/topology_maps.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/viewmodel/earthquake_history_view_model.dart';
-import 'package:eqmonitor/feature/earthquake_history_details/component/eq_map.dart';
+import 'package:eqmonitor/feature/earthquake_history_details/component/earthquake_map.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/prefecture_intensity.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -45,10 +44,8 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
       );
     }
     final sheetController = SheetController();
-
-    final mapKey = useMemoized(
-      () => GlobalKey(debugLabel: 'eq-history-map-${data.eventId}'),
-    );
+    final zoomCachedMapData =
+        ref.watch(zoomCachedProjectedFeatureLayerProvider).valueOrNull;
 
     return Scaffold(
       appBar: AppBar(
@@ -58,9 +55,16 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
       ),
       body: Stack(
         children: [
-          RepaintBoundary(
-            child: EarthquakeHistoryMap(item: data, mapKey: mapKey),
-          ),
+          if (zoomCachedMapData == null)
+            const Center(child: CircularProgressIndicator())
+          else
+            RepaintBoundary(
+              child: EarthquakeMapWidget(
+                item: data,
+                showIntensityIcon: true,
+                mapData: zoomCachedMapData,
+              ),
+            ),
           RepaintBoundary(
             child: Stack(
               children: [
@@ -70,11 +74,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                     FloatingActionButton.small(
                       heroTag: 'home',
                       onPressed: () {
-                        ref
-                            .read(mapViewModelProvider(mapKey).notifier)
-                            .animatedApplyBounds(
-                              bottom: 0.3,
-                            );
+                        throw UnimplementedError();
                       },
                       elevation: 4,
                       child: const Icon(Icons.home),
