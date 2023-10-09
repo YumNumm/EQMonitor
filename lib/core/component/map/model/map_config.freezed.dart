@@ -237,19 +237,19 @@ abstract class $MapColorSchemeCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color backgroundColor,
+      Color backgroundColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color worldLandColor,
+      Color worldLandColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color worldCoastlineColor,
+      Color worldCoastlineColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color worldBorderLineColor,
+      Color worldBorderLineColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color japanLandColor,
+      Color japanLandColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color japanCoastlineColor,
+      Color japanCoastlineColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color japanBorderLineColor});
+      Color japanBorderLineColor});
 }
 
 /// @nodoc
@@ -316,19 +316,19 @@ abstract class _$$_MapColorSchemeCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color backgroundColor,
+      Color backgroundColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color worldLandColor,
+      Color worldLandColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color worldCoastlineColor,
+      Color worldCoastlineColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color worldBorderLineColor,
+      Color worldBorderLineColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color japanLandColor,
+      Color japanLandColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color japanCoastlineColor,
+      Color japanCoastlineColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          Color japanBorderLineColor});
+      Color japanBorderLineColor});
 }
 
 /// @nodoc
@@ -388,19 +388,19 @@ class __$$_MapColorSchemeCopyWithImpl<$Res>
 class _$_MapColorScheme implements _MapColorScheme {
   const _$_MapColorScheme(
       {@JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required this.backgroundColor,
+      required this.backgroundColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required this.worldLandColor,
+      required this.worldLandColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required this.worldCoastlineColor,
+      required this.worldCoastlineColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required this.worldBorderLineColor,
+      required this.worldBorderLineColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required this.japanLandColor,
+      required this.japanLandColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required this.japanCoastlineColor,
+      required this.japanCoastlineColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required this.japanBorderLineColor});
+      required this.japanBorderLineColor});
 
   factory _$_MapColorScheme.fromJson(Map<String, dynamic> json) =>
       _$$_MapColorSchemeFromJson(json);
@@ -482,19 +482,19 @@ class _$_MapColorScheme implements _MapColorScheme {
 abstract class _MapColorScheme implements MapColorScheme {
   const factory _MapColorScheme(
       {@JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required final Color backgroundColor,
+      required final Color backgroundColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required final Color worldLandColor,
+      required final Color worldLandColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required final Color worldCoastlineColor,
+      required final Color worldCoastlineColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required final Color worldBorderLineColor,
+      required final Color worldBorderLineColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required final Color japanLandColor,
+      required final Color japanLandColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required final Color japanCoastlineColor,
+      required final Color japanCoastlineColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required final Color japanBorderLineColor}) = _$_MapColorScheme;
+      required final Color japanBorderLineColor}) = _$_MapColorScheme;
 
   factory _MapColorScheme.fromJson(Map<String, dynamic> json) =
       _$_MapColorScheme.fromJson;

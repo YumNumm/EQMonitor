@@ -585,9 +585,9 @@ class __$$_TextColorModelCopyWithImpl<$Res>
 class _$_TextColorModel implements _TextColorModel {
   const _$_TextColorModel(
       {@JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required this.foreground,
+      required this.foreground,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required this.background});
+      required this.background});
 
   factory _$_TextColorModel.fromJson(Map<String, dynamic> json) =>
       _$$_TextColorModelFromJson(json);
@@ -636,9 +636,9 @@ class _$_TextColorModel implements _TextColorModel {
 abstract class _TextColorModel implements TextColorModel {
   const factory _TextColorModel(
       {@JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required final Color foreground,
+      required final Color foreground,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-          required final Color background}) = _$_TextColorModel;
+      required final Color background}) = _$_TextColorModel;
 
   factory _TextColorModel.fromJson(Map<String, dynamic> json) =
       _$_TextColorModel.fromJson;

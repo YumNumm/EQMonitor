@@ -113,7 +113,7 @@ class __$$_MapStateCopyWithImpl<$Res>
 class _$_MapState implements _MapState {
   const _$_MapState(
       {@JsonKey(fromJson: _offsetFromJson, toJson: _offsetToJson)
-          required this.offset,
+      required this.offset,
       required this.zoomLevel});
 
   factory _$_MapState.fromJson(Map<String, dynamic> json) =>
@@ -161,7 +161,7 @@ class _$_MapState implements _MapState {
 abstract class _MapState implements MapState {
   const factory _MapState(
       {@JsonKey(fromJson: _offsetFromJson, toJson: _offsetToJson)
-          required final Offset offset,
+      required final Offset offset,
       required final double zoomLevel}) = _$_MapState;
 
   factory _MapState.fromJson(Map<String, dynamic> json) = _$_MapState.fromJson;

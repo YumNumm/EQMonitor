@@ -86,8 +86,8 @@ class MapConfigStateProvider
     extends NotifierProviderImpl<MapConfigState, MapConfig> {
   /// See also [MapConfigState].
   MapConfigStateProvider(
-    this.themeMode,
-  ) : super.internal(
+    ThemeMode themeMode,
+  ) : this._internal(
           () => MapConfigState()..themeMode = themeMode,
           from: mapConfigStateProvider,
           name: r'mapConfigStateProvider',
@@ -98,9 +98,50 @@ class MapConfigStateProvider
           dependencies: MapConfigStateFamily._dependencies,
           allTransitiveDependencies:
               MapConfigStateFamily._allTransitiveDependencies,
+          themeMode: themeMode,
         );
 
+  MapConfigStateProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.themeMode,
+  }) : super.internal();
+
   final ThemeMode themeMode;
+
+  @override
+  MapConfig runNotifierBuild(
+    covariant MapConfigState notifier,
+  ) {
+    return notifier.build(
+      themeMode,
+    );
+  }
+
+  @override
+  Override overrideWith(MapConfigState Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: MapConfigStateProvider._internal(
+        () => create()..themeMode = themeMode,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        themeMode: themeMode,
+      ),
+    );
+  }
+
+  @override
+  NotifierProviderElement<MapConfigState, MapConfig> createElement() {
+    return _MapConfigStateProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -114,14 +155,20 @@ class MapConfigStateProvider
 
     return _SystemHash.finish(hash);
   }
+}
+
+mixin MapConfigStateRef on NotifierProviderRef<MapConfig> {
+  /// The parameter `themeMode` of this provider.
+  ThemeMode get themeMode;
+}
+
+class _MapConfigStateProviderElement
+    extends NotifierProviderElement<MapConfigState, MapConfig>
+    with MapConfigStateRef {
+  _MapConfigStateProviderElement(super.provider);
 
   @override
-  MapConfig runNotifierBuild(
-    covariant MapConfigState notifier,
-  ) {
-    return notifier.build(
-      themeMode,
-    );
-  }
+  ThemeMode get themeMode => (origin as MapConfigStateProvider).themeMode;
 }
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

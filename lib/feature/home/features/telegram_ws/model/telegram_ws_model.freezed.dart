@@ -36,8 +36,9 @@ abstract class $TelegramWsModelCopyWith<$Res> {
       _$TelegramWsModelCopyWithImpl<$Res, TelegramWsModel>;
   @useResult
   $Res call(
-      {@JsonKey(fromJson: telegramWsModelFromJson, toJson: telegramWsModelToJson)
-          Stream<TelegramV3> telegramStream});
+      {@JsonKey(
+          fromJson: telegramWsModelFromJson, toJson: telegramWsModelToJson)
+      Stream<TelegramV3> telegramStream});
 }
 
 /// @nodoc
@@ -73,8 +74,9 @@ abstract class _$$_TelegramWsModelCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(fromJson: telegramWsModelFromJson, toJson: telegramWsModelToJson)
-          Stream<TelegramV3> telegramStream});
+      {@JsonKey(
+          fromJson: telegramWsModelFromJson, toJson: telegramWsModelToJson)
+      Stream<TelegramV3> telegramStream});
 }
 
 /// @nodoc
@@ -103,8 +105,9 @@ class __$$_TelegramWsModelCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_TelegramWsModel implements _TelegramWsModel {
   const _$_TelegramWsModel(
-      {@JsonKey(fromJson: telegramWsModelFromJson, toJson: telegramWsModelToJson)
-          required this.telegramStream});
+      {@JsonKey(
+          fromJson: telegramWsModelFromJson, toJson: telegramWsModelToJson)
+      required this.telegramStream});
 
   factory _$_TelegramWsModel.fromJson(Map<String, dynamic> json) =>
       _$$_TelegramWsModelFromJson(json);
@@ -147,9 +150,9 @@ class _$_TelegramWsModel implements _TelegramWsModel {
 
 abstract class _TelegramWsModel implements TelegramWsModel {
   const factory _TelegramWsModel(
-      {@JsonKey(fromJson: telegramWsModelFromJson, toJson: telegramWsModelToJson)
-          required final Stream<TelegramV3>
-              telegramStream}) = _$_TelegramWsModel;
+      {@JsonKey(
+          fromJson: telegramWsModelFromJson, toJson: telegramWsModelToJson)
+      required final Stream<TelegramV3> telegramStream}) = _$_TelegramWsModel;
 
   factory _TelegramWsModel.fromJson(Map<String, dynamic> json) =
       _$_TelegramWsModel.fromJson;

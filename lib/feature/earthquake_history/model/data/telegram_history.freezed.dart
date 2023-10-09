@@ -41,8 +41,10 @@ abstract class $TelegramHistoryV3CopyWith<$Res> {
       _$TelegramHistoryV3CopyWithImpl<$Res, TelegramHistoryV3>;
   @useResult
   $Res call(
-      {@JsonKey(fromJson: _telegramHistoryV3DataFromJson, toJson: _telegramHistoryV3DataToJson)
-          Map<String, List<TelegramV3>>? results,
+      {@JsonKey(
+          fromJson: _telegramHistoryV3DataFromJson,
+          toJson: _telegramHistoryV3DataToJson)
+      Map<String, List<TelegramV3>>? results,
       bool success,
       D1DbExecutionResult meta});
 
@@ -100,8 +102,10 @@ abstract class _$$_TelegramHistoryV3CopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(fromJson: _telegramHistoryV3DataFromJson, toJson: _telegramHistoryV3DataToJson)
-          Map<String, List<TelegramV3>>? results,
+      {@JsonKey(
+          fromJson: _telegramHistoryV3DataFromJson,
+          toJson: _telegramHistoryV3DataToJson)
+      Map<String, List<TelegramV3>>? results,
       bool success,
       D1DbExecutionResult meta});
 
@@ -145,8 +149,10 @@ class __$$_TelegramHistoryV3CopyWithImpl<$Res>
 @JsonSerializable()
 class _$_TelegramHistoryV3 implements _TelegramHistoryV3 {
   const _$_TelegramHistoryV3(
-      {@JsonKey(fromJson: _telegramHistoryV3DataFromJson, toJson: _telegramHistoryV3DataToJson)
-          required final Map<String, List<TelegramV3>>? results,
+      {@JsonKey(
+          fromJson: _telegramHistoryV3DataFromJson,
+          toJson: _telegramHistoryV3DataToJson)
+      required final Map<String, List<TelegramV3>>? results,
       required this.success,
       required this.meta})
       : _results = results;
@@ -209,8 +215,10 @@ class _$_TelegramHistoryV3 implements _TelegramHistoryV3 {
 
 abstract class _TelegramHistoryV3 implements TelegramHistoryV3 {
   const factory _TelegramHistoryV3(
-      {@JsonKey(fromJson: _telegramHistoryV3DataFromJson, toJson: _telegramHistoryV3DataToJson)
-          required final Map<String, List<TelegramV3>>? results,
+      {@JsonKey(
+          fromJson: _telegramHistoryV3DataFromJson,
+          toJson: _telegramHistoryV3DataToJson)
+      required final Map<String, List<TelegramV3>>? results,
       required final bool success,
       required final D1DbExecutionResult meta}) = _$_TelegramHistoryV3;
 

@@ -8,12 +8,12 @@ part of 'vector.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_DoubleVector _$$_DoubleVectorFromJson(Map<String, dynamic> json) =>
+_$DoubleVectorImpl _$$DoubleVectorImplFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_DoubleVector',
+      r'_$DoubleVectorImpl',
       json,
       ($checkedConvert) {
-        final val = _$_DoubleVector(
+        final val = _$DoubleVectorImpl(
           x: $checkedConvert('x', (v) => (v as num).toDouble()),
           y: $checkedConvert('y', (v) => (v as num).toDouble()),
         );
@@ -21,17 +21,18 @@ _$_DoubleVector _$$_DoubleVectorFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_DoubleVectorToJson(_$_DoubleVector instance) =>
+Map<String, dynamic> _$$DoubleVectorImplToJson(_$DoubleVectorImpl instance) =>
     <String, dynamic>{
       'x': instance.x,
       'y': instance.y,
     };
 
-_$_IntVector _$$_IntVectorFromJson(Map<String, dynamic> json) => $checkedCreate(
-      r'_$_IntVector',
+_$IntVectorImpl _$$IntVectorImplFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      r'_$IntVectorImpl',
       json,
       ($checkedConvert) {
-        final val = _$_IntVector(
+        final val = _$IntVectorImpl(
           x: $checkedConvert('x', (v) => v as int),
           y: $checkedConvert('y', (v) => v as int),
         );
@@ -39,7 +40,7 @@ _$_IntVector _$$_IntVectorFromJson(Map<String, dynamic> json) => $checkedCreate(
       },
     );
 
-Map<String, dynamic> _$$_IntVectorToJson(_$_IntVector instance) =>
+Map<String, dynamic> _$$IntVectorImplToJson(_$IntVectorImpl instance) =>
     <String, dynamic>{
       'x': instance.x,
       'y': instance.y,

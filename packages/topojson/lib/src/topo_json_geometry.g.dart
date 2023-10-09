@@ -8,12 +8,12 @@ part of 'topo_json_geometry.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_LineString _$$_LineStringFromJson(Map<String, dynamic> json) =>
+_$LineStringImpl _$$LineStringImplFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_LineString',
+      r'_$LineStringImpl',
       json,
       ($checkedConvert) {
-        final val = _$_LineString(
+        final val = _$LineStringImpl(
           type: $checkedConvert(
               'type', (v) => $enumDecode(_$TopoJsonGeometryTypeEnumMap, v)),
           arcs: $checkedConvert('arcs',
@@ -28,7 +28,7 @@ _$_LineString _$$_LineStringFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_LineStringToJson(_$_LineString instance) =>
+Map<String, dynamic> _$$LineStringImplToJson(_$LineStringImpl instance) =>
     <String, dynamic>{
       'type': _$TopoJsonGeometryTypeEnumMap[instance.type]!,
       'arcs': instance.arcs,
@@ -43,12 +43,13 @@ const _$TopoJsonGeometryTypeEnumMap = {
   TopoJsonGeometryType.multiLineString: 'MultiLineString',
 };
 
-_$_MultiLineString _$$_MultiLineStringFromJson(Map<String, dynamic> json) =>
+_$MultiLineStringImpl _$$MultiLineStringImplFromJson(
+        Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_MultiLineString',
+      r'_$MultiLineStringImpl',
       json,
       ($checkedConvert) {
-        final val = _$_MultiLineString(
+        final val = _$MultiLineStringImpl(
           type: $checkedConvert(
               'type', (v) => $enumDecode(_$TopoJsonGeometryTypeEnumMap, v)),
           arcs: $checkedConvert(
@@ -67,18 +68,20 @@ _$_MultiLineString _$$_MultiLineStringFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_MultiLineStringToJson(_$_MultiLineString instance) =>
+Map<String, dynamic> _$$MultiLineStringImplToJson(
+        _$MultiLineStringImpl instance) =>
     <String, dynamic>{
       'type': _$TopoJsonGeometryTypeEnumMap[instance.type]!,
       'arcs': instance.arcs,
       'properties': instance.properties,
     };
 
-_$_Polygon _$$_PolygonFromJson(Map<String, dynamic> json) => $checkedCreate(
-      r'_$_Polygon',
+_$PolygonImpl _$$PolygonImplFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      r'_$PolygonImpl',
       json,
       ($checkedConvert) {
-        final val = _$_Polygon(
+        final val = _$PolygonImpl(
           type: $checkedConvert(
               'type', (v) => $enumDecode(_$TopoJsonGeometryTypeEnumMap, v)),
           arcs: $checkedConvert(
@@ -97,19 +100,19 @@ _$_Polygon _$$_PolygonFromJson(Map<String, dynamic> json) => $checkedCreate(
       },
     );
 
-Map<String, dynamic> _$$_PolygonToJson(_$_Polygon instance) =>
+Map<String, dynamic> _$$PolygonImplToJson(_$PolygonImpl instance) =>
     <String, dynamic>{
       'type': _$TopoJsonGeometryTypeEnumMap[instance.type]!,
       'arcs': instance.arcs,
       'properties': instance.properties,
     };
 
-_$_MultiPolygon _$$_MultiPolygonFromJson(Map<String, dynamic> json) =>
+_$MultiPolygonImpl _$$MultiPolygonImplFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_MultiPolygon',
+      r'_$MultiPolygonImpl',
       json,
       ($checkedConvert) {
-        final val = _$_MultiPolygon(
+        final val = _$MultiPolygonImpl(
           type: $checkedConvert(
               'type', (v) => $enumDecode(_$TopoJsonGeometryTypeEnumMap, v)),
           arcs: $checkedConvert(
@@ -130,20 +133,20 @@ _$_MultiPolygon _$$_MultiPolygonFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_MultiPolygonToJson(_$_MultiPolygon instance) =>
+Map<String, dynamic> _$$MultiPolygonImplToJson(_$MultiPolygonImpl instance) =>
     <String, dynamic>{
       'type': _$TopoJsonGeometryTypeEnumMap[instance.type]!,
       'arcs': instance.arcs,
       'properties': instance.properties,
     };
 
-_$_GeometryCollection _$$_GeometryCollectionFromJson(
+_$GeometryCollectionImpl _$$GeometryCollectionImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_GeometryCollection',
+      r'_$GeometryCollectionImpl',
       json,
       ($checkedConvert) {
-        final val = _$_GeometryCollection(
+        final val = _$GeometryCollectionImpl(
           type: $checkedConvert(
               'type', (v) => $enumDecode(_$TopoJsonGeometryTypeEnumMap, v)),
           geometries: $checkedConvert(
@@ -162,21 +165,21 @@ _$_GeometryCollection _$$_GeometryCollectionFromJson(
       },
     );
 
-Map<String, dynamic> _$$_GeometryCollectionToJson(
-        _$_GeometryCollection instance) =>
+Map<String, dynamic> _$$GeometryCollectionImplToJson(
+        _$GeometryCollectionImpl instance) =>
     <String, dynamic>{
       'type': _$TopoJsonGeometryTypeEnumMap[instance.type]!,
       'geometries': instance.geometries,
       'properties': instance.properties,
     };
 
-_$_NullGeometryObject _$$_NullGeometryObjectFromJson(
+_$NullGeometryObjectImpl _$$NullGeometryObjectImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_NullGeometryObject',
+      r'_$NullGeometryObjectImpl',
       json,
       ($checkedConvert) {
-        final val = _$_NullGeometryObject(
+        final val = _$NullGeometryObjectImpl(
           type: $checkedConvert('type',
               (v) => $enumDecodeNullable(_$TopoJsonGeometryTypeEnumMap, v)),
           properties: $checkedConvert(
@@ -189,8 +192,8 @@ _$_NullGeometryObject _$$_NullGeometryObjectFromJson(
       },
     );
 
-Map<String, dynamic> _$$_NullGeometryObjectToJson(
-        _$_NullGeometryObject instance) =>
+Map<String, dynamic> _$$NullGeometryObjectImplToJson(
+        _$NullGeometryObjectImpl instance) =>
     <String, dynamic>{
       'type': _$TopoJsonGeometryTypeEnumMap[instance.type],
       'properties': instance.properties,

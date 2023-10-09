@@ -43,8 +43,10 @@ abstract class $KmoniMaintenanceMessageModelCopyWith<$Res> {
   @useResult
   $Res call(
       {String message,
-      @JsonKey(fromJson: kmoniMaintenanceMessageTypeFromJson, toJson: kmoniMaintenanceMessageTypeToJson)
-          KmoniMaintenanceMessageType type});
+      @JsonKey(
+          fromJson: kmoniMaintenanceMessageTypeFromJson,
+          toJson: kmoniMaintenanceMessageTypeToJson)
+      KmoniMaintenanceMessageType type});
 }
 
 /// @nodoc
@@ -88,8 +90,10 @@ abstract class _$$_KmoniMaintenanceMessageModelCopyWith<$Res>
   @useResult
   $Res call(
       {String message,
-      @JsonKey(fromJson: kmoniMaintenanceMessageTypeFromJson, toJson: kmoniMaintenanceMessageTypeToJson)
-          KmoniMaintenanceMessageType type});
+      @JsonKey(
+          fromJson: kmoniMaintenanceMessageTypeFromJson,
+          toJson: kmoniMaintenanceMessageTypeToJson)
+      KmoniMaintenanceMessageType type});
 }
 
 /// @nodoc
@@ -126,8 +130,10 @@ class __$$_KmoniMaintenanceMessageModelCopyWithImpl<$Res>
 class _$_KmoniMaintenanceMessageModel implements _KmoniMaintenanceMessageModel {
   const _$_KmoniMaintenanceMessageModel(
       {this.message = '',
-      @JsonKey(fromJson: kmoniMaintenanceMessageTypeFromJson, toJson: kmoniMaintenanceMessageTypeToJson)
-          this.type = KmoniMaintenanceMessageType.non});
+      @JsonKey(
+          fromJson: kmoniMaintenanceMessageTypeFromJson,
+          toJson: kmoniMaintenanceMessageTypeToJson)
+      this.type = KmoniMaintenanceMessageType.non});
 
   factory _$_KmoniMaintenanceMessageModel.fromJson(Map<String, dynamic> json) =>
       _$$_KmoniMaintenanceMessageModelFromJson(json);
@@ -177,10 +183,12 @@ class _$_KmoniMaintenanceMessageModel implements _KmoniMaintenanceMessageModel {
 abstract class _KmoniMaintenanceMessageModel
     implements KmoniMaintenanceMessageModel {
   const factory _KmoniMaintenanceMessageModel(
-      {final String message,
-      @JsonKey(fromJson: kmoniMaintenanceMessageTypeFromJson, toJson: kmoniMaintenanceMessageTypeToJson)
-          final KmoniMaintenanceMessageType
-              type}) = _$_KmoniMaintenanceMessageModel;
+          {final String message,
+          @JsonKey(
+              fromJson: kmoniMaintenanceMessageTypeFromJson,
+              toJson: kmoniMaintenanceMessageTypeToJson)
+          final KmoniMaintenanceMessageType type}) =
+      _$_KmoniMaintenanceMessageModel;
 
   factory _KmoniMaintenanceMessageModel.fromJson(Map<String, dynamic> json) =
       _$_KmoniMaintenanceMessageModel.fromJson;

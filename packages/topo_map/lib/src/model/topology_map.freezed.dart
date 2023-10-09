@@ -103,11 +103,11 @@ class _$TopologyMapCopyWithImpl<$Res, $Val extends TopologyMap>
 }
 
 /// @nodoc
-abstract class _$$_TopologyMapCopyWith<$Res>
+abstract class _$$TopologyMapImplCopyWith<$Res>
     implements $TopologyMapCopyWith<$Res> {
-  factory _$$_TopologyMapCopyWith(
-          _$_TopologyMap value, $Res Function(_$_TopologyMap) then) =
-      __$$_TopologyMapCopyWithImpl<$Res>;
+  factory _$$TopologyMapImplCopyWith(
+          _$TopologyMapImpl value, $Res Function(_$TopologyMapImpl) then) =
+      __$$TopologyMapImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -123,11 +123,11 @@ abstract class _$$_TopologyMapCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TopologyMapCopyWithImpl<$Res>
-    extends _$TopologyMapCopyWithImpl<$Res, _$_TopologyMap>
-    implements _$$_TopologyMapCopyWith<$Res> {
-  __$$_TopologyMapCopyWithImpl(
-      _$_TopologyMap _value, $Res Function(_$_TopologyMap) _then)
+class __$$TopologyMapImplCopyWithImpl<$Res>
+    extends _$TopologyMapCopyWithImpl<$Res, _$TopologyMapImpl>
+    implements _$$TopologyMapImplCopyWith<$Res> {
+  __$$TopologyMapImplCopyWithImpl(
+      _$TopologyMapImpl _value, $Res Function(_$TopologyMapImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -138,7 +138,7 @@ class __$$_TopologyMapCopyWithImpl<$Res>
     Object? polygons = null,
     Object? arcs = null,
   }) {
-    return _then(_$_TopologyMap(
+    return _then(_$TopologyMapImpl(
       scale: null == scale
           ? _value.scale
           : scale // ignore: cast_nullable_to_non_nullable
@@ -161,8 +161,8 @@ class __$$_TopologyMapCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TopologyMap implements _TopologyMap {
-  const _$_TopologyMap(
+class _$TopologyMapImpl implements _TopologyMap {
+  const _$TopologyMapImpl(
       {required this.scale,
       required this.translate,
       required final List<TopologyPolygon> polygons,
@@ -170,8 +170,8 @@ class _$_TopologyMap implements _TopologyMap {
       : _polygons = polygons,
         _arcs = arcs;
 
-  factory _$_TopologyMap.fromJson(Map<String, dynamic> json) =>
-      _$$_TopologyMapFromJson(json);
+  factory _$TopologyMapImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TopologyMapImplFromJson(json);
 
   @override
   final DoubleVector scale;
@@ -202,7 +202,7 @@ class _$_TopologyMap implements _TopologyMap {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TopologyMap &&
+            other is _$TopologyMapImpl &&
             (identical(other.scale, scale) || other.scale == scale) &&
             (identical(other.translate, translate) ||
                 other.translate == translate) &&
@@ -222,12 +222,12 @@ class _$_TopologyMap implements _TopologyMap {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TopologyMapCopyWith<_$_TopologyMap> get copyWith =>
-      __$$_TopologyMapCopyWithImpl<_$_TopologyMap>(this, _$identity);
+  _$$TopologyMapImplCopyWith<_$TopologyMapImpl> get copyWith =>
+      __$$TopologyMapImplCopyWithImpl<_$TopologyMapImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TopologyMapToJson(
+    return _$$TopologyMapImplToJson(
       this,
     );
   }
@@ -238,10 +238,10 @@ abstract class _TopologyMap implements TopologyMap {
       {required final DoubleVector scale,
       required final DoubleVector translate,
       required final List<TopologyPolygon> polygons,
-      required final List<TopologyArc> arcs}) = _$_TopologyMap;
+      required final List<TopologyArc> arcs}) = _$TopologyMapImpl;
 
   factory _TopologyMap.fromJson(Map<String, dynamic> json) =
-      _$_TopologyMap.fromJson;
+      _$TopologyMapImpl.fromJson;
 
   @override
   DoubleVector get scale;
@@ -253,7 +253,7 @@ abstract class _TopologyMap implements TopologyMap {
   List<TopologyArc> get arcs;
   @override
   @JsonKey(ignore: true)
-  _$$_TopologyMapCopyWith<_$_TopologyMap> get copyWith =>
+  _$$TopologyMapImplCopyWith<_$TopologyMapImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -311,22 +311,22 @@ class _$TopologyArcCopyWithImpl<$Res, $Val extends TopologyArc>
 }
 
 /// @nodoc
-abstract class _$$_TopologyArcCopyWith<$Res>
+abstract class _$$TopologyArcImplCopyWith<$Res>
     implements $TopologyArcCopyWith<$Res> {
-  factory _$$_TopologyArcCopyWith(
-          _$_TopologyArc value, $Res Function(_$_TopologyArc) then) =
-      __$$_TopologyArcCopyWithImpl<$Res>;
+  factory _$$TopologyArcImplCopyWith(
+          _$TopologyArcImpl value, $Res Function(_$TopologyArcImpl) then) =
+      __$$TopologyArcImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<IntVector> arc, TopologyArcType type});
 }
 
 /// @nodoc
-class __$$_TopologyArcCopyWithImpl<$Res>
-    extends _$TopologyArcCopyWithImpl<$Res, _$_TopologyArc>
-    implements _$$_TopologyArcCopyWith<$Res> {
-  __$$_TopologyArcCopyWithImpl(
-      _$_TopologyArc _value, $Res Function(_$_TopologyArc) _then)
+class __$$TopologyArcImplCopyWithImpl<$Res>
+    extends _$TopologyArcCopyWithImpl<$Res, _$TopologyArcImpl>
+    implements _$$TopologyArcImplCopyWith<$Res> {
+  __$$TopologyArcImplCopyWithImpl(
+      _$TopologyArcImpl _value, $Res Function(_$TopologyArcImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -335,7 +335,7 @@ class __$$_TopologyArcCopyWithImpl<$Res>
     Object? arc = null,
     Object? type = null,
   }) {
-    return _then(_$_TopologyArc(
+    return _then(_$TopologyArcImpl(
       arc: null == arc
           ? _value._arc
           : arc // ignore: cast_nullable_to_non_nullable
@@ -350,12 +350,13 @@ class __$$_TopologyArcCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TopologyArc implements _TopologyArc {
-  const _$_TopologyArc({required final List<IntVector> arc, required this.type})
+class _$TopologyArcImpl implements _TopologyArc {
+  const _$TopologyArcImpl(
+      {required final List<IntVector> arc, required this.type})
       : _arc = arc;
 
-  factory _$_TopologyArc.fromJson(Map<String, dynamic> json) =>
-      _$$_TopologyArcFromJson(json);
+  factory _$TopologyArcImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TopologyArcImplFromJson(json);
 
   final List<IntVector> _arc;
   @override
@@ -377,7 +378,7 @@ class _$_TopologyArc implements _TopologyArc {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TopologyArc &&
+            other is _$TopologyArcImpl &&
             const DeepCollectionEquality().equals(other._arc, _arc) &&
             (identical(other.type, type) || other.type == type));
   }
@@ -390,12 +391,12 @@ class _$_TopologyArc implements _TopologyArc {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TopologyArcCopyWith<_$_TopologyArc> get copyWith =>
-      __$$_TopologyArcCopyWithImpl<_$_TopologyArc>(this, _$identity);
+  _$$TopologyArcImplCopyWith<_$TopologyArcImpl> get copyWith =>
+      __$$TopologyArcImplCopyWithImpl<_$TopologyArcImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TopologyArcToJson(
+    return _$$TopologyArcImplToJson(
       this,
     );
   }
@@ -404,10 +405,10 @@ class _$_TopologyArc implements _TopologyArc {
 abstract class _TopologyArc implements TopologyArc {
   const factory _TopologyArc(
       {required final List<IntVector> arc,
-      required final TopologyArcType type}) = _$_TopologyArc;
+      required final TopologyArcType type}) = _$TopologyArcImpl;
 
   factory _TopologyArc.fromJson(Map<String, dynamic> json) =
-      _$_TopologyArc.fromJson;
+      _$TopologyArcImpl.fromJson;
 
   @override
   List<IntVector> get arc;
@@ -415,7 +416,7 @@ abstract class _TopologyArc implements TopologyArc {
   TopologyArcType get type;
   @override
   @JsonKey(ignore: true)
-  _$$_TopologyArcCopyWith<_$_TopologyArc> get copyWith =>
+  _$$TopologyArcImplCopyWith<_$TopologyArcImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -473,22 +474,22 @@ class _$TopologyPolygonCopyWithImpl<$Res, $Val extends TopologyPolygon>
 }
 
 /// @nodoc
-abstract class _$$_TopologyPolygonCopyWith<$Res>
+abstract class _$$TopologyPolygonImplCopyWith<$Res>
     implements $TopologyPolygonCopyWith<$Res> {
-  factory _$$_TopologyPolygonCopyWith(
-          _$_TopologyPolygon value, $Res Function(_$_TopologyPolygon) then) =
-      __$$_TopologyPolygonCopyWithImpl<$Res>;
+  factory _$$TopologyPolygonImplCopyWith(_$TopologyPolygonImpl value,
+          $Res Function(_$TopologyPolygonImpl) then) =
+      __$$TopologyPolygonImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<List<int>> arcs, int? areaCode});
 }
 
 /// @nodoc
-class __$$_TopologyPolygonCopyWithImpl<$Res>
-    extends _$TopologyPolygonCopyWithImpl<$Res, _$_TopologyPolygon>
-    implements _$$_TopologyPolygonCopyWith<$Res> {
-  __$$_TopologyPolygonCopyWithImpl(
-      _$_TopologyPolygon _value, $Res Function(_$_TopologyPolygon) _then)
+class __$$TopologyPolygonImplCopyWithImpl<$Res>
+    extends _$TopologyPolygonCopyWithImpl<$Res, _$TopologyPolygonImpl>
+    implements _$$TopologyPolygonImplCopyWith<$Res> {
+  __$$TopologyPolygonImplCopyWithImpl(
+      _$TopologyPolygonImpl _value, $Res Function(_$TopologyPolygonImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -497,7 +498,7 @@ class __$$_TopologyPolygonCopyWithImpl<$Res>
     Object? arcs = null,
     Object? areaCode = freezed,
   }) {
-    return _then(_$_TopologyPolygon(
+    return _then(_$TopologyPolygonImpl(
       arcs: null == arcs
           ? _value._arcs
           : arcs // ignore: cast_nullable_to_non_nullable
@@ -512,13 +513,13 @@ class __$$_TopologyPolygonCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TopologyPolygon implements _TopologyPolygon {
-  const _$_TopologyPolygon(
+class _$TopologyPolygonImpl implements _TopologyPolygon {
+  const _$TopologyPolygonImpl(
       {required final List<List<int>> arcs, required this.areaCode})
       : _arcs = arcs;
 
-  factory _$_TopologyPolygon.fromJson(Map<String, dynamic> json) =>
-      _$$_TopologyPolygonFromJson(json);
+  factory _$TopologyPolygonImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TopologyPolygonImplFromJson(json);
 
   final List<List<int>> _arcs;
   @override
@@ -540,7 +541,7 @@ class _$_TopologyPolygon implements _TopologyPolygon {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TopologyPolygon &&
+            other is _$TopologyPolygonImpl &&
             const DeepCollectionEquality().equals(other._arcs, _arcs) &&
             (identical(other.areaCode, areaCode) ||
                 other.areaCode == areaCode));
@@ -554,12 +555,13 @@ class _$_TopologyPolygon implements _TopologyPolygon {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TopologyPolygonCopyWith<_$_TopologyPolygon> get copyWith =>
-      __$$_TopologyPolygonCopyWithImpl<_$_TopologyPolygon>(this, _$identity);
+  _$$TopologyPolygonImplCopyWith<_$TopologyPolygonImpl> get copyWith =>
+      __$$TopologyPolygonImplCopyWithImpl<_$TopologyPolygonImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TopologyPolygonToJson(
+    return _$$TopologyPolygonImplToJson(
       this,
     );
   }
@@ -568,10 +570,10 @@ class _$_TopologyPolygon implements _TopologyPolygon {
 abstract class _TopologyPolygon implements TopologyPolygon {
   const factory _TopologyPolygon(
       {required final List<List<int>> arcs,
-      required final int? areaCode}) = _$_TopologyPolygon;
+      required final int? areaCode}) = _$TopologyPolygonImpl;
 
   factory _TopologyPolygon.fromJson(Map<String, dynamic> json) =
-      _$_TopologyPolygon.fromJson;
+      _$TopologyPolygonImpl.fromJson;
 
   @override
   List<List<int>> get arcs;
@@ -579,6 +581,6 @@ abstract class _TopologyPolygon implements TopologyPolygon {
   int? get areaCode;
   @override
   @JsonKey(ignore: true)
-  _$$_TopologyPolygonCopyWith<_$_TopologyPolygon> get copyWith =>
+  _$$TopologyPolygonImplCopyWith<_$TopologyPolygonImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

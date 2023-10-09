@@ -86,8 +86,8 @@ class MapViewModelProvider
     extends AutoDisposeNotifierProviderImpl<MapViewModel, MapState> {
   /// See also [MapViewModel].
   MapViewModelProvider(
-    this.key,
-  ) : super.internal(
+    Key key,
+  ) : this._internal(
           () => MapViewModel()..key = key,
           from: mapViewModelProvider,
           name: r'mapViewModelProvider',
@@ -98,9 +98,50 @@ class MapViewModelProvider
           dependencies: MapViewModelFamily._dependencies,
           allTransitiveDependencies:
               MapViewModelFamily._allTransitiveDependencies,
+          key: key,
         );
 
+  MapViewModelProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.key,
+  }) : super.internal();
+
   final Key key;
+
+  @override
+  MapState runNotifierBuild(
+    covariant MapViewModel notifier,
+  ) {
+    return notifier.build(
+      key,
+    );
+  }
+
+  @override
+  Override overrideWith(MapViewModel Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: MapViewModelProvider._internal(
+        () => create()..key = key,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        key: key,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeNotifierProviderElement<MapViewModel, MapState> createElement() {
+    return _MapViewModelProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -114,14 +155,20 @@ class MapViewModelProvider
 
     return _SystemHash.finish(hash);
   }
+}
+
+mixin MapViewModelRef on AutoDisposeNotifierProviderRef<MapState> {
+  /// The parameter `key` of this provider.
+  Key get key;
+}
+
+class _MapViewModelProviderElement
+    extends AutoDisposeNotifierProviderElement<MapViewModel, MapState>
+    with MapViewModelRef {
+  _MapViewModelProviderElement(super.provider);
 
   @override
-  MapState runNotifierBuild(
-    covariant MapViewModel notifier,
-  ) {
-    return notifier.build(
-      key,
-    );
-  }
+  Key get key => (origin as MapViewModelProvider).key;
 }
-// ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
