@@ -1,4 +1,4 @@
-name: iOS CI
+name: iOS CD (TestFlight)
 on:
   workflow_dispatch:
   push:
@@ -46,11 +46,31 @@ jobs:
       - name: Flutter version
         run: flutter --version
 
-      - name: Flutter dependencies install
-        run: flutter pub get
+      - name: Cache pubspec dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ env.FLUTTER_HOME }}/.pub-cache
+            **/.packages
+            **/.flutter-plugins
+            **/.flutter-plugin-dependencies
+            **/.dart_tool/package_config.json
+          key: build-pubspec-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: build-pubspec-
+
+      - name: Cache build runner
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/.dart_tool/build
+          key: build-runner-${{ hashFiles('**/asset_graph.json') }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: build-runner-
 
       - name: Install Melos
-        run: dart pub global activate melos && melos bootstrap
+        uses: bluefireteam/melos-action@v2
+
+      - name: Flutter dependencies install
+        run: flutter pub get
 
       - name: build_runner
         run: |

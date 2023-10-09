@@ -62,11 +62,11 @@ jobs:
           key: build-runner-${{ hashFiles('**/asset_graph.json') }}-${{ hashFiles('**/pubspec.lock') }}
           restore-keys: build-runner-
 
+      - name: Install Melos
+        uses: bluefireteam/melos-action@v2
+
       - name: Flutter dependencies install
         run: flutter pub get
-
-      - name: Install Melos
-        run: dart pub global activate melos && melos bootstrap
 
       - name: build_runner
         run: |
