@@ -113,6 +113,8 @@ post_install do |installer|
   end
 end
 
+pod 'GoogleUtilities'
+
 ################  Awesome Notifications FCM pod mod  ###################
 awesome_fcm_pod_file = File.expand_path(File.join('plugins', 'awesome_notifications_fcm', 'ios', 'Scripts', 'AwesomeFcmPodFile'), '.symlinks')
 require awesome_fcm_pod_file
