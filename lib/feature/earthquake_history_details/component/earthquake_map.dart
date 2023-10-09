@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart' as lat_lng;
+import 'package:latlong2/latlong.dart' as lat_lng2;
 import 'package:maplibre_gl/mapbox_gl.dart';
 import 'package:topo_map/topo_map.dart';
 
@@ -19,15 +20,13 @@ typedef _RegionColorItem = ({
   JmaIntensity intensity,
 });
 
-class EarthquakeIntensityMapWidget extends HookConsumerWidget {
-  const EarthquakeIntensityMapWidget({
+class EarthquakeMapWidget extends HookConsumerWidget {
+  const EarthquakeMapWidget({
     super.key,
     required this.item,
-    required this.mapKey,
     required this.showIntensityIcon,
     required this.mapData,
   });
-  final Key mapKey;
   final EarthquakeHistoryItem item;
   final bool showIntensityIcon;
   final Map<LandLayerType, ZoomCachedProjectedFeatureLayer> mapData;
@@ -36,11 +35,11 @@ class EarthquakeIntensityMapWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final earthquake = item.earthquake;
     final intensity = earthquake.intensity;
-    if (intensity == null) {
-      return const SizedBox();
-    }
     final colorModel = ref.watch(intensityColorProvider);
     final citiesItem = useMemoized(() {
+      if (intensity == null) {
+        return null;
+      }
       // cities
       if (intensity.cities == null) {
         return null;
@@ -83,6 +82,9 @@ class EarthquakeIntensityMapWidget extends HookConsumerWidget {
       return grouped;
     });
     final regionsItem = useMemoized(() {
+      if (intensity == null) {
+        return null;
+      }
       // regionsの探索
       {
         final regions = intensity.regions;
@@ -127,7 +129,6 @@ class EarthquakeIntensityMapWidget extends HookConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final mapStyle = ref.watch(mapStyleProvider);
     final styleJsonFuture = useFuture(mapStyle.getStyle(isDark: isDark));
-    final mapController = useState<MaplibreMapController?>(null);
     final path = styleJsonFuture.data;
     if (path == null) {
       return const Scaffold(
@@ -136,10 +137,9 @@ class EarthquakeIntensityMapWidget extends HookConsumerWidget {
         ),
       );
     }
-    final hypocenter = earthquake.earthquake?.hypocenter;
-    final bounds = _getShowBounds(
-      item,
-      mapData,
+    final bounds = useMemoized(
+      () => _getShowBounds(item, mapData),
+      [item, mapData],
     );
     final center = LatLng(
       (bounds.northEast.lat + bounds.southWest.lat) / 2,
@@ -152,7 +152,6 @@ class EarthquakeIntensityMapWidget extends HookConsumerWidget {
         _Map(
           center: center,
           path: path,
-          mapController: mapController,
           earthquake: earthquake,
           citiesItem: citiesItem,
           regionsItem: regionsItem,
@@ -169,11 +168,10 @@ class EarthquakeIntensityMapWidget extends HookConsumerWidget {
   }
 }
 
-class _Map extends StatelessWidget {
+class _Map extends HookWidget {
   const _Map({
     required this.center,
     required this.path,
-    required this.mapController,
     required this.earthquake,
     required this.citiesItem,
     required this.regionsItem,
@@ -182,13 +180,12 @@ class _Map extends StatelessWidget {
 
   final LatLng center;
   final String? path;
-  final ValueNotifier<MaplibreMapController?> mapController;
   final EarthquakeData earthquake;
   final List<
           ({List<String> codes, TextColorModel color, JmaIntensity intensity})>?
       citiesItem;
   final List<
-          ({List<String> codes, TextColorModel color, JmaIntensity intensity})>
+          ({List<String> codes, TextColorModel color, JmaIntensity intensity})>?
       regionsItem;
   final ValueNotifier<bool> isInitialized;
 
@@ -205,6 +202,8 @@ class _Map extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mapController = useState<MaplibreMapController?>(null);
+
     return MaplibreMap(
       initialCameraPosition: CameraPosition(
         target: center,
@@ -321,9 +320,9 @@ class _Map extends StatelessWidget {
               ],
             );
           }
-        } else {
+        } else if (regionsItem != null) {
           const name = 'areaForecastLocalE';
-          for (final item in regionsItem) {
+          for (final item in regionsItem!) {
             await controller.removeLayer(
               '$name-fill-${item.color.background.toHexStringRGB()}${item.intensity.type}',
             );
@@ -366,6 +365,7 @@ class _Map extends StatelessWidget {
           }
         }
         isInitialized.value = true;
+
         return;
       },
       rotateGesturesEnabled: false,
@@ -396,12 +396,30 @@ lat_lng.LatLngBoundary _getShowBounds(
   if (item.earthquake.earthquake != null &&
       item.earthquake.earthquake!.hypocenter.coordinate != null) {
     final lists = [
-      lat_lng.LatLng(
-        item.earthquake.earthquake!.hypocenter.coordinate!.lat,
-        item.earthquake.earthquake!.hypocenter.coordinate!.lon,
+      const lat_lng2.Distance().offset(
+        lat_lng2.LatLng(
+          item.earthquake.earthquake!.hypocenter.coordinate!.lat,
+          item.earthquake.earthquake!.hypocenter.coordinate!.lon,
+        ),
+        100 * 1000,
+        360 - 45,
+      ),
+      const lat_lng2.Distance().offset(
+        lat_lng2.LatLng(
+          item.earthquake.earthquake!.hypocenter.coordinate!.lat,
+          item.earthquake.earthquake!.hypocenter.coordinate!.lon,
+        ),
+        100 * 1000,
+        90 + 45,
       ),
     ];
-    return lat_lng.LatLngBoundary.fromList(lists);
+    return lat_lng.LatLngBoundary.fromList(
+      lists
+          .map(
+            (e) => lat_lng.LatLng(e.latitude, e.longitude),
+          )
+          .toList(),
+    );
   }
 
   final lists = [
