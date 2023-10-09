@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:eqapi_schema/eqapi_schema.dart';
 import 'package:eqmonitor/core/component/map/data/model/mutable_projected_feature_layer.dart';
@@ -12,6 +14,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart' as lat_lng;
 import 'package:latlong2/latlong.dart' as lat_lng2;
 import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:maplibre_gl/mapbox_gl.dart' as map_libre;
 import 'package:topo_map/topo_map.dart';
 
 typedef _RegionColorItem = ({
@@ -30,6 +33,16 @@ class EarthquakeMapWidget extends HookConsumerWidget {
   final EarthquakeHistoryItem item;
   final bool showIntensityIcon;
   final Map<LandLayerType, ZoomCachedProjectedFeatureLayer> mapData;
+
+  Future<void> addImageFromAsset(
+    MaplibreMapController controller,
+    String name,
+    String assetName,
+  ) async {
+    final bytes = await rootBundle.load(assetName);
+    final list = bytes.buffer.asUint8List();
+    return controller.addImage(name, list);
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -137,82 +150,41 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         ),
       );
     }
-    final bounds = useMemoized(
-      () => _getShowBounds(item, mapData),
-      [item, mapData],
-    );
-    final center = LatLng(
-      (bounds.northEast.lat + bounds.southWest.lat) / 2,
-      (bounds.northEast.lon + bounds.southWest.lon) / 2,
-    );
     final isInitialized = useState(false);
 
-    return Stack(
-      children: [
-        _Map(
-          center: center,
-          path: path,
-          earthquake: earthquake,
-          citiesItem: citiesItem,
-          regionsItem: regionsItem,
-          isInitialized: isInitialized,
-        ),
-        if (!isInitialized.value)
-          const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator.adaptive(),
-            ),
-          ),
-      ],
-    );
-  }
-}
-
-class _Map extends HookWidget {
-  const _Map({
-    required this.center,
-    required this.path,
-    required this.earthquake,
-    required this.citiesItem,
-    required this.regionsItem,
-    required this.isInitialized,
-  });
-
-  final LatLng center;
-  final String? path;
-  final EarthquakeData earthquake;
-  final List<
-          ({List<String> codes, TextColorModel color, JmaIntensity intensity})>?
-      citiesItem;
-  final List<
-          ({List<String> codes, TextColorModel color, JmaIntensity intensity})>?
-      regionsItem;
-  final ValueNotifier<bool> isInitialized;
-
-  /// Adds an asset image to the currently displayed style
-  Future<void> addImageFromAsset(
-    MaplibreMapController controller,
-    String name,
-    String assetName,
-  ) async {
-    final bytes = await rootBundle.load(assetName);
-    final list = bytes.buffer.asUint8List();
-    return controller.addImage(name, list);
-  }
-
-  @override
-  Widget build(BuildContext context) {
     final mapController = useState<MaplibreMapController?>(null);
+    final bounds =
+        useMemoized(() => _getShowBounds(item, mapData), [item, mapData]);
 
-    return MaplibreMap(
+    final map = MaplibreMap(
       initialCameraPosition: CameraPosition(
-        target: center,
+        target: LatLng(
+          (bounds.northEast.lat + bounds.southWest.lat) / 2,
+          (bounds.northEast.lon + bounds.southWest.lon) / 2,
+        ),
         zoom: 6,
       ),
       styleString: path,
       onMapCreated: (controller) => mapController.value = controller,
       onStyleLoadedCallback: () async {
         final controller = mapController.value!;
+
+        unawaited(
+          controller.animateCamera(
+            CameraUpdate.newLatLngBounds(
+              LatLngBounds(
+                northeast: map_libre.LatLng(
+                  bounds.northEast.lat,
+                  bounds.northEast.lon,
+                ),
+                southwest: map_libre.LatLng(
+                  bounds.southWest.lat,
+                  bounds.southWest.lon,
+                ),
+              ),
+            ),
+          ),
+        );
         await addImageFromAsset(
           controller,
           'hypocenter',
@@ -226,19 +198,31 @@ class _Map extends HookWidget {
           if (coord != null) {
             await controller.setSymbolIconAllowOverlap(true);
             await controller.setSymbolIconIgnorePlacement(true);
-            await controller.addSymbol(
-              SymbolOptions(
-                iconImage: 'assets/images/hypocenter.png',
-                geometry: LatLng(
-                  coord.lat,
-                  coord.lon,
-                ),
-                iconSize: 0.2,
-              ),
-              {'id': 'hypocenter'},
-            );
+            await controller.addGeoJsonSource('hypocenter', {
+              'type': 'FeatureCollection',
+              'features': [
+                {
+                  'type': 'Feature',
+                  'geometry': {
+                    'type': 'Point',
+                    'coordinates': [coord.lon, coord.lat],
+                  },
+                  'properties': {
+                    'magnitude': earthquake.earthquake?.magnitude.value,
+                  },
+                }
+              ],
+            });
             final magnitude = earthquake.earthquake?.magnitude;
-            print(magnitude);
+            await controller.addSymbolLayer(
+              'hypocenter',
+              'hypocenter',
+              const SymbolLayerProperties(
+                iconImage: 'hypocenter',
+                iconSize: 0.1,
+                iconAllowOverlap: true,
+              ),
+            );
 
             if (magnitude != null) {
               if (magnitude.value != null) {
@@ -279,7 +263,7 @@ class _Map extends HookWidget {
         /// 震度分布塗りつぶし (市区町村)
         if (citiesItem != null) {
           const name = 'areaInformationCityQuake';
-          for (final item in citiesItem!) {
+          for (final item in citiesItem) {
             await controller.removeLayer(
               '$name-fill-${item.color.background.toHexStringRGB()}',
             );
@@ -322,7 +306,7 @@ class _Map extends HookWidget {
           }
         } else if (regionsItem != null) {
           const name = 'areaForecastLocalE';
-          for (final item in regionsItem!) {
+          for (final item in regionsItem) {
             await controller.removeLayer(
               '$name-fill-${item.color.background.toHexStringRGB()}${item.intensity.type}',
             );
@@ -370,6 +354,18 @@ class _Map extends HookWidget {
       },
       rotateGesturesEnabled: false,
       tiltGesturesEnabled: false,
+    );
+
+    return Stack(
+      children: [
+        map,
+        if (!isInitialized.value)
+          const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator.adaptive(),
+            ),
+          ),
+      ],
     );
   }
 }
