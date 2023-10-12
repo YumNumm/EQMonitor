@@ -93,7 +93,7 @@ jobs:
       - name: build
         run: |
           echo '${{ secrets.FIREBASE_IOS }}' | base64 -d > ios/GoogleService-Info.plist
-          flutter build ios --release --no-codesign
+          flutter build ipa --release --no-codesign
 
       - name: fastlane
         env:
