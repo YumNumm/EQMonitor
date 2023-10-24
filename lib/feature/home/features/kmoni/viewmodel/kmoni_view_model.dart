@@ -92,14 +92,14 @@ class KmoniViewModel extends _$KmoniViewModel {
       final now = DateTime.now().subtract(state.delay ?? Duration.zero);
       final result = await _useCase.fetchRealtimeShindo(
         now,
-        obsPoints: ref.read(kmoniObservationPointsProvider).valueOrNull ?? [],
+        obsPoints: ref.read(kmoniObservationPointsProvider) ?? [],
       );
       state = state.copyWith(
         lastUpdatedAt: now,
         analyzedPoints: result,
         status: KmoniStatus.realtime,
       );
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       final dioError = e;
       if (dioError.response?.statusCode == 404) {
         log('404');

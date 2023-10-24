@@ -5,6 +5,7 @@ import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/fcm/notification_controller.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:eqmonitor/feature/home/features/kmoni_observation_points/provider/kmoni_observation_points_provider.dart';
 import 'package:eqmonitor/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -33,29 +34,26 @@ Future<void> main() async {
     talker.handle(error, stack, 'Uncaught async exception');
     return true;
   };
-
-  final prefs = await SharedPreferences.getInstance();
+  final results = await (
+    SharedPreferences.getInstance(),
+    loadKmoniObservationPoints(),
+  ).wait;
   if (Platform.isAndroid || Platform.isIOS) {
-    unawaited(() async {
-      if (kDebugMode) {
-        unawaited(
-          FirebaseMessaging.instance.subscribeToTopic('config-developer'),
-        );
-        talker.log('config-developer OK ');
-      }
-      await FirebaseMessaging.instance.subscribeToTopic('everyone');
-      talker.log('everyone OK');
-      await FirebaseMessaging.instance.subscribeToTopic('eew');
-      talker.log('eew OK');
-      await FirebaseMessaging.instance.subscribeToTopic('earthquake');
-      talker.log('earthquake OK');
-    }());
+    final fcm = FirebaseMessaging.instance;
+    unawaited(
+      (
+        fcm.subscribeToTopic('everyone'),
+        fcm.subscribeToTopic('eew'),
+        fcm.subscribeToTopic('earthquake'),
+      ).wait,
+    );
   }
 
   runApp(
     ProviderScope(
       overrides: [
-        sharedPreferencesProvider.overrideWithValue(prefs),
+        sharedPreferencesProvider.overrideWithValue(results.$1),
+        kmoniObservationPointsProvider.overrideWithValue(results.$2),
         talkerProvider.overrideWithValue(talker),
       ],
       child: const App(),
