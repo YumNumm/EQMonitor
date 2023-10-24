@@ -32,6 +32,8 @@ class KmoniDataSource {
       url,
       options: Options(
         responseType: ResponseType.bytes,
+        receiveTimeout: const Duration(milliseconds: 2000),
+        sendTimeout: const Duration(milliseconds: 2000),
       ),
     );
     return res;

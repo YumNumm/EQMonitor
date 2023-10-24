@@ -97,6 +97,20 @@ class SheetStatusWidget extends ConsumerWidget {
                         const SizedBox(width: 4),
                         const CircularProgressIndicator.adaptive(),
                       ],
+                    _
+                        when isInitialized &&
+                            latestTime != null &&
+                            status == KmoniStatus.delay =>
+                      [
+                        Text(
+                          DateFormat('yyyy/MM/dd HH:mm:ss').format(latestTime),
+                          style: theme.textTheme.bodyMedium!.copyWith(
+                            fontFamily: FontFamily.jetBrainsMono,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.redAccent,
+                          ),
+                        ),
+                      ],
                     _ when isInitialized && latestTime != null => [
                         Text(
                           DateFormat('yyyy/MM/dd HH:mm:ss').format(latestTime),
