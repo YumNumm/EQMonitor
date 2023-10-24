@@ -14,6 +14,7 @@ import 'package:eqmonitor/feature/home/component/map/kmoni_map_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/debug_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
+import 'package:eqmonitor/feature/home/features/debugger/debugger_provider.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_widget.dart';
@@ -227,7 +228,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
   }
 }
 
-class _Sheet extends StatelessWidget {
+class _Sheet extends ConsumerWidget {
   const _Sheet({
     required this.sheetController,
   });
@@ -235,7 +236,9 @@ class _Sheet extends StatelessWidget {
   final SheetController sheetController;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDebugMode = ref.watch(debuggerProvider);
+
     return RepaintBoundary(
       child: BasicModalSheet(
         controller: sheetController,
@@ -254,7 +257,8 @@ class _Sheet extends StatelessWidget {
             leading: const Icon(Icons.color_lens),
             onTap: () => context.push(const ColorSchemeConfigRoute().location),
           ),
-          const DebugWidget(),
+          if (isDebugMode.isDebugger || isDebugMode.isDeveloper)
+            const DebugWidget(),
         ],
       ),
     );

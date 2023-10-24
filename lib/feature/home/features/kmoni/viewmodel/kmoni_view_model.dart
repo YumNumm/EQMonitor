@@ -7,6 +7,7 @@ import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/model/kmoni_view_model_state.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/use_case/kmoni_use_case.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/provider/kmoni_observation_points_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -85,7 +86,8 @@ class KmoniViewModel extends _$KmoniViewModel {
 
   /// 画像取得
   Future<void> _update() async {
-    if (state.status == KmoniStatus.stopped) {
+    if (state.status == KmoniStatus.stopped ||
+        !ref.read(kmoniSettingsProvider).useKmoni) {
       return;
     }
     final now = DateTime.now().subtract(state.delay ?? Duration.zero);

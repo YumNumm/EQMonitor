@@ -1,5 +1,7 @@
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
 import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
+import 'package:eqmonitor/feature/home/features/debugger/debugger_provider.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +13,11 @@ class DebugWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final isDeveloper = ref.watch(
+      debuggerProvider.select(
+        (value) => value.isDeveloper,
+      ),
+    );
 
     return Card(
       margin: const EdgeInsets.all(4),
@@ -44,6 +51,15 @@ class DebugWidget extends ConsumerWidget {
               leading: const Icon(Icons.list),
               onTap: () => context.push(const TalkerRoute().location),
             ),
+            if (isDeveloper)
+              ListTile(
+                title: const Text('Kmoni Debug Setting'),
+                leading: const Icon(Icons.settings),
+                onTap: () => showDialog<void>(
+                  context: context,
+                  builder: (context) => const KmoniSettingsDialogWidget(),
+                ),
+              ),
           ],
         ),
       ),
