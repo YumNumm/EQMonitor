@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:eqapi_schema/eqapi_schema.dart';
 import 'package:eqmonitor/core/provider/dio_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/data/telegram_history.dart';
 import 'package:eqmonitor/feature/home/features/telegram_url/provider/telegram_url_provider.dart';
-import 'package:flutter/foundation.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'telegram_history_data_source.g.dart';
@@ -47,9 +50,42 @@ class TelegramHistoryDataSource {
     if (data == null) {
       throw Exception('data is null');
     }
-    return compute(
-      TelegramHistoryV3.fromJson,
-      data,
+    final meta = D1DbExecutionResult.fromJson(
+      data['meta'] as Map<String, dynamic>,
+    );
+    final isSuccess = data['success'] as bool;
+    final result = <String, List<TelegramV3>>{};
+    final preResults = data['results'] as Map<String, dynamic>? ?? {};
+    for (final e in preResults.entries) {
+      final key = e.key;
+      final value = e.value as List<dynamic>;
+      final newValue = value
+          .map((e) {
+            try {
+              return TelegramV3.fromJson(e as Map<String, dynamic>);
+            } on CheckedFromJsonException catch (e) {
+              FirebaseCrashlytics.instance.log(
+                'TelegramV3.fromJson CheckedFromJsonException: ${e.message} ${e.key}',
+              );
+              log('TelegramV3.fromJson CheckedFromJsonException: ${e.message} ${e.key}');
+              return null;
+              // ignore: avoid_catches_without_on_clauses
+            } catch (e) {
+              FirebaseCrashlytics.instance.log('TelegramV3.fromJson error: $e');
+              log('TelegramV3.fromJson error: $e');
+              return null;
+            }
+          })
+          .whereType<TelegramV3>()
+          .toList();
+      result.addAll({
+        key: newValue,
+      });
+    }
+    return TelegramHistoryV3(
+      results: result,
+      success: isSuccess,
+      meta: meta,
     );
   }
 

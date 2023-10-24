@@ -1,13 +1,18 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:eqapi_schema/eqapi_schema.dart';
+import 'package:eqapi_schema/model/components/region_intensity.dart';
+import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/component/map/data/model/mutable_projected_feature_layer.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/map_libre/provider/map_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -46,6 +51,26 @@ class EarthquakeMapWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isIconCaptured = useState(false);
+    final icons = useState(<(JmaIntensity, Uint8List)>[]);
+    if (!isIconCaptured.value) {
+      return Stack(
+        children: [
+          _CaptureAllIntensityWidget(
+            onCapture: (result) {
+              icons.value = result;
+              isIconCaptured.value = true;
+            },
+          ),
+          const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator.adaptive(),
+            ),
+          ),
+        ],
+      );
+    }
+
     final earthquake = item.earthquake;
     final intensity = earthquake.intensity;
     final colorModel = ref.watch(intensityColorProvider);
@@ -138,7 +163,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         return grouped;
       }
     });
-
+    final stations = intensity?.stations ?? [];
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final mapStyle = ref.watch(mapStyleProvider);
     final styleJsonFuture = useFuture(mapStyle.getStyle(isDark: isDark));
@@ -169,28 +194,143 @@ class EarthquakeMapWidget extends HookConsumerWidget {
       onStyleLoadedCallback: () async {
         final controller = mapController.value!;
 
-        unawaited(
-          controller.animateCamera(
-            CameraUpdate.newLatLngBounds(
-              LatLngBounds(
-                northeast: map_libre.LatLng(
-                  bounds.northEast.lat,
-                  bounds.northEast.lon,
-                ),
-                southwest: map_libre.LatLng(
-                  bounds.southWest.lat,
-                  bounds.southWest.lon,
-                ),
-              ),
-            ),
-          ),
-        );
         await addImageFromAsset(
           controller,
           'hypocenter',
           'assets/images/hypocenter.png',
         );
+        for (final e in icons.value) {
+          await controller.addImage(
+            'intensity-${e.$1.type}',
+            e.$2,
+          );
+        }
+        await _FillAction().init.call(
+              controller,
+              earthquake,
+              citiesItem,
+              regionsItem,
+              stations,
+            );
+        isInitialized.value = true;
 
+        return;
+      },
+      rotateGesturesEnabled: false,
+      tiltGesturesEnabled: false,
+    );
+
+    return Stack(
+      children: [
+        map,
+        if (!isInitialized.value)
+          const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator.adaptive(),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+lat_lng.LatLngBoundary _getShowBounds(
+  EarthquakeHistoryItem item,
+  Map<LandLayerType, ZoomCachedProjectedFeatureLayer> mapData,
+) {
+  if (item.earthquake.intensity != null) {
+    final map = mapData[LandLayerType.earthquakeInformationSubdivisionArea]!;
+    final result = <lat_lng.LatLng>[];
+    final onlyOver4 = item.earthquake.intensity!.maxInt > JmaIntensity.four;
+    for (final region in item.earthquake.intensity!.regions.where(
+      (element) =>
+          (!onlyOver4 || element.maxInt! > JmaIntensity.four) &&
+          element.maxInt != null,
+    )) {
+      final e = map.projectedPolygonFeatures
+          .firstWhere((e) => e.code.toString() == region.code);
+      result.addAll([e.bbox.northEast, e.bbox.southWest]);
+    }
+    return lat_lng.LatLngBoundary.fromList(result);
+  }
+  if (item.earthquake.earthquake != null &&
+      item.earthquake.earthquake!.hypocenter.coordinate != null) {
+    final lists = [
+      const lat_lng2.Distance().offset(
+        lat_lng2.LatLng(
+          item.earthquake.earthquake!.hypocenter.coordinate!.lat,
+          item.earthquake.earthquake!.hypocenter.coordinate!.lon,
+        ),
+        100 * 1000,
+        360 - 45,
+      ),
+      const lat_lng2.Distance().offset(
+        lat_lng2.LatLng(
+          item.earthquake.earthquake!.hypocenter.coordinate!.lat,
+          item.earthquake.earthquake!.hypocenter.coordinate!.lon,
+        ),
+        100 * 1000,
+        90 + 45,
+      ),
+    ];
+    return lat_lng.LatLngBoundary.fromList(
+      lists
+          .map(
+            (e) => lat_lng.LatLng(e.latitude, e.longitude),
+          )
+          .toList(),
+    );
+  }
+
+  final lists = [
+    const lat_lng.LatLng(45.3, 145.1),
+    const lat_lng.LatLng(30, 128.8),
+  ];
+  return lat_lng.LatLngBoundary.fromList(lists);
+}
+
+sealed class _MapLibreAction {
+  Future<void> Function(
+    MaplibreMapController controller,
+    EarthquakeData earthquake,
+    List<({List<String> codes, TextColorModel color, JmaIntensity intensity})>?
+        citiesItem,
+    List<({List<String> codes, TextColorModel color, JmaIntensity intensity})>?
+        regionsItem,
+    List<RegionIntensity> stations,
+  ) get init;
+  Future<void> Function(MaplibreMapController controller) get dispose;
+}
+
+class _FillAction extends _MapLibreAction {
+  @override
+  Future<void> Function(
+    MaplibreMapController controller,
+    EarthquakeData earthquake,
+    List<({List<String> codes, TextColorModel color, JmaIntensity intensity})>?
+        citiesItem,
+    List<({List<String> codes, TextColorModel color, JmaIntensity intensity})>?
+        regionsItem,
+    List<RegionIntensity> stations,
+  ) get init => (
+        controller,
+        EarthquakeData earthquake,
+        List<
+                ({
+                  List<String> codes,
+                  TextColorModel color,
+                  JmaIntensity intensity
+                })>?
+            citiesItem,
+        List<
+                ({
+                  List<String> codes,
+                  TextColorModel color,
+                  JmaIntensity intensity
+                })>?
+            regionsItem,
+        List<RegionIntensity> stations,
+      ) async {
         /// 震源地
         final hypocenter = earthquake.earthquake?.hypocenter;
         if (hypocenter != null) {
@@ -208,54 +348,52 @@ class EarthquakeMapWidget extends HookConsumerWidget {
                     'coordinates': [coord.lon, coord.lat],
                   },
                   'properties': {
-                    'magnitude': earthquake.earthquake?.magnitude.value,
+                    'magnitude':
+                        earthquake.earthquake?.magnitude.value.toString() ??
+                            earthquake.earthquake?.magnitude.condition ??
+                            '調査中',
                   },
                 }
               ],
             });
             final magnitude = earthquake.earthquake?.magnitude;
-            await controller.addSymbolLayer(
-              'hypocenter',
-              'hypocenter',
-              const SymbolLayerProperties(
-                iconImage: 'hypocenter',
-                iconSize: 0.1,
-                iconAllowOverlap: true,
-              ),
-            );
 
-            if (magnitude != null) {
-              if (magnitude.value != null) {
-                await controller.addSymbol(
-                  SymbolOptions(
-                    textField: 'M${magnitude.value}',
-                    textOffset: const Offset(0, 0.5),
-                    textColor: Colors.white.toHexStringRGB(),
-                    textAnchor: 'top',
-                    textHaloBlur: 2,
-                    geometry: LatLng(
-                      coord.lat,
-                      coord.lon,
-                    ),
-                  ),
-                );
-              }
-              if (magnitude.condition != null) {
-                await controller.addSymbol(
-                  SymbolOptions(
-                    textField: magnitude.condition,
-                    textOffset: const Offset(0, 1.5),
-                    textColor: Colors.white.toHexStringRGB(),
-                    textAnchor: 'top',
-                    textHaloBlur: 2,
-                    textHaloColor: Colors.grey.toHexStringRGB(),
-                    geometry: LatLng(
-                      coord.lat,
-                      coord.lon,
-                    ),
-                  ),
-                );
-              }
+            if (magnitude != null && magnitude.value != null) {
+              await controller.addSymbolLayer(
+                'hypocenter',
+                'hypocenter',
+                const SymbolLayerProperties(
+                  iconImage: 'hypocenter',
+                  iconSize: [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    6,
+                    0.2,
+                    20,
+                    4,
+                  ],
+                  iconAllowOverlap: true,
+                ),
+              );
+            } else {
+              await controller.addSymbolLayer(
+                'hypocenter',
+                'hypocenter',
+                const SymbolLayerProperties(
+                  iconImage: 'hypocenter',
+                  iconSize: [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    6,
+                    0.2,
+                    20,
+                    4,
+                  ],
+                  iconAllowOverlap: true,
+                ),
+              );
             }
           }
         }
@@ -348,79 +486,285 @@ class EarthquakeMapWidget extends HookConsumerWidget {
             );
           }
         }
-        isInitialized.value = true;
 
-        return;
+        // 観測点アイコン
+        for (final station in stations) {
+          final intensity = station.maxInt;
+        }
+      };
+
+  @override
+  Future<void> Function(MaplibreMapController controller) get dispose =>
+      (controller) async {
+        await (
+          controller.clearFills(),
+          controller.clearFills(),
+          controller.clearLines(),
+        ).wait;
+      };
+}
+
+class _IconAction extends _MapLibreAction {
+  @override
+  Future<void> Function(
+    MaplibreMapController controller,
+    EarthquakeData earthquake,
+    List<({List<String> codes, TextColorModel color, JmaIntensity intensity})>?
+        citiesItem,
+    List<({List<String> codes, TextColorModel color, JmaIntensity intensity})>?
+        regionsItem,
+    List<RegionIntensity> stations,
+  ) get init => (
+        controller,
+        EarthquakeData earthquake,
+        List<
+                ({
+                  List<String> codes,
+                  TextColorModel color,
+                  JmaIntensity intensity
+                })>?
+            citiesItem,
+        List<
+                ({
+                  List<String> codes,
+                  TextColorModel color,
+                  JmaIntensity intensity
+                })>?
+            regionsItem,
+        List<RegionIntensity> stations,
+      ) async {
+        /// 震源地
+        final hypocenter = earthquake.earthquake?.hypocenter;
+        if (hypocenter != null) {
+          final coord = hypocenter.coordinate;
+          if (coord != null) {
+            await controller.setSymbolIconAllowOverlap(true);
+            await controller.setSymbolIconIgnorePlacement(true);
+            await controller.addGeoJsonSource('hypocenter', {
+              'type': 'FeatureCollection',
+              'features': [
+                {
+                  'type': 'Feature',
+                  'geometry': {
+                    'type': 'Point',
+                    'coordinates': [coord.lon, coord.lat],
+                  },
+                  'properties': {
+                    'magnitude':
+                        earthquake.earthquake?.magnitude.value.toString() ??
+                            earthquake.earthquake?.magnitude.condition ??
+                            '調査中',
+                  },
+                }
+              ],
+            });
+            final magnitude = earthquake.earthquake?.magnitude;
+
+            if (magnitude != null && magnitude.value != null) {
+              await controller.addSymbolLayer(
+                'hypocenter',
+                'hypocenter',
+                const SymbolLayerProperties(
+                  iconImage: 'hypocenter',
+                  iconSize: [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    6,
+                    0.2,
+                    20,
+                    4,
+                  ],
+                  iconAllowOverlap: true,
+                ),
+              );
+            } else {
+              await controller.addSymbolLayer(
+                'hypocenter',
+                'hypocenter',
+                const SymbolLayerProperties(
+                  iconImage: 'hypocenter',
+                  iconSize: [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    6,
+                    0.2,
+                    20,
+                    4,
+                  ],
+                  iconAllowOverlap: true,
+                ),
+              );
+            }
+          }
+        }
+
+        /// 震度分布塗りつぶし (市区町村)
+        if (citiesItem != null) {
+          const name = 'areaInformationCityQuake';
+          for (final item in citiesItem) {
+            await controller.removeLayer(
+              '$name-fill-${item.color.background.toHexStringRGB()}',
+            );
+            await controller.addLayer(
+              'eqmonitor_map',
+              '$name-fill-${item.color.background.toHexStringRGB()}${item.intensity.type}',
+              FillLayerProperties(
+                fillColor: item.color.background.toHexStringRGB(),
+              ),
+              belowLayerId: 'areaForecastLocalEew_line',
+              sourceLayer: name,
+              filter: [
+                'in',
+                ['get', 'regioncode'],
+                [
+                  'literal',
+                  item.codes,
+                ],
+              ],
+            );
+            await controller.addLayer(
+              'eqmonitor_map',
+              '$name-line-${item.color.foreground.toHexStringRGB()}${item.intensity.type}',
+              LineLayerProperties(
+                lineWidth: 0.4,
+                lineColor: item.color.foreground.toHexStringRGB(),
+                lineOpacity: 0.2,
+              ),
+              belowLayerId: 'areaForecastLocalEew_line',
+              sourceLayer: name,
+              filter: [
+                'in',
+                ['get', 'regioncode'],
+                [
+                  'literal',
+                  item.codes,
+                ],
+              ],
+            );
+          }
+        } else if (regionsItem != null) {
+          const name = 'areaForecastLocalE';
+          for (final item in regionsItem) {
+            await controller.removeLayer(
+              '$name-fill-${item.color.background.toHexStringRGB()}${item.intensity.type}',
+            );
+            await controller.addLayer(
+              'eqmonitor_map',
+              '$name-fill-${item.color.background.toHexStringRGB()}',
+              FillLayerProperties(
+                fillColor: item.color.background.toHexStringRGB(),
+              ),
+              sourceLayer: name,
+              belowLayerId: 'areaForecastLocalEew_line',
+              filter: [
+                'in',
+                ['get', 'code'],
+                [
+                  'literal',
+                  item.codes,
+                ],
+              ],
+            );
+            await controller.addLayer(
+              'eqmonitor_map',
+              '$name-line-${item.color.foreground.toHexStringRGB()}${item.intensity.type}',
+              LineLayerProperties(
+                lineWidth: 0.4,
+                lineColor: item.color.foreground.toHexStringRGB(),
+                lineOpacity: 0.8,
+              ),
+              sourceLayer: name,
+              belowLayerId: 'areaForecastLocalEew_line',
+              filter: [
+                'in',
+                ['get', 'regioncode'],
+                [
+                  'literal',
+                  item.codes,
+                ],
+              ],
+            );
+          }
+        }
+      };
+
+  @override
+  Future<void> Function(MaplibreMapController controller) get dispose =>
+      (controller) async {
+        await (
+          controller.clearFills(),
+          controller.clearFills(),
+          controller.clearLines(),
+        ).wait;
+      };
+}
+
+class _WidgetImageCapture extends HookWidget {
+  _WidgetImageCapture(this.onCapture, this.child);
+
+  // callback
+  final void Function(Uint8List bytes)? onCapture;
+  final Widget child;
+  final captureKey = GlobalKey();
+
+  Future<void> _capture() async {
+    await Future<void>.delayed(const Duration(milliseconds: 100));
+    final widget =
+        captureKey.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+    final image = await widget.toImage();
+    final byteData = await image.toByteData(format: ImageByteFormat.png);
+    onCapture?.call(byteData!.buffer.asUint8List());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    useEffect(
+      () {
+        WidgetsBinding.instance.endOfFrame.then(
+          (_) => _capture(),
+        );
+        return null;
       },
-      rotateGesturesEnabled: false,
-      tiltGesturesEnabled: false,
+      [],
     );
-
-    return Stack(
-      children: [
-        map,
-        if (!isInitialized.value)
-          const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator.adaptive(),
-            ),
-          ),
-      ],
+    return RepaintBoundary(
+      key: captureKey,
+      child: child,
     );
   }
 }
 
-lat_lng.LatLngBoundary _getShowBounds(
-  EarthquakeHistoryItem item,
-  Map<LandLayerType, ZoomCachedProjectedFeatureLayer> mapData,
-) {
-  if (item.earthquake.intensity != null) {
-    final map = mapData[LandLayerType.earthquakeInformationSubdivisionArea]!;
-    final result = <lat_lng.LatLng>[];
-    final onlyOver4 = item.earthquake.intensity!.maxInt > JmaIntensity.four;
-    for (final region in item.earthquake.intensity!.regions.where(
-      (element) =>
-          (!onlyOver4 || element.maxInt! > JmaIntensity.four) &&
-          element.maxInt != null,
-    )) {
-      final e = map.projectedPolygonFeatures
-          .firstWhere((e) => e.code.toString() == region.code);
-      result.addAll([e.bbox.northEast, e.bbox.southWest]);
+class _CaptureAllIntensityWidget extends StatelessWidget {
+  _CaptureAllIntensityWidget({required this.onCapture});
+  final void Function(List<(JmaIntensity, Uint8List)> result) onCapture;
+
+  final result = <(JmaIntensity, Uint8List)>[];
+
+  void check() {
+    if (result.length == JmaIntensity.values.length) {
+      onCapture(result);
     }
-    return lat_lng.LatLngBoundary.fromList(result);
   }
-  if (item.earthquake.earthquake != null &&
-      item.earthquake.earthquake!.hypocenter.coordinate != null) {
-    final lists = [
-      const lat_lng2.Distance().offset(
-        lat_lng2.LatLng(
-          item.earthquake.earthquake!.hypocenter.coordinate!.lat,
-          item.earthquake.earthquake!.hypocenter.coordinate!.lon,
-        ),
-        100 * 1000,
-        360 - 45,
-      ),
-      const lat_lng2.Distance().offset(
-        lat_lng2.LatLng(
-          item.earthquake.earthquake!.hypocenter.coordinate!.lat,
-          item.earthquake.earthquake!.hypocenter.coordinate!.lon,
-        ),
-        100 * 1000,
-        90 + 45,
-      ),
-    ];
-    return lat_lng.LatLngBoundary.fromList(
-      lists
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: JmaIntensity.values
           .map(
-            (e) => lat_lng.LatLng(e.latitude, e.longitude),
+            (e) => _WidgetImageCapture(
+              (bytes) {
+                result.add((e, bytes));
+                check();
+              },
+              JmaIntensityIcon(
+                intensity: e,
+                type: IntensityIconType.filled,
+              ),
+            ),
           )
           .toList(),
     );
   }
-
-  final lists = [
-    const lat_lng.LatLng(45.3, 145.1),
-    const lat_lng.LatLng(30, 128.8),
-  ];
-  return lat_lng.LatLngBoundary.fromList(lists);
 }
