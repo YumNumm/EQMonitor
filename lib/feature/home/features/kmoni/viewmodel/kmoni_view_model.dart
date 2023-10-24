@@ -88,8 +88,16 @@ class KmoniViewModel extends _$KmoniViewModel {
     if (state.status == KmoniStatus.stopped) {
       return;
     }
+    final now = DateTime.now().subtract(state.delay ?? Duration.zero);
+    // 最終更新から5秒以上経過している場合は 遅延判定
+    if (state.lastUpdatedAt != null &&
+        now.difference(state.lastUpdatedAt!).inSeconds > 5) {
+      state = state.copyWith(
+        status: KmoniStatus.delay,
+      );
+    }
+
     try {
-      final now = DateTime.now().subtract(state.delay ?? Duration.zero);
       final result = await _useCase.fetchRealtimeShindo(
         now,
         obsPoints: ref.read(kmoniObservationPointsProvider) ?? [],
@@ -100,8 +108,7 @@ class KmoniViewModel extends _$KmoniViewModel {
         status: KmoniStatus.realtime,
       );
     } on DioException catch (e) {
-      final dioError = e;
-      if (dioError.response?.statusCode == 404) {
+      if (e.response?.statusCode == 404) {
         log('404');
         state = state.copyWith(
           delay: state.delay == null
@@ -110,6 +117,7 @@ class KmoniViewModel extends _$KmoniViewModel {
           status: KmoniStatus.delay,
         );
       }
+      log('error $e');
     }
   }
 
@@ -122,9 +130,9 @@ class KmoniViewModel extends _$KmoniViewModel {
       // kmoniから現在時刻を取得
       final firstDateTime = await _useCase.getLatestDataTime();
       var latestDataTime = firstDateTime;
-      // 変わるまで100msごとに取得
+      // 変わるまで200msごとに取得
       while (true) {
-        await Future<void>.delayed(const Duration(milliseconds: 100));
+        await Future<void>.delayed(const Duration(milliseconds: 200));
         latestDataTime = await _useCase.getLatestDataTime();
         if (latestDataTime != firstDateTime) {
           break;
