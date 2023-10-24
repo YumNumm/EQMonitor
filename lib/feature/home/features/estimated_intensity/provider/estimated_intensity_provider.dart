@@ -22,14 +22,14 @@ class EstimatedIntensity extends _$EstimatedIntensity {
         EstimatedIntensityLog('EstimatedIntensity: ${state.length}'),
       );
     });
-    return [];
+    return calc(ref.read(eewTelegramProvider));
   }
 
   late EstimatedIntensityDataSource _dataSource;
   late Talker _talker;
 
   List<AnalyzedKmoniObservationPoint> calc(List<EarthquakeHistoryItem> eews) {
-    final points = ref.read(kmoniObservationPointsProvider).valueOrNull ?? [];
+    final points = ref.read(kmoniObservationPointsProvider);
     final results = <List<AnalyzedKmoniObservationPoint>>[];
     for (final eew in eews
         .where((e) => e.latestEew != null && e.latestEew is TelegramVxse45Body)

@@ -14,6 +14,9 @@ HomeViewModel homeViewModel(HomeViewModelRef ref) => HomeViewModel(ref);
 
 class HomeViewModel {
   HomeViewModel(this.ref) : super() {
+    onEstimatedIntensityChanged(
+      ref.read(estimatedIntensityProvider),
+    );
     ref.listen(estimatedIntensityProvider, (_, next) {
       onEstimatedIntensityChanged(next);
     });
@@ -68,10 +71,6 @@ class HomeViewModel {
           ),
         ),
       );
-  }
-
-  void _resetPoC() {
-    ref.read(mapViewModelProvider(mapKey).notifier).reset();
   }
 
   /// 震度1以上の観測点のうち、震度が最大~最大-1の観測点を含むLatLngの配列を返す
