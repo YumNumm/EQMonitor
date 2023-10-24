@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/model/kmoni_view_model_state.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,8 @@ class SheetStatusWidget extends ConsumerWidget {
     final isDelayAdjusting = ref.watch(
       kmoniViewModelProvider.select((value) => value.isDelayAdjusting),
     );
+    final useKmoni =
+        ref.watch(kmoniSettingsProvider.select((value) => value.useKmoni));
     final socketStatus = ref.watch(socketStatusProvider);
     final theme = Theme.of(context);
 
@@ -64,67 +67,71 @@ class SheetStatusWidget extends ConsumerWidget {
       child: Row(
         children: [
           // kmoni
-          InkWell(
-            borderRadius: BorderRadius.circular(8),
-            onTap: adjustKmoniDelay,
-            child: Padding(
-              padding: const EdgeInsets.all(2),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // 現在時刻
-                  ...switch (status) {
-                    KmoniStatus.stopped => [
-                        const Icon(
-                          Icons.access_time_rounded,
-                          size: 16,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '強震モニタ 停止中',
-                          style: theme.textTheme.bodyMedium!.copyWith(
-                            fontFamily: FontFamily.jetBrainsMono,
+          if (useKmoni)
+            InkWell(
+              borderRadius: BorderRadius.circular(8),
+              onTap: adjustKmoniDelay,
+              child: Padding(
+                padding: const EdgeInsets.all(2),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // 現在時刻
+                    ...switch (status) {
+                      KmoniStatus.stopped => [
+                          const Icon(
+                            Icons.access_time_rounded,
+                            size: 16,
                           ),
-                        ),
-                      ],
-                    _ when isDelayAdjusting && latestTime != null => [
-                        Text(
-                          DateFormat('yyyy/MM/dd HH:mm:ss').format(latestTime),
-                          style: theme.textTheme.bodyMedium!.copyWith(
-                            fontFamily: FontFamily.jetBrainsMono,
+                          const SizedBox(width: 4),
+                          Text(
+                            '強震モニタ 停止中',
+                            style: theme.textTheme.bodyMedium!.copyWith(
+                              fontFamily: FontFamily.jetBrainsMono,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 4),
-                        const CircularProgressIndicator.adaptive(),
-                      ],
-                    _
-                        when isInitialized &&
-                            latestTime != null &&
-                            status == KmoniStatus.delay =>
-                      [
-                        Text(
-                          DateFormat('yyyy/MM/dd HH:mm:ss').format(latestTime),
-                          style: theme.textTheme.bodyMedium!.copyWith(
-                            fontFamily: FontFamily.jetBrainsMono,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.redAccent,
+                        ],
+                      _ when isDelayAdjusting && latestTime != null => [
+                          Text(
+                            DateFormat('yyyy/MM/dd HH:mm:ss')
+                                .format(latestTime),
+                            style: theme.textTheme.bodyMedium!.copyWith(
+                              fontFamily: FontFamily.jetBrainsMono,
+                            ),
                           ),
-                        ),
-                      ],
-                    _ when isInitialized && latestTime != null => [
-                        Text(
-                          DateFormat('yyyy/MM/dd HH:mm:ss').format(latestTime),
-                          style: theme.textTheme.bodyMedium!.copyWith(
-                            fontFamily: FontFamily.jetBrainsMono,
+                          const SizedBox(width: 4),
+                          const CircularProgressIndicator.adaptive(),
+                        ],
+                      _
+                          when isInitialized &&
+                              latestTime != null &&
+                              status == KmoniStatus.delay =>
+                        [
+                          Text(
+                            DateFormat('yyyy/MM/dd HH:mm:ss')
+                                .format(latestTime),
+                            style: theme.textTheme.bodyMedium!.copyWith(
+                              fontFamily: FontFamily.jetBrainsMono,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.redAccent,
+                            ),
                           ),
-                        ),
-                      ],
-                    _ => [const CircularProgressIndicator.adaptive()],
-                  },
-                ],
+                        ],
+                      _ when isInitialized && latestTime != null => [
+                          Text(
+                            DateFormat('yyyy/MM/dd HH:mm:ss')
+                                .format(latestTime),
+                            style: theme.textTheme.bodyMedium!.copyWith(
+                              fontFamily: FontFamily.jetBrainsMono,
+                            ),
+                          ),
+                        ],
+                      _ => [const CircularProgressIndicator.adaptive()],
+                    },
+                  ],
+                ),
               ),
             ),
-          ),
           const Spacer(),
           // WS接続状態
           if (socketStatus.connected) ...[

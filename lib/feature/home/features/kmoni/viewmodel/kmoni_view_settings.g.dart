@@ -37,12 +37,12 @@ Map<String, dynamic> _$$_KmoniSettingsStateToJson(
 // RiverpodGenerator
 // **************************************************************************
 
-String _$kmoniSettingsHash() => r'785fe5bdc6ef19ff8b885571b811818d34a627c4';
+String _$kmoniSettingsHash() => r'16b29280c64bcd4a0faccb9a501a56c02c647e9f';
 
 /// See also [KmoniSettings].
 @ProviderFor(KmoniSettings)
 final kmoniSettingsProvider =
-    AutoDisposeNotifierProvider<KmoniSettings, KmoniSettingsState>.internal(
+    NotifierProvider<KmoniSettings, KmoniSettingsState>.internal(
   KmoniSettings.new,
   name: r'kmoniSettingsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -52,6 +52,6 @@ final kmoniSettingsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$KmoniSettings = AutoDisposeNotifier<KmoniSettingsState>;
+typedef _$KmoniSettings = Notifier<KmoniSettingsState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

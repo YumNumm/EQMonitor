@@ -23,8 +23,36 @@ class KmoniSettingsPage extends ConsumerWidget {
               color: theme.colorScheme.primaryContainer,
               child: SwitchListTile.adaptive(
                 value: state.useKmoni,
-                onChanged: (_) =>
-                    ref.read(kmoniSettingsProvider.notifier).toggleUseKmoni(),
+                onChanged: (value) async {
+                  if (value) {
+                    final isAccepted = await showDialog<bool>(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog.adaptive(
+                          title: const Text('強震モニタの注意に同意しますか?'),
+                          content: const Text('強震モニタを有効すると、'
+                              '強震モニタの注意点に同意したものとみなします。'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: const Text('キャンセル'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(true),
+                              child: const Text('同意する'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    if (isAccepted ?? false) {
+                      ref.read(kmoniSettingsProvider.notifier).toggleUseKmoni();
+                    }
+                    return;
+                  }
+                  ref.read(kmoniSettingsProvider.notifier).toggleUseKmoni();
+                },
                 title: const Text('強震モニタを表示する'),
               ),
             ),

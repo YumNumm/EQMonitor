@@ -29,7 +29,7 @@ class KmoniSettingsState with _$KmoniSettingsState {
       _$KmoniSettingsStateFromJson(json);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class KmoniSettings extends _$KmoniSettings {
   @override
   KmoniSettingsState build() {
