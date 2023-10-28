@@ -3,7 +3,6 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/theme/custom_colors.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class App extends HookConsumerWidget {
@@ -26,10 +25,12 @@ class App extends HookConsumerWidget {
 
         if (lightDynamic != null && darkDynamic != null) {
           // On Android S+ devices, use the provided dynamic color scheme.
-          // (Recommended) Harmonize the dynamic color scheme' built-in semantic colors.
+          // (Recommended) Harmonize the dynamic color scheme' built-in semantic
+          // colors.
           lightColorScheme = lightDynamic.harmonized();
           // (Optional) Customize the scheme as desired. For example, one might
-          // want to use a brand color to override the dynamic [ColorScheme.secondary].
+          // want to use a brand color to override the dynamic
+          // [ColorScheme.secondary].
           lightColorScheme = lightColorScheme.copyWith(secondary: brandBlue);
           // (Optional) If applicable, harmonize custom colors.
           lightCustomColors = lightCustomColors.harmonized(lightColorScheme);

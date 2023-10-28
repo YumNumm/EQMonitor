@@ -79,9 +79,6 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
               ),
             );
           }
-
-        default:
-          break;
       }
     }
   }
