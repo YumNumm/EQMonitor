@@ -42,17 +42,19 @@ class HomeViewModel {
       ref.read(mapViewModelProvider(mapKey).notifier).resetMarkAsMoved();
     }
     if (filtered == null) {
-      ref
-          .read(mapViewModelProvider(mapKey).notifier)
-          .animatedApplyBoundsIfNeeded(
-            padding: const EdgeInsets.all(8).add(
-              EdgeInsets.only(
-                bottom: switch (sheetController.animation.value) {
-                  < 0.3 => height * sheetController.animation.value,
-                  _ => height * 0.3,
-                },
-              ),
-            ),
+      ref.read(mapViewModelProvider(mapKey).notifier).onRegisterRenderBox(
+            () => ref
+                .read(mapViewModelProvider(mapKey).notifier)
+                .animatedApplyBoundsIfNeeded(
+                  padding: const EdgeInsets.all(8).add(
+                    EdgeInsets.only(
+                      bottom: switch (sheetController.animation.value) {
+                        < 0.3 => height * sheetController.animation.value,
+                        _ => height * 0.3,
+                      },
+                    ),
+                  ),
+                ),
           );
       return;
     }
