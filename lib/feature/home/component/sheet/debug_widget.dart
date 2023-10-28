@@ -3,6 +3,7 @@ import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dar
 import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
 import 'package:eqmonitor/feature/home/features/debugger/debugger_provider.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -51,15 +52,40 @@ class DebugWidget extends ConsumerWidget {
               leading: const Icon(Icons.list),
               onTap: () => context.push(const TalkerRoute().location),
             ),
-            if (isDeveloper)
-              ListTile(
-                title: const Text('Kmoni Debug Setting'),
-                leading: const Icon(Icons.settings),
-                onTap: () => showDialog<void>(
-                  context: context,
-                  builder: (context) => const KmoniSettingsDialogWidget(),
-                ),
+            ListTile(
+              title: const Text('Kmoni Debug Setting'),
+              leading: const Icon(Icons.settings),
+              onTap: () => showDialog<void>(
+                context: context,
+                builder: (context) => const KmoniSettingsDialogWidget(),
               ),
+            ),
+            ListTile(
+              title: const Text('Subscribe to YumNumm Notify'),
+              leading: const Icon(Icons.notifications),
+              onTap: () async {
+                try {
+                  await FirebaseMessaging.instance
+                      .subscribeToTopic('yumnumm-notify');
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Subscribed to YumNumm Notify'),
+                      ),
+                    );
+                  }
+                } on Exception catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content:
+                            Text('Failed to subscribe to YumNumm Notify $e'),
+                      ),
+                    );
+                  }
+                }
+              },
+            ),
           ],
         ),
       ),

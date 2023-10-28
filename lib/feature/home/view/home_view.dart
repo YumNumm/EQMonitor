@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/config/debug/debug_attempt.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
 import 'package:eqmonitor/feature/home/component/map/eew_estimated_intensity_widget.dart';
 import 'package:eqmonitor/feature/home/component/map/eew_hypocenter_widget.dart';
@@ -35,6 +36,7 @@ class HomeView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final vm = ref.watch(homeViewModelProvider);
     final mapKey = vm.mapKey;
+    final debugAttemptCount = useState(0);
 
     useEffect(
       () {
@@ -51,25 +53,38 @@ class HomeView extends HookConsumerWidget {
       talker: ref.watch(talkerProvider),
       child: Scaffold(
         appBar: AppBar(
-          title: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Text(
-                'EQMonitor',
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(width: 4),
-              Text(
-                'Beta',
-                style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                      fontFamily: FontFamily.jetBrainsMono,
-                    ),
-              ),
-            ],
+          title: GestureDetector(
+            onDoubleTap: () async {
+              debugAttemptCount.value++;
+              if (debugAttemptCount.value >= 5) {
+                final result = await DebugAttempt.attempt(context);
+                if (result) {
+                  await ref
+                      .read(debuggerProvider.notifier)
+                      .setDebugger(value: true);
+                }
+              }
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text(
+                  'EQMonitor',
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  'Beta',
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        fontFamily: FontFamily.jetBrainsMono,
+                      ),
+                ),
+              ],
+            ),
           ),
           forceMaterialTransparency: true,
         ),

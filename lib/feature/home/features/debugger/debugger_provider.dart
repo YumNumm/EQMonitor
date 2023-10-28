@@ -12,7 +12,6 @@ class Debugger extends _$Debugger {
   @override
   DebuggerModel build() {
     _prefs = ref.read(sharedPreferencesProvider);
-    ref.listenSelf((_, next) async => save());
     return _getDebugger();
   }
 
@@ -34,5 +33,10 @@ class Debugger extends _$Debugger {
 
   Future<void> save() async {
     await _prefs.setString(_key, jsonEncode(state.toJson()));
+  }
+
+  Future<void> setDebugger({required bool value}) async {
+    state = state.copyWith(isDebugger: value);
+    await save();
   }
 }
