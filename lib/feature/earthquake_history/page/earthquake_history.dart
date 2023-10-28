@@ -68,7 +68,7 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
                   FilledButton.tonal(
                     onPressed: ref
                         .read(earthquakeHistoryViewModelProvider.notifier)
-                        .reload,
+                        .fetch,
                     child: const Text('再読み込み'),
                   ),
                 ],
@@ -94,7 +94,7 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
     );
     return Scaffold(
       body: RefreshIndicator.adaptive(
-        onRefresh: ref.read(earthquakeHistoryViewModelProvider.notifier).reload,
+        onRefresh: ref.read(earthquakeHistoryViewModelProvider.notifier).fetch,
         edgeOffset: 112,
         child: body,
       ),

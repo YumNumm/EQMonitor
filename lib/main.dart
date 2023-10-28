@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:eqmonitor/app.dart';
@@ -19,11 +20,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final talker = TalkerFlutter.init();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  await NotificationController.initializeLocalNotifications(debug: kDebugMode);
-  await NotificationController.initializeRemoteNotifications(debug: kDebugMode);
   // Pass all uncaught "fatal" errors from the framework to Crashlytics
   FlutterError.onError = (error) {
     talker.handle(error.exception, error.stack, 'Uncaught fatal exception');
@@ -37,6 +33,11 @@ Future<void> main() async {
   final results = await (
     SharedPreferences.getInstance(),
     loadKmoniObservationPoints(),
+    Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    ),
+    NotificationController.initializeLocalNotifications(debug: kDebugMode),
+    NotificationController.initializeRemoteNotifications(debug: kDebugMode),
   ).wait;
   if (Platform.isAndroid || Platform.isIOS) {
     final fcm = FirebaseMessaging.instance;
@@ -48,7 +49,6 @@ Future<void> main() async {
       ).wait,
     );
   }
-
   runApp(
     ProviderScope(
       overrides: [
@@ -56,7 +56,51 @@ Future<void> main() async {
         kmoniObservationPointsProvider.overrideWithValue(results.$2),
         talkerProvider.overrideWithValue(talker),
       ],
+      observers: [
+        if (kDebugMode)
+          Observer(
+            talker,
+          ),
+      ],
       child: const App(),
     ),
   );
+}
+
+class Observer extends ProviderObserver {
+  Observer(this.talker);
+
+  final Talker talker;
+
+  @override
+  void didAddProvider(
+    ProviderBase<Object?> provider,
+    Object? value,
+    ProviderContainer container,
+  ) =>
+      log('didAddProvider: ${provider.name} ($value)}');
+
+  @override
+  void didDisposeProvider(
+    ProviderBase<Object?> provider,
+    ProviderContainer container,
+  ) =>
+      log('didDisposeProvider: ${provider.name}');
+
+  @override
+  void didUpdateProvider(
+    ProviderBase<Object?> provider,
+    Object? previousValue,
+    Object? newValue,
+    ProviderContainer container,
+  ) {}
+
+  @override
+  void providerDidFail(
+    ProviderBase<Object?> provider,
+    Object error,
+    StackTrace stackTrace,
+    ProviderContainer container,
+  ) =>
+      talker.handle(error, stackTrace, 'providerDidFail: ${provider.name}');
 }

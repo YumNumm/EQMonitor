@@ -90,7 +90,7 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
                 FilledButton.tonal(
                   onPressed: ref
                       .read(earthquakeHistoryViewModelProvider.notifier)
-                      .reload,
+                      .fetch,
                   child: const Text('再読み込み'),
                 ),
               ];

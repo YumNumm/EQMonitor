@@ -37,6 +37,8 @@ class MapViewModel extends _$MapViewModel {
 
   RenderBox? _renderBox;
 
+  void Function()? _registerCallback;
+
   // * MapController周りの実装
   (LatLng, LatLng) _currencPoi = (
     const LatLng(45.8, 145.1),
@@ -567,6 +569,14 @@ class MapViewModel extends _$MapViewModel {
 
   void registerRenderBox(RenderBox renderBox) {
     _renderBox = renderBox;
+    _registerCallback?.call();
+  }
+
+  void onRegisterRenderBox(void Function() callback) {
+    _registerCallback = callback;
+    if (_renderBox != null) {
+      callback();
+    }
   }
 
   void registerAnimationControllers({

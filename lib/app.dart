@@ -13,12 +13,6 @@ class App extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    useEffect(
-      () {
-        return null;
-      },
-      [],
-    );
     final app = DynamicColorBuilder(
       builder: (lightDynamic, darkDynamic) {
         // Fictitious brand color.
