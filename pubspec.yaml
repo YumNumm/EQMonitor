@@ -13,6 +13,7 @@ dependencies:
   awesome_notifications: 0.8.2
   awesome_notifications_fcm: 0.8.0
   collection: ^1.17.1
+  crypto: ^3.0.3
   cupertino_icons: ^1.0.6
   dio: ^5.3.3
   dio_http2_adapter: ^2.3.1+1
@@ -26,7 +27,6 @@ dependencies:
     git:
       url: https://github.com/YumNumm/EQMonitor.git
       path: packages/eqapi_schema
-
   extensions:
     git:
       url: https://github.com/YumNumm/EQMonitor.git
