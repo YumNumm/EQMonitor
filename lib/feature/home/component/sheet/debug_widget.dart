@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
 import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
@@ -59,6 +60,54 @@ class DebugWidget extends ConsumerWidget {
                 context: context,
                 builder: (context) => const KmoniSettingsDialogWidget(),
               ),
+            ),
+            ListTile(
+              title: const Text('重大な通知権限'),
+              leading: const Icon(Icons.notifications_active),
+              onTap: () async {
+                {
+                  final result =
+                      await FirebaseMessaging.instance.requestPermission(
+                    criticalAlert: true,
+                  );
+                  if (context.mounted) {
+                    await showDialog<void>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('重大な通知権限 (FirebaseMessaging)'),
+                        content: Text(result.toString()),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                }
+                {
+                  final result = await AwesomeNotifications()
+                      .requestPermissionToSendNotifications(
+                    permissions: [NotificationPermission.CriticalAlert],
+                  );
+                  if (context.mounted) {
+                    await showDialog<void>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('重大な通知権限 (AwesomeNotifications)'),
+                        content: Text(result.toString()),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                }
+              },
             ),
             ListTile(
               title: const Text('Subscribe to YumNumm Notify'),
