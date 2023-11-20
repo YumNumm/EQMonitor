@@ -106,6 +106,9 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
     final backgroundColor = intensityColor?.background;
 
     return ListTile(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
       title: Text(
         title.toString(),
         style: theme.textTheme.titleMedium?.copyWith(
