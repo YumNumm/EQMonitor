@@ -50,7 +50,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          (data.telegrams.last.headline ?? '').toHalfWidth(),
+          (data.telegrams.last.headline ?? '').toHalfWidth,
         ),
       ),
       body: Stack(
@@ -221,7 +221,7 @@ class _EarthquakeHypoInfoWidget extends ConsumerWidget {
             eq.earthquake?.magnitude.condition,
             eq.earthquake?.magnitude.value
           )) {
-            (final String cond, _) => cond,
+            (final String cond, _) => cond.toHalfWidth.replaceAll('M不明', '不明'),
             (_, final double value) => value.toString(),
             _
                 when item.telegrams
@@ -284,14 +284,51 @@ class _EarthquakeHypoInfoWidget extends ConsumerWidget {
           ),
       ],
     );
+    // M・深さ ともに不明の場合
+    final isMagnitudeAndDepthUnknown =
+        eq.earthquake?.magnitude.condition?.toHalfWidth == 'M不明' &&
+            eq.earthquake?.hypocenter.depth == null &&
+            item.telegrams
+                .any((element) => element.type == TelegramType.vxse53);
+    final magnitudeDepthUnknownWidget = Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      textBaseline: TextBaseline.alphabetic,
+      children: [
+        Text(
+          'M・深さ',
+          style: textTheme.titleMedium!.copyWith(
+            color: textTheme.titleMedium!.color!.withOpacity(0.8),
+          ),
+        ),
+        Text(
+          switch (eq.earthquake?.hypocenter.depth) {
+            _
+                when item.telegrams
+                    .any((element) => element.type == TelegramType.vxse53) =>
+              '不明',
+            _ => '調査中',
+          },
+          style: textTheme.displaySmall!.copyWith(
+            fontWeight: FontWeight.w900,
+            fontFamily: FontFamily.jetBrainsMono,
+            fontFamilyFallback: [FontFamily.notoSansJP],
+          ),
+        ),
+      ],
+    );
     final body = Wrap(
       spacing: 8,
       crossAxisAlignment: WrapCrossAlignment.center,
       alignment: WrapAlignment.center,
       children: [
         const Row(),
-        magnitudeWidget,
-        depthWidget,
+        if (isMagnitudeAndDepthUnknown)
+          magnitudeDepthUnknownWidget
+        else ...[
+          magnitudeWidget,
+          depthWidget,
+        ],
         hypoWidget,
         if (timeWidget != null) timeWidget,
       ],
@@ -352,7 +389,7 @@ class _EarthquakeCommentWidget extends StatelessWidget {
             (_, final String free) => free,
             _ => '',
           }
-              .toHalfWidth(),
+              .toHalfWidth,
           style: Theme.of(context).textTheme.bodyMedium,
         ),
       );
