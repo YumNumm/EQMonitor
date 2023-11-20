@@ -14,9 +14,11 @@ HomeViewModel homeViewModel(HomeViewModelRef ref) => HomeViewModel(ref);
 
 class HomeViewModel {
   HomeViewModel(this.ref) : super() {
-    onEstimatedIntensityChanged(
-      ref.read(estimatedIntensityProvider),
-    );
+    Future<void>.delayed(const Duration(milliseconds: 100), () {
+      onEstimatedIntensityChanged(
+        ref.read(estimatedIntensityProvider),
+      );
+    });
     ref.listen(estimatedIntensityProvider, (_, next) {
       onEstimatedIntensityChanged(next);
     });
