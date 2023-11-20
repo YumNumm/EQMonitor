@@ -150,7 +150,7 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
             if (item.earthquake.isVolcano)
               const CustomChip(
                 child: Text(
-                  '大規模な火山',
+                  '大規模な火山の噴火',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -200,7 +200,7 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
           ? JmaIntensityIcon(
               intensity: JmaIntensity.fiveLower,
               type: IntensityIconType.filled,
-              customText: item.earthquake.isVolcano ? '火山\n情報' : '遠地\n地震',
+              customText: item.earthquake.isVolcano ? '噴火\n情報' : '遠地\n地震',
             )
           : maxIntenisty != null
               ? JmaIntensityIcon(
