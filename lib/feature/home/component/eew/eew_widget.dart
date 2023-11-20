@@ -329,7 +329,7 @@ class EewWidget extends ConsumerWidget {
           timeWidget,
         ],
       );
-      final headline = telegram.headline?.toString().toHalfWidth();
+      final headline = telegram.headline?.toString().toHalfWidth;
       final warningMessageWidget = (headline != null)
           ? [
               Text(

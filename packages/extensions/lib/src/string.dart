@@ -1,7 +1,7 @@
 /// 全角・半角の変換拡張関数
 extension StringExtension on String {
   /// 全角を半角に変換する
-  String toHalfWidth() {
+  String get toHalfWidth {
     return split('').map((String char) {
       final charCode = char.codeUnitAt(0);
       if (charCode >= 0xFF01 && charCode <= 0xFF5E) {
@@ -15,7 +15,7 @@ extension StringExtension on String {
   }
 
   /// 半角を全角に変換する
-  String toFullWidth() {
+  String get toFullWidth {
     return split('').map((String char) {
       final charCode = char.codeUnitAt(0);
       if (charCode >= 0x0021 && charCode <= 0x007E) {
