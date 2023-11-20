@@ -56,7 +56,9 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
       body: Stack(
         children: [
           if (zoomCachedMapData == null)
-            const Center(child: CircularProgressIndicator())
+            const Center(
+              child: CircularProgressIndicator.adaptive(),
+            )
           else
             RepaintBoundary(
               child: EarthquakeMapWidget(
@@ -345,10 +347,12 @@ class _EarthquakeCommentWidget extends StatelessWidget {
         elevation: 1,
         child: Text(
           switch ((comment.forecast?.text, comment.free)) {
+            (final String text, final String free) => '$text\n\n$free',
             (final String text, _) => text,
             (_, final String free) => free,
             _ => '',
-          },
+          }
+              .toHalfWidth(),
           style: Theme.of(context).textTheme.bodyMedium,
         ),
       );

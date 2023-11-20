@@ -24,7 +24,6 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
 
     final intensity = item.earthquake.intensity;
