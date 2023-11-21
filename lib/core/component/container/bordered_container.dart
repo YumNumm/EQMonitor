@@ -11,6 +11,7 @@ class BorderedContainer extends StatelessWidget {
     ),
     this.elevation = 0,
     this.borderRadius = const BorderRadius.all(Radius.circular(16)),
+    this.onPressed,
     super.key,
   });
   final Widget child;
@@ -19,10 +20,34 @@ class BorderedContainer extends StatelessWidget {
   final EdgeInsetsGeometry margin;
   final double elevation;
   final BorderRadiusGeometry borderRadius;
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    if (onPressed != null) {
+      return Ink(
+        child: Material(
+          shape: RoundedRectangleBorder(
+            side: BorderSide(
+              color: theme.colorScheme.onSurface,
+              width: 0,
+            ),
+            borderRadius: borderRadius,
+          ),
+          elevation: elevation,
+          color: accentColor ?? theme.cardColor,
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: onPressed,
+            child: Padding(
+              padding: padding,
+              child: child,
+            ),
+          ),
+        ),
+      );
+    }
 
     return Card(
       elevation: elevation,
