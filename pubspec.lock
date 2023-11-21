@@ -381,22 +381,28 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/eq_map"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "3568ceed0e1b96d1da3e9bfc69d679598368033d"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   eqapi_schema:
     dependency: "direct main"
     description:
       path: "packages/eqapi_schema"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "3568ceed0e1b96d1da3e9bfc69d679598368033d"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   extensions:
     dependency: "direct main"
     description:
       path: "packages/extensions"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "3568ceed0e1b96d1da3e9bfc69d679598368033d"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   fake_async:
     dependency: transitive
@@ -599,10 +605,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_riverpod
-      sha256: e90eaad95b2543d5473ca561f22995bb33f186b2b6065e26e9e22d913be481aa
+      sha256: d261b0f2461e0595b96f92ed807841eb72cea84a6b12b8fd0c76e5ed803e7921
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.7"
+    version: "2.4.8"
   flutter_smart_watch_platform_interface:
     dependency: transitive
     description:
@@ -713,10 +719,10 @@ packages:
     dependency: "direct main"
     description:
       name: hooks_riverpod
-      sha256: dcb557be94f6ae6c5483f74362615ebc9429c288581f570b38d3f2f70fcbad6b
+      sha256: b271e06606e718cf8185db9a792d1af00e2049e7bf5da09583654e020c00fbaa
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.7"
+    version: "2.4.8"
   hotreloader:
     dependency: transitive
     description:
@@ -817,8 +823,10 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/lat_lng"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "3568ceed0e1b96d1da3e9bfc69d679598368033d"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   latlong2:
     dependency: "direct main"
@@ -1195,10 +1203,10 @@ packages:
     dependency: transitive
     description:
       name: riverpod
-      sha256: f003970b2b47fc708f0697299e32693fd8f5e2d490edcba65e4987f88b840cf4
+      sha256: "08451ddbaad6eae73e2422d8109775885623340d721c6637b8719c9f4b478848"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.7"
+    version: "2.4.8"
   riverpod_analyzer_utils:
     dependency: transitive
     description:
@@ -1211,10 +1219,10 @@ packages:
     dependency: "direct main"
     description:
       name: riverpod_annotation
-      sha256: "670dc172c835a1638fe942552449f99adb40ea3faa2d4988081db3c2bd1a4891"
+      sha256: "02c9bced96ed3ed8d9970820d1ce7b16600955bc01aa8b2276f09dd3d9d29ed9"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.1"
+    version: "2.3.2"
   riverpod_generator:
     dependency: "direct dev"
     description:
@@ -1515,15 +1523,19 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/topo_map"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "3568ceed0e1b96d1da3e9bfc69d679598368033d"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   topojson:
     dependency: "direct main"
     description:
       path: "packages/topojson"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "3568ceed0e1b96d1da3e9bfc69d679598368033d"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   tuple:
     dependency: transitive
