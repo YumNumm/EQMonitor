@@ -19,6 +19,7 @@ class KmoniSettingsPage extends ConsumerWidget {
         child: Column(
           children: [
             Card(
+              clipBehavior: Clip.antiAlias,
               elevation: 0,
               color: theme.colorScheme.primaryContainer,
               child: SwitchListTile.adaptive(

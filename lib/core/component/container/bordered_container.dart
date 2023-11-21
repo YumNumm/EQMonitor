@@ -27,7 +27,10 @@ class BorderedContainer extends StatelessWidget {
     final theme = Theme.of(context);
     if (onPressed != null) {
       return Ink(
-        child: Material(
+        child: Card(
+          elevation: elevation,
+          color: accentColor ?? theme.cardColor,
+          // border
           shape: RoundedRectangleBorder(
             side: BorderSide(
               color: theme.colorScheme.onSurface,
@@ -35,8 +38,7 @@ class BorderedContainer extends StatelessWidget {
             ),
             borderRadius: borderRadius,
           ),
-          elevation: elevation,
-          color: accentColor ?? theme.cardColor,
+          margin: margin,
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: onPressed,

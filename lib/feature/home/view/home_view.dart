@@ -6,13 +6,11 @@ import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:eqmonitor/feature/config/debug/debug_attempt.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
 import 'package:eqmonitor/feature/home/component/map/eew_estimated_intensity_widget.dart';
 import 'package:eqmonitor/feature/home/component/map/eew_hypocenter_widget.dart';
 import 'package:eqmonitor/feature/home/component/map/eew_pswave_arrival_circle.dart';
 import 'package:eqmonitor/feature/home/component/map/kmoni_map_widget.dart';
-import 'package:eqmonitor/feature/home/component/sheet/debug_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
 import 'package:eqmonitor/feature/home/features/debugger/debugger_provider.dart';
@@ -51,24 +49,11 @@ class HomeView extends HookConsumerWidget {
       talker: ref.watch(talkerProvider),
       child: Scaffold(
         appBar: AppBar(
-          title: GestureDetector(
-            onDoubleTap: () async {
-              debugAttemptCount.value++;
-              if (debugAttemptCount.value >= 5) {
-                final result = await DebugAttempt.attempt(context);
-                if (result) {
-                  await ref
-                      .read(debuggerProvider.notifier)
-                      .setDebugger(value: true);
-                }
-              }
-            },
-            child: Text(
-              'EQMonitor',
-              style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
+          title: Text(
+            'EQMonitor',
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           forceMaterialTransparency: true,
         ),
@@ -239,17 +224,10 @@ class _Sheet extends ConsumerWidget {
           const KmoniMaintenanceWidget(),
           const EarthquakeHistorySheetWidget(),
           ListTile(
-            title: const Text('強震モニタ設定'),
+            title: const Text('設定'),
             leading: const Icon(Icons.settings),
-            onTap: () => context.push(const KmoniRoute().location),
+            onTap: () => context.push(const SettingsRoute().location),
           ),
-          ListTile(
-            title: const Text('震度配色設定'),
-            leading: const Icon(Icons.color_lens),
-            onTap: () => context.push(const ColorSchemeConfigRoute().location),
-          ),
-          if (isDebugMode.isDebugger || isDebugMode.isDeveloper)
-            const DebugWidget(),
         ],
       ),
     );
