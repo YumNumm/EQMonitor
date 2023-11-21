@@ -1,13 +1,17 @@
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
-import 'package:eqmonitor/feature/config/color_scheme/color_scheme_config_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/color_scheme/color_scheme_config_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/page/earthquake_history.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/screen/earthquake_history_details.dart';
 import 'package:eqmonitor/feature/eew_detailed_history/eew_detailed_history_screen.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/page/kmoni_settings_page.dart';
 import 'package:eqmonitor/feature/home/view/home_view.dart';
+import 'package:eqmonitor/feature/settings/children/privacy_policy_screen.dart';
+import 'package:eqmonitor/feature/settings/children/term_of_service_screen.dart';
+import 'package:eqmonitor/feature/settings/settings_screen.dart';
 import 'package:eqmonitor/feature/setup/screen/setup_screen.dart';
 import 'package:eqmonitor/feature/talker/talker_page.dart';
+import 'package:eqmonitor/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -102,4 +106,78 @@ class KmoniRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const KmoniSettingsPage();
+}
+
+@TypedGoRoute<SettingsRoute>(
+  path: '/settings',
+  routes: [
+    TypedGoRoute<TermOfServiceRoute>(
+      path: 'term-of-service',
+    ),
+    TypedGoRoute<PrivacyPolicyRoute>(
+      path: 'privacy-policy',
+    ),
+    TypedGoRoute<LicenseRoute>(
+      path: 'license',
+    ),
+  ],
+)
+class SettingsRoute extends GoRouteData {
+  const SettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const SettingsScreen();
+}
+
+class TermOfServiceRoute extends GoRouteData {
+  const TermOfServiceRoute({
+    required this.$extra,
+    this.showAcceptButton = false,
+  });
+  final void Function({bool isAccepted})? $extra;
+  final bool showAcceptButton;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      TermOfServiceScreen(
+        onResult: $extra,
+        showAcceptButton: showAcceptButton,
+      );
+}
+
+class PrivacyPolicyRoute extends GoRouteData {
+  const PrivacyPolicyRoute({
+    required this.$extra,
+    this.showAcceptButton = false,
+  });
+  final void Function({bool isAccepted})? $extra;
+  final bool showAcceptButton;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      PrivacyPolicyScreen(
+        onResult: $extra,
+        showAcceptButton: showAcceptButton,
+      );
+}
+
+class LicenseRoute extends GoRouteData {
+  const LicenseRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) => LicensePage(
+        applicationName: 'EQMonitor',
+        applicationLegalese:
+            '${DateTime.now().year} © Ryotaro Onoue All Rights Reserved.',
+        applicationIcon: Padding(
+          padding: const EdgeInsets.all(8),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: Assets.images.icon.image(
+              height: 80,
+            ),
+          ),
+        ),
+      );
 }

@@ -17,6 +17,7 @@ List<RouteBase> get $appRoutes => [
       $homeRoute,
       $talkerRoute,
       $kmoniRoute,
+      $settingsRoute,
     ];
 
 RouteBase get $setupRoute => GoRouteData.$route(
@@ -202,6 +203,137 @@ extension $KmoniRouteExtension on KmoniRoute {
       context.pushReplacement(location);
 
   void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $settingsRoute => GoRouteData.$route(
+      path: '/settings',
+      factory: $SettingsRouteExtension._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'term-of-service',
+          factory: $TermOfServiceRouteExtension._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'privacy-policy',
+          factory: $PrivacyPolicyRouteExtension._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'license',
+          factory: $LicenseRouteExtension._fromState,
+        ),
+      ],
+    );
+
+extension $SettingsRouteExtension on SettingsRoute {
+  static SettingsRoute _fromState(GoRouterState state) => const SettingsRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $TermOfServiceRouteExtension on TermOfServiceRoute {
+  static TermOfServiceRoute _fromState(GoRouterState state) =>
+      TermOfServiceRoute(
+        showAcceptButton: _$convertMapValue('show-accept-button',
+                state.uri.queryParameters, _$boolConverter) ??
+            false,
+        $extra: state.extra as void Function({bool isAccepted})?,
+      );
+
+  String get location => GoRouteData.$location(
+        '/settings/term-of-service',
+        queryParams: {
+          if (showAcceptButton != false)
+            'show-accept-button': showAcceptButton.toString(),
+        },
+      );
+
+  void go(BuildContext context) => context.go(location, extra: $extra);
+
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: $extra);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: $extra);
+
+  void replace(BuildContext context) =>
+      context.replace(location, extra: $extra);
+}
+
+extension $PrivacyPolicyRouteExtension on PrivacyPolicyRoute {
+  static PrivacyPolicyRoute _fromState(GoRouterState state) =>
+      PrivacyPolicyRoute(
+        showAcceptButton: _$convertMapValue('show-accept-button',
+                state.uri.queryParameters, _$boolConverter) ??
+            false,
+        $extra: state.extra as void Function({bool isAccepted})?,
+      );
+
+  String get location => GoRouteData.$location(
+        '/settings/privacy-policy',
+        queryParams: {
+          if (showAcceptButton != false)
+            'show-accept-button': showAcceptButton.toString(),
+        },
+      );
+
+  void go(BuildContext context) => context.go(location, extra: $extra);
+
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: $extra);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: $extra);
+
+  void replace(BuildContext context) =>
+      context.replace(location, extra: $extra);
+}
+
+extension $LicenseRouteExtension on LicenseRoute {
+  static LicenseRoute _fromState(GoRouterState state) => const LicenseRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/license',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+T? _$convertMapValue<T>(
+  String key,
+  Map<String, String> map,
+  T Function(String) converter,
+) {
+  final value = map[key];
+  return value == null ? null : converter(value);
+}
+
+bool _$boolConverter(String value) {
+  switch (value) {
+    case 'true':
+      return true;
+    case 'false':
+      return false;
+    default:
+      throw UnsupportedError('Cannot convert "$value" into a bool.');
+  }
 }
 
 // **************************************************************************

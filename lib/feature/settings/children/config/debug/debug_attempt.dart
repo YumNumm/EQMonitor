@@ -42,9 +42,12 @@ class DebugAttempt extends HookWidget {
       context: context,
       builder: (context) => const DebugAttempt(),
     );
-    if (str?.sha512 ==
+    if (str == null) {
+      return false;
+    }
+    if ('SALT${str}SALT'.sha512 ==
         // ignore: lines_longer_than_80_chars
-        'a18accfb22e45f501dc94cb4d6fbf0bb564a72bd6f37373728ee892855c31ae5d69364c5c9284ae860636cc21729c17d93ae5541bf112a9b95e9bc436b819073') {
+        '6e205e617f7b1a49310008f128abcd1f1a950486145f47b99c1a47c0edee63141420001eac07f0978bea3245026f71905086853bb2c26a06162c2bf5f3c56b11') {
       return true;
     }
     return false;
