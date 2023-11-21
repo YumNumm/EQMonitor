@@ -8,13 +8,13 @@ part of 'kmoni_maintenance_message_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_KmoniMaintenanceMessageModel _$$_KmoniMaintenanceMessageModelFromJson(
+_$KmoniMaintenanceMessageModelImpl _$$KmoniMaintenanceMessageModelImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_KmoniMaintenanceMessageModel',
+      r'_$KmoniMaintenanceMessageModelImpl',
       json,
       ($checkedConvert) {
-        final val = _$_KmoniMaintenanceMessageModel(
+        final val = _$KmoniMaintenanceMessageModelImpl(
           message: $checkedConvert('message', (v) => v as String? ?? ''),
           type: $checkedConvert(
               'type',
@@ -26,8 +26,8 @@ _$_KmoniMaintenanceMessageModel _$$_KmoniMaintenanceMessageModelFromJson(
       },
     );
 
-Map<String, dynamic> _$$_KmoniMaintenanceMessageModelToJson(
-        _$_KmoniMaintenanceMessageModel instance) =>
+Map<String, dynamic> _$$KmoniMaintenanceMessageModelImplToJson(
+        _$KmoniMaintenanceMessageModelImpl instance) =>
     <String, dynamic>{
       'message': instance.message,
       'type': kmoniMaintenanceMessageTypeToJson(instance.type),

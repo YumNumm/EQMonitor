@@ -62,22 +62,22 @@ class _$KmoniConfigCopyWithImpl<$Res, $Val extends KmoniConfig>
 }
 
 /// @nodoc
-abstract class _$$_KmoniConfigCopyWith<$Res>
+abstract class _$$KmoniConfigImplCopyWith<$Res>
     implements $KmoniConfigCopyWith<$Res> {
-  factory _$$_KmoniConfigCopyWith(
-          _$_KmoniConfig value, $Res Function(_$_KmoniConfig) then) =
-      __$$_KmoniConfigCopyWithImpl<$Res>;
+  factory _$$KmoniConfigImplCopyWith(
+          _$KmoniConfigImpl value, $Res Function(_$KmoniConfigImpl) then) =
+      __$$KmoniConfigImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int counter});
 }
 
 /// @nodoc
-class __$$_KmoniConfigCopyWithImpl<$Res>
-    extends _$KmoniConfigCopyWithImpl<$Res, _$_KmoniConfig>
-    implements _$$_KmoniConfigCopyWith<$Res> {
-  __$$_KmoniConfigCopyWithImpl(
-      _$_KmoniConfig _value, $Res Function(_$_KmoniConfig) _then)
+class __$$KmoniConfigImplCopyWithImpl<$Res>
+    extends _$KmoniConfigCopyWithImpl<$Res, _$KmoniConfigImpl>
+    implements _$$KmoniConfigImplCopyWith<$Res> {
+  __$$KmoniConfigImplCopyWithImpl(
+      _$KmoniConfigImpl _value, $Res Function(_$KmoniConfigImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -85,7 +85,7 @@ class __$$_KmoniConfigCopyWithImpl<$Res>
   $Res call({
     Object? counter = null,
   }) {
-    return _then(_$_KmoniConfig(
+    return _then(_$KmoniConfigImpl(
       counter: null == counter
           ? _value.counter
           : counter // ignore: cast_nullable_to_non_nullable
@@ -96,11 +96,11 @@ class __$$_KmoniConfigCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_KmoniConfig implements _KmoniConfig {
-  const _$_KmoniConfig({this.counter = 0});
+class _$KmoniConfigImpl implements _KmoniConfig {
+  const _$KmoniConfigImpl({this.counter = 0});
 
-  factory _$_KmoniConfig.fromJson(Map<String, dynamic> json) =>
-      _$$_KmoniConfigFromJson(json);
+  factory _$KmoniConfigImpl.fromJson(Map<String, dynamic> json) =>
+      _$$KmoniConfigImplFromJson(json);
 
   @override
   @JsonKey()
@@ -115,7 +115,7 @@ class _$_KmoniConfig implements _KmoniConfig {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_KmoniConfig &&
+            other is _$KmoniConfigImpl &&
             (identical(other.counter, counter) || other.counter == counter));
   }
 
@@ -126,27 +126,27 @@ class _$_KmoniConfig implements _KmoniConfig {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_KmoniConfigCopyWith<_$_KmoniConfig> get copyWith =>
-      __$$_KmoniConfigCopyWithImpl<_$_KmoniConfig>(this, _$identity);
+  _$$KmoniConfigImplCopyWith<_$KmoniConfigImpl> get copyWith =>
+      __$$KmoniConfigImplCopyWithImpl<_$KmoniConfigImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_KmoniConfigToJson(
+    return _$$KmoniConfigImplToJson(
       this,
     );
   }
 }
 
 abstract class _KmoniConfig implements KmoniConfig {
-  const factory _KmoniConfig({final int counter}) = _$_KmoniConfig;
+  const factory _KmoniConfig({final int counter}) = _$KmoniConfigImpl;
 
   factory _KmoniConfig.fromJson(Map<String, dynamic> json) =
-      _$_KmoniConfig.fromJson;
+      _$KmoniConfigImpl.fromJson;
 
   @override
   int get counter;
   @override
   @JsonKey(ignore: true)
-  _$$_KmoniConfigCopyWith<_$_KmoniConfig> get copyWith =>
+  _$$KmoniConfigImplCopyWith<_$KmoniConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

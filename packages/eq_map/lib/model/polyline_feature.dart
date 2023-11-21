@@ -12,7 +12,7 @@ class PolylineFeature {
   });
 
   factory PolylineFeature.fromTopoMap(TopologyMap map, int index) {
-    final arc = map.arcs.getOrNull<TopologyArc>(index);
+    final arc = map.arcs.getOrNull(index);
     if (arc == null) {
       throw ArgumentError('arc is null at index: $index');
     }

@@ -66,11 +66,11 @@ class _$TelegramWsModelCopyWithImpl<$Res, $Val extends TelegramWsModel>
 }
 
 /// @nodoc
-abstract class _$$_TelegramWsModelCopyWith<$Res>
+abstract class _$$TelegramWsModelImplCopyWith<$Res>
     implements $TelegramWsModelCopyWith<$Res> {
-  factory _$$_TelegramWsModelCopyWith(
-          _$_TelegramWsModel value, $Res Function(_$_TelegramWsModel) then) =
-      __$$_TelegramWsModelCopyWithImpl<$Res>;
+  factory _$$TelegramWsModelImplCopyWith(_$TelegramWsModelImpl value,
+          $Res Function(_$TelegramWsModelImpl) then) =
+      __$$TelegramWsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -80,11 +80,11 @@ abstract class _$$_TelegramWsModelCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TelegramWsModelCopyWithImpl<$Res>
-    extends _$TelegramWsModelCopyWithImpl<$Res, _$_TelegramWsModel>
-    implements _$$_TelegramWsModelCopyWith<$Res> {
-  __$$_TelegramWsModelCopyWithImpl(
-      _$_TelegramWsModel _value, $Res Function(_$_TelegramWsModel) _then)
+class __$$TelegramWsModelImplCopyWithImpl<$Res>
+    extends _$TelegramWsModelCopyWithImpl<$Res, _$TelegramWsModelImpl>
+    implements _$$TelegramWsModelImplCopyWith<$Res> {
+  __$$TelegramWsModelImplCopyWithImpl(
+      _$TelegramWsModelImpl _value, $Res Function(_$TelegramWsModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -92,7 +92,7 @@ class __$$_TelegramWsModelCopyWithImpl<$Res>
   $Res call({
     Object? telegramStream = null,
   }) {
-    return _then(_$_TelegramWsModel(
+    return _then(_$TelegramWsModelImpl(
       telegramStream: null == telegramStream
           ? _value.telegramStream
           : telegramStream // ignore: cast_nullable_to_non_nullable
@@ -103,14 +103,14 @@ class __$$_TelegramWsModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TelegramWsModel implements _TelegramWsModel {
-  const _$_TelegramWsModel(
+class _$TelegramWsModelImpl implements _TelegramWsModel {
+  const _$TelegramWsModelImpl(
       {@JsonKey(
           fromJson: telegramWsModelFromJson, toJson: telegramWsModelToJson)
       required this.telegramStream});
 
-  factory _$_TelegramWsModel.fromJson(Map<String, dynamic> json) =>
-      _$$_TelegramWsModelFromJson(json);
+  factory _$TelegramWsModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TelegramWsModelImplFromJson(json);
 
   @override
   @JsonKey(fromJson: telegramWsModelFromJson, toJson: telegramWsModelToJson)
@@ -125,7 +125,7 @@ class _$_TelegramWsModel implements _TelegramWsModel {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TelegramWsModel &&
+            other is _$TelegramWsModelImpl &&
             (identical(other.telegramStream, telegramStream) ||
                 other.telegramStream == telegramStream));
   }
@@ -137,12 +137,13 @@ class _$_TelegramWsModel implements _TelegramWsModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TelegramWsModelCopyWith<_$_TelegramWsModel> get copyWith =>
-      __$$_TelegramWsModelCopyWithImpl<_$_TelegramWsModel>(this, _$identity);
+  _$$TelegramWsModelImplCopyWith<_$TelegramWsModelImpl> get copyWith =>
+      __$$TelegramWsModelImplCopyWithImpl<_$TelegramWsModelImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TelegramWsModelToJson(
+    return _$$TelegramWsModelImplToJson(
       this,
     );
   }
@@ -150,18 +151,19 @@ class _$_TelegramWsModel implements _TelegramWsModel {
 
 abstract class _TelegramWsModel implements TelegramWsModel {
   const factory _TelegramWsModel(
-      {@JsonKey(
-          fromJson: telegramWsModelFromJson, toJson: telegramWsModelToJson)
-      required final Stream<TelegramV3> telegramStream}) = _$_TelegramWsModel;
+          {@JsonKey(
+              fromJson: telegramWsModelFromJson, toJson: telegramWsModelToJson)
+          required final Stream<TelegramV3> telegramStream}) =
+      _$TelegramWsModelImpl;
 
   factory _TelegramWsModel.fromJson(Map<String, dynamic> json) =
-      _$_TelegramWsModel.fromJson;
+      _$TelegramWsModelImpl.fromJson;
 
   @override
   @JsonKey(fromJson: telegramWsModelFromJson, toJson: telegramWsModelToJson)
   Stream<TelegramV3> get telegramStream;
   @override
   @JsonKey(ignore: true)
-  _$$_TelegramWsModelCopyWith<_$_TelegramWsModel> get copyWith =>
+  _$$TelegramWsModelImplCopyWith<_$TelegramWsModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -72,11 +72,11 @@ class _$WorldMapPropertyCopyWithImpl<$Res, $Val extends WorldMapProperty>
 }
 
 /// @nodoc
-abstract class _$$_WorldMapPropertyCopyWith<$Res>
+abstract class _$$WorldMapPropertyImplCopyWith<$Res>
     implements $WorldMapPropertyCopyWith<$Res> {
-  factory _$$_WorldMapPropertyCopyWith(
-          _$_WorldMapProperty value, $Res Function(_$_WorldMapProperty) then) =
-      __$$_WorldMapPropertyCopyWithImpl<$Res>;
+  factory _$$WorldMapPropertyImplCopyWith(_$WorldMapPropertyImpl value,
+          $Res Function(_$WorldMapPropertyImpl) then) =
+      __$$WorldMapPropertyImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -85,11 +85,11 @@ abstract class _$$_WorldMapPropertyCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_WorldMapPropertyCopyWithImpl<$Res>
-    extends _$WorldMapPropertyCopyWithImpl<$Res, _$_WorldMapProperty>
-    implements _$$_WorldMapPropertyCopyWith<$Res> {
-  __$$_WorldMapPropertyCopyWithImpl(
-      _$_WorldMapProperty _value, $Res Function(_$_WorldMapProperty) _then)
+class __$$WorldMapPropertyImplCopyWithImpl<$Res>
+    extends _$WorldMapPropertyCopyWithImpl<$Res, _$WorldMapPropertyImpl>
+    implements _$$WorldMapPropertyImplCopyWith<$Res> {
+  __$$WorldMapPropertyImplCopyWithImpl(_$WorldMapPropertyImpl _value,
+      $Res Function(_$WorldMapPropertyImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -98,7 +98,7 @@ class __$$_WorldMapPropertyCopyWithImpl<$Res>
     Object? name = null,
     Object? nameJa = null,
   }) {
-    return _then(_$_WorldMapProperty(
+    return _then(_$WorldMapPropertyImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -113,13 +113,13 @@ class __$$_WorldMapPropertyCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_WorldMapProperty implements _WorldMapProperty {
-  const _$_WorldMapProperty(
+class _$WorldMapPropertyImpl implements _WorldMapProperty {
+  const _$WorldMapPropertyImpl(
       {@JsonKey(name: 'NAME') required this.name,
       @JsonKey(name: 'NAME_JA') required this.nameJa});
 
-  factory _$_WorldMapProperty.fromJson(Map<String, dynamic> json) =>
-      _$$_WorldMapPropertyFromJson(json);
+  factory _$WorldMapPropertyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$WorldMapPropertyImplFromJson(json);
 
   @override
   @JsonKey(name: 'NAME')
@@ -137,7 +137,7 @@ class _$_WorldMapProperty implements _WorldMapProperty {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_WorldMapProperty &&
+            other is _$WorldMapPropertyImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.nameJa, nameJa) || other.nameJa == nameJa));
   }
@@ -149,12 +149,13 @@ class _$_WorldMapProperty implements _WorldMapProperty {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_WorldMapPropertyCopyWith<_$_WorldMapProperty> get copyWith =>
-      __$$_WorldMapPropertyCopyWithImpl<_$_WorldMapProperty>(this, _$identity);
+  _$$WorldMapPropertyImplCopyWith<_$WorldMapPropertyImpl> get copyWith =>
+      __$$WorldMapPropertyImplCopyWithImpl<_$WorldMapPropertyImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_WorldMapPropertyToJson(
+    return _$$WorldMapPropertyImplToJson(
       this,
     );
   }
@@ -164,10 +165,10 @@ abstract class _WorldMapProperty implements WorldMapProperty {
   const factory _WorldMapProperty(
           {@JsonKey(name: 'NAME') required final String name,
           @JsonKey(name: 'NAME_JA') required final String nameJa}) =
-      _$_WorldMapProperty;
+      _$WorldMapPropertyImpl;
 
   factory _WorldMapProperty.fromJson(Map<String, dynamic> json) =
-      _$_WorldMapProperty.fromJson;
+      _$WorldMapPropertyImpl.fromJson;
 
   @override
   @JsonKey(name: 'NAME')
@@ -177,6 +178,6 @@ abstract class _WorldMapProperty implements WorldMapProperty {
   String get nameJa;
   @override
   @JsonKey(ignore: true)
-  _$$_WorldMapPropertyCopyWith<_$_WorldMapProperty> get copyWith =>
+  _$$WorldMapPropertyImplCopyWith<_$WorldMapPropertyImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

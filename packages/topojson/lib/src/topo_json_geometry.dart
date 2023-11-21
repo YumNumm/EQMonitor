@@ -48,7 +48,7 @@ sealed class TopoJsonGeometryObject {
       case null:
         return {
           if (properties != null)
-            'properties': (properties as dynamic).toJson(),
+            'properties': properties,
           'type': null,
         };
     }

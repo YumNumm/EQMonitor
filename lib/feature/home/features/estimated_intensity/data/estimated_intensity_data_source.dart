@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/kmoni_observation_point.dart';
 import 'package:lat_lng/lat_lng.dart';
-import 'package:latlong2/latlong.dart' as latLong2;
+import 'package:latlong2/latlong.dart' as lat_long_2;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'estimated_intensity_data_source.g.dart';
@@ -26,12 +26,12 @@ class EstimatedIntensityDataSource {
     // 断層長計算(半径)
     final faultLength = math.pow(10, 0.5 * momentMagnitude - 1.85) / 2;
     final result = <AnalyzedKmoniObservationPoint>[];
-    const distanceCalcular = latLong2.Distance();
+    const distanceCalcular = lat_long_2.Distance();
     for (final point in points) {
       final epicenterDistance = distanceCalcular.as(
-            latLong2.LengthUnit.Kilometer,
-            latLong2.LatLng(point.latLng.lat, point.latLng.lon),
-            latLong2.LatLng(hypocenter.lat, hypocenter.lon),
+            lat_long_2.LengthUnit.Kilometer,
+            lat_long_2.LatLng(point.latLng.lat, point.latLng.lon),
+            lat_long_2.LatLng(hypocenter.lat, hypocenter.lon),
           ) -
           faultLength;
       // 断層長を引いた震源距離を求める

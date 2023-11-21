@@ -8,12 +8,12 @@ part of 'debugger_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_DebuggerModel _$$_DebuggerModelFromJson(Map<String, dynamic> json) =>
+_$DebuggerModelImpl _$$DebuggerModelImplFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_DebuggerModel',
+      r'_$DebuggerModelImpl',
       json,
       ($checkedConvert) {
-        final val = _$_DebuggerModel(
+        final val = _$DebuggerModelImpl(
           isDebugger: $checkedConvert('isDebugger', (v) => v as bool? ?? false),
           isDeveloper:
               $checkedConvert('isDeveloper', (v) => v as bool? ?? false),
@@ -22,7 +22,7 @@ _$_DebuggerModel _$$_DebuggerModelFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_DebuggerModelToJson(_$_DebuggerModel instance) =>
+Map<String, dynamic> _$$DebuggerModelImplToJson(_$DebuggerModelImpl instance) =>
     <String, dynamic>{
       'isDebugger': instance.isDebugger,
       'isDeveloper': instance.isDeveloper,

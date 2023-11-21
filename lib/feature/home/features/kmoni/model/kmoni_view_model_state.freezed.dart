@@ -99,11 +99,11 @@ class _$KmoniViewModelStateCopyWithImpl<$Res, $Val extends KmoniViewModelState>
 }
 
 /// @nodoc
-abstract class _$$_KmoniViewModelStateCopyWith<$Res>
+abstract class _$$KmoniViewModelStateImplCopyWith<$Res>
     implements $KmoniViewModelStateCopyWith<$Res> {
-  factory _$$_KmoniViewModelStateCopyWith(_$_KmoniViewModelState value,
-          $Res Function(_$_KmoniViewModelState) then) =
-      __$$_KmoniViewModelStateCopyWithImpl<$Res>;
+  factory _$$KmoniViewModelStateImplCopyWith(_$KmoniViewModelStateImpl value,
+          $Res Function(_$KmoniViewModelStateImpl) then) =
+      __$$KmoniViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -116,11 +116,11 @@ abstract class _$$_KmoniViewModelStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_KmoniViewModelStateCopyWithImpl<$Res>
-    extends _$KmoniViewModelStateCopyWithImpl<$Res, _$_KmoniViewModelState>
-    implements _$$_KmoniViewModelStateCopyWith<$Res> {
-  __$$_KmoniViewModelStateCopyWithImpl(_$_KmoniViewModelState _value,
-      $Res Function(_$_KmoniViewModelState) _then)
+class __$$KmoniViewModelStateImplCopyWithImpl<$Res>
+    extends _$KmoniViewModelStateCopyWithImpl<$Res, _$KmoniViewModelStateImpl>
+    implements _$$KmoniViewModelStateImplCopyWith<$Res> {
+  __$$KmoniViewModelStateImplCopyWithImpl(_$KmoniViewModelStateImpl _value,
+      $Res Function(_$KmoniViewModelStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -133,7 +133,7 @@ class __$$_KmoniViewModelStateCopyWithImpl<$Res>
     Object? analyzedPoints = freezed,
     Object? isDelayAdjusting = null,
   }) {
-    return _then(_$_KmoniViewModelState(
+    return _then(_$KmoniViewModelStateImpl(
       isInitialized: null == isInitialized
           ? _value.isInitialized
           : isInitialized // ignore: cast_nullable_to_non_nullable
@@ -164,8 +164,8 @@ class __$$_KmoniViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_KmoniViewModelState implements _KmoniViewModelState {
-  const _$_KmoniViewModelState(
+class _$KmoniViewModelStateImpl implements _KmoniViewModelState {
+  const _$KmoniViewModelStateImpl(
       {required this.isInitialized,
       required this.lastUpdatedAt,
       required this.delay,
@@ -208,7 +208,7 @@ class _$_KmoniViewModelState implements _KmoniViewModelState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_KmoniViewModelState &&
+            other is _$KmoniViewModelStateImpl &&
             (identical(other.isInitialized, isInitialized) ||
                 other.isInitialized == isInitialized) &&
             (identical(other.lastUpdatedAt, lastUpdatedAt) ||
@@ -234,8 +234,8 @@ class _$_KmoniViewModelState implements _KmoniViewModelState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_KmoniViewModelStateCopyWith<_$_KmoniViewModelState> get copyWith =>
-      __$$_KmoniViewModelStateCopyWithImpl<_$_KmoniViewModelState>(
+  _$$KmoniViewModelStateImplCopyWith<_$KmoniViewModelStateImpl> get copyWith =>
+      __$$KmoniViewModelStateImplCopyWithImpl<_$KmoniViewModelStateImpl>(
           this, _$identity);
 }
 
@@ -246,7 +246,7 @@ abstract class _KmoniViewModelState implements KmoniViewModelState {
       required final Duration? delay,
       required final KmoniStatus status,
       required final List<AnalyzedKmoniObservationPoint>? analyzedPoints,
-      required final bool isDelayAdjusting}) = _$_KmoniViewModelState;
+      required final bool isDelayAdjusting}) = _$KmoniViewModelStateImpl;
 
   @override
 
@@ -268,6 +268,6 @@ abstract class _KmoniViewModelState implements KmoniViewModelState {
   bool get isDelayAdjusting;
   @override
   @JsonKey(ignore: true)
-  _$$_KmoniViewModelStateCopyWith<_$_KmoniViewModelState> get copyWith =>
+  _$$KmoniViewModelStateImplCopyWith<_$KmoniViewModelStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

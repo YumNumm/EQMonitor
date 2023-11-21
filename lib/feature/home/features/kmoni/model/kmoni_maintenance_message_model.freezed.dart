@@ -80,12 +80,12 @@ class _$KmoniMaintenanceMessageModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_KmoniMaintenanceMessageModelCopyWith<$Res>
+abstract class _$$KmoniMaintenanceMessageModelImplCopyWith<$Res>
     implements $KmoniMaintenanceMessageModelCopyWith<$Res> {
-  factory _$$_KmoniMaintenanceMessageModelCopyWith(
-          _$_KmoniMaintenanceMessageModel value,
-          $Res Function(_$_KmoniMaintenanceMessageModel) then) =
-      __$$_KmoniMaintenanceMessageModelCopyWithImpl<$Res>;
+  factory _$$KmoniMaintenanceMessageModelImplCopyWith(
+          _$KmoniMaintenanceMessageModelImpl value,
+          $Res Function(_$KmoniMaintenanceMessageModelImpl) then) =
+      __$$KmoniMaintenanceMessageModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -97,13 +97,13 @@ abstract class _$$_KmoniMaintenanceMessageModelCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_KmoniMaintenanceMessageModelCopyWithImpl<$Res>
+class __$$KmoniMaintenanceMessageModelImplCopyWithImpl<$Res>
     extends _$KmoniMaintenanceMessageModelCopyWithImpl<$Res,
-        _$_KmoniMaintenanceMessageModel>
-    implements _$$_KmoniMaintenanceMessageModelCopyWith<$Res> {
-  __$$_KmoniMaintenanceMessageModelCopyWithImpl(
-      _$_KmoniMaintenanceMessageModel _value,
-      $Res Function(_$_KmoniMaintenanceMessageModel) _then)
+        _$KmoniMaintenanceMessageModelImpl>
+    implements _$$KmoniMaintenanceMessageModelImplCopyWith<$Res> {
+  __$$KmoniMaintenanceMessageModelImplCopyWithImpl(
+      _$KmoniMaintenanceMessageModelImpl _value,
+      $Res Function(_$KmoniMaintenanceMessageModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -112,7 +112,7 @@ class __$$_KmoniMaintenanceMessageModelCopyWithImpl<$Res>
     Object? message = null,
     Object? type = null,
   }) {
-    return _then(_$_KmoniMaintenanceMessageModel(
+    return _then(_$KmoniMaintenanceMessageModelImpl(
       message: null == message
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -127,16 +127,18 @@ class __$$_KmoniMaintenanceMessageModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_KmoniMaintenanceMessageModel implements _KmoniMaintenanceMessageModel {
-  const _$_KmoniMaintenanceMessageModel(
+class _$KmoniMaintenanceMessageModelImpl
+    implements _KmoniMaintenanceMessageModel {
+  const _$KmoniMaintenanceMessageModelImpl(
       {this.message = '',
       @JsonKey(
           fromJson: kmoniMaintenanceMessageTypeFromJson,
           toJson: kmoniMaintenanceMessageTypeToJson)
       this.type = KmoniMaintenanceMessageType.non});
 
-  factory _$_KmoniMaintenanceMessageModel.fromJson(Map<String, dynamic> json) =>
-      _$$_KmoniMaintenanceMessageModelFromJson(json);
+  factory _$KmoniMaintenanceMessageModelImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$KmoniMaintenanceMessageModelImplFromJson(json);
 
   @override
   @JsonKey()
@@ -156,7 +158,7 @@ class _$_KmoniMaintenanceMessageModel implements _KmoniMaintenanceMessageModel {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_KmoniMaintenanceMessageModel &&
+            other is _$KmoniMaintenanceMessageModelImpl &&
             (identical(other.message, message) || other.message == message) &&
             (identical(other.type, type) || other.type == type));
   }
@@ -168,13 +170,14 @@ class _$_KmoniMaintenanceMessageModel implements _KmoniMaintenanceMessageModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_KmoniMaintenanceMessageModelCopyWith<_$_KmoniMaintenanceMessageModel>
-      get copyWith => __$$_KmoniMaintenanceMessageModelCopyWithImpl<
-          _$_KmoniMaintenanceMessageModel>(this, _$identity);
+  _$$KmoniMaintenanceMessageModelImplCopyWith<
+          _$KmoniMaintenanceMessageModelImpl>
+      get copyWith => __$$KmoniMaintenanceMessageModelImplCopyWithImpl<
+          _$KmoniMaintenanceMessageModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_KmoniMaintenanceMessageModelToJson(
+    return _$$KmoniMaintenanceMessageModelImplToJson(
       this,
     );
   }
@@ -188,10 +191,10 @@ abstract class _KmoniMaintenanceMessageModel
               fromJson: kmoniMaintenanceMessageTypeFromJson,
               toJson: kmoniMaintenanceMessageTypeToJson)
           final KmoniMaintenanceMessageType type}) =
-      _$_KmoniMaintenanceMessageModel;
+      _$KmoniMaintenanceMessageModelImpl;
 
   factory _KmoniMaintenanceMessageModel.fromJson(Map<String, dynamic> json) =
-      _$_KmoniMaintenanceMessageModel.fromJson;
+      _$KmoniMaintenanceMessageModelImpl.fromJson;
 
   @override
   String get message;
@@ -202,6 +205,7 @@ abstract class _KmoniMaintenanceMessageModel
   KmoniMaintenanceMessageType get type;
   @override
   @JsonKey(ignore: true)
-  _$$_KmoniMaintenanceMessageModelCopyWith<_$_KmoniMaintenanceMessageModel>
+  _$$KmoniMaintenanceMessageModelImplCopyWith<
+          _$KmoniMaintenanceMessageModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

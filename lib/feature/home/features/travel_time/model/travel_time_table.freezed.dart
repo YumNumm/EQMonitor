@@ -75,22 +75,22 @@ class _$TravelTimeTableCopyWithImpl<$Res, $Val extends TravelTimeTable>
 }
 
 /// @nodoc
-abstract class _$$_TravelTimeTableCopyWith<$Res>
+abstract class _$$TravelTimeTableImplCopyWith<$Res>
     implements $TravelTimeTableCopyWith<$Res> {
-  factory _$$_TravelTimeTableCopyWith(
-          _$_TravelTimeTable value, $Res Function(_$_TravelTimeTable) then) =
-      __$$_TravelTimeTableCopyWithImpl<$Res>;
+  factory _$$TravelTimeTableImplCopyWith(_$TravelTimeTableImpl value,
+          $Res Function(_$TravelTimeTableImpl) then) =
+      __$$TravelTimeTableImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({double p, double s, int depth, int distance});
 }
 
 /// @nodoc
-class __$$_TravelTimeTableCopyWithImpl<$Res>
-    extends _$TravelTimeTableCopyWithImpl<$Res, _$_TravelTimeTable>
-    implements _$$_TravelTimeTableCopyWith<$Res> {
-  __$$_TravelTimeTableCopyWithImpl(
-      _$_TravelTimeTable _value, $Res Function(_$_TravelTimeTable) _then)
+class __$$TravelTimeTableImplCopyWithImpl<$Res>
+    extends _$TravelTimeTableCopyWithImpl<$Res, _$TravelTimeTableImpl>
+    implements _$$TravelTimeTableImplCopyWith<$Res> {
+  __$$TravelTimeTableImplCopyWithImpl(
+      _$TravelTimeTableImpl _value, $Res Function(_$TravelTimeTableImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -101,7 +101,7 @@ class __$$_TravelTimeTableCopyWithImpl<$Res>
     Object? depth = null,
     Object? distance = null,
   }) {
-    return _then(_$_TravelTimeTable(
+    return _then(_$TravelTimeTableImpl(
       p: null == p
           ? _value.p
           : p // ignore: cast_nullable_to_non_nullable
@@ -124,8 +124,8 @@ class __$$_TravelTimeTableCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_TravelTimeTable implements _TravelTimeTable {
-  const _$_TravelTimeTable(
+class _$TravelTimeTableImpl implements _TravelTimeTable {
+  const _$TravelTimeTableImpl(
       {required this.p,
       required this.s,
       required this.depth,
@@ -149,7 +149,7 @@ class _$_TravelTimeTable implements _TravelTimeTable {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TravelTimeTable &&
+            other is _$TravelTimeTableImpl &&
             (identical(other.p, p) || other.p == p) &&
             (identical(other.s, s) || other.s == s) &&
             (identical(other.depth, depth) || other.depth == depth) &&
@@ -163,8 +163,9 @@ class _$_TravelTimeTable implements _TravelTimeTable {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TravelTimeTableCopyWith<_$_TravelTimeTable> get copyWith =>
-      __$$_TravelTimeTableCopyWithImpl<_$_TravelTimeTable>(this, _$identity);
+  _$$TravelTimeTableImplCopyWith<_$TravelTimeTableImpl> get copyWith =>
+      __$$TravelTimeTableImplCopyWithImpl<_$TravelTimeTableImpl>(
+          this, _$identity);
 }
 
 abstract class _TravelTimeTable implements TravelTimeTable {
@@ -172,7 +173,7 @@ abstract class _TravelTimeTable implements TravelTimeTable {
       {required final double p,
       required final double s,
       required final int depth,
-      required final int distance}) = _$_TravelTimeTable;
+      required final int distance}) = _$TravelTimeTableImpl;
 
   @override
   double get p;
@@ -184,7 +185,7 @@ abstract class _TravelTimeTable implements TravelTimeTable {
   int get distance;
   @override
   @JsonKey(ignore: true)
-  _$$_TravelTimeTableCopyWith<_$_TravelTimeTable> get copyWith =>
+  _$$TravelTimeTableImplCopyWith<_$TravelTimeTableImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -231,22 +232,22 @@ class _$TravelTimeTablesCopyWithImpl<$Res, $Val extends TravelTimeTables>
 }
 
 /// @nodoc
-abstract class _$$_TravelTimeTablesCopyWith<$Res>
+abstract class _$$TravelTimeTablesImplCopyWith<$Res>
     implements $TravelTimeTablesCopyWith<$Res> {
-  factory _$$_TravelTimeTablesCopyWith(
-          _$_TravelTimeTables value, $Res Function(_$_TravelTimeTables) then) =
-      __$$_TravelTimeTablesCopyWithImpl<$Res>;
+  factory _$$TravelTimeTablesImplCopyWith(_$TravelTimeTablesImpl value,
+          $Res Function(_$TravelTimeTablesImpl) then) =
+      __$$TravelTimeTablesImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<TravelTimeTable> table});
 }
 
 /// @nodoc
-class __$$_TravelTimeTablesCopyWithImpl<$Res>
-    extends _$TravelTimeTablesCopyWithImpl<$Res, _$_TravelTimeTables>
-    implements _$$_TravelTimeTablesCopyWith<$Res> {
-  __$$_TravelTimeTablesCopyWithImpl(
-      _$_TravelTimeTables _value, $Res Function(_$_TravelTimeTables) _then)
+class __$$TravelTimeTablesImplCopyWithImpl<$Res>
+    extends _$TravelTimeTablesCopyWithImpl<$Res, _$TravelTimeTablesImpl>
+    implements _$$TravelTimeTablesImplCopyWith<$Res> {
+  __$$TravelTimeTablesImplCopyWithImpl(_$TravelTimeTablesImpl _value,
+      $Res Function(_$TravelTimeTablesImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -254,7 +255,7 @@ class __$$_TravelTimeTablesCopyWithImpl<$Res>
   $Res call({
     Object? table = null,
   }) {
-    return _then(_$_TravelTimeTables(
+    return _then(_$TravelTimeTablesImpl(
       table: null == table
           ? _value._table
           : table // ignore: cast_nullable_to_non_nullable
@@ -265,8 +266,8 @@ class __$$_TravelTimeTablesCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_TravelTimeTables implements _TravelTimeTables {
-  const _$_TravelTimeTables({required final List<TravelTimeTable> table})
+class _$TravelTimeTablesImpl implements _TravelTimeTables {
+  const _$TravelTimeTablesImpl({required final List<TravelTimeTable> table})
       : _table = table;
 
   final List<TravelTimeTable> _table;
@@ -286,7 +287,7 @@ class _$_TravelTimeTables implements _TravelTimeTables {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TravelTimeTables &&
+            other is _$TravelTimeTablesImpl &&
             const DeepCollectionEquality().equals(other._table, _table));
   }
 
@@ -297,18 +298,19 @@ class _$_TravelTimeTables implements _TravelTimeTables {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TravelTimeTablesCopyWith<_$_TravelTimeTables> get copyWith =>
-      __$$_TravelTimeTablesCopyWithImpl<_$_TravelTimeTables>(this, _$identity);
+  _$$TravelTimeTablesImplCopyWith<_$TravelTimeTablesImpl> get copyWith =>
+      __$$TravelTimeTablesImplCopyWithImpl<_$TravelTimeTablesImpl>(
+          this, _$identity);
 }
 
 abstract class _TravelTimeTables implements TravelTimeTables {
   const factory _TravelTimeTables(
-      {required final List<TravelTimeTable> table}) = _$_TravelTimeTables;
+      {required final List<TravelTimeTable> table}) = _$TravelTimeTablesImpl;
 
   @override
   List<TravelTimeTable> get table;
   @override
   @JsonKey(ignore: true)
-  _$$_TravelTimeTablesCopyWith<_$_TravelTimeTables> get copyWith =>
+  _$$TravelTimeTablesImplCopyWith<_$TravelTimeTablesImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

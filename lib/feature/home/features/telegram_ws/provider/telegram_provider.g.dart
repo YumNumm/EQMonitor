@@ -8,7 +8,7 @@ part of 'telegram_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$telegramWsHash() => r'f5b344ef68759cf23ece6a0bc36a6e6ba2a39a13';
+String _$telegramWsHash() => r'321380dfa157630caf80049d90292e22d483c95c';
 
 /// See also [TelegramWs].
 @ProviderFor(TelegramWs)
@@ -18,8 +18,11 @@ final telegramWsProvider =
   name: r'telegramWsProvider',
   debugGetCreateSourceHash:
       const bool.fromEnvironment('dart.vm.product') ? null : _$telegramWsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
+  dependencies: <ProviderOrFamily>[telegramSocketIoProvider],
+  allTransitiveDependencies: <ProviderOrFamily>{
+    telegramSocketIoProvider,
+    ...?telegramSocketIoProvider.allTransitiveDependencies
+  },
 );
 
 typedef _$TelegramWs = StreamNotifier<TelegramV3>;

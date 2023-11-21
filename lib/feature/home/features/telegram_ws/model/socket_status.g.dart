@@ -8,20 +8,21 @@ part of 'socket_status.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_SocketStatusModel _$$_SocketStatusModelFromJson(Map<String, dynamic> json) =>
+_$SocketStatusModelImpl _$$SocketStatusModelImplFromJson(
+        Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_SocketStatusModel',
+      r'_$SocketStatusModelImpl',
       json,
       ($checkedConvert) {
-        final val = _$_SocketStatusModel(
+        final val = _$SocketStatusModelImpl(
           connected: $checkedConvert('connected', (v) => v as bool? ?? false),
         );
         return val;
       },
     );
 
-Map<String, dynamic> _$$_SocketStatusModelToJson(
-        _$_SocketStatusModel instance) =>
+Map<String, dynamic> _$$SocketStatusModelImplToJson(
+        _$SocketStatusModelImpl instance) =>
     <String, dynamic>{
       'connected': instance.connected,
     };

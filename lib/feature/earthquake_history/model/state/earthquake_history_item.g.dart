@@ -8,13 +8,13 @@ part of 'earthquake_history_item.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_EarthquakeHistoryItem _$$_EarthquakeHistoryItemFromJson(
+_$EarthquakeHistoryItemImpl _$$EarthquakeHistoryItemImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_EarthquakeHistoryItem',
+      r'_$EarthquakeHistoryItemImpl',
       json,
       ($checkedConvert) {
-        final val = _$_EarthquakeHistoryItem(
+        final val = _$EarthquakeHistoryItemImpl(
           earthquake: $checkedConvert('earthquake',
               (v) => EarthquakeData.fromJson(v as Map<String, dynamic>)),
           tsunami: $checkedConvert('tsunami',
@@ -40,8 +40,8 @@ _$_EarthquakeHistoryItem _$$_EarthquakeHistoryItemFromJson(
       },
     );
 
-Map<String, dynamic> _$$_EarthquakeHistoryItemToJson(
-        _$_EarthquakeHistoryItem instance) =>
+Map<String, dynamic> _$$EarthquakeHistoryItemImplToJson(
+        _$EarthquakeHistoryItemImpl instance) =>
     <String, dynamic>{
       'earthquake': instance.earthquake,
       'tsunami': instance.tsunami,
@@ -51,12 +51,12 @@ Map<String, dynamic> _$$_EarthquakeHistoryItemToJson(
       'latestEewTelegram': instance.latestEewTelegram,
     };
 
-_$_EarthquakeData _$$_EarthquakeDataFromJson(Map<String, dynamic> json) =>
+_$EarthquakeDataImpl _$$EarthquakeDataImplFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_EarthquakeData',
+      r'_$EarthquakeDataImpl',
       json,
       ($checkedConvert) {
-        final val = _$_EarthquakeData(
+        final val = _$EarthquakeDataImpl(
           earthquake: $checkedConvert(
               'earthquake',
               (v) => v == null
@@ -83,7 +83,8 @@ _$_EarthquakeData _$$_EarthquakeDataFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_EarthquakeDataToJson(_$_EarthquakeData instance) =>
+Map<String, dynamic> _$$EarthquakeDataImplToJson(
+        _$EarthquakeDataImpl instance) =>
     <String, dynamic>{
       'earthquake': instance.earthquake,
       'intensity': instance.intensity,
@@ -92,12 +93,12 @@ Map<String, dynamic> _$$_EarthquakeDataToJson(_$_EarthquakeData instance) =>
       'isVolcano': instance.isVolcano,
     };
 
-_$_TsunamiData _$$_TsunamiDataFromJson(Map<String, dynamic> json) =>
+_$TsunamiDataImpl _$$TsunamiDataImplFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TsunamiData',
+      r'_$TsunamiDataImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TsunamiData(
+        final val = _$TsunamiDataImpl(
           forecasts: $checkedConvert(
               'forecasts',
               (v) => (v as List<dynamic>?)
@@ -126,7 +127,7 @@ _$_TsunamiData _$$_TsunamiDataFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_TsunamiDataToJson(_$_TsunamiData instance) =>
+Map<String, dynamic> _$$TsunamiDataImplToJson(_$TsunamiDataImpl instance) =>
     <String, dynamic>{
       'forecasts': instance.forecasts,
       'estimations': instance.estimations,

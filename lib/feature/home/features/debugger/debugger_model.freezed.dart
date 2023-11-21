@@ -68,22 +68,22 @@ class _$DebuggerModelCopyWithImpl<$Res, $Val extends DebuggerModel>
 }
 
 /// @nodoc
-abstract class _$$_DebuggerModelCopyWith<$Res>
+abstract class _$$DebuggerModelImplCopyWith<$Res>
     implements $DebuggerModelCopyWith<$Res> {
-  factory _$$_DebuggerModelCopyWith(
-          _$_DebuggerModel value, $Res Function(_$_DebuggerModel) then) =
-      __$$_DebuggerModelCopyWithImpl<$Res>;
+  factory _$$DebuggerModelImplCopyWith(
+          _$DebuggerModelImpl value, $Res Function(_$DebuggerModelImpl) then) =
+      __$$DebuggerModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool isDebugger, bool isDeveloper});
 }
 
 /// @nodoc
-class __$$_DebuggerModelCopyWithImpl<$Res>
-    extends _$DebuggerModelCopyWithImpl<$Res, _$_DebuggerModel>
-    implements _$$_DebuggerModelCopyWith<$Res> {
-  __$$_DebuggerModelCopyWithImpl(
-      _$_DebuggerModel _value, $Res Function(_$_DebuggerModel) _then)
+class __$$DebuggerModelImplCopyWithImpl<$Res>
+    extends _$DebuggerModelCopyWithImpl<$Res, _$DebuggerModelImpl>
+    implements _$$DebuggerModelImplCopyWith<$Res> {
+  __$$DebuggerModelImplCopyWithImpl(
+      _$DebuggerModelImpl _value, $Res Function(_$DebuggerModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -92,7 +92,7 @@ class __$$_DebuggerModelCopyWithImpl<$Res>
     Object? isDebugger = null,
     Object? isDeveloper = null,
   }) {
-    return _then(_$_DebuggerModel(
+    return _then(_$DebuggerModelImpl(
       isDebugger: null == isDebugger
           ? _value.isDebugger
           : isDebugger // ignore: cast_nullable_to_non_nullable
@@ -107,11 +107,12 @@ class __$$_DebuggerModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_DebuggerModel implements _DebuggerModel {
-  const _$_DebuggerModel({this.isDebugger = false, this.isDeveloper = false});
+class _$DebuggerModelImpl implements _DebuggerModel {
+  const _$DebuggerModelImpl(
+      {this.isDebugger = false, this.isDeveloper = false});
 
-  factory _$_DebuggerModel.fromJson(Map<String, dynamic> json) =>
-      _$$_DebuggerModelFromJson(json);
+  factory _$DebuggerModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$DebuggerModelImplFromJson(json);
 
   @override
   @JsonKey()
@@ -129,7 +130,7 @@ class _$_DebuggerModel implements _DebuggerModel {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_DebuggerModel &&
+            other is _$DebuggerModelImpl &&
             (identical(other.isDebugger, isDebugger) ||
                 other.isDebugger == isDebugger) &&
             (identical(other.isDeveloper, isDeveloper) ||
@@ -143,12 +144,12 @@ class _$_DebuggerModel implements _DebuggerModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_DebuggerModelCopyWith<_$_DebuggerModel> get copyWith =>
-      __$$_DebuggerModelCopyWithImpl<_$_DebuggerModel>(this, _$identity);
+  _$$DebuggerModelImplCopyWith<_$DebuggerModelImpl> get copyWith =>
+      __$$DebuggerModelImplCopyWithImpl<_$DebuggerModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_DebuggerModelToJson(
+    return _$$DebuggerModelImplToJson(
       this,
     );
   }
@@ -156,10 +157,10 @@ class _$_DebuggerModel implements _DebuggerModel {
 
 abstract class _DebuggerModel implements DebuggerModel {
   const factory _DebuggerModel(
-      {final bool isDebugger, final bool isDeveloper}) = _$_DebuggerModel;
+      {final bool isDebugger, final bool isDeveloper}) = _$DebuggerModelImpl;
 
   factory _DebuggerModel.fromJson(Map<String, dynamic> json) =
-      _$_DebuggerModel.fromJson;
+      _$DebuggerModelImpl.fromJson;
 
   @override
   bool get isDebugger;
@@ -167,6 +168,6 @@ abstract class _DebuggerModel implements DebuggerModel {
   bool get isDeveloper;
   @override
   @JsonKey(ignore: true)
-  _$$_DebuggerModelCopyWith<_$_DebuggerModel> get copyWith =>
+  _$$DebuggerModelImplCopyWith<_$DebuggerModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

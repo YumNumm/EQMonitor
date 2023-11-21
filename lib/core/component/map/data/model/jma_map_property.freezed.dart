@@ -79,11 +79,11 @@ class _$JmaMapPropertyCopyWithImpl<$Res, $Val extends JmaMapProperty>
 }
 
 /// @nodoc
-abstract class _$$_JmaMapPropertyCopyWith<$Res>
+abstract class _$$JmaMapPropertyImplCopyWith<$Res>
     implements $JmaMapPropertyCopyWith<$Res> {
-  factory _$$_JmaMapPropertyCopyWith(
-          _$_JmaMapProperty value, $Res Function(_$_JmaMapProperty) then) =
-      __$$_JmaMapPropertyCopyWithImpl<$Res>;
+  factory _$$JmaMapPropertyImplCopyWith(_$JmaMapPropertyImpl value,
+          $Res Function(_$JmaMapPropertyImpl) then) =
+      __$$JmaMapPropertyImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -93,11 +93,11 @@ abstract class _$$_JmaMapPropertyCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_JmaMapPropertyCopyWithImpl<$Res>
-    extends _$JmaMapPropertyCopyWithImpl<$Res, _$_JmaMapProperty>
-    implements _$$_JmaMapPropertyCopyWith<$Res> {
-  __$$_JmaMapPropertyCopyWithImpl(
-      _$_JmaMapProperty _value, $Res Function(_$_JmaMapProperty) _then)
+class __$$JmaMapPropertyImplCopyWithImpl<$Res>
+    extends _$JmaMapPropertyCopyWithImpl<$Res, _$JmaMapPropertyImpl>
+    implements _$$JmaMapPropertyImplCopyWith<$Res> {
+  __$$JmaMapPropertyImplCopyWithImpl(
+      _$JmaMapPropertyImpl _value, $Res Function(_$JmaMapPropertyImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -107,7 +107,7 @@ class __$$_JmaMapPropertyCopyWithImpl<$Res>
     Object? name = freezed,
     Object? nameKana = freezed,
   }) {
-    return _then(_$_JmaMapProperty(
+    return _then(_$JmaMapPropertyImpl(
       code: freezed == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
@@ -126,14 +126,14 @@ class __$$_JmaMapPropertyCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_JmaMapProperty implements _JmaMapProperty {
-  const _$_JmaMapProperty(
+class _$JmaMapPropertyImpl implements _JmaMapProperty {
+  const _$JmaMapPropertyImpl(
       {required this.code,
       required this.name,
       @JsonKey(name: 'namekana') required this.nameKana});
 
-  factory _$_JmaMapProperty.fromJson(Map<String, dynamic> json) =>
-      _$$_JmaMapPropertyFromJson(json);
+  factory _$JmaMapPropertyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$JmaMapPropertyImplFromJson(json);
 
   @override
   final String? code;
@@ -153,7 +153,7 @@ class _$_JmaMapProperty implements _JmaMapProperty {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_JmaMapProperty &&
+            other is _$JmaMapPropertyImpl &&
             (identical(other.code, code) || other.code == code) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.nameKana, nameKana) ||
@@ -167,12 +167,13 @@ class _$_JmaMapProperty implements _JmaMapProperty {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_JmaMapPropertyCopyWith<_$_JmaMapProperty> get copyWith =>
-      __$$_JmaMapPropertyCopyWithImpl<_$_JmaMapProperty>(this, _$identity);
+  _$$JmaMapPropertyImplCopyWith<_$JmaMapPropertyImpl> get copyWith =>
+      __$$JmaMapPropertyImplCopyWithImpl<_$JmaMapPropertyImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_JmaMapPropertyToJson(
+    return _$$JmaMapPropertyImplToJson(
       this,
     );
   }
@@ -183,10 +184,10 @@ abstract class _JmaMapProperty implements JmaMapProperty {
           {required final String? code,
           required final String? name,
           @JsonKey(name: 'namekana') required final String? nameKana}) =
-      _$_JmaMapProperty;
+      _$JmaMapPropertyImpl;
 
   factory _JmaMapProperty.fromJson(Map<String, dynamic> json) =
-      _$_JmaMapProperty.fromJson;
+      _$JmaMapPropertyImpl.fromJson;
 
   @override
   String? get code;
@@ -197,6 +198,6 @@ abstract class _JmaMapProperty implements JmaMapProperty {
   String? get nameKana;
   @override
   @JsonKey(ignore: true)
-  _$$_JmaMapPropertyCopyWith<_$_JmaMapProperty> get copyWith =>
+  _$$JmaMapPropertyImplCopyWith<_$JmaMapPropertyImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

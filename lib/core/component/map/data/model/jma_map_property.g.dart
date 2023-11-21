@@ -8,12 +8,12 @@ part of 'jma_map_property.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_JmaMapProperty _$$_JmaMapPropertyFromJson(Map<String, dynamic> json) =>
+_$JmaMapPropertyImpl _$$JmaMapPropertyImplFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_JmaMapProperty',
+      r'_$JmaMapPropertyImpl',
       json,
       ($checkedConvert) {
-        final val = _$_JmaMapProperty(
+        final val = _$JmaMapPropertyImpl(
           code: $checkedConvert('code', (v) => v as String?),
           name: $checkedConvert('name', (v) => v as String?),
           nameKana: $checkedConvert('namekana', (v) => v as String?),
@@ -23,7 +23,8 @@ _$_JmaMapProperty _$$_JmaMapPropertyFromJson(Map<String, dynamic> json) =>
       fieldKeyMap: const {'nameKana': 'namekana'},
     );
 
-Map<String, dynamic> _$$_JmaMapPropertyToJson(_$_JmaMapProperty instance) =>
+Map<String, dynamic> _$$JmaMapPropertyImplToJson(
+        _$JmaMapPropertyImpl instance) =>
     <String, dynamic>{
       'code': instance.code,
       'name': instance.name,

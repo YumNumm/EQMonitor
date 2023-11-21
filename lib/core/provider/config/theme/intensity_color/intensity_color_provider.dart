@@ -20,9 +20,12 @@ class IntensityColor extends _$IntensityColor {
   static const _key = 'intensity_color';
   late final SharedPreferences _prefs;
 
+  // ignore: use_setters_to_change_properties
   void update(IntensityColorModel model) {
     state = model;
   }
+
+
 
   IntensityColorModel? load() {
     final value = _prefs.getString(_key);

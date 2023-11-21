@@ -8,13 +8,13 @@ part of 'kmoni_view_settings.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_KmoniSettingsState _$$_KmoniSettingsStateFromJson(
+_$KmoniSettingsStateImpl _$$KmoniSettingsStateImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_KmoniSettingsState',
+      r'_$KmoniSettingsStateImpl',
       json,
       ($checkedConvert) {
-        final val = _$_KmoniSettingsState(
+        final val = _$KmoniSettingsStateImpl(
           isUpper0Only:
               $checkedConvert('isUpper0Only', (v) => v as bool? ?? false),
           isShowIntensityIcon: $checkedConvert(
@@ -25,8 +25,8 @@ _$_KmoniSettingsState _$$_KmoniSettingsStateFromJson(
       },
     );
 
-Map<String, dynamic> _$$_KmoniSettingsStateToJson(
-        _$_KmoniSettingsState instance) =>
+Map<String, dynamic> _$$KmoniSettingsStateImplToJson(
+        _$KmoniSettingsStateImpl instance) =>
     <String, dynamic>{
       'isUpper0Only': instance.isUpper0Only,
       'isShowIntensityIcon': instance.isShowIntensityIcon,

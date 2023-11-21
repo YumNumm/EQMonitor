@@ -8,13 +8,13 @@ part of 'permission_state.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_PermissionStateModel _$$_PermissionStateModelFromJson(
+_$PermissionStateModelImpl _$$PermissionStateModelImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_PermissionStateModel',
+      r'_$PermissionStateModelImpl',
       json,
       ($checkedConvert) {
-        final val = _$_PermissionStateModel(
+        final val = _$PermissionStateModelImpl(
           notification:
               $checkedConvert('notification', (v) => v as bool? ?? false),
           isNotificationDeniedByUser: $checkedConvert(
@@ -24,8 +24,8 @@ _$_PermissionStateModel _$$_PermissionStateModelFromJson(
       },
     );
 
-Map<String, dynamic> _$$_PermissionStateModelToJson(
-        _$_PermissionStateModel instance) =>
+Map<String, dynamic> _$$PermissionStateModelImplToJson(
+        _$PermissionStateModelImpl instance) =>
     <String, dynamic>{
       'notification': instance.notification,
       'isNotificationDeniedByUser': instance.isNotificationDeniedByUser,

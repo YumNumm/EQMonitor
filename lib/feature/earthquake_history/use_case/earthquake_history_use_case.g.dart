@@ -9,7 +9,7 @@ part of 'earthquake_history_use_case.dart';
 // **************************************************************************
 
 String _$earthquakeHistoryUseCaseHash() =>
-    r'70b87ad600088601c4aefdbbc2f1eea58bd8a2cb';
+    r'5a9c502ff25ef642d8a20e47e85e960040b0e340';
 
 /// See also [earthquakeHistoryUseCase].
 @ProviderFor(earthquakeHistoryUseCase)
@@ -20,8 +20,11 @@ final earthquakeHistoryUseCaseProvider =
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
       : _$earthquakeHistoryUseCaseHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
+  dependencies: <ProviderOrFamily>[telegramHistoryDataSourceProvider],
+  allTransitiveDependencies: <ProviderOrFamily>{
+    telegramHistoryDataSourceProvider,
+    ...?telegramHistoryDataSourceProvider.allTransitiveDependencies
+  },
 );
 
 typedef EarthquakeHistoryUseCaseRef = ProviderRef<EarthquakeHistoryUseCase>;

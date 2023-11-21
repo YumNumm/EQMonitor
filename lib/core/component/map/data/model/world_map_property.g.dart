@@ -8,12 +8,13 @@ part of 'world_map_property.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_WorldMapProperty _$$_WorldMapPropertyFromJson(Map<String, dynamic> json) =>
+_$WorldMapPropertyImpl _$$WorldMapPropertyImplFromJson(
+        Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_WorldMapProperty',
+      r'_$WorldMapPropertyImpl',
       json,
       ($checkedConvert) {
-        final val = _$_WorldMapProperty(
+        final val = _$WorldMapPropertyImpl(
           name: $checkedConvert('NAME', (v) => v as String),
           nameJa: $checkedConvert('NAME_JA', (v) => v as String),
         );
@@ -22,7 +23,8 @@ _$_WorldMapProperty _$$_WorldMapPropertyFromJson(Map<String, dynamic> json) =>
       fieldKeyMap: const {'name': 'NAME', 'nameJa': 'NAME_JA'},
     );
 
-Map<String, dynamic> _$$_WorldMapPropertyToJson(_$_WorldMapProperty instance) =>
+Map<String, dynamic> _$$WorldMapPropertyImplToJson(
+        _$WorldMapPropertyImpl instance) =>
     <String, dynamic>{
       'NAME': instance.name,
       'NAME_JA': instance.nameJa,

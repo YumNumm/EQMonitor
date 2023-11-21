@@ -74,22 +74,22 @@ class _$TelegramUrlModelCopyWithImpl<$Res, $Val extends TelegramUrlModel>
 }
 
 /// @nodoc
-abstract class _$$_TelegramUrlModelCopyWith<$Res>
+abstract class _$$TelegramUrlModelImplCopyWith<$Res>
     implements $TelegramUrlModelCopyWith<$Res> {
-  factory _$$_TelegramUrlModelCopyWith(
-          _$_TelegramUrlModel value, $Res Function(_$_TelegramUrlModel) then) =
-      __$$_TelegramUrlModelCopyWithImpl<$Res>;
+  factory _$$TelegramUrlModelImplCopyWith(_$TelegramUrlModelImpl value,
+          $Res Function(_$TelegramUrlModelImpl) then) =
+      __$$TelegramUrlModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String restApiUrl, String wsApiUrl, String? apiAuthorization});
 }
 
 /// @nodoc
-class __$$_TelegramUrlModelCopyWithImpl<$Res>
-    extends _$TelegramUrlModelCopyWithImpl<$Res, _$_TelegramUrlModel>
-    implements _$$_TelegramUrlModelCopyWith<$Res> {
-  __$$_TelegramUrlModelCopyWithImpl(
-      _$_TelegramUrlModel _value, $Res Function(_$_TelegramUrlModel) _then)
+class __$$TelegramUrlModelImplCopyWithImpl<$Res>
+    extends _$TelegramUrlModelCopyWithImpl<$Res, _$TelegramUrlModelImpl>
+    implements _$$TelegramUrlModelImplCopyWith<$Res> {
+  __$$TelegramUrlModelImplCopyWithImpl(_$TelegramUrlModelImpl _value,
+      $Res Function(_$TelegramUrlModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -99,7 +99,7 @@ class __$$_TelegramUrlModelCopyWithImpl<$Res>
     Object? wsApiUrl = null,
     Object? apiAuthorization = freezed,
   }) {
-    return _then(_$_TelegramUrlModel(
+    return _then(_$TelegramUrlModelImpl(
       restApiUrl: null == restApiUrl
           ? _value.restApiUrl
           : restApiUrl // ignore: cast_nullable_to_non_nullable
@@ -118,14 +118,14 @@ class __$$_TelegramUrlModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TelegramUrlModel implements _TelegramUrlModel {
-  const _$_TelegramUrlModel(
+class _$TelegramUrlModelImpl implements _TelegramUrlModel {
+  const _$TelegramUrlModelImpl(
       {required this.restApiUrl,
       required this.wsApiUrl,
       required this.apiAuthorization});
 
-  factory _$_TelegramUrlModel.fromJson(Map<String, dynamic> json) =>
-      _$$_TelegramUrlModelFromJson(json);
+  factory _$TelegramUrlModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TelegramUrlModelImplFromJson(json);
 
   @override
   final String restApiUrl;
@@ -143,7 +143,7 @@ class _$_TelegramUrlModel implements _TelegramUrlModel {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TelegramUrlModel &&
+            other is _$TelegramUrlModelImpl &&
             (identical(other.restApiUrl, restApiUrl) ||
                 other.restApiUrl == restApiUrl) &&
             (identical(other.wsApiUrl, wsApiUrl) ||
@@ -160,12 +160,13 @@ class _$_TelegramUrlModel implements _TelegramUrlModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TelegramUrlModelCopyWith<_$_TelegramUrlModel> get copyWith =>
-      __$$_TelegramUrlModelCopyWithImpl<_$_TelegramUrlModel>(this, _$identity);
+  _$$TelegramUrlModelImplCopyWith<_$TelegramUrlModelImpl> get copyWith =>
+      __$$TelegramUrlModelImplCopyWithImpl<_$TelegramUrlModelImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TelegramUrlModelToJson(
+    return _$$TelegramUrlModelImplToJson(
       this,
     );
   }
@@ -175,10 +176,10 @@ abstract class _TelegramUrlModel implements TelegramUrlModel {
   const factory _TelegramUrlModel(
       {required final String restApiUrl,
       required final String wsApiUrl,
-      required final String? apiAuthorization}) = _$_TelegramUrlModel;
+      required final String? apiAuthorization}) = _$TelegramUrlModelImpl;
 
   factory _TelegramUrlModel.fromJson(Map<String, dynamic> json) =
-      _$_TelegramUrlModel.fromJson;
+      _$TelegramUrlModelImpl.fromJson;
 
   @override
   String get restApiUrl;
@@ -188,6 +189,6 @@ abstract class _TelegramUrlModel implements TelegramUrlModel {
   String? get apiAuthorization;
   @override
   @JsonKey(ignore: true)
-  _$$_TelegramUrlModelCopyWith<_$_TelegramUrlModel> get copyWith =>
+  _$$TelegramUrlModelImplCopyWith<_$TelegramUrlModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

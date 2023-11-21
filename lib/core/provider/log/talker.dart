@@ -1,3 +1,5 @@
+// ignore_for_file: overridden_fields
+
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:talker_flutter/talker_flutter.dart';

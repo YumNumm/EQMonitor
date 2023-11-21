@@ -6,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_history_use_case.g.dart';
 
-@Riverpod(keepAlive: true)
+@Riverpod(keepAlive: true, dependencies: [telegramHistoryDataSource],)
 EarthquakeHistoryUseCase earthquakeHistoryUseCase(
   EarthquakeHistoryUseCaseRef ref,
 ) =>

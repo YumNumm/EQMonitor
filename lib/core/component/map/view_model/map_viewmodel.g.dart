@@ -8,7 +8,7 @@ part of 'map_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mapViewModelHash() => r'1397d0bd0357a5a3bd50948e0c60fffdcbd1e4f3';
+String _$mapViewModelHash() => r'aab6af0c289dbdc4d8867428b5a496e4906517fa';
 
 /// Copied from Dart SDK
 class _SystemHash {
