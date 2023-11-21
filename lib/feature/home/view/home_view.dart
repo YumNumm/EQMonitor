@@ -19,7 +19,6 @@ import 'package:eqmonitor/feature/home/features/debugger/debugger_provider.dart'
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_widget.dart';
-import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
 import 'package:eqmonitor/feature/home/viewmodel/home_viewmodel.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
@@ -186,14 +185,6 @@ class _HomeBodyWidget extends HookConsumerWidget {
               SheetFloatingActionButtons(
                 controller: sheetController,
                 fab: [
-                  FloatingActionButton.small(
-                    heroTag: 'request',
-                    onPressed: () {
-                      ref.read(telegramWsProvider.notifier).requestSample();
-                    },
-                    elevation: 4,
-                    child: const Icon(Icons.send),
-                  ),
                   FloatingActionButton.small(
                     heroTag: 'home',
                     onPressed: () {
