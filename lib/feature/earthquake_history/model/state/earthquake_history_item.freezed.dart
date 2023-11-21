@@ -119,11 +119,12 @@ class _$EarthquakeHistoryItemCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_EarthquakeHistoryItemCopyWith<$Res>
+abstract class _$$EarthquakeHistoryItemImplCopyWith<$Res>
     implements $EarthquakeHistoryItemCopyWith<$Res> {
-  factory _$$_EarthquakeHistoryItemCopyWith(_$_EarthquakeHistoryItem value,
-          $Res Function(_$_EarthquakeHistoryItem) then) =
-      __$$_EarthquakeHistoryItemCopyWithImpl<$Res>;
+  factory _$$EarthquakeHistoryItemImplCopyWith(
+          _$EarthquakeHistoryItemImpl value,
+          $Res Function(_$EarthquakeHistoryItemImpl) then) =
+      __$$EarthquakeHistoryItemImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -141,11 +142,12 @@ abstract class _$$_EarthquakeHistoryItemCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_EarthquakeHistoryItemCopyWithImpl<$Res>
-    extends _$EarthquakeHistoryItemCopyWithImpl<$Res, _$_EarthquakeHistoryItem>
-    implements _$$_EarthquakeHistoryItemCopyWith<$Res> {
-  __$$_EarthquakeHistoryItemCopyWithImpl(_$_EarthquakeHistoryItem _value,
-      $Res Function(_$_EarthquakeHistoryItem) _then)
+class __$$EarthquakeHistoryItemImplCopyWithImpl<$Res>
+    extends _$EarthquakeHistoryItemCopyWithImpl<$Res,
+        _$EarthquakeHistoryItemImpl>
+    implements _$$EarthquakeHistoryItemImplCopyWith<$Res> {
+  __$$EarthquakeHistoryItemImplCopyWithImpl(_$EarthquakeHistoryItemImpl _value,
+      $Res Function(_$EarthquakeHistoryItemImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -158,7 +160,7 @@ class __$$_EarthquakeHistoryItemCopyWithImpl<$Res>
     Object? latestEew = freezed,
     Object? latestEewTelegram = freezed,
   }) {
-    return _then(_$_EarthquakeHistoryItem(
+    return _then(_$EarthquakeHistoryItemImpl(
       earthquake: null == earthquake
           ? _value.earthquake
           : earthquake // ignore: cast_nullable_to_non_nullable
@@ -189,8 +191,8 @@ class __$$_EarthquakeHistoryItemCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_EarthquakeHistoryItem implements _EarthquakeHistoryItem {
-  const _$_EarthquakeHistoryItem(
+class _$EarthquakeHistoryItemImpl implements _EarthquakeHistoryItem {
+  const _$EarthquakeHistoryItemImpl(
       {required this.earthquake,
       required this.tsunami,
       required final List<TelegramV3> telegrams,
@@ -199,8 +201,8 @@ class _$_EarthquakeHistoryItem implements _EarthquakeHistoryItem {
       required this.latestEewTelegram})
       : _telegrams = telegrams;
 
-  factory _$_EarthquakeHistoryItem.fromJson(Map<String, dynamic> json) =>
-      _$$_EarthquakeHistoryItemFromJson(json);
+  factory _$EarthquakeHistoryItemImpl.fromJson(Map<String, dynamic> json) =>
+      _$$EarthquakeHistoryItemImplFromJson(json);
 
   @override
   final EarthquakeData earthquake;
@@ -230,7 +232,7 @@ class _$_EarthquakeHistoryItem implements _EarthquakeHistoryItem {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_EarthquakeHistoryItem &&
+            other is _$EarthquakeHistoryItemImpl &&
             (identical(other.earthquake, earthquake) ||
                 other.earthquake == earthquake) &&
             (identical(other.tsunami, tsunami) || other.tsunami == tsunami) &&
@@ -257,13 +259,13 @@ class _$_EarthquakeHistoryItem implements _EarthquakeHistoryItem {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_EarthquakeHistoryItemCopyWith<_$_EarthquakeHistoryItem> get copyWith =>
-      __$$_EarthquakeHistoryItemCopyWithImpl<_$_EarthquakeHistoryItem>(
-          this, _$identity);
+  _$$EarthquakeHistoryItemImplCopyWith<_$EarthquakeHistoryItemImpl>
+      get copyWith => __$$EarthquakeHistoryItemImplCopyWithImpl<
+          _$EarthquakeHistoryItemImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_EarthquakeHistoryItemToJson(
+    return _$$EarthquakeHistoryItemImplToJson(
       this,
     );
   }
@@ -271,15 +273,16 @@ class _$_EarthquakeHistoryItem implements _EarthquakeHistoryItem {
 
 abstract class _EarthquakeHistoryItem implements EarthquakeHistoryItem {
   const factory _EarthquakeHistoryItem(
-      {required final EarthquakeData earthquake,
-      required final TsunamiData tsunami,
-      required final List<TelegramV3> telegrams,
-      required final int eventId,
-      required final Vxse45? latestEew,
-      required final TelegramV3? latestEewTelegram}) = _$_EarthquakeHistoryItem;
+          {required final EarthquakeData earthquake,
+          required final TsunamiData tsunami,
+          required final List<TelegramV3> telegrams,
+          required final int eventId,
+          required final Vxse45? latestEew,
+          required final TelegramV3? latestEewTelegram}) =
+      _$EarthquakeHistoryItemImpl;
 
   factory _EarthquakeHistoryItem.fromJson(Map<String, dynamic> json) =
-      _$_EarthquakeHistoryItem.fromJson;
+      _$EarthquakeHistoryItemImpl.fromJson;
 
   @override
   EarthquakeData get earthquake;
@@ -295,8 +298,8 @@ abstract class _EarthquakeHistoryItem implements EarthquakeHistoryItem {
   TelegramV3? get latestEewTelegram;
   @override
   @JsonKey(ignore: true)
-  _$$_EarthquakeHistoryItemCopyWith<_$_EarthquakeHistoryItem> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$EarthquakeHistoryItemImplCopyWith<_$EarthquakeHistoryItemImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 EarthquakeData _$EarthquakeDataFromJson(Map<String, dynamic> json) {
@@ -429,11 +432,11 @@ class _$EarthquakeDataCopyWithImpl<$Res, $Val extends EarthquakeData>
 }
 
 /// @nodoc
-abstract class _$$_EarthquakeDataCopyWith<$Res>
+abstract class _$$EarthquakeDataImplCopyWith<$Res>
     implements $EarthquakeDataCopyWith<$Res> {
-  factory _$$_EarthquakeDataCopyWith(
-          _$_EarthquakeData value, $Res Function(_$_EarthquakeData) then) =
-      __$$_EarthquakeDataCopyWithImpl<$Res>;
+  factory _$$EarthquakeDataImplCopyWith(_$EarthquakeDataImpl value,
+          $Res Function(_$EarthquakeDataImpl) then) =
+      __$$EarthquakeDataImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -454,11 +457,11 @@ abstract class _$$_EarthquakeDataCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_EarthquakeDataCopyWithImpl<$Res>
-    extends _$EarthquakeDataCopyWithImpl<$Res, _$_EarthquakeData>
-    implements _$$_EarthquakeDataCopyWith<$Res> {
-  __$$_EarthquakeDataCopyWithImpl(
-      _$_EarthquakeData _value, $Res Function(_$_EarthquakeData) _then)
+class __$$EarthquakeDataImplCopyWithImpl<$Res>
+    extends _$EarthquakeDataCopyWithImpl<$Res, _$EarthquakeDataImpl>
+    implements _$$EarthquakeDataImplCopyWith<$Res> {
+  __$$EarthquakeDataImplCopyWithImpl(
+      _$EarthquakeDataImpl _value, $Res Function(_$EarthquakeDataImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -470,7 +473,7 @@ class __$$_EarthquakeDataCopyWithImpl<$Res>
     Object? comment = freezed,
     Object? isVolcano = null,
   }) {
-    return _then(_$_EarthquakeData(
+    return _then(_$EarthquakeDataImpl(
       earthquake: freezed == earthquake
           ? _value.earthquake
           : earthquake // ignore: cast_nullable_to_non_nullable
@@ -497,16 +500,16 @@ class __$$_EarthquakeDataCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_EarthquakeData implements _EarthquakeData {
-  const _$_EarthquakeData(
+class _$EarthquakeDataImpl implements _EarthquakeData {
+  const _$EarthquakeDataImpl(
       {required this.earthquake,
       required this.intensity,
       required this.lgIntensity,
       required this.comment,
       required this.isVolcano});
 
-  factory _$_EarthquakeData.fromJson(Map<String, dynamic> json) =>
-      _$$_EarthquakeDataFromJson(json);
+  factory _$EarthquakeDataImpl.fromJson(Map<String, dynamic> json) =>
+      _$$EarthquakeDataImplFromJson(json);
 
   @override
   final Earthquake? earthquake;
@@ -528,7 +531,7 @@ class _$_EarthquakeData implements _EarthquakeData {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_EarthquakeData &&
+            other is _$EarthquakeDataImpl &&
             (identical(other.earthquake, earthquake) ||
                 other.earthquake == earthquake) &&
             (identical(other.intensity, intensity) ||
@@ -548,12 +551,13 @@ class _$_EarthquakeData implements _EarthquakeData {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_EarthquakeDataCopyWith<_$_EarthquakeData> get copyWith =>
-      __$$_EarthquakeDataCopyWithImpl<_$_EarthquakeData>(this, _$identity);
+  _$$EarthquakeDataImplCopyWith<_$EarthquakeDataImpl> get copyWith =>
+      __$$EarthquakeDataImplCopyWithImpl<_$EarthquakeDataImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_EarthquakeDataToJson(
+    return _$$EarthquakeDataImplToJson(
       this,
     );
   }
@@ -565,10 +569,10 @@ abstract class _EarthquakeData implements EarthquakeData {
       required final Intensity? intensity,
       required final Intensity? lgIntensity,
       required final CommentsOmitVar? comment,
-      required final bool isVolcano}) = _$_EarthquakeData;
+      required final bool isVolcano}) = _$EarthquakeDataImpl;
 
   factory _EarthquakeData.fromJson(Map<String, dynamic> json) =
-      _$_EarthquakeData.fromJson;
+      _$EarthquakeDataImpl.fromJson;
 
   @override
   Earthquake? get earthquake;
@@ -582,7 +586,7 @@ abstract class _EarthquakeData implements EarthquakeData {
   bool get isVolcano;
   @override
   @JsonKey(ignore: true)
-  _$$_EarthquakeDataCopyWith<_$_EarthquakeData> get copyWith =>
+  _$$EarthquakeDataImplCopyWith<_$EarthquakeDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -672,11 +676,11 @@ class _$TsunamiDataCopyWithImpl<$Res, $Val extends TsunamiData>
 }
 
 /// @nodoc
-abstract class _$$_TsunamiDataCopyWith<$Res>
+abstract class _$$TsunamiDataImplCopyWith<$Res>
     implements $TsunamiDataCopyWith<$Res> {
-  factory _$$_TsunamiDataCopyWith(
-          _$_TsunamiData value, $Res Function(_$_TsunamiData) then) =
-      __$$_TsunamiDataCopyWithImpl<$Res>;
+  factory _$$TsunamiDataImplCopyWith(
+          _$TsunamiDataImpl value, $Res Function(_$TsunamiDataImpl) then) =
+      __$$TsunamiDataImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -690,11 +694,11 @@ abstract class _$$_TsunamiDataCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TsunamiDataCopyWithImpl<$Res>
-    extends _$TsunamiDataCopyWithImpl<$Res, _$_TsunamiData>
-    implements _$$_TsunamiDataCopyWith<$Res> {
-  __$$_TsunamiDataCopyWithImpl(
-      _$_TsunamiData _value, $Res Function(_$_TsunamiData) _then)
+class __$$TsunamiDataImplCopyWithImpl<$Res>
+    extends _$TsunamiDataCopyWithImpl<$Res, _$TsunamiDataImpl>
+    implements _$$TsunamiDataImplCopyWith<$Res> {
+  __$$TsunamiDataImplCopyWithImpl(
+      _$TsunamiDataImpl _value, $Res Function(_$TsunamiDataImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -705,7 +709,7 @@ class __$$_TsunamiDataCopyWithImpl<$Res>
     Object? observations = freezed,
     Object? comments = freezed,
   }) {
-    return _then(_$_TsunamiData(
+    return _then(_$TsunamiDataImpl(
       forecasts: freezed == forecasts
           ? _value._forecasts
           : forecasts // ignore: cast_nullable_to_non_nullable
@@ -728,8 +732,8 @@ class __$$_TsunamiDataCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TsunamiData implements _TsunamiData {
-  const _$_TsunamiData(
+class _$TsunamiDataImpl implements _TsunamiData {
+  const _$TsunamiDataImpl(
       {required final List<TsunamiForecast>? forecasts,
       required final List<TsunamiEstimation>? estimations,
       required final List<TsunamiObservation>? observations,
@@ -738,8 +742,8 @@ class _$_TsunamiData implements _TsunamiData {
         _estimations = estimations,
         _observations = observations;
 
-  factory _$_TsunamiData.fromJson(Map<String, dynamic> json) =>
-      _$$_TsunamiDataFromJson(json);
+  factory _$TsunamiDataImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TsunamiDataImplFromJson(json);
 
   final List<TsunamiForecast>? _forecasts;
   @override
@@ -783,7 +787,7 @@ class _$_TsunamiData implements _TsunamiData {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TsunamiData &&
+            other is _$TsunamiDataImpl &&
             const DeepCollectionEquality()
                 .equals(other._forecasts, _forecasts) &&
             const DeepCollectionEquality()
@@ -806,12 +810,12 @@ class _$_TsunamiData implements _TsunamiData {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TsunamiDataCopyWith<_$_TsunamiData> get copyWith =>
-      __$$_TsunamiDataCopyWithImpl<_$_TsunamiData>(this, _$identity);
+  _$$TsunamiDataImplCopyWith<_$TsunamiDataImpl> get copyWith =>
+      __$$TsunamiDataImplCopyWithImpl<_$TsunamiDataImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TsunamiDataToJson(
+    return _$$TsunamiDataImplToJson(
       this,
     );
   }
@@ -822,10 +826,10 @@ abstract class _TsunamiData implements TsunamiData {
       {required final List<TsunamiForecast>? forecasts,
       required final List<TsunamiEstimation>? estimations,
       required final List<TsunamiObservation>? observations,
-      required final TsunamiComments? comments}) = _$_TsunamiData;
+      required final TsunamiComments? comments}) = _$TsunamiDataImpl;
 
   factory _TsunamiData.fromJson(Map<String, dynamic> json) =
-      _$_TsunamiData.fromJson;
+      _$TsunamiDataImpl.fromJson;
 
   @override
   List<TsunamiForecast>? get forecasts;
@@ -837,6 +841,6 @@ abstract class _TsunamiData implements TsunamiData {
   TsunamiComments? get comments;
   @override
   @JsonKey(ignore: true)
-  _$$_TsunamiDataCopyWith<_$_TsunamiData> get copyWith =>
+  _$$TsunamiDataImplCopyWith<_$TsunamiDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

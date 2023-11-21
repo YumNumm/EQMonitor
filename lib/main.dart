@@ -3,12 +3,12 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:eqmonitor/app.dart';
-import 'package:eqmonitor/core/fcm/notification_controller.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/provider/kmoni_observation_points_provider.dart';
 import 'package:eqmonitor/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -23,21 +23,22 @@ Future<void> main() async {
   // Pass all uncaught "fatal" errors from the framework to Crashlytics
   FlutterError.onError = (error) {
     talker.handle(error.exception, error.stack, 'Uncaught fatal exception');
+    FirebaseCrashlytics.instance.recordFlutterError(error);
   };
   // Pass all uncaught asynchronous errors that aren't handled
   // by the Flutter framework to Crashlytics
   PlatformDispatcher.instance.onError = (error, stack) {
     talker.handle(error, stack, 'Uncaught async exception');
+    FirebaseCrashlytics.instance.recordError(error, stack);
     return true;
   };
+
   final results = await (
     SharedPreferences.getInstance(),
     loadKmoniObservationPoints(),
     Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     ),
-    NotificationController.initializeLocalNotifications(debug: kDebugMode),
-    NotificationController.initializeRemoteNotifications(debug: kDebugMode),
   ).wait;
   if (Platform.isAndroid || Platform.isIOS) {
     final fcm = FirebaseMessaging.instance;

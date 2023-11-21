@@ -92,8 +92,6 @@ class _EewEstimatedIntensityPainter extends CustomPainter {
     int id,
     Color color,
   ) {
-    final bbox = state.getLatLngBoundary(size);
-
     for (final e in maps[LandLayerType.earthquakeInformationSubdivisionArea]!
         .projectedPolygonFeatures
         .where(

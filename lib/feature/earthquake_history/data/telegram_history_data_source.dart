@@ -65,9 +65,11 @@ class TelegramHistoryDataSource {
               return TelegramV3.fromJson(e as Map<String, dynamic>);
             } on CheckedFromJsonException catch (e) {
               FirebaseCrashlytics.instance.log(
-                'TelegramV3.fromJson CheckedFromJsonException: ${e.message} ${e.key}',
+                'TelegramV3.fromJson CheckedFromJsonException: '
+                '${e.message} ${e.key}',
               );
-              log('TelegramV3.fromJson CheckedFromJsonException: ${e.message} ${e.key}');
+              log('TelegramV3.fromJson CheckedFromJsonException: '
+              '${e.message} ${e.key}');
               return null;
               // ignore: avoid_catches_without_on_clauses
             } catch (e) {

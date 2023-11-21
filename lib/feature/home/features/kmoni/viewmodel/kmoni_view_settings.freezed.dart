@@ -83,22 +83,22 @@ class _$KmoniSettingsStateCopyWithImpl<$Res, $Val extends KmoniSettingsState>
 }
 
 /// @nodoc
-abstract class _$$_KmoniSettingsStateCopyWith<$Res>
+abstract class _$$KmoniSettingsStateImplCopyWith<$Res>
     implements $KmoniSettingsStateCopyWith<$Res> {
-  factory _$$_KmoniSettingsStateCopyWith(_$_KmoniSettingsState value,
-          $Res Function(_$_KmoniSettingsState) then) =
-      __$$_KmoniSettingsStateCopyWithImpl<$Res>;
+  factory _$$KmoniSettingsStateImplCopyWith(_$KmoniSettingsStateImpl value,
+          $Res Function(_$KmoniSettingsStateImpl) then) =
+      __$$KmoniSettingsStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool isUpper0Only, bool isShowIntensityIcon, bool useKmoni});
 }
 
 /// @nodoc
-class __$$_KmoniSettingsStateCopyWithImpl<$Res>
-    extends _$KmoniSettingsStateCopyWithImpl<$Res, _$_KmoniSettingsState>
-    implements _$$_KmoniSettingsStateCopyWith<$Res> {
-  __$$_KmoniSettingsStateCopyWithImpl(
-      _$_KmoniSettingsState _value, $Res Function(_$_KmoniSettingsState) _then)
+class __$$KmoniSettingsStateImplCopyWithImpl<$Res>
+    extends _$KmoniSettingsStateCopyWithImpl<$Res, _$KmoniSettingsStateImpl>
+    implements _$$KmoniSettingsStateImplCopyWith<$Res> {
+  __$$KmoniSettingsStateImplCopyWithImpl(_$KmoniSettingsStateImpl _value,
+      $Res Function(_$KmoniSettingsStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -108,7 +108,7 @@ class __$$_KmoniSettingsStateCopyWithImpl<$Res>
     Object? isShowIntensityIcon = null,
     Object? useKmoni = null,
   }) {
-    return _then(_$_KmoniSettingsState(
+    return _then(_$KmoniSettingsStateImpl(
       isUpper0Only: null == isUpper0Only
           ? _value.isUpper0Only
           : isUpper0Only // ignore: cast_nullable_to_non_nullable
@@ -127,14 +127,14 @@ class __$$_KmoniSettingsStateCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_KmoniSettingsState implements _KmoniSettingsState {
-  const _$_KmoniSettingsState(
+class _$KmoniSettingsStateImpl implements _KmoniSettingsState {
+  const _$KmoniSettingsStateImpl(
       {this.isUpper0Only = false,
       this.isShowIntensityIcon = false,
       this.useKmoni = false});
 
-  factory _$_KmoniSettingsState.fromJson(Map<String, dynamic> json) =>
-      _$$_KmoniSettingsStateFromJson(json);
+  factory _$KmoniSettingsStateImpl.fromJson(Map<String, dynamic> json) =>
+      _$$KmoniSettingsStateImplFromJson(json);
 
 // 設定
   /// 震度0以上のみ表示するかどうか
@@ -164,7 +164,7 @@ class _$_KmoniSettingsState implements _KmoniSettingsState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_KmoniSettingsState &&
+            other is _$KmoniSettingsStateImpl &&
             (identical(other.isUpper0Only, isUpper0Only) ||
                 other.isUpper0Only == isUpper0Only) &&
             (identical(other.isShowIntensityIcon, isShowIntensityIcon) ||
@@ -181,13 +181,13 @@ class _$_KmoniSettingsState implements _KmoniSettingsState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_KmoniSettingsStateCopyWith<_$_KmoniSettingsState> get copyWith =>
-      __$$_KmoniSettingsStateCopyWithImpl<_$_KmoniSettingsState>(
+  _$$KmoniSettingsStateImplCopyWith<_$KmoniSettingsStateImpl> get copyWith =>
+      __$$KmoniSettingsStateImplCopyWithImpl<_$KmoniSettingsStateImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_KmoniSettingsStateToJson(
+    return _$$KmoniSettingsStateImplToJson(
       this,
     );
   }
@@ -197,10 +197,10 @@ abstract class _KmoniSettingsState implements KmoniSettingsState {
   const factory _KmoniSettingsState(
       {final bool isUpper0Only,
       final bool isShowIntensityIcon,
-      final bool useKmoni}) = _$_KmoniSettingsState;
+      final bool useKmoni}) = _$KmoniSettingsStateImpl;
 
   factory _KmoniSettingsState.fromJson(Map<String, dynamic> json) =
-      _$_KmoniSettingsState.fromJson;
+      _$KmoniSettingsStateImpl.fromJson;
 
   @override // 設定
   /// 震度0以上のみ表示するかどうか
@@ -218,6 +218,6 @@ abstract class _KmoniSettingsState implements KmoniSettingsState {
   bool get useKmoni;
   @override
   @JsonKey(ignore: true)
-  _$$_KmoniSettingsStateCopyWith<_$_KmoniSettingsState> get copyWith =>
+  _$$KmoniSettingsStateImplCopyWith<_$KmoniSettingsStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

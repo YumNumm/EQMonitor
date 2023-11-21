@@ -8,12 +8,13 @@ part of 'telegram_ws_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_TelegramWsModel _$$_TelegramWsModelFromJson(Map<String, dynamic> json) =>
+_$TelegramWsModelImpl _$$TelegramWsModelImplFromJson(
+        Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TelegramWsModel',
+      r'_$TelegramWsModelImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TelegramWsModel(
+        final val = _$TelegramWsModelImpl(
           telegramStream: $checkedConvert('telegramStream',
               (v) => telegramWsModelFromJson(v as Map<String, dynamic>)),
         );
@@ -21,7 +22,8 @@ _$_TelegramWsModel _$$_TelegramWsModelFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_TelegramWsModelToJson(_$_TelegramWsModel instance) =>
+Map<String, dynamic> _$$TelegramWsModelImplToJson(
+        _$TelegramWsModelImpl instance) =>
     <String, dynamic>{
       'telegramStream': telegramWsModelToJson(instance.telegramStream),
     };

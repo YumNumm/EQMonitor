@@ -7,7 +7,7 @@ import 'package:eqmonitor/feature/home/features/kmoni/util/realtime_data_type.da
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/kmoni_observation_point.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
-import 'package:image/image.dart' as Image;
+import 'package:image/image.dart' as image;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kmoni_use_case.g.dart';
@@ -57,16 +57,16 @@ class KmoniUseCase {
     required RealtimeDataType type,
   }) {
     final analyzedPoints = <AnalyzedKmoniObservationPoint>[];
-    final image = Image.decodeGif(
+    final pic = image.decodeGif(
       Uint8List.fromList(picture),
     );
-    if (image == null) {
+    if (pic == null) {
       throw Exception('Image was null');
     }
 
     // 画像解析開始
     for (final obsPoint in obsPoints) {
-      final pixel32 = image.getPixelSafe(obsPoint.x, obsPoint.y);
+      final pixel32 = pic.getPixelSafe(obsPoint.x, obsPoint.y);
       final analyzedPoint = _parsePixelToAnalyzedPoint(
         obsPoint: obsPoint,
         pixel32: pixel32,
@@ -84,7 +84,7 @@ class KmoniUseCase {
   AnalyzedKmoniObservationPoint _parsePixelToAnalyzedPoint({
     required KmoniObservationPoint obsPoint,
     required RealtimeDataType type,
-    required Image.Pixel pixel32,
+    required image.Pixel pixel32,
   }) {
     // 色がない場合(対象の観測点が画像内にない場合)
 

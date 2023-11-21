@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'eew_telegram_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@Riverpod(keepAlive: true, dependencies: [TelegramWs],)
 class EewWsTelegram extends _$EewWsTelegram {
   @override
   Stream<EewWsItem> build() {

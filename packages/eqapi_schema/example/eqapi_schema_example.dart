@@ -19,6 +19,7 @@ Future<List<TelegramV3>> main() async {
     }
   });
   for (final e in results) {
+    // ignore: avoid_print
     print('${e.runtimeType}: ${e.body is TelegramVxse53Body}');
   }
   return results;

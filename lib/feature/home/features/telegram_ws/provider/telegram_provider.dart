@@ -10,7 +10,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 
 part 'telegram_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@Riverpod(keepAlive: true, dependencies: [telegramSocketIo],)
 class TelegramWs extends _$TelegramWs {
   late final Talker _talker;
   late final Socket _socket;

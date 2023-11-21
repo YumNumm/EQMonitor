@@ -62,22 +62,22 @@ class _$SocketStatusModelCopyWithImpl<$Res, $Val extends SocketStatusModel>
 }
 
 /// @nodoc
-abstract class _$$_SocketStatusModelCopyWith<$Res>
+abstract class _$$SocketStatusModelImplCopyWith<$Res>
     implements $SocketStatusModelCopyWith<$Res> {
-  factory _$$_SocketStatusModelCopyWith(_$_SocketStatusModel value,
-          $Res Function(_$_SocketStatusModel) then) =
-      __$$_SocketStatusModelCopyWithImpl<$Res>;
+  factory _$$SocketStatusModelImplCopyWith(_$SocketStatusModelImpl value,
+          $Res Function(_$SocketStatusModelImpl) then) =
+      __$$SocketStatusModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool connected});
 }
 
 /// @nodoc
-class __$$_SocketStatusModelCopyWithImpl<$Res>
-    extends _$SocketStatusModelCopyWithImpl<$Res, _$_SocketStatusModel>
-    implements _$$_SocketStatusModelCopyWith<$Res> {
-  __$$_SocketStatusModelCopyWithImpl(
-      _$_SocketStatusModel _value, $Res Function(_$_SocketStatusModel) _then)
+class __$$SocketStatusModelImplCopyWithImpl<$Res>
+    extends _$SocketStatusModelCopyWithImpl<$Res, _$SocketStatusModelImpl>
+    implements _$$SocketStatusModelImplCopyWith<$Res> {
+  __$$SocketStatusModelImplCopyWithImpl(_$SocketStatusModelImpl _value,
+      $Res Function(_$SocketStatusModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -85,7 +85,7 @@ class __$$_SocketStatusModelCopyWithImpl<$Res>
   $Res call({
     Object? connected = null,
   }) {
-    return _then(_$_SocketStatusModel(
+    return _then(_$SocketStatusModelImpl(
       connected: null == connected
           ? _value.connected
           : connected // ignore: cast_nullable_to_non_nullable
@@ -96,11 +96,11 @@ class __$$_SocketStatusModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_SocketStatusModel implements _SocketStatusModel {
-  const _$_SocketStatusModel({this.connected = false});
+class _$SocketStatusModelImpl implements _SocketStatusModel {
+  const _$SocketStatusModelImpl({this.connected = false});
 
-  factory _$_SocketStatusModel.fromJson(Map<String, dynamic> json) =>
-      _$$_SocketStatusModelFromJson(json);
+  factory _$SocketStatusModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SocketStatusModelImplFromJson(json);
 
   @override
   @JsonKey()
@@ -115,7 +115,7 @@ class _$_SocketStatusModel implements _SocketStatusModel {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_SocketStatusModel &&
+            other is _$SocketStatusModelImpl &&
             (identical(other.connected, connected) ||
                 other.connected == connected));
   }
@@ -127,13 +127,13 @@ class _$_SocketStatusModel implements _SocketStatusModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_SocketStatusModelCopyWith<_$_SocketStatusModel> get copyWith =>
-      __$$_SocketStatusModelCopyWithImpl<_$_SocketStatusModel>(
+  _$$SocketStatusModelImplCopyWith<_$SocketStatusModelImpl> get copyWith =>
+      __$$SocketStatusModelImplCopyWithImpl<_$SocketStatusModelImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_SocketStatusModelToJson(
+    return _$$SocketStatusModelImplToJson(
       this,
     );
   }
@@ -141,15 +141,15 @@ class _$_SocketStatusModel implements _SocketStatusModel {
 
 abstract class _SocketStatusModel implements SocketStatusModel {
   const factory _SocketStatusModel({final bool connected}) =
-      _$_SocketStatusModel;
+      _$SocketStatusModelImpl;
 
   factory _SocketStatusModel.fromJson(Map<String, dynamic> json) =
-      _$_SocketStatusModel.fromJson;
+      _$SocketStatusModelImpl.fromJson;
 
   @override
   bool get connected;
   @override
   @JsonKey(ignore: true)
-  _$$_SocketStatusModelCopyWith<_$_SocketStatusModel> get copyWith =>
+  _$$SocketStatusModelImplCopyWith<_$SocketStatusModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

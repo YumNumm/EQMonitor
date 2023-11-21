@@ -185,8 +185,8 @@ class MapViewModel extends _$MapViewModel {
 
   // Decide which type of gesture this is by comparing the amount of scale
   // and rotation in the gesture, if any. Scale starts at 1 and rotation
-  // starts at 0. Pan will have no scale and no rotation because it uses only one
-  // finger.
+  // starts at 0. Pan will have no scale and no rotation because it uses only
+  // one finger.
   _GestureType _getGestureType(ScaleUpdateDetails details) {
     final scale = details.scale;
     const rotation = 0; //details.rotation;
@@ -588,8 +588,6 @@ class MapViewModel extends _$MapViewModel {
     _scaleController = scaleController;
     _globalPointAndZoomLevelController = globalPointAndZoomLevelController;
   }
-
-  double get actualZoomLevel => math.sqrt(state.zoomLevel);
 }
 
 // A classification of relevant user gestures. Each contiguous user gesture is

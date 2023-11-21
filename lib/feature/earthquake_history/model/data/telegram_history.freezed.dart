@@ -94,11 +94,11 @@ class _$TelegramHistoryV3CopyWithImpl<$Res, $Val extends TelegramHistoryV3>
 }
 
 /// @nodoc
-abstract class _$$_TelegramHistoryV3CopyWith<$Res>
+abstract class _$$TelegramHistoryV3ImplCopyWith<$Res>
     implements $TelegramHistoryV3CopyWith<$Res> {
-  factory _$$_TelegramHistoryV3CopyWith(_$_TelegramHistoryV3 value,
-          $Res Function(_$_TelegramHistoryV3) then) =
-      __$$_TelegramHistoryV3CopyWithImpl<$Res>;
+  factory _$$TelegramHistoryV3ImplCopyWith(_$TelegramHistoryV3Impl value,
+          $Res Function(_$TelegramHistoryV3Impl) then) =
+      __$$TelegramHistoryV3ImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -114,11 +114,11 @@ abstract class _$$_TelegramHistoryV3CopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TelegramHistoryV3CopyWithImpl<$Res>
-    extends _$TelegramHistoryV3CopyWithImpl<$Res, _$_TelegramHistoryV3>
-    implements _$$_TelegramHistoryV3CopyWith<$Res> {
-  __$$_TelegramHistoryV3CopyWithImpl(
-      _$_TelegramHistoryV3 _value, $Res Function(_$_TelegramHistoryV3) _then)
+class __$$TelegramHistoryV3ImplCopyWithImpl<$Res>
+    extends _$TelegramHistoryV3CopyWithImpl<$Res, _$TelegramHistoryV3Impl>
+    implements _$$TelegramHistoryV3ImplCopyWith<$Res> {
+  __$$TelegramHistoryV3ImplCopyWithImpl(_$TelegramHistoryV3Impl _value,
+      $Res Function(_$TelegramHistoryV3Impl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -128,7 +128,7 @@ class __$$_TelegramHistoryV3CopyWithImpl<$Res>
     Object? success = null,
     Object? meta = null,
   }) {
-    return _then(_$_TelegramHistoryV3(
+    return _then(_$TelegramHistoryV3Impl(
       results: freezed == results
           ? _value._results
           : results // ignore: cast_nullable_to_non_nullable
@@ -147,8 +147,8 @@ class __$$_TelegramHistoryV3CopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TelegramHistoryV3 implements _TelegramHistoryV3 {
-  const _$_TelegramHistoryV3(
+class _$TelegramHistoryV3Impl implements _TelegramHistoryV3 {
+  const _$TelegramHistoryV3Impl(
       {@JsonKey(
           fromJson: _telegramHistoryV3DataFromJson,
           toJson: _telegramHistoryV3DataToJson)
@@ -157,8 +157,8 @@ class _$_TelegramHistoryV3 implements _TelegramHistoryV3 {
       required this.meta})
       : _results = results;
 
-  factory _$_TelegramHistoryV3.fromJson(Map<String, dynamic> json) =>
-      _$$_TelegramHistoryV3FromJson(json);
+  factory _$TelegramHistoryV3Impl.fromJson(Map<String, dynamic> json) =>
+      _$$TelegramHistoryV3ImplFromJson(json);
 
   final Map<String, List<TelegramV3>>? _results;
   @override
@@ -187,7 +187,7 @@ class _$_TelegramHistoryV3 implements _TelegramHistoryV3 {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TelegramHistoryV3 &&
+            other is _$TelegramHistoryV3Impl &&
             const DeepCollectionEquality().equals(other._results, _results) &&
             (identical(other.success, success) || other.success == success) &&
             (identical(other.meta, meta) || other.meta == meta));
@@ -201,13 +201,13 @@ class _$_TelegramHistoryV3 implements _TelegramHistoryV3 {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TelegramHistoryV3CopyWith<_$_TelegramHistoryV3> get copyWith =>
-      __$$_TelegramHistoryV3CopyWithImpl<_$_TelegramHistoryV3>(
+  _$$TelegramHistoryV3ImplCopyWith<_$TelegramHistoryV3Impl> get copyWith =>
+      __$$TelegramHistoryV3ImplCopyWithImpl<_$TelegramHistoryV3Impl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TelegramHistoryV3ToJson(
+    return _$$TelegramHistoryV3ImplToJson(
       this,
     );
   }
@@ -220,10 +220,10 @@ abstract class _TelegramHistoryV3 implements TelegramHistoryV3 {
           toJson: _telegramHistoryV3DataToJson)
       required final Map<String, List<TelegramV3>>? results,
       required final bool success,
-      required final D1DbExecutionResult meta}) = _$_TelegramHistoryV3;
+      required final D1DbExecutionResult meta}) = _$TelegramHistoryV3Impl;
 
   factory _TelegramHistoryV3.fromJson(Map<String, dynamic> json) =
-      _$_TelegramHistoryV3.fromJson;
+      _$TelegramHistoryV3Impl.fromJson;
 
   @override
   @JsonKey(
@@ -236,7 +236,7 @@ abstract class _TelegramHistoryV3 implements TelegramHistoryV3 {
   D1DbExecutionResult get meta;
   @override
   @JsonKey(ignore: true)
-  _$$_TelegramHistoryV3CopyWith<_$_TelegramHistoryV3> get copyWith =>
+  _$$TelegramHistoryV3ImplCopyWith<_$TelegramHistoryV3Impl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -288,22 +288,22 @@ class _$D1DbExecutionResultCopyWithImpl<$Res, $Val extends D1DbExecutionResult>
 }
 
 /// @nodoc
-abstract class _$$_D1DbExecutionResultCopyWith<$Res>
+abstract class _$$D1DbExecutionResultImplCopyWith<$Res>
     implements $D1DbExecutionResultCopyWith<$Res> {
-  factory _$$_D1DbExecutionResultCopyWith(_$_D1DbExecutionResult value,
-          $Res Function(_$_D1DbExecutionResult) then) =
-      __$$_D1DbExecutionResultCopyWithImpl<$Res>;
+  factory _$$D1DbExecutionResultImplCopyWith(_$D1DbExecutionResultImpl value,
+          $Res Function(_$D1DbExecutionResultImpl) then) =
+      __$$D1DbExecutionResultImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({double duration});
 }
 
 /// @nodoc
-class __$$_D1DbExecutionResultCopyWithImpl<$Res>
-    extends _$D1DbExecutionResultCopyWithImpl<$Res, _$_D1DbExecutionResult>
-    implements _$$_D1DbExecutionResultCopyWith<$Res> {
-  __$$_D1DbExecutionResultCopyWithImpl(_$_D1DbExecutionResult _value,
-      $Res Function(_$_D1DbExecutionResult) _then)
+class __$$D1DbExecutionResultImplCopyWithImpl<$Res>
+    extends _$D1DbExecutionResultCopyWithImpl<$Res, _$D1DbExecutionResultImpl>
+    implements _$$D1DbExecutionResultImplCopyWith<$Res> {
+  __$$D1DbExecutionResultImplCopyWithImpl(_$D1DbExecutionResultImpl _value,
+      $Res Function(_$D1DbExecutionResultImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -311,7 +311,7 @@ class __$$_D1DbExecutionResultCopyWithImpl<$Res>
   $Res call({
     Object? duration = null,
   }) {
-    return _then(_$_D1DbExecutionResult(
+    return _then(_$D1DbExecutionResultImpl(
       duration: null == duration
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
@@ -322,11 +322,11 @@ class __$$_D1DbExecutionResultCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_D1DbExecutionResult implements _D1DbExecutionResult {
-  const _$_D1DbExecutionResult({required this.duration});
+class _$D1DbExecutionResultImpl implements _D1DbExecutionResult {
+  const _$D1DbExecutionResultImpl({required this.duration});
 
-  factory _$_D1DbExecutionResult.fromJson(Map<String, dynamic> json) =>
-      _$$_D1DbExecutionResultFromJson(json);
+  factory _$D1DbExecutionResultImpl.fromJson(Map<String, dynamic> json) =>
+      _$$D1DbExecutionResultImplFromJson(json);
 
   @override
   final double duration;
@@ -340,7 +340,7 @@ class _$_D1DbExecutionResult implements _D1DbExecutionResult {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_D1DbExecutionResult &&
+            other is _$D1DbExecutionResultImpl &&
             (identical(other.duration, duration) ||
                 other.duration == duration));
   }
@@ -352,13 +352,13 @@ class _$_D1DbExecutionResult implements _D1DbExecutionResult {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_D1DbExecutionResultCopyWith<_$_D1DbExecutionResult> get copyWith =>
-      __$$_D1DbExecutionResultCopyWithImpl<_$_D1DbExecutionResult>(
+  _$$D1DbExecutionResultImplCopyWith<_$D1DbExecutionResultImpl> get copyWith =>
+      __$$D1DbExecutionResultImplCopyWithImpl<_$D1DbExecutionResultImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_D1DbExecutionResultToJson(
+    return _$$D1DbExecutionResultImplToJson(
       this,
     );
   }
@@ -366,15 +366,15 @@ class _$_D1DbExecutionResult implements _D1DbExecutionResult {
 
 abstract class _D1DbExecutionResult implements D1DbExecutionResult {
   const factory _D1DbExecutionResult({required final double duration}) =
-      _$_D1DbExecutionResult;
+      _$D1DbExecutionResultImpl;
 
   factory _D1DbExecutionResult.fromJson(Map<String, dynamic> json) =
-      _$_D1DbExecutionResult.fromJson;
+      _$D1DbExecutionResultImpl.fromJson;
 
   @override
   double get duration;
   @override
   @JsonKey(ignore: true)
-  _$$_D1DbExecutionResultCopyWith<_$_D1DbExecutionResult> get copyWith =>
+  _$$D1DbExecutionResultImplCopyWith<_$D1DbExecutionResultImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

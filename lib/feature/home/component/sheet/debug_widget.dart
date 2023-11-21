@@ -1,8 +1,6 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
 import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
-import 'package:eqmonitor/feature/home/features/debugger/debugger_provider.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -15,11 +13,6 @@ class DebugWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final isDeveloper = ref.watch(
-      debuggerProvider.select(
-        (value) => value.isDeveloper,
-      ),
-    );
 
     return Card(
       margin: const EdgeInsets.all(4),
@@ -75,27 +68,6 @@ class DebugWidget extends ConsumerWidget {
                       context: context,
                       builder: (context) => AlertDialog(
                         title: const Text('重大な通知権限 (FirebaseMessaging)'),
-                        content: Text(result.toString()),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: const Text('OK'),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                }
-                {
-                  final result = await AwesomeNotifications()
-                      .requestPermissionToSendNotifications(
-                    permissions: [NotificationPermission.CriticalAlert],
-                  );
-                  if (context.mounted) {
-                    await showDialog<void>(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text('重大な通知権限 (AwesomeNotifications)'),
                         content: Text(result.toString()),
                         actions: [
                           TextButton(

@@ -11,7 +11,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'eew_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@Riverpod(
+  keepAlive: true,
+  dependencies: [EarthquakeHistoryViewModel],
+)
 class EewTelegram extends _$EewTelegram {
   @override
   List<EarthquakeHistoryItem> build() {
@@ -50,7 +53,6 @@ class EewTelegram extends _$EewTelegram {
       final data = state;
       data[index] = item;
       state = data;
-      print('update ${item.latestEewTelegram?.serialNo}');
       return;
     } else {
       state = [item, ...state];
@@ -113,7 +115,7 @@ class EewEstimatedIntensity extends _$EewEstimatedIntensity {
 }
 
 /// キャンセル報を除いた最新のEEW
-@riverpod
+@Riverpod(dependencies: [EewTelegram, EewTelegram])
 class EewNormalTelegram extends _$EewNormalTelegram {
   @override
   List<
@@ -141,7 +143,7 @@ class EewNormalTelegram extends _$EewNormalTelegram {
 }
 
 /// レベル法・PLUM法・IPF1点のEEWを 除いた最新のEEW
-@riverpod
+@Riverpod(dependencies: [EewNormalTelegram, EewNormalTelegram])
 class EewFilteredTelegram extends _$EewFilteredTelegram {
   @override
   List<
@@ -178,7 +180,7 @@ class EewFilteredTelegram extends _$EewFilteredTelegram {
 }
 
 /// EEWの予想震度のリスト
-@riverpod
+@Riverpod(dependencies: [EewNormalTelegram, EewNormalTelegram])
 class EewEstimatedIntensityList extends _$EewEstimatedIntensityList {
   @override
   List<(int code, JmaForecastIntensity intensity)> build() {

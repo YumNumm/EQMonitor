@@ -17,7 +17,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_history_view_model.g.dart';
 
-@Riverpod(keepAlive: true)
+@Riverpod(
+  keepAlive: true,
+  dependencies: [earthquakeHistoryUseCase, TelegramWs],
+)
 class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
   @override
   AsyncValue<List<EarthquakeHistoryItem>> build() {

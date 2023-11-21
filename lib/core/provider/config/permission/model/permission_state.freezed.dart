@@ -69,22 +69,22 @@ class _$PermissionStateModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_PermissionStateModelCopyWith<$Res>
+abstract class _$$PermissionStateModelImplCopyWith<$Res>
     implements $PermissionStateModelCopyWith<$Res> {
-  factory _$$_PermissionStateModelCopyWith(_$_PermissionStateModel value,
-          $Res Function(_$_PermissionStateModel) then) =
-      __$$_PermissionStateModelCopyWithImpl<$Res>;
+  factory _$$PermissionStateModelImplCopyWith(_$PermissionStateModelImpl value,
+          $Res Function(_$PermissionStateModelImpl) then) =
+      __$$PermissionStateModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool notification, bool isNotificationDeniedByUser});
 }
 
 /// @nodoc
-class __$$_PermissionStateModelCopyWithImpl<$Res>
-    extends _$PermissionStateModelCopyWithImpl<$Res, _$_PermissionStateModel>
-    implements _$$_PermissionStateModelCopyWith<$Res> {
-  __$$_PermissionStateModelCopyWithImpl(_$_PermissionStateModel _value,
-      $Res Function(_$_PermissionStateModel) _then)
+class __$$PermissionStateModelImplCopyWithImpl<$Res>
+    extends _$PermissionStateModelCopyWithImpl<$Res, _$PermissionStateModelImpl>
+    implements _$$PermissionStateModelImplCopyWith<$Res> {
+  __$$PermissionStateModelImplCopyWithImpl(_$PermissionStateModelImpl _value,
+      $Res Function(_$PermissionStateModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -93,7 +93,7 @@ class __$$_PermissionStateModelCopyWithImpl<$Res>
     Object? notification = null,
     Object? isNotificationDeniedByUser = null,
   }) {
-    return _then(_$_PermissionStateModel(
+    return _then(_$PermissionStateModelImpl(
       notification: null == notification
           ? _value.notification
           : notification // ignore: cast_nullable_to_non_nullable
@@ -108,12 +108,12 @@ class __$$_PermissionStateModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_PermissionStateModel implements _PermissionStateModel {
-  const _$_PermissionStateModel(
+class _$PermissionStateModelImpl implements _PermissionStateModel {
+  const _$PermissionStateModelImpl(
       {this.notification = false, this.isNotificationDeniedByUser = false});
 
-  factory _$_PermissionStateModel.fromJson(Map<String, dynamic> json) =>
-      _$$_PermissionStateModelFromJson(json);
+  factory _$PermissionStateModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PermissionStateModelImplFromJson(json);
 
   @override
   @JsonKey()
@@ -131,7 +131,7 @@ class _$_PermissionStateModel implements _PermissionStateModel {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_PermissionStateModel &&
+            other is _$PermissionStateModelImpl &&
             (identical(other.notification, notification) ||
                 other.notification == notification) &&
             (identical(other.isNotificationDeniedByUser,
@@ -148,13 +148,14 @@ class _$_PermissionStateModel implements _PermissionStateModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_PermissionStateModelCopyWith<_$_PermissionStateModel> get copyWith =>
-      __$$_PermissionStateModelCopyWithImpl<_$_PermissionStateModel>(
-          this, _$identity);
+  _$$PermissionStateModelImplCopyWith<_$PermissionStateModelImpl>
+      get copyWith =>
+          __$$PermissionStateModelImplCopyWithImpl<_$PermissionStateModelImpl>(
+              this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PermissionStateModelToJson(
+    return _$$PermissionStateModelImplToJson(
       this,
     );
   }
@@ -163,10 +164,10 @@ class _$_PermissionStateModel implements _PermissionStateModel {
 abstract class _PermissionStateModel implements PermissionStateModel {
   const factory _PermissionStateModel(
       {final bool notification,
-      final bool isNotificationDeniedByUser}) = _$_PermissionStateModel;
+      final bool isNotificationDeniedByUser}) = _$PermissionStateModelImpl;
 
   factory _PermissionStateModel.fromJson(Map<String, dynamic> json) =
-      _$_PermissionStateModel.fromJson;
+      _$PermissionStateModelImpl.fromJson;
 
   @override
   bool get notification;
@@ -174,6 +175,6 @@ abstract class _PermissionStateModel implements PermissionStateModel {
   bool get isNotificationDeniedByUser;
   @override
   @JsonKey(ignore: true)
-  _$$_PermissionStateModelCopyWith<_$_PermissionStateModel> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$PermissionStateModelImplCopyWith<_$PermissionStateModelImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

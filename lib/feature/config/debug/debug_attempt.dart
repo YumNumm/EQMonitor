@@ -43,6 +43,7 @@ class DebugAttempt extends HookWidget {
       builder: (context) => const DebugAttempt(),
     );
     if (str?.sha512 ==
+        // ignore: lines_longer_than_80_chars
         'a18accfb22e45f501dc94cb4d6fbf0bb564a72bd6f37373728ee892855c31ae5d69364c5c9284ae860636cc21729c17d93ae5541bf112a9b95e9bc436b819073') {
       return true;
     }

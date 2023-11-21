@@ -26,7 +26,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sheet/src/sheet.dart';
+import 'package:sheet/sheet.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 class HomeView extends HookConsumerWidget {

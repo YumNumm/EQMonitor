@@ -64,23 +64,25 @@ class _$CrashlyticsSettingModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_CrashlyticsSettingModelCopyWith<$Res>
+abstract class _$$CrashlyticsSettingModelImplCopyWith<$Res>
     implements $CrashlyticsSettingModelCopyWith<$Res> {
-  factory _$$_CrashlyticsSettingModelCopyWith(_$_CrashlyticsSettingModel value,
-          $Res Function(_$_CrashlyticsSettingModel) then) =
-      __$$_CrashlyticsSettingModelCopyWithImpl<$Res>;
+  factory _$$CrashlyticsSettingModelImplCopyWith(
+          _$CrashlyticsSettingModelImpl value,
+          $Res Function(_$CrashlyticsSettingModelImpl) then) =
+      __$$CrashlyticsSettingModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool isEnabled});
 }
 
 /// @nodoc
-class __$$_CrashlyticsSettingModelCopyWithImpl<$Res>
+class __$$CrashlyticsSettingModelImplCopyWithImpl<$Res>
     extends _$CrashlyticsSettingModelCopyWithImpl<$Res,
-        _$_CrashlyticsSettingModel>
-    implements _$$_CrashlyticsSettingModelCopyWith<$Res> {
-  __$$_CrashlyticsSettingModelCopyWithImpl(_$_CrashlyticsSettingModel _value,
-      $Res Function(_$_CrashlyticsSettingModel) _then)
+        _$CrashlyticsSettingModelImpl>
+    implements _$$CrashlyticsSettingModelImplCopyWith<$Res> {
+  __$$CrashlyticsSettingModelImplCopyWithImpl(
+      _$CrashlyticsSettingModelImpl _value,
+      $Res Function(_$CrashlyticsSettingModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -88,7 +90,7 @@ class __$$_CrashlyticsSettingModelCopyWithImpl<$Res>
   $Res call({
     Object? isEnabled = null,
   }) {
-    return _then(_$_CrashlyticsSettingModel(
+    return _then(_$CrashlyticsSettingModelImpl(
       isEnabled: null == isEnabled
           ? _value.isEnabled
           : isEnabled // ignore: cast_nullable_to_non_nullable
@@ -99,11 +101,11 @@ class __$$_CrashlyticsSettingModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_CrashlyticsSettingModel implements _CrashlyticsSettingModel {
-  const _$_CrashlyticsSettingModel({this.isEnabled = true});
+class _$CrashlyticsSettingModelImpl implements _CrashlyticsSettingModel {
+  const _$CrashlyticsSettingModelImpl({this.isEnabled = true});
 
-  factory _$_CrashlyticsSettingModel.fromJson(Map<String, dynamic> json) =>
-      _$$_CrashlyticsSettingModelFromJson(json);
+  factory _$CrashlyticsSettingModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CrashlyticsSettingModelImplFromJson(json);
 
   @override
   @JsonKey()
@@ -118,7 +120,7 @@ class _$_CrashlyticsSettingModel implements _CrashlyticsSettingModel {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_CrashlyticsSettingModel &&
+            other is _$CrashlyticsSettingModelImpl &&
             (identical(other.isEnabled, isEnabled) ||
                 other.isEnabled == isEnabled));
   }
@@ -130,14 +132,13 @@ class _$_CrashlyticsSettingModel implements _CrashlyticsSettingModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_CrashlyticsSettingModelCopyWith<_$_CrashlyticsSettingModel>
-      get copyWith =>
-          __$$_CrashlyticsSettingModelCopyWithImpl<_$_CrashlyticsSettingModel>(
-              this, _$identity);
+  _$$CrashlyticsSettingModelImplCopyWith<_$CrashlyticsSettingModelImpl>
+      get copyWith => __$$CrashlyticsSettingModelImplCopyWithImpl<
+          _$CrashlyticsSettingModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_CrashlyticsSettingModelToJson(
+    return _$$CrashlyticsSettingModelImplToJson(
       this,
     );
   }
@@ -145,15 +146,15 @@ class _$_CrashlyticsSettingModel implements _CrashlyticsSettingModel {
 
 abstract class _CrashlyticsSettingModel implements CrashlyticsSettingModel {
   const factory _CrashlyticsSettingModel({final bool isEnabled}) =
-      _$_CrashlyticsSettingModel;
+      _$CrashlyticsSettingModelImpl;
 
   factory _CrashlyticsSettingModel.fromJson(Map<String, dynamic> json) =
-      _$_CrashlyticsSettingModel.fromJson;
+      _$CrashlyticsSettingModelImpl.fromJson;
 
   @override
   bool get isEnabled;
   @override
   @JsonKey(ignore: true)
-  _$$_CrashlyticsSettingModelCopyWith<_$_CrashlyticsSettingModel>
+  _$$CrashlyticsSettingModelImplCopyWith<_$CrashlyticsSettingModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

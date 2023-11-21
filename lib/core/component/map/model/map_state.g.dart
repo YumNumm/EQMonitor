@@ -8,11 +8,12 @@ part of 'map_state.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_MapState _$$_MapStateFromJson(Map<String, dynamic> json) => $checkedCreate(
-      r'_$_MapState',
+_$MapStateImpl _$$MapStateImplFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      r'_$MapStateImpl',
       json,
       ($checkedConvert) {
-        final val = _$_MapState(
+        final val = _$MapStateImpl(
           offset: $checkedConvert(
               'offset', (v) => _offsetFromJson(v as Map<String, dynamic>)),
           zoomLevel: $checkedConvert('zoomLevel', (v) => (v as num).toDouble()),
@@ -21,7 +22,7 @@ _$_MapState _$$_MapStateFromJson(Map<String, dynamic> json) => $checkedCreate(
       },
     );
 
-Map<String, dynamic> _$$_MapStateToJson(_$_MapState instance) =>
+Map<String, dynamic> _$$MapStateImplToJson(_$MapStateImpl instance) =>
     <String, dynamic>{
       'offset': _offsetToJson(instance.offset),
       'zoomLevel': instance.zoomLevel,

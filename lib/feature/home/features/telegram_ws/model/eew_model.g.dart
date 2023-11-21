@@ -8,11 +8,12 @@ part of 'eew_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_EewWsItem _$$_EewWsItemFromJson(Map<String, dynamic> json) => $checkedCreate(
-      r'_$_EewWsItem',
+_$EewWsItemImpl _$$EewWsItemImplFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      r'_$EewWsItemImpl',
       json,
       ($checkedConvert) {
-        final val = _$_EewWsItem(
+        final val = _$EewWsItemImpl(
           telegram: $checkedConvert('telegram',
               (v) => TelegramV3.fromJson(v as Map<String, dynamic>)),
           body: $checkedConvert(
@@ -22,7 +23,7 @@ _$_EewWsItem _$$_EewWsItemFromJson(Map<String, dynamic> json) => $checkedCreate(
       },
     );
 
-Map<String, dynamic> _$$_EewWsItemToJson(_$_EewWsItem instance) =>
+Map<String, dynamic> _$$EewWsItemImplToJson(_$EewWsItemImpl instance) =>
     <String, dynamic>{
       'telegram': instance.telegram,
       'body': instance.body,

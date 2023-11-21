@@ -8,12 +8,13 @@ part of 'telegram_history.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_TelegramHistoryV3 _$$_TelegramHistoryV3FromJson(Map<String, dynamic> json) =>
+_$TelegramHistoryV3Impl _$$TelegramHistoryV3ImplFromJson(
+        Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TelegramHistoryV3',
+      r'_$TelegramHistoryV3Impl',
       json,
       ($checkedConvert) {
-        final val = _$_TelegramHistoryV3(
+        final val = _$TelegramHistoryV3Impl(
           results: $checkedConvert(
               'results',
               (v) =>
@@ -26,29 +27,29 @@ _$_TelegramHistoryV3 _$$_TelegramHistoryV3FromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_TelegramHistoryV3ToJson(
-        _$_TelegramHistoryV3 instance) =>
+Map<String, dynamic> _$$TelegramHistoryV3ImplToJson(
+        _$TelegramHistoryV3Impl instance) =>
     <String, dynamic>{
       'results': _telegramHistoryV3DataToJson(instance.results),
       'success': instance.success,
       'meta': instance.meta,
     };
 
-_$_D1DbExecutionResult _$$_D1DbExecutionResultFromJson(
+_$D1DbExecutionResultImpl _$$D1DbExecutionResultImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_D1DbExecutionResult',
+      r'_$D1DbExecutionResultImpl',
       json,
       ($checkedConvert) {
-        final val = _$_D1DbExecutionResult(
+        final val = _$D1DbExecutionResultImpl(
           duration: $checkedConvert('duration', (v) => (v as num).toDouble()),
         );
         return val;
       },
     );
 
-Map<String, dynamic> _$$_D1DbExecutionResultToJson(
-        _$_D1DbExecutionResult instance) =>
+Map<String, dynamic> _$$D1DbExecutionResultImplToJson(
+        _$D1DbExecutionResultImpl instance) =>
     <String, dynamic>{
       'duration': instance.duration,
     };

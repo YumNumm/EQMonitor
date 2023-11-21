@@ -14,8 +14,6 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(earthquakeHistoryViewModelProvider);
-    final theme = Theme.of(context);
-
     useEffect(
       () {
         WidgetsBinding.instance.endOfFrame.then(

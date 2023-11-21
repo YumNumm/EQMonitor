@@ -67,21 +67,22 @@ class _$EewWsItemCopyWithImpl<$Res, $Val extends EewWsItem>
 }
 
 /// @nodoc
-abstract class _$$_EewWsItemCopyWith<$Res> implements $EewWsItemCopyWith<$Res> {
-  factory _$$_EewWsItemCopyWith(
-          _$_EewWsItem value, $Res Function(_$_EewWsItem) then) =
-      __$$_EewWsItemCopyWithImpl<$Res>;
+abstract class _$$EewWsItemImplCopyWith<$Res>
+    implements $EewWsItemCopyWith<$Res> {
+  factory _$$EewWsItemImplCopyWith(
+          _$EewWsItemImpl value, $Res Function(_$EewWsItemImpl) then) =
+      __$$EewWsItemImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({TelegramV3 telegram, Vxse45 body});
 }
 
 /// @nodoc
-class __$$_EewWsItemCopyWithImpl<$Res>
-    extends _$EewWsItemCopyWithImpl<$Res, _$_EewWsItem>
-    implements _$$_EewWsItemCopyWith<$Res> {
-  __$$_EewWsItemCopyWithImpl(
-      _$_EewWsItem _value, $Res Function(_$_EewWsItem) _then)
+class __$$EewWsItemImplCopyWithImpl<$Res>
+    extends _$EewWsItemCopyWithImpl<$Res, _$EewWsItemImpl>
+    implements _$$EewWsItemImplCopyWith<$Res> {
+  __$$EewWsItemImplCopyWithImpl(
+      _$EewWsItemImpl _value, $Res Function(_$EewWsItemImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -90,7 +91,7 @@ class __$$_EewWsItemCopyWithImpl<$Res>
     Object? telegram = null,
     Object? body = null,
   }) {
-    return _then(_$_EewWsItem(
+    return _then(_$EewWsItemImpl(
       telegram: null == telegram
           ? _value.telegram
           : telegram // ignore: cast_nullable_to_non_nullable
@@ -105,11 +106,11 @@ class __$$_EewWsItemCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_EewWsItem implements _EewWsItem {
-  const _$_EewWsItem({required this.telegram, required this.body});
+class _$EewWsItemImpl implements _EewWsItem {
+  const _$EewWsItemImpl({required this.telegram, required this.body});
 
-  factory _$_EewWsItem.fromJson(Map<String, dynamic> json) =>
-      _$$_EewWsItemFromJson(json);
+  factory _$EewWsItemImpl.fromJson(Map<String, dynamic> json) =>
+      _$$EewWsItemImplFromJson(json);
 
   @override
   final TelegramV3 telegram;
@@ -125,7 +126,7 @@ class _$_EewWsItem implements _EewWsItem {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_EewWsItem &&
+            other is _$EewWsItemImpl &&
             (identical(other.telegram, telegram) ||
                 other.telegram == telegram) &&
             (identical(other.body, body) || other.body == body));
@@ -138,12 +139,12 @@ class _$_EewWsItem implements _EewWsItem {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_EewWsItemCopyWith<_$_EewWsItem> get copyWith =>
-      __$$_EewWsItemCopyWithImpl<_$_EewWsItem>(this, _$identity);
+  _$$EewWsItemImplCopyWith<_$EewWsItemImpl> get copyWith =>
+      __$$EewWsItemImplCopyWithImpl<_$EewWsItemImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_EewWsItemToJson(
+    return _$$EewWsItemImplToJson(
       this,
     );
   }
@@ -152,10 +153,10 @@ class _$_EewWsItem implements _EewWsItem {
 abstract class _EewWsItem implements EewWsItem {
   const factory _EewWsItem(
       {required final TelegramV3 telegram,
-      required final Vxse45 body}) = _$_EewWsItem;
+      required final Vxse45 body}) = _$EewWsItemImpl;
 
   factory _EewWsItem.fromJson(Map<String, dynamic> json) =
-      _$_EewWsItem.fromJson;
+      _$EewWsItemImpl.fromJson;
 
   @override
   TelegramV3 get telegram;
@@ -163,6 +164,6 @@ abstract class _EewWsItem implements EewWsItem {
   Vxse45 get body;
   @override
   @JsonKey(ignore: true)
-  _$$_EewWsItemCopyWith<_$_EewWsItem> get copyWith =>
+  _$$EewWsItemImplCopyWith<_$EewWsItemImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

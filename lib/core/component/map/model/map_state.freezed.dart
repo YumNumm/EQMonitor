@@ -70,10 +70,11 @@ class _$MapStateCopyWithImpl<$Res, $Val extends MapState>
 }
 
 /// @nodoc
-abstract class _$$_MapStateCopyWith<$Res> implements $MapStateCopyWith<$Res> {
-  factory _$$_MapStateCopyWith(
-          _$_MapState value, $Res Function(_$_MapState) then) =
-      __$$_MapStateCopyWithImpl<$Res>;
+abstract class _$$MapStateImplCopyWith<$Res>
+    implements $MapStateCopyWith<$Res> {
+  factory _$$MapStateImplCopyWith(
+          _$MapStateImpl value, $Res Function(_$MapStateImpl) then) =
+      __$$MapStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -82,11 +83,11 @@ abstract class _$$_MapStateCopyWith<$Res> implements $MapStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_MapStateCopyWithImpl<$Res>
-    extends _$MapStateCopyWithImpl<$Res, _$_MapState>
-    implements _$$_MapStateCopyWith<$Res> {
-  __$$_MapStateCopyWithImpl(
-      _$_MapState _value, $Res Function(_$_MapState) _then)
+class __$$MapStateImplCopyWithImpl<$Res>
+    extends _$MapStateCopyWithImpl<$Res, _$MapStateImpl>
+    implements _$$MapStateImplCopyWith<$Res> {
+  __$$MapStateImplCopyWithImpl(
+      _$MapStateImpl _value, $Res Function(_$MapStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -95,7 +96,7 @@ class __$$_MapStateCopyWithImpl<$Res>
     Object? offset = null,
     Object? zoomLevel = null,
   }) {
-    return _then(_$_MapState(
+    return _then(_$MapStateImpl(
       offset: null == offset
           ? _value.offset
           : offset // ignore: cast_nullable_to_non_nullable
@@ -110,14 +111,14 @@ class __$$_MapStateCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_MapState implements _MapState {
-  const _$_MapState(
+class _$MapStateImpl implements _MapState {
+  const _$MapStateImpl(
       {@JsonKey(fromJson: _offsetFromJson, toJson: _offsetToJson)
       required this.offset,
       required this.zoomLevel});
 
-  factory _$_MapState.fromJson(Map<String, dynamic> json) =>
-      _$$_MapStateFromJson(json);
+  factory _$MapStateImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MapStateImplFromJson(json);
 
   @override
   @JsonKey(fromJson: _offsetFromJson, toJson: _offsetToJson)
@@ -134,7 +135,7 @@ class _$_MapState implements _MapState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_MapState &&
+            other is _$MapStateImpl &&
             (identical(other.offset, offset) || other.offset == offset) &&
             (identical(other.zoomLevel, zoomLevel) ||
                 other.zoomLevel == zoomLevel));
@@ -147,12 +148,12 @@ class _$_MapState implements _MapState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_MapStateCopyWith<_$_MapState> get copyWith =>
-      __$$_MapStateCopyWithImpl<_$_MapState>(this, _$identity);
+  _$$MapStateImplCopyWith<_$MapStateImpl> get copyWith =>
+      __$$MapStateImplCopyWithImpl<_$MapStateImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MapStateToJson(
+    return _$$MapStateImplToJson(
       this,
     );
   }
@@ -162,9 +163,10 @@ abstract class _MapState implements MapState {
   const factory _MapState(
       {@JsonKey(fromJson: _offsetFromJson, toJson: _offsetToJson)
       required final Offset offset,
-      required final double zoomLevel}) = _$_MapState;
+      required final double zoomLevel}) = _$MapStateImpl;
 
-  factory _MapState.fromJson(Map<String, dynamic> json) = _$_MapState.fromJson;
+  factory _MapState.fromJson(Map<String, dynamic> json) =
+      _$MapStateImpl.fromJson;
 
   @override
   @JsonKey(fromJson: _offsetFromJson, toJson: _offsetToJson)
@@ -173,6 +175,6 @@ abstract class _MapState implements MapState {
   double get zoomLevel;
   @override
   @JsonKey(ignore: true)
-  _$$_MapStateCopyWith<_$_MapState> get copyWith =>
+  _$$MapStateImplCopyWith<_$MapStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

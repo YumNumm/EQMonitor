@@ -108,11 +108,12 @@ class _$KmoniObservationPointCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_KmoniObservationPointCopyWith<$Res>
+abstract class _$$KmoniObservationPointImplCopyWith<$Res>
     implements $KmoniObservationPointCopyWith<$Res> {
-  factory _$$_KmoniObservationPointCopyWith(_$_KmoniObservationPoint value,
-          $Res Function(_$_KmoniObservationPoint) then) =
-      __$$_KmoniObservationPointCopyWithImpl<$Res>;
+  factory _$$KmoniObservationPointImplCopyWith(
+          _$KmoniObservationPointImpl value,
+          $Res Function(_$KmoniObservationPointImpl) then) =
+      __$$KmoniObservationPointImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -127,11 +128,12 @@ abstract class _$$_KmoniObservationPointCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_KmoniObservationPointCopyWithImpl<$Res>
-    extends _$KmoniObservationPointCopyWithImpl<$Res, _$_KmoniObservationPoint>
-    implements _$$_KmoniObservationPointCopyWith<$Res> {
-  __$$_KmoniObservationPointCopyWithImpl(_$_KmoniObservationPoint _value,
-      $Res Function(_$_KmoniObservationPoint) _then)
+class __$$KmoniObservationPointImplCopyWithImpl<$Res>
+    extends _$KmoniObservationPointCopyWithImpl<$Res,
+        _$KmoniObservationPointImpl>
+    implements _$$KmoniObservationPointImplCopyWith<$Res> {
+  __$$KmoniObservationPointImplCopyWithImpl(_$KmoniObservationPointImpl _value,
+      $Res Function(_$KmoniObservationPointImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -146,7 +148,7 @@ class __$$_KmoniObservationPointCopyWithImpl<$Res>
     Object? y = null,
     Object? arv = null,
   }) {
-    return _then(_$_KmoniObservationPoint(
+    return _then(_$KmoniObservationPointImpl(
       code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
@@ -185,8 +187,8 @@ class __$$_KmoniObservationPointCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_KmoniObservationPoint implements _KmoniObservationPoint {
-  const _$_KmoniObservationPoint(
+class _$KmoniObservationPointImpl implements _KmoniObservationPoint {
+  const _$KmoniObservationPointImpl(
       {required this.code,
       required this.prefecture,
       required this.name,
@@ -222,7 +224,7 @@ class _$_KmoniObservationPoint implements _KmoniObservationPoint {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_KmoniObservationPoint &&
+            other is _$KmoniObservationPointImpl &&
             (identical(other.code, code) || other.code == code) &&
             (identical(other.prefecture, prefecture) ||
                 other.prefecture == prefecture) &&
@@ -242,9 +244,9 @@ class _$_KmoniObservationPoint implements _KmoniObservationPoint {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_KmoniObservationPointCopyWith<_$_KmoniObservationPoint> get copyWith =>
-      __$$_KmoniObservationPointCopyWithImpl<_$_KmoniObservationPoint>(
-          this, _$identity);
+  _$$KmoniObservationPointImplCopyWith<_$KmoniObservationPointImpl>
+      get copyWith => __$$KmoniObservationPointImplCopyWithImpl<
+          _$KmoniObservationPointImpl>(this, _$identity);
 }
 
 abstract class _KmoniObservationPoint implements KmoniObservationPoint {
@@ -256,7 +258,7 @@ abstract class _KmoniObservationPoint implements KmoniObservationPoint {
       required final GlobalPoint globalPoint,
       required final int x,
       required final int y,
-      required final double arv}) = _$_KmoniObservationPoint;
+      required final double arv}) = _$KmoniObservationPointImpl;
 
   @override
   String get code;
@@ -276,8 +278,8 @@ abstract class _KmoniObservationPoint implements KmoniObservationPoint {
   double get arv;
   @override
   @JsonKey(ignore: true)
-  _$$_KmoniObservationPointCopyWith<_$_KmoniObservationPoint> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$KmoniObservationPointImplCopyWith<_$KmoniObservationPointImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -368,12 +370,12 @@ class _$AnalyzedKmoniObservationPointCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_AnalyzedKmoniObservationPointCopyWith<$Res>
+abstract class _$$AnalyzedKmoniObservationPointImplCopyWith<$Res>
     implements $AnalyzedKmoniObservationPointCopyWith<$Res> {
-  factory _$$_AnalyzedKmoniObservationPointCopyWith(
-          _$_AnalyzedKmoniObservationPoint value,
-          $Res Function(_$_AnalyzedKmoniObservationPoint) then) =
-      __$$_AnalyzedKmoniObservationPointCopyWithImpl<$Res>;
+  factory _$$AnalyzedKmoniObservationPointImplCopyWith(
+          _$AnalyzedKmoniObservationPointImpl value,
+          $Res Function(_$AnalyzedKmoniObservationPointImpl) then) =
+      __$$AnalyzedKmoniObservationPointImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -389,13 +391,13 @@ abstract class _$$_AnalyzedKmoniObservationPointCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_AnalyzedKmoniObservationPointCopyWithImpl<$Res>
+class __$$AnalyzedKmoniObservationPointImplCopyWithImpl<$Res>
     extends _$AnalyzedKmoniObservationPointCopyWithImpl<$Res,
-        _$_AnalyzedKmoniObservationPoint>
-    implements _$$_AnalyzedKmoniObservationPointCopyWith<$Res> {
-  __$$_AnalyzedKmoniObservationPointCopyWithImpl(
-      _$_AnalyzedKmoniObservationPoint _value,
-      $Res Function(_$_AnalyzedKmoniObservationPoint) _then)
+        _$AnalyzedKmoniObservationPointImpl>
+    implements _$$AnalyzedKmoniObservationPointImplCopyWith<$Res> {
+  __$$AnalyzedKmoniObservationPointImplCopyWithImpl(
+      _$AnalyzedKmoniObservationPointImpl _value,
+      $Res Function(_$AnalyzedKmoniObservationPointImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -407,7 +409,7 @@ class __$$_AnalyzedKmoniObservationPointCopyWithImpl<$Res>
     Object? pga = freezed,
     Object? pgaColor = freezed,
   }) {
-    return _then(_$_AnalyzedKmoniObservationPoint(
+    return _then(_$AnalyzedKmoniObservationPointImpl(
       point: null == point
           ? _value.point
           : point // ignore: cast_nullable_to_non_nullable
@@ -434,9 +436,9 @@ class __$$_AnalyzedKmoniObservationPointCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_AnalyzedKmoniObservationPoint
+class _$AnalyzedKmoniObservationPointImpl
     implements _AnalyzedKmoniObservationPoint {
-  const _$_AnalyzedKmoniObservationPoint(
+  const _$AnalyzedKmoniObservationPointImpl(
       {required this.point,
       this.intensityValue,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
@@ -467,7 +469,7 @@ class _$_AnalyzedKmoniObservationPoint
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AnalyzedKmoniObservationPoint &&
+            other is _$AnalyzedKmoniObservationPointImpl &&
             (identical(other.point, point) || other.point == point) &&
             (identical(other.intensityValue, intensityValue) ||
                 other.intensityValue == intensityValue) &&
@@ -485,9 +487,10 @@ class _$_AnalyzedKmoniObservationPoint
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AnalyzedKmoniObservationPointCopyWith<_$_AnalyzedKmoniObservationPoint>
-      get copyWith => __$$_AnalyzedKmoniObservationPointCopyWithImpl<
-          _$_AnalyzedKmoniObservationPoint>(this, _$identity);
+  _$$AnalyzedKmoniObservationPointImplCopyWith<
+          _$AnalyzedKmoniObservationPointImpl>
+      get copyWith => __$$AnalyzedKmoniObservationPointImplCopyWithImpl<
+          _$AnalyzedKmoniObservationPointImpl>(this, _$identity);
 }
 
 abstract class _AnalyzedKmoniObservationPoint
@@ -499,7 +502,7 @@ abstract class _AnalyzedKmoniObservationPoint
       final Color? intensityColor,
       final double? pga,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      final Color? pgaColor}) = _$_AnalyzedKmoniObservationPoint;
+      final Color? pgaColor}) = _$AnalyzedKmoniObservationPointImpl;
 
   @override
   KmoniObservationPoint get point;
@@ -515,6 +518,7 @@ abstract class _AnalyzedKmoniObservationPoint
   Color? get pgaColor;
   @override
   @JsonKey(ignore: true)
-  _$$_AnalyzedKmoniObservationPointCopyWith<_$_AnalyzedKmoniObservationPoint>
+  _$$AnalyzedKmoniObservationPointImplCopyWith<
+          _$AnalyzedKmoniObservationPointImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -8,7 +8,7 @@ part of 'has_eew_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$hasEewHash() => r'41459697cd994f15397ce549bbecc0a970466631';
+String _$hasEewHash() => r'61db7356adcf49350877c868d7fb8767831f1884';
 
 /// See also [hasEew].
 @ProviderFor(hasEew)
@@ -17,8 +17,11 @@ final hasEewProvider = AutoDisposeProvider<bool>.internal(
   name: r'hasEewProvider',
   debugGetCreateSourceHash:
       const bool.fromEnvironment('dart.vm.product') ? null : _$hasEewHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
+  dependencies: <ProviderOrFamily>[eewNormalTelegramProvider],
+  allTransitiveDependencies: <ProviderOrFamily>{
+    eewNormalTelegramProvider,
+    ...?eewNormalTelegramProvider.allTransitiveDependencies
+  },
 );
 
 typedef HasEewRef = AutoDisposeProviderRef<bool>;

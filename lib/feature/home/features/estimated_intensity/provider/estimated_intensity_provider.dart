@@ -10,7 +10,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 
 part 'estimated_intensity_provider.g.dart';
 
-@riverpod
+@Riverpod(dependencies: [EewTelegram])
 class EstimatedIntensity extends _$EstimatedIntensity {
   @override
   List<AnalyzedKmoniObservationPoint> build() {

@@ -10,7 +10,7 @@ class PolygonFeature {
     TopologyPolygon topologyPolygon,
   ) {
     final polyIndexes = topologyPolygon.arcs;
-    final firstPolyIndexes = polyIndexes.getOrNull<List<int>>(0);
+    final firstPolyIndexes = polyIndexes.getOrNull(0);
     if (firstPolyIndexes == null) {
       throw ArgumentError('firstPolyIndexes is null');
     }

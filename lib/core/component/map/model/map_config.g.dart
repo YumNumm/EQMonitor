@@ -8,11 +8,12 @@ part of 'map_config.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_MapConfig _$$_MapConfigFromJson(Map<String, dynamic> json) => $checkedCreate(
-      r'_$_MapConfig',
+_$MapConfigImpl _$$MapConfigImplFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      r'_$MapConfigImpl',
       json,
       ($checkedConvert) {
-        final val = _$_MapConfig(
+        final val = _$MapConfigImpl(
           minScale: $checkedConvert(
               'minScale', (v) => (v as num?)?.toDouble() ?? 0.8),
           maxScale:
@@ -24,19 +25,19 @@ _$_MapConfig _$$_MapConfigFromJson(Map<String, dynamic> json) => $checkedCreate(
       },
     );
 
-Map<String, dynamic> _$$_MapConfigToJson(_$_MapConfig instance) =>
+Map<String, dynamic> _$$MapConfigImplToJson(_$MapConfigImpl instance) =>
     <String, dynamic>{
       'minScale': instance.minScale,
       'maxScale': instance.maxScale,
       'colorScheme': instance.colorScheme,
     };
 
-_$_MapColorScheme _$$_MapColorSchemeFromJson(Map<String, dynamic> json) =>
+_$MapColorSchemeImpl _$$MapColorSchemeImplFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_MapColorScheme',
+      r'_$MapColorSchemeImpl',
       json,
       ($checkedConvert) {
-        final val = _$_MapColorScheme(
+        final val = _$MapColorSchemeImpl(
           backgroundColor: $checkedConvert(
               'backgroundColor', (v) => colorFromJson(v as String)),
           worldLandColor: $checkedConvert(
@@ -56,7 +57,8 @@ _$_MapColorScheme _$$_MapColorSchemeFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_MapColorSchemeToJson(_$_MapColorScheme instance) =>
+Map<String, dynamic> _$$MapColorSchemeImplToJson(
+        _$MapColorSchemeImpl instance) =>
     <String, dynamic>{
       'backgroundColor': colorToJson(instance.backgroundColor),
       'worldLandColor': colorToJson(instance.worldLandColor),

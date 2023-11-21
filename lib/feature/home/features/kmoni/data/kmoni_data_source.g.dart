@@ -8,7 +8,7 @@ part of 'kmoni_data_source.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$kmoniDataSourceHash() => r'32db98ab9f76cf3f2bd55ea2852a66cc1542cc49';
+String _$kmoniDataSourceHash() => r'883714d82525510c1a7755cb1d6fc0b72f68ff80';
 
 /// See also [kmoniDataSource].
 @ProviderFor(kmoniDataSource)
@@ -18,11 +18,8 @@ final kmoniDataSourceProvider = Provider<KmoniDataSource>.internal(
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
       : _$kmoniDataSourceHash,
-  dependencies: <ProviderOrFamily>[dioProvider],
-  allTransitiveDependencies: <ProviderOrFamily>{
-    dioProvider,
-    ...?dioProvider.allTransitiveDependencies
-  },
+  dependencies: null,
+  allTransitiveDependencies: null,
 );
 
 typedef KmoniDataSourceRef = ProviderRef<KmoniDataSource>;

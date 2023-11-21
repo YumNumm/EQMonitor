@@ -8,19 +8,19 @@ part of 'kmoni_config.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_KmoniConfig _$$_KmoniConfigFromJson(Map<String, dynamic> json) =>
+_$KmoniConfigImpl _$$KmoniConfigImplFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_KmoniConfig',
+      r'_$KmoniConfigImpl',
       json,
       ($checkedConvert) {
-        final val = _$_KmoniConfig(
+        final val = _$KmoniConfigImpl(
           counter: $checkedConvert('counter', (v) => v as int? ?? 0),
         );
         return val;
       },
     );
 
-Map<String, dynamic> _$$_KmoniConfigToJson(_$_KmoniConfig instance) =>
+Map<String, dynamic> _$$KmoniConfigImplToJson(_$KmoniConfigImpl instance) =>
     <String, dynamic>{
       'counter': instance.counter,
     };

@@ -8,21 +8,21 @@ part of 'crashlytics_setting_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_CrashlyticsSettingModel _$$_CrashlyticsSettingModelFromJson(
+_$CrashlyticsSettingModelImpl _$$CrashlyticsSettingModelImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_CrashlyticsSettingModel',
+      r'_$CrashlyticsSettingModelImpl',
       json,
       ($checkedConvert) {
-        final val = _$_CrashlyticsSettingModel(
+        final val = _$CrashlyticsSettingModelImpl(
           isEnabled: $checkedConvert('isEnabled', (v) => v as bool? ?? true),
         );
         return val;
       },
     );
 
-Map<String, dynamic> _$$_CrashlyticsSettingModelToJson(
-        _$_CrashlyticsSettingModel instance) =>
+Map<String, dynamic> _$$CrashlyticsSettingModelImplToJson(
+        _$CrashlyticsSettingModelImpl instance) =>
     <String, dynamic>{
       'isEnabled': instance.isEnabled,
     };

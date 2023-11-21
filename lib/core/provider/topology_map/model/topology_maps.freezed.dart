@@ -58,22 +58,22 @@ class _$TopologyMapsCopyWithImpl<$Res, $Val extends TopologyMaps>
 }
 
 /// @nodoc
-abstract class _$$_TopologyMapsCopyWith<$Res>
+abstract class _$$TopologyMapsImplCopyWith<$Res>
     implements $TopologyMapsCopyWith<$Res> {
-  factory _$$_TopologyMapsCopyWith(
-          _$_TopologyMaps value, $Res Function(_$_TopologyMaps) then) =
-      __$$_TopologyMapsCopyWithImpl<$Res>;
+  factory _$$TopologyMapsImplCopyWith(
+          _$TopologyMapsImpl value, $Res Function(_$TopologyMapsImpl) then) =
+      __$$TopologyMapsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({Map<LandLayerType, TopologyMap> maps});
 }
 
 /// @nodoc
-class __$$_TopologyMapsCopyWithImpl<$Res>
-    extends _$TopologyMapsCopyWithImpl<$Res, _$_TopologyMaps>
-    implements _$$_TopologyMapsCopyWith<$Res> {
-  __$$_TopologyMapsCopyWithImpl(
-      _$_TopologyMaps _value, $Res Function(_$_TopologyMaps) _then)
+class __$$TopologyMapsImplCopyWithImpl<$Res>
+    extends _$TopologyMapsCopyWithImpl<$Res, _$TopologyMapsImpl>
+    implements _$$TopologyMapsImplCopyWith<$Res> {
+  __$$TopologyMapsImplCopyWithImpl(
+      _$TopologyMapsImpl _value, $Res Function(_$TopologyMapsImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -81,7 +81,7 @@ class __$$_TopologyMapsCopyWithImpl<$Res>
   $Res call({
     Object? maps = null,
   }) {
-    return _then(_$_TopologyMaps(
+    return _then(_$TopologyMapsImpl(
       maps: null == maps
           ? _value._maps
           : maps // ignore: cast_nullable_to_non_nullable
@@ -92,8 +92,9 @@ class __$$_TopologyMapsCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_TopologyMaps with DiagnosticableTreeMixin implements _TopologyMaps {
-  const _$_TopologyMaps({final Map<LandLayerType, TopologyMap> maps = const {}})
+class _$TopologyMapsImpl with DiagnosticableTreeMixin implements _TopologyMaps {
+  const _$TopologyMapsImpl(
+      {final Map<LandLayerType, TopologyMap> maps = const {}})
       : _maps = maps;
 
   final Map<LandLayerType, TopologyMap> _maps;
@@ -122,7 +123,7 @@ class _$_TopologyMaps with DiagnosticableTreeMixin implements _TopologyMaps {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TopologyMaps &&
+            other is _$TopologyMapsImpl &&
             const DeepCollectionEquality().equals(other._maps, _maps));
   }
 
@@ -133,19 +134,19 @@ class _$_TopologyMaps with DiagnosticableTreeMixin implements _TopologyMaps {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TopologyMapsCopyWith<_$_TopologyMaps> get copyWith =>
-      __$$_TopologyMapsCopyWithImpl<_$_TopologyMaps>(this, _$identity);
+  _$$TopologyMapsImplCopyWith<_$TopologyMapsImpl> get copyWith =>
+      __$$TopologyMapsImplCopyWithImpl<_$TopologyMapsImpl>(this, _$identity);
 }
 
 abstract class _TopologyMaps implements TopologyMaps {
   const factory _TopologyMaps({final Map<LandLayerType, TopologyMap> maps}) =
-      _$_TopologyMaps;
+      _$TopologyMapsImpl;
 
   @override
   Map<LandLayerType, TopologyMap> get maps;
   @override
   @JsonKey(ignore: true)
-  _$$_TopologyMapsCopyWith<_$_TopologyMaps> get copyWith =>
+  _$$TopologyMapsImplCopyWith<_$TopologyMapsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -191,20 +192,21 @@ class _$MapDataCopyWithImpl<$Res, $Val extends MapData>
 }
 
 /// @nodoc
-abstract class _$$_MapDataCopyWith<$Res> implements $MapDataCopyWith<$Res> {
-  factory _$$_MapDataCopyWith(
-          _$_MapData value, $Res Function(_$_MapData) then) =
-      __$$_MapDataCopyWithImpl<$Res>;
+abstract class _$$MapDataImplCopyWith<$Res> implements $MapDataCopyWith<$Res> {
+  factory _$$MapDataImplCopyWith(
+          _$MapDataImpl value, $Res Function(_$MapDataImpl) then) =
+      __$$MapDataImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({Map<LandLayerType, FeatureLayer>? maps});
 }
 
 /// @nodoc
-class __$$_MapDataCopyWithImpl<$Res>
-    extends _$MapDataCopyWithImpl<$Res, _$_MapData>
-    implements _$$_MapDataCopyWith<$Res> {
-  __$$_MapDataCopyWithImpl(_$_MapData _value, $Res Function(_$_MapData) _then)
+class __$$MapDataImplCopyWithImpl<$Res>
+    extends _$MapDataCopyWithImpl<$Res, _$MapDataImpl>
+    implements _$$MapDataImplCopyWith<$Res> {
+  __$$MapDataImplCopyWithImpl(
+      _$MapDataImpl _value, $Res Function(_$MapDataImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -212,7 +214,7 @@ class __$$_MapDataCopyWithImpl<$Res>
   $Res call({
     Object? maps = freezed,
   }) {
-    return _then(_$_MapData(
+    return _then(_$MapDataImpl(
       maps: freezed == maps
           ? _value._maps
           : maps // ignore: cast_nullable_to_non_nullable
@@ -223,8 +225,8 @@ class __$$_MapDataCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_MapData with DiagnosticableTreeMixin implements _MapData {
-  const _$_MapData({required final Map<LandLayerType, FeatureLayer>? maps})
+class _$MapDataImpl with DiagnosticableTreeMixin implements _MapData {
+  const _$MapDataImpl({required final Map<LandLayerType, FeatureLayer>? maps})
       : _maps = maps;
 
   final Map<LandLayerType, FeatureLayer>? _maps;
@@ -254,7 +256,7 @@ class _$_MapData with DiagnosticableTreeMixin implements _MapData {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_MapData &&
+            other is _$MapDataImpl &&
             const DeepCollectionEquality().equals(other._maps, _maps));
   }
 
@@ -265,18 +267,18 @@ class _$_MapData with DiagnosticableTreeMixin implements _MapData {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_MapDataCopyWith<_$_MapData> get copyWith =>
-      __$$_MapDataCopyWithImpl<_$_MapData>(this, _$identity);
+  _$$MapDataImplCopyWith<_$MapDataImpl> get copyWith =>
+      __$$MapDataImplCopyWithImpl<_$MapDataImpl>(this, _$identity);
 }
 
 abstract class _MapData implements MapData {
   const factory _MapData(
-      {required final Map<LandLayerType, FeatureLayer>? maps}) = _$_MapData;
+      {required final Map<LandLayerType, FeatureLayer>? maps}) = _$MapDataImpl;
 
   @override
   Map<LandLayerType, FeatureLayer>? get maps;
   @override
   @JsonKey(ignore: true)
-  _$$_MapDataCopyWith<_$_MapData> get copyWith =>
+  _$$MapDataImplCopyWith<_$MapDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

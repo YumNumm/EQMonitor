@@ -20,16 +20,6 @@ class CrashlyticsSetting extends _$CrashlyticsSetting {
 
   static const String _key = 'crashlytics_setting';
 
-  CrashlyticsSettingModel? _load() {
-    final json = _prefs.getString(_key);
-    if (json == null) {
-      return null;
-    }
-    return CrashlyticsSettingModel.fromJson(
-      jsonDecode(json) as Map<String, dynamic>,
-    );
-  }
-
   Future<void> _save() async {
     await _prefs.setString(_key, jsonEncode(state.toJson()));
   }

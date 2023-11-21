@@ -8,13 +8,13 @@ part of 'intensity_color_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_IntensityColorModel _$$_IntensityColorModelFromJson(
+_$IntensityColorModelImpl _$$IntensityColorModelImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_IntensityColorModel',
+      r'_$IntensityColorModelImpl',
       json,
       ($checkedConvert) {
-        final val = _$_IntensityColorModel(
+        final val = _$IntensityColorModelImpl(
           unknown: $checkedConvert('unknown',
               (v) => TextColorModel.fromJson(v as Map<String, dynamic>)),
           zero: $checkedConvert('zero',
@@ -42,8 +42,8 @@ _$_IntensityColorModel _$$_IntensityColorModelFromJson(
       },
     );
 
-Map<String, dynamic> _$$_IntensityColorModelToJson(
-        _$_IntensityColorModel instance) =>
+Map<String, dynamic> _$$IntensityColorModelImplToJson(
+        _$IntensityColorModelImpl instance) =>
     <String, dynamic>{
       'unknown': instance.unknown,
       'zero': instance.zero,
@@ -58,12 +58,12 @@ Map<String, dynamic> _$$_IntensityColorModelToJson(
       'seven': instance.seven,
     };
 
-_$_TextColorModel _$$_TextColorModelFromJson(Map<String, dynamic> json) =>
+_$TextColorModelImpl _$$TextColorModelImplFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$_TextColorModel',
+      r'_$TextColorModelImpl',
       json,
       ($checkedConvert) {
-        final val = _$_TextColorModel(
+        final val = _$TextColorModelImpl(
           foreground:
               $checkedConvert('foreground', (v) => colorFromJson(v as String)),
           background:
@@ -73,7 +73,8 @@ _$_TextColorModel _$$_TextColorModelFromJson(Map<String, dynamic> json) =>
       },
     );
 
-Map<String, dynamic> _$$_TextColorModelToJson(_$_TextColorModel instance) =>
+Map<String, dynamic> _$$TextColorModelImplToJson(
+        _$TextColorModelImpl instance) =>
     <String, dynamic>{
       'foreground': colorToJson(instance.foreground),
       'background': colorToJson(instance.background),

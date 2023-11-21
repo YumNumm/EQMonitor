@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -19,10 +21,12 @@ Future<void> main() async {
         print(element.type);
       }
       print(
-          '*****  end (items: ${geometryCollection.geometries.length}) *****',);
+        '*****  end (items: ${geometryCollection.geometries.length}) *****',
+      );
     }
   });
   print('');
   print(
-      '*****  parse end (time: ${stopwatch.elapsedMicroseconds / 1000} ms) *****',);
+    '*****  parse end (time: ${stopwatch.elapsedMicroseconds / 1000} ms) *****',
+  );
 }
