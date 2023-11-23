@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/setup/component/background_image.dart';
@@ -33,10 +31,8 @@ class SetupScreen extends HookConsumerWidget {
       ),
       KmoniWarnPage(onNext: next),
       NotificationSettingPage(
-        onNext: () async {
-          unawaited(
-            ref.read(sharedPreferencesProvider).setBool('isInitialized', true),
-          );
+        onNext: () {
+          ref.read(sharedPreferencesProvider).setBool('isInitialized', true);
           const HomeRoute().pushReplacement(context);
         },
       ),

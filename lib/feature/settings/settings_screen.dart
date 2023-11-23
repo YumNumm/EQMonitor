@@ -1,7 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
@@ -16,6 +17,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class SettingsScreen extends HookConsumerWidget {
   const SettingsScreen({super.key});
@@ -24,27 +26,32 @@ class SettingsScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     Future<void> onInquiryTap(BuildContext context) async {
       // 問い合わせ方法を選択するダイアログを表示
-      final result = await showDialog<bool>(
+      final result = await showModalActionSheet<bool>(
         context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('お問い合わせ方法を選択してください'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('メールで問い合わせ'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Xで問い合わせ'),
-              ),
-            ],
-          );
-        },
+        title: 'お問い合わせ方法を選択してください',
+        cancelLabel: 'キャンセル',
+        actions: [
+          const SheetAction(
+            key: true,
+            label: 'メールで問い合わせ',
+          ),
+          const SheetAction(
+            key: false,
+            label: 'Xで問い合わせ',
+          ),
+        ],
       );
-      if (result == null) {
+      if (result == null || !context.mounted) {
         return;
       }
+      unawaited(
+        showDialog<void>(
+          barrierDismissible: false,
+          context: context,
+          builder: (_) =>
+              const Center(child: CircularProgressIndicator.adaptive()),
+        ),
+      );
       final packageInfo = ref.read(packageInfoProvider);
       final androidDeviceInfo =
           Platform.isAndroid ? ref.read(androidDeviceInfoProvider) : null;
@@ -85,8 +92,7 @@ class SettingsScreen extends HookConsumerWidget {
             },
           ),
         );
-        log('launchUrl: $uri');
-        log((await launchUrl(uri)).toString());
+        await launchUrl(uri);
       } else {
         // X
         final uri = Uri(
@@ -101,6 +107,12 @@ class SettingsScreen extends HookConsumerWidget {
           ),
         );
         await launchUrl(uri, mode: LaunchMode.externalNonBrowserApplication);
+      }
+      if (!context.mounted) {
+        return;
+      }
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
       }
     }
 
@@ -185,9 +197,19 @@ class SettingsScreen extends HookConsumerWidget {
           ),
           ListTile(
             title: const Text('ライセンス情報'),
+            subtitle: Text('MIT License ${DateTime.now().year} Ryotaro Onoue'),
             leading: const Icon(Icons.settings),
             onTap: () => context.push(
               const LicenseRoute().location,
+            ),
+          ),
+          ListTile(
+            title: const Text('サーバの稼働状況'),
+            subtitle: const Text('外部Webサイトへ遷移します。'),
+            leading: const Icon(Icons.network_ping),
+            onTap: () => launchUrlString(
+              'https://status.eqmonitor.app/',
+              mode: LaunchMode.externalApplication,
             ),
           ),
           Center(

@@ -1,18 +1,18 @@
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
-import 'package:eqmonitor/feature/settings/children/config/color_scheme/color_scheme_config_page.dart';
 import 'package:eqmonitor/feature/earthquake_history/page/earthquake_history.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/screen/earthquake_history_details.dart';
 import 'package:eqmonitor/feature/eew_detailed_history/eew_detailed_history_screen.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/page/kmoni_settings_page.dart';
 import 'package:eqmonitor/feature/home/view/home_view.dart';
-import 'package:eqmonitor/feature/settings/children/privacy_policy_screen.dart';
-import 'package:eqmonitor/feature/settings/children/term_of_service_screen.dart';
+import 'package:eqmonitor/feature/settings/children/application_info/license_page.dart';
+import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_screen.dart';
+import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_screen.dart';
+import 'package:eqmonitor/feature/settings/children/config/color_scheme/color_scheme_config_page.dart';
 import 'package:eqmonitor/feature/settings/settings_screen.dart';
 import 'package:eqmonitor/feature/setup/screen/setup_screen.dart';
 import 'package:eqmonitor/feature/talker/talker_page.dart';
-import 'package:eqmonitor/gen/assets.gen.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide LicensePage;
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -166,18 +166,6 @@ class LicenseRoute extends GoRouteData {
   const LicenseRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => LicensePage(
-        applicationName: 'EQMonitor',
-        applicationLegalese:
-            '${DateTime.now().year} © Ryotaro Onoue All Rights Reserved.',
-        applicationIcon: Padding(
-          padding: const EdgeInsets.all(8),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(24),
-            child: Assets.images.icon.image(
-              height: 80,
-            ),
-          ),
-        ),
-      );
+  Widget build(BuildContext context, GoRouterState state) =>
+      const LicensePage();
 }
