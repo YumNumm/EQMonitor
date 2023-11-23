@@ -27,7 +27,7 @@ class PrivacyPolicyScreen extends HookWidget {
 }
 
 class _PrivacyPolicyScreenBody extends HookWidget {
-  const _PrivacyPolicyScreenBody({super.key});
+  const _PrivacyPolicyScreenBody();
 
   @override
   Widget build(BuildContext context) {

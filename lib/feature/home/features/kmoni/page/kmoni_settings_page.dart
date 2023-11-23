@@ -1,3 +1,4 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:eqmonitor/core/component/widget/kmoni_caution.dart';
 import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
@@ -26,28 +27,17 @@ class KmoniSettingsPage extends ConsumerWidget {
                 value: state.useKmoni,
                 onChanged: (value) async {
                   if (value) {
-                    final isAccepted = await showDialog<bool>(
-                      barrierDismissible: false,
+                    final result = await showOkCancelAlertDialog(
                       context: context,
-                      builder: (context) {
-                        return AlertDialog.adaptive(
-                          title: const Text('強震モニタの注意に同意しますか?'),
-                          content: const Text('強震モニタを有効すると、'
-                              '強震モニタの注意点に同意したものとみなします。'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(false),
-                              child: const Text('キャンセル'),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(true),
-                              child: const Text('同意する'),
-                            ),
-                          ],
-                        );
-                      },
+                      title: '強震モニタの注意',
+                      message: '強震モニタを有効すると、'
+                          '強震モニタの注意点に同意したものとみなします。',
+                      okLabel: '同意する',
+                      cancelLabel: 'キャンセル',
                     );
-                    if (isAccepted ?? false) {
+                    final isAccepted = result == OkCancelResult.ok;
+
+                    if (isAccepted) {
                       ref.read(kmoniSettingsProvider.notifier).toggleUseKmoni();
                     }
                     return;
