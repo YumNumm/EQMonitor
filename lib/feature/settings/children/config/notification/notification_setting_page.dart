@@ -3,7 +3,9 @@ import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/provider/config/notification/fcm_topic_manager.dart';
 import 'package:eqmonitor/core/provider/config/permission/permission_status_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/fullscreen_loading_overlay.dart';
 import 'package:eqmonitor/feature/settings/children/config/notification/children/earthquake/earthquake_notification_settings_view_model.dart';
+import 'package:eqmonitor/feature/settings/children/config/notification/notifiication_settings_view_model.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -39,8 +41,8 @@ class _NotificationSettingsBody extends HookConsumerWidget {
       },
       [],
     );
-    final status = ref.watch(permissionProvider.select((v) => v.notification));
-    if (status) {
+    final state = ref.watch(notificationSettingsViewModelProvider);
+    if (state.isNotificatioonPermissionAllowed) {
       return ListView(
         children: [
           // 通知権限
@@ -101,8 +103,26 @@ class _NotificationSettingsBody extends HookConsumerWidget {
                 .push(const EarthquakeNotificationSettingsRoute().location),
           ),
           SwitchListTile.adaptive(
-            value: true,
-            onChanged: (value) {},
+            value: state.isVzse40Subscribed,
+            onChanged: (value) async {
+              final notifier =
+                  ref.read(notificationSettingsViewModelProvider.notifier);
+              final result = await showFullScreenLoadingOverlay(
+                context,
+                value
+                    ? notifier.registerToVzse40()
+                    : notifier.unregisterFromVzse40(),
+              );
+              if (context.mounted && result.isFailure) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      '設定の変更中にエラーが発生しました: ${result.errorOrNull!}',
+                    ),
+                  ),
+                );
+              }
+            },
             title: const Text('地震・津波に関するお知らせ'),
             subtitle: const Text(
               '地震・津波の試験・訓練配信のお知らせ、'
@@ -113,8 +133,26 @@ class _NotificationSettingsBody extends HookConsumerWidget {
             text: 'その他',
           ),
           SwitchListTile.adaptive(
-            value: true,
-            onChanged: (value) {},
+            value: state.isNoticeSubscribed,
+            onChanged: (value) async {
+              final notifier =
+                  ref.read(notificationSettingsViewModelProvider.notifier);
+              final result = await showFullScreenLoadingOverlay(
+                context,
+                value
+                    ? notifier.registerToNotice()
+                    : notifier.unregisterFromNotice(),
+              );
+              if (context.mounted && result.isFailure) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      '設定の変更中にエラーが発生しました: ${result.errorOrNull!}',
+                    ),
+                  ),
+                );
+              }
+            },
             title: const Text('お知らせ'),
             subtitle: const Text('アップデート情報や開発者からのお知らせをお伝えします'),
           ),
