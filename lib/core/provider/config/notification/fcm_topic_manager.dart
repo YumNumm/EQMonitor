@@ -13,6 +13,7 @@ class FcmTopicManager extends _$FcmTopicManager {
   List<String> build() {
     final prefs = ref.watch(sharedPreferencesProvider);
     final list = prefs.getStringList(_prefsKey);
+    ref.listenSelf((_, __) => _save());
     return list ?? [];
   }
 
@@ -26,6 +27,11 @@ class FcmTopicManager extends _$FcmTopicManager {
     for (final topic in requireTopics) {
       await registerToTopic(topic);
     }
+  }
+
+  Future<void> _save() async {
+    final prefs = ref.read(sharedPreferencesProvider);
+    await prefs.setStringList(_prefsKey, state);
   }
 
   Future<Result<void, Exception>> registerToTopic(FcmTopic topic) async {
@@ -89,10 +95,8 @@ class FcmEarthquakeTopic implements FcmTopic {
 
 enum FcmTopics {
   all('all'),
-  allEew('all_eew'),
-  allEarthquake('all_earthquake'),
   notice('notice'),
-  noticeFromJma('notice_from_jma'),
+  vzse40('vzse40'),
   ;
 
   const FcmTopics(this.topic);
@@ -105,7 +109,7 @@ class FcmBasicTopic implements FcmTopic {
   final FcmTopics _topic;
 
   @override
-  String get topic => _topic.topic;
+  String get topic => 'basic_${_topic.topic}';
 }
 
 sealed class FcmTopic {

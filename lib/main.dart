@@ -89,7 +89,16 @@ class Observer extends ProviderObserver {
     Object? value,
     ProviderContainer container,
   ) =>
-      log('didAddProvider: ${provider.name} ($value)}');
+      switch (provider.name) {
+        _ when value.toString().length > 1000 => log(
+            '${provider.name} (${provider.runtimeType}) ${value?.toString().length} ',
+            name: 'didAddProvider',
+          ),
+        _ => log(
+            '${provider.name} ($provider)',
+            name: 'didAddProvider',
+          ),
+      };
 
   @override
   void didDisposeProvider(
@@ -104,17 +113,22 @@ class Observer extends ProviderObserver {
     Object? previousValue,
     Object? newValue,
     ProviderContainer container,
-  ) {
-    if (provider.name == 'kmoniViewModelProvider') {
-      return;
-    }
-    if (provider.name == 'earthquakeHistoryViewModelProvider') {
-      log('didUpdateProvider: ${provider.name} (${previousValue.runtimeType} '
-          '-> ${newValue.runtimeType})');
-      return;
-    }
-    log('didUpdateProvider: ${provider.name} ($previousValue -> $newValue)');
-  }
+  ) =>
+      switch (provider.name) {
+        'mapViewModelProvider' || 'kmoniViewModelProvider' => null,
+        _
+            when newValue.toString().length + previousValue.toString().length >
+                300 =>
+          log(
+            '${provider.name} (${previousValue.runtimeType} '
+            '-> ${newValue.runtimeType})',
+            name: 'didUpdateProvider',
+          ),
+        _ => log(
+            '${provider.name} ($previousValue -> $newValue)',
+            name: 'didUpdateProvider',
+          ),
+      };
 
   @override
   void providerDidFail(
@@ -122,6 +136,12 @@ class Observer extends ProviderObserver {
     Object error,
     StackTrace stackTrace,
     ProviderContainer container,
-  ) =>
-      talker.handle(error, stackTrace, 'providerDidFail: ${provider.name}');
+  ) {
+    talker.handle(error, stackTrace, 'providerDidFail: ${provider.name}');
+    log(
+      '${provider.name} $error',
+      name: 'providerDidFail',
+      error: error,
+    );
+  }
 }
