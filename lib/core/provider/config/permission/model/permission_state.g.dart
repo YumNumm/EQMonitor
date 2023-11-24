@@ -17,8 +17,8 @@ _$PermissionStateModelImpl _$$PermissionStateModelImplFromJson(
         final val = _$PermissionStateModelImpl(
           notification:
               $checkedConvert('notification', (v) => v as bool? ?? false),
-          isNotificationDeniedByUser: $checkedConvert(
-              'isNotificationDeniedByUser', (v) => v as bool? ?? false),
+          criticalAlert:
+              $checkedConvert('criticalAlert', (v) => v as bool? ?? false),
         );
         return val;
       },
@@ -28,5 +28,5 @@ Map<String, dynamic> _$$PermissionStateModelImplToJson(
         _$PermissionStateModelImpl instance) =>
     <String, dynamic>{
       'notification': instance.notification,
-      'isNotificationDeniedByUser': instance.isNotificationDeniedByUser,
+      'criticalAlert': instance.criticalAlert,
     };

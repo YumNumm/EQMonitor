@@ -7,7 +7,7 @@ part 'permission_state.g.dart';
 class PermissionStateModel with _$PermissionStateModel {
   const factory PermissionStateModel({
     @Default(false) bool notification,
-    @Default(false) bool isNotificationDeniedByUser,
+    @Default(false) bool criticalAlert,
   }) = _PermissionStateModel;
 
   factory PermissionStateModel.fromJson(Map<String, dynamic> json) =>

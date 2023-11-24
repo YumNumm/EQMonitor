@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/map/base_map.dart';
 import 'package:eqmonitor/core/component/map/map_touch_handler_widget.dart';
 import 'package:eqmonitor/core/component/map/model/map_config.dart';
 import 'package:eqmonitor/core/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
+import 'package:eqmonitor/core/provider/config/permission/permission_status_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
@@ -13,7 +16,6 @@ import 'package:eqmonitor/feature/home/component/map/eew_pswave_arrival_circle.d
 import 'package:eqmonitor/feature/home/component/map/kmoni_map_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
-import 'package:eqmonitor/feature/home/features/debugger/debugger_provider.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_widget.dart';
@@ -32,12 +34,16 @@ class HomeView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final vm = ref.watch(homeViewModelProvider);
     final mapKey = vm.mapKey;
-    final debugAttemptCount = useState(0);
 
     useEffect(
       () {
         WidgetsBinding.instance.endOfFrame.then((_) {
-          ref.read(kmoniViewModelProvider.notifier).initialize();
+          unawaited(
+            (
+              ref.read(kmoniViewModelProvider.notifier).initialize(),
+              ref.read(permissionProvider.notifier).initialize()
+            ).wait,
+          );
         });
         return null;
       },
@@ -204,7 +210,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
   }
 }
 
-class _Sheet extends ConsumerWidget {
+class _Sheet extends StatelessWidget {
   const _Sheet({
     required this.sheetController,
   });
@@ -212,9 +218,7 @@ class _Sheet extends ConsumerWidget {
   final SheetController sheetController;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isDebugMode = ref.watch(debuggerProvider);
-
+  Widget build(BuildContext context) {
     return RepaintBoundary(
       child: BasicModalSheet(
         controller: sheetController,

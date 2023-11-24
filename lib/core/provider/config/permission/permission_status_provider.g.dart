@@ -8,12 +8,12 @@ part of 'permission_status_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$permissionHash() => r'9d8b7be2b2adeb7854c3c71b2d8de0b3b9fbed50';
+String _$permissionHash() => r'ac277acb9a676f9f16c27654740d13b596acbe2f';
 
 /// See also [Permission].
 @ProviderFor(Permission)
 final permissionProvider =
-    AutoDisposeNotifierProvider<Permission, PermissionStateModel>.internal(
+    NotifierProvider<Permission, PermissionStateModel>.internal(
   Permission.new,
   name: r'permissionProvider',
   debugGetCreateSourceHash:
@@ -22,6 +22,6 @@ final permissionProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$Permission = AutoDisposeNotifier<PermissionStateModel>;
+typedef _$Permission = Notifier<PermissionStateModel>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

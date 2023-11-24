@@ -12,9 +12,9 @@ import 'package:eqmonitor/feature/home/features/kmoni_observation_points/provide
 import 'package:eqmonitor/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,6 +48,12 @@ Future<void> main() async {
     (Platform.isAndroid ? deviceInfo.androidInfo : Future<Null>.value()),
     // ignore: prefer_void_to_null
     (Platform.isIOS ? deviceInfo.iosInfo : Future<Null>.value()),
+    FlutterLocalNotificationsPlugin().initialize(
+      const InitializationSettings(
+        iOS: DarwinInitializationSettings(),
+        android: AndroidInitializationSettings('mipmap/ic_launcher'),
+      ),
+    ),
   ).wait;
   runApp(
     ProviderScope(
@@ -98,7 +104,17 @@ class Observer extends ProviderObserver {
     Object? previousValue,
     Object? newValue,
     ProviderContainer container,
-  ) {}
+  ) {
+    if (provider.name == 'kmoniViewModelProvider') {
+      return;
+    }
+    if (provider.name == 'earthquakeHistoryViewModelProvider') {
+      log('didUpdateProvider: ${provider.name} (${previousValue.runtimeType} '
+          '-> ${newValue.runtimeType})');
+      return;
+    }
+    log('didUpdateProvider: ${provider.name} ($previousValue -> $newValue)');
+  }
 
   @override
   void providerDidFail(

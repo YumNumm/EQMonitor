@@ -4,8 +4,8 @@ import 'package:eqmonitor/core/provider/config/permission/permission_status_prov
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class NotificationSettingPage extends HookConsumerWidget {
-  const NotificationSettingPage({required this.onNext, super.key});
+class NotificationSettingIntroPage extends HookConsumerWidget {
+  const NotificationSettingIntroPage({required this.onNext, super.key});
   final void Function() onNext;
 
   @override

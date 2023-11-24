@@ -17,4 +17,11 @@ sealed class Result<T, R> with _$Result<T, R> {
         success: (_) => null,
         failure: (error) => error,
       );
+
+  bool get isSuccess => when(
+        success: (_) => true,
+        failure: (_) => false,
+      );
+
+  bool get isFailure => !isSuccess;
 }

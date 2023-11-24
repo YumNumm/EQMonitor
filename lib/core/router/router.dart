@@ -9,6 +9,9 @@ import 'package:eqmonitor/feature/settings/children/application_info/license_pag
 import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_screen.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_screen.dart';
 import 'package:eqmonitor/feature/settings/children/config/color_scheme/color_scheme_config_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/notification/children/earthquake/earthquake_notification_settings_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/notification/children/eew_notification_settings_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/notification/notification_setting_page.dart';
 import 'package:eqmonitor/feature/settings/settings_screen.dart';
 import 'package:eqmonitor/feature/setup/screen/setup_screen.dart';
 import 'package:eqmonitor/feature/talker/talker_page.dart';
@@ -120,6 +123,17 @@ class KmoniRoute extends GoRouteData {
     TypedGoRoute<LicenseRoute>(
       path: 'license',
     ),
+    TypedGoRoute<NotificationSettingsRoute>(
+      path: 'notification',
+      routes: [
+        TypedGoRoute<EewNotificationSettingsRoute>(
+          path: 'eew',
+        ),
+        TypedGoRoute<EarthquakeNotificationSettingsRoute>(
+          path: 'earthquake',
+        ),
+      ],
+    ),
   ],
 )
 class SettingsRoute extends GoRouteData {
@@ -168,4 +182,28 @@ class LicenseRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const LicensePage();
+}
+
+class NotificationSettingsRoute extends GoRouteData {
+  const NotificationSettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const NotificationSettingsPage();
+}
+
+class EewNotificationSettingsRoute extends GoRouteData {
+  const EewNotificationSettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const EewNotificationSettingsPage();
+}
+
+class EarthquakeNotificationSettingsRoute extends GoRouteData {
+  const EarthquakeNotificationSettingsRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const EarthquakeNotificationSettingsPage();
 }
