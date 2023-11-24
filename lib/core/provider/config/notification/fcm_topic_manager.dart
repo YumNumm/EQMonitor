@@ -73,13 +73,28 @@ class FcmTopicManager extends _$FcmTopicManager {
   }
 }
 
-class FcmEewTopic implements FcmTopic {
-  const FcmEewTopic(this.area);
+class FcmEewIntensityTopic implements FcmTopic, FcmEewTopic {
+  const FcmEewIntensityTopic(this.intensity);
 
-  final AreaForecastLocalEew area;
+  final JmaIntensity intensity;
 
   @override
-  String get topic => 'eew_${area.code}';
+  String get topic =>
+      'eew${intensity.type.replaceAll("-", "lower").replaceAll("+", "upper")}';
+}
+
+class FcmEewAllTopic implements FcmTopic, FcmEewTopic {
+  const FcmEewAllTopic();
+
+  @override
+  String get topic => 'eew_all';
+}
+
+class FcmEewLowAccuracyTopic implements FcmTopic, FcmEewTopic {
+  const FcmEewLowAccuracyTopic();
+
+  @override
+  String get topic => 'eew_low_accuracy';
 }
 
 class FcmEarthquakeTopic implements FcmTopic {
@@ -90,7 +105,7 @@ class FcmEarthquakeTopic implements FcmTopic {
   @override
   // ignore: lines_longer_than_80_chars
   String get topic =>
-      'earthquake_${intensity?.type.replaceAll("-", "l").replaceAll("+", "p") ?? "all"}';
+      'earthquake_${intensity?.type.replaceAll("-", "lower").replaceAll("+", "upper") ?? "all"}';
 }
 
 enum FcmTopics {
@@ -115,3 +130,5 @@ class FcmBasicTopic implements FcmTopic {
 sealed class FcmTopic {
   String get topic;
 }
+
+sealed class FcmEewTopic {}
