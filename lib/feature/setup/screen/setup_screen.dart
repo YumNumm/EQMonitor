@@ -30,7 +30,7 @@ class SetupScreen extends HookConsumerWidget {
         onNext: next,
       ),
       KmoniWarnPage(onNext: next),
-      NotificationSettingPage(
+      NotificationSettingIntroPage(
         onNext: () {
           ref.read(sharedPreferencesProvider).setBool('isInitialized', true);
           const HomeRoute().pushReplacement(context);

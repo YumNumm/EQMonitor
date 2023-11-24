@@ -13,9 +13,9 @@ class SettingsSectionHeader extends StatelessWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 8,
+      padding: const EdgeInsets.only(
+        top: 8,
+        left: 16,
       ),
       child: Text(
         text,

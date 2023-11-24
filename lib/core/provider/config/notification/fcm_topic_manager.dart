@@ -77,12 +77,14 @@ class FcmEewTopic implements FcmTopic {
 }
 
 class FcmEarthquakeTopic implements FcmTopic {
-  const FcmEarthquakeTopic(this.area);
+  const FcmEarthquakeTopic(this.intensity);
 
-  final AreaInformationPrefectureEarthquake area;
+  final JmaIntensity? intensity;
 
   @override
-  String get topic => 'earthquake_${area.code}';
+  // ignore: lines_longer_than_80_chars
+  String get topic =>
+      'earthquake_${intensity?.type.replaceAll("-", "l").replaceAll("+", "p") ?? "all"}';
 }
 
 enum FcmTopics {

@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:eqmonitor/core/extension/string_ex.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/component/sheet/debug_widget.dart';
 import 'package:eqmonitor/feature/home/features/debugger/debugger_provider.dart';
-import 'package:eqmonitor/feature/settings/children/config/debug/debug_attempt.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
@@ -24,98 +24,6 @@ class SettingsScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Future<void> onInquiryTap(BuildContext context) async {
-      // 問い合わせ方法を選択するダイアログを表示
-      final result = await showModalActionSheet<bool>(
-        context: context,
-        title: 'お問い合わせ方法を選択してください',
-        cancelLabel: 'キャンセル',
-        actions: [
-          const SheetAction(
-            key: true,
-            label: 'メールで問い合わせ',
-          ),
-          const SheetAction(
-            key: false,
-            label: 'Xで問い合わせ',
-          ),
-        ],
-      );
-      if (result == null || !context.mounted) {
-        return;
-      }
-      unawaited(
-        showDialog<void>(
-          barrierDismissible: false,
-          context: context,
-          builder: (_) =>
-              const Center(child: CircularProgressIndicator.adaptive()),
-        ),
-      );
-      final packageInfo = ref.read(packageInfoProvider);
-      final androidDeviceInfo =
-          Platform.isAndroid ? ref.read(androidDeviceInfoProvider) : null;
-      final iosDeviceInfo =
-          Platform.isIOS ? ref.read(iosDeviceInfoProvider) : null;
-
-      final notificationSetting =
-          await ref.read(firebaseMessagingProvider).getNotificationSettings();
-
-      final base = '-------- 以下は編集せずに送信してください --------\n'
-          'packageInfo: ${jsonEncode(packageInfo.data)}\n'
-          'deviceInfo: ${jsonEncode({
-            "machine": iosDeviceInfo?.model ?? androidDeviceInfo?.model,
-            "systemVersion": iosDeviceInfo?.systemVersion ??
-                androidDeviceInfo?.version.release,
-          })}\n'
-          'alertPermission: ${notificationSetting.alert}\n'
-          '--------------------------';
-
-      String? encodeQueryParameters(Map<String, String> params) {
-        return params.entries
-            .map(
-              (MapEntry<String, String> e) =>
-                  '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
-            )
-            .join('&');
-      }
-
-      if (result) {
-        // メール
-        final uri = Uri(
-          scheme: 'mailto',
-          path: 'contacts@eqmonitor.app',
-          query: encodeQueryParameters(
-            <String, String>{
-              'subject': 'EQMonitor 問い合わせ: ',
-              'body': '\n[こちらに内容を記載してください]\n\n$base',
-            },
-          ),
-        );
-        await launchUrl(uri);
-      } else {
-        // X
-        final uri = Uri(
-          scheme: 'https',
-          host: 'twitter.com',
-          path: 'messages/compose',
-          query: encodeQueryParameters(
-            <String, String>{
-              'recipient_id': '1443896594529619970',
-              'text': '\n[こちらに内容を記載してください]\n\n$base',
-            },
-          ),
-        );
-        await launchUrl(uri, mode: LaunchMode.externalNonBrowserApplication);
-      }
-      if (!context.mounted) {
-        return;
-      }
-      if (Navigator.of(context).canPop()) {
-        Navigator.of(context).pop();
-      }
-    }
-
     final packageInfo = ref.watch(packageInfoProvider);
     final isDebugger = ref.watch(debuggerProvider).isDebugger;
     final theme = Theme.of(context);
@@ -139,7 +47,7 @@ class SettingsScreen extends HookConsumerWidget {
                       .read(debuggerProvider.notifier)
                       .setDebugger(value: false);
                 } else {
-                  final result = await DebugAttempt.attempt(context);
+                  final result = await _debugAttempt(context);
                   if (result) {
                     await ref
                         .read(debuggerProvider.notifier)
@@ -162,7 +70,8 @@ class SettingsScreen extends HookConsumerWidget {
           ListTile(
             title: const Text('通知設定'),
             leading: const Icon(Icons.notifications),
-            onTap: () => {},
+            onTap: () =>
+                context.push(const NotificationSettingsRoute().location),
           ),
           ListTile(
             title: const Text('強震モニタ設定'),
@@ -179,7 +88,7 @@ class SettingsScreen extends HookConsumerWidget {
             title: const Text('お問い合わせ'),
             subtitle: const Text('ご意見・ご要望などもこちらからお願いします。'),
             leading: const Icon(Icons.contact_support),
-            onTap: () => onInquiryTap(context),
+            onTap: () => _onInquiryTap(context, ref),
           ),
           ListTile(
             title: const Text('利用規約'),
@@ -236,4 +145,115 @@ class SettingsScreen extends HookConsumerWidget {
       ),
     );
   }
+}
+
+Future<void> _onInquiryTap(BuildContext context, WidgetRef ref) async {
+  // 問い合わせ方法を選択するダイアログを表示
+  final result = await showModalActionSheet<bool>(
+    context: context,
+    title: 'お問い合わせ方法を選択してください',
+    cancelLabel: 'キャンセル',
+    actions: [
+      const SheetAction(
+        key: true,
+        label: 'メールで問い合わせ',
+      ),
+      const SheetAction(
+        key: false,
+        label: 'Xで問い合わせ',
+      ),
+    ],
+  );
+  if (result == null || !context.mounted) {
+    return;
+  }
+  unawaited(
+    showDialog<void>(
+      barrierDismissible: false,
+      context: context,
+      builder: (_) => const Center(child: CircularProgressIndicator.adaptive()),
+    ),
+  );
+  final packageInfo = ref.read(packageInfoProvider);
+  final androidDeviceInfo =
+      Platform.isAndroid ? ref.read(androidDeviceInfoProvider) : null;
+  final iosDeviceInfo = Platform.isIOS ? ref.read(iosDeviceInfoProvider) : null;
+
+  final notificationSetting =
+      await ref.read(firebaseMessagingProvider).getNotificationSettings();
+
+  final base = '-------- 以下は編集せずに送信してください --------\n'
+      'packageInfo: ${jsonEncode(packageInfo.data)}\n'
+      'deviceInfo: ${jsonEncode({
+        "machine": iosDeviceInfo?.model ?? androidDeviceInfo?.model,
+        "systemVersion":
+            iosDeviceInfo?.systemVersion ?? androidDeviceInfo?.version.release,
+      })}\n'
+      'alertPermission: ${notificationSetting.alert}\n'
+      '--------------------------';
+
+  String? encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map(
+          (MapEntry<String, String> e) =>
+              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
+        )
+        .join('&');
+  }
+
+  if (result) {
+    // メール
+    final uri = Uri(
+      scheme: 'mailto',
+      path: 'contacts@eqmonitor.app',
+      query: encodeQueryParameters(
+        <String, String>{
+          'subject': 'EQMonitor 問い合わせ: ',
+          'body': '\n[こちらに内容を記載してください]\n\n$base',
+        },
+      ),
+    );
+    await launchUrl(uri);
+  } else {
+    // X
+    final uri = Uri(
+      scheme: 'https',
+      host: 'twitter.com',
+      path: 'messages/compose',
+      query: encodeQueryParameters(
+        <String, String>{
+          'recipient_id': '1443896594529619970',
+          'text': '\n[こちらに内容を記載してください]\n\n$base',
+        },
+      ),
+    );
+    await launchUrl(uri, mode: LaunchMode.externalNonBrowserApplication);
+  }
+  if (!context.mounted) {
+    return;
+  }
+  if (Navigator.of(context).canPop()) {
+    Navigator.of(context).pop();
+  }
+}
+
+Future<bool> _debugAttempt(BuildContext context) async {
+  final str = await showTextInputDialog(
+    context: context,
+    barrierDismissible: false,
+    title: 'Debug Attempt',
+    message: 'Input debug key.',
+    textFields: const [
+      DialogTextField(),
+    ],
+  );
+  if (str == null) {
+    return false;
+  }
+  if ('SALT${str}SALT'.sha512 ==
+      // ignore: lines_longer_than_80_chars
+      '6e205e617f7b1a49310008f128abcd1f1a950486145f47b99c1a47c0edee63141420001eac07f0978bea3245026f71905086853bb2c26a06162c2bf5f3c56b11') {
+    return true;
+  }
+  return false;
 }

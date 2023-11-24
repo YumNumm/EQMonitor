@@ -21,7 +21,7 @@ PermissionStateModel _$PermissionStateModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$PermissionStateModel {
   bool get notification => throw _privateConstructorUsedError;
-  bool get isNotificationDeniedByUser => throw _privateConstructorUsedError;
+  bool get criticalAlert => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +35,7 @@ abstract class $PermissionStateModelCopyWith<$Res> {
           $Res Function(PermissionStateModel) then) =
       _$PermissionStateModelCopyWithImpl<$Res, PermissionStateModel>;
   @useResult
-  $Res call({bool notification, bool isNotificationDeniedByUser});
+  $Res call({bool notification, bool criticalAlert});
 }
 
 /// @nodoc
@@ -53,16 +53,16 @@ class _$PermissionStateModelCopyWithImpl<$Res,
   @override
   $Res call({
     Object? notification = null,
-    Object? isNotificationDeniedByUser = null,
+    Object? criticalAlert = null,
   }) {
     return _then(_value.copyWith(
       notification: null == notification
           ? _value.notification
           : notification // ignore: cast_nullable_to_non_nullable
               as bool,
-      isNotificationDeniedByUser: null == isNotificationDeniedByUser
-          ? _value.isNotificationDeniedByUser
-          : isNotificationDeniedByUser // ignore: cast_nullable_to_non_nullable
+      criticalAlert: null == criticalAlert
+          ? _value.criticalAlert
+          : criticalAlert // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
   }
@@ -76,7 +76,7 @@ abstract class _$$PermissionStateModelImplCopyWith<$Res>
       __$$PermissionStateModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool notification, bool isNotificationDeniedByUser});
+  $Res call({bool notification, bool criticalAlert});
 }
 
 /// @nodoc
@@ -91,16 +91,16 @@ class __$$PermissionStateModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? notification = null,
-    Object? isNotificationDeniedByUser = null,
+    Object? criticalAlert = null,
   }) {
     return _then(_$PermissionStateModelImpl(
       notification: null == notification
           ? _value.notification
           : notification // ignore: cast_nullable_to_non_nullable
               as bool,
-      isNotificationDeniedByUser: null == isNotificationDeniedByUser
-          ? _value.isNotificationDeniedByUser
-          : isNotificationDeniedByUser // ignore: cast_nullable_to_non_nullable
+      criticalAlert: null == criticalAlert
+          ? _value.criticalAlert
+          : criticalAlert // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -110,7 +110,7 @@ class __$$PermissionStateModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$PermissionStateModelImpl implements _PermissionStateModel {
   const _$PermissionStateModelImpl(
-      {this.notification = false, this.isNotificationDeniedByUser = false});
+      {this.notification = false, this.criticalAlert = false});
 
   factory _$PermissionStateModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$PermissionStateModelImplFromJson(json);
@@ -120,11 +120,11 @@ class _$PermissionStateModelImpl implements _PermissionStateModel {
   final bool notification;
   @override
   @JsonKey()
-  final bool isNotificationDeniedByUser;
+  final bool criticalAlert;
 
   @override
   String toString() {
-    return 'PermissionStateModel(notification: $notification, isNotificationDeniedByUser: $isNotificationDeniedByUser)';
+    return 'PermissionStateModel(notification: $notification, criticalAlert: $criticalAlert)';
   }
 
   @override
@@ -134,16 +134,13 @@ class _$PermissionStateModelImpl implements _PermissionStateModel {
             other is _$PermissionStateModelImpl &&
             (identical(other.notification, notification) ||
                 other.notification == notification) &&
-            (identical(other.isNotificationDeniedByUser,
-                    isNotificationDeniedByUser) ||
-                other.isNotificationDeniedByUser ==
-                    isNotificationDeniedByUser));
+            (identical(other.criticalAlert, criticalAlert) ||
+                other.criticalAlert == criticalAlert));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, notification, isNotificationDeniedByUser);
+  int get hashCode => Object.hash(runtimeType, notification, criticalAlert);
 
   @JsonKey(ignore: true)
   @override
@@ -164,7 +161,7 @@ class _$PermissionStateModelImpl implements _PermissionStateModel {
 abstract class _PermissionStateModel implements PermissionStateModel {
   const factory _PermissionStateModel(
       {final bool notification,
-      final bool isNotificationDeniedByUser}) = _$PermissionStateModelImpl;
+      final bool criticalAlert}) = _$PermissionStateModelImpl;
 
   factory _PermissionStateModel.fromJson(Map<String, dynamic> json) =
       _$PermissionStateModelImpl.fromJson;
@@ -172,7 +169,7 @@ abstract class _PermissionStateModel implements PermissionStateModel {
   @override
   bool get notification;
   @override
-  bool get isNotificationDeniedByUser;
+  bool get criticalAlert;
   @override
   @JsonKey(ignore: true)
   _$$PermissionStateModelImplCopyWith<_$PermissionStateModelImpl>

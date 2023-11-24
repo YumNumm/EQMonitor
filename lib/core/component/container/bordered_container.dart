@@ -52,6 +52,7 @@ class BorderedContainer extends StatelessWidget {
     }
 
     return Card(
+      clipBehavior: Clip.antiAlias,
       elevation: elevation,
       color: accentColor ?? theme.cardColor,
       // border

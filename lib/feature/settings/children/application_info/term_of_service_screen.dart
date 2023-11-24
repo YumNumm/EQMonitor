@@ -51,7 +51,6 @@ class _TermOfServiceScreenBody extends HookWidget {
         }
         await launchUrl(
           uri,
-          mode: LaunchMode.externalNonBrowserApplication,
         );
       },
     );

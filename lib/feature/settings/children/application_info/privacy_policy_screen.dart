@@ -51,7 +51,6 @@ class _PrivacyPolicyScreenBody extends HookWidget {
         }
         await launchUrl(
           uri,
-          mode: LaunchMode.externalNonBrowserApplication,
         );
       },
     );
