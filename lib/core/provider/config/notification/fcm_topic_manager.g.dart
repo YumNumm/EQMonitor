@@ -8,7 +8,7 @@ part of 'fcm_topic_manager.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fcmTopicManagerHash() => r'6b9125366fa5d36add791031cfe09d590e20c841';
+String _$fcmTopicManagerHash() => r'd4f5e25b438dbd687c1bfe1bbb46b8f8092d3177';
 
 /// See also [FcmTopicManager].
 @ProviderFor(FcmTopicManager)
