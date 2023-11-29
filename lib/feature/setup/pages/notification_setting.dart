@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/component/button/action_button.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
+import 'package:eqmonitor/core/provider/config/notification/fcm_topic_manager.dart';
 import 'package:eqmonitor/core/provider/config/permission/permission_status_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -59,10 +60,28 @@ class NotificationSettingIntroPage extends HookConsumerWidget {
         const Spacer(),
         ActionButton.text(
           onPressed: () async {
-            await ref
-                .read(permissionProvider.notifier)
-                .requestNotificationPermission();
+            showDialog<void>(
+              context: context,
+              builder: (_) => const Center(
+                child: CircularProgressIndicator.adaptive(),
+              ),
+            ).ignore();
+            await (
+              ref
+                  .read(permissionProvider.notifier)
+                  .requestNotificationPermission(),
+              ref.read(fcmTopicManagerProvider.notifier).registerToTopic(
+                    FcmBasicTopic(FcmTopics.all),
+                  ),
+              ref
+                  .read(fcmTopicManagerProvider.notifier)
+                  .registerToTopic(FcmBasicTopic(FcmTopics.notice)),
+              ref
+                  .read(fcmTopicManagerProvider.notifier)
+                  .registerToTopic(const FcmEarthquakeTopic(null))
+            ).wait;
             if (context.mounted) {
+              Navigator.of(context).pop();
               onNext();
             }
           },

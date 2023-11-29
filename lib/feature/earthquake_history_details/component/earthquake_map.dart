@@ -165,6 +165,31 @@ class EarthquakeMapWidget extends HookConsumerWidget {
       () => _getShowBounds(item, mapData),
       [item, mapData],
     );
+    useEffect(
+      () {
+        WidgetsBinding.instance.endOfFrame.then(
+          (_) => registerNavigateToHome(() {
+            final controller = mapController.value;
+            if (controller == null) {
+              return;
+            }
+            controller.animateCamera(
+              CameraUpdate.newCameraPosition(
+                CameraPosition(
+                  target: LatLng(
+                    (bounds.northEast.lat + bounds.southWest.lat) / 2,
+                    (bounds.northEast.lon + bounds.southWest.lon) / 2,
+                  ),
+                  zoom: 6,
+                ),
+              ),
+            );
+          }),
+        );
+        return null;
+      },
+      [],
+    );
 
     final map = MaplibreMap(
       initialCameraPosition: CameraPosition(

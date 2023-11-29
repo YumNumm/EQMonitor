@@ -50,7 +50,11 @@ Future<void> main() async {
     (Platform.isIOS ? deviceInfo.iosInfo : Future<Null>.value()),
     FlutterLocalNotificationsPlugin().initialize(
       const InitializationSettings(
-        iOS: DarwinInitializationSettings(),
+        iOS: DarwinInitializationSettings(
+          requestAlertPermission: false,
+          requestSoundPermission: false,
+          requestBadgePermission: false,
+        ),
         android: AndroidInitializationSettings('mipmap/ic_launcher'),
       ),
     ),

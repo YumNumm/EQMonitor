@@ -48,7 +48,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
     final zoomCachedMapData =
         ref.watch(zoomCachedProjectedFeatureLayerProvider).valueOrNull;
 
-    final navigateToHomeFunction = useState<Function?>(null);
+    final navigateToHomeFunction = useState<VoidCallback?>(null);
 
     return Scaffold(
       appBar: AppBar(
@@ -81,6 +81,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                     FloatingActionButton.small(
                       heroTag: 'earthquake_history_details_fab',
                       onPressed: () {
+                        print(navigateToHomeFunction.value);
                         if (navigateToHomeFunction.value != null) {
                           navigateToHomeFunction.value!.call();
                         }

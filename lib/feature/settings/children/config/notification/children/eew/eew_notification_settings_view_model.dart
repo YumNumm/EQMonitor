@@ -4,18 +4,19 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/config/notification/fcm_topic_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'earthquake_notification_settings_view_model.g.dart';
+part 'eew_notification_settings_view_model.g.dart';
 
 @riverpod
-class EarthquakeNotificationSettingsViewModel
-    extends _$EarthquakeNotificationSettingsViewModel {
+class EewNotificationsSettingsViewModel
+    extends _$EewNotificationsSettingsViewModel {
   @override
-  FcmEarthquakeTopic? build() {
+  FcmEewTopic? build() {
     ref.listen(fcmTopicManagerProvider, (_, next) => _checkTopic(next));
+
     return _checkTopic(ref.read(fcmTopicManagerProvider));
   }
 
-  FcmEarthquakeTopic? _checkTopic(List<String> fcmTopics) {
+  FcmEewTopic? _checkTopic(List<String> fcmTopics) {
     final matchedTopic = choices.firstWhereOrNull(
       (e) => fcmTopics.contains(e.topic),
     );
@@ -23,7 +24,7 @@ class EarthquakeNotificationSettingsViewModel
   }
 
   Future<Result<void, Exception>> registerToTopic(
-    FcmEarthquakeTopic topic,
+    FcmEewTopic topic,
   ) async {
     final result = await (
       ref.read(fcmTopicManagerProvider.notifier).registerToTopic(topic),
@@ -52,10 +53,10 @@ class EarthquakeNotificationSettingsViewModel
     return result;
   }
 
-  static List<FcmEarthquakeTopic> choices = [
-    const FcmEarthquakeTopic(null),
+  static List<FcmEewTopic> choices = [
+    const FcmEewAllTopic(),
     ...([...JmaIntensity.values]..remove(JmaIntensity.fiveUpperNoInput)).map(
-      FcmEarthquakeTopic.new,
+      FcmEewIntensityTopic.new,
     ),
   ];
 }

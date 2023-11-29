@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/provider/config/permission/permission_status_prov
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/fullscreen_loading_overlay.dart';
 import 'package:eqmonitor/feature/settings/children/config/notification/children/earthquake/earthquake_notification_settings_view_model.dart';
+import 'package:eqmonitor/feature/settings/children/config/notification/children/eew/eew_notification_settings_view_model.dart';
 import 'package:eqmonitor/feature/settings/children/config/notification/notifiication_settings_view_model.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:flutter/material.dart';
@@ -69,8 +70,19 @@ class _NotificationSettingsBody extends HookConsumerWidget {
           ),
           ListTile(
             title: const Text('緊急地震速報(予報・警報)'),
-            subtitle: const Text(
-              'Unimplemented',
+            subtitle: Text(
+              switch (ref.watch(eewNotificationsSettingsViewModelProvider)) {
+                null => '受信しない',
+                FcmEewAllTopic() => 'すべて受信する',
+                FcmEewIntensityTopic(:final intensity)
+                    when intensity == JmaIntensity.seven =>
+                  '震度7',
+                FcmEewIntensityTopic(:final intensity) =>
+                  '震度${intensity.type}以上'
+                      .replaceAll('+', '強')
+                      .replaceAll('-', '弱'),
+                _ => '',
+              },
             ),
             trailing: const Icon(
               Icons.arrow_forward_ios,
