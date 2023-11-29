@@ -35,10 +35,12 @@ class EarthquakeMapWidget extends HookConsumerWidget {
     required this.item,
     required this.showIntensityIcon,
     required this.mapData,
+    required this.registerNavigateToHome,
   });
   final EarthquakeHistoryItem item;
   final bool showIntensityIcon;
   final Map<LandLayerType, ZoomCachedProjectedFeatureLayer> mapData;
+  final void Function(void Function() func) registerNavigateToHome;
 
   Future<void> addImageFromAsset(
     MaplibreMapController controller,
@@ -52,26 +54,6 @@ class EarthquakeMapWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isIconCaptured = useState(false);
-    final icons = useState(<(JmaIntensity, Uint8List)>[]);
-    if (!isIconCaptured.value) {
-      return Stack(
-        children: [
-          _CaptureAllIntensityWidget(
-            onCapture: (result) {
-              icons.value = result;
-              isIconCaptured.value = true;
-            },
-          ),
-          const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator.adaptive(),
-            ),
-          ),
-        ],
-      );
-    }
-
     final earthquake = item.earthquake;
     final intensity = earthquake.intensity;
     final colorModel = ref.watch(intensityColorProvider);
@@ -179,8 +161,10 @@ class EarthquakeMapWidget extends HookConsumerWidget {
     final isInitialized = useState(false);
 
     final mapController = useState<MaplibreMapController?>(null);
-    final bounds =
-        useMemoized(() => _getShowBounds(item, mapData), [item, mapData]);
+    final bounds = useMemoized(
+      () => _getShowBounds(item, mapData),
+      [item, mapData],
+    );
 
     final map = MaplibreMap(
       initialCameraPosition: CameraPosition(
@@ -200,21 +184,14 @@ class EarthquakeMapWidget extends HookConsumerWidget {
           'hypocenter',
           'assets/images/hypocenter.png',
         );
-        for (final e in icons.value) {
-          await controller.addImage(
-            'intensity-${e.$1.type}',
-            e.$2,
-          );
-        }
-        await _FillAction().init.call(
-              controller,
-              earthquake,
-              citiesItem,
-              regionsItem,
-              stations,
-            );
+        await _FillAction().init(
+          controller,
+          earthquake,
+          citiesItem,
+          regionsItem,
+          stations,
+        );
         isInitialized.value = true;
-
         return;
       },
       rotateGesturesEnabled: false,

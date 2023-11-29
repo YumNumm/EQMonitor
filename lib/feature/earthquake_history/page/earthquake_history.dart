@@ -140,7 +140,7 @@ class _ListBottomWidget extends ConsumerWidget {
     final state = ref.watch(earthquakeHistoryViewModelProvider);
     return state.map(
       data: (data) {
-        if (state.isLoading || state.isRefreshing || state.isReloading) {
+        if (state.isLoading) {
           return const Padding(
             padding: EdgeInsets.all(24),
             child: Center(
@@ -154,7 +154,9 @@ class _ListBottomWidget extends ConsumerWidget {
         if (state.isLoading) {
           return const Padding(
             padding: EdgeInsets.all(24),
-            child: Center(child: CircularProgressIndicator.adaptive()),
+            child: Center(
+              child: CircularProgressIndicator.adaptive(),
+            ),
           );
         }
         return Padding(
@@ -172,7 +174,7 @@ class _ListBottomWidget extends ConsumerWidget {
               FilledButton.tonal(
                 onPressed: () => ref
                     .read(earthquakeHistoryViewModelProvider.notifier)
-                    .fetch(isLoadMore: true),
+                    .fetch(),
                 child: const Text('再読み込み'),
               ),
               Text(

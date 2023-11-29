@@ -91,7 +91,8 @@ class Observer extends ProviderObserver {
   ) =>
       switch (provider.name) {
         _ when value.toString().length > 1000 => log(
-            '${provider.name} (${provider.runtimeType}) ${value?.toString().length} ',
+            '${provider.name} (${provider.runtimeType}) '
+            '${value?.toString().length} ',
             name: 'didAddProvider',
           ),
         _ => log(
