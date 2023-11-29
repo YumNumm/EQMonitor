@@ -70,9 +70,9 @@ jobs:
         uses: bluefireteam/melos-action@v2
 
       - name: Flutter dependencies install
-        run: flutter pub get
+        run: melos bootstrap
 
-      - name: build_runner
+      - name: Run build_runner
         run: |
           echo '${{ secrets.ENV }}' | base64 -d > .env
           melos generate
@@ -109,7 +109,7 @@ jobs:
         run: echo '${{ secrets.FIREBASE_IOS }}' | base64 -d > ios/GoogleService-Info.plist
 
       - name: build
-        run: flutter build ipa --release
+        run: flutter build ipa --release -v
 
       - name: Upload to App Store Connect
         env:
