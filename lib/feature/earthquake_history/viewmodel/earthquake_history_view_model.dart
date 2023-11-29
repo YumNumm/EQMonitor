@@ -36,7 +36,7 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
       // listen app lifecycle
       ..listen(appLifeCycleProvider, (previous, next) {
         if (next.isResumed) {
-          fetch();
+          fetch(isRefresh: true);
         }
       });
     return const AsyncData([]);
@@ -65,12 +65,13 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
 
   Future<void> fetch({
     bool isLoadMore = false,
+    bool isRefresh = false,
     int limit = 50,
   }) async {
     if (state.isLoading || state.isRefreshing || state.isReloading) {
       return;
     }
-    if (isLoadMore) {
+    if (isLoadMore || isRefresh) {
       state = const AsyncLoading<List<EarthquakeHistoryItem>>()
           .copyWithPrevious(state);
     } else {
@@ -78,7 +79,7 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
     }
     // 処理開始
     state = await state.guardPlus(() async {
-      final offset = state.asData?.value.length ?? 0;
+      final offset = isRefresh ? 0 : state.asData?.value.length ?? 0;
       final result = await _useCase.getEarthquakeHistory(
         limit: limit,
         offset: offset,
@@ -93,6 +94,9 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
           (telegram) => telegram.status == TelegramStatus.normal,
         ),
       );
+      if (isRefresh) {
+        return filteredItems.toList();
+      }
       return <EarthquakeHistoryItem>[
         ...state.asData?.value ?? [],
         ...filteredItems,

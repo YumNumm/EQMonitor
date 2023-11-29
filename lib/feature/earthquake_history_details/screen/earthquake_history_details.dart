@@ -16,6 +16,7 @@ import 'package:eqmonitor/feature/earthquake_history_details/component/prefectur
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -47,6 +48,8 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
     final zoomCachedMapData =
         ref.watch(zoomCachedProjectedFeatureLayerProvider).valueOrNull;
 
+    final navigateToHomeFunction = useState<Function?>(null);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -65,6 +68,8 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                 item: data,
                 showIntensityIcon: true,
                 mapData: zoomCachedMapData,
+                registerNavigateToHome: (func) =>
+                    navigateToHomeFunction.value = func,
               ),
             ),
           RepaintBoundary(
@@ -74,9 +79,11 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                   controller: sheetController,
                   fab: [
                     FloatingActionButton.small(
-                      heroTag: 'home',
+                      heroTag: 'earthquake_history_details_fab',
                       onPressed: () {
-                        throw UnimplementedError();
+                        if (navigateToHomeFunction.value != null) {
+                          navigateToHomeFunction.value!.call();
+                        }
                       },
                       elevation: 4,
                       child: const Icon(Icons.home),
