@@ -86,7 +86,7 @@ class SettingsScreen extends HookConsumerWidget {
           const SettingsSectionHeader(text: 'アプリの情報と問い合わせ'),
           ListTile(
             title: const Text('お問い合わせ'),
-            subtitle: const Text('ご意見・ご要望などもこちらからお願いします。'),
+            subtitle: const Text('ご意見・ご要望などもこちらからお願いします'),
             leading: const Icon(Icons.contact_support),
             onTap: () => _onInquiryTap(context, ref),
           ),
@@ -114,11 +114,19 @@ class SettingsScreen extends HookConsumerWidget {
           ),
           ListTile(
             title: const Text('サーバの稼働状況'),
-            subtitle: const Text('外部Webサイトへ遷移します。'),
+            subtitle: const Text('外部Webサイトへ遷移します'),
             leading: const Icon(Icons.network_ping),
             onTap: () => launchUrlString(
               'https://status.eqmonitor.app/',
               mode: LaunchMode.externalApplication,
+            ),
+          ),
+          ListTile(
+            title: const Text('ロードマップ'),
+            subtitle: const Text('アプリの開発ロードマップを確認できます'),
+            leading: const Icon(Icons.view_timeline),
+            onTap: () => launchUrlString(
+              'https://github.com/YumNumm/EQMonitor/issues/412',
             ),
           ),
           Center(
@@ -252,7 +260,7 @@ Future<bool> _debugAttempt(BuildContext context) async {
   }
   if ('SALT${str}SALT'.sha512 ==
       // ignore: lines_longer_than_80_chars
-      '6e205e617f7b1a49310008f128abcd1f1a950486145f47b99c1a47c0edee63141420001eac07f0978bea3245026f71905086853bb2c26a06162c2bf5f3c56b11') {
+      'debf7168f29c6b58d15ba0168663d36804d16f143ef3d81ff8c205bb8e840ddb5fcf0d0ab33a3f8b13fa44b772f852130986f0dc2d259f04e1587bbd559260b1') {
     return true;
   }
   return false;

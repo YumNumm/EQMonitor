@@ -131,4 +131,7 @@ sealed class FcmTopic {
   String get topic;
 }
 
-sealed class FcmEewTopic {}
+sealed class FcmEewTopic implements FcmTopic {
+  @override
+  String get topic;
+}

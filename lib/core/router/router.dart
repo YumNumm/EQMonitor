@@ -10,7 +10,7 @@ import 'package:eqmonitor/feature/settings/children/application_info/privacy_pol
 import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_screen.dart';
 import 'package:eqmonitor/feature/settings/children/config/color_scheme/color_scheme_config_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/notification/children/earthquake/earthquake_notification_settings_page.dart';
-import 'package:eqmonitor/feature/settings/children/config/notification/children/eew_notification_settings_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/notification/children/eew/eew_notification_settings_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/notification/notification_setting_page.dart';
 import 'package:eqmonitor/feature/settings/settings_screen.dart';
 import 'package:eqmonitor/feature/setup/screen/setup_screen.dart';
