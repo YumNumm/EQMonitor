@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
 
-import 'package:eqapi_schema/model/telegram_v3.dart';
+import 'package:eqapi_types/model/telegram_v3.dart';
 import 'package:eqmonitor/core/component/map/model/map_state.dart';
 import 'package:eqmonitor/core/component/map/utils/web_mercator_projection.dart';
 import 'package:eqmonitor/core/component/map/view_model/map_viewmodel.dart';

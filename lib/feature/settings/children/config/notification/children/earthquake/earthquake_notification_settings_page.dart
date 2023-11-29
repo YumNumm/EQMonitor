@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:eqapi_schema/eqapi_schema.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
@@ -16,7 +16,7 @@ class EarthquakeNotificationSettingsPage extends ConsumerWidget {
     final choices = EarthquakeNotificationSettingsViewModel.choices;
     final state = ref.watch(earthquakeNotificationSettingsViewModelProvider);
 
-    Future<void> onSwitchChanged(bool value) async {
+    Future<void> onSwitchChanged({required bool value}) async {
       unawaited(
         showDialog<void>(
           barrierDismissible: false,
@@ -68,7 +68,7 @@ class EarthquakeNotificationSettingsPage extends ConsumerWidget {
             padding: EdgeInsets.zero,
             child: SwitchListTile.adaptive(
               value: state != null,
-              onChanged: onSwitchChanged,
+              onChanged: (value) => onSwitchChanged(value: value),
               title: const Text('地震情報の通知を受信する'),
             ),
           ),

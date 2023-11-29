@@ -1,13 +1,16 @@
 import 'dart:async';
 
-import 'package:eqapi_schema/eqapi_schema.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/model/eew_model.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'eew_telegram_provider.g.dart';
 
-@Riverpod(keepAlive: true, dependencies: [TelegramWs],)
+@Riverpod(
+  keepAlive: true,
+  dependencies: [TelegramWs],
+)
 class EewWsTelegram extends _$EewWsTelegram {
   @override
   Stream<EewWsItem> build() {

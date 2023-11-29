@@ -16,7 +16,7 @@ Packages with breaking changes:
 Packages with other changes:
 
 - [`eq_map` - `v1.0.1`](#eq_map---v101)
-- [`eqapi_schema` - `v1.0.1`](#eqapi_schema---v101)
+- [`eqapi_types` - `v1.0.1`](#eqapi_types---v101)
 - [`eqmonitor` - `v2.1.0`](#eqmonitor---v210)
 - [`topo_map` - `v1.0.1`](#topo_map---v101)
 - [`topojson` - `v1.0.1`](#topojson---v101)
@@ -29,7 +29,7 @@ Packages with other changes:
 - **FIX**: mapdata. ([aaf05e0d](https://github.com/YumNumm/EQMonitor/commit/aaf05e0db06866b2c94ba417195c6185353d8c3c))
 - **FIX**: [eqmap] toLocations function. ([1d6e11ec](https://github.com/YumNumm/EQMonitor/commit/1d6e11ecda7e5b3fd66b8a859b481e3a619438fb))
 
-#### `eqapi_schema` - `v1.0.1`
+#### `eqapi_types` - `v1.0.1`
 
 - **FIX**: import && format. ([5983e485](https://github.com/YumNumm/EQMonitor/commit/5983e485a28c71258aaf5f1116ece745fb8e8e4c))
 - **FIX**: dependencies. ([b3d9197e](https://github.com/YumNumm/EQMonitor/commit/b3d9197e8a69f5818eaf9c91ce0df51926a6d85b))
@@ -147,7 +147,7 @@ Packages with other changes:
 - **FIX**: [TelegramV3] Vxse56,61. ([9ba3d109](https://github.com/YumNumm/EQMonitor/commit/9ba3d109c0ba19b1d5ebba97821dc37d597b1c46))
 - **FIX**: [TelegramV3] TelegramStatus の修正. ([791ad19d](https://github.com/YumNumm/EQMonitor/commit/791ad19d4108ab0a25354d21170522222e8c325e))
 - **FIX**: [TelegramV3] typedef. ([f897239d](https://github.com/YumNumm/EQMonitor/commit/f897239dfe27f17bfb37f120d97349c389fae569))
-- **FIX**: eqapi_schema. ([9cc12e28](https://github.com/YumNumm/EQMonitor/commit/9cc12e28db03ead50536af691d42869afc6d0f4b))
+- **FIX**: eqapi_types. ([9cc12e28](https://github.com/YumNumm/EQMonitor/commit/9cc12e28db03ead50536af691d42869afc6d0f4b))
 - **FIX**: [ci] auto-format. ([61da7204](https://github.com/YumNumm/EQMonitor/commit/61da720455ad6e3dab65b08369bbe9cdc49b7bd4))
 - **FIX**: ios splash screen. ([2379d4d9](https://github.com/YumNumm/EQMonitor/commit/2379d4d96f178c3d11d76952b917c2a12f43774f))
 - **FIX**: iOS. ([afc13f92](https://github.com/YumNumm/EQMonitor/commit/afc13f92aec12c260a47454ab0efedadb6015569))
@@ -337,7 +337,7 @@ Packages with other changes:
 - **FIX**: [TelegramV3] Vxse56,61. ([9ba3d109](https://github.com/YumNumm/EQMonitor/commit/9ba3d109c0ba19b1d5ebba97821dc37d597b1c46))
 - **FIX**: [TelegramV3] TelegramStatus の修正. ([791ad19d](https://github.com/YumNumm/EQMonitor/commit/791ad19d4108ab0a25354d21170522222e8c325e))
 - **FIX**: [TelegramV3] typedef. ([f897239d](https://github.com/YumNumm/EQMonitor/commit/f897239dfe27f17bfb37f120d97349c389fae569))
-- **FIX**: eqapi_schema. ([9cc12e28](https://github.com/YumNumm/EQMonitor/commit/9cc12e28db03ead50536af691d42869afc6d0f4b))
+- **FIX**: eqapi_types. ([9cc12e28](https://github.com/YumNumm/EQMonitor/commit/9cc12e28db03ead50536af691d42869afc6d0f4b))
 - **FIX**: [ci] auto-format. ([61da7204](https://github.com/YumNumm/EQMonitor/commit/61da720455ad6e3dab65b08369bbe9cdc49b7bd4))
 - **FIX**: ios splash screen. ([2379d4d9](https://github.com/YumNumm/EQMonitor/commit/2379d4d96f178c3d11d76952b917c2a12f43774f))
 - **FIX**: iOS. ([afc13f92](https://github.com/YumNumm/EQMonitor/commit/afc13f92aec12c260a47454ab0efedadb6015569))

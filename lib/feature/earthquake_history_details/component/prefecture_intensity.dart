@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:eqapi_schema/eqapi_schema.dart';
-import 'package:eqapi_schema/model/components/region_intensity.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';

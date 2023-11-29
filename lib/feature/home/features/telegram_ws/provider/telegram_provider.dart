@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:eqapi_schema/model/telegram_v3.dart';
+import 'package:eqapi_types/model/telegram_v3.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/model/socket_status.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_socket_io.dart';
@@ -10,7 +10,10 @@ import 'package:talker_flutter/talker_flutter.dart';
 
 part 'telegram_provider.g.dart';
 
-@Riverpod(keepAlive: true, dependencies: [telegramSocketIo],)
+@Riverpod(
+  keepAlive: true,
+  dependencies: [telegramSocketIo],
+)
 class TelegramWs extends _$TelegramWs {
   late final Talker _talker;
   late final Socket _socket;

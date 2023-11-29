@@ -1,0 +1,19 @@
+name: eqapi_client
+description: A starting point for Dart libraries or applications.
+version: 1.0.0
+publish_to: "none"
+environment:
+  sdk: ^3.1.5
+
+dependencies:
+  dio: ^5.3.4
+  eqapi_types:
+    git:
+      url: https://github.com/YumNumm/EQMonitor.git
+      path: packages/eqapi_types
+  retrofit: ^4.0.3
+
+dev_dependencies:
+  build_runner: ^2.4.7
+  pedantic_mono: ^1.25.0
+  retrofit_generator: ^8.0.4
