@@ -151,7 +151,7 @@ class _ListBottomWidget extends ConsumerWidget {
         return const SizedBox.shrink();
       },
       error: (error) {
-        if (state.isLoading || state.isRefreshing || state.isReloading) {
+        if (state.isLoading) {
           return const Padding(
             padding: EdgeInsets.all(24),
             child: Center(child: CircularProgressIndicator.adaptive()),
@@ -176,7 +176,7 @@ class _ListBottomWidget extends ConsumerWidget {
                 child: const Text('再読み込み'),
               ),
               Text(
-                '${error.error}',
+                error.error.toString(),
               ),
             ],
           ),
