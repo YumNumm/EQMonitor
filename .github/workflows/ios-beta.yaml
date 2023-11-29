@@ -90,26 +90,11 @@ jobs:
           cd ios
           pod install
 
-      - name: Get Provisioning File
-        env:
-          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-          MATCH_USERNAME: ${{ secrets.MATCH_USERNAME }}
-          PRODUCE_USERNAME: ${{ secrets.PRODUCE_USERNAME }}
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
-          SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA: false
-          APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_KEY }}
-          LANG: ja_JP.UTF-8
-        run: |
-          cd ios
-          fastlane match appstore --readonly
-
       - name: Get Firebase Configuration
         run: echo '${{ secrets.FIREBASE_IOS }}' | base64 -d > ios/GoogleService-Info.plist
 
-      - name: Build IPA
-        run: flutter build ipa --release -v
+      - name: Prebuild
+        run: flutter build ios --release --no-codesign
 
       - name: Upload to App Store Connect
         env:
