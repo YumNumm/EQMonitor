@@ -8,13 +8,11 @@ part 'eqapi_client.g.dart';
 class EqApi {
   EqApi({
     required this.dio,
-    required this.baseUrl,
   });
 
   final Dio dio;
-  final String baseUrl;
 
-  V3 get v3 => V3(dio, baseUrl: baseUrl);
+  V3 get v3 => V3(dio);
   PrivateV3 get privateV3 => throw UnimplementedError(
         "privateV3 feature is not implemented on public EqApi package",
       );

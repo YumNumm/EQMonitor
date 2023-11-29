@@ -420,10 +420,8 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/eqapi_client"
-      ref: HEAD
-      resolved-ref: "065e41dca32fbacb119e12659c13e3f8e4cdd6bf"
-      url: "https://github.com/YumNumm/EQMonitor.git"
-    source: git
+      relative: true
+    source: path
     version: "1.0.0"
   eqapi_types:
     dependency: "direct main"
