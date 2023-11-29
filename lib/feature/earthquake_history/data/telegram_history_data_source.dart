@@ -1,9 +1,8 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:eqapi_schema/eqapi_schema.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/provider/dio_provider.dart';
-import 'package:eqmonitor/feature/earthquake_history/model/data/telegram_history.dart';
 import 'package:eqmonitor/feature/home/features/telegram_url/provider/telegram_url_provider.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -69,7 +68,7 @@ class TelegramHistoryDataSource {
                 '${e.message} ${e.key}',
               );
               log('TelegramV3.fromJson CheckedFromJsonException: '
-              '${e.message} ${e.key}');
+                  '${e.message} ${e.key}');
               return null;
               // ignore: avoid_catches_without_on_clauses
             } catch (e) {

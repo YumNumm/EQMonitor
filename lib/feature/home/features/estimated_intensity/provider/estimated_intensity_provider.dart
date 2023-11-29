@@ -1,4 +1,4 @@
-import 'package:eqapi_schema/model/telegram_v3.dart';
+import 'package:eqapi_types/model/telegram_v3.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/home/features/eew/eew_provider.dart';

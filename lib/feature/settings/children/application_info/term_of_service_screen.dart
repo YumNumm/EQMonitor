@@ -27,7 +27,7 @@ class TermOfServiceScreen extends HookWidget {
 }
 
 class _TermOfServiceScreenBody extends HookWidget {
-  const _TermOfServiceScreenBody({super.key});
+  const _TermOfServiceScreenBody();
 
   @override
   Widget build(BuildContext context) {

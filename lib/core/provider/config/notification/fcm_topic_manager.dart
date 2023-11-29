@@ -1,4 +1,4 @@
-import 'package:eqapi_schema/eqapi_schema.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_crashlytics.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';

@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:eqapi_schema/eqapi_schema.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/config/notification/fcm_topic_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
