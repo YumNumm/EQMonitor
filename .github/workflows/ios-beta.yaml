@@ -7,7 +7,7 @@ on:
 jobs:
   build:
     runs-on: macos-13
-    timeout-minutes: 60
+    #timeout-minutes: 60
     env:
       TZ: Asia/Tokyo
 
@@ -108,7 +108,7 @@ jobs:
       - name: Get Firebase Configuration
         run: echo '${{ secrets.FIREBASE_IOS }}' | base64 -d > ios/GoogleService-Info.plist
 
-      - name: build
+      - name: Build IPA
         run: flutter build ipa --release -v
 
       - name: Upload to App Store Connect
