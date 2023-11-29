@@ -19,6 +19,7 @@ Dio dio(DioRef ref) {
         'x-operation-system-version': Platform.operatingSystemVersion,
         if (authorization != null) 'authorization': authorization,
       },
+      baseUrl: ref.watch(telegramUrlProvider).restApiUrl,
     ),
   )..httpClientAdapter = Http2Adapter(
       ConnectionManager(
