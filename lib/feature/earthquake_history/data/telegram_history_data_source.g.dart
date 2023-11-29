@@ -9,7 +9,7 @@ part of 'telegram_history_data_source.dart';
 // **************************************************************************
 
 String _$telegramHistoryDataSourceHash() =>
-    r'585bf729c822c04e923bde9b5b49e77fc591eed9';
+    r'97fd955f8e4d4c1cfef5c253e38edd4cbd413770';
 
 /// See also [telegramHistoryDataSource].
 @ProviderFor(telegramHistoryDataSource)
