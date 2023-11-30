@@ -104,6 +104,7 @@ dependencies:
   two_dimensional_scrollables: ^0.0.4
   url_launcher: ^6.2.1
   vector_math: ^2.1.4
+  version: ^3.0.2
   web_socket_client: ^0.1.0
 
 dev_dependencies:

@@ -27,7 +27,7 @@ class TelegramHistoryDataSource {
     required int limit,
     required int offset,
   }) async {
-    final response = await api.v3.getTelegramHistoryV3(
+    final response = await api.v3.getTelegramHistory(
       includeEew: includeEew,
       limit: limit,
       offset: offset,

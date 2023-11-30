@@ -16,6 +16,7 @@ import 'package:eqmonitor/feature/home/component/map/eew_pswave_arrival_circle.d
 import 'package:eqmonitor/feature/home/component/map/kmoni_map_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
+import 'package:eqmonitor/feature/home/component/sheet/update_widget.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_widget.dart';
@@ -226,6 +227,7 @@ class _Sheet extends StatelessWidget {
           const EewWidgets(),
           const SheetStatusWidget(),
           const KmoniMaintenanceWidget(),
+          const UpdateWidget(),
           const EarthquakeHistorySheetWidget(),
           ListTile(
             title: const Text('設定'),
