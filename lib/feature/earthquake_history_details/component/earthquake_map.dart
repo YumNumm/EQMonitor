@@ -19,8 +19,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lat_lng/lat_lng.dart' as lat_lng;
 import 'package:latlong2/latlong.dart' as lat_lng2;
-import 'package:maplibre_gl/mapbox_gl.dart' as map_libre;
-import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:maplibre_gl/maplibre_gl.dart' as map_libre;
+import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:topo_map/topo_map.dart';
 
 typedef _RegionColorItem = ({
