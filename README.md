@@ -2,7 +2,7 @@
 
 ### 地震速報・監視アプリケーション
 
-[![45BD36DF-05A4-4875-B913-2F53FDAA48FF](https://user-images.githubusercontent.com/73390859/183258345-ac71c9ca-b794-4c00-bd7d-a9a20693464e.png)](https://github.com/EQMonitor/EQMonitor)
+[![45BD36DF-05A4-4875-B913-2F53FDAA48FF](https://github.com/YumNumm/EQMonitor/blob/develop/assets/header.png?raw=true)](https://github.com/EQMonitor/EQMonitor)
 
 [![Github All Releases](https://img.shields.io/github/downloads/EQMonitor/EQMonitor/total.svg)](https://github.com/EQMonitor/EQMonitor/tags)
 [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/EQMonitor/EQMonitor?color=blue&include_prereleases&label=Release)](https://github.com/EQMonitor/EQMonitor/releases/latest)
@@ -10,38 +10,29 @@
 
 > **Warning** [利用規約](https://github.com/EQMonitor/EQMonitor/blob/main/assets/docs/term_of_service.md)を必ずご確認の上ご利用ください。
 
-|                                                                                                                                                |                                                                                                                                                |                                                                                                                                                |
-|------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
-| ![Screenshot_20221114-171045_EQMonitor](https://user-images.githubusercontent.com/73390859/201656094-c98e6942-489d-48dc-9ff5-80aa6d9e6247.png) | ![Screenshot_20221114-210650_EQMonitor](https://user-images.githubusercontent.com/73390859/201656208-87ae0eed-bf39-47d4-8003-9745ffba56c2.png) | ![Screenshot_20221114-210658_EQMonitor](https://user-images.githubusercontent.com/73390859/201656236-70d20f7c-6870-4d0f-a7d0-17777e6b276b.png) |
+![iPad 2](https://github.com/YumNumm/EQMonitor/assets/73390859/127f88f5-9e4f-40b5-a7f2-48efe0932c0c)
 
-## 支援のお願い
+## 概要
 
-本アプリケーションは、緊急地震速報などの地震情報を迅速に配信するために、外部サービス([Project DM-D.S.S](https://dmdata.jp/))や VPS を契約しています。
-そのため、開発者([@YumNumm](https://github.com/YumNumm))は、月数千円負担する必要があります。
-ご支援頂けると幸いです。
-**(本アプリは無料でご利用いただけます。)**
+EQMonitorは、日本全国の地震情報をいち早く受信できるアプリケーションです。
 
-[![](https://user-images.githubusercontent.com/73390859/201659680-63768eda-b774-4709-9c89-0e71771f6135.jpeg)](https://www.buymeacoffee.com/mgmg)
+***機能***
 
-## HOW TO BUILD
+* **地震情報・緊急地震速報の通知**
 
-`android/app/google-service.json`に Firebase 証明書を配置してください。
+  気象庁により発表された地震情報や、緊急地震速報を受信し、通知します。
 
-```bash
-# リポジトリをクローン
-git clone https://github.com/YumNumm/EQMonitor.git
-cd EQMonitor
+* **過去の地震履歴の閲覧**
 
-# FVMをインストール
-brew tap leoafarias/fvm
-brew install fvm
-fvm use
+  過去に発表された地震情報を遡って確認できます。
 
+* **緊急地震速報のリアルタイム表示**
 
-# Lefthookをインストール(コミット時にフォーマットを実行するため)
-brew install lefthook
-lefthook install
+  緊急地震速報が発表された際に、P波・S波の予想到達範囲、予想最大震度、震央地を表示します。
+  緊急地震速報は、リアルタイムに更新され、インターネットに接続されていれば、どこからでも確認できます。
 
-# パッケージをインストール
-fvm flutter pub get
-```
+* **強震モニタの表示**
+
+  防災科学技術研究所の提供するWebサービス 強震モニタ を表示します。
+  (※ 強震モニタは、揺れの様子を直感的に捉えることを目的としています。また、リアルタイムで観測値を処理しているため、ノイズ等により観測値が変動します。
+  そのため、本アプリケーションで表示される観測値は、あくまで参考値としてご利用ください。)

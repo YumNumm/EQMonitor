@@ -169,3 +169,6 @@ macos/GoogleService-Info.plist
 ios/*.p8
 
 /pubspec_overrides.yaml
+
+
+*.pem

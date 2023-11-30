@@ -6,8 +6,8 @@ on:
 
 jobs:
   build:
-    runs-on: macos-13
-    #timeout-minutes: 60
+    runs-on: macos-latest
+    timeout-minutes: 60
     env:
       TZ: Asia/Tokyo
 
