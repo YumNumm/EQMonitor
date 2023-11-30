@@ -69,7 +69,6 @@ class IntroductionPage extends StatelessWidget {
                     text: '利用規約',
                     style: const TextStyle(
                       decoration: TextDecoration.underline,
-                      color: Colors.white,
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () => context.push(

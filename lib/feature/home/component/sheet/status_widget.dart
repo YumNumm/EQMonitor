@@ -119,8 +119,9 @@ class SheetStatusWidget extends ConsumerWidget {
                         ],
                       _ when isInitialized && latestTime != null => [
                           Text(
-                            DateFormat('yyyy/MM/dd HH:mm:ss')
-                                .format(latestTime),
+                            DateFormat('yyyy/MM/dd HH:mm:ss').format(
+                              latestTime,
+                            ),
                             style: theme.textTheme.bodyMedium!.copyWith(
                               fontFamily: FontFamily.jetBrainsMono,
                             ),

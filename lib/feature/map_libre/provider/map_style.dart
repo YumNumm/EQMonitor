@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:eqmonitor/core/component/map/model/map_config.dart';
-import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
