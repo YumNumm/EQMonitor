@@ -19,7 +19,7 @@ class _V3 implements V3 {
   String? baseUrl;
 
   @override
-  Future<TelegramHistoryV3> getTelegramHistoryV3({
+  Future<TelegramHistoryV3> getTelegramHistory({
     bool includeEew = false,
     int limit = 100,
     int offset = 0,
@@ -54,7 +54,7 @@ class _V3 implements V3 {
   }
 
   @override
-  Future<InformationV3Result> getInformationV3({
+  Future<InformationV3Result> getInformation({
     int after = 0,
     int limit = 10,
   }) async {
@@ -83,6 +83,33 @@ class _V3 implements V3 {
               baseUrl,
             ))));
     final value = InformationV3Result.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<AppInformation> getAppInformation() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<AppInformation>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/v3/app_information',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = AppInformation.fromJson(_result.data!);
     return value;
   }
 
