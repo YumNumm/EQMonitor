@@ -6,7 +6,7 @@ on:
 
 jobs:
   check:
-    runs-on: srv2-osaka-api
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       id-token: write
