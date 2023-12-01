@@ -129,11 +129,6 @@ jobs:
           files: EQMonitor-${{ matrix.target }}.apk
           name: v${{ env.CI_ACTION_REF_NAME }}
           draft: true
-          prerelease: true
-
-      - name: Upload obfuscate
-        run: |
-          firebase crashlytics:symbols:upload --app=1:179553945248:android:11ffcfb483c098ad6fabc5 obfuscate/android
 
       #-- Slack通知 --#
       # 成功
