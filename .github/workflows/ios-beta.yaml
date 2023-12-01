@@ -1,8 +1,8 @@
 name: iOS CD (TestFlight)
 on:
   workflow_dispatch:
-  push:
-    branches: [main, develop, release/*]
+  #push:
+  #  branches: [main, develop, release/*]
 
 jobs:
   build:

@@ -1,8 +1,8 @@
 name: Flutter build Android(r)
 
 on:
-  push:
-    branches: [main, develop, release/*]
+  #push:
+  #  branches: [main, develop, release/*]
   workflow_dispatch:
 
 jobs:
