@@ -12,9 +12,22 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        target: ["android-arm", "android-arm64", "android-x64", "android-all"]
-    timeout-minutes: 45
+        target:
+          [
+            "android-arm",
+            "android-arm64",
+            "android-x64",
+            "android-all",
+            "android-aab",
+          ]
+    env:
+      SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+      KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      ALIAS: ${{ secrets.ALIAS }}
+      KEY_PATH: key.jks
 
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v2
 
@@ -67,66 +80,66 @@ jobs:
           key: build-runner-${{ hashFiles('**/asset_graph.json') }}-${{ hashFiles('**/pubspec.lock') }}
           restore-keys: build-runner-
 
+      - name: Install Melos
+        uses: bluefireteam/melos-action@v2
+
       - name: Flutter dependencies install
         run: flutter pub get
-
-      - name: Install Melos
-        run: dart pub global activate melos && melos bootstrap
 
       - name: build_runner
         run: |
           echo '${{ secrets.ENV }}' | base64 -d > .env
           melos generate
 
-      - name: Generate LauncherIcon
-        run: flutter pub run flutter_launcher_icons:main
-
-      #- name: Generate NativeSplash
-      #  run: flutter pub run flutter_native_splash:create
-
       - name: Accept Android License
         run: yes | flutter doctor --android-licenses
 
-      - name: Build apk
+      - name: Extract Environment Variables
         run: |
           echo '${{ secrets.SIGNING_KEY }}' | base64 -d > android/app/key.jks
           echo '${{ secrets.FIREBASE_ANDROID }}' | base64 -d > android/app/google-services.json
-          export KEYSTORE_PASSWORD='${{ secrets.KEYSTORE_PASSWORD }}'
-          export KEY_ALIAS='${{ secrets.KEY_ALIAS }}'
-          export KEY_PASSWORD='${{ secrets.KEY_PASSWORD }}'
-          # targetがallの場合は、全てのtargetでビルドする
-          if [ ${{ matrix.target }} = "android-all" ]; then
-            flutter build apk \
-              --release \
-              --obfuscate \
-              --split-debug-info=obfuscate/android
-          else
-            flutter build apk \
-              --release \
-              --obfuscate \
-              --split-debug-info=obfuscate/android \
-              --target-platform=${{ matrix.target }}
-          fi
-          cp build/app/outputs/flutter-apk/app-release.apk EQMonitor-${{ matrix.target }}.apk
-        env:
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          ALIAS: ${{ secrets.ALIAS }}
-          KEY_PATH: key.jks
-          target-platform: ${{ matrix.target }}
+          echo '${{ secrets.KEY_PROPERTIES }}' | base64 -d  > android/key.properties
+          flutter build appbundle --release
+
+      - name: Build APK
+        if: ${{ matrix.target }} != "android-all" && ${{ matrix.target }} != "android-aab"
+        run: flutter build apk --release --target-platform=${{ matrix.target }}
+
+      - name: Build APK (All Targets)
+        if: ${{ matrix.target }} == "android-all"
+        run: flutter build apk --release
+
+      - name: Build AAB
+        if: ${{ matrix.target }} == "android-aab"
+        run: flutter build appbundle --release
 
       - name: Upload artifact
         uses: actions/upload-artifact@v1.0.0
+        if: ${{ matrix.target }} != "android-aab"
         with:
           name: EQMonitor-${{ matrix.target }}.apk
           path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Upload artifact (AAB)
+        uses: actions/upload-artifact@v1.0.0
+        if: ${{ matrix.target }} == "android-aab"
+        with:
+          name: EQMonitor-${{ matrix.target }}.aab
+          path: build/app/outputs/bundle/release/app-release.aab
 
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: EQMonitor-${{ matrix.target }}.apk
+          name: v${{ env.CI_ACTION_REF_NAME }}
+          draft: true
+
+      - name: Release (AAB)
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/') && ${{ matrix.target }} == "android-aab"
+        with:
+          files: EQMonitor-${{ matrix.target }}.aab
           name: v${{ env.CI_ACTION_REF_NAME }}
           draft: true
 
