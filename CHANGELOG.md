@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [v0.7.2](https://github.com/YumNumm/EQMonitor/compare/v0.7.2...v0.7.2) - 2023-12-01
+
 ## 2023-07-27
 
 ### Changes
