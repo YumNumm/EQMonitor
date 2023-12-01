@@ -910,19 +910,17 @@ packages:
   maplibre_gl:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "0bf326044759dfc2f590a1c219d2f1eb86e7b8ad"
-      resolved-ref: "0bf326044759dfc2f590a1c219d2f1eb86e7b8ad"
-      url: "git@github.com:YumNumm/flutter-maplibre-gl.git"
-    source: git
+      path: "../flutter-maplibre-gl"
+      relative: true
+    source: path
     version: "0.18.0"
   maplibre_gl_platform_interface:
     dependency: transitive
     description:
       path: maplibre_gl_platform_interface
       ref: main
-      resolved-ref: a41833c3f102288381931fe616c159e7a5bc5c52
-      url: "https://github.com/maplibre/flutter-maplibre-gl.git"
+      resolved-ref: "954ad8171b66cfdfa5eddcbfd8b35e0ea5b50a9a"
+      url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
     source: git
     version: "0.18.0"
   maplibre_gl_web:
@@ -930,8 +928,8 @@ packages:
     description:
       path: maplibre_gl_web
       ref: main
-      resolved-ref: a41833c3f102288381931fe616c159e7a5bc5c52
-      url: "https://github.com/maplibre/flutter-maplibre-gl.git"
+      resolved-ref: "954ad8171b66cfdfa5eddcbfd8b35e0ea5b50a9a"
+      url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
     source: git
     version: "0.18.0"
   markdown:
