@@ -13,15 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: restore signkey
-        run: |
-          echo 'LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUM0VENDQWNtZ0F3SUJBZ0lVYjhsdEJFTVEzTFdEZnNnakIrcmExUjVMWGVzd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0FEQWVGdzB5TXpFeE16QXhORFUxTXpkYUZ3MHlNekV5TXpBeE5EVTFNemRhTUFBd2dnRWlNQTBHQ1NxRwpTSWIzRFFFQkFRVUFBNElCRHdBd2dnRUtBb0lCQVFESVA1eFIrZjdVQUxTV0dXN3dEaXg2RWEzZ0ZGWGF2Vy9aCnBINGVTNGFHSVFSMFpDaC85YlY3K1dNd0NPV1lFZHg0WDVMdTVnYzliWXlQVDFRMXFBYWtkOC9CU3BzeC93K3IKQ2Y2aUlxb3BhQWRHU3kwNmVOODhHMENSSFluRk5Neno3TnVLeFdDR2ZGUWJMdm9VMFRGUUVIblREbkZ0Q0ZMZApRMU5uR0pxU2Y1b2xXRm5aOFhQOUV4cVlBQzI0eEtFcjRKVTBWbDlQMnF3ZHVoZG5vMkpZTGwrbFc1eW5FYmxaCkpyOTFqbGJGYW5jeVBUU29zeCt6dnpLcnJHOTZYdzlHSnpxaFhod0UvVTREdnFRQmM5V1RiQjk4N0JpeVNtNWsKVzBUZkEvQzRhNkg5OWhKanJsMDkyaXRlZVdXWVQzQS8rbGtySmNMVjZXdFhGeVhDT3ZENUFnTUJBQUdqVXpCUgpNQjBHQTFVZERnUVdCQlNHaUc5Q3B3Ni90bmVHWTNDNjRWWHYwajJwc2pBZkJnTlZIU01FR0RBV2dCU0dpRzlDCnB3Ni90bmVHWTNDNjRWWHYwajJwc2pBUEJnTlZIUk1CQWY4RUJUQURBUUgvTUEwR0NTcUdTSWIzRFFFQkN3VUEKQTRJQkFRQ2RrRzlhR2FQWW1CZGp0TVBBVFpnV3BlaU5Pb2d5SlFOU2c5TXFNR3JxRjlzRUVUNHJxYkJjbzNKRQplaHdxVytGMjVpODJJV2pGZWY0V291YnVMS05hUFZ5elRWSEU2VlhTdVlrVVp1Tlh6N3E5VnVFNVkzeXhpN2hmClJacjE1cFNQdE92dlJYRnpieUFxT0lpTzB1R3ZZbXhBUW9VN2ZGb3A0WXppQWdSQVd3NnF5Y1ZWQWJUR1R3bWUKVFJRVEswT3kxc1JVcEgxZ2pXYldCblVMUi9nZ0RPNVk2RjBIVVdlcXA0ZVFkMTU4bU5aZGNRSE1rTlI4d21HNwo4R2N5VmExWHBhTktya2tzQURwblpqMGQ4UldLWUJ6Y0ZVRS9HUlhwbWNVWERVMmdHdVcyYWhGZjZSdm0wVE5ZCkpnWm9jVndLaUpVYkwvQUdyV0JtRkRIU2JmRSsKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=' | base64 -d > public_key.pem
-          cat public_key.pem
-          echo "${{ secrets.SIGNING_KEY}}" > SIGNING_KEY
-
-          openssl smime -encrypt -aes256 -in SIGNING_KEY -binary -outform DEM -out SIGNING_KEY.enc public_key.pem
-          cat SIGNING_KEY.enc | base64
-
       - name: Set up ssh
         run: |
           mkdir -p ~/.ssh
@@ -89,20 +80,14 @@ jobs:
         run: |
           echo '${{ secrets.SIGNING_KEY }}' | base64 -d > android/app/key.jks
           echo '${{ secrets.FIREBASE_ANDROID }}' | base64 -d > android/app/google-services.json
+          echo '${{ secrets.KEY_PROPERTIES }}' | base64 -d  > android/key.properties
           flutter build appbundle --release
-          flutter build apk --release
-        env:
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          ALIAS: ${{ secrets.ALIAS }}
-          KEY_PATH: key.jks
 
       - name: Upload artifact
         uses: actions/upload-artifact@v1.0.0
         with:
           name: release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/bundle/release/app-release-aab
 
       #-- Slack通知 --#
       # 成功
