@@ -90,10 +90,6 @@ PODS:
   - Flutter (1.0.0)
   - flutter_local_notifications (0.0.1):
     - Flutter
-  - flutter_tts (0.0.1):
-    - Flutter
-  - flutter_watch_os_connectivity (1.0.0):
-    - Flutter
   - GoogleAppMeasurement (10.18.0):
     - GoogleAppMeasurement/AdIdSupport (= 10.18.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.11)
@@ -151,8 +147,6 @@ PODS:
     - GoogleUtilities/MethodSwizzler
   - GoogleUtilities/UserDefaults (7.12.0):
     - GoogleUtilities/Logger
-  - in_app_review (0.2.0):
-    - Flutter
   - MapLibre (5.14.0-pre3)
   - maplibre_gl (0.0.1):
     - Flutter
@@ -191,10 +185,7 @@ DEPENDENCIES:
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
-  - flutter_tts (from `.symlinks/plugins/flutter_tts/ios`)
-  - flutter_watch_os_connectivity (from `.symlinks/plugins/flutter_watch_os_connectivity/ios`)
   - GoogleUtilities
-  - in_app_review (from `.symlinks/plugins/in_app_review/ios`)
   - maplibre_gl (from `.symlinks/plugins/maplibre_gl/ios`)
   - native_shared_preferences (from `.symlinks/plugins/native_shared_preferences/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
@@ -240,12 +231,6 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
-  flutter_tts:
-    :path: ".symlinks/plugins/flutter_tts/ios"
-  flutter_watch_os_connectivity:
-    :path: ".symlinks/plugins/flutter_watch_os_connectivity/ios"
-  in_app_review:
-    :path: ".symlinks/plugins/in_app_review/ios"
   maplibre_gl:
     :path: ".symlinks/plugins/maplibre_gl/ios"
   native_shared_preferences:
@@ -281,12 +266,9 @@ SPEC CHECKSUMS:
   FirebaseSessions: f90fe9212ee2818641eda051c0835c9c4e30d9ae
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
-  flutter_tts: 0f492aab6accf87059b72354fcb4ba934304771d
-  flutter_watch_os_connectivity: 2c2f549d6d6d3e71ce19c12da2d64d2691c04861
   GoogleAppMeasurement: 70ce9aa438cff1cfb31ea3e660bcc67734cb716e
   GoogleDataTransport: 54dee9d48d14580407f8f5fbf2f496e92437a2f2
   GoogleUtilities: 0759d1a57ebb953965c2dfe0ba4c82e95ccc2e34
-  in_app_review: 318597b3a06c22bb46dc454d56828c85f444f99d
   MapLibre: 620fc933c1d6029b33738c905c1490d024e5d4ef
   maplibre_gl: a2efec727dd340e4c65e26d2b03b584f14881fd9
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
@@ -302,4 +284,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: d5a2b9ba3db86b051fa15aa6a76dc71f8f3f9eb2
 
-COCOAPODS: 1.13.0
+COCOAPODS: 1.14.3
