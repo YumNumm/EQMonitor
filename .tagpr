@@ -39,3 +39,4 @@
 [tagpr]
 	vPrefix = true
 	releaseBranch = develop
+	versionFile = -
