@@ -1,1 +1,4 @@
 # Changelog
+
+## [v2.0.1](https://github.com/YumNumm/EQMonitor/compare/v2.0.0...v2.0.1) - 2023-12-01
+- Auto format - ref: develop by @github-actions in https://github.com/YumNumm/EQMonitor/pull/416
