@@ -2,7 +2,7 @@ name: Production Release Tag PR
 on:
   push:
     branches:
-      - main
+      - develop
 
 jobs:
   check:
