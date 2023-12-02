@@ -204,22 +204,16 @@ class EewWidget extends ConsumerWidget {
       );
 
       // 地震発生時刻
-      final timeWidget = Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Text(
-            '${DateFormat('yyyy/MM/dd HH:mm:ss').format(
-              (eew.originTime ?? eew.arrivalTime).toLocal(),
-            )}'
-            ' '
-            '${eew.originTime == null ? "検知" : "発生"}',
-            style: textTheme.bodyMedium!.copyWith(
-              fontFamily: FontFamily.jetBrainsMono,
-              fontFamilyFallback: [FontFamily.notoSansJP],
-            ),
-          ),
-        ],
+      final timeWidget = Text(
+        '${DateFormat('yyyy/MM/dd HH:mm:ss').format(
+          (eew.originTime ?? eew.arrivalTime).toLocal(),
+        )}'
+        ' '
+        '${eew.originTime == null ? "検知" : "発生"}',
+        style: textTheme.bodyMedium!.copyWith(
+          fontFamily: FontFamily.jetBrainsMono,
+          fontFamilyFallback: [FontFamily.notoSansJP],
+        ),
       );
 
       // 「M 8.0 / 深さ100km」
@@ -314,10 +308,9 @@ class EewWidget extends ConsumerWidget {
             ),
           ] else
             AnimatedOpacity(
-              opacity: (eew.isIpfOnePoint || eew.isLevelEew) ? 0.6 : 1,
+              opacity: (eew.isIpfOnePoint || eew.isLevelEew) ? 0.7 : 1,
               duration: const Duration(milliseconds: 400),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+              child: Wrap(
                 children: [
                   magnitudeWidget,
                   const SizedBox(width: 4),

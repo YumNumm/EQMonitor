@@ -99,6 +99,8 @@ class IntroductionPage extends StatelessWidget {
       ],
     );
 
-    return body;
+    return SafeArea(
+      child: body,
+    );
   }
 }
