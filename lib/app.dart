@@ -51,7 +51,6 @@ class App extends HookConsumerWidget {
           );
         }
         return MaterialApp.router(
-          debugShowCheckedModeBanner: false,
           title: 'EQMonitor',
           routerConfig: ref.watch(goRouterProvider),
           theme: ThemeData(
