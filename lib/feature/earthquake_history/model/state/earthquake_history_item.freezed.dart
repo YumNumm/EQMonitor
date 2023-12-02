@@ -22,7 +22,7 @@ EarthquakeHistoryItem _$EarthquakeHistoryItemFromJson(
 /// @nodoc
 mixin _$EarthquakeHistoryItem {
   EarthquakeData get earthquake => throw _privateConstructorUsedError;
-  TsunamiData get tsunami => throw _privateConstructorUsedError;
+  TsunamiData? get tsunami => throw _privateConstructorUsedError;
   List<TelegramV3> get telegrams => throw _privateConstructorUsedError;
   int get eventId => throw _privateConstructorUsedError;
   Vxse45? get latestEew => throw _privateConstructorUsedError;
@@ -42,14 +42,14 @@ abstract class $EarthquakeHistoryItemCopyWith<$Res> {
   @useResult
   $Res call(
       {EarthquakeData earthquake,
-      TsunamiData tsunami,
+      TsunamiData? tsunami,
       List<TelegramV3> telegrams,
       int eventId,
       Vxse45? latestEew,
       TelegramV3? latestEewTelegram});
 
   $EarthquakeDataCopyWith<$Res> get earthquake;
-  $TsunamiDataCopyWith<$Res> get tsunami;
+  $TsunamiDataCopyWith<$Res>? get tsunami;
 }
 
 /// @nodoc
@@ -67,7 +67,7 @@ class _$EarthquakeHistoryItemCopyWithImpl<$Res,
   @override
   $Res call({
     Object? earthquake = null,
-    Object? tsunami = null,
+    Object? tsunami = freezed,
     Object? telegrams = null,
     Object? eventId = null,
     Object? latestEew = freezed,
@@ -78,10 +78,10 @@ class _$EarthquakeHistoryItemCopyWithImpl<$Res,
           ? _value.earthquake
           : earthquake // ignore: cast_nullable_to_non_nullable
               as EarthquakeData,
-      tsunami: null == tsunami
+      tsunami: freezed == tsunami
           ? _value.tsunami
           : tsunami // ignore: cast_nullable_to_non_nullable
-              as TsunamiData,
+              as TsunamiData?,
       telegrams: null == telegrams
           ? _value.telegrams
           : telegrams // ignore: cast_nullable_to_non_nullable
@@ -111,8 +111,12 @@ class _$EarthquakeHistoryItemCopyWithImpl<$Res,
 
   @override
   @pragma('vm:prefer-inline')
-  $TsunamiDataCopyWith<$Res> get tsunami {
-    return $TsunamiDataCopyWith<$Res>(_value.tsunami, (value) {
+  $TsunamiDataCopyWith<$Res>? get tsunami {
+    if (_value.tsunami == null) {
+      return null;
+    }
+
+    return $TsunamiDataCopyWith<$Res>(_value.tsunami!, (value) {
       return _then(_value.copyWith(tsunami: value) as $Val);
     });
   }
@@ -129,7 +133,7 @@ abstract class _$$EarthquakeHistoryItemImplCopyWith<$Res>
   @useResult
   $Res call(
       {EarthquakeData earthquake,
-      TsunamiData tsunami,
+      TsunamiData? tsunami,
       List<TelegramV3> telegrams,
       int eventId,
       Vxse45? latestEew,
@@ -138,7 +142,7 @@ abstract class _$$EarthquakeHistoryItemImplCopyWith<$Res>
   @override
   $EarthquakeDataCopyWith<$Res> get earthquake;
   @override
-  $TsunamiDataCopyWith<$Res> get tsunami;
+  $TsunamiDataCopyWith<$Res>? get tsunami;
 }
 
 /// @nodoc
@@ -154,7 +158,7 @@ class __$$EarthquakeHistoryItemImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? earthquake = null,
-    Object? tsunami = null,
+    Object? tsunami = freezed,
     Object? telegrams = null,
     Object? eventId = null,
     Object? latestEew = freezed,
@@ -165,10 +169,10 @@ class __$$EarthquakeHistoryItemImplCopyWithImpl<$Res>
           ? _value.earthquake
           : earthquake // ignore: cast_nullable_to_non_nullable
               as EarthquakeData,
-      tsunami: null == tsunami
+      tsunami: freezed == tsunami
           ? _value.tsunami
           : tsunami // ignore: cast_nullable_to_non_nullable
-              as TsunamiData,
+              as TsunamiData?,
       telegrams: null == telegrams
           ? _value._telegrams
           : telegrams // ignore: cast_nullable_to_non_nullable
@@ -207,7 +211,7 @@ class _$EarthquakeHistoryItemImpl implements _EarthquakeHistoryItem {
   @override
   final EarthquakeData earthquake;
   @override
-  final TsunamiData tsunami;
+  final TsunamiData? tsunami;
   final List<TelegramV3> _telegrams;
   @override
   List<TelegramV3> get telegrams {
@@ -274,7 +278,7 @@ class _$EarthquakeHistoryItemImpl implements _EarthquakeHistoryItem {
 abstract class _EarthquakeHistoryItem implements EarthquakeHistoryItem {
   const factory _EarthquakeHistoryItem(
           {required final EarthquakeData earthquake,
-          required final TsunamiData tsunami,
+          required final TsunamiData? tsunami,
           required final List<TelegramV3> telegrams,
           required final int eventId,
           required final Vxse45? latestEew,
@@ -287,7 +291,7 @@ abstract class _EarthquakeHistoryItem implements EarthquakeHistoryItem {
   @override
   EarthquakeData get earthquake;
   @override
-  TsunamiData get tsunami;
+  TsunamiData? get tsunami;
   @override
   List<TelegramV3> get telegrams;
   @override

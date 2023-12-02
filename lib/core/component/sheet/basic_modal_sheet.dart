@@ -7,9 +7,11 @@ class BasicModalSheet extends HookWidget {
     super.key,
     required this.controller,
     required this.children,
+    this.hasAppBar = true,
   });
   final SheetController controller;
   final List<Widget> children;
+  final bool hasAppBar;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,7 @@ class BasicModalSheet extends HookWidget {
           initialExtent: constraints.maxHeight * 0.3,
           controller: controller,
           physics: const SnapSheetPhysics(
-            stops: <double>[0.1, 0.3, 0.5, 0.95, 1],
+            stops: <double>[0.1, 0.2, 0.3, 0.5, 0.95, 1],
           ),
           child: DecoratedBox(
             decoration: BoxDecoration(
@@ -51,6 +53,7 @@ class BasicModalSheet extends HookWidget {
               ],
             ),
             child: SafeArea(
+              top: hasAppBar,
               bottom: false,
               child: RepaintBoundary(
                 child: Column(
@@ -72,6 +75,7 @@ class BasicModalSheet extends HookWidget {
           return Align(
             alignment: Alignment.bottomRight,
             child: SafeArea(
+              top: hasAppBar,
               bottom: false,
               child: Padding(
                 padding: const EdgeInsets.only(right: 8),

@@ -15,7 +15,7 @@ part 'earthquake_history_item.g.dart';
 class EarthquakeHistoryItem with _$EarthquakeHistoryItem {
   const factory EarthquakeHistoryItem({
     required EarthquakeData earthquake,
-    required TsunamiData tsunami,
+    required TsunamiData? tsunami,
     required List<TelegramV3> telegrams,
     required int eventId,
     required Vxse45? latestEew,
