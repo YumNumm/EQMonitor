@@ -49,15 +49,18 @@ class ActionButton extends StatelessWidget {
           vertical: 4,
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              text,
-              style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: 1.1,
-                  ),
+            Flexible(
+              child: Center(
+                child: Text(
+                  text,
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        letterSpacing: 1.1,
+                      ),
+                ),
+              ),
             ),
           ],
         ),

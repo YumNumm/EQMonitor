@@ -41,7 +41,7 @@ class SetupBackgroundImageWidget extends HookWidget {
             painter: _ShaderPainter(data, elapsedTimeInSeconds()),
             child: Scaffold(
               backgroundColor: Colors.transparent,
-              body: SafeArea(child: child),
+              body: child,
             ),
           );
         },
