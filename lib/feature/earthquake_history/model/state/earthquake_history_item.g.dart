@@ -17,8 +17,11 @@ _$EarthquakeHistoryItemImpl _$$EarthquakeHistoryItemImplFromJson(
         final val = _$EarthquakeHistoryItemImpl(
           earthquake: $checkedConvert('earthquake',
               (v) => EarthquakeData.fromJson(v as Map<String, dynamic>)),
-          tsunami: $checkedConvert('tsunami',
-              (v) => TsunamiData.fromJson(v as Map<String, dynamic>)),
+          tsunami: $checkedConvert(
+              'tsunami',
+              (v) => v == null
+                  ? null
+                  : TsunamiData.fromJson(v as Map<String, dynamic>)),
           telegrams: $checkedConvert(
               'telegrams',
               (v) => (v as List<dynamic>)

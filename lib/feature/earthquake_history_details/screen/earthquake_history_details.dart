@@ -49,13 +49,10 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
         ref.watch(zoomCachedProjectedFeatureLayerProvider).valueOrNull;
 
     final navigateToHomeFunction = useState<VoidCallback?>(null);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          (data.telegrams.last.headline ?? '').toHalfWidth,
-        ),
-      ),
       body: Stack(
         children: [
           if (zoomCachedMapData == null)
@@ -72,33 +69,44 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                     navigateToHomeFunction.value = func,
               ),
             ),
-          RepaintBoundary(
-            child: Stack(
-              children: [
-                SheetFloatingActionButtons(
-                  controller: sheetController,
-                  fab: [
-                    FloatingActionButton.small(
-                      heroTag: 'earthquake_history_details_fab',
-                      onPressed: () {
-                        print(navigateToHomeFunction.value);
-                        if (navigateToHomeFunction.value != null) {
-                          navigateToHomeFunction.value!.call();
-                        }
-                      },
-                      elevation: 4,
-                      child: const Icon(Icons.home),
-                    ),
-                  ],
-                ),
-                // Sheet
-                _Sheet(
-                  sheetController: sheetController,
-                  item: data,
-                ),
-              ],
-            ),
+          Stack(
+            children: [
+              SheetFloatingActionButtons(
+                hasAppBar: false,
+                controller: sheetController,
+                fab: [
+                  FloatingActionButton.small(
+                    heroTag: 'earthquake_history_details_fab',
+                    onPressed: () {
+                      if (navigateToHomeFunction.value != null) {
+                        navigateToHomeFunction.value!.call();
+                      }
+                    },
+                    elevation: 4,
+                    child: const Icon(Icons.home),
+                  ),
+                ],
+              ),
+              // Sheet
+              _Sheet(
+                sheetController: sheetController,
+                item: data,
+              ),
+            ],
           ),
+          if (Navigator.canPop(context))
+            // 戻るボタン
+            Positioned(
+              top: 0,
+              left: 0,
+              child: SafeArea(
+                child: IconButton.filledTonal(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => context.pop(),
+                  color: colorScheme.primary,
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -116,8 +124,10 @@ class _Sheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RepaintBoundary(
+    return SafeArea(
+      bottom: false,
       child: BasicModalSheet(
+        hasAppBar: false,
         controller: sheetController,
         children: [
           _EarthquakeHypoInfoWidget(item: item),
@@ -176,7 +186,6 @@ class _EarthquakeHypoInfoWidget extends ConsumerWidget {
         : null;
     // 「[MaxInt, 震源地, 規模」
     final hypoWidget = Row(
-      crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.ideographic,
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -188,10 +197,12 @@ class _EarthquakeHypoInfoWidget extends ConsumerWidget {
           ),
         ),
         const SizedBox(width: 4),
-        Text(
-          eq.earthquake?.hypocenter.name ?? '不明',
-          style: textTheme.headlineMedium!.copyWith(
-            fontWeight: FontWeight.w900,
+        Flexible(
+          child: Text(
+            eq.earthquake?.hypocenter.name ?? '不明',
+            style: textTheme.headlineMedium!.copyWith(
+              fontWeight: FontWeight.w900,
+            ),
           ),
         ),
       ],

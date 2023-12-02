@@ -8,11 +8,14 @@ class SheetFloatingActionButtons extends HookWidget {
     required this.controller,
     required this.fab,
     this.maxHeight = 0.3,
+    this.hasAppBar = true,
   });
 
   /// FABの最大高さ
   /// 画面から見えなくなる高さ
   final double maxHeight;
+
+  final bool hasAppBar;
 
   /// FAB
   final List<FloatingActionButton> fab;
@@ -22,8 +25,10 @@ class SheetFloatingActionButtons extends HookWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     final padding = MediaQuery.paddingOf(context);
-    final height =
-        size.height - (padding.top + padding.bottom) - kToolbarHeight;
+    final height = size.height -
+        (padding.bottom) -
+        // SafeAreaのtop部分, AppBarの高さ
+        (hasAppBar ? padding.top + kToolbarHeight : 0);
     return AnimatedBuilder(
       animation: controller.animation,
       builder: (BuildContext context, Widget? child) {
@@ -32,7 +37,7 @@ class SheetFloatingActionButtons extends HookWidget {
           left: padding.left,
           bottom: height * controller.animation.value,
           child: Container(
-            margin: const EdgeInsets.all(10),
+            margin: const EdgeInsets.all(4),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: fab,

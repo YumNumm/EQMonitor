@@ -42,7 +42,7 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
     return const AsyncData([]);
   }
 
-  late final EarthquakeHistoryUseCase _useCase;
+  late EarthquakeHistoryUseCase _useCase;
   // state
   final bool _includeTestTelegrams = false;
 
@@ -189,7 +189,7 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
         comment: comment,
         isVolcano: isVolcano,
       );
-      //! EarthquakeData !
+      //! TsunamiData !
       final vtse41 = telegrams.firstWhereOrNull(
         (e) =>
             e.type == TelegramType.vtse41 &&
@@ -235,12 +235,18 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
       } else if (vtse41 != null) {
         comments = (vtse41.body as TelegramVtse41Body).comments;
       }
-      final tsunamiData = TsunamiData(
-        forecasts: forecasts,
-        estimations: estimations,
-        observations: observations,
-        comments: comments,
-      );
+      final TsunamiData? tsunamiData;
+      if ([forecasts, estimations, observations, comments]
+          .every((e) => e == null)) {
+        tsunamiData = null;
+      } else {
+        tsunamiData = TsunamiData(
+          forecasts: forecasts,
+          estimations: estimations,
+          observations: observations,
+          comments: comments,
+        );
+      }
 
       // 最新のEEW
       final latestEew = telegrams
