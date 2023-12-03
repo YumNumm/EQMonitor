@@ -2,6 +2,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
 import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
+import 'package:eqmonitor/feature/tsunami_history/screen/tsunami_history.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -106,6 +107,15 @@ class DebugWidget extends ConsumerWidget {
                   }
                 }
               },
+            ),
+            ListTile(
+              title: const Text('津波情報'),
+              leading: const Icon(Icons.waves),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (context) => const TsunamiHistoryScreen(),
+                ),
+              ),
             ),
           ],
         ),

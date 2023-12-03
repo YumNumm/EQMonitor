@@ -1,10 +1,6 @@
 import 'package:eqapi_types/model/components/comments.dart';
 import 'package:eqapi_types/model/components/earthquake.dart';
 import 'package:eqapi_types/model/components/intensity.dart';
-import 'package:eqapi_types/model/components/tsunami-information/comments.dart';
-import 'package:eqapi_types/model/components/tsunami-information/tsunami_estimation.dart';
-import 'package:eqapi_types/model/components/tsunami-information/tsunami_forecast.dart';
-import 'package:eqapi_types/model/components/tsunami-information/tsunami_observations.dart';
 import 'package:eqapi_types/model/telegram_v3.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -49,10 +45,21 @@ class EarthquakeData with _$EarthquakeData {
 @freezed
 class TsunamiData with _$TsunamiData {
   const factory TsunamiData({
-    required List<TsunamiForecast>? forecasts,
-    required List<TsunamiEstimation>? estimations,
-    required List<TsunamiObservation>? observations,
-    required TsunamiComments? comments,
+    required ({
+      TelegramV3 telegram,
+      TelegramVtse41Body? body,
+      TelegramCancelBody? cancel
+    })? vtse41,
+    required ({
+      TelegramV3 telegram,
+      TelegramVtse51Body? body,
+      TelegramCancelBody? cancel,
+    })? vtse51,
+    required ({
+      TelegramV3 telegram,
+      TelegramVtse52Body? body,
+      TelegramCancelBody? cancel,
+    })? vtse52,
   }) = _TsunamiData;
 
   factory TsunamiData.fromJson(Map<String, dynamic> json) =>

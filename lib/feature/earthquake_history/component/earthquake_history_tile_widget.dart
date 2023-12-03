@@ -125,9 +125,9 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
               fontFamilyFallback: [FontFamily.notoSansJP],
             ),
           ),
-          if (item.tsunami?.forecasts != null ||
-              item.tsunami?.observations != null ||
-              item.tsunami?.estimations != null)
+          if (item.tsunami?.vtse41 != null ||
+              item.tsunami?.vtse51 != null ||
+              item.tsunami?.vtse52 != null)
             const CustomChip(
               child: Text(
                 '津波情報',

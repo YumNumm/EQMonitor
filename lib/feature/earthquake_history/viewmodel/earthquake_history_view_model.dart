@@ -2,16 +2,13 @@ import 'package:collection/collection.dart';
 import 'package:eqapi_types/model/components/comments.dart';
 import 'package:eqapi_types/model/components/earthquake.dart';
 import 'package:eqapi_types/model/components/intensity.dart';
-import 'package:eqapi_types/model/components/tsunami-information/comments.dart';
-import 'package:eqapi_types/model/components/tsunami-information/tsunami_estimation.dart';
-import 'package:eqapi_types/model/components/tsunami-information/tsunami_forecast.dart';
-import 'package:eqapi_types/model/components/tsunami-information/tsunami_observations.dart';
 import 'package:eqapi_types/model/telegram_v3.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/use_case/earthquake_history_use_case.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -106,7 +103,7 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
 
   List<EarthquakeHistoryItem> _toEarthquakeHistoryItem(
     Map<String, List<TelegramV3>> data, {
-    bool includeTestTelegrams = true,
+    bool includeTestTelegrams = kDebugMode,
   }) {
     final result = <EarthquakeHistoryItem>[];
     data.forEach((eventId, telegrams) {
@@ -205,48 +202,41 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
             e.type == TelegramType.vtse52 &&
             (_includeTestTelegrams || e.status == TelegramStatus.normal),
       );
-      List<TsunamiForecast>? forecasts;
-      if (vtse51 != null) {
-        forecasts = (vtse51.body as TelegramVtse51Body).tsunami.forecasts;
-      } else if (vtse41 != null) {
-        forecasts = (vtse41.body as TelegramVtse41Body).tsunami.forecasts;
-      }
-      List<TsunamiEstimation>? estimations;
-      if (vtse52 != null) {
-        estimations = (vtse52.body as TelegramVtse52Body).tsunami.estimations;
-      }
-      List<TsunamiObservation>? observations;
-      if (vtse52 != null) {
-        observations = (vtse52.body as TelegramVtse52Body).tsunami.observations;
-      }
-      // observationsが入っていない もしくは vtse52よりも後に来ている場合
-      if (vtse51 != null) {
-        if (observations == null ||
-            (vtse52?.pressTime ?? (DateTime(1900))).isAfter(vtse51.pressTime)) {
-          observations =
-              (vtse51.body as TelegramVtse51Body).tsunami.observations;
-        }
-      }
-      TsunamiComments? comments;
-      if (vtse52 != null) {
-        comments = (vtse52.body as TelegramVtse52Body).comments;
-      } else if (vtse51 != null) {
-        comments = (vtse51.body as TelegramVtse51Body).comments;
-      } else if (vtse41 != null) {
-        comments = (vtse41.body as TelegramVtse41Body).comments;
-      }
-      final TsunamiData? tsunamiData;
-      if ([forecasts, estimations, observations, comments]
-          .every((e) => e == null)) {
-        tsunamiData = null;
-      } else {
-        tsunamiData = TsunamiData(
-          forecasts: forecasts,
-          estimations: estimations,
-          observations: observations,
-          comments: comments,
-        );
-      }
+      final tsunamiData = TsunamiData(
+        vtse41: vtse41 != null
+            ? (
+                telegram: vtse41,
+                body: vtse41.body is TelegramVtse41Body
+                    ? vtse41.body as TelegramVtse41Body
+                    : null,
+                cancel: vtse41.body is TelegramCancelBody
+                    ? vtse41.body as TelegramCancelBody
+                    : null,
+              )
+            : null,
+        vtse51: vtse51 != null
+            ? (
+                telegram: vtse51,
+                body: vtse51.body is TelegramVtse51Body
+                    ? vtse51.body as TelegramVtse51Body
+                    : null,
+                cancel: vtse51.body is TelegramCancelBody
+                    ? vtse51.body as TelegramCancelBody
+                    : null,
+              )
+            : null,
+        vtse52: vtse52 != null
+            ? (
+                telegram: vtse52,
+                body: vtse52.body is TelegramVtse52Body
+                    ? vtse52.body as TelegramVtse52Body
+                    : null,
+                cancel: vtse52.body is TelegramCancelBody
+                    ? vtse52.body as TelegramCancelBody
+                    : null,
+              )
+            : null,
+      );
 
       // 最新のEEW
       final latestEew = telegrams
