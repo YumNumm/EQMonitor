@@ -75,19 +75,29 @@ jobs:
 
       - name: Accept Android License
         run: yes | flutter doctor --android-licenses
-
-      - name: Build apk
+      - name: Extract keystore
         run: |
           echo '${{ secrets.SIGNING_KEY }}' | base64 -d > android/app/key.jks
           echo '${{ secrets.FIREBASE_ANDROID }}' | base64 -d > android/app/google-services.json
           echo '${{ secrets.KEY_PROPERTIES }}' | base64 -d  > android/key.properties
-          flutter build appbundle --release
 
-      - name: Upload artifact
+      - name: Build aab
+        run: flutter build appbundle --release
+
+      - name: Build apk
+        run: flutter build apk --release
+
+      - name: Upload artifact aab
         uses: actions/upload-artifact@v1.0.0
         with:
           name: release-apk
           path: build/app/outputs/bundle/release/app-release-aab
+
+      - name: Upload artifact apk
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
 
       #-- Slack通知 --#
       # 成功
