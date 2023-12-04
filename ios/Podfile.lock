@@ -179,6 +179,7 @@ PODS:
 DEPENDENCIES:
   - app_settings (from `.symlinks/plugins/app_settings/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
+  - Firebase/Messaging
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
@@ -282,6 +283,6 @@ SPEC CHECKSUMS:
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
   url_launcher_ios: bf5ce03e0e2088bad9cc378ea97fa0ed5b49673b
 
-PODFILE CHECKSUM: c089516b58988196a57bdde38218df9afb939d18
+PODFILE CHECKSUM: ed004133a4fb69edf7b8ec637bafb0286877f367
 
 COCOAPODS: 1.14.3
