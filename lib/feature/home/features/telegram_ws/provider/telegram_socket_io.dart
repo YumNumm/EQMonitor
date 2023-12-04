@@ -20,6 +20,7 @@ Socket telegramSocketIo(TelegramSocketIoRef ref) {
     OptionBuilder()
         .setTransports(['websocket'])
         .enableReconnection()
+        .enableAutoConnect()
         .enableForceNew()
         .setQuery({'key': authorization})
         .build(),
@@ -37,8 +38,13 @@ Socket telegramSocketIo(TelegramSocketIoRef ref) {
       // 再接続
     })
     ..onAny((event, data) {
-      talker.logTyped(TelegramWebSocketLog('Event: $event ($data)'));
-      log('Event: $event ($data)');
+      talker.logTyped(
+        TelegramWebSocketLog(
+          'Event: $event ($data)'
+              .replaceAll(url, '**')
+              .replaceAll(authorization, '++'),
+        ),
+      );
     })
     ..onPing((data) {
       log('Ping: $data');
