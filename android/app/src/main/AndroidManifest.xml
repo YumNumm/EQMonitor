@@ -37,6 +37,7 @@
             android:windowSoftInputMode="adjustResize"
             android:showWhenLocked="true"
             android:turnScreenOn="true"
+            android:enableOnBackInvokedCallback="true"
             android:directBootAware="true">
 
             <meta-data
