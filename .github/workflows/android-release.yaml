@@ -103,7 +103,7 @@ jobs:
         env:
           SLACK_TITLE: Deploy Success
           SLACK_COLOR: good
-          SLACK_ICON: https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/assets/icon.png
+          SLACK_ICON: https://github.com/YumNumm/EQMonitor/blob/6bedf4314134ecf614654f7284841390d3d0a4f3/assets/images/icon.png?raw=true
           SLACK_USERNAME: EQMonitor
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
 
@@ -114,6 +114,6 @@ jobs:
         env:
           SLACK_TITLE: Deploy Failure
           SLACK_COLOR: danger
-          SLACK_ICON: https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/assets/icon.png
+          SLACK_ICON: https://github.com/YumNumm/EQMonitor/blob/6bedf4314134ecf614654f7284841390d3d0a4f3/assets/images/icon.png?raw=true
           SLACK_USERNAME: EQMonitor
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
