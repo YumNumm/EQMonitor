@@ -8,7 +8,7 @@ part of 'telegram_socket_io.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$telegramSocketIoHash() => r'601366de53fdaed8a00fbda01e918b40eab08c25';
+String _$telegramSocketIoHash() => r'faefda0ee37828927b22d60ac71e40ec18c76ffe';
 
 /// See also [telegramSocketIo].
 @ProviderFor(telegramSocketIo)
