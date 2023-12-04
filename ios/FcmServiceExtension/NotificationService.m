@@ -1,7 +1,7 @@
 #import "NotificationService.h"
 #import "FirebaseMessaging.h"
-#import "FirebaseAuth.h" // Add this line if you are using FirebaseAuth phone authentication
-#import <UIKit/UIKit.h> // Add this line if you are using FirebaseAuth phone authentication
+// #import "FirebaseAuth.h" // Add this line if you are using FirebaseAuth phone authentication
+// #import <UIKit/UIKit.h> // Add this line if you are using FirebaseAuth phone authentication
 
 @interface NotificationService ()
 
