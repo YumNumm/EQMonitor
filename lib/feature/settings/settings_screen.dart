@@ -130,10 +130,13 @@ class SettingsScreen extends HookConsumerWidget {
             ),
           ),
           Center(
-            child: Text(
-              'EQMonitor v${packageInfo.version} (${packageInfo.buildNumber})',
-              style: textTheme.bodySmall!.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.8),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Text(
+                'EQMonitor v${packageInfo.version} (${packageInfo.buildNumber})',
+                style: textTheme.bodySmall!.copyWith(
+                  color: theme.colorScheme.onSurface.withOpacity(0.8),
+                ),
               ),
             ),
           ),

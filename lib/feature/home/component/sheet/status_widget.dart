@@ -104,8 +104,12 @@ class SheetStatusWidget extends ConsumerWidget {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 4),
-                            const CircularProgressIndicator.adaptive(),
+                            const SizedBox(width: 8),
+                            const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator.adaptive(),
+                            ),
                           ],
                         _
                             when isInitialized &&
@@ -136,7 +140,13 @@ class SheetStatusWidget extends ConsumerWidget {
                               ),
                             ),
                           ],
-                        _ => [const CircularProgressIndicator.adaptive()],
+                        _ => [
+                            const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator.adaptive(),
+                            ),
+                          ],
                       },
                     ],
                   ),
