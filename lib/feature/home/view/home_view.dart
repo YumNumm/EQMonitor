@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/component/map/model/map_config.dart';
 import 'package:eqmonitor/core/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
+import 'package:eqmonitor/core/provider/config/notification/fcm_topic_manager.dart';
 import 'package:eqmonitor/core/provider/config/permission/permission_status_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -45,6 +46,7 @@ class HomeView extends HookConsumerWidget {
               ref.read(permissionProvider.notifier).initialize()
             ).wait,
           );
+          ref.read(fcmTopicManagerProvider.notifier).setup().ignore();
         });
         return null;
       },

@@ -21,12 +21,23 @@ class FcmTopicManager extends _$FcmTopicManager {
 
   /// デフォルトで購読すべきトピックを登録する
   Future<void> setup() async {
+    final futures = <Future<void>>[];
     final requireTopics = [
       FcmBasicTopic(FcmTopics.all),
     ];
     for (final topic in requireTopics) {
-      await registerToTopic(topic);
+      futures.add(registerToTopic(topic));
     }
+    final shouldBeUnregisteredTopics = [
+      'earthquake',
+      'eew',
+    ];
+    final messaging = ref.read(firebaseMessagingProvider);
+    for (final topic in shouldBeUnregisteredTopics) {
+      // bypass prefs check
+      futures.add(messaging.unsubscribeFromTopic(topic));
+    }
+    await futures.wait;
   }
 
   Future<void> _save() async {
