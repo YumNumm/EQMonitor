@@ -600,12 +600,12 @@ TsunamiData _$TsunamiDataFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$TsunamiData {
-  ({TelegramVtse41Body? body, TelegramCancelBody? cancel, TelegramV3 telegram})?
-      get vtse41 => throw _privateConstructorUsedError;
-  ({TelegramVtse51Body? body, TelegramCancelBody? cancel, TelegramV3 telegram})?
-      get vtse51 => throw _privateConstructorUsedError;
-  ({TelegramVtse52Body? body, TelegramCancelBody? cancel, TelegramV3 telegram})?
-      get vtse52 => throw _privateConstructorUsedError;
+  List<TsunamiForecast>? get forecasts => throw _privateConstructorUsedError;
+  List<TsunamiEstimation>? get estimations =>
+      throw _privateConstructorUsedError;
+  List<TsunamiObservation>? get observations =>
+      throw _privateConstructorUsedError;
+  TsunamiComments? get comments => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -620,21 +620,12 @@ abstract class $TsunamiDataCopyWith<$Res> {
       _$TsunamiDataCopyWithImpl<$Res, TsunamiData>;
   @useResult
   $Res call(
-      {({
-        TelegramVtse41Body? body,
-        TelegramCancelBody? cancel,
-        TelegramV3 telegram
-      })? vtse41,
-      ({
-        TelegramVtse51Body? body,
-        TelegramCancelBody? cancel,
-        TelegramV3 telegram
-      })? vtse51,
-      ({
-        TelegramVtse52Body? body,
-        TelegramCancelBody? cancel,
-        TelegramV3 telegram
-      })? vtse52});
+      {List<TsunamiForecast>? forecasts,
+      List<TsunamiEstimation>? estimations,
+      List<TsunamiObservation>? observations,
+      TsunamiComments? comments});
+
+  $TsunamiCommentsCopyWith<$Res>? get comments;
 }
 
 /// @nodoc
@@ -650,36 +641,41 @@ class _$TsunamiDataCopyWithImpl<$Res, $Val extends TsunamiData>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? vtse41 = freezed,
-    Object? vtse51 = freezed,
-    Object? vtse52 = freezed,
+    Object? forecasts = freezed,
+    Object? estimations = freezed,
+    Object? observations = freezed,
+    Object? comments = freezed,
   }) {
     return _then(_value.copyWith(
-      vtse41: freezed == vtse41
-          ? _value.vtse41
-          : vtse41 // ignore: cast_nullable_to_non_nullable
-              as ({
-              TelegramVtse41Body? body,
-              TelegramCancelBody? cancel,
-              TelegramV3 telegram
-            })?,
-      vtse51: freezed == vtse51
-          ? _value.vtse51
-          : vtse51 // ignore: cast_nullable_to_non_nullable
-              as ({
-              TelegramVtse51Body? body,
-              TelegramCancelBody? cancel,
-              TelegramV3 telegram
-            })?,
-      vtse52: freezed == vtse52
-          ? _value.vtse52
-          : vtse52 // ignore: cast_nullable_to_non_nullable
-              as ({
-              TelegramVtse52Body? body,
-              TelegramCancelBody? cancel,
-              TelegramV3 telegram
-            })?,
+      forecasts: freezed == forecasts
+          ? _value.forecasts
+          : forecasts // ignore: cast_nullable_to_non_nullable
+              as List<TsunamiForecast>?,
+      estimations: freezed == estimations
+          ? _value.estimations
+          : estimations // ignore: cast_nullable_to_non_nullable
+              as List<TsunamiEstimation>?,
+      observations: freezed == observations
+          ? _value.observations
+          : observations // ignore: cast_nullable_to_non_nullable
+              as List<TsunamiObservation>?,
+      comments: freezed == comments
+          ? _value.comments
+          : comments // ignore: cast_nullable_to_non_nullable
+              as TsunamiComments?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $TsunamiCommentsCopyWith<$Res>? get comments {
+    if (_value.comments == null) {
+      return null;
+    }
+
+    return $TsunamiCommentsCopyWith<$Res>(_value.comments!, (value) {
+      return _then(_value.copyWith(comments: value) as $Val);
+    });
   }
 }
 
@@ -692,21 +688,13 @@ abstract class _$$TsunamiDataImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {({
-        TelegramVtse41Body? body,
-        TelegramCancelBody? cancel,
-        TelegramV3 telegram
-      })? vtse41,
-      ({
-        TelegramVtse51Body? body,
-        TelegramCancelBody? cancel,
-        TelegramV3 telegram
-      })? vtse51,
-      ({
-        TelegramVtse52Body? body,
-        TelegramCancelBody? cancel,
-        TelegramV3 telegram
-      })? vtse52});
+      {List<TsunamiForecast>? forecasts,
+      List<TsunamiEstimation>? estimations,
+      List<TsunamiObservation>? observations,
+      TsunamiComments? comments});
+
+  @override
+  $TsunamiCommentsCopyWith<$Res>? get comments;
 }
 
 /// @nodoc
@@ -720,35 +708,28 @@ class __$$TsunamiDataImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? vtse41 = freezed,
-    Object? vtse51 = freezed,
-    Object? vtse52 = freezed,
+    Object? forecasts = freezed,
+    Object? estimations = freezed,
+    Object? observations = freezed,
+    Object? comments = freezed,
   }) {
     return _then(_$TsunamiDataImpl(
-      vtse41: freezed == vtse41
-          ? _value.vtse41
-          : vtse41 // ignore: cast_nullable_to_non_nullable
-              as ({
-              TelegramVtse41Body? body,
-              TelegramCancelBody? cancel,
-              TelegramV3 telegram
-            })?,
-      vtse51: freezed == vtse51
-          ? _value.vtse51
-          : vtse51 // ignore: cast_nullable_to_non_nullable
-              as ({
-              TelegramVtse51Body? body,
-              TelegramCancelBody? cancel,
-              TelegramV3 telegram
-            })?,
-      vtse52: freezed == vtse52
-          ? _value.vtse52
-          : vtse52 // ignore: cast_nullable_to_non_nullable
-              as ({
-              TelegramVtse52Body? body,
-              TelegramCancelBody? cancel,
-              TelegramV3 telegram
-            })?,
+      forecasts: freezed == forecasts
+          ? _value._forecasts
+          : forecasts // ignore: cast_nullable_to_non_nullable
+              as List<TsunamiForecast>?,
+      estimations: freezed == estimations
+          ? _value._estimations
+          : estimations // ignore: cast_nullable_to_non_nullable
+              as List<TsunamiEstimation>?,
+      observations: freezed == observations
+          ? _value._observations
+          : observations // ignore: cast_nullable_to_non_nullable
+              as List<TsunamiObservation>?,
+      comments: freezed == comments
+          ? _value.comments
+          : comments // ignore: cast_nullable_to_non_nullable
+              as TsunamiComments?,
     ));
   }
 }
@@ -757,33 +738,53 @@ class __$$TsunamiDataImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$TsunamiDataImpl implements _TsunamiData {
   const _$TsunamiDataImpl(
-      {required this.vtse41, required this.vtse51, required this.vtse52});
+      {required final List<TsunamiForecast>? forecasts,
+      required final List<TsunamiEstimation>? estimations,
+      required final List<TsunamiObservation>? observations,
+      required this.comments})
+      : _forecasts = forecasts,
+        _estimations = estimations,
+        _observations = observations;
 
   factory _$TsunamiDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$TsunamiDataImplFromJson(json);
 
+  final List<TsunamiForecast>? _forecasts;
   @override
-  final ({
-    TelegramVtse41Body? body,
-    TelegramCancelBody? cancel,
-    TelegramV3 telegram
-  })? vtse41;
+  List<TsunamiForecast>? get forecasts {
+    final value = _forecasts;
+    if (value == null) return null;
+    if (_forecasts is EqualUnmodifiableListView) return _forecasts;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<TsunamiEstimation>? _estimations;
   @override
-  final ({
-    TelegramVtse51Body? body,
-    TelegramCancelBody? cancel,
-    TelegramV3 telegram
-  })? vtse51;
+  List<TsunamiEstimation>? get estimations {
+    final value = _estimations;
+    if (value == null) return null;
+    if (_estimations is EqualUnmodifiableListView) return _estimations;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<TsunamiObservation>? _observations;
   @override
-  final ({
-    TelegramVtse52Body? body,
-    TelegramCancelBody? cancel,
-    TelegramV3 telegram
-  })? vtse52;
+  List<TsunamiObservation>? get observations {
+    final value = _observations;
+    if (value == null) return null;
+    if (_observations is EqualUnmodifiableListView) return _observations;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  final TsunamiComments? comments;
 
   @override
   String toString() {
-    return 'TsunamiData(vtse41: $vtse41, vtse51: $vtse51, vtse52: $vtse52)';
+    return 'TsunamiData(forecasts: $forecasts, estimations: $estimations, observations: $observations, comments: $comments)';
   }
 
   @override
@@ -791,14 +792,24 @@ class _$TsunamiDataImpl implements _TsunamiData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TsunamiDataImpl &&
-            (identical(other.vtse41, vtse41) || other.vtse41 == vtse41) &&
-            (identical(other.vtse51, vtse51) || other.vtse51 == vtse51) &&
-            (identical(other.vtse52, vtse52) || other.vtse52 == vtse52));
+            const DeepCollectionEquality()
+                .equals(other._forecasts, _forecasts) &&
+            const DeepCollectionEquality()
+                .equals(other._estimations, _estimations) &&
+            const DeepCollectionEquality()
+                .equals(other._observations, _observations) &&
+            (identical(other.comments, comments) ||
+                other.comments == comments));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, vtse41, vtse51, vtse52);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_forecasts),
+      const DeepCollectionEquality().hash(_estimations),
+      const DeepCollectionEquality().hash(_observations),
+      comments);
 
   @JsonKey(ignore: true)
   @override
@@ -816,34 +827,22 @@ class _$TsunamiDataImpl implements _TsunamiData {
 
 abstract class _TsunamiData implements TsunamiData {
   const factory _TsunamiData(
-      {required final ({
-        TelegramVtse41Body? body,
-        TelegramCancelBody? cancel,
-        TelegramV3 telegram
-      })? vtse41,
-      required final ({
-        TelegramVtse51Body? body,
-        TelegramCancelBody? cancel,
-        TelegramV3 telegram
-      })? vtse51,
-      required final ({
-        TelegramVtse52Body? body,
-        TelegramCancelBody? cancel,
-        TelegramV3 telegram
-      })? vtse52}) = _$TsunamiDataImpl;
+      {required final List<TsunamiForecast>? forecasts,
+      required final List<TsunamiEstimation>? estimations,
+      required final List<TsunamiObservation>? observations,
+      required final TsunamiComments? comments}) = _$TsunamiDataImpl;
 
   factory _TsunamiData.fromJson(Map<String, dynamic> json) =
       _$TsunamiDataImpl.fromJson;
 
   @override
-  ({TelegramVtse41Body? body, TelegramCancelBody? cancel, TelegramV3 telegram})?
-      get vtse41;
+  List<TsunamiForecast>? get forecasts;
   @override
-  ({TelegramVtse51Body? body, TelegramCancelBody? cancel, TelegramV3 telegram})?
-      get vtse51;
+  List<TsunamiEstimation>? get estimations;
   @override
-  ({TelegramVtse52Body? body, TelegramCancelBody? cancel, TelegramV3 telegram})?
-      get vtse52;
+  List<TsunamiObservation>? get observations;
+  @override
+  TsunamiComments? get comments;
   @override
   @JsonKey(ignore: true)
   _$$TsunamiDataImplCopyWith<_$TsunamiDataImpl> get copyWith =>

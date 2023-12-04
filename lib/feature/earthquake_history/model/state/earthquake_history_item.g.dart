@@ -102,57 +102,29 @@ _$TsunamiDataImpl _$$TsunamiDataImplFromJson(Map<String, dynamic> json) =>
       json,
       ($checkedConvert) {
         final val = _$TsunamiDataImpl(
-          vtse41: $checkedConvert(
-              'vtse41',
-              (v) => _$recordConvertNullable(
-                    v,
-                    ($jsonValue) => (
-                      body: $jsonValue['body'] == null
-                          ? null
-                          : TelegramVtse41Body.fromJson(
-                              $jsonValue['body'] as Map<String, dynamic>),
-                      cancel: $jsonValue['cancel'] == null
-                          ? null
-                          : TelegramCancelBody.fromJson(
-                              $jsonValue['cancel'] as Map<String, dynamic>),
-                      telegram: TelegramV3.fromJson(
-                          $jsonValue['telegram'] as Map<String, dynamic>),
-                    ),
-                  )),
-          vtse51: $checkedConvert(
-              'vtse51',
-              (v) => _$recordConvertNullable(
-                    v,
-                    ($jsonValue) => (
-                      body: $jsonValue['body'] == null
-                          ? null
-                          : TelegramVtse51Body.fromJson(
-                              $jsonValue['body'] as Map<String, dynamic>),
-                      cancel: $jsonValue['cancel'] == null
-                          ? null
-                          : TelegramCancelBody.fromJson(
-                              $jsonValue['cancel'] as Map<String, dynamic>),
-                      telegram: TelegramV3.fromJson(
-                          $jsonValue['telegram'] as Map<String, dynamic>),
-                    ),
-                  )),
-          vtse52: $checkedConvert(
-              'vtse52',
-              (v) => _$recordConvertNullable(
-                    v,
-                    ($jsonValue) => (
-                      body: $jsonValue['body'] == null
-                          ? null
-                          : TelegramVtse52Body.fromJson(
-                              $jsonValue['body'] as Map<String, dynamic>),
-                      cancel: $jsonValue['cancel'] == null
-                          ? null
-                          : TelegramCancelBody.fromJson(
-                              $jsonValue['cancel'] as Map<String, dynamic>),
-                      telegram: TelegramV3.fromJson(
-                          $jsonValue['telegram'] as Map<String, dynamic>),
-                    ),
-                  )),
+          forecasts: $checkedConvert(
+              'forecasts',
+              (v) => (v as List<dynamic>?)
+                  ?.map((e) =>
+                      TsunamiForecast.fromJson(e as Map<String, dynamic>))
+                  .toList()),
+          estimations: $checkedConvert(
+              'estimations',
+              (v) => (v as List<dynamic>?)
+                  ?.map((e) =>
+                      TsunamiEstimation.fromJson(e as Map<String, dynamic>))
+                  .toList()),
+          observations: $checkedConvert(
+              'observations',
+              (v) => (v as List<dynamic>?)
+                  ?.map((e) =>
+                      TsunamiObservation.fromJson(e as Map<String, dynamic>))
+                  .toList()),
+          comments: $checkedConvert(
+              'comments',
+              (v) => v == null
+                  ? null
+                  : TsunamiComments.fromJson(v as Map<String, dynamic>)),
         );
         return val;
       },
@@ -160,31 +132,8 @@ _$TsunamiDataImpl _$$TsunamiDataImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$TsunamiDataImplToJson(_$TsunamiDataImpl instance) =>
     <String, dynamic>{
-      'vtse41': instance.vtse41 == null
-          ? null
-          : {
-              'body': instance.vtse41!.body,
-              'cancel': instance.vtse41!.cancel,
-              'telegram': instance.vtse41!.telegram,
-            },
-      'vtse51': instance.vtse51 == null
-          ? null
-          : {
-              'body': instance.vtse51!.body,
-              'cancel': instance.vtse51!.cancel,
-              'telegram': instance.vtse51!.telegram,
-            },
-      'vtse52': instance.vtse52 == null
-          ? null
-          : {
-              'body': instance.vtse52!.body,
-              'cancel': instance.vtse52!.cancel,
-              'telegram': instance.vtse52!.telegram,
-            },
+      'forecasts': instance.forecasts,
+      'estimations': instance.estimations,
+      'observations': instance.observations,
+      'comments': instance.comments,
     };
-
-$Rec? _$recordConvertNullable<$Rec>(
-  Object? value,
-  $Rec Function(Map) convert,
-) =>
-    value == null ? null : convert(value as Map<String, dynamic>);

@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqapi_types/model/app_information.dart';
+import 'package:eqapi_types/model/information_v3.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'eqapi_client.g.dart';
@@ -25,12 +27,6 @@ abstract class V3 {
   Future<TelegramHistoryV3> getTelegramHistory({
     @Query('includeEew') bool includeEew = false,
     @Query('limit') int limit = 100,
-    @Query('offset') int offset = 0,
-  });
-
-  @GET('/v3/tsunami')
-  Future<TelegramHistoryV3> getTsunamiHistory({
-    @Query('limit') int limit = 10,
     @Query('offset') int offset = 0,
   });
 

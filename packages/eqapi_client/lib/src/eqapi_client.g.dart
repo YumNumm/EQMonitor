@@ -54,39 +54,6 @@ class _V3 implements V3 {
   }
 
   @override
-  Future<TelegramHistoryV3> getTsunamiHistory({
-    int limit = 10,
-    int offset = 0,
-  }) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{
-      r'limit': limit,
-      r'offset': offset,
-    };
-    final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
-    final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<TelegramHistoryV3>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/v3/tsunami',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final value = TelegramHistoryV3.fromJson(_result.data!);
-    return value;
-  }
-
-  @override
   Future<InformationV3Result> getInformation({
     int after = 0,
     int limit = 10,
