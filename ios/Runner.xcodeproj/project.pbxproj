@@ -11,20 +11,21 @@
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		4D8C2A0FE754EAC10919F948 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A0FCA18092F52AB3383AD60 /* Pods_Runner.framework */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
-		8587411E2B1DE12B0049670F /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 8587411D2B1DE12B0049670F /* NotificationService.m */; };
-		858741222B1DE12B0049670F /* FcmServiceExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 8587411A2B1DE12B0049670F /* FcmServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		858741302B1E1EAD0049670F /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8587412F2B1E1EAD0049670F /* NotificationService.swift */; };
+		858741342B1E1EAD0049670F /* FcmServiceExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 8587412D2B1E1EAD0049670F /* FcmServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		858A97502B1E1FA100079924 /* Pods_FcmServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAAEA7380B5D23E97A979A95 /* Pods_FcmServiceExtension.framework */; };
+		858A97512B1E1FA100079924 /* Pods_FcmServiceExtension.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CAAEA7380B5D23E97A979A95 /* Pods_FcmServiceExtension.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
-		FD61DC8896725765729D98AB /* Pods_FcmServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAAEA7380B5D23E97A979A95 /* Pods_FcmServiceExtension.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		858741202B1DE12B0049670F /* PBXContainerItemProxy */ = {
+		858741322B1E1EAD0049670F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 858741192B1DE12B0049670F;
+			remoteGlobalIDString = 8587412C2B1E1EAD0049670F;
 			remoteInfo = FcmServiceExtension;
 		};
 /* End PBXContainerItemProxy section */
@@ -36,9 +37,20 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				858741222B1DE12B0049670F /* FcmServiceExtension.appex in Embed Foundation Extensions */,
+				858741342B1E1EAD0049670F /* FcmServiceExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		858A97522B1E1FA100079924 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				858A97512B1E1FA100079924 /* Pods_FcmServiceExtension.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
@@ -66,10 +78,9 @@
 		7A0FCA18092F52AB3383AD60 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		8510456E2B1B20AF00EED834 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
-		8587411A2B1DE12B0049670F /* FcmServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FcmServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		8587411C2B1DE12B0049670F /* NotificationService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationService.h; sourceTree = "<group>"; };
-		8587411D2B1DE12B0049670F /* NotificationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationService.m; sourceTree = "<group>"; };
-		8587411F2B1DE12B0049670F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8587412D2B1E1EAD0049670F /* FcmServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FcmServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		8587412F2B1E1EAD0049670F /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		858741312B1E1EAD0049670F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8ED9602EF8CDD0414AA974B1 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
@@ -87,11 +98,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		858741172B1DE12B0049670F /* Frameworks */ = {
+		8587412A2B1E1EAD0049670F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FD61DC8896725765729D98AB /* Pods_FcmServiceExtension.framework in Frameworks */,
+				858A97502B1E1FA100079924 /* Pods_FcmServiceExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,12 +127,11 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		8587411B2B1DE12B0049670F /* FcmServiceExtension */ = {
+		8587412E2B1E1EAD0049670F /* FcmServiceExtension */ = {
 			isa = PBXGroup;
 			children = (
-				8587411C2B1DE12B0049670F /* NotificationService.h */,
-				8587411D2B1DE12B0049670F /* NotificationService.m */,
-				8587411F2B1DE12B0049670F /* Info.plist */,
+				8587412F2B1E1EAD0049670F /* NotificationService.swift */,
+				858741312B1E1EAD0049670F /* Info.plist */,
 			);
 			path = FcmServiceExtension;
 			sourceTree = "<group>";
@@ -142,7 +152,7 @@
 			children = (
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
-				8587411B2B1DE12B0049670F /* FcmServiceExtension */,
+				8587412E2B1E1EAD0049670F /* FcmServiceExtension */,
 				97C146EF1CF9000F007C117D /* Products */,
 				F5663D1DFB0D62F1F2916288 /* Pods */,
 				1F5AFB7B86F93C0490BEEFC2 /* Frameworks */,
@@ -153,7 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				97C146EE1CF9000F007C117D /* Runner.app */,
-				8587411A2B1DE12B0049670F /* FcmServiceExtension.appex */,
+				8587412D2B1E1EAD0049670F /* FcmServiceExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -193,14 +203,15 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		858741192B1DE12B0049670F /* FcmServiceExtension */ = {
+		8587412C2B1E1EAD0049670F /* FcmServiceExtension */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 858741272B1DE12B0049670F /* Build configuration list for PBXNativeTarget "FcmServiceExtension" */;
+			buildConfigurationList = 858741352B1E1EAD0049670F /* Build configuration list for PBXNativeTarget "FcmServiceExtension" */;
 			buildPhases = (
-				0F1081F53CF4605FABDEF55A /* [CP] Check Pods Manifest.lock */,
-				858741162B1DE12B0049670F /* Sources */,
-				858741172B1DE12B0049670F /* Frameworks */,
-				858741182B1DE12B0049670F /* Resources */,
+				ACB4C78FF428B2F03B552569 /* [CP] Check Pods Manifest.lock */,
+				858741292B1E1EAD0049670F /* Sources */,
+				8587412A2B1E1EAD0049670F /* Frameworks */,
+				8587412B2B1E1EAD0049670F /* Resources */,
+				858A97522B1E1FA100079924 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -208,7 +219,7 @@
 			);
 			name = FcmServiceExtension;
 			productName = FcmServiceExtension;
-			productReference = 8587411A2B1DE12B0049670F /* FcmServiceExtension.appex */;
+			productReference = 8587412D2B1E1EAD0049670F /* FcmServiceExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 		97C146ED1CF9000F007C117D /* Runner */ = {
@@ -229,7 +240,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				858741212B1DE12B0049670F /* PBXTargetDependency */,
+				858741332B1E1EAD0049670F /* PBXTargetDependency */,
 			);
 			name = Runner;
 			productName = Runner;
@@ -243,10 +254,11 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
+				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1430;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
-					858741192B1DE12B0049670F = {
+					8587412C2B1E1EAD0049670F = {
 						CreatedOnToolsVersion = 15.0.1;
 					};
 					97C146ED1CF9000F007C117D = {
@@ -269,13 +281,13 @@
 			projectRoot = "";
 			targets = (
 				97C146ED1CF9000F007C117D /* Runner */,
-				858741192B1DE12B0049670F /* FcmServiceExtension */,
+				8587412C2B1E1EAD0049670F /* FcmServiceExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		858741182B1DE12B0049670F /* Resources */ = {
+		8587412B2B1E1EAD0049670F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -296,28 +308,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0F1081F53CF4605FABDEF55A /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-FcmServiceExtension-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		26284F3D303FDD8165F5337E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -411,14 +401,36 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		ACB4C78FF428B2F03B552569 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FcmServiceExtension-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		858741162B1DE12B0049670F /* Sources */ = {
+		858741292B1E1EAD0049670F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8587411E2B1DE12B0049670F /* NotificationService.m in Sources */,
+				858741302B1E1EAD0049670F /* NotificationService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -434,10 +446,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		858741212B1DE12B0049670F /* PBXTargetDependency */ = {
+		858741332B1E1EAD0049670F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 858741192B1DE12B0049670F /* FcmServiceExtension */;
-			targetProxy = 858741202B1DE12B0049670F /* PBXContainerItemProxy */;
+			target = 8587412C2B1E1EAD0049670F /* FcmServiceExtension */;
+			targetProxy = 858741322B1E1EAD0049670F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -515,7 +527,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APPLICATION_EXTENSION_API_ONLY = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = iOSAppIcon;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_STYLE = Manual;
@@ -541,11 +556,13 @@
 			};
 			name = Profile;
 		};
-		858741242B1DE12B0049670F /* Debug */ = {
+		858741362B1E1EAD0049670F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 36D34AA610B456F76321C66C /* Pods-FcmServiceExtension.debug.xcconfig */;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -557,13 +574,14 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = CPL7H8SHVM;
+				ENABLE_BITCODE = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FcmServiceExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = FcmServiceExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -578,16 +596,21 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore net.yumnumm.eqmonitor.FcmServiceExtension";
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		858741252B1DE12B0049670F /* Release */ = {
+		858741372B1E1EAD0049670F /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3698DE022D9225564B8E7EFD /* Pods-FcmServiceExtension.release.xcconfig */;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -599,13 +622,14 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = CPL7H8SHVM;
+				ENABLE_BITCODE = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FcmServiceExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = FcmServiceExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -620,15 +644,18 @@
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore net.yumnumm.eqmonitor.FcmServiceExtension";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
-		858741262B1DE12B0049670F /* Profile */ = {
+		858741382B1E1EAD0049670F /* Profile */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C79C72177F3F929ED7DED179 /* Pods-FcmServiceExtension.profile.xcconfig */;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -640,13 +667,14 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = CPL7H8SHVM;
+				ENABLE_BITCODE = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FcmServiceExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = FcmServiceExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -661,6 +689,7 @@
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore net.yumnumm.eqmonitor.FcmServiceExtension";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Profile;
@@ -776,7 +805,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APPLICATION_EXTENSION_API_ONLY = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = iOSAppIcon;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_STYLE = Manual;
@@ -807,7 +839,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APPLICATION_EXTENSION_API_ONLY = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = iOSAppIcon;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
@@ -837,12 +872,12 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		858741272B1DE12B0049670F /* Build configuration list for PBXNativeTarget "FcmServiceExtension" */ = {
+		858741352B1E1EAD0049670F /* Build configuration list for PBXNativeTarget "FcmServiceExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				858741242B1DE12B0049670F /* Debug */,
-				858741252B1DE12B0049670F /* Release */,
-				858741262B1DE12B0049670F /* Profile */,
+				858741362B1E1EAD0049670F /* Debug */,
+				858741372B1E1EAD0049670F /* Release */,
+				858741382B1E1EAD0049670F /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

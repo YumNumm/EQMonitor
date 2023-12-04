@@ -11,6 +11,9 @@ dependencies:
   adaptive_dialog: ^2.0.0
   animations: ^2.0.8
   app_settings: ^5.1.1
+  awesome_notifications: any # <- this version will be managed by core plugin
+  awesome_notifications_core: ^0.8.0 # use the latest version available
+  awesome_notifications_fcm: any # <- this version will be managed by core plugin
   collection: ^1.17.1
   crypto: ^3.0.3
   cupertino_icons: ^1.0.6

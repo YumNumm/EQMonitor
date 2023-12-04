@@ -1,6 +1,18 @@
 PODS:
   - app_settings (5.1.1):
     - Flutter
+  - awesome_notifications (0.8.1):
+    - Flutter
+    - IosAwnCore (~> 0.8.0)
+  - awesome_notifications_core (0.0.1):
+    - Flutter
+  - awesome_notifications_fcm (0.8.1):
+    - awesome_notifications
+    - Firebase/Messaging
+    - FirebaseCore
+    - Flutter
+    - IosAwnCore (~> 0.8.0)
+    - IosAwnFcmDist (~> 0.8.0)
   - device_info_plus (0.0.1):
     - Flutter
   - Firebase/Analytics (10.18.0):
@@ -147,6 +159,11 @@ PODS:
     - GoogleUtilities/MethodSwizzler
   - GoogleUtilities/UserDefaults (7.12.0):
     - GoogleUtilities/Logger
+  - IosAwnCore (0.8.0)
+  - IosAwnFcmDist (0.8.0):
+    - FirebaseCore
+    - FirebaseMessaging
+    - IosAwnCore (~> 0.8.0)
   - MapLibre (5.14.0-pre3)
   - maplibre_gl (0.0.1):
     - Flutter
@@ -178,6 +195,9 @@ PODS:
 
 DEPENDENCIES:
   - app_settings (from `.symlinks/plugins/app_settings/ios`)
+  - awesome_notifications (from `.symlinks/plugins/awesome_notifications/ios`)
+  - awesome_notifications_core (from `.symlinks/plugins/awesome_notifications_core/ios`)
+  - awesome_notifications_fcm (from `.symlinks/plugins/awesome_notifications_fcm/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - Firebase/Messaging
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
@@ -210,6 +230,8 @@ SPEC REPOS:
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleUtilities
+    - IosAwnCore
+    - IosAwnFcmDist
     - MapLibre
     - nanopb
     - PromisesObjC
@@ -218,6 +240,12 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   app_settings:
     :path: ".symlinks/plugins/app_settings/ios"
+  awesome_notifications:
+    :path: ".symlinks/plugins/awesome_notifications/ios"
+  awesome_notifications_core:
+    :path: ".symlinks/plugins/awesome_notifications_core/ios"
+  awesome_notifications_fcm:
+    :path: ".symlinks/plugins/awesome_notifications_fcm/ios"
   device_info_plus:
     :path: ".symlinks/plugins/device_info_plus/ios"
   firebase_analytics:
@@ -251,6 +279,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   app_settings: 017320c6a680cdc94c799949d95b84cb69389ebc
+  awesome_notifications: db394d2e061e4583ba0f738ddea611e3986cc3fb
+  awesome_notifications_core: d02eed89738fa362d56cbd372850e9adcd2c6bef
+  awesome_notifications_fcm: 554a9088f81a91dbe8a318abee6b48f43e4a9417
   device_info_plus: c6fb39579d0f423935b0c9ce7ee2f44b71b9fce6
   Firebase: 414ad272f8d02dfbf12662a9d43f4bba9bec2a06
   firebase_analytics: a8c0d8ba83f213c9b775b5f61d36dadaafb1b239
@@ -270,6 +301,8 @@ SPEC CHECKSUMS:
   GoogleAppMeasurement: 70ce9aa438cff1cfb31ea3e660bcc67734cb716e
   GoogleDataTransport: 57c22343ab29bc686febbf7cbb13bad167c2d8fe
   GoogleUtilities: 0759d1a57ebb953965c2dfe0ba4c82e95ccc2e34
+  IosAwnCore: ed1b2b6d84962a758354dbacd9ce525c72ce28a9
+  IosAwnFcmDist: 0ac4da8f9ef8f2db9e5ec5d0c10c8db793ce447d
   MapLibre: 620fc933c1d6029b33738c905c1490d024e5d4ef
   maplibre_gl: a2efec727dd340e4c65e26d2b03b584f14881fd9
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
@@ -283,6 +316,6 @@ SPEC CHECKSUMS:
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
   url_launcher_ios: bf5ce03e0e2088bad9cc378ea97fa0ed5b49673b
 
-PODFILE CHECKSUM: ed004133a4fb69edf7b8ec637bafb0286877f367
+PODFILE CHECKSUM: d59dd9e75b9e11b8ba613c80c719a76883a184f3
 
 COCOAPODS: 1.14.3
