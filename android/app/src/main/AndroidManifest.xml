@@ -35,6 +35,8 @@
             android:launchMode="singleTop"
             android:theme="@style/Theme.App.Starting"
             android:windowSoftInputMode="adjustResize"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
             android:directBootAware="true">
 
             <meta-data
@@ -46,6 +48,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver android:exported="false"
+            android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver" />
+
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />

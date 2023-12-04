@@ -56,7 +56,11 @@ class IntroductionPage extends StatelessWidget {
         ),
         // このボタンを押して、利用規約とプライバシーポリシーに同意したものとみなします。
         Card(
-          margin: const EdgeInsets.symmetric(horizontal: 8),
+          margin: const EdgeInsets.only(
+            left: 8,
+            right: 8,
+            bottom: 8,
+          ),
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Text.rich(
