@@ -15,7 +15,7 @@ dependencies:
   crypto: ^3.0.3
   cupertino_icons: ^1.0.6
   device_info_plus: ^9.1.1
-  dio: ^5.3.3
+  dio: ^5.4.0
   dio_http2_adapter: ^2.4.0
   dynamic_color: ^1.6.8
   envied: ^0.5.2
