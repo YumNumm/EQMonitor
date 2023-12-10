@@ -188,6 +188,7 @@ class _EarthquakeHypoInfoWidget extends ConsumerWidget {
     final hypoWidget = Row(
       textBaseline: TextBaseline.ideographic,
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.baseline,
       children: [
         Text(
           '震源地',
