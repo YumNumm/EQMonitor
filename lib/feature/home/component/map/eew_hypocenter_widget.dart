@@ -16,6 +16,11 @@ class EewHypocenterWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final eewTelegrams = ref.watch(eewTelegramProvider);
+    if (eewTelegrams.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     final opacityController = useAnimationController(
       duration: const Duration(milliseconds: 500),
     );
@@ -43,7 +48,6 @@ class EewHypocenterWidget extends HookConsumerWidget {
     );
 
     final state = ref.watch(MapViewModelProvider(mapKey));
-    final eewTelegrams = ref.watch(eewTelegramProvider);
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
 

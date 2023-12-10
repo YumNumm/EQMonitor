@@ -137,7 +137,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
             key: mapKey,
             child: Stack(
               children: [
-                RepaintBoundary(child: BaseMapWidget.polygon(mapKey)),
+                BaseMapWidget.polygon(mapKey),
                 RepaintBoundary(
                   child: EewPsWaveArrivalCircleWidget.gradient(mapKey: mapKey),
                 ),

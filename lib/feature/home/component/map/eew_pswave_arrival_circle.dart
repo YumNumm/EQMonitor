@@ -44,6 +44,9 @@ class EewPsWaveArrivalCircleWidget extends HookConsumerWidget {
     final state = ref.watch(mapViewModelProvider(mapKey));
     final travelTimeTables = ref.watch(travelTimeProvider);
     final eews = ref.watch(eewFilteredTelegramProvider);
+    if (eews.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     final controller = useAnimationController(
       duration: const Duration(microseconds: 78000),
