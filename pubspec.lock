@@ -381,10 +381,10 @@ packages:
     dependency: "direct main"
     description:
       name: dio_http2_adapter
-      sha256: "505ed47b1508122dbd3e351630030e5845bb292fe14fc8df4251a78b0c1a73b9"
+      sha256: "3bb35e81eb8a688eb1cb15beb97f46823698b44037e7b55227aa1060f5593adc"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.2"
+    version: "2.4.0"
   dynamic_color:
     dependency: "direct main"
     description:
