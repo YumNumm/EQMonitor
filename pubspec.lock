@@ -413,22 +413,28 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/eq_map"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "89c2c813d9d8f9b68b87152e09e39aa37586c297"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   eqapi_client:
     dependency: "direct main"
     description:
       path: "packages/eqapi_client"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "89c2c813d9d8f9b68b87152e09e39aa37586c297"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   eqapi_types:
     dependency: "direct main"
     description:
       path: "packages/eqapi_types"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "89c2c813d9d8f9b68b87152e09e39aa37586c297"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   equatable:
     dependency: transitive
@@ -442,8 +448,10 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/extensions"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "89c2c813d9d8f9b68b87152e09e39aa37586c297"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   fake_async:
     dependency: transitive
@@ -696,10 +704,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "2ccd74480706e0a70a0e0dfa9543dede41bc11d0fe3b146a6ad7b7686f6b4407"
+      sha256: c5fa45fa502ee880839e3b2152d987c44abae26d064a2376d4aad434cf0f7b15
       url: "https://pub.dev"
     source: hosted
-    version: "11.1.4"
+    version: "12.1.3"
   go_router_builder:
     dependency: "direct dev"
     description:
@@ -856,8 +864,10 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/lat_lng"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "89c2c813d9d8f9b68b87152e09e39aa37586c297"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   latlong2:
     dependency: "direct main"
@@ -1602,15 +1612,19 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/topo_map"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "89c2c813d9d8f9b68b87152e09e39aa37586c297"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   topojson:
     dependency: "direct main"
     description:
       path: "packages/topojson"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "89c2c813d9d8f9b68b87152e09e39aa37586c297"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   tuple:
     dependency: transitive
