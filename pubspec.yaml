@@ -36,7 +36,7 @@ dependencies:
       url: https://github.com/YumNumm/EQMonitor.git
       path: packages/extensions
   firebase_analytics: ^10.7.0
-  firebase_core: ^2.22.0
+  firebase_core: ^2.24.2
   firebase_crashlytics: ^3.4.4
   firebase_messaging: ^14.7.4
   flutter:
