@@ -1,26 +1,20 @@
 import 'dart:async';
 
-import 'package:eqmonitor/core/component/map/base_map.dart';
-import 'package:eqmonitor/core/component/map/map_touch_handler_widget.dart';
 import 'package:eqmonitor/core/component/map/model/map_config.dart';
-import 'package:eqmonitor/core/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
+import 'package:eqmonitor/core/hook/use_sheet_controller.dart';
 import 'package:eqmonitor/core/provider/config/notification/fcm_topic_manager.dart';
 import 'package:eqmonitor/core/provider/config/permission/permission_status_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
-import 'package:eqmonitor/feature/home/component/map/eew_estimated_intensity_widget.dart';
-import 'package:eqmonitor/feature/home/component/map/eew_hypocenter_widget.dart';
-import 'package:eqmonitor/feature/home/component/map/eew_pswave_arrival_circle.dart';
-import 'package:eqmonitor/feature/home/component/map/kmoni_map_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/update_widget.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_widget.dart';
+import 'package:eqmonitor/feature/home/features/map/map_widget.dart';
 import 'package:eqmonitor/feature/home/viewmodel/home_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -81,47 +75,8 @@ class _HomeBodyWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final vm = ref.watch(homeViewModelProvider);
-    final moveController = useAnimationController();
-    final scaleController = useAnimationController();
-    final globalPointAndZoomLevelController = useAnimationController();
-    // * mapViewModelへWidgetの各情報を登録しながら 初期化
-    void init() {
-      // Widgetのサイズを登録
-      final renderBox = mapKey.currentContext!.findRenderObject()! as RenderBox;
-      ref.read(mapViewModelProvider(mapKey).notifier)
-        ..registerRenderBox(
-          renderBox,
-        )
-        ..registerAnimationControllers(
-          moveController: moveController,
-          scaleController: scaleController,
-          globalPointAndZoomLevelController: globalPointAndZoomLevelController,
-        )
-        ..resetMarkAsMoved()
-        ..applyBounds();
-    }
-
-    useEffect(
-      () {
-        WidgetsBinding.instance.endOfFrame.then((_) => init());
-        return null;
-      },
-      [],
-    );
-    final sheetController = vm.sheetController;
-    final mediaQuery = MediaQuery.of(context);
-
-    useEffect(
-      () {
-        ref.read(homeViewModelProvider).height = mediaQuery.size.height -
-            (mediaQuery.padding.top + mediaQuery.padding.bottom) -
-            kToolbarHeight;
-        return null;
-      },
-      [context],
-    );
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final sheetController = useSheetController();
+    final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
     final backgroundColor =
         (isDark ? MapColorScheme.dark() : MapColorScheme.light())
             .backgroundColor;
@@ -132,32 +87,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
         Container(
           color: backgroundColor,
         ),
-        RepaintBoundary(
-          child: ClipRRect(
-            key: mapKey,
-            child: Stack(
-              children: [
-                BaseMapWidget.polygon(mapKey),
-                RepaintBoundary(
-                  child: EewPsWaveArrivalCircleWidget.gradient(mapKey: mapKey),
-                ),
-                RepaintBoundary(
-                  child: EewEstimatedIntensityWidget(mapKey: mapKey),
-                ),
-                RepaintBoundary(child: BaseMapWidget.polyline(mapKey)),
-                if (ref.watch(
-                  kmoniSettingsProvider.select((value) => value.useKmoni),
-                ))
-                  RepaintBoundary(child: KmoniMapWidget(mapKey: mapKey)),
-                RepaintBoundary(
-                  child: EewPsWaveArrivalCircleWidget.border(mapKey: mapKey),
-                ),
-                RepaintBoundary(child: EewHypocenterWidget(mapKey: mapKey)),
-                MapTouchHandlerWidget(mapKey: mapKey),
-              ],
-            ),
-          ),
-        ),
+        const MainMapWidget(),
         RepaintBoundary(
           child: Stack(
             children: [
@@ -166,24 +96,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
                 fab: [
                   FloatingActionButton.small(
                     heroTag: 'home',
-                    onPressed: () {
-                      final height = mediaQuery.size.height -
-                          (mediaQuery.padding.top + mediaQuery.padding.bottom) -
-                          kToolbarHeight;
-                      ref.read(mapViewModelProvider(mapKey).notifier)
-                        ..resetMarkAsMoved()
-                        ..animatedApplyBounds(
-                          padding: const EdgeInsets.all(8).add(
-                            EdgeInsets.only(
-                              bottom: switch (sheetController.animation.value) {
-                                < 0.3 =>
-                                  height * sheetController.animation.value,
-                                _ => height * 0.3,
-                              },
-                            ),
-                          ),
-                        );
-                    },
+                    onPressed: () {},
                     elevation: 4,
                     child: const Icon(Icons.home),
                   ),
@@ -196,20 +109,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
         ),
       ],
     );
-
-    return NotificationListener<SizeChangedLayoutNotification>(
-      onNotification: (notification) {
-        WidgetsBinding.instance.endOfFrame.then(
-          (_) => ref.read(mapViewModelProvider(mapKey).notifier)
-            ..resetMarkAsMoved()
-            ..applyBounds(),
-        );
-        return false;
-      },
-      child: SizeChangedLayoutNotifier(
-        child: child,
-      ),
-    );
+    return child;
   }
 }
 
