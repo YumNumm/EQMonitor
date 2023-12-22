@@ -163,7 +163,7 @@ class _$InformationV3ResultImpl implements _InformationV3Result {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$InformationV3ResultImpl &&
@@ -439,7 +439,7 @@ class _$InformationV3Impl implements _InformationV3 {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$InformationV3Impl &&
