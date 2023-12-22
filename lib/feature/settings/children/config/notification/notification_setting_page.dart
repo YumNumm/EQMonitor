@@ -10,7 +10,6 @@ import 'package:eqmonitor/feature/settings/children/config/notification/children
 import 'package:eqmonitor/feature/settings/children/config/notification/notifiication_settings_view_model.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -186,75 +185,72 @@ class _OnNotificationPermissionAllowed extends ConsumerWidget {
           title: const Text('お知らせ'),
           subtitle: const Text('アップデート情報や開発者からのお知らせをお伝えします'),
         ),
-        if (kDebugMode) ...[
-          const SettingsSectionHeader(text: 'FCM DEBUG'),
-          Consumer(
-            builder: (context, ref, _) {
-              final notificationTokenState =
-                  ref.watch(notificationTokenProvider);
-              return notificationTokenState.when(
-                data: (value) => Column(
-                  children: [
-                    ListTile(
-                      title: const Text(
-                        'FCM デバイストークン',
-                        style: TextStyle(
-                          fontFamily: FontFamily.jetBrainsMono,
-                        ),
+        const SettingsSectionHeader(text: 'FCM DEBUG'),
+        Consumer(
+          builder: (context, ref, _) {
+            final notificationTokenState = ref.watch(notificationTokenProvider);
+            return notificationTokenState.when(
+              data: (value) => Column(
+                children: [
+                  ListTile(
+                    title: const Text(
+                      'FCM デバイストークン',
+                      style: TextStyle(
+                        fontFamily: FontFamily.jetBrainsMono,
                       ),
-                      trailing: Text(
-                        value.fcmToken?.obfuscate ?? '不明',
-                        style: const TextStyle(
-                          fontFamily: FontFamily.jetBrainsMono,
-                        ),
-                      ),
-                      onTap: () => Clipboard.setData(
-                        ClipboardData(text: value.fcmToken ?? ''),
-                      ).then((_) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('コピーしました'),
-                          ),
-                        );
-                      }),
-                      visualDensity: VisualDensity.compact,
                     ),
-                    ListTile(
-                      title: const Text(
-                        'APNS デバイストークン',
-                        style: TextStyle(
-                          fontFamily: FontFamily.jetBrainsMono,
-                        ),
+                    trailing: Text(
+                      value.fcmToken?.obfuscate ?? '不明',
+                      style: const TextStyle(
+                        fontFamily: FontFamily.jetBrainsMono,
                       ),
-                      trailing: Text(
-                        value.apnsToken?.obfuscate ?? '不明',
-                        style: const TextStyle(
-                          fontFamily: FontFamily.jetBrainsMono,
-                        ),
-                      ),
-                      onTap: () => Clipboard.setData(
-                        ClipboardData(text: value.apnsToken ?? ''),
-                      ).then((_) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('コピーしました'),
-                          ),
-                        );
-                      }),
-                      visualDensity: VisualDensity.compact,
                     ),
-                  ],
-                ),
-                error: (error, stackTrace) => Text(
-                  'エラーが発生しました: $error',
-                ),
-                loading: () => const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                ),
-              );
-            },
-          ),
-        ],
+                    onTap: () => Clipboard.setData(
+                      ClipboardData(text: value.fcmToken ?? ''),
+                    ).then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('コピーしました'),
+                        ),
+                      );
+                    }),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  ListTile(
+                    title: const Text(
+                      'APNS デバイストークン',
+                      style: TextStyle(
+                        fontFamily: FontFamily.jetBrainsMono,
+                      ),
+                    ),
+                    trailing: Text(
+                      value.apnsToken?.obfuscate ?? '不明',
+                      style: const TextStyle(
+                        fontFamily: FontFamily.jetBrainsMono,
+                      ),
+                    ),
+                    onTap: () => Clipboard.setData(
+                      ClipboardData(text: value.apnsToken ?? ''),
+                    ).then((_) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('コピーしました'),
+                        ),
+                      );
+                    }),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ],
+              ),
+              error: (error, stackTrace) => Text(
+                'エラーが発生しました: $error',
+              ),
+              loading: () => const Center(
+                child: CircularProgressIndicator.adaptive(),
+              ),
+            );
+          },
+        ),
       ],
     );
   }
