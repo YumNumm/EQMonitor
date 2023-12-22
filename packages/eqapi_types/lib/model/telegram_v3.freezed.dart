@@ -314,7 +314,7 @@ class _$TelegramV3BaseImpl implements _TelegramV3Base {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TelegramV3BaseImpl &&
@@ -576,7 +576,7 @@ class _$TelegramVxse51BodyImpl implements _TelegramVxse51Body {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TelegramVxse51BodyImpl &&
@@ -774,7 +774,7 @@ class _$TelegramVxse52BodyImpl implements _TelegramVxse52Body {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TelegramVxse52BodyImpl &&
@@ -1011,7 +1011,7 @@ class _$TelegramVxse53BodyImpl implements _TelegramVxse53Body {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TelegramVxse53BodyImpl &&
@@ -1254,7 +1254,7 @@ class _$TelegramVxse62BodyImpl implements _TelegramVxse62Body {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TelegramVxse62BodyImpl &&
@@ -1493,7 +1493,7 @@ class _$TelegramVtse41BodyImpl implements _TelegramVtse41Body {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TelegramVtse41BodyImpl &&
@@ -1732,7 +1732,7 @@ class _$TelegramVtse51BodyImpl implements _TelegramVtse51Body {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TelegramVtse51BodyImpl &&
@@ -1971,7 +1971,7 @@ class _$TelegramVtse52BodyImpl implements _TelegramVtse52Body {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TelegramVtse52BodyImpl &&
@@ -2179,7 +2179,7 @@ class _$TelegramVxse61BodyImpl implements _TelegramVxse61Body {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TelegramVxse61BodyImpl &&
@@ -2381,7 +2381,7 @@ class _$EarthquakeNankaiBodyImpl implements _EarthquakeNankaiBody {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeNankaiBodyImpl &&
@@ -2590,7 +2590,7 @@ class _$TelegramVxse56BodyImpl implements _TelegramVxse56Body {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TelegramVxse56BodyImpl &&
@@ -2737,7 +2737,7 @@ class _$TelegramCancelBodyImpl implements _TelegramCancelBody {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TelegramCancelBodyImpl &&
@@ -3105,7 +3105,7 @@ class _$TelegramVxse45BodyImpl implements _TelegramVxse45Body {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TelegramVxse45BodyImpl &&
@@ -3334,7 +3334,7 @@ class _$EarthquakeInformationBodyImpl implements _EarthquakeInformationBody {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeInformationBodyImpl &&
