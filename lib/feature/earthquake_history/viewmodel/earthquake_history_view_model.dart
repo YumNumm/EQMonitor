@@ -24,7 +24,6 @@ part 'earthquake_history_view_model.g.dart';
 class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
   @override
   AsyncValue<List<EarthquakeHistoryItem>> build() {
-    _useCase = ref.watch(earthquakeHistoryUseCaseProvider);
     // start listen telegram ws
     ref
       ..listen(telegramWsProvider, (previous, next) {
@@ -42,7 +41,6 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
     return const AsyncData([]);
   }
 
-  late EarthquakeHistoryUseCase _useCase;
   // state
   final bool _includeTestTelegrams = false;
 
@@ -80,7 +78,8 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
     // 処理開始
     state = await state.guardPlus(() async {
       final offset = isRefresh ? 0 : state.asData?.value.length ?? 0;
-      final result = await _useCase.getEarthquakeHistory(
+      final useCase = ref.read(earthquakeHistoryUseCaseProvider);
+      final result = await useCase.getEarthquakeHistory(
         limit: limit,
         offset: offset,
         includeEew: true,

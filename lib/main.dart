@@ -48,9 +48,11 @@ Future<void> main() async {
     ),
     PackageInfo.fromPlatform(),
     // ignore: prefer_void_to_null
-    (Platform.isAndroid ? deviceInfo.androidInfo : Future<Null>.value()),
+    (!kIsWeb && Platform.isAndroid
+        ? deviceInfo.androidInfo
+        : Future<Null>.value()),
     // ignore: prefer_void_to_null
-    (Platform.isIOS ? deviceInfo.iosInfo : Future<Null>.value()),
+    (!kIsWeb && Platform.isIOS ? deviceInfo.iosInfo : Future<Null>.value()),
     FlutterLocalNotificationsPlugin().initialize(
       const InitializationSettings(
         iOS: DarwinInitializationSettings(
