@@ -191,36 +191,38 @@ class EarthquakeMapWidget extends HookConsumerWidget {
       [],
     );
 
-    final map = MaplibreMap(
-      initialCameraPosition: CameraPosition(
-        target: LatLng(
-          (bounds.northEast.lat + bounds.southWest.lat) / 2,
-          (bounds.northEast.lon + bounds.southWest.lon) / 2,
+    final map = RepaintBoundary(
+      child: MaplibreMap(
+        initialCameraPosition: CameraPosition(
+          target: LatLng(
+            (bounds.northEast.lat + bounds.southWest.lat) / 2,
+            (bounds.northEast.lon + bounds.southWest.lon) / 2,
+          ),
+          zoom: 6,
         ),
-        zoom: 6,
-      ),
-      styleString: path,
-      onMapCreated: (controller) => mapController.value = controller,
-      onStyleLoadedCallback: () async {
-        final controller = mapController.value!;
+        styleString: path,
+        onMapCreated: (controller) => mapController.value = controller,
+        onStyleLoadedCallback: () async {
+          final controller = mapController.value!;
 
-        await addImageFromAsset(
-          controller,
-          'hypocenter',
-          'assets/images/hypocenter.png',
-        );
-        await _FillAction().init(
-          controller,
-          earthquake,
-          citiesItem,
-          regionsItem,
-          stations,
-        );
-        isInitialized.value = true;
-        return;
-      },
-      rotateGesturesEnabled: false,
-      tiltGesturesEnabled: false,
+          await addImageFromAsset(
+            controller,
+            'hypocenter',
+            'assets/images/hypocenter.png',
+          );
+          await _FillAction().init(
+            controller,
+            earthquake,
+            citiesItem,
+            regionsItem,
+            stations,
+          );
+          isInitialized.value = true;
+          return;
+        },
+        rotateGesturesEnabled: false,
+        tiltGesturesEnabled: false,
+      ),
     );
 
     return Stack(

@@ -35,7 +35,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
     // 当該データがアレばOK
     final data = ref
         .watch(earthquakeHistoryViewModelProvider)
-        .value
+        ?.value
         ?.firstWhereOrNull((e) => e.eventId == eventId);
     if (data == null) {
       return const Scaffold(
@@ -60,14 +60,12 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
               child: CircularProgressIndicator.adaptive(),
             )
           else
-            RepaintBoundary(
-              child: EarthquakeMapWidget(
-                item: data,
-                showIntensityIcon: true,
-                mapData: zoomCachedMapData,
-                registerNavigateToHome: (func) =>
-                    navigateToHomeFunction.value = func,
-              ),
+            EarthquakeMapWidget(
+              item: data,
+              showIntensityIcon: true,
+              mapData: zoomCachedMapData,
+              registerNavigateToHome: (func) =>
+                  navigateToHomeFunction.value = func,
             ),
           Stack(
             children: [

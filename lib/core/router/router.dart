@@ -9,6 +9,8 @@ import 'package:eqmonitor/feature/settings/children/application_info/license_pag
 import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_screen.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_screen.dart';
 import 'package:eqmonitor/feature/settings/children/config/color_scheme/color_scheme_config_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/api_endpoint_selector_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/debugger_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/notification/children/earthquake/earthquake_notification_settings_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/notification/children/eew/eew_notification_settings_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/notification/notification_setting_page.dart';
@@ -80,14 +82,6 @@ class EewDetailedHistoryRoute extends GoRouteData {
       );
 }
 
-@TypedGoRoute<ColorSchemeConfigRoute>(path: '/config')
-class ColorSchemeConfigRoute extends GoRouteData {
-  const ColorSchemeConfigRoute();
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const ColorSchemeConfigPage();
-}
-
 @TypedGoRoute<HomeRoute>(path: '/')
 class HomeRoute extends GoRouteData {
   const HomeRoute();
@@ -123,6 +117,9 @@ class KmoniRoute extends GoRouteData {
     TypedGoRoute<LicenseRoute>(
       path: 'license',
     ),
+    TypedGoRoute<ColorSchemeConfigRoute>(
+      path: 'color-schema',
+    ),
     TypedGoRoute<NotificationSettingsRoute>(
       path: 'notification',
       routes: [
@@ -134,6 +131,14 @@ class KmoniRoute extends GoRouteData {
         ),
       ],
     ),
+    TypedGoRoute<DebuggerRoute>(
+      path: 'debugger',
+      routes: [
+        TypedGoRoute<ApiEndpointSelectorRoute>(
+          path: 'api-endpoint-selector',
+        ),
+      ],
+    ),
   ],
 )
 class SettingsRoute extends GoRouteData {
@@ -142,6 +147,22 @@ class SettingsRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const SettingsScreen();
+}
+
+class DebuggerRoute extends GoRouteData {
+  const DebuggerRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const DebuggerPage();
+}
+
+class ApiEndpointSelectorRoute extends GoRouteData {
+  const ApiEndpointSelectorRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const ApiEndpointSelectorPage();
 }
 
 class TermOfServiceRoute extends GoRouteData {
@@ -158,6 +179,13 @@ class TermOfServiceRoute extends GoRouteData {
         onResult: $extra,
         showAcceptButton: showAcceptButton,
       );
+}
+
+class ColorSchemeConfigRoute extends GoRouteData {
+  const ColorSchemeConfigRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const ColorSchemeConfigPage();
 }
 
 class PrivacyPolicyRoute extends GoRouteData {

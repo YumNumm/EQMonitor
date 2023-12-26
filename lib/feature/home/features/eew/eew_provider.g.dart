@@ -8,7 +8,7 @@ part of 'eew_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$eewTelegramHash() => r'02131229e453d7aa36e1d82018fcf5641c4b6e34';
+String _$eewTelegramHash() => r'dd2b2c0b3b77b1e27b2b9ef9b729d09777b9aa8c';
 
 /// See also [EewTelegram].
 @ProviderFor(EewTelegram)
