@@ -143,7 +143,7 @@ class _$TsunamiCommentsImpl implements _TsunamiComments {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TsunamiCommentsImpl &&
@@ -315,7 +315,7 @@ class _$TsunamiForecastCommentWarningImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TsunamiForecastCommentWarningImpl &&
