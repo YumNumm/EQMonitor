@@ -24,7 +24,7 @@ class EewDetailedHistoryScreen extends HookConsumerWidget {
 
     final data = ref
         .watch(earthquakeHistoryViewModelProvider)
-        .value
+        ?.value
         ?.firstWhereOrNull((e) => e.eventId == eventId);
     final eews = data?.eewList.reversed.toList();
     if (eews == null) {
