@@ -15,8 +15,9 @@ Dio dio(DioRef ref) {
   final dio = Dio(
     BaseOptions(
       headers: {
-        'user-agent': 'eqmonitor-${Platform.version}',
-        'x-operation-system-version': Platform.operatingSystemVersion,
+        'user-agent': 'eqmonitor-${kIsWeb ? "web" : Platform.version}',
+        'x-operation-system-version':
+            kIsWeb ? 'web' : Platform.operatingSystemVersion,
         if (authorization != null) 'authorization': authorization,
       },
       baseUrl: ref.watch(telegramUrlProvider).restApiUrl,

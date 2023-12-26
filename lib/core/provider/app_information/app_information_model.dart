@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:eqapi_types/eqapi_types.dart';
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:version/version.dart';
 
@@ -42,7 +43,7 @@ extension AppInformationEx on AppInformation {
   AppInformationModel toModel({
     required Version currentVersion,
   }) {
-    if (Platform.isIOS) {
+    if (!kIsWeb && Platform.isIOS) {
       final latestVersion = Version.parse(iosLatestVersion);
       final minimumVersion =
           iosMinimumVersion == null ? null : Version.parse(iosMinimumVersion!);
@@ -57,7 +58,7 @@ extension AppInformationEx on AppInformation {
             latestVersion > currentVersion,
       );
     }
-    if (Platform.isAndroid) {
+    if (!kIsWeb && Platform.isAndroid) {
       final latestVersion = Version.parse(androidLatestVersion);
       final minimumVersion = androidMinimumVersion == null
           ? null
