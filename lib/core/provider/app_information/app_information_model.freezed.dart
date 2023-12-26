@@ -172,7 +172,9 @@ class __$$AppInformationModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$AppInformationModelImpl implements _AppInformationModel {
+class _$AppInformationModelImpl
+    with DiagnosticableTreeMixin
+    implements _AppInformationModel {
   const _$AppInformationModelImpl(
       {@JsonKey(fromJson: versionFromJson, toJson: versionToJson)
       required this.latestVersion,
@@ -204,8 +206,21 @@ class _$AppInformationModelImpl implements _AppInformationModel {
   final bool hasForceUpdate;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'AppInformationModel(latestVersion: $latestVersion, minimumVersion: $minimumVersion, downloadUrl: $downloadUrl, forceUpdateMessage: $forceUpdateMessage, hasUpdate: $hasUpdate, hasForceUpdate: $hasForceUpdate)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'AppInformationModel'))
+      ..add(DiagnosticsProperty('latestVersion', latestVersion))
+      ..add(DiagnosticsProperty('minimumVersion', minimumVersion))
+      ..add(DiagnosticsProperty('downloadUrl', downloadUrl))
+      ..add(DiagnosticsProperty('forceUpdateMessage', forceUpdateMessage))
+      ..add(DiagnosticsProperty('hasUpdate', hasUpdate))
+      ..add(DiagnosticsProperty('hasForceUpdate', hasForceUpdate));
   }
 
   @override
