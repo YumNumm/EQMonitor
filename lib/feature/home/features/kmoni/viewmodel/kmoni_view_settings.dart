@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'kmoni_view_settings.freezed.dart';
 part 'kmoni_view_settings.g.dart';
@@ -33,7 +32,6 @@ class KmoniSettingsState with _$KmoniSettingsState {
 class KmoniSettings extends _$KmoniSettings {
   @override
   KmoniSettingsState build() {
-    _prefs = ref.watch(sharedPreferencesProvider);
     ref.listenSelf((_, __) => _save());
     final result = _loadFromPrefs();
     if (result != null) {
@@ -44,10 +42,9 @@ class KmoniSettings extends _$KmoniSettings {
   }
 
   static const _prefsKey = '_kmoni_settings';
-  late final SharedPreferences _prefs;
 
   KmoniSettingsState? _loadFromPrefs() {
-    final json = _prefs.getString(_prefsKey);
+    final json = ref.read(sharedPreferencesProvider).getString(_prefsKey);
     if (json == null) {
       return null;
     }
@@ -61,12 +58,10 @@ class KmoniSettings extends _$KmoniSettings {
     }
   }
 
-  Future<void> _save() async {
-    await _prefs.setString(
-      _prefsKey,
-      jsonEncode(state.toJson()),
-    );
-  }
+  Future<void> _save() async => ref.read(sharedPreferencesProvider).setString(
+        _prefsKey,
+        jsonEncode(state.toJson()),
+      );
 
   void toggleIsUpper0Only() {
     state = state.copyWith(

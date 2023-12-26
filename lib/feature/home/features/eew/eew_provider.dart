@@ -19,7 +19,7 @@ class EewTelegram extends _$EewTelegram {
   @override
   List<EarthquakeHistoryItem> build() {
     ref.listen(earthquakeHistoryViewModelProvider, (previous, next) {
-      for (final item in (next.value ?? <EarthquakeHistoryItem>[])
+      for (final item in (next?.value ?? <EarthquakeHistoryItem>[])
           .where((e) => e.latestEew != null)) {
         if (_shouldShow(item)) {
           upsert(item);

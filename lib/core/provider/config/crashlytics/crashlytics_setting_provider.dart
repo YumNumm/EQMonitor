@@ -11,18 +11,15 @@ part 'crashlytics_setting_provider.g.dart';
 class CrashlyticsSetting extends _$CrashlyticsSetting {
   @override
   CrashlyticsSettingModel build() {
-    _prefs = ref.watch(sharedPreferencesProvider);
     ref.listenSelf((_, next) => _save());
     return const CrashlyticsSettingModel();
   }
 
-  late final SharedPreferences _prefs;
-
   static const String _key = 'crashlytics_setting';
 
-  Future<void> _save() async {
-    await _prefs.setString(_key, jsonEncode(state.toJson()));
-  }
+  Future<void> _save() async => ref
+      .read(sharedPreferencesProvider)
+      .setString(_key, jsonEncode(state.toJson()));
 
   void setEnabled({required bool isEnabled}) {
     state = state.copyWith(isEnabled: isEnabled);

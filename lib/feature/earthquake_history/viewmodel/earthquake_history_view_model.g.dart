@@ -9,13 +9,13 @@ part of 'earthquake_history_view_model.dart';
 // **************************************************************************
 
 String _$earthquakeHistoryViewModelHash() =>
-    r'1714b410d5fb414008e1246390b7f60e33eb275f';
+    r'0dea4a5dd478d7c2048be9be50b23617f0d1dbd4';
 
 /// See also [EarthquakeHistoryViewModel].
 @ProviderFor(EarthquakeHistoryViewModel)
 final earthquakeHistoryViewModelProvider = NotifierProvider<
     EarthquakeHistoryViewModel,
-    AsyncValue<List<EarthquakeHistoryItem>>>.internal(
+    AsyncValue<List<EarthquakeHistoryItem>>?>.internal(
   EarthquakeHistoryViewModel.new,
   name: r'earthquakeHistoryViewModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -34,6 +34,6 @@ final earthquakeHistoryViewModelProvider = NotifierProvider<
 );
 
 typedef _$EarthquakeHistoryViewModel
-    = Notifier<AsyncValue<List<EarthquakeHistoryItem>>>;
+    = Notifier<AsyncValue<List<EarthquakeHistoryItem>>?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

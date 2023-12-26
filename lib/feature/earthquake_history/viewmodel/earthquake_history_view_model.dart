@@ -12,6 +12,7 @@ import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/use_case/earthquake_history_use_case.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -23,7 +24,7 @@ part 'earthquake_history_view_model.g.dart';
 )
 class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
   @override
-  AsyncValue<List<EarthquakeHistoryItem>> build() {
+  AsyncValue<List<EarthquakeHistoryItem>>? build() {
     // start listen telegram ws
     ref
       ..listen(telegramWsProvider, (previous, next) {
@@ -38,22 +39,18 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
           fetch(isRefresh: true);
         }
       });
-    return const AsyncData([]);
+    return null;
   }
 
   // state
-  final bool _includeTestTelegrams = false;
-
-  Future<void> loadIfNull() async {
-    // stateがnullなら、loadMoreを呼ぶ
-    if ((state.value ?? []).isEmpty) {
-      return fetch(isLoadMore: true);
-    }
-  }
+  final bool _includeTestTelegrams = kDebugMode;
 
   void onScrollPositionChanged(ScrollController controller) {
     // エラー発生時・リロード中は何もしない
-    if (state.hasError || state.isRefreshing || state.isReloading) {
+    if (state == null) {
+      return;
+    }
+    if (state!.hasError || state!.isRefreshing || state!.isReloading) {
       return;
     }
     if (controller.position.maxScrollExtent - controller.position.pixels < 20) {
@@ -66,18 +63,18 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
     bool isRefresh = false,
     int limit = 50,
   }) async {
-    if (state.isLoading || state.isRefreshing || state.isReloading) {
+    if (state?.isLoading ?? false) {
       return;
     }
-    if (isLoadMore || isRefresh) {
+    if ((isLoadMore || isRefresh) && state != null) {
       state = const AsyncLoading<List<EarthquakeHistoryItem>>()
-          .copyWithPrevious(state);
+          .copyWithPrevious(state!);
     } else {
       state = const AsyncLoading<List<EarthquakeHistoryItem>>();
     }
     // 処理開始
-    state = await state.guardPlus(() async {
-      final offset = isRefresh ? 0 : state.asData?.value.length ?? 0;
+    state = await state!.guardPlus(() async {
+      final offset = isRefresh ? 0 : state?.asData?.value.length ?? 0;
       final useCase = ref.read(earthquakeHistoryUseCaseProvider);
       final result = await useCase.getEarthquakeHistory(
         limit: limit,
@@ -86,57 +83,47 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
       );
       final items = _toEarthquakeHistoryItem(
         result,
-        includeTestTelegrams: _includeTestTelegrams,
       );
-      final filteredItems = items.where(
-        (e) => e.telegrams.every(
-          (telegram) => telegram.status == TelegramStatus.normal,
-        ),
-      );
+      final filteredItems = _includeTestTelegrams
+          ? items
+          : items.where(
+              (e) => e.telegrams.every(
+                (telegram) => telegram.status == TelegramStatus.normal,
+              ),
+            );
       if (isRefresh) {
         return filteredItems.toList();
       }
       return <EarthquakeHistoryItem>[
-        ...state.asData?.value ?? [],
+        ...state?.asData?.value ?? [],
         ...filteredItems,
       ];
     });
   }
 
   List<EarthquakeHistoryItem> _toEarthquakeHistoryItem(
-    Map<String, List<TelegramV3>> data, {
-    bool includeTestTelegrams = true,
-  }) {
+    Map<String, List<TelegramV3>> data,
+  ) {
     final result = <EarthquakeHistoryItem>[];
     data.forEach((eventId, telegrams) {
       //! EarthquakeData !
       // 震度速報
       final vxse51 = telegrams.firstWhereOrNull(
-        (e) =>
-            e.type == TelegramType.vxse51 &&
-            (_includeTestTelegrams || e.status == TelegramStatus.normal),
+        (e) => e.type == TelegramType.vxse51,
       );
       final vxse52 = telegrams.firstWhereOrNull(
-        (e) =>
-            e.type == TelegramType.vxse52 &&
-            (_includeTestTelegrams || e.status == TelegramStatus.normal),
+        (e) => e.type == TelegramType.vxse52,
       );
       final vxse53 = telegrams.firstWhereOrNull(
-        (e) =>
-            e.type == TelegramType.vxse53 &&
-            (_includeTestTelegrams || e.status == TelegramStatus.normal),
+        (e) => e.type == TelegramType.vxse53,
       );
       // 顕著な地震の震源要素更新のお知らせ
       final vxse61 = telegrams.firstWhereOrNull(
-        (e) =>
-            e.type == TelegramType.vxse61 &&
-            (_includeTestTelegrams || e.status == TelegramStatus.normal),
+        (e) => e.type == TelegramType.vxse61,
       );
       // 長周期地震動に関する観測情報
       final vxse62 = telegrams.firstWhereOrNull(
-        (e) =>
-            e.type == TelegramType.vxse62 &&
-            (_includeTestTelegrams || e.status == TelegramStatus.normal),
+        (e) => e.type == TelegramType.vxse62,
       );
       Earthquake? earthquake;
       if (vxse61 != null) {
@@ -190,19 +177,13 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
       );
       //! TsunamiData !
       final vtse41 = telegrams.firstWhereOrNull(
-        (e) =>
-            e.type == TelegramType.vtse41 &&
-            (_includeTestTelegrams || e.status == TelegramStatus.normal),
+        (e) => e.type == TelegramType.vtse41,
       );
       final vtse51 = telegrams.firstWhereOrNull(
-        (e) =>
-            e.type == TelegramType.vtse51 &&
-            (_includeTestTelegrams || e.status == TelegramStatus.normal),
+        (e) => e.type == TelegramType.vtse51,
       );
       final vtse52 = telegrams.firstWhereOrNull(
-        (e) =>
-            e.type == TelegramType.vtse52 &&
-            (_includeTestTelegrams || e.status == TelegramStatus.normal),
+        (e) => e.type == TelegramType.vtse52,
       );
       List<TsunamiForecast>? forecasts;
       if (vtse51 != null) {
@@ -271,7 +252,7 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
 
   void _upsertTelegram(TelegramV3 telegram) {
     // 既に同一EventIDのTelegramが存在する場合は、上書きする
-    var data = state.value ?? [];
+    var data = state?.value ?? [];
     final index = data.indexWhere((e) => e.eventId == telegram.eventId);
     if (index != -1) {
       data[index] = data[index].copyWith(

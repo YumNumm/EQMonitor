@@ -9,7 +9,7 @@ part of 'crashlytics_setting_provider.dart';
 // **************************************************************************
 
 String _$crashlyticsSettingHash() =>
-    r'3c9d23bc4227245d7091d8d11b45f91fe5501d6e';
+    r'000581239d3ee84dd95a09f814f6d5b8f31fa845';
 
 /// See also [CrashlyticsSetting].
 @ProviderFor(CrashlyticsSetting)

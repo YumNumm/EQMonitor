@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/chip/custom_chip.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
@@ -40,6 +41,11 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
           (e) => e.type == TelegramType.vxse51,
         ) &&
         item.telegrams.every((e) => e.type == TelegramType.vxse52);
+
+    // 通常報以外かどうか
+    final telegramStatuses = item.telegrams.map((e) => e.status).toSet();
+    final isNotNormal = telegramStatuses.contains(TelegramStatus.test) ||
+        telegramStatuses.contains(TelegramStatus.training);
 
     // ! title
     final title = StringBuffer();
@@ -125,6 +131,19 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
               fontFamilyFallback: [FontFamily.notoSansJP],
             ),
           ),
+          if (!const SetEquality<TelegramStatus>()
+              .equals(telegramStatuses, {TelegramStatus.normal}))
+            for (final status in telegramStatuses)
+              CustomChip(
+                backgroundColor: Colors.red.shade200,
+                child: Text(
+                  '${status.type}報',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
           if (item.tsunami?.forecasts != null ||
               item.tsunami?.observations != null ||
               item.tsunami?.estimations != null)

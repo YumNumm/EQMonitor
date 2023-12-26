@@ -4,7 +4,6 @@ import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/env/env.dart';
 import 'package:eqmonitor/feature/home/features/telegram_url/model/telegram_url_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'telegram_url_provider.g.dart';
 
@@ -12,13 +11,10 @@ part 'telegram_url_provider.g.dart';
 class TelegramUrl extends _$TelegramUrl {
   @override
   TelegramUrlModel build() {
-    _prefs = ref.watch(sharedPreferencesProvider);
     final result = _load();
     if (result != null) {
       return result;
     }
-
-    ref.listenSelf((_, __) => _save());
 
     return TelegramUrlModel(
       restApiUrl: Env.restApiUrl,
@@ -27,14 +23,13 @@ class TelegramUrl extends _$TelegramUrl {
     );
   }
 
-  late final SharedPreferences _prefs;
-
   static const _key = 'telegram_url';
 
-  Future<void> _save() async => _prefs.setString(_key, jsonEncode(state));
+  Future<void> _save() async =>
+      ref.read(sharedPreferencesProvider).setString(_key, jsonEncode(state));
 
   TelegramUrlModel? _load() {
-    final jsonString = _prefs.getString(_key);
+    final jsonString = ref.read(sharedPreferencesProvider).getString(_key);
     if (jsonString == null) {
       return null;
     }
@@ -48,6 +43,8 @@ class TelegramUrl extends _$TelegramUrl {
     }
   }
 
-  // ignore: avoid_setters_without_getters
-  set setState(TelegramUrlModel model) => state = model;
+  void updateRestUrl(String url) {
+    state = state.copyWith(restApiUrl: url);
+    _save();
+  }
 }
