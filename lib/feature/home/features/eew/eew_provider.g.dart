@@ -26,24 +26,6 @@ final eewTelegramProvider =
 );
 
 typedef _$EewTelegram = Notifier<List<EarthquakeHistoryItem>>;
-String _$eewEstimatedIntensityHash() =>
-    r'24b78ca4cd869b15c0f438fdc346b69130810169';
-
-/// See also [EewEstimatedIntensity].
-@ProviderFor(EewEstimatedIntensity)
-final eewEstimatedIntensityProvider = NotifierProvider<EewEstimatedIntensity,
-    List<(int code, JmaForecastIntensity intensity)>>.internal(
-  EewEstimatedIntensity.new,
-  name: r'eewEstimatedIntensityProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$eewEstimatedIntensityHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$EewEstimatedIntensity
-    = Notifier<List<(int code, JmaForecastIntensity intensity)>>;
 String _$eewNormalTelegramHash() => r'3bb7263846a2b4c3a3f7dd77e2ea673917c4a798';
 
 /// キャンセル報を除いた最新のEEW

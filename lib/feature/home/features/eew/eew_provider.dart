@@ -106,14 +106,6 @@ class EewTelegram extends _$EewTelegram {
       true;
 }
 
-@Riverpod(keepAlive: true)
-class EewEstimatedIntensity extends _$EewEstimatedIntensity {
-  @override
-  List<(int code, JmaForecastIntensity intensity)> build() {
-    return [];
-  }
-}
-
 /// キャンセル報を除いた最新のEEW
 @Riverpod(dependencies: [EewTelegram, EewTelegram])
 class EewNormalTelegram extends _$EewNormalTelegram {
