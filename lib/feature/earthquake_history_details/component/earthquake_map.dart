@@ -1,19 +1,15 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
-import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/component/map/data/model/mutable_projected_feature_layer.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/map_libre/provider/map_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -210,12 +206,12 @@ class EarthquakeMapWidget extends HookConsumerWidget {
             'hypocenter',
             'assets/images/hypocenter.png',
           );
-          await _FillAction().init(
+          await _FillAction(
+            citiesItem: citiesItem,
+            regionsItem: regionsItem,
+            earthquake: earthquake,
+          ).init(
             controller,
-            earthquake,
-            citiesItem,
-            regionsItem,
-            stations,
           );
           isInitialized.value = true;
           return;
@@ -295,285 +291,177 @@ lat_lng.LatLngBoundary _getShowBounds(
 }
 
 sealed class _MapLibreAction {
-  Future<void> Function(
+  _MapLibreAction({
+    required this.citiesItem,
+    required this.regionsItem,
+    required this.earthquake,
+  });
+
+  final List<
+          ({List<String> codes, TextColorModel color, JmaIntensity intensity})>?
+      citiesItem;
+  final List<
+          ({List<String> codes, TextColorModel color, JmaIntensity intensity})>?
+      regionsItem;
+  final EarthquakeData earthquake;
+
+  Future<void> init(
     MaplibreMapController controller,
-    EarthquakeData earthquake,
-    List<({List<String> codes, TextColorModel color, JmaIntensity intensity})>?
-        citiesItem,
-    List<({List<String> codes, TextColorModel color, JmaIntensity intensity})>?
-        regionsItem,
-    List<RegionIntensity> stations,
-  ) get init;
-  Future<void> Function(MaplibreMapController controller) get dispose;
+  );
+
+  Future<void> dispose(MaplibreMapController controller);
 }
 
 class _FillAction extends _MapLibreAction {
-  @override
-  Future<void> Function(
-    MaplibreMapController controller,
-    EarthquakeData earthquake,
-    List<({List<String> codes, TextColorModel color, JmaIntensity intensity})>?
-        citiesItem,
-    List<({List<String> codes, TextColorModel color, JmaIntensity intensity})>?
-        regionsItem,
-    List<RegionIntensity> stations,
-  ) get init => (
-        controller,
-        EarthquakeData earthquake,
-        List<
-                ({
-                  List<String> codes,
-                  TextColorModel color,
-                  JmaIntensity intensity
-                })>?
-            citiesItem,
-        List<
-                ({
-                  List<String> codes,
-                  TextColorModel color,
-                  JmaIntensity intensity
-                })>?
-            regionsItem,
-        List<RegionIntensity> stations,
-      ) async {
-        /// 震源地
-        final hypocenter = earthquake.earthquake?.hypocenter;
-        if (hypocenter != null) {
-          final coord = hypocenter.coordinate;
-          if (coord != null) {
-            await controller.setSymbolIconAllowOverlap(true);
-            await controller.setSymbolIconIgnorePlacement(true);
-            await controller.addGeoJsonSource('hypocenter', {
-              'type': 'FeatureCollection',
-              'features': [
-                {
-                  'type': 'Feature',
-                  'geometry': {
-                    'type': 'Point',
-                    'coordinates': [coord.lon, coord.lat],
-                  },
-                  'properties': {
-                    'magnitude':
-                        earthquake.earthquake?.magnitude.value.toString() ??
-                            earthquake.earthquake?.magnitude.condition ??
-                            '調査中',
-                  },
-                }
-              ],
-            });
-            final magnitude = earthquake.earthquake?.magnitude;
-
-            if (magnitude != null && magnitude.value != null) {
-              await controller.addSymbolLayer(
-                'hypocenter',
-                'hypocenter',
-                const SymbolLayerProperties(
-                  iconImage: 'hypocenter',
-                  iconSize: [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    6,
-                    0.2,
-                    20,
-                    4,
-                  ],
-                  iconAllowOverlap: true,
-                ),
-              );
-            } else {
-              await controller.addSymbolLayer(
-                'hypocenter',
-                'hypocenter',
-                const SymbolLayerProperties(
-                  iconImage: 'hypocenter',
-                  iconSize: [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    6,
-                    0.2,
-                    20,
-                    4,
-                  ],
-                  iconAllowOverlap: true,
-                ),
-              );
-            }
-          }
-        }
-
-        /// 震度分布塗りつぶし (市区町村)
-        if (citiesItem != null) {
-          const name = 'areaInformationCityQuake';
-          for (final item in citiesItem) {
-            await controller.removeLayer(
-              '$name-fill-${item.color.background.toHexStringRGB()}',
-            );
-            await controller.addLayer(
-              'eqmonitor_map',
-              '$name-fill-${item.color.background.toHexStringRGB()}'
-                  '${item.intensity.type}',
-              FillLayerProperties(
-                fillColor: item.color.background.toHexStringRGB(),
-              ),
-              belowLayerId: 'areaForecastLocalEew_line',
-              sourceLayer: name,
-              filter: [
-                'in',
-                ['get', 'regioncode'],
-                [
-                  'literal',
-                  item.codes,
-                ],
-              ],
-            );
-            await controller.addLayer(
-              'eqmonitor_map',
-              '$name-line-${item.color.foreground.toHexStringRGB()}'
-                  '${item.intensity.type}',
-              LineLayerProperties(
-                lineWidth: 0.4,
-                lineColor: item.color.foreground.toHexStringRGB(),
-                lineOpacity: 0.2,
-              ),
-              belowLayerId: 'areaForecastLocalEew_line',
-              sourceLayer: name,
-              filter: [
-                'in',
-                ['get', 'regioncode'],
-                [
-                  'literal',
-                  item.codes,
-                ],
-              ],
-            );
-          }
-        } else if (regionsItem != null) {
-          const name = 'areaForecastLocalE';
-          for (final item in regionsItem) {
-            await controller.removeLayer(
-              '$name-fill-${item.color.background.toHexStringRGB()}'
-              '${item.intensity.type}',
-            );
-            await controller.addLayer(
-              'eqmonitor_map',
-              '$name-fill-${item.color.background.toHexStringRGB()}',
-              FillLayerProperties(
-                fillColor: item.color.background.toHexStringRGB(),
-              ),
-              sourceLayer: name,
-              belowLayerId: 'areaForecastLocalEew_line',
-              filter: [
-                'in',
-                ['get', 'code'],
-                [
-                  'literal',
-                  item.codes,
-                ],
-              ],
-            );
-            await controller.addLayer(
-              'eqmonitor_map',
-              '$name-line-${item.color.foreground.toHexStringRGB()}${item.intensity.type}',
-              LineLayerProperties(
-                lineWidth: 0.4,
-                lineColor: item.color.foreground.toHexStringRGB(),
-                lineOpacity: 0.8,
-              ),
-              sourceLayer: name,
-              belowLayerId: 'areaForecastLocalEew_line',
-              filter: [
-                'in',
-                ['get', 'regioncode'],
-                [
-                  'literal',
-                  item.codes,
-                ],
-              ],
-            );
-          }
-        }
-      };
+  _FillAction({
+    required super.citiesItem,
+    required super.regionsItem,
+    required super.earthquake,
+  });
 
   @override
-  Future<void> Function(MaplibreMapController controller) get dispose =>
-      (controller) async {
-        await (
-          controller.clearFills(),
-          controller.clearFills(),
-          controller.clearLines(),
-        ).wait;
-      };
-}
-
-class _WidgetImageCapture extends HookWidget {
-  _WidgetImageCapture(this.onCapture, this.child);
-
-  // callback
-  final void Function(Uint8List bytes)? onCapture;
-  final Widget child;
-  final captureKey = GlobalKey();
-
-  Future<void> _capture() async {
-    await Future<void>.delayed(const Duration(milliseconds: 100));
-    final context = captureKey.currentContext!;
-    if (!context.mounted) {
-      return;
-    }
-    final widget = context.findRenderObject()! as RenderRepaintBoundary;
-    final image = await widget.toImage();
-    final byteData = await image.toByteData(format: ImageByteFormat.png);
-    onCapture?.call(byteData!.buffer.asUint8List());
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    useEffect(
-      () {
-        WidgetsBinding.instance.endOfFrame.then(
-          (_) => _capture(),
-        );
-        return null;
-      },
-      [],
-    );
-    return RepaintBoundary(
-      key: captureKey,
-      child: child,
-    );
-  }
-}
-
-class _CaptureAllIntensityWidget extends StatelessWidget {
-  _CaptureAllIntensityWidget({required this.onCapture});
-  final void Function(List<(JmaIntensity, Uint8List)> result) onCapture;
-
-  final result = <(JmaIntensity, Uint8List)>[];
-
-  void check() {
-    if (result.length == JmaIntensity.values.length) {
-      onCapture(result);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: JmaIntensity.values
-          .map(
-            (e) => _WidgetImageCapture(
-              (bytes) {
-                result.add((e, bytes));
-                check();
+  Future<void> init(map_libre.MaplibreMapController controller) async {
+    /// 震源地
+    final hypocenter = earthquake.earthquake?.hypocenter;
+    if (hypocenter != null) {
+      final coord = hypocenter.coordinate;
+      if (coord != null) {
+        await controller.setSymbolIconAllowOverlap(true);
+        await controller.setSymbolIconIgnorePlacement(true);
+        await controller.addGeoJsonSource('hypocenter', {
+          'type': 'FeatureCollection',
+          'features': [
+            {
+              'type': 'Feature',
+              'geometry': {
+                'type': 'Point',
+                'coordinates': [coord.lon, coord.lat],
               },
-              JmaIntensityIcon(
-                intensity: e,
-                type: IntensityIconType.filled,
-              ),
-            ),
-          )
-          .toList(),
-    );
+              'properties': {
+                'magnitude':
+                    earthquake.earthquake?.magnitude.value.toString() ??
+                        earthquake.earthquake?.magnitude.condition ??
+                        '調査中',
+              },
+            }
+          ],
+        });
+        await controller.addSymbolLayer(
+          'hypocenter',
+          'hypocenter',
+          const SymbolLayerProperties(
+            iconImage: 'hypocenter',
+            iconSize: [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              6,
+              0.2,
+              20,
+              4,
+            ],
+            iconAllowOverlap: true,
+          ),
+        );
+      }
+    }
+
+    /// 震度分布塗りつぶし (市区町村)
+    if (citiesItem != null) {
+      const name = 'areaInformationCityQuake';
+      for (final item in citiesItem!) {
+        await controller.removeLayer(
+          '$name-fill-${item.color.background.toHexStringRGB()}',
+        );
+        await controller.addLayer(
+          'eqmonitor_map',
+          '$name-fill-${item.color.background.toHexStringRGB()}'
+              '${item.intensity.type}',
+          FillLayerProperties(
+            fillColor: item.color.background.toHexStringRGB(),
+          ),
+          belowLayerId: 'areaForecastLocalEew_line',
+          sourceLayer: name,
+          filter: [
+            'in',
+            ['get', 'regioncode'],
+            [
+              'literal',
+              item.codes,
+            ],
+          ],
+        );
+        await controller.addLayer(
+          'eqmonitor_map',
+          '$name-line-${item.color.foreground.toHexStringRGB()}'
+              '${item.intensity.type}',
+          LineLayerProperties(
+            lineWidth: 0.4,
+            lineColor: item.color.foreground.toHexStringRGB(),
+            lineOpacity: 0.2,
+          ),
+          belowLayerId: 'areaForecastLocalEew_line',
+          sourceLayer: name,
+          filter: [
+            'in',
+            ['get', 'regioncode'],
+            [
+              'literal',
+              item.codes,
+            ],
+          ],
+        );
+      }
+    } else if (regionsItem != null) {
+      const name = 'areaForecastLocalE';
+      for (final item in regionsItem!) {
+        await controller.removeLayer(
+          '$name-fill-${item.color.background.toHexStringRGB()}'
+          '${item.intensity.type}',
+        );
+        await controller.addLayer(
+          'eqmonitor_map',
+          '$name-fill-${item.color.background.toHexStringRGB()}',
+          FillLayerProperties(
+            fillColor: item.color.background.toHexStringRGB(),
+          ),
+          sourceLayer: name,
+          belowLayerId: 'areaForecastLocalEew_line',
+          filter: [
+            'in',
+            ['get', 'code'],
+            [
+              'literal',
+              item.codes,
+            ],
+          ],
+        );
+        await controller.addLayer(
+          'eqmonitor_map',
+          '$name-line-${item.color.foreground.toHexStringRGB()}${item.intensity.type}',
+          LineLayerProperties(
+            lineWidth: 0.4,
+            lineColor: item.color.foreground.toHexStringRGB(),
+            lineOpacity: 0.8,
+          ),
+          sourceLayer: name,
+          belowLayerId: 'areaForecastLocalEew_line',
+          filter: [
+            'in',
+            ['get', 'regioncode'],
+            [
+              'literal',
+              item.codes,
+            ],
+          ],
+        );
+      }
+    }
+  }
+
+  @override
+  Future<void> dispose(map_libre.MaplibreMapController controller) {
+    // TODO: implement dispose
+    throw UnimplementedError();
   }
 }
