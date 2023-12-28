@@ -9,10 +9,10 @@ import 'package:eqapi_types/model/components/tsunami-information/tsunami_observa
 import 'package:eqapi_types/model/telegram_v3.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
+import 'package:eqmonitor/core/provider/config/earthquake_history/earthquake_history_config_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/use_case/earthquake_history_use_case.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -42,9 +42,6 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
     return null;
   }
 
-  // state
-  final bool _includeTestTelegrams = kDebugMode;
-
   void onScrollPositionChanged(ScrollController controller) {
     // エラー発生時・リロード中は何もしない
     if (state == null) {
@@ -72,6 +69,8 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
     } else {
       state = const AsyncLoading<List<EarthquakeHistoryItem>>();
     }
+    final shouldIncludeTestTelegram =
+        ref.read(earthquakeHistoryConfigProvider).list.includeTestTelegrams;
     // 処理開始
     state = await state!.guardPlus(() async {
       final offset = isRefresh ? 0 : state?.asData?.value.length ?? 0;
@@ -84,7 +83,7 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
       final items = _toEarthquakeHistoryItem(
         result,
       );
-      final filteredItems = _includeTestTelegrams
+      final filteredItems = shouldIncludeTestTelegram
           ? items
           : items.where(
               (e) => e.telegrams.every(

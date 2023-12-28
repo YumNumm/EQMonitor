@@ -202,6 +202,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $ColorSchemeConfigRouteExtension._fromState,
         ),
         GoRouteData.$route(
+          path: 'earthquake-history',
+          factory: $EarthquakeHistoryConfigRouteExtension._fromState,
+        ),
+        GoRouteData.$route(
           path: 'notification',
           factory: $NotificationSettingsRouteExtension._fromState,
           routes: [
@@ -326,6 +330,25 @@ extension $ColorSchemeConfigRouteExtension on ColorSchemeConfigRoute {
 
   String get location => GoRouteData.$location(
         '/settings/color-schema',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $EarthquakeHistoryConfigRouteExtension
+    on EarthquakeHistoryConfigRoute {
+  static EarthquakeHistoryConfigRoute _fromState(GoRouterState state) =>
+      const EarthquakeHistoryConfigRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/earthquake-history',
       );
 
   void go(BuildContext context) => context.go(location);

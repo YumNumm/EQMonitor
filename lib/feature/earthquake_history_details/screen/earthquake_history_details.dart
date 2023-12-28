@@ -52,6 +52,9 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
+    final telegramType = data.telegrams.map((e) => e.status).toSet()
+      ..remove(TelegramStatus.normal);
+
     return Scaffold(
       body: Stack(
         children: [
@@ -66,6 +69,28 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
               mapData: zoomCachedMapData,
               registerNavigateToHome: (func) =>
                   navigateToHomeFunction.value = func,
+            ),
+          if (telegramType.isNotEmpty)
+            Positioned(
+              right: 10,
+              top: 10,
+              child: SafeArea(
+                child: Text(
+                  telegramType
+                      .map(
+                        (e) => switch (e) {
+                          TelegramStatus.test => '試験報',
+                          TelegramStatus.training => '訓練報',
+                          TelegramStatus.normal => '',
+                        },
+                      )
+                      .join('・'),
+                  style: theme.textTheme.displayLarge!.copyWith(
+                    color: colorScheme.error.withOpacity(0.4),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ),
           Stack(
             children: [
