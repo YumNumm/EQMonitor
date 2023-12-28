@@ -11,6 +11,7 @@ import 'package:eqmonitor/feature/settings/children/application_info/term_of_ser
 import 'package:eqmonitor/feature/settings/children/config/color_scheme/color_scheme_config_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/debugger_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/notification/children/earthquake/earthquake_notification_settings_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/notification/children/eew/eew_notification_settings_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/notification/notification_setting_page.dart';
@@ -120,6 +121,9 @@ class KmoniRoute extends GoRouteData {
     TypedGoRoute<ColorSchemeConfigRoute>(
       path: 'color-schema',
     ),
+    TypedGoRoute<EarthquakeHistoryConfigRoute>(
+      path: 'earthquake-history',
+    ),
     TypedGoRoute<NotificationSettingsRoute>(
       path: 'notification',
       routes: [
@@ -163,6 +167,14 @@ class ApiEndpointSelectorRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const ApiEndpointSelectorPage();
+}
+
+class EarthquakeHistoryConfigRoute extends GoRouteData {
+  const EarthquakeHistoryConfigRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const EarthquakeHistoryConfigPage();
 }
 
 class TermOfServiceRoute extends GoRouteData {

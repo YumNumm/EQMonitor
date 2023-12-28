@@ -9,7 +9,7 @@ part of 'earthquake_history_view_model.dart';
 // **************************************************************************
 
 String _$earthquakeHistoryViewModelHash() =>
-    r'0dea4a5dd478d7c2048be9be50b23617f0d1dbd4';
+    r'01edb17978f0afb4673dd179b4958935c5f7bc23';
 
 /// See also [EarthquakeHistoryViewModel].
 @ProviderFor(EarthquakeHistoryViewModel)
