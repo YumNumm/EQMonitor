@@ -3,7 +3,7 @@ import 'package:eqapi_types/model/telegram_v3.dart';
 import 'package:eqmonitor/core/component/map/model/map_state.dart';
 import 'package:eqmonitor/core/component/map/utils/web_mercator_projection.dart';
 import 'package:eqmonitor/core/component/map/view_model/map_viewmodel.dart';
-import 'package:eqmonitor/feature/home/features/eew/eew_provider.dart';
+import 'package:eqmonitor/feature/home/features/eew/provider/eew_telegram.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -16,8 +16,10 @@ class EewHypocenterWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eewTelegrams = ref.watch(eewTelegramProvider);
-    if (eewTelegrams.isEmpty) {
+    final eewTelegramState = ref.watch(eewTelegramProvider);
+    final eewTelegrams = eewTelegramState.value;
+
+    if (eewTelegrams == null || eewTelegrams.isEmpty) {
       return const SizedBox.shrink();
     }
 

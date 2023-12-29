@@ -1,19 +1,16 @@
-import 'package:eqapi_types/model/telegram_v3.dart';
-import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
-import 'package:eqmonitor/feature/home/features/eew/eew_provider.dart';
 import 'package:eqmonitor/feature/home/features/estimated_intensity/data/estimated_intensity_data_source.dart';
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/kmoni_observation_point.dart';
-import 'package:eqmonitor/feature/home/features/kmoni_observation_points/provider/kmoni_observation_points_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 part 'estimated_intensity_provider.g.dart';
 
-@Riverpod(dependencies: [EewTelegram])
+@Riverpod(dependencies: [])
 class EstimatedIntensity extends _$EstimatedIntensity {
   @override
   List<AnalyzedKmoniObservationPoint> build() {
+    /*
     _dataSource = ref.watch(estimatedIntensityDataSourceProvider);
     _talker = ref.watch(talkerProvider);
     ref.listen(eewTelegramProvider, (previous, next) {
@@ -23,12 +20,16 @@ class EstimatedIntensity extends _$EstimatedIntensity {
       );
     });
     return calc(ref.read(eewTelegramProvider));
+    */
+    return [];
   }
 
   late EstimatedIntensityDataSource _dataSource;
   late Talker _talker;
 
   List<AnalyzedKmoniObservationPoint> calc(List<EarthquakeHistoryItem> eews) {
+    return [];
+    /*
     final points = ref.read(kmoniObservationPointsProvider);
     final results = <List<AnalyzedKmoniObservationPoint>>[];
     for (final eew in eews
@@ -68,5 +69,6 @@ class EstimatedIntensity extends _$EstimatedIntensity {
       }
     }
     return merged;
+    */
   }
 }

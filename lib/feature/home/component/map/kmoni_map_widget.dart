@@ -5,7 +5,6 @@ import 'package:eqmonitor/core/component/map/model/map_state.dart';
 import 'package:eqmonitor/core/component/map/view_model/map_viewmodel.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/has_eew_provider.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/kmoni_observation_point.dart';
@@ -26,14 +25,13 @@ class KmoniMapWidget extends HookConsumerWidget {
     final kmoniState = ref
         .watch(kmoniViewModelProvider.select((value) => value.analyzedPoints));
     final kmoniSettingsState = ref.watch(kmoniSettingsProvider);
-    final hasEew = ref.watch(hasEewProvider);
     return CustomPaint(
       painter: _KmoniPainter(
         state: state,
         kmoniState: kmoniState,
         settingsState: kmoniSettingsState,
         colorModel: ref.watch(intensityColorProvider),
-        drawBorder: hasEew,
+        drawBorder: false,
       ),
       size: Size.infinite,
       willChange: true,
