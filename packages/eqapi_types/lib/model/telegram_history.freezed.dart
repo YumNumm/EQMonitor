@@ -184,7 +184,7 @@ class _$TelegramHistoryV3Impl implements _TelegramHistoryV3 {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TelegramHistoryV3Impl &&
@@ -337,7 +337,7 @@ class _$D1DbExecutionResultImpl implements _D1DbExecutionResult {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$D1DbExecutionResultImpl &&
