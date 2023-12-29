@@ -8,6 +8,11 @@ jobs:
   check:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      FLUTTER_VERSION:
+      FLUTTER_CHANNEL:
+      FLUTTER_HOME:
+      PUB_CACHE:
 
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions
     permissions:

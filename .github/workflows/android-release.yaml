@@ -7,6 +7,10 @@ on:
 
 jobs:
   build:
+    env:
+      FLUTTER_VERSION:
+      FLUTTER_CHANNEL:
+      FLUTTER_HOME:
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
