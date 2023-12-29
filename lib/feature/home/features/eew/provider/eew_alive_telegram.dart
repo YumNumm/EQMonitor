@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'eew_alive_telegram.g.dart';
 
 /// イベント終了していないEEW
-@Riverpod(dependencies: [eewTelegram])
+@riverpod
 List<EarthquakeHistoryItem>? eewAliveTelegram(EewAliveTelegramRef ref) {
   final state = ref.watch(eewTelegramProvider);
   final value = state.valueOrNull;

@@ -8,7 +8,7 @@ part of 'eew_telegram_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$eewWsTelegramHash() => r'835bc8ff7c4b0b742034359755e5efb2dca9ffbb';
+String _$eewWsTelegramHash() => r'6075d4c942f0fa29bf80fc8398f8275331e03552';
 
 /// See also [EewWsTelegram].
 @ProviderFor(EewWsTelegram)
@@ -19,11 +19,8 @@ final eewWsTelegramProvider =
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
       : _$eewWsTelegramHash,
-  dependencies: <ProviderOrFamily>[telegramWsProvider],
-  allTransitiveDependencies: <ProviderOrFamily>{
-    telegramWsProvider,
-    ...?telegramWsProvider.allTransitiveDependencies
-  },
+  dependencies: null,
+  allTransitiveDependencies: null,
 );
 
 typedef _$EewWsTelegram = StreamNotifier<EewWsItem>;

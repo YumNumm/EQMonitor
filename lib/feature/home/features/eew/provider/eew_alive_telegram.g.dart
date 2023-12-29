@@ -8,7 +8,7 @@ part of 'eew_alive_telegram.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$eewAliveTelegramHash() => r'e554e3292711af5f891a42d418cd99cdab3ea73a';
+String _$eewAliveTelegramHash() => r'946199afe6f090eae87ad601e57624d08ede17f3';
 
 /// イベント終了していないEEW
 ///
@@ -21,11 +21,8 @@ final eewAliveTelegramProvider =
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
       : _$eewAliveTelegramHash,
-  dependencies: <ProviderOrFamily>[eewTelegramProvider],
-  allTransitiveDependencies: <ProviderOrFamily>{
-    eewTelegramProvider,
-    ...?eewTelegramProvider.allTransitiveDependencies
-  },
+  dependencies: null,
+  allTransitiveDependencies: null,
 );
 
 typedef EewAliveTelegramRef
