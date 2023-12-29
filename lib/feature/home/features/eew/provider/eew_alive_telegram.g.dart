@@ -8,7 +8,7 @@ part of 'eew_alive_telegram.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$eewAliveTelegramHash() => r'3aaa11eaa3f0424d7936ef4ef97873c4de8900e9';
+String _$eewAliveTelegramHash() => r'e17c3dd6d88428dd5a6d0486e80eda4e84102cdf';
 
 /// イベント終了していないEEW
 ///
@@ -32,5 +32,20 @@ final eewAliveTelegramProvider =
 
 typedef EewAliveTelegramRef
     = AutoDisposeProviderRef<List<EarthquakeHistoryItem>?>;
+String _$eewAliveCheckerHash() => r'b0fa8533e9d43c782b141fa6e24f080e863105d6';
+
+/// See also [eewAliveChecker].
+@ProviderFor(eewAliveChecker)
+final eewAliveCheckerProvider = AutoDisposeProvider<EewAliveChecker>.internal(
+  eewAliveChecker,
+  name: r'eewAliveCheckerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$eewAliveCheckerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef EewAliveCheckerRef = AutoDisposeProviderRef<EewAliveChecker>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
