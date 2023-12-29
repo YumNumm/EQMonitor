@@ -10,6 +10,7 @@ part 'telegram_provider.g.dart';
 
 @Riverpod(
   keepAlive: true,
+  dependencies: [telegramSocketIo, telegramSocketIo],
 )
 class TelegramWs extends _$TelegramWs {
   @override

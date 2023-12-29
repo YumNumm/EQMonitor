@@ -9,6 +9,7 @@ part 'eew_telegram_provider.g.dart';
 
 @Riverpod(
   keepAlive: true,
+  dependencies: [TelegramWs],
 )
 class EewWsTelegram extends _$EewWsTelegram {
   @override

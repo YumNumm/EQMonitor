@@ -9,7 +9,7 @@ part of 'earthquake_history_view_model.dart';
 // **************************************************************************
 
 String _$earthquakeHistoryViewModelHash() =>
-    r'd613e6883c97ee64bdeaa1a212209c3f4d50ea30';
+    r'fccad9f9ef687ed9f8a179f4e4f5c0c2b9d22bdb';
 
 /// See also [EarthquakeHistoryViewModel].
 @ProviderFor(EarthquakeHistoryViewModel)
@@ -22,14 +22,14 @@ final earthquakeHistoryViewModelProvider = NotifierProvider<
       ? null
       : _$earthquakeHistoryViewModelHash,
   dependencies: <ProviderOrFamily>[
-    earthquakeHistoryUseCaseProvider,
-    telegramWsProvider
+    telegramWsProvider,
+    earthquakeHistoryUseCaseProvider
   ],
   allTransitiveDependencies: <ProviderOrFamily>{
-    earthquakeHistoryUseCaseProvider,
-    ...?earthquakeHistoryUseCaseProvider.allTransitiveDependencies,
     telegramWsProvider,
-    ...?telegramWsProvider.allTransitiveDependencies
+    ...?telegramWsProvider.allTransitiveDependencies,
+    earthquakeHistoryUseCaseProvider,
+    ...?earthquakeHistoryUseCaseProvider.allTransitiveDependencies
   },
 );
 

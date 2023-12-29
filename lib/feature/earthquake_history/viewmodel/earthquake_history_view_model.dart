@@ -20,7 +20,7 @@ part 'earthquake_history_view_model.g.dart';
 
 @Riverpod(
   keepAlive: true,
-  dependencies: [earthquakeHistoryUseCase, TelegramWs],
+  dependencies: [TelegramWs, earthquakeHistoryUseCase],
 )
 class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
   @override
