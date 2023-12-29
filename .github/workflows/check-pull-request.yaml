@@ -59,7 +59,6 @@ jobs:
 
         # use flutter-analyze-commenter
       - uses: yorifuji/flutter-analyze-commenter@v1
-        if: ${{ !cancelled() }} # required to run this step even if flutter analyze fails
         with:
           analyze-log: flutter_analyze.log # file path for analyze log
 
