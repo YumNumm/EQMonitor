@@ -179,7 +179,7 @@ class _$CommentsImpl implements _Comments {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CommentsImpl &&
@@ -358,7 +358,7 @@ class _$CommentsOmitVarImpl implements _CommentsOmitVar {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CommentsOmitVarImpl &&
@@ -521,7 +521,7 @@ class _$ForecastCommentsImpl implements _ForecastComments {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ForecastCommentsImpl &&
@@ -684,7 +684,7 @@ class _$VarCommentsImpl implements _VarComments {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$VarCommentsImpl &&
@@ -826,7 +826,7 @@ class _$CommentsOnlyFreeImpl implements _CommentsOnlyFree {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CommentsOnlyFreeImpl &&
