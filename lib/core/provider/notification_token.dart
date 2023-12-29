@@ -6,7 +6,9 @@ part 'notification_token.freezed.dart';
 part 'notification_token.g.dart';
 
 @riverpod
-Future<NotificationTokenModel> notificationToken(NotificationTokenRef ref) async {
+Future<NotificationTokenModel> notificationToken(
+  NotificationTokenRef ref,
+) async {
   final messaging = ref.watch(firebaseMessagingProvider);
   final results = await (
     messaging.getAPNSToken(),

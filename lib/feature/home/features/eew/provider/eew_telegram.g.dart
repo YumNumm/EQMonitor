@@ -8,7 +8,7 @@ part of 'eew_telegram.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$eewTelegramHash() => r'2496e686359cbce485ee98ad1c9a372fce97a56d';
+String _$eewTelegramHash() => r'0ce98004d262083f6eb12c7e732cbcacde83d86d';
 
 /// EEWを持つEarthquakeHistoryItem
 ///
@@ -20,8 +20,11 @@ final eewTelegramProvider =
   name: r'eewTelegramProvider',
   debugGetCreateSourceHash:
       const bool.fromEnvironment('dart.vm.product') ? null : _$eewTelegramHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
+  dependencies: <ProviderOrFamily>[earthquakeHistoryViewModelProvider],
+  allTransitiveDependencies: <ProviderOrFamily>{
+    earthquakeHistoryViewModelProvider,
+    ...?earthquakeHistoryViewModelProvider.allTransitiveDependencies
+  },
 );
 
 typedef EewTelegramRef

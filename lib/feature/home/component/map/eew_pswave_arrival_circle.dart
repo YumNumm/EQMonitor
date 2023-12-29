@@ -46,7 +46,7 @@ class EewPsWaveArrivalCircleWidget extends HookConsumerWidget {
     //if (eews.isEmpty) {
     //  return const SizedBox.shrink();
     // }
-    // TODO
+    // TODO(YumNumm): ここでEEWを取得する
 
     final controller = useAnimationController(
       duration: const Duration(microseconds: 78000),

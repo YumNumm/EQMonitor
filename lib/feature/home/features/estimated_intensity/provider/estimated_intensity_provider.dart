@@ -1,8 +1,6 @@
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
-import 'package:eqmonitor/feature/home/features/estimated_intensity/data/estimated_intensity_data_source.dart';
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/kmoni_observation_point.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 
 part 'estimated_intensity_provider.g.dart';
 
@@ -23,9 +21,6 @@ class EstimatedIntensity extends _$EstimatedIntensity {
     */
     return [];
   }
-
-  late EstimatedIntensityDataSource _dataSource;
-  late Talker _talker;
 
   List<AnalyzedKmoniObservationPoint> calc(List<EarthquakeHistoryItem> eews) {
     return [];
