@@ -12,9 +12,11 @@ jobs:
       id-token: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      # https://github.com/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
       - id: tagpr
         uses: Songmu/tagpr@v1
         env:

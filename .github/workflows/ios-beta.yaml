@@ -12,8 +12,12 @@ jobs:
       TZ: Asia/Tokyo
 
     steps:
-      #リポジトリからソースをダンロード
-      - uses: actions/checkout@v2
+      # https://github.com/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          
 
       - name: Set up ssh
         run: |
