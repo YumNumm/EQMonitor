@@ -124,7 +124,7 @@ class _$DoubleVectorImpl implements _DoubleVector {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DoubleVectorImpl &&
@@ -276,7 +276,7 @@ class _$IntVectorImpl implements _IntVector {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$IntVectorImpl &&

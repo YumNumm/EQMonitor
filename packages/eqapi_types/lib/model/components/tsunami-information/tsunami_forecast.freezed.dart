@@ -257,7 +257,7 @@ class _$TsunamiForecastImpl implements _TsunamiForecast {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TsunamiForecastImpl &&
@@ -447,7 +447,7 @@ class _$TsunamiForecastFirstHeightImpl implements _TsunamiForecastFirstHeight {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TsunamiForecastFirstHeightImpl &&
@@ -632,7 +632,7 @@ class _$TsunamiForecastMaxHeightImpl implements _TsunamiForecastMaxHeight {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TsunamiForecastMaxHeightImpl &&
@@ -853,7 +853,7 @@ class _$TsunamiForecastStationImpl implements _TsunamiForecastStation {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TsunamiForecastStationImpl &&

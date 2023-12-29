@@ -124,7 +124,7 @@ class _$ForecastMaxIntImpl implements _ForecastMaxInt {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ForecastMaxIntImpl &&
@@ -279,7 +279,7 @@ class _$ForecastMaxLgIntImpl implements _ForecastMaxLgInt {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ForecastMaxLgIntImpl &&
