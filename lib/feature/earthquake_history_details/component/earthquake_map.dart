@@ -142,7 +142,6 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         return grouped;
       }
     });
-    final stations = intensity?.stations ?? [];
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final mapStyle = ref.watch(mapStyleProvider);
     final styleJsonFuture = useFuture(mapStyle.getStyle(isDark: isDark));
@@ -461,7 +460,7 @@ class _FillAction extends _MapLibreAction {
 
   @override
   Future<void> dispose(map_libre.MaplibreMapController controller) {
-    // TODO: implement dispose
+    // TODO(YumNumm): implement dispose
     throw UnimplementedError();
   }
 }

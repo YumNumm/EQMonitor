@@ -10,10 +10,17 @@ jobs:
     timeout-minutes: 60
     env:
       TZ: Asia/Tokyo
+      FLUTTER_VERSION:
+      FLUTTER_CHANNEL:
+      FLUTTER_HOME:
 
     steps:
-      #リポジトリからソースをダンロード
-      - uses: actions/checkout@v2
+      # https://github.com/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
 
       - name: Set up ssh
         run: |

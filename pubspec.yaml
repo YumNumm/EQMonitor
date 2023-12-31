@@ -61,6 +61,7 @@ dependencies:
     git:
       url: git@github.com:YumNumm/flutter-maplibre-gl.git
       ref: 0bf326044759dfc2f590a1c219d2f1eb86e7b8ad
+  mocktail: ^1.0.2
   native_shared_preferences: ^2.0.7
   ntp: ^2.0.0
   package_info_plus: ^5.0.1
@@ -88,6 +89,7 @@ dependencies:
       branch: dev
       ref: 6425594b611b5f44ad88258cc97641ff96aba014
       path: packages/talker_flutter
+  test: ^1.24.9
   topo_map:
     git:
       url: https://github.com/YumNumm/EQMonitor.git

@@ -4,7 +4,6 @@ import 'package:eqapi_types/model/telegram_v3.dart';
 import 'package:eqmonitor/core/component/map/model/map_state.dart';
 import 'package:eqmonitor/core/component/map/utils/web_mercator_projection.dart';
 import 'package:eqmonitor/core/component/map/view_model/map_viewmodel.dart';
-import 'package:eqmonitor/feature/home/features/eew/eew_provider.dart';
 import 'package:eqmonitor/feature/home/features/travel_time/model/travel_time_table.dart';
 import 'package:eqmonitor/feature/home/features/travel_time/provider/travel_time_provider.dart';
 import 'package:flutter/material.dart';
@@ -42,11 +41,12 @@ class EewPsWaveArrivalCircleWidget extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(mapViewModelProvider(mapKey));
-    final travelTimeTables = ref.watch(travelTimeProvider);
-    final eews = ref.watch(eewFilteredTelegramProvider);
-    if (eews.isEmpty) {
-      return const SizedBox.shrink();
-    }
+    final travelTimeTables = ref.watch(travelTimeProvider).requireValue;
+    //final eews = ref.watch(eewFilteredTelegramProvider);
+    //if (eews.isEmpty) {
+    //  return const SizedBox.shrink();
+    // }
+    // TODO(YumNumm): ここでEEWを取得する
 
     final controller = useAnimationController(
       duration: const Duration(microseconds: 78000),
@@ -64,7 +64,7 @@ class EewPsWaveArrivalCircleWidget extends HookConsumerWidget {
       willChange: true,
       painter: _HypocenterPainter(
         state: state,
-        eews: eews,
+        eews: [],
         travelTimeTables: travelTimeTables,
         drawBorder: drawBorder,
         drawGradient: drawGradient,

@@ -26,10 +26,18 @@ jobs:
       KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       ALIAS: ${{ secrets.ALIAS }}
       KEY_PATH: key.jks
+      FLUTTER_VERSION:
+      FLUTTER_CHANNEL:
+      FLUTTER_HOME:
+      CI_ACTION_REF_NAME:
 
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v2
+      # https://github.com/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
       - name: Set up ssh
         run: |

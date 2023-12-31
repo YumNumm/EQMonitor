@@ -8,13 +8,12 @@ part of 'travel_time_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$travelTimeHash() => r'457a7d39d3b801a9dfecd594a69f6f3431d89c05';
+String _$travelTimeHash() => r'b309b731b7ecb63f9896067485571d5e34249361';
 
-/// See also [TravelTime].
-@ProviderFor(TravelTime)
-final travelTimeProvider =
-    NotifierProvider<TravelTime, TravelTimeTables>.internal(
-  TravelTime.new,
+/// See also [travelTime].
+@ProviderFor(travelTime)
+final travelTimeProvider = FutureProvider<TravelTimeTables>.internal(
+  travelTime,
   name: r'travelTimeProvider',
   debugGetCreateSourceHash:
       const bool.fromEnvironment('dart.vm.product') ? null : _$travelTimeHash,
@@ -22,6 +21,24 @@ final travelTimeProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$TravelTime = Notifier<TravelTimeTables>;
+typedef TravelTimeRef = FutureProviderRef<TravelTimeTables>;
+String _$travelTimeDepthMapHash() =>
+    r'baadfe17a963b0f833d36447080933a6b4b6238e';
+
+/// See also [travelTimeDepthMap].
+@ProviderFor(travelTimeDepthMap)
+final travelTimeDepthMapProvider =
+    FutureProvider<Map<int, List<TravelTimeTable>>>.internal(
+  travelTimeDepthMap,
+  name: r'travelTimeDepthMapProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$travelTimeDepthMapHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef TravelTimeDepthMapRef
+    = FutureProviderRef<Map<int, List<TravelTimeTable>>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -4,10 +4,7 @@ import 'package:eqmonitor/core/component/map/data/model/mutable_projected_featur
 import 'package:eqmonitor/core/component/map/model/map_config.dart';
 import 'package:eqmonitor/core/component/map/model/map_state.dart';
 import 'package:eqmonitor/core/component/map/view_model/map_viewmodel.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/topology_map/provider/topology_maps.dart';
-import 'package:eqmonitor/feature/home/features/eew/eew_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:topo_map/topo_map.dart';
@@ -29,9 +26,9 @@ class EewEstimatedIntensityWidget extends HookConsumerWidget {
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final eews = ref.watch(eewEstimatedIntensityListProvider);
+    // TODO(YumNumm): ここでEEWを取得する
+    //ref.watch(eewEstimatedIntensityListProvider);
 
-    final colorScheme = ref.watch(intensityColorProvider);
     return switch (zoomCachedProjectedFeatureLayer.value) {
       null => const SizedBox.shrink(),
       final data => CustomPaint(
@@ -44,14 +41,15 @@ class EewEstimatedIntensityWidget extends HookConsumerWidget {
             colorScheme:
                 isDark ? MapColorScheme.dark() : MapColorScheme.light(),
             maps: data,
-            areas: eews
+            areas: [],
+            /* eews
                 .map(
                   (e) => (
                     e.$1,
                     colorScheme.fromJmaForecastIntensity(e.$2).background
                   ),
                 )
-                .toList(),
+                .toList()*/
           ),
         ),
     };

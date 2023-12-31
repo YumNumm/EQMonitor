@@ -92,14 +92,16 @@ class EarthquakeNotificationSettingsPage extends ConsumerWidget {
                                 groupValue: state,
                                 value: choice,
                                 onChanged: (value) async {
-                                  showDialog<void>(
-                                    barrierDismissible: false,
-                                    context: context,
-                                    builder: (_) => const Center(
-                                      child:
-                                          CircularProgressIndicator.adaptive(),
+                                  unawaited(
+                                    showDialog<void>(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      builder: (_) => const Center(
+                                        child: CircularProgressIndicator
+                                            .adaptive(),
+                                      ),
                                     ),
-                                  ).ignore();
+                                  );
                                   final result = await ref
                                       .read(
                                         earthquakeNotificationSettingsViewModelProvider
