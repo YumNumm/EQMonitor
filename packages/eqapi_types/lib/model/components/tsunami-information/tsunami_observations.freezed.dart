@@ -149,7 +149,7 @@ class _$TsunamiObservationImpl implements _TsunamiObservation {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TsunamiObservationImpl &&
@@ -447,7 +447,7 @@ class _$TsunamiObservationStationImpl implements _TsunamiObservationStation {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TsunamiObservationStationImpl &&

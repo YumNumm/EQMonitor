@@ -161,7 +161,7 @@ class _$LineStringImpl implements _LineString {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LineStringImpl &&
@@ -361,7 +361,7 @@ class _$MultiLineStringImpl implements _MultiLineString {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MultiLineStringImpl &&
@@ -559,7 +559,7 @@ class _$PolygonImpl implements _Polygon {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PolygonImpl &&
@@ -758,7 +758,7 @@ class _$MultiPolygonImpl implements _MultiPolygon {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MultiPolygonImpl &&
@@ -959,7 +959,7 @@ class _$GeometryCollectionImpl implements _GeometryCollection {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$GeometryCollectionImpl &&
@@ -1134,7 +1134,7 @@ class _$NullGeometryObjectImpl implements _NullGeometryObject {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$NullGeometryObjectImpl &&

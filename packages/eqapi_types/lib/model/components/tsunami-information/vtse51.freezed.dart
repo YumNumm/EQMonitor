@@ -151,7 +151,7 @@ class _$PublicBodyVtse51TsunamiImpl implements _PublicBodyVtse51Tsunami {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PublicBodyVtse51TsunamiImpl &&

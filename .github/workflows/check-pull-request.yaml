@@ -1,0 +1,91 @@
+name: Check Pull Request
+
+on:
+  pull_request:
+    types: [opened, ready_for_review, synchronize]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      FLUTTER_VERSION:
+      FLUTTER_CHANNEL:
+      FLUTTER_HOME:
+      PUB_CACHE:
+
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions
+    permissions:
+      checks: write
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up ssh
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_ID_ED25519 }}" | base64 -d > ~/.ssh/id_ed25519
+          chmod 700 ~/.ssh/id_ed25519
+          eval $(ssh-agent -s)
+          echo "Host github.com \n\tIdentityFile ~/.ssh/id_ed25519\n\tUser git\n\tIdentityiesOnly yes" >> ~/.ssh/config
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+
+      - name: Fetch flutter config
+        uses: kuhnroyal/flutter-fvm-config-action@v1
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
+
+      # https://github.com/actions/cache
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ${{ env.PUB_CACHE }}
+            ${{ github.workspace }}/.packages
+            ${{ github.workspace }}/.flutter-plugins
+            ${{ github.workspace }}/.flutter-plugin-dependencies
+            ${{ github.workspace }}/.dart_tool/package_config.json
+          key: build-pubspec-${{ hashFiles(format('{0}{1}', github.workspace, '/pubspec.lock')) }}
+          restore-keys: |
+            build-pubspec-
+
+      - name: Install Melos
+        run: dart pub global activate melos
+
+      - name: Melos bootstrap
+        run: melos bootstrap
+
+      - name: flutter analyze
+        run: flutter analyze --write=flutter_analyze.log
+        continue-on-error: true
+
+        # use flutter-analyze-commenter
+      - uses: yorifuji/flutter-analyze-commenter@v1
+        with:
+          analyze-log: flutter_analyze.log # file path for analyze log
+
+      - name: Run test
+        run: flutter test --file-reporter="json:test-results.json"
+        continue-on-error: true
+
+      # https://github.com/dorny/test-reporter
+      - name: report test
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: "flutter test"
+          path: "test-results.json"
+          reporter: "flutter-json"
+          fail-on-error: "true"

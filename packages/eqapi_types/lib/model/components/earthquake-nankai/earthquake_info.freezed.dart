@@ -156,7 +156,7 @@ class _$EarthquakeNankaiInfoImpl implements _EarthquakeNankaiInfo {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeNankaiInfoImpl &&
@@ -318,7 +318,7 @@ class _$EarthquakeNankaiKindImpl implements _EarthquakeNankaiKind {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeNankaiKindImpl &&

@@ -192,7 +192,7 @@ class _$TopoJsonImpl implements _TopoJson {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TopoJsonImpl &&

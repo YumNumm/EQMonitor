@@ -115,8 +115,12 @@ class FcmEarthquakeTopic implements FcmTopic {
 
   @override
   // ignore: lines_longer_than_80_chars
-  String get topic =>
-      'earthquake_${intensity?.type.replaceAll("-", "lower").replaceAll("+", "upper") ?? "all"}';
+  String get topic {
+    final suffix =
+        intensity?.type.replaceAll('-', 'lower').replaceAll('+', 'upper') ??
+            'all';
+    return 'earthquake_$suffix';
+  }
 }
 
 enum FcmTopics {

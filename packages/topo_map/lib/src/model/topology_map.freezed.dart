@@ -199,7 +199,7 @@ class _$TopologyMapImpl implements _TopologyMap {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TopologyMapImpl &&
@@ -375,7 +375,7 @@ class _$TopologyArcImpl implements _TopologyArc {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TopologyArcImpl &&
@@ -538,7 +538,7 @@ class _$TopologyPolygonImpl implements _TopologyPolygon {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TopologyPolygonImpl &&

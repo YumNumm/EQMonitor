@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqapi_types/model/app_information.dart';
-import 'package:eqapi_types/model/information_v3.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'eqapi_client.g.dart';

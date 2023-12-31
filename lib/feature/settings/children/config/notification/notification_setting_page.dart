@@ -35,8 +35,6 @@ class _NotificationSettingsBody extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     useEffect(
       () {
         WidgetsBinding.instance.endOfFrame

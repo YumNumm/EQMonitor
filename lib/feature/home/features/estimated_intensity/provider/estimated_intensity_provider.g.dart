@@ -9,7 +9,7 @@ part of 'estimated_intensity_provider.dart';
 // **************************************************************************
 
 String _$estimatedIntensityHash() =>
-    r'f42fc9c87c6c64cd61033280f6885b10abe5874e';
+    r'b135577c039a089fea5838e5fca5f20f0df04f3b';
 
 /// See also [EstimatedIntensity].
 @ProviderFor(EstimatedIntensity)
@@ -20,11 +20,8 @@ final estimatedIntensityProvider = AutoDisposeNotifierProvider<
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
       : _$estimatedIntensityHash,
-  dependencies: <ProviderOrFamily>[eewTelegramProvider],
-  allTransitiveDependencies: <ProviderOrFamily>{
-    eewTelegramProvider,
-    ...?eewTelegramProvider.allTransitiveDependencies
-  },
+  dependencies: const <ProviderOrFamily>[],
+  allTransitiveDependencies: const <ProviderOrFamily>{},
 );
 
 typedef _$EstimatedIntensity

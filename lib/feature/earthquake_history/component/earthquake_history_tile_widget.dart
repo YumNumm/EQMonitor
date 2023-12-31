@@ -44,8 +44,6 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
 
     // 通常報以外かどうか
     final telegramStatuses = item.telegrams.map((e) => e.status).toSet();
-    final isNotNormal = telegramStatuses.contains(TelegramStatus.test) ||
-        telegramStatuses.contains(TelegramStatus.training);
 
     // ! title
     final title = StringBuffer();
