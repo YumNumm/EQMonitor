@@ -134,7 +134,7 @@ class _$WorldMapPropertyImpl implements _WorldMapProperty {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$WorldMapPropertyImpl &&

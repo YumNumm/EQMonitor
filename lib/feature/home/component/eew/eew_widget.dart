@@ -79,11 +79,7 @@ class EewWidget extends ConsumerWidget {
             horizontal: 8,
             vertical: 4,
           ),
-          child: Row(
-            children: [
-              Text(eew.text),
-            ],
-          ),
+          child: Text(eew.text),
         ),
       );
     }

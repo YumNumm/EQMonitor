@@ -117,7 +117,7 @@ class _$CrashlyticsSettingModelImpl implements _CrashlyticsSettingModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CrashlyticsSettingModelImpl &&

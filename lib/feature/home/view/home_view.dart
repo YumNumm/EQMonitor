@@ -22,6 +22,7 @@ import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_widget.dart';
 import 'package:eqmonitor/feature/home/viewmodel/home_viewmodel.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -53,10 +54,7 @@ class HomeView extends HookConsumerWidget {
       [mapKey],
     );
     // * 地図データが読み込まれるまでローディングを表示
-
-    return TalkerWrapper(
-      talker: ref.watch(talkerProvider),
-      child: Scaffold(
+final body =  Scaffold(
         appBar: AppBar(
           title: Text(
             'EQMonitor',
@@ -67,8 +65,15 @@ class HomeView extends HookConsumerWidget {
           forceMaterialTransparency: true,
         ),
         body: _HomeBodyWidget(mapKey: mapKey),
-      ),
-    );
+      );
+      if(kDebugMode){
+        return TalkerWrapper(
+          talker: ref.watch(talkerProvider),
+          child: body,
+        );
+      }else {
+        return body;
+      }
   }
 }
 

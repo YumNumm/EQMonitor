@@ -397,7 +397,7 @@ class _$IntensityColorModelImpl implements _IntensityColorModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$IntensityColorModelImpl &&
@@ -605,7 +605,7 @@ class _$TextColorModelImpl implements _TextColorModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TextColorModelImpl &&

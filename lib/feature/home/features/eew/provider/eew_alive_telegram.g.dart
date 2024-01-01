@@ -8,14 +8,34 @@ part of 'eew_alive_telegram.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$eewAliveTelegramHash() => r'e554e3292711af5f891a42d418cd99cdab3ea73a';
+String _$eewAliveNormalTelegramHash() =>
+    r'766b0b917c342b7df80bfb30b959f517a1c0b518';
+
+/// イベント終了していないEEWのうち、精度が低いものを除外したもの
+///
+/// Copied from [eewAliveNormalTelegram].
+@ProviderFor(eewAliveNormalTelegram)
+final eewAliveNormalTelegramProvider =
+    AutoDisposeProvider<List<EarthquakeHistoryItem>>.internal(
+  eewAliveNormalTelegram,
+  name: r'eewAliveNormalTelegramProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$eewAliveNormalTelegramHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef EewAliveNormalTelegramRef
+    = AutoDisposeProviderRef<List<EarthquakeHistoryItem>>;
+String _$eewAliveTelegramHash() => r'88a24577230a7b6f3e04bdbf54a0fa5fe4803d54';
 
 /// イベント終了していないEEW
 ///
 /// Copied from [eewAliveTelegram].
 @ProviderFor(eewAliveTelegram)
 final eewAliveTelegramProvider =
-    AutoDisposeProvider<List<EarthquakeHistoryItem>?>.internal(
+    Provider<List<EarthquakeHistoryItem>?>.internal(
   eewAliveTelegram,
   name: r'eewAliveTelegramProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -28,8 +48,7 @@ final eewAliveTelegramProvider =
   },
 );
 
-typedef EewAliveTelegramRef
-    = AutoDisposeProviderRef<List<EarthquakeHistoryItem>?>;
+typedef EewAliveTelegramRef = ProviderRef<List<EarthquakeHistoryItem>?>;
 String _$eewAliveCheckerHash() => r'b0fa8533e9d43c782b141fa6e24f080e863105d6';
 
 /// See also [eewAliveChecker].

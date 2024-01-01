@@ -122,7 +122,7 @@ class _$TelegramWsModelImpl implements _TelegramWsModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TelegramWsModelImpl &&

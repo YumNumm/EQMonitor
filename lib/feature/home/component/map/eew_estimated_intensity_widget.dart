@@ -1,13 +1,59 @@
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
+import 'package:eqapi_types/model/components/eew_intensity.dart';
+import 'package:eqapi_types/model/telegram_v3.dart';
 import 'package:eqmonitor/core/component/map/data/model/mutable_projected_feature_layer.dart';
 import 'package:eqmonitor/core/component/map/model/map_config.dart';
 import 'package:eqmonitor/core/component/map/model/map_state.dart';
 import 'package:eqmonitor/core/component/map/view_model/map_viewmodel.dart';
+import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
+import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/topology_map/provider/topology_maps.dart';
+import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
+import 'package:eqmonitor/feature/home/features/eew/provider/eew_alive_telegram.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:topo_map/topo_map.dart';
+
+part 'eew_estimated_intensity_widget.g.dart';
+
+/// EEWの予想震度のリスト
+@Riverpod(dependencies: [eewAliveTelegram])
+class EewEstimatedIntensityList extends _$EewEstimatedIntensityList {
+  @override
+  List<(int code, JmaForecastIntensity intensity)> build() {
+    ref.listen(
+      eewAliveTelegramProvider,
+      (_, next) => state = _build(next ?? []),
+    );
+    return _build(ref.read(eewAliveTelegramProvider) ?? []);
+  }
+
+  List<(int code, JmaForecastIntensity intensity)> _build(
+    List<EarthquakeHistoryItem> eews,
+  ) {
+    final normalEews = eews.where((e) => e.latestEew is TelegramVxse45Body);
+
+    final regions = normalEews
+        .map((e) => (e.latestEew! as TelegramVxse45Body).regions ?? [])
+        .flattened;
+    final result = <(int, JmaForecastIntensity)>[];
+    regions
+        .groupListsBy((e) => int.tryParse(e.code) ?? 0)
+        .forEach((key, value) {
+      final maxIntensity = value
+          .map((e) => e.forecastMaxInt.toDisplayMaxInt())
+          .sorted((a, b) => b.maxInt.compareTo(a.maxInt))
+          .firstOrNull;
+      if (maxIntensity != null) {
+        result.add((key, maxIntensity.maxInt));
+      }
+    });
+    return result;
+  }
+}
 
 class EewEstimatedIntensityWidget extends HookConsumerWidget {
   const EewEstimatedIntensityWidget({
@@ -26,8 +72,8 @@ class EewEstimatedIntensityWidget extends HookConsumerWidget {
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // TODO(YumNumm): ここでEEWを取得する
-    //ref.watch(eewEstimatedIntensityListProvider);
+    final eews = ref.watch(eewEstimatedIntensityListProvider) ;
+    final intensityColorScheme = ref.watch(intensityColorProvider);
 
     return switch (zoomCachedProjectedFeatureLayer.value) {
       null => const SizedBox.shrink(),
@@ -41,15 +87,16 @@ class EewEstimatedIntensityWidget extends HookConsumerWidget {
             colorScheme:
                 isDark ? MapColorScheme.dark() : MapColorScheme.light(),
             maps: data,
-            areas: [],
-            /* eews
+            areas: eews
                 .map(
                   (e) => (
                     e.$1,
-                    colorScheme.fromJmaForecastIntensity(e.$2).background
+                    intensityColorScheme
+                        .fromJmaForecastIntensity(e.$2)
+                        .background
                   ),
                 )
-                .toList()*/
+                .toList(),
           ),
         ),
     };

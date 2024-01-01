@@ -161,7 +161,7 @@ class _$EarthquakeHistoryConfigModelImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeHistoryConfigModelImpl &&
@@ -338,7 +338,7 @@ class _$EarthquakeHistoryListConfigImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeHistoryListConfigImpl &&
@@ -502,7 +502,7 @@ class _$EarthquakeHistoryDetailConfigImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeHistoryDetailConfigImpl &&

@@ -1,5 +1,6 @@
+import 'package:eqapi_types/model/telegram_v3.dart';
 import 'package:eqmonitor/core/component/map/view_model/map_viewmodel.dart';
-import 'package:eqmonitor/feature/home/features/eew/provider/eew_telegram.dart';
+import 'package:eqmonitor/feature/home/features/eew/provider/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/features/estimated_intensity/provider/estimated_intensity_provider.dart';
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/kmoni_observation_point.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class HomeViewModel {
   ) {
     final filtered = _getTargets(points);
     // EEWの要素数が変化したかチェック
-    final length = ref.read(eewTelegramProvider).value?.length;
+    final length = ref.read(eewAliveTelegramProvider)?.length;
     if (_lastEstimatedIntensityChangedEewsLength != length) {
       _lastEstimatedIntensityChangedEewsLength = length ?? 0;
       ref.read(mapViewModelProvider(mapKey).notifier).resetMarkAsMoved();
@@ -79,6 +80,27 @@ class HomeViewModel {
 
   /// 震度1以上の観測点のうち、震度が最大~最大-1の観測点を含むLatLngの配列を返す
   List<LatLng>? _getTargets(List<AnalyzedKmoniObservationPoint> points) {
-    return [];
+    final filtered = points.where((e) => e.intensityValue! > 0).toList();
+    if (filtered.isEmpty) {
+      return null;
+    }
+    final max = filtered.first.intensityValue!;
+    // しきい値
+    final threshold = max - 2;
+    final filteredPoints =
+        filtered.where((e) => e.intensityValue! >= threshold);
+    if (filteredPoints.isEmpty) {
+      return null;
+    }
+    final latLngs = filteredPoints.map((e) => e.point.latLng).toList()
+      ..addAll(
+        (ref.read(eewAliveTelegramProvider) ?? [])
+            .map((element) => element.latestEew)
+            .whereType<TelegramVxse45Body>()
+            .where((element) => element.hypocenter != null)
+            .map((e) => e.hypocenter!.coordinate)
+            .whereType<LatLng>(),
+      );
+    return latLngs;
   }
 }

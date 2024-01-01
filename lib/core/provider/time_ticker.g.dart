@@ -8,11 +8,11 @@ part of 'time_ticker.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$timeTickerHash() => r'37cf92198dccf7b839e969d9e6502d8b0d87f4c1';
+String _$timeTickerHash() => r'044c3a83021e23d21f28147fc9676a6dd92b87c2';
 
 /// See also [timeTicker].
 @ProviderFor(timeTicker)
-final timeTickerProvider = AutoDisposeStreamProvider<DateTime>.internal(
+final timeTickerProvider = StreamProvider<DateTime>.internal(
   timeTicker,
   name: r'timeTickerProvider',
   debugGetCreateSourceHash:
@@ -21,6 +21,6 @@ final timeTickerProvider = AutoDisposeStreamProvider<DateTime>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef TimeTickerRef = AutoDisposeStreamProviderRef<DateTime>;
+typedef TimeTickerRef = StreamProviderRef<DateTime>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

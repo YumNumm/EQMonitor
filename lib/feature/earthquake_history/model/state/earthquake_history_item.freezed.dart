@@ -233,7 +233,7 @@ class _$EarthquakeHistoryItemImpl implements _EarthquakeHistoryItem {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeHistoryItemImpl &&
@@ -532,7 +532,7 @@ class _$EarthquakeDataImpl implements _EarthquakeData {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeDataImpl &&
@@ -788,7 +788,7 @@ class _$TsunamiDataImpl implements _TsunamiData {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TsunamiDataImpl &&

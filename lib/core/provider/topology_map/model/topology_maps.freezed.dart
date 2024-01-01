@@ -120,7 +120,7 @@ class _$TopologyMapsImpl with DiagnosticableTreeMixin implements _TopologyMaps {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TopologyMapsImpl &&
@@ -253,7 +253,7 @@ class _$MapDataImpl with DiagnosticableTreeMixin implements _MapData {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MapDataImpl &&
