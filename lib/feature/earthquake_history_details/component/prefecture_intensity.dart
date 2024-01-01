@@ -103,15 +103,15 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
                   subtitle: Text(
                     kv.value.map((e) => e.prefecture.name).join(', '),
                   ),
-                  onTap: kv.value.isEmpty
-                      ? null
-                      : () => _PrefectureModalBottomSheet.show(
+                  onTap: hasChildren
+                      ? () => _PrefectureModalBottomSheet.show(
                             context: context,
                             intensity: kv.key,
                             prefectures: kv.value,
-                          ),
+                          )
+                      : null,
                   trailing:
-                      hasChildren ? null : const Icon(Icons.chevron_right),
+                      hasChildren ? const Icon(Icons.chevron_right) : null,
                 );
               }(),
           ],

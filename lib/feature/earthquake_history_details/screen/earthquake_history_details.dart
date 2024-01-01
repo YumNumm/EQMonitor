@@ -418,6 +418,7 @@ class _EarthquakeHypoInfoWidget extends ConsumerWidget {
             color: textTheme.titleMedium!.color!.withOpacity(0.8),
           ),
         ),
+        const SizedBox(width: 4),
         Text(
           item.telegrams.any((element) => element.type == TelegramType.vxse53)
               ? '不明'
@@ -498,7 +499,7 @@ class _EarthquakeCommentWidget extends StatelessWidget {
       return BorderedContainer(
         padding: const EdgeInsets.all(8),
         elevation: 1,
-        child: MarkdownBody(
+        child: Markdown(
           data: switch ((comment.forecast?.text, comment.free)) {
             (final String text, final String free) => '$text\n\n$free',
             (final String text, _) => text,
@@ -508,6 +509,9 @@ class _EarthquakeCommentWidget extends StatelessWidget {
               .toHalfWidth,
           selectable: true,
           softLineBreak: true,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
           onTapLink: (text, href, title) async {
             final uri = Uri.tryParse(href.toString());
             if (uri == null) {
