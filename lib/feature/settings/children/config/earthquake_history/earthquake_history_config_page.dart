@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/provider/config/earthquake_history/earthquake_history_config_provider.dart';
 import 'package:eqmonitor/core/provider/config/earthquake_history/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -19,11 +20,13 @@ class EarthquakeHistoryConfigPage extends StatelessWidget {
             text: '地震履歴一覧',
           ),
           _EarthquakeHistoryListConfigWidget(),
-          Divider(),
-          SettingsSectionHeader(
-            text: '地震履歴詳細',
-          ),
-          _EarthquakeHistoryDetailConfigWidget(),
+          if (kDebugMode) ...[
+            Divider(),
+            SettingsSectionHeader(
+              text: '地震履歴詳細',
+            ),
+            _EarthquakeHistoryDetailConfigWidget(),
+          ],
         ],
       ),
     );

@@ -8,10 +8,12 @@ class BasicModalSheet extends HookWidget {
     required this.controller,
     required this.children,
     this.hasAppBar = true,
+    this.useColumn = false,
   });
   final SheetController controller;
   final List<Widget> children;
   final bool hasAppBar;
+  final bool useColumn;
 
   @override
   Widget build(BuildContext context) {
@@ -59,12 +61,21 @@ class BasicModalSheet extends HookWidget {
                 child: Column(
                   children: <Widget>[
                     barWidget,
-                    Expanded(
-                      child: ListView(
-                        padding: const EdgeInsets.all(2),
-                        children: children,
+                    if (useColumn)
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: children,
+                          ),
+                        ),
+                      )
+                    else
+                      Expanded(
+                        child: ListView(
+                          padding: const EdgeInsets.all(2),
+                          children: children,
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),
