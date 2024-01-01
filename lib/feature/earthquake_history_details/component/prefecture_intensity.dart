@@ -89,7 +89,7 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
                   size: 16,
                 ),
                 title: Text(
-                  '震度${kv.key.type}',
+                  '震度${kv.key.type.replaceAll("+", "強").replaceAll("-", "弱")}',
                   style: textTheme.titleMedium!.copyWith(
                     fontFamily: FontFamily.jetBrainsMono,
                     fontFamilyFallback: [FontFamily.notoSansJP],
