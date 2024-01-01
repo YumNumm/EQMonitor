@@ -72,7 +72,7 @@ dependencies:
   shared_preferences: ^2.2.2
   sheet:
     git:
-      url: git@github.com:jamesblasco/modal_bottom_sheet.git
+      url: git@github.com:YumNumm/modal_bottom_sheet.git
       branch: main
       path: sheet
   simplify: ^1.0.2
