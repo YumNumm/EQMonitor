@@ -13,6 +13,7 @@ import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_hist
 import 'package:eqmonitor/feature/earthquake_history/viewmodel/earthquake_history_view_model.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/earthquake_map.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/prefecture_intensity.dart';
+import 'package:eqmonitor/feature/earthquake_history_details/component/prefecture_lpgm_intensity.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
@@ -40,9 +41,33 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
         ?.value
         ?.firstWhereOrNull((e) => e.eventId == eventId);
     if (data == null) {
-      return const Scaffold(
+      final state = ref.watch(earthquakeHistoryViewModelProvider);
+      final isLoading = state?.isLoading ?? false;
+      final isReloading = state?.isReloading ?? false;
+      final disableLoading = isLoading || isReloading;
+      return Scaffold(
         body: Center(
-          child: Text('当該データが見つかりませんでした\n再度地震の履歴を読み込んでください'),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('当該データが見つかりませんでした\n再度地震の履歴を読み込んでください'),
+              const SizedBox(height: 8),
+              FilledButton(
+                onPressed: disableLoading
+                    ? null
+                    : () => ref
+                        .read(earthquakeHistoryViewModelProvider.notifier)
+                        .fetch(isLoadMore: true),
+                child: const Text('追加で地震履歴を読み込む'),
+              ),
+              if (disableLoading) ...[
+                const SizedBox(height: 8),
+                const Center(
+                  child: CircularProgressIndicator.adaptive(),
+                ),
+              ],
+            ],
+          ),
         ),
       );
     }
@@ -153,12 +178,17 @@ class _Sheet extends StatelessWidget {
       bottom: false,
       child: BasicModalSheet(
         hasAppBar: false,
+        useColumn: true,
         controller: sheetController,
         children: [
           _EarthquakeHypoInfoWidget(item: item),
           const Divider(),
-          _EarthquakeCommentWidget(item: item),
           PrefectureIntensityWidget(item: item),
+          if (item.earthquake.lgIntensity != null)
+            PrefectureLpgmIntensityWidget(
+              item: item,
+            ),
+          _EarthquakeCommentWidget(item: item),
           if (item.latestEewTelegram != null)
             ListTile(
               title: const Text('この地震に関する緊急地震速報'),
