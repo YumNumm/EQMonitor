@@ -89,6 +89,12 @@ class EarthquakeHistoryTileWidget extends ConsumerWidget {
         case _:
           body.write('深さ${item.earthquake.earthquake!.hypocenter.depth}km');
       }
+    } else {
+      // 受信時刻
+      body.write(
+        DateFormat('yyyy/MM/dd HH:mm頃 発表')
+            .format(item.telegrams.first.pressTime.toLocal()),
+      );
     }
     var trailing = '';
     if (item.earthquake.isVolcano) {
