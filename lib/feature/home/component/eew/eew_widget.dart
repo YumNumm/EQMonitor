@@ -6,7 +6,7 @@ import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_c
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
-import 'package:eqmonitor/feature/home/features/eew/provider/eew_telegram.dart';
+import 'package:eqmonitor/feature/home/features/eew/provider/eew_alive_telegram.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +19,8 @@ class EewWidgets extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(eewTelegramProvider);
-    final value = state.value;
-    if (value == null || value.isEmpty) {
+    final state = ref.watch(eewAliveTelegramProvider) ?? [];
+    if (state.isEmpty) {
       return const SizedBox.shrink();
     }
     return LayoutBuilder(
@@ -29,11 +28,11 @@ class EewWidgets extends ConsumerWidget {
         return SizedBox(
           width: constraints.maxWidth,
           child: Column(
-            children: value
+            children: state
                 .mapIndexed(
                   (index, element) => EewWidget(
                     item: element,
-                    index: (value.length > 1) ? '${index + 1}' : null,
+                    index: (state.length > 1) ? '${index + 1}' : null,
                   ),
                 )
                 .toList(),
