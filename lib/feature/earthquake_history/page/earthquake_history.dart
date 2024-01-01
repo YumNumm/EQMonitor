@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/provider/config/earthquake_history/earthquake_history_config_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/component/earthquake_history_tile_widget.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
@@ -25,7 +26,9 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
                   ),
             );
             // 初回読み込みを行う
-            await ref.read(earthquakeHistoryViewModelProvider.notifier).fetch();
+            await ref
+                .read(earthquakeHistoryViewModelProvider.notifier)
+                .fetchIfNeeded();
           },
         );
         return null;
@@ -37,8 +40,16 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
       child: CustomScrollView(
         primary: true,
         slivers: [
-          const SliverAppBar.medium(
-            title: Text('地震の履歴'),
+          SliverAppBar.medium(
+            title: const Text('地震の履歴'),
+            actions: [
+              IconButton(
+                onPressed: () => context.push(
+                  const EarthquakeHistoryConfigRoute().location,
+                ),
+                icon: const Icon(Icons.settings),
+              ),
+            ],
           ),
           state?.when(
                 data: (data) {
@@ -101,7 +112,7 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
   }
 }
 
-class EarthquakeHistoryListView extends StatelessWidget {
+class EarthquakeHistoryListView extends ConsumerWidget {
   const EarthquakeHistoryListView({
     super.key,
     required this.data,
@@ -110,7 +121,11 @@ class EarthquakeHistoryListView extends StatelessWidget {
   final List<EarthquakeHistoryItem> data;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final shouldShowBackgroundColor = ref.watch(
+      earthquakeHistoryConfigProvider
+          .select((value) => value.list.isFillBackground),
+    );
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         childCount: data.length + 1,
@@ -124,6 +139,7 @@ class EarthquakeHistoryListView extends StatelessWidget {
             onTap: (p0) => context.push(
               EarthquakeHistoryDetailsRoute(p0.eventId).location,
             ),
+            showBackgroundColor: shouldShowBackgroundColor,
           );
         },
       ),

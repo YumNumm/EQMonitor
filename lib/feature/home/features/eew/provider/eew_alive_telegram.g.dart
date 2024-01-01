@@ -9,7 +9,7 @@ part of 'eew_alive_telegram.dart';
 // **************************************************************************
 
 String _$eewAliveNormalTelegramHash() =>
-    r'766b0b917c342b7df80bfb30b959f517a1c0b518';
+    r'5f9a2dc85fdde28fc0268b4a10e52edb332abcf1';
 
 /// イベント終了していないEEWのうち、精度が低いものを除外したもの
 ///
@@ -22,8 +22,11 @@ final eewAliveNormalTelegramProvider =
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
       : _$eewAliveNormalTelegramHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
+  dependencies: <ProviderOrFamily>[eewAliveTelegramProvider],
+  allTransitiveDependencies: <ProviderOrFamily>{
+    eewAliveTelegramProvider,
+    ...?eewAliveTelegramProvider.allTransitiveDependencies
+  },
 );
 
 typedef EewAliveNormalTelegramRef

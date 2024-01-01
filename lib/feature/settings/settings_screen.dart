@@ -78,14 +78,13 @@ class SettingsScreen extends HookConsumerWidget {
             leading: const Icon(Icons.settings),
             onTap: () => context.push(const KmoniRoute().location),
           ),
-          if (kDebugMode)
-            ListTile(
-              title: const Text('地震履歴設定'),
-              leading: const Icon(Icons.history),
-              onTap: () => context.push(
-                const EarthquakeHistoryConfigRoute().location,
-              ),
+          ListTile(
+            title: const Text('地震履歴設定'),
+            leading: const Icon(Icons.history),
+            onTap: () => context.push(
+              const EarthquakeHistoryConfigRoute().location,
             ),
+          ),
           ListTile(
             title: const Text('震度配色設定'),
             leading: const Icon(Icons.color_lens),
