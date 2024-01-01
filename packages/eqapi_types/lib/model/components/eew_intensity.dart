@@ -41,7 +41,7 @@ extension ForecastMaxLgIntDisplay on ForecastMaxLgInt {
   /// 表示する最大震度
   /// 推定最大長周期地震動階級0の場合、nullを返す
   /// 0以上の場合、推定最大長周期地震動階級を返す
-  ({JmaForecastLgIntensity? maxLgInt, bool isOver}) toDisplayMaxLgInt() {
+  ({JmaForecastLgIntensity maxLgInt, bool isOver}) toDisplayMaxLgInt() {
     if (to == JmaForecastLgIntensityOver.over) {
       return (maxLgInt: from, isOver: true);
     }
