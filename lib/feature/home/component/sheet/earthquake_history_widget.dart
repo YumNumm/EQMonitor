@@ -19,7 +19,9 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
         WidgetsBinding.instance.endOfFrame.then(
           (_) =>
               // 初回読み込みを行う
-              ref.read(earthquakeHistoryViewModelProvider.notifier).fetch(),
+              ref
+                  .read(earthquakeHistoryViewModelProvider.notifier)
+                  .fetchIfNeeded(),
         );
         return null;
       },

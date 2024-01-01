@@ -25,7 +25,9 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
                   ),
             );
             // 初回読み込みを行う
-            await ref.read(earthquakeHistoryViewModelProvider.notifier).fetch();
+            await ref
+                .read(earthquakeHistoryViewModelProvider.notifier)
+                .fetchIfNeeded();
           },
         );
         return null;
