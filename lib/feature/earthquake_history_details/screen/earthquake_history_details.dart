@@ -247,7 +247,19 @@ class _EarthquakeHypoInfoWidget extends ConsumerWidget {
               fontFamilyFallback: [FontFamily.notoSansJP],
             ),
           )
-        : null;
+        : item.telegrams.firstOrNull != null
+            ? Text(
+                '${DateFormat('yyyy/MM/dd HH:mm頃').format(
+                  item.telegrams.firstOrNull!.pressTime.toLocal(),
+                )}'
+                ' '
+                '発表',
+                style: textTheme.bodyMedium!.copyWith(
+                  fontFamily: FontFamily.jetBrainsMono,
+                  fontFamilyFallback: [FontFamily.notoSansJP],
+                ),
+              )
+            : null;
 
     // 「M 8.0 / 深さ100km」
     final magnitudeWidget = Row(
