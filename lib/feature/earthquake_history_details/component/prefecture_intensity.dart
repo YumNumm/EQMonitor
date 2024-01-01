@@ -89,7 +89,7 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
                   size: 16,
                 ),
                 title: Text(
-                  '震度${kv.key.type}',
+                  '震度${kv.key.type.replaceAll("+", "強").replaceAll("-", "弱")}',
                   style: textTheme.titleMedium!.copyWith(
                     fontFamily: FontFamily.jetBrainsMono,
                     fontFamilyFallback: [FontFamily.notoSansJP],
@@ -98,6 +98,12 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
                 subtitle: Text(
                   kv.value.map((e) => e.prefecture.name).join(', '),
                 ),
+                onTap: () => _PrefectureModalBottomSheet.show(
+                  context: context,
+                  intensity: kv.key,
+                  prefectures: kv.value,
+                ),
+                trailing: const Icon(Icons.chevron_right),
               ),
           ],
         ),
@@ -112,6 +118,121 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
         ),
       _ => const SizedBox.shrink(),
     };
+  }
+}
+
+class _PrefectureModalBottomSheet extends StatelessWidget {
+  const _PrefectureModalBottomSheet({
+    required this.intensity,
+    required this.prefectures,
+  });
+
+  static Future<void> show({
+    required BuildContext context,
+    required JmaIntensity intensity,
+    required List<_MergedPrefectureIntensity> prefectures,
+  }) {
+    return showModalBottomSheet<void>(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(16),
+        ),
+      ),
+      context: context,
+      builder: (context) {
+        return _PrefectureModalBottomSheet(
+          intensity: intensity,
+          prefectures: prefectures,
+        );
+      },
+    );
+  }
+
+  final JmaIntensity intensity;
+  final List<_MergedPrefectureIntensity> prefectures;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "震度${intensity.type.replaceAll('+', '強').replaceAll('-', '弱')}"
+          'の地域',
+        ),
+      ),
+      body: ListView(
+        children: [
+          for (final prefecture in prefectures)
+            _PrefectureListTile(prefecture: prefecture),
+        ],
+      ),
+    );
+  }
+}
+
+class _PrefectureListTile extends HookWidget {
+  const _PrefectureListTile({
+    required this.prefecture,
+  });
+
+  final _MergedPrefectureIntensity prefecture;
+
+  @override
+  Widget build(BuildContext context) {
+    final isExpanded = useState(false);
+    final shrinked = ListTile(
+      title: Text(
+        prefecture.prefecture.name,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      trailing: const Icon(Icons.expand_more),
+      onTap: () => isExpanded.value = true,
+    );
+    final expanded = ListTile(
+      title: Text(
+        prefecture.prefecture.name,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (final city in prefecture.cities)
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: '${city.city.name}: ',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  for (final station in city.stations)
+                    TextSpan(
+                      text: '${station.name} ',
+                      style: const TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+        ],
+      ),
+      onTap: () => isExpanded.value = false,
+      trailing: const Icon(Icons.expand_less),
+    );
+    return AnimatedCrossFade(
+      firstChild: shrinked,
+      secondChild: expanded,
+      crossFadeState: isExpanded.value
+          ? CrossFadeState.showSecond
+          : CrossFadeState.showFirst,
+      duration: const Duration(milliseconds: 300),
+    );
   }
 }
 

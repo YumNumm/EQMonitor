@@ -17,10 +17,12 @@ import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:sheet/sheet.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
   const EarthquakeHistoryDetailsPage({
@@ -245,7 +247,19 @@ class _EarthquakeHypoInfoWidget extends ConsumerWidget {
               fontFamilyFallback: [FontFamily.notoSansJP],
             ),
           )
-        : null;
+        : item.telegrams.firstOrNull != null
+            ? Text(
+                '${DateFormat('yyyy/MM/dd HH:mm頃').format(
+                  item.telegrams.firstOrNull!.pressTime.toLocal(),
+                )}'
+                ' '
+                '発表',
+                style: textTheme.bodyMedium!.copyWith(
+                  fontFamily: FontFamily.jetBrainsMono,
+                  fontFamilyFallback: [FontFamily.notoSansJP],
+                ),
+              )
+            : null;
 
     // 「M 8.0 / 深さ100km」
     final magnitudeWidget = Row(
@@ -394,13 +408,14 @@ class _EarthquakeHypoInfoWidget extends ConsumerWidget {
         const Row(),
         if (isEarthquakeNull)
           earthquakeNullWidget
-        else if (isMagnitudeAndDepthUnknown)
-          magnitudeDepthUnknownWidget
-        else ...[
+        else if (isMagnitudeAndDepthUnknown) ...[
+          magnitudeDepthUnknownWidget,
+          hypoWidget,
+        ] else ...[
           magnitudeWidget,
           depthWidget,
+          hypoWidget,
         ],
-        hypoWidget,
         if (timeWidget != null) timeWidget,
       ],
     );
@@ -453,15 +468,25 @@ class _EarthquakeCommentWidget extends StatelessWidget {
       return BorderedContainer(
         padding: const EdgeInsets.all(8),
         elevation: 1,
-        child: Text(
-          switch ((comment.forecast?.text, comment.free)) {
+        child: MarkdownBody(
+          data: switch ((comment.forecast?.text, comment.free)) {
             (final String text, final String free) => '$text\n\n$free',
             (final String text, _) => text,
             (_, final String free) => free,
             _ => '',
           }
               .toHalfWidth,
-          style: Theme.of(context).textTheme.bodyMedium,
+          selectable: true,
+          softLineBreak: true,
+          onTapLink: (text, href, title) async {
+            final uri = Uri.tryParse(href.toString());
+            if (uri == null) {
+              return;
+            }
+            await launchUrl(
+              uri,
+            );
+          },
         ),
       );
     }
