@@ -96,10 +96,10 @@ class EewDetailedHistoryScreen extends HookConsumerWidget {
         value: (eew, body) {
           if (body is TelegramVxse45Body) {
             final maxLgInt = body.forecastMaxLgInt?.toDisplayMaxLgInt();
-            if (maxLgInt == null || maxLgInt.maxLgInt == null) {
+            if (maxLgInt == null) {
               return '不明';
             }
-            return '${maxLgInt.maxLgInt?.type}${maxLgInt.isOver ? "程度以上" : ""}';
+            return '${maxLgInt.maxLgInt.type}${maxLgInt.isOver ? "程度以上" : ""}';
           }
           return '---';
         },
