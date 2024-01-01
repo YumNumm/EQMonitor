@@ -568,6 +568,21 @@ enum JmaLgIntensity {
 
   @override
   String toString() => type;
+  bool operator <(JmaLgIntensity other) {
+    return index < other.index;
+  }
+
+  bool operator <=(JmaLgIntensity other) {
+    return index <= other.index;
+  }
+
+  bool operator >(JmaLgIntensity other) {
+    return index > other.index;
+  }
+
+  bool operator >=(JmaLgIntensity other) {
+    return index >= other.index;
+  }
 }
 
 @JsonEnum(valueField: 'type')

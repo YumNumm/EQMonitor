@@ -357,7 +357,16 @@ class _FillAction extends _MapLibreAction {
               6,
               0.2,
               20,
-              4,
+              2,
+            ],
+            iconOpacity: [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              20,
+              1,
+              25,
+              0.4,
             ],
             iconAllowOverlap: true,
           ),
@@ -370,11 +379,12 @@ class _FillAction extends _MapLibreAction {
       const name = 'areaInformationCityQuake';
       for (final item in citiesItem!) {
         await controller.removeLayer(
-          '$name-fill-${item.color.background.toHexStringRGB()}',
+          '$name-fill-${item.color.background.toHexStringRGB()}-'
+          '${item.intensity.type}',
         );
         await controller.addLayer(
           'eqmonitor_map',
-          '$name-fill-${item.color.background.toHexStringRGB()}'
+          '$name-fill-${item.color.background.toHexStringRGB()}-'
               '${item.intensity.type}',
           FillLayerProperties(
             fillColor: item.color.background.toHexStringRGB(),
@@ -392,7 +402,7 @@ class _FillAction extends _MapLibreAction {
         );
         await controller.addLayer(
           'eqmonitor_map',
-          '$name-line-${item.color.foreground.toHexStringRGB()}'
+          '$name-line-${item.color.foreground.toHexStringRGB()}-'
               '${item.intensity.type}',
           LineLayerProperties(
             lineWidth: 0.4,
@@ -415,12 +425,13 @@ class _FillAction extends _MapLibreAction {
       const name = 'areaForecastLocalE';
       for (final item in regionsItem!) {
         await controller.removeLayer(
-          '$name-fill-${item.color.background.toHexStringRGB()}'
+          '$name-fill-${item.color.background.toHexStringRGB()}-'
           '${item.intensity.type}',
         );
         await controller.addLayer(
           'eqmonitor_map',
-          '$name-fill-${item.color.background.toHexStringRGB()}',
+          '$name-fill-${item.color.background.toHexStringRGB()}-'
+              '${item.intensity.type}',
           FillLayerProperties(
             fillColor: item.color.background.toHexStringRGB(),
           ),

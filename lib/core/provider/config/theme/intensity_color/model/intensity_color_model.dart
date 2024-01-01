@@ -205,6 +205,17 @@ extension IntensityColorModelExt on IntensityColorModel {
     }
   }
 
+  TextColorModel fromJmaLgIntensity(
+    JmaLgIntensity intensity,
+  ) =>
+      switch (intensity) {
+        JmaLgIntensity.zero => zero,
+        JmaLgIntensity.one => one,
+        JmaLgIntensity.two => three,
+        JmaLgIntensity.three => fiveLower,
+        JmaLgIntensity.four => seven,
+      };
+
   TextColorModel fromJmaForecastIntensity(
     JmaForecastIntensity intensity,
   ) {
