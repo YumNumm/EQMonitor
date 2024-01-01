@@ -152,7 +152,7 @@ class _$MapConfigImpl implements _MapConfig {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MapConfigImpl &&
@@ -434,7 +434,7 @@ class _$MapColorSchemeImpl implements _MapColorScheme {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MapColorSchemeImpl &&

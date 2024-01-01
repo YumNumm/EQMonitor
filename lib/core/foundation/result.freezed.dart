@@ -119,7 +119,7 @@ class _$SuccessImpl<T, R> extends Success<T, R> {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SuccessImpl<T, R> &&
@@ -254,7 +254,7 @@ class _$FailureImpl<T, R> extends Failure<T, R> {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$FailureImpl<T, R> &&

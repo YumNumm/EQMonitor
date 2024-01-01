@@ -232,7 +232,10 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
           .where(
             (e) => e.type == TelegramType.vxse45,
           )
+          // SerialNoでソート
           .sorted((a, b) => (a.serialNo ?? 0).compareTo(b.serialNo ?? 0))
+          // 取消報を優先
+          .sorted((a, b) => (a.body is TelegramVxse45Cancel ? 1 : 0))
           .lastOrNull;
 
       result.add(

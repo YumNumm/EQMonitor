@@ -1,4 +1,4 @@
-import 'package:eqapi_types/model/telegram_v3.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/home/features/eew/provider/eew_telegram.dart';
@@ -6,8 +6,27 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'eew_alive_telegram.g.dart';
 
+/// イベント終了していないEEWのうち、精度が低いものを除外したもの
+@Riverpod(dependencies: [eewAliveTelegram])
+List<EarthquakeHistoryItem> eewAliveNormalTelegram(
+  EewAliveNormalTelegramRef ref,
+) {
+  final state = ref.watch(eewAliveTelegramProvider) ?? [];
+  return state.where((e) {
+    if (e.latestEew is TelegramVxse45Body) {
+      final body = e.latestEew! as TelegramVxse45Body;
+      if (body.isPlum || body.isLevelEew) {
+        return false;
+      }
+      return true;
+    } else {
+      return false;
+    }
+  }).toList();
+}
+
 /// イベント終了していないEEW
-@Riverpod(dependencies: [eewTelegram])
+@Riverpod(dependencies: [eewTelegram], keepAlive: true)
 List<EarthquakeHistoryItem>? eewAliveTelegram(EewAliveTelegramRef ref) {
   final state = ref.watch(eewTelegramProvider);
   final value = state.valueOrNull;
@@ -37,9 +56,6 @@ class EewAliveChecker {
     // 発表から1時間以上経過している場合、イベント終了と判定する
     final reportTime = latestEew?.reportTime?.toUtc();
     if (reportTime == null) {
-      return true;
-    }
-    if (now.toUtc().difference(reportTime).inHours > 1) {
       return true;
     }
     // 最新のEEWがない場合、イベント終了と判定する

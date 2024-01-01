@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'eew_telegram.g.dart';
 
 /// EEWを持つEarthquakeHistoryItem
-@Riverpod(dependencies: [EarthquakeHistoryViewModel])
+@Riverpod(dependencies: [EarthquakeHistoryViewModel], keepAlive: true)
 AsyncValue<List<EarthquakeHistoryItem>> eewTelegram(EewTelegramRef ref) {
   final state = ref.watch(earthquakeHistoryViewModelProvider);
   if (state == null) {

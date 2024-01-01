@@ -221,7 +221,7 @@ class _$KmoniObservationPointImpl implements _KmoniObservationPoint {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$KmoniObservationPointImpl &&
@@ -466,7 +466,7 @@ class _$AnalyzedKmoniObservationPointImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AnalyzedKmoniObservationPointImpl &&

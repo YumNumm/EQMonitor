@@ -8,14 +8,14 @@ part of 'eew_telegram.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$eewTelegramHash() => r'0ce98004d262083f6eb12c7e732cbcacde83d86d';
+String _$eewTelegramHash() => r'85a3dddbf3d79cbedf93b209fb9dbf2cc810ff8a';
 
 /// EEWを持つEarthquakeHistoryItem
 ///
 /// Copied from [eewTelegram].
 @ProviderFor(eewTelegram)
 final eewTelegramProvider =
-    AutoDisposeProvider<AsyncValue<List<EarthquakeHistoryItem>>>.internal(
+    Provider<AsyncValue<List<EarthquakeHistoryItem>>>.internal(
   eewTelegram,
   name: r'eewTelegramProvider',
   debugGetCreateSourceHash:
@@ -27,7 +27,6 @@ final eewTelegramProvider =
   },
 );
 
-typedef EewTelegramRef
-    = AutoDisposeProviderRef<AsyncValue<List<EarthquakeHistoryItem>>>;
+typedef EewTelegramRef = ProviderRef<AsyncValue<List<EarthquakeHistoryItem>>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
