@@ -1,5 +1,11 @@
 # Changelog
 
+## [v2.1.1](https://github.com/YumNumm/EQMonitor/compare/v2.1.0...v2.1.1) - 2024-01-01
+- 震度速報のみの表示を改善 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/491
+- VXSE51の発表時刻表示 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/492
+- 地震履歴の長周期地震動階級周りの実装 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/494
+- EEWのLPGM実装 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/496
+
 ## [v2.0.3](https://github.com/YumNumm/EQMonitor/compare/v2.0.2...v2.0.3) - 2024-01-01
 - [iOS] 通知画像が表示されない問題を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/433
 - add: デバッグ時にFCM・APNS Tokenを表示するように by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/434
