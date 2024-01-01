@@ -459,8 +459,6 @@ class _FillAction extends _MapLibreAction {
   }
 
   @override
-  Future<void> dispose(map_libre.MaplibreMapController controller) {
-    // TODO(YumNumm): implement dispose
-    throw UnimplementedError();
+  Future<void> dispose(map_libre.MaplibreMapController controller) async {
   }
 }

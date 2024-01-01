@@ -55,6 +55,16 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
     }
   }
 
+  Future<void> fetchIfNeeded() async {
+    if (state?.isLoading ?? false) {
+      return;
+    }
+    if (state?.hasValue ?? false) {
+      return;
+    }
+    await fetch();
+  }
+
   Future<void> fetch({
     bool isLoadMore = false,
     bool isRefresh = false,

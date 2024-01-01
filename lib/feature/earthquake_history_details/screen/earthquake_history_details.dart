@@ -329,10 +329,9 @@ class _EarthquakeHypoInfoWidget extends ConsumerWidget {
     );
     // M・深さ ともに不明の場合
     final isMagnitudeAndDepthUnknown =
-        eq.earthquake?.magnitude.condition?.toHalfWidth == 'M不明' &&
-            eq.earthquake?.hypocenter.depth == null &&
-            item.telegrams
-                .any((element) => element.type == TelegramType.vxse53);
+        (eq.earthquake?.magnitude.condition?.toHalfWidth == 'M不明' ||
+                eq.earthquake?.magnitude.value == null) &&
+            eq.earthquake?.hypocenter.depth == null;
     final magnitudeDepthUnknownWidget = Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -360,13 +359,42 @@ class _EarthquakeHypoInfoWidget extends ConsumerWidget {
         ),
       ],
     );
+
+    // M・深さ・震源 ともに不明の場合
+    final isEarthquakeNull = eq.earthquake == null;
+
+    final earthquakeNullWidget = Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      textBaseline: TextBaseline.alphabetic,
+      children: [
+        Text(
+          'M・深さ・震源地',
+          style: textTheme.titleMedium!.copyWith(
+            color: textTheme.titleMedium!.color!.withOpacity(0.8),
+          ),
+        ),
+        Text(
+          item.telegrams.any((element) => element.type == TelegramType.vxse53)
+              ? '不明'
+              : '調査中',
+          style: textTheme.displaySmall!.copyWith(
+            fontWeight: FontWeight.w900,
+            fontFamily: FontFamily.jetBrainsMono,
+            fontFamilyFallback: [FontFamily.notoSansJP],
+          ),
+        ),
+      ],
+    );
     final body = Wrap(
       spacing: 8,
       crossAxisAlignment: WrapCrossAlignment.center,
       alignment: WrapAlignment.center,
       children: [
         const Row(),
-        if (isMagnitudeAndDepthUnknown)
+        if (isEarthquakeNull)
+          earthquakeNullWidget
+        else if (isMagnitudeAndDepthUnknown)
           magnitudeDepthUnknownWidget
         else ...[
           magnitudeWidget,

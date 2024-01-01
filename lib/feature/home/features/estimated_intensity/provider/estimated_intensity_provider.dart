@@ -9,7 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'estimated_intensity_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@Riverpod(keepAlive: true, dependencies: [eewAliveTelegram, eewAliveTelegram])
 class EstimatedIntensity extends _$EstimatedIntensity {
   @override
   List<AnalyzedKmoniObservationPoint> build() {
