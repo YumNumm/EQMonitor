@@ -86,5 +86,5 @@ const _$IntensityDisplayModeEnumMap = {
   IntensityDisplayMode.icon: 'icon',
   IntensityDisplayMode.fillCity: 'fillCity',
   IntensityDisplayMode.fillPrefecture: 'fillPrefecture',
-  IntensityDisplayMode.iconAndFillCity: 'iconAndFillCity',
+  IntensityDisplayMode.iconAndFillPrefecture: 'iconAndFillPrefecture',
 };

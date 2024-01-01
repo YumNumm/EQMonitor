@@ -141,6 +141,6 @@ extension _IntensityDisplayModeEx on IntensityDisplayMode {
         IntensityDisplayMode.icon => '震度アイコン',
         IntensityDisplayMode.fillCity => '市区町村を塗りつぶし',
         IntensityDisplayMode.fillPrefecture => '都道府県を塗りつぶし',
-        IntensityDisplayMode.iconAndFillCity => '震度アイコンと市区町村を塗りつぶし',
+        IntensityDisplayMode.iconAndFillPrefecture => '震度アイコンと市区町村を塗りつぶし',
       };
 }

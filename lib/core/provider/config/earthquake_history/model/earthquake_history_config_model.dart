@@ -51,7 +51,7 @@ enum IntensityDisplayMode {
   /// 都道府県レベルの震度塗りつぶし
   fillPrefecture,
 
-  /// 震度観測点のアイコンと市区町村レベルの震度塗りつぶし
-  iconAndFillCity,
+  /// 震度観測点のアイコンと都道府県レベルの震度塗りつぶし
+  iconAndFillPrefecture,
   ;
 }
