@@ -54,26 +54,26 @@ class HomeView extends HookConsumerWidget {
       [mapKey],
     );
     // * 地図データが読み込まれるまでローディングを表示
-final body =  Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'EQMonitor',
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          forceMaterialTransparency: true,
+    final body = Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'EQMonitor',
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
         ),
-        body: _HomeBodyWidget(mapKey: mapKey),
+        forceMaterialTransparency: true,
+      ),
+      body: _HomeBodyWidget(mapKey: mapKey),
+    );
+    if (kDebugMode) {
+      return TalkerWrapper(
+        talker: ref.watch(talkerProvider),
+        child: body,
       );
-      if(kDebugMode){
-        return TalkerWrapper(
-          talker: ref.watch(talkerProvider),
-          child: body,
-        );
-      }else {
-        return body;
-      }
+    } else {
+      return body;
+    }
   }
 }
 
