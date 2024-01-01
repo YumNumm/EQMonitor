@@ -76,7 +76,7 @@ class PrefectureLpgmIntensityWidget extends HookConsumerWidget {
               title: '各地の長周期地震動観測状況',
             ),
             // 長周期地震動階級の種別
-            
+
             // 震度一覧
             for (final kv in mergedPrefectures.toList
                 .where((kv) => kv.key != null)
