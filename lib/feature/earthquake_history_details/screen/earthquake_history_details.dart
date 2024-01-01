@@ -456,7 +456,7 @@ class _EarthquakeCommentWidget extends StatelessWidget {
       return BorderedContainer(
         padding: const EdgeInsets.all(8),
         elevation: 1,
-        child: Markdown(
+        child: MarkdownBody(
           data: switch ((comment.forecast?.text, comment.free)) {
             (final String text, final String free) => '$text\n\n$free',
             (final String text, _) => text,
@@ -475,8 +475,6 @@ class _EarthquakeCommentWidget extends StatelessWidget {
               uri,
             );
           },
-          shrinkWrap: true,
-          padding: EdgeInsets.zero,
         ),
       );
     }
