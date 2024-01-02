@@ -8,7 +8,7 @@ part of 'intensity_color_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$intensityColorHash() => r'6affe0c2bf46fc6afb34347a41a54b73996534f3';
+String _$intensityColorHash() => r'7892bed4f63a288d70217c9f2795257f4751bc5c';
 
 /// See also [IntensityColor].
 @ProviderFor(IntensityColor)
