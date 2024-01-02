@@ -1,7 +1,6 @@
 .fvm/flutter_sdk
 .crashlytics
 
-
 .env
 
 ~$*
@@ -166,9 +165,6 @@ macos/GoogleService-Info.plist
 
 # app store connect api related file
 ios/*.p8
-
-/pubspec_overrides.yaml
-
 
 *.pem
 *_old
