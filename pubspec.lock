@@ -934,17 +934,19 @@ packages:
   maplibre_gl:
     dependency: "direct main"
     description:
-      path: "../flutter-maplibre-gl"
-      relative: true
-    source: path
+      path: "."
+      ref: "0bf326044759dfc2f590a1c219d2f1eb86e7b8ad"
+      resolved-ref: "0bf326044759dfc2f590a1c219d2f1eb86e7b8ad"
+      url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
+    source: git
     version: "0.18.0"
   maplibre_gl_platform_interface:
     dependency: transitive
     description:
       path: maplibre_gl_platform_interface
       ref: main
-      resolved-ref: "9215375e2c74529222a1b6e37a8f87b856d36f23"
-      url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
+      resolved-ref: "96956bb21b367275f98118b198945d28a57cab3c"
+      url: "https://github.com/maplibre/flutter-maplibre-gl.git"
     source: git
     version: "0.18.0"
   maplibre_gl_web:
@@ -952,8 +954,8 @@ packages:
     description:
       path: maplibre_gl_web
       ref: main
-      resolved-ref: "9215375e2c74529222a1b6e37a8f87b856d36f23"
-      url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
+      resolved-ref: "96956bb21b367275f98118b198945d28a57cab3c"
+      url: "https://github.com/maplibre/flutter-maplibre-gl.git"
     source: git
     version: "0.18.0"
   markdown:
@@ -1439,9 +1441,11 @@ packages:
   sheet:
     dependency: "direct main"
     description:
-      path: "../modal_bottom_sheet/sheet"
-      relative: true
-    source: path
+      path: sheet
+      ref: HEAD
+      resolved-ref: f5be540e399a82ee94b0b4195a3d33095b5821db
+      url: "https://github.com/YumNumm/modal_bottom_sheet.git"
+    source: git
     version: "1.0.0-pre"
   shelf:
     dependency: transitive
@@ -1606,7 +1610,7 @@ packages:
       path: "packages/talker_dio_logger"
       ref: "6425594b611b5f44ad88258cc97641ff96aba014"
       resolved-ref: "6425594b611b5f44ad88258cc97641ff96aba014"
-      url: "git@github.com:Frezyx/talker.git"
+      url: "https://github.com/Frezyx/talker.git"
     source: git
     version: "2.0.0-dev.2"
   talker_flutter:
@@ -1615,7 +1619,7 @@ packages:
       path: "packages/talker_flutter"
       ref: "6425594b611b5f44ad88258cc97641ff96aba014"
       resolved-ref: "6425594b611b5f44ad88258cc97641ff96aba014"
-      url: "git@github.com:Frezyx/talker.git"
+      url: "https://github.com/Frezyx/talker.git"
     source: git
     version: "3.0.0-dev.11"
   talker_logger:

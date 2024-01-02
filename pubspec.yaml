@@ -59,7 +59,7 @@ dependencies:
   latlong2: ^0.9.0
   maplibre_gl:
     git:
-      url: git@github.com:YumNumm/flutter-maplibre-gl.git
+      url: https://github.com/YumNumm/flutter-maplibre-gl.git
       ref: 0bf326044759dfc2f590a1c219d2f1eb86e7b8ad
   mocktail: ^1.0.2
   native_shared_preferences: ^2.0.7
@@ -72,20 +72,20 @@ dependencies:
   shared_preferences: ^2.2.2
   sheet:
     git:
-      url: git@github.com:YumNumm/modal_bottom_sheet.git
+      url: https://github.com/YumNumm/modal_bottom_sheet.git
       branch: main
       path: sheet
   simplify: ^1.0.2
   socket_io_client: ^2.0.3+1
   talker_dio_logger:
     git:
-      url: git@github.com:Frezyx/talker.git
+      url: https://github.com/Frezyx/talker.git
       branch: dev
       ref: 6425594b611b5f44ad88258cc97641ff96aba014
       path: packages/talker_dio_logger
   talker_flutter:
     git:
-      url: git@github.com:Frezyx/talker.git
+      url: https://github.com/Frezyx/talker.git
       branch: dev
       ref: 6425594b611b5f44ad88258cc97641ff96aba014
       path: packages/talker_flutter
