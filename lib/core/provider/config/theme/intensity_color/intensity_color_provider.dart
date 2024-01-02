@@ -24,6 +24,10 @@ class IntensityColor extends _$IntensityColor {
   // ignore: use_setters_to_change_properties
   void update(IntensityColorModel model) {
     state = model;
+    ref.read(sharedPreferencesProvider).setString(
+          _key,
+          jsonEncode(model.toJson()),
+        );
   }
 
   IntensityColorModel? load() {
