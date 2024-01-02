@@ -4,7 +4,7 @@ version: 1.0.0
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: ^3.3.0-174.3.beta
+  sdk: ^3.2.0
 
 dependencies:
   protobuf: ^3.1.0
