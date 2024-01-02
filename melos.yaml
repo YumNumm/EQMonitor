@@ -35,3 +35,4 @@ scripts:
 packages:
   - .
   - packages/*
+  - "!packages/*_internal"

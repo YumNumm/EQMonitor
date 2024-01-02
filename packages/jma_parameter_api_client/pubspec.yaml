@@ -1,0 +1,19 @@
+name: jma_parameter_api_client
+description: A starting point for Dart libraries or applications.
+version: 1.0.0
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
+
+environment:
+  sdk: ^3.3.0-174.3.beta
+
+# Add regular dependencies here.
+dependencies:
+  dio: ^5.3.4
+  jma_parameter_types:
+    path: ../jma_parameter_types
+  retrofit: ^4.0.3
+
+dev_dependencies:
+  build_runner: ^2.4.7
+  pedantic_mono: ^1.25.0
+  retrofit_generator: ^8.0.4

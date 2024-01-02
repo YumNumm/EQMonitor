@@ -2,7 +2,7 @@
 
 // ignore_for_file: type=lint
 
-part of 'eqapi_client.dart';
+part of 'jma_parameter_api_client.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -10,8 +10,8 @@ part of 'eqapi_client.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
-class _V3 implements V3 {
-  _V3(
+class __JmaParameterApiClient implements _JmaParameterApiClient {
+  __JmaParameterApiClient(
     this._dio, {
     this.baseUrl,
   });
@@ -21,88 +21,21 @@ class _V3 implements V3 {
   String? baseUrl;
 
   @override
-  Future<TelegramHistoryV3> getTelegramHistory({
-    bool includeEew = false,
-    int limit = 100,
-    int offset = 0,
-  }) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{
-      r'includeEew': includeEew,
-      r'limit': limit,
-      r'offset': offset,
-    };
-    final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
-    final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<TelegramHistoryV3>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/v3/telegram',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final value = TelegramHistoryV3.fromJson(_result.data!);
-    return value;
-  }
-
-  @override
-  Future<InformationV3Result> getInformation({
-    int after = 0,
-    int limit = 10,
-  }) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{
-      r'after': after,
-      r'limit': limit,
-    };
-    final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<InformationV3Result>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/v3/information',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final value = InformationV3Result.fromJson(_result.data!);
-    return value;
-  }
-
-  @override
-  Future<AppInformation> getAppInformation() async {
+  Future<List<int>> getEarthquakeParameter() async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
-    final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<AppInformation>(Options(
+    final _result =
+        await _dio.fetch<List<dynamic>>(_setStreamType<List<int>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
+      responseType: ResponseType.bytes,
     )
             .compose(
               _dio.options,
-              '/v3/app_information',
+              'parameter/earthquake',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -111,8 +44,90 @@ class _V3 implements V3 {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = AppInformation.fromJson(_result.data!);
+    final value = _result.data!.cast<int>();
     return value;
+  }
+
+  @override
+  Future<HttpResponse<void>> getEarthquakeParameterHead() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result =
+        await _dio.fetch<void>(_setStreamType<HttpResponse<void>>(Options(
+      method: 'HEAD',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'parameter/earthquake',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final httpResponse = HttpResponse(null, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<List<int>> getTsunamiParameter() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result =
+        await _dio.fetch<List<dynamic>>(_setStreamType<List<int>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      responseType: ResponseType.bytes,
+    )
+            .compose(
+              _dio.options,
+              'parameter/tsunami',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = _result.data!.cast<int>();
+    return value;
+  }
+
+  @override
+  Future<HttpResponse<void>> getTsunamiParameterHead() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result =
+        await _dio.fetch<void>(_setStreamType<HttpResponse<void>>(Options(
+      method: 'HEAD',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'parameter/tsunami',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final httpResponse = HttpResponse(null, _result);
+    return httpResponse;
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
