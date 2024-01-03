@@ -472,3 +472,23 @@ class _FillAction extends _MapLibreAction {
   @override
   Future<void> dispose(map_libre.MaplibreMapController controller) async {}
 }
+
+class _StationAction extends _MapLibreAction {
+  _StationAction({
+    required super.citiesItem,
+    required super.regionsItem,
+    required super.earthquake,
+  });
+
+  @override
+  Future<void> dispose(map_libre.MaplibreMapController controller) {
+    // TODO: implement dispose
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> init(map_libre.MaplibreMapController controller) {
+    // TODO: implement init
+    throw UnimplementedError();
+  }
+}

@@ -31,7 +31,13 @@ class CustomProviderObserver extends ProviderObserver {
     ProviderBase<Object?> provider,
     ProviderContainer container,
   ) =>
-      log('didDisposeProvider: ${provider.name}');
+      switch (provider.name) {
+        'timeTickerProvider' || 'eewAliveTelegramProvider' => null,
+        _ => log(
+            '${provider.name}',
+            name: 'didDisposeProvider',
+          ),
+      };
 
   @override
   void didUpdateProvider(
@@ -41,7 +47,10 @@ class CustomProviderObserver extends ProviderObserver {
     ProviderContainer container,
   ) =>
       switch (provider.name) {
-        'mapViewModelProvider' || 'kmoniViewModelProvider' => null,
+        'mapViewModelProvider' ||
+        'kmoniViewModelProvider' ||
+        'timeTickerProvider' =>
+          null,
         _
             when newValue.toString().length + previousValue.toString().length >
                 300 =>

@@ -21,13 +21,13 @@ class __JmaParameterApiClient implements _JmaParameterApiClient {
   String? baseUrl;
 
   @override
-  Future<List<int>> getEarthquakeParameter() async {
+  Future<HttpResponse<List<int>>> getEarthquakeParameter() async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
-    final _result =
-        await _dio.fetch<List<dynamic>>(_setStreamType<List<int>>(Options(
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<HttpResponse<List<int>>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -35,7 +35,7 @@ class __JmaParameterApiClient implements _JmaParameterApiClient {
     )
             .compose(
               _dio.options,
-              'parameter/earthquake',
+              '/parameter/earthquake',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -45,7 +45,8 @@ class __JmaParameterApiClient implements _JmaParameterApiClient {
               baseUrl,
             ))));
     final value = _result.data!.cast<int>();
-    return value;
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
   }
 
   @override
@@ -62,7 +63,7 @@ class __JmaParameterApiClient implements _JmaParameterApiClient {
     )
             .compose(
               _dio.options,
-              'parameter/earthquake',
+              '/parameter/earthquake',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -76,13 +77,13 @@ class __JmaParameterApiClient implements _JmaParameterApiClient {
   }
 
   @override
-  Future<List<int>> getTsunamiParameter() async {
+  Future<HttpResponse<List<int>>> getTsunamiParameter() async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
-    final _result =
-        await _dio.fetch<List<dynamic>>(_setStreamType<List<int>>(Options(
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<HttpResponse<List<int>>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -90,7 +91,7 @@ class __JmaParameterApiClient implements _JmaParameterApiClient {
     )
             .compose(
               _dio.options,
-              'parameter/tsunami',
+              '/parameter/tsunami',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -100,7 +101,8 @@ class __JmaParameterApiClient implements _JmaParameterApiClient {
               baseUrl,
             ))));
     final value = _result.data!.cast<int>();
-    return value;
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
   }
 
   @override
@@ -117,7 +119,7 @@ class __JmaParameterApiClient implements _JmaParameterApiClient {
     )
             .compose(
               _dio.options,
-              'parameter/tsunami',
+              '/parameter/tsunami',
               queryParameters: queryParameters,
               data: _data,
             )

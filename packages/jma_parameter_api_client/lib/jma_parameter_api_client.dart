@@ -16,19 +16,33 @@ class JmaParameterApiClient {
 
   final _JmaParameterApiClient _client;
 
-  Future<EarthquakeParameter> getEarthquakeParameter() async {
-    final buffer = await _client.getEarthquakeParameter();
-    return EarthquakeParameter.fromBuffer(buffer);
+  Future<
+      ({
+        EarthquakeParameter parameter,
+        String? etag,
+      })> getEarthquakeParameter() async {
+    final res = await _client.getEarthquakeParameter();
+    return (
+      parameter: EarthquakeParameter.fromBuffer(res.data),
+      etag: res.response.headers.value('etag'),
+    );
   }
 
-  Future<String> getEarthquakeParameterHead() async {
+  Future<String?> getEarthquakeParameterHead() async {
     final response = await _client.getEarthquakeParameterHead();
-    return response.response.headers.value('etag')!;
+    return response.response.headers.value('etag');
   }
 
-  Future<TsunamiParameter> getTsunamiParameter() async {
-    final buffer = await _client.getTsunamiParameter();
-    return TsunamiParameter.fromBuffer(buffer);
+  Future<
+      ({
+        TsunamiParameter parameter,
+        String? etag,
+      })> getTsunamiParameter() async {
+    final response = await _client.getTsunamiParameter();
+    return (
+      parameter: TsunamiParameter.fromBuffer(response.data),
+      etag: response.response.headers.value('etag'),
+    );
   }
 
   Future<String?> getTsunamiParameterHeadEtag() async {
@@ -42,17 +56,17 @@ abstract class _JmaParameterApiClient {
   factory _JmaParameterApiClient(Dio dio, {String baseUrl}) =
       __JmaParameterApiClient;
 
-  @GET('parameter/earthquake')
+  @GET('/parameter/earthquake')
   @DioResponseType(ResponseType.bytes)
-  Future<List<int>> getEarthquakeParameter();
+  Future<HttpResponse<List<int>>> getEarthquakeParameter();
 
-  @HEAD('parameter/earthquake')
+  @HEAD('/parameter/earthquake')
   Future<HttpResponse<void>> getEarthquakeParameterHead();
 
-  @GET('parameter/tsunami')
+  @GET('/parameter/tsunami')
   @DioResponseType(ResponseType.bytes)
-  Future<List<int>> getTsunamiParameter();
+  Future<HttpResponse<List<int>>> getTsunamiParameter();
 
-  @HEAD('parameter/tsunami')
+  @HEAD('/parameter/tsunami')
   Future<HttpResponse<void>> getTsunamiParameterHead();
 }
