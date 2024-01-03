@@ -11,10 +11,12 @@ import 'package:eqmonitor/core/provider/config/permission/permission_status_prov
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
+import 'package:eqmonitor/feature/home/component/intensity_renderer/intensity_renderer_widget.dart';
 import 'package:eqmonitor/feature/home/component/map/eew_estimated_intensity_widget.dart';
 import 'package:eqmonitor/feature/home/component/map/eew_hypocenter_widget.dart';
 import 'package:eqmonitor/feature/home/component/map/eew_pswave_arrival_circle.dart';
 import 'package:eqmonitor/feature/home/component/map/kmoni_map_widget.dart';
+import 'package:eqmonitor/feature/home/component/parameter/parameter_loader_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/update_widget.dart';
@@ -196,6 +198,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
               ),
               // Sheet
               _Sheet(sheetController: sheetController),
+              const IntensityRendererWidget(),
             ],
           ),
         ),
@@ -229,11 +232,13 @@ class _Sheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return RepaintBoundary(
       child: BasicModalSheet(
+        useColumn: true,
         controller: sheetController,
         children: [
           const EewWidgets(),
           const SheetStatusWidget(),
           const KmoniMaintenanceWidget(),
+          const ParameterLoaderWidget(),
           const UpdateWidget(),
           const EarthquakeHistorySheetWidget(),
           ListTile(

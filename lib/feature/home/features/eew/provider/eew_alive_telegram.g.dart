@@ -9,7 +9,7 @@ part of 'eew_alive_telegram.dart';
 // **************************************************************************
 
 String _$eewAliveNormalTelegramHash() =>
-    r'5f9a2dc85fdde28fc0268b4a10e52edb332abcf1';
+    r'10210952f6125eb8fd2c1c730277eaeba8e23692';
 
 /// イベント終了していないEEWのうち、精度が低いものを除外したもの
 ///
@@ -31,15 +31,30 @@ final eewAliveNormalTelegramProvider =
 
 typedef EewAliveNormalTelegramRef
     = AutoDisposeProviderRef<List<EarthquakeHistoryItem>>;
-String _$eewAliveTelegramHash() => r'88a24577230a7b6f3e04bdbf54a0fa5fe4803d54';
+String _$eewAliveCheckerHash() => r'9a37a3cc06eecdcaf74ecf1e717f9f34a6761948';
+
+/// See also [eewAliveChecker].
+@ProviderFor(eewAliveChecker)
+final eewAliveCheckerProvider = Provider<EewAliveChecker>.internal(
+  eewAliveChecker,
+  name: r'eewAliveCheckerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$eewAliveCheckerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef EewAliveCheckerRef = ProviderRef<EewAliveChecker>;
+String _$eewAliveTelegramHash() => r'3ef1c9333903731f1e31962bd611a82a1e3e1ee0';
 
 /// イベント終了していないEEW
 ///
-/// Copied from [eewAliveTelegram].
-@ProviderFor(eewAliveTelegram)
+/// Copied from [EewAliveTelegram].
+@ProviderFor(EewAliveTelegram)
 final eewAliveTelegramProvider =
-    Provider<List<EarthquakeHistoryItem>?>.internal(
-  eewAliveTelegram,
+    NotifierProvider<EewAliveTelegram, List<EarthquakeHistoryItem>?>.internal(
+  EewAliveTelegram.new,
   name: r'eewAliveTelegramProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
@@ -51,21 +66,6 @@ final eewAliveTelegramProvider =
   },
 );
 
-typedef EewAliveTelegramRef = ProviderRef<List<EarthquakeHistoryItem>?>;
-String _$eewAliveCheckerHash() => r'b0fa8533e9d43c782b141fa6e24f080e863105d6';
-
-/// See also [eewAliveChecker].
-@ProviderFor(eewAliveChecker)
-final eewAliveCheckerProvider = AutoDisposeProvider<EewAliveChecker>.internal(
-  eewAliveChecker,
-  name: r'eewAliveCheckerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$eewAliveCheckerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef EewAliveCheckerRef = AutoDisposeProviderRef<EewAliveChecker>;
+typedef _$EewAliveTelegram = Notifier<List<EarthquakeHistoryItem>?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

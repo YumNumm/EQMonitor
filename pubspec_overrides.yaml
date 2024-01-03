@@ -1,4 +1,4 @@
-# melos_managed_dependency_overrides: eq_map,eqapi_client,eqapi_types,extensions,lat_lng,topo_map,topojson
+# melos_managed_dependency_overrides: eq_map,eqapi_client,eqapi_types,extensions,lat_lng,topo_map,topojson,jma_parameter_types
 dependency_overrides:
   eq_map:
     path: packages/eq_map
@@ -14,3 +14,7 @@ dependency_overrides:
     path: packages/topo_map
   topojson:
     path: packages/topojson
+  jma_parameter_api_client:
+    path: packages/jma_parameter_api_client
+  jma_parameter_types:
+    path: packages/jma_parameter_types
