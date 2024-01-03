@@ -79,7 +79,6 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
                               .fetch,
                           child: const Text('再読み込み'),
                         ),
-                        
                       ],
                     ),
                   );
@@ -137,9 +136,8 @@ class EarthquakeHistoryListView extends ConsumerWidget {
           final item = data[index];
           return EarthquakeHistoryTileWidget(
             item: item,
-            onTap: (p0) => context.push(
-              EarthquakeHistoryDetailsRoute(p0.eventId).location,
-            ),
+            onTap: (p0) =>
+                EarthquakeHistoryDetailsRoute($extra: p0).push<void>(context),
             showBackgroundColor: shouldShowBackgroundColor,
           );
         },
