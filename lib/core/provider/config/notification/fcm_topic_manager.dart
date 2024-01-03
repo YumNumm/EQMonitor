@@ -31,6 +31,7 @@ class FcmTopicManager extends _$FcmTopicManager {
     final shouldBeUnregisteredTopics = [
       'earthquake',
       'eew',
+      'everyone',
     ];
     final messaging = ref.read(firebaseMessagingProvider);
     for (final topic in shouldBeUnregisteredTopics) {
