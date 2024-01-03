@@ -137,7 +137,6 @@ class _Sheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('_Sheet.build');
     return SafeArea(
       bottom: false,
       child: BasicModalSheet(
