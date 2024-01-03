@@ -39,9 +39,9 @@ class HomeViewModel {
   ) {
     final filtered = _getTargets(points);
     // EEWの要素数が変化したかチェック
-    final length = ref.read(eewAliveTelegramProvider)?.length;
+    final length = ref.read(eewAliveTelegramProvider)?.length ?? 0;
     if (_lastEstimatedIntensityChangedEewsLength != length) {
-      _lastEstimatedIntensityChangedEewsLength = length ?? 0;
+      _lastEstimatedIntensityChangedEewsLength = length;
       ref.read(mapViewModelProvider(mapKey).notifier).resetMarkAsMoved();
     }
     if (filtered == null) {
