@@ -10,7 +10,6 @@ import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/inten
 import 'package:eqmonitor/core/provider/topology_map/provider/topology_maps.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
-import 'package:eqmonitor/feature/earthquake_history/viewmodel/earthquake_history_view_model.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/earthquake_map.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/prefecture_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/prefecture_lpgm_intensity.dart';
@@ -27,50 +26,14 @@ import 'package:url_launcher/url_launcher.dart';
 
 class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
   const EarthquakeHistoryDetailsPage({
-    required this.eventId,
+    required this.data,
     super.key,
   });
 
-  final int eventId;
+  final EarthquakeHistoryItem data;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 当該データがアレばOK
-    final data = ref
-        .watch(earthquakeHistoryViewModelProvider)
-        ?.value
-        ?.firstWhereOrNull((e) => e.eventId == eventId);
-    if (data == null) {
-      final state = ref.watch(earthquakeHistoryViewModelProvider);
-      final isLoading = state?.isLoading ?? false;
-      final isReloading = state?.isReloading ?? false;
-      final disableLoading = isLoading || isReloading;
-      return Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('当該データが見つかりませんでした\n再度地震の履歴を読み込んでください'),
-              const SizedBox(height: 8),
-              FilledButton(
-                onPressed: disableLoading
-                    ? null
-                    : () => ref
-                        .read(earthquakeHistoryViewModelProvider.notifier)
-                        .fetch(isLoadMore: true),
-                child: const Text('追加で地震履歴を読み込む'),
-              ),
-              if (disableLoading) ...[
-                const SizedBox(height: 8),
-                const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                ),
-              ],
-            ],
-          ),
-        ),
-      );
-    }
     final sheetController = SheetController();
     final zoomCachedMapData =
         ref.watch(zoomCachedProjectedFeatureLayerProvider).valueOrNull;
@@ -174,6 +137,7 @@ class _Sheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('_Sheet.build');
     return SafeArea(
       bottom: false,
       child: BasicModalSheet(
@@ -193,11 +157,9 @@ class _Sheet extends StatelessWidget {
             ListTile(
               title: const Text('この地震に関する緊急地震速報'),
               subtitle: Text('${item.eewList.length}件'),
-              onTap: () => context.push(
-                EewDetailedHistoryRoute(
-                  item.eventId,
-                ).location,
-              ),
+              onTap: () => EewHisotryDetailRoute(
+                $extra: item,
+              ).push<void>(context),
             ),
         ],
       ),

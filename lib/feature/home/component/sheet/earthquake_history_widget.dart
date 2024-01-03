@@ -60,9 +60,8 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
                     for (final item in items)
                       EarthquakeHistoryTileWidget(
                         item: item,
-                        onTap: (p0) => context.push(
-                          EarthquakeHistoryDetailsRoute(p0.eventId).location,
-                        ),
+                        onTap: (p0) => EarthquakeHistoryDetailsRoute($extra: p0)
+                            .push<void>(context),
                         showBackgroundColor: false,
                       ),
                   ];
@@ -79,9 +78,9 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
                         EarthquakeHistoryTileWidget(
                           showBackgroundColor: false,
                           item: item,
-                          onTap: (p0) => context.push(
-                            EarthquakeHistoryDetailsRoute(p0.eventId).location,
-                          ),
+                          onTap: (p0) =>
+                              EarthquakeHistoryDetailsRoute($extra: p0)
+                                  .push<void>(context),
                         ),
                     ];
                   }
