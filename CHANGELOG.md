@@ -1,5 +1,12 @@
 # Changelog
 
+## [v2.2.1](https://github.com/YumNumm/EQMonitor/compare/v2.2.0...v2.2.1) - 2024-01-03
+- docs: Fix outdated syntax in README.md by @siketyan in https://github.com/YumNumm/EQMonitor/pull/501
+- ci: Fix failing CI by @siketyan in https://github.com/YumNumm/EQMonitor/pull/502
+- Android CDの修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/503
+- Auto format - ref: develop by @github-actions in https://github.com/YumNumm/EQMonitor/pull/504
+- Fix/everyone topic by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/505
+
 ## [v2.0.3](https://github.com/YumNumm/EQMonitor/compare/v2.0.2...v2.0.3) - 2024-01-01
 - [iOS] 通知画像が表示されない問題を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/433
 - add: デバッグ時にFCM・APNS Tokenを表示するように by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/434
