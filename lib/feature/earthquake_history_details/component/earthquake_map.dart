@@ -88,7 +88,6 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         ),
       );
     }
-    final isInitialized = useState(false);
 
     final citiesItem = useMemoized(
       () {
@@ -245,7 +244,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
       [],
     );
 
-    final map = RepaintBoundary(
+    return RepaintBoundary(
       child: MaplibreMap(
         initialCameraPosition: CameraPosition(
           target: LatLng(
@@ -258,7 +257,6 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         onMapCreated: (controller) => mapController.value = controller,
         onStyleLoadedCallback: () async {
           final controller = mapController.value!;
-
           await [
             addImageFromAsset(
               controller,
@@ -305,24 +303,11 @@ class EarthquakeMapWidget extends HookConsumerWidget {
           ).init(
             controller,
           );
-          isInitialized.value = true;
           return;
         },
         rotateGesturesEnabled: false,
         tiltGesturesEnabled: false,
       ),
-    );
-
-    return Stack(
-      children: [
-        map,
-        if (!isInitialized.value)
-          const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator.adaptive(),
-            ),
-          ),
-      ],
     );
   }
 }
