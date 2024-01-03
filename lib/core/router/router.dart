@@ -1,5 +1,6 @@
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/page/earthquake_history.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/screen/earthquake_history_details.dart';
 import 'package:eqmonitor/feature/eew_detailed_history/eew_detailed_history_screen.dart';
@@ -57,29 +58,34 @@ class EarthquakeHistoryRoute extends GoRouteData {
 }
 
 @TypedGoRoute<EarthquakeHistoryDetailsRoute>(
-  path: '/earthquake-history/:eventId',
+  path: '/earthquake-history-detailed',
 )
 class EarthquakeHistoryDetailsRoute extends GoRouteData {
-  const EarthquakeHistoryDetailsRoute(this.eventId);
-  final int eventId;
+  const EarthquakeHistoryDetailsRoute({
+    required this.$extra,
+  });
+  final EarthquakeHistoryItem $extra;
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return EarthquakeHistoryDetailsPage(
-      eventId: eventId,
-    );
-  }
+  Widget build(BuildContext context, GoRouterState state) =>
+      EarthquakeHistoryDetailsPage(
+        data: $extra,
+      );
 }
 
-@TypedGoRoute<EewDetailedHistoryRoute>(
-  path: '/eew-detailed-history/:eventId',
+@TypedGoRoute<EewHisotryDetailRoute>(
+  path: '/eew-history-detailed',
 )
-class EewDetailedHistoryRoute extends GoRouteData {
-  const EewDetailedHistoryRoute(this.eventId);
-  final int eventId;
+class EewHisotryDetailRoute extends GoRouteData {
+  const EewHisotryDetailRoute({
+    required this.$extra,
+  });
+
+  final EarthquakeHistoryItem $extra;
+
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       EewDetailedHistoryScreen(
-        eventId: eventId,
+        data: $extra,
       );
 }
 

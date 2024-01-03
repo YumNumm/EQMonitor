@@ -11,7 +11,6 @@ import 'package:eqmonitor/feature/home/features/eew/provider/eew_alive_telegram.
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -333,7 +332,7 @@ class EewWidget extends ConsumerWidget {
       final maxLgInt = eew.forecastMaxLgInt?.toDisplayMaxLgInt();
       final card = InkWell(
         onLongPress: () =>
-            context.push(EewDetailedHistoryRoute(telegram.eventId).location),
+            EewHisotryDetailRoute($extra: item).push<void>(context),
         child: Card(
           margin: const EdgeInsets.all(4),
           elevation: 0,

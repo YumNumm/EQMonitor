@@ -12,7 +12,7 @@ List<RouteBase> get $appRoutes => [
       $setupRoute,
       $earthquakeHistoryRoute,
       $earthquakeHistoryDetailsRoute,
-      $eewDetailedHistoryRoute,
+      $eewHisotryDetailRoute,
       $homeRoute,
       $talkerRoute,
       $kmoniRoute,
@@ -65,7 +65,7 @@ extension $EarthquakeHistoryRouteExtension on EarthquakeHistoryRoute {
 }
 
 RouteBase get $earthquakeHistoryDetailsRoute => GoRouteData.$route(
-      path: '/earthquake-history/:eventId',
+      path: '/earthquake-history-detailed',
       factory: $EarthquakeHistoryDetailsRouteExtension._fromState,
     );
 
@@ -73,46 +73,50 @@ extension $EarthquakeHistoryDetailsRouteExtension
     on EarthquakeHistoryDetailsRoute {
   static EarthquakeHistoryDetailsRoute _fromState(GoRouterState state) =>
       EarthquakeHistoryDetailsRoute(
-        int.parse(state.pathParameters['eventId']!),
+        $extra: state.extra as EarthquakeHistoryItem,
       );
 
   String get location => GoRouteData.$location(
-        '/earthquake-history/${Uri.encodeComponent(eventId.toString())}',
+        '/earthquake-history-detailed',
       );
 
-  void go(BuildContext context) => context.go(location);
+  void go(BuildContext context) => context.go(location, extra: $extra);
 
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: $extra);
 
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
+      context.pushReplacement(location, extra: $extra);
 
-  void replace(BuildContext context) => context.replace(location);
+  void replace(BuildContext context) =>
+      context.replace(location, extra: $extra);
 }
 
-RouteBase get $eewDetailedHistoryRoute => GoRouteData.$route(
-      path: '/eew-detailed-history/:eventId',
-      factory: $EewDetailedHistoryRouteExtension._fromState,
+RouteBase get $eewHisotryDetailRoute => GoRouteData.$route(
+      path: '/eew-history-detailed',
+      factory: $EewHisotryDetailRouteExtension._fromState,
     );
 
-extension $EewDetailedHistoryRouteExtension on EewDetailedHistoryRoute {
-  static EewDetailedHistoryRoute _fromState(GoRouterState state) =>
-      EewDetailedHistoryRoute(
-        int.parse(state.pathParameters['eventId']!),
+extension $EewHisotryDetailRouteExtension on EewHisotryDetailRoute {
+  static EewHisotryDetailRoute _fromState(GoRouterState state) =>
+      EewHisotryDetailRoute(
+        $extra: state.extra as EarthquakeHistoryItem,
       );
 
   String get location => GoRouteData.$location(
-        '/eew-detailed-history/${Uri.encodeComponent(eventId.toString())}',
+        '/eew-history-detailed',
       );
 
-  void go(BuildContext context) => context.go(location);
+  void go(BuildContext context) => context.go(location, extra: $extra);
 
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: $extra);
 
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
+      context.pushReplacement(location, extra: $extra);
 
-  void replace(BuildContext context) => context.replace(location);
+  void replace(BuildContext context) =>
+      context.replace(location, extra: $extra);
 }
 
 RouteBase get $homeRoute => GoRouteData.$route(
