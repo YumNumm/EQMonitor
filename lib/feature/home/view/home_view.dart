@@ -198,7 +198,10 @@ class _HomeBodyWidget extends HookConsumerWidget {
               ),
               // Sheet
               _Sheet(sheetController: sheetController),
-              const IntensityRendererWidget(),
+              const FractionalTranslation(
+                translation: Offset(-2, -2),
+                child: IntensityRendererWidget(),
+              ),
             ],
           ),
         ),
