@@ -25,19 +25,24 @@ class JmaIntensityIcon extends ConsumerWidget {
     final colorScheme = intensityColorModel.fromJmaIntensity(intensity);
     final (fg, bg) = (colorScheme.foreground, colorScheme.background);
     // 震度の整数部分
-    final intensityMainText =
-        intensity.type.replaceAll('-', '').replaceAll('+', '');
+    final intensityMainText = switch (intensity) {
+      JmaIntensity.fiveUpperNoInput => '5',
+      _ => intensity.type.replaceAll('-', '').replaceAll('+', ''),
+    };
     // 震度の弱・強の表記
     final suffix = intensity.type.contains('-')
         ? '-'
         : intensity.type.contains('+')
             ? '+'
             : '';
-    final intensitySubText = intensity.type.contains('-')
-        ? '弱'
-        : intensity.type.contains('+')
-            ? '強'
-            : '';
+    final intensitySubText = switch (intensity) {
+      JmaIntensity.fiveUpperNoInput => '弱以上',
+      _ => intensity.type.contains('-')
+          ? '弱'
+          : intensity.type.contains('+')
+              ? '強'
+              : '',
+    };
     final borderColor = Color.lerp(
       bg,
       fg,

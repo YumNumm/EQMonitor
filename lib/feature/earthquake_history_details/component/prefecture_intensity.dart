@@ -116,7 +116,6 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print('PrefectureIntensityWidget#build');
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
 
@@ -162,6 +161,11 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
                             ?.any((city) => city.stations.isNotEmpty) ??
                         false,
                   );
+                  final title = switch (intensity) {
+                    JmaIntensity.fiveUpperNoInput => '震度5弱以上未入電',
+                    _ =>
+                      '震度${intensity.type.replaceAll("+", "強").replaceAll("-", "弱")}'
+                  };
                   return ListTile(
                     titleAlignment: ListTileTitleAlignment.titleHeight,
                     leading: JmaIntensityIcon(
@@ -170,7 +174,7 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
                       size: 16,
                     ),
                     title: Text(
-                      '震度${intensity.type.replaceAll("+", "強").replaceAll("-", "弱")}',
+                      title,
                       style: textTheme.titleMedium!.copyWith(
                         fontFamily: FontFamily.jetBrainsMono,
                         fontFamilyFallback: [FontFamily.notoSansJP],
@@ -228,7 +232,7 @@ class _PrefectureModalBottomSheet extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "震度${intensity.type.replaceAll('+', '強').replaceAll('-', '弱')}"
+          "震度${intensity.type.replaceAll("!5-", "震度5弱以上未入電").replaceAll('+', '強').replaceAll('-', '弱')}"
           'の地域',
         ),
       ),
