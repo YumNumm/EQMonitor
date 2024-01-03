@@ -11,6 +11,7 @@ import 'package:eqmonitor/core/provider/config/permission/permission_status_prov
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
+import 'package:eqmonitor/feature/home/component/intensity_renderer/intensity_renderer_widget.dart';
 import 'package:eqmonitor/feature/home/component/map/eew_estimated_intensity_widget.dart';
 import 'package:eqmonitor/feature/home/component/map/eew_hypocenter_widget.dart';
 import 'package:eqmonitor/feature/home/component/map/eew_pswave_arrival_circle.dart';
@@ -197,6 +198,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
               ),
               // Sheet
               _Sheet(sheetController: sheetController),
+              const IntensityRendererWidget(),
             ],
           ),
         ),

@@ -9,7 +9,7 @@ part of 'jma_parameter_api.dart';
 // **************************************************************************
 
 String _$jmaParameterApiClientHash() =>
-    r'18f168a44d820b70566c826ac1dba737ef73a86a';
+    r'8376451bacb718f92fd9eac9792b82f54c9bdde6';
 
 /// See also [jmaParameterApiClient].
 @ProviderFor(jmaParameterApiClient)

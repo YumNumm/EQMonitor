@@ -5,14 +5,18 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/map/data/model/mutable_projected_feature_layer.dart';
+import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/map_libre/provider/map_style.dart';
+import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
 import 'package:lat_lng/lat_lng.dart' as lat_lng;
 import 'package:latlong2/latlong.dart' as lat_lng2;
 import 'package:maplibre_gl/maplibre_gl.dart' as map_libre;
@@ -48,78 +52,70 @@ class EarthquakeMapWidget extends HookConsumerWidget {
     return controller.addImage(name, list);
   }
 
+  Future<void> addImageFromBuffer(
+    MaplibreMapController controller,
+    String name,
+    Uint8List buffer,
+  ) =>
+      controller.addImage(name, buffer);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final earthquake = item.earthquake;
     final intensity = earthquake.intensity;
     final colorModel = ref.watch(intensityColorProvider);
-    final citiesItem = useMemoized(() {
-      if (intensity == null) {
-        return null;
-      }
-      // cities
-      if (intensity.cities == null) {
-        return null;
-      }
-      final cities = intensity.cities!;
-      final result = <_RegionColorItem>[];
-      for (final e in mapData[LandLayerType.municipalityEarthquakeTsunamiArea]!
-          .projectedPolygonFeatures) {
-        final cityIntensity = cities.firstWhereOrNull(
-          (cityIntensity) =>
-              (int.tryParse(cityIntensity.code) ?? -2) == (e.code ?? -1),
-        );
-        if (cityIntensity != null && cityIntensity.maxInt != null) {
-          result.add(
-            (
-              color: colorModel.fromJmaIntensity(cityIntensity.maxInt!),
-              codes: [
-                e.code.toString().padLeft(7, '0'),
-              ],
-              intensity: cityIntensity.maxInt!,
-            ),
-          );
+    final earthquakeParams =
+        ref.watch(jmaParameterProvider).valueOrNull?.earthquake;
+    final intensityIconData = ref.watch(intensityIconRenderProvider);
+    final intensityIconFillData = ref.watch(intensityIconFillRenderProvider);
+    if (earthquakeParams == null ||
+        !intensityIconData.isAllRendered() ||
+        !intensityIconFillData.isAllRendered()) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator.adaptive(),
+        ),
+      );
+    }
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final mapStyle = ref.watch(mapStyleProvider);
+    final styleJsonFuture = useFuture(mapStyle.getStyle(isDark: isDark));
+    final path = styleJsonFuture.data;
+    if (path == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator.adaptive(),
+        ),
+      );
+    }
+    final isInitialized = useState(false);
+
+    final citiesItem = useMemoized(
+      () {
+        if (intensity == null) {
+          return null;
         }
-      }
-      // 同じ色の地域をまとめる
-      final grouped = groupBy<_RegionColorItem, JmaIntensity>(
-        result,
-        (e) => e.intensity,
-      ).entries.map((e) {
-        final codes = <String>[];
-        for (final item in e.value) {
-          codes.addAll(item.codes);
+        // cities
+        if (intensity.cities == null) {
+          return null;
         }
-        return (
-          color: e.value.first.color,
-          codes: codes,
-          intensity: e.key,
-        );
-      }).toList();
-      return grouped;
-    });
-    final regionsItem = useMemoized(() {
-      if (intensity == null) {
-        return null;
-      }
-      // regionsの探索
-      {
-        final regions = intensity.regions;
+        final cities = intensity.cities!;
         final result = <_RegionColorItem>[];
         for (final e
-            in mapData[LandLayerType.earthquakeInformationSubdivisionArea]!
+            in mapData[LandLayerType.municipalityEarthquakeTsunamiArea]!
                 .projectedPolygonFeatures) {
-          final regionIntensity = regions.firstWhereOrNull(
-            (cityIntensity) => cityIntensity.code == e.code.toString(),
+          final cityIntensity = cities.firstWhereOrNull(
+            (cityIntensity) =>
+                (int.tryParse(cityIntensity.code) ?? -2) == (e.code ?? -1),
           );
-          if (regionIntensity != null && regionIntensity.maxInt != null) {
+          if (cityIntensity != null && cityIntensity.maxInt != null) {
             result.add(
               (
-                color: colorModel.fromJmaIntensity(regionIntensity.maxInt!),
+                color: colorModel.fromJmaIntensity(cityIntensity.maxInt!),
                 codes: [
-                  e.code.toString().padLeft(3, '0'),
+                  e.code.toString().padLeft(7, '0'),
                 ],
-                intensity: regionIntensity.maxInt!,
+                intensity: cityIntensity.maxInt!,
               ),
             );
           }
@@ -140,20 +136,83 @@ class EarthquakeMapWidget extends HookConsumerWidget {
           );
         }).toList();
         return grouped;
-      }
-    });
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final mapStyle = ref.watch(mapStyleProvider);
-    final styleJsonFuture = useFuture(mapStyle.getStyle(isDark: isDark));
-    final path = styleJsonFuture.data;
-    if (path == null) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator.adaptive(),
-        ),
-      );
-    }
-    final isInitialized = useState(false);
+      },
+      [intensity],
+    );
+    final regionsItem = useMemoized(
+      () {
+        if (intensity == null) {
+          return null;
+        }
+        // regionsの探索
+        {
+          final regions = intensity.regions;
+          final result = <_RegionColorItem>[];
+          for (final e
+              in mapData[LandLayerType.earthquakeInformationSubdivisionArea]!
+                  .projectedPolygonFeatures) {
+            final regionIntensity = regions.firstWhereOrNull(
+              (cityIntensity) => cityIntensity.code == e.code.toString(),
+            );
+            if (regionIntensity != null && regionIntensity.maxInt != null) {
+              result.add(
+                (
+                  color: colorModel.fromJmaIntensity(regionIntensity.maxInt!),
+                  codes: [
+                    e.code.toString().padLeft(3, '0'),
+                  ],
+                  intensity: regionIntensity.maxInt!,
+                ),
+              );
+            }
+          }
+          // 同じ色の地域をまとめる
+          final grouped = groupBy<_RegionColorItem, JmaIntensity>(
+            result,
+            (e) => e.intensity,
+          ).entries.map((e) {
+            final codes = <String>[];
+            for (final item in e.value) {
+              codes.addAll(item.codes);
+            }
+            return (
+              color: e.value.first.color,
+              codes: codes,
+              intensity: e.key,
+            );
+          }).toList();
+          return grouped;
+        }
+      },
+      [intensity],
+    );
+    final stationsItem = useMemoized(
+      () {
+        final stations = intensity?.stations;
+        if (stations == null) {
+          return null;
+        }
+        final allStations = earthquakeParams.regions
+            .map(
+              (region) => region.cities.map(
+                (city) => city.stations,
+              ),
+            )
+            .flattened
+            .flattened;
+        final stationsParamMerged = stations.map(
+          (e) => (
+            item: e,
+            param: allStations.firstWhereOrNull(
+              (element) => element.code == e.code,
+            ),
+          ),
+        );
+        final grouped = stationsParamMerged.groupListsBy((e) => e.item.maxInt);
+        return grouped;
+      },
+      [intensity],
+    );
 
     final mapController = useState<MaplibreMapController?>(null);
     final bounds = useMemoized(
@@ -200,12 +259,46 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         onStyleLoadedCallback: () async {
           final controller = mapController.value!;
 
-          await addImageFromAsset(
-            controller,
-            'hypocenter',
-            'assets/images/hypocenter.png',
-          );
+          await [
+            addImageFromAsset(
+              controller,
+              'hypocenter',
+              'assets/images/hypocenter.png',
+            ),
+            for (final intensity in JmaIntensity.values)
+              addImageFromBuffer(
+                controller,
+                'intensity-${intensity.type}',
+                intensityIconData.getOrNull(intensity)!,
+              ),
+            for (final intensity in JmaIntensity.values)
+              addImageFromBuffer(
+                controller,
+                'intensity-${intensity.type}-fill',
+                intensityIconFillData.getOrNull(intensity)!,
+              ),
+          ].wait;
+
           await _FillAction(
+            citiesItem: citiesItem,
+            regionsItem: regionsItem,
+            earthquake: earthquake,
+          ).init(
+            controller,
+          );
+          if (stationsItem != null) {
+            await _StationAction(
+              citiesItem: citiesItem,
+              regionsItem: regionsItem,
+              earthquake: earthquake,
+              stations: stationsItem,
+              colorModel: colorModel,
+            ).init(
+              controller,
+            );
+          }
+
+          await _HypocenterAction(
             citiesItem: citiesItem,
             regionsItem: regionsItem,
             earthquake: earthquake,
@@ -320,60 +413,6 @@ class _FillAction extends _MapLibreAction {
 
   @override
   Future<void> init(map_libre.MaplibreMapController controller) async {
-    /// 震源地
-    final hypocenter = earthquake.earthquake?.hypocenter;
-    if (hypocenter != null) {
-      final coord = hypocenter.coordinate;
-      if (coord != null) {
-        await controller.setSymbolIconAllowOverlap(true);
-        await controller.setSymbolIconIgnorePlacement(true);
-        await controller.addGeoJsonSource('hypocenter', {
-          'type': 'FeatureCollection',
-          'features': [
-            {
-              'type': 'Feature',
-              'geometry': {
-                'type': 'Point',
-                'coordinates': [coord.lon, coord.lat],
-              },
-              'properties': {
-                'magnitude':
-                    earthquake.earthquake?.magnitude.value.toString() ??
-                        earthquake.earthquake?.magnitude.condition ??
-                        '調査中',
-              },
-            }
-          ],
-        });
-        await controller.addSymbolLayer(
-          'hypocenter',
-          'hypocenter',
-          const SymbolLayerProperties(
-            iconImage: 'hypocenter',
-            iconSize: [
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              6,
-              0.2,
-              20,
-              2,
-            ],
-            iconOpacity: [
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              20,
-              1,
-              25,
-              0.4,
-            ],
-            iconAllowOverlap: true,
-          ),
-        );
-      }
-    }
-
     /// 震度分布塗りつぶし (市区町村)
     if (citiesItem != null) {
       const name = 'areaInformationCityQuake';
@@ -478,17 +517,199 @@ class _StationAction extends _MapLibreAction {
     required super.citiesItem,
     required super.regionsItem,
     required super.earthquake,
+    required this.stations,
+    required this.colorModel,
+  });
+
+  final Map<JmaIntensity?,
+          List<({RegionIntensity item, EarthquakeParameterStationItem? param})>>
+      stations;
+  final IntensityColorModel colorModel;
+
+  @override
+  Future<void> init(
+    map_libre.MaplibreMapController controller,
+  ) async {
+    await controller.setSymbolIconAllowOverlap(true);
+    await controller.setSymbolIconIgnorePlacement(true);
+    await controller.addGeoJsonSource(
+      'station-intensity',
+      {
+        'type': 'FeatureCollection',
+        'features': stations.entries
+            .map((e) {
+              final color = e.key == null
+                  ? const TextColorModel(
+                      background: Color(0x00000000),
+                      foreground: Color(0x00000000),
+                    )
+                  : colorModel.fromJmaIntensity(e.key!);
+              return e.value.map(
+                (point) => {
+                  'type': 'Feature',
+                  'geometry': {
+                    'type': 'Point',
+                    'coordinates': [
+                      point.param?.longitude ?? 0,
+                      point.param?.latitude ?? 0,
+                    ],
+                  },
+                  'properties': {
+                    'color': color.background.toHexStringRGB(),
+                    'intensity': e.key?.type,
+                    'name': point.param?.name,
+                  },
+                },
+              );
+            })
+            .flattened
+            .toList(),
+      },
+    );
+    for (final intensity in JmaIntensity.values) {
+      await controller.removeLayer('station-intensity-${intensity.type}');
+      await controller.addLayer(
+        'station-intensity',
+        'station-intensity-${intensity.type}',
+        SymbolLayerProperties(
+          iconImage: 'intensity-${intensity.type}',
+          iconSize: [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            6,
+            1,
+            20,
+            2,
+          ],
+          iconOpacity: [
+            'step',
+            ['zoom'],
+            0.0,
+            7,
+            1.0,
+          ],
+          textAllowOverlap: true,
+          iconAllowOverlap: true,
+        ),
+        filter: [
+          '==',
+          'intensity',
+          intensity.type,
+        ],
+        sourceLayer: 'station-intensity',
+      );
+
+      await controller.addLayer(
+        'station-intensity',
+        'station-intensity-${intensity.type}-circle',
+        SymbolLayerProperties(
+          iconImage: 'intensity-${intensity.type}-fill',
+          iconSize: [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            3,
+            0.3,
+            20,
+            2,
+          ],
+          iconOpacity: [
+            'step',
+            ['zoom'],
+            1.0,
+            7,
+            0.0,
+          ],
+          textAllowOverlap: true,
+          iconAllowOverlap: true,
+        ),
+        filter: [
+          '==',
+          'intensity',
+          intensity.type,
+        ],
+        sourceLayer: 'station-intensity',
+      );
+    }
+  }
+
+  @override
+  Future<void> dispose(map_libre.MaplibreMapController controller) => [
+        controller.removeSource('station-intensity'),
+        controller.removeLayer('station-intensity'),
+        for (final intensity in JmaIntensity.values)
+          controller.removeLayer('station-intensity-${intensity.type}'),
+      ].wait;
+}
+
+class _HypocenterAction extends _MapLibreAction {
+  _HypocenterAction({
+    required super.citiesItem,
+    required super.regionsItem,
+    required super.earthquake,
   });
 
   @override
-  Future<void> dispose(map_libre.MaplibreMapController controller) {
-    // TODO: implement dispose
-    throw UnimplementedError();
+  Future<void> init(map_libre.MaplibreMapController controller) async {
+    /// 震源地
+    final hypocenter = earthquake.earthquake?.hypocenter;
+    if (hypocenter != null) {
+      final coord = hypocenter.coordinate;
+      if (coord != null) {
+        await controller.setSymbolIconAllowOverlap(true);
+        await controller.setSymbolIconIgnorePlacement(true);
+        await controller.addGeoJsonSource('hypocenter', {
+          'type': 'FeatureCollection',
+          'features': [
+            {
+              'type': 'Feature',
+              'geometry': {
+                'type': 'Point',
+                'coordinates': [coord.lon, coord.lat],
+              },
+              'properties': {
+                'magnitude':
+                    earthquake.earthquake?.magnitude.value.toString() ??
+                        earthquake.earthquake?.magnitude.condition ??
+                        '調査中',
+              },
+            }
+          ],
+        });
+        await controller.addSymbolLayer(
+          'hypocenter',
+          'hypocenter',
+          const SymbolLayerProperties(
+            iconImage: 'hypocenter',
+            iconSize: [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              6,
+              0.2,
+              20,
+              2,
+            ],
+            iconOpacity: [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              6,
+              1.0,
+              10,
+              0.7,
+            ],
+            iconAllowOverlap: true,
+          ),
+        );
+      }
+    }
   }
 
   @override
-  Future<void> init(map_libre.MaplibreMapController controller) {
-    // TODO: implement init
-    throw UnimplementedError();
-  }
+  Future<void> dispose(map_libre.MaplibreMapController controller) => (
+        controller.removeSource('hypocenter'),
+        controller.removeLayer('hypocenter')
+      ).wait;
 }
