@@ -9,7 +9,7 @@ part of 'estimated_intensity_provider.dart';
 // **************************************************************************
 
 String _$estimatedIntensityHash() =>
-    r'a42433a8a953507f64e5c254c2501dc12c3a1ef6';
+    r'b0900f34fb6a79c0639a45168768a9ff3d04789d';
 
 /// See also [EstimatedIntensity].
 @ProviderFor(EstimatedIntensity)

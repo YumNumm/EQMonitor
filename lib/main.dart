@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/fcm/channels.dart';
+import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/core/provider/custom_provider_observer.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
@@ -20,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
@@ -64,6 +66,7 @@ Future<void> main() async {
       ),
     ),
     _registerNotificationChannelIfNeeded(),
+    getApplicationDocumentsDirectory(),
   ).wait;
   runApp(
     ProviderScope(
@@ -76,6 +79,7 @@ Future<void> main() async {
           androidDeviceInfoProvider.overrideWithValue(results.$5!),
         if (results.$6 != null)
           iosDeviceInfoProvider.overrideWithValue(results.$6!),
+        applicationDocumentsDirectoryProvider.overrideWithValue(results.$9),
       ],
       observers: [
         if (kDebugMode)

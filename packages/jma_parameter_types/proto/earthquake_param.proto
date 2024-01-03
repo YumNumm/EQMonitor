@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+message EarthquakeParameter {
+  repeated EarthquakeParameterRegionItem regions = 1;
+}
+
+message EarthquakeParameterRegionItem {
+  string code = 1;
+  string name = 2;
+  repeated EarthquakeParameterCityItem cities = 3;
+}
+
+message EarthquakeParameterCityItem {
+  string code = 1;
+  string name = 2;
+  repeated EarthquakeParameterStationItem stations = 3;
+}
+
+message EarthquakeParameterStationItem {
+  string code = 1;
+  string name = 2;
+  double latitude = 3;
+  double longitude = 4;
+}

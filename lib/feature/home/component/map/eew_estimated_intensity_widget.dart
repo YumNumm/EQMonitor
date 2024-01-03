@@ -20,7 +20,7 @@ import 'package:topo_map/topo_map.dart';
 part 'eew_estimated_intensity_widget.g.dart';
 
 /// EEWの予想震度のリスト
-@Riverpod(dependencies: [eewAliveTelegram])
+@Riverpod(dependencies: [EewAliveTelegram, EewAliveTelegram])
 class EewEstimatedIntensityList extends _$EewEstimatedIntensityList {
   @override
   List<(int code, JmaForecastIntensity intensity)> build() {
@@ -72,7 +72,7 @@ class EewEstimatedIntensityWidget extends HookConsumerWidget {
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final eews = ref.watch(eewEstimatedIntensityListProvider) ;
+    final eews = ref.watch(eewEstimatedIntensityListProvider);
     final intensityColorScheme = ref.watch(intensityColorProvider);
 
     return switch (zoomCachedProjectedFeatureLayer.value) {

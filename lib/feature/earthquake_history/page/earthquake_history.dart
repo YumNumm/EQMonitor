@@ -79,6 +79,7 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
                               .fetch,
                           child: const Text('再読み込み'),
                         ),
+                        
                       ],
                     ),
                   );

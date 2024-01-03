@@ -1,0 +1,10 @@
+targets:
+  $default:
+    builders:
+      source_gen|combining_builder:
+        options:
+          ignore_for_file:
+            - type=lint
+      json_serializable:
+        options:
+          checked: true

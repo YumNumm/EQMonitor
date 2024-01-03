@@ -9,7 +9,7 @@ part of 'eew_estimated_intensity_widget.dart';
 // **************************************************************************
 
 String _$eewEstimatedIntensityListHash() =>
-    r'bd70fa2cd32a529b38c62cedfa427f8c6008f5d2';
+    r'3c97280167293709aa3bc04bff56a05631c8d1c4';
 
 /// EEWの予想震度のリスト
 ///

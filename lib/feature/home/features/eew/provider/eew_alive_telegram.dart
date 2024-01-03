@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
@@ -7,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'eew_alive_telegram.g.dart';
 
 /// イベント終了していないEEWのうち、精度が低いものを除外したもの
-@Riverpod(dependencies: [eewAliveTelegram])
+@Riverpod(dependencies: [EewAliveTelegram])
 List<EarthquakeHistoryItem> eewAliveNormalTelegram(
   EewAliveNormalTelegramRef ref,
 ) {
@@ -26,23 +27,37 @@ List<EarthquakeHistoryItem> eewAliveNormalTelegram(
 }
 
 /// イベント終了していないEEW
-@Riverpod(dependencies: [eewTelegram], keepAlive: true)
-List<EarthquakeHistoryItem>? eewAliveTelegram(EewAliveTelegramRef ref) {
-  final state = ref.watch(eewTelegramProvider);
-  final value = state.valueOrNull;
-  if (value == null) {
-    return null;
-  }
-  final tickerTime = ref.watch(timeTickerProvider);
-  final now = (tickerTime.value ?? DateTime.now()).toUtc();
+@Riverpod(keepAlive: true, dependencies: [eewTelegram])
+class EewAliveTelegram extends _$EewAliveTelegram {
+  @override
+  List<EarthquakeHistoryItem>? build() {
+    final state = ref.watch(eewTelegramProvider);
+    final value = state.valueOrNull;
+    final tickerTime = ref.watch(timeTickerProvider);
+    final checker = ref.watch(eewAliveCheckerProvider);
+    if (value == null) {
+      return null;
+    }
+    final now = (tickerTime.value ?? DateTime.now()).toUtc();
 
-  final checker = ref.read(eewAliveCheckerProvider);
-  return value
-      .where((e) => !checker.checkMarkAsEventEnded(item: e, now: now))
-      .toList();
+    return value
+        .where((e) => !checker.checkMarkAsEventEnded(item: e, now: now))
+        .toList();
+  }
+
+  @override
+  bool updateShouldNotify(
+    List<EarthquakeHistoryItem>? previous,
+    List<EarthquakeHistoryItem>? next,
+  ) {
+    if (previous == null || next == null) {
+      return true;
+    }
+    return !const ListEquality<EarthquakeHistoryItem>().equals(previous, next);
+  }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 EewAliveChecker eewAliveChecker(EewAliveCheckerRef ref) => EewAliveChecker();
 
 class EewAliveChecker {

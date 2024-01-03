@@ -1,0 +1,13 @@
+name: jma_parameter_types
+description: A starting point for Dart libraries or applications.
+version: 1.0.0
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
+
+environment:
+  sdk: ^3.2.0
+
+dependencies:
+  protobuf: ^3.1.0
+
+dev_dependencies:
+  pedantic_mono: ^1.23.0
