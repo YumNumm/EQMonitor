@@ -38,7 +38,7 @@ class SettingsScreen extends HookConsumerWidget {
       body: ListView(
         children: [
           GestureDetector(
-            onScaleEnd: (_) async {
+            onTapDown: (_) async {
               debugAttemptCount.value++;
               if (debugAttemptCount.value >= 10) {
                 debugAttemptCount.value = 0;

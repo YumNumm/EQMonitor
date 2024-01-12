@@ -12,13 +12,16 @@ part 'map_style.g.dart';
 MapStyle mapStyle(MapStyleRef ref) => MapStyle();
 
 class MapStyle {
-  Future<String> _saveStyleJson(Map<String, dynamic> json) async {
+  Future<String> _saveStyleJson(
+    Map<String, dynamic> json,
+    String prefix,
+  ) async {
     final dir = await getApplicationDocumentsDirectory();
     final documentDir = dir.path;
     final stylesDir = '$documentDir/styles';
 
     await Directory(stylesDir).create(recursive: true);
-    final styleFile = File('$stylesDir/style.json');
+    final styleFile = File('$stylesDir/${prefix}style.json');
     await styleFile.writeAsString(jsonEncode(json));
     return styleFile.path;
   }
@@ -144,6 +147,6 @@ class MapStyle {
         },
       ],
     };
-    return _saveStyleJson(json);
+    return _saveStyleJson(json, 'maplibre-$isDark');
   }
 }

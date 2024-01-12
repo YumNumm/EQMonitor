@@ -9,7 +9,7 @@ part of 'intensity_icon_render.dart';
 // **************************************************************************
 
 String _$intensityIconRenderHash() =>
-    r'7176bfa396c8cab71cad48ef87ada77c2ced3ed1';
+    r'166c11d54456f44a4543d1319dac89b3a9857ac7';
 
 /// See also [IntensityIconRender].
 @ProviderFor(IntensityIconRender)
@@ -26,7 +26,7 @@ final intensityIconRenderProvider = NotifierProvider<IntensityIconRender,
 
 typedef _$IntensityIconRender = Notifier<Map<JmaIntensity, Uint8List>>;
 String _$intensityIconFillRenderHash() =>
-    r'96bd5d101d9856995ef723fe64c332e5ab48cbb5';
+    r'ffc902ad3f54b8cfcdd588157c47876d0f041dcb';
 
 /// See also [IntensityIconFillRender].
 @ProviderFor(IntensityIconFillRender)
@@ -42,5 +42,39 @@ final intensityIconFillRenderProvider = NotifierProvider<
 );
 
 typedef _$IntensityIconFillRender = Notifier<Map<JmaIntensity, Uint8List>>;
+String _$hypocenterIconRenderHash() =>
+    r'76f8f7104e9c1218646b56290778b15bed6973c0';
+
+/// See also [HypocenterIconRender].
+@ProviderFor(HypocenterIconRender)
+final hypocenterIconRenderProvider =
+    NotifierProvider<HypocenterIconRender, Uint8List?>.internal(
+  HypocenterIconRender.new,
+  name: r'hypocenterIconRenderProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$hypocenterIconRenderHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$HypocenterIconRender = Notifier<Uint8List?>;
+String _$hypocenterLowPreciseIconRenderHash() =>
+    r'bcac14276f8cab043ecf7a29f78652b6be4140e8';
+
+/// See also [HypocenterLowPreciseIconRender].
+@ProviderFor(HypocenterLowPreciseIconRender)
+final hypocenterLowPreciseIconRenderProvider =
+    NotifierProvider<HypocenterLowPreciseIconRender, Uint8List?>.internal(
+  HypocenterLowPreciseIconRender.new,
+  name: r'hypocenterLowPreciseIconRenderProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$hypocenterLowPreciseIconRenderHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$HypocenterLowPreciseIconRender = Notifier<Uint8List?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
