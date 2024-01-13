@@ -65,7 +65,9 @@ jobs:
         run: dart pub global activate melos
 
       - name: Melos bootstrap
-        run: melos bootstrap
+        run: |
+          ln -s $FLUTTER_ROOT .fvm/flutter_sdk
+          melos bootstrap
 
       - name: flutter analyze
         run: flutter analyze --write=flutter_analyze.log

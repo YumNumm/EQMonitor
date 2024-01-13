@@ -1,37 +1,19 @@
-name: Auto Format
+name: Protocol Buffer Updator
 
 on:
-  pull_request_target:
   push:
-    branches:
-      - main
-      - develop
+  pull_request:
 
 jobs:
-  format:
-    env:
-      FLUTTER_VERSION:
-      FLUTTER_CHANNEL:
-      FLUTTER_HOME:
+  check-update:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-
     steps:
       # https://github.com/actions/checkout
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
-
-      - name: Set up ssh
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_ID_ED25519 }}" | base64 -d > ~/.ssh/id_ed25519
-          chmod 700 ~/.ssh/id_ed25519
-          eval $(ssh-agent -s)
-          echo "Host github.com \n\tIdentityFile ~/.ssh/id_ed25519\n\tUser git\n\tIdentityiesOnly yes" >> ~/.ssh/config
-          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-
       - name: Fetch flutter config
         uses: kuhnroyal/flutter-fvm-config-action@v1
       # https://github.com/subosito/flutter-action
@@ -42,22 +24,12 @@ jobs:
           channel: ${{ env.FLUTTER_CHANNEL }}
           cache: true
           cache-key: ${{ env.FLUTTER_VERSION }}-${{ env.FLUTTER_CHANNEL }}
-
-      - name: Install dependencies
-        run: flutter pub get
-      - name: Install Melos
+      - name: Install protoc-gen-dart
+        run: dart pub global activate protoc_plugin
+      - name: Re-generate code
         run: |
-          dart pub global activate melos
-          ln -s $FLUTTER_ROOT .fvm/flutter_sdk
-          melos bootstrap
-
-      - name: build_runner
-        run: |
-          echo '${{ secrets.ENV }}' | base64 -d > .env
-          melos generate
-
-      - name: format
-        run: melos run format
+          cd packages/jma_parameter_types
+          ./util/update_proto.sh
 
       # 変更が発生した場合は プルリクエストを作成
       - name: Create pull request
