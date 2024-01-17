@@ -74,6 +74,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
                 fab: [
                   FloatingActionButton.small(
                     heroTag: 'home',
+                    tooltip: '表示領域領域を戻す',
                     onPressed: () async {
                       final notifier =
                           ref.read(mainMapViewModelProvider.notifier);
