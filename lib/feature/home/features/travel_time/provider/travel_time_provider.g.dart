@@ -23,12 +23,11 @@ final travelTimeProvider = FutureProvider<TravelTimeTables>.internal(
 
 typedef TravelTimeRef = FutureProviderRef<TravelTimeTables>;
 String _$travelTimeDepthMapHash() =>
-    r'baadfe17a963b0f833d36447080933a6b4b6238e';
+    r'241005fd772514c36e310f6d4757d33429dea0f2';
 
 /// See also [travelTimeDepthMap].
 @ProviderFor(travelTimeDepthMap)
-final travelTimeDepthMapProvider =
-    FutureProvider<Map<int, List<TravelTimeTable>>>.internal(
+final travelTimeDepthMapProvider = FutureProvider<TravelTimeDepthMap>.internal(
   travelTimeDepthMap,
   name: r'travelTimeDepthMapProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -38,7 +37,6 @@ final travelTimeDepthMapProvider =
   allTransitiveDependencies: null,
 );
 
-typedef TravelTimeDepthMapRef
-    = FutureProviderRef<Map<int, List<TravelTimeTable>>>;
+typedef TravelTimeDepthMapRef = FutureProviderRef<TravelTimeDepthMap>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

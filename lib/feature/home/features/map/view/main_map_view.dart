@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
+import 'package:eqmonitor/feature/home/features/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/feature/map_libre/provider/map_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -26,13 +27,24 @@ class MainMapView extends HookConsumerWidget {
     useFuture(
       getStyleJsonFuture,
     );
-    if (stylePath.value == null) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator.adaptive(),
-        ),
-      );
-    }
+
+    final controller = useAnimationController(
+      duration: const Duration(microseconds: 1000),
+    );
+    useAnimation(controller);
+    useEffect(
+      () {
+        controller
+          ..repeat()
+          ..addListener(
+            () => ref
+                .read(mainMapViewModelProvider.notifier)
+                .onTick(DateTime.now()),
+          );
+        return null;
+      },
+      [],
+    );
 
     // 震央画像 / 震度アイコンの登録
     final images = (
@@ -42,12 +54,22 @@ class MainMapView extends HookConsumerWidget {
       hypocenterLowPreciseIcon:
           ref.watch(hypocenterLowPreciseIconRenderProvider),
     );
+    final hasTravelTimeDepthMapValue = ref.watch(
+      travelTimeDepthMapProvider
+          .select((e) => e.valueOrNull?.isNotEmpty ?? false),
+    );
     // 初回描画が終わるまで待つ
-    if (images.hypocenterIcon == null ||
+    if (stylePath.value == null ||
+        images.hypocenterIcon == null ||
         images.hypocenterLowPreciseIcon == null ||
         !images.intenistyIcon.isAllRendered() ||
-        !images.intensityIconFill.isAllRendered()) {
-      return const SizedBox.shrink();
+        !images.intensityIconFill.isAllRendered() ||
+        !hasTravelTimeDepthMapValue) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator.adaptive(),
+        ),
+      );
     }
 
     final mapController = useState<MaplibreMapController?>(null);
@@ -78,8 +100,8 @@ class MainMapView extends HookConsumerWidget {
           final notifier = ref.read(mainMapViewModelProvider.notifier)
             ..registerMapController(
               controller!,
-            )
-            ..moveCameraToDefaultPosition();
+            );
+
           await Future.wait(
             [
               notifier.updateImage(
@@ -105,8 +127,9 @@ class MainMapView extends HookConsumerWidget {
           );
           unawaited(
             [
-              notifier.startUpdateKmoni(),
+              notifier.onMapControllerRegistered(),
               notifier.startUpdateEew(),
+              notifier.moveCameraToDefaultPosition(),
             ].wait,
           );
         },

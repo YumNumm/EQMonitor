@@ -13,7 +13,7 @@ Future<TravelTimeTables> travelTime(TravelTimeRef ref) async {
 }
 
 @Riverpod(keepAlive: true)
-Future<Map<int, List<TravelTimeTable>>> travelTimeDepthMap(
+Future<TravelTimeDepthMap> travelTimeDepthMap(
   TravelTimeDepthMapRef ref,
 ) {
   final state = ref.watch(travelTimeProvider);
@@ -24,7 +24,9 @@ Future<Map<int, List<TravelTimeTable>>> travelTimeDepthMap(
   return Future.value(value.table.groupListsBy((e) => e.depth));
 }
 
-extension TravelTimeDepthMapCalc on Map<int, List<TravelTimeTable>> {
+typedef TravelTimeDepthMap = Map<int, List<TravelTimeTable>>;
+
+extension TravelTimeDepthMapCalc on TravelTimeDepthMap {
   /// 走時を求める
   /// [depth]: 震源の深さ(km)
   /// [duration]: 地震発生からの経過時間(sec)

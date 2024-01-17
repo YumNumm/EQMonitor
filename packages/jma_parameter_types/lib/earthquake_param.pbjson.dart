@@ -74,3 +74,4 @@ final $typed_data.Uint8List earthquakeParameterStationItemDescriptor = $convert.
     'Ch5FYXJ0aHF1YWtlUGFyYW1ldGVyU3RhdGlvbkl0ZW0SEgoEY29kZRgBIAEoCVIEY29kZRISCg'
     'RuYW1lGAIgASgJUgRuYW1lEhoKCGxhdGl0dWRlGAMgASgBUghsYXRpdHVkZRIcCglsb25naXR1'
     'ZGUYBCABKAFSCWxvbmdpdHVkZQ==');
+

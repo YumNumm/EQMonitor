@@ -14,6 +14,7 @@ import 'package:eqmonitor/feature/home/component/sheet/update_widget.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_widget.dart';
 import 'package:eqmonitor/feature/home/features/map/view/main_map_view.dart';
+import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -71,11 +72,13 @@ class _HomeBodyWidget extends HookConsumerWidget {
               SheetFloatingActionButtons(
                 controller: sheetController,
                 fab: [
-                  const FloatingActionButton.small(
+                  FloatingActionButton.small(
                     heroTag: 'home',
-                    onPressed: null,
+                    onPressed: () => ref
+                        .read(mainMapViewModelProvider.notifier)
+                        .animateCameraToDefaultPosition(),
                     elevation: 4,
-                    child: Icon(Icons.home),
+                    child: const Icon(Icons.home),
                   ),
                   if (kDebugMode)
                     FloatingActionButton.small(
