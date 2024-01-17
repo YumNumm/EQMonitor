@@ -74,9 +74,24 @@ class _HomeBodyWidget extends HookConsumerWidget {
                 fab: [
                   FloatingActionButton.small(
                     heroTag: 'home',
-                    onPressed: () => ref
-                        .read(mainMapViewModelProvider.notifier)
-                        .animateCameraToDefaultPosition(),
+                    onPressed: () async {
+                      final notifier =
+                          ref.read(mainMapViewModelProvider.notifier);
+                      if (!notifier.isMapControllerRegistered()) {
+                        return;
+                      }
+                      // 画面の高さを取得
+                      final height = MediaQuery.sizeOf(context).height;
+                      final sheetRatio = sheetController.animation.value;
+                      final bottomPadding = switch (sheetRatio) {
+                        < 0.3 => height * sheetRatio,
+                        _ => height * 0.3,
+                      };
+                      // sheetの高さを取得
+                      await notifier.animateCameraToDefaultPosition(
+                        bottom: bottomPadding,
+                      );
+                    },
                     elevation: 4,
                     child: const Icon(Icons.home),
                   ),
