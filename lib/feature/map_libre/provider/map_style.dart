@@ -44,14 +44,14 @@ class MapStyle {
           'https://orangemug.github.io/font-glyphs/glyphs/{fontstack}/{range}.pbf',
       'layers': [
         {
-          'id': 'background',
+          'id': BaseLayer.background.name,
           'type': 'background',
           'paint': {
             'background-color': colorScheme.backgroundColor.toHexStringRGB(),
           },
         },
         {
-          'id': 'countries-fill',
+          'id': BaseLayer.countriesFill.name,
           'source': 'eqmonitor_map',
           'source-layer': 'countries',
           'type': 'fill',
@@ -61,7 +61,7 @@ class MapStyle {
           },
         },
         {
-          'id': 'countries-line',
+          'id': BaseLayer.countriesLines.name,
           'source': 'eqmonitor_map',
           'source-layer': 'countries',
           'type': 'line',
@@ -73,7 +73,7 @@ class MapStyle {
           },
         },
         {
-          'id': 'areaForecastLocalE_fill',
+          'id': BaseLayer.areaForecastLocalEFill.name,
           'source': 'eqmonitor_map',
           'source-layer': 'areaForecastLocalE',
           'type': 'fill',
@@ -83,7 +83,7 @@ class MapStyle {
         },
         // areaForecastLocalEew_line
         {
-          'id': 'areaForecastLocalEew_line',
+          'id': BaseLayer.areaForecastLocalEewLine.name,
           'source': 'eqmonitor_map',
           'source-layer': 'areaForecastLocalEew',
           'type': 'line',
@@ -103,7 +103,7 @@ class MapStyle {
           },
         },
         {
-          'id': 'areaForecastLocalE_line',
+          'id': BaseLayer.areaForecastLocalELine.name,
           'source': 'eqmonitor_map',
           'source-layer': 'areaForecastLocalE',
           'type': 'line',
@@ -126,7 +126,7 @@ class MapStyle {
         },
         // areaInformationCityQuake
         {
-          'id': 'areaInformationCityQuake_line',
+          'id': BaseLayer.areaInformationCityQuakeLine.name,
           'source': 'eqmonitor_map',
           'source-layer': 'areaInformationCityQuake',
           'type': 'line',
@@ -149,4 +149,15 @@ class MapStyle {
     };
     return _saveStyleJson(json, 'maplibre-$isDark');
   }
+}
+
+enum BaseLayer {
+  background,
+  countriesLines,
+  countriesFill,
+  areaForecastLocalEFill,
+  areaForecastLocalEewLine,
+  areaForecastLocalELine,
+  areaInformationCityQuakeLine,
+  ;
 }

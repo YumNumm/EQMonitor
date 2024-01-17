@@ -484,7 +484,7 @@ class _FillAction extends _MapLibreAction {
           FillLayerProperties(
             fillColor: item.color.background.toHexStringRGB(),
           ),
-          belowLayerId: 'areaForecastLocalEew_line',
+          belowLayerId: BaseLayer.areaForecastLocalEewLine.name,
           sourceLayer: name,
           filter: [
             'in',
@@ -504,7 +504,7 @@ class _FillAction extends _MapLibreAction {
             lineColor: item.color.foreground.toHexStringRGB(),
             lineOpacity: 0.2,
           ),
-          belowLayerId: 'areaForecastLocalEew_line',
+          belowLayerId: BaseLayer.areaForecastLocalEewLine.name,
           sourceLayer: name,
           filter: [
             'in',
@@ -531,7 +531,7 @@ class _FillAction extends _MapLibreAction {
             fillColor: item.color.background.toHexStringRGB(),
           ),
           sourceLayer: name,
-          belowLayerId: 'areaForecastLocalEew_line',
+          belowLayerId: BaseLayer.areaForecastLocalEewLine.name,
           filter: [
             'in',
             ['get', 'code'],
@@ -550,7 +550,7 @@ class _FillAction extends _MapLibreAction {
             lineOpacity: 0.8,
           ),
           sourceLayer: name,
-          belowLayerId: 'areaForecastLocalEew_line',
+          belowLayerId: BaseLayer.areaForecastLocalEewLine.name,
           filter: [
             'in',
             ['get', 'regioncode'],

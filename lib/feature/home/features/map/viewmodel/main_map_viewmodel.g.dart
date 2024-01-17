@@ -5,10 +5,37 @@
 part of 'main_map_viewmodel.dart';
 
 // **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_$_EewHypocenterPropertiesImpl _$$_EewHypocenterPropertiesImplFromJson(
+        Map<String, dynamic> json) =>
+    $checkedCreate(
+      r'_$_EewHypocenterPropertiesImpl',
+      json,
+      ($checkedConvert) {
+        final val = _$_EewHypocenterPropertiesImpl(
+          depth: $checkedConvert('depth', (v) => v as int),
+          magnitude: $checkedConvert('magnitude', (v) => (v as num).toDouble()),
+          isLowPrecise: $checkedConvert('isLowPrecise', (v) => v as bool),
+        );
+        return val;
+      },
+    );
+
+Map<String, dynamic> _$$_EewHypocenterPropertiesImplToJson(
+        _$_EewHypocenterPropertiesImpl instance) =>
+    <String, dynamic>{
+      'depth': instance.depth,
+      'magnitude': instance.magnitude,
+      'isLowPrecise': instance.isLowPrecise,
+    };
+
+// **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mainMapViewModelHash() => r'c4702263b1b4776b4bbc0df502f830be6cff2d72';
+String _$mainMapViewModelHash() => r'c66ccd82172d919370bddc69dea69ec77327e947';
 
 /// See also [MainMapViewModel].
 @ProviderFor(MainMapViewModel)
