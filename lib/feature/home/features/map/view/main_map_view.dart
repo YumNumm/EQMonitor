@@ -129,7 +129,11 @@ class MainMapView extends HookConsumerWidget {
             [
               notifier.onMapControllerRegistered(),
               notifier.startUpdateEew(),
-              notifier.moveCameraToDefaultPosition(),
+              notifier.moveCameraToDefaultPosition(
+                bottom: 100,
+                left: 10,
+                right: 10,
+              ),
             ].wait,
           );
         },

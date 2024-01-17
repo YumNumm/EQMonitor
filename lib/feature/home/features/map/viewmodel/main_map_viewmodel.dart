@@ -175,8 +175,13 @@ class MainMapViewModel extends _$MainMapViewModel {
       // ignore: void_checks
       _controller = controller;
 
+  bool isMapControllerRegistered() => _controller != null;
+
   Future<void> moveCameraToDefaultPosition({
     double bottom = 0,
+    double left = 0,
+    double right = 0,
+    double top = 0,
   }) async {
     if (_controller == null) {
       throw Exception('MaplibreMapController is null');
@@ -188,6 +193,9 @@ class MainMapViewModel extends _$MainMapViewModel {
           northeast: const LatLng(45.8, 145.1),
         ),
         bottom: bottom,
+        left: left,
+        right: right,
+        top: top,
       ),
     );
   }
