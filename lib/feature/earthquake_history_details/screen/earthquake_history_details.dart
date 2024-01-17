@@ -45,10 +45,6 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
     final telegramType = data.telegrams.map((e) => e.status).toSet()
       ..remove(TelegramStatus.normal);
 
-    if (zoomCachedMapData == null) {
-      print('zoomCachedMapData is null');
-    }
-
     return Scaffold(
       body: Stack(
         children: [

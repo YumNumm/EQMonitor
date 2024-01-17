@@ -13,7 +13,7 @@ extension SafeListAccess<T> on List<T> {
 extension SafeMapAccess<K, V> on Map<K, V> {
   /// 指定したキーの要素を取得する
   /// キーが存在しない場合はnullを返す
-  V? getOrNull<V>(K key) {
+  V? getOrNull(K key) {
     if (!containsKey(key)) {
       return null;
     }
