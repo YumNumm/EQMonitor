@@ -102,6 +102,7 @@ class MainMapViewModel extends _$MainMapViewModel {
         _eewPsWaveService!.tick(now: now),
         _eewHypocenterService!.tick(),
       ).wait;
+    // ignore: avoid_catches_without_on_clauses, empty_catches
     } catch (e) {}
   }
 
@@ -868,6 +869,7 @@ class _EewHypocenterProperties with _$EewHypocenterProperties {
     required bool isLowPrecise,
   }) = __EewHypocenterProperties;
 
+  // ignore: unused_element
   factory _EewHypocenterProperties.fromJson(Map<String, dynamic> json) =>
       _$$_EewHypocenterPropertiesImplFromJson(json);
 }

@@ -80,15 +80,6 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         !intensityIconData.isAllRendered() ||
         !intensityIconFillData.isAllRendered() ||
         hypocenterIconRender == null) {
-      if (earthquakeParams == null) {
-        print('earthquakeParams is null');
-      } else if (!intensityIconData.isAllRendered()) {
-        print('intensityIconData is not rendered');
-      } else if (!intensityIconFillData.isAllRendered()) {
-        print('intensityIconFillData is not rendered');
-      } else if (hypocenterIconRender == null) {
-        print('hypocenterIconRender is null');
-      }
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator.adaptive(),
@@ -100,7 +91,6 @@ class EarthquakeMapWidget extends HookConsumerWidget {
     final styleJsonFuture = useFuture(mapStyle.getStyle(isDark: isDark));
     final path = styleJsonFuture.data;
     if (path == null) {
-      print('styleJsonFuture.data is null');
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator.adaptive(),

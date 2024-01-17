@@ -27,16 +27,16 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
             TopologyPolygon(
               arcs: arcs,
               areaCode: int.tryParse(
-                    geo.properties?.getOrNull<String>('code').toString() ?? '',
+                    geo.properties?.getOrNull('code').toString() ?? '',
                   ) ??
                   int.tryParse(
                     geo.properties
-                            ?.getOrNull<String>('regioncode')
+                            ?.getOrNull('regioncode')
                             .toString() ??
                         '',
                   ) ??
                   int.tryParse(
-                    geo.properties?.getOrNull<String>('ISO_N3').toString() ??
+                    geo.properties?.getOrNull('ISO_N3').toString() ??
                         '',
                   ),
             ),
@@ -47,17 +47,17 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
               TopologyPolygon(
                 arcs: arcs,
                 areaCode: int.tryParse(
-                      geo.properties?.getOrNull<String>('code').toString() ??
+                      geo.properties?.getOrNull('code').toString() ??
                           '',
                     ) ??
                     int.tryParse(
                       geo.properties
-                              ?.getOrNull<String>('regioncode')
+                              ?.getOrNull('regioncode')
                               .toString() ??
                           '',
                     ) ??
                     int.tryParse(
-                      geo.properties?.getOrNull<String>('ISO_N3').toString() ??
+                      geo.properties?.getOrNull('ISO_N3').toString() ??
                           '',
                     ),
               ),
@@ -71,7 +71,7 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
             TopologyPolygon(
               arcs: [arcs],
               areaCode: int.tryParse(
-                geo.properties?.getOrNull<String>('code').toString() ?? '',
+                geo.properties?.getOrNull('code').toString() ?? '',
               ),
             ),
           );
@@ -82,7 +82,7 @@ TopologyMap createMap(TopoJson json, LandLayerType layerType) {
               TopologyPolygon(
                 arcs: [arcs],
                 areaCode: int.tryParse(
-                  geo.properties?.getOrNull<String>('code').toString() ?? '',
+                  geo.properties?.getOrNull('code').toString() ?? '',
                 ),
               ),
             );

@@ -31,7 +31,7 @@ extension TravelTimeDepthMapCalc on TravelTimeDepthMap {
   /// [depth]: 震源の深さ(km)
   /// [duration]: 地震発生からの経過時間(sec)
   TravelTimeResult getTravelTime(int depth, double duration) {
-    final lists = getOrNull<List<TravelTimeTable>>(depth);
+    final lists = getOrNull(depth);
     if (depth > 700 || duration > 2000) {
       return TravelTimeResult(null, null);
     }
