@@ -20,18 +20,28 @@ class ParameterLoaderWidget extends HookConsumerWidget {
     );
     final state = ref.watch(jmaParameterProvider);
     return switch (state) {
-      AsyncData() || AsyncError() => const SizedBox.shrink(),
-      _ => const BorderedContainer(
-          child: Row(
-            children: [
-              Text('観測点の情報を取得中...'),
-              SizedBox(width: 8),
-              SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator.adaptive(),
-              ),
-            ],
+      AsyncData() || AsyncError() => const AnimatedSwitcher(
+          duration: Duration(milliseconds: 150),
+          child: SizedBox.shrink(
+            key: ValueKey('non'),
+          ),
+        ),
+      _ => const AnimatedSwitcher(
+          duration: Duration(milliseconds: 150),
+          child: BorderedContainer(
+            key: ValueKey('loading'),
+            elevation: 1,
+            child: Row(
+              children: [
+                Text('観測点の情報を取得中...'),
+                SizedBox(width: 8),
+                SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator.adaptive(),
+                ),
+              ],
+            ),
           ),
         ),
     };
