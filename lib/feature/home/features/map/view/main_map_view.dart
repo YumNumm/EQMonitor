@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
+import 'package:eqmonitor/core/provider/map_style/map_style.dart';
+import 'package:eqmonitor/feature/home/features/debugger/debugger_provider.dart';
+import 'package:eqmonitor/feature/home/features/estimated_intensity/provider/estimated_intensity_provider.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
 import 'package:eqmonitor/feature/home/features/travel_time/provider/travel_time_provider.dart';
-import 'package:eqmonitor/feature/map_libre/provider/map_style.dart';
+import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -27,6 +31,7 @@ class MainMapView extends HookConsumerWidget {
     useFuture(
       getStyleJsonFuture,
     );
+    final cameraPosition = useState<String>('');
 
     final controller = useAnimationController(
       duration: const Duration(microseconds: 1000),
@@ -92,7 +97,19 @@ class MainMapView extends HookConsumerWidget {
           zoom: 3,
         ),
         styleString: stylePath.value,
-        onMapCreated: (controller) => mapController.value = controller,
+        onMapCreated: (controller) {
+          mapController.value = controller;
+
+          controller.addListener(
+            () {
+              final position = controller.cameraPosition;
+              if (position != null) {
+                cameraPosition.value =
+                    const JsonEncoder.withIndent(' ').convert(position.toMap());
+              }
+            },
+          );
+        },
         onStyleLoadedCallback: () async {
           final controller = mapController.value;
           await controller?.setSymbolIconAllowOverlap(true);
@@ -139,8 +156,76 @@ class MainMapView extends HookConsumerWidget {
         },
         rotateGesturesEnabled: false,
         tiltGesturesEnabled: false,
+        trackCameraPosition: true,
       ),
     );
-    return map;
+    return Stack(
+      children: [
+        map,
+        if (ref
+            .watch(debuggerProvider.select((value) => value.isDebugger))) ...[
+          _MapDebugWidget(cameraPosition: cameraPosition),
+        ],
+      ],
+    );
+  }
+}
+
+class _MapDebugWidget extends HookConsumerWidget {
+  const _MapDebugWidget({
+    required this.cameraPosition,
+  });
+
+  final ValueNotifier<String> cameraPosition;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isExpanded = useState(false);
+    if (!isExpanded.value) {
+      return AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: FilledButton.tonalIcon(
+              onPressed: () => isExpanded.value = true,
+              label: const Text(
+                'Debug',
+                style: TextStyle(
+                  fontFamily: FontFamily.jetBrainsMono,
+                ),
+              ),
+              icon: const Icon(Icons.bug_report),
+            ),
+          ),
+        ),
+      );
+    }
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      child: InkWell(
+        onTap: () => isExpanded.value = false,
+        child: Card(
+          color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '${cameraPosition.value}\n'
+                  'EewEstimatedIntensity: ${ref.watch(estimatedIntensityProvider).firstOrNull}',
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontFamily: FontFamily.jetBrainsMono,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
