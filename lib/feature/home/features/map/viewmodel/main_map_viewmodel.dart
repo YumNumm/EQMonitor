@@ -7,12 +7,12 @@ import 'package:eqapi_types/lib.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/provider/map_style/map_style.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/home/features/eew/provider/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/kmoni_observation_point.dart';
 import 'package:eqmonitor/feature/home/features/travel_time/provider/travel_time_provider.dart';
-import 'package:eqmonitor/feature/map_libre/provider/map_style.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:lat_lng/lat_lng.dart' as lat_lng;
@@ -102,7 +102,7 @@ class MainMapViewModel extends _$MainMapViewModel {
         _eewPsWaveService!.tick(now: now),
         _eewHypocenterService!.tick(),
       ).wait;
-    // ignore: avoid_catches_without_on_clauses, empty_catches
+      // ignore: avoid_catches_without_on_clauses, empty_catches
     } catch (e) {}
   }
 
@@ -172,9 +172,10 @@ class MainMapViewModel extends _$MainMapViewModel {
       _controller?.addImage(name, bytes);
 
   // ignore: use_setters_to_change_properties
-  void registerMapController(MaplibreMapController controller) =>
-      // ignore: void_checks
-      _controller = controller;
+  void registerMapController(MaplibreMapController controller) {
+    // ignore: void_checks
+    _controller = controller;
+  }
 
   bool isMapControllerRegistered() => _controller != null;
 
@@ -338,8 +339,7 @@ class _EewEstimatedIntensityService {
   /// 予想震度を更新する
   /// [areas] は Map<予想震度, List<地域コード>>
   Future<void> update(Map<JmaForecastIntensity, List<String>> areas) => [
-
-      // 各予想震度ごとにFill Layerを追加
+        // 各予想震度ごとにFill Layerを追加
         for (final intensity in JmaForecastIntensity.values)
           controller.setFilter(
             getFillLayerId(intensity),
@@ -351,8 +351,7 @@ class _EewEstimatedIntensityService {
                 areas[intensity] ?? [],
               ]
             ],
-          )
-         ,
+          ),
       ].wait;
 
   Future<void> dispose() => [

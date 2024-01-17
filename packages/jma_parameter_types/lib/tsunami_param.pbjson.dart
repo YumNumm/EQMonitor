@@ -23,7 +23,7 @@ const TsunamiParameter$json = {
       '4': 3,
       '5': 11,
       '6': '.TsunamiParameterItem',
-      '10': 'items'
+      '10': 'items',
     },
   ],
 };
