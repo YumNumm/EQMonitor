@@ -322,17 +322,14 @@ class _EewEstimatedIntensityService {
           ),
           filter: [
             'in',
-            'code',
+            ['get', 'code'],
             [
               'literal',
-              <String>[
-                '100',
-                if (intensity == JmaForecastIntensity.four) '102',
-              ],
+              <String>[],
             ]
           ],
           sourceLayer: 'areaForecastLocalE',
-          //belowLayerId: 'areaForecastLocalEew_line',
+          belowLayerId: BaseLayer.areaForecastLocalELine.name,
         ),
     ].wait;
   }
@@ -340,18 +337,21 @@ class _EewEstimatedIntensityService {
   /// 予想震度を更新する
   /// [areas] は Map<予想震度, List<地域コード>>
   Future<void> update(Map<JmaForecastIntensity, List<String>> areas) => [
-        for (final MapEntry(:key, :value) in areas.entries)
+
+      // 各予想震度ごとにFill Layerを追加
+        for (final intensity in JmaForecastIntensity.values)
           controller.setFilter(
-            getFillLayerId(key),
+            getFillLayerId(intensity),
             [
               'in',
-              'code',
+              ['get', 'code'],
               [
                 'literal',
-                value,
-              ],
+                areas[intensity] ?? [],
+              ]
             ],
-          ),
+          )
+         ,
       ].wait;
 
   Future<void> dispose() => [
@@ -585,7 +585,7 @@ class _EewPsWaveService {
           _EewPWaveLineService(controller: controller),
           _EewSWaveLineService(controller: controller),
           //  _EewPWaveFillService(controller: controller),
-          // _EewSWaveFillService(controller: controller),
+          _EewSWaveFillService(controller: controller),
         );
 
   final MaplibreMapController controller;
@@ -595,7 +595,7 @@ class _EewPsWaveService {
     _EewPWaveLineService,
     _EewSWaveLineService,
     // _EewPWaveFillService,
-    // _EewSWaveFillService
+    _EewSWaveFillService
   ) _children;
 
   Future<void> init() async {
@@ -611,7 +611,7 @@ class _EewPsWaveService {
       _children.$2.init(),
     ).wait;
     // fill
-    // await _children.$3.init();
+    await _children.$3.init();
     //_children.$4.init(),
   }
 
@@ -684,31 +684,26 @@ class _EewPsWaveService {
                 'type': 'Feature',
                 'geometry': {
                   'type': 'LineString',
-                  'coordinates': () {
-                    final base = [
-                      for (final bearing
-                          in List<int>.generate(360, (index) => index))
-                        () {
-                          final latLng = const latlong2.Distance().offset(
-                            latlong2.LatLng(
-                              result.$2.lat,
-                              result.$2.lon,
-                            ),
-                            ((type == _WaveType.sWave
-                                        ? result.$1.sDistance!
-                                        : result.$1.pDistance!) *
-                                    1000)
-                                .toInt(),
-                            bearing,
-                          );
-                          return [latLng.longitude, latLng.latitude];
-                        }(),
-                    ];
-                    return [
-                      ...base,
-                      base.first,
-                    ];
-                  }(),
+                  'coordinates': [
+                    // 0...360
+                    for (final bearing
+                        in List<int>.generate(361, (index) => index))
+                      () {
+                        final latLng = const latlong2.Distance().offset(
+                          latlong2.LatLng(
+                            result.$2.lat,
+                            result.$2.lon,
+                          ),
+                          ((type == _WaveType.sWave
+                                      ? result.$1.sDistance!
+                                      : result.$1.pDistance!) *
+                                  1000)
+                              .toInt(),
+                          bearing,
+                        );
+                        return [latLng.longitude, latLng.latitude];
+                      }(),
+                  ],
                 },
                 'properties': {
                   'distance': result.$1.sDistance,
@@ -757,8 +752,8 @@ class _EewPWaveLineService {
       _EewPsWaveService.sourceId,
       layerId,
       LineLayerProperties(
-        lineColor: const Color(0xff0000ff).toHexStringRGB(),
-        lineOpacity: 0.9,
+        lineColor: Colors.blueAccent.toHexStringRGB(),
+        lineCap: 'round',
       ),
       filter: [
         '==',
@@ -788,8 +783,7 @@ class _EewSWaveLineService {
       LineLayerProperties(
         lineColor: const Color(0xffff0000).toHexStringRGB(),
         lineWidth: 2,
-        lineOpacity: 0.9,
-        lineBlur: 1,
+        lineCap: 'round',
       ),
       filter: [
         '==',
@@ -834,6 +828,7 @@ class _EewPWaveFillService {
 
   static String get layerId => 'p-wave-fill';
 }
+*/
 
 class _EewSWaveFillService {
   _EewSWaveFillService({
@@ -849,14 +844,14 @@ class _EewSWaveFillService {
       layerId,
       FillLayerProperties(
         fillColor: Colors.red.toHexStringRGB(),
-        fillOpacity: 0.5,
+        fillOpacity: 0.2,
       ),
       filter: [
         '==',
         'type',
         _WaveType.sWave.name,
       ],
-      belowLayerId: _EewSWaveLineService.layerId,
+      belowLayerId: BaseLayer.countriesFill.name,
     );
   }
 
@@ -864,7 +859,6 @@ class _EewSWaveFillService {
 
   static String get layerId => 's-wave-fill';
 }
-*/
 
 @freezed
 class _EewHypocenterProperties with _$EewHypocenterProperties {
