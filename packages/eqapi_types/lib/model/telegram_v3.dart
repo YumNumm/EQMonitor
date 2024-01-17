@@ -514,7 +514,7 @@ enum JmaForecastIntensity {
   final String type;
 
   // compare to JmaIntensity
-  bool operator >(JmaIntensity other) {
+  bool operator >(JmaForecastIntensity other) {
     return type.compareTo(other.type) > 0;
   }
 
