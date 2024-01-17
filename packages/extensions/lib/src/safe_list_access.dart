@@ -13,10 +13,10 @@ extension SafeListAccess<T> on List<T> {
 extension SafeMapAccess<K, V> on Map<K, V> {
   /// 指定したキーの要素を取得する
   /// キーが存在しない場合はnullを返す
-  T? getOrNull<T>(dynamic key) {
+  V? getOrNull<V>(K key) {
     if (!containsKey(key)) {
       return null;
     }
-    return this[key] as T;
+    return this[key] as V;
   }
 }
