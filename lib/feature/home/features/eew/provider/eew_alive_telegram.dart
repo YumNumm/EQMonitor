@@ -96,6 +96,17 @@ class EewAliveChecker {
       final arrivalTime = latestEewBody.arrivalTime.toUtc();
       final targetTime = originTime ?? arrivalTime;
       final depth = latestEewBody.depth;
+
+      // EEW警報の場合、420秒でイベント終了と判定する
+      final isWarning = (latestEew.headline ?? '').contains('強い揺れ');
+      if (isWarning) {
+        return now.toUtc().difference(targetTime).inSeconds > 420;
+      }
+      // M6.0以上の場合、360秒でイベント終了と判定する
+      final magnitude = latestEewBody.magnitude;
+      if (magnitude != null && magnitude >= 6.0) {
+        return now.toUtc().difference(targetTime).inSeconds > 360;
+      }
       // 深さ不明/150km未満の場合、地震発生/検知から250秒でイベント終了と判定する
       if (depth == null || depth < 150) {
         return now.toUtc().difference(targetTime).inSeconds > 250;

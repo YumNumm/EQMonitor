@@ -4,24 +4,20 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/component/map/data/model/mutable_projected_feature_layer.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
+import 'package:eqmonitor/core/provider/map_style/map_style.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
-import 'package:eqmonitor/feature/map_libre/provider/map_style.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
-import 'package:lat_lng/lat_lng.dart' as lat_lng;
-import 'package:latlong2/latlong.dart' as lat_lng2;
 import 'package:maplibre_gl/maplibre_gl.dart' as map_libre;
 import 'package:maplibre_gl/maplibre_gl.dart';
-import 'package:topo_map/topo_map.dart';
 
 typedef _RegionColorItem = ({
   TextColorModel color,
@@ -29,17 +25,22 @@ typedef _RegionColorItem = ({
   JmaIntensity intensity,
 });
 
+/*
+typedef _RegionLpgmColorItem = ({
+  TextColorModel color,
+  List<String> codes,
+  JmaLgIntensity intensity,
+});
+*/
 class EarthquakeMapWidget extends HookConsumerWidget {
   const EarthquakeMapWidget({
     super.key,
     required this.item,
     required this.showIntensityIcon,
-    required this.mapData,
     required this.registerNavigateToHome,
   });
   final EarthquakeHistoryItem item;
   final bool showIntensityIcon;
-  final Map<LandLayerType, ZoomCachedProjectedFeatureLayer> mapData;
   final void Function(void Function() func) registerNavigateToHome;
 
   Future<void> addImageFromAsset(
@@ -67,10 +68,12 @@ class EarthquakeMapWidget extends HookConsumerWidget {
     final earthquakeParams =
         ref.watch(jmaParameterProvider).valueOrNull?.earthquake;
     final intensityIconData = ref.watch(intensityIconRenderProvider);
+    final hypocenterIconRender = ref.watch(hypocenterIconRenderProvider);
     final intensityIconFillData = ref.watch(intensityIconFillRenderProvider);
     if (earthquakeParams == null ||
         !intensityIconData.isAllRendered() ||
-        !intensityIconFillData.isAllRendered()) {
+        !intensityIconFillData.isAllRendered() ||
+        hypocenterIconRender == null) {
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator.adaptive(),
@@ -100,24 +103,16 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         }
         final cities = intensity.cities!;
         final result = <_RegionColorItem>[];
-        for (final e
-            in mapData[LandLayerType.municipalityEarthquakeTsunamiArea]!
-                .projectedPolygonFeatures) {
-          final cityIntensity = cities.firstWhereOrNull(
-            (cityIntensity) =>
-                (int.tryParse(cityIntensity.code) ?? -2) == (e.code ?? -1),
+        for (final cityIntensity in cities) {
+          result.add(
+            (
+              color: colorModel.fromJmaIntensity(cityIntensity.maxInt!),
+              codes: [
+                cityIntensity.code.padLeft(7, '0'),
+              ],
+              intensity: cityIntensity.maxInt!,
+            ),
           );
-          if (cityIntensity != null && cityIntensity.maxInt != null) {
-            result.add(
-              (
-                color: colorModel.fromJmaIntensity(cityIntensity.maxInt!),
-                codes: [
-                  e.code.toString().padLeft(7, '0'),
-                ],
-                intensity: cityIntensity.maxInt!,
-              ),
-            );
-          }
         }
         // 同じ色の地域をまとめる
         final grouped = groupBy<_RegionColorItem, JmaIntensity>(
@@ -147,23 +142,16 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         {
           final regions = intensity.regions;
           final result = <_RegionColorItem>[];
-          for (final e
-              in mapData[LandLayerType.earthquakeInformationSubdivisionArea]!
-                  .projectedPolygonFeatures) {
-            final regionIntensity = regions.firstWhereOrNull(
-              (cityIntensity) => cityIntensity.code == e.code.toString(),
+          for (final regionIntensity in regions) {
+            result.add(
+              (
+                color: colorModel.fromJmaIntensity(regionIntensity.maxInt!),
+                codes: [
+                  regionIntensity.code.padLeft(3, '0'),
+                ],
+                intensity: regionIntensity.maxInt!,
+              ),
             );
-            if (regionIntensity != null && regionIntensity.maxInt != null) {
-              result.add(
-                (
-                  color: colorModel.fromJmaIntensity(regionIntensity.maxInt!),
-                  codes: [
-                    e.code.toString().padLeft(3, '0'),
-                  ],
-                  intensity: regionIntensity.maxInt!,
-                ),
-              );
-            }
           }
           // 同じ色の地域をまとめる
           final grouped = groupBy<_RegionColorItem, JmaIntensity>(
@@ -185,6 +173,57 @@ class EarthquakeMapWidget extends HookConsumerWidget {
       },
       [intensity],
     );
+    /*
+    final regionsLpgmItem = useMemoized(
+      () {
+        final lgIntensity = item.earthquake.lgIntensity;
+        if (lgIntensity == null) {
+          return null;
+        }
+        // regionsの探索
+        {
+          final regions = lgIntensity.regions;
+          final result = <_RegionLpgmColorItem>[];
+          for (final e
+              in mapData[LandLayerType.earthquakeInformationSubdivisionArea]!
+                  .projectedPolygonFeatures) {
+            final regionIntensity = regions.firstWhereOrNull(
+              (cityIntensity) => cityIntensity.code == e.code.toString(),
+            );
+            if (regionIntensity != null && regionIntensity.maxLgInt != null) {
+              result.add(
+                (
+                  color:
+                      colorModel.fromJmaLgIntensity(regionIntensity.maxLgInt!),
+                  codes: [
+                    e.code.toString().padLeft(3, '0'),
+                  ],
+                  intensity: regionIntensity.maxLgInt!,
+                ),
+              );
+            }
+          }
+          // 同じ色の地域をまとめる
+          final grouped = groupBy<_RegionLpgmColorItem, JmaLgIntensity>(
+            result,
+            (e) => e.intensity,
+          ).entries.map((e) {
+            final codes = <String>[];
+            for (final item in e.value) {
+              codes.addAll(item.codes);
+            }
+            return (
+              color: e.value.first.color,
+              codes: codes,
+              intensity: e.key,
+            );
+          }).toList();
+          return grouped;
+        }
+      },
+      [intensity],
+    );
+    */
     final stationsItem = useMemoized(
       () {
         final stations = intensity?.stations;
@@ -214,10 +253,6 @@ class EarthquakeMapWidget extends HookConsumerWidget {
     );
 
     final mapController = useState<MaplibreMapController?>(null);
-    final bounds = useMemoized(
-      () => _getShowBounds(item, mapData),
-      [item, mapData],
-    );
     useEffect(
       () {
         WidgetsBinding.instance.endOfFrame.then(
@@ -230,8 +265,8 @@ class EarthquakeMapWidget extends HookConsumerWidget {
               CameraUpdate.newCameraPosition(
                 CameraPosition(
                   target: LatLng(
-                    (bounds.northEast.lat + bounds.southWest.lat) / 2,
-                    (bounds.northEast.lon + bounds.southWest.lon) / 2,
+                    earthquake.earthquake?.hypocenter.coordinate?.lat ?? 35,
+                    earthquake.earthquake?.hypocenter.coordinate?.lon ?? 139,
                   ),
                   zoom: 6,
                 ),
@@ -248,8 +283,8 @@ class EarthquakeMapWidget extends HookConsumerWidget {
       child: MaplibreMap(
         initialCameraPosition: CameraPosition(
           target: LatLng(
-            (bounds.northEast.lat + bounds.southWest.lat) / 2,
-            (bounds.northEast.lon + bounds.southWest.lon) / 2,
+            earthquake.earthquake?.hypocenter.coordinate?.lat ?? 35,
+            earthquake.earthquake?.hypocenter.coordinate?.lon ?? 139,
           ),
           zoom: 6,
         ),
@@ -258,10 +293,10 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         onStyleLoadedCallback: () async {
           final controller = mapController.value!;
           await [
-            addImageFromAsset(
+            addImageFromBuffer(
               controller,
               'hypocenter',
-              'assets/images/hypocenter.png',
+              hypocenterIconRender,
             ),
             for (final intensity in JmaIntensity.values)
               addImageFromBuffer(
@@ -284,6 +319,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
           ).init(
             controller,
           );
+
           if (stationsItem != null) {
             await _StationAction(
               citiesItem: citiesItem,
@@ -303,68 +339,12 @@ class EarthquakeMapWidget extends HookConsumerWidget {
           ).init(
             controller,
           );
-          return;
         },
         rotateGesturesEnabled: false,
         tiltGesturesEnabled: false,
       ),
     );
   }
-}
-
-lat_lng.LatLngBoundary _getShowBounds(
-  EarthquakeHistoryItem item,
-  Map<LandLayerType, ZoomCachedProjectedFeatureLayer> mapData,
-) {
-  if (item.earthquake.intensity != null) {
-    final map = mapData[LandLayerType.earthquakeInformationSubdivisionArea]!;
-    final result = <lat_lng.LatLng>[];
-    final onlyOver4 = item.earthquake.intensity!.maxInt > JmaIntensity.four;
-    for (final region in item.earthquake.intensity!.regions.where(
-      (element) =>
-          (!onlyOver4 || element.maxInt! > JmaIntensity.four) &&
-          element.maxInt != null,
-    )) {
-      final e = map.projectedPolygonFeatures
-          .firstWhere((e) => e.code.toString() == region.code);
-      result.addAll([e.bbox.northEast, e.bbox.southWest]);
-    }
-    return lat_lng.LatLngBoundary.fromList(result);
-  }
-  if (item.earthquake.earthquake != null &&
-      item.earthquake.earthquake!.hypocenter.coordinate != null) {
-    final lists = [
-      const lat_lng2.Distance().offset(
-        lat_lng2.LatLng(
-          item.earthquake.earthquake!.hypocenter.coordinate!.lat,
-          item.earthquake.earthquake!.hypocenter.coordinate!.lon,
-        ),
-        100 * 1000,
-        360 - 45,
-      ),
-      const lat_lng2.Distance().offset(
-        lat_lng2.LatLng(
-          item.earthquake.earthquake!.hypocenter.coordinate!.lat,
-          item.earthquake.earthquake!.hypocenter.coordinate!.lon,
-        ),
-        100 * 1000,
-        90 + 45,
-      ),
-    ];
-    return lat_lng.LatLngBoundary.fromList(
-      lists
-          .map(
-            (e) => lat_lng.LatLng(e.latitude, e.longitude),
-          )
-          .toList(),
-    );
-  }
-
-  final lists = [
-    const lat_lng.LatLng(45.3, 145.1),
-    const lat_lng.LatLng(30, 128.8),
-  ];
-  return lat_lng.LatLngBoundary.fromList(lists);
 }
 
 sealed class _MapLibreAction {
@@ -413,7 +393,7 @@ class _FillAction extends _MapLibreAction {
           FillLayerProperties(
             fillColor: item.color.background.toHexStringRGB(),
           ),
-          belowLayerId: 'areaForecastLocalEew_line',
+          belowLayerId: BaseLayer.areaForecastLocalEewLine.name,
           sourceLayer: name,
           filter: [
             'in',
@@ -433,7 +413,7 @@ class _FillAction extends _MapLibreAction {
             lineColor: item.color.foreground.toHexStringRGB(),
             lineOpacity: 0.2,
           ),
-          belowLayerId: 'areaForecastLocalEew_line',
+          belowLayerId: BaseLayer.areaForecastLocalEewLine.name,
           sourceLayer: name,
           filter: [
             'in',
@@ -460,7 +440,7 @@ class _FillAction extends _MapLibreAction {
             fillColor: item.color.background.toHexStringRGB(),
           ),
           sourceLayer: name,
-          belowLayerId: 'areaForecastLocalEew_line',
+          belowLayerId: BaseLayer.areaForecastLocalEewLine.name,
           filter: [
             'in',
             ['get', 'code'],
@@ -479,7 +459,7 @@ class _FillAction extends _MapLibreAction {
             lineOpacity: 0.8,
           ),
           sourceLayer: name,
-          belowLayerId: 'areaForecastLocalEew_line',
+          belowLayerId: BaseLayer.areaForecastLocalEewLine.name,
           filter: [
             'in',
             ['get', 'regioncode'],
@@ -666,10 +646,10 @@ class _HypocenterAction extends _MapLibreAction {
               'interpolate',
               ['linear'],
               ['zoom'],
-              6,
-              0.2,
+              3,
+              0.3,
               20,
-              2,
+              5,
             ],
             iconOpacity: [
               'interpolate',
@@ -678,7 +658,7 @@ class _HypocenterAction extends _MapLibreAction {
               6,
               1.0,
               10,
-              0.7,
+              0.5,
             ],
             iconAllowOverlap: true,
           ),
@@ -693,3 +673,71 @@ class _HypocenterAction extends _MapLibreAction {
         controller.removeLayer('hypocenter')
       ).wait;
 }
+
+/*
+class _FillLpgmAction extends _MapLibreAction {
+  _FillLpgmAction({
+    required super.citiesItem,
+    required super.regionsItem,
+    required super.earthquake,
+    required this.regionsLpgmItem,
+  });
+
+  final List<_RegionLpgmColorItem> regionsLpgmItem;
+
+  @override
+  Future<void> init(map_libre.MaplibreMapController controller) async {
+    /// 震度分布塗りつぶし (市区町村)
+    if (regionsItem != null) {
+      const name = 'areaForecastLocalE';
+      for (final item in regionsLpgmItem) {
+        await controller.removeLayer(
+          '$name-fill-${item.color.background.toHexStringRGB()}-'
+          '${item.intensity.type}',
+        );
+        await controller.addLayer(
+          'eqmonitor_map',
+          '$name-fill-${item.color.background.toHexStringRGB()}-'
+              '${item.intensity.type}-lpgm',
+          FillLayerProperties(
+            fillColor: item.color.background.toHexStringRGB(),
+          ),
+          sourceLayer: name,
+          belowLayerId: 'areaForecastLocalEew_line',
+          filter: [
+            'in',
+            ['get', 'code'],
+            [
+              'literal',
+              item.codes,
+            ],
+          ],
+        );
+        await controller.addLayer(
+          'eqmonitor_map',
+          '$name-line-${item.color.foreground.toHexStringRGB()}${item.intensity.type}',
+          LineLayerProperties(
+            lineWidth: 0.4,
+            lineColor: item.color.foreground.toHexStringRGB(),
+            lineOpacity: 0.8,
+          ),
+          sourceLayer: name,
+          belowLayerId: 'areaForecastLocalEew_line',
+          filter: [
+            'in',
+            ['get', 'regioncode'],
+            [
+              'literal',
+              item.codes,
+            ],
+          ],
+        );
+      }
+    }
+  }
+
+  @override
+  Future<void> dispose(map_libre.MaplibreMapController controller) async {}
+}
+
+*/

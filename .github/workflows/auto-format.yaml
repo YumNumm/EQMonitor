@@ -46,7 +46,10 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
       - name: Install Melos
-        run: dart pub global activate melos && melos bootstrap
+        run: |
+          dart pub global activate melos
+          ln -s $FLUTTER_ROOT .fvm/flutter_sdk
+          melos bootstrap
 
       - name: build_runner
         run: |

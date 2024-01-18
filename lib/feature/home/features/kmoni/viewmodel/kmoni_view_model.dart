@@ -125,34 +125,37 @@ class KmoniViewModel extends _$KmoniViewModel {
     }
     state = state.copyWith(isDelayAdjusting: true);
     try {
-      // kmoniから現在時刻を取得
-      final firstDateTime = await useCase.getLatestDataTime();
-      var latestDataTime = firstDateTime;
-      // 変わるまで200msごとに取得
-      while (true) {
-        await Future<void>.delayed(const Duration(milliseconds: 200));
-        latestDataTime = await useCase.getLatestDataTime();
-        if (latestDataTime != firstDateTime) {
-          break;
+      return await () async {
+        // kmoniから現在時刻を取得
+        final firstDateTime = await useCase.getLatestDataTime();
+        var latestDataTime = firstDateTime;
+        // 変わるまで200msごとに取得
+        while (true) {
+          await Future<void>.delayed(const Duration(milliseconds: 200));
+          latestDataTime = await useCase.getLatestDataTime();
+          if (latestDataTime != firstDateTime) {
+            break;
+          }
         }
-      }
-      // 現在時刻との差分を取得
-      final diff = DateTime.now().difference(latestDataTime);
-      // 適用
-      state = state.copyWith(
-        delay: diff,
-        isDelayAdjusting: false,
-      );
-      // タイマー再起動
-      _kmoniFetchTimer.cancel();
-      _kmoniFetchTimer = Timer.periodic(
-        const Duration(seconds: 1),
-        (_) => _update(),
-      );
-      talker.logTyped(
-        KmoniLog('遅延調整を行いました ${diff.inMicroseconds / 1000}ms'),
-      );
-      return diff;
+        // 現在時刻との差分を取得
+        final diff = DateTime.now().difference(latestDataTime);
+        // 適用
+        state = state.copyWith(
+          delay: diff,
+          isDelayAdjusting: false,
+        );
+        // タイマー再起動
+        _kmoniFetchTimer.cancel();
+        _kmoniFetchTimer = Timer.periodic(
+          const Duration(seconds: 1),
+          (_) => _update(),
+        );
+        talker.logTyped(
+          KmoniLog('遅延調整を行いました ${diff.inMicroseconds / 1000}ms'),
+        );
+        return diff;
+      }()
+          .timeout(const Duration(seconds: 5));
       // ignore: avoid_catches_without_on_clauses
     } catch (e) {
       talker.logTyped(
