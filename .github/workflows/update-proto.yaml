@@ -1,7 +1,6 @@
 name: Protocol Buffer Updator
 
 on:
-  push:
   pull_request:
 
 jobs:
@@ -25,7 +24,7 @@ jobs:
           cache: true
           cache-key: ${{ env.FLUTTER_VERSION }}-${{ env.FLUTTER_CHANNEL }}
       - name: Install protoc
-        run: apt-get install -y protobuf-compiler
+        run: sudo apt-get install -y protobuf-compiler
       - name: Install protoc-gen-dart
         run: dart pub global activate protoc_plugin
       - name: Re-generate code
