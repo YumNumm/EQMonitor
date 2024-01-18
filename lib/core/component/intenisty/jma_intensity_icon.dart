@@ -74,7 +74,7 @@ class JmaIntensityIcon extends ConsumerWidget {
                             style: TextStyle(
                               color: fg,
                               fontSize: 100,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w900,
                               fontFamily: FontFamily.jetBrainsMono,
                             ),
                           ),

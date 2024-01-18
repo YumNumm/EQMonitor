@@ -28,16 +28,18 @@ import 'package:talker_flutter/talker_flutter.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
-
   final talker = TalkerFlutter.init();
   FlutterError.onError = (error) {
     talker.handle(error.exception, error.stack, 'Uncaught fatal exception');
-    FirebaseCrashlytics.instance.recordFlutterError(error);
+    if (!kDebugMode) {
+      FirebaseCrashlytics.instance.recordFlutterError(error);
+    }
   };
   PlatformDispatcher.instance.onError = (error, stack) {
     talker.handle(error, stack, 'Uncaught async exception');
-    FirebaseCrashlytics.instance.recordError(error, stack);
+    if (kDebugMode) {
+      FirebaseCrashlytics.instance.recordError(error, stack);
+    }
     return true;
   };
   final deviceInfo = DeviceInfoPlugin();
@@ -68,6 +70,11 @@ Future<void> main() async {
     _registerNotificationChannelIfNeeded(),
     getApplicationDocumentsDirectory(),
   ).wait;
+
+  FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
+  unawaited(
+    FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode),
+  );
   runApp(
     ProviderScope(
       overrides: [

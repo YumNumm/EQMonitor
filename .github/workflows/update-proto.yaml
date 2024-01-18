@@ -1,0 +1,45 @@
+name: Protocol Buffer Updator
+
+on:
+  pull_request:
+
+jobs:
+  check-update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Fetch flutter config
+        uses: kuhnroyal/flutter-fvm-config-action@v1
+      # https://github.com/subosito/flutter-action
+      - name: Set up flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
+          cache-key: ${{ env.FLUTTER_VERSION }}-${{ env.FLUTTER_CHANNEL }}
+      - name: Install protoc
+        run: sudo apt-get install -y protobuf-compiler
+      - name: Install protoc-gen-dart
+        run: dart pub global activate protoc_plugin
+      - name: Re-generate code
+        run: |
+          cd packages/jma_parameter_types
+          ./util/update_proto.sh
+
+      # 変更が発生した場合は プルリクエストを作成
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          delete-branch: true
+          commit-message: "Auto format"
+          committer: "GitHub Actions <noreply@github.com>"
+          base: ${{ github.head_ref }}
+          branch: "auto-format/${{ github.sha }}"
+          title: "Auto format - ref: ${{ github.ref_name }}"
+          body: "Auto format by GitHub Actions on ${{ github.sha }}\nby: ${{github.actor}}"

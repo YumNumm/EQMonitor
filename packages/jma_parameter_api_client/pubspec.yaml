@@ -10,7 +10,9 @@ environment:
 dependencies:
   dio: ^5.3.4
   jma_parameter_types:
-    path: ../jma_parameter_types
+    git:
+      url: https://github.com/YumNumm/EQMonitor.git
+      path: packages/jma_parameter_types
   retrofit: ^4.0.3
 
 dev_dependencies:

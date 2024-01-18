@@ -7,7 +7,6 @@ import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
-import 'package:eqmonitor/core/provider/topology_map/provider/topology_maps.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/earthquake_map.dart';
@@ -35,9 +34,6 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sheetController = SheetController();
-    final zoomCachedMapData =
-        ref.watch(zoomCachedProjectedFeatureLayerProvider).valueOrNull;
-
     final navigateToHomeFunction = useState<VoidCallback?>(null);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -48,18 +44,12 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
     return Scaffold(
       body: Stack(
         children: [
-          if (zoomCachedMapData == null)
-            const Center(
-              child: CircularProgressIndicator.adaptive(),
-            )
-          else
-            EarthquakeMapWidget(
-              item: data,
-              showIntensityIcon: true,
-              mapData: zoomCachedMapData,
-              registerNavigateToHome: (func) =>
-                  navigateToHomeFunction.value = func,
-            ),
+          EarthquakeMapWidget(
+            item: data,
+            showIntensityIcon: true,
+            registerNavigateToHome: (func) =>
+                navigateToHomeFunction.value = func,
+          ),
           if (telegramType.isNotEmpty)
             Positioned(
               right: 10,
