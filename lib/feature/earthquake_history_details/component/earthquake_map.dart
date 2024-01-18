@@ -4,7 +4,6 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/component/map/data/model/mutable_projected_feature_layer.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
@@ -17,11 +16,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
-import 'package:lat_lng/lat_lng.dart' as lat_lng;
-import 'package:latlong2/latlong.dart' as lat_lng2;
 import 'package:maplibre_gl/maplibre_gl.dart' as map_libre;
 import 'package:maplibre_gl/maplibre_gl.dart';
-import 'package:topo_map/topo_map.dart';
 
 typedef _RegionColorItem = ({
   TextColorModel color,
@@ -146,12 +142,12 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         {
           final regions = intensity.regions;
           final result = <_RegionColorItem>[];
-          for(final regionIntensity in regions) {
+          for (final regionIntensity in regions) {
             result.add(
               (
                 color: colorModel.fromJmaIntensity(regionIntensity.maxInt!),
                 codes: [
-                  regionIntensity.code.toString().padLeft(3, '0'),
+                  regionIntensity.code.padLeft(3, '0'),
                 ],
                 intensity: regionIntensity.maxInt!,
               ),
@@ -350,61 +346,6 @@ class EarthquakeMapWidget extends HookConsumerWidget {
       ),
     );
   }
-}
-
-lat_lng.LatLngBoundary _getShowBounds(
-  EarthquakeHistoryItem item,
-  Map<LandLayerType, ZoomCachedProjectedFeatureLayer> mapData,
-) {
-  if (item.earthquake.intensity != null) {
-    final map = mapData[LandLayerType.earthquakeInformationSubdivisionArea]!;
-    final result = <lat_lng.LatLng>[];
-    final onlyOver4 = item.earthquake.intensity!.maxInt > JmaIntensity.four;
-    for (final region in item.earthquake.intensity!.regions.where(
-      (element) =>
-          (!onlyOver4 || element.maxInt! > JmaIntensity.four) &&
-          element.maxInt != null,
-    )) {
-      final e = map.projectedPolygonFeatures
-          .firstWhere((e) => e.code.toString() == region.code);
-      result.addAll([e.bbox.northEast, e.bbox.southWest]);
-    }
-    return lat_lng.LatLngBoundary.fromList(result);
-  }
-  if (item.earthquake.earthquake != null &&
-      item.earthquake.earthquake!.hypocenter.coordinate != null) {
-    final lists = [
-      const lat_lng2.Distance().offset(
-        lat_lng2.LatLng(
-          item.earthquake.earthquake!.hypocenter.coordinate!.lat,
-          item.earthquake.earthquake!.hypocenter.coordinate!.lon,
-        ),
-        100 * 1000,
-        360 - 45,
-      ),
-      const lat_lng2.Distance().offset(
-        lat_lng2.LatLng(
-          item.earthquake.earthquake!.hypocenter.coordinate!.lat,
-          item.earthquake.earthquake!.hypocenter.coordinate!.lon,
-        ),
-        100 * 1000,
-        90 + 45,
-      ),
-    ];
-    return lat_lng.LatLngBoundary.fromList(
-      lists
-          .map(
-            (e) => lat_lng.LatLng(e.latitude, e.longitude),
-          )
-          .toList(),
-    );
-  }
-
-  final lists = [
-    const lat_lng.LatLng(45.3, 145.1),
-    const lat_lng.LatLng(30, 128.8),
-  ];
-  return lat_lng.LatLngBoundary.fromList(lists);
 }
 
 sealed class _MapLibreAction {

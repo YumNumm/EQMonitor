@@ -19,10 +19,6 @@ dependencies:
   dio_http2_adapter: ^2.4.0
   dynamic_color: ^1.6.8
   envied: ^0.5.2
-  eq_map:
-    git:
-      url: https://github.com/YumNumm/EQMonitor.git
-      path: packages/eq_map
   eqapi_client:
     git:
       url: https://github.com/YumNumm/EQMonitor.git
@@ -94,14 +90,6 @@ dependencies:
       ref: 6425594b611b5f44ad88258cc97641ff96aba014
       path: packages/talker_flutter
   test: ^1.24.9
-  topo_map:
-    git:
-      url: https://github.com/YumNumm/EQMonitor.git
-      path: packages/topo_map
-  topojson:
-    git:
-      url: https://github.com/YumNumm/EQMonitor.git
-      path: packages/topojson
   two_dimensional_scrollables: ^0.0.4
   url_launcher: ^6.2.1
   vector_math: ^2.1.4
@@ -128,7 +116,6 @@ flutter:
     - assets/
     - assets/images/
     - assets/kmoni/
-    - assets/maps/
     - assets/fonts/
     - assets/docs/
 

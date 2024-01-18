@@ -1,6 +1,0 @@
-# melos_managed_dependency_overrides: eqapi_types,lat_lng
-dependency_overrides:
-  eqapi_types:
-    path: ../eqapi_types
-  lat_lng:
-    path: ../lat_lng
