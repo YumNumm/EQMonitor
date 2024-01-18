@@ -41,12 +41,10 @@ class EarthquakeMapWidget extends HookConsumerWidget {
     super.key,
     required this.item,
     required this.showIntensityIcon,
-    required this.mapData,
     required this.registerNavigateToHome,
   });
   final EarthquakeHistoryItem item;
   final bool showIntensityIcon;
-  final Map<LandLayerType, ZoomCachedProjectedFeatureLayer> mapData;
   final void Function(void Function() func) registerNavigateToHome;
 
   Future<void> addImageFromAsset(
@@ -109,24 +107,16 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         }
         final cities = intensity.cities!;
         final result = <_RegionColorItem>[];
-        for (final e
-            in mapData[LandLayerType.municipalityEarthquakeTsunamiArea]!
-                .projectedPolygonFeatures) {
-          final cityIntensity = cities.firstWhereOrNull(
-            (cityIntensity) =>
-                (int.tryParse(cityIntensity.code) ?? -2) == (e.code ?? -1),
+        for (final cityIntensity in cities) {
+          result.add(
+            (
+              color: colorModel.fromJmaIntensity(cityIntensity.maxInt!),
+              codes: [
+                cityIntensity.code.padLeft(7, '0'),
+              ],
+              intensity: cityIntensity.maxInt!,
+            ),
           );
-          if (cityIntensity != null && cityIntensity.maxInt != null) {
-            result.add(
-              (
-                color: colorModel.fromJmaIntensity(cityIntensity.maxInt!),
-                codes: [
-                  e.code.toString().padLeft(7, '0'),
-                ],
-                intensity: cityIntensity.maxInt!,
-              ),
-            );
-          }
         }
         // 同じ色の地域をまとめる
         final grouped = groupBy<_RegionColorItem, JmaIntensity>(
@@ -156,23 +146,16 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         {
           final regions = intensity.regions;
           final result = <_RegionColorItem>[];
-          for (final e
-              in mapData[LandLayerType.earthquakeInformationSubdivisionArea]!
-                  .projectedPolygonFeatures) {
-            final regionIntensity = regions.firstWhereOrNull(
-              (cityIntensity) => cityIntensity.code == e.code.toString(),
+          for(final regionIntensity in regions) {
+            result.add(
+              (
+                color: colorModel.fromJmaIntensity(regionIntensity.maxInt!),
+                codes: [
+                  regionIntensity.code.toString().padLeft(3, '0'),
+                ],
+                intensity: regionIntensity.maxInt!,
+              ),
             );
-            if (regionIntensity != null && regionIntensity.maxInt != null) {
-              result.add(
-                (
-                  color: colorModel.fromJmaIntensity(regionIntensity.maxInt!),
-                  codes: [
-                    e.code.toString().padLeft(3, '0'),
-                  ],
-                  intensity: regionIntensity.maxInt!,
-                ),
-              );
-            }
           }
           // 同じ色の地域をまとめる
           final grouped = groupBy<_RegionColorItem, JmaIntensity>(
@@ -274,10 +257,6 @@ class EarthquakeMapWidget extends HookConsumerWidget {
     );
 
     final mapController = useState<MaplibreMapController?>(null);
-    final bounds = useMemoized(
-      () => _getShowBounds(item, mapData),
-      [item, mapData],
-    );
     useEffect(
       () {
         WidgetsBinding.instance.endOfFrame.then(
@@ -290,8 +269,8 @@ class EarthquakeMapWidget extends HookConsumerWidget {
               CameraUpdate.newCameraPosition(
                 CameraPosition(
                   target: LatLng(
-                    (bounds.northEast.lat + bounds.southWest.lat) / 2,
-                    (bounds.northEast.lon + bounds.southWest.lon) / 2,
+                    earthquake.earthquake?.hypocenter.coordinate?.lat ?? 35,
+                    earthquake.earthquake?.hypocenter.coordinate?.lon ?? 139,
                   ),
                   zoom: 6,
                 ),
@@ -308,8 +287,8 @@ class EarthquakeMapWidget extends HookConsumerWidget {
       child: MaplibreMap(
         initialCameraPosition: CameraPosition(
           target: LatLng(
-            (bounds.northEast.lat + bounds.southWest.lat) / 2,
-            (bounds.northEast.lon + bounds.southWest.lon) / 2,
+            earthquake.earthquake?.hypocenter.coordinate?.lat ?? 35,
+            earthquake.earthquake?.hypocenter.coordinate?.lon ?? 139,
           ),
           zoom: 6,
         ),
