@@ -39,8 +39,7 @@ class HypocenterIconRender extends _$HypocenterIconRender {
 }
 
 @Riverpod(keepAlive: true)
-class HypocenterLowPreciseIconRender
-    extends _$HypocenterLowPreciseIconRender {
+class HypocenterLowPreciseIconRender extends _$HypocenterLowPreciseIconRender {
   @override
   Uint8List? build() => null;
 
