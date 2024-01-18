@@ -421,19 +421,15 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/eqapi_client"
-      ref: HEAD
-      resolved-ref: "3394d8a68115d28532b4a0ad0d6c8c7fe65e5f02"
-      url: "https://github.com/YumNumm/EQMonitor.git"
-    source: git
+      relative: true
+    source: path
     version: "1.0.0"
   eqapi_types:
     dependency: "direct main"
     description:
       path: "packages/eqapi_types"
-      ref: HEAD
-      resolved-ref: "3394d8a68115d28532b4a0ad0d6c8c7fe65e5f02"
-      url: "https://github.com/YumNumm/EQMonitor.git"
-    source: git
+      relative: true
+    source: path
     version: "1.0.1"
   equatable:
     dependency: transitive
@@ -447,10 +443,8 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/extensions"
-      ref: HEAD
-      resolved-ref: "3394d8a68115d28532b4a0ad0d6c8c7fe65e5f02"
-      url: "https://github.com/YumNumm/EQMonitor.git"
-    source: git
+      relative: true
+    source: path
     version: "1.0.0"
   fake_async:
     dependency: transitive
@@ -839,19 +833,15 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/jma_parameter_api_client"
-      ref: HEAD
-      resolved-ref: "3394d8a68115d28532b4a0ad0d6c8c7fe65e5f02"
-      url: "https://github.com/YumNumm/EQMonitor.git"
-    source: git
+      relative: true
+    source: path
     version: "1.0.0"
   jma_parameter_types:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       path: "packages/jma_parameter_types"
-      ref: HEAD
-      resolved-ref: "3394d8a68115d28532b4a0ad0d6c8c7fe65e5f02"
-      url: "https://github.com/YumNumm/EQMonitor.git"
-    source: git
+      relative: true
+    source: path
     version: "1.0.0"
   js:
     dependency: transitive
@@ -881,10 +871,8 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/lat_lng"
-      ref: HEAD
-      resolved-ref: "3394d8a68115d28532b4a0ad0d6c8c7fe65e5f02"
-      url: "https://github.com/YumNumm/EQMonitor.git"
-    source: git
+      relative: true
+    source: path
     version: "1.0.1"
   latlong2:
     dependency: "direct main"
