@@ -17,14 +17,7 @@ import 'dart:typed_data' as $typed_data;
 const TsunamiParameter$json = {
   '1': 'TsunamiParameter',
   '2': [
-    {
-      '1': 'items',
-      '3': 1,
-      '4': 3,
-      '5': 11,
-      '6': '.TsunamiParameterItem',
-      '10': 'items'
-    },
+    {'1': 'items', '3': 1, '4': 3, '5': 11, '6': '.TsunamiParameterItem', '10': 'items'},
   ],
 };
 
@@ -49,3 +42,4 @@ final $typed_data.Uint8List tsunamiParameterItemDescriptor = $convert.base64Deco
     'ChRUc3VuYW1pUGFyYW1ldGVySXRlbRIeCgpwcmVmZWN0dXJlGAEgASgJUgpwcmVmZWN0dXJlEh'
     'IKBGNvZGUYAiABKAlSBGNvZGUSGgoIbGF0aXR1ZGUYAyABKAFSCGxhdGl0dWRlEhwKCWxvbmdp'
     'dHVkZRgEIAEoAVIJbG9uZ2l0dWRl');
+

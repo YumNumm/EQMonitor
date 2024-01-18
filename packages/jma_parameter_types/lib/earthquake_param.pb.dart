@@ -24,42 +24,33 @@ class EarthquakeParameter extends $pb.GeneratedMessage {
     return $result;
   }
   EarthquakeParameter._() : super();
-  factory EarthquakeParameter.fromBuffer($core.List<$core.int> i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(i, r);
-  factory EarthquakeParameter.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(i, r);
+  factory EarthquakeParameter.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory EarthquakeParameter.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'EarthquakeParameter',
-      createEmptyInstance: create)
-    ..pc<EarthquakeParameterRegionItem>(
-        1, _omitFieldNames ? '' : 'regions', $pb.PbFieldType.PM,
-        subBuilder: EarthquakeParameterRegionItem.create)
-    ..hasRequiredFields = false;
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'EarthquakeParameter', createEmptyInstance: create)
+    ..pc<EarthquakeParameterRegionItem>(1, _omitFieldNames ? '' : 'regions', $pb.PbFieldType.PM, subBuilder: EarthquakeParameterRegionItem.create)
+    ..hasRequiredFields = false
+  ;
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-      'Will be removed in next major version')
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
   EarthquakeParameter clone() => EarthquakeParameter()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-      'Will be removed in next major version')
-  EarthquakeParameter copyWith(void Function(EarthquakeParameter) updates) =>
-      super.copyWith((message) => updates(message as EarthquakeParameter))
-          as EarthquakeParameter;
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  EarthquakeParameter copyWith(void Function(EarthquakeParameter) updates) => super.copyWith((message) => updates(message as EarthquakeParameter)) as EarthquakeParameter;
 
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
   static EarthquakeParameter create() => EarthquakeParameter._();
   EarthquakeParameter createEmptyInstance() => create();
-  static $pb.PbList<EarthquakeParameter> createRepeated() =>
-      $pb.PbList<EarthquakeParameter>();
+  static $pb.PbList<EarthquakeParameter> createRepeated() => $pb.PbList<EarthquakeParameter>();
   @$core.pragma('dart2js:noInline')
-  static EarthquakeParameter getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<EarthquakeParameter>(create);
+  static EarthquakeParameter getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<EarthquakeParameter>(create);
   static EarthquakeParameter? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -85,57 +76,41 @@ class EarthquakeParameterRegionItem extends $pb.GeneratedMessage {
     return $result;
   }
   EarthquakeParameterRegionItem._() : super();
-  factory EarthquakeParameterRegionItem.fromBuffer($core.List<$core.int> i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(i, r);
-  factory EarthquakeParameterRegionItem.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(i, r);
+  factory EarthquakeParameterRegionItem.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory EarthquakeParameterRegionItem.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'EarthquakeParameterRegionItem',
-      createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'EarthquakeParameterRegionItem', createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'code')
     ..aOS(2, _omitFieldNames ? '' : 'name')
-    ..pc<EarthquakeParameterCityItem>(
-        3, _omitFieldNames ? '' : 'cities', $pb.PbFieldType.PM,
-        subBuilder: EarthquakeParameterCityItem.create)
-    ..hasRequiredFields = false;
+    ..pc<EarthquakeParameterCityItem>(3, _omitFieldNames ? '' : 'cities', $pb.PbFieldType.PM, subBuilder: EarthquakeParameterCityItem.create)
+    ..hasRequiredFields = false
+  ;
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-      'Will be removed in next major version')
-  EarthquakeParameterRegionItem clone() =>
-      EarthquakeParameterRegionItem()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-      'Will be removed in next major version')
-  EarthquakeParameterRegionItem copyWith(
-          void Function(EarthquakeParameterRegionItem) updates) =>
-      super.copyWith(
-              (message) => updates(message as EarthquakeParameterRegionItem))
-          as EarthquakeParameterRegionItem;
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  EarthquakeParameterRegionItem clone() => EarthquakeParameterRegionItem()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  EarthquakeParameterRegionItem copyWith(void Function(EarthquakeParameterRegionItem) updates) => super.copyWith((message) => updates(message as EarthquakeParameterRegionItem)) as EarthquakeParameterRegionItem;
 
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static EarthquakeParameterRegionItem create() =>
-      EarthquakeParameterRegionItem._();
+  static EarthquakeParameterRegionItem create() => EarthquakeParameterRegionItem._();
   EarthquakeParameterRegionItem createEmptyInstance() => create();
-  static $pb.PbList<EarthquakeParameterRegionItem> createRepeated() =>
-      $pb.PbList<EarthquakeParameterRegionItem>();
+  static $pb.PbList<EarthquakeParameterRegionItem> createRepeated() => $pb.PbList<EarthquakeParameterRegionItem>();
   @$core.pragma('dart2js:noInline')
-  static EarthquakeParameterRegionItem getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<EarthquakeParameterRegionItem>(create);
+  static EarthquakeParameterRegionItem getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<EarthquakeParameterRegionItem>(create);
   static EarthquakeParameterRegionItem? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get code => $_getSZ(0);
   @$pb.TagNumber(1)
-  set code($core.String v) {
-    $_setString(0, v);
-  }
-
+  set code($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasCode() => $_has(0);
   @$pb.TagNumber(1)
@@ -144,10 +119,7 @@ class EarthquakeParameterRegionItem extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.String get name => $_getSZ(1);
   @$pb.TagNumber(2)
-  set name($core.String v) {
-    $_setString(1, v);
-  }
-
+  set name($core.String v) { $_setString(1, v); }
   @$pb.TagNumber(2)
   $core.bool hasName() => $_has(1);
   @$pb.TagNumber(2)
@@ -176,57 +148,41 @@ class EarthquakeParameterCityItem extends $pb.GeneratedMessage {
     return $result;
   }
   EarthquakeParameterCityItem._() : super();
-  factory EarthquakeParameterCityItem.fromBuffer($core.List<$core.int> i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(i, r);
-  factory EarthquakeParameterCityItem.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(i, r);
+  factory EarthquakeParameterCityItem.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory EarthquakeParameterCityItem.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'EarthquakeParameterCityItem',
-      createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'EarthquakeParameterCityItem', createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'code')
     ..aOS(2, _omitFieldNames ? '' : 'name')
-    ..pc<EarthquakeParameterStationItem>(
-        3, _omitFieldNames ? '' : 'stations', $pb.PbFieldType.PM,
-        subBuilder: EarthquakeParameterStationItem.create)
-    ..hasRequiredFields = false;
+    ..pc<EarthquakeParameterStationItem>(3, _omitFieldNames ? '' : 'stations', $pb.PbFieldType.PM, subBuilder: EarthquakeParameterStationItem.create)
+    ..hasRequiredFields = false
+  ;
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-      'Will be removed in next major version')
-  EarthquakeParameterCityItem clone() =>
-      EarthquakeParameterCityItem()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-      'Will be removed in next major version')
-  EarthquakeParameterCityItem copyWith(
-          void Function(EarthquakeParameterCityItem) updates) =>
-      super.copyWith(
-              (message) => updates(message as EarthquakeParameterCityItem))
-          as EarthquakeParameterCityItem;
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  EarthquakeParameterCityItem clone() => EarthquakeParameterCityItem()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  EarthquakeParameterCityItem copyWith(void Function(EarthquakeParameterCityItem) updates) => super.copyWith((message) => updates(message as EarthquakeParameterCityItem)) as EarthquakeParameterCityItem;
 
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static EarthquakeParameterCityItem create() =>
-      EarthquakeParameterCityItem._();
+  static EarthquakeParameterCityItem create() => EarthquakeParameterCityItem._();
   EarthquakeParameterCityItem createEmptyInstance() => create();
-  static $pb.PbList<EarthquakeParameterCityItem> createRepeated() =>
-      $pb.PbList<EarthquakeParameterCityItem>();
+  static $pb.PbList<EarthquakeParameterCityItem> createRepeated() => $pb.PbList<EarthquakeParameterCityItem>();
   @$core.pragma('dart2js:noInline')
-  static EarthquakeParameterCityItem getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<EarthquakeParameterCityItem>(create);
+  static EarthquakeParameterCityItem getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<EarthquakeParameterCityItem>(create);
   static EarthquakeParameterCityItem? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get code => $_getSZ(0);
   @$pb.TagNumber(1)
-  set code($core.String v) {
-    $_setString(0, v);
-  }
-
+  set code($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasCode() => $_has(0);
   @$pb.TagNumber(1)
@@ -235,10 +191,7 @@ class EarthquakeParameterCityItem extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.String get name => $_getSZ(1);
   @$pb.TagNumber(2)
-  set name($core.String v) {
-    $_setString(1, v);
-  }
-
+  set name($core.String v) { $_setString(1, v); }
   @$pb.TagNumber(2)
   $core.bool hasName() => $_has(1);
   @$pb.TagNumber(2)
@@ -271,56 +224,42 @@ class EarthquakeParameterStationItem extends $pb.GeneratedMessage {
     return $result;
   }
   EarthquakeParameterStationItem._() : super();
-  factory EarthquakeParameterStationItem.fromBuffer($core.List<$core.int> i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(i, r);
-  factory EarthquakeParameterStationItem.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(i, r);
+  factory EarthquakeParameterStationItem.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory EarthquakeParameterStationItem.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'EarthquakeParameterStationItem',
-      createEmptyInstance: create)
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'EarthquakeParameterStationItem', createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'code')
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..a<$core.double>(3, _omitFieldNames ? '' : 'latitude', $pb.PbFieldType.OD)
     ..a<$core.double>(4, _omitFieldNames ? '' : 'longitude', $pb.PbFieldType.OD)
-    ..hasRequiredFields = false;
+    ..hasRequiredFields = false
+  ;
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-      'Will be removed in next major version')
-  EarthquakeParameterStationItem clone() =>
-      EarthquakeParameterStationItem()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
-      'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-      'Will be removed in next major version')
-  EarthquakeParameterStationItem copyWith(
-          void Function(EarthquakeParameterStationItem) updates) =>
-      super.copyWith(
-              (message) => updates(message as EarthquakeParameterStationItem))
-          as EarthquakeParameterStationItem;
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  EarthquakeParameterStationItem clone() => EarthquakeParameterStationItem()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  EarthquakeParameterStationItem copyWith(void Function(EarthquakeParameterStationItem) updates) => super.copyWith((message) => updates(message as EarthquakeParameterStationItem)) as EarthquakeParameterStationItem;
 
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static EarthquakeParameterStationItem create() =>
-      EarthquakeParameterStationItem._();
+  static EarthquakeParameterStationItem create() => EarthquakeParameterStationItem._();
   EarthquakeParameterStationItem createEmptyInstance() => create();
-  static $pb.PbList<EarthquakeParameterStationItem> createRepeated() =>
-      $pb.PbList<EarthquakeParameterStationItem>();
+  static $pb.PbList<EarthquakeParameterStationItem> createRepeated() => $pb.PbList<EarthquakeParameterStationItem>();
   @$core.pragma('dart2js:noInline')
-  static EarthquakeParameterStationItem getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<EarthquakeParameterStationItem>(create);
+  static EarthquakeParameterStationItem getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<EarthquakeParameterStationItem>(create);
   static EarthquakeParameterStationItem? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get code => $_getSZ(0);
   @$pb.TagNumber(1)
-  set code($core.String v) {
-    $_setString(0, v);
-  }
-
+  set code($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasCode() => $_has(0);
   @$pb.TagNumber(1)
@@ -329,10 +268,7 @@ class EarthquakeParameterStationItem extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $core.String get name => $_getSZ(1);
   @$pb.TagNumber(2)
-  set name($core.String v) {
-    $_setString(1, v);
-  }
-
+  set name($core.String v) { $_setString(1, v); }
   @$pb.TagNumber(2)
   $core.bool hasName() => $_has(1);
   @$pb.TagNumber(2)
@@ -341,10 +277,7 @@ class EarthquakeParameterStationItem extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $core.double get latitude => $_getN(2);
   @$pb.TagNumber(3)
-  set latitude($core.double v) {
-    $_setDouble(2, v);
-  }
-
+  set latitude($core.double v) { $_setDouble(2, v); }
   @$pb.TagNumber(3)
   $core.bool hasLatitude() => $_has(2);
   @$pb.TagNumber(3)
@@ -353,16 +286,13 @@ class EarthquakeParameterStationItem extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $core.double get longitude => $_getN(3);
   @$pb.TagNumber(4)
-  set longitude($core.double v) {
-    $_setDouble(3, v);
-  }
-
+  set longitude($core.double v) { $_setDouble(3, v); }
   @$pb.TagNumber(4)
   $core.bool hasLongitude() => $_has(3);
   @$pb.TagNumber(4)
   void clearLongitude() => clearField(4);
 }
 
+
 const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const _omitMessageNames =
-    $core.bool.fromEnvironment('protobuf.omit_message_names');
+const _omitMessageNames = $core.bool.fromEnvironment('protobuf.omit_message_names');
