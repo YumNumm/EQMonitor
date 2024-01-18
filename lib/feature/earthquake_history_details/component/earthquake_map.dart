@@ -292,7 +292,6 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         onMapCreated: (controller) => mapController.value = controller,
         onStyleLoadedCallback: () async {
           final controller = mapController.value!;
-
           await [
             addImageFromBuffer(
               controller,
@@ -564,6 +563,7 @@ class _StationAction extends _MapLibreAction {
           intensity.type,
         ],
         sourceLayer: 'station-intensity',
+        minzoom: 7,
       );
 
       await controller.addLayer(
@@ -580,16 +580,10 @@ class _StationAction extends _MapLibreAction {
             20,
             2,
           ],
-          iconOpacity: [
-            'step',
-            ['zoom'],
-            1.0,
-            7,
-            0.0,
-          ],
           textAllowOverlap: true,
           iconAllowOverlap: true,
         ),
+        maxzoom: 7,
         filter: [
           '==',
           'intensity',
