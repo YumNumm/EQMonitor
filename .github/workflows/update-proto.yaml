@@ -24,6 +24,8 @@ jobs:
           channel: ${{ env.FLUTTER_CHANNEL }}
           cache: true
           cache-key: ${{ env.FLUTTER_VERSION }}-${{ env.FLUTTER_CHANNEL }}
+      - name: Install protoc
+        run: apt-get install -y protobuf-compiler
       - name: Install protoc-gen-dart
         run: dart pub global activate protoc_plugin
       - name: Re-generate code
