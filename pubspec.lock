@@ -421,15 +421,19 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/eqapi_client"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "3394d8a68115d28532b4a0ad0d6c8c7fe65e5f02"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   eqapi_types:
     dependency: "direct main"
     description:
       path: "packages/eqapi_types"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "3394d8a68115d28532b4a0ad0d6c8c7fe65e5f02"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   equatable:
     dependency: transitive
@@ -443,8 +447,10 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/extensions"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "3394d8a68115d28532b4a0ad0d6c8c7fe65e5f02"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   fake_async:
     dependency: transitive
@@ -697,10 +703,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "2ccd74480706e0a70a0e0dfa9543dede41bc11d0fe3b146a6ad7b7686f6b4407"
+      sha256: "3b40e751eaaa855179b416974d59d29669e750d2e50fcdb2b37f1cb0ca8c803a"
       url: "https://pub.dev"
     source: hosted
-    version: "11.1.4"
+    version: "13.0.1"
   go_router_builder:
     dependency: "direct dev"
     description:
@@ -833,15 +839,19 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/jma_parameter_api_client"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "3394d8a68115d28532b4a0ad0d6c8c7fe65e5f02"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   jma_parameter_types:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       path: "packages/jma_parameter_types"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "3394d8a68115d28532b4a0ad0d6c8c7fe65e5f02"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   js:
     dependency: transitive
@@ -871,8 +881,10 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/lat_lng"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "3394d8a68115d28532b4a0ad0d6c8c7fe65e5f02"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   latlong2:
     dependency: "direct main"
