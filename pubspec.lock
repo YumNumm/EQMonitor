@@ -417,13 +417,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.3"
-  eq_map:
-    dependency: "direct main"
-    description:
-      path: "packages/eq_map"
-      relative: true
-    source: path
-    version: "1.0.1"
   eqapi_client:
     dependency: "direct main"
     description:
@@ -1683,20 +1676,6 @@ packages:
       sha256: "70a3b636575d4163c477e6de42f247a23b315ae20e86442bebe32d3cabf61c32"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1"
-  topo_map:
-    dependency: "direct main"
-    description:
-      path: "packages/topo_map"
-      relative: true
-    source: path
-    version: "1.0.1"
-  topojson:
-    dependency: "direct main"
-    description:
-      path: "packages/topojson"
-      relative: true
-    source: path
     version: "1.0.1"
   tuple:
     dependency: transitive
