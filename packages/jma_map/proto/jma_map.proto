@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package net.yumnumm.eqmonitor.jma_map;
+
+
+message JmaMap {
+  repeated JmaMapData data = 1;
+
+	message JmaMapData
+	{
+		JmaMapType   mapType = 1;
+
+		enum JmaMapType
+		{
+			AREA_FORECAST_LOCAL_EEW = 0;
+			AREA_FORECAST_LOCAL_E = 1;
+			AREA_INFORMATION_CITY = 2;
+			AREA_TSUNAMI = 3;
+		}
+
+		repeated JmaMapDataItem data = 2;
+
+		message JmaMapDataItem {
+			LatLngBounds bounds = 1;
+			Property property = 2;
+
+
+			message Property
+			{
+				string code = 1;
+				string name = 2;
+				string nameKana = 3;
+			}
+		}
+	}
+}
+
+
+message LatLngBounds {
+  LatLng southWest = 1;
+  LatLng northEast = 2;
+}
+
+message LatLng
+{
+	double lat = 1;
+	double lng = 2;
+}

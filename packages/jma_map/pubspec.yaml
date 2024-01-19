@@ -1,4 +1,4 @@
-name: jma_parameter_types
+name: jma_map
 description: A starting point for Dart libraries or applications.
 version: 1.0.0
 publish_to: "none" # Remove this line if you wish to publish to pub.dev

@@ -66,7 +66,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                       )
                       .join('・'),
                   style: theme.textTheme.displayLarge!.copyWith(
-                    color: colorScheme.error.withOpacity(0.4),
+                    color: colorScheme.error,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

@@ -12,3 +12,5 @@ dependency_overrides:
     path: packages/jma_parameter_types
   lat_lng:
     path: packages/lat_lng
+  jma_map:
+    path: packages/jma_map

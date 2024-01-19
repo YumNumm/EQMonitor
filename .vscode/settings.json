@@ -1,10 +1,12 @@
 {
   "dart.flutterSdkPath": ".fvm/flutter_sdk",
   "search.exclude": {
-    "**/.fvm": true
+    "**/.fvm": true,
+    "*.geojson": true
   },
   "files.watcherExclude": {
-    "**/.fvm": true
+    "**/.fvm": true,
+    "*.geojson": true
   },
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {

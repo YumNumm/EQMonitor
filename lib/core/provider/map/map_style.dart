@@ -1,12 +1,15 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
-import 'package:eqmonitor/core/component/map/model/map_config.dart';
+import 'package:eqmonitor/core/provider/map/map_config.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'map_style.g.dart';
+
+void main() async => print(await MapStyle().getStyle(isDark: false));
 
 @Riverpod(keepAlive: true)
 MapStyle mapStyle(MapStyleRef ref) => MapStyle();
@@ -147,6 +150,7 @@ class MapStyle {
         },
       ],
     };
+    log(jsonEncode(json));
     return _saveStyleJson(json, 'maplibre-$isDark');
   }
 }
