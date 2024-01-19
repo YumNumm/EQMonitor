@@ -490,10 +490,6 @@ enum JmaIntensity {
       .replaceAll('!5-', '震度5弱以上未入電')
       .replaceAll('+', '強')
       .replaceAll('-', '弱');
-
-  bool operator >(JmaIntensity other) {
-    return type.compareTo(other.type) > 0;
-  }
 }
 
 @JsonEnum(valueField: 'type')

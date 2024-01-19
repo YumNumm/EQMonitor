@@ -35,12 +35,12 @@ Map<String, dynamic> _$$_EewHypocenterPropertiesImplToJson(
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mainMapViewModelHash() => r'a7f133de37bf629d7728d13b7c6ba41b5bb6d5eb';
+String _$mainMapViewModelHash() => r'e92ab7fedfb50411cb9cc563a78eeb01120f4837';
 
 /// See also [MainMapViewModel].
 @ProviderFor(MainMapViewModel)
 final mainMapViewModelProvider =
-    AutoDisposeNotifierProvider<MainMapViewModel, void>.internal(
+    NotifierProvider<MainMapViewModel, void>.internal(
   MainMapViewModel.new,
   name: r'mainMapViewModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -53,6 +53,6 @@ final mainMapViewModelProvider =
   },
 );
 
-typedef _$MainMapViewModel = AutoDisposeNotifier<void>;
+typedef _$MainMapViewModel = Notifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

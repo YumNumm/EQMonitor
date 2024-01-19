@@ -829,6 +829,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  jma_map:
+    dependency: "direct main"
+    description:
+      path: "packages/jma_map"
+      relative: true
+    source: path
+    version: "1.0.0"
   jma_parameter_api_client:
     dependency: "direct main"
     description:

@@ -7,7 +7,7 @@ import 'package:eqapi_types/lib.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
-import 'package:eqmonitor/core/provider/map_style/map_style.dart';
+import 'package:eqmonitor/core/provider/map/map_style.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/home/features/eew/provider/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
@@ -23,7 +23,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'main_map_viewmodel.freezed.dart';
 part 'main_map_viewmodel.g.dart';
 
-@Riverpod(dependencies: [EewAliveTelegram])
+@Riverpod(dependencies: [EewAliveTelegram], keepAlive: true)
 class MainMapViewModel extends _$MainMapViewModel {
   @override
   void build() {
