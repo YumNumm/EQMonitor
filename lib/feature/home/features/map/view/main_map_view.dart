@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/map/map_style.dart';
 import 'package:eqmonitor/feature/home/features/debugger/debugger_provider.dart';
@@ -9,7 +10,6 @@ import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel
 import 'package:eqmonitor/feature/home/features/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
@@ -19,6 +19,11 @@ class MainMapView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = useState(Theme.of(context).brightness == Brightness.dark);
+    ref.listen(appLifeCycleProvider, (_, value) {
+      if (value == AppLifecycleState.resumed) {
+        isDark.value = Theme.of(context).brightness == Brightness.dark;
+      }
+    });
     final mapStyle = ref.watch(mapStyleProvider);
     final stylePath = useState<String?>(null);
     final getStyleJsonFuture = useMemoized(
@@ -79,15 +84,6 @@ class MainMapView extends HookConsumerWidget {
 
     final mapController = useState<MaplibreMapController?>(null);
 
-    useEffect(
-      () {
-        final dispatcher = SchedulerBinding.instance.platformDispatcher;
-        dispatcher.onPlatformBrightnessChanged = () =>
-            isDark.value = dispatcher.platformBrightness == Brightness.dark;
-        return null;
-      },
-      [],
-    );
     ref.watch(mainMapViewModelProvider);
 
     final map = RepaintBoundary(
