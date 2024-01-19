@@ -9,6 +9,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'map_style.g.dart';
 
+void main() async => print(await MapStyle().getStyle(isDark: false));
+
 @Riverpod(keepAlive: true)
 MapStyle mapStyle(MapStyleRef ref) => MapStyle();
 
