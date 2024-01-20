@@ -9,7 +9,7 @@ part of 'information_history_view_model.dart';
 // **************************************************************************
 
 String _$informationHistoryViewModelHash() =>
-    r'2e14569b05e93afec54df73142def222936d5210';
+    r'b25c689d00bd14df0d5ea02d8f6c1cf2104a84d5';
 
 /// See also [InformationHistoryViewModel].
 @ProviderFor(InformationHistoryViewModel)
