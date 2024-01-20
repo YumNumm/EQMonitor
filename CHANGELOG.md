@@ -1,12 +1,14 @@
 # Changelog
 
 ## [v2.2.2](https://github.com/YumNumm/EQMonitor/compare/v2.2.1...v2.2.2) - 2024-01-03
+
 - 地震履歴詳細画面の観測点表示を追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/508
 - 震度詳細画面の 都道府県ごとの震度が誤っていた問題を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/510
 - すべてのEEWが失効した時に、デフォルトの表示範囲へ戻す by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/512
 - Auto format - ref: develop by @github-actions in https://github.com/YumNumm/EQMonitor/pull/511
 
 ## [v2.2.1](https://github.com/YumNumm/EQMonitor/compare/v2.2.0...v2.2.1) - 2024-01-03
+
 - docs: Fix outdated syntax in README.md by @siketyan in https://github.com/YumNumm/EQMonitor/pull/501
 - ci: Fix failing CI by @siketyan in https://github.com/YumNumm/EQMonitor/pull/502
 - Android CDの修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/503
@@ -14,6 +16,7 @@
 - Fix/everyone topic by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/505
 
 ## [v2.0.3](https://github.com/YumNumm/EQMonitor/compare/v2.0.2...v2.0.3) - 2024-01-01
+
 - [iOS] 通知画像が表示されない問題を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/433
 - add: デバッグ時にFCM・APNS Tokenを表示するように by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/434
 - Androidの通知関連修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/437
@@ -40,10 +43,13 @@
 - EEWのLPGM実装 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/496
 
 ## [v2.0.2](https://github.com/YumNumm/EQMonitor/compare/v2.0.1...v2.0.2) - 2023-12-02
+
 - Auto format - ref: develop by @github-actions in https://github.com/YumNumm/EQMonitor/pull/423
 
 ## [v2.0.1](https://github.com/YumNumm/EQMonitor/compare/v2.0.0...v2.0.1) - 2023-12-01
+
 - Auto format - ref: develop by @github-actions in https://github.com/YumNumm/EQMonitor/pull/416
 
 ## [v2.0.1](https://github.com/YumNumm/EQMonitor/compare/v2.0.0...v2.0.1) - 2023-12-01
+
 - Auto format - ref: develop by @github-actions in https://github.com/YumNumm/EQMonitor/pull/416
