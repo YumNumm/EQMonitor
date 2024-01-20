@@ -9,4 +9,4 @@ fi
 protoc \
     --dart_out="grpc:lib" \
     -I="./proto" \
-    $(find . -iname "*.proto")
+    "$(find . -iname "*.proto")"

@@ -11,4 +11,4 @@ mkdir -p lib/gen
 protoc \
     --dart_out="grpc:lib/gen" \
     -I="./proto" \
-    $(find . -iname "*.proto")
+    "$(find . -iname "*.proto")"
