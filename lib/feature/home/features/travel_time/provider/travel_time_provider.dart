@@ -32,9 +32,6 @@ extension TravelTimeDepthMapCalc on TravelTimeDepthMap {
   /// [duration]: 地震発生からの経過時間(sec)
   TravelTimeResult getTravelTime(int depth, double duration) {
     final lists = getOrNull(depth);
-    if (depth > 700 || duration > 2000) {
-      return TravelTimeResult(null, null);
-    }
     if (lists == null) {
       return TravelTimeResult(null, null);
     }
