@@ -38,20 +38,28 @@ extension TravelTimeDepthMapCalc on TravelTimeDepthMap {
     if (lists == null) {
       return TravelTimeResult(null, null);
     }
-    final p1 = lists.firstWhereOrNull((e) => e.p <= duration);
-    final p2 = lists.lastWhereOrNull((e) => e.p >= duration);
-    if (p1 == null || p2 == null) {
-      return TravelTimeResult(null, null);
-    }
-    final p = (duration - p1.p) / (p2.p - p1.p) * (p2.distance - p1.distance) +
-        p1.distance;
-    final s1 = lists.firstWhereOrNull((e) => e.s <= duration);
-    final s2 = lists.lastWhereOrNull((e) => e.s >= duration);
-    if (s1 == null || s2 == null) {
-      return TravelTimeResult(null, p);
-    }
-    final s = (duration - s1.s) / (s2.s - s1.s) * (s2.distance - s1.distance) +
-        s1.distance;
+    final p = () {
+      final p1 = lists.firstWhereOrNull((e) => e.p <= duration);
+      final p2 = lists.lastWhereOrNull((e) => e.p >= duration);
+      if (p1 == null || p2 == null) {
+        return null;
+      }
+      final p =
+          (duration - p1.p) / (p2.p - p1.p) * (p2.distance - p1.distance) +
+              p1.distance;
+      return p;
+    }();
+    final s = () {
+      final s1 = lists.firstWhereOrNull((e) => e.s <= duration);
+      final s2 = lists.lastWhereOrNull((e) => e.s >= duration);
+      if (s1 == null || s2 == null) {
+        return null;
+      }
+      final s =
+          (duration - s1.s) / (s2.s - s1.s) * (s2.distance - s1.distance) +
+              s1.distance;
+      return s;
+    }();
     return TravelTimeResult(s, p);
   }
 }
