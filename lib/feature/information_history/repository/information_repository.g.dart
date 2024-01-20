@@ -2,27 +2,27 @@
 
 // ignore_for_file: type=lint, duplicate_ignore
 
-part of 'app_information.dart';
+part of 'information_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appInformationHash() => r'04a9d9195331a5deeacaea3f34b73eb0fa1c1e22';
+String _$informationRepositoryHash() =>
+    r'5cfdd4f2b17b34f872c535daaee98bcc4c7a1bb2';
 
-/// See also [AppInformation].
-@ProviderFor(AppInformation)
-final appInformationProvider =
-    NotifierProvider<AppInformation, AsyncValue<AppInformationModel>?>.internal(
-  AppInformation.new,
-  name: r'appInformationProvider',
+/// See also [informationRepository].
+@ProviderFor(informationRepository)
+final informationRepositoryProvider = Provider<InformationRepository>.internal(
+  informationRepository,
+  name: r'informationRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$appInformationHash,
+      : _$informationRepositoryHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$AppInformation = Notifier<AsyncValue<AppInformationModel>?>;
+typedef InformationRepositoryRef = ProviderRef<InformationRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

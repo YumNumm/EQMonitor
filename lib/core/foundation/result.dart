@@ -1,27 +1,43 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'dart:async';
 
-part 'result.freezed.dart';
+/// sealed classに準拠したResultクラスを生成
+sealed class Result<S, E extends Exception> {
+  const Result();
 
-@freezed
-sealed class Result<T, R> with _$Result<T, R> {
-  const Result._();
-  const factory Result.success(T value) = Success<T, R>;
-  const factory Result.failure(R error) = Failure<T, R>;
+  static Future<Result<V, Exception>> capture<V>(
+    FutureOr<V> Function() fn,
+  ) async {
+    try {
+      return Success(await fn.call());
+    } on Exception catch (e, stackTrace) {
+      return Failure(e, stackTrace);
+    }
+  }
 
-  T? get valueOrNull => when(
-        success: (value) => value,
-        failure: (_) => null,
-      );
+  static Future<Result<V, E>> captureSelected<V, E extends Exception>(
+    FutureOr<V> Function() fn,
+  ) async {
+    try {
+      return Success(await fn.call());
+    } on E catch (e, stackTrace) {
+      return Failure(e, stackTrace);
+    }
+  }
 
-  R? get errorOrNull => when(
-        success: (_) => null,
-        failure: (error) => error,
-      );
+  static Result<V, Exception> success<V>(V value) => Success(value);
+  static Result<V, Exception> failure<V>(Exception exception) =>
+      Failure(exception);
+}
 
-  bool get isSuccess => when(
-        success: (_) => true,
-        failure: (_) => false,
-      );
+/// Resultクラスに準拠したSuccessクラス
+final class Success<S, E extends Exception> extends Result<S, E> {
+  const Success(this.value);
+  final S value;
+}
 
-  bool get isFailure => !isSuccess;
+/// Resultクラスに準拠したFailureクラス
+final class Failure<S, E extends Exception> extends Result<S, E> {
+  const Failure(this.exception, [this.stackTrace]);
+  final E exception;
+  final StackTrace? stackTrace;
 }

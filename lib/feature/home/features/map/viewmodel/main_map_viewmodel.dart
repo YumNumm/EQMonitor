@@ -585,7 +585,7 @@ class _EewPsWaveService {
           _EewPWaveLineService(controller: controller),
           _EewSWaveLineService(controller: controller),
           //  _EewPWaveFillService(controller: controller),
-          _EewSWaveFillService(controller: controller),
+          // _EewSWaveFillService(controller: controller),
         );
 
   final MaplibreMapController controller;
@@ -595,7 +595,7 @@ class _EewPsWaveService {
     _EewPWaveLineService,
     _EewSWaveLineService,
     // _EewPWaveFillService,
-    _EewSWaveFillService
+    // _EewSWaveFillService
   ) _children;
 
   Future<void> init() async {
@@ -611,7 +611,7 @@ class _EewPsWaveService {
       _children.$2.init(),
     ).wait;
     // fill
-    await _children.$3.init();
+    // await _children.$3.init();
     //_children.$4.init(),
   }
 
@@ -828,7 +828,6 @@ class _EewPWaveFillService {
 
   static String get layerId => 'p-wave-fill';
 }
-*/
 
 class _EewSWaveFillService {
   _EewSWaveFillService({
@@ -859,6 +858,7 @@ class _EewSWaveFillService {
 
   static String get layerId => 's-wave-fill';
 }
+*/
 
 @freezed
 class _EewHypocenterProperties with _$EewHypocenterProperties {

@@ -12,6 +12,8 @@ List<RouteBase> get $appRoutes => [
       $setupRoute,
       $earthquakeHistoryRoute,
       $earthquakeHistoryDetailsRoute,
+      $informationHistoryRoute,
+      $informationHistoryDetailsRoute,
       $eewHisotryDetailRoute,
       $homeRoute,
       $talkerRoute,
@@ -65,7 +67,7 @@ extension $EarthquakeHistoryRouteExtension on EarthquakeHistoryRoute {
 }
 
 RouteBase get $earthquakeHistoryDetailsRoute => GoRouteData.$route(
-      path: '/earthquake-history-detailed',
+      path: '/earthquake-history-details',
       factory: $EarthquakeHistoryDetailsRouteExtension._fromState,
     );
 
@@ -77,7 +79,58 @@ extension $EarthquakeHistoryDetailsRouteExtension
       );
 
   String get location => GoRouteData.$location(
-        '/earthquake-history-detailed',
+        '/earthquake-history-details',
+      );
+
+  void go(BuildContext context) => context.go(location, extra: $extra);
+
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: $extra);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: $extra);
+
+  void replace(BuildContext context) =>
+      context.replace(location, extra: $extra);
+}
+
+RouteBase get $informationHistoryRoute => GoRouteData.$route(
+      path: '/information-history',
+      factory: $InformationHistoryRouteExtension._fromState,
+    );
+
+extension $InformationHistoryRouteExtension on InformationHistoryRoute {
+  static InformationHistoryRoute _fromState(GoRouterState state) =>
+      const InformationHistoryRoute();
+
+  String get location => GoRouteData.$location(
+        '/information-history',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $informationHistoryDetailsRoute => GoRouteData.$route(
+      path: '/information-history-details',
+      factory: $InformationHistoryDetailsRouteExtension._fromState,
+    );
+
+extension $InformationHistoryDetailsRouteExtension
+    on InformationHistoryDetailsRoute {
+  static InformationHistoryDetailsRoute _fromState(GoRouterState state) =>
+      InformationHistoryDetailsRoute(
+        $extra: state.extra as InformationV3,
+      );
+
+  String get location => GoRouteData.$location(
+        '/information-history-details',
       );
 
   void go(BuildContext context) => context.go(location, extra: $extra);

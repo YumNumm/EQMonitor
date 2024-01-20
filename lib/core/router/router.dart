@@ -1,3 +1,4 @@
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
@@ -6,6 +7,8 @@ import 'package:eqmonitor/feature/earthquake_history_details/screen/earthquake_h
 import 'package:eqmonitor/feature/eew_detailed_history/eew_detailed_history_screen.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/page/kmoni_settings_page.dart';
 import 'package:eqmonitor/feature/home/view/home_view.dart';
+import 'package:eqmonitor/feature/information_history/page/information_history_page.dart';
+import 'package:eqmonitor/feature/information_history_details/information_history_details_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/license_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_screen.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_screen.dart';
@@ -58,7 +61,7 @@ class EarthquakeHistoryRoute extends GoRouteData {
 }
 
 @TypedGoRoute<EarthquakeHistoryDetailsRoute>(
-  path: '/earthquake-history-detailed',
+  path: '/earthquake-history-details',
 )
 class EarthquakeHistoryDetailsRoute extends GoRouteData {
   const EarthquakeHistoryDetailsRoute({
@@ -68,6 +71,29 @@ class EarthquakeHistoryDetailsRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       EarthquakeHistoryDetailsPage(
+        data: $extra,
+      );
+}
+
+@TypedGoRoute<InformationHistoryRoute>(path: '/information-history')
+class InformationHistoryRoute extends GoRouteData {
+  const InformationHistoryRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const InformationHistoryPage();
+}
+
+@TypedGoRoute<InformationHistoryDetailsRoute>(
+  path: '/information-history-details',
+)
+class InformationHistoryDetailsRoute extends GoRouteData {
+  const InformationHistoryDetailsRoute({
+    required this.$extra,
+  });
+  final InformationV3 $extra;
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      InformationHistoryDetailsPage(
         data: $extra,
       );
 }

@@ -49,13 +49,13 @@ class FcmTopicManager extends _$FcmTopicManager {
   Future<Result<void, Exception>> registerToTopic(FcmTopic topic) async {
     // 既に登録済みの場合は何もしない
     if (state.contains(topic.topic)) {
-      return const Result.success(null);
+      return  Result.success(null);
     }
     final messaging = ref.read(firebaseMessagingProvider);
     try {
       await messaging.subscribeToTopic(topic.topic);
       state = [...state, topic.topic];
-      return const Result.success(null);
+      return  Result.success(null);
     } on Exception catch (error, stackTrace) {
       await ref.read(firebaseCrashlyticsProvider).recordError(
             error,
@@ -68,13 +68,13 @@ class FcmTopicManager extends _$FcmTopicManager {
   Future<Result<void, Exception>> unregisterFromTopic(FcmTopic topic) async {
     // 登録されていない場合は何もしない
     if (!state.contains(topic.topic)) {
-      return const Result.success(null);
+      return  Result.success(null);
     }
     final messaging = ref.read(firebaseMessagingProvider);
     try {
       await messaging.unsubscribeFromTopic(topic.topic);
       state = [...state]..remove(topic.topic);
-      return const Result.success(null);
+      return  Result.success(null);
     } on Exception catch (error, stackTrace) {
       await ref.read(firebaseCrashlyticsProvider).recordError(
             error,

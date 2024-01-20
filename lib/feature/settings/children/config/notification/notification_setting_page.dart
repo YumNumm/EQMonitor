@@ -1,5 +1,6 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
+import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/config/notification/fcm_topic_manager.dart';
 import 'package:eqmonitor/core/provider/config/permission/permission_status_provider.dart';
 import 'package:eqmonitor/core/provider/notification_token.dart';
@@ -140,11 +141,14 @@ class _OnNotificationPermissionAllowed extends ConsumerWidget {
                   ? notifier.registerToVzse40()
                   : notifier.unregisterFromVzse40(),
             );
-            if (context.mounted && result.isFailure) {
+            if (!context.mounted) {
+              return;
+            }
+            if (result case Failure(:final exception)) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    '設定の変更中にエラーが発生しました: ${result.errorOrNull!}',
+                    '設定の変更中にエラーが発生しました: $exception',
                   ),
                 ),
               );
@@ -170,11 +174,14 @@ class _OnNotificationPermissionAllowed extends ConsumerWidget {
                   ? notifier.registerToNotice()
                   : notifier.unregisterFromNotice(),
             );
-            if (context.mounted && result.isFailure) {
+            if (!context.mounted) {
+              return;
+            }
+            if (result case Failure(:final exception)) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    '設定の変更中にエラーが発生しました: ${result.errorOrNull!}',
+                    '設定の変更中にエラーが発生しました: $exception',
                   ),
                 ),
               );

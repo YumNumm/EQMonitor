@@ -57,12 +57,12 @@ class _V3 implements V3 {
 
   @override
   Future<InformationV3Result> getInformation({
-    int after = 0,
+    int offset = 0,
     int limit = 10,
   }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'after': after,
+      r'offset': offset,
       r'limit': limit,
     };
     final _headers = <String, dynamic>{};

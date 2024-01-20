@@ -16,7 +16,7 @@ class AppInformation extends _$AppInformation {
 
   Future<Result<void, Exception>> load() async {
     if (state is AsyncLoading) {
-      return const Result.success(null);
+      return Result.success(null);
     }
     state = const AsyncLoading();
     final api = ref.read(eqApiProvider);

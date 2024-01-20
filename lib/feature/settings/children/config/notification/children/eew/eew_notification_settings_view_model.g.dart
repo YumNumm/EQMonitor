@@ -9,7 +9,7 @@ part of 'eew_notification_settings_view_model.dart';
 // **************************************************************************
 
 String _$eewNotificationsSettingsViewModelHash() =>
-    r'062eee9dd567ed25e37b54be9a385d087e53ef00';
+    r'a9de37bd8b96cd420a5294da1ee895864a770d21';
 
 /// See also [EewNotificationsSettingsViewModel].
 @ProviderFor(EewNotificationsSettingsViewModel)
