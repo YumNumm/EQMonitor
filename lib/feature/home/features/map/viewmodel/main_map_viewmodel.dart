@@ -646,8 +646,7 @@ class _EewPsWaveService {
                 .difference(
                   originTime,
                 )
-                .inMicroseconds /
-            1000 /
+                .inMilliseconds /
             1000,
       );
       results.add(
@@ -695,8 +694,8 @@ class _EewPsWaveService {
                             result.$2.lon,
                           ),
                           ((type == _WaveType.sWave
-                                      ? result.$1.sDistance!
-                                      : result.$1.pDistance!) *
+                                      ? result.$1.sDistance ?? 0
+                                      : result.$1.pDistance ?? 0) *
                                   1000)
                               .toInt(),
                           bearing,
