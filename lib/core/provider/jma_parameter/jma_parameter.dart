@@ -44,8 +44,8 @@ class JmaParameter extends _$JmaParameter {
     log('cachedEtag: $cachedEtag, currentEtag: $currentEtag');
     if (cachedEtag != null && cachedEtag == currentEtag) {
       final localResult = await _getEarthquakeFromLocal();
-      if (localResult.isSuccess) {
-        return localResult.valueOrNull!;
+      if (localResult case Success(:final value)) {
+        return value;
       }
     }
     final result =
@@ -90,8 +90,8 @@ class JmaParameter extends _$JmaParameter {
     log('cachedEtag: $cachedEtag, currentEtag: $currentEtag');
     if (cachedEtag != null && cachedEtag == currentEtag) {
       final localResult = await _getTsunamiFromLocal();
-      if (localResult.isSuccess) {
-        return localResult.valueOrNull!;
+      if (localResult case Success(:final value)) {
+        return value;
       }
     }
     final result =

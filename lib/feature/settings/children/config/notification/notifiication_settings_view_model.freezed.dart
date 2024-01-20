@@ -135,7 +135,7 @@ class __$$NotificationSettingsStateImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$NotificationSettingsStateImpl implements _NotificationSettingsState {
-  const _$NotificationSettingsStateImpl(
+  _$NotificationSettingsStateImpl(
       {required this.isNotificatioonPermissionAllowed,
       required this.isVzse40Subscribed,
       required this.isNoticeSubscribed});
@@ -195,7 +195,7 @@ class _$NotificationSettingsStateImpl implements _NotificationSettingsState {
 }
 
 abstract class _NotificationSettingsState implements NotificationSettingsState {
-  const factory _NotificationSettingsState(
+  factory _NotificationSettingsState(
           {required final bool isNotificatioonPermissionAllowed,
           required final bool isVzse40Subscribed,
           required final bool isNoticeSubscribed}) =

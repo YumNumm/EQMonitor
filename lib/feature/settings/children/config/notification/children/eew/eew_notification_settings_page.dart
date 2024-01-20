@@ -40,15 +40,18 @@ class EewNotificationSettingsPage extends ConsumerWidget {
             )
             .unregisterFromTopic();
       }
-      if (context.mounted && result.isFailure) {
+      if (!context.mounted) {
+        return;
+      }
+      if (result case Failure(:final exception, :final stackTrace)) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
-              '通知設定の変更に失敗しました',
+              '通知設定の変更に失敗しました: $exception',
             ),
           ),
         );
-        ref.read(talkerProvider).error(result.errorOrNull);
+        ref.read(talkerProvider).error(exception, exception, stackTrace);
       }
       if (context.mounted && Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
@@ -112,17 +115,20 @@ class EewNotificationSettingsPage extends ConsumerWidget {
                                             .notifier,
                                       )
                                       .registerToTopic(choice);
-                                  if (context.mounted && result.isFailure) {
+                                  if (!context.mounted) {
+                                    return;
+                                  }
+                                  if ( result case Failure(:final exception, :final stackTrace)) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
+                                       SnackBar(
                                         content: Text(
-                                          '通知設定の変更に失敗しました',
+                                          '通知設定の変更に失敗しました: $exception',
                                         ),
                                       ),
                                     );
                                     ref
                                         .read(talkerProvider)
-                                        .error(result.errorOrNull);
+                                        .error(exception, exception, stackTrace);
                                   }
                                   if (context.mounted &&
                                       Navigator.of(context).canPop()) {

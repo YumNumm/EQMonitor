@@ -33,7 +33,7 @@ class EarthquakeNotificationSettingsViewModel
               .unregisterFromTopic(state!)
           : Future<void>.value(),
     ).wait;
-    if (result.$1.isSuccess) {
+    if (result.$1 case Success()) {
       state = topic;
     }
     return result.$1;
@@ -41,12 +41,12 @@ class EarthquakeNotificationSettingsViewModel
 
   Future<Result<void, Exception>> unregisterFromTopic() async {
     if (state == null) {
-      return const Result.success(null);
+      return Result.success(null);
     }
     final result = await ref
         .read(fcmTopicManagerProvider.notifier)
         .unregisterFromTopic(state!);
-    if (result.isSuccess) {
+    if (result case Success()) {
       state = null;
     }
     return result;

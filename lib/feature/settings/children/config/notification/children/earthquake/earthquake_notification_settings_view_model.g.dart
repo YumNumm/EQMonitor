@@ -9,7 +9,7 @@ part of 'earthquake_notification_settings_view_model.dart';
 // **************************************************************************
 
 String _$earthquakeNotificationSettingsViewModelHash() =>
-    r'712c612b25589442705efd059b5904e4711ea294';
+    r'bcffe637838e213309a0e7da89621b7c4c7cc79d';
 
 /// See also [EarthquakeNotificationSettingsViewModel].
 @ProviderFor(EarthquakeNotificationSettingsViewModel)
