@@ -118,17 +118,20 @@ class EewNotificationSettingsPage extends ConsumerWidget {
                                   if (!context.mounted) {
                                     return;
                                   }
-                                  if ( result case Failure(:final exception, :final stackTrace)) {
+                                  if (result
+                                      case Failure(
+                                        :final exception,
+                                        :final stackTrace
+                                      )) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                       SnackBar(
+                                      SnackBar(
                                         content: Text(
                                           '通知設定の変更に失敗しました: $exception',
                                         ),
                                       ),
                                     );
-                                    ref
-                                        .read(talkerProvider)
-                                        .error(exception, exception, stackTrace);
+                                    ref.read(talkerProvider).error(
+                                        exception, exception, stackTrace);
                                   }
                                   if (context.mounted &&
                                       Navigator.of(context).canPop()) {
