@@ -1,6 +1,6 @@
 enum IntensityIconType {
   filled,
-  tonal,
-  outline,
-  text,
+  small,
+  smallWithoutText,
+  ;
 }

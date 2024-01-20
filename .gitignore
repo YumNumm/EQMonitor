@@ -1,7 +1,6 @@
 .fvm/flutter_sdk
 .crashlytics
 
-
 .env
 
 ~$*
@@ -132,7 +131,6 @@ app.*.symbols
 
 
 # Web related
-lib/generated_plugin_registrant.dart
 
 # Obfuscation related
 app.*.map.json
@@ -167,9 +165,6 @@ macos/GoogleService-Info.plist
 
 # app store connect api related file
 ios/*.p8
-
-/pubspec_overrides.yaml
-
 
 *.pem
 *_old

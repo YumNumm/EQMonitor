@@ -1,6 +1,6 @@
 name: eqmonitor
 repository: https://github.com/YumNumm/EQMonitor
-#sdkPath: ./.fvm/flutter_sdk
+sdkPath: .fvm/flutter_sdk
 
 command:
   version:

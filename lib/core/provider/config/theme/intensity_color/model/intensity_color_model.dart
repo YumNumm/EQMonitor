@@ -205,6 +205,17 @@ extension IntensityColorModelExt on IntensityColorModel {
     }
   }
 
+  TextColorModel fromJmaLgIntensity(
+    JmaLgIntensity intensity,
+  ) =>
+      switch (intensity) {
+        JmaLgIntensity.zero => zero,
+        JmaLgIntensity.one => three,
+        JmaLgIntensity.two => four,
+        JmaLgIntensity.three => fiveLower,
+        JmaLgIntensity.four => seven,
+      };
+
   TextColorModel fromJmaForecastIntensity(
     JmaForecastIntensity intensity,
   ) {
@@ -233,6 +244,18 @@ extension IntensityColorModelExt on IntensityColorModel {
         return unknown;
     }
   }
+
+  TextColorModel fromJmaForecastLgIntensity(
+    JmaForecastLgIntensity intensity,
+  ) =>
+      switch (intensity) {
+        JmaForecastLgIntensity.zero => zero,
+        JmaForecastLgIntensity.one => three,
+        JmaForecastLgIntensity.two => four,
+        JmaForecastLgIntensity.three => fiveLower,
+        JmaForecastLgIntensity.four => seven,
+        JmaForecastLgIntensity.unknown => unknown,
+      };
 }
 
 Color colorFromJson(String color) => Color(int.parse(color, radix: 16));

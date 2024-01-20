@@ -21,12 +21,24 @@ class FcmTopicManager extends _$FcmTopicManager {
 
   /// デフォルトで購読すべきトピックを登録する
   Future<void> setup() async {
+    final futures = <Future<void>>[];
     final requireTopics = [
       FcmBasicTopic(FcmTopics.all),
     ];
     for (final topic in requireTopics) {
-      await registerToTopic(topic);
+      futures.add(registerToTopic(topic));
     }
+    final shouldBeUnregisteredTopics = [
+      'earthquake',
+      'eew',
+      'everyone',
+    ];
+    final messaging = ref.read(firebaseMessagingProvider);
+    for (final topic in shouldBeUnregisteredTopics) {
+      // bypass prefs check
+      futures.add(messaging.unsubscribeFromTopic(topic));
+    }
+    await futures.wait;
   }
 
   Future<void> _save() async {
@@ -37,13 +49,13 @@ class FcmTopicManager extends _$FcmTopicManager {
   Future<Result<void, Exception>> registerToTopic(FcmTopic topic) async {
     // 既に登録済みの場合は何もしない
     if (state.contains(topic.topic)) {
-      return const Result.success(null);
+      return  Result.success(null);
     }
     final messaging = ref.read(firebaseMessagingProvider);
     try {
       await messaging.subscribeToTopic(topic.topic);
       state = [...state, topic.topic];
-      return const Result.success(null);
+      return  Result.success(null);
     } on Exception catch (error, stackTrace) {
       await ref.read(firebaseCrashlyticsProvider).recordError(
             error,
@@ -56,13 +68,13 @@ class FcmTopicManager extends _$FcmTopicManager {
   Future<Result<void, Exception>> unregisterFromTopic(FcmTopic topic) async {
     // 登録されていない場合は何もしない
     if (!state.contains(topic.topic)) {
-      return const Result.success(null);
+      return  Result.success(null);
     }
     final messaging = ref.read(firebaseMessagingProvider);
     try {
       await messaging.unsubscribeFromTopic(topic.topic);
       state = [...state]..remove(topic.topic);
-      return const Result.success(null);
+      return  Result.success(null);
     } on Exception catch (error, stackTrace) {
       await ref.read(firebaseCrashlyticsProvider).recordError(
             error,
@@ -104,8 +116,12 @@ class FcmEarthquakeTopic implements FcmTopic {
 
   @override
   // ignore: lines_longer_than_80_chars
-  String get topic =>
-      'earthquake_${intensity?.type.replaceAll("-", "lower").replaceAll("+", "upper") ?? "all"}';
+  String get topic {
+    final suffix =
+        intensity?.type.replaceAll('-', 'lower').replaceAll('+', 'upper') ??
+            'all';
+    return 'earthquake_$suffix';
+  }
 }
 
 enum FcmTopics {

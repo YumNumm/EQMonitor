@@ -10,7 +10,6 @@ import 'package:eqmonitor/feature/home/features/kmoni/use_case/kmoni_use_case.da
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/provider/kmoni_observation_points_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 
 part 'kmoni_view_model.g.dart';
 
@@ -18,8 +17,6 @@ part 'kmoni_view_model.g.dart';
 class KmoniViewModel extends _$KmoniViewModel {
   @override
   KmoniViewModelState build() {
-    _useCase = ref.watch(kmoniUseCaseProvider);
-    _talker = ref.watch(talkerProvider);
     ref.listen(appLifeCycleProvider, (_, next) async {
       if (next == AppLifecycleState.resumed) {
         state = state.copyWith(
@@ -43,9 +40,6 @@ class KmoniViewModel extends _$KmoniViewModel {
       isDelayAdjusting: false,
     );
   }
-
-  late final KmoniUseCase _useCase;
-  late final Talker _talker;
 
   /// 画像取得タイマー
   Timer _kmoniFetchTimer = Timer.periodic(
@@ -100,10 +94,10 @@ class KmoniViewModel extends _$KmoniViewModel {
     }
 
     try {
-      final result = await _useCase.fetchRealtimeShindo(
-        now,
-        obsPoints: ref.read(kmoniObservationPointsProvider) ?? [],
-      );
+      final result = await ref.read(kmoniUseCaseProvider).fetchRealtimeShindo(
+            now,
+            obsPoints: ref.read(kmoniObservationPointsProvider) ?? [],
+          );
       state = state.copyWith(
         lastUpdatedAt: now,
         analyzedPoints: result,
@@ -124,42 +118,47 @@ class KmoniViewModel extends _$KmoniViewModel {
   }
 
   Future<Duration> syncDelayWithKmoni() async {
+    final useCase = ref.read(kmoniUseCaseProvider);
+    final talker = ref.read(talkerProvider);
     if (state.isDelayAdjusting) {
       return state.delay!;
     }
     state = state.copyWith(isDelayAdjusting: true);
     try {
-      // kmoniから現在時刻を取得
-      final firstDateTime = await _useCase.getLatestDataTime();
-      var latestDataTime = firstDateTime;
-      // 変わるまで200msごとに取得
-      while (true) {
-        await Future<void>.delayed(const Duration(milliseconds: 200));
-        latestDataTime = await _useCase.getLatestDataTime();
-        if (latestDataTime != firstDateTime) {
-          break;
+      return await () async {
+        // kmoniから現在時刻を取得
+        final firstDateTime = await useCase.getLatestDataTime();
+        var latestDataTime = firstDateTime;
+        // 変わるまで200msごとに取得
+        while (true) {
+          await Future<void>.delayed(const Duration(milliseconds: 200));
+          latestDataTime = await useCase.getLatestDataTime();
+          if (latestDataTime != firstDateTime) {
+            break;
+          }
         }
-      }
-      // 現在時刻との差分を取得
-      final diff = DateTime.now().difference(latestDataTime);
-      // 適用
-      state = state.copyWith(
-        delay: diff,
-        isDelayAdjusting: false,
-      );
-      // タイマー再起動
-      _kmoniFetchTimer.cancel();
-      _kmoniFetchTimer = Timer.periodic(
-        const Duration(seconds: 1),
-        (_) => _update(),
-      );
-      _talker.logTyped(
-        KmoniLog('遅延調整を行いました ${diff.inMicroseconds / 1000}ms'),
-      );
-      return diff;
+        // 現在時刻との差分を取得
+        final diff = DateTime.now().difference(latestDataTime);
+        // 適用
+        state = state.copyWith(
+          delay: diff,
+          isDelayAdjusting: false,
+        );
+        // タイマー再起動
+        _kmoniFetchTimer.cancel();
+        _kmoniFetchTimer = Timer.periodic(
+          const Duration(seconds: 1),
+          (_) => _update(),
+        );
+        talker.logTyped(
+          KmoniLog('遅延調整を行いました ${diff.inMicroseconds / 1000}ms'),
+        );
+        return diff;
+      }()
+          .timeout(const Duration(seconds: 5));
       // ignore: avoid_catches_without_on_clauses
     } catch (e) {
-      _talker.logTyped(
+      talker.logTyped(
         KmoniLog('遅延調整失敗 $e'),
       );
       state = state.copyWith(isDelayAdjusting: false);

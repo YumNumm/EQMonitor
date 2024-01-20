@@ -1,0 +1,4 @@
+# melos_managed_dependency_overrides: jma_parameter_types
+dependency_overrides:
+  jma_parameter_types:
+    path: ../jma_parameter_types

@@ -486,11 +486,10 @@ enum JmaIntensity {
   final String type;
 
   @override
-  String toString() => type.replaceAll('+', '強').replaceAll('-', '弱');
-
-  bool operator >(JmaIntensity other) {
-    return type.compareTo(other.type) > 0;
-  }
+  String toString() => type
+      .replaceAll('!5-', '震度5弱以上未入電')
+      .replaceAll('+', '強')
+      .replaceAll('-', '弱');
 }
 
 @JsonEnum(valueField: 'type')
@@ -511,7 +510,7 @@ enum JmaForecastIntensity {
   final String type;
 
   // compare to JmaIntensity
-  bool operator >(JmaIntensity other) {
+  bool operator >(JmaForecastIntensity other) {
     return type.compareTo(other.type) > 0;
   }
 
@@ -568,6 +567,21 @@ enum JmaLgIntensity {
 
   @override
   String toString() => type;
+  bool operator <(JmaLgIntensity other) {
+    return index < other.index;
+  }
+
+  bool operator <=(JmaLgIntensity other) {
+    return index <= other.index;
+  }
+
+  bool operator >(JmaLgIntensity other) {
+    return index > other.index;
+  }
+
+  bool operator >=(JmaLgIntensity other) {
+    return index >= other.index;
+  }
 }
 
 @JsonEnum(valueField: 'type')

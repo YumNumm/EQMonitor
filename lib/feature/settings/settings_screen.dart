@@ -8,10 +8,10 @@ import 'package:eqmonitor/core/provider/device_info.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:eqmonitor/feature/home/component/sheet/debug_widget.dart';
 import 'package:eqmonitor/feature/home/features/debugger/debugger_provider.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/gen/assets.gen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -38,7 +38,7 @@ class SettingsScreen extends HookConsumerWidget {
       body: ListView(
         children: [
           GestureDetector(
-            onScaleEnd: (_) async {
+            onTapDown: (_) async {
               debugAttemptCount.value++;
               if (debugAttemptCount.value >= 10) {
                 debugAttemptCount.value = 0;
@@ -77,6 +77,13 @@ class SettingsScreen extends HookConsumerWidget {
             title: const Text('強震モニタ設定'),
             leading: const Icon(Icons.settings),
             onTap: () => context.push(const KmoniRoute().location),
+          ),
+          ListTile(
+            title: const Text('地震履歴設定'),
+            leading: const Icon(Icons.history),
+            onTap: () => context.push(
+              const EarthquakeHistoryConfigRoute().location,
+            ),
           ),
           ListTile(
             title: const Text('震度配色設定'),
@@ -130,10 +137,14 @@ class SettingsScreen extends HookConsumerWidget {
             ),
           ),
           Center(
-            child: Text(
-              'EQMonitor v${packageInfo.version} (${packageInfo.buildNumber})',
-              style: textTheme.bodySmall!.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.8),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Text(
+                'EQMonitor v${packageInfo.version} '
+                '(${packageInfo.buildNumber})',
+                style: textTheme.bodySmall!.copyWith(
+                  color: theme.colorScheme.onSurface.withOpacity(0.8),
+                ),
               ),
             ),
           ),
@@ -147,7 +158,11 @@ class SettingsScreen extends HookConsumerWidget {
               ),
             ),
             const Divider(),
-            const DebugWidget(),
+            ListTile(
+              title: const Text('デバッグメニュー'),
+              leading: const Icon(Icons.bug_report),
+              onTap: () => context.push(const DebuggerRoute().location),
+            ),
           ],
         ],
       ),
@@ -183,9 +198,11 @@ Future<void> _onInquiryTap(BuildContext context, WidgetRef ref) async {
     ),
   );
   final packageInfo = ref.read(packageInfoProvider);
-  final androidDeviceInfo =
-      Platform.isAndroid ? ref.read(androidDeviceInfoProvider) : null;
-  final iosDeviceInfo = Platform.isIOS ? ref.read(iosDeviceInfoProvider) : null;
+  final androidDeviceInfo = !kIsWeb && Platform.isAndroid
+      ? ref.read(androidDeviceInfoProvider)
+      : null;
+  final iosDeviceInfo =
+      !kIsWeb && Platform.isIOS ? ref.read(iosDeviceInfoProvider) : null;
 
   final notificationSetting =
       await ref.read(firebaseMessagingProvider).getNotificationSettings();

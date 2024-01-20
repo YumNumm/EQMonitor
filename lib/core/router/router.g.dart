@@ -12,8 +12,9 @@ List<RouteBase> get $appRoutes => [
       $setupRoute,
       $earthquakeHistoryRoute,
       $earthquakeHistoryDetailsRoute,
-      $eewDetailedHistoryRoute,
-      $colorSchemeConfigRoute,
+      $informationHistoryRoute,
+      $informationHistoryDetailsRoute,
+      $eewHisotryDetailRoute,
       $homeRoute,
       $talkerRoute,
       $kmoniRoute,
@@ -66,7 +67,7 @@ extension $EarthquakeHistoryRouteExtension on EarthquakeHistoryRoute {
 }
 
 RouteBase get $earthquakeHistoryDetailsRoute => GoRouteData.$route(
-      path: '/earthquake-history/:eventId',
+      path: '/earthquake-history-details',
       factory: $EarthquakeHistoryDetailsRouteExtension._fromState,
     );
 
@@ -74,11 +75,36 @@ extension $EarthquakeHistoryDetailsRouteExtension
     on EarthquakeHistoryDetailsRoute {
   static EarthquakeHistoryDetailsRoute _fromState(GoRouterState state) =>
       EarthquakeHistoryDetailsRoute(
-        int.parse(state.pathParameters['eventId']!),
+        $extra: state.extra as EarthquakeHistoryItem,
       );
 
   String get location => GoRouteData.$location(
-        '/earthquake-history/${Uri.encodeComponent(eventId.toString())}',
+        '/earthquake-history-details',
+      );
+
+  void go(BuildContext context) => context.go(location, extra: $extra);
+
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: $extra);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: $extra);
+
+  void replace(BuildContext context) =>
+      context.replace(location, extra: $extra);
+}
+
+RouteBase get $informationHistoryRoute => GoRouteData.$route(
+      path: '/information-history',
+      factory: $InformationHistoryRouteExtension._fromState,
+    );
+
+extension $InformationHistoryRouteExtension on InformationHistoryRoute {
+  static InformationHistoryRoute _fromState(GoRouterState state) =>
+      const InformationHistoryRoute();
+
+  String get location => GoRouteData.$location(
+        '/information-history',
       );
 
   void go(BuildContext context) => context.go(location);
@@ -91,52 +117,59 @@ extension $EarthquakeHistoryDetailsRouteExtension
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $eewDetailedHistoryRoute => GoRouteData.$route(
-      path: '/eew-detailed-history/:eventId',
-      factory: $EewDetailedHistoryRouteExtension._fromState,
+RouteBase get $informationHistoryDetailsRoute => GoRouteData.$route(
+      path: '/information-history-details',
+      factory: $InformationHistoryDetailsRouteExtension._fromState,
     );
 
-extension $EewDetailedHistoryRouteExtension on EewDetailedHistoryRoute {
-  static EewDetailedHistoryRoute _fromState(GoRouterState state) =>
-      EewDetailedHistoryRoute(
-        int.parse(state.pathParameters['eventId']!),
+extension $InformationHistoryDetailsRouteExtension
+    on InformationHistoryDetailsRoute {
+  static InformationHistoryDetailsRoute _fromState(GoRouterState state) =>
+      InformationHistoryDetailsRoute(
+        $extra: state.extra as InformationV3,
       );
 
   String get location => GoRouteData.$location(
-        '/eew-detailed-history/${Uri.encodeComponent(eventId.toString())}',
+        '/information-history-details',
       );
 
-  void go(BuildContext context) => context.go(location);
+  void go(BuildContext context) => context.go(location, extra: $extra);
 
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: $extra);
 
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
+      context.pushReplacement(location, extra: $extra);
 
-  void replace(BuildContext context) => context.replace(location);
+  void replace(BuildContext context) =>
+      context.replace(location, extra: $extra);
 }
 
-RouteBase get $colorSchemeConfigRoute => GoRouteData.$route(
-      path: '/config',
-      factory: $ColorSchemeConfigRouteExtension._fromState,
+RouteBase get $eewHisotryDetailRoute => GoRouteData.$route(
+      path: '/eew-history-detailed',
+      factory: $EewHisotryDetailRouteExtension._fromState,
     );
 
-extension $ColorSchemeConfigRouteExtension on ColorSchemeConfigRoute {
-  static ColorSchemeConfigRoute _fromState(GoRouterState state) =>
-      const ColorSchemeConfigRoute();
-
-  String get location => GoRouteData.$location(
-        '/config',
+extension $EewHisotryDetailRouteExtension on EewHisotryDetailRoute {
+  static EewHisotryDetailRoute _fromState(GoRouterState state) =>
+      EewHisotryDetailRoute(
+        $extra: state.extra as EarthquakeHistoryItem,
       );
 
-  void go(BuildContext context) => context.go(location);
+  String get location => GoRouteData.$location(
+        '/eew-history-detailed',
+      );
 
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+  void go(BuildContext context) => context.go(location, extra: $extra);
+
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: $extra);
 
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
+      context.pushReplacement(location, extra: $extra);
 
-  void replace(BuildContext context) => context.replace(location);
+  void replace(BuildContext context) =>
+      context.replace(location, extra: $extra);
 }
 
 RouteBase get $homeRoute => GoRouteData.$route(
@@ -222,6 +255,14 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $LicenseRouteExtension._fromState,
         ),
         GoRouteData.$route(
+          path: 'color-schema',
+          factory: $ColorSchemeConfigRouteExtension._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'earthquake-history',
+          factory: $EarthquakeHistoryConfigRouteExtension._fromState,
+        ),
+        GoRouteData.$route(
           path: 'notification',
           factory: $NotificationSettingsRouteExtension._fromState,
           routes: [
@@ -232,6 +273,16 @@ RouteBase get $settingsRoute => GoRouteData.$route(
             GoRouteData.$route(
               path: 'earthquake',
               factory: $EarthquakeNotificationSettingsRouteExtension._fromState,
+            ),
+          ],
+        ),
+        GoRouteData.$route(
+          path: 'debugger',
+          factory: $DebuggerRouteExtension._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'api-endpoint-selector',
+              factory: $ApiEndpointSelectorRouteExtension._fromState,
             ),
           ],
         ),
@@ -330,6 +381,43 @@ extension $LicenseRouteExtension on LicenseRoute {
   void replace(BuildContext context) => context.replace(location);
 }
 
+extension $ColorSchemeConfigRouteExtension on ColorSchemeConfigRoute {
+  static ColorSchemeConfigRoute _fromState(GoRouterState state) =>
+      const ColorSchemeConfigRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/color-schema',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $EarthquakeHistoryConfigRouteExtension
+    on EarthquakeHistoryConfigRoute {
+  static EarthquakeHistoryConfigRoute _fromState(GoRouterState state) =>
+      const EarthquakeHistoryConfigRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/earthquake-history',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
 extension $NotificationSettingsRouteExtension on NotificationSettingsRoute {
   static NotificationSettingsRoute _fromState(GoRouterState state) =>
       const NotificationSettingsRoute();
@@ -374,6 +462,41 @@ extension $EarthquakeNotificationSettingsRouteExtension
 
   String get location => GoRouteData.$location(
         '/settings/notification/earthquake',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $DebuggerRouteExtension on DebuggerRoute {
+  static DebuggerRoute _fromState(GoRouterState state) => const DebuggerRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/debugger',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $ApiEndpointSelectorRouteExtension on ApiEndpointSelectorRoute {
+  static ApiEndpointSelectorRoute _fromState(GoRouterState state) =>
+      const ApiEndpointSelectorRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/debugger/api-endpoint-selector',
       );
 
   void go(BuildContext context) => context.go(location);

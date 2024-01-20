@@ -146,7 +146,7 @@ class _$TravelTimeTableImpl implements _TravelTimeTable {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TravelTimeTableImpl &&
@@ -284,7 +284,7 @@ class _$TravelTimeTablesImpl implements _TravelTimeTables {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TravelTimeTablesImpl &&

@@ -1,9 +1,7 @@
-import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
-import 'package:eqmonitor/feature/earthquake_history/viewmodel/earthquake_history_view_model.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -12,28 +10,22 @@ import 'package:two_dimensional_scrollables/two_dimensional_scrollables.dart';
 
 class EewDetailedHistoryScreen extends HookConsumerWidget {
   const EewDetailedHistoryScreen({
-    required this.eventId,
+    required this.data,
     super.key,
   });
-  final int eventId;
+  final EarthquakeHistoryItem data;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final data = ref
-        .watch(earthquakeHistoryViewModelProvider)
-        .value
-        ?.firstWhereOrNull((e) => e.eventId == eventId);
-    final eews = data?.eewList.reversed.toList();
-    if (eews == null) {
-      return Scaffold(
+    final eews = data.eewList.reversed.toList();
+    if (eews.isEmpty) {
+      return const Scaffold(
         body: Center(
           child: Text(
-            data == null
-                ? '当該IDの地震情報が見つかりませんでした。\n再読み込みしてください'
-                : '当該IDの地震情報に対する緊急地震速報が見つかりませんでした。',
+            '当該IDの地震情報に対する緊急地震速報が見つかりませんでした。',
           ),
         ),
       );
@@ -96,10 +88,10 @@ class EewDetailedHistoryScreen extends HookConsumerWidget {
         value: (eew, body) {
           if (body is TelegramVxse45Body) {
             final maxLgInt = body.forecastMaxLgInt?.toDisplayMaxLgInt();
-            if (maxLgInt == null || maxLgInt.maxLgInt == null) {
+            if (maxLgInt == null) {
               return '不明';
             }
-            return '${maxLgInt.maxLgInt?.type}${maxLgInt.isOver ? "程度以上" : ""}';
+            return '${maxLgInt.maxLgInt.type}${maxLgInt.isOver ? "程度以上" : ""}';
           }
           return '---';
         },

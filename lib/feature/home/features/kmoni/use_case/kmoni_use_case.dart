@@ -87,7 +87,6 @@ class KmoniUseCase {
     required image.Pixel pixel32,
   }) {
     // 色がない場合(対象の観測点が画像内にない場合)
-
     final hsv = HSVColor.fromColor(
       Color.fromARGB(
         pixel32.a.toInt(),
@@ -153,6 +152,7 @@ class KmoniUseCase {
     }
     return p;
   }
+
 }
 
 class KmoniIsolateArg {

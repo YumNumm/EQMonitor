@@ -7,66 +7,69 @@ import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
-import 'package:eqmonitor/core/provider/topology_map/provider/topology_maps.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
-import 'package:eqmonitor/feature/earthquake_history/viewmodel/earthquake_history_view_model.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/earthquake_map.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/prefecture_intensity.dart';
+import 'package:eqmonitor/feature/earthquake_history_details/component/prefecture_lpgm_intensity.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:sheet/sheet.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
   const EarthquakeHistoryDetailsPage({
-    required this.eventId,
+    required this.data,
     super.key,
   });
 
-  final int eventId;
+  final EarthquakeHistoryItem data;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 当該データがアレばOK
-    final data = ref
-        .watch(earthquakeHistoryViewModelProvider)
-        .value
-        ?.firstWhereOrNull((e) => e.eventId == eventId);
-    if (data == null) {
-      return const Scaffold(
-        body: Center(
-          child: Text('当該データが見つかりませんでした\n再度地震の履歴を読み込んでください'),
-        ),
-      );
-    }
     final sheetController = SheetController();
-    final zoomCachedMapData =
-        ref.watch(zoomCachedProjectedFeatureLayerProvider).valueOrNull;
-
     final navigateToHomeFunction = useState<VoidCallback?>(null);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
+    final telegramType = data.telegrams.map((e) => e.status).toSet()
+      ..remove(TelegramStatus.normal);
+
     return Scaffold(
       body: Stack(
         children: [
-          if (zoomCachedMapData == null)
-            const Center(
-              child: CircularProgressIndicator.adaptive(),
-            )
-          else
-            RepaintBoundary(
-              child: EarthquakeMapWidget(
-                item: data,
-                showIntensityIcon: true,
-                mapData: zoomCachedMapData,
-                registerNavigateToHome: (func) =>
-                    navigateToHomeFunction.value = func,
+          EarthquakeMapWidget(
+            item: data,
+            showIntensityIcon: true,
+            registerNavigateToHome: (func) =>
+                navigateToHomeFunction.value = func,
+          ),
+          if (telegramType.isNotEmpty)
+            Positioned(
+              right: 10,
+              top: 10,
+              child: SafeArea(
+                child: Text(
+                  telegramType
+                      .map(
+                        (e) => switch (e) {
+                          TelegramStatus.test => '試験報',
+                          TelegramStatus.training => '訓練報',
+                          TelegramStatus.normal => '',
+                        },
+                      )
+                      .join('・'),
+                  style: theme.textTheme.displayLarge!.copyWith(
+                    color: colorScheme.error,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           Stack(
@@ -128,21 +131,24 @@ class _Sheet extends StatelessWidget {
       bottom: false,
       child: BasicModalSheet(
         hasAppBar: false,
+        useColumn: true,
         controller: sheetController,
         children: [
           _EarthquakeHypoInfoWidget(item: item),
           const Divider(),
-          _EarthquakeCommentWidget(item: item),
           PrefectureIntensityWidget(item: item),
+          if (item.earthquake.lgIntensity != null)
+            PrefectureLpgmIntensityWidget(
+              item: item,
+            ),
+          _EarthquakeCommentWidget(item: item),
           if (item.latestEewTelegram != null)
             ListTile(
               title: const Text('この地震に関する緊急地震速報'),
               subtitle: Text('${item.eewList.length}件'),
-              onTap: () => context.push(
-                EewDetailedHistoryRoute(
-                  item.eventId,
-                ).location,
-              ),
+              onTap: () => EewHisotryDetailRoute(
+                $extra: item,
+              ).push<void>(context),
             ),
         ],
       ),
@@ -188,6 +194,7 @@ class _EarthquakeHypoInfoWidget extends ConsumerWidget {
     final hypoWidget = Row(
       textBaseline: TextBaseline.ideographic,
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.baseline,
       children: [
         Text(
           '震源地',
@@ -221,7 +228,19 @@ class _EarthquakeHypoInfoWidget extends ConsumerWidget {
               fontFamilyFallback: [FontFamily.notoSansJP],
             ),
           )
-        : null;
+        : item.telegrams.firstOrNull != null
+            ? Text(
+                '${DateFormat('yyyy/MM/dd HH:mm頃').format(
+                  item.telegrams.firstOrNull!.pressTime.toLocal(),
+                )}'
+                ' '
+                '発表',
+                style: textTheme.bodyMedium!.copyWith(
+                  fontFamily: FontFamily.jetBrainsMono,
+                  fontFamilyFallback: [FontFamily.notoSansJP],
+                ),
+              )
+            : null;
 
     // 「M 8.0 / 深さ100km」
     final magnitudeWidget = Row(
@@ -305,10 +324,9 @@ class _EarthquakeHypoInfoWidget extends ConsumerWidget {
     );
     // M・深さ ともに不明の場合
     final isMagnitudeAndDepthUnknown =
-        eq.earthquake?.magnitude.condition?.toHalfWidth == 'M不明' &&
-            eq.earthquake?.hypocenter.depth == null &&
-            item.telegrams
-                .any((element) => element.type == TelegramType.vxse53);
+        (eq.earthquake?.magnitude.condition?.toHalfWidth == 'M不明' ||
+                eq.earthquake?.magnitude.value == null) &&
+            eq.earthquake?.hypocenter.depth == null;
     final magnitudeDepthUnknownWidget = Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -336,19 +354,50 @@ class _EarthquakeHypoInfoWidget extends ConsumerWidget {
         ),
       ],
     );
+
+    // M・深さ・震源 ともに不明の場合
+    final isEarthquakeNull = eq.earthquake == null;
+
+    final earthquakeNullWidget = Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      textBaseline: TextBaseline.alphabetic,
+      children: [
+        Text(
+          'M・深さ・震源地',
+          style: textTheme.titleMedium!.copyWith(
+            color: textTheme.titleMedium!.color!.withOpacity(0.8),
+          ),
+        ),
+        const SizedBox(width: 4),
+        Text(
+          item.telegrams.any((element) => element.type == TelegramType.vxse53)
+              ? '不明'
+              : '調査中',
+          style: textTheme.displaySmall!.copyWith(
+            fontWeight: FontWeight.w900,
+            fontFamily: FontFamily.jetBrainsMono,
+            fontFamilyFallback: [FontFamily.notoSansJP],
+          ),
+        ),
+      ],
+    );
     final body = Wrap(
       spacing: 8,
       crossAxisAlignment: WrapCrossAlignment.center,
       alignment: WrapAlignment.center,
       children: [
         const Row(),
-        if (isMagnitudeAndDepthUnknown)
-          magnitudeDepthUnknownWidget
-        else ...[
+        if (isEarthquakeNull)
+          earthquakeNullWidget
+        else if (isMagnitudeAndDepthUnknown) ...[
+          magnitudeDepthUnknownWidget,
+          hypoWidget,
+        ] else ...[
           magnitudeWidget,
           depthWidget,
+          hypoWidget,
         ],
-        hypoWidget,
         if (timeWidget != null) timeWidget,
       ],
     );
@@ -401,15 +450,28 @@ class _EarthquakeCommentWidget extends StatelessWidget {
       return BorderedContainer(
         padding: const EdgeInsets.all(8),
         elevation: 1,
-        child: Text(
-          switch ((comment.forecast?.text, comment.free)) {
+        child: Markdown(
+          data: switch ((comment.forecast?.text, comment.free)) {
             (final String text, final String free) => '$text\n\n$free',
             (final String text, _) => text,
             (_, final String free) => free,
             _ => '',
           }
               .toHalfWidth,
-          style: Theme.of(context).textTheme.bodyMedium,
+          selectable: true,
+          softLineBreak: true,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
+          onTapLink: (text, href, title) async {
+            final uri = Uri.tryParse(href.toString());
+            if (uri == null) {
+              return;
+            }
+            await launchUrl(
+              uri,
+            );
+          },
         ),
       );
     }

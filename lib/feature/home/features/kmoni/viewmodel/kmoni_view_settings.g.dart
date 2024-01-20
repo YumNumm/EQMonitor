@@ -37,7 +37,7 @@ Map<String, dynamic> _$$KmoniSettingsStateImplToJson(
 // RiverpodGenerator
 // **************************************************************************
 
-String _$kmoniSettingsHash() => r'16b29280c64bcd4a0faccb9a501a56c02c647e9f';
+String _$kmoniSettingsHash() => r'3a624489de7f8bd258d81cbd5e30d570bbe2951a';
 
 /// See also [KmoniSettings].
 @ProviderFor(KmoniSettings)

@@ -20,9 +20,7 @@ InformationV3Result _$InformationV3ResultFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$InformationV3Result {
-  List<InformationV3> get results => throw _privateConstructorUsedError;
-  bool get success => throw _privateConstructorUsedError;
-  D1DbExecutionResult get meta => throw _privateConstructorUsedError;
+  List<InformationV3> get items => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -36,10 +34,7 @@ abstract class $InformationV3ResultCopyWith<$Res> {
           InformationV3Result value, $Res Function(InformationV3Result) then) =
       _$InformationV3ResultCopyWithImpl<$Res, InformationV3Result>;
   @useResult
-  $Res call(
-      {List<InformationV3> results, bool success, D1DbExecutionResult meta});
-
-  $D1DbExecutionResultCopyWith<$Res> get meta;
+  $Res call({List<InformationV3> items});
 }
 
 /// @nodoc
@@ -55,32 +50,14 @@ class _$InformationV3ResultCopyWithImpl<$Res, $Val extends InformationV3Result>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? results = null,
-    Object? success = null,
-    Object? meta = null,
+    Object? items = null,
   }) {
     return _then(_value.copyWith(
-      results: null == results
-          ? _value.results
-          : results // ignore: cast_nullable_to_non_nullable
+      items: null == items
+          ? _value.items
+          : items // ignore: cast_nullable_to_non_nullable
               as List<InformationV3>,
-      success: null == success
-          ? _value.success
-          : success // ignore: cast_nullable_to_non_nullable
-              as bool,
-      meta: null == meta
-          ? _value.meta
-          : meta // ignore: cast_nullable_to_non_nullable
-              as D1DbExecutionResult,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $D1DbExecutionResultCopyWith<$Res> get meta {
-    return $D1DbExecutionResultCopyWith<$Res>(_value.meta, (value) {
-      return _then(_value.copyWith(meta: value) as $Val);
-    });
   }
 }
 
@@ -92,11 +69,7 @@ abstract class _$$InformationV3ResultImplCopyWith<$Res>
       __$$InformationV3ResultImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {List<InformationV3> results, bool success, D1DbExecutionResult meta});
-
-  @override
-  $D1DbExecutionResultCopyWith<$Res> get meta;
+  $Res call({List<InformationV3> items});
 }
 
 /// @nodoc
@@ -110,23 +83,13 @@ class __$$InformationV3ResultImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? results = null,
-    Object? success = null,
-    Object? meta = null,
+    Object? items = null,
   }) {
     return _then(_$InformationV3ResultImpl(
-      results: null == results
-          ? _value._results
-          : results // ignore: cast_nullable_to_non_nullable
+      items: null == items
+          ? _value._items
+          : items // ignore: cast_nullable_to_non_nullable
               as List<InformationV3>,
-      success: null == success
-          ? _value.success
-          : success // ignore: cast_nullable_to_non_nullable
-              as bool,
-      meta: null == meta
-          ? _value.meta
-          : meta // ignore: cast_nullable_to_non_nullable
-              as D1DbExecutionResult,
     ));
   }
 }
@@ -134,48 +97,37 @@ class __$$InformationV3ResultImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$InformationV3ResultImpl implements _InformationV3Result {
-  const _$InformationV3ResultImpl(
-      {final List<InformationV3> results = const [],
-      required this.success,
-      required this.meta})
-      : _results = results;
+  const _$InformationV3ResultImpl({required final List<InformationV3> items})
+      : _items = items;
 
   factory _$InformationV3ResultImpl.fromJson(Map<String, dynamic> json) =>
       _$$InformationV3ResultImplFromJson(json);
 
-  final List<InformationV3> _results;
+  final List<InformationV3> _items;
   @override
-  @JsonKey()
-  List<InformationV3> get results {
-    if (_results is EqualUnmodifiableListView) return _results;
+  List<InformationV3> get items {
+    if (_items is EqualUnmodifiableListView) return _items;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_results);
+    return EqualUnmodifiableListView(_items);
   }
-
-  @override
-  final bool success;
-  @override
-  final D1DbExecutionResult meta;
 
   @override
   String toString() {
-    return 'InformationV3Result(results: $results, success: $success, meta: $meta)';
+    return 'InformationV3Result(items: $items)';
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$InformationV3ResultImpl &&
-            const DeepCollectionEquality().equals(other._results, _results) &&
-            (identical(other.success, success) || other.success == success) &&
-            (identical(other.meta, meta) || other.meta == meta));
+            const DeepCollectionEquality().equals(other._items, _items));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(_results), success, meta);
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_items));
 
   @JsonKey(ignore: true)
   @override
@@ -194,19 +146,13 @@ class _$InformationV3ResultImpl implements _InformationV3Result {
 
 abstract class _InformationV3Result implements InformationV3Result {
   const factory _InformationV3Result(
-      {final List<InformationV3> results,
-      required final bool success,
-      required final D1DbExecutionResult meta}) = _$InformationV3ResultImpl;
+      {required final List<InformationV3> items}) = _$InformationV3ResultImpl;
 
   factory _InformationV3Result.fromJson(Map<String, dynamic> json) =
       _$InformationV3ResultImpl.fromJson;
 
   @override
-  List<InformationV3> get results;
-  @override
-  bool get success;
-  @override
-  D1DbExecutionResult get meta;
+  List<InformationV3> get items;
   @override
   @JsonKey(ignore: true)
   _$$InformationV3ResultImplCopyWith<_$InformationV3ResultImpl> get copyWith =>
@@ -227,8 +173,6 @@ mixin _$InformationV3 {
   DateTime get createdAt => throw _privateConstructorUsedError;
   @JsonKey(unknownEnumValue: Level.info)
   Level get level => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: tagFromString, toJson: tagToString)
-  List<String> get tag => throw _privateConstructorUsedError;
   int? get eventId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -250,7 +194,6 @@ abstract class $InformationV3CopyWith<$Res> {
       @JsonKey(unknownEnumValue: Author.unknown) Author author,
       DateTime createdAt,
       @JsonKey(unknownEnumValue: Level.info) Level level,
-      @JsonKey(fromJson: tagFromString, toJson: tagToString) List<String> tag,
       int? eventId});
 }
 
@@ -273,7 +216,6 @@ class _$InformationV3CopyWithImpl<$Res, $Val extends InformationV3>
     Object? author = null,
     Object? createdAt = null,
     Object? level = null,
-    Object? tag = null,
     Object? eventId = freezed,
   }) {
     return _then(_value.copyWith(
@@ -301,10 +243,6 @@ class _$InformationV3CopyWithImpl<$Res, $Val extends InformationV3>
           ? _value.level
           : level // ignore: cast_nullable_to_non_nullable
               as Level,
-      tag: null == tag
-          ? _value.tag
-          : tag // ignore: cast_nullable_to_non_nullable
-              as List<String>,
       eventId: freezed == eventId
           ? _value.eventId
           : eventId // ignore: cast_nullable_to_non_nullable
@@ -328,7 +266,6 @@ abstract class _$$InformationV3ImplCopyWith<$Res>
       @JsonKey(unknownEnumValue: Author.unknown) Author author,
       DateTime createdAt,
       @JsonKey(unknownEnumValue: Level.info) Level level,
-      @JsonKey(fromJson: tagFromString, toJson: tagToString) List<String> tag,
       int? eventId});
 }
 
@@ -349,7 +286,6 @@ class __$$InformationV3ImplCopyWithImpl<$Res>
     Object? author = null,
     Object? createdAt = null,
     Object? level = null,
-    Object? tag = null,
     Object? eventId = freezed,
   }) {
     return _then(_$InformationV3Impl(
@@ -377,10 +313,6 @@ class __$$InformationV3ImplCopyWithImpl<$Res>
           ? _value.level
           : level // ignore: cast_nullable_to_non_nullable
               as Level,
-      tag: null == tag
-          ? _value._tag
-          : tag // ignore: cast_nullable_to_non_nullable
-              as List<String>,
       eventId: freezed == eventId
           ? _value.eventId
           : eventId // ignore: cast_nullable_to_non_nullable
@@ -399,10 +331,7 @@ class _$InformationV3Impl implements _InformationV3 {
       @JsonKey(unknownEnumValue: Author.unknown) required this.author,
       required this.createdAt,
       @JsonKey(unknownEnumValue: Level.info) required this.level,
-      @JsonKey(fromJson: tagFromString, toJson: tagToString)
-      required final List<String> tag,
-      required this.eventId})
-      : _tag = tag;
+      required this.eventId});
 
   factory _$InformationV3Impl.fromJson(Map<String, dynamic> json) =>
       _$$InformationV3ImplFromJson(json);
@@ -421,25 +350,16 @@ class _$InformationV3Impl implements _InformationV3 {
   @override
   @JsonKey(unknownEnumValue: Level.info)
   final Level level;
-  final List<String> _tag;
-  @override
-  @JsonKey(fromJson: tagFromString, toJson: tagToString)
-  List<String> get tag {
-    if (_tag is EqualUnmodifiableListView) return _tag;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_tag);
-  }
-
   @override
   final int? eventId;
 
   @override
   String toString() {
-    return 'InformationV3(id: $id, title: $title, body: $body, author: $author, createdAt: $createdAt, level: $level, tag: $tag, eventId: $eventId)';
+    return 'InformationV3(id: $id, title: $title, body: $body, author: $author, createdAt: $createdAt, level: $level, eventId: $eventId)';
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$InformationV3Impl &&
@@ -450,14 +370,13 @@ class _$InformationV3Impl implements _InformationV3 {
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.level, level) || other.level == level) &&
-            const DeepCollectionEquality().equals(other._tag, _tag) &&
             (identical(other.eventId, eventId) || other.eventId == eventId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, title, body, author,
-      createdAt, level, const DeepCollectionEquality().hash(_tag), eventId);
+  int get hashCode => Object.hash(
+      runtimeType, id, title, body, author, createdAt, level, eventId);
 
   @JsonKey(ignore: true)
   @override
@@ -481,8 +400,6 @@ abstract class _InformationV3 implements InformationV3 {
       @JsonKey(unknownEnumValue: Author.unknown) required final Author author,
       required final DateTime createdAt,
       @JsonKey(unknownEnumValue: Level.info) required final Level level,
-      @JsonKey(fromJson: tagFromString, toJson: tagToString)
-      required final List<String> tag,
       required final int? eventId}) = _$InformationV3Impl;
 
   factory _InformationV3.fromJson(Map<String, dynamic> json) =
@@ -502,9 +419,6 @@ abstract class _InformationV3 implements InformationV3 {
   @override
   @JsonKey(unknownEnumValue: Level.info)
   Level get level;
-  @override
-  @JsonKey(fromJson: tagFromString, toJson: tagToString)
-  List<String> get tag;
   @override
   int? get eventId;
   @override

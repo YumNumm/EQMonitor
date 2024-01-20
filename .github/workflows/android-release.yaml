@@ -7,11 +7,19 @@ on:
 
 jobs:
   build:
+    env:
+      FLUTTER_VERSION:
+      FLUTTER_CHANNEL:
+      FLUTTER_HOME:
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
     steps:
-      - uses: actions/checkout@v2
+      # https://github.com/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
       - name: Set up ssh
         run: |
@@ -71,6 +79,7 @@ jobs:
       - name: build_runner
         run: |
           echo '${{ secrets.ENV }}' | base64 -d > .env
+          ln -s $FLUTTER_ROOT .fvm/flutter_sdk
           melos generate
 
       - name: Accept Android License
@@ -81,9 +90,6 @@ jobs:
           echo '${{ secrets.FIREBASE_ANDROID }}' | base64 -d > android/app/google-services.json
           echo '${{ secrets.KEY_PROPERTIES }}' | base64 -d  > android/key.properties
 
-      - name: Build aab
-        run: flutter build appbundle --release
-
       - name: Build apk
         run: flutter build apk --release
 
@@ -91,9 +97,7 @@ jobs:
         uses: actions/upload-artifact@v1.0.0
         with:
           name: release-android
-          path: |
-            build/app/outputs/bundle/release/app-release.aab
-            build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
 
       #-- Slack通知 --#
       # 成功
@@ -101,9 +105,9 @@ jobs:
         if: ${{ success() }}
         uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_TITLE: Deploy Success
+          SLACK_TITLE: Android CI Success
           SLACK_COLOR: good
-          SLACK_ICON: https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/assets/icon.png
+          SLACK_ICON: https://github.com/YumNumm/EQMonitor/blob/6bedf4314134ecf614654f7284841390d3d0a4f3/assets/images/icon.png?raw=true
           SLACK_USERNAME: EQMonitor
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
 
@@ -112,8 +116,8 @@ jobs:
         if: ${{ failure() }}
         uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_TITLE: Deploy Failure
+          SLACK_TITLE: Android CI Failure
           SLACK_COLOR: danger
-          SLACK_ICON: https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/assets/icon.png
+          SLACK_ICON: https://github.com/YumNumm/EQMonitor/blob/6bedf4314134ecf614654f7284841390d3d0a4f3/assets/images/icon.png?raw=true
           SLACK_USERNAME: EQMonitor
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}

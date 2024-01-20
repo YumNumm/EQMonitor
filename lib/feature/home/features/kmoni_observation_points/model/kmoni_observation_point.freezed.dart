@@ -20,7 +20,6 @@ mixin _$KmoniObservationPoint {
   String get prefecture => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   LatLng get latLng => throw _privateConstructorUsedError;
-  GlobalPoint get globalPoint => throw _privateConstructorUsedError;
   int get x => throw _privateConstructorUsedError;
   int get y => throw _privateConstructorUsedError;
   double get arv => throw _privateConstructorUsedError;
@@ -41,7 +40,6 @@ abstract class $KmoniObservationPointCopyWith<$Res> {
       String prefecture,
       String name,
       LatLng latLng,
-      GlobalPoint globalPoint,
       int x,
       int y,
       double arv});
@@ -65,7 +63,6 @@ class _$KmoniObservationPointCopyWithImpl<$Res,
     Object? prefecture = null,
     Object? name = null,
     Object? latLng = null,
-    Object? globalPoint = null,
     Object? x = null,
     Object? y = null,
     Object? arv = null,
@@ -87,10 +84,6 @@ class _$KmoniObservationPointCopyWithImpl<$Res,
           ? _value.latLng
           : latLng // ignore: cast_nullable_to_non_nullable
               as LatLng,
-      globalPoint: null == globalPoint
-          ? _value.globalPoint
-          : globalPoint // ignore: cast_nullable_to_non_nullable
-              as GlobalPoint,
       x: null == x
           ? _value.x
           : x // ignore: cast_nullable_to_non_nullable
@@ -121,7 +114,6 @@ abstract class _$$KmoniObservationPointImplCopyWith<$Res>
       String prefecture,
       String name,
       LatLng latLng,
-      GlobalPoint globalPoint,
       int x,
       int y,
       double arv});
@@ -143,7 +135,6 @@ class __$$KmoniObservationPointImplCopyWithImpl<$Res>
     Object? prefecture = null,
     Object? name = null,
     Object? latLng = null,
-    Object? globalPoint = null,
     Object? x = null,
     Object? y = null,
     Object? arv = null,
@@ -165,10 +156,6 @@ class __$$KmoniObservationPointImplCopyWithImpl<$Res>
           ? _value.latLng
           : latLng // ignore: cast_nullable_to_non_nullable
               as LatLng,
-      globalPoint: null == globalPoint
-          ? _value.globalPoint
-          : globalPoint // ignore: cast_nullable_to_non_nullable
-              as GlobalPoint,
       x: null == x
           ? _value.x
           : x // ignore: cast_nullable_to_non_nullable
@@ -193,7 +180,6 @@ class _$KmoniObservationPointImpl implements _KmoniObservationPoint {
       required this.prefecture,
       required this.name,
       required this.latLng,
-      required this.globalPoint,
       required this.x,
       required this.y,
       required this.arv});
@@ -207,8 +193,6 @@ class _$KmoniObservationPointImpl implements _KmoniObservationPoint {
   @override
   final LatLng latLng;
   @override
-  final GlobalPoint globalPoint;
-  @override
   final int x;
   @override
   final int y;
@@ -217,11 +201,11 @@ class _$KmoniObservationPointImpl implements _KmoniObservationPoint {
 
   @override
   String toString() {
-    return 'KmoniObservationPoint(code: $code, prefecture: $prefecture, name: $name, latLng: $latLng, globalPoint: $globalPoint, x: $x, y: $y, arv: $arv)';
+    return 'KmoniObservationPoint(code: $code, prefecture: $prefecture, name: $name, latLng: $latLng, x: $x, y: $y, arv: $arv)';
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$KmoniObservationPointImpl &&
@@ -230,16 +214,14 @@ class _$KmoniObservationPointImpl implements _KmoniObservationPoint {
                 other.prefecture == prefecture) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.latLng, latLng) || other.latLng == latLng) &&
-            (identical(other.globalPoint, globalPoint) ||
-                other.globalPoint == globalPoint) &&
             (identical(other.x, x) || other.x == x) &&
             (identical(other.y, y) || other.y == y) &&
             (identical(other.arv, arv) || other.arv == arv));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, code, prefecture, name, latLng, globalPoint, x, y, arv);
+  int get hashCode =>
+      Object.hash(runtimeType, code, prefecture, name, latLng, x, y, arv);
 
   @JsonKey(ignore: true)
   @override
@@ -255,7 +237,6 @@ abstract class _KmoniObservationPoint implements KmoniObservationPoint {
       required final String prefecture,
       required final String name,
       required final LatLng latLng,
-      required final GlobalPoint globalPoint,
       required final int x,
       required final int y,
       required final double arv}) = _$KmoniObservationPointImpl;
@@ -268,8 +249,6 @@ abstract class _KmoniObservationPoint implements KmoniObservationPoint {
   String get name;
   @override
   LatLng get latLng;
-  @override
-  GlobalPoint get globalPoint;
   @override
   int get x;
   @override
@@ -466,7 +445,7 @@ class _$AnalyzedKmoniObservationPointImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AnalyzedKmoniObservationPointImpl &&

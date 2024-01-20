@@ -40,7 +40,7 @@ Map<String, dynamic> _$$NotificationSettingsStateImplToJson(
 // **************************************************************************
 
 String _$notificationSettingsViewModelHash() =>
-    r'ea562cf8ec27b0173f901d3d853657abaa503782';
+    r'd1daaa3edbf24a7e476a15035f21e8b1c5d18ff9';
 
 /// See also [NotificationSettingsViewModel].
 @ProviderFor(NotificationSettingsViewModel)

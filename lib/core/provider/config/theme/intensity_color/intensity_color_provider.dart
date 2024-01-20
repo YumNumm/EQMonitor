@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'intensity_color_provider.g.dart';
 
@@ -13,22 +12,26 @@ part 'intensity_color_provider.g.dart';
 class IntensityColor extends _$IntensityColor {
   @override
   IntensityColorModel build() {
-    _prefs = ref.watch(sharedPreferencesProvider);
+    final result = load();
+    if (result != null) {
+      return result;
+    }
     return IntensityColorModel.eqmonitor();
   }
 
   static const _key = 'intensity_color';
-  late final SharedPreferences _prefs;
 
   // ignore: use_setters_to_change_properties
   void update(IntensityColorModel model) {
     state = model;
+    ref.read(sharedPreferencesProvider).setString(
+          _key,
+          jsonEncode(model.toJson()),
+        );
   }
 
-
-
   IntensityColorModel? load() {
-    final value = _prefs.getString(_key);
+    final value = ref.read(sharedPreferencesProvider).getString(_key);
     if (value == null) {
       return null;
     }

@@ -35,12 +35,12 @@ class NotificationSettingsViewModel extends _$NotificationSettingsViewModel {
     final topicNotifier = ref.read(fcmTopicManagerProvider.notifier);
     // 既に登録済みの場合は何もしない
     if (state.isVzse40Subscribed) {
-      return const Result.success(null);
+      return  Result.success(null);
     }
     final result = await topicNotifier.registerToTopic(
       FcmBasicTopic(FcmTopics.vzse40),
     );
-    if (result.isSuccess) {
+    if (result case Success()) {
       state = state.copyWith(isVzse40Subscribed: true);
     }
     return result;
@@ -50,12 +50,12 @@ class NotificationSettingsViewModel extends _$NotificationSettingsViewModel {
     final topicNotifier = ref.read(fcmTopicManagerProvider.notifier);
     // 登録されていない場合は何もしない
     if (!state.isVzse40Subscribed) {
-      return const Result.success(null);
+      return  Result.success(null);
     }
     final result = await topicNotifier.unregisterFromTopic(
       FcmBasicTopic(FcmTopics.vzse40),
     );
-    if (result.isSuccess) {
+    if (result case Success()) {
       state = state.copyWith(isVzse40Subscribed: false);
     }
     return result;
@@ -65,12 +65,12 @@ class NotificationSettingsViewModel extends _$NotificationSettingsViewModel {
     final topicNotifier = ref.read(fcmTopicManagerProvider.notifier);
     // 既に登録済みの場合は何もしない
     if (state.isNoticeSubscribed) {
-      return const Result.success(null);
+      return  Result.success(null);
     }
     final result = await topicNotifier.registerToTopic(
       FcmBasicTopic(FcmTopics.notice),
     );
-    if (result.isSuccess) {
+    if (result case Success()) {
       state = state.copyWith(isNoticeSubscribed: true);
     }
     return result;
@@ -80,12 +80,12 @@ class NotificationSettingsViewModel extends _$NotificationSettingsViewModel {
     final topicNotifier = ref.read(fcmTopicManagerProvider.notifier);
     // 登録されていない場合は何もしない
     if (!state.isNoticeSubscribed) {
-      return const Result.success(null);
+      return  Result.success(null);
     }
     final result = await topicNotifier.unregisterFromTopic(
       FcmBasicTopic(FcmTopics.notice),
     );
-    if (result.isSuccess) {
+    if (result case Success()) {
       state = state.copyWith(isNoticeSubscribed: false);
     }
     return result;
@@ -94,7 +94,7 @@ class NotificationSettingsViewModel extends _$NotificationSettingsViewModel {
 
 @freezed
 class NotificationSettingsState with _$NotificationSettingsState {
-  const factory NotificationSettingsState({
+   factory NotificationSettingsState({
     required bool isNotificatioonPermissionAllowed,
 
     /// 地震・津波に関するお知らせ

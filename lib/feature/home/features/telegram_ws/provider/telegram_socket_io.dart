@@ -13,13 +13,14 @@ part 'telegram_socket_io.g.dart';
 @Riverpod(keepAlive: true, dependencies: [])
 Socket telegramSocketIo(TelegramSocketIoRef ref) {
   final talker = ref.watch(talkerProvider);
-  final url = ref.watch(telegramUrlProvider).wsApiUrl;
+  final url = ref.watch(telegramUrlProvider.select((v) => v.wsApiUrl));
   final authorization = ref.watch(telegramUrlProvider).apiAuthorization ?? '';
   final socket = io(
     url,
     OptionBuilder()
         .setTransports(['websocket'])
         .enableReconnection()
+        .enableAutoConnect()
         .enableForceNew()
         .setQuery({'key': authorization})
         .build(),
@@ -37,8 +38,13 @@ Socket telegramSocketIo(TelegramSocketIoRef ref) {
       // 再接続
     })
     ..onAny((event, data) {
-      talker.logTyped(TelegramWebSocketLog('Event: $event ($data)'));
-      log('Event: $event ($data)');
+      talker.logTyped(
+        TelegramWebSocketLog(
+          'Event: $event ($data)'
+              .replaceAll(url, '**')
+              .replaceAll(authorization, '++'),
+        ),
+      );
     })
     ..onPing((data) {
       log('Ping: $data');

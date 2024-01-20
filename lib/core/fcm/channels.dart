@@ -11,9 +11,10 @@ final List<AndroidNotificationChannel> notificationChannels = [
     groupId: 'fromdev',
     importance: Importance.high,
   ),
+
   //! EEW
   const AndroidNotificationChannel(
-    'eew_alert',
+    'eew_warning',
     '緊急地震速報(警報)',
     groupId: 'eew',
     description: '緊急地震速報(警報)通知',
@@ -21,14 +22,66 @@ final List<AndroidNotificationChannel> notificationChannels = [
     importance: Importance.max,
   ),
   const AndroidNotificationChannel(
-    'eew',
+    'eew_forecast',
     '緊急地震速報(予報)',
     groupId: 'eew',
     description: '緊急地震速報(予報)通知',
     ledColor: Color.fromARGB(255, 190, 0, 0),
     importance: Importance.high,
   ),
+
   //! 地震通知
+  const AndroidNotificationChannel(
+    'VXSE51',
+    groupId: 'earthquake',
+    '震度速報',
+    description: '震度3以上の地域を90秒程度で第1報を通知',
+    importance: Importance.high,
+  ),
+  const AndroidNotificationChannel(
+    'VXSE52',
+    groupId: 'earthquake',
+    '震源に関する情報',
+    description: '震源速報、津波の有無を通知',
+    importance: Importance.high,
+  ),
+  const AndroidNotificationChannel(
+    'VXSE53',
+    groupId: 'earthquake',
+    '震源・震度に関する情報',
+    description: '震源要素・各地の震度、海外で発生した大きな地震の震源要素等、津波の有無を通知',
+    importance: Importance.high,
+  ),
+  /*
+  const AndroidNotificationChannel(
+    'VXSE56',
+    groupId: 'earthquake',
+    '地震の活動状況等に関する情報',
+    description: '地震の活動状況等に関する情報や、伊豆東部の地震活動に関する情報などの解説情報を発表',
+    importance: Importance.high,
+  ),
+  const AndroidNotificationChannel(
+    'VXSE60',
+    groupId: 'earthquake',
+    '地震回数に関する情報',
+    description: '顕著な地震に対して、有感地震の回数経過状況を発表',
+    importance: Importance.high,
+  ),
+  */
+  const AndroidNotificationChannel(
+    'VXSE61',
+    groupId: 'earthquake',
+    '顕著な地震の震源要素更新のお知らせ',
+    description: '顕著な地震に対して、震源要素をより正確にした情報を発表',
+  ),
+  const AndroidNotificationChannel(
+    'VXSE62',
+    groupId: 'earthquake',
+    '長周期地震動に関する観測情報',
+    description: '長周期地震動階級1以上を観測した地震について、観測した要素などを地震発生後10分程度で発表',
+    importance: Importance.high,
+  ),
+
   const AndroidNotificationChannel(
     'VZSE40',
     groupId: 'earthquake',
@@ -36,6 +89,7 @@ final List<AndroidNotificationChannel> notificationChannels = [
     description: '地震・津波の試験・訓練配信のお知らせ、自治体震度データの入電停止等のお知らせ、その他を発表',
     importance: Importance.low,
   ),
+  /*
   const AndroidNotificationChannel(
     'VTSE41',
     groupId: 'tsunami',
@@ -67,54 +121,6 @@ final List<AndroidNotificationChannel> notificationChannels = [
     importance: Importance.high,
   ),
   const AndroidNotificationChannel(
-    'VXSE51',
-    groupId: 'earthquake',
-    '震度速報',
-    description: '震度3以上の地域を90秒程度で第1報を通知',
-    importance: Importance.high,
-  ),
-  const AndroidNotificationChannel(
-    'VXSE52',
-    groupId: 'earthquake',
-    '震源に関する情報',
-    description: '震源速報、津波の有無を通知',
-    importance: Importance.high,
-  ),
-  const AndroidNotificationChannel(
-    'VXSE53',
-    groupId: 'earthquake',
-    '震源・震度に関する情報',
-    description: '震源要素・各地の震度、海外で発生した大きな地震の震源要素等、津波の有無を通知',
-    importance: Importance.high,
-  ),
-  const AndroidNotificationChannel(
-    'VXSE56',
-    groupId: 'earthquake',
-    '地震の活動状況等に関する情報',
-    description: '地震の活動状況等に関する情報や、伊豆東部の地震活動に関する情報などの解説情報を発表',
-    importance: Importance.high,
-  ),
-  const AndroidNotificationChannel(
-    'VXSE60',
-    groupId: 'earthquake',
-    '地震回数に関する情報',
-    description: '顕著な地震に対して、有感地震の回数経過状況を発表',
-    importance: Importance.high,
-  ),
-  const AndroidNotificationChannel(
-    'VXSE61',
-    groupId: 'earthquake',
-    '顕著な地震の震源要素更新のお知らせ',
-    description: '顕著な地震に対して、震源要素をより正確にした情報を発表',
-  ),
-  const AndroidNotificationChannel(
-    'VXSE62',
-    groupId: 'earthquake',
-    '長周期地震動に関する観測情報',
-    description: '長周期地震動階級1以上を観測した地震について、観測した要素などを地震発生後10分程度で発表',
-    importance: Importance.high,
-  ),
-  const AndroidNotificationChannel(
     'VYSE50',
     groupId: 'earthquake',
     '南海トラフ地震臨時情報',
@@ -135,7 +141,7 @@ final List<AndroidNotificationChannel> notificationChannels = [
     '南海トラフ地震関連解説情報(定例)',
     description: '南海トラフ沿いの地震に関する評価検討会の定例会合における調査結果の発表',
     importance: Importance.high,
-  ),
+  ),*/
 ];
 
 final List<AndroidNotificationChannelGroup> notificationChannelGroups = [
@@ -146,13 +152,16 @@ final List<AndroidNotificationChannelGroup> notificationChannelGroups = [
   const AndroidNotificationChannelGroup(
     'earthquake',
     '地震通知',
+    description: '緊急地震速報を除く地震に関する情報をお伝えします',
   ),
   const AndroidNotificationChannelGroup(
     'tsunami',
     '津波通知',
+    description: '津波に関する情報をお伝えします',
   ),
   const AndroidNotificationChannelGroup(
     'fromdev',
     '開発者からのお知らせ',
+    description: '開発者からの連絡に使用されます。',
   ),
 ];

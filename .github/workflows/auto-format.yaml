@@ -1,7 +1,7 @@
 name: Auto Format
 
 on:
-  pull_request:
+  pull_request_target:
   push:
     branches:
       - main
@@ -9,11 +9,19 @@ on:
 
 jobs:
   format:
+    env:
+      FLUTTER_VERSION:
+      FLUTTER_CHANNEL:
+      FLUTTER_HOME:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
-      - uses: actions/checkout@v3
+      # https://github.com/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
       - name: Set up ssh
         run: |
@@ -38,7 +46,10 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
       - name: Install Melos
-        run: dart pub global activate melos && melos bootstrap
+        run: |
+          dart pub global activate melos
+          ln -s $FLUTTER_ROOT .fvm/flutter_sdk
+          melos bootstrap
 
       - name: build_runner
         run: |

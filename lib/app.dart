@@ -2,7 +2,6 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/theme/custom_colors.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -65,14 +64,6 @@ class App extends HookConsumerWidget {
             useMaterial3: true,
             fontFamily: FontFamily.notoSansJP,
           ),
-          builder: (context, child) {
-            return CupertinoTheme(
-              data: CupertinoThemeData(
-                brightness: Theme.of(context).brightness,
-              ),
-              child: child!,
-            );
-          },
         );
       },
     );

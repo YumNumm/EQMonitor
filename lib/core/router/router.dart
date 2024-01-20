@@ -1,14 +1,21 @@
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history/page/earthquake_history.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/screen/earthquake_history_details.dart';
 import 'package:eqmonitor/feature/eew_detailed_history/eew_detailed_history_screen.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/page/kmoni_settings_page.dart';
 import 'package:eqmonitor/feature/home/view/home_view.dart';
+import 'package:eqmonitor/feature/information_history/page/information_history_page.dart';
+import 'package:eqmonitor/feature/information_history_details/information_history_details_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/license_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_screen.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_screen.dart';
 import 'package:eqmonitor/feature/settings/children/config/color_scheme/color_scheme_config_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/api_endpoint_selector_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/debugger_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/notification/children/earthquake/earthquake_notification_settings_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/notification/children/eew/eew_notification_settings_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/notification/notification_setting_page.dart';
@@ -54,38 +61,58 @@ class EarthquakeHistoryRoute extends GoRouteData {
 }
 
 @TypedGoRoute<EarthquakeHistoryDetailsRoute>(
-  path: '/earthquake-history/:eventId',
+  path: '/earthquake-history-details',
 )
 class EarthquakeHistoryDetailsRoute extends GoRouteData {
-  const EarthquakeHistoryDetailsRoute(this.eventId);
-  final int eventId;
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return EarthquakeHistoryDetailsPage(
-      eventId: eventId,
-    );
-  }
-}
-
-@TypedGoRoute<EewDetailedHistoryRoute>(
-  path: '/eew-detailed-history/:eventId',
-)
-class EewDetailedHistoryRoute extends GoRouteData {
-  const EewDetailedHistoryRoute(this.eventId);
-  final int eventId;
+  const EarthquakeHistoryDetailsRoute({
+    required this.$extra,
+  });
+  final EarthquakeHistoryItem $extra;
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      EewDetailedHistoryScreen(
-        eventId: eventId,
+      EarthquakeHistoryDetailsPage(
+        data: $extra,
       );
 }
 
-@TypedGoRoute<ColorSchemeConfigRoute>(path: '/config')
-class ColorSchemeConfigRoute extends GoRouteData {
-  const ColorSchemeConfigRoute();
+@TypedGoRoute<InformationHistoryRoute>(path: '/information-history')
+class InformationHistoryRoute extends GoRouteData {
+  const InformationHistoryRoute();
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const ColorSchemeConfigPage();
+      const InformationHistoryPage();
+}
+
+@TypedGoRoute<InformationHistoryDetailsRoute>(
+  path: '/information-history-details',
+)
+class InformationHistoryDetailsRoute extends GoRouteData {
+  const InformationHistoryDetailsRoute({
+    required this.$extra,
+  });
+  final InformationV3 $extra;
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      InformationHistoryDetailsPage(
+        data: $extra,
+      );
+}
+
+@TypedGoRoute<EewHisotryDetailRoute>(
+  path: '/eew-history-detailed',
+)
+class EewHisotryDetailRoute extends GoRouteData {
+  const EewHisotryDetailRoute({
+    required this.$extra,
+  });
+
+  final EarthquakeHistoryItem $extra;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      EewDetailedHistoryScreen(
+        data: $extra,
+      );
 }
 
 @TypedGoRoute<HomeRoute>(path: '/')
@@ -123,6 +150,12 @@ class KmoniRoute extends GoRouteData {
     TypedGoRoute<LicenseRoute>(
       path: 'license',
     ),
+    TypedGoRoute<ColorSchemeConfigRoute>(
+      path: 'color-schema',
+    ),
+    TypedGoRoute<EarthquakeHistoryConfigRoute>(
+      path: 'earthquake-history',
+    ),
     TypedGoRoute<NotificationSettingsRoute>(
       path: 'notification',
       routes: [
@@ -134,6 +167,14 @@ class KmoniRoute extends GoRouteData {
         ),
       ],
     ),
+    TypedGoRoute<DebuggerRoute>(
+      path: 'debugger',
+      routes: [
+        TypedGoRoute<ApiEndpointSelectorRoute>(
+          path: 'api-endpoint-selector',
+        ),
+      ],
+    ),
   ],
 )
 class SettingsRoute extends GoRouteData {
@@ -142,6 +183,30 @@ class SettingsRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const SettingsScreen();
+}
+
+class DebuggerRoute extends GoRouteData {
+  const DebuggerRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const DebuggerPage();
+}
+
+class ApiEndpointSelectorRoute extends GoRouteData {
+  const ApiEndpointSelectorRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const ApiEndpointSelectorPage();
+}
+
+class EarthquakeHistoryConfigRoute extends GoRouteData {
+  const EarthquakeHistoryConfigRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const EarthquakeHistoryConfigPage();
 }
 
 class TermOfServiceRoute extends GoRouteData {
@@ -158,6 +223,13 @@ class TermOfServiceRoute extends GoRouteData {
         onResult: $extra,
         showAcceptButton: showAcceptButton,
       );
+}
+
+class ColorSchemeConfigRoute extends GoRouteData {
+  const ColorSchemeConfigRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const ColorSchemeConfigPage();
 }
 
 class PrivacyPolicyRoute extends GoRouteData {

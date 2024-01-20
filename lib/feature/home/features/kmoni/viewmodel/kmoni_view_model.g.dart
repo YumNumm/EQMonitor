@@ -8,7 +8,7 @@ part of 'kmoni_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$kmoniViewModelHash() => r'990e2679e26210893579b065e242361b5d6d94ed';
+String _$kmoniViewModelHash() => r'ab07033947e585c7301cf4084f8b14991894b1f9';
 
 /// See also [KmoniViewModel].
 @ProviderFor(KmoniViewModel)

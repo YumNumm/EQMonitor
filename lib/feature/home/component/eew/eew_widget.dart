@@ -2,15 +2,15 @@ import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/chip/custom_chip.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_forecast_lg_intensity_icon.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
-import 'package:eqmonitor/feature/home/features/eew/eew_provider.dart';
+import 'package:eqmonitor/feature/home/features/eew/provider/eew_alive_telegram.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -19,7 +19,7 @@ class EewWidgets extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(eewTelegramProvider);
+    final state = ref.watch(eewAliveTelegramProvider) ?? [];
     if (state.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -79,11 +79,7 @@ class EewWidget extends ConsumerWidget {
             horizontal: 8,
             vertical: 4,
           ),
-          child: Row(
-            children: [
-              Text(eew.text),
-            ],
-          ),
+          child: Text(eew.text),
         ),
       );
     }
@@ -333,9 +329,10 @@ class EewWidget extends ConsumerWidget {
               const Divider(),
             ]
           : null;
+      final maxLgInt = eew.forecastMaxLgInt?.toDisplayMaxLgInt();
       final card = InkWell(
         onLongPress: () =>
-            context.push(EewDetailedHistoryRoute(telegram.eventId).location),
+            EewHisotryDetailRoute($extra: item).push<void>(context),
         child: Card(
           margin: const EdgeInsets.all(4),
           elevation: 0,
@@ -366,6 +363,37 @@ class EewWidget extends ConsumerWidget {
                     Expanded(child: body),
                   ],
                 ),
+                if (maxLgInt != null &&
+                    ![
+                      JmaForecastLgIntensity.zero,
+                      JmaForecastLgIntensity.unknown,
+                    ].contains(maxLgInt.maxLgInt)) ...[
+                  Row(
+                    children: [
+                      Column(
+                        children: [
+                          const Text('最大LPGM'),
+                          JmaForecastLgIntensityWidget(
+                            intensity: maxLgInt.maxLgInt,
+                          ),
+                        ],
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Text(
+                              '予想最大長周期地震動階級 ${maxLgInt.maxLgInt.type}',
+                              style: textTheme.titleMedium!.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const Text('高層階では特に周期の長い揺れに注意してください'),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),
@@ -374,7 +402,7 @@ class EewWidget extends ConsumerWidget {
       return Stack(
         alignment: Alignment.center,
         children: [
-          if (index != null)
+          if (index != null) ...[
             Center(
               child: FittedBox(
                 child: Text(
@@ -389,6 +417,24 @@ class EewWidget extends ConsumerWidget {
                 ),
               ),
             ),
+            Center(
+              child: FittedBox(
+                child: Text(
+                  (index).toString(),
+                  style: TextStyle(
+                    fontSize: 100,
+                    fontWeight: FontWeight.w900,
+                    fontFamily: FontFamily.jetBrainsMono,
+                    fontFamilyFallback: const [FontFamily.notoSansJP],
+                    foreground: Paint()
+                      ..style = PaintingStyle.stroke
+                      ..strokeWidth = 2
+                      ..color = textTheme.bodyMedium!.color!.withOpacity(0.3),
+                  ),
+                ),
+              ),
+            ),
+          ],
           card,
           if (telegram.status != TelegramStatus.normal)
             Center(

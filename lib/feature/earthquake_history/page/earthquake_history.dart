@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/provider/config/earthquake_history/earthquake_history_config_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/component/earthquake_history_tile_widget.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
@@ -27,7 +28,7 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
             // 初回読み込みを行う
             await ref
                 .read(earthquakeHistoryViewModelProvider.notifier)
-                .loadIfNull();
+                .fetchIfNeeded();
           },
         );
         return null;
@@ -39,56 +40,65 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
       child: CustomScrollView(
         primary: true,
         slivers: [
-          const SliverAppBar.medium(
-            title: Text('地震の履歴'),
-          ),
-          state.when(
-            data: (data) {
-              return EarthquakeHistoryListView(
-                data: data,
-              );
-            },
-            error: (error, stackTrace) {
-              // dataがある場合にはそれを表示
-              if (state.hasValue) {
-                final data = state.value!;
-                return EarthquakeHistoryListView(
-                  data: data,
-                );
-              }
-              return SliverFillRemaining(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      '地震履歴の取得中にエラーが発生しました。',
-                    ),
-                    FilledButton.tonal(
-                      onPressed: ref
-                          .read(earthquakeHistoryViewModelProvider.notifier)
-                          .fetch,
-                      child: const Text('再読み込み'),
-                    ),
-                  ],
+          SliverAppBar.medium(
+            title: const Text('地震の履歴'),
+            actions: [
+              IconButton(
+                onPressed: () => context.push(
+                  const EarthquakeHistoryConfigRoute().location,
                 ),
-              );
-            },
-            loading: () => const SliverFillRemaining(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '地震履歴を取得中です。',
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(16),
-                    child: CircularProgressIndicator.adaptive(),
-                  ),
-                ],
+                icon: const Icon(Icons.settings),
               ),
-            ),
+            ],
           ),
+          state?.when(
+                data: (data) {
+                  return EarthquakeHistoryListView(
+                    data: data,
+                  );
+                },
+                error: (error, stackTrace) {
+                  // dataがある場合にはそれを表示
+                  if (state.hasValue) {
+                    final data = state.value!;
+                    return EarthquakeHistoryListView(
+                      data: data,
+                    );
+                  }
+                  return SliverFillRemaining(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          '地震履歴の取得中にエラーが発生しました。',
+                        ),
+                        FilledButton.tonal(
+                          onPressed: ref
+                              .read(earthquakeHistoryViewModelProvider.notifier)
+                              .fetch,
+                          child: const Text('再読み込み'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                loading: () => const SliverFillRemaining(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '地震履歴を取得中です。',
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(16),
+                        child: CircularProgressIndicator.adaptive(),
+                      ),
+                    ],
+                  ),
+                ),
+              ) ??
+              const CircularProgressIndicator.adaptive(),
         ],
       ),
     );
@@ -102,7 +112,7 @@ class EarthquakeHistoryPage extends HookConsumerWidget {
   }
 }
 
-class EarthquakeHistoryListView extends StatelessWidget {
+class EarthquakeHistoryListView extends ConsumerWidget {
   const EarthquakeHistoryListView({
     super.key,
     required this.data,
@@ -111,7 +121,11 @@ class EarthquakeHistoryListView extends StatelessWidget {
   final List<EarthquakeHistoryItem> data;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final shouldShowBackgroundColor = ref.watch(
+      earthquakeHistoryConfigProvider
+          .select((value) => value.list.isFillBackground),
+    );
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         childCount: data.length + 1,
@@ -122,9 +136,9 @@ class EarthquakeHistoryListView extends StatelessWidget {
           final item = data[index];
           return EarthquakeHistoryTileWidget(
             item: item,
-            onTap: (p0) => context.push(
-              EarthquakeHistoryDetailsRoute(p0.eventId).location,
-            ),
+            onTap: (p0) =>
+                EarthquakeHistoryDetailsRoute($extra: p0).push<void>(context),
+            showBackgroundColor: shouldShowBackgroundColor,
           );
         },
       ),
@@ -138,58 +152,60 @@ class _ListBottomWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(earthquakeHistoryViewModelProvider);
-    return state.map(
-      data: (data) {
-        if (state.isLoading) {
-          return const Padding(
-            padding: EdgeInsets.all(24),
-            child: Center(
-              child: CircularProgressIndicator.adaptive(),
-            ),
-          );
-        }
-        return const SizedBox.shrink();
-      },
-      error: (error) {
-        if (state.isLoading) {
-          return const Padding(
-            padding: EdgeInsets.all(24),
-            child: Center(
-              child: CircularProgressIndicator.adaptive(),
-            ),
-          );
-        }
-        return Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 40,
-            horizontal: 10,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                '地震履歴の取得中にエラーが発生しました。',
-              ),
-              // 再読み込み
-              FilledButton.tonal(
-                onPressed: () => ref
-                    .read(earthquakeHistoryViewModelProvider.notifier)
-                    .fetch(),
-                child: const Text('再読み込み'),
-              ),
-              Text(
-                error.error.toString(),
-              ),
-            ],
-          ),
-        );
-      },
-      loading: (data) => const Center(
-        child: Padding(
-          padding: EdgeInsets.all(24),
-          child: CircularProgressIndicator.adaptive(),
-        ),
+    const loading = Center(
+      child: Padding(
+        padding: EdgeInsets.all(24),
+        child: CircularProgressIndicator.adaptive(),
       ),
     );
+    return state?.map(
+          data: (data) {
+            if (state.isLoading) {
+              return const Padding(
+                padding: EdgeInsets.all(24),
+                child: Center(
+                  child: CircularProgressIndicator.adaptive(),
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          },
+          error: (error) {
+            if (state.isLoading) {
+              return const Padding(
+                padding: EdgeInsets.all(24),
+                child: Center(
+                  child: CircularProgressIndicator.adaptive(),
+                ),
+              );
+            }
+            return Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 40,
+                horizontal: 10,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    '地震履歴の取得中にエラーが発生しました。',
+                  ),
+                  // 再読み込み
+                  FilledButton.tonal(
+                    onPressed: () => ref
+                        .read(earthquakeHistoryViewModelProvider.notifier)
+                        .fetch(),
+                    child: const Text('再読み込み'),
+                  ),
+                  Text(
+                    error.error.toString(),
+                  ),
+                ],
+              ),
+            );
+          },
+          loading: (data) => loading,
+        ) ??
+        loading;
   }
 }
