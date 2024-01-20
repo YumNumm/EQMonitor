@@ -30,7 +30,7 @@ abstract class V3 {
 
   @GET('/v3/information')
   Future<InformationV3Result> getInformation({
-    @Query('after') int after = 0,
+    @Query('offset') int offset = 0,
     @Query('limit') int limit = 10,
   });
 

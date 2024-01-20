@@ -12,6 +12,7 @@ List<RouteBase> get $appRoutes => [
       $setupRoute,
       $earthquakeHistoryRoute,
       $earthquakeHistoryDetailsRoute,
+      $informationHistoryRoute,
       $eewHisotryDetailRoute,
       $homeRoute,
       $talkerRoute,
@@ -90,6 +91,29 @@ extension $EarthquakeHistoryDetailsRouteExtension
 
   void replace(BuildContext context) =>
       context.replace(location, extra: $extra);
+}
+
+RouteBase get $informationHistoryRoute => GoRouteData.$route(
+      path: '/information-history',
+      factory: $InformationHistoryRouteExtension._fromState,
+    );
+
+extension $InformationHistoryRouteExtension on InformationHistoryRoute {
+  static InformationHistoryRoute _fromState(GoRouterState state) =>
+      const InformationHistoryRoute();
+
+  String get location => GoRouteData.$location(
+        '/information-history',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $eewHisotryDetailRoute => GoRouteData.$route(

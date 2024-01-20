@@ -15,17 +15,11 @@ _$InformationV3ResultImpl _$$InformationV3ResultImplFromJson(
       json,
       ($checkedConvert) {
         final val = _$InformationV3ResultImpl(
-          results: $checkedConvert(
-              'results',
-              (v) =>
-                  (v as List<dynamic>?)
-                      ?.map((e) =>
-                          InformationV3.fromJson(e as Map<String, dynamic>))
-                      .toList() ??
-                  const []),
-          success: $checkedConvert('success', (v) => v as bool),
-          meta: $checkedConvert('meta',
-              (v) => D1DbExecutionResult.fromJson(v as Map<String, dynamic>)),
+          items: $checkedConvert(
+              'items',
+              (v) => (v as List<dynamic>)
+                  .map((e) => InformationV3.fromJson(e as Map<String, dynamic>))
+                  .toList()),
         );
         return val;
       },
@@ -34,9 +28,7 @@ _$InformationV3ResultImpl _$$InformationV3ResultImplFromJson(
 Map<String, dynamic> _$$InformationV3ResultImplToJson(
         _$InformationV3ResultImpl instance) =>
     <String, dynamic>{
-      'results': instance.results,
-      'success': instance.success,
-      'meta': instance.meta,
+      'items': instance.items,
     };
 
 _$InformationV3Impl _$$InformationV3ImplFromJson(Map<String, dynamic> json) =>
@@ -56,7 +48,6 @@ _$InformationV3Impl _$$InformationV3ImplFromJson(Map<String, dynamic> json) =>
               $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
           level: $checkedConvert('level',
               (v) => $enumDecode(_$LevelEnumMap, v, unknownValue: Level.info)),
-          tag: $checkedConvert('tag', (v) => tagFromString(v as String)),
           eventId: $checkedConvert('eventId', (v) => v as int?),
         );
         return val;
@@ -71,7 +62,6 @@ Map<String, dynamic> _$$InformationV3ImplToJson(_$InformationV3Impl instance) =>
       'author': _$AuthorEnumMap[instance.author]!,
       'createdAt': instance.createdAt.toIso8601String(),
       'level': _$LevelEnumMap[instance.level]!,
-      'tag': tagToString(instance.tag),
       'eventId': instance.eventId,
     };
 

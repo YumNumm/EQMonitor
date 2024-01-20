@@ -1,4 +1,3 @@
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'information_v3.freezed.dart';
@@ -7,9 +6,7 @@ part 'information_v3.g.dart';
 @freezed
 class InformationV3Result with _$InformationV3Result {
   const factory InformationV3Result({
-    @Default([]) List<InformationV3> results,
-    required bool success,
-    required D1DbExecutionResult meta,
+    required List<InformationV3> items,
   }) = _InformationV3Result;
 
   factory InformationV3Result.fromJson(Map<String, dynamic> json) =>
@@ -25,8 +22,6 @@ class InformationV3 with _$InformationV3 {
     @JsonKey(unknownEnumValue: Author.unknown) required Author author,
     required DateTime createdAt,
     @JsonKey(unknownEnumValue: Level.info) required Level level,
-    @JsonKey(fromJson: tagFromString, toJson: tagToString)
-    required List<String> tag,
     required int? eventId,
   }) = _InformationV3;
 
