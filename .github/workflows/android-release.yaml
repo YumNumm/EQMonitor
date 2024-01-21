@@ -74,7 +74,9 @@ jobs:
         uses: bluefireteam/melos-action@v2
 
       - name: Flutter dependencies install
-        run: flutter pub get
+        run: |
+            ln -s $FLUTTER_ROOT .fvm/flutter_sdk
+            melos bootstrap
 
       - name: build_runner
         run: |
