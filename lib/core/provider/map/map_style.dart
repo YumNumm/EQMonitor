@@ -17,6 +17,7 @@ class MapStyle {
     Map<String, dynamic> json,
     String prefix,
   ) async {
+    return 'https://map.eqmonitor.app/tiles/style.json';
     final dir = await getApplicationDocumentsDirectory();
     final documentDir = dir.path;
     final stylesDir = '$documentDir/styles';

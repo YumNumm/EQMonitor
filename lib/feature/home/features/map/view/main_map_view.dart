@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
@@ -94,7 +93,7 @@ class MainMapView extends HookConsumerWidget {
           target: LatLng(35.681236, 139.767125),
           zoom: 3,
         ),
-        styleString: stylePath.value,
+        styleString: 'https://map.eqmonitor.app/tiles/style_old.json',
         onMapCreated: (controller) {
           mapController.value = controller;
 
@@ -123,39 +122,33 @@ class MainMapView extends HookConsumerWidget {
               controller!,
             );
 
-          await Future.wait(
-            [
-              notifier.updateImage(
-                name: 'hypocenter',
-                bytes: images.hypocenterIcon!,
-              ),
-              notifier.updateImage(
-                name: 'hypocenter-low-precise',
-                bytes: images.hypocenterLowPreciseIcon!,
-              ),
-              for (final MapEntry(:key, :value) in images.intenistyIcon.entries)
-                notifier.updateImage(
-                  name: 'intensity-${key.type}',
-                  bytes: value,
-                ),
-              for (final MapEntry(:key, :value)
-                  in images.intensityIconFill.entries)
-                notifier.updateImage(
-                  name: 'intensity-fill-${key.type}',
-                  bytes: value,
-                ),
-            ],
+          await notifier.updateImage(
+            name: 'hypocenter',
+            bytes: images.hypocenterIcon!,
           );
-          unawaited(
-            [
-              notifier.onMapControllerRegistered(),
-              notifier.startUpdateEew(),
-              notifier.moveCameraToDefaultPosition(
-                bottom: 100,
-                left: 10,
-                right: 10,
-              ),
-            ].wait,
+          await notifier.updateImage(
+            name: 'hypocenter-low-precise',
+            bytes: images.hypocenterLowPreciseIcon!,
+          );
+          for (final MapEntry(:key, :value) in images.intenistyIcon.entries) {
+            await notifier.updateImage(
+              name: 'intensity-${key.type}',
+              bytes: value,
+            );
+          }
+          for (final MapEntry(:key, :value)
+              in images.intensityIconFill.entries) {
+            await notifier.updateImage(
+              name: 'intensity-fill-${key.type}',
+              bytes: value,
+            );
+          }
+          await notifier.onMapControllerRegistered();
+          await notifier.startUpdateEew();
+          await notifier.moveCameraToDefaultPosition(
+            bottom: 100,
+            left: 10,
+            right: 10,
           );
         },
         rotateGesturesEnabled: false,

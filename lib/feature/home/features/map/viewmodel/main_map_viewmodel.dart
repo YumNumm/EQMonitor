@@ -90,19 +90,17 @@ class MainMapViewModel extends _$MainMapViewModel {
         colorMap: await ref.read(kyoshinColorMapProvider.future),
       );
     }
-    await (
-      _kmoniObservationPointService!.init(),
-      _eewHypocenterService!.init(
-        hypocenterIcon: ref.read(hypocenterIconRenderProvider)!,
-        hypocenterLowPreciseIcon:
-            ref.read(hypocenterLowPreciseIconRenderProvider)!,
-      ),
-      _eewPsWaveService!.init(),
-      _eewRegionIntensityService!.init(
-        ref.read(intensityColorProvider),
-      ),
-      _eewEstimatedIntensityService?.init() ?? Future.value(),
-    ).wait;
+    await _kmoniObservationPointService!.init();
+    await _eewHypocenterService!.init(
+      hypocenterIcon: ref.read(hypocenterIconRenderProvider)!,
+      hypocenterLowPreciseIcon:
+          ref.read(hypocenterLowPreciseIconRenderProvider)!,
+    );
+    await _eewPsWaveService!.init();
+    await _eewRegionIntensityService!.init(
+      ref.read(intensityColorProvider),
+    );
+    await (_eewEstimatedIntensityService?.init() ?? Future.value());
 
     ref.onDispose(() async {
       await (
@@ -124,10 +122,8 @@ class MainMapViewModel extends _$MainMapViewModel {
       return;
     }
     try {
-      await (
-        _eewPsWaveService!.tick(now: now),
-        _eewHypocenterService!.tick(),
-      ).wait;
+      await _eewPsWaveService!.tick(now: now);
+      await _eewHypocenterService!.tick();
       // ignore: avoid_catches_without_on_clauses, empty_catches
     } catch (e) {}
   }
@@ -436,49 +432,49 @@ class _EewRegionIntensityService {
   final MaplibreMapController controller;
   Future<void> init(IntensityColorModel colorModel) async {
     await dispose();
-    await [
-      // 各予想震度ごとにFill Layerを追加
-      for (final intensity in JmaForecastIntensity.values)
-        controller.addLayer(
-          'eqmonitor_map',
-          getFillLayerId(intensity),
-          FillLayerProperties(
-            fillColor: colorModel
-                .fromJmaForecastIntensity(intensity)
-                .background
-                .toHexStringRGB(),
-          ),
-          filter: [
-            'in',
-            ['get', 'code'],
-            [
-              'literal',
-              <String>[],
-            ]
-          ],
-          sourceLayer: 'areaForecastLocalE',
-          belowLayerId: BaseLayer.areaForecastLocalELine.name,
+    // 各予想震度ごとにFill Layerを追加
+    for (final intensity in JmaForecastIntensity.values) {
+      await controller.addLayer(
+        'eqmonitor_map',
+        getFillLayerId(intensity),
+        FillLayerProperties(
+          fillColor: colorModel
+              .fromJmaForecastIntensity(intensity)
+              .background
+              .toHexStringRGB(),
         ),
-    ].wait;
+        filter: [
+          'in',
+          ['get', 'code'],
+          [
+            'literal',
+            <String>[],
+          ]
+        ],
+        sourceLayer: 'areaForecastLocalE',
+        belowLayerId: BaseLayer.areaForecastLocalELine.name,
+      );
+    }
   }
 
   /// 予想震度を更新する
   /// [areas] は Map<予想震度, List<地域コード>>
-  Future<void> update(Map<JmaForecastIntensity, List<String>> areas) => [
-        // 各予想震度ごとにFill Layerを追加
-        for (final intensity in JmaForecastIntensity.values)
-          controller.setFilter(
-            getFillLayerId(intensity),
-            [
-              'in',
-              ['get', 'code'],
-              [
-                'literal',
-                areas[intensity] ?? [],
-              ]
-            ],
-          ),
-      ].wait;
+  Future<void> update(Map<JmaForecastIntensity, List<String>> areas) async {
+    // 各予想震度ごとにFill Layerを追加
+    for (final intensity in JmaForecastIntensity.values) {
+      await controller.setFilter(
+        getFillLayerId(intensity),
+        [
+          'in',
+          ['get', 'code'],
+          [
+            'literal',
+            areas[intensity] ?? [],
+          ]
+        ],
+      );
+    }
+  }
 
   Future<void> dispose() => [
         for (final intensity in JmaForecastIntensity.values)
@@ -542,16 +538,14 @@ class _EewHypocenterService {
     required Uint8List hypocenterIcon,
     required Uint8List hypocenterLowPreciseIcon,
   }) async {
-    await (
-      controller.addImage(
-        hypocenterIconId,
-        hypocenterIcon,
-      ),
-      controller.addImage(
-        hypocenterLowPreciseIconId,
-        hypocenterLowPreciseIcon,
-      ),
-    ).wait;
+    await controller.addImage(
+      hypocenterIconId,
+      hypocenterIcon,
+    );
+    await controller.addImage(
+      hypocenterLowPreciseIconId,
+      hypocenterLowPreciseIcon,
+    );
     await controller.removeSource(sourceLayerId);
     await controller.addGeoJsonSource(
       sourceLayerId,
@@ -559,73 +553,71 @@ class _EewHypocenterService {
     );
 
     // adding Symbol Layers
-    await (
-      controller.addSymbolLayer(
-        sourceLayerId,
-        hypocenterIconId,
-        SymbolLayerProperties(
-          iconImage: hypocenterIconId,
-          iconSize: [
-            'interpolate',
-            ['linear'],
-            ['zoom'],
-            3,
-            0.3,
-            20,
-            5,
-          ],
-          iconOpacity: [
-            'interpolate',
-            ['linear'],
-            ['zoom'],
-            6,
-            1.0,
-            10,
-            0.5,
-          ],
-          iconAllowOverlap: true,
-        ),
-        filter: [
-          '==',
-          ['get', 'isLowPrecise'],
-          false,
+    await controller.addSymbolLayer(
+      sourceLayerId,
+      hypocenterIconId,
+      SymbolLayerProperties(
+        iconImage: hypocenterIconId,
+        iconSize: [
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          3,
+          0.3,
+          20,
+          5,
         ],
-        sourceLayer: sourceLayerId,
-      ),
-      controller.addSymbolLayer(
-        sourceLayerId,
-        hypocenterLowPreciseIconId,
-        SymbolLayerProperties(
-          iconImage: hypocenterLowPreciseIconId,
-          iconSize: [
-            'interpolate',
-            ['linear'],
-            ['zoom'],
-            3,
-            0.3,
-            20,
-            5,
-          ],
-          iconOpacity: [
-            'interpolate',
-            ['linear'],
-            ['zoom'],
-            6,
-            1.0,
-            10,
-            0.5,
-          ],
-          iconAllowOverlap: true,
-        ),
-        // where isLowPrecise == true
-        filter: [
-          '==',
-          ['get', 'isLowPrecise'],
-          true,
+        iconOpacity: [
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          6,
+          1.0,
+          10,
+          0.5,
         ],
-        sourceLayer: sourceLayerId,
+        iconAllowOverlap: true,
       ),
-    ).wait;
+      filter: [
+        '==',
+        ['get', 'isLowPrecise'],
+        false,
+      ],
+      sourceLayer: sourceLayerId,
+    );
+    await controller.addSymbolLayer(
+      sourceLayerId,
+      hypocenterLowPreciseIconId,
+      SymbolLayerProperties(
+        iconImage: hypocenterLowPreciseIconId,
+        iconSize: [
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          3,
+          0.3,
+          20,
+          5,
+        ],
+        iconOpacity: [
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          6,
+          1.0,
+          10,
+          0.5,
+        ],
+        iconAllowOverlap: true,
+      ),
+      // where isLowPrecise == true
+      filter: [
+        '==',
+        ['get', 'isLowPrecise'],
+        true,
+      ],
+      sourceLayer: sourceLayerId,
+    );
     hasInitialized = true;
   }
 
@@ -732,10 +724,8 @@ class _EewPsWaveService {
       createGeoJson([]),
     );
     // line
-    await (
-      _children.$1.init(),
-      _children.$2.init(),
-    ).wait;
+    await _children.$1.init();
+    await _children.$2.init();
     // fill
     // await _children.$3.init();
     //_children.$4.init(),

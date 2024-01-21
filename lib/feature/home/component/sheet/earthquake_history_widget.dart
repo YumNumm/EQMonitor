@@ -85,8 +85,8 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
                     ];
                   }
                   return [
-                    const Text(
-                      '地震履歴の取得中にエラーが発生しました。',
+                    Text(
+                      '地震履歴の取得中にエラーが発生しました。$error, $stackTrace',
                     ),
                     FilledButton.tonal(
                       onPressed: ref

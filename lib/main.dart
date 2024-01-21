@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/fcm/channels.dart';
-import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/core/provider/custom_provider_observer.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
@@ -21,7 +20,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
@@ -44,49 +42,50 @@ Future<void> main() async {
   };
   final deviceInfo = DeviceInfoPlugin();
 
-  final results = await (
-    SharedPreferences.getInstance(),
-    loadKmoniObservationPoints(),
-    Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    ),
-    PackageInfo.fromPlatform(),
-    // ignore: prefer_void_to_null
-    (!kIsWeb && Platform.isAndroid
-        ? deviceInfo.androidInfo
-        : Future<Null>.value()),
-    // ignore: prefer_void_to_null
-    (!kIsWeb && Platform.isIOS ? deviceInfo.iosInfo : Future<Null>.value()),
-    FlutterLocalNotificationsPlugin().initialize(
-      const InitializationSettings(
-        iOS: DarwinInitializationSettings(
-          requestAlertPermission: false,
-          requestSoundPermission: false,
-          requestBadgePermission: false,
-        ),
-        android: AndroidInitializationSettings('mipmap/ic_launcher'),
+  final prefs = await SharedPreferences.getInstance();
+  final kmoni = await loadKmoniObservationPoints();
+  await kIsWeb
+      ? Future<Null>.value()
+      : Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
+  final packageInfo = await PackageInfo.fromPlatform();
+  // ignore: prefer_void_to_null
+  final androidInfo = await (!kIsWeb && Platform.isAndroid
+      ? deviceInfo.androidInfo
+      : Future<Null>.value());
+  // ignore: prefer_void_to_null
+  final iosInfo = await (!kIsWeb && Platform.isIOS
+      ? deviceInfo.iosInfo
+      : Future<Null>.value());
+  await FlutterLocalNotificationsPlugin().initialize(
+    const InitializationSettings(
+      iOS: DarwinInitializationSettings(
+        requestAlertPermission: false,
+        requestSoundPermission: false,
+        requestBadgePermission: false,
       ),
+      android: AndroidInitializationSettings('mipmap/ic_launcher'),
     ),
-    _registerNotificationChannelIfNeeded(),
-    getApplicationDocumentsDirectory(),
-  ).wait;
-
-  FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
-  unawaited(
-    FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode),
   );
+  await _registerNotificationChannelIfNeeded();
+
+  if (!kIsWeb) {
+    FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
+    await FirebaseCrashlytics.instance
+        .setCrashlyticsCollectionEnabled(!kDebugMode);
+  }
+  print('kDebugMode: $kDebugMode');
   runApp(
     ProviderScope(
       overrides: [
-        sharedPreferencesProvider.overrideWithValue(results.$1),
-        kmoniObservationPointsProvider.overrideWithValue(results.$2),
+        sharedPreferencesProvider.overrideWithValue(prefs),
+        kmoniObservationPointsProvider.overrideWithValue(kmoni),
         talkerProvider.overrideWithValue(talker),
-        packageInfoProvider.overrideWithValue(results.$4),
-        if (results.$5 != null)
-          androidDeviceInfoProvider.overrideWithValue(results.$5!),
-        if (results.$6 != null)
-          iosDeviceInfoProvider.overrideWithValue(results.$6!),
-        applicationDocumentsDirectoryProvider.overrideWithValue(results.$9),
+        packageInfoProvider.overrideWithValue(packageInfo),
+        if (androidInfo != null)
+          androidDeviceInfoProvider.overrideWithValue(androidInfo),
+        if (iosInfo != null) iosDeviceInfoProvider.overrideWithValue(iosInfo),
       ],
       observers: [
         if (kDebugMode)
