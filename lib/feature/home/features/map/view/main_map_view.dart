@@ -211,7 +211,7 @@ class _MapDebugWidget extends HookConsumerWidget {
       child: InkWell(
         onTap: () => isExpanded.value = false,
         child: Card(
-          color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
+          color: Theme.of(context).colorScheme.surface.withOpacity(0.6),
           child: Padding(
             padding: const EdgeInsets.all(4),
             child: Column(
@@ -221,7 +221,7 @@ class _MapDebugWidget extends HookConsumerWidget {
                 Text(
                   cameraPosition.value,
                   style: const TextStyle(
-                    fontSize: 10,
+                    fontSize: 8,
                     fontFamily: FontFamily.jetBrainsMono,
                   ),
                 ),
@@ -253,13 +253,15 @@ class _EewEstimatedIntensityMax extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Divider(),
+        const SizedBox(width: 8),
         const Text('距離減衰式による推定最大震度'),
         const SizedBox(height: 4),
         Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             JmaForecastIntensityWidget(
               intensity: intensity,
+              size: 36,
             ),
             const SizedBox(width: 8),
             Text(
