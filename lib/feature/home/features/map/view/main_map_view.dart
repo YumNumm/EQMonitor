@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
+import 'package:eqmonitor/core/extension/double_to_jma_forecast_intensity.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/map/map_style.dart';
@@ -100,8 +102,14 @@ class MainMapView extends HookConsumerWidget {
             () {
               final position = controller.cameraPosition;
               if (position != null) {
-                cameraPosition.value =
-                    const JsonEncoder.withIndent(' ').convert(position.toMap());
+                try {
+                  cameraPosition.value = const JsonEncoder.withIndent(' ')
+                      .convert(position.toMap());
+                  // ignore: avoid_catching_errors
+                } on JsonUnsupportedObjectError {
+                  // ignore: avoid_print
+                  print(position);
+                }
               }
             },
           );
@@ -205,23 +213,65 @@ class _MapDebugWidget extends HookConsumerWidget {
         child: Card(
           color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
           child: Padding(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(4),
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${cameraPosition.value}\n'
-                  'EewEstimatedIntensity: ${ref.watch(estimatedIntensityProvider).firstOrNull}',
+                  cameraPosition.value,
                   style: const TextStyle(
                     fontSize: 10,
                     fontFamily: FontFamily.jetBrainsMono,
                   ),
                 ),
+                const _EewEstimatedIntensityMax(),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _EewEstimatedIntensityMax extends ConsumerWidget {
+  const _EewEstimatedIntensityMax({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(estimatedIntensityProvider).firstOrNull;
+    if (state == null) {
+      return const SizedBox.shrink();
+    }
+    final intensity = state.intensityValue?.toJmaForecastIntensity;
+    if (intensity == null) {
+      return const SizedBox.shrink();
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Divider(),
+        const Text('距離減衰式による推定最大震度'),
+        const SizedBox(height: 4),
+        Row(
+          children: [
+            JmaForecastIntensityWidget(
+              intensity: intensity,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              '${state.point.prefecture} ${state.point.name}: ${state.intensityValue}',
+              style: const TextStyle(
+                fontSize: 10,
+                fontFamily: FontFamily.jetBrainsMono,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
