@@ -28,45 +28,31 @@ class MapColorScheme with _$MapColorScheme {
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
     required Color worldLandColor,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color worldCoastlineColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color worldBorderLineColor,
+    required Color worldLineColor,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
     required Color japanLandColor,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color japanCoastlineColor,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-    required Color japanBorderLineColor,
+    required Color japanLineColor,
   }) = _MapColorScheme;
 
   factory MapColorScheme.fromJson(Map<String, dynamic> json) =>
       _$MapColorSchemeFromJson(json);
 
-  factory MapColorScheme.light() => MapColorScheme(
-        backgroundColor: Color.lerp(
-          const Color.fromARGB(255, 253, 252, 255),
-          Colors.blueAccent,
-          0.3,
-        )!,
-        worldLandColor: Colors.white.withOpacity(0.8),
-        worldCoastlineColor: Colors.black.withOpacity(0.15),
-        worldBorderLineColor: Colors.black.withOpacity(0.3),
-        japanLandColor: Colors.white,
-        japanCoastlineColor: Colors.grey.withOpacity(0.5),
-        japanBorderLineColor: Colors.grey,
+  factory MapColorScheme.light({required ColorScheme colorScheme}) =>
+      MapColorScheme(
+        backgroundColor: colorScheme.surfaceVariant,
+        worldLandColor: colorScheme.surface,
+        worldLineColor: colorScheme.onSurfaceVariant,
+        japanLandColor: colorScheme.surface,
+        japanLineColor: colorScheme.onSurfaceVariant,
       );
 
-  factory MapColorScheme.dark() => MapColorScheme(
-        backgroundColor: Color.lerp(
-          const Color(0xff0a0a0a),
-          Colors.blueAccent,
-          0.3,
-        )!,
-        worldLandColor: Colors.blueGrey.shade900.withOpacity(0.9),
-        worldCoastlineColor: Colors.white.withOpacity(0.3),
-        worldBorderLineColor: Colors.white.withOpacity(0.3),
-        japanLandColor: const Color(0xFF1a1c1e),
-        japanCoastlineColor: Colors.grey.shade400,
-        japanBorderLineColor: Colors.grey,
+  factory MapColorScheme.dark({required ColorScheme colorScheme}) =>
+      MapColorScheme(
+        backgroundColor: colorScheme.surfaceVariant,
+        worldLandColor: colorScheme.surface,
+        worldLineColor: colorScheme.onSurfaceVariant,
+        japanLandColor: colorScheme.surface,
+        japanLineColor: colorScheme.onSurfaceVariant,
       );
 }

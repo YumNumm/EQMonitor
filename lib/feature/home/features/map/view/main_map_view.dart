@@ -29,7 +29,10 @@ class MainMapView extends HookConsumerWidget {
     final stylePath = useState<String?>(null);
     final getStyleJsonFuture = useMemoized(
       () async {
-        final path = await mapStyle.getStyle(isDark: isDark.value);
+        final path = await mapStyle.getStyle(
+          isDark: isDark.value,
+          scheme: Theme.of(context).colorScheme,
+        );
         stylePath.value = path;
       },
       [isDark.value],

@@ -214,15 +214,11 @@ mixin _$MapColorScheme {
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
   Color get worldLandColor => throw _privateConstructorUsedError;
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  Color get worldCoastlineColor => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  Color get worldBorderLineColor => throw _privateConstructorUsedError;
+  Color get worldLineColor => throw _privateConstructorUsedError;
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
   Color get japanLandColor => throw _privateConstructorUsedError;
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  Color get japanCoastlineColor => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  Color get japanBorderLineColor => throw _privateConstructorUsedError;
+  Color get japanLineColor => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -242,15 +238,11 @@ abstract class $MapColorSchemeCopyWith<$Res> {
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
       Color worldLandColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      Color worldCoastlineColor,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      Color worldBorderLineColor,
+      Color worldLineColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
       Color japanLandColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      Color japanCoastlineColor,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      Color japanBorderLineColor});
+      Color japanLineColor});
 }
 
 /// @nodoc
@@ -266,42 +258,32 @@ class _$MapColorSchemeCopyWithImpl<$Res, $Val extends MapColorScheme>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? backgroundColor = null,
-    Object? worldLandColor = null,
-    Object? worldCoastlineColor = null,
-    Object? worldBorderLineColor = null,
-    Object? japanLandColor = null,
-    Object? japanCoastlineColor = null,
-    Object? japanBorderLineColor = null,
+    Object? backgroundColor = freezed,
+    Object? worldLandColor = freezed,
+    Object? worldLineColor = freezed,
+    Object? japanLandColor = freezed,
+    Object? japanLineColor = freezed,
   }) {
     return _then(_value.copyWith(
-      backgroundColor: null == backgroundColor
+      backgroundColor: freezed == backgroundColor
           ? _value.backgroundColor
           : backgroundColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      worldLandColor: null == worldLandColor
+      worldLandColor: freezed == worldLandColor
           ? _value.worldLandColor
           : worldLandColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      worldCoastlineColor: null == worldCoastlineColor
-          ? _value.worldCoastlineColor
-          : worldCoastlineColor // ignore: cast_nullable_to_non_nullable
+      worldLineColor: freezed == worldLineColor
+          ? _value.worldLineColor
+          : worldLineColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      worldBorderLineColor: null == worldBorderLineColor
-          ? _value.worldBorderLineColor
-          : worldBorderLineColor // ignore: cast_nullable_to_non_nullable
-              as Color,
-      japanLandColor: null == japanLandColor
+      japanLandColor: freezed == japanLandColor
           ? _value.japanLandColor
           : japanLandColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      japanCoastlineColor: null == japanCoastlineColor
-          ? _value.japanCoastlineColor
-          : japanCoastlineColor // ignore: cast_nullable_to_non_nullable
-              as Color,
-      japanBorderLineColor: null == japanBorderLineColor
-          ? _value.japanBorderLineColor
-          : japanBorderLineColor // ignore: cast_nullable_to_non_nullable
+      japanLineColor: freezed == japanLineColor
+          ? _value.japanLineColor
+          : japanLineColor // ignore: cast_nullable_to_non_nullable
               as Color,
     ) as $Val);
   }
@@ -321,15 +303,11 @@ abstract class _$$MapColorSchemeImplCopyWith<$Res>
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
       Color worldLandColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      Color worldCoastlineColor,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      Color worldBorderLineColor,
+      Color worldLineColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
       Color japanLandColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      Color japanCoastlineColor,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      Color japanBorderLineColor});
+      Color japanLineColor});
 }
 
 /// @nodoc
@@ -343,42 +321,32 @@ class __$$MapColorSchemeImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? backgroundColor = null,
-    Object? worldLandColor = null,
-    Object? worldCoastlineColor = null,
-    Object? worldBorderLineColor = null,
-    Object? japanLandColor = null,
-    Object? japanCoastlineColor = null,
-    Object? japanBorderLineColor = null,
+    Object? backgroundColor = freezed,
+    Object? worldLandColor = freezed,
+    Object? worldLineColor = freezed,
+    Object? japanLandColor = freezed,
+    Object? japanLineColor = freezed,
   }) {
     return _then(_$MapColorSchemeImpl(
-      backgroundColor: null == backgroundColor
+      backgroundColor: freezed == backgroundColor
           ? _value.backgroundColor
           : backgroundColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      worldLandColor: null == worldLandColor
+      worldLandColor: freezed == worldLandColor
           ? _value.worldLandColor
           : worldLandColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      worldCoastlineColor: null == worldCoastlineColor
-          ? _value.worldCoastlineColor
-          : worldCoastlineColor // ignore: cast_nullable_to_non_nullable
+      worldLineColor: freezed == worldLineColor
+          ? _value.worldLineColor
+          : worldLineColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      worldBorderLineColor: null == worldBorderLineColor
-          ? _value.worldBorderLineColor
-          : worldBorderLineColor // ignore: cast_nullable_to_non_nullable
-              as Color,
-      japanLandColor: null == japanLandColor
+      japanLandColor: freezed == japanLandColor
           ? _value.japanLandColor
           : japanLandColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      japanCoastlineColor: null == japanCoastlineColor
-          ? _value.japanCoastlineColor
-          : japanCoastlineColor // ignore: cast_nullable_to_non_nullable
-              as Color,
-      japanBorderLineColor: null == japanBorderLineColor
-          ? _value.japanBorderLineColor
-          : japanBorderLineColor // ignore: cast_nullable_to_non_nullable
+      japanLineColor: freezed == japanLineColor
+          ? _value.japanLineColor
+          : japanLineColor // ignore: cast_nullable_to_non_nullable
               as Color,
     ));
   }
@@ -393,15 +361,11 @@ class _$MapColorSchemeImpl implements _MapColorScheme {
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
       required this.worldLandColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.worldCoastlineColor,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.worldBorderLineColor,
+      required this.worldLineColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
       required this.japanLandColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.japanCoastlineColor,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.japanBorderLineColor});
+      required this.japanLineColor});
 
   factory _$MapColorSchemeImpl.fromJson(Map<String, dynamic> json) =>
       _$$MapColorSchemeImplFromJson(json);
@@ -414,23 +378,17 @@ class _$MapColorSchemeImpl implements _MapColorScheme {
   final Color worldLandColor;
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  final Color worldCoastlineColor;
-  @override
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  final Color worldBorderLineColor;
+  final Color worldLineColor;
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
   final Color japanLandColor;
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  final Color japanCoastlineColor;
-  @override
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  final Color japanBorderLineColor;
+  final Color japanLineColor;
 
   @override
   String toString() {
-    return 'MapColorScheme(backgroundColor: $backgroundColor, worldLandColor: $worldLandColor, worldCoastlineColor: $worldCoastlineColor, worldBorderLineColor: $worldBorderLineColor, japanLandColor: $japanLandColor, japanCoastlineColor: $japanCoastlineColor, japanBorderLineColor: $japanBorderLineColor)';
+    return 'MapColorScheme(backgroundColor: $backgroundColor, worldLandColor: $worldLandColor, worldLineColor: $worldLineColor, japanLandColor: $japanLandColor, japanLineColor: $japanLineColor)';
   }
 
   @override
@@ -438,33 +396,27 @@ class _$MapColorSchemeImpl implements _MapColorScheme {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MapColorSchemeImpl &&
-            (identical(other.backgroundColor, backgroundColor) ||
-                other.backgroundColor == backgroundColor) &&
-            (identical(other.worldLandColor, worldLandColor) ||
-                other.worldLandColor == worldLandColor) &&
-            (identical(other.worldCoastlineColor, worldCoastlineColor) ||
-                other.worldCoastlineColor == worldCoastlineColor) &&
-            (identical(other.worldBorderLineColor, worldBorderLineColor) ||
-                other.worldBorderLineColor == worldBorderLineColor) &&
-            (identical(other.japanLandColor, japanLandColor) ||
-                other.japanLandColor == japanLandColor) &&
-            (identical(other.japanCoastlineColor, japanCoastlineColor) ||
-                other.japanCoastlineColor == japanCoastlineColor) &&
-            (identical(other.japanBorderLineColor, japanBorderLineColor) ||
-                other.japanBorderLineColor == japanBorderLineColor));
+            const DeepCollectionEquality()
+                .equals(other.backgroundColor, backgroundColor) &&
+            const DeepCollectionEquality()
+                .equals(other.worldLandColor, worldLandColor) &&
+            const DeepCollectionEquality()
+                .equals(other.worldLineColor, worldLineColor) &&
+            const DeepCollectionEquality()
+                .equals(other.japanLandColor, japanLandColor) &&
+            const DeepCollectionEquality()
+                .equals(other.japanLineColor, japanLineColor));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      backgroundColor,
-      worldLandColor,
-      worldCoastlineColor,
-      worldBorderLineColor,
-      japanLandColor,
-      japanCoastlineColor,
-      japanBorderLineColor);
+      const DeepCollectionEquality().hash(backgroundColor),
+      const DeepCollectionEquality().hash(worldLandColor),
+      const DeepCollectionEquality().hash(worldLineColor),
+      const DeepCollectionEquality().hash(japanLandColor),
+      const DeepCollectionEquality().hash(japanLineColor));
 
   @JsonKey(ignore: true)
   @override
@@ -488,15 +440,11 @@ abstract class _MapColorScheme implements MapColorScheme {
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
       required final Color worldLandColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color worldCoastlineColor,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color worldBorderLineColor,
+      required final Color worldLineColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
       required final Color japanLandColor,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color japanCoastlineColor,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color japanBorderLineColor}) = _$MapColorSchemeImpl;
+      required final Color japanLineColor}) = _$MapColorSchemeImpl;
 
   factory _MapColorScheme.fromJson(Map<String, dynamic> json) =
       _$MapColorSchemeImpl.fromJson;
@@ -509,19 +457,13 @@ abstract class _MapColorScheme implements MapColorScheme {
   Color get worldLandColor;
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  Color get worldCoastlineColor;
-  @override
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  Color get worldBorderLineColor;
+  Color get worldLineColor;
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
   Color get japanLandColor;
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  Color get japanCoastlineColor;
-  @override
-  @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  Color get japanBorderLineColor;
+  Color get japanLineColor;
   @override
   @JsonKey(ignore: true)
   _$$MapColorSchemeImplCopyWith<_$MapColorSchemeImpl> get copyWith =>
