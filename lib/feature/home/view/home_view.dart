@@ -64,11 +64,9 @@ class _HomeBodyWidget extends HookConsumerWidget {
     useEffect(
       () {
         WidgetsBinding.instance.endOfFrame.then((_) {
-          (
-            ref.read(kmoniViewModelProvider.notifier).initialize(),
-            ref.read(permissionProvider.notifier).initialize(),
-            ref.read(fcmTopicManagerProvider.notifier).setup(),
-          ).wait;
+          ref.read(kmoniViewModelProvider.notifier).initialize();
+          ref.read(permissionProvider.notifier).initialize();
+          ref.read(fcmTopicManagerProvider.notifier).setup();
         });
         return null;
       },

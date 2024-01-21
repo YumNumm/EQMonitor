@@ -252,25 +252,25 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         onStyleLoadedCallback: () async {
           final controller = mapController.value!;
           await controller.moveCamera(cameraUpdate);
-          await [
-            addImageFromBuffer(
+          await addImageFromBuffer(
+            controller,
+            'hypocenter',
+            hypocenterIconRender,
+          );
+          for (final intensity in JmaIntensity.values) {
+            await addImageFromBuffer(
               controller,
-              'hypocenter',
-              hypocenterIconRender,
-            ),
-            for (final intensity in JmaIntensity.values)
-              addImageFromBuffer(
-                controller,
-                'intensity-${intensity.type}',
-                intensityIconData.getOrNull(intensity)!,
-              ),
-            for (final intensity in JmaIntensity.values)
-              addImageFromBuffer(
-                controller,
-                'intensity-${intensity.type}-fill',
-                intensityIconFillData.getOrNull(intensity)!,
-              ),
-          ].wait;
+              'intensity-${intensity.type}',
+              intensityIconData.getOrNull(intensity)!,
+            );
+          }
+          for (final intensity in JmaIntensity.values) {
+            await addImageFromBuffer(
+              controller,
+              'intensity-${intensity.type}-fill',
+              intensityIconFillData.getOrNull(intensity)!,
+            );
+          }
 
           if (citiesItem != null) {
             await _FillCityAction(
@@ -357,13 +357,14 @@ class _FillCityAction {
     }
   }
 
-  Future<void> dispose(map_libre.MaplibreMapController controller) async => [
-        for (final type in ['fill', 'line'])
-          for (final item in citiesItem)
-            controller.removeLayer(
-              '$name-$type-${item.hashCode}',
-            ),
-      ].wait;
+  Future<void> dispose(map_libre.MaplibreMapController controller) async {
+    for (final type in ['fill', 'line'])
+      for (final item in citiesItem) {
+        await controller.removeLayer(
+          '$name-$type-${item.hashCode}',
+        );
+      }
+  }
 
   static const name = 'areaInformationCityQuake';
 }

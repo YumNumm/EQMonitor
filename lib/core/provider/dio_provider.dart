@@ -22,13 +22,6 @@ Dio dio(DioRef ref) {
       },
       baseUrl: ref.watch(telegramUrlProvider).restApiUrl,
     ),
-  )..httpClientAdapter = Http2Adapter(
-      ConnectionManager(
-        idleTimeout: const Duration(seconds: 10),
-        // debug時は証明書の検証を行わない
-        onClientCreate: (_, config) =>
-            config.onBadCertificate = (_) => kDebugMode,
-      ),
-    );
+  );
   return dio;
 }

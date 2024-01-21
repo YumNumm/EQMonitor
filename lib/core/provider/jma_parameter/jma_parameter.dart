@@ -18,13 +18,9 @@ class JmaParameter extends _$JmaParameter {
         EarthquakeParameter earthquake,
         TsunamiParameter tsunami,
       })> build() async {
-    final results = await (
-      getEarthquake(),
-      getTsunami(),
-    ).wait;
     return (
-      earthquake: results.$1,
-      tsunami: results.$2,
+      earthquake: await getEarthquake(),
+      tsunami: await getTsunami(),
     );
   }
 

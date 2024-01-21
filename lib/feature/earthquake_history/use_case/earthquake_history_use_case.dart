@@ -37,7 +37,7 @@ class EarthquakeHistoryUseCase {
       if (e.response?.statusCode == 429) {
         throw Exception('レートリミットに達しました。10秒後に再度お試しください。');
       }
-      throw Exception(e.message);
+      throw Exception(e);
     }
   }
 }

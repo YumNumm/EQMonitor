@@ -1,4 +1,5 @@
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/kmoni_observation_point.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -11,6 +12,9 @@ List<KmoniObservationPoint> kmoniObservationPoints(
     throw UnimplementedError();
 
 Future<List<KmoniObservationPoint>> loadKmoniObservationPoints() async {
+  if(kIsWeb) {
+    return [];
+  }
   final file = await rootBundle.loadString('assets/kmoni/kansokuten.csv');
   final lines = file.split('\n');
   final result = <KmoniObservationPoint>[];
