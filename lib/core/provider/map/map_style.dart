@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:eqmonitor/core/provider/map/map_config.dart';
+import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -27,11 +28,16 @@ class MapStyle {
     return styleFile.path;
   }
 
-  Future<String> getStyle({required bool isDark}) {
-    final colorScheme = isDark ? MapColorScheme.dark() : MapColorScheme.light();
+  Future<String> getStyle({
+    required bool isDark,
+    required ColorScheme scheme,
+  }) {
+    final colorScheme = isDark
+        ? MapColorScheme.dark(colorScheme: scheme)
+        : MapColorScheme.light(colorScheme: scheme);
     final json = {
       'version': 8,
-      'name': 'Demo style',
+      'name': 'EQMonitor Style',
       'center': [50, 10],
       'zoom': 4,
       'sources': {
@@ -68,9 +74,16 @@ class MapStyle {
           'type': 'line',
           'layout': {'visibility': 'visible'},
           'paint': {
-            // gray
-            'line-color': colorScheme.worldBorderLineColor.toHexStringRGB(),
-            'line-width': 0.5,
+            'line-color': colorScheme.worldLineColor.toHexStringRGB(),
+            'line-width': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              3,
+              0.5,
+              5.5,
+              1,
+            ],
           },
         },
         {
@@ -90,8 +103,7 @@ class MapStyle {
           'type': 'line',
           'layout': {'line-cap': 'round', 'line-join': 'round'},
           'paint': {
-            'line-color': colorScheme.japanBorderLineColor.toHexStringRGB(),
-            'line-opacity': 1,
+            'line-color': colorScheme.japanLineColor.toHexStringRGB(),
             'line-width': [
               'interpolate',
               ['linear'],
@@ -110,7 +122,7 @@ class MapStyle {
           'type': 'line',
           'layout': {'line-cap': 'round', 'line-join': 'round'},
           'paint': {
-            'line-color': colorScheme.japanBorderLineColor.toHexStringRGB(),
+            'line-color': colorScheme.japanLineColor.toHexStringRGB(),
             'line-opacity': [
               'interpolate',
               ['linear'],
@@ -133,7 +145,7 @@ class MapStyle {
           'type': 'line',
           'layout': {'line-cap': 'round', 'line-join': 'round'},
           'paint': {
-            'line-color': colorScheme.japanBorderLineColor.toHexStringRGB(),
+            'line-color': colorScheme.japanLineColor.toHexStringRGB(),
             'line-width': 0.5,
             'line-opacity': [
               'interpolate',

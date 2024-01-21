@@ -45,10 +45,13 @@ class _HypocenterRender extends HookConsumerWidget {
     useEffect(
       () {
         WidgetsBinding.instance.endOfFrame.then((_) async {
-          await Future<void>.delayed(const Duration(milliseconds: 180));
+          final currentContext = key.currentContext;
+          while (currentContext == null) {
+            await Future<void>.delayed(const Duration(milliseconds: 100));
+          }
           if (context.mounted) {
-            final boundary = key.currentContext!.findRenderObject()!
-                as RenderRepaintBoundary;
+            final boundary =
+                currentContext.findRenderObject()! as RenderRepaintBoundary;
             final image = await boundary.toImage();
             final byte = await image.toByteData(format: ImageByteFormat.png);
             onRendered.call(byte!.buffer.asUint8List());

@@ -64,6 +64,7 @@ class _IntensityRender extends HookConsumerWidget {
     useEffect(
       () {
         WidgetsBinding.instance.endOfFrame.then((_) async {
+          await Future<void>.delayed(const Duration(milliseconds: 100));
           final boundary =
               _key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
           final image = await boundary.toImage();

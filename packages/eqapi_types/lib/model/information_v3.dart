@@ -35,8 +35,8 @@ enum Author {
   unknown('不明'),
   ;
 
-  final String name;
   const Author(this.name);
+  final String name;
 }
 
 enum Level {

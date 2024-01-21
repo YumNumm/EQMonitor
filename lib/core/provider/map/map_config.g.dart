@@ -42,16 +42,12 @@ _$MapColorSchemeImpl _$$MapColorSchemeImplFromJson(Map<String, dynamic> json) =>
               'backgroundColor', (v) => colorFromJson(v as String)),
           worldLandColor: $checkedConvert(
               'worldLandColor', (v) => colorFromJson(v as String)),
-          worldCoastlineColor: $checkedConvert(
-              'worldCoastlineColor', (v) => colorFromJson(v as String)),
-          worldBorderLineColor: $checkedConvert(
-              'worldBorderLineColor', (v) => colorFromJson(v as String)),
+          worldLineColor: $checkedConvert(
+              'worldLineColor', (v) => colorFromJson(v as String)),
           japanLandColor: $checkedConvert(
               'japanLandColor', (v) => colorFromJson(v as String)),
-          japanCoastlineColor: $checkedConvert(
-              'japanCoastlineColor', (v) => colorFromJson(v as String)),
-          japanBorderLineColor: $checkedConvert(
-              'japanBorderLineColor', (v) => colorFromJson(v as String)),
+          japanLineColor: $checkedConvert(
+              'japanLineColor', (v) => colorFromJson(v as String)),
         );
         return val;
       },
@@ -62,9 +58,7 @@ Map<String, dynamic> _$$MapColorSchemeImplToJson(
     <String, dynamic>{
       'backgroundColor': colorToJson(instance.backgroundColor),
       'worldLandColor': colorToJson(instance.worldLandColor),
-      'worldCoastlineColor': colorToJson(instance.worldCoastlineColor),
-      'worldBorderLineColor': colorToJson(instance.worldBorderLineColor),
+      'worldLineColor': colorToJson(instance.worldLineColor),
       'japanLandColor': colorToJson(instance.japanLandColor),
-      'japanCoastlineColor': colorToJson(instance.japanCoastlineColor),
-      'japanBorderLineColor': colorToJson(instance.japanBorderLineColor),
+      'japanLineColor': colorToJson(instance.japanLineColor),
     };

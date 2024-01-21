@@ -74,8 +74,13 @@ class EarthquakeMapWidget extends HookConsumerWidget {
     final jmaMap = ref.watch(jmaMapProvider).valueOrNull;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final mapStyle = ref.watch(mapStyleProvider);
-    final styleJsonFutureing =
-        useMemoized(() => mapStyle.getStyle(isDark: isDark), [isDark]);
+    final styleJsonFutureing = useMemoized(
+      () => mapStyle.getStyle(
+        isDark: isDark,
+        scheme: Theme.of(context).colorScheme,
+      ),
+      [isDark],
+    );
     final styleJsonFuture = useFuture(styleJsonFutureing);
     final path = styleJsonFuture.data;
     if (earthquakeParams == null ||
