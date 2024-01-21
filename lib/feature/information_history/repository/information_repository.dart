@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:eqapi_client/eqapi_client.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/api/eq_api.dart';

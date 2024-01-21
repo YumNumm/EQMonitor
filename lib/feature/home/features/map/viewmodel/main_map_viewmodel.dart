@@ -9,7 +9,11 @@ import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_c
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/map/map_style.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
+import 'package:eqmonitor/feature/home/features/debugger/debugger_provider.dart';
 import 'package:eqmonitor/feature/home/features/eew/provider/eew_alive_telegram.dart';
+import 'package:eqmonitor/feature/home/features/estimated_intensity/provider/estimated_intensity_provider.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/model/kyoshin_color_map_model.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/provider/kmoni_color_provider.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/kmoni_observation_point.dart';
 import 'package:eqmonitor/feature/home/features/travel_time/provider/travel_time_provider.dart';
@@ -23,7 +27,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'main_map_viewmodel.freezed.dart';
 part 'main_map_viewmodel.g.dart';
 
-@Riverpod(dependencies: [EewAliveTelegram], keepAlive: true)
+@Riverpod(
+  dependencies: [
+    EewAliveTelegram,
+    EstimatedIntensity,
+    EewAliveTelegram,
+    kyoshinColorMap,
+  ],
+  keepAlive: true,
+)
 class MainMapViewModel extends _$MainMapViewModel {
   @override
   void build() {
@@ -42,6 +54,12 @@ class MainMapViewModel extends _$MainMapViewModel {
         eewAliveTelegramProvider,
         (_, value) => _onEewStateChanged(value ?? []),
       );
+    if (ref.read(debuggerProvider).isDebugger) {
+      ref.listen(
+        estimatedIntensityProvider,
+        (_, value) => _onEstimatedIntensityChanged(value),
+      );
+    }
   }
 
   MaplibreMapController? _controller;
@@ -63,9 +81,15 @@ class MainMapViewModel extends _$MainMapViewModel {
       controller: controller,
       travelTimeMap: ref.read(travelTimeDepthMapProvider).requireValue,
     );
-    _eewEstimatedIntensityService = _EewEstimatedIntensityService(
+    _eewRegionIntensityService = _EewRegionIntensityService(
       controller: controller,
     );
+    if (ref.read(debuggerProvider).isDebugger) {
+      _eewEstimatedIntensityService = _EewEstimatedIntensityService(
+        controller: controller,
+        colorMap: await ref.read(kyoshinColorMapProvider.future),
+      );
+    }
     await (
       _kmoniObservationPointService!.init(),
       _eewHypocenterService!.init(
@@ -74,9 +98,10 @@ class MainMapViewModel extends _$MainMapViewModel {
             ref.read(hypocenterLowPreciseIconRenderProvider)!,
       ),
       _eewPsWaveService!.init(),
-      _eewEstimatedIntensityService!.init(
+      _eewRegionIntensityService!.init(
         ref.read(intensityColorProvider),
       ),
+      _eewEstimatedIntensityService?.init() ?? Future.value(),
     ).wait;
 
     ref.onDispose(() async {
@@ -84,7 +109,8 @@ class MainMapViewModel extends _$MainMapViewModel {
         _kmoniObservationPointService!.dispose(),
         _eewHypocenterService!.dispose(),
         _eewPsWaveService!.dispose(),
-        _eewEstimatedIntensityService!.dispose(),
+        _eewRegionIntensityService!.dispose(),
+        _eewEstimatedIntensityService?.dispose() ?? Future.value(),
       ).wait;
     });
   }
@@ -111,6 +137,7 @@ class MainMapViewModel extends _$MainMapViewModel {
 
   _EewHypocenterService? _eewHypocenterService;
   _EewPsWaveService? _eewPsWaveService;
+  _EewRegionIntensityService? _eewRegionIntensityService;
   _EewEstimatedIntensityService? _eewEstimatedIntensityService;
 
   Future<void> _onEewStateChanged(List<EarthquakeHistoryItem> values) async {
@@ -128,14 +155,27 @@ class MainMapViewModel extends _$MainMapViewModel {
         .toList();
     _eewPsWaveService!.update(normalEews);
     await _eewHypocenterService!.update(aliveBodies);
-    final transformed = _EewEstimatedIntensityService.transform(
+    final transformed = _EewRegionIntensityService.transform(
       aliveBodies
           .map((e) => e.regions)
           .whereType<List<EewRegion>>()
           .flattened
           .toList(),
     );
-    await _eewEstimatedIntensityService!.update(transformed);
+    await _eewRegionIntensityService!.update(transformed);
+  }
+
+  Future<void> _onEstimatedIntensityChanged(
+    List<AnalyzedKmoniObservationPoint> points,
+  ) async {
+    // 初期化が終わっていない場合は何もしない
+    if (!_isEewInitialized) {
+      return;
+    }
+    if (!ref.read(debuggerProvider).isDebugger) {
+      return;
+    }
+    await _eewEstimatedIntensityService?.update(points);
   }
 
   // *********** Kyoshin Monitor Related ***********
@@ -305,7 +345,93 @@ class _KmoniObservationPointService {
 }
 
 class _EewEstimatedIntensityService {
-  _EewEstimatedIntensityService({required this.controller});
+  _EewEstimatedIntensityService({
+    required this.controller,
+    required this.colorMap,
+  });
+
+  final MaplibreMapController controller;
+  final List<KyoshinColorMapModel> colorMap;
+
+  Future<void> init() async {
+    await dispose();
+    await controller.addGeoJsonSource(
+      layerId,
+      {
+        'type': 'FeatureCollection',
+        'features': <void>[],
+      },
+    );
+    await controller.addCircleLayer(
+      layerId,
+      layerId,
+      CircleLayerProperties(
+        circleRadius: [
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          3,
+          1,
+          10,
+          10,
+        ],
+        circleColor: [
+          'get',
+          'color',
+        ],
+        circleStrokeWidth: 0.5,
+        circleStrokeColor: Colors.grey.toHexStringRGB(),
+      ),
+      sourceLayer: layerId,
+      belowLayerId: BaseLayer.areaForecastLocalELine.name,
+    );
+  }
+
+  Future<void> update(List<AnalyzedKmoniObservationPoint> points) =>
+      controller.setGeoJsonSource(
+        layerId,
+        createGeoJson(points),
+      );
+
+  Future<void> dispose() async {
+    await controller.removeLayer(layerId);
+    await controller.removeSource(layerId);
+  }
+
+  static const String layerId = 'eew-estimated-intensity-circle';
+
+  Map<String, dynamic> createGeoJson(
+    List<AnalyzedKmoniObservationPoint> points,
+  ) =>
+      {
+        'type': 'FeatureCollection',
+        'features': points
+            .where((e) => e.intensityValue != null)
+            .map(
+              (e) => {
+                'type': 'Feature',
+                'geometry': {
+                  'type': 'Point',
+                  'coordinates': [e.point.latLng.lon, e.point.latLng.lat],
+                },
+                'properties': {
+                  'color': e.intensityValue != null
+                      ? colorMap
+                          .intensityToColor(e.intensityValue!)
+                          .toHexStringRGB()
+                      : null,
+                  'intensity': e.intensityValue == double.negativeInfinity
+                      ? 0
+                      : e.intensityValue,
+                },
+              },
+            )
+            .toList(),
+      };
+}
+
+class _EewRegionIntensityService {
+  _EewRegionIntensityService({required this.controller});
 
   final MaplibreMapController controller;
   Future<void> init(IntensityColorModel colorModel) async {

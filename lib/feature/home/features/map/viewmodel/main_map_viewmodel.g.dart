@@ -35,7 +35,7 @@ Map<String, dynamic> _$$_EewHypocenterPropertiesImplToJson(
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mainMapViewModelHash() => r'e92ab7fedfb50411cb9cc563a78eeb01120f4837';
+String _$mainMapViewModelHash() => r'861cee1f682acd6b501046b802384593dc481900';
 
 /// See also [MainMapViewModel].
 @ProviderFor(MainMapViewModel)
@@ -46,10 +46,15 @@ final mainMapViewModelProvider =
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
       : _$mainMapViewModelHash,
-  dependencies: <ProviderOrFamily>[eewAliveTelegramProvider],
+  dependencies: <ProviderOrFamily>[
+    eewAliveTelegramProvider,
+    estimatedIntensityProvider
+  ],
   allTransitiveDependencies: <ProviderOrFamily>{
     eewAliveTelegramProvider,
-    ...?eewAliveTelegramProvider.allTransitiveDependencies
+    ...?eewAliveTelegramProvider.allTransitiveDependencies,
+    estimatedIntensityProvider,
+    ...?estimatedIntensityProvider.allTransitiveDependencies
   },
 );
 
