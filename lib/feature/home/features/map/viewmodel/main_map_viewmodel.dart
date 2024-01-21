@@ -162,7 +162,7 @@ class MainMapViewModel extends _$MainMapViewModel {
           .flattened
           .toList(),
     );
-    await _eewRegionIntensityService!.update(transformed);
+    //await _eewRegionIntensityService!.update(transformed);
   }
 
   Future<void> _onEstimatedIntensityChanged(
