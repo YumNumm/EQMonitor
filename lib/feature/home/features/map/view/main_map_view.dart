@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
@@ -95,16 +96,22 @@ class MainMapView extends HookConsumerWidget {
         styleString: stylePath.value,
         onMapCreated: (controller) {
           mapController.value = controller;
-
-          controller.addListener(
-            () {
-              final position = controller.cameraPosition;
-              if (position != null) {
-                cameraPosition.value =
-                    const JsonEncoder.withIndent(' ').convert(position.toMap());
-              }
-            },
-          );
+          if (ref.read(debuggerProvider).isDebugger) {
+            controller.addListener(
+              () {
+                final position = controller.cameraPosition;
+                if (position != null) {
+                  try {
+                    cameraPosition.value = const JsonEncoder.withIndent(' ')
+                        .convert(position.toMap());
+                    // ignore: avoid_catching_errors
+                  } on JsonUnsupportedObjectError {
+                    log('JsonUnsupportedObjectError');
+                  }
+                }
+              },
+            );
+          }
         },
         onStyleLoadedCallback: () async {
           final controller = mapController.value;
