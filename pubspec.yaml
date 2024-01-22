@@ -66,7 +66,7 @@ dependencies:
     git:
       url: https://github.com/YumNumm/flutter-maplibre-gl.git
       ref: 59e1eeaf7e627a8054b7024d0189070ee616bcd5
-  mocktail: ^1.0.2
+  mocktail: ^1.0.3
   native_shared_preferences: ^2.0.7
   ntp: ^2.0.0
   package_info_plus: ^5.0.1
