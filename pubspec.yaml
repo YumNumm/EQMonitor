@@ -96,7 +96,7 @@ dependencies:
       path: packages/talker_flutter
   test: ^1.24.9
   two_dimensional_scrollables: ^0.0.4
-  url_launcher: ^6.2.1
+  url_launcher: ^6.2.4
   vector_math: ^2.1.4
   version: ^3.0.2
   visibility_detector: ^0.4.0+2
