@@ -258,30 +258,30 @@ class _$MapColorSchemeCopyWithImpl<$Res, $Val extends MapColorScheme>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? backgroundColor = freezed,
-    Object? worldLandColor = freezed,
-    Object? worldLineColor = freezed,
-    Object? japanLandColor = freezed,
-    Object? japanLineColor = freezed,
+    Object? backgroundColor = null,
+    Object? worldLandColor = null,
+    Object? worldLineColor = null,
+    Object? japanLandColor = null,
+    Object? japanLineColor = null,
   }) {
     return _then(_value.copyWith(
-      backgroundColor: freezed == backgroundColor
+      backgroundColor: null == backgroundColor
           ? _value.backgroundColor
           : backgroundColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      worldLandColor: freezed == worldLandColor
+      worldLandColor: null == worldLandColor
           ? _value.worldLandColor
           : worldLandColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      worldLineColor: freezed == worldLineColor
+      worldLineColor: null == worldLineColor
           ? _value.worldLineColor
           : worldLineColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      japanLandColor: freezed == japanLandColor
+      japanLandColor: null == japanLandColor
           ? _value.japanLandColor
           : japanLandColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      japanLineColor: freezed == japanLineColor
+      japanLineColor: null == japanLineColor
           ? _value.japanLineColor
           : japanLineColor // ignore: cast_nullable_to_non_nullable
               as Color,
@@ -321,30 +321,30 @@ class __$$MapColorSchemeImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? backgroundColor = freezed,
-    Object? worldLandColor = freezed,
-    Object? worldLineColor = freezed,
-    Object? japanLandColor = freezed,
-    Object? japanLineColor = freezed,
+    Object? backgroundColor = null,
+    Object? worldLandColor = null,
+    Object? worldLineColor = null,
+    Object? japanLandColor = null,
+    Object? japanLineColor = null,
   }) {
     return _then(_$MapColorSchemeImpl(
-      backgroundColor: freezed == backgroundColor
+      backgroundColor: null == backgroundColor
           ? _value.backgroundColor
           : backgroundColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      worldLandColor: freezed == worldLandColor
+      worldLandColor: null == worldLandColor
           ? _value.worldLandColor
           : worldLandColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      worldLineColor: freezed == worldLineColor
+      worldLineColor: null == worldLineColor
           ? _value.worldLineColor
           : worldLineColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      japanLandColor: freezed == japanLandColor
+      japanLandColor: null == japanLandColor
           ? _value.japanLandColor
           : japanLandColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      japanLineColor: freezed == japanLineColor
+      japanLineColor: null == japanLineColor
           ? _value.japanLineColor
           : japanLineColor // ignore: cast_nullable_to_non_nullable
               as Color,
@@ -396,27 +396,22 @@ class _$MapColorSchemeImpl implements _MapColorScheme {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MapColorSchemeImpl &&
-            const DeepCollectionEquality()
-                .equals(other.backgroundColor, backgroundColor) &&
-            const DeepCollectionEquality()
-                .equals(other.worldLandColor, worldLandColor) &&
-            const DeepCollectionEquality()
-                .equals(other.worldLineColor, worldLineColor) &&
-            const DeepCollectionEquality()
-                .equals(other.japanLandColor, japanLandColor) &&
-            const DeepCollectionEquality()
-                .equals(other.japanLineColor, japanLineColor));
+            (identical(other.backgroundColor, backgroundColor) ||
+                other.backgroundColor == backgroundColor) &&
+            (identical(other.worldLandColor, worldLandColor) ||
+                other.worldLandColor == worldLandColor) &&
+            (identical(other.worldLineColor, worldLineColor) ||
+                other.worldLineColor == worldLineColor) &&
+            (identical(other.japanLandColor, japanLandColor) ||
+                other.japanLandColor == japanLandColor) &&
+            (identical(other.japanLineColor, japanLineColor) ||
+                other.japanLineColor == japanLineColor));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(backgroundColor),
-      const DeepCollectionEquality().hash(worldLandColor),
-      const DeepCollectionEquality().hash(worldLineColor),
-      const DeepCollectionEquality().hash(japanLandColor),
-      const DeepCollectionEquality().hash(japanLineColor));
+  int get hashCode => Object.hash(runtimeType, backgroundColor, worldLandColor,
+      worldLineColor, japanLandColor, japanLineColor);
 
   @JsonKey(ignore: true)
   @override

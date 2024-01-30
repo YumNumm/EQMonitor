@@ -48,11 +48,27 @@ class MapColorScheme with _$MapColorScheme {
       );
 
   factory MapColorScheme.dark({required ColorScheme colorScheme}) =>
+      /*
       MapColorScheme(
-        backgroundColor: colorScheme.surfaceVariant,
-        worldLandColor: colorScheme.surface,
+        backgroundColor: colorScheme.surface,
+        worldLandColor: Color.lerp(
+          Colors.blue,
+          colorScheme.surfaceVariant,
+          0.9,
+        )!,
         worldLineColor: colorScheme.onSurfaceVariant,
-        japanLandColor: colorScheme.surface,
+        japanLandColor: Color.lerp(
+          Colors.blue.shade700,
+          colorScheme.surface,
+          0.75,
+        )!,
+        japanLineColor: colorScheme.onSurfaceVariant,
+      );*/
+      MapColorScheme(
+        backgroundColor: colorScheme.surface,
+        worldLandColor: colorScheme.surfaceVariant,
+        worldLineColor: colorScheme.onSurfaceVariant,
+        japanLandColor: colorScheme.surfaceVariant,
         japanLineColor: colorScheme.onSurfaceVariant,
       );
 }

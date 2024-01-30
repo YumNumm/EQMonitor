@@ -1,16 +1,4 @@
-import 'package:eqapi_types/model/components/accuracy.dart';
-import 'package:eqapi_types/model/components/comments.dart';
-import 'package:eqapi_types/model/components/earthquake-explanation/naming.dart';
-import 'package:eqapi_types/model/components/earthquake-nankai/earthquake_info.dart';
-import 'package:eqapi_types/model/components/earthquake.dart';
-import 'package:eqapi_types/model/components/eew_hypocenter.dart';
-import 'package:eqapi_types/model/components/eew_intensity.dart';
-import 'package:eqapi_types/model/components/eew_region.dart';
-import 'package:eqapi_types/model/components/intensity.dart';
-import 'package:eqapi_types/model/components/tsunami-information/comments.dart';
-import 'package:eqapi_types/model/components/tsunami-information/vtse41.dart';
-import 'package:eqapi_types/model/components/tsunami-information/vtse51.dart';
-import 'package:eqapi_types/model/components/tsunami-information/vtse52.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'telegram_v3.freezed.dart';

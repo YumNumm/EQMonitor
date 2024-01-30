@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:eqapi_types/model/telegram_v3.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/model/socket_status.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_socket_io.dart';
