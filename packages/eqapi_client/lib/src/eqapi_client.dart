@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqapi_types/lib.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'eqapi_client.g.dart';
@@ -15,6 +16,34 @@ class EqApi {
   PrivateV3 get privateV3 => throw UnimplementedError(
         'privateV3 feature is not implemented on public EqApi package',
       );
+}
+
+@RestApi()
+abstract class V1 {
+  factory V1(Dio dio, {String baseUrl}) = _V1;
+
+  @GET('/v1/earthquake')
+  Future<List<EarthquakeV1>> getEarthquake({
+    /// 1~100
+    @Query('limit') int limit = 100,
+
+    /// 0~100000
+    @Query('offset') int offset = 0,
+
+    /// 0~10
+    @Query('magnitudeLte') double? magnitudeLte,
+
+    /// 0~10
+    @Query('magnitudeGte') double? magnitudeGte,
+
+    /// 0~1000
+    @Query('depthLte') double? depthLte,
+
+    /// 0~1000
+    @Query('depthGte') double? depthGte,
+    @Query('intensityLte') JmaIntensity? intensityLte,
+    @Query('intensityGte') JmaIntensity? intensityGte,
+  });
 }
 
 @RestApi()

@@ -1,6 +1,6 @@
 // ignore_for_file: invalid_annotation_target
 
-import 'package:eqapi_types/model/telegram_v3.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'telegram_ws_model.freezed.dart';

@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:eqapi_types/model/telegram_v3.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/telegram_history_data_source.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
