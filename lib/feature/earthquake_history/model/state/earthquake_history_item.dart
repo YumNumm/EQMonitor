@@ -1,11 +1,4 @@
-import 'package:eqapi_types/model/components/comments.dart';
-import 'package:eqapi_types/model/components/earthquake.dart';
-import 'package:eqapi_types/model/components/intensity.dart';
-import 'package:eqapi_types/model/components/tsunami-information/comments.dart';
-import 'package:eqapi_types/model/components/tsunami-information/tsunami_estimation.dart';
-import 'package:eqapi_types/model/components/tsunami-information/tsunami_forecast.dart';
-import 'package:eqapi_types/model/components/tsunami-information/tsunami_observations.dart';
-import 'package:eqapi_types/model/telegram_v3.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake_history_item.freezed.dart';

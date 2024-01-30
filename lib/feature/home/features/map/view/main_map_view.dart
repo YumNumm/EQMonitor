@@ -159,6 +159,16 @@ class MainMapView extends HookConsumerWidget {
               ),
             ].wait,
           );
+          Future<void>.delayed(
+            const Duration(
+              milliseconds: 100,
+            ),
+            () async => notifier.moveCameraToDefaultPosition(
+              bottom: 100,
+              left: 10,
+              right: 10,
+            ),
+          );
         },
         rotateGesturesEnabled: false,
         tiltGesturesEnabled: false,

@@ -1,7 +1,9 @@
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/theme/custom_colors.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -67,6 +69,18 @@ class App extends HookConsumerWidget {
         );
       },
     );
+    if (kDebugMode) {
+      final packageInfo = ref.watch(packageInfoProvider);
+      return Directionality(
+        textDirection: TextDirection.ltr,
+        child: Banner(
+          message: 'v${packageInfo.version}-${packageInfo.buildNumber}',
+          location: BannerLocation.bottomStart,
+          color: Colors.red.shade900,
+          child: app,
+        ),
+      );
+    }
     return app;
   }
 }

@@ -1,4 +1,4 @@
-import 'package:eqapi_types/model/telegram_v3.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 
 extension Vxse45BodyExtension on TelegramVxse45Body {
   bool get isLevelEew =>
