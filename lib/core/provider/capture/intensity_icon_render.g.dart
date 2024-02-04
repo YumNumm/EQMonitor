@@ -42,6 +42,41 @@ final intensityIconFillRenderProvider = NotifierProvider<
 );
 
 typedef _$IntensityIconFillRender = Notifier<Map<JmaIntensity, Uint8List>>;
+String _$lpgmIntensityIconRenderHash() =>
+    r'44e23825e54c81cde3fff5109e75be2910db02c9';
+
+/// See also [LpgmIntensityIconRender].
+@ProviderFor(LpgmIntensityIconRender)
+final lpgmIntensityIconRenderProvider = NotifierProvider<
+    LpgmIntensityIconRender, Map<JmaLgIntensity, Uint8List>>.internal(
+  LpgmIntensityIconRender.new,
+  name: r'lpgmIntensityIconRenderProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$lpgmIntensityIconRenderHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$LpgmIntensityIconRender = Notifier<Map<JmaLgIntensity, Uint8List>>;
+String _$lpgmIntensityIconFillRenderHash() =>
+    r'34bd69625f805e15eebfa7192e71532f19e3c94d';
+
+/// See also [LpgmIntensityIconFillRender].
+@ProviderFor(LpgmIntensityIconFillRender)
+final lpgmIntensityIconFillRenderProvider = NotifierProvider<
+    LpgmIntensityIconFillRender, Map<JmaLgIntensity, Uint8List>>.internal(
+  LpgmIntensityIconFillRender.new,
+  name: r'lpgmIntensityIconFillRenderProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$lpgmIntensityIconFillRenderHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$LpgmIntensityIconFillRender
+    = Notifier<Map<JmaLgIntensity, Uint8List>>;
 String _$hypocenterIconRenderHash() =>
     r'76f8f7104e9c1218646b56290778b15bed6973c0';
 

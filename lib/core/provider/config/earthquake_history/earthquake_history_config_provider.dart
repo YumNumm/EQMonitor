@@ -42,13 +42,20 @@ class EarthquakeHistoryConfig extends _$EarthquakeHistoryConfig {
     }
   }
 
-  void updateListConfig(EarthquakeHistoryListConfig config) {
+  Future<void> updateListConfig(EarthquakeHistoryListConfig config) async {
     state = state.copyWith(list: config);
-    _save();
+    return _save();
   }
 
-  void updateDetailConfig(EarthquakeHistoryDetailConfig config) {
+  Future<void> updateDetailConfig(EarthquakeHistoryDetailConfig config) async {
     state = state.copyWith(detail: config);
-    _save();
+    return _save();
+  }
+
+  Future<void> updateIntensityIcon({required bool value}) async {
+    state = state.copyWith(
+      detail: state.detail.copyWith(showIntensityIcon: value),
+    );
+    await _save();
   }
 }

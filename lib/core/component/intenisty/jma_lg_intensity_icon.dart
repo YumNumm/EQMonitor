@@ -24,68 +24,85 @@ class JmaLgIntensityIcon extends ConsumerWidget {
     final intensityColorModel = ref.watch(intensityColorProvider);
     final colorScheme = intensityColorModel.fromJmaLgIntensity(intensity);
     final (fg, bg) = (colorScheme.foreground, colorScheme.background);
-    // 震度の整数部分
-    final intensityMainText =
-        intensity.type.replaceAll('-', '').replaceAll('+', '');
-    // 震度の弱・強の表記
-    final intensitySubText = intensity.type.contains('-')
-        ? '弱'
-        : intensity.type.contains('+')
-            ? '強'
-            : '';
 
-    return SizedBox(
-      height: 50,
-      width: 50,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: bg,
-          // 角丸にする
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Center(
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              children: [
-                if (customText != null)
-                  Text(
-                    customText!,
-                    style: TextStyle(
-                      color: fg,
-                      fontSize: 100,
-                      fontWeight: FontWeight.w900,
-                      fontFamily: FontFamily.jetBrainsMono,
+    final borderColor = Color.lerp(
+      bg,
+      fg,
+      0.3,
+    )!;
+    return switch (type) {
+      IntensityIconType.small => SizedBox(
+          height: size,
+          width: size,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: bg,
+              border: Border.all(
+                color: borderColor,
+                width: 5,
+              ),
+            ),
+            child: Center(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      intensity.type,
+                      style: TextStyle(
+                        color: fg,
+                        fontSize: 100,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: FontFamily.jetBrainsMono,
+                      ),
                     ),
-                  )
-                else ...[
-                  Text(
-                    intensityMainText,
-                    style: TextStyle(
-                      color: fg,
-                      fontSize: 100,
-                      fontWeight: FontWeight.w900,
-                      fontFamily: FontFamily.jetBrainsMono,
-                    ),
-                  ),
-                  Text(
-                    intensitySubText,
-                    style: TextStyle(
-                      color: fg,
-                      fontSize: 50,
-                      fontWeight: FontWeight.w900,
-                      fontFamily: FontFamily.jetBrainsMono,
-                      fontFamilyFallback: const [FontFamily.notoSansJP],
-                    ),
-                  ),
-                ],
-              ],
+                  ],
+                ),
+              ),
             ),
           ),
         ),
-      ),
-    );
+      IntensityIconType.smallWithoutText => SizedBox(
+          height: size,
+          width: size,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: bg,
+              border: Border.all(
+                color: borderColor,
+                width: 5,
+              ),
+            ),
+          ),
+        ),
+      IntensityIconType.filled => SizedBox(
+          height: 50,
+          width: 50,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: bg,
+              // 角丸にする
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Center(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  customText!,
+                  style: TextStyle(
+                    color: fg,
+                    fontSize: 100,
+                    fontWeight: FontWeight.w900,
+                    fontFamily: FontFamily.jetBrainsMono,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+    };
   }
 }

@@ -65,11 +65,15 @@ _$EarthquakeHistoryDetailConfigImpl
           json,
           ($checkedConvert) {
             final val = _$EarthquakeHistoryDetailConfigImpl(
-              intensityDisplayMode: $checkedConvert(
-                  'intensityDisplayMode',
+              intensityFillMode: $checkedConvert(
+                  'intensityFillMode',
                   (v) =>
-                      $enumDecodeNullable(_$IntensityDisplayModeEnumMap, v) ??
-                      IntensityDisplayMode.fillCity),
+                      $enumDecodeNullable(_$IntensityFillModeEnumMap, v) ??
+                      IntensityFillMode.fillCity),
+              showIntensityIcon: $checkedConvert(
+                  'showIntensityIcon', (v) => v as bool? ?? true),
+              showingLpgmIntensity: $checkedConvert(
+                  'showingLpgmIntensity', (v) => v as bool? ?? false),
             );
             return val;
           },
@@ -78,13 +82,14 @@ _$EarthquakeHistoryDetailConfigImpl
 Map<String, dynamic> _$$EarthquakeHistoryDetailConfigImplToJson(
         _$EarthquakeHistoryDetailConfigImpl instance) =>
     <String, dynamic>{
-      'intensityDisplayMode':
-          _$IntensityDisplayModeEnumMap[instance.intensityDisplayMode]!,
+      'intensityFillMode':
+          _$IntensityFillModeEnumMap[instance.intensityFillMode]!,
+      'showIntensityIcon': instance.showIntensityIcon,
+      'showingLpgmIntensity': instance.showingLpgmIntensity,
     };
 
-const _$IntensityDisplayModeEnumMap = {
-  IntensityDisplayMode.icon: 'icon',
-  IntensityDisplayMode.fillCity: 'fillCity',
-  IntensityDisplayMode.fillPrefecture: 'fillPrefecture',
-  IntensityDisplayMode.iconAndFillPrefecture: 'iconAndFillPrefecture',
+const _$IntensityFillModeEnumMap = {
+  IntensityFillMode.fillCity: 'fillCity',
+  IntensityFillMode.fillRegion: 'fillRegion',
+  IntensityFillMode.none: 'none',
 };
