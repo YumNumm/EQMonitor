@@ -32,26 +32,24 @@ class EarthquakeHistoryListConfig with _$EarthquakeHistoryListConfig {
 class EarthquakeHistoryDetailConfig with _$EarthquakeHistoryDetailConfig {
   const factory EarthquakeHistoryDetailConfig({
     /// 震度の表示方法
-    @Default(IntensityDisplayMode.fillCity)
-    IntensityDisplayMode intensityDisplayMode,
+    @Default(IntensityFillMode.fillCity) IntensityFillMode intensityFillMode,
+
+    /// 震度観測点のアイコン表示
+    @Default(true) bool showIntensityIcon,
+
+    /// fromJsonでは、常にfalseを返す
+    @Default(false) bool showingLpgmIntensity,
   }) = _EarthquakeHistoryDetailConfig;
 
   factory EarthquakeHistoryDetailConfig.fromJson(Map<String, dynamic> json) =>
-      _$EarthquakeHistoryDetailConfigFromJson(json);
+      _$EarthquakeHistoryDetailConfigFromJson(json).copyWith(
+        showingLpgmIntensity: false,
+      );
 }
 
 /// 地震履歴詳細画面における震度の表示方法
-enum IntensityDisplayMode {
-  /// 震度観測点のアイコンを表示
-  icon,
-
-  /// 市区町村レベルの震度塗りつぶし
+enum IntensityFillMode {
   fillCity,
-
-  /// 都道府県レベルの震度塗りつぶし
-  fillPrefecture,
-
-  /// 震度観測点のアイコンと都道府県レベルの震度塗りつぶし
-  iconAndFillPrefecture,
-  ;
+  fillRegion,
+  none;
 }

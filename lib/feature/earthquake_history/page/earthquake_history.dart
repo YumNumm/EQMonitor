@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/provider/config/earthquake_history/earthquake_history_config_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/component/earthquake_history_tile_widget.dart';
@@ -179,6 +180,7 @@ class _ListBottomWidget extends ConsumerWidget {
                 ),
               );
             }
+            final exception = error.error;
             return Padding(
               padding: const EdgeInsets.symmetric(
                 vertical: 40,
@@ -200,6 +202,10 @@ class _ListBottomWidget extends ConsumerWidget {
                   Text(
                     error.error.toString(),
                   ),
+                  switch (exception) {
+                    DioException() => Text(exception.response.toString()),
+                    _ => Text(exception.runtimeType.toString()),
+                  },
                 ],
               ),
             );

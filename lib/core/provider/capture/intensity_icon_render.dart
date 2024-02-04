@@ -30,6 +30,30 @@ class IntensityIconFillRender extends _$IntensityIconFillRender {
 }
 
 @Riverpod(keepAlive: true)
+class LpgmIntensityIconRender extends _$LpgmIntensityIconRender {
+  void onRendered(Uint8List data, JmaLgIntensity intensity) {
+    state = {...state, intensity: data};
+  }
+
+  Uint8List? get(JmaLgIntensity intensity) => state.getOrNull(intensity);
+
+  @override
+  Map<JmaLgIntensity, Uint8List> build() => {};
+}
+
+@Riverpod(keepAlive: true)
+class LpgmIntensityIconFillRender extends _$LpgmIntensityIconFillRender {
+  void onRendered(Uint8List data, JmaLgIntensity intensity) {
+    state = {...state, intensity: data};
+  }
+
+  Uint8List? get(JmaLgIntensity intensity) => state.getOrNull(intensity);
+
+  @override
+  Map<JmaLgIntensity, Uint8List> build() => {};
+}
+
+@Riverpod(keepAlive: true)
 class HypocenterIconRender extends _$HypocenterIconRender {
   @override
   Uint8List? build() => null;
@@ -49,4 +73,8 @@ class HypocenterLowPreciseIconRender extends _$HypocenterLowPreciseIconRender {
 
 extension IntensityIconRenderEx on Map<JmaIntensity, Uint8List> {
   bool isAllRendered() => length == JmaIntensity.values.length;
+}
+
+extension LpgmIntensityIconRenderEx on Map<JmaLgIntensity, Uint8List> {
+  bool isAllRendered() => length == JmaLgIntensity.values.length;
 }

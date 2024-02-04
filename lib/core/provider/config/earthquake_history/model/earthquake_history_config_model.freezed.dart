@@ -399,8 +399,13 @@ EarthquakeHistoryDetailConfig _$EarthquakeHistoryDetailConfigFromJson(
 /// @nodoc
 mixin _$EarthquakeHistoryDetailConfig {
   /// 震度の表示方法
-  IntensityDisplayMode get intensityDisplayMode =>
-      throw _privateConstructorUsedError;
+  IntensityFillMode get intensityFillMode => throw _privateConstructorUsedError;
+
+  /// 震度観測点のアイコン表示
+  bool get showIntensityIcon => throw _privateConstructorUsedError;
+
+  /// fromJsonでは、常にfalseを返す
+  bool get showingLpgmIntensity => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -416,7 +421,10 @@ abstract class $EarthquakeHistoryDetailConfigCopyWith<$Res> {
       _$EarthquakeHistoryDetailConfigCopyWithImpl<$Res,
           EarthquakeHistoryDetailConfig>;
   @useResult
-  $Res call({IntensityDisplayMode intensityDisplayMode});
+  $Res call(
+      {IntensityFillMode intensityFillMode,
+      bool showIntensityIcon,
+      bool showingLpgmIntensity});
 }
 
 /// @nodoc
@@ -433,13 +441,23 @@ class _$EarthquakeHistoryDetailConfigCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? intensityDisplayMode = null,
+    Object? intensityFillMode = null,
+    Object? showIntensityIcon = null,
+    Object? showingLpgmIntensity = null,
   }) {
     return _then(_value.copyWith(
-      intensityDisplayMode: null == intensityDisplayMode
-          ? _value.intensityDisplayMode
-          : intensityDisplayMode // ignore: cast_nullable_to_non_nullable
-              as IntensityDisplayMode,
+      intensityFillMode: null == intensityFillMode
+          ? _value.intensityFillMode
+          : intensityFillMode // ignore: cast_nullable_to_non_nullable
+              as IntensityFillMode,
+      showIntensityIcon: null == showIntensityIcon
+          ? _value.showIntensityIcon
+          : showIntensityIcon // ignore: cast_nullable_to_non_nullable
+              as bool,
+      showingLpgmIntensity: null == showingLpgmIntensity
+          ? _value.showingLpgmIntensity
+          : showingLpgmIntensity // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -453,7 +471,10 @@ abstract class _$$EarthquakeHistoryDetailConfigImplCopyWith<$Res>
       __$$EarthquakeHistoryDetailConfigImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({IntensityDisplayMode intensityDisplayMode});
+  $Res call(
+      {IntensityFillMode intensityFillMode,
+      bool showIntensityIcon,
+      bool showingLpgmIntensity});
 }
 
 /// @nodoc
@@ -469,13 +490,23 @@ class __$$EarthquakeHistoryDetailConfigImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? intensityDisplayMode = null,
+    Object? intensityFillMode = null,
+    Object? showIntensityIcon = null,
+    Object? showingLpgmIntensity = null,
   }) {
     return _then(_$EarthquakeHistoryDetailConfigImpl(
-      intensityDisplayMode: null == intensityDisplayMode
-          ? _value.intensityDisplayMode
-          : intensityDisplayMode // ignore: cast_nullable_to_non_nullable
-              as IntensityDisplayMode,
+      intensityFillMode: null == intensityFillMode
+          ? _value.intensityFillMode
+          : intensityFillMode // ignore: cast_nullable_to_non_nullable
+              as IntensityFillMode,
+      showIntensityIcon: null == showIntensityIcon
+          ? _value.showIntensityIcon
+          : showIntensityIcon // ignore: cast_nullable_to_non_nullable
+              as bool,
+      showingLpgmIntensity: null == showingLpgmIntensity
+          ? _value.showingLpgmIntensity
+          : showingLpgmIntensity // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -485,7 +516,9 @@ class __$$EarthquakeHistoryDetailConfigImplCopyWithImpl<$Res>
 class _$EarthquakeHistoryDetailConfigImpl
     implements _EarthquakeHistoryDetailConfig {
   const _$EarthquakeHistoryDetailConfigImpl(
-      {this.intensityDisplayMode = IntensityDisplayMode.fillCity});
+      {this.intensityFillMode = IntensityFillMode.fillCity,
+      this.showIntensityIcon = true,
+      this.showingLpgmIntensity = false});
 
   factory _$EarthquakeHistoryDetailConfigImpl.fromJson(
           Map<String, dynamic> json) =>
@@ -494,11 +527,21 @@ class _$EarthquakeHistoryDetailConfigImpl
   /// 震度の表示方法
   @override
   @JsonKey()
-  final IntensityDisplayMode intensityDisplayMode;
+  final IntensityFillMode intensityFillMode;
+
+  /// 震度観測点のアイコン表示
+  @override
+  @JsonKey()
+  final bool showIntensityIcon;
+
+  /// fromJsonでは、常にfalseを返す
+  @override
+  @JsonKey()
+  final bool showingLpgmIntensity;
 
   @override
   String toString() {
-    return 'EarthquakeHistoryDetailConfig(intensityDisplayMode: $intensityDisplayMode)';
+    return 'EarthquakeHistoryDetailConfig(intensityFillMode: $intensityFillMode, showIntensityIcon: $showIntensityIcon, showingLpgmIntensity: $showingLpgmIntensity)';
   }
 
   @override
@@ -506,13 +549,18 @@ class _$EarthquakeHistoryDetailConfigImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeHistoryDetailConfigImpl &&
-            (identical(other.intensityDisplayMode, intensityDisplayMode) ||
-                other.intensityDisplayMode == intensityDisplayMode));
+            (identical(other.intensityFillMode, intensityFillMode) ||
+                other.intensityFillMode == intensityFillMode) &&
+            (identical(other.showIntensityIcon, showIntensityIcon) ||
+                other.showIntensityIcon == showIntensityIcon) &&
+            (identical(other.showingLpgmIntensity, showingLpgmIntensity) ||
+                other.showingLpgmIntensity == showingLpgmIntensity));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, intensityDisplayMode);
+  int get hashCode => Object.hash(
+      runtimeType, intensityFillMode, showIntensityIcon, showingLpgmIntensity);
 
   @JsonKey(ignore: true)
   @override
@@ -533,8 +581,9 @@ class _$EarthquakeHistoryDetailConfigImpl
 abstract class _EarthquakeHistoryDetailConfig
     implements EarthquakeHistoryDetailConfig {
   const factory _EarthquakeHistoryDetailConfig(
-          {final IntensityDisplayMode intensityDisplayMode}) =
-      _$EarthquakeHistoryDetailConfigImpl;
+      {final IntensityFillMode intensityFillMode,
+      final bool showIntensityIcon,
+      final bool showingLpgmIntensity}) = _$EarthquakeHistoryDetailConfigImpl;
 
   factory _EarthquakeHistoryDetailConfig.fromJson(Map<String, dynamic> json) =
       _$EarthquakeHistoryDetailConfigImpl.fromJson;
@@ -542,7 +591,15 @@ abstract class _EarthquakeHistoryDetailConfig
   @override
 
   /// 震度の表示方法
-  IntensityDisplayMode get intensityDisplayMode;
+  IntensityFillMode get intensityFillMode;
+  @override
+
+  /// 震度観測点のアイコン表示
+  bool get showIntensityIcon;
+  @override
+
+  /// fromJsonでは、常にfalseを返す
+  bool get showingLpgmIntensity;
   @override
   @JsonKey(ignore: true)
   _$$EarthquakeHistoryDetailConfigImplCopyWith<

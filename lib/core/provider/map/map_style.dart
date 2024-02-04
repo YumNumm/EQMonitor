@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:eqmonitor/core/provider/map/map_config.dart';
@@ -160,7 +159,6 @@ class MapStyle {
         },
       ],
     };
-    log(jsonEncode(json));
     return _saveStyleJson(json, 'maplibre-$isDark');
   }
 }

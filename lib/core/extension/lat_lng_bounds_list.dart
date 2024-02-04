@@ -21,3 +21,16 @@ extension LatLngBoundsListEx on List<LatLngBounds> {
     );
   }
 }
+
+extension LatLngBoundsEx on LatLngBounds {
+  LatLngBounds add(LatLng latLng) {
+    final minLat = min(southWest.lat, latLng.lat);
+    final minLng = min(southWest.lng, latLng.lng);
+    final maxLat = max(northEast.lat, latLng.lat);
+    final maxLng = max(northEast.lng, latLng.lng);
+    return LatLngBounds(
+      southWest: LatLng(lat: minLat, lng: minLng),
+      northEast: LatLng(lat: maxLat, lng: maxLng),
+    );
+  }
+}
