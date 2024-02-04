@@ -9,7 +9,7 @@ part of 'earthquake_history_config_provider.dart';
 // **************************************************************************
 
 String _$earthquakeHistoryConfigHash() =>
-    r'b1fdfbaa45d3af3f74336154f5d1f905bd84e51c';
+    r'453f49269fbf832c29a5b1363665b4b05884eb3f';
 
 /// See also [EarthquakeHistoryConfig].
 @ProviderFor(EarthquakeHistoryConfig)

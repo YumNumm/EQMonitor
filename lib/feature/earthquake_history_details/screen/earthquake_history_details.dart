@@ -12,6 +12,7 @@ import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_hist
 import 'package:eqmonitor/feature/earthquake_history_details/component/earthquake_map.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/prefecture_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/prefecture_lpgm_intensity.dart';
+import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +67,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                       )
                       .join('・'),
                   style: theme.textTheme.displayLarge!.copyWith(
-                    color: colorScheme.error,
+                    color: colorScheme.onError,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -78,8 +79,23 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                 hasAppBar: false,
                 controller: sheetController,
                 fab: [
+                  // layer controller
+                  if (data.earthquake.intensity != null)
+                    FloatingActionButton.small(
+                      heroTag: 'earthquake_history_details_layer_fab',
+                      tooltip: '地図の表示レイヤーを切り替える',
+                      onPressed: () => showEarthquakeHistoryDetailConfigDialog(
+                        context,
+                        showCitySelector:
+                            data.earthquake.intensity?.cities != null,
+                        hasLpgmIntensity: data.earthquake.lgIntensity != null,
+                      ),
+                      elevation: 4,
+                      child: const Icon(Icons.layers),
+                    ),
                   FloatingActionButton.small(
                     heroTag: 'earthquake_history_details_fab',
+                    tooltip: '表示領域を地図に合わせる',
                     onPressed: () {
                       if (navigateToHomeFunction.value != null) {
                         navigateToHomeFunction.value!.call();
@@ -475,6 +491,6 @@ class _EarthquakeCommentWidget extends StatelessWidget {
         ),
       );
     }
-    return Container();
+    return const SizedBox.shrink();
   }
 }

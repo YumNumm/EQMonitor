@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_lg_intensity_icon.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -34,6 +35,24 @@ class IntensityRendererWidget extends HookConsumerWidget {
                     .onRendered(data, intensity),
                 IntensityIconType.smallWithoutText => ref
                     .read(intensityIconFillRenderProvider.notifier)
+                    .onRendered(data, intensity),
+                _ => null,
+              },
+              type: type,
+            ),
+        for (final intensity in JmaLgIntensity.values)
+          for (final type in [
+            IntensityIconType.small,
+            IntensityIconType.smallWithoutText,
+          ])
+            _LpgmIntensityRender(
+              intensity: intensity,
+              onRendered: (data) => switch (type) {
+                IntensityIconType.small => ref
+                    .read(lpgmIntensityIconRenderProvider.notifier)
+                    .onRendered(data, intensity),
+                IntensityIconType.smallWithoutText => ref
+                    .read(lpgmIntensityIconFillRenderProvider.notifier)
                     .onRendered(data, intensity),
                 _ => null,
               },
@@ -78,6 +97,47 @@ class _IntensityRender extends HookConsumerWidget {
     return RepaintBoundary(
       key: _key,
       child: JmaIntensityIcon(
+        intensity: intensity,
+        type: type,
+      ),
+    );
+  }
+}
+
+class _LpgmIntensityRender extends HookConsumerWidget {
+  _LpgmIntensityRender({
+    required this.onRendered,
+    required this.intensity,
+    required this.type,
+  }) : super() {
+    _key = GlobalObjectKey((intensity, type));
+  }
+
+  final void Function(Uint8List data) onRendered;
+  final JmaLgIntensity intensity;
+  final IntensityIconType type;
+
+  late final GlobalObjectKey _key;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    useEffect(
+      () {
+        WidgetsBinding.instance.endOfFrame.then((_) async {
+          await Future<void>.delayed(const Duration(milliseconds: 100));
+          final boundary =
+              _key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+          final image = await boundary.toImage();
+          final byte = await image.toByteData(format: ImageByteFormat.png);
+          onRendered.call(byte!.buffer.asUint8List());
+        });
+        return null;
+      },
+      [],
+    );
+    return RepaintBoundary(
+      key: _key,
+      child: JmaLgIntensityIcon(
         intensity: intensity,
         type: type,
       ),
