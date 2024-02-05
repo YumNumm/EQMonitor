@@ -23,6 +23,22 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Push a new beta build to TestFlight
 
+### ios register_new_devices
+
+```sh
+[bundle exec] fastlane ios register_new_devices
+```
+
+Register Devices
+
+### ios match_after_register
+
+```sh
+[bundle exec] fastlane ios match_after_register
+```
+
+match_after_register
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

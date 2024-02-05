@@ -23,11 +23,9 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1113</string>
+	<string>1117</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
-	<key>FLTEnableImpeller</key>
-  <false />
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>mailto</string>
