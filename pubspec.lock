@@ -421,15 +421,19 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/eqapi_client"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "8da1857cfe8bcb78cf3054546c2a10f27cecf760"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   eqapi_types:
     dependency: "direct main"
     description:
       path: "packages/eqapi_types"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "8da1857cfe8bcb78cf3054546c2a10f27cecf760"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   equatable:
     dependency: transitive
@@ -443,8 +447,10 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/extensions"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "8da1857cfe8bcb78cf3054546c2a10f27cecf760"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   fake_async:
     dependency: transitive
@@ -474,26 +480,26 @@ packages:
     dependency: "direct main"
     description:
       name: firebase_analytics
-      sha256: "5e92d510eacd66c354718fd9cc8f66ffdfa025640b645c4742297fb973770508"
+      sha256: "0240076090d77045d757aecb090616066d23b343840d4c21074094d6fe40a184"
       url: "https://pub.dev"
     source: hosted
-    version: "10.7.4"
+    version: "10.8.0"
   firebase_analytics_platform_interface:
     dependency: transitive
     description:
       name: firebase_analytics_platform_interface
-      sha256: "72977325a72af5ebb8e53b5c5533cb2e33eec481cd46210cfe5427f5efba55d8"
+      sha256: "6d9baa077d16b47ef5f19d982c4fc475597991aa53b0c601216faa3e1cdab45f"
       url: "https://pub.dev"
     source: hosted
-    version: "3.8.4"
+    version: "3.9.0"
   firebase_analytics_web:
     dependency: transitive
     description:
       name: firebase_analytics_web
-      sha256: "8b9710be7e292e2a5ad34fff449d4b668c5808fb339649e69181727a4534f579"
+      sha256: "89a740249bce9d52a99db4e501be6087ca6749c73c47cff2b174802be10abd81"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.5+11"
+    version: "0.5.5+12"
   firebase_core:
     dependency: "direct main"
     description:
@@ -829,26 +835,23 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
-  jma_map:
-    dependency: "direct overridden"
-    description:
-      path: "packages/jma_map"
-      relative: true
-    source: path
-    version: "1.0.0"
   jma_parameter_api_client:
     dependency: "direct main"
     description:
       path: "packages/jma_parameter_api_client"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "8da1857cfe8bcb78cf3054546c2a10f27cecf760"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   jma_parameter_types:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       path: "packages/jma_parameter_types"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "8da1857cfe8bcb78cf3054546c2a10f27cecf760"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   js:
     dependency: transitive
@@ -878,8 +881,10 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/lat_lng"
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "8da1857cfe8bcb78cf3054546c2a10f27cecf760"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   latlong2:
     dependency: "direct main"
