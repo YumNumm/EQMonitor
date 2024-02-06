@@ -31,22 +31,5 @@ platform :ios do
       ipa: "./Runner.ipa",
     )
   end
-
-  desc "Register Devices"
-  lane :register_new_devices do
-    register_devices(
-      devices: {
-        "iPhone 14 Pro" => "00008120-00092DD63C80201E"
-      }
-    )
-    match_after_register
-  end
-
-  desc "match_after_register"
-  lane :match_after_register do
-    # 前回との差分を見て，新しいデバイスが追加されているなら新しくprovisioning profileを作成する
-    match(type: "development", force_for_new_devices: true)
-    match(type: "appstore", force_for_new_devices: true)
-  end
 end
 
