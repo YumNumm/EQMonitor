@@ -47,6 +47,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // 参照元が定数なので notifier から取得
     final sheetController = useSheetController();
     useEffect(
       () {
@@ -88,7 +89,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
                         _ => height * 0.3,
                       };
                       // sheetの高さを取得
-                      await notifier.animateCameraToDefaultPosition(
+                      await notifier.animateToHomeBoundary(
                         bottom: bottomPadding,
                       );
                     },

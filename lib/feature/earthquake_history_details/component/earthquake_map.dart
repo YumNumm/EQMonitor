@@ -412,9 +412,8 @@ class EarthquakeMapWidget extends HookConsumerWidget {
     return compute(
       (arg) {
         final earthquake = arg.$1;
-        final earthquakeParam = arg.$2;
-        final earthquakeParams = arg.$3;
-        final colorModel = arg.$4;
+        final earthquakeParams = arg.$2;
+        final colorModel = arg.$3;
         final regionsItem = earthquake.intensity?.regions
             .groupListsBy((e) => e.maxInt)
             .entries
@@ -513,7 +512,6 @@ class EarthquakeMapWidget extends HookConsumerWidget {
       },
       (
         earthquake,
-        jmaMap,
         earthquakeParams,
         colorModel,
       ),
