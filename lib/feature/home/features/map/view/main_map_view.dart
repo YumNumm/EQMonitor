@@ -159,27 +159,8 @@ class MainMapView extends HookConsumerWidget {
                 ),
             ],
           );
-          unawaited(
-            [
-              notifier.onMapControllerRegistered(),
-              notifier.startUpdateEew(),
-              notifier.moveCameraToDefaultPosition(
-                bottom: 100,
-                left: 10,
-                right: 10,
-              ),
-            ].wait,
-          );
-          Future<void>.delayed(
-            const Duration(
-              milliseconds: 100,
-            ),
-            () async => notifier.moveCameraToDefaultPosition(
-              bottom: 100,
-              left: 10,
-              right: 10,
-            ),
-          );
+          await notifier.onMapControllerRegistered();
+          await notifier.startUpdateEew();
         },
         rotateGesturesEnabled: false,
         tiltGesturesEnabled: false,
@@ -189,10 +170,11 @@ class MainMapView extends HookConsumerWidget {
     return Stack(
       children: [
         map,
-        if (ref
-            .watch(debuggerProvider.select((value) => value.isDebugger))) ...[
+        if (ref.watch(debuggerProvider.select((value) => value.isDebugger)))
           _MapDebugWidget(cameraPosition: cameraPosition),
-        ],
+        Card(
+          child: Text(ref.watch(mainMapViewModelProvider).toJson().toString()),
+        ),
       ],
     );
   }

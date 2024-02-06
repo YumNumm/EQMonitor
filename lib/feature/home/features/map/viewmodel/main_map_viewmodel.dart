@@ -10,23 +10,29 @@ import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/inten
 import 'package:eqmonitor/core/provider/map/map_style.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/home/features/eew/provider/eew_alive_telegram.dart';
+import 'package:eqmonitor/feature/home/features/estimated_intensity/provider/estimated_intensity_provider.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/kmoni_observation_point.dart';
+import 'package:eqmonitor/feature/home/features/map/model/main_map_viewmodel_state.dart';
 import 'package:eqmonitor/feature/home/features/travel_time/provider/travel_time_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:lat_lng/lat_lng.dart' as lat_lng;
 import 'package:latlong2/latlong.dart' as latlong2;
+import 'package:maplibre_gl/maplibre_gl.dart' as maplibre_gl;
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sheet/sheet.dart';
 
 part 'main_map_viewmodel.freezed.dart';
 part 'main_map_viewmodel.g.dart';
 
-@Riverpod(dependencies: [EewAliveTelegram], keepAlive: true)
+@Riverpod(
+  keepAlive: true,
+)
 class MainMapViewModel extends _$MainMapViewModel {
   @override
-  void build() {
+  MainMapViewmodelState build() {
     ref
       ..listen(
         kmoniViewModelProvider,
@@ -41,8 +47,21 @@ class MainMapViewModel extends _$MainMapViewModel {
       ..listen(
         eewAliveTelegramProvider,
         (_, value) => _onEewStateChanged(value ?? []),
+      )
+      ..listen(
+        estimatedIntensityProvider,
+        (_, value) => _onEstimatedIntensityChanged(value),
       );
+    return MainMapViewmodelState(
+      isHomePosition: true,
+      homeBoundary: defaultBoundary,
+    );
   }
+
+  static LatLngBounds defaultBoundary = LatLngBounds(
+    southwest: const LatLng(30, 128.8),
+    northeast: const LatLng(45.8, 145.1),
+  );
 
   MaplibreMapController? _controller;
 
@@ -66,6 +85,9 @@ class MainMapViewModel extends _$MainMapViewModel {
     _eewEstimatedIntensityService = _EewEstimatedIntensityService(
       controller: controller,
     );
+
+    await moveToHomeBoundary();
+
     await (
       _kmoniObservationPointService!.init(),
       _eewHypocenterService!.init(
@@ -79,6 +101,15 @@ class MainMapViewModel extends _$MainMapViewModel {
       ),
     ).wait;
 
+    // 地図の移動を監視
+    controller.addListener(() {
+      final position = controller.cameraPosition;
+      if (position != null && state.isHomePosition) {
+        state = state.copyWith(
+          isHomePosition: false,
+        );
+      }
+    });
     ref.onDispose(() async {
       await (
         _kmoniObservationPointService!.dispose(),
@@ -138,6 +169,55 @@ class MainMapViewModel extends _$MainMapViewModel {
     await _eewEstimatedIntensityService!.update(transformed);
   }
 
+  Future<void> _onEstimatedIntensityChanged(
+    List<AnalyzedKmoniObservationPoint> points,
+  ) async {
+    final boundary = _getEstimatedIntensityBoundary(points);
+    if (boundary != null) {
+      await changeHomeBoundaryWithAnimation(
+        bounds: boundary,
+      );
+    } else {
+      state = state.copyWith(
+        isHomePosition: false,
+        homeBoundary: defaultBoundary,
+      );
+      await animateToHomeBoundary();
+    }
+  }
+
+  LatLngBounds? _getEstimatedIntensityBoundary(
+    List<AnalyzedKmoniObservationPoint> points,
+  ) {
+    final filtered = points.where((e) => e.intensityValue! > 0).toList();
+    if (filtered.isEmpty) {
+      return null;
+    }
+    final max = filtered.first.intensityValue!;
+    // しきい値
+    final threshold = max - 2;
+    final filteredPoints =
+        filtered.where((e) => e.intensityValue! >= threshold);
+    if (filteredPoints.isEmpty) {
+      return null;
+    }
+    final latLngs = filteredPoints.map((e) => e.point.latLng).toList()
+      ..addAll(
+        (ref.read(eewAliveNormalTelegramProvider))
+            .map((element) => element.latestEew)
+            .whereType<TelegramVxse45Body>()
+            .where((element) => element.hypocenter != null)
+            .map((e) {
+          final coord = e.hypocenter!.coordinate;
+          return lat_lng.LatLng(
+            coord!.lat,
+            coord.lon,
+          );
+        }),
+      );
+    return latLngs.toBounds;
+  }
+
   // *********** Kyoshin Monitor Related ***********
   _KmoniObservationPointService? _kmoniObservationPointService;
   Future<void> _onKmoniStateChanged(
@@ -190,10 +270,7 @@ class MainMapViewModel extends _$MainMapViewModel {
     }
     await _controller!.moveCamera(
       CameraUpdate.newLatLngBounds(
-        LatLngBounds(
-          southwest: const LatLng(30, 128.8),
-          northeast: const LatLng(45.8, 145.1),
-        ),
+        defaultBoundary,
         bottom: bottom,
         left: left,
         right: right,
@@ -214,16 +291,113 @@ class MainMapViewModel extends _$MainMapViewModel {
     }
     await controller.animateCamera(
       CameraUpdate.newLatLngBounds(
-        LatLngBounds(
-          southwest: const LatLng(30, 128.8),
-          northeast: const LatLng(45.8, 145.1),
-        ),
+        defaultBoundary,
         bottom: bottom,
         left: 10,
         right: 10,
         top: 10,
       ),
       duration: duration,
+    );
+  }
+
+  // *********** Map Boundary Utilities ***********
+  Future<void> changeHomeBoundaryWithAnimation({
+    required LatLngBounds bounds,
+    double bottom = 50,
+    double left = 10,
+    double right = 10,
+    double top = 10,
+    Duration duration = const Duration(
+      milliseconds: 250,
+    ),
+
+    /// 現在の表示領域を破棄し、強制的に新しい表示領域を適用するかどうか
+    bool isForce = false,
+  }) async {
+    final controller = _controller;
+    if (controller == null) {
+      throw Exception('MaplibreMapController is null');
+    }
+    // 現在のホームポジションから変更がない場合は何もしない
+    if (!isForce && state.isHomePosition && state.homeBoundary == bounds) {
+      return;
+    }
+    // 強制移動 もしくは ホームから移動していない場合(=isHomePosition == true)の場合は
+    // アニメーションを実行する
+    if (isForce || state.isHomePosition) {
+      state = state.copyWith(
+        homeBoundary: bounds,
+      );
+      await controller.animateCamera(
+        CameraUpdate.newLatLngBounds(
+          bounds,
+          bottom: bottom,
+          left: left,
+          right: right,
+          top: top,
+        ),
+        duration: duration,
+      );
+      state = state.copyWith(
+        isHomePosition: true,
+      );
+    } else {
+      state = state.copyWith(
+        homeBoundary: bounds,
+      );
+    }
+  }
+
+  Future<void> animateToHomeBoundary({
+    double bottom = 150,
+    double left = 10,
+    double right = 10,
+    double top = 10,
+    Duration duration = const Duration(
+      milliseconds: 250,
+    ),
+  }) async {
+    final controller = _controller;
+    if (controller == null) {
+      throw Exception('MaplibreMapController is null');
+    }
+    await controller.animateCamera(
+      CameraUpdate.newLatLngBounds(
+        state.homeBoundary,
+        bottom: bottom,
+        left: left,
+        right: right,
+        top: top,
+      ),
+      duration: duration,
+    );
+    state = state.copyWith(
+      isHomePosition: true,
+    );
+  }
+
+  Future<void> moveToHomeBoundary({
+    double bottom = 100,
+    double left = 10,
+    double right = 10,
+    double top = 10,
+  }) async {
+    final controller = _controller;
+    if (controller == null) {
+      throw Exception('MaplibreMapController is null');
+    }
+    await controller.moveCamera(
+      CameraUpdate.newLatLngBounds(
+        state.homeBoundary,
+        bottom: bottom,
+        left: left,
+        right: right,
+        top: top,
+      ),
+    );
+    state = state.copyWith(
+      isHomePosition: true,
     );
   }
 }
@@ -870,4 +1044,33 @@ class _EewHypocenterProperties with _$EewHypocenterProperties {
   // ignore: unused_element
   factory _EewHypocenterProperties.fromJson(Map<String, dynamic> json) =>
       _$$_EewHypocenterPropertiesImplFromJson(json);
+}
+
+extension ListLatLngEx on List<lat_lng.LatLng> {
+  LatLngBounds get toBounds {
+    final latLngs = this;
+    final latLngsSorted = latLngs.sorted(
+      (a, b) => a.lat.compareTo(b.lat),
+    );
+    final latMin = latLngsSorted.first.lat;
+    final latMax = latLngsSorted.last.lat;
+    final lngs = latLngsSorted.where(
+      (e) => e.lat == latMin || e.lat == latMax,
+    );
+    final lngsSorted = lngs.sorted(
+      (a, b) => a.lon.compareTo(b.lon),
+    );
+    final lngMin = lngsSorted.first.lon;
+    final lngMax = lngsSorted.last.lon;
+    return LatLngBounds(
+      southwest: LatLng(
+        latMin,
+        lngMin,
+      ),
+      northeast: LatLng(
+        latMax,
+        lngMax,
+      ),
+    );
+  }
 }
