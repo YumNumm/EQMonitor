@@ -3,12 +3,15 @@ import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_lg_intensity_icon.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
+import 'package:eqmonitor/core/provider/config/earthquake_history/earthquake_history_config_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
+import 'package:eqmonitor/feature/earthquake_history/viewmodel/earthquake_history_view_model.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/earthquake_map.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/prefecture_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/prefecture_lpgm_intensity.dart';
@@ -26,27 +29,51 @@ import 'package:url_launcher/url_launcher.dart';
 
 class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
   const EarthquakeHistoryDetailsPage({
-    required this.data,
+    required EarthquakeHistoryItem data,
     super.key,
-  });
+  }) : _data = data;
 
-  final EarthquakeHistoryItem data;
+  final EarthquakeHistoryItem _data;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final data = useState(_data);
+    // earthquakeDataが変わったら再構築
+    ref.listen(
+      earthquakeHistoryViewModelProvider,
+      (previous, next) {
+        final previousItem = previous?.valueOrNull
+            ?.firstWhereOrNull((element) => element.eventId == _data.eventId);
+        final nextItem = next?.valueOrNull
+            ?.firstWhereOrNull((element) => element.eventId == _data.eventId);
+        if (nextItem == null) {
+          return;
+        }
+        if (previousItem != nextItem) {
+          data.value = nextItem;
+        }
+      },
+    );
+
+    final maxIntensity = data.value.earthquake.intensity?.maxInt;
+    final maxLgIntensity = data.value.earthquake.lgIntensity?.maxLgInt;
+
+    final config = ref
+        .watch(earthquakeHistoryConfigProvider.select((value) => value.detail));
+
     final sheetController = SheetController();
     final navigateToHomeFunction = useState<VoidCallback?>(null);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final telegramType = data.telegrams.map((e) => e.status).toSet()
+    final telegramType = data.value.telegrams.map((e) => e.status).toSet()
       ..remove(TelegramStatus.normal);
 
     return Scaffold(
       body: Stack(
         children: [
           EarthquakeMapWidget(
-            item: data,
+            item: data.value,
             showIntensityIcon: true,
             registerNavigateToHome: (func) =>
                 navigateToHomeFunction.value = func,
@@ -73,45 +100,100 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                 ),
               ),
             ),
-          Stack(
-            children: [
-              SheetFloatingActionButtons(
-                hasAppBar: false,
-                controller: sheetController,
-                fab: [
-                  // layer controller
-                  if (data.earthquake.intensity != null)
-                    FloatingActionButton.small(
-                      heroTag: 'earthquake_history_details_layer_fab',
-                      tooltip: '地図の表示レイヤーを切り替える',
-                      onPressed: () => showEarthquakeHistoryDetailConfigDialog(
-                        context,
-                        showCitySelector:
-                            data.earthquake.intensity?.cities != null,
-                        hasLpgmIntensity: data.earthquake.lgIntensity != null,
+          SheetFloatingActionButtons(
+            hasAppBar: false,
+            controller: sheetController,
+            fab: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IgnorePointer(
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 250),
+                      child: Visibility(
+                        visible: !config.showIntensityIcon,
+                        child: BorderedContainer(
+                          key: ValueKey(
+                            (config, maxIntensity, maxLgIntensity),
+                          ),
+                          margin: const EdgeInsets.all(4),
+                          padding: const EdgeInsets.all(4),
+                          borderRadius: BorderRadius.circular((25 / 5) + 5),
+                          child: Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              if (config.showingLpgmIntensity &&
+                                  maxLgIntensity != null)
+                                for (final intensity in [
+                                  ...JmaLgIntensity.values,
+                                ].where(
+                                  (e) =>
+                                      e != JmaLgIntensity.zero &&
+                                      e <= maxLgIntensity,
+                                ))
+                                  JmaLgIntensityIcon(
+                                    type: IntensityIconType.filled,
+                                    intensity: intensity,
+                                    size: 25,
+                                  )
+                              else
+                                for (final intensity in [
+                                  ...JmaIntensity.values,
+                                ].where(
+                                  (e) => e <= maxIntensity!,
+                                ))
+                                  JmaIntensityIcon(
+                                    type: IntensityIconType.filled,
+                                    intensity: intensity,
+                                    size: 25,
+                                  ),
+                            ],
+                          ),
+                        ),
                       ),
-                      elevation: 4,
-                      child: const Icon(Icons.layers),
                     ),
-                  FloatingActionButton.small(
-                    heroTag: 'earthquake_history_details_fab',
-                    tooltip: '表示領域を地図に合わせる',
-                    onPressed: () {
-                      if (navigateToHomeFunction.value != null) {
-                        navigateToHomeFunction.value!.call();
-                      }
-                    },
-                    elevation: 4,
-                    child: const Icon(Icons.home),
+                  ),
+                  Column(
+                    children: [
+                      // layer controller
+                      if (data.value.earthquake.intensity != null)
+                        FloatingActionButton.small(
+                          heroTag: 'earthquake_history_details_layer_fab',
+                          tooltip: '地図の表示レイヤーを切り替える',
+                          onPressed: () =>
+                              showEarthquakeHistoryDetailConfigDialog(
+                            context,
+                            showCitySelector:
+                                data.value.earthquake.intensity?.cities != null,
+                            hasLpgmIntensity:
+                                data.value.earthquake.lgIntensity != null,
+                          ),
+                          elevation: 4,
+                          child: const Icon(Icons.layers),
+                        ),
+                      FloatingActionButton.small(
+                        heroTag: 'earthquake_history_details_fab',
+                        tooltip: '表示領域を地図に合わせる',
+                        onPressed: () {
+                          if (navigateToHomeFunction.value != null) {
+                            navigateToHomeFunction.value!.call();
+                          }
+                        },
+                        elevation: 4,
+                        child: const Icon(Icons.home),
+                      ),
+                    ],
                   ),
                 ],
               ),
-              // Sheet
-              _Sheet(
-                sheetController: sheetController,
-                item: data,
-              ),
             ],
+          ),
+          // Sheet
+          _Sheet(
+            sheetController: sheetController,
+            item: data.value,
           ),
           if (Navigator.canPop(context))
             // 戻るボタン

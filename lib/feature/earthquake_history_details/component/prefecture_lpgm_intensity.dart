@@ -93,7 +93,6 @@ class PrefectureLpgmIntensityWidget extends HookConsumerWidget {
                 leading: JmaLgIntensityIcon(
                   intensity: kv.key,
                   type: IntensityIconType.filled,
-                  size: 16,
                 ),
                 title: Text(
                   '長周期地震動階級${kv.key.type}',

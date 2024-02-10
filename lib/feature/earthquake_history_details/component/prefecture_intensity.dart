@@ -171,7 +171,6 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
                     leading: JmaIntensityIcon(
                       intensity: intensity,
                       type: IntensityIconType.filled,
-                      size: 16,
                     ),
                     title: Text(
                       title,

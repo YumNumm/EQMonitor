@@ -66,58 +66,50 @@ class _HomeBodyWidget extends HookConsumerWidget {
     final child = Stack(
       children: [
         const MainMapView(),
-        RepaintBoundary(
-          child: Stack(
-            children: [
-              SheetFloatingActionButtons(
-                controller: sheetController,
-                fab: [
-                  FloatingActionButton.small(
-                    heroTag: 'home',
-                    tooltip: '表示領域領域を戻す',
-                    onPressed: () async {
-                      final notifier =
-                          ref.read(mainMapViewModelProvider.notifier);
-                      if (!notifier.isMapControllerRegistered()) {
-                        return;
-                      }
-                      // 画面の高さを取得
-                      final height = MediaQuery.sizeOf(context).height;
-                      final sheetRatio = sheetController.animation.value;
-                      final bottomPadding = switch (sheetRatio) {
-                        < 0.3 => height * sheetRatio,
-                        _ => height * 0.3,
-                      };
-                      // sheetの高さを取得
-                      await notifier.animateToHomeBoundary(
-                        bottom: bottomPadding,
-                      );
-                    },
-                    elevation: 4,
-                    child: const Icon(Icons.home),
-                  ),
-                  if (kDebugMode)
-                    FloatingActionButton.small(
-                      onPressed:
-                          ref.read(telegramWsProvider.notifier).requestSample,
-                      heroTag: 'sample',
-                      child: const Icon(Icons.warning),
-                    ),
-                ],
+        SheetFloatingActionButtons(
+          controller: sheetController,
+          fab: [
+            FloatingActionButton.small(
+              heroTag: 'home',
+              tooltip: '表示領域領域を戻す',
+              onPressed: () async {
+                final notifier = ref.read(mainMapViewModelProvider.notifier);
+                if (!notifier.isMapControllerRegistered()) {
+                  return;
+                }
+                // 画面の高さを取得
+                final height = MediaQuery.sizeOf(context).height;
+                final sheetRatio = sheetController.animation.value;
+                final bottomPadding = switch (sheetRatio) {
+                  < 0.3 => height * sheetRatio,
+                  _ => height * 0.3,
+                };
+                // sheetの高さを取得
+                await notifier.animateCameraToDefaultPosition(
+                  bottom: bottomPadding,
+                );
+              },
+              elevation: 4,
+              child: const Icon(Icons.home),
+            ),
+            if (kDebugMode)
+              FloatingActionButton.small(
+                onPressed: ref.read(telegramWsProvider.notifier).requestSample,
+                heroTag: 'sample',
+                child: const Icon(Icons.warning),
               ),
-              // Sheet
-              _Sheet(sheetController: sheetController),
-              FractionalTranslation(
-                translation: -const Offset(2, 2),
-                child: const IntensityRendererWidget(),
-              ),
-              FractionalTranslation(
-                translation: -const Offset(2, 2),
-                // translation: -const Offset(2, 2),
-                child: const HypocenterRenderWidget(),
-              ),
-            ],
-          ),
+          ],
+        ),
+        // Sheet
+        _Sheet(sheetController: sheetController),
+        FractionalTranslation(
+          translation: -const Offset(2, 2),
+          child: const IntensityRendererWidget(),
+        ),
+        FractionalTranslation(
+          translation: -const Offset(2, 2),
+          // translation: -const Offset(2, 2),
+          child: const HypocenterRenderWidget(),
         ),
       ],
     );

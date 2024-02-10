@@ -1,7 +1,6 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
@@ -40,11 +39,12 @@ typedef _RegionLpgmColorItem = ({
 
 class EarthquakeMapWidget extends HookConsumerWidget {
   const EarthquakeMapWidget({
-    super.key,
     required this.item,
     required this.showIntensityIcon,
     required this.registerNavigateToHome,
+    super.key,
   });
+
   final EarthquakeHistoryItem item;
   final bool showIntensityIcon;
   final void Function(void Function() func) registerNavigateToHome;
@@ -68,8 +68,6 @@ class EarthquakeMapWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final stopWatch = Stopwatch()..start();
-    log('EarthquakeMapWidget build start');
     final earthquake = item.earthquake;
     final intensity = earthquake.intensity;
 
@@ -84,8 +82,9 @@ class EarthquakeMapWidget extends HookConsumerWidget {
 
     final hypocenterIconRender = ref.watch(hypocenterIconRenderProvider);
     final jmaMap = ref.watch(jmaMapProvider).valueOrNull;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final mapStyle = ref.watch(mapStyleProvider);
+
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final styleJsonFutureing = useMemoized(
       () => mapStyle.getStyle(
         isDark: isDark,
@@ -110,7 +109,6 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         ),
       );
     }
-    log('EarthquakeMapWidget build phase 1 ${stopWatch.elapsedMilliseconds}ms');
 
     final itemCalcurateFutureing = useMemoized(
       () {
@@ -141,7 +139,6 @@ class EarthquakeMapWidget extends HookConsumerWidget {
       regionsLpgmItem,
       stationsLpgmItem
     ) = result;
-    log('EarthquakeMapWidget build phase 2 ${stopWatch.elapsedMilliseconds}ms');
     final bbox = useMemoized(
       () {
         final maxInt = intensity?.maxInt;
@@ -216,7 +213,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
             earthquake: earthquake,
           ),
           if (config.showingLpgmIntensity) ...[
-            if (config.intensityFillMode == IntensityFillMode.fillRegion)
+            if (config.intensityFillMode != IntensityFillMode.none)
               _FillRegionLpgmIntensityAction(
                 regionsItem: regionsLpgmItem ?? [],
               ),
@@ -245,13 +242,6 @@ class EarthquakeMapWidget extends HookConsumerWidget {
                 colorModel: colorModel,
               ),
           ],
-          // TODO
-          /*         if (config.intensityFillMode ==
-              intensityFillMode.fillLpgmRegion)
-            _FillLpgmAction(
-              regionsLpgmItem: regionsLpgmItem ?? [],
-            ),
-   */
         ];
     final config = ref.watch(
       earthquakeHistoryConfigProvider.select((value) => value.detail),
@@ -965,6 +955,13 @@ class _StationIntensityLpgmAction extends _Action {
       stations;
   final IntensityColorModel colorModel;
 
+  static const sourceName = 'station-lpgm-intensity';
+  static String layerName(JmaLgIntensity intenstiy) =>
+      'station-lpgm-intensity-${intenstiy.type}';
+  static String circleLayerName(JmaLgIntensity intenstiy) =>
+      'station-lpgm-intensity-${intenstiy.type}-circle';
+  static const symbolLayerName = 'station-lpgm-intensity-symbol';
+
   @override
   Future<void> init(
     map_libre.MaplibreMapController controller,
@@ -973,7 +970,7 @@ class _StationIntensityLpgmAction extends _Action {
     await controller.setSymbolIconAllowOverlap(true);
     await controller.setSymbolIconIgnorePlacement(true);
     await controller.addGeoJsonSource(
-      'station-lpgm-intensity',
+      sourceName,
       {
         'type': 'FeatureCollection',
         'features': stations.entries
@@ -1003,8 +1000,8 @@ class _StationIntensityLpgmAction extends _Action {
     );
     for (final intensity in JmaLgIntensity.values) {
       await controller.addLayer(
-        'station-lpgm-intensity',
-        'station-lpgm-intensity-${intensity.type}',
+        sourceName,
+        layerName(intensity),
         SymbolLayerProperties(
           iconImage: 'lpgm-intensity-${intensity.type}',
           iconSize: [
@@ -1031,15 +1028,15 @@ class _StationIntensityLpgmAction extends _Action {
           'lgIntensity',
           intensity.type,
         ],
-        sourceLayer: 'station-lpgm-intensity',
+        sourceLayer: sourceName,
         minzoom: 7,
       );
 
       await controller.addLayer(
-        'station-lpgm-intensity',
-        'station-lpgm-intensity-${intensity.type}-circle',
+        sourceName,
+        circleLayerName(intensity),
         SymbolLayerProperties(
-          iconImage: 'intensity-${intensity.type}-fill',
+          iconImage: 'lpgm-intensity-${intensity.type}-fill',
           iconSize: [
             'interpolate',
             ['linear'],
@@ -1058,13 +1055,13 @@ class _StationIntensityLpgmAction extends _Action {
           'lgIntensity',
           intensity.type,
         ],
-        sourceLayer: 'station-lpgm-intensity',
+        sourceLayer: sourceName,
       );
     }
 
     await controller.addSymbolLayer(
-      'station-lpgm-intensity',
-      'station-lpgm-intensity-symbol',
+      sourceName,
+      symbolLayerName,
       SymbolLayerProperties(
         textField: ['get', 'name'],
         textSize: 12,
@@ -1075,7 +1072,7 @@ class _StationIntensityLpgmAction extends _Action {
           [0, 2],
         ],
       ),
-      sourceLayer: 'station-intensity',
+      sourceLayer: sourceName,
       minzoom: 10,
     );
   }
@@ -1084,14 +1081,13 @@ class _StationIntensityLpgmAction extends _Action {
   Future<void> dispose(map_libre.MaplibreMapController controller) async {
     // Layer
     await [
-      for (final intensity in JmaIntensity.values)
-        controller.removeLayer('station-lpgm-intensity-${intensity.type}'),
-      for (final intensity in JmaIntensity.values)
-        controller
-            .removeLayer('station-lpgm-intensity-${intensity.type}-circle'),
-      controller.removeLayer('station-lpgm-intensity-symbol'),
+      for (final intensity in JmaLgIntensity.values)
+        controller.removeLayer(layerName(intensity)),
+      for (final intensity in JmaLgIntensity.values)
+        controller.removeLayer(circleLayerName(intensity)),
+      controller.removeLayer(symbolLayerName),
     ].wait;
     // Source
-    await controller.removeSource('station-lpgm-intensity');
+    await controller.removeSource(sourceName);
   }
 }

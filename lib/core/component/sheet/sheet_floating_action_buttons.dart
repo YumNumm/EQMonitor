@@ -18,7 +18,7 @@ class SheetFloatingActionButtons extends HookWidget {
   final bool hasAppBar;
 
   /// FAB
-  final List<FloatingActionButton> fab;
+  final List<Widget> fab;
 
   final SheetController controller;
   @override
