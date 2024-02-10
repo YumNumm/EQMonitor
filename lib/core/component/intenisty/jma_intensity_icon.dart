@@ -109,13 +109,13 @@ class JmaIntensityIcon extends ConsumerWidget {
           ),
         ),
       IntensityIconType.filled => SizedBox(
-          height: 50,
-          width: 50,
+          height: size,
+          width: size,
           child: DecoratedBox(
             decoration: BoxDecoration(
               color: bg,
               // 角丸にする
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(size / 5),
             ),
             child: Center(
               child: FittedBox(
