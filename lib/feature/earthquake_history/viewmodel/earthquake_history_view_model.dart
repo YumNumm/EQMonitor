@@ -93,6 +93,7 @@ class EarthquakeHistoryViewModel extends _$EarthquakeHistoryViewModel {
                 (telegram) => telegram.status == TelegramStatus.normal,
               ),
             );
+
       if (isRefresh) {
         return filteredItems.toList();
       }
