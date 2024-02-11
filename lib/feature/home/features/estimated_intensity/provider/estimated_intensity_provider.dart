@@ -1,3 +1,4 @@
+// ignore_for_file: provider_dependencies
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
@@ -9,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'estimated_intensity_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@Riverpod(keepAlive: true, dependencies: [EewAliveTelegram])
 class EstimatedIntensity extends _$EstimatedIntensity {
   @override
   List<AnalyzedKmoniObservationPoint> build() {

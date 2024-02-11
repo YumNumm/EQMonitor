@@ -99,8 +99,6 @@ class MainMapView extends HookConsumerWidget {
 
     final mapController = useState<MaplibreMapController?>(null);
 
-    ref.watch(mainMapViewModelProvider);
-
     final map = RepaintBoundary(
       child: MaplibreMap(
         initialCameraPosition: const CameraPosition(
@@ -172,9 +170,6 @@ class MainMapView extends HookConsumerWidget {
         map,
         if (ref.watch(debuggerProvider.select((value) => value.isDebugger)))
           _MapDebugWidget(cameraPosition: cameraPosition),
-        Card(
-          child: Text(ref.watch(mainMapViewModelProvider).toJson().toString()),
-        ),
       ],
     );
   }

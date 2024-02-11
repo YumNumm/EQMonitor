@@ -1,3 +1,4 @@
+// ignore_for_file: provider_dependencies
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
@@ -22,7 +23,6 @@ import 'package:latlong2/latlong.dart' as latlong2;
 import 'package:maplibre_gl/maplibre_gl.dart' as maplibre_gl;
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:sheet/sheet.dart';
 
 part 'main_map_viewmodel.freezed.dart';
 part 'main_map_viewmodel.g.dart';
@@ -189,15 +189,10 @@ class MainMapViewModel extends _$MainMapViewModel {
   LatLngBounds? _getEstimatedIntensityBoundary(
     List<AnalyzedKmoniObservationPoint> points,
   ) {
-    final filtered = points.where((e) => e.intensityValue! > 0).toList();
-    if (filtered.isEmpty) {
-      return null;
-    }
-    final max = filtered.first.intensityValue!;
+    final max = points.first.intensityValue!;
     // しきい値
-    final threshold = max - 2;
-    final filteredPoints =
-        filtered.where((e) => e.intensityValue! >= threshold);
+    final threshold = max - 4;
+    final filteredPoints = points.where((e) => e.intensityValue! >= threshold);
     if (filteredPoints.isEmpty) {
       return null;
     }
