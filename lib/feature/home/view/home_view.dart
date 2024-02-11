@@ -85,7 +85,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
                   _ => height * 0.3,
                 };
                 // sheetの高さを取得
-                await notifier.animateCameraToDefaultPosition(
+                await notifier.animateToHomeBoundary(
                   bottom: bottomPadding,
                 );
               },

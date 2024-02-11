@@ -154,11 +154,12 @@ class MainMapViewModel extends _$MainMapViewModel {
         .whereType<TelegramVxse45Body>()
         .where((e) => e.hypocenter != null && e.hypocenter!.coordinate != null)
         .toList();
+    await _eewHypocenterService!.update(aliveBodies);
+
     final normalEews = aliveBodies
         .where((e) => !(e.isIpfOnePoint || e.isLevelEew || e.isPlum))
         .toList();
     _eewPsWaveService!.update(normalEews);
-    await _eewHypocenterService!.update(aliveBodies);
     final transformed = _EewEstimatedIntensityService.transform(
       aliveBodies
           .map((e) => e.regions)
@@ -178,10 +179,6 @@ class MainMapViewModel extends _$MainMapViewModel {
         bounds: boundary,
       );
     } else {
-      state = state.copyWith(
-        isHomePosition: false,
-        homeBoundary: defaultBoundary,
-      );
       await animateToHomeBoundary();
     }
   }
@@ -189,7 +186,14 @@ class MainMapViewModel extends _$MainMapViewModel {
   LatLngBounds? _getEstimatedIntensityBoundary(
     List<AnalyzedKmoniObservationPoint> points,
   ) {
-    final max = points.first.intensityValue!;
+    if (points.isEmpty) {
+      return null;
+    }
+    final first = points.first;
+    if (first.intensityValue == null) {
+      return null;
+    }
+    final max = first.intensityValue!;
     // しきい値
     final threshold = max - 4;
     final filteredPoints = points.where((e) => e.intensityValue! >= threshold);
