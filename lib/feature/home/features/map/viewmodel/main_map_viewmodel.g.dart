@@ -35,7 +35,7 @@ Map<String, dynamic> _$$_EewHypocenterPropertiesImplToJson(
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mainMapViewModelHash() => r'fdc6d56684de07b48cef95c279dece228943a5dc';
+String _$mainMapViewModelHash() => r'f0e5c843537b5438a0b2677421c20c6448d4a348';
 
 /// See also [MainMapViewModel].
 @ProviderFor(MainMapViewModel)
