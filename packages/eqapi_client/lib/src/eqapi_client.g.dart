@@ -31,7 +31,7 @@ class _V1 implements V1 {
     JmaIntensity? intensityLte,
     JmaIntensity? intensityGte,
   }) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'limit': limit,
       r'offset': offset,
@@ -44,7 +44,7 @@ class _V1 implements V1 {
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<List<dynamic>>(_setStreamType<List<EarthquakeV1>>(Options(
       method: 'GET',
@@ -117,14 +117,14 @@ class _V3 implements V3 {
     int limit = 100,
     int offset = 0,
   }) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'includeEew': includeEew,
       r'limit': limit,
       r'offset': offset,
     };
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<TelegramHistoryV3>(Options(
       method: 'GET',
@@ -151,13 +151,13 @@ class _V3 implements V3 {
     int offset = 0,
     int limit = 10,
   }) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'offset': offset,
       r'limit': limit,
     };
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<InformationV3Result>(Options(
       method: 'GET',
@@ -181,10 +181,10 @@ class _V3 implements V3 {
 
   @override
   Future<AppInformation> getAppInformation() async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<AppInformation>(Options(
       method: 'GET',
