@@ -19,6 +19,7 @@ class MainMapView extends HookConsumerWidget {
   const MainMapView({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(mainMapViewModelProvider);
     final isDark = useState(Theme.of(context).brightness == Brightness.dark);
     ref.listen(appLifeCycleProvider, (_, value) {
       if (value == AppLifecycleState.resumed) {
@@ -219,6 +220,7 @@ class _MapDebugWidget extends HookConsumerWidget {
               children: [
                 Text(
                   '${cameraPosition.value}\n'
+                  '${ref.watch(mainMapViewModelProvider).toJson()}'
                   'EewEstimatedIntensity: ${ref.watch(estimatedIntensityProvider).firstOrNull}',
                   style: const TextStyle(
                     fontSize: 10,
