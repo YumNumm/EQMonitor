@@ -46,9 +46,10 @@ class _HypocenterRender extends HookConsumerWidget {
       () {
         WidgetsBinding.instance.endOfFrame.then((_) async {
           final currentContext = key.currentContext;
-          while (currentContext == null) {
-            await Future<void>.delayed(const Duration(milliseconds: 100));
-          }
+          do {
+            await Future<void>.delayed(const Duration(milliseconds: 250));
+          } while (currentContext == null);
+          
           if (context.mounted) {
             final boundary =
                 currentContext.findRenderObject()! as RenderRepaintBoundary;

@@ -9,7 +9,7 @@ part of 'estimated_intensity_provider.dart';
 // **************************************************************************
 
 String _$estimatedIntensityHash() =>
-    r'3dfc8800f82b60db3587c77fcdaa329f4b37421b';
+    r'd1515deb70d4069f3be88f935b0a0cf7b7de4184';
 
 /// See also [EstimatedIntensity].
 @ProviderFor(EstimatedIntensity)
@@ -20,8 +20,11 @@ final estimatedIntensityProvider = NotifierProvider<EstimatedIntensity,
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
       : _$estimatedIntensityHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
+  dependencies: <ProviderOrFamily>[eewAliveTelegramProvider],
+  allTransitiveDependencies: <ProviderOrFamily>{
+    eewAliveTelegramProvider,
+    ...?eewAliveTelegramProvider.allTransitiveDependencies
+  },
 );
 
 typedef _$EstimatedIntensity = Notifier<List<AnalyzedKmoniObservationPoint>>;
