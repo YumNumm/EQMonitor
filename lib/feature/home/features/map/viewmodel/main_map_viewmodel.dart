@@ -154,10 +154,18 @@ class MainMapViewModel extends _$MainMapViewModel {
         .whereType<TelegramVxse45Body>()
         .where((e) => e.hypocenter != null && e.hypocenter!.coordinate != null)
         .toList();
-    await _eewHypocenterService!.update(aliveBodies);
-
-    final normalEews = aliveBodies
-        .where((e) => !(e.isIpfOnePoint || e.isLevelEew || e.isPlum))
+    final normalEews = values
+        .where(
+          (e) =>
+              e.latestEewTelegram != null && e.latestEew is TelegramVxse45Body,
+        )
+        .map(
+          (e) => (e.latestEewTelegram!, e.latestEew! as TelegramVxse45Body),
+        )
+        .where((e) => !(e.$2.isIpfOnePoint || e.$2.isLevelEew || e.$2.isPlum))
+        .map(
+          (e) => (e.$2, (e.$1.headline ?? '').contains('強い揺れ')),
+        )
         .toList();
     _eewPsWaveService!.update(normalEews);
     final transformed = _EewEstimatedIntensityService.transform(
@@ -788,7 +796,7 @@ class _EewPsWaveService {
     //_children.$4.init(),
   }
 
-  List<TelegramVxse45Body> _cachedEews = [];
+  List<(TelegramVxse45Body, bool isWarning)> _cachedEews = [];
 
   /// 表示するEEWが0件になってから GeoJSON Sourceを更新したかどうか
   bool didUpdatedSinceZero = false;
@@ -796,7 +804,7 @@ class _EewPsWaveService {
   Future<void> tick({
     required DateTime now,
   }) async {
-    final results = <(TravelTimeResult, lat_lng.LatLng)>[];
+    final results = <(TravelTimeResult, lat_lng.LatLng, bool isWarning)>[];
     // 表示EEWが1件以上だったら、didUpdatedSinceZeroをfalseにする
     if (_cachedEews.isNotEmpty) {
       didUpdatedSinceZero = false;
@@ -805,7 +813,8 @@ class _EewPsWaveService {
     if (_cachedEews.isEmpty && didUpdatedSinceZero) {
       return;
     }
-    for (final eew in _cachedEews) {
+    for (final e in _cachedEews) {
+      final eew = e.$1;
       final hypocenter = eew.hypocenter?.coordinate;
       final depth = eew.depth;
       final originTime = eew.originTime;
@@ -823,10 +832,7 @@ class _EewPsWaveService {
             1000,
       );
       results.add(
-        (
-          travel,
-          hypocenter,
-        ),
+        (travel, hypocenter, e.$2),
       );
     }
     // update GeoJSON
@@ -841,10 +847,11 @@ class _EewPsWaveService {
   }
 
   // ignore: use_setters_to_change_properties
-  void update(List<TelegramVxse45Body> items) => _cachedEews = items;
+  void update(List<(TelegramVxse45Body, bool isWarning)> items) =>
+      _cachedEews = items;
 
   static Map<String, dynamic> createGeoJson(
-    List<(TravelTimeResult, lat_lng.LatLng)> results,
+    List<(TravelTimeResult, lat_lng.LatLng, bool isWarning)> results,
   ) =>
       {
         'type': 'FeatureCollection',
@@ -885,6 +892,7 @@ class _EewPsWaveService {
                       result.$2.lon,
                       result.$2.lat,
                     ],
+                    'isWarning': result.$3,
                   },
                   'type': type.name,
                 },
@@ -896,8 +904,6 @@ class _EewPsWaveService {
         controller.removeLayer(sourceId),
         _children.$1.dispose(),
         _children.$2.dispose(),
-        //_children.$3.dispose(),
-        //_children.$4.dispose(),
       ).wait.then(
             (_) => controller.removeSource(sourceId),
           );
@@ -953,7 +959,7 @@ class _EewSWaveLineService {
       _EewPsWaveService.sourceId,
       layerId,
       LineLayerProperties(
-        lineColor: const Color(0xffff0000).toHexStringRGB(),
+        lineColor: Colors.redAccent.toHexStringRGB(),
         lineWidth: 2,
         lineCap: 'round',
       ),
