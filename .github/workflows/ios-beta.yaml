@@ -1,4 +1,4 @@
-name: iOS CD (TestFlight)
+name: Flutter build iOS and upload to App Store Connect
 on:
   workflow_dispatch:
   push:
@@ -41,43 +41,16 @@ jobs:
         uses: kuhnroyal/flutter-fvm-config-action@v1
 
       # https://github.com/subosito/flutter-action
-      - name: Set up flutter
+      - name: Setup flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: ${{ env.FLUTTER_CHANNEL }}
-          cache: true
-          cache-key: ${{ env.FLUTTER_VERSION }}-${{ env.FLUTTER_CHANNEL }}
+          flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
+          channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
 
-      - name: Flutter version
-        run: flutter --version
-
-      - name: Cache pubspec dependencies
-        uses: actions/cache@v2
-        with:
-          path: |
-            ${{ env.FLUTTER_HOME }}/.pub-cache
-            **/.packages
-            **/.flutter-plugins
-            **/.flutter-plugin-dependencies
-            **/.dart_tool/package_config.json
-          key: build-pubspec-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: build-pubspec-
-
-      - name: Cache build runner
-        uses: actions/cache@v2
-        with:
-          path: |
-            **/.dart_tool/build
-          key: build-runner-${{ hashFiles('**/asset_graph.json') }}-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: build-runner-
-
-      - name: Install Melos
-        uses: bluefireteam/melos-action@v2
-
-      - name: Flutter dependencies install
+      - name: Setup melos
         run: |
           ln -s $FLUTTER_ROOT .fvm/flutter_sdk
+          dart pub global activate melos
           melos bootstrap
 
       - name: Run build_runner
