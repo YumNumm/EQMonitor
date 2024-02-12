@@ -22,10 +22,10 @@ class __JmaParameterApiClient implements _JmaParameterApiClient {
 
   @override
   Future<HttpResponse<List<int>>> getEarthquakeParameter() async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<List<dynamic>>(_setStreamType<HttpResponse<List<int>>>(Options(
       method: 'GET',
@@ -51,10 +51,10 @@ class __JmaParameterApiClient implements _JmaParameterApiClient {
 
   @override
   Future<HttpResponse<void>> getEarthquakeParameterHead() async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result =
         await _dio.fetch<void>(_setStreamType<HttpResponse<void>>(Options(
       method: 'HEAD',
@@ -78,10 +78,10 @@ class __JmaParameterApiClient implements _JmaParameterApiClient {
 
   @override
   Future<HttpResponse<List<int>>> getTsunamiParameter() async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<List<dynamic>>(_setStreamType<HttpResponse<List<int>>>(Options(
       method: 'GET',
@@ -107,10 +107,10 @@ class __JmaParameterApiClient implements _JmaParameterApiClient {
 
   @override
   Future<HttpResponse<void>> getTsunamiParameterHead() async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result =
         await _dio.fetch<void>(_setStreamType<HttpResponse<void>>(Options(
       method: 'HEAD',
