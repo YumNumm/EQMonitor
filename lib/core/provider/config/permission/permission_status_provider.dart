@@ -51,7 +51,7 @@ class Permission extends _$Permission {
     final result = await ref.read(firebaseMessagingProvider).requestPermission(
           announcement: true,
           criticalAlert: true,
-          provisional: true,
+          carPlay: true,
         );
     if (result.authorizationStatus == AuthorizationStatus.denied) {
       // 設定画面に遷移する
