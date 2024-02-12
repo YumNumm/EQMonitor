@@ -168,6 +168,7 @@ class MainMapViewModel extends _$MainMapViewModel {
         )
         .toList();
     _eewPsWaveService!.update(normalEews);
+    await _eewHypocenterService!.update(aliveBodies);
     final transformed = _EewEstimatedIntensityService.transform(
       aliveBodies
           .map((e) => e.regions)
@@ -426,7 +427,7 @@ class _KmoniObservationPointService {
     await controller.addCircleLayer(
       layerId,
       layerId,
-      const CircleLayerProperties(
+      CircleLayerProperties(
         circleRadius: [
           'interpolate',
           ['linear'],
@@ -440,9 +441,19 @@ class _KmoniObservationPointService {
           'get',
           'color',
         ],
+        circleStrokeColor: Colors.grey.toHexStringRGB(),
+        circleStrokeWidth: [
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          3,
+          0.5,
+          10,
+          1,
+        ],
       ),
       sourceLayer: layerId,
-      belowLayerId: BaseLayer.areaForecastLocalELine.name,
+      //      belowLayerId: BaseLayer.areaForecastLocalELine.name,
     );
   }
 
