@@ -44,7 +44,7 @@ class JmaForecastIntensityWidget extends ConsumerWidget {
         decoration: BoxDecoration(
           color: type == IntensityIconType.filled ? bg : null,
           // 角丸にする
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(size / 5),
         ),
         child: Center(
           child: FittedBox(

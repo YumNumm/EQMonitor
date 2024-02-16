@@ -28,7 +28,12 @@ import 'package:talker_flutter/talker_flutter.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final talker = TalkerFlutter.init();
+final talker =   TalkerFlutter.init(
+      logger: TalkerLogger(),
+    )..configure(
+        observer: CrashlitycsTalkerObserver(),
+      );
+
   FlutterError.onError = (error) {
     talker.handle(error.exception, error.stack, 'Uncaught fatal exception');
     if (!kDebugMode) {

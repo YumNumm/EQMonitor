@@ -1,4 +1,6 @@
 // ignore_for_file: provider_dependencies
+import 'dart:developer';
+import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
@@ -183,12 +185,12 @@ class MainMapViewModel extends _$MainMapViewModel {
     List<AnalyzedKmoniObservationPoint> points,
   ) async {
     final boundary = _getEstimatedIntensityBoundary(points);
-    if (boundary != null) {
+    try {
       await changeHomeBoundaryWithAnimation(
-        bounds: boundary,
+        bounds: boundary ?? defaultBoundary,
       );
-    } else {
-      await animateToHomeBoundary();
+    } on Exception {
+      log('error');
     }
   }
 
@@ -204,25 +206,25 @@ class MainMapViewModel extends _$MainMapViewModel {
     }
     final max = first.intensityValue!;
     // しきい値
-    final threshold = max - 4;
+    final threshold = math.max(0, max - 3);
     final filteredPoints = points.where((e) => e.intensityValue! >= threshold);
-    if (filteredPoints.isEmpty) {
-      return null;
-    }
-    final latLngs = filteredPoints.map((e) => e.point.latLng).toList()
-      ..addAll(
-        (ref.read(eewAliveNormalTelegramProvider))
-            .map((element) => element.latestEew)
-            .whereType<TelegramVxse45Body>()
-            .where((element) => element.hypocenter != null)
-            .map((e) {
-          final coord = e.hypocenter!.coordinate;
-          return lat_lng.LatLng(
-            coord!.lat,
-            coord.lon,
-          );
-        }),
-      );
+
+    final latLngs = [
+      ...filteredPoints.map((e) => e.point.latLng),
+      ...ref
+          .read(eewAliveNormalTelegramProvider)
+          .map((element) => element.latestEew)
+          .whereType<TelegramVxse45Body>()
+          .where((element) => element.hypocenter != null)
+          .map((e) {
+        final coord = e.hypocenter!.coordinate;
+        return lat_lng.LatLng(
+          coord!.lat,
+          coord.lon,
+        );
+      }),
+    ];
+    print(latLngs.length);
     return latLngs.toBounds;
   }
 
@@ -301,9 +303,6 @@ class MainMapViewModel extends _$MainMapViewModel {
       CameraUpdate.newLatLngBounds(
         defaultBoundary,
         bottom: bottom,
-        left: 10,
-        right: 10,
-        top: 10,
       ),
       duration: duration,
     );
@@ -313,9 +312,9 @@ class MainMapViewModel extends _$MainMapViewModel {
   Future<void> changeHomeBoundaryWithAnimation({
     required LatLngBounds bounds,
     double bottom = 50,
-    double left = 10,
-    double right = 10,
-    double top = 10,
+    double left = 20,
+    double right = 20,
+    double top = 20,
     Duration duration = const Duration(
       milliseconds: 250,
     ),

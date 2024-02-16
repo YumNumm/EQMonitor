@@ -513,13 +513,20 @@ enum JmaForecastIntensity {
   const JmaForecastIntensity(this.type);
   final String type;
 
-  // compare to JmaIntensity
-  bool operator >(JmaForecastIntensity other) {
-    return type.compareTo(other.type) > 0;
+  bool operator <(JmaForecastIntensity other) {
+    return index < other.index;
   }
 
-  int compareTo(JmaForecastIntensity other) {
-    return index.compareTo(other.index);
+  bool operator <=(JmaForecastIntensity other) {
+    return index <= other.index;
+  }
+
+  bool operator >(JmaForecastIntensity other) {
+    return index > other.index;
+  }
+
+  bool operator >=(JmaForecastIntensity other) {
+    return index >= other.index;
   }
 }
 

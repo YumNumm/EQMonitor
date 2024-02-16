@@ -7,11 +7,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 part 'talker.g.dart';
 
 @Riverpod(keepAlive: true)
-Talker talker(TalkerRef ref) => TalkerFlutter.init(
-      logger: TalkerLogger(),
-    )..configure(
-        observer: CrashlitycsTalkerObserver(),
-      );
+Talker talker(TalkerRef ref) => throw UnimplementedError();
 
 class TelegramWebSocketLog extends TalkerLog {
   TelegramWebSocketLog(super.message);
@@ -83,4 +79,37 @@ class AppLifeCycleLog extends TalkerLog {
 
   @override
   final pen = AnsiPen()..cyan();
+}
+
+class NtpLog extends TalkerLog {
+  NtpLog(super.message);
+
+  @override
+  String get title => 'NTP';
+
+  @override
+  final pen = AnsiPen()..red();
+}
+
+class CrashlyticsTalkerObserver implements TalkerObserver {
+  CrashlyticsTalkerObserver();
+
+  @override
+  void onError(TalkerError err) => FirebaseCrashlytics.instance.recordError(
+        err.error,
+        err.stackTrace,
+        reason: err.message,
+      );
+
+  @override
+  void onException(TalkerException err) =>
+      FirebaseCrashlytics.instance.recordError(
+        err.exception,
+        err.stackTrace,
+        reason: err.message,
+      );
+
+  @override
+  void onLog(TalkerDataInterface log) =>
+      FirebaseCrashlytics.instance.log(log.message.toString());
 }

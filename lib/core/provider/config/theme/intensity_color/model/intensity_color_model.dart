@@ -83,35 +83,35 @@ class IntensityColorModel with _$IntensityColorModel {
         ),
         two: TextColorModel(
           foreground: Colors.black,
-          background: Colors.greenAccent.shade200,
+          background: Colors.greenAccent.shade100,
         ),
-        three: const TextColorModel(
+        three: TextColorModel(
           foreground: Colors.black,
-          background: Colors.limeAccent,
+          background: Colors.greenAccent.shade700,
         ),
-        four: const TextColorModel(
+        four: TextColorModel(
           foreground: Colors.black,
-          background: Colors.orange,
+          background: Colors.yellow.shade400,
         ),
         fiveLower: const TextColorModel(
-          foreground: Colors.white,
-          background: Colors.red,
+          foreground: Colors.black,
+          background: Colors.amber,
         ),
-        fiveUpper: const TextColorModel(
-          foreground: Colors.white,
-          background: Colors.red,
+        fiveUpper: TextColorModel(
+          foreground: Colors.black,
+          background: Colors.orange.shade800,
         ),
         sixLower: const TextColorModel(
           foreground: Colors.white,
-          background: Color.fromARGB(255, 165, 0, 33),
+          background: Color.fromARGB(255, 255, 40, 0),
         ),
         sixUpper: const TextColorModel(
           foreground: Colors.white,
           background: Color.fromARGB(255, 165, 0, 33),
         ),
-        seven: TextColorModel(
+        seven: const TextColorModel(
           foreground: Colors.white,
-          background: Colors.pinkAccent.shade400,
+          background: Color.fromARGB(255, 200, 0, 255),
         ),
         unknown: const TextColorModel(
           foreground: Colors.white,
