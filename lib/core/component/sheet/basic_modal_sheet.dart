@@ -15,6 +15,12 @@ class BasicModalSheet extends HookWidget {
   final bool hasAppBar;
   final bool useColumn;
 
+  static double width(BoxConstraints constraints) {
+    final isTablet = constraints.maxWidth > 600 &&
+        constraints.maxHeight < constraints.maxWidth;
+    return isTablet ? constraints.maxWidth / 2 : constraints.maxWidth;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

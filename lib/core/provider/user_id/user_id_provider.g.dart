@@ -2,25 +2,25 @@
 
 // ignore_for_file: type=lint, duplicate_ignore
 
-part of 'talker.dart';
+part of 'user_id_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$talkerHash() => r'4509d8da008ccf8ac469ff99e62b8a26328b1cf1';
+String _$userIdHash() => r'7ab831cb39bbc468439f4a2fdc278ac34325a349';
 
-/// See also [talker].
-@ProviderFor(talker)
-final talkerProvider = Provider<Talker>.internal(
-  talker,
-  name: r'talkerProvider',
+/// See also [UserId].
+@ProviderFor(UserId)
+final userIdProvider = NotifierProvider<UserId, String>.internal(
+  UserId.new,
+  name: r'userIdProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$talkerHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$userIdHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef TalkerRef = ProviderRef<Talker>;
+typedef _$UserId = Notifier<String>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

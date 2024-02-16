@@ -23,19 +23,22 @@ class SheetFloatingActionButtons extends HookWidget {
   final SheetController controller;
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final size = MediaQuery.sizeOf(context);
     final padding = MediaQuery.paddingOf(context);
+    // safearea取得
     final height = size.height -
-        (padding.bottom) -
-        // SafeAreaのtop部分, AppBarの高さ
-        (hasAppBar ? padding.top + kToolbarHeight : 0);
+        (padding.top +
+            // SafeAreaのtop部分, AppBarの高さ
+            (hasAppBar ? AppBar().preferredSize.height ?? 0 : 0));
     return AnimatedBuilder(
       animation: controller.animation,
       builder: (BuildContext context, Widget? child) {
+        final bottom = height * controller.animation.value;
         return Positioned(
           right: padding.right,
           left: padding.left,
-          bottom: height * controller.animation.value,
+          bottom: bottom,
           child: Container(
             margin: const EdgeInsets.all(4),
             child: Column(

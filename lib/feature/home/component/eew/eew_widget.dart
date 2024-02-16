@@ -25,17 +25,21 @@ class EewWidgets extends ConsumerWidget {
     }
     return LayoutBuilder(
       builder: (context, constraints) {
-        return SizedBox(
-          width: constraints.maxWidth,
-          child: Column(
-            children: state
-                .mapIndexed(
-                  (index, element) => EewWidget(
-                    item: element,
-                    index: (state.length > 1) ? '${index + 1}' : null,
-                  ),
-                )
-                .toList(),
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 250),
+          child: SizedBox(
+            key: ValueKey(state.length),
+            width: constraints.maxWidth,
+            child: Column(
+              children: state.reversed
+                  .mapIndexed(
+                    (index, element) => EewWidget(
+                      item: element,
+                      index: (state.length > 1) ? '${index + 1}' : null,
+                    ),
+                  )
+                  .toList(),
+            ),
           ),
         );
       },
@@ -424,11 +428,9 @@ class EewWidget extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: 100,
                     fontWeight: FontWeight.w900,
-                    fontFamily: FontFamily.jetBrainsMono,
-                    fontFamilyFallback: const [FontFamily.notoSansJP],
                     foreground: Paint()
                       ..style = PaintingStyle.stroke
-                      ..strokeWidth = 2
+                      ..strokeWidth = 0
                       ..color = textTheme.bodyMedium!.color!.withOpacity(0.3),
                   ),
                 ),
@@ -444,8 +446,6 @@ class EewWidget extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: 100,
                     fontWeight: FontWeight.w900,
-                    fontFamily: FontFamily.jetBrainsMono,
-                    fontFamilyFallback: const [FontFamily.notoSansJP],
                     color: textTheme.bodyMedium!.color!.withOpacity(0.4),
                   ),
                 ),
