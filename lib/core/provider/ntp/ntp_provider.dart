@@ -16,12 +16,14 @@ class Ntp extends _$Ntp {
     final interval = config.interval;
 
     // intervalごとにsyncを実行する
-    final stream = Stream<void>.periodic(interval).listen((_) => sync());
+    _stream = Stream<void>.periodic(interval).listen((_) => sync());
     unawaited(sync());
-    ref.onDispose(stream.cancel);
+    ref.onDispose(_stream.cancel);
 
     return const NtpStateModel();
   }
+
+  late StreamSubscription<void> _stream;
 
   Future<void> sync() async {
     final talker = ref.read(talkerProvider)..logTyped(NtpLog('sync start'));

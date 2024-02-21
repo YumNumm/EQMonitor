@@ -1,6 +1,5 @@
 // ignore_for_file: provider_dependencies
 import 'dart:developer';
-import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
@@ -214,29 +213,9 @@ class MainMapViewModel extends _$MainMapViewModel {
     if (first.intensityValue == null) {
       return null;
     }
-    final max = first.intensityValue!;
-    // しきい値
-    final threshold = math.max(1, max - 2);
-    var filteredPoints = points.where((e) => e.intensityValue! >= threshold);
-    if (filteredPoints.isEmpty) {
-      filteredPoints = points.where((e) => e.intensityValue! >= 0);
-    }
-    if (filteredPoints.isEmpty) {
-      final extractedCoords = [
-        for (final e in coords)
-          // +/- 1度
-          ...[
-          lat_lng.LatLng(e.lat - 1, e.lon - 1),
-          lat_lng.LatLng(e.lat + 1, e.lon + 1),
-        ],
-      ];
-      if (extractedCoords.isNotEmpty) {
-        return extractedCoords.toBounds;
-      }
-    }
 
     final latLngs = [
-      ...filteredPoints.map((e) => e.point.latLng),
+      ...points.sublist(0, 50).map((e) => e.point.latLng),
       ...coords.map(
         (e) => lat_lng.LatLng(
           e.lat,

@@ -29,6 +29,10 @@ late final ProviderContainer container;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
   final talker = TalkerFlutter.init(
     logger: TalkerLogger(),
   )..configure(
@@ -53,9 +57,7 @@ Future<void> main() async {
   final results = await (
     SharedPreferences.getInstance(),
     loadKmoniObservationPoints(),
-    Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    ),
+
     PackageInfo.fromPlatform(),
     // ignore: prefer_void_to_null
     (!kIsWeb && Platform.isAndroid
@@ -86,12 +88,12 @@ Future<void> main() async {
       sharedPreferencesProvider.overrideWithValue(results.$1),
       kmoniObservationPointsProvider.overrideWithValue(results.$2),
       talkerProvider.overrideWithValue(talker),
-      packageInfoProvider.overrideWithValue(results.$4),
+      packageInfoProvider.overrideWithValue(results.$3),
+      if (results.$4 != null)
+        androidDeviceInfoProvider.overrideWithValue(results.$4!),
       if (results.$5 != null)
-        androidDeviceInfoProvider.overrideWithValue(results.$5!),
-      if (results.$6 != null)
-        iosDeviceInfoProvider.overrideWithValue(results.$6!),
-      applicationDocumentsDirectoryProvider.overrideWithValue(results.$9),
+        iosDeviceInfoProvider.overrideWithValue(results.$5!),
+      applicationDocumentsDirectoryProvider.overrideWithValue(results.$8),
     ],
     observers: [
       if (kDebugMode)

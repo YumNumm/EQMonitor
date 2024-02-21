@@ -2,7 +2,7 @@
 // ignore_for_file: lines_longer_than_80_chars, avoid_classes_with_only_static_members
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
-    show TargetPlatform, defaultTargetPlatform, kIsWeb;
+    show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -36,10 +36,9 @@ class DefaultFirebaseOptions {
           'DefaultFirebaseOptions have not been configured for linux - '
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
-      case TargetPlatform.fuchsia:
+      default:
         throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for fuchsia - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+          'DefaultFirebaseOptions are not supported for this platform.',
         );
     }
   }
@@ -68,23 +67,19 @@ class DefaultFirebaseOptions {
     messagingSenderId: '179553945248',
     projectId: 'eqmonitor-main',
     storageBucket: 'eqmonitor-main.appspot.com',
-    androidClientId:
-        '179553945248-gnhkjhr4feqsv308rf3dlcber84o647i.apps.googleusercontent.com',
-    iosClientId:
-        '179553945248-hog16qgussjvd0ddqqe973c32n64atm1.apps.googleusercontent.com',
+    androidClientId: '179553945248-gnhkjhr4feqsv308rf3dlcber84o647i.apps.googleusercontent.com',
+    iosClientId: '179553945248-hog16qgussjvd0ddqqe973c32n64atm1.apps.googleusercontent.com',
     iosBundleId: 'net.yumnumm.eqmonitor',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyARNQCNBeDoGYCzW8iQK_puUgx8IEu33tc',
-    appId: '1:179553945248:ios:a738f33a18702c7f6fabc5',
+    appId: '1:179553945248:ios:d4eb5c7be4dee8196fabc5',
     messagingSenderId: '179553945248',
     projectId: 'eqmonitor-main',
     storageBucket: 'eqmonitor-main.appspot.com',
-    androidClientId:
-        '179553945248-gnhkjhr4feqsv308rf3dlcber84o647i.apps.googleusercontent.com',
-    iosClientId:
-        '179553945248-hog16qgussjvd0ddqqe973c32n64atm1.apps.googleusercontent.com',
-    iosBundleId: 'net.yumnumm.eqmonitor',
+    androidClientId: '179553945248-gnhkjhr4feqsv308rf3dlcber84o647i.apps.googleusercontent.com',
+    iosClientId: '179553945248-3r5sui3ebeomd0i9h2v8ihbs037dkj76.apps.googleusercontent.com',
+    iosBundleId: 'net.yumnumm.eqmonitor.FcmServiceExtension',
   );
 }
