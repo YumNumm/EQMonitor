@@ -111,7 +111,7 @@ dev_dependencies:
   custom_lint: ^0.5.3
   envied_generator: ^0.5.2
   flutter_gen_runner: ^5.3.2
-  freezed: ^2.4.5
+  freezed: ^2.4.7
   go_router_builder: ^2.3.4
   json_serializable: ^6.7.1
   melos: ^3.4.0
