@@ -205,29 +205,44 @@ class MainMapViewModel extends _$MainMapViewModel {
     if (points.isEmpty) {
       return null;
     }
+    final aliveEews = ref.read(eewAliveTelegramProvider);
+    final telegrams = aliveEews?.whereType<TelegramVxse45Body>();
+    final coords =
+        telegrams?.map((e) => e.hypocenter?.coordinate).whereNotNull() ?? [];
+
     final first = points.first;
     if (first.intensityValue == null) {
       return null;
     }
     final max = first.intensityValue!;
     // しきい値
-    final threshold = math.max(0, max - 3);
-    final filteredPoints = points.where((e) => e.intensityValue! >= threshold);
+    final threshold = math.max(1, max - 2);
+    var filteredPoints = points.where((e) => e.intensityValue! >= threshold);
+    if (filteredPoints.isEmpty) {
+      filteredPoints = points.where((e) => e.intensityValue! >= 0);
+    }
+    if (filteredPoints.isEmpty) {
+      final extractedCoords = [
+        for (final e in coords)
+          // +/- 1度
+          ...[
+          lat_lng.LatLng(e.lat - 1, e.lon - 1),
+          lat_lng.LatLng(e.lat + 1, e.lon + 1),
+        ],
+      ];
+      if (extractedCoords.isNotEmpty) {
+        return extractedCoords.toBounds;
+      }
+    }
 
     final latLngs = [
       ...filteredPoints.map((e) => e.point.latLng),
-      ...ref
-          .read(eewAliveNormalTelegramProvider)
-          .map((element) => element.latestEew)
-          .whereType<TelegramVxse45Body>()
-          .where((element) => element.hypocenter != null)
-          .map((e) {
-        final coord = e.hypocenter!.coordinate;
-        return lat_lng.LatLng(
-          coord!.lat,
-          coord.lon,
-        );
-      }),
+      ...coords.map(
+        (e) => lat_lng.LatLng(
+          e.lat,
+          e.lon,
+        ),
+      ),
     ];
     return latLngs.toBounds;
   }
