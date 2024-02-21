@@ -15,6 +15,7 @@ import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_hist
 import 'package:eqmonitor/feature/home/features/eew/provider/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/features/estimated_intensity/provider/estimated_intensity_provider.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/kmoni_observation_point.dart';
 import 'package:eqmonitor/feature/home/features/map/model/main_map_viewmodel_state.dart';
 import 'package:eqmonitor/feature/home/features/travel_time/provider/travel_time_provider.dart';
@@ -53,6 +54,10 @@ class MainMapViewModel extends _$MainMapViewModel {
       ..listen(
         estimatedIntensityProvider,
         (_, value) => _onEstimatedIntensityChanged(value),
+      )
+      ..listen(
+        kmoniSettingsProvider.select((e) => e.useKmoni),
+        (_, value) => _onKmoniSettingsChanged(value: value),
       );
     return MainMapViewmodelState(
       isHomePosition: true,
@@ -235,10 +240,25 @@ class MainMapViewModel extends _$MainMapViewModel {
     if (_controller == null) {
       return;
     }
-    final service = _KmoniObservationPointService(
-      controller: _controller!,
-    );
-    await service.update(values);
+    if (!ref.read(kmoniSettingsProvider).useKmoni) {
+      await _kmoniObservationPointService?.update([]);
+      return;
+    }
+
+    await _kmoniObservationPointService?.update(values);
+  }
+
+  Future<void> _onKmoniSettingsChanged({required bool value}) async {
+    if (value) {
+      await _kmoniObservationPointService?.dispose();
+      _kmoniObservationPointService = _KmoniObservationPointService(
+        controller: _controller!,
+      );
+      await _kmoniObservationPointService?.init();
+    } else {
+      await _kmoniObservationPointService?.dispose();
+      _kmoniObservationPointService = null;
+    }
   }
 
   Future<void> startUpdateEew() async {
@@ -636,7 +656,7 @@ class _EewHypocenterService {
             3,
             0.3,
             20,
-            5,
+            2,
           ],
           iconOpacity: [
             'interpolate',
@@ -668,7 +688,7 @@ class _EewHypocenterService {
             3,
             0.3,
             20,
-            5,
+            2,
           ],
           iconOpacity: [
             'interpolate',
