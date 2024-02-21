@@ -1,18 +1,19 @@
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
+import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
 import 'package:eqmonitor/core/hook/use_sheet_controller.dart';
+import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/config/notification/fcm_topic_manager.dart';
 import 'package:eqmonitor/core/provider/config/permission/permission_status_provider.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
 import 'package:eqmonitor/feature/home/component/parameter/parameter_loader_widget.dart';
-import 'package:eqmonitor/feature/home/component/render/hypocenter_render.dart';
-import 'package:eqmonitor/feature/home/component/render/intensity_renderer_widget.dart';
+import 'package:eqmonitor/feature/home/component/render/map_components_renderer.dart';
 import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/update_widget.dart';
@@ -66,6 +67,89 @@ class _HomeBodyWidget extends HookConsumerWidget {
             ref.read(kmoniViewModelProvider.notifier).initialize(),
             ref.read(permissionProvider.notifier).initialize(),
             ref.read(fcmTopicManagerProvider.notifier).setup(),
+            () async {
+              final renderer = MapComponentsRenderer();
+              final futures = <Future<void>>[
+                for (final type in [
+                  IntensityIconType.small,
+                  IntensityIconType.smallWithoutText,
+                ]) ...[
+                  for (final intensity in JmaIntensity.values)
+                    renderer
+                        .renderIntensityIcon(
+                          context,
+                          intensity,
+                          type,
+                        )
+                        .then(
+                          (value) => switch (type) {
+                            IntensityIconType.small => ref
+                                .read(intensityIconRenderProvider.notifier)
+                                .onRendered(
+                                  value,
+                                  intensity,
+                                ),
+                            IntensityIconType.smallWithoutText => ref
+                                .read(intensityIconFillRenderProvider.notifier)
+                                .onRendered(
+                                  value,
+                                  intensity,
+                                ),
+                            _ => null,
+                          },
+                        ),
+                  for (final intensity in JmaLgIntensity.values)
+                    renderer
+                        .renderLpgmIntensityIcon(
+                          context,
+                          intensity,
+                          type,
+                        )
+                        .then(
+                          (value) => switch (type) {
+                            IntensityIconType.small => ref
+                                .read(lpgmIntensityIconRenderProvider.notifier)
+                                .onRendered(
+                                  value,
+                                  intensity,
+                                ),
+                            IntensityIconType.smallWithoutText => ref
+                                .read(
+                                  lpgmIntensityIconFillRenderProvider.notifier,
+                                )
+                                .onRendered(
+                                  value,
+                                  intensity,
+                                ),
+                            _ => null,
+                          },
+                        ),
+                ],
+                for (final type in HypocenterType.values)
+                  renderer
+                      .renderHypocenterIcon(
+                        context,
+                        type,
+                      )
+                      .then(
+                        (value) => switch (type) {
+                          HypocenterType.normal => ref
+                              .read(hypocenterIconRenderProvider.notifier)
+                              .onRendered(
+                                value,
+                              ),
+                          HypocenterType.lowPrecise => ref
+                              .read(
+                                hypocenterLowPreciseIconRenderProvider.notifier,
+                              )
+                              .onRendered(
+                                value,
+                              ),
+                        },
+                      ),
+              ];
+              await futures.wait;
+            }(),
           ).wait;
         });
         return null;
@@ -88,15 +172,6 @@ class _HomeBodyWidget extends HookConsumerWidget {
           child: _IntensityIcons(),
         ),
         _Sheet(sheetController: sheetController),
-        FractionalTranslation(
-          translation: -const Offset(2, 2),
-          child: const IntensityRendererWidget(),
-        ),
-        FractionalTranslation(
-          translation: -const Offset(2, 2),
-          // translation: -const Offset(2, 2),
-          child: const HypocenterRenderWidget(),
-        ),
       ],
     );
     return child;
@@ -104,7 +179,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
 }
 
 class _IntensityIcons extends ConsumerWidget {
-  const _IntensityIcons({super.key});
+  const _IntensityIcons();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -160,7 +235,7 @@ class _IntensityIcons extends ConsumerWidget {
 }
 
 class _Fabs extends ConsumerWidget {
-  const _Fabs({super.key});
+  const _Fabs();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
