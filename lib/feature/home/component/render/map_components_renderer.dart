@@ -1,77 +1,70 @@
 import 'dart:typed_data';
-import 'dart:ui';
 
-import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
+import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_lg_intensity_icon.dart';
+import 'package:eqmonitor/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:screenshot/screenshot.dart';
 
-class HypocenterRenderWidget extends ConsumerWidget {
-  const HypocenterRenderWidget({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Row(
-      children: [
-        _HypocenterRender(
-          type: HypocenterType.normal,
-          onRendered: (data) =>
-              ref.read(hypocenterIconRenderProvider.notifier).onRendered(data),
-        ),
-        _HypocenterRender(
-          type: HypocenterType.lowPrecise,
-          onRendered: (data) => ref
-              .read(hypocenterLowPreciseIconRenderProvider.notifier)
-              .onRendered(data),
-        ),
-      ],
-    );
-  }
-}
-
-class _HypocenterRender extends HookConsumerWidget {
-  const _HypocenterRender({
-    required this.onRendered,
-    required this.type,
-  });
-  final void Function(Uint8List data) onRendered;
-  final HypocenterType type;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final key = GlobalObjectKey('hypocenter$type');
-
-    useEffect(
-      () {
-        WidgetsBinding.instance.endOfFrame.then((_) async {
-          final currentContext = key.currentContext;
-          do {
-            await Future<void>.delayed(const Duration(milliseconds: 250));
-          } while (currentContext == null);
-          
-          if (context.mounted) {
-            final boundary =
-                currentContext.findRenderObject()! as RenderRepaintBoundary;
-            final image = await boundary.toImage();
-            final byte = await image.toByteData(format: ImageByteFormat.png);
-            onRendered.call(byte!.buffer.asUint8List());
-          }
-        });
-        return null;
-      },
-      [],
-    );
-    return RepaintBoundary(
-      key: key,
-      child: SizedBox(
-        height: 80,
-        width: 80,
-        child: CustomPaint(
-          painter: _HypocenterPainter(type: type),
+class MapComponentsRenderer {
+  final ScreenshotController _controller = ScreenshotController();
+  Future<Uint8List> renderIntensityIcon(
+    BuildContext context,
+    JmaIntensity intensity,
+    IntensityIconType type,
+  ) async {
+    final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final result = await _controller.captureFromWidget(
+      ProviderScope(
+        parent: container,
+        child: JmaIntensityIcon(
+          intensity: intensity,
+          type: type,
         ),
       ),
+      context: context,
+      pixelRatio: pixelRatio,
     );
+    return result;
+  }
+
+  Future<Uint8List> renderLpgmIntensityIcon(
+    BuildContext context,
+    JmaLgIntensity intensity,
+    IntensityIconType type,
+  ) async {
+    final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final result = await _controller.captureFromWidget(
+      ProviderScope(
+        parent: container,
+        child: JmaLgIntensityIcon(
+          intensity: intensity,
+          type: type,
+        ),
+      ),
+      context: context,
+      pixelRatio: pixelRatio,
+    );
+    return result;
+  }
+
+  Future<Uint8List> renderHypocenterIcon(
+    BuildContext context,
+    HypocenterType type,
+  ) async {
+    final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final result = await _controller.captureFromWidget(
+      CustomPaint(
+        painter: _HypocenterPainter(type: type),
+        size: const Size(80, 80),
+      ),
+      context: context,
+      pixelRatio: pixelRatio,
+    );
+    return result;
   }
 }
 

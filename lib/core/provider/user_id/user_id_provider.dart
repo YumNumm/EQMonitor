@@ -12,7 +12,7 @@ class UserId extends _$UserId {
     if (previousUserId != null) {
       return previousUserId;
     }
-    final newUserId = Uuid().v8();
+    final newUserId = const Uuid().v8();
     save(newUserId);
     return newUserId;
   }

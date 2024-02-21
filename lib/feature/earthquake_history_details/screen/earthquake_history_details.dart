@@ -111,46 +111,43 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                   IgnorePointer(
                     child: AnimatedSwitcher(
                       duration: const Duration(milliseconds: 250),
-                      child: Visibility(
-                        visible: !config.showIntensityIcon,
-                        child: BorderedContainer(
-                          key: ValueKey(
-                            (config, maxIntensity, maxLgIntensity),
-                          ),
-                          margin: const EdgeInsets.all(4),
-                          padding: const EdgeInsets.all(4),
-                          borderRadius: BorderRadius.circular((25 / 5) + 5),
-                          child: Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: [
-                              if (config.showingLpgmIntensity &&
-                                  maxLgIntensity != null)
-                                for (final intensity in [
-                                  ...JmaLgIntensity.values,
-                                ].where(
-                                  (e) =>
-                                      e != JmaLgIntensity.zero &&
-                                      e <= maxLgIntensity,
-                                ))
-                                  JmaLgIntensityIcon(
-                                    type: IntensityIconType.filled,
-                                    intensity: intensity,
-                                    size: 25,
-                                  )
-                              else
-                                for (final intensity in [
-                                  ...JmaIntensity.values,
-                                ].where(
-                                  (e) => e <= maxIntensity!,
-                                ))
-                                  JmaIntensityIcon(
-                                    type: IntensityIconType.filled,
-                                    intensity: intensity,
-                                    size: 25,
-                                  ),
-                            ],
-                          ),
+                      child: BorderedContainer(
+                        key: ValueKey(
+                          (config, maxIntensity, maxLgIntensity),
+                        ),
+                        margin: const EdgeInsets.all(4),
+                        padding: const EdgeInsets.all(4),
+                        borderRadius: BorderRadius.circular((25 / 5) + 5),
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            if (config.showingLpgmIntensity &&
+                                maxLgIntensity != null)
+                              for (final intensity in [
+                                ...JmaLgIntensity.values,
+                              ].where(
+                                (e) =>
+                                    e != JmaLgIntensity.zero &&
+                                    e <= maxLgIntensity,
+                              ))
+                                JmaLgIntensityIcon(
+                                  type: IntensityIconType.filled,
+                                  intensity: intensity,
+                                  size: 25,
+                                )
+                            else
+                              for (final intensity in [
+                                ...JmaIntensity.values,
+                              ].where(
+                                (e) => e <= maxIntensity!,
+                              ))
+                                JmaIntensityIcon(
+                                  type: IntensityIconType.filled,
+                                  intensity: intensity,
+                                  size: 25,
+                                ),
+                          ],
                         ),
                       ),
                     ),

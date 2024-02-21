@@ -2,7 +2,7 @@ name: eqmonitor
 description: An earthquake monitoring Application
 publish_to: "none"
 
-version: 2.3.0+1085
+version: 2.3.1+1095
 
 environment:
   sdk: ^3.1.5
@@ -74,6 +74,10 @@ dependencies:
   permission_handler: ^11.0.1
   retrofit: ^4.0.3
   riverpod_annotation: ^2.3.1
+  screenshot:
+    git:
+     url: git@github.com:timmaffett/screenshot.git
+     branch: master
   shared_preferences: ^2.2.2
   sheet:
     git:
