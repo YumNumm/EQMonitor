@@ -25,14 +25,15 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
+late final ProviderContainer container;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-final talker =   TalkerFlutter.init(
-      logger: TalkerLogger(),
-    )..configure(
-        observer: CrashlitycsTalkerObserver(),
-      );
+  final talker = TalkerFlutter.init(
+    logger: TalkerLogger(),
+  )..configure(
+      observer: CrashlitycsTalkerObserver(),
+    );
 
   FlutterError.onError = (error) {
     talker.handle(error.exception, error.stack, 'Uncaught fatal exception');
@@ -80,25 +81,28 @@ final talker =   TalkerFlutter.init(
   unawaited(
     FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode),
   );
+  container = ProviderContainer(
+    overrides: [
+      sharedPreferencesProvider.overrideWithValue(results.$1),
+      kmoniObservationPointsProvider.overrideWithValue(results.$2),
+      talkerProvider.overrideWithValue(talker),
+      packageInfoProvider.overrideWithValue(results.$4),
+      if (results.$5 != null)
+        androidDeviceInfoProvider.overrideWithValue(results.$5!),
+      if (results.$6 != null)
+        iosDeviceInfoProvider.overrideWithValue(results.$6!),
+      applicationDocumentsDirectoryProvider.overrideWithValue(results.$9),
+    ],
+    observers: [
+      if (kDebugMode)
+        CustomProviderObserver(
+          talker,
+        ),
+    ],
+  );
   runApp(
     ProviderScope(
-      overrides: [
-        sharedPreferencesProvider.overrideWithValue(results.$1),
-        kmoniObservationPointsProvider.overrideWithValue(results.$2),
-        talkerProvider.overrideWithValue(talker),
-        packageInfoProvider.overrideWithValue(results.$4),
-        if (results.$5 != null)
-          androidDeviceInfoProvider.overrideWithValue(results.$5!),
-        if (results.$6 != null)
-          iosDeviceInfoProvider.overrideWithValue(results.$6!),
-        applicationDocumentsDirectoryProvider.overrideWithValue(results.$9),
-      ],
-      observers: [
-        if (kDebugMode)
-          CustomProviderObserver(
-            talker,
-          ),
-      ],
+      parent: container,
       child: const App(),
     ),
   );

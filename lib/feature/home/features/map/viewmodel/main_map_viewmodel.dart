@@ -224,7 +224,6 @@ class MainMapViewModel extends _$MainMapViewModel {
         );
       }),
     ];
-    print(latLngs.length);
     return latLngs.toBounds;
   }
 
@@ -446,7 +445,7 @@ class _KmoniObservationPointService {
           ['linear'],
           ['zoom'],
           3,
-          0.5,
+          0.2,
           10,
           1,
         ],
