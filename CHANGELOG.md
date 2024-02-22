@@ -1,5 +1,11 @@
 # Changelog
 
+## [v2.3.1](https://github.com/YumNumm/EQMonitor/compare/v2.3.0...v2.3.1) - 2024-02-22
+- 震源・震度アイコン描画バグの修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/579
+- Fix/vxse41-crash-bug by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/580
+- build(deps): bump envied from 0.5.2 to 0.5.3 by @dependabot in https://github.com/YumNumm/EQMonitor/pull/571
+- JMAパラメータ更新用のシェルスクリプトを追加 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/584
+
 ## [v2.3.0](https://github.com/YumNumm/EQMonitor/compare/v2.2.2...v2.3.0) - 2024-02-12
 - 震度5弱以上未入電が !5- と表示されていた問題を修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/516
 - メイン画面のMapLibre化 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/517
