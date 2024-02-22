@@ -57,7 +57,6 @@ Future<void> main() async {
   final results = await (
     SharedPreferences.getInstance(),
     loadKmoniObservationPoints(),
-
     PackageInfo.fromPlatform(),
     // ignore: prefer_void_to_null
     (!kIsWeb && Platform.isAndroid

@@ -219,8 +219,6 @@ class MainMapViewModel extends _$MainMapViewModel {
       return null;
     }
 
-    print(coords);
-
     final latLngs = [
       ...points
           .where((e) => first.intensityValue! < e.intensityValue! + 2)
@@ -239,8 +237,6 @@ class MainMapViewModel extends _$MainMapViewModel {
         ),
       ),
     ];
-    print(latLngs);
-    print(latLngs.toBounds);
     return latLngs.toBounds;
   }
 
