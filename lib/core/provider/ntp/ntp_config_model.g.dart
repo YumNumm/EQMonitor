@@ -15,7 +15,7 @@ _$NtpConfigModelImpl _$$NtpConfigModelImplFromJson(Map<String, dynamic> json) =>
       ($checkedConvert) {
         final val = _$NtpConfigModelImpl(
           lookUpAddress: $checkedConvert(
-              'lookUpAddress', (v) => v as String? ?? 'time.google.com'),
+              'lookUpAddress', (v) => v as String? ?? 'ntp.nict.jp'),
           timeout: $checkedConvert(
               'timeout',
               (v) => v == null

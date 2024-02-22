@@ -12,7 +12,9 @@ class EqApi {
 
   final Dio dio;
 
+  @Deprecated('Earthquake API v3 is deprecated.')
   V3 get v3 => V3(dio);
+  @Deprecated('Earthquake API v3 is deprecated.')
   PrivateV3 get privateV3 => throw UnimplementedError(
         'privateV3 feature is not implemented on public EqApi package',
       );
@@ -46,6 +48,7 @@ abstract class V1 {
   });
 }
 
+@Deprecated('Earthquake API v3 is deprecated.')
 @RestApi()
 abstract class V3 {
   factory V3(Dio dio, {String baseUrl}) = _V3;
@@ -67,6 +70,7 @@ abstract class V3 {
   Future<AppInformation> getAppInformation();
 }
 
+@Deprecated('Earthquake API v3 is deprecated.')
 abstract class PrivateV3 {
   Future<void> addTelegram({
     required TelegramV3 telegram,

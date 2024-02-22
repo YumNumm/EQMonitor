@@ -3,14 +3,15 @@ import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/config/earthquake_history/earthquake_history_config_provider.dart';
-import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
-import 'package:eqmonitor/feature/earthquake_history/use_case/earthquake_history_use_case.dart';
+import 'package:eqmonitor/feature/earthquake_history_old/model/state/earthquake_history_item.dart';
+import 'package:eqmonitor/feature/earthquake_history_old/use_case/earthquake_history_use_case.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_history_view_model.g.dart';
 
+@Deprecated('Earthquake API v3 is deprecated.')
 @Riverpod(
   keepAlive: true,
   dependencies: [TelegramWs, earthquakeHistoryUseCase],

@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'telegram_history_data_source.g.dart';
 
+@Deprecated('Earthquake API v3 is deprecated.')
 @Riverpod(
   keepAlive: true,
   dependencies: [],

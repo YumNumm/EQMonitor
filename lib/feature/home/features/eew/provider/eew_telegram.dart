@@ -1,5 +1,5 @@
-import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
-import 'package:eqmonitor/feature/earthquake_history/viewmodel/earthquake_history_view_model.dart';
+import 'package:eqmonitor/feature/earthquake_history_old/model/state/earthquake_history_item.dart';
+import 'package:eqmonitor/feature/earthquake_history_old/viewmodel/earthquake_history_view_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'eew_telegram.g.dart';
