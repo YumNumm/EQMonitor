@@ -120,7 +120,7 @@ class __$$NtpConfigModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$NtpConfigModelImpl implements _NtpConfigModel {
   const _$NtpConfigModelImpl(
-      {this.lookUpAddress = 'time.google.com',
+      {this.lookUpAddress = 'ntp.nict.jp',
       this.timeout = const Duration(seconds: 10),
       this.interval = const Duration(minutes: 1)});
 

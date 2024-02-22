@@ -4,6 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'earthquake_history_item.freezed.dart';
 part 'earthquake_history_item.g.dart';
 
+@Deprecated('Earthquake API v3 is deprecated.')
 @freezed
 class EarthquakeHistoryItem with _$EarthquakeHistoryItem {
   const factory EarthquakeHistoryItem({
@@ -25,6 +26,7 @@ extension EarthquakeHistoryItemExtension on EarthquakeHistoryItem {
       .toList(growable: false);
 }
 
+@Deprecated('Earthquake API v3 is deprecated.')
 @freezed
 class EarthquakeData with _$EarthquakeData {
   const factory EarthquakeData({
@@ -39,6 +41,7 @@ class EarthquakeData with _$EarthquakeData {
       _$EarthquakeDataFromJson(json);
 }
 
+@Deprecated('Earthquake API v3 is deprecated.')
 @freezed
 class TsunamiData with _$TsunamiData {
   const factory TsunamiData({

@@ -20,6 +20,7 @@ class ParameterLoaderWidget extends HookConsumerWidget {
     );
     final state = ref.watch(jmaParameterProvider);
     return switch (state) {
+      AsyncError() => Text(state.toString()),
       AsyncData() || AsyncError() => const AnimatedSwitcher(
           duration: Duration(milliseconds: 150),
           child: SizedBox.shrink(
