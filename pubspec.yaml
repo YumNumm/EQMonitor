@@ -32,9 +32,9 @@ dependencies:
       url: https://github.com/YumNumm/EQMonitor.git
       path: packages/extensions
   firebase_analytics: ^10.6.0
-  firebase_core: 2.22.0
+  firebase_core: 2.25.4
   firebase_crashlytics: ^3.4.0
-  firebase_messaging: ^14.0.0
+  firebase_messaging: ^14.7.16
   flutter:
     sdk: flutter
   flutter_hooks: ^0.20.3
