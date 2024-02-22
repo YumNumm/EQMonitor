@@ -54,12 +54,9 @@ class MainMapView extends HookConsumerWidget {
           ..repeat()
           ..addListener(
             () {
-              final now = ref.read(ntpProvider.notifier).now();
-              if (now != null) {
-                ref
-                    .read(mainMapViewModelProvider.notifier)
-                    .onTick(now);
-              }
+              final now =
+                  ref.read(ntpProvider.notifier).now() ?? DateTime.now();
+              ref.read(mainMapViewModelProvider.notifier).onTick(now);
             },
           );
         return null;

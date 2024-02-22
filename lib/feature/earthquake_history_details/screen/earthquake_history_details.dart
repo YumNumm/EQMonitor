@@ -122,31 +122,32 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                           spacing: 8,
                           runSpacing: 8,
                           children: [
-                            if (config.showingLpgmIntensity &&
-                                maxLgIntensity != null)
-                              for (final intensity in [
-                                ...JmaLgIntensity.values,
-                              ].where(
-                                (e) =>
-                                    e != JmaLgIntensity.zero &&
-                                    e <= maxLgIntensity,
-                              ))
-                                JmaLgIntensityIcon(
-                                  type: IntensityIconType.filled,
-                                  intensity: intensity,
-                                  size: 25,
-                                )
-                            else
-                              for (final intensity in [
-                                ...JmaIntensity.values,
-                              ].where(
-                                (e) => e <= maxIntensity!,
-                              ))
-                                JmaIntensityIcon(
-                                  type: IntensityIconType.filled,
-                                  intensity: intensity,
-                                  size: 25,
-                                ),
+                            if (maxIntensity != null)
+                              if (config.showingLpgmIntensity &&
+                                  maxLgIntensity != null)
+                                for (final intensity in [
+                                  ...JmaLgIntensity.values,
+                                ].where(
+                                  (e) =>
+                                      e != JmaLgIntensity.zero &&
+                                      e <= maxLgIntensity,
+                                ))
+                                  JmaLgIntensityIcon(
+                                    type: IntensityIconType.filled,
+                                    intensity: intensity,
+                                    size: 25,
+                                  )
+                              else
+                                for (final intensity in [
+                                  ...JmaIntensity.values,
+                                ].where(
+                                  (e) => e <= maxIntensity,
+                                ))
+                                  JmaIntensityIcon(
+                                    type: IntensityIconType.filled,
+                                    intensity: intensity,
+                                    size: 25,
+                                  ),
                           ],
                         ),
                       ),
