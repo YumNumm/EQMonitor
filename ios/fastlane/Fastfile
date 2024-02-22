@@ -24,12 +24,17 @@ platform :ios do
     )
 
     # Step 4 - Upload the project
-    changelog_from_git_commits(
+    changelog = changelog_from_git_commits(
       date_format: "%Y-%m-%d",
+      between: [last_git_tag, "HEAD"],
+      pretty: "- %s",
+      date_format: "short",
+      match_lightweight_tag: false,
+      merge_commit_filtering: "exclude_merges"
     )
     upload_to_testflight(
       ipa: "./Runner.ipa",
+      changelog: changelog
     )
   end
 end
-

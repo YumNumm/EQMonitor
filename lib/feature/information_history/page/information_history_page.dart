@@ -144,9 +144,11 @@ class _Loading extends StatelessWidget {
           Text(
             'お知らせを取得中です。',
           ),
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: CircularProgressIndicator.adaptive(),
+          Center(
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: CircularProgressIndicator.adaptive(),
+            ),
           ),
         ],
       ),

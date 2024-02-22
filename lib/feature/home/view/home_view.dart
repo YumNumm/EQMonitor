@@ -67,6 +67,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
             ref.read(kmoniViewModelProvider.notifier).initialize(),
             ref.read(permissionProvider.notifier).initialize(),
             ref.read(fcmTopicManagerProvider.notifier).setup(),
+            ref.read(ntpProvider.notifier).sync(),
             () async {
               final renderer = MapComponentsRenderer();
               final futures = <Future<void>>[
