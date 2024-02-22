@@ -40,4 +40,3 @@
 	vPrefix = true
 	releaseBranch = develop
 	versionFile = .tagpr.version
-	releaseBranch = main
