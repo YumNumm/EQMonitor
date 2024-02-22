@@ -205,7 +205,12 @@ class MainMapViewModel extends _$MainMapViewModel {
       return null;
     }
     final aliveEews = ref.read(eewAliveTelegramProvider);
-    final telegrams = aliveEews?.whereType<TelegramVxse45Body>();
+
+    final telegrams = aliveEews
+        ?.map(
+          (e) => e.latestEew,
+        )
+        .whereType<TelegramVxse45Body>();
     final coords =
         telegrams?.map((e) => e.hypocenter?.coordinate).whereNotNull() ?? [];
 
@@ -214,15 +219,28 @@ class MainMapViewModel extends _$MainMapViewModel {
       return null;
     }
 
+    print(coords);
+
     final latLngs = [
-      ...points.sublist(0, 50).map((e) => e.point.latLng),
+      ...points
+          .where((e) => first.intensityValue! < e.intensityValue! + 2)
+          .where((e) => e.intensityValue! > 1)
+          .map((e) => e.point.latLng),
       ...coords.map(
         (e) => lat_lng.LatLng(
-          e.lat,
-          e.lon,
+          e.lat + 3,
+          e.lon + 3,
+        ),
+      ),
+      ...coords.map(
+        (e) => lat_lng.LatLng(
+          e.lat - 3,
+          e.lon - 3,
         ),
       ),
     ];
+    print(latLngs);
+    print(latLngs.toBounds);
     return latLngs.toBounds;
   }
 

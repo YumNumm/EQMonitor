@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/core/provider/ntp/ntp_config_model.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_config_provider.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_state_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ntp/ntp.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -15,30 +17,32 @@ class Ntp extends _$Ntp {
     final config = ref.watch(ntpConfigProvider);
     final interval = config.interval;
 
-    // intervalごとにsyncを実行する
-    _stream = Stream<void>.periodic(interval).listen((_) => sync());
-    unawaited(sync());
-    ref.onDispose(_stream.cancel);
+    final timer = Timer.periodic(interval, (_) {
+      sync();
+    });
+    ref.onDispose(timer.cancel);
 
     return const NtpStateModel();
   }
 
-  late StreamSubscription<void> _stream;
-
   Future<void> sync() async {
-    final talker = ref.read(talkerProvider)..logTyped(NtpLog('sync start'));
     final config = ref.read(ntpConfigProvider);
 
-    final localTime = DateTime.now();
-    final offset = await NTP.getNtpOffset(
-      lookUpAddress: config.lookUpAddress,
-      timeout: config.timeout,
+    final offset = await compute<NtpConfigModel, int>(
+      (config) => NTP.getNtpOffset(
+        lookUpAddress: config.lookUpAddress,
+        timeout: config.timeout,
+      ),
+      config,
     );
     state = state.copyWith(
       offset: offset,
-      updatedAt: localTime,
+      updatedAt: DateTime.now(),
     );
-    talker.logTyped(NtpLog('sync end: ${offset}ms'));
+
+    ref
+        .read(talkerProvider)
+        .logTyped(NtpLog('NTP Time Sync: offset ${offset}ms'));
   }
 
   DateTime? now() {
