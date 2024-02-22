@@ -3,7 +3,7 @@ import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
-import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
+import 'package:eqmonitor/feature/earthquake_history_old/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/foundation.dart';

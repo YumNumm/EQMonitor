@@ -1,7 +1,7 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
-import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
+import 'package:eqmonitor/feature/earthquake_history_old/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

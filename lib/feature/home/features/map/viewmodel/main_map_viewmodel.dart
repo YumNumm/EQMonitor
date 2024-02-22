@@ -10,7 +10,7 @@ import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/map/map_style.dart';
-import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
+import 'package:eqmonitor/feature/earthquake_history_old/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/home/features/eew/provider/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/features/estimated_intensity/provider/estimated_intensity_provider.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';

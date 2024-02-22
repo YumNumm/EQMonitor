@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/telegram_history_data_source.dart';
+import 'package:eqmonitor/feature/earthquake_history_old/data/telegram_history_data_source.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_history_use_case.g.dart';
 
+@Deprecated('Earthquake API v3 is deprecated.')
 @Riverpod(
   keepAlive: true,
   dependencies: [telegramHistoryDataSource],

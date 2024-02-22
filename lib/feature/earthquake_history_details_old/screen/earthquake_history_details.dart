@@ -10,11 +10,11 @@ import 'package:eqmonitor/core/provider/config/earthquake_history/earthquake_his
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:eqmonitor/feature/earthquake_history/model/state/earthquake_history_item.dart';
-import 'package:eqmonitor/feature/earthquake_history/viewmodel/earthquake_history_view_model.dart';
-import 'package:eqmonitor/feature/earthquake_history_details/component/earthquake_map.dart';
-import 'package:eqmonitor/feature/earthquake_history_details/component/prefecture_intensity.dart';
-import 'package:eqmonitor/feature/earthquake_history_details/component/prefecture_lpgm_intensity.dart';
+import 'package:eqmonitor/feature/earthquake_history_old/model/state/earthquake_history_item.dart';
+import 'package:eqmonitor/feature/earthquake_history_old/viewmodel/earthquake_history_view_model.dart';
+import 'package:eqmonitor/feature/earthquake_history_details_old/component/earthquake_map.dart';
+import 'package:eqmonitor/feature/earthquake_history_details_old/component/prefecture_intensity.dart';
+import 'package:eqmonitor/feature/earthquake_history_details_old/component/prefecture_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:extensions/extensions.dart';
