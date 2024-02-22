@@ -76,8 +76,8 @@ dependencies:
   riverpod_annotation: ^2.3.1
   screenshot:
     git:
-     url: git@github.com:timmaffett/screenshot.git
-     branch: master
+      url: git@github.com:timmaffett/screenshot.git
+      branch: master
   shared_preferences: ^2.2.2
   sheet:
     git:
