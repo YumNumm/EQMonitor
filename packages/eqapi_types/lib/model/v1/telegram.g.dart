@@ -15,37 +15,46 @@ _$TelegramV1Impl _$$TelegramV1ImplFromJson(Map<String, dynamic> json) =>
       ($checkedConvert) {
         final val = _$TelegramV1Impl(
           id: $checkedConvert('id', (v) => v as int),
-          eventId: $checkedConvert('eventId', (v) => v as int),
+          eventId: $checkedConvert('event_id', (v) => v as int),
           type: $checkedConvert('type', (v) => v as String),
-          schemaType: $checkedConvert('schemaType', (v) => v as String),
+          schemaType: $checkedConvert('schema_type', (v) => v as String),
           status: $checkedConvert('status', (v) => v as String),
-          infoType: $checkedConvert('infoType', (v) => v as String),
+          infoType: $checkedConvert('info_type', (v) => v as String),
           pressTime:
-              $checkedConvert('pressTime', (v) => DateTime.parse(v as String)),
-          reportTime:
-              $checkedConvert('reportTime', (v) => DateTime.parse(v as String)),
-          validTime: $checkedConvert('validTime',
+              $checkedConvert('press_time', (v) => DateTime.parse(v as String)),
+          reportTime: $checkedConvert(
+              'report_time', (v) => DateTime.parse(v as String)),
+          validTime: $checkedConvert('valid_time',
               (v) => v == null ? null : DateTime.parse(v as String)),
-          serialNo: $checkedConvert('serialNo', (v) => v as int?),
+          serialNo: $checkedConvert('serial_no', (v) => v as int?),
           headline: $checkedConvert('headline', (v) => v as String?),
           body: $checkedConvert('body', (v) => v as Map<String, dynamic>),
         );
         return val;
+      },
+      fieldKeyMap: const {
+        'eventId': 'event_id',
+        'schemaType': 'schema_type',
+        'infoType': 'info_type',
+        'pressTime': 'press_time',
+        'reportTime': 'report_time',
+        'validTime': 'valid_time',
+        'serialNo': 'serial_no'
       },
     );
 
 Map<String, dynamic> _$$TelegramV1ImplToJson(_$TelegramV1Impl instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'eventId': instance.eventId,
+      'event_id': instance.eventId,
       'type': instance.type,
-      'schemaType': instance.schemaType,
+      'schema_type': instance.schemaType,
       'status': instance.status,
-      'infoType': instance.infoType,
-      'pressTime': instance.pressTime.toIso8601String(),
-      'reportTime': instance.reportTime.toIso8601String(),
-      'validTime': instance.validTime?.toIso8601String(),
-      'serialNo': instance.serialNo,
+      'info_type': instance.infoType,
+      'press_time': instance.pressTime.toIso8601String(),
+      'report_time': instance.reportTime.toIso8601String(),
+      'valid_time': instance.validTime?.toIso8601String(),
+      'serial_no': instance.serialNo,
       'headline': instance.headline,
       'body': instance.body,
     };

@@ -2,19 +2,18 @@
 
 // ignore_for_file: type=lint
 
-part of 'intensity_sub_division.dart';
+part of 'region.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$IntensitySubDivisionImpl _$$IntensitySubDivisionImplFromJson(
-        Map<String, dynamic> json) =>
+_$RegionItemImpl _$$RegionItemImplFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
-      r'_$IntensitySubDivisionImpl',
+      r'_$RegionItemImpl',
       json,
       ($checkedConvert) {
-        final val = _$IntensitySubDivisionImpl(
+        final val = _$RegionItemImpl(
           id: $checkedConvert('id', (v) => v as int),
           eventId: $checkedConvert('event_id', (v) => v as int),
           areaCode: $checkedConvert('area_code', (v) => v as String),
@@ -22,6 +21,8 @@ _$IntensitySubDivisionImpl _$$IntensitySubDivisionImplFromJson(
               'max_intensity', (v) => $enumDecode(_$JmaIntensityEnumMap, v)),
           maxLpgmIntensity: $checkedConvert('max_lpgm_intensity',
               (v) => $enumDecodeNullable(_$JmaLgIntensityEnumMap, v)),
+          earthquake: $checkedConvert('earthquake',
+              (v) => EarthquakeV1Base.fromJson(v as Map<String, dynamic>)),
         );
         return val;
       },
@@ -33,14 +34,14 @@ _$IntensitySubDivisionImpl _$$IntensitySubDivisionImplFromJson(
       },
     );
 
-Map<String, dynamic> _$$IntensitySubDivisionImplToJson(
-        _$IntensitySubDivisionImpl instance) =>
+Map<String, dynamic> _$$RegionItemImplToJson(_$RegionItemImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'event_id': instance.eventId,
       'area_code': instance.areaCode,
       'max_intensity': _$JmaIntensityEnumMap[instance.maxIntensity]!,
       'max_lpgm_intensity': _$JmaLgIntensityEnumMap[instance.maxLpgmIntensity],
+      'earthquake': instance.earthquake,
     };
 
 const _$JmaIntensityEnumMap = {

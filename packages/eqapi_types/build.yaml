@@ -8,3 +8,4 @@ targets:
       json_serializable:
         options:
           checked: true
+          field_rename: snake

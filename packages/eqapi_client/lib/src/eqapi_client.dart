@@ -1,6 +1,9 @@
+// ignore_for_file: deprecated_consistency
+
 import 'package:dio/dio.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqapi_types/lib.dart';
+import 'package:eqapi_types/model/v1/earthquake.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'eqapi_client.g.dart';

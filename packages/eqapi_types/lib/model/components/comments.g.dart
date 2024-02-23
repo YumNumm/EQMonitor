@@ -21,20 +21,21 @@ _$CommentsImpl _$$CommentsImplFromJson(Map<String, dynamic> json) =>
                   ? null
                   : ForecastComments.fromJson(v as Map<String, dynamic>)),
           varComments: $checkedConvert(
-              'varComments',
+              'var_comments',
               (v) => v == null
                   ? null
                   : VarComments.fromJson(v as Map<String, dynamic>)),
         );
         return val;
       },
+      fieldKeyMap: const {'varComments': 'var_comments'},
     );
 
 Map<String, dynamic> _$$CommentsImplToJson(_$CommentsImpl instance) =>
     <String, dynamic>{
       'free': instance.free,
       'forecast': instance.forecast,
-      'varComments': instance.varComments,
+      'var_comments': instance.varComments,
     };
 
 _$CommentsOmitVarImpl _$$CommentsOmitVarImplFromJson(

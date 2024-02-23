@@ -2,7 +2,7 @@
 
 // ignore_for_file: type=lint
 
-part of 'eqapi_client.dart';
+part of 'v1.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -21,8 +21,8 @@ class _V1 implements V1 {
   String? baseUrl;
 
   @override
-  Future<List<EarthquakeV1>> getEarthquake({
-    int limit = 100,
+  Future<HttpResponse<List<EarthquakeV1>>> getEarthquakes({
+    int limit = 10,
     int offset = 0,
     double? magnitudeLte,
     double? magnitudeGte,
@@ -45,8 +45,8 @@ class _V1 implements V1 {
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio
-        .fetch<List<dynamic>>(_setStreamType<List<EarthquakeV1>>(Options(
+    final _result = await _dio.fetch<List<dynamic>>(
+        _setStreamType<HttpResponse<List<EarthquakeV1>>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -65,75 +65,110 @@ class _V1 implements V1 {
     var value = _result.data!
         .map((dynamic i) => EarthquakeV1.fromJson(i as Map<String, dynamic>))
         .toList();
-    return value;
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
   }
-
-  RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
-    if (T != dynamic &&
-        !(requestOptions.responseType == ResponseType.bytes ||
-            requestOptions.responseType == ResponseType.stream)) {
-      if (T == String) {
-        requestOptions.responseType = ResponseType.plain;
-      } else {
-        requestOptions.responseType = ResponseType.json;
-      }
-    }
-    return requestOptions;
-  }
-
-  String _combineBaseUrls(
-    String dioBaseUrl,
-    String? baseUrl,
-  ) {
-    if (baseUrl == null || baseUrl.trim().isEmpty) {
-      return dioBaseUrl;
-    }
-
-    final url = Uri.parse(baseUrl);
-
-    if (url.isAbsolute) {
-      return url.toString();
-    }
-
-    return Uri.parse(dioBaseUrl).resolveUri(url).toString();
-  }
-}
-
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
-
-class _V3 implements V3 {
-  _V3(
-    this._dio, {
-    this.baseUrl,
-  });
-
-  final Dio _dio;
-
-  String? baseUrl;
 
   @override
-  Future<TelegramHistoryV3> getTelegramHistory({
-    bool includeEew = false,
-    int limit = 100,
+  Future<HttpResponse<List<RegionItem>>> getEarthquakeRegions({
+    int limit = 10,
+    int offset = 0,
+    required String regionCode,
+    JmaIntensity? intensityLte,
+    JmaIntensity? intensityGte,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'limit': limit,
+      r'offset': offset,
+      r'regionCode': regionCode,
+      r'intensityLte': intensityLte?.name,
+      r'intensityGte': intensityGte?.name,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<List<dynamic>>(
+        _setStreamType<HttpResponse<List<RegionItem>>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/v1/earthquake/region',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) => RegionItem.fromJson(i as Map<String, dynamic>))
+        .toList();
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<List<InformationV1>>> getInformations({
+    int limit = 10,
     int offset = 0,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'includeEew': includeEew,
+      r'limit': limit,
+      r'offset': offset,
+    };
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<List<dynamic>>(
+        _setStreamType<HttpResponse<List<InformationV1>>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/v1/information',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) => InformationV1.fromJson(i as Map<String, dynamic>))
+        .toList();
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<List<EewV1>>> getEew({
+    int limit = 10,
+    int offset = 0,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
       r'limit': limit,
       r'offset': offset,
     };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<TelegramHistoryV3>(Options(
+        .fetch<List<dynamic>>(_setStreamType<HttpResponse<List<EewV1>>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/v3/telegram',
+              '/v1/eew',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -142,58 +177,28 @@ class _V3 implements V3 {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = TelegramHistoryV3.fromJson(_result.data!);
-    return value;
+    var value = _result.data!
+        .map((dynamic i) => EewV1.fromJson(i as Map<String, dynamic>))
+        .toList();
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
   }
 
   @override
-  Future<InformationV3Result> getInformation({
-    int offset = 0,
-    int limit = 10,
-  }) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{
-      r'offset': offset,
-      r'limit': limit,
-    };
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<InformationV3Result>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/v3/information',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final value = InformationV3Result.fromJson(_result.data!);
-    return value;
-  }
-
-  @override
-  Future<AppInformation> getAppInformation() async {
+  Future<HttpResponse<List<EewV1>>> getEewLatest() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<AppInformation>(Options(
+        .fetch<List<dynamic>>(_setStreamType<HttpResponse<List<EewV1>>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/v3/app_information',
+              '/v1/eew/latest',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -202,8 +207,11 @@ class _V3 implements V3 {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = AppInformation.fromJson(_result.data!);
-    return value;
+    var value = _result.data!
+        .map((dynamic i) => EewV1.fromJson(i as Map<String, dynamic>))
+        .toList();
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {

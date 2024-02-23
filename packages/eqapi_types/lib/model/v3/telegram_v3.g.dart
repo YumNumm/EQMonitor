@@ -16,26 +16,35 @@ _$TelegramV3BaseImpl _$$TelegramV3BaseImplFromJson(Map<String, dynamic> json) =>
         final val = _$TelegramV3BaseImpl(
           id: $checkedConvert('id', (v) => v as int?),
           hash: $checkedConvert('hash', (v) => v as String?),
-          eventId: $checkedConvert('eventId', (v) => v as int),
+          eventId: $checkedConvert('event_id', (v) => v as int),
           type: $checkedConvert(
               'type', (v) => $enumDecode(_$TelegramTypeEnumMap, v)),
           schemaType: $checkedConvert(
-              'schemaType', (v) => $enumDecode(_$SchemaTypeEnumMap, v)),
+              'schema_type', (v) => $enumDecode(_$SchemaTypeEnumMap, v)),
           status: $checkedConvert(
               'status', (v) => $enumDecode(_$TelegramStatusEnumMap, v)),
           infoType: $checkedConvert(
-              'infoType', (v) => $enumDecode(_$TelegramInfoTypeEnumMap, v)),
+              'info_type', (v) => $enumDecode(_$TelegramInfoTypeEnumMap, v)),
           pressTime:
-              $checkedConvert('pressTime', (v) => DateTime.parse(v as String)),
-          reportTime: $checkedConvert('reportTime',
+              $checkedConvert('press_time', (v) => DateTime.parse(v as String)),
+          reportTime: $checkedConvert('report_time',
               (v) => v == null ? null : DateTime.parse(v as String)),
-          validTime: $checkedConvert('validTime',
+          validTime: $checkedConvert('valid_time',
               (v) => v == null ? null : DateTime.parse(v as String)),
-          serialNo: $checkedConvert('serialNo', (v) => v as int?),
+          serialNo: $checkedConvert('serial_no', (v) => v as int?),
           headline: $checkedConvert('headline', (v) => v as String?),
           body: $checkedConvert('body', (v) => v as Map<String, dynamic>),
         );
         return val;
+      },
+      fieldKeyMap: const {
+        'eventId': 'event_id',
+        'schemaType': 'schema_type',
+        'infoType': 'info_type',
+        'pressTime': 'press_time',
+        'reportTime': 'report_time',
+        'validTime': 'valid_time',
+        'serialNo': 'serial_no'
       },
     );
 
@@ -44,15 +53,15 @@ Map<String, dynamic> _$$TelegramV3BaseImplToJson(
     <String, dynamic>{
       'id': instance.id,
       'hash': instance.hash,
-      'eventId': instance.eventId,
+      'event_id': instance.eventId,
       'type': _$TelegramTypeEnumMap[instance.type]!,
-      'schemaType': _$SchemaTypeEnumMap[instance.schemaType]!,
+      'schema_type': _$SchemaTypeEnumMap[instance.schemaType]!,
       'status': _$TelegramStatusEnumMap[instance.status]!,
-      'infoType': _$TelegramInfoTypeEnumMap[instance.infoType]!,
-      'pressTime': instance.pressTime.toIso8601String(),
-      'reportTime': instance.reportTime?.toIso8601String(),
-      'validTime': instance.validTime?.toIso8601String(),
-      'serialNo': instance.serialNo,
+      'info_type': _$TelegramInfoTypeEnumMap[instance.infoType]!,
+      'press_time': instance.pressTime.toIso8601String(),
+      'report_time': instance.reportTime?.toIso8601String(),
+      'valid_time': instance.validTime?.toIso8601String(),
+      'serial_no': instance.serialNo,
       'headline': instance.headline,
       'body': instance.body,
     };
@@ -359,22 +368,26 @@ _$EarthquakeNankaiBodyImpl _$$EarthquakeNankaiBodyImplFromJson(
       ($checkedConvert) {
         final val = _$EarthquakeNankaiBodyImpl(
           earthquakeInfo: $checkedConvert(
-              'earthquakeInfo',
+              'earthquake_info',
               (v) => v == null
                   ? null
                   : EarthquakeNankaiInfo.fromJson(v as Map<String, dynamic>)),
-          nextAdvisory: $checkedConvert('nextAdvisory', (v) => v as String?),
+          nextAdvisory: $checkedConvert('next_advisory', (v) => v as String?),
           text: $checkedConvert('text', (v) => v as String?),
         );
         return val;
+      },
+      fieldKeyMap: const {
+        'earthquakeInfo': 'earthquake_info',
+        'nextAdvisory': 'next_advisory'
       },
     );
 
 Map<String, dynamic> _$$EarthquakeNankaiBodyImplToJson(
         _$EarthquakeNankaiBodyImpl instance) =>
     <String, dynamic>{
-      'earthquakeInfo': instance.earthquakeInfo,
-      'nextAdvisory': instance.nextAdvisory,
+      'earthquake_info': instance.earthquakeInfo,
+      'next_advisory': instance.nextAdvisory,
       'text': instance.text,
     };
 
@@ -444,12 +457,12 @@ _$TelegramVxse45BodyImpl _$$TelegramVxse45BodyImplFromJson(
                   : EewHypocenter.fromJson(v as Map<String, dynamic>)),
           depth: $checkedConvert('depth', (v) => v as int?),
           forecastMaxInt: $checkedConvert(
-              'forecastMaxInt',
+              'forecast_max_int',
               (v) => v == null
                   ? null
                   : ForecastMaxInt.fromJson(v as Map<String, dynamic>)),
           forecastMaxLgInt: $checkedConvert(
-              'forecastMaxLgInt',
+              'forecast_max_lg_int',
               (v) => v == null
                   ? null
                   : ForecastMaxLgInt.fromJson(v as Map<String, dynamic>)),
@@ -458,16 +471,24 @@ _$TelegramVxse45BodyImpl _$$TelegramVxse45BodyImplFromJson(
               (v) => (v as List<dynamic>?)
                   ?.map((e) => EewRegion.fromJson(e as Map<String, dynamic>))
                   .toList()),
-          originTime: $checkedConvert('originTime',
+          originTime: $checkedConvert('origin_time',
               (v) => v == null ? null : DateTime.parse(v as String)),
           arrivalTime: $checkedConvert(
-              'arrivalTime', (v) => DateTime.parse(v as String)),
+              'arrival_time', (v) => DateTime.parse(v as String)),
           accuracy: $checkedConvert('accuracy',
               (v) => EewAccuracy.fromJson(v as Map<String, dynamic>)),
-          isPlum: $checkedConvert('isPlum', (v) => v as bool),
-          isLastInfo: $checkedConvert('isLastInfo', (v) => v as bool),
+          isPlum: $checkedConvert('is_plum', (v) => v as bool),
+          isLastInfo: $checkedConvert('is_last_info', (v) => v as bool),
         );
         return val;
+      },
+      fieldKeyMap: const {
+        'forecastMaxInt': 'forecast_max_int',
+        'forecastMaxLgInt': 'forecast_max_lg_int',
+        'originTime': 'origin_time',
+        'arrivalTime': 'arrival_time',
+        'isPlum': 'is_plum',
+        'isLastInfo': 'is_last_info'
       },
     );
 
@@ -477,14 +498,14 @@ Map<String, dynamic> _$$TelegramVxse45BodyImplToJson(
       'magnitude': instance.magnitude,
       'hypocenter': instance.hypocenter,
       'depth': instance.depth,
-      'forecastMaxInt': instance.forecastMaxInt,
-      'forecastMaxLgInt': instance.forecastMaxLgInt,
+      'forecast_max_int': instance.forecastMaxInt,
+      'forecast_max_lg_int': instance.forecastMaxLgInt,
       'regions': instance.regions,
-      'originTime': instance.originTime?.toIso8601String(),
-      'arrivalTime': instance.arrivalTime.toIso8601String(),
+      'origin_time': instance.originTime?.toIso8601String(),
+      'arrival_time': instance.arrivalTime.toIso8601String(),
       'accuracy': instance.accuracy,
-      'isPlum': instance.isPlum,
-      'isLastInfo': instance.isLastInfo,
+      'is_plum': instance.isPlum,
+      'is_last_info': instance.isLastInfo,
     };
 
 _$EarthquakeInformationBodyImpl _$$EarthquakeInformationBodyImplFromJson(
@@ -494,18 +515,22 @@ _$EarthquakeInformationBodyImpl _$$EarthquakeInformationBodyImplFromJson(
       json,
       ($checkedConvert) {
         final val = _$EarthquakeInformationBodyImpl(
-          isLastInfo: $checkedConvert('isLastInfo', (v) => v as bool),
-          isCanceled: $checkedConvert('isCanceled', (v) => v as bool),
+          isLastInfo: $checkedConvert('is_last_info', (v) => v as bool),
+          isCanceled: $checkedConvert('is_canceled', (v) => v as bool),
           text: $checkedConvert('text', (v) => v as String),
         );
         return val;
+      },
+      fieldKeyMap: const {
+        'isLastInfo': 'is_last_info',
+        'isCanceled': 'is_canceled'
       },
     );
 
 Map<String, dynamic> _$$EarthquakeInformationBodyImplToJson(
         _$EarthquakeInformationBodyImpl instance) =>
     <String, dynamic>{
-      'isLastInfo': instance.isLastInfo,
-      'isCanceled': instance.isCanceled,
+      'is_last_info': instance.isLastInfo,
+      'is_canceled': instance.isCanceled,
       'text': instance.text,
     };

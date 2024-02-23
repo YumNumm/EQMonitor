@@ -17,25 +17,34 @@ _$TsunamiEstimationImpl _$$TsunamiEstimationImplFromJson(
         final val = _$TsunamiEstimationImpl(
           code: $checkedConvert('code', (v) => v as String),
           name: $checkedConvert('name', (v) => v as String),
-          firstHeightTime: $checkedConvert('firstHeightTime',
+          firstHeightTime: $checkedConvert('first_height_time',
               (v) => v == null ? null : DateTime.parse(v as String)),
           firstHeightCondition: $checkedConvert(
-              'firstHeightCondition',
+              'first_height_condition',
               (v) => $enumDecodeNullable(
                   _$TsunamiEstimationFirstHeightConditionEnumMap, v)),
-          maxHeightTime: $checkedConvert('maxHeightTime',
+          maxHeightTime: $checkedConvert('max_height_time',
               (v) => v == null ? null : DateTime.parse(v as String)),
-          maxHeightValue:
-              $checkedConvert('maxHeightValue', (v) => (v as num?)?.toDouble()),
+          maxHeightValue: $checkedConvert(
+              'max_height_value', (v) => (v as num?)?.toDouble()),
           maxHeightIsOver:
-              $checkedConvert('maxHeightIsOver', (v) => v as bool?),
+              $checkedConvert('max_height_is_over', (v) => v as bool?),
           maxHeightCondition: $checkedConvert(
-              'maxHeightCondition',
+              'max_height_condition',
               (v) => $enumDecodeNullable(
                   _$TsunamiEstimationMaxHeightConditionEnumMap, v)),
-          isObserving: $checkedConvert('isObserving', (v) => v as bool?),
+          isObserving: $checkedConvert('is_observing', (v) => v as bool?),
         );
         return val;
+      },
+      fieldKeyMap: const {
+        'firstHeightTime': 'first_height_time',
+        'firstHeightCondition': 'first_height_condition',
+        'maxHeightTime': 'max_height_time',
+        'maxHeightValue': 'max_height_value',
+        'maxHeightIsOver': 'max_height_is_over',
+        'maxHeightCondition': 'max_height_condition',
+        'isObserving': 'is_observing'
       },
     );
 
@@ -44,15 +53,15 @@ Map<String, dynamic> _$$TsunamiEstimationImplToJson(
     <String, dynamic>{
       'code': instance.code,
       'name': instance.name,
-      'firstHeightTime': instance.firstHeightTime?.toIso8601String(),
-      'firstHeightCondition': _$TsunamiEstimationFirstHeightConditionEnumMap[
+      'first_height_time': instance.firstHeightTime?.toIso8601String(),
+      'first_height_condition': _$TsunamiEstimationFirstHeightConditionEnumMap[
           instance.firstHeightCondition],
-      'maxHeightTime': instance.maxHeightTime?.toIso8601String(),
-      'maxHeightValue': instance.maxHeightValue,
-      'maxHeightIsOver': instance.maxHeightIsOver,
-      'maxHeightCondition': _$TsunamiEstimationMaxHeightConditionEnumMap[
+      'max_height_time': instance.maxHeightTime?.toIso8601String(),
+      'max_height_value': instance.maxHeightValue,
+      'max_height_is_over': instance.maxHeightIsOver,
+      'max_height_condition': _$TsunamiEstimationMaxHeightConditionEnumMap[
           instance.maxHeightCondition],
-      'isObserving': instance.isObserving,
+      'is_observing': instance.isObserving,
     };
 
 const _$TsunamiEstimationFirstHeightConditionEnumMap = {
