@@ -9,7 +9,7 @@ part of 'earthquake_history_notifier.dart';
 // **************************************************************************
 
 String _$earthquakeHistoryHasNextFetchHash() =>
-    r'9582948b6f2cd1696bb15a8b02615aa4e2cae1ae';
+    r'dbc04e4db75f455c34a5057c0bf368ece5c2dd19';
 
 /// See also [earthquakeHistoryHasNextFetch].
 @ProviderFor(earthquakeHistoryHasNextFetch)
@@ -26,7 +26,7 @@ final earthquakeHistoryHasNextFetchProvider =
 
 typedef EarthquakeHistoryHasNextFetchRef = AutoDisposeProviderRef<bool>;
 String _$earthquakeHistoryNotifierHash() =>
-    r'534ed47648abb99aa76254ad093a3d5f2c1dd6ec';
+    r'0dab9a494bf9c1a41ae897ff5e074d7c3f350e3d';
 
 /// See also [EarthquakeHistoryNotifier].
 @ProviderFor(EarthquakeHistoryNotifier)

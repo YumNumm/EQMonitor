@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_manual_providers_as_generated_provider_dependency
 import 'dart:developer';
 import 'dart:io';
 
@@ -10,7 +11,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'jma_parameter.g.dart';
 
-@Riverpod(keepAlive: true)
+@Riverpod(
+  keepAlive: true,
+)
 class JmaParameter extends _$JmaParameter {
   @override
   Future<
@@ -24,15 +27,13 @@ class JmaParameter extends _$JmaParameter {
     );
   }
 
-  static const _earthquakeKey = 'jma_parameter_earthquake';
   static const _tsunamiKey = 'jma_parameter_tsunami';
 
   static const _earthquakeFileName = 'earthquake_param.pb';
   static const _tsunamiFileName = 'tsunami_param.pb';
 
   Future<EarthquakeParameter> getEarthquake() async {
-    final prefs = ref.watch(sharedPreferencesProvider);
-    final cachedEtag = prefs.getString(_earthquakeKey);
+    final cachedEtag = ref.read(earthquakeParameterEtagProvider);
     // check Etag
     final currentEtag = await ref
         .watch(jmaParameterApiClientProvider)
@@ -49,7 +50,7 @@ class JmaParameter extends _$JmaParameter {
     await _saveEarthquakeToLocal(result.parameter);
     final etag = result.etag;
     if (etag != null) {
-      await prefs.setString(_earthquakeKey, etag);
+      await ref.read(earthquakeParameterEtagProvider.notifier).set(etag);
     }
     return result.parameter;
   }
@@ -120,4 +121,21 @@ class JmaParameter extends _$JmaParameter {
     final file = File('${dir.path}/$_tsunamiFileName');
     await file.writeAsBytes(tsunami.writeToBuffer());
   }
+}
+
+@Riverpod(keepAlive: true)
+class EarthquakeParameterEtag extends _$EarthquakeParameterEtag {
+  @override
+  String? build() {
+    final prefs = ref.watch(sharedPreferencesProvider);
+    return prefs.getString(_prefsKey);
+  }
+
+  Future<void> set(String etag) async {
+    final prefs = ref.read(sharedPreferencesProvider);
+    await prefs.setString(_prefsKey, etag);
+    state = etag;
+  }
+
+  static const _prefsKey = 'jma_parameter_earthquake';
 }

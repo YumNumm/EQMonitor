@@ -1,6 +1,7 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:eqmonitor/feature/debug/earthquake_parameter/ui/earthquake_parameter_list_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history_details_old/screen/earthquake_history_details.dart';
 import 'package:eqmonitor/feature/earthquake_history_old/model/state/earthquake_history_item.dart';
@@ -173,6 +174,9 @@ class KmoniRoute extends GoRouteData {
         TypedGoRoute<ApiEndpointSelectorRoute>(
           path: 'api-endpoint-selector',
         ),
+        TypedGoRoute<EarthquakeParameterListRoute>(
+          path: 'earthquake-parameter-list',
+        ),
       ],
     ),
   ],
@@ -278,4 +282,12 @@ class EarthquakeNotificationSettingsRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const EarthquakeNotificationSettingsPage();
+}
+
+class EarthquakeParameterListRoute extends GoRouteData {
+  const EarthquakeParameterListRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const EarthquakeParameterListScreen();
 }

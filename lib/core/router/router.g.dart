@@ -284,6 +284,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
               path: 'api-endpoint-selector',
               factory: $ApiEndpointSelectorRouteExtension._fromState,
             ),
+            GoRouteData.$route(
+              path: 'earthquake-parameter-list',
+              factory: $EarthquakeParameterListRouteExtension._fromState,
+            ),
           ],
         ),
       ],
@@ -497,6 +501,25 @@ extension $ApiEndpointSelectorRouteExtension on ApiEndpointSelectorRoute {
 
   String get location => GoRouteData.$location(
         '/settings/debugger/api-endpoint-selector',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $EarthquakeParameterListRouteExtension
+    on EarthquakeParameterListRoute {
+  static EarthquakeParameterListRoute _fromState(GoRouterState state) =>
+      const EarthquakeParameterListRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/debugger/earthquake-parameter-list',
       );
 
   void go(BuildContext context) => context.go(location);
