@@ -36,7 +36,7 @@ Future<void> main() async {
   final talker = TalkerFlutter.init(
     logger: TalkerLogger(),
   )..configure(
-      observer: CrashlitycsTalkerObserver(),
+      observer: CrashlyticsTalkerObserver(),
     );
 
   FlutterError.onError = (error) {

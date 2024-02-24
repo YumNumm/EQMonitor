@@ -39,38 +39,6 @@ class KmoniLog extends TalkerLog {
   final pen = AnsiPen()..yellow();
 }
 
-class CrashlitycsTalkerObserver extends TalkerObserver {
-  CrashlitycsTalkerObserver();
-
-  @override
-  void onError(TalkerError err) {
-    FirebaseCrashlytics.instance.recordError(
-      err.error,
-      err.stackTrace,
-      reason: err.message,
-    );
-  }
-
-  @override
-  void onException(TalkerException err) {
-    FirebaseCrashlytics.instance.recordError(
-      err.exception,
-      err.stackTrace,
-      reason: err.message,
-    );
-  }
-}
-
-class EstimatedIntensityLog extends TalkerLog {
-  EstimatedIntensityLog(super.message);
-
-  @override
-  String get title => 'EstimatedIntensity';
-
-  @override
-  final pen = AnsiPen()..magenta();
-}
-
 class AppLifeCycleLog extends TalkerLog {
   AppLifeCycleLog(super.message);
 
@@ -95,21 +63,17 @@ class CrashlyticsTalkerObserver implements TalkerObserver {
   CrashlyticsTalkerObserver();
 
   @override
-  void onError(TalkerError err) => FirebaseCrashlytics.instance.recordError(
-        err.error,
-        err.stackTrace,
-        reason: err.message,
+  void onError(TalkerError err) => FirebaseCrashlytics.instance.log(
+        'Error: ${err.message}, ${err.exception}, ${err.stackTrace}',
       );
 
   @override
-  void onException(TalkerException err) =>
-      FirebaseCrashlytics.instance.recordError(
-        err.exception,
-        err.stackTrace,
-        reason: err.message,
+  void onException(TalkerException err) => FirebaseCrashlytics.instance.log(
+        'Exception: ${err.message}, ${err.exception}, ${err.stackTrace}',
       );
 
   @override
-  void onLog(TalkerDataInterface log) =>
-      FirebaseCrashlytics.instance.log(log.message.toString());
+  void onLog(TalkerDataInterface log) => FirebaseCrashlytics.instance.log(
+        log.message.toString(),
+      );
 }
