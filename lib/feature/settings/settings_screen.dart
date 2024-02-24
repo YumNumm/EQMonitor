@@ -263,6 +263,9 @@ Future<void> _onInquiryTap(BuildContext context, WidgetRef ref) async {
 }
 
 Future<bool> _debugAttempt(BuildContext context) async {
+  if (kDebugMode) {
+    return true;
+  }
   final str = await showTextInputDialog(
     context: context,
     barrierDismissible: false,

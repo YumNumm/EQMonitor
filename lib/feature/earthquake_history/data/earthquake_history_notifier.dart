@@ -6,6 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_history_notifier.g.dart';
 
+// TODO(YumNumm): テスト書く
 @Riverpod(keepAlive: true)
 class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
   @override
