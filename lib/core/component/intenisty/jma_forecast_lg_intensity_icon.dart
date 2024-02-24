@@ -1,5 +1,4 @@
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqapi_types/model/v3/telegram_v3.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';

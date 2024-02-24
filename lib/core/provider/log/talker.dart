@@ -59,6 +59,16 @@ class NtpLog extends TalkerLog {
   final pen = AnsiPen()..red();
 }
 
+class GoRouterLog extends TalkerLog {
+  GoRouterLog(super.message);
+
+  @override
+  String get title => 'GoRouter';
+
+  @override
+  final pen = AnsiPen()..magenta();
+}
+
 class CrashlyticsTalkerObserver implements TalkerObserver {
   CrashlyticsTalkerObserver();
 
@@ -73,7 +83,12 @@ class CrashlyticsTalkerObserver implements TalkerObserver {
       );
 
   @override
-  void onLog(TalkerDataInterface log) => FirebaseCrashlytics.instance.log(
-        log.message.toString(),
-      );
+  void onLog(TalkerDataInterface log) {
+    if (log.title == TelegramWebSocketLog('').title) {
+      return;
+    }
+    FirebaseCrashlytics.instance.log(
+      log.message.toString(),
+    );
+  }
 }

@@ -1,7 +1,12 @@
+import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
+import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/earthquake_history_repository.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
+import 'package:flutter/foundation.dart';
+import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_history_notifier.g.dart';
@@ -10,15 +15,23 @@ part 'earthquake_history_notifier.g.dart';
 @Riverpod(keepAlive: true)
 class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
   @override
-  Future<List<EarthquakeV1>> build() {
+  Future<List<EarthquakeV1Extended>> build() {
+    final earthquakeParameter =
+        ref.watch(jmaParameterProvider).valueOrNull?.earthquake;
+    if (earthquakeParameter == null) {
+      throw EarthquakeParameterHasNotInitializedException();
+    }
     final parameter = ref.watch(earthquakeHistoryParameterNotifierProvider);
-    // TODO(YumNumm): WebSocketからの情報を引き込む
-    return _fetchInitialData(parameter);
+    return _fetchInitialData(
+      param: parameter,
+      regions: earthquakeParameter.regions,
+    );
   }
 
-  Future<List<EarthquakeV1>> _fetchInitialData(
-    EarthquakeHistoryParameter param,
-  ) async {
+  Future<List<EarthquakeV1Extended>> _fetchInitialData({
+    required EarthquakeHistoryParameter param,
+    required List<EarthquakeParameterRegionItem> regions,
+  }) async {
     final result = await ref
         .read(earthquakeHistoryRepositoryProvider)
         .fetchEarthquakeLists(
@@ -29,7 +42,10 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
           magnitudeGte: param.magnitudeGte,
           magnitudeLte: param.magnitudeLte,
         );
-    return result.items;
+    return _v1ToV1Extended(
+      data: result.items,
+      regions: regions,
+    );
   }
 
   Future<void> fetchNextData() async {
@@ -42,8 +58,14 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     if (!hasNext) {
       return;
     }
+    final jmaEarthquakeParameter =
+        ref.read(jmaParameterProvider).valueOrNull?.earthquake;
+    if (jmaEarthquakeParameter == null) {
+      throw EarthquakeParameterHasNotInitializedException();
+    }
 
-    state = const AsyncLoading<List<EarthquakeV1>>().copyWithPrevious(state);
+    state = const AsyncLoading<List<EarthquakeV1Extended>>()
+        .copyWithPrevious(state);
     final parameter = ref.read(earthquakeHistoryParameterNotifierProvider);
     state = await state.guardPlus(
       () async {
@@ -58,17 +80,58 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
           magnitudeLte: parameter.magnitudeLte,
           offset: currentData?.length ?? 0,
         );
+        final extendedResult = await _v1ToV1Extended(
+          data: result.items,
+          regions: jmaEarthquakeParameter.regions,
+        );
         ref
             .read(earthquakeHistoryTotalCountProvider.notifier)
             .update(result.count);
         return [
-          ...result.items,
+          ...extendedResult,
           ...currentData ?? [],
         ];
       },
     );
   }
+
+  Future<List<EarthquakeV1Extended>> _v1ToV1Extended({
+    required List<EarthquakeV1> data,
+    required List<EarthquakeParameterRegionItem> regions,
+  }) async =>
+      compute(
+        (param) async {
+          final data = param.$1;
+          final regions = param.$2;
+
+          return <EarthquakeV1Extended>[
+            for (final e in data)
+              EarthquakeV1Extended(
+                earthquake: e,
+                maxIntensityRegionNames: e.maxIntensityRegionIds
+                    ?.map(
+                      (region) => regions
+                          .firstWhereOrNull(
+                            (paramRegion) =>
+                                int.parse(paramRegion.$1) == region,
+                          )
+                          ?.$2,
+                    )
+                    .whereNotNull()
+                    .toList(),
+              ),
+          ];
+        },
+        (
+          data,
+          regions.map(
+            (e) => (e.code, e.name),
+          )
+        ),
+      );
 }
+
+class EarthquakeParameterHasNotInitializedException implements Exception {}
 
 @Riverpod(keepAlive: true)
 class EarthquakeHistoryTotalCount extends _$EarthquakeHistoryTotalCount {

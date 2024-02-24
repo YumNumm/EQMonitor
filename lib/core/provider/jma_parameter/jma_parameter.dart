@@ -1,10 +1,12 @@
 // ignore_for_file: avoid_manual_providers_as_generated_provider_dependency
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:eqmonitor/core/api/jma_parameter_api.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -38,7 +40,9 @@ class JmaParameter extends _$JmaParameter {
     final currentEtag = await ref
         .watch(jmaParameterApiClientProvider)
         .getEarthquakeParameterHead();
-    log('cachedEtag: $cachedEtag, currentEtag: $currentEtag');
+    ref
+        .read(talkerProvider)
+        .log('Earthquake cachedEtag: $cachedEtag, currentEtag: $currentEtag');
     if (cachedEtag != null && cachedEtag == currentEtag) {
       final localResult = await _getEarthquakeFromLocal();
       if (localResult case Success(:final value)) {
@@ -84,7 +88,9 @@ class JmaParameter extends _$JmaParameter {
     final currentEtag = await ref
         .watch(jmaParameterApiClientProvider)
         .getTsunamiParameterHeadEtag();
-    log('cachedEtag: $cachedEtag, currentEtag: $currentEtag');
+    ref
+        .read(talkerProvider)
+        .log('Tsunami cachedEtag: $cachedEtag, currentEtag: $currentEtag');
     if (cachedEtag != null && cachedEtag == currentEtag) {
       final localResult = await _getTsunamiFromLocal();
       if (localResult case Success(:final value)) {
@@ -104,6 +110,7 @@ class JmaParameter extends _$JmaParameter {
   Future<Result<TsunamiParameter, Exception>> _getTsunamiFromLocal() async {
     final dir = ref.read(applicationDocumentsDirectoryProvider);
     final file = File('${dir.path}/$_tsunamiFileName');
+    log('Tsunami file path: ${file.path}');
     if (file.existsSync()) {
       final buffer = await file.readAsBytes();
       try {

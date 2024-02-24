@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,37 @@ class ParameterLoaderWidget extends HookConsumerWidget {
     );
     final state = ref.watch(jmaParameterProvider);
     return switch (state) {
-      AsyncError() => Text(state.toString()),
+      AsyncError(:final error) => BorderedContainer(
+          elevation: 1,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.warning),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('観測点情報の取得に失敗しました'),
+                        if (error is DioException)
+                          const Text('ネットワーク接続を確認してください'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              if (state.isLoading)
+                const CircularProgressIndicator.adaptive()
+              else
+                FilledButton(
+                  child: const Text('再取得'),
+                  onPressed: () async => ref.invalidate(jmaParameterProvider),
+                ),
+            ],
+          ),
+        ),
       AsyncData() || AsyncError() => const AnimatedSwitcher(
           duration: Duration(milliseconds: 150),
           child: SizedBox.shrink(

@@ -296,6 +296,11 @@ class _Sheet extends StatelessWidget {
             leading: const Icon(Icons.settings),
             onTap: () => const SettingsRoute().push<void>(context),
           ),
+          if (kDebugMode)
+            ListTile(
+              title: const Text('旧 地震履歴'),
+              onTap: () => const DeprecatedEarthquakeHistoryRoute().push<void>(context),
+            ),
         ],
       ),
     );

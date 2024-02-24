@@ -17,9 +17,6 @@ class EstimatedIntensity extends _$EstimatedIntensity {
     final talker = ref.watch(talkerProvider);
     ref.listen(eewAliveTelegramProvider, (previous, next) {
       state = calc(next ?? []);
-      talker.logTyped(
-        EstimatedIntensityLog('EstimatedIntensity: ${state.length}'),
-      );
     });
     return calc(ref.read(eewAliveTelegramProvider) ?? []);
   }
