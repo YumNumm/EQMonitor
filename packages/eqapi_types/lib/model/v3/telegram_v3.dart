@@ -194,6 +194,7 @@ class TelegramV3 {
 
 @freezed
 class TelegramV3Base with _$TelegramV3Base {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory TelegramV3Base({
     required int? id,
     required String? hash,
@@ -223,6 +224,7 @@ sealed class TelegramV3Body {
 @freezed
 @Deprecated('Use v1 instead')
 class TelegramVxse51Body with _$TelegramVxse51Body implements TelegramV3Body {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory TelegramVxse51Body({
     required Intensity? intensity,
     required String? text,
@@ -236,6 +238,7 @@ class TelegramVxse51Body with _$TelegramVxse51Body implements TelegramV3Body {
 @freezed
 @Deprecated('Use v1 instead')
 class TelegramVxse52Body with _$TelegramVxse52Body implements TelegramV3Body {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory TelegramVxse52Body({
     required Earthquake earthquake,
     required String? text,
@@ -249,6 +252,7 @@ class TelegramVxse52Body with _$TelegramVxse52Body implements TelegramV3Body {
 @Deprecated('Use v1 instead')
 @freezed
 class TelegramVxse53Body with _$TelegramVxse53Body implements TelegramV3Body {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory TelegramVxse53Body({
     required Earthquake earthquake,
     required Intensity? intensity,
@@ -263,6 +267,7 @@ class TelegramVxse53Body with _$TelegramVxse53Body implements TelegramV3Body {
 @Deprecated('Use v1 instead')
 @freezed
 class TelegramVxse62Body with _$TelegramVxse62Body implements TelegramV3Body {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory TelegramVxse62Body({
     required Earthquake earthquake,
     required Intensity? intensity,
@@ -277,6 +282,7 @@ class TelegramVxse62Body with _$TelegramVxse62Body implements TelegramV3Body {
 @Deprecated('Use v1 instead')
 @freezed
 class TelegramVtse41Body with _$TelegramVtse41Body implements TelegramV3Body {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory TelegramVtse41Body({
     required PublicBodyVtse41Tsunami tsunami,
     required List<Earthquake> earthquakes,
@@ -291,6 +297,7 @@ class TelegramVtse41Body with _$TelegramVtse41Body implements TelegramV3Body {
 @Deprecated('Use v1 instead')
 @freezed
 class TelegramVtse51Body with _$TelegramVtse51Body implements TelegramV3Body {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory TelegramVtse51Body({
     required PublicBodyVtse51Tsunami tsunami,
     required List<Earthquake> earthquakes,
@@ -305,6 +312,7 @@ class TelegramVtse51Body with _$TelegramVtse51Body implements TelegramV3Body {
 @Deprecated('Use v1 instead')
 @freezed
 class TelegramVtse52Body with _$TelegramVtse52Body implements TelegramV3Body {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory TelegramVtse52Body({
     required PublicBodyVtse52Tsunami tsunami,
     required List<Earthquake> earthquakes,
@@ -319,6 +327,7 @@ class TelegramVtse52Body with _$TelegramVtse52Body implements TelegramV3Body {
 @Deprecated('Use v1 instead')
 @freezed
 class TelegramVxse61Body with _$TelegramVxse61Body implements TelegramV3Body {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory TelegramVxse61Body({
     required Earthquake earthquake,
     required String? text,
@@ -334,6 +343,7 @@ class TelegramVxse61Body with _$TelegramVxse61Body implements TelegramV3Body {
 class EarthquakeNankaiBody
     with _$EarthquakeNankaiBody
     implements TelegramV3Body {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory EarthquakeNankaiBody({
     required EarthquakeNankaiInfo? earthquakeInfo,
     required String? nextAdvisory,
@@ -347,6 +357,7 @@ class EarthquakeNankaiBody
 @Deprecated('Use v1 instead')
 @freezed
 class TelegramVxse56Body with _$TelegramVxse56Body implements TelegramV3Body {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory TelegramVxse56Body({
     required Naming? naming,
     required String text,
@@ -360,6 +371,7 @@ class TelegramVxse56Body with _$TelegramVxse56Body implements TelegramV3Body {
 @Deprecated('Use v1 instead')
 @freezed
 class TelegramCancelBody with _$TelegramCancelBody implements TelegramV3Body {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory TelegramCancelBody({
     required String text,
   }) = _TelegramCancelBody;
@@ -370,6 +382,7 @@ class TelegramCancelBody with _$TelegramCancelBody implements TelegramV3Body {
 
 @Deprecated('Use v1 instead')
 sealed class Vxse45 {
+  @JsonSerializable(fieldRename: FieldRename.none)
   factory Vxse45.fromJson(Map<String, dynamic> _) {
     throw UnimplementedError();
   }
@@ -381,6 +394,7 @@ sealed class Vxse45 {
 class TelegramVxse45Body
     with _$TelegramVxse45Body
     implements TelegramV3Body, Vxse45 {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory TelegramVxse45Body({
     required double? magnitude,
     required EewHypocenter? hypocenter,
@@ -404,6 +418,7 @@ class TelegramVxse45Body
 class TelegramVxse45Cancel
     with _$TelegramVxse45Cancel
     implements TelegramV3Body, Vxse45 {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory TelegramVxse45Cancel({
     required bool isLastInfo,
     required bool isCanceled,

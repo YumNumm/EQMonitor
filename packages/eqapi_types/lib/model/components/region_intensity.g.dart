@@ -18,13 +18,12 @@ _$RegionIntensityImpl _$$RegionIntensityImplFromJson(
           code: $checkedConvert('code', (v) => v as String),
           name: $checkedConvert('name', (v) => v as String),
           maxInt: $checkedConvert(
-              'max_int', (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v)),
-          maxLgInt: $checkedConvert('max_lg_int',
+              'maxInt', (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v)),
+          maxLgInt: $checkedConvert('maxLgInt',
               (v) => $enumDecodeNullable(_$JmaLgIntensityEnumMap, v)),
         );
         return val;
       },
-      fieldKeyMap: const {'maxInt': 'max_int', 'maxLgInt': 'max_lg_int'},
     );
 
 Map<String, dynamic> _$$RegionIntensityImplToJson(
@@ -32,8 +31,8 @@ Map<String, dynamic> _$$RegionIntensityImplToJson(
     <String, dynamic>{
       'code': instance.code,
       'name': instance.name,
-      'max_int': _$JmaIntensityEnumMap[instance.maxInt],
-      'max_lg_int': _$JmaLgIntensityEnumMap[instance.maxLgInt],
+      'maxInt': _$JmaIntensityEnumMap[instance.maxInt],
+      'maxLgInt': _$JmaLgIntensityEnumMap[instance.maxLgInt],
     };
 
 const _$JmaIntensityEnumMap = {

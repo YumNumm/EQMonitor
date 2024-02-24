@@ -6,6 +6,7 @@ part 'eew_intensity.g.dart';
 
 @freezed
 class ForecastMaxInt with _$ForecastMaxInt {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory ForecastMaxInt({
     required JmaForecastIntensity from,
     required JmaForecastIntensityOver to,
@@ -17,6 +18,7 @@ class ForecastMaxInt with _$ForecastMaxInt {
 
 @freezed
 class ForecastMaxLgInt with _$ForecastMaxLgInt {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory ForecastMaxLgInt({
     required JmaForecastLgIntensity from,
     required JmaForecastLgIntensityOver to,

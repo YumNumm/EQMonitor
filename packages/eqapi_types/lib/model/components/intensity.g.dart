@@ -15,10 +15,10 @@ _$IntensityImpl _$$IntensityImplFromJson(Map<String, dynamic> json) =>
       ($checkedConvert) {
         final val = _$IntensityImpl(
           maxInt: $checkedConvert(
-              'max_int', (v) => $enumDecode(_$JmaIntensityEnumMap, v)),
-          maxLgInt: $checkedConvert('max_lg_int',
+              'maxInt', (v) => $enumDecode(_$JmaIntensityEnumMap, v)),
+          maxLgInt: $checkedConvert('maxLgInt',
               (v) => $enumDecodeNullable(_$JmaLgIntensityEnumMap, v) ?? null),
-          lgCategory: $checkedConvert('lg_category',
+          lgCategory: $checkedConvert('lgCategory',
               (v) => $enumDecodeNullable(_$LgTypeEnumMap, v) ?? null),
           prefectures: $checkedConvert(
               'prefectures',
@@ -47,18 +47,13 @@ _$IntensityImpl _$$IntensityImplFromJson(Map<String, dynamic> json) =>
         );
         return val;
       },
-      fieldKeyMap: const {
-        'maxInt': 'max_int',
-        'maxLgInt': 'max_lg_int',
-        'lgCategory': 'lg_category'
-      },
     );
 
 Map<String, dynamic> _$$IntensityImplToJson(_$IntensityImpl instance) =>
     <String, dynamic>{
-      'max_int': _$JmaIntensityEnumMap[instance.maxInt]!,
-      'max_lg_int': _$JmaLgIntensityEnumMap[instance.maxLgInt],
-      'lg_category': _$LgTypeEnumMap[instance.lgCategory],
+      'maxInt': _$JmaIntensityEnumMap[instance.maxInt]!,
+      'maxLgInt': _$JmaLgIntensityEnumMap[instance.maxLgInt],
+      'lgCategory': _$LgTypeEnumMap[instance.lgCategory],
       'prefectures': instance.prefectures,
       'regions': instance.regions,
       'cities': instance.cities,

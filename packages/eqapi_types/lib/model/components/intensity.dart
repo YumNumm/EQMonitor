@@ -6,6 +6,7 @@ part 'intensity.g.dart';
 
 @freezed
 class Intensity with _$Intensity {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory Intensity({
     required JmaIntensity maxInt,
     @Default(null) JmaLgIntensity? maxLgInt,

@@ -14,10 +14,10 @@ _$EarthquakeImpl _$$EarthquakeImplFromJson(Map<String, dynamic> json) =>
       json,
       ($checkedConvert) {
         final val = _$EarthquakeImpl(
-          originTime: $checkedConvert(
-              'origin_time', (v) => DateTime.parse(v as String)),
+          originTime:
+              $checkedConvert('originTime', (v) => DateTime.parse(v as String)),
           arrivalTime: $checkedConvert(
-              'arrival_time', (v) => DateTime.parse(v as String)),
+              'arrivalTime', (v) => DateTime.parse(v as String)),
           hypocenter: $checkedConvert('hypocenter',
               (v) => EarthquakeHypocenter.fromJson(v as Map<String, dynamic>)),
           magnitude: $checkedConvert('magnitude',
@@ -25,16 +25,12 @@ _$EarthquakeImpl _$$EarthquakeImplFromJson(Map<String, dynamic> json) =>
         );
         return val;
       },
-      fieldKeyMap: const {
-        'originTime': 'origin_time',
-        'arrivalTime': 'arrival_time'
-      },
     );
 
 Map<String, dynamic> _$$EarthquakeImplToJson(_$EarthquakeImpl instance) =>
     <String, dynamic>{
-      'origin_time': instance.originTime.toIso8601String(),
-      'arrival_time': instance.arrivalTime.toIso8601String(),
+      'originTime': instance.originTime.toIso8601String(),
+      'arrivalTime': instance.arrivalTime.toIso8601String(),
       'hypocenter': instance.hypocenter,
       'magnitude': instance.magnitude,
     };

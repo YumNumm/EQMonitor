@@ -160,7 +160,8 @@ class __$$EarthquakeImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$EarthquakeImpl implements _Earthquake {
   const _$EarthquakeImpl(
       {required this.originTime,
@@ -402,7 +403,8 @@ class __$$EarthquakeHypocenterImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$EarthquakeHypocenterImpl implements _EarthquakeHypocenter {
   const _$EarthquakeHypocenterImpl(
       {required this.name,
@@ -599,7 +601,8 @@ class __$$EarthquakeHypocenterDetailedImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$EarthquakeHypocenterDetailedImpl
     implements _EarthquakeHypocenterDetailed {
   const _$EarthquakeHypocenterDetailedImpl(
@@ -760,7 +763,8 @@ class __$$EarthquakeMagnitudeImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$EarthquakeMagnitudeImpl implements _EarthquakeMagnitude {
   const _$EarthquakeMagnitudeImpl(
       {required this.value, required this.condition});

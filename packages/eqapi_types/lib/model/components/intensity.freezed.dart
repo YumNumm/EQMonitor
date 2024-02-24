@@ -174,7 +174,8 @@ class __$$IntensityImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$IntensityImpl implements _Intensity {
   const _$IntensityImpl(
       {required this.maxInt,
