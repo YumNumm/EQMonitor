@@ -1,6 +1,14 @@
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
+
+@widgetbook.UseCase(
+  name: 'EarthquakeParameterListScreen',
+  type: EarthquakeParameterListScreen,
+)
+Widget earthquakeParameterListScreen(BuildContext _) =>
+    const EarthquakeParameterListScreen();
 
 class EarthquakeParameterListScreen extends StatelessWidget {
   const EarthquakeParameterListScreen({super.key});
