@@ -106,8 +106,14 @@ Future<void> main() async {
     await container.read(jmaParameterProvider.future);
   } on Exception catch (e) {
     return runApp(
-      Scaffold(
-        body: ErrorWidget(e),
+      ProviderScope(
+        child: Scaffold(
+          body: Center(
+            child: Text(
+              e.toString(),
+            ),
+          ),
+        ),
       ),
     );
   }
