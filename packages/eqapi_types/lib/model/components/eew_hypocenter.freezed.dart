@@ -117,7 +117,8 @@ class __$$EewHypocenterImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$EewHypocenterImpl implements _EewHypocenter {
   const _$EewHypocenterImpl(
       {required this.coordinate, required this.code, required this.name});

@@ -155,7 +155,8 @@ class __$$CommentsImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$CommentsImpl implements _Comments {
   const _$CommentsImpl(
       {required this.free,
@@ -340,7 +341,8 @@ class __$$CommentsOmitVarImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$CommentsOmitVarImpl implements _CommentsOmitVar {
   const _$CommentsOmitVarImpl({required this.free, required this.forecast});
 
@@ -496,7 +498,8 @@ class __$$ForecastCommentsImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$ForecastCommentsImpl implements _ForecastComments {
   const _$ForecastCommentsImpl(
       {required this.text, required final List<String> codes})
@@ -659,7 +662,8 @@ class __$$VarCommentsImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$VarCommentsImpl implements _VarComments {
   const _$VarCommentsImpl(
       {required this.text, required final List<String> codes})
@@ -810,7 +814,8 @@ class __$$CommentsOnlyFreeImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$CommentsOnlyFreeImpl implements _CommentsOnlyFree {
   const _$CommentsOnlyFreeImpl({required this.free});
 

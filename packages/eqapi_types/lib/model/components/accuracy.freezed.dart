@@ -136,7 +136,8 @@ class __$$EewAccuracyImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$EewAccuracyImpl implements _EewAccuracy {
   const _$EewAccuracyImpl(
       {required final List<String> epicenters,

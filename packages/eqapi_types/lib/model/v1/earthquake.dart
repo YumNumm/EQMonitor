@@ -1,98 +1,92 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqapi_types/lib.dart';
-import 'package:eqapi_types/model/model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake.freezed.dart';
 part 'earthquake.g.dart';
 
-@freezed
-class EarthquakeBaseComponent with _$EarthquakeBaseComponent {
-  const factory EarthquakeBaseComponent({
-    required int id,
-    required int eventId,
-    required String status,
-    double? magnitude,
-    String? magnitudeCondition,
-    JmaIntensity? maxIntensity,
-    JmaLgIntensity? maxLpgmIntensity,
-    int? depth,
-    double? latitude,
-    double? longitude,
-    int? epicenterCode,
-    int? epicenterDetailCode,
-    DateTime? arrivalTime,
-    DateTime? originTime,
-    String? latestHeadline,
-    List<int>? maxIntensityRegionIds,
-  }) = _EarthquakeBaseComponent;
 
-  factory EarthquakeBaseComponent.fromJson(Map<String, dynamic> json) =>
-      _$EarthquakeBaseComponentFromJson(json);
-}
 
 @freezed
 class EarthquakeV1 with _$EarthquakeV1 {
   const factory EarthquakeV1({
-    required int id,
+    DateTime? arrivalTime,
+    int? depth,
+    int? epicenterCode,
+    int? epicenterDetailCode,
     required int eventId,
-    required String status,
+    String? headline,
+    List<ObservedRegionIntensity>? intensityCities,
+    List<ObservedRegionIntensity>? intensityPrefectures,
+    List<ObservedRegionIntensity>? intensityRegions,
+    List<ObservedRegionIntensity>? intensityStations,
+    double? latitude,
+    double? longitude,
+    List<ObservedRegionLpgmIntensity>? lpgmIntensityPrefectures,
+    List<ObservedRegionLpgmIntensity>? lpgmIntensityRegions,
+    List<ObservedRegionLpgmIntensity>? lpgmIntenstiyStations,
     double? magnitude,
     String? magnitudeCondition,
     JmaIntensity? maxIntensity,
-    JmaLgIntensity? maxLpgmIntensity,
-    int? depth,
-    double? latitude,
-    double? longitude,
-    int? epicenterCode,
-    int? epicenterDetailCode,
-    DateTime? arrivalTime,
-    DateTime? originTime,
-    String? latestHeadline,
     List<int>? maxIntensityRegionIds,
+    JmaLgIntensity? maxLpgmIntensity,
+    DateTime? originTime,
+    required String status,
+    String? text,
   }) = _EarthquakeV1;
 
   factory EarthquakeV1.fromJson(Map<String, dynamic> json) =>
       _$EarthquakeV1FromJson(json);
 }
 
-sealed class IntensityObservationBase {
-  IntensityObservationBase({
-    required this.code,
-    required this.name,
-    required this.maxInt,
-  });
 
-  final String code;
-  final String name;
-  final JmaIntensity maxInt;
+/// `/v1/earthquake/region` の `$.[*].earthquake` で利用
+@freezed
+ class EarthquakeV1Base with _$EarthquakeV1Base {
+  const factory EarthquakeV1Base({
+    DateTime? arrivalTime,
+    int? depth,
+    int? epicenterCode,
+    int? epicenterDetailCode,
+    required int eventId,
+    String? headline,
+    double? latitude,
+    double? longitude,
+    double? magnitude,
+    String? magnitudeCondition,
+    JmaIntensity? maxIntensity,
+    List<int>? maxIntensityRegionIds,
+    JmaLgIntensity? maxLpgmIntensity,
+    DateTime? originTime,
+    required String status,
+    String? text,
+  }) = _EarthquakeV1Base;
+
+  factory EarthquakeV1Base.fromJson(Map<String, dynamic> json) =>
+      _$EarthquakeV1BaseFromJson(json);
 }
 
 @freezed
-class IntensityObservationItem
-    with _$IntensityObservationItem
-    implements IntensityObservationBase {
-  const factory IntensityObservationItem({
+class ObservedRegionIntensity with _$ObservedRegionIntensity {
+  const factory ObservedRegionIntensity({
     required String code,
     required String name,
-    required JmaIntensity maxInt,
-  }) = _IntensityObservationItem;
+    @JsonKey(name: 'maxInt') required JmaIntensity? intensity,
+  }) = _ObservedRegionIntensity;
 
-  factory IntensityObservationItem.fromJson(Map<String, dynamic> json) =>
-      _$IntensityObservationItemFromJson(json);
+  factory ObservedRegionIntensity.fromJson(Map<String, dynamic> json) =>
+      _$ObservedRegionIntensityFromJson(json);
 }
 
 @freezed
-class LgIntensityObservationItem
-    with _$LgIntensityObservationItem
-    implements IntensityObservationBase {
-  const factory LgIntensityObservationItem({
+class ObservedRegionLpgmIntensity with _$ObservedRegionLpgmIntensity {
+  const factory ObservedRegionLpgmIntensity({
     required String code,
     required String name,
-    required JmaIntensity maxInt,
-    required JmaLgIntensity lgMaxInt,
-  }) = _LgIntensityObservationItem;
+    @JsonKey(name: 'maxInt') required JmaIntensity? intensity,
+    @JsonKey(name: 'maxLgInt') required JmaLgIntensity? lpgmIntensity,
+  }) = _ObservedRegionLpgmIntensity;
 
-  factory LgIntensityObservationItem.fromJson(Map<String, dynamic> json) =>
-      _$LgIntensityObservationItemFromJson(json);
+  factory ObservedRegionLpgmIntensity.fromJson(Map<String, dynamic> json) =>
+      _$ObservedRegionLpgmIntensityFromJson(json);
 }

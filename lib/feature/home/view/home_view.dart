@@ -68,7 +68,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
             ref.read(permissionProvider.notifier).initialize(),
             ref.read(fcmTopicManagerProvider.notifier).setup(),
             ref.read(ntpProvider.notifier).sync(),
-            () async {
+            Future.doWhile(() async {
               final renderer = MapComponentsRenderer();
               final futures = <Future<void>>[
                 for (final type in [
@@ -150,7 +150,23 @@ class _HomeBodyWidget extends HookConsumerWidget {
                       ),
               ];
               await futures.wait;
-            }(),
+              // 画像のキャッシュが終わったかどうかを確認
+              final images = (
+                intenistyIcon: ref.read(intensityIconRenderProvider),
+                intensityIconFill: ref.read(intensityIconFillRenderProvider),
+                hypocenterIcon: ref.read(hypocenterIconRenderProvider),
+                hypocenterLowPreciseIcon:
+                    ref.read(hypocenterLowPreciseIconRenderProvider),
+              );
+              if (images.hypocenterIcon != null &&
+                  images.hypocenterLowPreciseIcon != null &&
+                  images.intenistyIcon.isAllRendered() &&
+                  images.intensityIconFill.isAllRendered()) {
+                return false;
+              }
+              await Future<void>.delayed(const Duration(milliseconds: 1000));
+              return true;
+            }),
           ).wait;
         });
         return null;
@@ -296,6 +312,12 @@ class _Sheet extends StatelessWidget {
             leading: const Icon(Icons.settings),
             onTap: () => const SettingsRoute().push<void>(context),
           ),
+          if (kDebugMode)
+            ListTile(
+              title: const Text('旧 地震履歴'),
+              onTap: () =>
+                  const DeprecatedEarthquakeHistoryRoute().push<void>(context),
+            ),
         ],
       ),
     );

@@ -2,7 +2,9 @@ import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_crashlytics.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'fcm_topic_manager.g.dart';
@@ -21,6 +23,9 @@ class FcmTopicManager extends _$FcmTopicManager {
 
   /// デフォルトで購読すべきトピックを登録する
   Future<void> setup() async {
+    if (kIsWeb) {
+      ref.read(talkerProvider).log('FcmTopicManager.setup: Skipped! (Web)');
+    }
     final futures = <Future<void>>[];
     final requireTopics = [
       FcmBasicTopic(FcmTopics.all),
@@ -49,13 +54,13 @@ class FcmTopicManager extends _$FcmTopicManager {
   Future<Result<void, Exception>> registerToTopic(FcmTopic topic) async {
     // 既に登録済みの場合は何もしない
     if (state.contains(topic.topic)) {
-      return  Result.success(null);
+      return Result.success(null);
     }
     final messaging = ref.read(firebaseMessagingProvider);
     try {
       await messaging.subscribeToTopic(topic.topic);
       state = [...state, topic.topic];
-      return  Result.success(null);
+      return Result.success(null);
     } on Exception catch (error, stackTrace) {
       await ref.read(firebaseCrashlyticsProvider).recordError(
             error,
@@ -68,13 +73,13 @@ class FcmTopicManager extends _$FcmTopicManager {
   Future<Result<void, Exception>> unregisterFromTopic(FcmTopic topic) async {
     // 登録されていない場合は何もしない
     if (!state.contains(topic.topic)) {
-      return  Result.success(null);
+      return Result.success(null);
     }
     final messaging = ref.read(firebaseMessagingProvider);
     try {
       await messaging.unsubscribeFromTopic(topic.topic);
       state = [...state]..remove(topic.topic);
-      return  Result.success(null);
+      return Result.success(null);
     } on Exception catch (error, stackTrace) {
       await ref.read(firebaseCrashlyticsProvider).recordError(
             error,

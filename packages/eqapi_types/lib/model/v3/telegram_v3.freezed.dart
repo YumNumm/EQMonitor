@@ -254,7 +254,8 @@ class __$$TelegramV3BaseImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$TelegramV3BaseImpl implements _TelegramV3Base {
   const _$TelegramV3BaseImpl(
       {required this.id,
@@ -555,7 +556,8 @@ class __$$TelegramVxse51BodyImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$TelegramVxse51BodyImpl implements _TelegramVxse51Body {
   const _$TelegramVxse51BodyImpl(
       {required this.intensity, required this.text, required this.comment});
@@ -753,7 +755,8 @@ class __$$TelegramVxse52BodyImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$TelegramVxse52BodyImpl implements _TelegramVxse52Body {
   const _$TelegramVxse52BodyImpl(
       {required this.earthquake, required this.text, required this.comment});
@@ -985,7 +988,8 @@ class __$$TelegramVxse53BodyImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$TelegramVxse53BodyImpl implements _TelegramVxse53Body {
   const _$TelegramVxse53BodyImpl(
       {required this.earthquake,
@@ -1228,7 +1232,8 @@ class __$$TelegramVxse62BodyImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$TelegramVxse62BodyImpl implements _TelegramVxse62Body {
   const _$TelegramVxse62BodyImpl(
       {required this.earthquake,
@@ -1460,7 +1465,8 @@ class __$$TelegramVtse41BodyImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$TelegramVtse41BodyImpl implements _TelegramVtse41Body {
   const _$TelegramVtse41BodyImpl(
       {required this.tsunami,
@@ -1699,7 +1705,8 @@ class __$$TelegramVtse51BodyImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$TelegramVtse51BodyImpl implements _TelegramVtse51Body {
   const _$TelegramVtse51BodyImpl(
       {required this.tsunami,
@@ -1938,7 +1945,8 @@ class __$$TelegramVtse52BodyImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$TelegramVtse52BodyImpl implements _TelegramVtse52Body {
   const _$TelegramVtse52BodyImpl(
       {required this.tsunami,
@@ -2158,7 +2166,8 @@ class __$$TelegramVxse61BodyImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$TelegramVxse61BodyImpl implements _TelegramVxse61Body {
   const _$TelegramVxse61BodyImpl(
       {required this.earthquake, required this.text, required this.comments});
@@ -2358,7 +2367,8 @@ class __$$EarthquakeNankaiBodyImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$EarthquakeNankaiBodyImpl implements _EarthquakeNankaiBody {
   const _$EarthquakeNankaiBodyImpl(
       {required this.earthquakeInfo,
@@ -2569,7 +2579,8 @@ class __$$TelegramVxse56BodyImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$TelegramVxse56BodyImpl implements _TelegramVxse56Body {
   const _$TelegramVxse56BodyImpl(
       {required this.naming, required this.text, required this.comments});
@@ -2721,7 +2732,8 @@ class __$$TelegramCancelBodyImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$TelegramCancelBodyImpl implements _TelegramCancelBody {
   const _$TelegramCancelBodyImpl({required this.text});
 
@@ -3049,7 +3061,8 @@ class __$$TelegramVxse45BodyImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$TelegramVxse45BodyImpl implements _TelegramVxse45Body {
   const _$TelegramVxse45BodyImpl(
       {required this.magnitude,
@@ -3313,7 +3326,8 @@ class __$$EarthquakeInformationBodyImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$EarthquakeInformationBodyImpl implements _EarthquakeInformationBody {
   const _$EarthquakeInformationBodyImpl(
       {required this.isLastInfo, required this.isCanceled, required this.text});

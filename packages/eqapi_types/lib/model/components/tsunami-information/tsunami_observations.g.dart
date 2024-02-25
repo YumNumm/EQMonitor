@@ -45,26 +45,34 @@ _$TsunamiObservationStationImpl _$$TsunamiObservationStationImplFromJson(
         final val = _$TsunamiObservationStationImpl(
           code: $checkedConvert('code', (v) => v as String),
           name: $checkedConvert('name', (v) => v as String),
-          firstHeightArrivalTime: $checkedConvert('firstHeightArrivalTime',
+          firstHeightArrivalTime: $checkedConvert('first_height_arrival_time',
               (v) => v == null ? null : DateTime.parse(v as String)),
           firstHeightInitial: $checkedConvert(
-              'firstHeightInitial',
+              'first_height_initial',
               (v) => $enumDecodeNullable(
                   _$TsunamiObservationFirstHeightInitialEnumMap, v)),
-          maxHeightTime: $checkedConvert('maxHeightTime',
+          maxHeightTime: $checkedConvert('max_height_time',
               (v) => v == null ? null : DateTime.parse(v as String)),
-          maxHeightValue:
-              $checkedConvert('maxHeightValue', (v) => (v as num?)?.toDouble()),
+          maxHeightValue: $checkedConvert(
+              'max_height_value', (v) => (v as num?)?.toDouble()),
           maxHeightIsOver:
-              $checkedConvert('maxHeightIsOver', (v) => v as bool?),
+              $checkedConvert('max_height_is_over', (v) => v as bool?),
           maxHeightIsRising:
-              $checkedConvert('maxHeightIsRising', (v) => v as bool?),
+              $checkedConvert('max_height_is_rising', (v) => v as bool?),
           condition: $checkedConvert(
               'condition',
               (v) => $enumDecodeNullable(
                   _$TsunamiObservationStationConditionEnumMap, v)),
         );
         return val;
+      },
+      fieldKeyMap: const {
+        'firstHeightArrivalTime': 'first_height_arrival_time',
+        'firstHeightInitial': 'first_height_initial',
+        'maxHeightTime': 'max_height_time',
+        'maxHeightValue': 'max_height_value',
+        'maxHeightIsOver': 'max_height_is_over',
+        'maxHeightIsRising': 'max_height_is_rising'
       },
     );
 
@@ -73,14 +81,14 @@ Map<String, dynamic> _$$TsunamiObservationStationImplToJson(
     <String, dynamic>{
       'code': instance.code,
       'name': instance.name,
-      'firstHeightArrivalTime':
+      'first_height_arrival_time':
           instance.firstHeightArrivalTime?.toIso8601String(),
-      'firstHeightInitial': _$TsunamiObservationFirstHeightInitialEnumMap[
+      'first_height_initial': _$TsunamiObservationFirstHeightInitialEnumMap[
           instance.firstHeightInitial],
-      'maxHeightTime': instance.maxHeightTime?.toIso8601String(),
-      'maxHeightValue': instance.maxHeightValue,
-      'maxHeightIsOver': instance.maxHeightIsOver,
-      'maxHeightIsRising': instance.maxHeightIsRising,
+      'max_height_time': instance.maxHeightTime?.toIso8601String(),
+      'max_height_value': instance.maxHeightValue,
+      'max_height_is_over': instance.maxHeightIsOver,
+      'max_height_is_rising': instance.maxHeightIsRising,
       'condition':
           _$TsunamiObservationStationConditionEnumMap[instance.condition],
     };

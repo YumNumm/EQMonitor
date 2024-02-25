@@ -1,4 +1,4 @@
-name: Flutter build iOS and upload to App Store Connect
+name: Deploy iOS
 on:
   workflow_dispatch:
   push:

@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+// 気象庁地震関連コード表
+message JmaCodeTable {
+  AreaEpicenter areaEpicenter = 41;
+  AreaEpicenterAbbreviation areaEpicenterAbbreviation = 42;
+  AreaEpicenterDetail areaEpicenterDetail = 43;
+}
+
+// 41. 震央地名
+// (011, 北海道地方)
+message AreaEpicenter {
+  repeated AreaEpicenterItem items = 1;
+
+  message AreaEpicenterItem {
+    string code = 1;
+    string name = 2;
+  }
+}
+
+// 42. 短縮用震央地名
+// (9011, 北海道道央), ...
+message AreaEpicenterAbbreviation {
+  repeated AreaEpicenterAbbreviationItem items = 1;
+
+  message AreaEpicenterAbbreviationItem {
+    string code = 1;
+    string name = 2;
+  }
+}
+
+// 43. 詳細震央地名
+// (1001, 米国、アラスカ州中央部)
+message AreaEpicenterDetail {
+  repeated AreaEpicenterDetailItem items = 1;
+
+  message AreaEpicenterDetailItem {
+    string code = 1;
+    string name = 2;
+  }
+}

@@ -112,7 +112,9 @@ class __$$NotificationTokenModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$NotificationTokenModelImpl implements _NotificationTokenModel {
+class _$NotificationTokenModelImpl
+    with DiagnosticableTreeMixin
+    implements _NotificationTokenModel {
   const _$NotificationTokenModelImpl(
       {required this.fcmToken, required this.apnsToken});
 
@@ -125,8 +127,17 @@ class _$NotificationTokenModelImpl implements _NotificationTokenModel {
   final String? apnsToken;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'NotificationTokenModel(fcmToken: $fcmToken, apnsToken: $apnsToken)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'NotificationTokenModel'))
+      ..add(DiagnosticsProperty('fcmToken', fcmToken))
+      ..add(DiagnosticsProperty('apnsToken', apnsToken));
   }
 
   @override

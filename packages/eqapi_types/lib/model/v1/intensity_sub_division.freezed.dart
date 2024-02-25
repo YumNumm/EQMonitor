@@ -22,6 +22,7 @@ IntensitySubDivision _$IntensitySubDivisionFromJson(Map<String, dynamic> json) {
 mixin _$IntensitySubDivision {
   int get id => throw _privateConstructorUsedError;
   int get eventId => throw _privateConstructorUsedError;
+  String get areaCode => throw _privateConstructorUsedError;
   JmaIntensity get maxIntensity => throw _privateConstructorUsedError;
   JmaLgIntensity? get maxLpgmIntensity => throw _privateConstructorUsedError;
 
@@ -40,6 +41,7 @@ abstract class $IntensitySubDivisionCopyWith<$Res> {
   $Res call(
       {int id,
       int eventId,
+      String areaCode,
       JmaIntensity maxIntensity,
       JmaLgIntensity? maxLpgmIntensity});
 }
@@ -60,6 +62,7 @@ class _$IntensitySubDivisionCopyWithImpl<$Res,
   $Res call({
     Object? id = null,
     Object? eventId = null,
+    Object? areaCode = null,
     Object? maxIntensity = null,
     Object? maxLpgmIntensity = freezed,
   }) {
@@ -72,6 +75,10 @@ class _$IntensitySubDivisionCopyWithImpl<$Res,
           ? _value.eventId
           : eventId // ignore: cast_nullable_to_non_nullable
               as int,
+      areaCode: null == areaCode
+          ? _value.areaCode
+          : areaCode // ignore: cast_nullable_to_non_nullable
+              as String,
       maxIntensity: null == maxIntensity
           ? _value.maxIntensity
           : maxIntensity // ignore: cast_nullable_to_non_nullable
@@ -95,6 +102,7 @@ abstract class _$$IntensitySubDivisionImplCopyWith<$Res>
   $Res call(
       {int id,
       int eventId,
+      String areaCode,
       JmaIntensity maxIntensity,
       JmaLgIntensity? maxLpgmIntensity});
 }
@@ -112,6 +120,7 @@ class __$$IntensitySubDivisionImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? eventId = null,
+    Object? areaCode = null,
     Object? maxIntensity = null,
     Object? maxLpgmIntensity = freezed,
   }) {
@@ -124,6 +133,10 @@ class __$$IntensitySubDivisionImplCopyWithImpl<$Res>
           ? _value.eventId
           : eventId // ignore: cast_nullable_to_non_nullable
               as int,
+      areaCode: null == areaCode
+          ? _value.areaCode
+          : areaCode // ignore: cast_nullable_to_non_nullable
+              as String,
       maxIntensity: null == maxIntensity
           ? _value.maxIntensity
           : maxIntensity // ignore: cast_nullable_to_non_nullable
@@ -142,6 +155,7 @@ class _$IntensitySubDivisionImpl implements _IntensitySubDivision {
   const _$IntensitySubDivisionImpl(
       {required this.id,
       required this.eventId,
+      required this.areaCode,
       required this.maxIntensity,
       required this.maxLpgmIntensity});
 
@@ -153,13 +167,15 @@ class _$IntensitySubDivisionImpl implements _IntensitySubDivision {
   @override
   final int eventId;
   @override
+  final String areaCode;
+  @override
   final JmaIntensity maxIntensity;
   @override
   final JmaLgIntensity? maxLpgmIntensity;
 
   @override
   String toString() {
-    return 'IntensitySubDivision(id: $id, eventId: $eventId, maxIntensity: $maxIntensity, maxLpgmIntensity: $maxLpgmIntensity)';
+    return 'IntensitySubDivision(id: $id, eventId: $eventId, areaCode: $areaCode, maxIntensity: $maxIntensity, maxLpgmIntensity: $maxLpgmIntensity)';
   }
 
   @override
@@ -169,6 +185,8 @@ class _$IntensitySubDivisionImpl implements _IntensitySubDivision {
             other is _$IntensitySubDivisionImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.eventId, eventId) || other.eventId == eventId) &&
+            (identical(other.areaCode, areaCode) ||
+                other.areaCode == areaCode) &&
             (identical(other.maxIntensity, maxIntensity) ||
                 other.maxIntensity == maxIntensity) &&
             (identical(other.maxLpgmIntensity, maxLpgmIntensity) ||
@@ -177,8 +195,8 @@ class _$IntensitySubDivisionImpl implements _IntensitySubDivision {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, eventId, maxIntensity, maxLpgmIntensity);
+  int get hashCode => Object.hash(
+      runtimeType, id, eventId, areaCode, maxIntensity, maxLpgmIntensity);
 
   @JsonKey(ignore: true)
   @override
@@ -200,6 +218,7 @@ abstract class _IntensitySubDivision implements IntensitySubDivision {
   const factory _IntensitySubDivision(
           {required final int id,
           required final int eventId,
+          required final String areaCode,
           required final JmaIntensity maxIntensity,
           required final JmaLgIntensity? maxLpgmIntensity}) =
       _$IntensitySubDivisionImpl;
@@ -211,6 +230,8 @@ abstract class _IntensitySubDivision implements IntensitySubDivision {
   int get id;
   @override
   int get eventId;
+  @override
+  String get areaCode;
   @override
   JmaIntensity get maxIntensity;
   @override

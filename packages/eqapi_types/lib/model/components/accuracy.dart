@@ -5,6 +5,7 @@ part 'accuracy.g.dart';
 
 @freezed
 class EewAccuracy with _$EewAccuracy {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory EewAccuracy({
     required List<String> epicenters,
     required String depth,

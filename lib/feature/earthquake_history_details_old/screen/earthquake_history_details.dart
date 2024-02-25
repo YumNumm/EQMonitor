@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';

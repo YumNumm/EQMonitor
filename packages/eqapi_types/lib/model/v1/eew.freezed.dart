@@ -524,3 +524,322 @@ abstract class _EewV1 implements EewV1 {
   _$$EewV1ImplCopyWith<_$EewV1Impl> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+EstimatedIntensityRegion _$EstimatedIntensityRegionFromJson(
+    Map<String, dynamic> json) {
+  return _EstimatedIntensityRegion.fromJson(json);
+}
+
+/// @nodoc
+mixin _$EstimatedIntensityRegion {
+  String get code => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+  @JsonKey(name: 'isPlum')
+  bool get isPlum => throw _privateConstructorUsedError;
+  @JsonKey(name: 'isWarning')
+  bool get isWarning => throw _privateConstructorUsedError;
+  @JsonKey(name: 'forecastMaxInt')
+  ForecastMaxInt get forecastMaxInt => throw _privateConstructorUsedError;
+  @JsonKey(name: 'forecastMaxLgInt')
+  ForecastMaxLgInt get forecastMaxLgInt => throw _privateConstructorUsedError;
+
+  /// nullの場合 `既に主要動到達と推測`
+  @JsonKey(name: 'arrivalTime')
+  DateTime? get arrivalTime => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $EstimatedIntensityRegionCopyWith<EstimatedIntensityRegion> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $EstimatedIntensityRegionCopyWith<$Res> {
+  factory $EstimatedIntensityRegionCopyWith(EstimatedIntensityRegion value,
+          $Res Function(EstimatedIntensityRegion) then) =
+      _$EstimatedIntensityRegionCopyWithImpl<$Res, EstimatedIntensityRegion>;
+  @useResult
+  $Res call(
+      {String code,
+      String name,
+      @JsonKey(name: 'isPlum') bool isPlum,
+      @JsonKey(name: 'isWarning') bool isWarning,
+      @JsonKey(name: 'forecastMaxInt') ForecastMaxInt forecastMaxInt,
+      @JsonKey(name: 'forecastMaxLgInt') ForecastMaxLgInt forecastMaxLgInt,
+      @JsonKey(name: 'arrivalTime') DateTime? arrivalTime});
+
+  $ForecastMaxIntCopyWith<$Res> get forecastMaxInt;
+  $ForecastMaxLgIntCopyWith<$Res> get forecastMaxLgInt;
+}
+
+/// @nodoc
+class _$EstimatedIntensityRegionCopyWithImpl<$Res,
+        $Val extends EstimatedIntensityRegion>
+    implements $EstimatedIntensityRegionCopyWith<$Res> {
+  _$EstimatedIntensityRegionCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? code = null,
+    Object? name = null,
+    Object? isPlum = null,
+    Object? isWarning = null,
+    Object? forecastMaxInt = null,
+    Object? forecastMaxLgInt = null,
+    Object? arrivalTime = freezed,
+  }) {
+    return _then(_value.copyWith(
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      isPlum: null == isPlum
+          ? _value.isPlum
+          : isPlum // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isWarning: null == isWarning
+          ? _value.isWarning
+          : isWarning // ignore: cast_nullable_to_non_nullable
+              as bool,
+      forecastMaxInt: null == forecastMaxInt
+          ? _value.forecastMaxInt
+          : forecastMaxInt // ignore: cast_nullable_to_non_nullable
+              as ForecastMaxInt,
+      forecastMaxLgInt: null == forecastMaxLgInt
+          ? _value.forecastMaxLgInt
+          : forecastMaxLgInt // ignore: cast_nullable_to_non_nullable
+              as ForecastMaxLgInt,
+      arrivalTime: freezed == arrivalTime
+          ? _value.arrivalTime
+          : arrivalTime // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ForecastMaxIntCopyWith<$Res> get forecastMaxInt {
+    return $ForecastMaxIntCopyWith<$Res>(_value.forecastMaxInt, (value) {
+      return _then(_value.copyWith(forecastMaxInt: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ForecastMaxLgIntCopyWith<$Res> get forecastMaxLgInt {
+    return $ForecastMaxLgIntCopyWith<$Res>(_value.forecastMaxLgInt, (value) {
+      return _then(_value.copyWith(forecastMaxLgInt: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$EstimatedIntensityRegionImplCopyWith<$Res>
+    implements $EstimatedIntensityRegionCopyWith<$Res> {
+  factory _$$EstimatedIntensityRegionImplCopyWith(
+          _$EstimatedIntensityRegionImpl value,
+          $Res Function(_$EstimatedIntensityRegionImpl) then) =
+      __$$EstimatedIntensityRegionImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String code,
+      String name,
+      @JsonKey(name: 'isPlum') bool isPlum,
+      @JsonKey(name: 'isWarning') bool isWarning,
+      @JsonKey(name: 'forecastMaxInt') ForecastMaxInt forecastMaxInt,
+      @JsonKey(name: 'forecastMaxLgInt') ForecastMaxLgInt forecastMaxLgInt,
+      @JsonKey(name: 'arrivalTime') DateTime? arrivalTime});
+
+  @override
+  $ForecastMaxIntCopyWith<$Res> get forecastMaxInt;
+  @override
+  $ForecastMaxLgIntCopyWith<$Res> get forecastMaxLgInt;
+}
+
+/// @nodoc
+class __$$EstimatedIntensityRegionImplCopyWithImpl<$Res>
+    extends _$EstimatedIntensityRegionCopyWithImpl<$Res,
+        _$EstimatedIntensityRegionImpl>
+    implements _$$EstimatedIntensityRegionImplCopyWith<$Res> {
+  __$$EstimatedIntensityRegionImplCopyWithImpl(
+      _$EstimatedIntensityRegionImpl _value,
+      $Res Function(_$EstimatedIntensityRegionImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? code = null,
+    Object? name = null,
+    Object? isPlum = null,
+    Object? isWarning = null,
+    Object? forecastMaxInt = null,
+    Object? forecastMaxLgInt = null,
+    Object? arrivalTime = freezed,
+  }) {
+    return _then(_$EstimatedIntensityRegionImpl(
+      code: null == code
+          ? _value.code
+          : code // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      isPlum: null == isPlum
+          ? _value.isPlum
+          : isPlum // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isWarning: null == isWarning
+          ? _value.isWarning
+          : isWarning // ignore: cast_nullable_to_non_nullable
+              as bool,
+      forecastMaxInt: null == forecastMaxInt
+          ? _value.forecastMaxInt
+          : forecastMaxInt // ignore: cast_nullable_to_non_nullable
+              as ForecastMaxInt,
+      forecastMaxLgInt: null == forecastMaxLgInt
+          ? _value.forecastMaxLgInt
+          : forecastMaxLgInt // ignore: cast_nullable_to_non_nullable
+              as ForecastMaxLgInt,
+      arrivalTime: freezed == arrivalTime
+          ? _value.arrivalTime
+          : arrivalTime // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$EstimatedIntensityRegionImpl implements _EstimatedIntensityRegion {
+  const _$EstimatedIntensityRegionImpl(
+      {required this.code,
+      required this.name,
+      @JsonKey(name: 'isPlum') required this.isPlum,
+      @JsonKey(name: 'isWarning') required this.isWarning,
+      @JsonKey(name: 'forecastMaxInt') required this.forecastMaxInt,
+      @JsonKey(name: 'forecastMaxLgInt') required this.forecastMaxLgInt,
+      @JsonKey(name: 'arrivalTime') required this.arrivalTime});
+
+  factory _$EstimatedIntensityRegionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$EstimatedIntensityRegionImplFromJson(json);
+
+  @override
+  final String code;
+  @override
+  final String name;
+  @override
+  @JsonKey(name: 'isPlum')
+  final bool isPlum;
+  @override
+  @JsonKey(name: 'isWarning')
+  final bool isWarning;
+  @override
+  @JsonKey(name: 'forecastMaxInt')
+  final ForecastMaxInt forecastMaxInt;
+  @override
+  @JsonKey(name: 'forecastMaxLgInt')
+  final ForecastMaxLgInt forecastMaxLgInt;
+
+  /// nullの場合 `既に主要動到達と推測`
+  @override
+  @JsonKey(name: 'arrivalTime')
+  final DateTime? arrivalTime;
+
+  @override
+  String toString() {
+    return 'EstimatedIntensityRegion(code: $code, name: $name, isPlum: $isPlum, isWarning: $isWarning, forecastMaxInt: $forecastMaxInt, forecastMaxLgInt: $forecastMaxLgInt, arrivalTime: $arrivalTime)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$EstimatedIntensityRegionImpl &&
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.isPlum, isPlum) || other.isPlum == isPlum) &&
+            (identical(other.isWarning, isWarning) ||
+                other.isWarning == isWarning) &&
+            (identical(other.forecastMaxInt, forecastMaxInt) ||
+                other.forecastMaxInt == forecastMaxInt) &&
+            (identical(other.forecastMaxLgInt, forecastMaxLgInt) ||
+                other.forecastMaxLgInt == forecastMaxLgInt) &&
+            (identical(other.arrivalTime, arrivalTime) ||
+                other.arrivalTime == arrivalTime));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, code, name, isPlum, isWarning,
+      forecastMaxInt, forecastMaxLgInt, arrivalTime);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$EstimatedIntensityRegionImplCopyWith<_$EstimatedIntensityRegionImpl>
+      get copyWith => __$$EstimatedIntensityRegionImplCopyWithImpl<
+          _$EstimatedIntensityRegionImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$EstimatedIntensityRegionImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _EstimatedIntensityRegion implements EstimatedIntensityRegion {
+  const factory _EstimatedIntensityRegion(
+          {required final String code,
+          required final String name,
+          @JsonKey(name: 'isPlum') required final bool isPlum,
+          @JsonKey(name: 'isWarning') required final bool isWarning,
+          @JsonKey(name: 'forecastMaxInt')
+          required final ForecastMaxInt forecastMaxInt,
+          @JsonKey(name: 'forecastMaxLgInt')
+          required final ForecastMaxLgInt forecastMaxLgInt,
+          @JsonKey(name: 'arrivalTime') required final DateTime? arrivalTime}) =
+      _$EstimatedIntensityRegionImpl;
+
+  factory _EstimatedIntensityRegion.fromJson(Map<String, dynamic> json) =
+      _$EstimatedIntensityRegionImpl.fromJson;
+
+  @override
+  String get code;
+  @override
+  String get name;
+  @override
+  @JsonKey(name: 'isPlum')
+  bool get isPlum;
+  @override
+  @JsonKey(name: 'isWarning')
+  bool get isWarning;
+  @override
+  @JsonKey(name: 'forecastMaxInt')
+  ForecastMaxInt get forecastMaxInt;
+  @override
+  @JsonKey(name: 'forecastMaxLgInt')
+  ForecastMaxLgInt get forecastMaxLgInt;
+  @override
+
+  /// nullの場合 `既に主要動到達と推測`
+  @JsonKey(name: 'arrivalTime')
+  DateTime? get arrivalTime;
+  @override
+  @JsonKey(ignore: true)
+  _$$EstimatedIntensityRegionImplCopyWith<_$EstimatedIntensityRegionImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}

@@ -9,7 +9,7 @@ part of 'earthquake_history_use_case.dart';
 // **************************************************************************
 
 String _$earthquakeHistoryUseCaseHash() =>
-    r'5a9c502ff25ef642d8a20e47e85e960040b0e340';
+    r'8c5b08aaff54465ddd3d86d943160193c0ec158e';
 
 /// See also [earthquakeHistoryUseCase].
 @ProviderFor(earthquakeHistoryUseCase)

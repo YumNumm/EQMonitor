@@ -6,6 +6,7 @@ part 'eew_hypocenter.g.dart';
 
 @freezed
 class EewHypocenter with _$EewHypocenter {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory EewHypocenter({
     required LatLng? coordinate,
     required String code,

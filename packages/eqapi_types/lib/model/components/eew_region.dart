@@ -6,6 +6,7 @@ part 'eew_region.g.dart';
 
 @freezed
 class EewRegion with _$EewRegion {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory EewRegion({
     required String code,
     required String name,

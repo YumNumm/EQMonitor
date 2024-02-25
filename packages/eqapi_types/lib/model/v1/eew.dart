@@ -1,3 +1,4 @@
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqapi_types/lib.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -28,4 +29,23 @@ class EewV1 with _$EewV1 {
   }) = _EewV1;
 
   factory EewV1.fromJson(Map<String, dynamic> json) => _$EewV1FromJson(json);
+}
+
+@freezed
+class EstimatedIntensityRegion with _$EstimatedIntensityRegion {
+  const factory EstimatedIntensityRegion({
+    required String code,
+    required String name,
+    @JsonKey(name: 'isPlum') required bool isPlum,
+    @JsonKey(name: 'isWarning') required bool isWarning,
+    @JsonKey(name: 'forecastMaxInt') required ForecastMaxInt forecastMaxInt,
+    @JsonKey(name: 'forecastMaxLgInt')
+    required ForecastMaxLgInt forecastMaxLgInt,
+
+    /// nullの場合 `既に主要動到達と推測`
+    @JsonKey(name: 'arrivalTime') required DateTime? arrivalTime,
+  }) = _EstimatedIntensityRegion;
+
+  factory EstimatedIntensityRegion.fromJson(Map<String, dynamic> json) =>
+      _$EstimatedIntensityRegionFromJson(json);
 }

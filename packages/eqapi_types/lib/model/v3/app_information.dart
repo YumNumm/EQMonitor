@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'app_information.freezed.dart';
 part 'app_information.g.dart';
 
+@Deprecated('Use v1 instead')
 @freezed
 class AppInformation with _$AppInformation {
   const factory AppInformation({

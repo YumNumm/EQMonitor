@@ -27,14 +27,22 @@ class Ntp extends _$Ntp {
 
   Future<void> sync() async {
     final config = ref.read(ntpConfigProvider);
-
-    final offset = await compute<NtpConfigModel, int>(
-      (config) => NTP.getNtpOffset(
+    final int offset;
+    if (kIsWeb) {
+      offset = await NTP.getNtpOffset(
         lookUpAddress: config.lookUpAddress,
         timeout: config.timeout,
-      ),
-      config,
-    );
+      );
+    } else {
+      offset = await compute<NtpConfigModel, int>(
+        (config) => NTP.getNtpOffset(
+          lookUpAddress: config.lookUpAddress,
+          timeout: config.timeout,
+        ),
+        config,
+      );
+    }
+
     state = state.copyWith(
       offset: offset,
       updatedAt: DateTime.now(),

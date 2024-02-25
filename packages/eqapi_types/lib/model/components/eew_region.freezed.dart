@@ -205,7 +205,8 @@ class __$$EewRegionImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$EewRegionImpl implements _EewRegion {
   const _$EewRegionImpl(
       {required this.code,

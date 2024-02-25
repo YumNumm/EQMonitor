@@ -8,6 +8,7 @@ import 'package:eqmonitor/core/fcm/channels.dart';
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/core/provider/custom_provider_observer.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
+import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
@@ -35,23 +36,33 @@ Future<void> main() async {
 
   final talker = TalkerFlutter.init(
     logger: TalkerLogger(),
-  )..configure(
-      observer: CrashlitycsTalkerObserver(),
+  );
+  if (!kIsWeb) {
+    talker.configure(
+      observer: CrashlyticsTalkerObserver(),
     );
+  }
 
   FlutterError.onError = (error) {
-    talker.handle(error.exception, error.stack, 'Uncaught fatal exception');
-    if (!kDebugMode) {
-      FirebaseCrashlytics.instance.recordFlutterError(error);
+    final exception = error.exception;
+    if (exception is ParallelWaitError) {
+      talker
+        ..handle(exception, error.stack, 'Uncaught fatal exception')
+        ..log(exception.errors.toString());
     }
+    talker.handle(error.exception, error.stack, 'Uncaught fatal exception');
   };
   PlatformDispatcher.instance.onError = (error, stack) {
     talker.handle(error, stack, 'Uncaught async exception');
-    if (kDebugMode) {
-      FirebaseCrashlytics.instance.recordError(error, stack);
+    final exception = error;
+    if (exception is ParallelWaitError) {
+      talker
+        ..log(exception.errors.toString())
+        ..log(exception.stackTrace.toString());
     }
     return true;
   };
+
   final deviceInfo = DeviceInfoPlugin();
 
   final results = await (
@@ -64,24 +75,30 @@ Future<void> main() async {
         : Future<Null>.value()),
     // ignore: prefer_void_to_null
     (!kIsWeb && Platform.isIOS ? deviceInfo.iosInfo : Future<Null>.value()),
-    FlutterLocalNotificationsPlugin().initialize(
-      const InitializationSettings(
-        iOS: DarwinInitializationSettings(
-          requestAlertPermission: false,
-          requestSoundPermission: false,
-          requestBadgePermission: false,
-        ),
-        android: AndroidInitializationSettings('mipmap/ic_launcher'),
-      ),
-    ),
-    _registerNotificationChannelIfNeeded(),
-    getApplicationDocumentsDirectory(),
+
+    kIsWeb ? Future<Null>.value() : _registerNotificationChannelIfNeeded(),
+    kIsWeb ? Future<Null>.value() : getApplicationDocumentsDirectory(),
+    loadJmaCodeTable(),
+    kIsWeb
+        ? Future<Null>.value()
+        : FlutterLocalNotificationsPlugin().initialize(
+            const InitializationSettings(
+              iOS: DarwinInitializationSettings(
+                requestAlertPermission: false,
+                requestSoundPermission: false,
+                requestBadgePermission: false,
+              ),
+              android: AndroidInitializationSettings('mipmap/ic_launcher'),
+            ),
+          )
   ).wait;
 
   FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
-  unawaited(
-    FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode),
-  );
+  if (!kIsWeb) {
+    unawaited(
+      FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode),
+    );
+  }
   container = ProviderContainer(
     overrides: [
       sharedPreferencesProvider.overrideWithValue(results.$1),
@@ -92,7 +109,9 @@ Future<void> main() async {
         androidDeviceInfoProvider.overrideWithValue(results.$4!),
       if (results.$5 != null)
         iosDeviceInfoProvider.overrideWithValue(results.$5!),
-      applicationDocumentsDirectoryProvider.overrideWithValue(results.$8),
+      if (results.$7 != null)
+        applicationDocumentsDirectoryProvider.overrideWithValue(results.$7!),
+      jmaCodeTableProvider.overrideWithValue(results.$8),
     ],
     observers: [
       if (kDebugMode)

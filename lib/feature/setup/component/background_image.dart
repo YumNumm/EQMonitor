@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -13,6 +14,13 @@ class SetupBackgroundImageWidget extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final startTime = useState(0);
+
+    if (kIsWeb) {
+      return ColoredBox(
+        color: const Color(0xFF05052F),
+        child: child,
+      );
+    }
 
     double elapsedTimeInSeconds() =>
         (DateTime.now().millisecondsSinceEpoch - startTime.value) / 1000;

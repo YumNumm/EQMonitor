@@ -1,0 +1,14 @@
+name: jma_code_table_converter_internal
+description: A sample command-line application.
+version: 1.0.0
+publish_to: "none"
+
+environment:
+  sdk: ^3.3.0
+
+dependencies:
+  jma_code_table_types:
+    git:
+      url: https://github.com/YumNumm/EQMonitor.git
+      path: packages/eqapi_types
+
