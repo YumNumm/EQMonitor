@@ -103,14 +103,16 @@ Future<void> main() async {
     ],
   );
   try {
+    // CORSエラーなりなんなり起こるので try-catch
     await container.read(jmaParameterProvider.future);
-  } on Exception catch (e) {
+  } on Exception {
     return runApp(
-      ProviderScope(
+      const ProviderScope(
         child: Scaffold(
           body: Center(
             child: Text(
-              e.toString(),
+              'An error occurred while loading the JMA parameter. '
+              'See console for details.',
             ),
           ),
         ),
