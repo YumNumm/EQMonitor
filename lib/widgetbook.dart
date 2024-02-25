@@ -139,6 +139,18 @@ class WidgetbookApp extends ConsumerWidget {
           ),
         ),
         ZoomAddon(),
+        DeviceFrameAddon(
+          devices: [
+            Devices.android.samsungGalaxyNote20,
+            Devices.ios.iPhoneSE,
+            Devices.ios.iPhone13,
+          ],
+        ),
+        TimeDilationAddon(),
+        TextScaleAddon(
+          scales: [1.0, 1.2, 2.0],
+          initialScale: 1,
+        ),
       ],
       integrations: [
         WidgetbookCloudIntegration(),

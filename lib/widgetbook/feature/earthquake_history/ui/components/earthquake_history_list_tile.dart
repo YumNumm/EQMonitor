@@ -86,21 +86,19 @@ class _Body extends ConsumerWidget {
         description: '最大震度',
       ),
     );
-    return Material(
-      child: EarthquakeHistoryListTile(
-        item: EarthquakeV1Extended(
-          earthquake: v1,
-          maxIntensityRegionNames: [
-            context.knobs.listOrNull(
-              label: '最大震度観測地域',
-              description: '一次細分化地域',
-              options: earthquakeParameter.regions.map((e) => e.name).toList(),
-              labelBuilder: (data) => data.toString(),
-            ),
-          ].whereNotNull().toList(),
-        ),
-        onTap: () {},
+    return EarthquakeHistoryListTile(
+      item: EarthquakeV1Extended(
+        earthquake: v1,
+        maxIntensityRegionNames: [
+          context.knobs.listOrNull(
+            label: '最大震度観測地域',
+            description: '一次細分化地域',
+            options: earthquakeParameter.regions.map((e) => e.name).toList(),
+            labelBuilder: (data) => data.toString(),
+          ),
+        ].whereNotNull().toList(),
       ),
+      onTap: () {},
     );
   }
 }
