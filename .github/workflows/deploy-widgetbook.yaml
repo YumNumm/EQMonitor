@@ -44,7 +44,7 @@ jobs:
           melos generate
 
       - name: Build web
-        run: flutter build web --release ./lib/widgetbook.dart
+        run: flutter build web --release -t ./lib/widgetbook.dart
 
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@v1
