@@ -2,25 +2,31 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Flutter Debug",
+      "name": "EQMonitor Debug",
       "type": "dart",
       "request": "launch",
       "program": "lib/main.dart",
       "args": []
     },
     {
-      "name": "Flutter Release",
+      "name": "EQMonitor Release",
       "type": "dart",
       "request": "launch",
       "program": "lib/main.dart",
       "flutterMode": "release"
     },
     {
-      "name": "Flutter Profile",
+      "name": "EQMonitor Profile",
       "type": "dart",
       "request": "launch",
       "program": "lib/main.dart",
       "flutterMode": "profile"
+    },
+    {
+      "name": "Widgetbook Debug",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/widgetbook.dart",
     }
   ]
 }

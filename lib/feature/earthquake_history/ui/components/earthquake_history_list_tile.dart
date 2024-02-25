@@ -91,9 +91,9 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
           _ => '',
         } +
         switch (item.depth) {
-          (final int depth) when depth == 0 => '深さ: ごく浅い',
-          (final int depth) when depth == 700 => '深さ: 700km以上',
-          (final int depth) => '深さ: ${depth}km',
+          (final int depth) when depth == 0 => '深さ ごく浅い',
+          (final int depth) when depth == 700 => '深さ 700km以上',
+          (final int depth) => '深さ ${depth}km',
           _ => '',
         };
 
