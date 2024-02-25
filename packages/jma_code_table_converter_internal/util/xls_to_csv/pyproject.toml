@@ -1,0 +1,26 @@
+[project]
+name = "xls-to-csv"
+version = "0.1.0"
+description = "Add your description here"
+authors = [
+    { name = "YumNumm", email = "onory0917@gmail.com" }
+]
+dependencies = [
+    "openpyxl>=3.1.2",
+    "pyexcel>=0.7.0",
+    "pyexcel-xls>=0.7.0",
+    "pyexcel-xlsx>=0.6.0",
+]
+readme = "README.md"
+requires-python = ">= 3.11"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = []
+
+[tool.hatch.metadata]
+allow-direct-references = true

@@ -1,0 +1,4 @@
+# melos_managed_dependency_overrides: jma_code_table_types
+dependency_overrides:
+  jma_code_table_types:
+    path: ../jma_code_table_types
