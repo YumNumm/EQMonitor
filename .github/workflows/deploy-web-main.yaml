@@ -1,4 +1,4 @@
-name: Deploy Web (Widgetbook)
+name: Deploy Web (Main)
 on:
   push:
   workflow_dispatch:
