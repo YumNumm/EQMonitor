@@ -1,4 +1,4 @@
-name: Flutter build Android
+name: Deploy Android
 
 on:
   push:

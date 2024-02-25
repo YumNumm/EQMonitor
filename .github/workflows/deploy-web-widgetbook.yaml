@@ -1,4 +1,4 @@
-name: Publish to Cloudflare Pages (Widgetbook)
+name: Deploy Web (Widgetbook)
 on:
   push:
   workflow_dispatch:
