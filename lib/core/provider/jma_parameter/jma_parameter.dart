@@ -8,6 +8,7 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -43,7 +44,7 @@ class JmaParameter extends _$JmaParameter {
     ref
         .read(talkerProvider)
         .log('Earthquake cachedEtag: $cachedEtag, currentEtag: $currentEtag');
-    if (cachedEtag != null && cachedEtag == currentEtag) {
+    if (cachedEtag != null && cachedEtag == currentEtag && !kIsWeb) {
       final localResult = await _getEarthquakeFromLocal();
       if (localResult case Success(:final value)) {
         return value;
@@ -51,7 +52,9 @@ class JmaParameter extends _$JmaParameter {
     }
     final result =
         await ref.watch(jmaParameterApiClientProvider).getEarthquakeParameter();
-    await _saveEarthquakeToLocal(result.parameter);
+    if (!kIsWeb) {
+      await _saveEarthquakeToLocal(result.parameter);
+    }
     final etag = result.etag;
     if (etag != null) {
       await ref.read(earthquakeParameterEtagProvider.notifier).set(etag);
@@ -91,7 +94,7 @@ class JmaParameter extends _$JmaParameter {
     ref
         .read(talkerProvider)
         .log('Tsunami cachedEtag: $cachedEtag, currentEtag: $currentEtag');
-    if (cachedEtag != null && cachedEtag == currentEtag) {
+    if (cachedEtag != null && cachedEtag == currentEtag && !kIsWeb) {
       final localResult = await _getTsunamiFromLocal();
       if (localResult case Success(:final value)) {
         return value;
@@ -99,7 +102,9 @@ class JmaParameter extends _$JmaParameter {
     }
     final result =
         await ref.watch(jmaParameterApiClientProvider).getTsunamiParameter();
-    await _saveTsunamiToLocal(result.parameter);
+    if (!kIsWeb) {
+      await _saveTsunamiToLocal(result.parameter);
+    }
     final etag = result.etag;
     if (etag != null) {
       await prefs.setString(_tsunamiKey, etag);

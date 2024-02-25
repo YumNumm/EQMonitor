@@ -12,7 +12,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:jma_code_table_types/jma_code_table_types.dart';
-import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
 
 class EarthquakeHistoryListTile extends HookConsumerWidget {
   const EarthquakeHistoryListTile({
@@ -75,10 +74,10 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
         hypoName.name,
       (_, _, final JmaIntensity intensity, final List<String> regionNames)
           when regionNames.isNotEmpty && regionNames.length > 2 =>
-        '最大震度${intensity.type}を${regionNames.first}などで観測',
+        '最大震度$intensityを${regionNames.first}などで観測',
       (_, _, final JmaIntensity intensity, final List<String> regionNames)
           when regionNames.isNotEmpty =>
-        '最大震度${intensity.type}を${regionNames.first}で観測',
+        '最大震度$intensityを${regionNames.first}で観測',
       (_, _, final JmaIntensity intensity, _) => '最大震度${intensity.type}を観測',
       _ => ''
     };
@@ -114,7 +113,12 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
     return ListTile(
       tileColor: showBackgroundColor ? intensityColor?.withOpacity(0.4) : null,
       onTap: onTap,
-      title: Text(title),
+      title: Text(
+        title,
+        style: theme.textTheme.titleMedium!.copyWith(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
       subtitle: Text(subTitle),
       leading: isFarEarthquake
           ? JmaIntensityIcon(
@@ -138,10 +142,4 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
       ),
     );
   }
-
-  String? _parseRegionCode({
-    required String regionCode,
-    required List<EarthquakeParameterRegionItem> parameter,
-  }) =>
-      parameter.firstWhereOrNull((e) => e.code == regionCode)?.name;
 }

@@ -41,7 +41,7 @@ enum JmaIntensity {
 
   @override
   String toString() => type
-      .replaceAll('!5-', '震度5弱以上未入電')
+      .replaceAll('!5-', '5弱以上未入電')
       .replaceAll('+', '強')
       .replaceAll('-', '弱');
 
