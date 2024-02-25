@@ -14,3 +14,5 @@ dependency_overrides:
     path: packages/lat_lng
   jma_map:
     path: packages/jma_map
+  jma_code_table_types:
+    path: packages/jma_code_table_types

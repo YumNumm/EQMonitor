@@ -15,32 +15,41 @@ _$AppInformationImpl _$$AppInformationImplFromJson(Map<String, dynamic> json) =>
       ($checkedConvert) {
         final val = _$AppInformationImpl(
           iosLatestVersion:
-              $checkedConvert('iosLatestVersion', (v) => v as String),
+              $checkedConvert('ios_latest_version', (v) => v as String),
           androidLatestVersion:
-              $checkedConvert('androidLatestVersion', (v) => v as String),
+              $checkedConvert('android_latest_version', (v) => v as String),
           iosMinimumVersion:
-              $checkedConvert('iosMinimumVersion', (v) => v as String?),
+              $checkedConvert('ios_minimum_version', (v) => v as String?),
           androidMinimumVersion:
-              $checkedConvert('androidMinimumVersion', (v) => v as String?),
+              $checkedConvert('android_minimum_version', (v) => v as String?),
           iosDownloadUrl:
-              $checkedConvert('iosDownloadUrl', (v) => v as String?),
+              $checkedConvert('ios_download_url', (v) => v as String?),
           androidDownloadUrl:
-              $checkedConvert('androidDownloadUrl', (v) => v as String?),
+              $checkedConvert('android_download_url', (v) => v as String?),
           forceUpdateMessage:
-              $checkedConvert('forceUpdateMessage', (v) => v as String?),
+              $checkedConvert('force_update_message', (v) => v as String?),
         );
         return val;
+      },
+      fieldKeyMap: const {
+        'iosLatestVersion': 'ios_latest_version',
+        'androidLatestVersion': 'android_latest_version',
+        'iosMinimumVersion': 'ios_minimum_version',
+        'androidMinimumVersion': 'android_minimum_version',
+        'iosDownloadUrl': 'ios_download_url',
+        'androidDownloadUrl': 'android_download_url',
+        'forceUpdateMessage': 'force_update_message'
       },
     );
 
 Map<String, dynamic> _$$AppInformationImplToJson(
         _$AppInformationImpl instance) =>
     <String, dynamic>{
-      'iosLatestVersion': instance.iosLatestVersion,
-      'androidLatestVersion': instance.androidLatestVersion,
-      'iosMinimumVersion': instance.iosMinimumVersion,
-      'androidMinimumVersion': instance.androidMinimumVersion,
-      'iosDownloadUrl': instance.iosDownloadUrl,
-      'androidDownloadUrl': instance.androidDownloadUrl,
-      'forceUpdateMessage': instance.forceUpdateMessage,
+      'ios_latest_version': instance.iosLatestVersion,
+      'android_latest_version': instance.androidLatestVersion,
+      'ios_minimum_version': instance.iosMinimumVersion,
+      'android_minimum_version': instance.androidMinimumVersion,
+      'ios_download_url': instance.iosDownloadUrl,
+      'android_download_url': instance.androidDownloadUrl,
+      'force_update_message': instance.forceUpdateMessage,
     };

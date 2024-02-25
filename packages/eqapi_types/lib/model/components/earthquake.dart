@@ -7,6 +7,7 @@ part 'earthquake.g.dart';
 
 @freezed
 class Earthquake with _$Earthquake {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory Earthquake({
     required DateTime originTime,
     required DateTime arrivalTime,
@@ -22,6 +23,7 @@ class Earthquake with _$Earthquake {
 
 @freezed
 class EarthquakeHypocenter with _$EarthquakeHypocenter {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory EarthquakeHypocenter({
     required String name,
     required String code,
@@ -40,6 +42,7 @@ class EarthquakeHypocenter with _$EarthquakeHypocenter {
 
 @freezed
 class EarthquakeHypocenterDetailed with _$EarthquakeHypocenterDetailed {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory EarthquakeHypocenterDetailed({
     required String code,
     required String name,
@@ -51,6 +54,7 @@ class EarthquakeHypocenterDetailed with _$EarthquakeHypocenterDetailed {
 
 @freezed
 class EarthquakeMagnitude with _$EarthquakeMagnitude {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory EarthquakeMagnitude({
     required double? value,
     required String? condition,

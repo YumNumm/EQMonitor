@@ -106,7 +106,8 @@ class __$$ForecastMaxIntImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$ForecastMaxIntImpl implements _ForecastMaxInt {
   const _$ForecastMaxIntImpl({required this.from, required this.to});
 
@@ -261,7 +262,8 @@ class __$$ForecastMaxLgIntImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$ForecastMaxLgIntImpl implements _ForecastMaxLgInt {
   const _$ForecastMaxLgIntImpl({required this.from, required this.to});
 

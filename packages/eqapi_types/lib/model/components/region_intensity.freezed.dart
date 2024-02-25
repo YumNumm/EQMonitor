@@ -136,7 +136,8 @@ class __$$RegionIntensityImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.none)
 class _$RegionIntensityImpl implements _RegionIntensity {
   const _$RegionIntensityImpl(
       {required this.code,

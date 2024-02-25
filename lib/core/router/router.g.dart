@@ -11,6 +11,7 @@ part of 'router.dart';
 List<RouteBase> get $appRoutes => [
       $setupRoute,
       $earthquakeHistoryRoute,
+      $deprecatedEarthquakeHistoryRoute,
       $earthquakeHistoryDetailsRoute,
       $informationHistoryRoute,
       $informationHistoryDetailsRoute,
@@ -54,6 +55,30 @@ extension $EarthquakeHistoryRouteExtension on EarthquakeHistoryRoute {
 
   String get location => GoRouteData.$location(
         '/earthquake-history',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $deprecatedEarthquakeHistoryRoute => GoRouteData.$route(
+      path: '/deprecated-earthquake-history',
+      factory: $DeprecatedEarthquakeHistoryRouteExtension._fromState,
+    );
+
+extension $DeprecatedEarthquakeHistoryRouteExtension
+    on DeprecatedEarthquakeHistoryRoute {
+  static DeprecatedEarthquakeHistoryRoute _fromState(GoRouterState state) =>
+      const DeprecatedEarthquakeHistoryRoute();
+
+  String get location => GoRouteData.$location(
+        '/deprecated-earthquake-history',
       );
 
   void go(BuildContext context) => context.go(location);
@@ -284,6 +309,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
               path: 'api-endpoint-selector',
               factory: $ApiEndpointSelectorRouteExtension._fromState,
             ),
+            GoRouteData.$route(
+              path: 'earthquake-parameter-list',
+              factory: $EarthquakeParameterListRouteExtension._fromState,
+            ),
           ],
         ),
       ],
@@ -509,6 +538,25 @@ extension $ApiEndpointSelectorRouteExtension on ApiEndpointSelectorRoute {
   void replace(BuildContext context) => context.replace(location);
 }
 
+extension $EarthquakeParameterListRouteExtension
+    on EarthquakeParameterListRoute {
+  static EarthquakeParameterListRoute _fromState(GoRouterState state) =>
+      const EarthquakeParameterListRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/debugger/earthquake-parameter-list',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
 T? _$convertMapValue<T>(
   String key,
   Map<String, String> map,
@@ -533,7 +581,7 @@ bool _$boolConverter(String value) {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$goRouterHash() => r'2b45ac372cb663512b42a9cc1b8e8f3600165263';
+String _$goRouterHash() => r'ca25653fd56b61e1ab0e3745908c1e74b25bdf8e';
 
 /// See also [goRouter].
 @ProviderFor(goRouter)

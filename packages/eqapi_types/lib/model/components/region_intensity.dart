@@ -6,6 +6,7 @@ part 'region_intensity.g.dart';
 
 @freezed
 class RegionIntensity with _$RegionIntensity {
+  @JsonSerializable(fieldRename: FieldRename.none)
   const factory RegionIntensity({
     required String code,
     required String name,

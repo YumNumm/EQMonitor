@@ -18,15 +18,15 @@ _$TsunamiForecastImpl _$$TsunamiForecastImplFromJson(
           code: $checkedConvert('code', (v) => v as String),
           name: $checkedConvert('name', (v) => v as String),
           kind: $checkedConvert('kind', (v) => v as String),
-          lastKind: $checkedConvert('lastKind', (v) => v as String),
+          lastKind: $checkedConvert('last_kind', (v) => v as String),
           firstHeight: $checkedConvert(
-              'firstHeight',
+              'first_height',
               (v) => v == null
                   ? null
                   : TsunamiForecastFirstHeight.fromJson(
                       v as Map<String, dynamic>)),
           maxHeight: $checkedConvert(
-              'maxHeight',
+              'max_height',
               (v) => v == null
                   ? null
                   : TsunamiForecastMaxHeight.fromJson(
@@ -40,6 +40,11 @@ _$TsunamiForecastImpl _$$TsunamiForecastImplFromJson(
         );
         return val;
       },
+      fieldKeyMap: const {
+        'lastKind': 'last_kind',
+        'firstHeight': 'first_height',
+        'maxHeight': 'max_height'
+      },
     );
 
 Map<String, dynamic> _$$TsunamiForecastImplToJson(
@@ -48,9 +53,9 @@ Map<String, dynamic> _$$TsunamiForecastImplToJson(
       'code': instance.code,
       'name': instance.name,
       'kind': instance.kind,
-      'lastKind': instance.lastKind,
-      'firstHeight': instance.firstHeight,
-      'maxHeight': instance.maxHeight,
+      'last_kind': instance.lastKind,
+      'first_height': instance.firstHeight,
+      'max_height': instance.maxHeight,
       'stations': instance.stations,
     };
 
@@ -61,19 +66,20 @@ _$TsunamiForecastFirstHeightImpl _$$TsunamiForecastFirstHeightImplFromJson(
       json,
       ($checkedConvert) {
         final val = _$TsunamiForecastFirstHeightImpl(
-          arrivalTime: $checkedConvert('arrivalTime',
+          arrivalTime: $checkedConvert('arrival_time',
               (v) => v == null ? null : DateTime.parse(v as String)),
           condition: $checkedConvert('condition',
               (v) => $enumDecodeNullable(_$TsunamiForecastConditionEnumMap, v)),
         );
         return val;
       },
+      fieldKeyMap: const {'arrivalTime': 'arrival_time'},
     );
 
 Map<String, dynamic> _$$TsunamiForecastFirstHeightImplToJson(
         _$TsunamiForecastFirstHeightImpl instance) =>
     <String, dynamic>{
-      'arrivalTime': instance.arrivalTime?.toIso8601String(),
+      'arrival_time': instance.arrivalTime?.toIso8601String(),
       'condition': _$TsunamiForecastConditionEnumMap[instance.condition],
     };
 
@@ -91,7 +97,7 @@ _$TsunamiForecastMaxHeightImpl _$$TsunamiForecastMaxHeightImplFromJson(
       ($checkedConvert) {
         final val = _$TsunamiForecastMaxHeightImpl(
           value: $checkedConvert('value', (v) => (v as num?)?.toDouble()),
-          isOver: $checkedConvert('isOver', (v) => v as bool?),
+          isOver: $checkedConvert('is_over', (v) => v as bool?),
           condition: $checkedConvert(
               'condition',
               (v) => $enumDecodeNullable(
@@ -99,13 +105,14 @@ _$TsunamiForecastMaxHeightImpl _$$TsunamiForecastMaxHeightImplFromJson(
         );
         return val;
       },
+      fieldKeyMap: const {'isOver': 'is_over'},
     );
 
 Map<String, dynamic> _$$TsunamiForecastMaxHeightImplToJson(
         _$TsunamiForecastMaxHeightImpl instance) =>
     <String, dynamic>{
       'value': instance.value,
-      'isOver': instance.isOver,
+      'is_over': instance.isOver,
       'condition':
           _$TsunamiForecastMaxHeightConditionEnumMap[instance.condition],
     };
@@ -125,8 +132,8 @@ _$TsunamiForecastStationImpl _$$TsunamiForecastStationImplFromJson(
           code: $checkedConvert('code', (v) => v as String),
           name: $checkedConvert('name', (v) => v as String),
           highTideTime: $checkedConvert(
-              'highTideTime', (v) => DateTime.parse(v as String)),
-          firstHeightTime: $checkedConvert('firstHeightTime',
+              'high_tide_time', (v) => DateTime.parse(v as String)),
+          firstHeightTime: $checkedConvert('first_height_time',
               (v) => v == null ? null : DateTime.parse(v as String)),
           condition: $checkedConvert(
               'condition',
@@ -135,6 +142,10 @@ _$TsunamiForecastStationImpl _$$TsunamiForecastStationImplFromJson(
         );
         return val;
       },
+      fieldKeyMap: const {
+        'highTideTime': 'high_tide_time',
+        'firstHeightTime': 'first_height_time'
+      },
     );
 
 Map<String, dynamic> _$$TsunamiForecastStationImplToJson(
@@ -142,8 +153,8 @@ Map<String, dynamic> _$$TsunamiForecastStationImplToJson(
     <String, dynamic>{
       'code': instance.code,
       'name': instance.name,
-      'highTideTime': instance.highTideTime.toIso8601String(),
-      'firstHeightTime': instance.firstHeightTime?.toIso8601String(),
+      'high_tide_time': instance.highTideTime.toIso8601String(),
+      'first_height_time': instance.firstHeightTime?.toIso8601String(),
       'condition': _$TsunamiForecastStationConditionEnumMap[instance.condition],
     };
 

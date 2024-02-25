@@ -1,6 +1,9 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/app.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:eqmonitor/feature/debug/earthquake_parameter/ui/earthquake_parameter_list_screen.dart';
+import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history_details_old/screen/earthquake_history_details.dart';
 import 'package:eqmonitor/feature/earthquake_history_old/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/earthquake_history_old/page/earthquake_history.dart';
@@ -22,10 +25,13 @@ import 'package:eqmonitor/feature/settings/children/config/notification/notifica
 import 'package:eqmonitor/feature/settings/settings_screen.dart';
 import 'package:eqmonitor/feature/setup/screen/setup_screen.dart';
 import 'package:eqmonitor/feature/talker/talker_page.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide LicensePage;
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 part 'router.g.dart';
 
@@ -40,6 +46,11 @@ GoRouter goRouter(GoRouterRef ref) => GoRouter(
                   false)
               ? const HomeRoute().location
               : const SetupRoute().location,
+      observers: [
+        _NavigatorObserver(
+          ref.watch(talkerProvider),
+        ),
+      ],
     );
 
 @TypedGoRoute<SetupRoute>(
@@ -55,6 +66,16 @@ class SetupRoute extends GoRouteData {
 @TypedGoRoute<EarthquakeHistoryRoute>(path: '/earthquake-history')
 class EarthquakeHistoryRoute extends GoRouteData {
   const EarthquakeHistoryRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const EarthquakeHistoryScreen();
+}
+
+@TypedGoRoute<DeprecatedEarthquakeHistoryRoute>(
+  path: '/deprecated-earthquake-history',
+)
+class DeprecatedEarthquakeHistoryRoute extends GoRouteData {
+  const DeprecatedEarthquakeHistoryRoute();
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const EarthquakeHistoryPage();
@@ -173,6 +194,9 @@ class KmoniRoute extends GoRouteData {
         TypedGoRoute<ApiEndpointSelectorRoute>(
           path: 'api-endpoint-selector',
         ),
+        TypedGoRoute<EarthquakeParameterListRoute>(
+          path: 'earthquake-parameter-list',
+        ),
       ],
     ),
   ],
@@ -278,4 +302,31 @@ class EarthquakeNotificationSettingsRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const EarthquakeNotificationSettingsPage();
+}
+
+class EarthquakeParameterListRoute extends GoRouteData {
+  const EarthquakeParameterListRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const EarthquakeParameterListScreen();
+}
+
+class _NavigatorObserver extends NavigatorObserver {
+  _NavigatorObserver(this.talker);
+
+  final Talker talker;
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    if (route is PageRoute) {
+      final page = route.settings.name;
+      talker.logTyped(GoRouterLog('push to $page'));
+      if (kIsWeb) {
+        return;
+      }
+      FirebaseAnalytics.instance.logScreenView(
+        screenName: page,
+      );
+    }
+  }
 }
