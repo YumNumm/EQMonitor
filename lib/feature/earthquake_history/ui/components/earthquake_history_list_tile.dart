@@ -91,9 +91,9 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
           _ => '',
         } +
         switch (item.depth) {
-          (final double depth) when depth == 0 => '深さ: ごく浅い',
-          (final double depth) when depth == 700 => '深さ: 700km以上',
-          (final double depth) => '深さ: ${depth}km',
+          (final int depth) when depth == 0 => '深さ: ごく浅い',
+          (final int depth) when depth == 700 => '深さ: 700km以上',
+          (final int depth) => '深さ: ${depth}km',
           _ => '',
         };
 
@@ -114,7 +114,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
     return ListTile(
       tileColor: showBackgroundColor ? intensityColor?.withOpacity(0.4) : null,
       onTap: onTap,
-      title:  Text(title),
+      title: Text(title),
       subtitle: Text(subTitle),
       leading: isFarEarthquake
           ? JmaIntensityIcon(
