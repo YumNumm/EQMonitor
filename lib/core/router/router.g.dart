@@ -581,7 +581,7 @@ bool _$boolConverter(String value) {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$goRouterHash() => r'2b45ac372cb663512b42a9cc1b8e8f3600165263';
+String _$goRouterHash() => r'ca25653fd56b61e1ab0e3745908c1e74b25bdf8e';
 
 /// See also [goRouter].
 @ProviderFor(goRouter)

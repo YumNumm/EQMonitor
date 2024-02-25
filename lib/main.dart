@@ -8,6 +8,7 @@ import 'package:eqmonitor/core/fcm/channels.dart';
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/core/provider/custom_provider_observer.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
+import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
@@ -76,6 +77,7 @@ Future<void> main() async {
     ),
     _registerNotificationChannelIfNeeded(),
     getApplicationDocumentsDirectory(),
+    loadJmaCodeTable(),
   ).wait;
 
   FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
@@ -93,6 +95,7 @@ Future<void> main() async {
       if (results.$5 != null)
         iosDeviceInfoProvider.overrideWithValue(results.$5!),
       applicationDocumentsDirectoryProvider.overrideWithValue(results.$8),
+      jmaCodeTableProvider.overrideWithValue(results.$9),
     ],
     observers: [
       if (kDebugMode)
