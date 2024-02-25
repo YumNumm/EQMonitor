@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/provider/custom_provider_observer.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
@@ -89,12 +90,12 @@ Future<void> main() async {
 }
 
 @widgetbook.App()
-class WidgetbookApp extends StatelessWidget {
+class WidgetbookApp extends ConsumerWidget {
   const WidgetbookApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Widgetbook.material(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final child = Widgetbook.material(
       directories: directories,
       addons: [
         AccessibilityAddon(),
@@ -120,6 +121,17 @@ class WidgetbookApp extends StatelessWidget {
       integrations: [
         WidgetbookCloudIntegration(),
       ],
+    );
+    final packageInfo = ref.watch(packageInfoProvider);
+
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Banner(
+        message: 'v${packageInfo.version}-${packageInfo.buildNumber}',
+        location: BannerLocation.bottomStart,
+        color: Colors.red.shade900,
+        child: child,
+      ),
     );
   }
 }

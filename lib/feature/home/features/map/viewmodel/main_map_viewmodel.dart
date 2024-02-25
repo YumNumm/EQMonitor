@@ -193,8 +193,8 @@ class MainMapViewModel extends _$MainMapViewModel {
       await changeHomeBoundaryWithAnimation(
         bounds: boundary ?? defaultBoundary,
       );
-    } on Exception {
-      log('error');
+    } on Exception catch(e) {
+      log('error $e');
     }
   }
 

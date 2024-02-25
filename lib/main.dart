@@ -20,6 +20,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
@@ -30,29 +31,43 @@ late final ProviderContainer container;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  if (kIsWeb) {
+    setUrlStrategy(PathUrlStrategy());
+  }
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
   final talker = TalkerFlutter.init(
     logger: TalkerLogger(),
-  )..configure(
+  );
+  if (!kIsWeb) {
+    talker.configure(
       observer: CrashlyticsTalkerObserver(),
     );
+  }
 
   FlutterError.onError = (error) {
-    talker.handle(error.exception, error.stack, 'Uncaught fatal exception');
-    if (!kDebugMode) {
-      FirebaseCrashlytics.instance.recordFlutterError(error);
+    final exception = error.exception;
+    if (exception is ParallelWaitError) {
+      talker
+        ..handle(exception, error.stack, 'Uncaught fatal exception')
+        ..log(exception.errors.toString());
     }
+    talker.handle(error.exception, error.stack, 'Uncaught fatal exception');
   };
   PlatformDispatcher.instance.onError = (error, stack) {
     talker.handle(error, stack, 'Uncaught async exception');
-    if (kDebugMode) {
-      FirebaseCrashlytics.instance.recordError(error, stack);
+    final exception = error;
+    if (exception is ParallelWaitError) {
+      talker
+        ..log(exception.errors.toString())
+        ..log(exception.stackTrace.toString());
     }
     return true;
   };
+
   final deviceInfo = DeviceInfoPlugin();
 
   final results = await (
@@ -65,25 +80,30 @@ Future<void> main() async {
         : Future<Null>.value()),
     // ignore: prefer_void_to_null
     (!kIsWeb && Platform.isIOS ? deviceInfo.iosInfo : Future<Null>.value()),
-    FlutterLocalNotificationsPlugin().initialize(
-      const InitializationSettings(
-        iOS: DarwinInitializationSettings(
-          requestAlertPermission: false,
-          requestSoundPermission: false,
-          requestBadgePermission: false,
-        ),
-        android: AndroidInitializationSettings('mipmap/ic_launcher'),
-      ),
-    ),
-    _registerNotificationChannelIfNeeded(),
-    getApplicationDocumentsDirectory(),
+
+    kIsWeb ? Future<Null>.value() : _registerNotificationChannelIfNeeded(),
+    kIsWeb ? Future<Null>.value() : getApplicationDocumentsDirectory(),
     loadJmaCodeTable(),
+    kIsWeb
+        ? Future<Null>.value()
+        : FlutterLocalNotificationsPlugin().initialize(
+            const InitializationSettings(
+              iOS: DarwinInitializationSettings(
+                requestAlertPermission: false,
+                requestSoundPermission: false,
+                requestBadgePermission: false,
+              ),
+              android: AndroidInitializationSettings('mipmap/ic_launcher'),
+            ),
+          )
   ).wait;
 
   FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
-  unawaited(
-    FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode),
-  );
+  if (!kIsWeb) {
+    unawaited(
+      FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode),
+    );
+  }
   container = ProviderContainer(
     overrides: [
       sharedPreferencesProvider.overrideWithValue(results.$1),
@@ -94,8 +114,9 @@ Future<void> main() async {
         androidDeviceInfoProvider.overrideWithValue(results.$4!),
       if (results.$5 != null)
         iosDeviceInfoProvider.overrideWithValue(results.$5!),
-      applicationDocumentsDirectoryProvider.overrideWithValue(results.$8),
-      jmaCodeTableProvider.overrideWithValue(results.$9),
+      if (results.$7 != null)
+        applicationDocumentsDirectoryProvider.overrideWithValue(results.$7!),
+      jmaCodeTableProvider.overrideWithValue(results.$8),
     ],
     observers: [
       if (kDebugMode)

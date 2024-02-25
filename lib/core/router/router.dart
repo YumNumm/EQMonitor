@@ -26,6 +26,7 @@ import 'package:eqmonitor/feature/settings/settings_screen.dart';
 import 'package:eqmonitor/feature/setup/screen/setup_screen.dart';
 import 'package:eqmonitor/feature/talker/talker_page.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide LicensePage;
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -320,6 +321,9 @@ class _NavigatorObserver extends NavigatorObserver {
     if (route is PageRoute) {
       final page = route.settings.name;
       talker.logTyped(GoRouterLog('push to $page'));
+      if (kIsWeb) {
+        return;
+      }
       FirebaseAnalytics.instance.logScreenView(
         screenName: page,
       );

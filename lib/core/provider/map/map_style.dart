@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:eqmonitor/core/provider/map/map_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -30,7 +31,10 @@ class MapStyle {
   Future<String> getStyle({
     required bool isDark,
     required ColorScheme scheme,
-  }) {
+  }) async{
+    if (kIsWeb) {
+      return 'https://map.eqmonitor.app/tiles/style.json';
+    }
     final colorScheme = isDark
         ? MapColorScheme.dark(colorScheme: scheme)
         : MapColorScheme.light(colorScheme: scheme);

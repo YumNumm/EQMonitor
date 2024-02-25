@@ -6,7 +6,10 @@
       "type": "dart",
       "request": "launch",
       "program": "lib/main.dart",
-      "args": []
+      "args": [
+        "--web-port",
+        "62130"
+      ]
     },
     {
       "name": "EQMonitor Release",

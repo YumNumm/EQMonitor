@@ -83,17 +83,6 @@ class MainMapView extends HookConsumerWidget {
         !images.intenistyIcon.isAllRendered() ||
         !images.intensityIconFill.isAllRendered() ||
         !hasTravelTimeDepthMapValue) {
-      log('stylePath.value: ${stylePath.value != null}');
-      log('images.hypocenterIcon: ${images.hypocenterIcon != null}');
-      log(
-        'images.hypocenterLowPreciseIcon: ${images.hypocenterLowPreciseIcon != null}',
-      );
-      log('images.intenistyIcon: ${images.intenistyIcon.isAllRendered()}');
-      log(
-        'images.intensityIconFill: ${images.intensityIconFill.isAllRendered()}',
-      );
-      log('hasTravelTimeDepthMapValue: $hasTravelTimeDepthMapValue');
-
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator.adaptive(),
