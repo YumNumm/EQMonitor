@@ -1,4 +1,4 @@
-name: eqmonitor
+name: eqmonitor_workspace
 repository: https://github.com/YumNumm/EQMonitor
 sdkPath: .fvm/flutter_sdk
 
@@ -33,5 +33,6 @@ scripts:
     exec: $PWD/util/shell/format.sh
 
 packages:
-  - .
+  - app
   - packages/*
+

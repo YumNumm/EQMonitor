@@ -1,0 +1,170 @@
+.crashlytics
+
+.env
+
+~$*
+
+*.ipa
+*.dSYM.zip
+
+vendor/*
+
+# Screenshot
+*.skp
+
+.VSCodeCounter/*
+
+obfuscate
+
+# Miscellaneous
+*.class
+*.lock
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Visual Studio Code related
+.classpath
+.project
+.settings/
+.vscode/
+
+# packages file containing multi-root paths
+.packages.generated
+
+# Flutter/Dart/Pub related
+**/doc/api/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+**/generated_plugin_registrant.dart
+.packages
+.pub-cache/
+.pub/
+build/
+flutter_*.png
+linked_*.ds
+unlinked.ds
+unlinked_spec.ds
+
+# Android related
+**/android/**/gradle-wrapper.jar
+.gradle/
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/**/GeneratedPluginRegistrant.java
+**/android/key.properties
+*.jks
+
+# iOS/XCode related
+**/ios/**/*.mode1v3
+**/ios/**/*.mode2v3
+**/ios/**/*.moved-aside
+**/ios/**/*.pbxuser
+**/ios/**/*.perspectivev3
+**/ios/**/*sync/
+**/ios/**/.sconsign.dblite
+**/ios/**/.tags*
+**/ios/**/.vagrant/
+**/ios/**/DerivedData/
+**/ios/**/Icon?
+**/ios/**/Pods/
+**/ios/**/.symlinks/
+**/ios/**/profile
+**/ios/**/xcuserdata
+**/ios/.generated/
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+**/ios/Flutter/flutter_assets/
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+# macOS
+**/Flutter/ephemeral/
+**/Pods/
+**/macos/Flutter/GeneratedPluginRegistrant.swift
+**/macos/Flutter/ephemeral
+**/xcuserdata/
+
+# Windows
+**/windows/flutter/generated_plugin_registrant.cc
+**/windows/flutter/generated_plugin_registrant.h
+
+# Linux
+**/linux/flutter/generated_plugin_registrant.cc
+**/linux/flutter/generated_plugin_registrant.h
+
+# Coverage
+coverage/
+
+# Symbols
+app.*.symbols
+
+# Exceptions to above rules.
+!**/ios/**/default.mode1v3
+!**/ios/**/default.mode2v3
+!**/ios/**/default.pbxuser
+!**/ios/**/default.perspectivev3
+!/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+!/dev/ci/**/Gemfile.lock
+
+# Web related
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Firebase Secret Files
+./android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+macos/Runner/GoogleService-Info.plist
+macos/Runner/GoogleService-Info.plist
+ios/GoogleService-Info.plist
+
+.envrc
+ios/production_net.yumnumm.eqmonitor_ios*
+macos/GoogleService-Info.plist
+
+# fastlane specific
+**/fastlane/report.xml
+
+# deliver temporary files
+**/fastlane/Preview.html
+
+# snapshot generated screenshots
+**/fastlane/screenshots
+
+# scan temporary files
+**/fastlane/test_output
+
+# app store connect api related file
+ios/*.p8
+
+*.pem
+
+# FVM Version Cache
+.fvm/

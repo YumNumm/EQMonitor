@@ -36,7 +36,7 @@ jobs:
 
       # https://github.com/kuhnroyal/flutter-fvm-config-action
       - name: Fetch flutter config
-        uses: kuhnroyal/flutter-fvm-config-action@v1
+        uses: kuhnroyal/flutter-fvm-config-action@v2
 
       # https://github.com/subosito/flutter-action
       - name: Setup flutter
@@ -53,25 +53,26 @@ jobs:
 
       - name: build_runner
         run: |
-          echo '${{ secrets.ENV }}' | base64 -d > .env
+          echo '${{ secrets.ENV }}' | base64 -d > app/.env
           melos generate
 
       - name: Accept Android License
         run: yes | flutter doctor --android-licenses
       - name: Extract keystore
         run: |
-          echo '${{ secrets.SIGNING_KEY }}' | base64 -d > android/app/key.jks
-          echo '${{ secrets.FIREBASE_ANDROID }}' | base64 -d > android/app/google-services.json
-          echo '${{ secrets.KEY_PROPERTIES }}' | base64 -d  > android/key.properties
+          echo '${{ secrets.SIGNING_KEY }}' | base64 -d > app/android/app/key.jks
+          echo '${{ secrets.FIREBASE_ANDROID }}' | base64 -d > app/android/app/google-services.json
+          echo '${{ secrets.KEY_PROPERTIES }}' | base64 -d  > app/android/key.properties
 
       - name: Build apk
+        working-directory: app
         run: flutter build apk --release
 
       - name: Upload artifact aab
         uses: actions/upload-artifact@v1.0.0
         with:
           name: release-android
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: app/build/app/outputs/flutter-apk/app-release.apk
 
       #-- Slack通知 --#
       # 成功
