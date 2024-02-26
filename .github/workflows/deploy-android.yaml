@@ -36,7 +36,7 @@ jobs:
 
       # https://github.com/kuhnroyal/flutter-fvm-config-action
       - name: Fetch flutter config
-        uses: kuhnroyal/flutter-fvm-config-action@v1
+        uses: kuhnroyal/flutter-fvm-config-action@v2
 
       # https://github.com/subosito/flutter-action
       - name: Setup flutter
@@ -65,13 +65,14 @@ jobs:
           echo '${{ secrets.KEY_PROPERTIES }}' | base64 -d  > android/key.properties
 
       - name: Build apk
+        working-directory: app
         run: flutter build apk --release
 
       - name: Upload artifact aab
         uses: actions/upload-artifact@v1.0.0
         with:
           name: release-android
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: app/build/app/outputs/flutter-apk/app-release.apk
 
       #-- Slack通知 --#
       # 成功

@@ -38,7 +38,7 @@ jobs:
         run: xcodebuild -version
 
       - name: Fetch flutter config
-        uses: kuhnroyal/flutter-fvm-config-action@v1
+        uses: kuhnroyal/flutter-fvm-config-action@v2
 
       # https://github.com/subosito/flutter-action
       - name: Setup flutter
@@ -62,20 +62,21 @@ jobs:
       - name: Cache Pods
         uses: actions/cache@v2
         with:
-          path: ios/Pods
+          path: app/ios/Pods
           key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pods-
 
       - name: Install CocoaPods
         run: |
-          cd ios
+          cd app/ios
           pod install
 
       - name: Get Firebase Configuration
-        run: echo '${{ secrets.FIREBASE_IOS }}' | base64 -d > ios/GoogleService-Info.plist
+        run: echo '${{ secrets.FIREBASE_IOS }}' | base64 -d > app/ios/GoogleService-Info.plist
 
       - name: Prebuild
+        working-directory: app
         run: flutter build ios --release --no-codesign
 
       - name: Upload to App Store Connect
@@ -90,6 +91,6 @@ jobs:
           APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_KEY }}
           LANG: ja_JP.UTF-8
         run: |
-          cd ios
+          cd app/ios
           echo '${{ secrets.APP_STORE_CONNECT_KEY }}' | base64 -d > AuthKey_HAZX33F4T7.p8
           fastlane beta
