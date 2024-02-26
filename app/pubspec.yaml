@@ -8,7 +8,6 @@ environment:
   sdk: ^3.1.5
 
 dependencies:
-  accessibility_tools: ^1.0.0
   adaptive_dialog: ^2.0.0
   animations: ^2.0.8
   app_settings: ^5.1.1
@@ -120,7 +119,6 @@ dev_dependencies:
   freezed: ^2.4.5
   go_router_builder: ^2.3.4
   json_serializable: ^6.7.1
-  melos: ^3.4.0
   pedantic_mono: ^1.24.0+1
   retrofit_generator: ^8.0.4
   riverpod_generator: ^2.3.7
