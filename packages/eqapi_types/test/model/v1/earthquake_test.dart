@@ -1,4 +1,5 @@
-import 'package:collection/collection.dart';
+import 'dart:convert';
+
 import 'package:eqapi_types/lib.dart';
 import 'package:test/test.dart';
 
@@ -70,44 +71,36 @@ void main() {
           expect(object.text, 'この地震による津波の心配はありません。');
           expect(object.maxIntensityRegionIds, [390]);
           expect(
-            object.intensityRegions,
-            [
-              {
-                'code': '390',
-                'name': '石川県能登',
-                'maxInt': '1',
-              }
-            ],
+            object.intensityRegions?.first,
+            const ObservedRegionIntensity(
+              code: '390',
+              name: '石川県能登',
+              intensity: JmaIntensity.one,
+            ),
           );
           expect(
-            object.intensityPrefectures,
-            [
-              {
-                'code': '17',
-                'name': '石川県',
-                'maxInt': '1',
-              }
-            ],
+            object.intensityPrefectures?.first,
+            const ObservedRegionIntensity(
+              code: '17',
+              name: '石川県',
+              intensity: JmaIntensity.one,
+            ),
           );
           expect(
-            object.intensityCities,
-            [
-              {
-                'code': '1720500',
-                'name': '珠洲市',
-                'maxInt': '1',
-              }
-            ],
+            object.intensityCities?.first,
+            const ObservedRegionIntensity(
+              code: '1720500',
+              name: '珠洲市',
+              intensity: JmaIntensity.one,
+            ),
           );
           expect(
-            object.intensityStations,
-            [
-              {
-                'code': '1720521',
-                'name': '珠洲市大谷町＊',
-                'maxInt': '1',
-              }
-            ],
+            object.intensityStations?.first,
+            const ObservedRegionIntensity(
+              code: '1720521',
+              name: '珠洲市大谷町＊',
+              intensity: JmaIntensity.one,
+            ),
           );
           expect(object.lpgmIntensityPrefectures, null);
           expect(object.lpgmIntensityRegions, null);
@@ -118,36 +111,10 @@ void main() {
         // Arrange
         final object = EarthquakeV1.fromJson(json);
         // Act
-        final json2 = object.toJson();
+        final json2 = jsonEncode(object.toJson());
         // Assert
-        expect(json2, json);
+        expect(json, jsonDecode(json2));
       });
-      test(
-        'intenistyCitiesの配列は、List<RegionIntensity>としてparseできること',
-        () {
-          // Act
-          final object = EarthquakeV1.fromJson(json);
-          // Assert
-          expect(
-            object.intensityCities,
-            isA<List<dynamic>>(),
-          );
-          final expected = object.intensityCities;
-          final parsedIntensityCities = expected
-              ?.map(
-                (e) =>
-                    ObservedRegionIntensity.fromJson(e as Map<String, dynamic>),
-              )
-              .toList();
-          parsedIntensityCities?.forEachIndexed((index, e) {
-            final expected =
-                object.intensityCities?[index] as Map<String, dynamic>;
-            expect(e.code, expected['code']);
-            expect(e.name, expected['name']);
-            expect(e.intensity?.type, expected['maxInt']);
-          });
-        },
-      );
     },
   );
 }
