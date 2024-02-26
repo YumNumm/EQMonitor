@@ -35,7 +35,7 @@ class NotificationSettingsViewModel extends _$NotificationSettingsViewModel {
     final topicNotifier = ref.read(fcmTopicManagerProvider.notifier);
     // 既に登録済みの場合は何もしない
     if (state.isVzse40Subscribed) {
-      return  Result.success(null);
+      return Result.success(null);
     }
     final result = await topicNotifier.registerToTopic(
       FcmBasicTopic(FcmTopics.vzse40),
@@ -50,7 +50,7 @@ class NotificationSettingsViewModel extends _$NotificationSettingsViewModel {
     final topicNotifier = ref.read(fcmTopicManagerProvider.notifier);
     // 登録されていない場合は何もしない
     if (!state.isVzse40Subscribed) {
-      return  Result.success(null);
+      return Result.success(null);
     }
     final result = await topicNotifier.unregisterFromTopic(
       FcmBasicTopic(FcmTopics.vzse40),
@@ -65,7 +65,7 @@ class NotificationSettingsViewModel extends _$NotificationSettingsViewModel {
     final topicNotifier = ref.read(fcmTopicManagerProvider.notifier);
     // 既に登録済みの場合は何もしない
     if (state.isNoticeSubscribed) {
-      return  Result.success(null);
+      return Result.success(null);
     }
     final result = await topicNotifier.registerToTopic(
       FcmBasicTopic(FcmTopics.notice),
@@ -80,7 +80,7 @@ class NotificationSettingsViewModel extends _$NotificationSettingsViewModel {
     final topicNotifier = ref.read(fcmTopicManagerProvider.notifier);
     // 登録されていない場合は何もしない
     if (!state.isNoticeSubscribed) {
-      return  Result.success(null);
+      return Result.success(null);
     }
     final result = await topicNotifier.unregisterFromTopic(
       FcmBasicTopic(FcmTopics.notice),
@@ -94,7 +94,7 @@ class NotificationSettingsViewModel extends _$NotificationSettingsViewModel {
 
 @freezed
 class NotificationSettingsState with _$NotificationSettingsState {
-   factory NotificationSettingsState({
+  factory NotificationSettingsState({
     required bool isNotificatioonPermissionAllowed,
 
     /// 地震・津波に関するお知らせ

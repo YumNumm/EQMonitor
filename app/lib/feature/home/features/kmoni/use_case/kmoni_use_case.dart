@@ -152,7 +152,6 @@ class KmoniUseCase {
     }
     return p;
   }
-
 }
 
 class KmoniIsolateArg {
