@@ -55,7 +55,7 @@ jobs:
 
       - name: Run build_runner
         run: |
-          echo '${{ secrets.ENV }}' | base64 -d > .env
+          echo '${{ secrets.ENV }}' | base64 -d > app/.env
           ln -s $FLUTTER_ROOT .fvm/flutter_sdk
           melos generate
 
