@@ -57,48 +57,30 @@ jobs:
         uses: kuhnroyal/flutter-fvm-config-action@v2
 
       # https://github.com/subosito/flutter-action
-      - name: Set up flutter
+      - name: Setup flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: ${{ env.FLUTTER_CHANNEL }}
-          cache: true
-          cache-key: ${{ env.FLUTTER_VERSION }}-${{ env.FLUTTER_CHANNEL }}
+          flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
+          channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
 
-      - name: Flutter version
-        run: flutter --version
-
-      - name: Cache pubspec dependencies
-        uses: actions/cache@v2
-        with:
-          path: |
-            ${{ env.FLUTTER_HOME }}/.pub-cache
-            **/.packages
-            **/.flutter-plugins
-            **/.flutter-plugin-dependencies
-            **/.dart_tool/package_config.json
-          key: build-pubspec-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: build-pubspec-
-
-      - name: Cache build runner
-        uses: actions/cache@v2
-        with:
-          path: |
-            **/.dart_tool/build
-          key: build-runner-${{ hashFiles('**/asset_graph.json') }}-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: build-runner-
-
-      - name: Install Melos
-        uses: bluefireteam/melos-action@v2
-
-      - name: Flutter dependencies install
-        run: flutter pub get
+      - name: Setup melos
+        run: |
+          ln -s $FLUTTER_ROOT .fvm/flutter_sdk
+          dart pub global activate melos
+          melos bootstrap
 
       - name: build_runner
         run: |
           echo '${{ secrets.ENV }}' | base64 -d > .env
-          ln -s $FLUTTER_ROOT .fvm/flutter_sdk
           melos generate
+
+      - name: Accept Android License
+        run: yes | flutter doctor --android-licenses
+      - name: Extract keystore
+        run: |
+          echo '${{ secrets.SIGNING_KEY }}' | base64 -d > app/android/app/key.jks
+          echo '${{ secrets.FIREBASE_ANDROID }}' | base64 -d > app/android/app/google-services.json
+          echo '${{ secrets.KEY_PROPERTIES }}' | base64 -d  > app/android/key.properties
 
       - name: Accept Android License
         run: yes | flutter doctor --android-licenses
@@ -108,18 +90,20 @@ jobs:
           echo '${{ secrets.SIGNING_KEY }}' | base64 -d > android/app/key.jks
           echo '${{ secrets.FIREBASE_ANDROID }}' | base64 -d > android/app/google-services.json
           echo '${{ secrets.KEY_PROPERTIES }}' | base64 -d  > android/key.properties
-          flutter build appbundle --release
 
       - name: Build APK
         if: ${{ matrix.target }} != "android-all" && ${{ matrix.target }} != "android-aab"
+        working-directory: app
         run: flutter build apk --release --target-platform=${{ matrix.target }}
 
       - name: Build APK (All Targets)
         if: ${{ matrix.target }} == "android-all"
+        working-directory: app
         run: flutter build apk --release
 
       - name: Build AAB
         if: ${{ matrix.target }} == "android-aab"
+        working-directory: app
         run: flutter build appbundle --release
 
       - name: Upload artifact
@@ -127,14 +111,14 @@ jobs:
         if: ${{ matrix.target }} != "android-aab"
         with:
           name: EQMonitor-${{ matrix.target }}.apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: app/build/app/outputs/flutter-apk/app-release.apk
 
       - name: Upload artifact (AAB)
         uses: actions/upload-artifact@v1.0.0
         if: ${{ matrix.target }} == "android-aab"
         with:
           name: EQMonitor-${{ matrix.target }}.aab
-          path: build/app/outputs/bundle/release/app-release.aab
+          path: app/build/app/outputs/bundle/release/app-release.aab
 
       - name: Release
         uses: softprops/action-gh-release@v1

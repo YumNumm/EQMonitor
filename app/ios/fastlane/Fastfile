@@ -1,0 +1,40 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Push a new beta build to TestFlight"
+  lane :beta do
+    app_store_connect_api_key(
+      key_id: "HAZX33F4T7",
+      issuer_id: "fd4cca56-716b-4f03-8e44-de72a03453db",
+      key_filepath: "./AuthKey_HAZX33F4T7.p8"
+    )
+    increment_build_number(
+      build_number: latest_testflight_build_number + 1,
+      xcodeproj: "Runner.xcodeproj",
+    )
+    # Step 2 - Download provisioning profiles and certificates
+    match(
+      readonly: true,
+    )
+
+    # Step 3 - Build the project
+    build_app(
+      archive_path: "../build/ios/archive/Runner.xcarchive",
+      export_method: "app-store",
+    )
+
+    # Step 4 - Upload the project
+    changelog = changelog_from_git_commits(
+      date_format: "%Y-%m-%d",
+      between: [last_git_tag, "HEAD"],
+      pretty: "- %s",
+      date_format: "short",
+      match_lightweight_tag: false,
+      merge_commit_filtering: "exclude_merges"
+    )
+    upload_to_testflight(
+      ipa: "./Runner.ipa",
+      changelog: changelog
+    )
+  end
+end
