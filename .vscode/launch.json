@@ -6,6 +6,7 @@
       "type": "dart",
       "request": "launch",
       "program": "lib/main.dart",
+      "cwd": "app",
       "args": [
         "--web-port",
         "62130"
@@ -16,6 +17,7 @@
       "type": "dart",
       "request": "launch",
       "program": "lib/main.dart",
+      "cwd": "app",
       "flutterMode": "release"
     },
     {
@@ -23,12 +25,14 @@
       "type": "dart",
       "request": "launch",
       "program": "lib/main.dart",
+      "cwd": "app",
       "flutterMode": "profile"
     },
     {
       "name": "Widgetbook Debug",
       "type": "dart",
       "request": "launch",
+      "cwd": "app",
       "program": "lib/widgetbook.dart",
     }
   ]

@@ -40,10 +40,11 @@ jobs:
 
       - name: build_runner
         run: |
-          echo '${{ secrets.ENV }}' | base64 -d > .env
+          echo '${{ secrets.ENV }}' | base64 -d > app/.env
           melos generate
 
       - name: Build web
+        working-directory: app
         run: flutter build web --release
 
       - name: Publish to Cloudflare Pages
@@ -52,7 +53,7 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: 4270d8a14dfc1f866629099a788c93e2
           projectName: eqmonitor-web
-          directory: ./build/web
+          directory: app/build/web
           # Optional: Enable this if you want to have GitHub Deployments triggered
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           branch: main
