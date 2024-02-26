@@ -102,7 +102,8 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
             .fromJmaIntensity(maxIntensity)
             .background
         : null;
-    final magnitude = item.magnitude;
+    // 5 -> 5.0, 5.123 -> 5.1
+    final magnitude = item.magnitude?.toStringAsFixed(1);
     final magnitudeCondition = item.magnitudeCondition;
     final trailingText = switch (null) {
       _ when isVolcano => '大規模な噴火',
@@ -135,7 +136,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
       trailing: Text(
         trailingText,
         style: theme.textTheme.labelLarge!.copyWith(
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.bold,
           fontFamily: FontFamily.jetBrainsMono,
           fontFamilyFallback: [FontFamily.notoSansJP],
         ),
