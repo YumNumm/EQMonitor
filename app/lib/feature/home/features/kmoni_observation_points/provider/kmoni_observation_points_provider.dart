@@ -12,7 +12,7 @@ List<KmoniObservationPoint> kmoniObservationPoints(
     throw UnimplementedError();
 
 Future<List<KmoniObservationPoint>> loadKmoniObservationPoints() async {
-  if(kIsWeb) {
+  if (kIsWeb) {
     return [];
   }
   final file = await rootBundle.loadString('assets/kmoni/kansokuten.csv');

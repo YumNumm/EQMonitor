@@ -10,7 +10,7 @@ part 'notification_token.g.dart';
 Future<NotificationTokenModel> notificationToken(
   NotificationTokenRef ref,
 ) async {
-  if(kIsWeb) {
+  if (kIsWeb) {
     throw UnimplementedError();
   }
   final messaging = ref.watch(firebaseMessagingProvider);
