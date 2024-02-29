@@ -47,6 +47,52 @@ void main() async {
         ),
       );
 
+  testWidgets("遠地地震の場合、'遠地地震'が表示されること(20210121212726)",
+      (WidgetTester tester) async {
+    // Arrange
+    final v1Extended = EarthquakeV1Extended(
+      earthquake: baseV1.copyWith(
+        headline: '''２１日２１時２３分ころ、海外で規模の大きな地震がありました。''',
+      ),
+      maxIntensityRegionNames: null,
+    );
+    // Act
+    await tester.pumpWidget(
+      buildWidget(
+        EarthquakeHistoryListTile(
+          item: v1Extended,
+        ),
+      ),
+    );
+    // Assert
+    expect(find.text('遠地\n地震'), findsOneWidget);
+  });
+  testWidgets(
+    '大規模な噴火の場合、(20210813033300)',
+    (WidgetTester tester) async {
+      // Arrange
+      final v1Extended = EarthquakeV1Extended(
+        earthquake: baseV1.copyWith(
+          text: '''
+この地震による日本への津波の影響はありません。
+令和４年３月８日１８時５０分頃（日本時間）にマナム火山で大規模な噴火が発生しました（ダーウィン航空路火山灰情報センター（ＶＡＡＣ）による）。
+（注１）本情報の冒頭に「海外で規模の大きな地震がありました。」や「震源地」とありますが、これは「遠地地震に関する情報」を作成する際に自動的に付与される文言です。実際には、規模の大きな地震は発生していない点に留意してください。
+（注２）火山噴火に伴う潮位変化の呼称については、今後検討していきますが、当面は防災対応の呼びかけとして「津波」と表記します。''',
+        ),
+        maxIntensityRegionNames: null,
+      );
+      // Act
+      await tester.pumpWidget(
+        buildWidget(
+          EarthquakeHistoryListTile(
+            item: v1Extended,
+          ),
+        ),
+      );
+      // Assert
+      expect(find.text('大規模な噴火'), findsOneWidget);
+    },
+  );
   group(
     'マグニチュード',
     () {

@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
@@ -23,6 +26,7 @@ import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_w
 import 'package:eqmonitor/feature/home/features/map/view/main_map_view.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -69,6 +73,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
             ref.read(fcmTopicManagerProvider.notifier).setup(),
             ref.read(ntpProvider.notifier).sync(),
             Future.doWhile(() async {
+              log('Rendering images...');
               final renderer = MapComponentsRenderer();
               final futures = <Future<void>>[
                 for (final type in [
@@ -162,6 +167,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
                   images.hypocenterLowPreciseIcon != null &&
                   images.intenistyIcon.isAllRendered() &&
                   images.intensityIconFill.isAllRendered()) {
+                unawaited(FirebaseCrashlytics.instance.log('画像のキャッシュ 成功'));
                 return false;
               }
               await Future<void>.delayed(const Duration(milliseconds: 1000));
