@@ -45,14 +45,14 @@ _$InformationV3Impl _$$InformationV3ImplFromJson(Map<String, dynamic> json) =>
               (v) => $enumDecode(_$AuthorEnumMap, v,
                   unknownValue: Author.unknown)),
           createdAt:
-              $checkedConvert('created_at', (v) => DateTime.parse(v as String)),
+              $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
           level: $checkedConvert('level',
               (v) => $enumDecode(_$LevelEnumMap, v, unknownValue: Level.info)),
           eventId: $checkedConvert('event_id', (v) => v as int?),
         );
         return val;
       },
-      fieldKeyMap: const {'createdAt': 'created_at', 'eventId': 'event_id'},
+      fieldKeyMap: const {'eventId': 'event_id'},
     );
 
 Map<String, dynamic> _$$InformationV3ImplToJson(_$InformationV3Impl instance) =>
@@ -61,7 +61,7 @@ Map<String, dynamic> _$$InformationV3ImplToJson(_$InformationV3Impl instance) =>
       'title': instance.title,
       'body': instance.body,
       'author': _$AuthorEnumMap[instance.author]!,
-      'created_at': instance.createdAt.toIso8601String(),
+      'createdAt': instance.createdAt.toIso8601String(),
       'level': _$LevelEnumMap[instance.level]!,
       'event_id': instance.eventId,
     };

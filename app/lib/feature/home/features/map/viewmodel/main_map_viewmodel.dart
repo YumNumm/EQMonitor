@@ -285,8 +285,10 @@ class MainMapViewModel extends _$MainMapViewModel {
   Future<void> updateImage({
     required String name,
     required Uint8List bytes,
-  }) async =>
-      _controller?.addImage(name, bytes);
+  }) async {
+    log('updateImage $name');
+    await  _controller?.addImage(name, bytes);
+  }
 
   // ignore: use_setters_to_change_properties
   void registerMapController(MaplibreMapController controller) {

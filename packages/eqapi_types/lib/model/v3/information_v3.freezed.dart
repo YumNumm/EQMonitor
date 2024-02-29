@@ -170,6 +170,7 @@ mixin _$InformationV3 {
   String get body => throw _privateConstructorUsedError;
   @JsonKey(unknownEnumValue: Author.unknown)
   Author get author => throw _privateConstructorUsedError;
+  @JsonKey(name: "createdAt")
   DateTime get createdAt => throw _privateConstructorUsedError;
   @JsonKey(unknownEnumValue: Level.info)
   Level get level => throw _privateConstructorUsedError;
@@ -192,7 +193,7 @@ abstract class $InformationV3CopyWith<$Res> {
       String title,
       String body,
       @JsonKey(unknownEnumValue: Author.unknown) Author author,
-      DateTime createdAt,
+      @JsonKey(name: "createdAt") DateTime createdAt,
       @JsonKey(unknownEnumValue: Level.info) Level level,
       int? eventId});
 }
@@ -264,7 +265,7 @@ abstract class _$$InformationV3ImplCopyWith<$Res>
       String title,
       String body,
       @JsonKey(unknownEnumValue: Author.unknown) Author author,
-      DateTime createdAt,
+      @JsonKey(name: "createdAt") DateTime createdAt,
       @JsonKey(unknownEnumValue: Level.info) Level level,
       int? eventId});
 }
@@ -329,7 +330,7 @@ class _$InformationV3Impl implements _InformationV3 {
       required this.title,
       required this.body,
       @JsonKey(unknownEnumValue: Author.unknown) required this.author,
-      required this.createdAt,
+      @JsonKey(name: "createdAt") required this.createdAt,
       @JsonKey(unknownEnumValue: Level.info) required this.level,
       required this.eventId});
 
@@ -346,6 +347,7 @@ class _$InformationV3Impl implements _InformationV3 {
   @JsonKey(unknownEnumValue: Author.unknown)
   final Author author;
   @override
+  @JsonKey(name: "createdAt")
   final DateTime createdAt;
   @override
   @JsonKey(unknownEnumValue: Level.info)
@@ -398,7 +400,7 @@ abstract class _InformationV3 implements InformationV3 {
       required final String title,
       required final String body,
       @JsonKey(unknownEnumValue: Author.unknown) required final Author author,
-      required final DateTime createdAt,
+      @JsonKey(name: "createdAt") required final DateTime createdAt,
       @JsonKey(unknownEnumValue: Level.info) required final Level level,
       required final int? eventId}) = _$InformationV3Impl;
 
@@ -415,6 +417,7 @@ abstract class _InformationV3 implements InformationV3 {
   @JsonKey(unknownEnumValue: Author.unknown)
   Author get author;
   @override
+  @JsonKey(name: "createdAt")
   DateTime get createdAt;
   @override
   @JsonKey(unknownEnumValue: Level.info)
