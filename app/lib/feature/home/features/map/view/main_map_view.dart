@@ -98,7 +98,7 @@ class MainMapView extends HookConsumerWidget {
           target: LatLng(35.681236, 139.767125),
           zoom: 3,
         ),
-        styleString: stylePath.value,
+        styleString: stylePath.value ?? '',
         onMapCreated: (controller) {
           mapController.value = controller;
           if (ref.read(debuggerProvider).isDebugger) {

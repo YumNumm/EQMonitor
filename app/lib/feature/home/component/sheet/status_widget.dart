@@ -35,7 +35,7 @@ class SheetStatusWidget extends ConsumerWidget {
             .read(kmoniViewModelProvider.notifier)
             .syncDelayWithKmoni();
         // showSnackbar
-        if (context.mounted) {
+        if (context.mounted && result != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(

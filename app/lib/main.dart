@@ -49,12 +49,20 @@ Future<void> main() async {
       talker
         ..handle(exception, error.stack, 'Uncaught fatal exception')
         ..log(exception.errors.toString());
+      final stackTrace = error.stack;
+      if (stackTrace != null) {
+        talker.log(stackTrace.toString());
+      }
     }
     talker.handle(error.exception, error.stack, 'Uncaught fatal exception');
   };
   PlatformDispatcher.instance.onError = (error, stack) {
     talker.handle(error, stack, 'Uncaught async exception');
     final exception = error;
+    log(
+      'Uncaught async exception: ${exception.runtimeType} $exception',
+      name: 'main',
+    );
     if (exception is ParallelWaitError) {
       talker
         ..log(exception.errors.toString())

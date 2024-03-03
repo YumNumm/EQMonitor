@@ -117,7 +117,7 @@ class KmoniViewModel extends _$KmoniViewModel {
     }
   }
 
-  Future<Duration> syncDelayWithKmoni() async {
+  Future<Duration?> syncDelayWithKmoni() async {
     final useCase = ref.read(kmoniUseCaseProvider);
     final talker = ref.read(talkerProvider);
     if (state.isDelayAdjusting) {
@@ -162,7 +162,7 @@ class KmoniViewModel extends _$KmoniViewModel {
         KmoniLog('遅延調整失敗 $e'),
       );
       state = state.copyWith(isDelayAdjusting: false);
-      rethrow;
+      return null;
     }
   }
 }
