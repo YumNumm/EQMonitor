@@ -94,9 +94,11 @@ class _InformationDataView extends HookConsumerWidget {
         (context, index) {
           if (index == data.length) {
             if (hasNext) {
-              return const Padding(
+              return const Center(
+                child: Padding(
                 padding: EdgeInsets.all(16),
                 child: CircularProgressIndicator.adaptive(),
+              ),
               );
             } else {
               return const Padding(

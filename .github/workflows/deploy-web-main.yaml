@@ -1,6 +1,8 @@
 name: Deploy Web (Main)
 on:
   push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:

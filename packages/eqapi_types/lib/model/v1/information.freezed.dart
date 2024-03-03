@@ -25,6 +25,7 @@ mixin _$InformationV1 {
       defaultValue: InformationAuthor.unknown)
   InformationAuthor get author => throw _privateConstructorUsedError;
   Map<String, dynamic> get body => throw _privateConstructorUsedError;
+  @JsonKey(name: 'created_at')
   DateTime get createdAt => throw _privateConstructorUsedError;
   int get id => throw _privateConstructorUsedError;
   @JsonKey(
@@ -52,7 +53,7 @@ abstract class $InformationV1CopyWith<$Res> {
           defaultValue: InformationAuthor.unknown)
       InformationAuthor author,
       Map<String, dynamic> body,
-      DateTime createdAt,
+      @JsonKey(name: 'created_at') DateTime createdAt,
       int id,
       @JsonKey(
           unknownEnumValue: InformationLevel.info,
@@ -130,7 +131,7 @@ abstract class _$$InformationV1ImplCopyWith<$Res>
           defaultValue: InformationAuthor.unknown)
       InformationAuthor author,
       Map<String, dynamic> body,
-      DateTime createdAt,
+      @JsonKey(name: 'created_at') DateTime createdAt,
       int id,
       @JsonKey(
           unknownEnumValue: InformationLevel.info,
@@ -201,7 +202,7 @@ class _$InformationV1Impl implements _InformationV1 {
           defaultValue: InformationAuthor.unknown)
       required this.author,
       required final Map<String, dynamic> body,
-      required this.createdAt,
+      @JsonKey(name: 'created_at') required this.createdAt,
       required this.id,
       @JsonKey(
           unknownEnumValue: InformationLevel.info,
@@ -228,6 +229,7 @@ class _$InformationV1Impl implements _InformationV1 {
   }
 
   @override
+  @JsonKey(name: 'created_at')
   final DateTime createdAt;
   @override
   final int id;
@@ -294,7 +296,7 @@ abstract class _InformationV1 implements InformationV1 {
           defaultValue: InformationAuthor.unknown)
       required final InformationAuthor author,
       required final Map<String, dynamic> body,
-      required final DateTime createdAt,
+      @JsonKey(name: 'created_at') required final DateTime createdAt,
       required final int id,
       @JsonKey(
           unknownEnumValue: InformationLevel.info,
@@ -314,6 +316,7 @@ abstract class _InformationV1 implements InformationV1 {
   @override
   Map<String, dynamic> get body;
   @override
+  @JsonKey(name: 'created_at')
   DateTime get createdAt;
   @override
   int get id;

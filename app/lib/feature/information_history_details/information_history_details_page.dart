@@ -86,7 +86,7 @@ class InformationHistoryDetailsPage extends HookConsumerWidget {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          '本アプリでは、気象庁による配信試験電文を通知お知らせしていません。',
+                          '本アプリでは、気象庁による試験電文の通知配信を行っていません。',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: theme.colorScheme.onErrorContainer,

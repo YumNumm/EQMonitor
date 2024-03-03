@@ -103,6 +103,31 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         jmaMap == null ||
         hypocenterIconRender == null ||
         path == null) {
+      // どれが条件を満たしていないのか表示
+      if (kDebugMode) {
+        return SafeArea(
+          child: Center(
+            child: Column(
+              children: [
+                if (earthquakeParams == null)
+                  const Text('earthquakeParams is null'),
+                if (!intensityIconData.isAllRendered())
+                  const Text('intensityIconData is not rendered'),
+                if (!intensityIconFillData.isAllRendered())
+                  const Text('intensityIconFillData is not rendered'),
+                if (!lpgmIntensityIconData.isAllRendered())
+                  const Text('lpgmIntensityIconData is not rendered'),
+                if (!lpgmIntensityIconFillData.isAllRendered())
+                  const Text('lpgmIntensityIconFillData is not rendered'),
+                if (jmaMap == null) const Text('jmaMap is null'),
+                if (hypocenterIconRender == null)
+                  const Text('hypocenterIconRender is null'),
+                if (path == null) const Text('path is null'),
+              ],
+            ),
+          ),
+        );
+      }
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator.adaptive(),

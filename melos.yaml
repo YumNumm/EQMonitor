@@ -32,6 +32,9 @@ scripts:
   format:
     exec: $PWD/util/shell/format.sh
 
+  clean-all:
+    run: melos clean &&  melos exec "flutter clean"
+
 packages:
   - app
   - packages/*

@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
@@ -23,6 +26,7 @@ import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_w
 import 'package:eqmonitor/feature/home/features/map/view/main_map_view.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -69,103 +73,117 @@ class _HomeBodyWidget extends HookConsumerWidget {
             ref.read(fcmTopicManagerProvider.notifier).setup(),
             ref.read(ntpProvider.notifier).sync(),
             Future.doWhile(() async {
-              final renderer = MapComponentsRenderer();
-              final futures = <Future<void>>[
-                for (final type in [
-                  IntensityIconType.small,
-                  IntensityIconType.smallWithoutText,
-                ]) ...[
-                  for (final intensity in JmaIntensity.values)
+              try {
+                final renderer = MapComponentsRenderer();
+                final futures = <Future<void>>[
+                  for (final type in [
+                    IntensityIconType.small,
+                    IntensityIconType.smallWithoutText,
+                  ]) ...[
+                    for (final intensity in JmaIntensity.values)
+                      renderer
+                          .renderIntensityIcon(
+                            context,
+                            intensity,
+                            type,
+                          )
+                          .then(
+                            (value) => switch (type) {
+                              IntensityIconType.small => ref
+                                  .read(intensityIconRenderProvider.notifier)
+                                  .onRendered(
+                                    value,
+                                    intensity,
+                                  ),
+                              IntensityIconType.smallWithoutText => ref
+                                  .read(
+                                    intensityIconFillRenderProvider.notifier,
+                                  )
+                                  .onRendered(
+                                    value,
+                                    intensity,
+                                  ),
+                              _ => null,
+                            },
+                          ),
+                    for (final intensity in JmaLgIntensity.values)
+                      renderer
+                          .renderLpgmIntensityIcon(
+                            context,
+                            intensity,
+                            type,
+                          )
+                          .then(
+                            (value) => switch (type) {
+                              IntensityIconType.small => ref
+                                  .read(
+                                    lpgmIntensityIconRenderProvider.notifier,
+                                  )
+                                  .onRendered(
+                                    value,
+                                    intensity,
+                                  ),
+                              IntensityIconType.smallWithoutText => ref
+                                  .read(
+                                    lpgmIntensityIconFillRenderProvider
+                                        .notifier,
+                                  )
+                                  .onRendered(
+                                    value,
+                                    intensity,
+                                  ),
+                              _ => null,
+                            },
+                          ),
+                  ],
+                  for (final type in HypocenterType.values)
                     renderer
-                        .renderIntensityIcon(
+                        .renderHypocenterIcon(
                           context,
-                          intensity,
                           type,
                         )
                         .then(
                           (value) => switch (type) {
-                            IntensityIconType.small => ref
-                                .read(intensityIconRenderProvider.notifier)
+                            HypocenterType.normal => ref
+                                .read(hypocenterIconRenderProvider.notifier)
                                 .onRendered(
                                   value,
-                                  intensity,
                                 ),
-                            IntensityIconType.smallWithoutText => ref
-                                .read(intensityIconFillRenderProvider.notifier)
-                                .onRendered(
-                                  value,
-                                  intensity,
-                                ),
-                            _ => null,
-                          },
-                        ),
-                  for (final intensity in JmaLgIntensity.values)
-                    renderer
-                        .renderLpgmIntensityIcon(
-                          context,
-                          intensity,
-                          type,
-                        )
-                        .then(
-                          (value) => switch (type) {
-                            IntensityIconType.small => ref
-                                .read(lpgmIntensityIconRenderProvider.notifier)
-                                .onRendered(
-                                  value,
-                                  intensity,
-                                ),
-                            IntensityIconType.smallWithoutText => ref
+                            HypocenterType.lowPrecise => ref
                                 .read(
-                                  lpgmIntensityIconFillRenderProvider.notifier,
+                                  hypocenterLowPreciseIconRenderProvider
+                                      .notifier,
                                 )
                                 .onRendered(
                                   value,
-                                  intensity,
                                 ),
-                            _ => null,
                           },
                         ),
-                ],
-                for (final type in HypocenterType.values)
-                  renderer
-                      .renderHypocenterIcon(
-                        context,
-                        type,
-                      )
-                      .then(
-                        (value) => switch (type) {
-                          HypocenterType.normal => ref
-                              .read(hypocenterIconRenderProvider.notifier)
-                              .onRendered(
-                                value,
-                              ),
-                          HypocenterType.lowPrecise => ref
-                              .read(
-                                hypocenterLowPreciseIconRenderProvider.notifier,
-                              )
-                              .onRendered(
-                                value,
-                              ),
-                        },
-                      ),
-              ];
-              await futures.wait;
-              // 画像のキャッシュが終わったかどうかを確認
-              final images = (
-                intenistyIcon: ref.read(intensityIconRenderProvider),
-                intensityIconFill: ref.read(intensityIconFillRenderProvider),
-                hypocenterIcon: ref.read(hypocenterIconRenderProvider),
-                hypocenterLowPreciseIcon:
-                    ref.read(hypocenterLowPreciseIconRenderProvider),
-              );
-              if (images.hypocenterIcon != null &&
-                  images.hypocenterLowPreciseIcon != null &&
-                  images.intenistyIcon.isAllRendered() &&
-                  images.intensityIconFill.isAllRendered()) {
-                return false;
+                ];
+                await futures.wait;
+                // 画像のキャッシュが終わったかどうかを確認
+                final images = (
+                  intenistyIcon: ref.read(intensityIconRenderProvider),
+                  intensityIconFill: ref.read(intensityIconFillRenderProvider),
+                  hypocenterIcon: ref.read(hypocenterIconRenderProvider),
+                  hypocenterLowPreciseIcon:
+                      ref.read(hypocenterLowPreciseIconRenderProvider),
+                );
+                if (images.hypocenterIcon != null &&
+                    images.hypocenterLowPreciseIcon != null &&
+                    images.intenistyIcon.isAllRendered() &&
+                    images.intensityIconFill.isAllRendered()) {
+                  unawaited(FirebaseCrashlytics.instance.log('画像のキャッシュ 成功'));
+                  return false;
+                }
+                await Future<void>.delayed(const Duration(milliseconds: 1000));
+                return true;
+              // ignore: avoid_catches_without_on_clauses
+              } catch (e) {
+                log('画像のキャッシュ 失敗: $e');
+                await Future<void>.delayed(const Duration(milliseconds: 1000));
+                return true;
               }
-              await Future<void>.delayed(const Duration(milliseconds: 1000));
-              return true;
             }),
           ).wait;
         });
@@ -314,9 +332,9 @@ class _Sheet extends StatelessWidget {
           ),
           if (kDebugMode)
             ListTile(
-              title: const Text('旧 地震履歴'),
+              title: const Text('新 地震履歴'),
               onTap: () =>
-                  const DeprecatedEarthquakeHistoryRoute().push<void>(context),
+                  const EarthquakeHistoryRoute().push<void>(context),
             ),
         ],
       ),

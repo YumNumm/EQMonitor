@@ -66,6 +66,11 @@ class MapComponentsRenderer {
     );
     return result;
   }
+
+  static Widget hypocenterIcon() => const CustomPaint(
+        painter: _HypocenterPainter(type: HypocenterType.normal),
+        size: Size(80, 80),
+      );
 }
 
 class _HypocenterPainter extends CustomPainter {
