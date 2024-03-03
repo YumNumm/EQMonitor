@@ -193,7 +193,7 @@ class MainMapViewModel extends _$MainMapViewModel {
       await changeHomeBoundaryWithAnimation(
         bounds: boundary ?? defaultBoundary,
       );
-    } on Exception catch(e) {
+    } on Exception catch (e) {
       log('error $e');
     }
   }
@@ -285,8 +285,10 @@ class MainMapViewModel extends _$MainMapViewModel {
   Future<void> updateImage({
     required String name,
     required Uint8List bytes,
-  }) async =>
-      _controller?.addImage(name, bytes);
+  }) async {
+    log('updateImage $name');
+    await _controller?.addImage(name, bytes);
+  }
 
   // ignore: use_setters_to_change_properties
   void registerMapController(MaplibreMapController controller) {
@@ -351,6 +353,7 @@ class MainMapViewModel extends _$MainMapViewModel {
   }) async {
     final controller = _controller;
     if (controller == null) {
+      print('MaplibreMapController is null');
       throw Exception('MaplibreMapController is null');
     }
     // 現在のホームポジションから変更がない場合は何もしない
