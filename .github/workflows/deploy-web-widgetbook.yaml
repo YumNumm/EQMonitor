@@ -3,8 +3,7 @@ on:
   push:
     paths:
       - 'app/**.dart'
-    paths-ignore:
-      - 'app/test/**'
+      - '!app/test/**'
   workflow_dispatch:
 
 jobs:
