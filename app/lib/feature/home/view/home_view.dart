@@ -332,9 +332,9 @@ class _Sheet extends StatelessWidget {
           ),
           if (kDebugMode)
             ListTile(
-              title: const Text('旧 地震履歴'),
+              title: const Text('新 地震履歴'),
               onTap: () =>
-                  const DeprecatedEarthquakeHistoryRoute().push<void>(context),
+                  const EarthquakeHistoryRoute().push<void>(context),
             ),
         ],
       ),
