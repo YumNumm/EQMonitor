@@ -1,5 +1,7 @@
 # Changelog
 
+## [v2.3.4](https://github.com/YumNumm/EQMonitor/compare/v2.3.3...v2.3.4) - 2024-03-03
+
 ## [v2.3.3](https://github.com/YumNumm/EQMonitor/compare/v2.3.2...v2.3.3) - 2024-03-03
 - API v3を_oldへ移行し、deprecatedとしてマーク by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/587
 - API v1 仮実装 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/589
