@@ -90,7 +90,7 @@ Future<Map<JmaIntensity, List<_MergedRegionIntensity>>> _calculator(
             return MapEntry(intensity, mergedPrefecture);
           });
         } else {
-          return prefectures.where((e) => e.intensity != null).groupListsBy((e) => e.intensity).map(
+          return prefectures.where((e) => e.intensity != null).groupListsBy((e) => e.intensity!).map(
                 (intensity, prefectures) => MapEntry(
                   intensity,
                   prefectures
