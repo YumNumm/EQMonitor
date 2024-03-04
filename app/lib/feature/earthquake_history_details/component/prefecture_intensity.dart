@@ -14,16 +14,11 @@ import 'package:sheet/route.dart';
 
 part 'prefecture_intensity.g.dart';
 
-class _Arg {
-  _Arg({
-    required this.cities,
-    required this.prefectures,
-    required this.stations,
-  });
-  final List<ObservedRegionIntensity>? cities;
-  final List<ObservedRegionIntensity> prefectures;
-  final List<ObservedRegionIntensity>? stations;
-}
+typedef _Arg = ({
+  List<ObservedRegionIntensity>? cities,
+  List<ObservedRegionIntensity> prefectures,
+  List<ObservedRegionIntensity>? stations,
+});
 
 @riverpod
 Future<Map<JmaIntensity, List<_MergedRegionIntensity>>> _calculator(
@@ -90,7 +85,10 @@ Future<Map<JmaIntensity, List<_MergedRegionIntensity>>> _calculator(
             return MapEntry(intensity, mergedPrefecture);
           });
         } else {
-          return prefectures.where((e) => e.intensity != null).groupListsBy((e) => e.intensity!).map(
+          return prefectures
+              .where((e) => e.intensity != null)
+              .groupListsBy((e) => e.intensity!)
+              .map(
                 (intensity, prefectures) => MapEntry(
                   intensity,
                   prefectures
@@ -125,7 +123,7 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
 
     final mergedPrefecturesFuture = ref.watch(
       _calculatorProvider(
-        _Arg(
+        (
           prefectures: item.intensityPrefectures!,
           cities: item.intensityCities,
           stations: item.intensityStations,

@@ -8,7 +8,7 @@ part of 'prefecture_intensity.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$calculatorHash() => r'70b1258776522fabb1a812bb29b97e00281d74e3';
+String _$calculatorHash() => r'8f639dd4d60bda645dfc32e57a8efe6ebb4d1e5e';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -43,7 +43,11 @@ class _CalculatorFamily extends Family<
 
   /// See also [_calculator].
   _CalculatorProvider call(
-    _Arg arg,
+    ({
+      List<ObservedRegionIntensity>? cities,
+      List<ObservedRegionIntensity> prefectures,
+      List<ObservedRegionIntensity>? stations
+    }) arg,
   ) {
     return _CalculatorProvider(
       arg,
@@ -79,7 +83,11 @@ class _CalculatorProvider extends AutoDisposeFutureProvider<
     Map<JmaIntensity, List<_MergedRegionIntensity>>> {
   /// See also [_calculator].
   _CalculatorProvider(
-    _Arg arg,
+    ({
+      List<ObservedRegionIntensity>? cities,
+      List<ObservedRegionIntensity> prefectures,
+      List<ObservedRegionIntensity>? stations
+    }) arg,
   ) : this._internal(
           (ref) => _calculator(
             ref as _CalculatorRef,
@@ -107,7 +115,11 @@ class _CalculatorProvider extends AutoDisposeFutureProvider<
     required this.arg,
   }) : super.internal();
 
-  final _Arg arg;
+  final ({
+    List<ObservedRegionIntensity>? cities,
+    List<ObservedRegionIntensity> prefectures,
+    List<ObservedRegionIntensity>? stations
+  }) arg;
 
   @override
   Override overrideWith(
@@ -152,7 +164,11 @@ class _CalculatorProvider extends AutoDisposeFutureProvider<
 mixin _CalculatorRef on AutoDisposeFutureProviderRef<
     Map<JmaIntensity, List<_MergedRegionIntensity>>> {
   /// The parameter `arg` of this provider.
-  _Arg get arg;
+  ({
+    List<ObservedRegionIntensity>? cities,
+    List<ObservedRegionIntensity> prefectures,
+    List<ObservedRegionIntensity>? stations
+  }) get arg;
 }
 
 class _CalculatorProviderElement extends AutoDisposeFutureProviderElement<
@@ -160,7 +176,11 @@ class _CalculatorProviderElement extends AutoDisposeFutureProviderElement<
   _CalculatorProviderElement(super.provider);
 
   @override
-  _Arg get arg => (origin as _CalculatorProvider).arg;
+  ({
+    List<ObservedRegionIntensity>? cities,
+    List<ObservedRegionIntensity> prefectures,
+    List<ObservedRegionIntensity>? stations
+  }) get arg => (origin as _CalculatorProvider).arg;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
