@@ -30,8 +30,8 @@ abstract class V1 {
 
     /// 0~1000
     @Query('depthGte') double? depthGte,
-    @Query('intensityLte') JmaIntensity? intensityLte,
-    @Query('intensityGte') JmaIntensity? intensityGte,
+    @Query('intensityLte') String? intensityLte,
+    @Query('intensityGte') String? intensityGte,
   });
 
   @GET('/v1/earthquake/region')
@@ -42,8 +42,8 @@ abstract class V1 {
     /// 0~10000
     @Query('offset') int offset = 0,
     @Query('regionCode') required String regionCode,
-    @Query('intensityLte') JmaIntensity? intensityLte,
-    @Query('intensityGte') JmaIntensity? intensityGte,
+    @Query('intensityLte') String? intensityLte,
+    @Query('intensityGte') String? intensityGte,
   });
 
   @GET('/v1/information')

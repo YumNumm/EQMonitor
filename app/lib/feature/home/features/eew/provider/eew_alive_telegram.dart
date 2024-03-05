@@ -50,9 +50,6 @@ class EewAliveTelegram extends _$EewAliveTelegram {
     List<EarthquakeHistoryItem>? previous,
     List<EarthquakeHistoryItem>? next,
   ) {
-    if (previous == null || next == null) {
-      return true;
-    }
     return !const ListEquality<EarthquakeHistoryItem>().equals(previous, next);
   }
 }

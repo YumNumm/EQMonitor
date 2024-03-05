@@ -16,6 +16,7 @@ import 'package:eqmonitor/widgetbook.directories.g.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
@@ -161,6 +162,21 @@ class WidgetbookApp extends ConsumerWidget {
             Devices.ios.iPhoneSE,
             Devices.ios.iPhone13,
           ],
+        ),
+        BuilderAddon(
+          name: 'Scaffold',
+          builder: (context, child) {
+            final scaffoldFinder = find.byType(Scaffold);
+            return scaffoldFinder.hasFound
+                ? child
+                : Scaffold(
+                    body: child,
+                  );
+          },
+        ),
+        BuilderAddon(
+          name: 'SafeArea',
+          builder: (context, child) => SafeArea(child: child),
         ),
         TimeDilationAddon(),
         TextScaleAddon(

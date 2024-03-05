@@ -28,8 +28,8 @@ class _V1 implements V1 {
     double? magnitudeGte,
     double? depthLte,
     double? depthGte,
-    JmaIntensity? intensityLte,
-    JmaIntensity? intensityGte,
+    String? intensityLte,
+    String? intensityGte,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -39,8 +39,8 @@ class _V1 implements V1 {
       r'magnitudeGte': magnitudeGte,
       r'depthLte': depthLte,
       r'depthGte': depthGte,
-      r'intensityLte': intensityLte?.name,
-      r'intensityGte': intensityGte?.name,
+      r'intensityLte': intensityLte,
+      r'intensityGte': intensityGte,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
@@ -74,16 +74,16 @@ class _V1 implements V1 {
     int limit = 10,
     int offset = 0,
     required String regionCode,
-    JmaIntensity? intensityLte,
-    JmaIntensity? intensityGte,
+    String? intensityLte,
+    String? intensityGte,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'limit': limit,
       r'offset': offset,
       r'regionCode': regionCode,
-      r'intensityLte': intensityLte?.name,
-      r'intensityGte': intensityGte?.name,
+      r'intensityLte': intensityLte,
+      r'intensityGte': intensityGte,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};

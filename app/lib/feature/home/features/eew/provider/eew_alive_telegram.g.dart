@@ -46,7 +46,7 @@ final eewAliveCheckerProvider = Provider<EewAliveChecker>.internal(
 );
 
 typedef EewAliveCheckerRef = ProviderRef<EewAliveChecker>;
-String _$eewAliveTelegramHash() => r'3ef1c9333903731f1e31962bd611a82a1e3e1ee0';
+String _$eewAliveTelegramHash() => r'df98e3c00d6f87479476d78191b09969589176dd';
 
 /// イベント終了していないEEW
 ///

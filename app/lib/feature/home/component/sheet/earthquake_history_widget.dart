@@ -1,6 +1,7 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/earthquake_history_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
 import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,11 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(earthquakeHistoryNotifierProvider);
+    final defaultEarthquakeHistoryNotifierProvider =
+        earthquakeHistoryNotifierProvider(const EarthquakeHistoryParameter());
+    final state = ref.watch(
+      defaultEarthquakeHistoryNotifierProvider,
+    );
     const loading = Center(
       child: Padding(
         padding: EdgeInsets.all(24),
@@ -33,7 +38,7 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
           ...state.when(
                 data: (data) {
                   // 地震情報を持つもののうち上から3つのみ表示
-                  final items = data.take(3).toList();
+                  final items = data.$1.take(3).toList();
                   return [
                     for (final item in items)
                       EarthquakeHistoryListTile(
@@ -47,7 +52,7 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
                   if (state.hasValue) {
                     final data = state.value!;
                     // 上から3つのみ表示
-                    final items = data.take(3).toList();
+                    final items = data.$1.take(3).toList();
 
                     return [
                       for (final item in items)
@@ -63,7 +68,7 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
                     ),
                     FilledButton.tonal(
                       onPressed: () async =>
-                          ref.refresh(earthquakeHistoryNotifierProvider),
+                          ref.refresh(defaultEarthquakeHistoryNotifierProvider),
                       child: const Text('再読み込み'),
                     ),
                   ];

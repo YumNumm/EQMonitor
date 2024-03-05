@@ -12,9 +12,9 @@ import 'package:eqmonitor/core/provider/config/earthquake_history/earthquake_his
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
-import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/event_id.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/earthquake_history_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/prefecture_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/prefecture_lpgm_intensity.dart';
@@ -43,12 +43,12 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
     final data = useState(_data);
     // earthquakeDataが変わったら再構築
     ref.listen(
-      earthquakeHistoryNotifierProvider,
+      earthquakeHistoryNotifierProvider(const EarthquakeHistoryParameter()),
       (previous, next) {
-        final previousItem = previous?.valueOrNull
-            ?.firstWhereOrNull((element) => element.eventId == _data.eventId);
-        final nextItem = next.valueOrNull
-            ?.firstWhereOrNull((element) => element.eventId == _data.eventId);
+        final previousItem = previous?.valueOrNull?.$1
+            .firstWhereOrNull((element) => element.eventId == _data.eventId);
+        final nextItem = next.valueOrNull?.$1
+            .firstWhereOrNull((element) => element.eventId == _data.eventId);
         if (nextItem == null) {
           return;
         }
@@ -210,7 +210,7 @@ class _Sheet extends StatelessWidget {
           _EarthquakeHypoInfoWidget(item: item),
           const Divider(),
           PrefectureIntensityWidget(item: item.v1),
-          if (item.lpgmIntensityPrefectures!= null)
+          if (item.lpgmIntensityPrefectures != null)
             PrefectureLpgmIntensityWidget(
               item: item,
             ),
@@ -527,8 +527,7 @@ class _EarthquakeCommentWidget extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         elevation: 1,
         child: Markdown(
-          data: comment
-              .toHalfWidth,
+          data: comment.toHalfWidth,
           selectable: true,
           softLineBreak: true,
           shrinkWrap: true,

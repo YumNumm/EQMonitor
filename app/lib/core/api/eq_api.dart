@@ -8,6 +8,11 @@ part 'eq_api.g.dart';
 @Riverpod(keepAlive: true)
 EqApi eqApi(EqApiRef ref) {
   final dio = ref.watch(dioProvider);
+  dio.options = dio.options.copyWith(
+    sendTimeout: const Duration(seconds: 10),
+    connectTimeout: const Duration(seconds: 10),
+    receiveTimeout: const Duration(seconds: 10),
+  );
   return EqApi(dio: dio);
 }
 

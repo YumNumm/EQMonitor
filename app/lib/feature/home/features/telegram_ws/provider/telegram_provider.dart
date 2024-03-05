@@ -4,7 +4,6 @@ import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/model/socket_status.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_socket_io.dart';
-import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'telegram_provider.g.dart';
@@ -32,9 +31,6 @@ class TelegramWs extends _$TelegramWs {
         talker.handle(error, stackTrace);
       }
     });
-    if (kDebugMode) {
-      requestSample();
-    }
     return stream.stream;
   }
 
