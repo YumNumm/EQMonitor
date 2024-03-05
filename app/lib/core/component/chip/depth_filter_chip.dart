@@ -40,7 +40,10 @@ class DepthFilterChip extends StatelessWidget {
       },
       label: (range.isAllSelected)
           ? const Text('震源の深さ')
-          : Text(range.toRangeString),
+          : Text(
+              range.toRangeString,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
       onDeleted: range.isAllSelected
           ? null
           : () => onChanged?.call(initialMin, initialMax),
@@ -91,7 +94,9 @@ class _DepthFilterModal extends HookWidget {
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: Text(
               '震源の深さ',
-              style: theme.textTheme.bodyLarge,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           const SizedBox(height: 24),
@@ -117,7 +122,9 @@ class _DepthFilterModal extends HookWidget {
           Center(
             child: Text(
               (min.value, max.value).toRangeString,
-              style: theme.textTheme.bodyLarge,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           const SizedBox(height: 16),
