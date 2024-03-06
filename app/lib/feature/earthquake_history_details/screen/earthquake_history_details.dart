@@ -135,18 +135,21 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                   Column(
                     children: [
                       // layer controller
-                      FloatingActionButton.small(
-                        heroTag: 'earthquake_history_details_layer_fab',
-                        tooltip: '地図の表示レイヤーを切り替える',
-                        onPressed: () =>
-                            showEarthquakeHistoryDetailConfigDialog(
-                          context,
-                          showCitySelector: data.value.intensityCities != null,
-                          hasLpgmIntensity: data.value.maxLpgmIntensity != null,
+                      if (data.value.maxIntensity != null)
+                        FloatingActionButton.small(
+                          heroTag: 'earthquake_history_details_layer_fab',
+                          tooltip: '地図の表示レイヤーを切り替える',
+                          onPressed: () =>
+                              showEarthquakeHistoryDetailConfigDialog(
+                            context,
+                            showCitySelector:
+                                data.value.intensityCities != null,
+                            hasLpgmIntensity:
+                                data.value.maxLpgmIntensity != null,
+                          ),
+                          elevation: 4,
+                          child: const Icon(Icons.layers),
                         ),
-                        elevation: 4,
-                        child: const Icon(Icons.layers),
-                      ),
                       FloatingActionButton.small(
                         heroTag: 'earthquake_history_details_fab',
                         tooltip: '表示領域を地図に合わせる',
