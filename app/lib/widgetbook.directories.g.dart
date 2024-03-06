@@ -23,6 +23,8 @@ import 'package:eqmonitor/widgetbook/feature/earthquake_history/ui/components/ea
     as _i8;
 import 'package:eqmonitor/widgetbook/feature/earthquake_history/ui/earthquake_history_screen.dart'
     as _i7;
+import 'package:eqmonitor/widgetbook/feature/earthquake_history_details/components/earthquake_hypo_info_widget.dart'
+    as _i9;
 import 'package:widgetbook/widgetbook.dart' as _i1;
 
 final directories = <_i1.WidgetbookNode>[
@@ -119,6 +121,23 @@ final directories = <_i1.WidgetbookNode>[
                   )
                 ],
               ),
+            ],
+          )
+        ],
+      ),
+      _i1.WidgetbookFolder(
+        name: 'earthquake_history_details',
+        children: [
+          _i1.WidgetbookFolder(
+            name: 'component',
+            children: [
+              _i1.WidgetbookLeafComponent(
+                name: 'EarthquakeHypoInfoWidget',
+                useCase: _i1.WidgetbookUseCase(
+                  name: 'EarthquakeHypoInfoWidget',
+                  builder: _i9.earthquakeHypoInfoWidget,
+                ),
+              )
             ],
           )
         ],

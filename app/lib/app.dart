@@ -2,9 +2,9 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/theme/custom_colors.dart';
-import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class App extends HookConsumerWidget {
@@ -58,13 +58,13 @@ class App extends HookConsumerWidget {
             colorScheme: lightColorScheme,
             extensions: [lightCustomColors],
             useMaterial3: true,
-            fontFamily: FontFamily.notoSansJP,
+            textTheme: GoogleFonts.notoSansJpTextTheme(),
           ),
           darkTheme: ThemeData(
             colorScheme: darkColorScheme,
             extensions: [darkCustomColors],
             useMaterial3: true,
-            fontFamily: FontFamily.notoSansJP,
+            textTheme: GoogleFonts.notoSansJpTextTheme(),
           ),
         );
       },
