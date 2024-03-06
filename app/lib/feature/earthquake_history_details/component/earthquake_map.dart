@@ -13,7 +13,7 @@ import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/inten
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/core/provider/map/map_style.dart';
-import 'package:eqmonitor/feature/earthquake_history_old/model/state/earthquake_history_item.dart';
+import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +45,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
     super.key,
   });
 
-  final EarthquakeHistoryItem item;
+  final EarthquakeV1Extended item;
   final bool showIntensityIcon;
   final void Function(void Function() func) registerNavigateToHome;
 
@@ -68,9 +68,6 @@ class EarthquakeMapWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final earthquake = item.earthquake;
-    final intensity = earthquake.intensity;
-
     final colorModel = ref.watch(intensityColorProvider);
     final earthquakeParams =
         ref.watch(jmaParameterProvider).valueOrNull?.earthquake;
@@ -104,30 +101,6 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         hypocenterIconRender == null ||
         path == null) {
       // どれが条件を満たしていないのか表示
-      if (kDebugMode) {
-        return SafeArea(
-          child: Center(
-            child: Column(
-              children: [
-                if (earthquakeParams == null)
-                  const Text('earthquakeParams is null'),
-                if (!intensityIconData.isAllRendered())
-                  const Text('intensityIconData is not rendered'),
-                if (!intensityIconFillData.isAllRendered())
-                  const Text('intensityIconFillData is not rendered'),
-                if (!lpgmIntensityIconData.isAllRendered())
-                  const Text('lpgmIntensityIconData is not rendered'),
-                if (!lpgmIntensityIconFillData.isAllRendered())
-                  const Text('lpgmIntensityIconFillData is not rendered'),
-                if (jmaMap == null) const Text('jmaMap is null'),
-                if (hypocenterIconRender == null)
-                  const Text('hypocenterIconRender is null'),
-                if (path == null) const Text('path is null'),
-              ],
-            ),
-          ),
-        );
-      }
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator.adaptive(),
@@ -137,9 +110,9 @@ class EarthquakeMapWidget extends HookConsumerWidget {
 
     final itemCalcurateFutureing = useMemoized(
       () {
-        return _compute(colorModel, earthquake, earthquakeParams);
+        return _compute(colorModel, item, earthquakeParams);
       },
-      [earthquake, jmaMap],
+      [item, jmaMap],
     );
     final itemCalcurateFuture = useFuture(itemCalcurateFutureing);
     final result = itemCalcurateFuture.data;
@@ -166,7 +139,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
     ) = result;
     final bbox = useMemoized(
       () {
-        final maxInt = intensity?.maxInt;
+        final maxInt = item.maxIntensity;
         if (maxInt == null || regionsItem == null) {
           return null;
         }
@@ -183,10 +156,10 @@ class EarthquakeMapWidget extends HookConsumerWidget {
             .toList();
         var bbox = bboxs.marge();
         // 震源地を含める
-        final hypocenter = earthquake.earthquake?.hypocenter.coordinate;
-        if (hypocenter != null) {
+        final (latitude, longitude) = (item.latitude, item.longitude);
+        if (latitude != null && longitude != null) {
           bbox = bbox.add(
-            jma_map.LatLng(lat: hypocenter.lat, lng: hypocenter.lon),
+            jma_map.LatLng(lat: latitude, lng: longitude),
           );
         }
         return bbox;
@@ -199,10 +172,10 @@ class EarthquakeMapWidget extends HookConsumerWidget {
     final cameraUpdate = useMemoized(
       () {
         if (bbox == null) {
-          final hypocenter = earthquake.earthquake?.hypocenter.coordinate;
-          if (hypocenter != null) {
+          final (latitude, longitude) = (item.latitude, item.longitude);
+          if (latitude != null && longitude != null) {
             return CameraUpdate.newLatLngZoom(
-              map_libre.LatLng(hypocenter.lat, hypocenter.lon),
+              map_libre.LatLng(latitude, longitude),
               2,
             );
           } else {
@@ -229,13 +202,13 @@ class EarthquakeMapWidget extends HookConsumerWidget {
           top: 10,
         );
       },
-      [bbox, earthquake],
+      [bbox, item],
     );
 
     // * Display mode related
     List<_Action> getActions(EarthquakeHistoryDetailConfig config) => [
           _HypocenterAction(
-            earthquake: earthquake,
+            earthquake: item,
           ),
           if (config.showingLpgmIntensity) ...[
             if (config.intensityFillMode != IntensityFillMode.none)
@@ -332,8 +305,8 @@ class EarthquakeMapWidget extends HookConsumerWidget {
       child: MaplibreMap(
         initialCameraPosition: CameraPosition(
           target: map_libre.LatLng(
-            earthquake.earthquake?.hypocenter.coordinate?.lat ?? 35,
-            earthquake.earthquake?.hypocenter.coordinate?.lon ?? 139,
+            item.latitude ?? 35,
+            item.longitude ?? 139,
           ),
           zoom: 7,
         ),
@@ -403,7 +376,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
             JmaIntensity?,
             List<
                 ({
-                  RegionIntensity item,
+                  ObservedRegionIntensity item,
                   EarthquakeParameterStationItem? param
                 })>>?,
         List<
@@ -416,21 +389,21 @@ class EarthquakeMapWidget extends HookConsumerWidget {
             JmaLgIntensity?,
             List<
                 ({
-                  RegionIntensity item,
+                  ObservedRegionLpgmIntensity item,
                   EarthquakeParameterStationItem? param
                 })>>?
       )> _compute(
     IntensityColorModel colorModel,
-    EarthquakeData earthquake,
+    EarthquakeV1Extended earthquake,
     EarthquakeParameter earthquakeParams,
-  ) {
+  ) async {
     return compute(
       (arg) {
         final earthquake = arg.$1;
         final earthquakeParams = arg.$2;
         final colorModel = arg.$3;
-        final regionsItem = earthquake.intensity?.regions
-            .groupListsBy((e) => e.maxInt)
+        final regionsItem = earthquake.intensityRegions
+            ?.groupListsBy((e) => e.intensity)
             .entries
             .where((e) => e.key != null)
             .map(
@@ -441,8 +414,8 @@ class EarthquakeMapWidget extends HookConsumerWidget {
               ),
             )
             .toList();
-        final citiesItem = earthquake.intensity?.cities
-            ?.groupListsBy((e) => e.maxInt)
+        final citiesItem = earthquake.intensityCities
+            ?.groupListsBy((e) => e.intensity)
             .entries
             .where((e) => e.key != null)
             .map(
@@ -455,7 +428,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
             .toList();
 
         final stationsItem = () {
-          final stations = earthquake.intensity?.stations;
+          final stations = earthquake.intensityStations;
           if (stations == null) {
             return null;
           }
@@ -476,12 +449,12 @@ class EarthquakeMapWidget extends HookConsumerWidget {
             ),
           );
           final grouped =
-              stationsParamMerged.groupListsBy((e) => e.item.maxInt);
+              stationsParamMerged.groupListsBy((e) => e.item.intensity);
           return grouped;
         }();
 
-        final regionsLpgmItem = earthquake.lgIntensity?.regions
-            .groupListsBy((e) => e.maxLgInt)
+        final regionsLpgmItem = earthquake.lpgmIntensityRegions
+            ?.groupListsBy((e) => e.lpgmIntensity)
             .entries
             .where((e) => e.key != null)
             .map(
@@ -493,7 +466,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
             )
             .toList();
         final stationsLpgmItem = () {
-          final stations = earthquake.lgIntensity?.stations;
+          final stations = earthquake.lpgmIntenstiyStations;
           if (stations == null) {
             return null;
           }
@@ -514,7 +487,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
             ),
           );
           final grouped =
-              stationsParamMerged.groupListsBy((e) => e.item.maxLgInt);
+              stationsParamMerged.groupListsBy((e) => e.item.lpgmIntensity);
           return grouped;
         }();
         return (
@@ -687,9 +660,13 @@ class _StationAction extends _Action {
     required this.colorModel,
   });
 
-  final Map<JmaIntensity?,
-          List<({RegionIntensity item, EarthquakeParameterStationItem? param})>>
-      stations;
+  final Map<
+      JmaIntensity?,
+      List<
+          ({
+            ObservedRegionIntensity item,
+            EarthquakeParameterStationItem? param
+          })>> stations;
   final IntensityColorModel colorModel;
 
   @override
@@ -833,62 +810,58 @@ class _HypocenterAction extends _Action {
     required this.earthquake,
   });
 
-  final EarthquakeData earthquake;
+  final EarthquakeV1Extended earthquake;
 
   @override
   Future<void> init(map_libre.MaplibreMapController controller) async {
     /// 震源地
-    final hypocenter = earthquake.earthquake?.hypocenter;
-    if (hypocenter != null) {
-      final coord = hypocenter.coordinate;
-      if (coord != null) {
-        await controller.setSymbolIconAllowOverlap(true);
-        await controller.setSymbolIconIgnorePlacement(true);
-        await controller.addGeoJsonSource('hypocenter', {
-          'type': 'FeatureCollection',
-          'features': [
-            {
-              'type': 'Feature',
-              'geometry': {
-                'type': 'Point',
-                'coordinates': [coord.lon, coord.lat],
-              },
-              'properties': {
-                'magnitude':
-                    earthquake.earthquake?.magnitude.value.toString() ??
-                        earthquake.earthquake?.magnitude.condition ??
-                        '調査中',
-              },
-            }
+    final (latitude, longitude) = (earthquake.latitude, earthquake.longitude);
+    if (latitude != null && longitude != null) {
+      await controller.setSymbolIconAllowOverlap(true);
+      await controller.setSymbolIconIgnorePlacement(true);
+      await controller.addGeoJsonSource('hypocenter', {
+        'type': 'FeatureCollection',
+        'features': [
+          {
+            'type': 'Feature',
+            'geometry': {
+              'type': 'Point',
+              'coordinates': [longitude, latitude],
+            },
+            'properties': {
+              'magnitude': earthquake.magnitude?.toString() ??
+                  earthquake.magnitudeCondition ??
+                  '調査中',
+            },
+          }
+        ],
+      });
+      await controller.addSymbolLayer(
+        'hypocenter',
+        'hypocenter',
+        const SymbolLayerProperties(
+          iconImage: 'hypocenter',
+          iconSize: [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            3,
+            0.3,
+            20,
+            1,
           ],
-        });
-        await controller.addSymbolLayer(
-          'hypocenter',
-          'hypocenter',
-          const SymbolLayerProperties(
-            iconImage: 'hypocenter',
-            iconSize: [
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              3,
-              0.3,
-              20,
-              1,
-            ],
-            iconOpacity: [
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              6,
-              1.0,
-              10,
-              0.8,
-            ],
-            iconAllowOverlap: true,
-          ),
-        );
-      }
+          iconOpacity: [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            6,
+            1.0,
+            10,
+            0.8,
+          ],
+          iconAllowOverlap: true,
+        ),
+      );
     }
   }
 
@@ -976,9 +949,13 @@ class _StationIntensityLpgmAction extends _Action {
     required this.colorModel,
   });
 
-  final Map<JmaLgIntensity?,
-          List<({RegionIntensity item, EarthquakeParameterStationItem? param})>>
-      stations;
+  final Map<
+      JmaLgIntensity?,
+      List<
+          ({
+            ObservedRegionLpgmIntensity item,
+            EarthquakeParameterStationItem? param
+          })>> stations;
   final IntensityColorModel colorModel;
 
   static const sourceName = 'station-lpgm-intensity';

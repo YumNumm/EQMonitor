@@ -16,6 +16,7 @@ import 'package:eqmonitor/core/util/event_id.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
+import 'package:eqmonitor/feature/earthquake_history_details/component/earthquake_map.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/prefecture_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/prefecture_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
@@ -72,14 +73,12 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
     return Scaffold(
       body: Stack(
         children: [
-          /*
-
           EarthquakeMapWidget(
             item: data.value,
             showIntensityIcon: true,
             registerNavigateToHome: (func) =>
                 navigateToHomeFunction.value = func,
-          ), */
+          ),
           SheetFloatingActionButtons(
             hasAppBar: false,
             controller: sheetController,
@@ -248,12 +247,13 @@ class _EarthquakeHypoInfoWidget extends HookConsumerWidget {
       ),
       [item.epicenterCode],
     );
+    /*
     final hypoDetailName = useMemoized(
       () => codeTable.areaEpicenterDetail.items.firstWhereOrNull(
         (e) => int.tryParse(e.code) == item.epicenterDetailCode,
       ),
       [item.epicenterDetailCode],
-    );
+    );*/
 
     final maxIntensityWidget = maxIntensity != null
         ? Column(

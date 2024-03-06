@@ -4,6 +4,7 @@ import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
 import 'package:eqmonitor/core/component/widget/dio_exception_text.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
@@ -195,7 +196,8 @@ class _SliverListBody extends HookConsumerWidget {
             final item = data.$1[index];
             return EarthquakeHistoryListTile(
               item: item,
-              onTap: () {},
+              onTap: () => EarthquakeHistoryDetailsRoute($extra: item)
+                  .push<void>(context),
             );
           },
         ),

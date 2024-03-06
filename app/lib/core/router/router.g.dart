@@ -11,7 +11,6 @@ part of 'router.dart';
 List<RouteBase> get $appRoutes => [
       $setupRoute,
       $earthquakeHistoryRoute,
-      $deprecatedEarthquakeHistoryRoute,
       $earthquakeHistoryDetailsRoute,
       $informationHistoryRoute,
       $informationHistoryDetailsRoute,
@@ -67,30 +66,6 @@ extension $EarthquakeHistoryRouteExtension on EarthquakeHistoryRoute {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $deprecatedEarthquakeHistoryRoute => GoRouteData.$route(
-      path: '/deprecated-earthquake-history',
-      factory: $DeprecatedEarthquakeHistoryRouteExtension._fromState,
-    );
-
-extension $DeprecatedEarthquakeHistoryRouteExtension
-    on DeprecatedEarthquakeHistoryRoute {
-  static DeprecatedEarthquakeHistoryRoute _fromState(GoRouterState state) =>
-      const DeprecatedEarthquakeHistoryRoute();
-
-  String get location => GoRouteData.$location(
-        '/deprecated-earthquake-history',
-      );
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
 RouteBase get $earthquakeHistoryDetailsRoute => GoRouteData.$route(
       path: '/earthquake-history-details',
       factory: $EarthquakeHistoryDetailsRouteExtension._fromState,
@@ -100,7 +75,7 @@ extension $EarthquakeHistoryDetailsRouteExtension
     on EarthquakeHistoryDetailsRoute {
   static EarthquakeHistoryDetailsRoute _fromState(GoRouterState state) =>
       EarthquakeHistoryDetailsRoute(
-        $extra: state.extra as EarthquakeHistoryItem,
+        $extra: state.extra as EarthquakeV1Extended,
       );
 
   String get location => GoRouteData.$location(

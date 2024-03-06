@@ -161,8 +161,7 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
                   );
                   final title = switch (intensity) {
                     JmaIntensity.fiveUpperNoInput => '震度5弱以上未入電',
-                    _ =>
-                      '震度${intensity.type.replaceAll("+", "強").replaceAll("-", "弱")}'
+                    _ => '震度$intensity'
                   };
                   return ListTile(
                     titleAlignment: ListTileTitleAlignment.titleHeight,
@@ -229,8 +228,7 @@ class _PrefectureModalBottomSheet extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "震度${intensity.type.replaceAll("!5-", "震度5弱以上未入電").replaceAll('+', '強').replaceAll('-', '弱')}"
-          'の地域',
+          '震度$intensityの地域',
         ),
       ),
       body: ListView(

@@ -95,12 +95,13 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
           (final int depth) => '深さ ${depth}km',
           _ => '',
         };
-
+    final intensityColorState = ref.watch(intensityColorProvider);
     final intensityColor = maxIntensity != null
-        ? ref
-            .watch(intensityColorProvider)
-            .fromJmaIntensity(maxIntensity)
-            .background
+        ? intensityColorState.fromJmaIntensity(maxIntensity).background
+        : null;
+    final maxLpgmIntensity = item.maxLpgmIntensity;
+    final lpgmIntensityColor = maxLpgmIntensity != null
+        ? intensityColorState.fromJmaLgIntensity(maxLpgmIntensity).background
         : null;
     // 5 -> 5.0, 5.123 -> 5.1
     final magnitude = item.magnitude?.toStringAsFixed(1);
@@ -111,6 +112,13 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
       _ when magnitude != null => 'M$magnitude',
       _ => '',
     };
+    final chips = <Widget>[
+      if (maxLpgmIntensity != null && maxLpgmIntensity != JmaLgIntensity.zero)
+        Chip(
+          label: Text('最大長周期地震動階級 $maxLpgmIntensity'),
+          padding: EdgeInsets.zero,
+        ),
+    ];
     return ListTile(
       tileColor: showBackgroundColor ? intensityColor?.withOpacity(0.4) : null,
       onTap: onTap,
@@ -120,7 +128,13 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
           fontWeight: FontWeight.bold,
         ),
       ),
-      subtitle: Text(subTitle),
+      subtitle: Wrap(
+        spacing: 4,
+        children: [
+          Text(subTitle),
+          ...chips,
+        ],
+      ),
       leading: isFarEarthquake
           ? JmaIntensityIcon(
               intensity: JmaIntensity.fiveLower,
