@@ -87,51 +87,58 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IgnorePointer(
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 250),
-                      child: BorderedContainer(
-                        key: ValueKey(
-                          (config, maxIntensity, maxLgIntensity),
-                        ),
-                        margin: const EdgeInsets.all(4),
-                        padding: const EdgeInsets.all(4),
-                        borderRadius: BorderRadius.circular((25 / 5) + 5),
-                        child: Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: [
-                            if (maxIntensity != null)
-                              if (config.showingLpgmIntensity &&
-                                  maxLgIntensity != null)
-                                for (final intensity in [
-                                  ...JmaLgIntensity.values,
-                                ].where(
-                                  (e) =>
-                                      e != JmaLgIntensity.zero &&
-                                      e <= maxLgIntensity,
-                                ))
-                                  JmaLgIntensityIcon(
-                                    type: IntensityIconType.filled,
-                                    intensity: intensity,
-                                    size: 25,
-                                  )
-                              else
-                                for (final intensity in [
-                                  ...JmaIntensity.values,
-                                ].where(
-                                  (e) => e <= maxIntensity,
-                                ))
-                                  JmaIntensityIcon(
-                                    type: IntensityIconType.filled,
-                                    intensity: intensity,
-                                    size: 25,
-                                  ),
-                          ],
+                  if (maxIntensity != null)
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        child: IgnorePointer(
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 250),
+                            child: BorderedContainer(
+                              key: ValueKey(
+                                (config, maxIntensity, maxLgIntensity),
+                              ),
+                              margin: const EdgeInsets.all(4),
+                              padding: const EdgeInsets.all(4),
+                              borderRadius: BorderRadius.circular((25 / 5) + 5),
+                              child: Wrap(
+                                spacing: 8,
+                                runSpacing: 8,
+                                children: [
+                                  if (config.showingLpgmIntensity &&
+                                      maxLgIntensity != null)
+                                    for (final intensity in [
+                                      ...JmaLgIntensity.values,
+                                    ].where(
+                                      (e) =>
+                                          e != JmaLgIntensity.zero &&
+                                          e <= maxLgIntensity,
+                                    ))
+                                      JmaLgIntensityIcon(
+                                        type: IntensityIconType.filled,
+                                        intensity: intensity,
+                                        size: 25,
+                                      )
+                                  else
+                                    for (final intensity in [
+                                      ...JmaIntensity.values,
+                                    ].where(
+                                      (e) => e <= maxIntensity,
+                                    ))
+                                      JmaIntensityIcon(
+                                        type: IntensityIconType.filled,
+                                        intensity: intensity,
+                                        size: 25,
+                                      ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
+                    )
+                  else
+                    const Spacer(),
                   Column(
                     children: [
                       // layer controller
