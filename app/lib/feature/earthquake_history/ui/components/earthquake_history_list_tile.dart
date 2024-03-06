@@ -100,9 +100,6 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
         ? intensityColorState.fromJmaIntensity(maxIntensity).background
         : null;
     final maxLpgmIntensity = item.maxLpgmIntensity;
-    final lpgmIntensityColor = maxLpgmIntensity != null
-        ? intensityColorState.fromJmaLgIntensity(maxLpgmIntensity).background
-        : null;
     // 5 -> 5.0, 5.123 -> 5.1
     final magnitude = item.magnitude?.toStringAsFixed(1);
     final magnitudeCondition = item.magnitudeCondition;
