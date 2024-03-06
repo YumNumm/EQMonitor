@@ -247,13 +247,12 @@ class _EarthquakeHypoInfoWidget extends HookConsumerWidget {
       ),
       [item.epicenterCode],
     );
-    /*
     final hypoDetailName = useMemoized(
       () => codeTable.areaEpicenterDetail.items.firstWhereOrNull(
         (e) => int.tryParse(e.code) == item.epicenterDetailCode,
       ),
       [item.epicenterDetailCode],
-    );*/
+    );
 
     final maxIntensityWidget = maxIntensity != null
         ? Column(
@@ -269,7 +268,7 @@ class _EarthquakeHypoInfoWidget extends HookConsumerWidget {
             ],
           )
         : null;
-    // 「[MaxInt, 震源地, 規模」
+    // 「MaxInt, 震源地, 規模」
     final hypoWidget = Row(
       textBaseline: TextBaseline.ideographic,
       mainAxisSize: MainAxisSize.min,
@@ -284,10 +283,25 @@ class _EarthquakeHypoInfoWidget extends HookConsumerWidget {
         ),
         const SizedBox(width: 4),
         Flexible(
-          child: Text(
-            hypoName?.name ?? '不明',
-            style: textTheme.headlineMedium!.copyWith(
-              fontWeight: FontWeight.w900,
+          child: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: hypoName?.name ?? '不明',
+                  style: textTheme.headlineMedium!.copyWith(
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                if (hypoDetailName != null) ...[
+                  const TextSpan(text: ' '),
+                  TextSpan(
+                    text: '(${hypoDetailName.name})',
+                    style: textTheme.headlineSmall!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
         ),
@@ -460,7 +474,7 @@ class _EarthquakeHypoInfoWidget extends HookConsumerWidget {
     );
     final body = Wrap(
       spacing: 8,
-      crossAxisAlignment: WrapCrossAlignment.center,
+      crossAxisAlignment: WrapCrossAlignment.end,
       alignment: WrapAlignment.center,
       children: [
         const Row(),

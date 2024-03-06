@@ -120,6 +120,9 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
+    if (item.intensityPrefectures == null) {
+      return const SizedBox.shrink();
+    }
 
     final mergedPrefecturesFuture = ref.watch(
       _calculatorProvider(
