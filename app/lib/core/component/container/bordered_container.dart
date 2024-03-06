@@ -58,8 +58,7 @@ class BorderedContainer extends StatelessWidget {
       // border
       shape: RoundedRectangleBorder(
         side: BorderSide(
-          color: theme.colorScheme.onSurface,
-          width: 0,
+          color: theme.colorScheme.onSurface.withOpacity(0.2),
         ),
         borderRadius: borderRadius,
       ),
