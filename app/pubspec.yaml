@@ -46,7 +46,7 @@ dependencies:
   flutter_xlider: ^3.5.0
   freezed_annotation: ^2.4.1
   go_router: ^11.1.4
-  google_fonts: ^6.2.0
+  google_fonts: ^6.2.1
   group_button: ^5.3.4
   hooks_riverpod: ^2.4.10
   image: ^4.1.7
