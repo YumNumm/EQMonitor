@@ -6,9 +6,9 @@ import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_c
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
-import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:jma_code_table_types/jma_code_table_types.dart';
@@ -73,7 +73,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
       ) =>
         hypoName.name,
       (_, _, final JmaIntensity intensity, final List<String> regionNames)
-          when regionNames.isNotEmpty && regionNames.length > 2 =>
+          when regionNames.isNotEmpty && regionNames.length >= 2 =>
         '最大震度$intensityを${regionNames.first}などで観測',
       (_, _, final JmaIntensity intensity, final List<String> regionNames)
           when regionNames.isNotEmpty =>
@@ -128,7 +128,12 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
       subtitle: Wrap(
         spacing: 4,
         children: [
-          Text(subTitle),
+          Text(
+            subTitle,
+            style: TextStyle(
+              fontFamily: GoogleFonts.notoSansJp().fontFamily,
+            ),
+          ),
           ...chips,
         ],
       ),
@@ -148,8 +153,6 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
         trailingText,
         style: theme.textTheme.labelLarge!.copyWith(
           fontWeight: FontWeight.bold,
-          fontFamily: FontFamily.jetBrainsMono,
-          fontFamilyFallback: [FontFamily.notoSansJP],
         ),
       ),
     );

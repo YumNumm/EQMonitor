@@ -3,7 +3,6 @@ import 'package:eqmonitor/feature/home/features/kmoni/model/kmoni_view_model_sta
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
 import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
-import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -88,9 +87,7 @@ class SheetStatusWidget extends ConsumerWidget {
                             Flexible(
                               child: Text(
                                 '強震モニタ 停止中',
-                                style: theme.textTheme.bodyMedium!.copyWith(
-                                  fontFamily: FontFamily.jetBrainsMono,
-                                ),
+                                style: theme.textTheme.bodyMedium,
                               ),
                             ),
                           ],
@@ -99,9 +96,7 @@ class SheetStatusWidget extends ConsumerWidget {
                               child: Text(
                                 DateFormat('yyyy/MM/dd HH:mm:ss')
                                     .format(latestTime),
-                                style: theme.textTheme.bodyMedium!.copyWith(
-                                  fontFamily: FontFamily.jetBrainsMono,
-                                ),
+                                style: theme.textTheme.bodyMedium,
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -121,7 +116,6 @@ class SheetStatusWidget extends ConsumerWidget {
                                 DateFormat('yyyy/MM/dd HH:mm:ss')
                                     .format(latestTime),
                                 style: theme.textTheme.bodyMedium!.copyWith(
-                                  fontFamily: FontFamily.jetBrainsMono,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.redAccent,
                                 ),
@@ -134,9 +128,7 @@ class SheetStatusWidget extends ConsumerWidget {
                                 DateFormat('yyyy/MM/dd HH:mm:ss').format(
                                   latestTime,
                                 ),
-                                style: theme.textTheme.bodyMedium!.copyWith(
-                                  fontFamily: FontFamily.jetBrainsMono,
-                                ),
+                                style: theme.textTheme.bodyMedium,
                               ),
                             ),
                           ],
@@ -152,23 +144,32 @@ class SheetStatusWidget extends ConsumerWidget {
                   ),
                 ),
               ),
-            ),
+            )
+          else
+            const Spacer(),
           // WS接続状態
-          if (socketStatus.connected) ...[
-            const Icon(
-              Icons.cloud_sync_rounded,
-              color: Colors.green,
+          Tooltip(
+            message: 'WebSocket接続状況',
+            child: Row(
+              children: [
+                if (socketStatus.connected) ...[
+                  const Icon(
+                    Icons.cloud_sync_rounded,
+                    color: Colors.green,
+                  ),
+                  const SizedBox(width: 4),
+                  const Text('接続済み'),
+                ] else ...[
+                  const Icon(
+                    Icons.cloud_off_rounded,
+                    color: Colors.red,
+                  ),
+                  const SizedBox(width: 4),
+                  const Text('接続試行中...'),
+                ],
+              ],
             ),
-            const SizedBox(width: 4),
-            const Text('接続済み'),
-          ] else ...[
-            const Icon(
-              Icons.cloud_off_rounded,
-              color: Colors.red,
-            ),
-            const SizedBox(width: 4),
-            const Text('接続試行中...'),
-          ],
+          ),
         ],
       ),
     );

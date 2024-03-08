@@ -8,7 +8,6 @@ import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/inten
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history_old/model/state/earthquake_history_item.dart';
 import 'package:eqmonitor/feature/home/features/eew/provider/eew_alive_telegram.dart';
-import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -124,8 +123,6 @@ class EewWidget extends ConsumerWidget {
                   child: Text(
                     'レベル法',
                     style: TextStyle(
-                      fontFamily: FontFamily.jetBrainsMono,
-                      fontFamilyFallback: [FontFamily.notoSansJP],
                       fontWeight: FontWeight.w900,
                     ),
                   ),
@@ -137,8 +134,6 @@ class EewWidget extends ConsumerWidget {
                   child: Text(
                     '1点観測点による検知',
                     style: TextStyle(
-                      fontFamily: FontFamily.jetBrainsMono,
-                      fontFamilyFallback: [FontFamily.notoSansJP],
                       fontWeight: FontWeight.w900,
                     ),
                   ),
@@ -150,8 +145,6 @@ class EewWidget extends ConsumerWidget {
                   child: Text(
                     'PLUM法',
                     style: TextStyle(
-                      fontFamily: FontFamily.jetBrainsMono,
-                      fontFamilyFallback: [FontFamily.notoSansJP],
                       fontWeight: FontWeight.w900,
                     ),
                   ),
@@ -163,8 +156,6 @@ class EewWidget extends ConsumerWidget {
             '${eew.isLastInfo ? "(最終)" : ""}',
             style: textTheme.titleMedium!.copyWith(
               fontWeight: FontWeight.bold,
-              fontFamily: FontFamily.jetBrainsMono,
-              fontFamilyFallback: [FontFamily.notoSansJP],
               color: textTheme.titleMedium!.color!.withOpacity(0.8),
             ),
           ),
@@ -210,10 +201,7 @@ class EewWidget extends ConsumerWidget {
         )}'
         ' '
         '${eew.originTime == null ? "検知" : "発生"}',
-        style: textTheme.bodyMedium!.copyWith(
-          fontFamily: FontFamily.jetBrainsMono,
-          fontFamilyFallback: [FontFamily.notoSansJP],
-        ),
+        style: textTheme.bodyMedium,
       );
 
       // 「M 8.0 / 深さ100km」
@@ -232,8 +220,6 @@ class EewWidget extends ConsumerWidget {
             (eew.magnitude ?? '不明').toString(),
             style: textTheme.displaySmall!.copyWith(
               fontWeight: FontWeight.w900,
-              fontFamily: FontFamily.notoSansJP,
-              fontFamilyFallback: [FontFamily.notoSansJP],
             ),
           ),
         ],
@@ -254,8 +240,6 @@ class EewWidget extends ConsumerWidget {
               eew.depth.toString(),
               style: textTheme.displaySmall!.copyWith(
                 fontWeight: FontWeight.w900,
-                fontFamily: FontFamily.notoSansJP,
-                fontFamilyFallback: [FontFamily.notoSansJP],
               ),
             ),
             Text(
@@ -269,8 +253,6 @@ class EewWidget extends ConsumerWidget {
               '不明',
               style: textTheme.displaySmall!.copyWith(
                 fontWeight: FontWeight.w900,
-                fontFamily: FontFamily.jetBrainsMono,
-                fontFamilyFallback: [FontFamily.notoSansJP],
               ),
             ),
         ],
@@ -289,8 +271,6 @@ class EewWidget extends ConsumerWidget {
                 'PLUM法による仮定震源要素',
                 style: textTheme.titleMedium!.copyWith(
                   fontWeight: FontWeight.w900,
-                  fontFamily: FontFamily.notoSansJP,
-                  fontFamilyFallback: [FontFamily.notoSansJP],
                 ),
               ),
             ),
@@ -301,8 +281,6 @@ class EewWidget extends ConsumerWidget {
                 'レベル法による仮定震源要素',
                 style: textTheme.titleMedium!.copyWith(
                   fontWeight: FontWeight.w900,
-                  fontFamily: FontFamily.notoSansJP,
-                  fontFamilyFallback: [FontFamily.notoSansJP],
                 ),
               ),
             ),
@@ -414,8 +392,6 @@ class EewWidget extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: 100,
                     fontWeight: FontWeight.w900,
-                    fontFamily: FontFamily.jetBrainsMono,
-                    fontFamilyFallback: const [FontFamily.notoSansJP],
                     color: textTheme.bodyMedium!.color!.withOpacity(0.3),
                   ),
                 ),

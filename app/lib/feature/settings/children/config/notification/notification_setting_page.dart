@@ -10,7 +10,6 @@ import 'package:eqmonitor/feature/settings/children/config/notification/children
 import 'package:eqmonitor/feature/settings/children/config/notification/children/eew/eew_notification_settings_view_model.dart';
 import 'package:eqmonitor/feature/settings/children/config/notification/notifiication_settings_view_model.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
-import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -198,17 +197,9 @@ class _OnNotificationPermissionAllowed extends ConsumerWidget {
               data: (value) => Column(
                 children: [
                   ListTile(
-                    title: const Text(
-                      'FCM デバイストークン',
-                      style: TextStyle(
-                        fontFamily: FontFamily.jetBrainsMono,
-                      ),
-                    ),
+                    title: const Text('FCM デバイストークン'),
                     trailing: Text(
                       value.fcmToken?.obfuscate ?? '不明',
-                      style: const TextStyle(
-                        fontFamily: FontFamily.jetBrainsMono,
-                      ),
                     ),
                     onTap: () => Clipboard.setData(
                       ClipboardData(text: value.fcmToken ?? ''),
@@ -224,15 +215,9 @@ class _OnNotificationPermissionAllowed extends ConsumerWidget {
                   ListTile(
                     title: const Text(
                       'APNS デバイストークン',
-                      style: TextStyle(
-                        fontFamily: FontFamily.jetBrainsMono,
-                      ),
                     ),
                     trailing: Text(
                       value.apnsToken?.obfuscate ?? '不明',
-                      style: const TextStyle(
-                        fontFamily: FontFamily.jetBrainsMono,
-                      ),
                     ),
                     onTap: () => Clipboard.setData(
                       ClipboardData(text: value.apnsToken ?? ''),

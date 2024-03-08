@@ -2,7 +2,6 @@ import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/feature/earthquake_history_old/model/state/earthquake_history_item.dart';
-import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -213,10 +212,7 @@ class EewDetailedHistoryScreen extends HookConsumerWidget {
               return Center(
                 child: Text(
                   builder.title,
-                  style: theme.textTheme.titleMedium!.copyWith(
-                    fontFamily: FontFamily.jetBrainsMono,
-                    fontFamilyFallback: [FontFamily.notoSansJP],
-                  ),
+                  style: theme.textTheme.titleMedium,
                 ),
               );
             }
@@ -225,12 +221,8 @@ class EewDetailedHistoryScreen extends HookConsumerWidget {
               child: Text(
                 builder.value(eew, eew.body as Vxse45),
                 style: (vicinity.xIndex == 0
-                        ? theme.textTheme.titleMedium
-                        : theme.textTheme.bodyMedium)!
-                    .copyWith(
-                  fontFamily: FontFamily.jetBrainsMono,
-                  fontFamilyFallback: [FontFamily.notoSansJP],
-                ),
+                    ? theme.textTheme.titleMedium
+                    : theme.textTheme.bodyMedium),
               ),
             );
           },

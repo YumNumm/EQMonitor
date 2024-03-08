@@ -106,10 +106,6 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
     final creationDateFromEventId = EventId(item.eventId).toCreationDate();
 
     // 地震発生時刻
-    final timeTextStyle = textTheme.bodyMedium!.copyWith(
-      fontFamily: FontFamily.jetBrainsMono,
-      fontFamilyFallback: [FontFamily.notoSansJP],
-    );
     final timeText =
         switch ((item.originTime, item.arrivalTime, creationDateFromEventId)) {
       (final DateTime originTime, _, _) =>
@@ -130,7 +126,6 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
         ? Center(
             child: Text(
               timeText,
-              style: timeTextStyle,
             ),
           )
         : null;
