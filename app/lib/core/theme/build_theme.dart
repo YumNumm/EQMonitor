@@ -7,12 +7,12 @@ ThemeData buildTheme({
   CustomColors? customColors,
 }) {
   final notoSansJp = GoogleFonts.notoSansJp().fontFamily;
-  final jetbrainsMono = GoogleFonts.jetBrainsMono().fontFamily;
+  final robotoMono = GoogleFonts.robotoMono().fontFamily;
   return ThemeData(
     colorScheme: colorScheme,
     extensions: [if (customColors != null) customColors],
     useMaterial3: true,
-    fontFamily: jetbrainsMono,
+    fontFamily: robotoMono,
     fontFamilyFallback: [
       if (notoSansJp != null) notoSansJp,
     ],

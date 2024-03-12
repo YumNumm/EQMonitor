@@ -155,6 +155,7 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
           },
           style: textTheme.displaySmall!.copyWith(
             fontWeight: FontWeight.w900,
+            fontFamily: FontFamily.notoSansJP,
           ),
         ),
       ],
