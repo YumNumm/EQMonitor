@@ -10,11 +10,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_history_notifier.g.dart';
 
-// TODO(YumNumm): テスト書く
+typedef EarthquakeHistoryNotifierStaet = (
+  List<EarthquakeV1Extended>,
+  int totalCount
+);
+
 @riverpod
 class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
   @override
-  Future<(List<EarthquakeV1Extended>, int totalCount)> build(
+  Future<EarthquakeHistoryNotifierStaet> build(
     EarthquakeHistoryParameter parameter,
   ) async {
     // ensure earthquakeParameter has been initialized.
