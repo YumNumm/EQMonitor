@@ -8,12 +8,12 @@ part of 'jma_parameter.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$jmaParameterHash() => r'778c903288d44df594fbb91198d68712d8dcf6b7';
+String _$jmaParameterHash() => r'494d462517d6e93a473b3161ecb244af68d0d309';
 
 /// See also [JmaParameter].
 @ProviderFor(JmaParameter)
-final jmaParameterProvider = AsyncNotifierProvider<JmaParameter,
-    ({EarthquakeParameter earthquake, TsunamiParameter tsunami})>.internal(
+final jmaParameterProvider =
+    AsyncNotifierProvider<JmaParameter, JmaParameterState>.internal(
   JmaParameter.new,
   name: r'jmaParameterProvider',
   debugGetCreateSourceHash:
@@ -22,8 +22,7 @@ final jmaParameterProvider = AsyncNotifierProvider<JmaParameter,
   allTransitiveDependencies: null,
 );
 
-typedef _$JmaParameter = AsyncNotifier<
-    ({EarthquakeParameter earthquake, TsunamiParameter tsunami})>;
+typedef _$JmaParameter = AsyncNotifier<JmaParameterState>;
 String _$earthquakeParameterEtagHash() =>
     r'2351454514903ab08fe4100dc59680743b4ee26d';
 

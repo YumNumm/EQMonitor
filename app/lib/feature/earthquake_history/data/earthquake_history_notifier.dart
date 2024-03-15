@@ -165,6 +165,37 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
   }
 }
 
+@riverpod
+Future<EarthquakeV1Extended> earthquakeV1Extended(
+  EarthquakeV1ExtendedRef ref,
+  EarthquakeV1 data,
+) async {
+  // ensure earthquakeParameter has been initialized.
+  await ref.read(jmaParameterProvider.future);
+
+  final earthquakeParameter =
+      ref.watch(jmaParameterProvider).valueOrNull?.earthquake;
+
+  if (earthquakeParameter == null) {
+    throw EarthquakeParameterHasNotInitializedException();
+  }
+  final regions = earthquakeParameter.regions;
+
+  return  EarthquakeV1Extended(
+            earthquake: data,
+            maxIntensityRegionNames: data.maxIntensityRegionIds
+                ?.map(
+                  (region) => regions
+                      .firstWhereOrNull(
+                        (paramRegion) => int.parse(paramRegion.code) == region,
+                      )
+                      ?.name,
+                )
+                .whereNotNull()
+                .toList(),
+          );
+}
+
 class EarthquakeParameterHasNotInitializedException implements Exception {}
 
 extension EarthquakeHistoryState on (

@@ -97,6 +97,11 @@ Future<void> main() async {
                 requestBadgePermission: false,
               ),
               android: AndroidInitializationSettings('mipmap/ic_launcher'),
+              macOS: DarwinInitializationSettings(
+                requestAlertPermission: false,
+                requestSoundPermission: false,
+                requestBadgePermission: false,
+              ),
             ),
           )
   ).wait;

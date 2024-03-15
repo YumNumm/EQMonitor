@@ -71,19 +71,20 @@ class EarthquakeHistoryRoute extends GoRouteData {
       const EarthquakeHistoryScreen();
 }
 
-
 @TypedGoRoute<EarthquakeHistoryDetailsRoute>(
-  path: '/earthquake-history-details',
+  path: '/earthquake-history-details/:eventId',
 )
 class EarthquakeHistoryDetailsRoute extends GoRouteData {
   const EarthquakeHistoryDetailsRoute({
-    required this.$extra,
+    required this.eventId,
   });
-  final EarthquakeV1Extended $extra;
+
+  final String eventId;
+
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       EarthquakeHistoryDetailsPage(
-        data: $extra,
+        eventId: eventId,
       );
 }
 

@@ -11,7 +11,7 @@ part 'v1.g.dart';
 abstract class V1 {
   factory V1(Dio dio, {String baseUrl}) = _V1;
 
-  @GET('/v1/earthquake')
+  @GET('/v1/earthquake/list')
   Future<HttpResponse<List<EarthquakeV1>>> getEarthquakes({
     /// 1~100
     @Query('limit') int limit = 10,
@@ -32,6 +32,11 @@ abstract class V1 {
     @Query('depthGte') double? depthGte,
     @Query('intensityLte') String? intensityLte,
     @Query('intensityGte') String? intensityGte,
+  });
+
+  @GET('/v1/earthquake/detail/{eventId}')
+  Future<HttpResponse<EarthquakeV1>> getEarthquakeDetail({
+    @Path('eventId') required String eventId,
   });
 
   @GET('/v1/earthquake/region')

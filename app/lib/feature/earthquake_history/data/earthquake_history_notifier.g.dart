@@ -8,8 +8,8 @@ part of 'earthquake_history_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$earthquakeHistoryNotifierHash() =>
-    r'ab7bac4cd38f434008d03bb28561ae7ab4f11384';
+String _$earthquakeV1ExtendedHash() =>
+    r'0e75d744275dd72ce35fa905707e3b3c9758308d';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -32,12 +32,145 @@ class _SystemHash {
   }
 }
 
+/// See also [earthquakeV1Extended].
+@ProviderFor(earthquakeV1Extended)
+const earthquakeV1ExtendedProvider = EarthquakeV1ExtendedFamily();
+
+/// See also [earthquakeV1Extended].
+class EarthquakeV1ExtendedFamily
+    extends Family<AsyncValue<EarthquakeV1Extended>> {
+  /// See also [earthquakeV1Extended].
+  const EarthquakeV1ExtendedFamily();
+
+  /// See also [earthquakeV1Extended].
+  EarthquakeV1ExtendedProvider call(
+    EarthquakeV1 data,
+  ) {
+    return EarthquakeV1ExtendedProvider(
+      data,
+    );
+  }
+
+  @override
+  EarthquakeV1ExtendedProvider getProviderOverride(
+    covariant EarthquakeV1ExtendedProvider provider,
+  ) {
+    return call(
+      provider.data,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'earthquakeV1ExtendedProvider';
+}
+
+/// See also [earthquakeV1Extended].
+class EarthquakeV1ExtendedProvider
+    extends AutoDisposeFutureProvider<EarthquakeV1Extended> {
+  /// See also [earthquakeV1Extended].
+  EarthquakeV1ExtendedProvider(
+    EarthquakeV1 data,
+  ) : this._internal(
+          (ref) => earthquakeV1Extended(
+            ref as EarthquakeV1ExtendedRef,
+            data,
+          ),
+          from: earthquakeV1ExtendedProvider,
+          name: r'earthquakeV1ExtendedProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$earthquakeV1ExtendedHash,
+          dependencies: EarthquakeV1ExtendedFamily._dependencies,
+          allTransitiveDependencies:
+              EarthquakeV1ExtendedFamily._allTransitiveDependencies,
+          data: data,
+        );
+
+  EarthquakeV1ExtendedProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.data,
+  }) : super.internal();
+
+  final EarthquakeV1 data;
+
+  @override
+  Override overrideWith(
+    FutureOr<EarthquakeV1Extended> Function(EarthquakeV1ExtendedRef provider)
+        create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: EarthquakeV1ExtendedProvider._internal(
+        (ref) => create(ref as EarthquakeV1ExtendedRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        data: data,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<EarthquakeV1Extended> createElement() {
+    return _EarthquakeV1ExtendedProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is EarthquakeV1ExtendedProvider && other.data == data;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, data.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin EarthquakeV1ExtendedRef
+    on AutoDisposeFutureProviderRef<EarthquakeV1Extended> {
+  /// The parameter `data` of this provider.
+  EarthquakeV1 get data;
+}
+
+class _EarthquakeV1ExtendedProviderElement
+    extends AutoDisposeFutureProviderElement<EarthquakeV1Extended>
+    with EarthquakeV1ExtendedRef {
+  _EarthquakeV1ExtendedProviderElement(super.provider);
+
+  @override
+  EarthquakeV1 get data => (origin as EarthquakeV1ExtendedProvider).data;
+}
+
+String _$earthquakeHistoryNotifierHash() =>
+    r'5866eb1d4a42ec400cbb64075cc7c3514ad367a1';
+
 abstract class _$EarthquakeHistoryNotifier
-    extends BuildlessAutoDisposeAsyncNotifier<
-        (List<EarthquakeV1Extended>, int totalCount)> {
+    extends BuildlessAutoDisposeAsyncNotifier<EarthquakeHistoryNotifierStaet> {
   late final EarthquakeHistoryParameter parameter;
 
-  FutureOr<(List<EarthquakeV1Extended>, int totalCount)> build(
+  FutureOr<EarthquakeHistoryNotifierStaet> build(
     EarthquakeHistoryParameter parameter,
   );
 }
@@ -48,7 +181,7 @@ const earthquakeHistoryNotifierProvider = EarthquakeHistoryNotifierFamily();
 
 /// See also [EarthquakeHistoryNotifier].
 class EarthquakeHistoryNotifierFamily
-    extends Family<AsyncValue<(List<EarthquakeV1Extended>, int totalCount)>> {
+    extends Family<AsyncValue<EarthquakeHistoryNotifierStaet>> {
   /// See also [EarthquakeHistoryNotifier].
   const EarthquakeHistoryNotifierFamily();
 
@@ -88,7 +221,7 @@ class EarthquakeHistoryNotifierFamily
 /// See also [EarthquakeHistoryNotifier].
 class EarthquakeHistoryNotifierProvider
     extends AutoDisposeAsyncNotifierProviderImpl<EarthquakeHistoryNotifier,
-        (List<EarthquakeV1Extended>, int totalCount)> {
+        EarthquakeHistoryNotifierStaet> {
   /// See also [EarthquakeHistoryNotifier].
   EarthquakeHistoryNotifierProvider(
     EarthquakeHistoryParameter parameter,
@@ -119,7 +252,7 @@ class EarthquakeHistoryNotifierProvider
   final EarthquakeHistoryParameter parameter;
 
   @override
-  FutureOr<(List<EarthquakeV1Extended>, int totalCount)> runNotifierBuild(
+  FutureOr<EarthquakeHistoryNotifierStaet> runNotifierBuild(
     covariant EarthquakeHistoryNotifier notifier,
   ) {
     return notifier.build(
@@ -145,7 +278,7 @@ class EarthquakeHistoryNotifierProvider
 
   @override
   AutoDisposeAsyncNotifierProviderElement<EarthquakeHistoryNotifier,
-      (List<EarthquakeV1Extended>, int totalCount)> createElement() {
+      EarthquakeHistoryNotifierStaet> createElement() {
     return _EarthquakeHistoryNotifierProviderElement(this);
   }
 
@@ -164,16 +297,15 @@ class EarthquakeHistoryNotifierProvider
   }
 }
 
-mixin EarthquakeHistoryNotifierRef on AutoDisposeAsyncNotifierProviderRef<
-    (List<EarthquakeV1Extended>, int totalCount)> {
+mixin EarthquakeHistoryNotifierRef
+    on AutoDisposeAsyncNotifierProviderRef<EarthquakeHistoryNotifierStaet> {
   /// The parameter `parameter` of this provider.
   EarthquakeHistoryParameter get parameter;
 }
 
 class _EarthquakeHistoryNotifierProviderElement
     extends AutoDisposeAsyncNotifierProviderElement<EarthquakeHistoryNotifier,
-        (List<EarthquakeV1Extended>, int totalCount)>
-    with EarthquakeHistoryNotifierRef {
+        EarthquakeHistoryNotifierStaet> with EarthquakeHistoryNotifierRef {
   _EarthquakeHistoryNotifierProviderElement(super.provider);
 
   @override

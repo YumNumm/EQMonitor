@@ -67,7 +67,7 @@ extension $EarthquakeHistoryRouteExtension on EarthquakeHistoryRoute {
 }
 
 RouteBase get $earthquakeHistoryDetailsRoute => GoRouteData.$route(
-      path: '/earthquake-history-details',
+      path: '/earthquake-history-details/:eventId',
       factory: $EarthquakeHistoryDetailsRouteExtension._fromState,
     );
 
@@ -75,23 +75,21 @@ extension $EarthquakeHistoryDetailsRouteExtension
     on EarthquakeHistoryDetailsRoute {
   static EarthquakeHistoryDetailsRoute _fromState(GoRouterState state) =>
       EarthquakeHistoryDetailsRoute(
-        $extra: state.extra as EarthquakeV1Extended,
+        eventId: state.pathParameters['eventId']!,
       );
 
   String get location => GoRouteData.$location(
-        '/earthquake-history-details',
+        '/earthquake-history-details/${Uri.encodeComponent(eventId)}',
       );
 
-  void go(BuildContext context) => context.go(location, extra: $extra);
+  void go(BuildContext context) => context.go(location);
 
-  Future<T?> push<T>(BuildContext context) =>
-      context.push<T>(location, extra: $extra);
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: $extra);
+      context.pushReplacement(location);
 
-  void replace(BuildContext context) =>
-      context.replace(location, extra: $extra);
+  void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $informationHistoryRoute => GoRouteData.$route(

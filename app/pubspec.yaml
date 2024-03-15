@@ -31,16 +31,16 @@ dependencies:
     git:
       url: https://github.com/YumNumm/EQMonitor.git
       path: packages/extensions
-  firebase_analytics: ^10.6.0
-  firebase_core: 2.22.0
-  firebase_crashlytics: ^3.4.0
-  firebase_messaging: ^14.0.0
+  firebase_analytics: ^10.7.0
+  firebase_core: ^2.27.0
+  firebase_crashlytics: ^3.4.4
+  firebase_messaging: ^14.7.4
   flutter:
     sdk: flutter
   flutter_hooks: ^0.20.5
-  flutter_html: ^3.0.0-beta.2
-  flutter_local_notifications: ^16.1.0
-  flutter_markdown: ^0.6.18+2
+  flutter_html: ^3.0.0-alpha.2
+  flutter_local_notifications: ^17.0.0
+  flutter_markdown: ^0.6.21
   flutter_test:
     sdk: flutter
   flutter_xlider: ^3.5.0
@@ -48,7 +48,7 @@ dependencies:
   go_router: ^11.1.4
   google_fonts: ^6.2.1
   group_button: ^5.3.4
-  hooks_riverpod: ^2.4.10
+  hooks_riverpod: ^2.5.1
   image: ^4.1.7
   integration_test:
     sdk: flutter

@@ -1,6 +1,5 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
@@ -8,14 +7,14 @@ import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_lg_intensity_icon.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
+import 'package:eqmonitor/core/component/widget/error_widget.dart';
 import 'package:eqmonitor/core/provider/config/earthquake_history/earthquake_history_config_provider.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/earthquake_history_notifier.dart';
-import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/earthquake_hypo_info_widget.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/earthquake_map.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/prefecture_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/prefecture_lpgm_intensity.dart';
+import 'package:eqmonitor/feature/earthquake_history_details/data/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
@@ -28,34 +27,53 @@ import 'package:url_launcher/url_launcher.dart';
 
 class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
   const EarthquakeHistoryDetailsPage({
-    required EarthquakeV1Extended data,
+    required this.eventId,
     super.key,
-  }) : _data = data;
+  });
 
-  final EarthquakeV1Extended _data;
+  final String eventId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final data = useState(_data);
-    // earthquakeDataが変わったら再構築
-    ref.listen(
-      earthquakeHistoryNotifierProvider(const EarthquakeHistoryParameter()),
-      (previous, next) {
-        final previousItem = previous?.valueOrNull?.$1
-            .firstWhereOrNull((element) => element.eventId == _data.eventId);
-        final nextItem = next.valueOrNull?.$1
-            .firstWhereOrNull((element) => element.eventId == _data.eventId);
-        if (nextItem == null) {
-          return;
-        }
-        if (previousItem != nextItem) {
-          data.value = nextItem;
-        }
-      },
+    final detailsState = ref.watch(
+      earthquakeHistoryDetailsNotifierProvider(eventId),
     );
+    final details = detailsState.valueOrNull;
 
-    final maxIntensity = data.value.maxIntensity;
-    final maxLgIntensity = data.value.maxLpgmIntensity;
+    if (details == null) {
+      return Scaffold(
+        appBar: AppBar(),
+        body: switch (detailsState) {
+          AsyncLoading() => Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const CircularProgressIndicator.adaptive(),
+                  const SizedBox(height: 8),
+                  Text(
+                    '各地の震度データを取得中...',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          AsyncError(:final error) => ErrorInfoWidget(
+              error: error,
+              onRefresh: () => ref.invalidate(
+                earthquakeHistoryDetailsNotifierProvider(eventId),
+              ),
+            ),
+          _ => const Center(
+              child: CircularProgressIndicator.adaptive(),
+            ),
+        },
+      );
+    }
+    final data = details;
+    final maxIntensity = data.maxIntensity;
+    final maxLgIntensity = data.maxLpgmIntensity;
 
     final config = ref
         .watch(earthquakeHistoryConfigProvider.select((value) => value.detail));
@@ -69,7 +87,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
       body: Stack(
         children: [
           EarthquakeMapWidget(
-            item: data.value,
+            item: data,
             showIntensityIcon: true,
             registerNavigateToHome: (func) =>
                 navigateToHomeFunction.value = func,
@@ -137,17 +155,15 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                   Column(
                     children: [
                       // layer controller
-                      if (data.value.maxIntensity != null)
+                      if (data.maxIntensity != null)
                         FloatingActionButton.small(
                           heroTag: 'earthquake_history_details_layer_fab',
                           tooltip: '地図の表示レイヤーを切り替える',
                           onPressed: () =>
                               showEarthquakeHistoryDetailConfigDialog(
                             context,
-                            showCitySelector:
-                                data.value.intensityCities != null,
-                            hasLpgmIntensity:
-                                data.value.maxLpgmIntensity != null,
+                            showCitySelector: data.intensityCities != null,
+                            hasLpgmIntensity: data.maxLpgmIntensity != null,
                           ),
                           elevation: 4,
                           child: const Icon(Icons.layers),
@@ -172,7 +188,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
           // Sheet
           _Sheet(
             sheetController: sheetController,
-            item: data.value,
+            item: data,
           ),
           if (Navigator.canPop(context))
             // 戻るボタン

@@ -53,7 +53,7 @@ class _V1 implements V1 {
     )
             .compose(
               _dio.options,
-              '/v1/earthquake',
+              '/v1/earthquake/list',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -65,6 +65,35 @@ class _V1 implements V1 {
     var value = _result.data!
         .map((dynamic i) => EarthquakeV1.fromJson(i as Map<String, dynamic>))
         .toList();
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<EarthquakeV1>> getEarthquakeDetail(
+      {required String eventId}) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<EarthquakeV1>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/v1/earthquake/detail/${eventId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = EarthquakeV1.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

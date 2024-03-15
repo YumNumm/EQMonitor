@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
+import 'package:eqmonitor/core/component/widget/error_widget.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
@@ -35,51 +36,37 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
           const SheetHeader(
             title: '地震履歴',
           ),
-          ...state.when(
-                data: (data) {
-                  // 地震情報を持つもののうち上から3つのみ表示
-                  final items = data.$1.take(3).toList();
-                  return [
-                    for (final item in items)
-                      EarthquakeHistoryListTile(
-                        item: item,
-                        showBackgroundColor: false,
-                      ),
-                  ];
-                },
-                error: (error, stackTrace) {
-                  // dataがある場合にはそれを表示
-                  if (state.hasValue) {
-                    final data = state.value!;
-                    // 上から3つのみ表示
-                    final items = data.$1.take(3).toList();
-
-                    return [
-                      for (final item in items)
-                        EarthquakeHistoryListTile(
+          switch (state) {
+            AsyncData(:final value) => () {
+                final data = value.$1.take(3).toList();
+                if (data.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+                return Column(
+                  children: data
+                      .map(
+                        (e) => EarthquakeHistoryListTile(
+                          item: e,
+                          onTap: () => EarthquakeHistoryDetailsRoute(
+                            eventId: e.eventId.toString(),
+                          ).push<void>(context),
                           showBackgroundColor: false,
-                          item: item,
                         ),
-                    ];
-                  }
-                  return [
-                    const Text(
-                      '地震履歴の取得中にエラーが発生しました。',
-                    ),
-                    FilledButton.tonal(
-                      onPressed: () async =>
-                          ref.refresh(defaultEarthquakeHistoryNotifierProvider),
-                      child: const Text('再読み込み'),
-                    ),
-                  ];
+                      )
+                      .toList(),
+                );
+              }(),
+            AsyncLoading() => loading,
+            AsyncError(:final error) => ErrorInfoWidget(
+                error: error,
+                onRefresh: () async {
+                  await ref
+                      .read(defaultEarthquakeHistoryNotifierProvider.notifier)
+                      .refresh();
                 },
-                loading: () => [
-                  loading,
-                ],
-              ) ??
-              [
-                loading,
-              ],
+              ),
+            _ => const SizedBox.shrink(),
+          },
           Row(
             children: [
               const Spacer(),

@@ -1,8 +1,7 @@
-import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
-import 'package:eqmonitor/core/component/widget/dio_exception_text.dart';
+import 'package:eqmonitor/core/component/widget/error_widget.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/earthquake_history_notifier.dart';
@@ -131,7 +130,7 @@ class _SliverListBody extends HookConsumerWidget {
         });
         return null;
       },
-      [controller],
+      [controller, state, onScrollEnd, onRefresh],
     );
 
     Widget listView({
@@ -158,32 +157,10 @@ class _SliverListBody extends HookConsumerWidget {
                 return loading;
               }
               if (state.hasError) {
-                final error = state.error;
-                return Center(
-                  child: SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.error,
-                            size: 48,
-                          ),
-                          if (error is DioException)
-                            DioExceptionText(
-                              exception: error,
-                            )
-                          else
-                            const Text('エラーが発生しました'),
-                          ElevatedButton(
-                            onPressed: () => onScrollEnd?.call(),
-                            child: const Text('再読み込み'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                final error = state.error!;
+                return ErrorInfoWidget(
+                  error: error,
+                  onRefresh: onRefresh,
                 );
               }
               final hasNext = state.valueOrNull?.hasNext ?? false;
@@ -196,13 +173,55 @@ class _SliverListBody extends HookConsumerWidget {
             final item = data.$1[index];
             return EarthquakeHistoryListTile(
               item: item,
-              onTap: () => EarthquakeHistoryDetailsRoute($extra: item)
-                  .push<void>(context),
+              onTap: () => EarthquakeHistoryDetailsRoute(
+                eventId: item.eventId.toString(),
+              ).push<void>(context),
             );
           },
         ),
       );
     }
+
+    return RefreshIndicator(
+      onRefresh: () async => onRefresh?.call(),
+      child: switch (state) {
+        AsyncLoading() => const Center(
+            child: CircularProgressIndicator.adaptive(),
+          ),
+        AsyncError(:final error) => () {
+            if (error is EarthquakeParameterHasNotInitializedException) {
+              final parameterState = ref.watch(jmaParameterProvider);
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('観測点情報が初期化されていません'),
+                    if (parameterState.isLoading)
+                      const CircularProgressIndicator.adaptive()
+                    else
+                      FilledButton(
+                        child: const Text('観測点情報を再取得'),
+                        onPressed: () async =>
+                            ref.invalidate(jmaParameterProvider),
+                      ),
+                  ],
+                ),
+              );
+            }
+            final valueOrNull = state.valueOrNull;
+            if (valueOrNull != null) {
+              return listView(data: valueOrNull);
+            }
+            return ErrorInfoWidget(
+              error: error,
+              onRefresh: () =>
+                  ref.invalidate(earthquakeHistoryNotifierProvider),
+            );
+          }(),
+        AsyncData(:final value) => listView(data: value),
+        _ => const SizedBox(),
+      },
+    );
 
     return RefreshIndicator(
       onRefresh: () async => onRefresh?.call(),
@@ -234,18 +253,9 @@ class _SliverListBody extends HookConsumerWidget {
           if (valueOrNull != null) {
             return listView(data: valueOrNull);
           }
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('エラーが発生しました'),
-                ElevatedButton(
-                  onPressed: () =>
-                      ref.invalidate(earthquakeHistoryNotifierProvider),
-                  child: const Text('再読み込み'),
-                ),
-              ],
-            ),
+          return ErrorInfoWidget(
+            error: error,
+            onRefresh: () => ref.invalidate(earthquakeHistoryNotifierProvider),
           );
         },
         data: (data) => listView(data: data),
