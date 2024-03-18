@@ -8,7 +8,7 @@ part of 'telegram_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$telegramWsHash() => r'044b8f023b53db535f74f37f308ddf46a93c4c18';
+String _$telegramWsHash() => r'823b6751ed24a945f25b67483516df92bb0f459c';
 
 /// See also [TelegramWs].
 @ProviderFor(TelegramWs)
