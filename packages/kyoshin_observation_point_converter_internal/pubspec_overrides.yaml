@@ -1,0 +1,4 @@
+# melos_managed_dependency_overrides: kyoshin_observation_point_types
+dependency_overrides:
+  kyoshin_observation_point_types:
+    path: ../kyoshin_observation_point_types
