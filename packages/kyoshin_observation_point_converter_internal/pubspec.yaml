@@ -6,6 +6,7 @@ environment:
   sdk: ^3.3.1
 
 dependencies:
+  http: ^1.2.1
   kyoshin_observation_point_types:
     git:
       url: https://github.com/YumNumm/EQMonitor.git

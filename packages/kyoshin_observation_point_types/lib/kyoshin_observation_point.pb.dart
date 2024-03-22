@@ -192,6 +192,7 @@ class KyoshinObservationPoint extends $pb.GeneratedMessage {
     $core.String? region,
     KyoshinObservationPoint_LatLng? location,
     KyoshinObservationPoint_Point? point,
+    $core.double? arv400,
   }) {
     final $result = create();
     if (code != null) {
@@ -209,6 +210,9 @@ class KyoshinObservationPoint extends $pb.GeneratedMessage {
     if (point != null) {
       $result.point = point;
     }
+    if (arv400 != null) {
+      $result.arv400 = arv400;
+    }
     return $result;
   }
   KyoshinObservationPoint._() : super();
@@ -221,6 +225,7 @@ class KyoshinObservationPoint extends $pb.GeneratedMessage {
     ..aOS(3, _omitFieldNames ? '' : 'region')
     ..aOM<KyoshinObservationPoint_LatLng>(4, _omitFieldNames ? '' : 'location', subBuilder: KyoshinObservationPoint_LatLng.create)
     ..aOM<KyoshinObservationPoint_Point>(5, _omitFieldNames ? '' : 'point', subBuilder: KyoshinObservationPoint_Point.create)
+    ..a<$core.double>(6, _omitFieldNames ? '' : 'arv400', $pb.PbFieldType.OD, protoName: 'arv_400')
     ..hasRequiredFields = false
   ;
 
@@ -293,6 +298,16 @@ class KyoshinObservationPoint extends $pb.GeneratedMessage {
   void clearPoint() => clearField(5);
   @$pb.TagNumber(5)
   KyoshinObservationPoint_Point ensurePoint() => $_ensure(4);
+
+  /// 工学的基盤（Vs=400m/s）から地表に至る最大速度の増幅率
+  @$pb.TagNumber(6)
+  $core.double get arv400 => $_getN(5);
+  @$pb.TagNumber(6)
+  set arv400($core.double v) { $_setDouble(5, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasArv400() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearArv400() => clearField(6);
 }
 
 

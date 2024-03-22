@@ -11,7 +11,7 @@ Future<void> main(List<String> args) async {
   print("Converting Kyoshin Observation Point...");
   final converter = KyoshinObservationPointConverter();
   final points = await converter.readFile(path);
-  final table = converter.convert(points);
+  final table = await converter.convert(points);
   // delete output file if exists
   final file = (
     json: File("kyoshin_observation_point.json"),

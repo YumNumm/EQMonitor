@@ -35,6 +35,7 @@ const KyoshinObservationPoint$json = {
     {'1': 'region', '3': 3, '4': 1, '5': 9, '10': 'region'},
     {'1': 'location', '3': 4, '4': 1, '5': 11, '6': '.KyoshinObservationPoint.LatLng', '10': 'location'},
     {'1': 'point', '3': 5, '4': 1, '5': 11, '6': '.KyoshinObservationPoint.Point', '10': 'point'},
+    {'1': 'arv_400', '3': 6, '4': 1, '5': 1, '10': 'arv400'},
   ],
   '3': [KyoshinObservationPoint_LatLng$json, KyoshinObservationPoint_Point$json],
 };
@@ -62,7 +63,8 @@ final $typed_data.Uint8List kyoshinObservationPointDescriptor = $convert.base64D
     'ChdLeW9zaGluT2JzZXJ2YXRpb25Qb2ludBISCgRjb2RlGAEgASgJUgRjb2RlEhIKBG5hbWUYAi'
     'ABKAlSBG5hbWUSFgoGcmVnaW9uGAMgASgJUgZyZWdpb24SOwoIbG9jYXRpb24YBCABKAsyHy5L'
     'eW9zaGluT2JzZXJ2YXRpb25Qb2ludC5MYXRMbmdSCGxvY2F0aW9uEjQKBXBvaW50GAUgASgLMh'
-    '4uS3lvc2hpbk9ic2VydmF0aW9uUG9pbnQuUG9pbnRSBXBvaW50GkIKBkxhdExuZxIaCghsYXRp'
-    'dHVkZRgBIAEoAVIIbGF0aXR1ZGUSHAoJbG9uZ2l0dWRlGAIgASgBUglsb25naXR1ZGUaIwoFUG'
-    '9pbnQSDAoBeBgBIAEoBVIBeBIMCgF5GAIgASgFUgF5');
+    '4uS3lvc2hpbk9ic2VydmF0aW9uUG9pbnQuUG9pbnRSBXBvaW50EhcKB2Fydl80MDAYBiABKAFS'
+    'BmFydjQwMBpCCgZMYXRMbmcSGgoIbGF0aXR1ZGUYASABKAFSCGxhdGl0dWRlEhwKCWxvbmdpdH'
+    'VkZRgCIAEoAVIJbG9uZ2l0dWRlGiMKBVBvaW50EgwKAXgYASABKAVSAXgSDAoBeRgCIAEoBVIB'
+    'eQ==');
 

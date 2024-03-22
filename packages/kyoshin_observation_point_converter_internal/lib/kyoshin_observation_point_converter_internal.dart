@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:http/http.dart' as http;
 import 'package:kyoshin_observation_point_types/kyoshin_observation_point.pb.dart';
 
 class KyoshinObservationPointConverter {
@@ -21,24 +22,43 @@ class KyoshinObservationPointConverter {
     return result;
   }
 
-  KyoshinObservationPoints convert(List<ObservationModel> points) =>
-      KyoshinObservationPoints(
-        points: points.map(
-          (point) => KyoshinObservationPoint(
-            code: point.code,
-            location: KyoshinObservationPoint_LatLng(
-              latitude: point.latitude,
-              longitude: point.longitude,
-            ),
-            name: point.name,
-            point: KyoshinObservationPoint_Point(
-              x: point.x,
-              y: point.y,
-            ),
-            region: point.region,
-          ),
-        ),
+  Future<KyoshinObservationPoints> convert(
+      List<ObservationModel> points) async {
+    final result = <KyoshinObservationPoint>[];
+    for (final point in points) {
+      print(point.code);
+      final response = await http.get(
+        Uri.parse(
+            'https://www.j-shis.bosai.go.jp/map/api/sstrct/V2/meshinfo.geojson'
+            '?position=${point.longitude},${point.latitude}'
+            '&epsg=4326'),
       );
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+      print(json);
+      final arvStr = (((json["features"] as List<dynamic>?)?.first
+              as Map<String, dynamic>?)?["properties"]
+          as Map<String, dynamic>?)?["ARV"] as String?;
+      final arv = double.tryParse(arvStr.toString());
+      print("ARV: $arv");
+      result.add(KyoshinObservationPoint(
+        code: point.code,
+        location: KyoshinObservationPoint_LatLng(
+          latitude: point.latitude,
+          longitude: point.longitude,
+        ),
+        name: point.name,
+        point: KyoshinObservationPoint_Point(
+          x: point.x,
+          y: point.y,
+        ),
+        region: point.region,
+        arv400: arv,
+      ));
+    }
+    return KyoshinObservationPoints(
+      points: result,
+    );
+  }
 }
 
 class ObservationModel {
