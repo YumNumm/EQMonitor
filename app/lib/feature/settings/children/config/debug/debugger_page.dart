@@ -117,6 +117,12 @@ class _DebugWidget extends ConsumerWidget {
               onTap: () =>
                   const EarthquakeParameterListRoute().push<void>(context),
             ),
+            ListTile(
+              title: const Text('揺れ検知通知 Subscribe'),
+              leading: const Icon(Icons.notifications_active),
+              onTap: () async =>
+                  FirebaseMessaging.instance.subscribeToTopic('kevi'),
+            ),
           ],
         ),
       ),

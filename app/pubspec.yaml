@@ -66,6 +66,10 @@ dependencies:
       url: https://github.com/YumNumm/EQMonitor.git
       path: packages/jma_parameter_api_client
   json_annotation: ^4.8.1
+  kyoshin_observation_point_types:
+    git:
+      url: https://github.com/YumNumm/EQMonitor.git
+      path: packages/kyoshin_observation_point_types
   lat_lng:
     git:
       url: https://github.com/YumNumm/EQMonitor.git
@@ -134,7 +138,6 @@ flutter:
   assets:
     - assets/
     - assets/images/
-    - assets/kmoni/
     - assets/fonts/
     - assets/docs/
 
