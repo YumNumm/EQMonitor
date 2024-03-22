@@ -1,9 +1,11 @@
 name: Deploy Web (Widgetbook)
 on:
   push:
+    branches:
+      - main
     paths:
-      - 'app/**.dart'
-      - '!app/test/**'
+      - "app/**.dart"
+      - "!app/test/**"
   workflow_dispatch:
 
 jobs:
