@@ -485,6 +485,10 @@ class _KmoniObservationPointService {
           10,
           1,
         ],
+        circleSortKey: [
+          'get',
+          'intensity',
+        ],
       ),
       sourceLayer: layerId,
     );
