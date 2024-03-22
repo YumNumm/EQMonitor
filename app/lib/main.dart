@@ -12,7 +12,7 @@ import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
-import 'package:eqmonitor/feature/home/features/kmoni_observation_points/provider/kmoni_observation_points_provider.dart';
+import 'package:eqmonitor/feature/home/features/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:eqmonitor/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -115,7 +115,7 @@ Future<void> main() async {
   container = ProviderContainer(
     overrides: [
       sharedPreferencesProvider.overrideWithValue(results.$1),
-      kmoniObservationPointsProvider.overrideWithValue(results.$2),
+      kyoshinObservationPointsProvider.overrideWithValue(results.$2),
       talkerProvider.overrideWithValue(talker),
       packageInfoProvider.overrideWithValue(results.$3),
       if (results.$4 != null)

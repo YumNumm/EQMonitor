@@ -13,6 +13,8 @@ Future<EarthquakeV1Extended> earthquakeHistoryDetailsNotifier(
   final api = ref.watch(eqApiProvider);
   final response = await api.v1.getEarthquakeDetail(eventId: eventId);
   final data = response.data;
+  // TODO(YumNumm): ここでWebSocketからの情報を結合する
+  // TODO(YumNumm): WebSocketの仕様決めてくれyo
 
   final extended = await ref.read(earthquakeV1ExtendedProvider(data).future);
   return extended;

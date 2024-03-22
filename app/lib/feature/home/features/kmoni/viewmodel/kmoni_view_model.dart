@@ -8,7 +8,7 @@ import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/model/kmoni_view_model_state.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/use_case/kmoni_use_case.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
-import 'package:eqmonitor/feature/home/features/kmoni_observation_points/provider/kmoni_observation_points_provider.dart';
+import 'package:eqmonitor/feature/home/features/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kmoni_view_model.g.dart';
@@ -96,7 +96,7 @@ class KmoniViewModel extends _$KmoniViewModel {
     try {
       final result = await ref.read(kmoniUseCaseProvider).fetchRealtimeShindo(
             now,
-            obsPoints: ref.read(kmoniObservationPointsProvider) ?? [],
+            obsPoints: ref.read(kyoshinObservationPointsProvider).points,
           );
       state = state.copyWith(
         lastUpdatedAt: now,

@@ -223,7 +223,12 @@ class MainMapViewModel extends _$MainMapViewModel {
       ...points
           .where((e) => first.intensityValue! < e.intensityValue! + 2)
           .where((e) => e.intensityValue! > 1)
-          .map((e) => e.point.latLng),
+          .map(
+            (e) => lat_lng.LatLng(
+              e.point.location.latitude,
+              e.point.location.longitude,
+            ),
+          ),
       ...coords.map(
         (e) => lat_lng.LatLng(
           e.lat + 3,
@@ -482,7 +487,6 @@ class _KmoniObservationPointService {
         ],
       ),
       sourceLayer: layerId,
-      //      belowLayerId: BaseLayer.areaForecastLocalELine.name,
     );
   }
 
@@ -511,13 +515,17 @@ class _KmoniObservationPointService {
                 'type': 'Feature',
                 'geometry': {
                   'type': 'Point',
-                  'coordinates': [e.point.latLng.lon, e.point.latLng.lat],
+                  'coordinates': [
+                    e.point.location.longitude,
+                    e.point.location.latitude,
+                  ],
                 },
                 'properties': {
                   'color': e.intensityValue != null
                       ? e.intensityColor?.toHexStringRGB()
                       : null,
                   'intensity': e.intensityValue,
+                  'name': e.point.name,
                 },
               },
             )

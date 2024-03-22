@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/kmoni_observation_point.dart';
+import 'package:kyoshin_observation_point_types/kyoshin_observation_point.pb.dart';
 import 'package:lat_lng/lat_lng.dart';
 import 'package:latlong2/latlong.dart' as lat_long_2;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -15,7 +16,7 @@ EstimatedIntensityDataSource estimatedIntensityDataSource(
 
 class EstimatedIntensityDataSource {
   List<AnalyzedKmoniObservationPoint> getEstimatedIntensity({
-    required List<KmoniObservationPoint> points,
+    required List<KyoshinObservationPoint> points,
     required double jmaMagnitude,
     required int depth,
     required LatLng hypocenter,
@@ -30,7 +31,10 @@ class EstimatedIntensityDataSource {
     for (final point in points) {
       final epicenterDistance = distanceCalcular.as(
             lat_long_2.LengthUnit.Kilometer,
-            lat_long_2.LatLng(point.latLng.lat, point.latLng.lon),
+            lat_long_2.LatLng(
+              point.location.latitude,
+              point.location.longitude,
+            ),
             lat_long_2.LatLng(hypocenter.lat, hypocenter.lon),
           ) -
           faultLength;
@@ -51,7 +55,7 @@ class EstimatedIntensityDataSource {
       );
 
       // 予測する地点の工学的基盤（Vs=400m/s）から地表に至る最大速度の増幅率
-      final arv = point.arv;
+      final arv = point.arv400;
       // 最大速度を工学的基盤（Vs=600m/s）から工学的基盤（Vs=400m/s）へ変換を行う
       final pgv400 = gpv600 * 1.31;
       // 地表面での推定最大速度を求めます

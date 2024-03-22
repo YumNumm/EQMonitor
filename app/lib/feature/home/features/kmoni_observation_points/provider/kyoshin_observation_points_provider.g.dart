@@ -2,28 +2,28 @@
 
 // ignore_for_file: type=lint, duplicate_ignore
 
-part of 'kmoni_observation_points_provider.dart';
+part of 'kyoshin_observation_points_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$kmoniObservationPointsHash() =>
-    r'a9009a58c7518c4524fb50cfd99a6d5631cc9626';
+String _$kyoshinObservationPointsHash() =>
+    r'69bb2084b1e913a55f36a1ba2a0378c09501087a';
 
-/// See also [kmoniObservationPoints].
-@ProviderFor(kmoniObservationPoints)
-final kmoniObservationPointsProvider =
-    Provider<List<KmoniObservationPoint>>.internal(
-  kmoniObservationPoints,
-  name: r'kmoniObservationPointsProvider',
+/// See also [kyoshinObservationPoints].
+@ProviderFor(kyoshinObservationPoints)
+final kyoshinObservationPointsProvider =
+    Provider<KyoshinObservationPoints>.internal(
+  kyoshinObservationPoints,
+  name: r'kyoshinObservationPointsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$kmoniObservationPointsHash,
+      : _$kyoshinObservationPointsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef KmoniObservationPointsRef = ProviderRef<List<KmoniObservationPoint>>;
+typedef KyoshinObservationPointsRef = ProviderRef<KyoshinObservationPoints>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -8,6 +8,7 @@ import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/k
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image/image.dart' as image;
+import 'package:kyoshin_observation_point_types/kyoshin_observation_point.pb.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kmoni_use_case.g.dart';
@@ -24,7 +25,7 @@ class KmoniUseCase {
 
   Future<List<AnalyzedKmoniObservationPoint>> fetchRealtimeShindo(
     DateTime dateTime, {
-    required List<KmoniObservationPoint> obsPoints,
+    required List<KyoshinObservationPoint> obsPoints,
   }) async {
     final imageResponse = await dataSource.fetchRealtimeImage(
       dateTime: dateTime,
@@ -53,7 +54,7 @@ class KmoniUseCase {
 
   List<AnalyzedKmoniObservationPoint> _imageParse({
     required List<int> picture,
-    required List<KmoniObservationPoint> obsPoints,
+    required List<KyoshinObservationPoint> obsPoints,
     required RealtimeDataType type,
   }) {
     final analyzedPoints = <AnalyzedKmoniObservationPoint>[];
@@ -66,7 +67,7 @@ class KmoniUseCase {
 
     // 画像解析開始
     for (final obsPoint in obsPoints) {
-      final pixel32 = pic.getPixelSafe(obsPoint.x, obsPoint.y);
+      final pixel32 = pic.getPixelSafe(obsPoint.point.x, obsPoint.point.y);
       final analyzedPoint = _parsePixelToAnalyzedPoint(
         obsPoint: obsPoint,
         pixel32: pixel32,
@@ -82,7 +83,7 @@ class KmoniUseCase {
   /// [type] リアルタイム画像の種別(RealtimeDataType)
   /// [pixel32] 観測点のピクセル
   AnalyzedKmoniObservationPoint _parsePixelToAnalyzedPoint({
-    required KmoniObservationPoint obsPoint,
+    required KyoshinObservationPoint obsPoint,
     required RealtimeDataType type,
     required image.Pixel pixel32,
   }) {
@@ -152,12 +153,11 @@ class KmoniUseCase {
     }
     return p;
   }
-
 }
 
 class KmoniIsolateArg {
   KmoniIsolateArg(this.$1, this.$2, this.$3);
   final List<int> $1;
-  final List<KmoniObservationPoint> $2;
+  final List<KyoshinObservationPoint> $2;
   final RealtimeDataType $3;
 }

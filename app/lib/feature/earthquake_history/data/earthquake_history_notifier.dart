@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/earthquake_history_repository.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
+import 'package:eqmonitor/feature/earthquake_history_details/data/earthquake_history_details_notifier.dart';
 import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -39,6 +40,8 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     required EarthquakeHistoryParameter param,
     required List<EarthquakeParameterRegionItem> regions,
   }) async {
+    ref.invalidate(earthquakeHistoryDetailsNotifierProvider);
+
     final result = await ref
         .read(earthquakeHistoryRepositoryProvider)
         .fetchEarthquakeLists(
@@ -59,6 +62,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
   }
 
   Future<void> refresh() async {
+    ref.invalidate(earthquakeHistoryDetailsNotifierProvider);
     state = const AsyncLoading();
     state =
         await AsyncValue.guard<(List<EarthquakeV1Extended>, int totalCount)>(
@@ -181,19 +185,19 @@ Future<EarthquakeV1Extended> earthquakeV1Extended(
   }
   final regions = earthquakeParameter.regions;
 
-  return  EarthquakeV1Extended(
-            earthquake: data,
-            maxIntensityRegionNames: data.maxIntensityRegionIds
-                ?.map(
-                  (region) => regions
-                      .firstWhereOrNull(
-                        (paramRegion) => int.parse(paramRegion.code) == region,
-                      )
-                      ?.name,
-                )
-                .whereNotNull()
-                .toList(),
-          );
+  return EarthquakeV1Extended(
+    earthquake: data,
+    maxIntensityRegionNames: data.maxIntensityRegionIds
+        ?.map(
+          (region) => regions
+              .firstWhereOrNull(
+                (paramRegion) => int.parse(paramRegion.code) == region,
+              )
+              ?.name,
+        )
+        .whereNotNull()
+        .toList(),
+  );
 }
 
 class EarthquakeParameterHasNotInitializedException implements Exception {}

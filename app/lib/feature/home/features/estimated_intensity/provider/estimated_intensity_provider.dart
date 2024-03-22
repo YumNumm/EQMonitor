@@ -4,7 +4,7 @@ import 'package:eqmonitor/feature/earthquake_history_old/model/state/earthquake_
 import 'package:eqmonitor/feature/home/features/eew/provider/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/features/estimated_intensity/data/estimated_intensity_data_source.dart';
 import 'package:eqmonitor/feature/home/features/kmoni_observation_points/model/kmoni_observation_point.dart';
-import 'package:eqmonitor/feature/home/features/kmoni_observation_points/provider/kmoni_observation_points_provider.dart';
+import 'package:eqmonitor/feature/home/features/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'estimated_intensity_provider.g.dart';
@@ -20,14 +20,14 @@ class EstimatedIntensity extends _$EstimatedIntensity {
   }
 
   List<AnalyzedKmoniObservationPoint> calc(List<EarthquakeHistoryItem> eews) {
-    final points = ref.read(kmoniObservationPointsProvider);
+    final points = ref.read(kyoshinObservationPointsProvider);
     final results = <List<AnalyzedKmoniObservationPoint>>[];
     for (final eew in eews
         .where((e) => e.latestEew != null && e.latestEew is TelegramVxse45Body)
         .map((e) => e.latestEew! as TelegramVxse45Body)) {
       results.add(
         ref.read(estimatedIntensityDataSourceProvider).getEstimatedIntensity(
-              points: points,
+              points: points.points,
               jmaMagnitude: eew.magnitude ?? 0,
               depth: eew.depth ?? 0,
               hypocenter: eew.hypocenter!.coordinate!,
