@@ -223,44 +223,5 @@ class _SliverListBody extends HookConsumerWidget {
       },
     );
 
-    return RefreshIndicator(
-      onRefresh: () async => onRefresh?.call(),
-      child: state.when(
-        loading: () => const Center(
-          child: CircularProgressIndicator.adaptive(),
-        ),
-        error: (error, stackTrace) {
-          if (error is EarthquakeParameterHasNotInitializedException) {
-            final parameterState = ref.watch(jmaParameterProvider);
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('観測点情報が初期化されていません'),
-                  if (parameterState.isLoading)
-                    const CircularProgressIndicator.adaptive()
-                  else
-                    FilledButton(
-                      child: const Text('観測点情報を再取得'),
-                      onPressed: () async =>
-                          ref.invalidate(jmaParameterProvider),
-                    ),
-                ],
-              ),
-            );
-          }
-          final valueOrNull = state.valueOrNull;
-          if (valueOrNull != null) {
-            return listView(data: valueOrNull);
-          }
-          return ErrorInfoWidget(
-            error: error,
-            onRefresh: () => ref.invalidate(earthquakeHistoryNotifierProvider),
-          );
-        },
-        data: (data) => listView(data: data),
-        skipLoadingOnRefresh: true,
-      ),
-    );
   }
 }
