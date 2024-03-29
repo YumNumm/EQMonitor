@@ -25,7 +25,9 @@ class EewV1 with _$EewV1 {
     int? depth,
     double? magnitude,
     JmaForecastIntensity? forecastMaxIntensity,
+    bool? forecastMaxIntensityIsOver,
     JmaForecastLgIntensity? forecastMaxLpgmIntensity,
+    bool? forecastMaxLpgmIntensityIsOver,
   }) = _EewV1;
 
   factory EewV1.fromJson(Map<String, dynamic> json) => _$EewV1FromJson(json);

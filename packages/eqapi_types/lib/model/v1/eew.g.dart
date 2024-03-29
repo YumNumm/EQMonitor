@@ -34,9 +34,13 @@ _$EewV1Impl _$$EewV1ImplFromJson(Map<String, dynamic> json) => $checkedCreate(
               $checkedConvert('magnitude', (v) => (v as num?)?.toDouble()),
           forecastMaxIntensity: $checkedConvert('forecast_max_intensity',
               (v) => $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v)),
+          forecastMaxIntensityIsOver: $checkedConvert(
+              'forecast_max_intensity_is_over', (v) => v as bool?),
           forecastMaxLpgmIntensity: $checkedConvert(
               'forecast_max_lpgm_intensity',
               (v) => $enumDecodeNullable(_$JmaForecastLgIntensityEnumMap, v)),
+          forecastMaxLpgmIntensityIsOver: $checkedConvert(
+              'forecast_max_lpgm_intensity_is_over', (v) => v as bool?),
         );
         return val;
       },
@@ -51,7 +55,9 @@ _$EewV1Impl _$$EewV1ImplFromJson(Map<String, dynamic> json) => $checkedCreate(
         'arrivalTime': 'arrival_time',
         'hypoName': 'hypo_name',
         'forecastMaxIntensity': 'forecast_max_intensity',
-        'forecastMaxLpgmIntensity': 'forecast_max_lpgm_intensity'
+        'forecastMaxIntensityIsOver': 'forecast_max_intensity_is_over',
+        'forecastMaxLpgmIntensity': 'forecast_max_lpgm_intensity',
+        'forecastMaxLpgmIntensityIsOver': 'forecast_max_lpgm_intensity_is_over'
       },
     );
 
@@ -75,8 +81,11 @@ Map<String, dynamic> _$$EewV1ImplToJson(_$EewV1Impl instance) =>
       'magnitude': instance.magnitude,
       'forecast_max_intensity':
           _$JmaForecastIntensityEnumMap[instance.forecastMaxIntensity],
+      'forecast_max_intensity_is_over': instance.forecastMaxIntensityIsOver,
       'forecast_max_lpgm_intensity':
           _$JmaForecastLgIntensityEnumMap[instance.forecastMaxLpgmIntensity],
+      'forecast_max_lpgm_intensity_is_over':
+          instance.forecastMaxLpgmIntensityIsOver,
     };
 
 const _$JmaForecastIntensityEnumMap = {
