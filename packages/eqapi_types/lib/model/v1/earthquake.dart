@@ -1,5 +1,6 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqapi_types/lib.dart';
+import 'package:eqapi_types/model/v1/v1_database.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake.freezed.dart';
@@ -8,7 +9,7 @@ part 'earthquake.g.dart';
 
 
 @freezed
-class EarthquakeV1 with _$EarthquakeV1 {
+class EarthquakeV1 with _$EarthquakeV1 implements V1Database {
   const factory EarthquakeV1({
     DateTime? arrivalTime,
     int? depth,

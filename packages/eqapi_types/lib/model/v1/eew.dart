@@ -1,12 +1,13 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqapi_types/lib.dart';
+import 'package:eqapi_types/model/v1/v1_database.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'eew.freezed.dart';
 part 'eew.g.dart';
 
 @freezed
-class EewV1 with _$EewV1 {
+class EewV1 with _$EewV1 implements V1Database {
   const factory EewV1({
     required int id,
     required int eventId,
