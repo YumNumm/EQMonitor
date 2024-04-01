@@ -20,3 +20,15 @@ extension SafeMapAccess<K, V> on Map<K, V> {
     return this[key] as V;
   }
 }
+
+extension ListIndexWhereOrNull<T> on List<T> {
+  /// 条件に合致する最初の要素のインデックスを取得する
+  /// 条件に合致する要素が存在しない場合はnullを返す
+  int? indexWhereOrNull(bool Function(T) test) {
+    final index = indexWhere(test);
+    if (index == -1) {
+      return null;
+    }
+    return index;
+  }
+}
