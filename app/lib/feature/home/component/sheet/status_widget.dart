@@ -2,7 +2,6 @@ import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/model/kmoni_view_model_state.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
-import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -24,7 +23,6 @@ class SheetStatusWidget extends ConsumerWidget {
     );
     final useKmoni =
         ref.watch(kmoniSettingsProvider.select((value) => value.useKmoni));
-    final socketStatus = ref.watch(socketStatusProvider);
     final theme = Theme.of(context);
 
     Future<void> adjustKmoniDelay() async {
@@ -148,28 +146,7 @@ class SheetStatusWidget extends ConsumerWidget {
           else
             const Spacer(),
           // WS接続状態
-          Tooltip(
-            message: 'WebSocket接続状況',
-            child: Row(
-              children: [
-                if (socketStatus.connected) ...[
-                  const Icon(
-                    Icons.cloud_sync_rounded,
-                    color: Colors.green,
-                  ),
-                  const SizedBox(width: 4),
-                  const Text('接続済み'),
-                ] else ...[
-                  const Icon(
-                    Icons.cloud_off_rounded,
-                    color: Colors.red,
-                  ),
-                  const SizedBox(width: 4),
-                  const Text('接続試行中...'),
-                ],
-              ],
-            ),
-          ),
+          // TODO(YumNumm): 未実装
         ],
       ),
     );

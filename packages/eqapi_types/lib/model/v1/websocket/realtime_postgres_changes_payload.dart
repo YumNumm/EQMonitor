@@ -146,6 +146,9 @@ sealed class RealtimePostgresChangesPayloadBase {
   final List<String> errors;
 }
 
+sealed class RealtimePostgresChangesPayloadTable<T extends V1Database>
+    implements RealtimePostgresChangesPayloadBase {}
+
 enum PublicTable {
   earthquake,
   eew,
@@ -159,7 +162,9 @@ enum PublicTable {
 @Freezed(genericArgumentFactories: true)
 class RealtimePostgresInsertPayload<T extends V1Database>
     with _$RealtimePostgresInsertPayload<T>
-    implements RealtimePostgresChangesPayloadBase {
+    implements
+        RealtimePostgresChangesPayloadBase,
+        RealtimePostgresChangesPayloadTable<T> {
   const factory RealtimePostgresInsertPayload({
     required String schema,
     required String table,
@@ -182,7 +187,9 @@ class RealtimePostgresInsertPayload<T extends V1Database>
 @Freezed(genericArgumentFactories: true)
 class RealtimePostgresUpdatePayload<T extends V1Database>
     with _$RealtimePostgresUpdatePayload<T>
-    implements RealtimePostgresChangesPayloadBase {
+    implements
+        RealtimePostgresChangesPayloadBase,
+        RealtimePostgresChangesPayloadTable<T> {
   const factory RealtimePostgresUpdatePayload({
     required String schema,
     required String table,
@@ -207,7 +214,9 @@ class RealtimePostgresUpdatePayload<T extends V1Database>
 @Freezed(genericArgumentFactories: true)
 class RealtimePostgresDeletePayload<T extends V1Database>
     with _$RealtimePostgresDeletePayload<T>
-    implements RealtimePostgresChangesPayloadBase {
+    implements
+        RealtimePostgresChangesPayloadBase,
+        RealtimePostgresChangesPayloadTable<T> {
   const factory RealtimePostgresDeletePayload({
     required String schema,
     required String table,

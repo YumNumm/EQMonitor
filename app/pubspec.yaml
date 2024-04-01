@@ -113,7 +113,7 @@ dependencies:
   uuid: ^4.3.3
   vector_math: ^2.1.4
   version: ^3.0.2
-  web_socket_client: ^0.1.0
+  web_socket_client: ^0.1.1
   widgetbook: ^3.7.1
   widgetbook_annotation: ^3.1.0
 

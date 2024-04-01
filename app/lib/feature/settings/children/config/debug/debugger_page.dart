@@ -2,7 +2,6 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
 import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
 import 'package:eqmonitor/feature/home/features/telegram_url/provider/telegram_url_provider.dart';
-import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -54,12 +53,6 @@ class _DebugWidget extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SheetHeader(title: 'デバッグメニュー'),
-            ListTile(
-              title: const Text('Request Sample EEW Telegram'),
-              subtitle: const Text('EventID: 20171213112000'),
-              leading: const Icon(Icons.send),
-              onTap: ref.read(telegramWsProvider.notifier).requestSample,
-            ),
             ListTile(
               title: const Text('ログ'),
               leading: const Icon(Icons.list),

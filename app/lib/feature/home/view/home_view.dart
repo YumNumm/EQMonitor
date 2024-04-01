@@ -25,9 +25,7 @@ import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model
 import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_widget.dart';
 import 'package:eqmonitor/feature/home/features/map/view/main_map_view.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
-import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -178,7 +176,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
                 }
                 await Future<void>.delayed(const Duration(milliseconds: 1000));
                 return true;
-              // ignore: avoid_catches_without_on_clauses
+                // ignore: avoid_catches_without_on_clauses
               } catch (e) {
                 log('画像のキャッシュ 失敗: $e');
                 await Future<void>.delayed(const Duration(milliseconds: 1000));
@@ -289,12 +287,6 @@ class _Fabs extends ConsumerWidget {
           elevation: 4,
           child: const Icon(Icons.home),
         ),
-        if (kDebugMode)
-          FloatingActionButton.small(
-            onPressed: ref.read(telegramWsProvider.notifier).requestSample,
-            heroTag: 'sample',
-            child: const Icon(Icons.warning),
-          ),
       ],
     );
   }
