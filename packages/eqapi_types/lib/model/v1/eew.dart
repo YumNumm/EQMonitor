@@ -15,6 +15,7 @@ class EewV1 with _$EewV1 implements V1Database {
     required String schemaType,
     required String status,
     required String infoType,
+    required DateTime reportTime,
     int? serialno,
     String? headline,
     required bool isCanceled,

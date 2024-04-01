@@ -26,6 +26,7 @@ mixin _$EewV1 {
   String get schemaType => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
   String get infoType => throw _privateConstructorUsedError;
+  DateTime get reportTime => throw _privateConstructorUsedError;
   int? get serialno => throw _privateConstructorUsedError;
   String? get headline => throw _privateConstructorUsedError;
   bool get isCanceled => throw _privateConstructorUsedError;
@@ -65,6 +66,7 @@ abstract class $EewV1CopyWith<$Res> {
       String schemaType,
       String status,
       String infoType,
+      DateTime reportTime,
       int? serialno,
       String? headline,
       bool isCanceled,
@@ -103,6 +105,7 @@ class _$EewV1CopyWithImpl<$Res, $Val extends EewV1>
     Object? schemaType = null,
     Object? status = null,
     Object? infoType = null,
+    Object? reportTime = null,
     Object? serialno = freezed,
     Object? headline = freezed,
     Object? isCanceled = null,
@@ -146,6 +149,10 @@ class _$EewV1CopyWithImpl<$Res, $Val extends EewV1>
           ? _value.infoType
           : infoType // ignore: cast_nullable_to_non_nullable
               as String,
+      reportTime: null == reportTime
+          ? _value.reportTime
+          : reportTime // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       serialno: freezed == serialno
           ? _value.serialno
           : serialno // ignore: cast_nullable_to_non_nullable
@@ -232,6 +239,7 @@ abstract class _$$EewV1ImplCopyWith<$Res> implements $EewV1CopyWith<$Res> {
       String schemaType,
       String status,
       String infoType,
+      DateTime reportTime,
       int? serialno,
       String? headline,
       bool isCanceled,
@@ -268,6 +276,7 @@ class __$$EewV1ImplCopyWithImpl<$Res>
     Object? schemaType = null,
     Object? status = null,
     Object? infoType = null,
+    Object? reportTime = null,
     Object? serialno = freezed,
     Object? headline = freezed,
     Object? isCanceled = null,
@@ -311,6 +320,10 @@ class __$$EewV1ImplCopyWithImpl<$Res>
           ? _value.infoType
           : infoType // ignore: cast_nullable_to_non_nullable
               as String,
+      reportTime: null == reportTime
+          ? _value.reportTime
+          : reportTime // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       serialno: freezed == serialno
           ? _value.serialno
           : serialno // ignore: cast_nullable_to_non_nullable
@@ -393,6 +406,7 @@ class _$EewV1Impl implements _EewV1 {
       required this.schemaType,
       required this.status,
       required this.infoType,
+      required this.reportTime,
       this.serialno,
       this.headline,
       required this.isCanceled,
@@ -427,6 +441,8 @@ class _$EewV1Impl implements _EewV1 {
   final String status;
   @override
   final String infoType;
+  @override
+  final DateTime reportTime;
   @override
   final int? serialno;
   @override
@@ -471,7 +487,7 @@ class _$EewV1Impl implements _EewV1 {
 
   @override
   String toString() {
-    return 'EewV1(id: $id, eventId: $eventId, type: $type, schemaType: $schemaType, status: $status, infoType: $infoType, serialno: $serialno, headline: $headline, isCanceled: $isCanceled, isWarning: $isWarning, isLastInfo: $isLastInfo, originTime: $originTime, arrivalTime: $arrivalTime, hypoName: $hypoName, depth: $depth, latitude: $latitude, longitude: $longitude, magnitude: $magnitude, forecastMaxIntensity: $forecastMaxIntensity, forecastMaxIntensityIsOver: $forecastMaxIntensityIsOver, forecastMaxLpgmIntensity: $forecastMaxLpgmIntensity, forecastMaxLpgmIntensityIsOver: $forecastMaxLpgmIntensityIsOver, regions: $regions)';
+    return 'EewV1(id: $id, eventId: $eventId, type: $type, schemaType: $schemaType, status: $status, infoType: $infoType, reportTime: $reportTime, serialno: $serialno, headline: $headline, isCanceled: $isCanceled, isWarning: $isWarning, isLastInfo: $isLastInfo, originTime: $originTime, arrivalTime: $arrivalTime, hypoName: $hypoName, depth: $depth, latitude: $latitude, longitude: $longitude, magnitude: $magnitude, forecastMaxIntensity: $forecastMaxIntensity, forecastMaxIntensityIsOver: $forecastMaxIntensityIsOver, forecastMaxLpgmIntensity: $forecastMaxLpgmIntensity, forecastMaxLpgmIntensityIsOver: $forecastMaxLpgmIntensityIsOver, regions: $regions)';
   }
 
   @override
@@ -487,6 +503,8 @@ class _$EewV1Impl implements _EewV1 {
             (identical(other.status, status) || other.status == status) &&
             (identical(other.infoType, infoType) ||
                 other.infoType == infoType) &&
+            (identical(other.reportTime, reportTime) ||
+                other.reportTime == reportTime) &&
             (identical(other.serialno, serialno) ||
                 other.serialno == serialno) &&
             (identical(other.headline, headline) ||
@@ -536,6 +554,7 @@ class _$EewV1Impl implements _EewV1 {
         schemaType,
         status,
         infoType,
+        reportTime,
         serialno,
         headline,
         isCanceled,
@@ -577,6 +596,7 @@ abstract class _EewV1 implements EewV1 {
       required final String schemaType,
       required final String status,
       required final String infoType,
+      required final DateTime reportTime,
       final int? serialno,
       final String? headline,
       required final bool isCanceled,
@@ -609,6 +629,8 @@ abstract class _EewV1 implements EewV1 {
   String get status;
   @override
   String get infoType;
+  @override
+  DateTime get reportTime;
   @override
   int? get serialno;
   @override
