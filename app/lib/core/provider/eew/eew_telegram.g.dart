@@ -22,7 +22,7 @@ final _eewRestProvider = AutoDisposeFutureProvider<List<EewV1>>.internal(
 );
 
 typedef _EewRestRef = AutoDisposeFutureProviderRef<List<EewV1>>;
-String _$eewHash() => r'20b895f06445cf6b1821584698f2505097f68eed';
+String _$eewHash() => r'438572edc746240738da2ee179de10c43b654756';
 
 /// See also [Eew].
 @ProviderFor(Eew)

@@ -1,4 +1,5 @@
 import 'package:eqapi_types/lib.dart';
+import 'package:eqapi_types/model/components/region_intensity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'intensity.freezed.dart';

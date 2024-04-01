@@ -6,6 +6,8 @@ import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart' as eqapi_types;
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqapi_types/lib.dart';
+import 'package:eqapi_types/model/components/eew_intensity.dart';
+import 'package:eqapi_types/model/components/eew_region.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';

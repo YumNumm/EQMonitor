@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqapi_types/model/v1/websocket/realtime_postgres_changes_payload.dart';
 import 'package:eqmonitor/core/api/eq_api.dart';
 import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
+import 'package:extensions/extensions.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:web_socket_client/web_socket_client.dart';
 
@@ -20,6 +22,15 @@ class Eew extends _$Eew {
     }
 
     // WebSocketのListen開始
+    ref.listen(
+      websocketTableMessagesProvider<EewV1>(),
+      (_, next) {
+        final valueOrNull = next.valueOrNull;
+        if (valueOrNull is RealtimePostgresInsertPayload<EewV1>) {
+          _upsert(valueOrNull.newData);
+        }
+      },
+    );
 
     final refreshTimer = Timer.periodic(
       const Duration(seconds: 10),
@@ -36,6 +47,30 @@ class Eew extends _$Eew {
       return;
     }
     ref.invalidate(_eewRestProvider);
+  }
+
+  /// [item]をstateに追加する
+  /// 既に同じeventIdが存在する場合は、serialnoが大きい方を採用する
+  void _upsert(EewV1 item) {
+    if (state is AsyncData) {
+      final dataView = state.value;
+      if (dataView == null) {
+        return;
+      }
+      final data = [...dataView];
+      final index = data.indexWhereOrNull((e) => e.eventId == item.eventId);
+      if (index != null) {
+        final previous = data[index];
+        final previousSerialNo = previous.serialno ?? 0;
+        final newSerialNo = item.serialno ?? 0;
+        if (previousSerialNo <= newSerialNo) {
+          data[index] = item;
+        }
+      } else {
+        data.add(item);
+      }
+      state = AsyncData(data);
+    }
   }
 }
 

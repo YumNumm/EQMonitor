@@ -1,6 +1,15 @@
 // ignore_for_file: deprecated_consistency
 
 import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqapi_types/model/components/earthquake-explanation/naming.dart';
+import 'package:eqapi_types/model/components/earthquake-nankai/earthquake_info.dart';
+import 'package:eqapi_types/model/components/eew_hypocenter.dart';
+import 'package:eqapi_types/model/components/eew_intensity.dart';
+import 'package:eqapi_types/model/components/eew_region.dart';
+import 'package:eqapi_types/model/components/tsunami-information/comments.dart';
+import 'package:eqapi_types/model/components/tsunami-information/vtse41.dart';
+import 'package:eqapi_types/model/components/tsunami-information/vtse51.dart';
+import 'package:eqapi_types/model/components/tsunami-information/vtse52.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'telegram_v3.freezed.dart';
@@ -397,7 +406,7 @@ class TelegramVxse45Body
   @JsonSerializable(fieldRename: FieldRename.none)
   const factory TelegramVxse45Body({
     required double? magnitude,
-    required EewHypocenter? hypocenter,
+    required EewHypocenter hypocenter,
     required int? depth,
     required ForecastMaxInt? forecastMaxInt,
     required ForecastMaxLgInt? forecastMaxLgInt,

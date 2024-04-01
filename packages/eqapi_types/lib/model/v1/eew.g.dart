@@ -52,6 +52,12 @@ _$EewV1Impl _$$EewV1ImplFromJson(Map<String, dynamic> json) => $checkedCreate(
                   ?.map((e) => EstimatedIntensityRegion.fromJson(
                       e as Map<String, dynamic>))
                   .toList()),
+          isPlum: $checkedConvert('is_plum', (v) => v as bool?),
+          accuracy: $checkedConvert(
+              'accuracy',
+              (v) => v == null
+                  ? null
+                  : EewAccuracy.fromJson(v as Map<String, dynamic>)),
         );
         return val;
       },
@@ -69,7 +75,8 @@ _$EewV1Impl _$$EewV1ImplFromJson(Map<String, dynamic> json) => $checkedCreate(
         'forecastMaxIntensity': 'forecast_max_intensity',
         'forecastMaxIntensityIsOver': 'forecast_max_intensity_is_over',
         'forecastMaxLpgmIntensity': 'forecast_max_lpgm_intensity',
-        'forecastMaxLpgmIntensityIsOver': 'forecast_max_lpgm_intensity_is_over'
+        'forecastMaxLpgmIntensityIsOver': 'forecast_max_lpgm_intensity_is_over',
+        'isPlum': 'is_plum'
       },
     );
 
@@ -102,6 +109,8 @@ Map<String, dynamic> _$$EewV1ImplToJson(_$EewV1Impl instance) =>
       'forecast_max_lpgm_intensity_is_over':
           instance.forecastMaxLpgmIntensityIsOver,
       'regions': instance.regions,
+      'is_plum': instance.isPlum,
+      'accuracy': instance.accuracy,
     };
 
 const _$JmaForecastIntensityEnumMap = {
@@ -159,4 +168,31 @@ Map<String, dynamic> _$$EstimatedIntensityRegionImplToJson(
       'forecastMaxInt': instance.forecastMaxInt,
       'forecastMaxLgInt': instance.forecastMaxLgInt,
       'arrivalTime': instance.arrivalTime?.toIso8601String(),
+    };
+
+_$EewAccuracyImpl _$$EewAccuracyImplFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      r'_$EewAccuracyImpl',
+      json,
+      ($checkedConvert) {
+        final val = _$EewAccuracyImpl(
+          epicenters: $checkedConvert(
+              'epicenters', (v) => stringListToIntList(v as List<String>)),
+          depth: $checkedConvert('depth', (v) => int.parse(v as String)),
+          magnitudeCalcuration: $checkedConvert(
+              'magnitudeCalcuration', (v) => int.parse(v as String)),
+          numberOfMagnitudeCalculation: $checkedConvert(
+              'numberOfMagnitudeCalculation', (v) => int.parse(v as String)),
+        );
+        return val;
+      },
+    );
+
+Map<String, dynamic> _$$EewAccuracyImplToJson(_$EewAccuracyImpl instance) =>
+    <String, dynamic>{
+      'epicenters': intListToStringList(instance.epicenters),
+      'depth': intToString(instance.depth),
+      'magnitudeCalcuration': intToString(instance.magnitudeCalcuration),
+      'numberOfMagnitudeCalculation':
+          intToString(instance.numberOfMagnitudeCalculation),
     };

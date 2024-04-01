@@ -57,24 +57,8 @@ final websocketParsedMessagesProvider =
 
 typedef WebsocketParsedMessagesRef
     = AutoDisposeStreamProviderRef<RealtimePostgresChangesPayloadBase>;
-String _$websocketStatusHash() => r'0a02dad8afb47defa1ef60cc7ca9f448372ea77d';
-
-/// See also [WebsocketStatus].
-@ProviderFor(WebsocketStatus)
-final websocketStatusProvider =
-    AutoDisposeNotifierProvider<WebsocketStatus, ConnectionState>.internal(
-  WebsocketStatus.new,
-  name: r'websocketStatusProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$websocketStatusHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$WebsocketStatus = AutoDisposeNotifier<ConnectionState>;
-String _$realtimePostgresChangesPayloadTableMessageHash() =>
-    r'9d1fa8be66aebe22bc08e93b11e5fd6af066fa3f';
+String _$websocketTableMessagesHash() =>
+    r'a2cc8d87641f64a119a88fc5c9c7b716dd25476f';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -97,22 +81,14 @@ class _SystemHash {
   }
 }
 
-abstract class _$RealtimePostgresChangesPayloadTableMessage<
-        T extends V1Database>
-    extends BuildlessAutoDisposeStreamNotifier<
-        RealtimePostgresChangesPayloadTable<T>> {
-  Stream<RealtimePostgresChangesPayloadTable<T>> build();
-}
+/// See also [websocketTableMessages].
+@ProviderFor(websocketTableMessages)
+const websocketTableMessagesProvider = WebsocketTableMessagesFamily();
 
-/// See also [RealtimePostgresChangesPayloadTableMessage].
-@ProviderFor(RealtimePostgresChangesPayloadTableMessage)
-const realtimePostgresChangesPayloadTableMessageProvider =
-    RealtimePostgresChangesPayloadTableMessageFamily();
-
-/// See also [RealtimePostgresChangesPayloadTableMessage].
-class RealtimePostgresChangesPayloadTableMessageFamily extends Family {
-  /// See also [RealtimePostgresChangesPayloadTableMessage].
-  const RealtimePostgresChangesPayloadTableMessageFamily();
+/// See also [websocketTableMessages].
+class WebsocketTableMessagesFamily extends Family {
+  /// See also [websocketTableMessages].
+  const WebsocketTableMessagesFamily();
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
 
@@ -126,73 +102,68 @@ class RealtimePostgresChangesPayloadTableMessageFamily extends Family {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'realtimePostgresChangesPayloadTableMessageProvider';
+  String? get name => r'websocketTableMessagesProvider';
 
-  /// See also [RealtimePostgresChangesPayloadTableMessage].
-  RealtimePostgresChangesPayloadTableMessageProvider<T>
-      call<T extends V1Database>() {
-    return RealtimePostgresChangesPayloadTableMessageProvider<T>();
+  /// See also [websocketTableMessages].
+  WebsocketTableMessagesProvider<T> call<T extends V1Database>() {
+    return WebsocketTableMessagesProvider<T>();
   }
 
   @visibleForOverriding
   @override
-  RealtimePostgresChangesPayloadTableMessageProvider<V1Database>
-      getProviderOverride(
-    covariant RealtimePostgresChangesPayloadTableMessageProvider<V1Database>
-        provider,
+  WebsocketTableMessagesProvider<V1Database> getProviderOverride(
+    covariant WebsocketTableMessagesProvider<V1Database> provider,
   ) {
     return call();
   }
 
   /// Enables overriding the behavior of this provider, no matter the parameters.
   Override overrideWith(
-      RealtimePostgresChangesPayloadTableMessage Function() create) {
-    return _$RealtimePostgresChangesPayloadTableMessageFamilyOverride(
-        this, create);
+      Stream<RealtimePostgresChangesPayloadTable<T>>
+              Function<T extends V1Database>(WebsocketTableMessagesRef ref)
+          create) {
+    return _$WebsocketTableMessagesFamilyOverride(this, create);
   }
 }
 
-class _$RealtimePostgresChangesPayloadTableMessageFamilyOverride
-    implements FamilyOverride {
-  _$RealtimePostgresChangesPayloadTableMessageFamilyOverride(
-      this.overriddenFamily, this.create);
+class _$WebsocketTableMessagesFamilyOverride implements FamilyOverride {
+  _$WebsocketTableMessagesFamilyOverride(this.overriddenFamily, this.create);
 
-  final RealtimePostgresChangesPayloadTableMessage Function() create;
-
-  @override
-  final RealtimePostgresChangesPayloadTableMessageFamily overriddenFamily;
+  final Stream<RealtimePostgresChangesPayloadTable<T>>
+      Function<T extends V1Database>(WebsocketTableMessagesRef ref) create;
 
   @override
-  RealtimePostgresChangesPayloadTableMessageProvider getProviderOverride(
-    covariant RealtimePostgresChangesPayloadTableMessageProvider provider,
+  final WebsocketTableMessagesFamily overriddenFamily;
+
+  @override
+  WebsocketTableMessagesProvider getProviderOverride(
+    covariant WebsocketTableMessagesProvider provider,
   ) {
     return provider._copyWith(create);
   }
 }
 
-/// See also [RealtimePostgresChangesPayloadTableMessage].
-class RealtimePostgresChangesPayloadTableMessageProvider<T extends V1Database>
-    extends AutoDisposeStreamNotifierProviderImpl<
-        RealtimePostgresChangesPayloadTableMessage<T>,
-        RealtimePostgresChangesPayloadTable<T>> {
-  /// See also [RealtimePostgresChangesPayloadTableMessage].
-  RealtimePostgresChangesPayloadTableMessageProvider()
+/// See also [websocketTableMessages].
+class WebsocketTableMessagesProvider<T extends V1Database>
+    extends AutoDisposeStreamProvider<RealtimePostgresChangesPayloadTable<T>> {
+  /// See also [websocketTableMessages].
+  WebsocketTableMessagesProvider()
       : this._internal(
-          RealtimePostgresChangesPayloadTableMessage<T>.new,
-          from: realtimePostgresChangesPayloadTableMessageProvider,
-          name: r'realtimePostgresChangesPayloadTableMessageProvider',
+          (ref) => websocketTableMessages<T>(
+            ref as WebsocketTableMessagesRef<T>,
+          ),
+          from: websocketTableMessagesProvider,
+          name: r'websocketTableMessagesProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$realtimePostgresChangesPayloadTableMessageHash,
-          dependencies:
-              RealtimePostgresChangesPayloadTableMessageFamily._dependencies,
+                  : _$websocketTableMessagesHash,
+          dependencies: WebsocketTableMessagesFamily._dependencies,
           allTransitiveDependencies:
-              RealtimePostgresChangesPayloadTableMessageFamily
-                  ._allTransitiveDependencies,
+              WebsocketTableMessagesFamily._allTransitiveDependencies,
         );
 
-  RealtimePostgresChangesPayloadTableMessageProvider._internal(
+  WebsocketTableMessagesProvider._internal(
     super.create, {
     required super.name,
     required super.dependencies,
@@ -202,19 +173,15 @@ class RealtimePostgresChangesPayloadTableMessageProvider<T extends V1Database>
   }) : super.internal();
 
   @override
-  Stream<RealtimePostgresChangesPayloadTable<T>> runNotifierBuild(
-    covariant RealtimePostgresChangesPayloadTableMessage<T> notifier,
-  ) {
-    return notifier.build();
-  }
-
-  @override
   Override overrideWith(
-      RealtimePostgresChangesPayloadTableMessage<T> Function() create) {
+    Stream<RealtimePostgresChangesPayloadTable<T>> Function(
+            WebsocketTableMessagesRef<T> ref)
+        create,
+  ) {
     return ProviderOverride(
       origin: this,
-      override: RealtimePostgresChangesPayloadTableMessageProvider<T>._internal(
-        () => create(),
+      override: WebsocketTableMessagesProvider<T>._internal(
+        (ref) => create(ref as WebsocketTableMessagesRef<T>),
         from: from,
         name: null,
         dependencies: null,
@@ -230,17 +197,18 @@ class RealtimePostgresChangesPayloadTableMessageProvider<T extends V1Database>
   }
 
   @override
-  AutoDisposeStreamNotifierProviderElement<
-      RealtimePostgresChangesPayloadTableMessage<T>,
-      RealtimePostgresChangesPayloadTable<T>> createElement() {
-    return _RealtimePostgresChangesPayloadTableMessageProviderElement(this);
+  AutoDisposeStreamProviderElement<RealtimePostgresChangesPayloadTable<T>>
+      createElement() {
+    return _WebsocketTableMessagesProviderElement(this);
   }
 
-  RealtimePostgresChangesPayloadTableMessageProvider _copyWith(
-    RealtimePostgresChangesPayloadTableMessage Function() create,
+  WebsocketTableMessagesProvider _copyWith(
+    Stream<RealtimePostgresChangesPayloadTable<T>>
+            Function<T extends V1Database>(WebsocketTableMessagesRef ref)
+        create,
   ) {
-    return RealtimePostgresChangesPayloadTableMessageProvider._internal(
-      () => create(),
+    return WebsocketTableMessagesProvider._internal(
+      (ref) => create(ref as WebsocketTableMessagesRef),
       name: name,
       dependencies: dependencies,
       allTransitiveDependencies: allTransitiveDependencies,
@@ -251,7 +219,7 @@ class RealtimePostgresChangesPayloadTableMessageProvider<T extends V1Database>
 
   @override
   bool operator ==(Object other) {
-    return other is RealtimePostgresChangesPayloadTableMessageProvider &&
+    return other is WebsocketTableMessagesProvider &&
         other.runtimeType == runtimeType;
   }
 
@@ -264,17 +232,31 @@ class RealtimePostgresChangesPayloadTableMessageProvider<T extends V1Database>
   }
 }
 
-mixin RealtimePostgresChangesPayloadTableMessageRef<T extends V1Database>
-    on AutoDisposeStreamNotifierProviderRef<
-        RealtimePostgresChangesPayloadTable<T>> {}
+mixin WebsocketTableMessagesRef<T extends V1Database>
+    on AutoDisposeStreamProviderRef<RealtimePostgresChangesPayloadTable<T>> {}
 
-class _RealtimePostgresChangesPayloadTableMessageProviderElement<
-        T extends V1Database>
-    extends AutoDisposeStreamNotifierProviderElement<
-        RealtimePostgresChangesPayloadTableMessage<T>,
+class _WebsocketTableMessagesProviderElement<T extends V1Database>
+    extends AutoDisposeStreamProviderElement<
         RealtimePostgresChangesPayloadTable<T>>
-    with RealtimePostgresChangesPayloadTableMessageRef<T> {
-  _RealtimePostgresChangesPayloadTableMessageProviderElement(super.provider);
+    with WebsocketTableMessagesRef<T> {
+  _WebsocketTableMessagesProviderElement(super.provider);
 }
+
+String _$websocketStatusHash() => r'0a02dad8afb47defa1ef60cc7ca9f448372ea77d';
+
+/// See also [WebsocketStatus].
+@ProviderFor(WebsocketStatus)
+final websocketStatusProvider =
+    AutoDisposeNotifierProvider<WebsocketStatus, ConnectionState>.internal(
+  WebsocketStatus.new,
+  name: r'websocketStatusProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$websocketStatusHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$WebsocketStatus = AutoDisposeNotifier<ConnectionState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

@@ -68,11 +68,11 @@ Stream<RealtimePostgresChangesPayloadBase> websocketParsedMessages(
     ..onDispose(controller.close);
   return controller.stream;
 }
-/*
+
 @riverpod
 Stream<RealtimePostgresChangesPayloadTable<T>>
-    realtimePostgresChangesPayloadTableMessage<T extends V1Database>(
-  RealtimePostgresChangesPayloadTableMessageRef<T> ref,
+    websocketTableMessages<T extends V1Database>(
+  WebsocketTableMessagesRef<T> ref,
 ) {
   final controller = StreamController<RealtimePostgresChangesPayloadTable<T>>();
   ref
@@ -87,14 +87,4 @@ Stream<RealtimePostgresChangesPayloadTable<T>>
     })
     ..onDispose(controller.close);
   return controller.stream;
-}
-*/
-
-@riverpod
-class RealtimePostgresChangesPayloadTableMessage<T extends V1Database>
-    extends _$RealtimePostgresChangesPayloadTableMessage<T> {
-  @override
-  Stream<RealtimePostgresChangesPayloadTable<T>> build() {
-    throw UnimplementedError();
-  }
 }
