@@ -1,17 +1,23 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqapi_types/model/v1/websocket/realtime_postgres_changes_payload.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
+import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/earthquake_history_repository.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/data/earthquake_history_details_notifier.dart';
+import 'package:extensions/extensions.dart';
 import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:web_socket_client/web_socket_client.dart';
 
 part 'earthquake_history_notifier.g.dart';
 
-typedef EarthquakeHistoryNotifierStaet = (
+typedef EarthquakeHistoryNotifierState = (
   List<EarthquakeV1Extended>,
   int totalCount
 );
@@ -19,7 +25,7 @@ typedef EarthquakeHistoryNotifierStaet = (
 @riverpod
 class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
   @override
-  Future<EarthquakeHistoryNotifierStaet> build(
+  Future<EarthquakeHistoryNotifierState> build(
     EarthquakeHistoryParameter parameter,
   ) async {
     // ensure earthquakeParameter has been initialized.
@@ -29,6 +35,15 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
 
     if (earthquakeParameter == null) {
       throw EarthquakeParameterHasNotInitializedException();
+    }
+    // 検索条件を指定していないNotifierでのみ、30秒ごとにデータ再取得するタイマーを設定
+    if (parameter == EarthquakeHistoryParameter.empty()) {
+      // 30秒ごとにデータ再取得するタイマー
+      final refetchTimer = Timer.periodic(
+        const Duration(seconds: 30),
+        (_) => _refreshIfWebsocketNotConnected(),
+      );
+      ref.onDispose(refetchTimer.cancel);
     }
     return _fetchInitialData(
       param: parameter,
@@ -127,6 +142,57 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     );
   }
 
+  Future<void> _refreshIfWebsocketNotConnected() async {
+    // AsyncData以外の場合は何もしない
+    if (state is! AsyncData<EarthquakeHistoryNotifierState>) {
+      return;
+    }
+    // WebSocketが接続されている場合は何もしない
+    final webSocketState = ref.read(websocketStatusProvider);
+    if (webSocketState is Connected || webSocketState is Connecting) {
+      return;
+    }
+    // パラメータが指定されている場合は何もしない
+    if (parameter != EarthquakeHistoryParameter.empty()) {
+      return;
+    }
+
+    // リフレッシュ処理を実行
+    final repository = ref.read(earthquakeHistoryRepositoryProvider);
+    final result = await repository.fetchEarthquakeLists();
+    await _upsertEarthquakeV1s(result.items);
+  }
+
+  Future<void> _upsertEarthquakeV1s(List<EarthquakeV1> items) async {
+    // AsyncValue以外の場合は何もしない
+    if (state is! AsyncData<EarthquakeHistoryNotifierState>) {
+      return;
+    }
+    final currentData = state.valueOrNull;
+    if (currentData == null) {
+      return;
+    }
+    final baseHistories = currentData.$1;
+    final histories = [...baseHistories];
+    final extended = await _v1ToV1Extended(
+      data: items,
+      regions: ref.read(jmaParameterProvider).valueOrNull!.earthquake.regions,
+    );
+    for (final item in extended) {
+      final index = histories.indexWhereOrNull(
+        (element) => element.eventId == item.eventId,
+      );
+      if (index == null) {
+        histories.add(item);
+      } else {
+        histories[index] = item;
+      }
+    }
+    state = AsyncData(
+      (histories, currentData.$2),
+    );
+  }
+
   Future<List<EarthquakeV1Extended>> _v1ToV1Extended({
     required List<EarthquakeV1> data,
     required List<EarthquakeParameterRegionItem> regions,
@@ -166,6 +232,33 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     stopWatch.stop();
     log('compute time: ${stopWatch.elapsedMilliseconds}ms');
     return result;*/
+  }
+
+  /// WebSocketからのデータを適用する
+  void applyWebSocketData(
+    RealtimePostgresChangesPayloadTable<EarthquakeV1> payload,
+  ) {
+    // AsyncValue以外の場合は何もしない
+    if (state is! AsyncData<EarthquakeHistoryNotifierState>) {
+      return;
+    }
+    final currentData = state.valueOrNull;
+    if (currentData == null) {
+      return;
+    }
+    switch (payload) {
+      case RealtimePostgresInsertPayload<EarthquakeV1>():
+        () {
+          final newData = payload.newData;
+          // もしも、同一event_idのデータが既に存在していた場合は、更新する
+          final index = currentData.$1.indexWhereOrNull(
+            (element) => element.eventId == newData.eventId,
+          );
+          if (index == null) {}
+        }();
+      case RealtimePostgresUpdatePayload<EarthquakeV1>():
+      case RealtimePostgresDeletePayload<EarthquakeV1>():
+    }
   }
 }
 
@@ -207,4 +300,64 @@ extension EarthquakeHistoryState on (
   int totalCount
 ) {
   bool get hasNext => $1.length < $2;
+}
+
+extension EarthquakeHistoryParameterMatch on EarthquakeHistoryParameter {
+  bool isRealtimeDataMatch(
+    RealtimePostgresChangesPayloadTable<EarthquakeV1> payload,
+  ) {
+    return switch (payload) {
+      RealtimePostgresInsertPayload<EarthquakeV1>() =>
+        isEarthquakeV1Match(payload.newData),
+      RealtimePostgresUpdatePayload<EarthquakeV1>() =>
+        isEarthquakeV1Match(payload.newData),
+      RealtimePostgresDeletePayload<EarthquakeV1>() => false,
+    };
+  }
+
+  bool isEarthquakeV1Match(EarthquakeV1 data) {
+    // intensity
+    final intensity = data.maxIntensity;
+    if (intensity == null) {
+      return false;
+    }
+    // intensityGte
+    if (intensityGte != null && intensity < intensityGte!) {
+      return false;
+    }
+    // intensityLte
+    if (intensityLte != null && intensity > intensityLte!) {
+      return false;
+    }
+
+    // magnitude
+    final magnitude = data.magnitude;
+    if (magnitude == null) {
+      return false;
+    }
+    // magnitudeGte
+    if (magnitudeGte != null && magnitude < magnitudeGte!) {
+      return false;
+    }
+    // magnitudeLte
+    if (magnitudeLte != null && magnitude > magnitudeLte!) {
+      return false;
+    }
+
+    // depth
+    final depth = data.depth;
+    if (depth == null) {
+      return false;
+    }
+    // depthGte
+    if (depthGte != null && depth < depthGte!) {
+      return false;
+    }
+    // depthLte
+    if (depthLte != null && depth > depthLte!) {
+      return false;
+    }
+
+    return true;
+  }
 }

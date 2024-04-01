@@ -16,6 +16,9 @@ class EarthquakeHistoryParameter with _$EarthquakeHistoryParameter {
     JmaIntensity? intensityLte,
     JmaIntensity? intensityGte,
   }) = _EarthquakeHistoryParameter;
+
+  factory EarthquakeHistoryParameter.empty() =>
+      const EarthquakeHistoryParameter();
 }
 
 extension EarthquakeHistoryParameterEx on EarthquakeHistoryParameter {

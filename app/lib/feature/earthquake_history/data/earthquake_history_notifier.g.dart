@@ -164,13 +164,13 @@ class _EarthquakeV1ExtendedProviderElement
 }
 
 String _$earthquakeHistoryNotifierHash() =>
-    r'55cee170770e13bad65f96f31c85b2164e11e949';
+    r'89f651d42728dc94a396c3d5ea5063a0f63c0762';
 
 abstract class _$EarthquakeHistoryNotifier
-    extends BuildlessAutoDisposeAsyncNotifier<EarthquakeHistoryNotifierStaet> {
+    extends BuildlessAutoDisposeAsyncNotifier<EarthquakeHistoryNotifierState> {
   late final EarthquakeHistoryParameter parameter;
 
-  FutureOr<EarthquakeHistoryNotifierStaet> build(
+  FutureOr<EarthquakeHistoryNotifierState> build(
     EarthquakeHistoryParameter parameter,
   );
 }
@@ -181,7 +181,7 @@ const earthquakeHistoryNotifierProvider = EarthquakeHistoryNotifierFamily();
 
 /// See also [EarthquakeHistoryNotifier].
 class EarthquakeHistoryNotifierFamily
-    extends Family<AsyncValue<EarthquakeHistoryNotifierStaet>> {
+    extends Family<AsyncValue<EarthquakeHistoryNotifierState>> {
   /// See also [EarthquakeHistoryNotifier].
   const EarthquakeHistoryNotifierFamily();
 
@@ -221,7 +221,7 @@ class EarthquakeHistoryNotifierFamily
 /// See also [EarthquakeHistoryNotifier].
 class EarthquakeHistoryNotifierProvider
     extends AutoDisposeAsyncNotifierProviderImpl<EarthquakeHistoryNotifier,
-        EarthquakeHistoryNotifierStaet> {
+        EarthquakeHistoryNotifierState> {
   /// See also [EarthquakeHistoryNotifier].
   EarthquakeHistoryNotifierProvider(
     EarthquakeHistoryParameter parameter,
@@ -252,7 +252,7 @@ class EarthquakeHistoryNotifierProvider
   final EarthquakeHistoryParameter parameter;
 
   @override
-  FutureOr<EarthquakeHistoryNotifierStaet> runNotifierBuild(
+  FutureOr<EarthquakeHistoryNotifierState> runNotifierBuild(
     covariant EarthquakeHistoryNotifier notifier,
   ) {
     return notifier.build(
@@ -278,7 +278,7 @@ class EarthquakeHistoryNotifierProvider
 
   @override
   AutoDisposeAsyncNotifierProviderElement<EarthquakeHistoryNotifier,
-      EarthquakeHistoryNotifierStaet> createElement() {
+      EarthquakeHistoryNotifierState> createElement() {
     return _EarthquakeHistoryNotifierProviderElement(this);
   }
 
@@ -298,14 +298,14 @@ class EarthquakeHistoryNotifierProvider
 }
 
 mixin EarthquakeHistoryNotifierRef
-    on AutoDisposeAsyncNotifierProviderRef<EarthquakeHistoryNotifierStaet> {
+    on AutoDisposeAsyncNotifierProviderRef<EarthquakeHistoryNotifierState> {
   /// The parameter `parameter` of this provider.
   EarthquakeHistoryParameter get parameter;
 }
 
 class _EarthquakeHistoryNotifierProviderElement
     extends AutoDisposeAsyncNotifierProviderElement<EarthquakeHistoryNotifier,
-        EarthquakeHistoryNotifierStaet> with EarthquakeHistoryNotifierRef {
+        EarthquakeHistoryNotifierState> with EarthquakeHistoryNotifierRef {
   _EarthquakeHistoryNotifierProviderElement(super.provider);
 
   @override
