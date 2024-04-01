@@ -17,8 +17,8 @@ import 'package:eqmonitor/feature/home/component/render/map_components_renderer.
 import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/update_widget.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_widget.dart';
+import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_view_model.dart';
+import 'package:eqmonitor/core/provider/kmoni/widget/kmoni_maintenance_widget.dart';
 import 'package:eqmonitor/feature/home/features/map/view/main_map_view.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
