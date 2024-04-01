@@ -8,25 +8,34 @@ part of 'eew_telegram.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$eewTelegramHash() => r'85a3dddbf3d79cbedf93b209fb9dbf2cc810ff8a';
+String _$eewRestHash() => r'879face7857ad85f37de98b5c25327d7ad6dbf98';
 
-/// EEWを持つEarthquakeHistoryItem
-///
-/// Copied from [eewTelegram].
-@ProviderFor(eewTelegram)
-final eewTelegramProvider =
-    Provider<AsyncValue<List<EarthquakeHistoryItem>>>.internal(
-  eewTelegram,
-  name: r'eewTelegramProvider',
+/// See also [_eewRest].
+@ProviderFor(_eewRest)
+final _eewRestProvider = AutoDisposeFutureProvider<List<EewV1>>.internal(
+  _eewRest,
+  name: r'_eewRestProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$eewTelegramHash,
-  dependencies: <ProviderOrFamily>[earthquakeHistoryViewModelProvider],
-  allTransitiveDependencies: <ProviderOrFamily>{
-    earthquakeHistoryViewModelProvider,
-    ...?earthquakeHistoryViewModelProvider.allTransitiveDependencies
-  },
+      const bool.fromEnvironment('dart.vm.product') ? null : _$eewRestHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
 );
 
-typedef EewTelegramRef = ProviderRef<AsyncValue<List<EarthquakeHistoryItem>>>;
+typedef _EewRestRef = AutoDisposeFutureProviderRef<List<EewV1>>;
+String _$eewHash() => r'20b895f06445cf6b1821584698f2505097f68eed';
+
+/// See also [Eew].
+@ProviderFor(Eew)
+final eewProvider =
+    AutoDisposeNotifierProvider<Eew, AsyncValue<List<EewV1>>>.internal(
+  Eew.new,
+  name: r'eewProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$eewHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$Eew = AutoDisposeNotifier<AsyncValue<List<EewV1>>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

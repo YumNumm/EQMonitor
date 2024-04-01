@@ -14,7 +14,6 @@ List<RouteBase> get $appRoutes => [
       $earthquakeHistoryDetailsRoute,
       $informationHistoryRoute,
       $informationHistoryDetailsRoute,
-      $eewHisotryDetailRoute,
       $homeRoute,
       $talkerRoute,
       $kmoniRoute,
@@ -129,33 +128,6 @@ extension $InformationHistoryDetailsRouteExtension
 
   String get location => GoRouteData.$location(
         '/information-history-details',
-      );
-
-  void go(BuildContext context) => context.go(location, extra: $extra);
-
-  Future<T?> push<T>(BuildContext context) =>
-      context.push<T>(location, extra: $extra);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: $extra);
-
-  void replace(BuildContext context) =>
-      context.replace(location, extra: $extra);
-}
-
-RouteBase get $eewHisotryDetailRoute => GoRouteData.$route(
-      path: '/eew-history-detailed',
-      factory: $EewHisotryDetailRouteExtension._fromState,
-    );
-
-extension $EewHisotryDetailRouteExtension on EewHisotryDetailRoute {
-  static EewHisotryDetailRoute _fromState(GoRouterState state) =>
-      EewHisotryDetailRoute(
-        $extra: state.extra as EarthquakeHistoryItem,
-      );
-
-  String get location => GoRouteData.$location(
-        '/eew-history-detailed',
       );
 
   void go(BuildContext context) => context.go(location, extra: $extra);

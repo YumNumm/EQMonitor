@@ -24,11 +24,14 @@ class EewV1 with _$EewV1 implements V1Database {
     DateTime? arrivalTime,
     String? hypoName,
     int? depth,
+    double? latitude,
+    double? longitude,
     double? magnitude,
     JmaForecastIntensity? forecastMaxIntensity,
     bool? forecastMaxIntensityIsOver,
     JmaForecastLgIntensity? forecastMaxLpgmIntensity,
     bool? forecastMaxLpgmIntensityIsOver,
+    List<EstimatedIntensityRegion>? regions,
   }) = _EewV1;
 
   factory EewV1.fromJson(Map<String, dynamic> json) => _$EewV1FromJson(json);

@@ -30,6 +30,9 @@ _$EewV1Impl _$$EewV1ImplFromJson(Map<String, dynamic> json) => $checkedCreate(
               (v) => v == null ? null : DateTime.parse(v as String)),
           hypoName: $checkedConvert('hypo_name', (v) => v as String?),
           depth: $checkedConvert('depth', (v) => v as int?),
+          latitude: $checkedConvert('latitude', (v) => (v as num?)?.toDouble()),
+          longitude:
+              $checkedConvert('longitude', (v) => (v as num?)?.toDouble()),
           magnitude:
               $checkedConvert('magnitude', (v) => (v as num?)?.toDouble()),
           forecastMaxIntensity: $checkedConvert('forecast_max_intensity',
@@ -41,6 +44,12 @@ _$EewV1Impl _$$EewV1ImplFromJson(Map<String, dynamic> json) => $checkedCreate(
               (v) => $enumDecodeNullable(_$JmaForecastLgIntensityEnumMap, v)),
           forecastMaxLpgmIntensityIsOver: $checkedConvert(
               'forecast_max_lpgm_intensity_is_over', (v) => v as bool?),
+          regions: $checkedConvert(
+              'regions',
+              (v) => (v as List<dynamic>?)
+                  ?.map((e) => EstimatedIntensityRegion.fromJson(
+                      e as Map<String, dynamic>))
+                  .toList()),
         );
         return val;
       },
@@ -78,6 +87,8 @@ Map<String, dynamic> _$$EewV1ImplToJson(_$EewV1Impl instance) =>
       'arrival_time': instance.arrivalTime?.toIso8601String(),
       'hypo_name': instance.hypoName,
       'depth': instance.depth,
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
       'magnitude': instance.magnitude,
       'forecast_max_intensity':
           _$JmaForecastIntensityEnumMap[instance.forecastMaxIntensity],
@@ -86,6 +97,7 @@ Map<String, dynamic> _$$EewV1ImplToJson(_$EewV1Impl instance) =>
           _$JmaForecastLgIntensityEnumMap[instance.forecastMaxLpgmIntensity],
       'forecast_max_lpgm_intensity_is_over':
           instance.forecastMaxLpgmIntensityIsOver,
+      'regions': instance.regions,
     };
 
 const _$JmaForecastIntensityEnumMap = {

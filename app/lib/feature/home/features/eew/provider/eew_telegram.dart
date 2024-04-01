@@ -1,25 +1,52 @@
-import 'package:eqmonitor/feature/earthquake_history_old/model/state/earthquake_history_item.dart';
-import 'package:eqmonitor/feature/earthquake_history_old/viewmodel/earthquake_history_view_model.dart';
+import 'dart:async';
+
+import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor/core/api/eq_api.dart';
+import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:web_socket_client/web_socket_client.dart';
 
 part 'eew_telegram.g.dart';
 
-/// EEWを持つEarthquakeHistoryItem
-@Riverpod(dependencies: [EarthquakeHistoryViewModel], keepAlive: true)
-AsyncValue<List<EarthquakeHistoryItem>> eewTelegram(EewTelegramRef ref) {
-  final state = ref.watch(earthquakeHistoryViewModelProvider);
-  if (state == null) {
-    return const AsyncLoading();
+@riverpod
+class Eew extends _$Eew {
+  @override
+  AsyncValue<List<EewV1>> build() {
+    final restResult = ref.watch(_eewRestProvider);
+    // AsyncData以外の場合は、そのまま返す
+    // ^ AsyncError, AsyncLoading
+    if (restResult is! AsyncData) {
+      return restResult;
+    }
+
+    // WebSocketのListen開始
+
+    final refreshTimer = Timer.periodic(
+      const Duration(seconds: 10),
+      (_) => _refetchRestApi(),
+    );
+    ref.onDispose(refreshTimer.cancel);
+    return restResult;
   }
-  return switch (state) {
-    AsyncData(:final List<EarthquakeHistoryItem> value) => AsyncData(
-        value.where((e) => e.latestEew != null).toList(),
-      ),
-    AsyncError(:final error, :final stackTrace) =>
-      AsyncError(error, stackTrace),
-    _ => const AsyncLoading(),
-  };
+
+  void _refetchRestApi() {
+    // WebSocketが接続されている場合は、パス
+    final webSocketState = ref.read(websocketStatusProvider);
+    if (webSocketState is Connected || webSocketState is Reconnected) {
+      return;
+    }
+    ref.invalidate(_eewRestProvider);
+  }
 }
+
+@riverpod
+Future<List<EewV1>> _eewRest(_EewRestRef ref) async {
+  final api = ref.watch(eqApiProvider);
+  final result = await api.v1.getEewLatest();
+  return result.data;
+}
+
+
 
 /*
 class EewTelegram extends _$EewTelegram {

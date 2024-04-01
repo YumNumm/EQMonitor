@@ -35,6 +35,8 @@ mixin _$EewV1 {
   DateTime? get arrivalTime => throw _privateConstructorUsedError;
   String? get hypoName => throw _privateConstructorUsedError;
   int? get depth => throw _privateConstructorUsedError;
+  double? get latitude => throw _privateConstructorUsedError;
+  double? get longitude => throw _privateConstructorUsedError;
   double? get magnitude => throw _privateConstructorUsedError;
   JmaForecastIntensity? get forecastMaxIntensity =>
       throw _privateConstructorUsedError;
@@ -42,6 +44,8 @@ mixin _$EewV1 {
   JmaForecastLgIntensity? get forecastMaxLpgmIntensity =>
       throw _privateConstructorUsedError;
   bool? get forecastMaxLpgmIntensityIsOver =>
+      throw _privateConstructorUsedError;
+  List<EstimatedIntensityRegion>? get regions =>
       throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -70,11 +74,14 @@ abstract class $EewV1CopyWith<$Res> {
       DateTime? arrivalTime,
       String? hypoName,
       int? depth,
+      double? latitude,
+      double? longitude,
       double? magnitude,
       JmaForecastIntensity? forecastMaxIntensity,
       bool? forecastMaxIntensityIsOver,
       JmaForecastLgIntensity? forecastMaxLpgmIntensity,
-      bool? forecastMaxLpgmIntensityIsOver});
+      bool? forecastMaxLpgmIntensityIsOver,
+      List<EstimatedIntensityRegion>? regions});
 }
 
 /// @nodoc
@@ -105,11 +112,14 @@ class _$EewV1CopyWithImpl<$Res, $Val extends EewV1>
     Object? arrivalTime = freezed,
     Object? hypoName = freezed,
     Object? depth = freezed,
+    Object? latitude = freezed,
+    Object? longitude = freezed,
     Object? magnitude = freezed,
     Object? forecastMaxIntensity = freezed,
     Object? forecastMaxIntensityIsOver = freezed,
     Object? forecastMaxLpgmIntensity = freezed,
     Object? forecastMaxLpgmIntensityIsOver = freezed,
+    Object? regions = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -172,6 +182,14 @@ class _$EewV1CopyWithImpl<$Res, $Val extends EewV1>
           ? _value.depth
           : depth // ignore: cast_nullable_to_non_nullable
               as int?,
+      latitude: freezed == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double?,
+      longitude: freezed == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double?,
       magnitude: freezed == magnitude
           ? _value.magnitude
           : magnitude // ignore: cast_nullable_to_non_nullable
@@ -192,6 +210,10 @@ class _$EewV1CopyWithImpl<$Res, $Val extends EewV1>
           ? _value.forecastMaxLpgmIntensityIsOver
           : forecastMaxLpgmIntensityIsOver // ignore: cast_nullable_to_non_nullable
               as bool?,
+      regions: freezed == regions
+          ? _value.regions
+          : regions // ignore: cast_nullable_to_non_nullable
+              as List<EstimatedIntensityRegion>?,
     ) as $Val);
   }
 }
@@ -219,11 +241,14 @@ abstract class _$$EewV1ImplCopyWith<$Res> implements $EewV1CopyWith<$Res> {
       DateTime? arrivalTime,
       String? hypoName,
       int? depth,
+      double? latitude,
+      double? longitude,
       double? magnitude,
       JmaForecastIntensity? forecastMaxIntensity,
       bool? forecastMaxIntensityIsOver,
       JmaForecastLgIntensity? forecastMaxLpgmIntensity,
-      bool? forecastMaxLpgmIntensityIsOver});
+      bool? forecastMaxLpgmIntensityIsOver,
+      List<EstimatedIntensityRegion>? regions});
 }
 
 /// @nodoc
@@ -252,11 +277,14 @@ class __$$EewV1ImplCopyWithImpl<$Res>
     Object? arrivalTime = freezed,
     Object? hypoName = freezed,
     Object? depth = freezed,
+    Object? latitude = freezed,
+    Object? longitude = freezed,
     Object? magnitude = freezed,
     Object? forecastMaxIntensity = freezed,
     Object? forecastMaxIntensityIsOver = freezed,
     Object? forecastMaxLpgmIntensity = freezed,
     Object? forecastMaxLpgmIntensityIsOver = freezed,
+    Object? regions = freezed,
   }) {
     return _then(_$EewV1Impl(
       id: null == id
@@ -319,6 +347,14 @@ class __$$EewV1ImplCopyWithImpl<$Res>
           ? _value.depth
           : depth // ignore: cast_nullable_to_non_nullable
               as int?,
+      latitude: freezed == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double?,
+      longitude: freezed == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double?,
       magnitude: freezed == magnitude
           ? _value.magnitude
           : magnitude // ignore: cast_nullable_to_non_nullable
@@ -339,6 +375,10 @@ class __$$EewV1ImplCopyWithImpl<$Res>
           ? _value.forecastMaxLpgmIntensityIsOver
           : forecastMaxLpgmIntensityIsOver // ignore: cast_nullable_to_non_nullable
               as bool?,
+      regions: freezed == regions
+          ? _value._regions
+          : regions // ignore: cast_nullable_to_non_nullable
+              as List<EstimatedIntensityRegion>?,
     ));
   }
 }
@@ -362,11 +402,15 @@ class _$EewV1Impl implements _EewV1 {
       this.arrivalTime,
       this.hypoName,
       this.depth,
+      this.latitude,
+      this.longitude,
       this.magnitude,
       this.forecastMaxIntensity,
       this.forecastMaxIntensityIsOver,
       this.forecastMaxLpgmIntensity,
-      this.forecastMaxLpgmIntensityIsOver});
+      this.forecastMaxLpgmIntensityIsOver,
+      final List<EstimatedIntensityRegion>? regions})
+      : _regions = regions;
 
   factory _$EewV1Impl.fromJson(Map<String, dynamic> json) =>
       _$$EewV1ImplFromJson(json);
@@ -402,6 +446,10 @@ class _$EewV1Impl implements _EewV1 {
   @override
   final int? depth;
   @override
+  final double? latitude;
+  @override
+  final double? longitude;
+  @override
   final double? magnitude;
   @override
   final JmaForecastIntensity? forecastMaxIntensity;
@@ -411,10 +459,19 @@ class _$EewV1Impl implements _EewV1 {
   final JmaForecastLgIntensity? forecastMaxLpgmIntensity;
   @override
   final bool? forecastMaxLpgmIntensityIsOver;
+  final List<EstimatedIntensityRegion>? _regions;
+  @override
+  List<EstimatedIntensityRegion>? get regions {
+    final value = _regions;
+    if (value == null) return null;
+    if (_regions is EqualUnmodifiableListView) return _regions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'EewV1(id: $id, eventId: $eventId, type: $type, schemaType: $schemaType, status: $status, infoType: $infoType, serialno: $serialno, headline: $headline, isCanceled: $isCanceled, isWarning: $isWarning, isLastInfo: $isLastInfo, originTime: $originTime, arrivalTime: $arrivalTime, hypoName: $hypoName, depth: $depth, magnitude: $magnitude, forecastMaxIntensity: $forecastMaxIntensity, forecastMaxIntensityIsOver: $forecastMaxIntensityIsOver, forecastMaxLpgmIntensity: $forecastMaxLpgmIntensity, forecastMaxLpgmIntensityIsOver: $forecastMaxLpgmIntensityIsOver)';
+    return 'EewV1(id: $id, eventId: $eventId, type: $type, schemaType: $schemaType, status: $status, infoType: $infoType, serialno: $serialno, headline: $headline, isCanceled: $isCanceled, isWarning: $isWarning, isLastInfo: $isLastInfo, originTime: $originTime, arrivalTime: $arrivalTime, hypoName: $hypoName, depth: $depth, latitude: $latitude, longitude: $longitude, magnitude: $magnitude, forecastMaxIntensity: $forecastMaxIntensity, forecastMaxIntensityIsOver: $forecastMaxIntensityIsOver, forecastMaxLpgmIntensity: $forecastMaxLpgmIntensity, forecastMaxLpgmIntensityIsOver: $forecastMaxLpgmIntensityIsOver, regions: $regions)';
   }
 
   @override
@@ -447,6 +504,10 @@ class _$EewV1Impl implements _EewV1 {
             (identical(other.hypoName, hypoName) ||
                 other.hypoName == hypoName) &&
             (identical(other.depth, depth) || other.depth == depth) &&
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude) &&
             (identical(other.magnitude, magnitude) ||
                 other.magnitude == magnitude) &&
             (identical(other.forecastMaxIntensity, forecastMaxIntensity) ||
@@ -461,7 +522,8 @@ class _$EewV1Impl implements _EewV1 {
             (identical(other.forecastMaxLpgmIntensityIsOver,
                     forecastMaxLpgmIntensityIsOver) ||
                 other.forecastMaxLpgmIntensityIsOver ==
-                    forecastMaxLpgmIntensityIsOver));
+                    forecastMaxLpgmIntensityIsOver) &&
+            const DeepCollectionEquality().equals(other._regions, _regions));
   }
 
   @JsonKey(ignore: true)
@@ -483,11 +545,14 @@ class _$EewV1Impl implements _EewV1 {
         arrivalTime,
         hypoName,
         depth,
+        latitude,
+        longitude,
         magnitude,
         forecastMaxIntensity,
         forecastMaxIntensityIsOver,
         forecastMaxLpgmIntensity,
-        forecastMaxLpgmIntensityIsOver
+        forecastMaxLpgmIntensityIsOver,
+        const DeepCollectionEquality().hash(_regions)
       ]);
 
   @JsonKey(ignore: true)
@@ -521,11 +586,14 @@ abstract class _EewV1 implements EewV1 {
       final DateTime? arrivalTime,
       final String? hypoName,
       final int? depth,
+      final double? latitude,
+      final double? longitude,
       final double? magnitude,
       final JmaForecastIntensity? forecastMaxIntensity,
       final bool? forecastMaxIntensityIsOver,
       final JmaForecastLgIntensity? forecastMaxLpgmIntensity,
-      final bool? forecastMaxLpgmIntensityIsOver}) = _$EewV1Impl;
+      final bool? forecastMaxLpgmIntensityIsOver,
+      final List<EstimatedIntensityRegion>? regions}) = _$EewV1Impl;
 
   factory _EewV1.fromJson(Map<String, dynamic> json) = _$EewV1Impl.fromJson;
 
@@ -560,6 +628,10 @@ abstract class _EewV1 implements EewV1 {
   @override
   int? get depth;
   @override
+  double? get latitude;
+  @override
+  double? get longitude;
+  @override
   double? get magnitude;
   @override
   JmaForecastIntensity? get forecastMaxIntensity;
@@ -569,6 +641,8 @@ abstract class _EewV1 implements EewV1 {
   JmaForecastLgIntensity? get forecastMaxLpgmIntensity;
   @override
   bool? get forecastMaxLpgmIntensityIsOver;
+  @override
+  List<EstimatedIntensityRegion>? get regions;
   @override
   @JsonKey(ignore: true)
   _$$EewV1ImplCopyWith<_$EewV1Impl> get copyWith =>

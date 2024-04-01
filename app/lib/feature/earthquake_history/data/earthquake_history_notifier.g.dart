@@ -164,7 +164,7 @@ class _EarthquakeV1ExtendedProviderElement
 }
 
 String _$earthquakeHistoryNotifierHash() =>
-    r'89f651d42728dc94a396c3d5ea5063a0f63c0762';
+    r'07f4072e2c20cfc5e1724f480e94a81f6ad0cb1d';
 
 abstract class _$EarthquakeHistoryNotifier
     extends BuildlessAutoDisposeAsyncNotifier<EarthquakeHistoryNotifierState> {

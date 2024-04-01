@@ -1,12 +1,5 @@
-import 'package:collection/collection.dart';
-import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/provider/time_ticker.dart';
-import 'package:eqmonitor/feature/earthquake_history_old/model/state/earthquake_history_item.dart';
-import 'package:eqmonitor/feature/home/features/eew/provider/eew_telegram.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-part 'eew_alive_telegram.g.dart';
-
+// TODO(YumNumm): EEWの結合
+/*
 /// イベント終了していないEEWのうち、精度が低いものを除外したもの
 @Riverpod(dependencies: [EewAliveTelegram])
 List<EarthquakeHistoryItem> eewAliveNormalTelegram(
@@ -115,3 +108,4 @@ class EewAliveChecker {
     throw UnimplementedError('Unknown EEW type');
   }
 }
+*/

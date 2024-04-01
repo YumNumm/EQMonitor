@@ -1,23 +1,15 @@
-import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/component/chip/custom_chip.dart';
-import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
-import 'package:eqmonitor/core/component/intenisty/jma_forecast_lg_intensity_icon.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
-import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
-import 'package:eqmonitor/core/router/router.dart';
-import 'package:eqmonitor/feature/earthquake_history_old/model/state/earthquake_history_item.dart';
-import 'package:eqmonitor/feature/home/features/eew/provider/eew_alive_telegram.dart';
-import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 
 class EewWidgets extends ConsumerWidget {
   const EewWidgets({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // TODO(YumNumm): EEWの結合
+    return const Text('EEWの接続は現在無効です');
+/*
     final state = ref.watch(eewAliveTelegramProvider) ?? [];
     if (state.isEmpty) {
       return const SizedBox.shrink();
@@ -42,7 +34,7 @@ class EewWidgets extends ConsumerWidget {
           ),
         );
       },
-    );
+    );*/
   }
 }
 
@@ -53,16 +45,14 @@ class EewWidget extends ConsumerWidget {
     super.key,
   });
 
-  final EarthquakeHistoryItem item;
+  final EewV1 item;
   final String? index;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    /*
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-    assert(item.latestEew != null && item.latestEewTelegram != null);
-    final eew = item.latestEew!;
-    final telegram = item.latestEewTelegram!;
     final intensityColorScheme = ref.watch(intensityColorProvider);
     if (eew is TelegramVxse45Cancel) {
       return Card(
@@ -430,6 +420,7 @@ class EewWidget extends ConsumerWidget {
         ],
       );
     }
-    return Text('不明なタイプの緊急地震速報を受信しました ${eew.runtimeType}');
+    return Text('不明なタイプの緊急地震速報を受信しました ${eew.runtimeType}');*/
+    return Text(item.toString());
   }
 }

@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
-import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
 import 'package:eqmonitor/core/hook/use_sheet_controller.dart';
@@ -20,7 +17,6 @@ import 'package:eqmonitor/feature/home/component/render/map_components_renderer.
 import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/update_widget.dart';
-import 'package:eqmonitor/feature/home/features/eew/provider/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_widget.dart';
 import 'package:eqmonitor/feature/home/features/map/view/main_map_view.dart';
@@ -216,6 +212,9 @@ class _IntensityIcons extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    return const SizedBox.shrink();
+    // TODO(YumNumm): EEWの結合
+    /*
     final aliveEews = ref.watch(eewAliveNormalTelegramProvider);
     final maxEstimatedIntensities = aliveEews
         .map((e) => e.latestEew)
@@ -263,7 +262,7 @@ class _IntensityIcons extends ConsumerWidget {
           ),
         ),
       ),
-    );
+    );*/
   }
 }
 

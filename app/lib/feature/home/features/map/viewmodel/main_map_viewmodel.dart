@@ -10,8 +10,6 @@ import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/map/map_style.dart';
-import 'package:eqmonitor/feature/earthquake_history_old/model/state/earthquake_history_item.dart';
-import 'package:eqmonitor/feature/home/features/eew/provider/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/features/estimated_intensity/provider/estimated_intensity_provider.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
@@ -46,10 +44,11 @@ class MainMapViewModel extends _$MainMapViewModel {
           _onKmoniStateChanged(analyzedPoints);
         },
       )
+      /* TODO(YumNumm): EEWの結合
       ..listen(
         eewAliveTelegramProvider,
         (_, value) => _onEewStateChanged(value ?? []),
-      )
+      )*/
       ..listen(
         estimatedIntensityProvider,
         (_, value) => _onEstimatedIntensityChanged(value),
@@ -150,11 +149,13 @@ class MainMapViewModel extends _$MainMapViewModel {
   _EewPsWaveService? _eewPsWaveService;
   _EewEstimatedIntensityService? _eewEstimatedIntensityService;
 
-  Future<void> _onEewStateChanged(List<EarthquakeHistoryItem> values) async {
+  Future<void> _onEewStateChanged(List<EewV1> values) async {
     // 初期化が終わっていない場合は何もしない
     if (!_isEewInitialized) {
       return;
     }
+    // TODO(YumNumm): EEWの結合
+    /*
     final aliveBodies = values
         .map((e) => e.latestEew)
         .whereType<TelegramVxse45Body>()
@@ -182,7 +183,7 @@ class MainMapViewModel extends _$MainMapViewModel {
           .flattened
           .toList(),
     );
-    await _eewEstimatedIntensityService!.update(transformed);
+    await _eewEstimatedIntensityService!.update(transformed);*/
   }
 
   Future<void> _onEstimatedIntensityChanged(
@@ -204,6 +205,9 @@ class MainMapViewModel extends _$MainMapViewModel {
     if (points.isEmpty) {
       return null;
     }
+    return null;
+    // TODO(YumNumm): EEWの結合
+    /*
     final aliveEews = ref.read(eewAliveTelegramProvider);
 
     final telegrams = aliveEews
@@ -242,7 +246,7 @@ class MainMapViewModel extends _$MainMapViewModel {
         ),
       ),
     ];
-    return latLngs.toBounds;
+    return latLngs.toBounds;*/
   }
 
   // *********** Kyoshin Monitor Related ***********
@@ -281,9 +285,12 @@ class MainMapViewModel extends _$MainMapViewModel {
 
     _isEewInitialized = true;
     // 初回EEW State更新
+    // TODO(YumNumm): EEWの結合
+/*
     await _onEewStateChanged(
       ref.read(eewAliveTelegramProvider) ?? [],
     );
+    */
   }
 
   // *********** Utilities ***********

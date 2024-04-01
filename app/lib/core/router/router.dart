@@ -5,8 +5,6 @@ import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/feature/debug/earthquake_parameter/ui/earthquake_parameter_list_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/screen/earthquake_history_details.dart';
-import 'package:eqmonitor/feature/earthquake_history_old/model/state/earthquake_history_item.dart';
-import 'package:eqmonitor/feature/eew_detailed_history/eew_detailed_history_screen.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/page/kmoni_settings_page.dart';
 import 'package:eqmonitor/feature/home/view/home_view.dart';
 import 'package:eqmonitor/feature/information_history/page/information_history_page.dart';
@@ -110,22 +108,6 @@ class InformationHistoryDetailsRoute extends GoRouteData {
       );
 }
 
-@TypedGoRoute<EewHisotryDetailRoute>(
-  path: '/eew-history-detailed',
-)
-class EewHisotryDetailRoute extends GoRouteData {
-  const EewHisotryDetailRoute({
-    required this.$extra,
-  });
-
-  final EarthquakeHistoryItem $extra;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      EewDetailedHistoryScreen(
-        data: $extra,
-      );
-}
 
 @TypedGoRoute<HomeRoute>(path: '/')
 class HomeRoute extends GoRouteData {
