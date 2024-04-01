@@ -164,45 +164,57 @@ class _WebsocketStatusWidget extends ConsumerWidget {
     final colorScheme = theme.colorScheme;
     final status = ref.watch(websocketStatusProvider);
     return switch (status) {
-      Connecting() => Row(
-          children: [
-            Icon(
-              Icons.cloud_off_rounded,
-              color: colorScheme.error,
-            ),
-            const SizedBox(width: 4),
-            const Text('接続試行中...'),
-          ],
+      Connecting() => Tooltip(
+          message: 'WebSocket接続試行中',
+          child: Row(
+            children: [
+              Icon(
+                Icons.cloud_off_rounded,
+                color: colorScheme.error,
+              ),
+              const SizedBox(width: 4),
+              const Text('接続試行中...'),
+            ],
+          ),
         ),
-      Connected() || Reconnected() => Row(
-          children: [
-            Icon(
-              Icons.cloud_done_outlined,
-              color: colorScheme.primary,
-            ),
-            const SizedBox(width: 4),
-            const Text('接続済み'),
-          ],
+      Connected() || Reconnected() => Tooltip(
+          message: 'WebSocket接続済み',
+          child: Row(
+            children: [
+              Icon(
+                Icons.cloud_done_outlined,
+                color: colorScheme.primary,
+              ),
+              const SizedBox(width: 4),
+              const Text('接続済み'),
+            ],
+          ),
         ),
-      Reconnecting() => Row(
-          children: [
-            Icon(
-              Icons.cloud_sync_outlined,
-              color: colorScheme.error,
-            ),
-            const SizedBox(width: 4),
-            const Text('再接続中...'),
-          ],
+      Reconnecting() => Tooltip(
+          message: 'WebSocket再接続中',
+          child: Row(
+            children: [
+              Icon(
+                Icons.cloud_sync_outlined,
+                color: colorScheme.error,
+              ),
+              const SizedBox(width: 4),
+              const Text('再接続中...'),
+            ],
+          ),
         ),
-      Disconnected() || Disconnecting() => Row(
-          children: [
-            Icon(
-              Icons.cloud_off_rounded,
-              color: colorScheme.error,
-            ),
-            const SizedBox(width: 4),
-            const Text('未接続'),
-          ],
+      Disconnected() || Disconnecting() => Tooltip(
+          message: 'WebSocket未接続',
+          child: Row(
+            children: [
+              Icon(
+                Icons.cloud_off_rounded,
+                color: colorScheme.error,
+              ),
+              const SizedBox(width: 4),
+              const Text('未接続'),
+            ],
+          ),
         ),
       _ => const Text('不明'),
     };
