@@ -22,8 +22,10 @@ _$RealtimePostgresInsertPayloadImpl<T>
               table: $checkedConvert('table', (v) => v as String),
               commitTimestamp: $checkedConvert(
                   'commit_timestamp', (v) => DateTime.parse(v as String)),
-              errors: $checkedConvert('errors',
-                  (v) => (v as List<dynamic>).map((e) => e as String).toList()),
+              errors: $checkedConvert(
+                  'errors',
+                  (v) =>
+                      (v as List<dynamic>?)?.map((e) => e as String).toList()),
               newData: $checkedConvert('new', (v) => fromJsonT(v)),
             );
             return val;
@@ -61,8 +63,10 @@ _$RealtimePostgresUpdatePayloadImpl<T>
               table: $checkedConvert('table', (v) => v as String),
               commitTimestamp: $checkedConvert(
                   'commit_timestamp', (v) => DateTime.parse(v as String)),
-              errors: $checkedConvert('errors',
-                  (v) => (v as List<dynamic>).map((e) => e as String).toList()),
+              errors: $checkedConvert(
+                  'errors',
+                  (v) =>
+                      (v as List<dynamic>?)?.map((e) => e as String).toList()),
               newData: $checkedConvert('new', (v) => fromJsonT(v)),
               old: $checkedConvert('old', (v) => v as Map<String, dynamic>?),
             );
@@ -102,8 +106,10 @@ _$RealtimePostgresDeletePayloadImpl<T>
               table: $checkedConvert('table', (v) => v as String),
               commitTimestamp: $checkedConvert(
                   'commit_timestamp', (v) => DateTime.parse(v as String)),
-              errors: $checkedConvert('errors',
-                  (v) => (v as List<dynamic>).map((e) => e as String).toList()),
+              errors: $checkedConvert(
+                  'errors',
+                  (v) =>
+                      (v as List<dynamic>?)?.map((e) => e as String).toList()),
               old: $checkedConvert('old', (v) => v as Map<String, dynamic>?),
             );
             return val;

@@ -143,7 +143,7 @@ sealed class RealtimePostgresChangesPayloadBase {
   final String schema;
   final String table;
   final DateTime commitTimestamp;
-  final List<String> errors;
+  final List<String>? errors;
 }
 
 sealed class RealtimePostgresChangesPayloadTable<T extends V1Database>
@@ -169,7 +169,7 @@ class RealtimePostgresInsertPayload<T extends V1Database>
     required String schema,
     required String table,
     required DateTime commitTimestamp,
-    required List<String> errors,
+    required List<String>? errors,
     @JsonKey(name: 'new') required T newData,
   }) = _RealtimePostgresInsertPayload<T>;
 
@@ -194,7 +194,7 @@ class RealtimePostgresUpdatePayload<T extends V1Database>
     required String schema,
     required String table,
     required DateTime commitTimestamp,
-    required List<String> errors,
+    required List<String>? errors,
     @JsonKey(name: 'new') required T newData,
 
     /// Partical<T> | null
@@ -221,7 +221,7 @@ class RealtimePostgresDeletePayload<T extends V1Database>
     required String schema,
     required String table,
     required DateTime commitTimestamp,
-    required List<String> errors,
+    required List<String>? errors,
 
     /// Partical<T> | null
     required Map<String, dynamic>? old,

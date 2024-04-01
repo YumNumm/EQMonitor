@@ -25,7 +25,7 @@ mixin _$RealtimePostgresInsertPayload<T extends V1Database> {
   String get schema => throw _privateConstructorUsedError;
   String get table => throw _privateConstructorUsedError;
   DateTime get commitTimestamp => throw _privateConstructorUsedError;
-  List<String> get errors => throw _privateConstructorUsedError;
+  List<String>? get errors => throw _privateConstructorUsedError;
   @JsonKey(name: 'new')
   T get newData => throw _privateConstructorUsedError;
 
@@ -49,7 +49,7 @@ abstract class $RealtimePostgresInsertPayloadCopyWith<T extends V1Database,
       {String schema,
       String table,
       DateTime commitTimestamp,
-      List<String> errors,
+      List<String>? errors,
       @JsonKey(name: 'new') T newData});
 }
 
@@ -70,7 +70,7 @@ class _$RealtimePostgresInsertPayloadCopyWithImpl<T extends V1Database, $Res,
     Object? schema = null,
     Object? table = null,
     Object? commitTimestamp = null,
-    Object? errors = null,
+    Object? errors = freezed,
     Object? newData = null,
   }) {
     return _then(_value.copyWith(
@@ -86,10 +86,10 @@ class _$RealtimePostgresInsertPayloadCopyWithImpl<T extends V1Database, $Res,
           ? _value.commitTimestamp
           : commitTimestamp // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      errors: null == errors
+      errors: freezed == errors
           ? _value.errors
           : errors // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<String>?,
       newData: null == newData
           ? _value.newData
           : newData // ignore: cast_nullable_to_non_nullable
@@ -112,7 +112,7 @@ abstract class _$$RealtimePostgresInsertPayloadImplCopyWith<
       {String schema,
       String table,
       DateTime commitTimestamp,
-      List<String> errors,
+      List<String>? errors,
       @JsonKey(name: 'new') T newData});
 }
 
@@ -133,7 +133,7 @@ class __$$RealtimePostgresInsertPayloadImplCopyWithImpl<T extends V1Database,
     Object? schema = null,
     Object? table = null,
     Object? commitTimestamp = null,
-    Object? errors = null,
+    Object? errors = freezed,
     Object? newData = null,
   }) {
     return _then(_$RealtimePostgresInsertPayloadImpl<T>(
@@ -149,10 +149,10 @@ class __$$RealtimePostgresInsertPayloadImplCopyWithImpl<T extends V1Database,
           ? _value.commitTimestamp
           : commitTimestamp // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      errors: null == errors
+      errors: freezed == errors
           ? _value._errors
           : errors // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<String>?,
       newData: null == newData
           ? _value.newData
           : newData // ignore: cast_nullable_to_non_nullable
@@ -169,7 +169,7 @@ class _$RealtimePostgresInsertPayloadImpl<T extends V1Database>
       {required this.schema,
       required this.table,
       required this.commitTimestamp,
-      required final List<String> errors,
+      required final List<String>? errors,
       @JsonKey(name: 'new') required this.newData})
       : _errors = errors;
 
@@ -183,12 +183,14 @@ class _$RealtimePostgresInsertPayloadImpl<T extends V1Database>
   final String table;
   @override
   final DateTime commitTimestamp;
-  final List<String> _errors;
+  final List<String>? _errors;
   @override
-  List<String> get errors {
+  List<String>? get errors {
+    final value = _errors;
+    if (value == null) return null;
     if (_errors is EqualUnmodifiableListView) return _errors;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_errors);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
@@ -243,7 +245,7 @@ abstract class _RealtimePostgresInsertPayload<T extends V1Database>
           {required final String schema,
           required final String table,
           required final DateTime commitTimestamp,
-          required final List<String> errors,
+          required final List<String>? errors,
           @JsonKey(name: 'new') required final T newData}) =
       _$RealtimePostgresInsertPayloadImpl<T>;
 
@@ -258,7 +260,7 @@ abstract class _RealtimePostgresInsertPayload<T extends V1Database>
   @override
   DateTime get commitTimestamp;
   @override
-  List<String> get errors;
+  List<String>? get errors;
   @override
   @JsonKey(name: 'new')
   T get newData;
@@ -280,7 +282,7 @@ mixin _$RealtimePostgresUpdatePayload<T extends V1Database> {
   String get schema => throw _privateConstructorUsedError;
   String get table => throw _privateConstructorUsedError;
   DateTime get commitTimestamp => throw _privateConstructorUsedError;
-  List<String> get errors => throw _privateConstructorUsedError;
+  List<String>? get errors => throw _privateConstructorUsedError;
   @JsonKey(name: 'new')
   T get newData => throw _privateConstructorUsedError;
 
@@ -307,7 +309,7 @@ abstract class $RealtimePostgresUpdatePayloadCopyWith<T extends V1Database,
       {String schema,
       String table,
       DateTime commitTimestamp,
-      List<String> errors,
+      List<String>? errors,
       @JsonKey(name: 'new') T newData,
       Map<String, dynamic>? old});
 }
@@ -329,7 +331,7 @@ class _$RealtimePostgresUpdatePayloadCopyWithImpl<T extends V1Database, $Res,
     Object? schema = null,
     Object? table = null,
     Object? commitTimestamp = null,
-    Object? errors = null,
+    Object? errors = freezed,
     Object? newData = null,
     Object? old = freezed,
   }) {
@@ -346,10 +348,10 @@ class _$RealtimePostgresUpdatePayloadCopyWithImpl<T extends V1Database, $Res,
           ? _value.commitTimestamp
           : commitTimestamp // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      errors: null == errors
+      errors: freezed == errors
           ? _value.errors
           : errors // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<String>?,
       newData: null == newData
           ? _value.newData
           : newData // ignore: cast_nullable_to_non_nullable
@@ -376,7 +378,7 @@ abstract class _$$RealtimePostgresUpdatePayloadImplCopyWith<
       {String schema,
       String table,
       DateTime commitTimestamp,
-      List<String> errors,
+      List<String>? errors,
       @JsonKey(name: 'new') T newData,
       Map<String, dynamic>? old});
 }
@@ -398,7 +400,7 @@ class __$$RealtimePostgresUpdatePayloadImplCopyWithImpl<T extends V1Database,
     Object? schema = null,
     Object? table = null,
     Object? commitTimestamp = null,
-    Object? errors = null,
+    Object? errors = freezed,
     Object? newData = null,
     Object? old = freezed,
   }) {
@@ -415,10 +417,10 @@ class __$$RealtimePostgresUpdatePayloadImplCopyWithImpl<T extends V1Database,
           ? _value.commitTimestamp
           : commitTimestamp // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      errors: null == errors
+      errors: freezed == errors
           ? _value._errors
           : errors // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<String>?,
       newData: null == newData
           ? _value.newData
           : newData // ignore: cast_nullable_to_non_nullable
@@ -439,7 +441,7 @@ class _$RealtimePostgresUpdatePayloadImpl<T extends V1Database>
       {required this.schema,
       required this.table,
       required this.commitTimestamp,
-      required final List<String> errors,
+      required final List<String>? errors,
       @JsonKey(name: 'new') required this.newData,
       required final Map<String, dynamic>? old})
       : _errors = errors,
@@ -455,12 +457,14 @@ class _$RealtimePostgresUpdatePayloadImpl<T extends V1Database>
   final String table;
   @override
   final DateTime commitTimestamp;
-  final List<String> _errors;
+  final List<String>? _errors;
   @override
-  List<String> get errors {
+  List<String>? get errors {
+    final value = _errors;
+    if (value == null) return null;
     if (_errors is EqualUnmodifiableListView) return _errors;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_errors);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
@@ -530,7 +534,7 @@ abstract class _RealtimePostgresUpdatePayload<T extends V1Database>
           {required final String schema,
           required final String table,
           required final DateTime commitTimestamp,
-          required final List<String> errors,
+          required final List<String>? errors,
           @JsonKey(name: 'new') required final T newData,
           required final Map<String, dynamic>? old}) =
       _$RealtimePostgresUpdatePayloadImpl<T>;
@@ -546,7 +550,7 @@ abstract class _RealtimePostgresUpdatePayload<T extends V1Database>
   @override
   DateTime get commitTimestamp;
   @override
-  List<String> get errors;
+  List<String>? get errors;
   @override
   @JsonKey(name: 'new')
   T get newData;
@@ -572,7 +576,7 @@ mixin _$RealtimePostgresDeletePayload<T extends V1Database> {
   String get schema => throw _privateConstructorUsedError;
   String get table => throw _privateConstructorUsedError;
   DateTime get commitTimestamp => throw _privateConstructorUsedError;
-  List<String> get errors => throw _privateConstructorUsedError;
+  List<String>? get errors => throw _privateConstructorUsedError;
 
   /// Partical<T> | null
   Map<String, dynamic>? get old => throw _privateConstructorUsedError;
@@ -597,7 +601,7 @@ abstract class $RealtimePostgresDeletePayloadCopyWith<T extends V1Database,
       {String schema,
       String table,
       DateTime commitTimestamp,
-      List<String> errors,
+      List<String>? errors,
       Map<String, dynamic>? old});
 }
 
@@ -618,7 +622,7 @@ class _$RealtimePostgresDeletePayloadCopyWithImpl<T extends V1Database, $Res,
     Object? schema = null,
     Object? table = null,
     Object? commitTimestamp = null,
-    Object? errors = null,
+    Object? errors = freezed,
     Object? old = freezed,
   }) {
     return _then(_value.copyWith(
@@ -634,10 +638,10 @@ class _$RealtimePostgresDeletePayloadCopyWithImpl<T extends V1Database, $Res,
           ? _value.commitTimestamp
           : commitTimestamp // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      errors: null == errors
+      errors: freezed == errors
           ? _value.errors
           : errors // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<String>?,
       old: freezed == old
           ? _value.old
           : old // ignore: cast_nullable_to_non_nullable
@@ -660,7 +664,7 @@ abstract class _$$RealtimePostgresDeletePayloadImplCopyWith<
       {String schema,
       String table,
       DateTime commitTimestamp,
-      List<String> errors,
+      List<String>? errors,
       Map<String, dynamic>? old});
 }
 
@@ -681,7 +685,7 @@ class __$$RealtimePostgresDeletePayloadImplCopyWithImpl<T extends V1Database,
     Object? schema = null,
     Object? table = null,
     Object? commitTimestamp = null,
-    Object? errors = null,
+    Object? errors = freezed,
     Object? old = freezed,
   }) {
     return _then(_$RealtimePostgresDeletePayloadImpl<T>(
@@ -697,10 +701,10 @@ class __$$RealtimePostgresDeletePayloadImplCopyWithImpl<T extends V1Database,
           ? _value.commitTimestamp
           : commitTimestamp // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      errors: null == errors
+      errors: freezed == errors
           ? _value._errors
           : errors // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<String>?,
       old: freezed == old
           ? _value._old
           : old // ignore: cast_nullable_to_non_nullable
@@ -717,7 +721,7 @@ class _$RealtimePostgresDeletePayloadImpl<T extends V1Database>
       {required this.schema,
       required this.table,
       required this.commitTimestamp,
-      required final List<String> errors,
+      required final List<String>? errors,
       required final Map<String, dynamic>? old})
       : _errors = errors,
         _old = old;
@@ -732,12 +736,14 @@ class _$RealtimePostgresDeletePayloadImpl<T extends V1Database>
   final String table;
   @override
   final DateTime commitTimestamp;
-  final List<String> _errors;
+  final List<String>? _errors;
   @override
-  List<String> get errors {
+  List<String>? get errors {
+    final value = _errors;
+    if (value == null) return null;
     if (_errors is EqualUnmodifiableListView) return _errors;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_errors);
+    return EqualUnmodifiableListView(value);
   }
 
   /// Partical<T> | null
@@ -801,7 +807,7 @@ abstract class _RealtimePostgresDeletePayload<T extends V1Database>
           {required final String schema,
           required final String table,
           required final DateTime commitTimestamp,
-          required final List<String> errors,
+          required final List<String>? errors,
           required final Map<String, dynamic>? old}) =
       _$RealtimePostgresDeletePayloadImpl<T>;
 
@@ -816,7 +822,7 @@ abstract class _RealtimePostgresDeletePayload<T extends V1Database>
   @override
   DateTime get commitTimestamp;
   @override
-  List<String> get errors;
+  List<String>? get errors;
   @override
 
   /// Partical<T> | null
