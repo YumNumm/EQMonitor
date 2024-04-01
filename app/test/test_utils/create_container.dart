@@ -1,4 +1,4 @@
-import 'package:riverpod/riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:test/test.dart';
 
 /// A testing utility which creates a [ProviderContainer] and automatically

@@ -4,7 +4,7 @@ part 'information_v3.freezed.dart';
 part 'information_v3.g.dart';
 
 @freezed
-@Deprecated("Use v1 instead")
+@Deprecated('Use v1 instead')
 class InformationV3Result with _$InformationV3Result {
   const factory InformationV3Result({
     required List<InformationV3> items,
@@ -15,15 +15,14 @@ class InformationV3Result with _$InformationV3Result {
 }
 
 @freezed
-@Deprecated("Use v1 instead")
+@Deprecated('Use v1 instead')
 class InformationV3 with _$InformationV3 {
   const factory InformationV3({
     required int id,
     required String title,
     required String body,
     @JsonKey(unknownEnumValue: Author.unknown) required Author author,
-    @JsonKey(name: "createdAt")
-    required DateTime createdAt,
+    @JsonKey(name: 'createdAt') required DateTime createdAt,
     @JsonKey(unknownEnumValue: Level.info) required Level level,
     required int? eventId,
   }) = _InformationV3;

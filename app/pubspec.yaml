@@ -48,7 +48,7 @@ dependencies:
   go_router: ^11.1.4
   google_fonts: ^6.2.1
   group_button: ^5.3.4
-  hooks_riverpod: ^2.5.1
+  hooks_riverpod: ^3.0.0-dev.3
   image: ^4.1.7
   integration_test:
     sdk: flutter
@@ -85,7 +85,7 @@ dependencies:
   path_provider: ^2.1.1
   permission_handler: ^11.0.1
   retrofit: ^4.0.3
-  riverpod_annotation: ^2.3.1
+  riverpod_annotation: ^3.0.0-dev.3
   screenshot: any
   shared_preferences: ^2.2.2
   sheet:
@@ -127,8 +127,8 @@ dev_dependencies:
   json_serializable: ^6.7.1
   pedantic_mono: ^1.24.0+1
   retrofit_generator: ^8.0.4
-  riverpod_generator: ^2.3.7
-  riverpod_lint: ^2.3.5
+  riverpod_generator: ^3.0.0-dev.11
+  riverpod_lint: ^3.0.0-dev.4
   widgetbook_generator: ^3.7.0
 
 flutter:

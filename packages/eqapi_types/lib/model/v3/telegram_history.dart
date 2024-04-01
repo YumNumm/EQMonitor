@@ -6,7 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'telegram_history.freezed.dart';
 part 'telegram_history.g.dart';
 
-@Deprecated("Use v1 instead")
+@Deprecated('Use v1 instead')
 @freezed
 class TelegramHistoryV3 with _$TelegramHistoryV3 {
   const factory TelegramHistoryV3({
@@ -71,7 +71,7 @@ Map<String, dynamic>? _telegramHistoryV3DataToJson(
             ),
           );
 
-@Deprecated("Use v1 instead")
+@Deprecated('Use v1 instead')
 @freezed
 class D1DbExecutionResult with _$D1DbExecutionResult {
   const factory D1DbExecutionResult({

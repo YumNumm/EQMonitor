@@ -4,12 +4,12 @@ import 'dart:developer';
 
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
-import 'package:eqmonitor/core/provider/map/map_style.dart';
-import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
 import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_provider.dart';
-import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
+import 'package:eqmonitor/core/provider/map/map_style.dart';
+import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
+import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

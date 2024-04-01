@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
-import 'package:eqmonitor/env/env.dart';
 import 'package:eqmonitor/core/provider/telegram_url/model/telegram_url_model.dart';
+import 'package:eqmonitor/env/env.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'telegram_url_provider.g.dart';

@@ -222,6 +222,5 @@ class _SliverListBody extends HookConsumerWidget {
         _ => const SizedBox(),
       },
     );
-
   }
 }

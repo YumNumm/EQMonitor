@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/core/provider/debugger/debugger_model.dart';
+import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

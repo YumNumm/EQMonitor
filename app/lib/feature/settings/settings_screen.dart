@@ -4,11 +4,11 @@ import 'dart:io';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:eqmonitor/core/extension/string_ex.dart';
+import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/gen/assets.gen.dart';
 import 'package:flutter/foundation.dart';

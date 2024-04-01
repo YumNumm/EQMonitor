@@ -57,24 +57,6 @@ final websocketParsedMessagesProvider =
 
 typedef WebsocketParsedMessagesRef
     = AutoDisposeStreamProviderRef<RealtimePostgresChangesPayloadBase>;
-String _$realtimePostgresChangesPayloadTableMessageHash() =>
-    r'21037c3c37433c1968cf8ee1b3ae72e785db899f';
-
-/// See also [realtimePostgresChangesPayloadTableMessage].
-@ProviderFor(realtimePostgresChangesPayloadTableMessage)
-final realtimePostgresChangesPayloadTableMessageProvider =
-    AutoDisposeStreamProvider<RealtimePostgresChangesPayloadTable>.internal(
-  realtimePostgresChangesPayloadTableMessage,
-  name: r'realtimePostgresChangesPayloadTableMessageProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$realtimePostgresChangesPayloadTableMessageHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef RealtimePostgresChangesPayloadTableMessageRef<T extends V1Database>
-    = AutoDisposeStreamProviderRef<RealtimePostgresChangesPayloadTable<T>>;
 String _$websocketStatusHash() => r'0a02dad8afb47defa1ef60cc7ca9f448372ea77d';
 
 /// See also [WebsocketStatus].
@@ -91,5 +73,208 @@ final websocketStatusProvider =
 );
 
 typedef _$WebsocketStatus = AutoDisposeNotifier<ConnectionState>;
+String _$realtimePostgresChangesPayloadTableMessageHash() =>
+    r'9d1fa8be66aebe22bc08e93b11e5fd6af066fa3f';
+
+/// Copied from Dart SDK
+class _SystemHash {
+  _SystemHash._();
+
+  static int combine(int hash, int value) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + value);
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int finish(int hash) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    // ignore: parameter_assignments
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
+
+abstract class _$RealtimePostgresChangesPayloadTableMessage<
+        T extends V1Database>
+    extends BuildlessAutoDisposeStreamNotifier<
+        RealtimePostgresChangesPayloadTable<T>> {
+  Stream<RealtimePostgresChangesPayloadTable<T>> build();
+}
+
+/// See also [RealtimePostgresChangesPayloadTableMessage].
+@ProviderFor(RealtimePostgresChangesPayloadTableMessage)
+const realtimePostgresChangesPayloadTableMessageProvider =
+    RealtimePostgresChangesPayloadTableMessageFamily();
+
+/// See also [RealtimePostgresChangesPayloadTableMessage].
+class RealtimePostgresChangesPayloadTableMessageFamily extends Family {
+  /// See also [RealtimePostgresChangesPayloadTableMessage].
+  const RealtimePostgresChangesPayloadTableMessageFamily();
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'realtimePostgresChangesPayloadTableMessageProvider';
+
+  /// See also [RealtimePostgresChangesPayloadTableMessage].
+  RealtimePostgresChangesPayloadTableMessageProvider<T>
+      call<T extends V1Database>() {
+    return RealtimePostgresChangesPayloadTableMessageProvider<T>();
+  }
+
+  @visibleForOverriding
+  @override
+  RealtimePostgresChangesPayloadTableMessageProvider<V1Database>
+      getProviderOverride(
+    covariant RealtimePostgresChangesPayloadTableMessageProvider<V1Database>
+        provider,
+  ) {
+    return call();
+  }
+
+  /// Enables overriding the behavior of this provider, no matter the parameters.
+  Override overrideWith(
+      RealtimePostgresChangesPayloadTableMessage Function() create) {
+    return _$RealtimePostgresChangesPayloadTableMessageFamilyOverride(
+        this, create);
+  }
+}
+
+class _$RealtimePostgresChangesPayloadTableMessageFamilyOverride
+    implements FamilyOverride {
+  _$RealtimePostgresChangesPayloadTableMessageFamilyOverride(
+      this.overriddenFamily, this.create);
+
+  final RealtimePostgresChangesPayloadTableMessage Function() create;
+
+  @override
+  final RealtimePostgresChangesPayloadTableMessageFamily overriddenFamily;
+
+  @override
+  RealtimePostgresChangesPayloadTableMessageProvider getProviderOverride(
+    covariant RealtimePostgresChangesPayloadTableMessageProvider provider,
+  ) {
+    return provider._copyWith(create);
+  }
+}
+
+/// See also [RealtimePostgresChangesPayloadTableMessage].
+class RealtimePostgresChangesPayloadTableMessageProvider<T extends V1Database>
+    extends AutoDisposeStreamNotifierProviderImpl<
+        RealtimePostgresChangesPayloadTableMessage<T>,
+        RealtimePostgresChangesPayloadTable<T>> {
+  /// See also [RealtimePostgresChangesPayloadTableMessage].
+  RealtimePostgresChangesPayloadTableMessageProvider()
+      : this._internal(
+          RealtimePostgresChangesPayloadTableMessage<T>.new,
+          from: realtimePostgresChangesPayloadTableMessageProvider,
+          name: r'realtimePostgresChangesPayloadTableMessageProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$realtimePostgresChangesPayloadTableMessageHash,
+          dependencies:
+              RealtimePostgresChangesPayloadTableMessageFamily._dependencies,
+          allTransitiveDependencies:
+              RealtimePostgresChangesPayloadTableMessageFamily
+                  ._allTransitiveDependencies,
+        );
+
+  RealtimePostgresChangesPayloadTableMessageProvider._internal(
+    super.create, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+  }) : super.internal();
+
+  @override
+  Stream<RealtimePostgresChangesPayloadTable<T>> runNotifierBuild(
+    covariant RealtimePostgresChangesPayloadTableMessage<T> notifier,
+  ) {
+    return notifier.build();
+  }
+
+  @override
+  Override overrideWith(
+      RealtimePostgresChangesPayloadTableMessage<T> Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: RealtimePostgresChangesPayloadTableMessageProvider<T>._internal(
+        () => create(),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+      ),
+    );
+  }
+
+  @override
+  () get argument {
+    return ();
+  }
+
+  @override
+  AutoDisposeStreamNotifierProviderElement<
+      RealtimePostgresChangesPayloadTableMessage<T>,
+      RealtimePostgresChangesPayloadTable<T>> createElement() {
+    return _RealtimePostgresChangesPayloadTableMessageProviderElement(this);
+  }
+
+  RealtimePostgresChangesPayloadTableMessageProvider _copyWith(
+    RealtimePostgresChangesPayloadTableMessage Function() create,
+  ) {
+    return RealtimePostgresChangesPayloadTableMessageProvider._internal(
+      () => create(),
+      name: name,
+      dependencies: dependencies,
+      allTransitiveDependencies: allTransitiveDependencies,
+      debugGetCreateSourceHash: debugGetCreateSourceHash,
+      from: from,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RealtimePostgresChangesPayloadTableMessageProvider &&
+        other.runtimeType == runtimeType;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, T.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin RealtimePostgresChangesPayloadTableMessageRef<T extends V1Database>
+    on AutoDisposeStreamNotifierProviderRef<
+        RealtimePostgresChangesPayloadTable<T>> {}
+
+class _RealtimePostgresChangesPayloadTableMessageProviderElement<
+        T extends V1Database>
+    extends AutoDisposeStreamNotifierProviderElement<
+        RealtimePostgresChangesPayloadTableMessage<T>,
+        RealtimePostgresChangesPayloadTable<T>>
+    with RealtimePostgresChangesPayloadTableMessageRef<T> {
+  _RealtimePostgresChangesPayloadTableMessageProviderElement(super.provider);
+}
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

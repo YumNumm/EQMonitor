@@ -46,8 +46,6 @@ Future<List<EewV1>> _eewRest(_EewRestRef ref) async {
   return result.data;
 }
 
-
-
 /*
 class EewTelegram extends _$EewTelegram {
   @override
