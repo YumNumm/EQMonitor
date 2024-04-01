@@ -1,10 +1,12 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
+import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/model/kmoni_view_model_state.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide ConnectionState;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:web_socket_client/web_socket_client.dart';
 
 class SheetStatusWidget extends ConsumerWidget {
   const SheetStatusWidget({super.key});
@@ -146,9 +148,63 @@ class SheetStatusWidget extends ConsumerWidget {
           else
             const Spacer(),
           // WS接続状態
-          // TODO(YumNumm): 未実装
+          const _WebsocketStatusWidget(),
         ],
       ),
     );
+  }
+}
+
+class _WebsocketStatusWidget extends ConsumerWidget {
+  const _WebsocketStatusWidget();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final status = ref.watch(websocketStatusProvider);
+    return switch (status) {
+      Connecting() => Row(
+          children: [
+            Icon(
+              Icons.cloud_off_rounded,
+              color: colorScheme.error,
+            ),
+            const SizedBox(width: 4),
+            const Text('接続試行中...'),
+          ],
+        ),
+      Connected() || Reconnected() => Row(
+          children: [
+            Icon(
+              Icons.cloud_done_outlined,
+              color: colorScheme.primary,
+            ),
+            const SizedBox(width: 4),
+            const Text('接続済み'),
+          ],
+        ),
+      Reconnecting() => Row(
+          children: [
+            Icon(
+              Icons.cloud_sync_outlined,
+              color: colorScheme.error,
+            ),
+            const SizedBox(width: 4),
+            const Text('再接続中...'),
+          ],
+        ),
+      Disconnected() || Disconnecting() => Row(
+          children: [
+            Icon(
+              Icons.cloud_off_rounded,
+              color: colorScheme.error,
+            ),
+            const SizedBox(width: 4),
+            const Text('未接続'),
+          ],
+        ),
+      _ => const Text('不明'),
+    };
   }
 }

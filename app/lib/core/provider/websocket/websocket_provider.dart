@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:eqapi_types/model/v1/v1_database.dart';
 import 'package:eqapi_types/model/v1/websocket/realtime_postgres_changes_payload.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/env/env.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:web_socket_client/web_socket_client.dart';
@@ -26,20 +27,24 @@ WebSocket websocket(WebsocketRef ref) {
 }
 
 @riverpod
-ConnectionState websocketStatus(WebsocketStatusRef ref) {
-  final socket = ref.read(websocketProvider);
-
-  socket.connection.listen((state) {
-    ref.state = state;
-  });
-  return socket.connection.state;
+class WebsocketStatus extends _$WebsocketStatus {
+  @override
+  ConnectionState build() {
+    final socket = ref.watch(websocketProvider);
+    final talker = ref.watch(talkerProvider);
+    socket.connection.listen((status) {
+      state = status;
+      talker.log('WebSocket state: $status');
+    });
+    return socket.connection.state;
+  }
 }
 
 @riverpod
 Stream<Map<String, dynamic>> websocketMessages(
   WebsocketMessagesRef ref,
 ) async* {
-  final socket = ref.read(websocketProvider);
+  final socket = ref.watch(websocketProvider);
 
   await for (final message in socket.messages) {
     yield jsonDecode(message.toString()) as Map<String, dynamic>;

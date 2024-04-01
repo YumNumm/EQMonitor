@@ -7,12 +7,13 @@ part 'env.g.dart';
 @Envied(
   obfuscate: true,
   requireEnvFile: true,
+  useConstantCase: true,
 )
 abstract class Env {
-  @EnviedField(varName: 'REST_API_URL')
+  @EnviedField()
   static final String restApiUrl = _Env.restApiUrl;
-  @EnviedField(varName: 'WS_API_URL')
+  @EnviedField()
   static final String wsApiUrl = _Env.wsApiUrl;
-  @EnviedField(varName: 'API_AUTHORIZATION')
+  @EnviedField()
   static final String apiAuthorization = _Env.apiAuthorization;
 }

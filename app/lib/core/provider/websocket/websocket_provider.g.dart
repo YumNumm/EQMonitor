@@ -22,22 +22,7 @@ final websocketProvider = Provider<WebSocket>.internal(
 );
 
 typedef WebsocketRef = ProviderRef<WebSocket>;
-String _$websocketStatusHash() => r'7f199af406e0d7998f53615c616e41470b0f1eff';
-
-/// See also [websocketStatus].
-@ProviderFor(websocketStatus)
-final websocketStatusProvider = AutoDisposeProvider<ConnectionState>.internal(
-  websocketStatus,
-  name: r'websocketStatusProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$websocketStatusHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef WebsocketStatusRef = AutoDisposeProviderRef<ConnectionState>;
-String _$websocketMessagesHash() => r'231000da2b9ef04c6cce2814a67651c9cfeea4de';
+String _$websocketMessagesHash() => r'fef03b8990a93b2eebe2a3d330ef4d2dc40637ec';
 
 /// See also [websocketMessages].
 @ProviderFor(websocketMessages)
@@ -90,5 +75,21 @@ final realtimePostgresChangesPayloadTableMessageProvider =
 
 typedef RealtimePostgresChangesPayloadTableMessageRef<T extends V1Database>
     = AutoDisposeStreamProviderRef<RealtimePostgresChangesPayloadTable<T>>;
+String _$websocketStatusHash() => r'0a02dad8afb47defa1ef60cc7ca9f448372ea77d';
+
+/// See also [WebsocketStatus].
+@ProviderFor(WebsocketStatus)
+final websocketStatusProvider =
+    AutoDisposeNotifierProvider<WebsocketStatus, ConnectionState>.internal(
+  WebsocketStatus.new,
+  name: r'websocketStatusProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$websocketStatusHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$WebsocketStatus = AutoDisposeNotifier<ConnectionState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
