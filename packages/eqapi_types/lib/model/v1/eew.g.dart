@@ -21,7 +21,7 @@ _$EewV1Impl _$$EewV1ImplFromJson(Map<String, dynamic> json) => $checkedCreate(
           infoType: $checkedConvert('info_type', (v) => v as String),
           reportTime: $checkedConvert(
               'report_time', (v) => DateTime.parse(v as String)),
-          serialno: $checkedConvert('serialno', (v) => v as int?),
+          serialNo: $checkedConvert('serial_no', (v) => v as int?),
           headline: $checkedConvert('headline', (v) => v as String?),
           isCanceled: $checkedConvert('is_canceled', (v) => v as bool),
           isWarning: $checkedConvert('is_warning', (v) => v as bool?),
@@ -66,6 +66,7 @@ _$EewV1Impl _$$EewV1ImplFromJson(Map<String, dynamic> json) => $checkedCreate(
         'schemaType': 'schema_type',
         'infoType': 'info_type',
         'reportTime': 'report_time',
+        'serialNo': 'serial_no',
         'isCanceled': 'is_canceled',
         'isWarning': 'is_warning',
         'isLastInfo': 'is_last_info',
@@ -89,7 +90,7 @@ Map<String, dynamic> _$$EewV1ImplToJson(_$EewV1Impl instance) =>
       'status': instance.status,
       'info_type': instance.infoType,
       'report_time': instance.reportTime.toIso8601String(),
-      'serialno': instance.serialno,
+      'serial_no': instance.serialNo,
       'headline': instance.headline,
       'is_canceled': instance.isCanceled,
       'is_warning': instance.isWarning,
@@ -177,10 +178,10 @@ _$EewAccuracyImpl _$$EewAccuracyImplFromJson(Map<String, dynamic> json) =>
       ($checkedConvert) {
         final val = _$EewAccuracyImpl(
           epicenters: $checkedConvert(
-              'epicenters', (v) => stringListToIntList(v as List<String>)),
+              'epicenters', (v) => stringListToIntList(v as List)),
           depth: $checkedConvert('depth', (v) => int.parse(v as String)),
-          magnitudeCalcuration: $checkedConvert(
-              'magnitudeCalcuration', (v) => int.parse(v as String)),
+          magnitudeCalculation: $checkedConvert(
+              'magnitudeCalculation', (v) => int.parse(v as String)),
           numberOfMagnitudeCalculation: $checkedConvert(
               'numberOfMagnitudeCalculation', (v) => int.parse(v as String)),
         );
@@ -192,7 +193,7 @@ Map<String, dynamic> _$$EewAccuracyImplToJson(_$EewAccuracyImpl instance) =>
     <String, dynamic>{
       'epicenters': intListToStringList(instance.epicenters),
       'depth': intToString(instance.depth),
-      'magnitudeCalcuration': intToString(instance.magnitudeCalcuration),
+      'magnitudeCalculation': intToString(instance.magnitudeCalculation),
       'numberOfMagnitudeCalculation':
           intToString(instance.numberOfMagnitudeCalculation),
     };

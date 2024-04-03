@@ -219,7 +219,6 @@ class _SliverListBody extends HookConsumerWidget {
             );
           }(),
         AsyncData(:final value) => listView(data: value),
-        _ => const SizedBox(),
       },
     );
   }

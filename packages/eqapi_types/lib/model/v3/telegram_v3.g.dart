@@ -437,11 +437,8 @@ _$TelegramVxse45BodyImpl _$$TelegramVxse45BodyImplFromJson(
         final val = _$TelegramVxse45BodyImpl(
           magnitude:
               $checkedConvert('magnitude', (v) => (v as num?)?.toDouble()),
-          hypocenter: $checkedConvert(
-              'hypocenter',
-              (v) => v == null
-                  ? null
-                  : EewHypocenter.fromJson(v as Map<String, dynamic>)),
+          hypocenter: $checkedConvert('hypocenter',
+              (v) => EewHypocenter.fromJson(v as Map<String, dynamic>)),
           depth: $checkedConvert('depth', (v) => v as int?),
           forecastMaxInt: $checkedConvert(
               'forecastMaxInt',

@@ -6,9 +6,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'eew_alive_telegram.g.dart';
 
-// TODO(YumNumm): EEWの結合
 /// イベント終了していないEEWのうち、精度が低いものを除外したもの
-@riverpod
+@Riverpod(keepAlive: true)
 List<EewV1> eewAliveNormalTelegram(
   EewAliveNormalTelegramRef ref,
 ) {
@@ -22,7 +21,7 @@ List<EewV1> eewAliveNormalTelegram(
 }
 
 /// イベント終了していないEEW
-@riverpod
+@Riverpod(keepAlive: true)
 class EewAliveTelegram extends _$EewAliveTelegram {
   @override
   List<EewV1>? build() {
@@ -71,28 +70,29 @@ class EewAliveChecker {
     // 最新のEEWが通常の場合
     final originTime = eew.originTime?.toUtc();
     final arrivalTime = eew.arrivalTime?.toUtc();
-    final targetTime = originTime ?? arrivalTime;
-    if (targetTime == null) {
+    final happenedTime = originTime ?? arrivalTime;
+    if (happenedTime == null) {
       return false;
     }
+    final happenedDiff = now.toUtc().difference(happenedTime).inSeconds;
     final depth = eew.depth;
 
     // EEW警報の場合、420秒でイベント終了と判定する
     final isWarning = (eew.headline ?? '').contains('強い揺れ');
     if (isWarning) {
-      return now.toUtc().difference(targetTime).inSeconds > 420;
+      return happenedDiff > 420;
     }
     // M6.0以上の場合、360秒でイベント終了と判定する
     final magnitude = eew.magnitude;
     if (magnitude != null && magnitude >= 6.0) {
-      return now.toUtc().difference(targetTime).inSeconds > 360;
+      return happenedDiff > 360;
     }
     // 深さ不明/150km未満の場合、地震発生/検知から250秒でイベント終了と判定する
     if (depth == null || depth < 150) {
-      return now.toUtc().difference(targetTime).inSeconds > 250;
+      return happenedDiff > 250;
     } else {
       // 深さ150km以上の場合、地震発生/検知から400秒でイベント終了と判定する
-      return now.toUtc().difference(targetTime).inSeconds > 400;
+      return happenedDiff > 400;
     }
   }
 }

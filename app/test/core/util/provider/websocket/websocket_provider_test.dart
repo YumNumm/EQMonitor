@@ -1,5 +1,4 @@
 import 'package:eqapi_types/lib.dart';
-import 'package:eqapi_types/model/v1/websocket/realtime_postgres_changes_payload.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -22,12 +22,11 @@ final websocketProvider = Provider<WebSocket>.internal(
 );
 
 typedef WebsocketRef = ProviderRef<WebSocket>;
-String _$websocketMessagesHash() => r'fef03b8990a93b2eebe2a3d330ef4d2dc40637ec';
+String _$websocketMessagesHash() => r'fdee9f3642d4edf9e918511f85a43087a98e9c76';
 
 /// See also [websocketMessages].
 @ProviderFor(websocketMessages)
-final websocketMessagesProvider =
-    AutoDisposeStreamProvider<Map<String, dynamic>>.internal(
+final websocketMessagesProvider = StreamProvider<Map<String, dynamic>>.internal(
   websocketMessages,
   name: r'websocketMessagesProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -37,15 +36,14 @@ final websocketMessagesProvider =
   allTransitiveDependencies: null,
 );
 
-typedef WebsocketMessagesRef
-    = AutoDisposeStreamProviderRef<Map<String, dynamic>>;
+typedef WebsocketMessagesRef = StreamProviderRef<Map<String, dynamic>>;
 String _$websocketParsedMessagesHash() =>
-    r'b978f3a89cb132ddc28779f9cc05f1c70c4639ab';
+    r'5a18e83f5c10c6e092adcc0cae8350271f028a71';
 
 /// See also [websocketParsedMessages].
 @ProviderFor(websocketParsedMessages)
 final websocketParsedMessagesProvider =
-    AutoDisposeStreamProvider<RealtimePostgresChangesPayloadBase>.internal(
+    StreamProvider<RealtimePostgresChangesPayloadBase>.internal(
   websocketParsedMessages,
   name: r'websocketParsedMessagesProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -56,9 +54,9 @@ final websocketParsedMessagesProvider =
 );
 
 typedef WebsocketParsedMessagesRef
-    = AutoDisposeStreamProviderRef<RealtimePostgresChangesPayloadBase>;
+    = StreamProviderRef<RealtimePostgresChangesPayloadBase>;
 String _$websocketTableMessagesHash() =>
-    r'a2cc8d87641f64a119a88fc5c9c7b716dd25476f';
+    r'0d338e0f4e024a4494b985dd40ce654ee70c9685';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -145,7 +143,7 @@ class _$WebsocketTableMessagesFamilyOverride implements FamilyOverride {
 
 /// See also [websocketTableMessages].
 class WebsocketTableMessagesProvider<T extends V1Database>
-    extends AutoDisposeStreamProvider<RealtimePostgresChangesPayloadTable<T>> {
+    extends StreamProvider<RealtimePostgresChangesPayloadTable<T>> {
   /// See also [websocketTableMessages].
   WebsocketTableMessagesProvider()
       : this._internal(
@@ -197,7 +195,7 @@ class WebsocketTableMessagesProvider<T extends V1Database>
   }
 
   @override
-  AutoDisposeStreamProviderElement<RealtimePostgresChangesPayloadTable<T>>
+  StreamProviderElement<RealtimePostgresChangesPayloadTable<T>>
       createElement() {
     return _WebsocketTableMessagesProviderElement(this);
   }
@@ -233,21 +231,20 @@ class WebsocketTableMessagesProvider<T extends V1Database>
 }
 
 mixin WebsocketTableMessagesRef<T extends V1Database>
-    on AutoDisposeStreamProviderRef<RealtimePostgresChangesPayloadTable<T>> {}
+    on StreamProviderRef<RealtimePostgresChangesPayloadTable<T>> {}
 
 class _WebsocketTableMessagesProviderElement<T extends V1Database>
-    extends AutoDisposeStreamProviderElement<
-        RealtimePostgresChangesPayloadTable<T>>
+    extends StreamProviderElement<RealtimePostgresChangesPayloadTable<T>>
     with WebsocketTableMessagesRef<T> {
   _WebsocketTableMessagesProviderElement(super.provider);
 }
 
-String _$websocketStatusHash() => r'0a02dad8afb47defa1ef60cc7ca9f448372ea77d';
+String _$websocketStatusHash() => r'b02f3b5f4e952453120dd81fd92ee33911fd6bda';
 
 /// See also [WebsocketStatus].
 @ProviderFor(WebsocketStatus)
 final websocketStatusProvider =
-    AutoDisposeNotifierProvider<WebsocketStatus, ConnectionState>.internal(
+    NotifierProvider<WebsocketStatus, ConnectionState>.internal(
   WebsocketStatus.new,
   name: r'websocketStatusProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -257,6 +254,6 @@ final websocketStatusProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$WebsocketStatus = AutoDisposeNotifier<ConnectionState>;
+typedef _$WebsocketStatus = Notifier<ConnectionState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

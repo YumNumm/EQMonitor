@@ -65,7 +65,6 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
                       .refresh();
                 },
               ),
-            _ => const SizedBox.shrink(),
           },
           Row(
             children: [

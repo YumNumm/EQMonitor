@@ -27,7 +27,7 @@ mixin _$EewV1 {
   String get status => throw _privateConstructorUsedError;
   String get infoType => throw _privateConstructorUsedError;
   DateTime get reportTime => throw _privateConstructorUsedError;
-  int? get serialno => throw _privateConstructorUsedError;
+  int? get serialNo => throw _privateConstructorUsedError;
   String? get headline => throw _privateConstructorUsedError;
   bool get isCanceled => throw _privateConstructorUsedError;
   bool? get isWarning => throw _privateConstructorUsedError;
@@ -69,7 +69,7 @@ abstract class $EewV1CopyWith<$Res> {
       String status,
       String infoType,
       DateTime reportTime,
-      int? serialno,
+      int? serialNo,
       String? headline,
       bool isCanceled,
       bool? isWarning,
@@ -112,7 +112,7 @@ class _$EewV1CopyWithImpl<$Res, $Val extends EewV1>
     Object? status = null,
     Object? infoType = null,
     Object? reportTime = null,
-    Object? serialno = freezed,
+    Object? serialNo = freezed,
     Object? headline = freezed,
     Object? isCanceled = null,
     Object? isWarning = freezed,
@@ -161,9 +161,9 @@ class _$EewV1CopyWithImpl<$Res, $Val extends EewV1>
           ? _value.reportTime
           : reportTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      serialno: freezed == serialno
-          ? _value.serialno
-          : serialno // ignore: cast_nullable_to_non_nullable
+      serialNo: freezed == serialNo
+          ? _value.serialNo
+          : serialNo // ignore: cast_nullable_to_non_nullable
               as int?,
       headline: freezed == headline
           ? _value.headline
@@ -268,7 +268,7 @@ abstract class _$$EewV1ImplCopyWith<$Res> implements $EewV1CopyWith<$Res> {
       String status,
       String infoType,
       DateTime reportTime,
-      int? serialno,
+      int? serialNo,
       String? headline,
       bool isCanceled,
       bool? isWarning,
@@ -310,7 +310,7 @@ class __$$EewV1ImplCopyWithImpl<$Res>
     Object? status = null,
     Object? infoType = null,
     Object? reportTime = null,
-    Object? serialno = freezed,
+    Object? serialNo = freezed,
     Object? headline = freezed,
     Object? isCanceled = null,
     Object? isWarning = freezed,
@@ -359,9 +359,9 @@ class __$$EewV1ImplCopyWithImpl<$Res>
           ? _value.reportTime
           : reportTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      serialno: freezed == serialno
-          ? _value.serialno
-          : serialno // ignore: cast_nullable_to_non_nullable
+      serialNo: freezed == serialNo
+          ? _value.serialNo
+          : serialNo // ignore: cast_nullable_to_non_nullable
               as int?,
       headline: freezed == headline
           ? _value.headline
@@ -450,7 +450,7 @@ class _$EewV1Impl implements _EewV1 {
       required this.status,
       required this.infoType,
       required this.reportTime,
-      this.serialno,
+      this.serialNo,
       this.headline,
       required this.isCanceled,
       this.isWarning,
@@ -489,7 +489,7 @@ class _$EewV1Impl implements _EewV1 {
   @override
   final DateTime reportTime;
   @override
-  final int? serialno;
+  final int? serialNo;
   @override
   final String? headline;
   @override
@@ -537,7 +537,7 @@ class _$EewV1Impl implements _EewV1 {
 
   @override
   String toString() {
-    return 'EewV1(id: $id, eventId: $eventId, type: $type, schemaType: $schemaType, status: $status, infoType: $infoType, reportTime: $reportTime, serialno: $serialno, headline: $headline, isCanceled: $isCanceled, isWarning: $isWarning, isLastInfo: $isLastInfo, originTime: $originTime, arrivalTime: $arrivalTime, hypoName: $hypoName, depth: $depth, latitude: $latitude, longitude: $longitude, magnitude: $magnitude, forecastMaxIntensity: $forecastMaxIntensity, forecastMaxIntensityIsOver: $forecastMaxIntensityIsOver, forecastMaxLpgmIntensity: $forecastMaxLpgmIntensity, forecastMaxLpgmIntensityIsOver: $forecastMaxLpgmIntensityIsOver, regions: $regions, isPlum: $isPlum, accuracy: $accuracy)';
+    return 'EewV1(id: $id, eventId: $eventId, type: $type, schemaType: $schemaType, status: $status, infoType: $infoType, reportTime: $reportTime, serialNo: $serialNo, headline: $headline, isCanceled: $isCanceled, isWarning: $isWarning, isLastInfo: $isLastInfo, originTime: $originTime, arrivalTime: $arrivalTime, hypoName: $hypoName, depth: $depth, latitude: $latitude, longitude: $longitude, magnitude: $magnitude, forecastMaxIntensity: $forecastMaxIntensity, forecastMaxIntensityIsOver: $forecastMaxIntensityIsOver, forecastMaxLpgmIntensity: $forecastMaxLpgmIntensity, forecastMaxLpgmIntensityIsOver: $forecastMaxLpgmIntensityIsOver, regions: $regions, isPlum: $isPlum, accuracy: $accuracy)';
   }
 
   @override
@@ -555,8 +555,8 @@ class _$EewV1Impl implements _EewV1 {
                 other.infoType == infoType) &&
             (identical(other.reportTime, reportTime) ||
                 other.reportTime == reportTime) &&
-            (identical(other.serialno, serialno) ||
-                other.serialno == serialno) &&
+            (identical(other.serialNo, serialNo) ||
+                other.serialNo == serialNo) &&
             (identical(other.headline, headline) ||
                 other.headline == headline) &&
             (identical(other.isCanceled, isCanceled) ||
@@ -608,7 +608,7 @@ class _$EewV1Impl implements _EewV1 {
         status,
         infoType,
         reportTime,
-        serialno,
+        serialNo,
         headline,
         isCanceled,
         isWarning,
@@ -652,7 +652,7 @@ abstract class _EewV1 implements EewV1 {
       required final String status,
       required final String infoType,
       required final DateTime reportTime,
-      final int? serialno,
+      final int? serialNo,
       final String? headline,
       required final bool isCanceled,
       final bool? isWarning,
@@ -689,7 +689,7 @@ abstract class _EewV1 implements EewV1 {
   @override
   DateTime get reportTime;
   @override
-  int? get serialno;
+  int? get serialNo;
   @override
   String? get headline;
   @override
@@ -1064,7 +1064,7 @@ mixin _$EewAccuracy {
   @JsonKey(fromJson: int.parse, toJson: intToString)
   int get depth => throw _privateConstructorUsedError;
   @JsonKey(fromJson: int.parse, toJson: intToString)
-  int get magnitudeCalcuration => throw _privateConstructorUsedError;
+  int get magnitudeCalculation => throw _privateConstructorUsedError;
   @JsonKey(fromJson: int.parse, toJson: intToString)
   int get numberOfMagnitudeCalculation => throw _privateConstructorUsedError;
 
@@ -1085,7 +1085,7 @@ abstract class $EewAccuracyCopyWith<$Res> {
       List<int> epicenters,
       @JsonKey(fromJson: int.parse, toJson: intToString) int depth,
       @JsonKey(fromJson: int.parse, toJson: intToString)
-      int magnitudeCalcuration,
+      int magnitudeCalculation,
       @JsonKey(fromJson: int.parse, toJson: intToString)
       int numberOfMagnitudeCalculation});
 }
@@ -1105,7 +1105,7 @@ class _$EewAccuracyCopyWithImpl<$Res, $Val extends EewAccuracy>
   $Res call({
     Object? epicenters = null,
     Object? depth = null,
-    Object? magnitudeCalcuration = null,
+    Object? magnitudeCalculation = null,
     Object? numberOfMagnitudeCalculation = null,
   }) {
     return _then(_value.copyWith(
@@ -1117,9 +1117,9 @@ class _$EewAccuracyCopyWithImpl<$Res, $Val extends EewAccuracy>
           ? _value.depth
           : depth // ignore: cast_nullable_to_non_nullable
               as int,
-      magnitudeCalcuration: null == magnitudeCalcuration
-          ? _value.magnitudeCalcuration
-          : magnitudeCalcuration // ignore: cast_nullable_to_non_nullable
+      magnitudeCalculation: null == magnitudeCalculation
+          ? _value.magnitudeCalculation
+          : magnitudeCalculation // ignore: cast_nullable_to_non_nullable
               as int,
       numberOfMagnitudeCalculation: null == numberOfMagnitudeCalculation
           ? _value.numberOfMagnitudeCalculation
@@ -1142,7 +1142,7 @@ abstract class _$$EewAccuracyImplCopyWith<$Res>
       List<int> epicenters,
       @JsonKey(fromJson: int.parse, toJson: intToString) int depth,
       @JsonKey(fromJson: int.parse, toJson: intToString)
-      int magnitudeCalcuration,
+      int magnitudeCalculation,
       @JsonKey(fromJson: int.parse, toJson: intToString)
       int numberOfMagnitudeCalculation});
 }
@@ -1160,7 +1160,7 @@ class __$$EewAccuracyImplCopyWithImpl<$Res>
   $Res call({
     Object? epicenters = null,
     Object? depth = null,
-    Object? magnitudeCalcuration = null,
+    Object? magnitudeCalculation = null,
     Object? numberOfMagnitudeCalculation = null,
   }) {
     return _then(_$EewAccuracyImpl(
@@ -1172,9 +1172,9 @@ class __$$EewAccuracyImplCopyWithImpl<$Res>
           ? _value.depth
           : depth // ignore: cast_nullable_to_non_nullable
               as int,
-      magnitudeCalcuration: null == magnitudeCalcuration
-          ? _value.magnitudeCalcuration
-          : magnitudeCalcuration // ignore: cast_nullable_to_non_nullable
+      magnitudeCalculation: null == magnitudeCalculation
+          ? _value.magnitudeCalculation
+          : magnitudeCalculation // ignore: cast_nullable_to_non_nullable
               as int,
       numberOfMagnitudeCalculation: null == numberOfMagnitudeCalculation
           ? _value.numberOfMagnitudeCalculation
@@ -1193,7 +1193,7 @@ class _$EewAccuracyImpl implements _EewAccuracy {
       required final List<int> epicenters,
       @JsonKey(fromJson: int.parse, toJson: intToString) required this.depth,
       @JsonKey(fromJson: int.parse, toJson: intToString)
-      required this.magnitudeCalcuration,
+      required this.magnitudeCalculation,
       @JsonKey(fromJson: int.parse, toJson: intToString)
       required this.numberOfMagnitudeCalculation})
       : _epicenters = epicenters;
@@ -1220,14 +1220,14 @@ class _$EewAccuracyImpl implements _EewAccuracy {
   final int depth;
   @override
   @JsonKey(fromJson: int.parse, toJson: intToString)
-  final int magnitudeCalcuration;
+  final int magnitudeCalculation;
   @override
   @JsonKey(fromJson: int.parse, toJson: intToString)
   final int numberOfMagnitudeCalculation;
 
   @override
   String toString() {
-    return 'EewAccuracy(epicenters: $epicenters, depth: $depth, magnitudeCalcuration: $magnitudeCalcuration, numberOfMagnitudeCalculation: $numberOfMagnitudeCalculation)';
+    return 'EewAccuracy(epicenters: $epicenters, depth: $depth, magnitudeCalculation: $magnitudeCalculation, numberOfMagnitudeCalculation: $numberOfMagnitudeCalculation)';
   }
 
   @override
@@ -1238,8 +1238,8 @@ class _$EewAccuracyImpl implements _EewAccuracy {
             const DeepCollectionEquality()
                 .equals(other._epicenters, _epicenters) &&
             (identical(other.depth, depth) || other.depth == depth) &&
-            (identical(other.magnitudeCalcuration, magnitudeCalcuration) ||
-                other.magnitudeCalcuration == magnitudeCalcuration) &&
+            (identical(other.magnitudeCalculation, magnitudeCalculation) ||
+                other.magnitudeCalculation == magnitudeCalculation) &&
             (identical(other.numberOfMagnitudeCalculation,
                     numberOfMagnitudeCalculation) ||
                 other.numberOfMagnitudeCalculation ==
@@ -1252,7 +1252,7 @@ class _$EewAccuracyImpl implements _EewAccuracy {
       runtimeType,
       const DeepCollectionEquality().hash(_epicenters),
       depth,
-      magnitudeCalcuration,
+      magnitudeCalculation,
       numberOfMagnitudeCalculation);
 
   @JsonKey(ignore: true)
@@ -1276,7 +1276,7 @@ abstract class _EewAccuracy implements EewAccuracy {
       @JsonKey(fromJson: int.parse, toJson: intToString)
       required final int depth,
       @JsonKey(fromJson: int.parse, toJson: intToString)
-      required final int magnitudeCalcuration,
+      required final int magnitudeCalculation,
       @JsonKey(fromJson: int.parse, toJson: intToString)
       required final int numberOfMagnitudeCalculation}) = _$EewAccuracyImpl;
 
@@ -1294,7 +1294,7 @@ abstract class _EewAccuracy implements EewAccuracy {
   int get depth;
   @override
   @JsonKey(fromJson: int.parse, toJson: intToString)
-  int get magnitudeCalcuration;
+  int get magnitudeCalculation;
   @override
   @JsonKey(fromJson: int.parse, toJson: intToString)
   int get numberOfMagnitudeCalculation;

@@ -9,7 +9,7 @@ import 'package:web_socket_client/web_socket_client.dart';
 
 part 'eew_telegram.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class Eew extends _$Eew {
   @override
   AsyncValue<List<EewV1>> build() {
@@ -49,7 +49,7 @@ class Eew extends _$Eew {
   }
 
   /// [item]をstateに追加する
-  /// 既に同じeventIdが存在する場合は、serialnoが大きい方を採用する
+  /// 既に同じeventIdが存在する場合は、serialNoが大きい方を採用する
   void _upsert(EewV1 item) {
     if (state is AsyncData) {
       final dataView = state.value;
@@ -60,8 +60,8 @@ class Eew extends _$Eew {
       final index = data.indexWhereOrNull((e) => e.eventId == item.eventId);
       if (index != null) {
         final previous = data[index];
-        final previousSerialNo = previous.serialno ?? 0;
-        final newSerialNo = item.serialno ?? 0;
+        final previousSerialNo = previous.serialNo ?? 0;
+        final newSerialNo = item.serialNo ?? 0;
         if (previousSerialNo <= newSerialNo) {
           data[index] = item;
         }
@@ -73,7 +73,7 @@ class Eew extends _$Eew {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<List<EewV1>> _eewRest(_EewRestRef ref) async {
   final api = ref.watch(eqApiProvider);
   final result = await api.v1.getEewLatest();

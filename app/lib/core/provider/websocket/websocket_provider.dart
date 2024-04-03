@@ -27,7 +27,7 @@ WebSocket websocket(WebsocketRef ref) {
   return socket;
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class WebsocketStatus extends _$WebsocketStatus {
   @override
   ConnectionState build() {
@@ -41,7 +41,7 @@ class WebsocketStatus extends _$WebsocketStatus {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Stream<Map<String, dynamic>> websocketMessages(
   WebsocketMessagesRef ref,
 ) async* {
@@ -53,7 +53,7 @@ Stream<Map<String, dynamic>> websocketMessages(
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Stream<RealtimePostgresChangesPayloadBase> websocketParsedMessages(
   WebsocketParsedMessagesRef ref,
 ) {
@@ -71,7 +71,7 @@ Stream<RealtimePostgresChangesPayloadBase> websocketParsedMessages(
   return controller.stream;
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Stream<RealtimePostgresChangesPayloadTable<T>>
     websocketTableMessages<T extends V1Database>(
   WebsocketTableMessagesRef<T> ref,

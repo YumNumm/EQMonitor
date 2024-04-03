@@ -11,6 +11,7 @@ import 'package:eqapi_types/model/components/eew_region.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
+import 'package:eqmonitor/core/provider/eew/eew_alive_telegram.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_provider.dart';
 import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_view_settings.dart';
@@ -46,11 +47,10 @@ class MainMapViewModel extends _$MainMapViewModel {
           _onKmoniStateChanged(analyzedPoints);
         },
       )
-      /* TODO(YumNumm): EEWの結合
       ..listen(
         eewAliveTelegramProvider,
         (_, value) => _onEewStateChanged(value ?? []),
-      )*/
+      )
       ..listen(
         estimatedIntensityProvider,
         (_, value) => _onEstimatedIntensityChanged(value),
@@ -156,24 +156,15 @@ class MainMapViewModel extends _$MainMapViewModel {
     if (!_isEewInitialized) {
       return;
     }
-    // TODO(YumNumm): EEWの結合
-    /*
     final aliveBodies = values
-        .map((e) => e.latestEew)
-        .whereType<TelegramVxse45Body>()
-        .where((e) => e.hypocenter != null && e.hypocenter!.coordinate != null)
-        .toList();
-    final normalEews = values
         .where(
-          (e) =>
-              e.latestEewTelegram != null && e.latestEew is TelegramVxse45Body,
+          (e) => !e.isCanceled && e.latitude != null && e.longitude != null,
         )
+        .toList();
+    final normalEews = aliveBodies
+        .where((e) => !(e.isIpfOnePoint || e.isLevelEew || (e.isPlum ?? false)))
         .map(
-          (e) => (e.latestEewTelegram!, e.latestEew! as TelegramVxse45Body),
-        )
-        .where((e) => !(e.$2.isIpfOnePoint || e.$2.isLevelEew || e.$2.isPlum))
-        .map(
-          (e) => (e.$2, (e.$1.headline ?? '').contains('強い揺れ')),
+          (e) => (e, e.headline?.contains('強い揺れ') ?? false),
         )
         .toList();
     _eewPsWaveService!.update(normalEews);
@@ -185,7 +176,7 @@ class MainMapViewModel extends _$MainMapViewModel {
           .flattened
           .toList(),
     );
-    await _eewEstimatedIntensityService!.update(transformed);*/
+    await _eewEstimatedIntensityService!.update(transformed);
   }
 
   Future<void> _onEstimatedIntensityChanged(
@@ -204,21 +195,18 @@ class MainMapViewModel extends _$MainMapViewModel {
   LatLngBounds? _getEstimatedIntensityBoundary(
     List<AnalyzedKmoniObservationPoint> points,
   ) {
-    if (points.isEmpty) {
-      return null;
-    }
-    return null;
-    // TODO(YumNumm): EEWの結合
-    /*
     final aliveEews = ref.read(eewAliveTelegramProvider);
 
-    final telegrams = aliveEews
-        ?.map(
-          (e) => e.latestEew,
-        )
-        .whereType<TelegramVxse45Body>();
-    final coords =
-        telegrams?.map((e) => e.hypocenter?.coordinate).whereNotNull() ?? [];
+    final coords = aliveEews
+            ?.where((e) => e.latitude != null && e.longitude != null)
+            .map(
+              (e) => lat_lng.LatLng(
+                e.latitude!,
+                e.longitude!,
+              ),
+            )
+            .whereNotNull() ??
+        [];
 
     final first = points.first;
     if (first.intensityValue == null) {
@@ -226,6 +214,7 @@ class MainMapViewModel extends _$MainMapViewModel {
     }
 
     final latLngs = [
+      /*
       ...points
           .where((e) => first.intensityValue! < e.intensityValue! + 2)
           .where((e) => e.intensityValue! > 1)
@@ -234,7 +223,7 @@ class MainMapViewModel extends _$MainMapViewModel {
               e.point.location.latitude,
               e.point.location.longitude,
             ),
-          ),
+          ),*/
       ...coords.map(
         (e) => lat_lng.LatLng(
           e.lat + 3,
@@ -248,7 +237,7 @@ class MainMapViewModel extends _$MainMapViewModel {
         ),
       ),
     ];
-    return latLngs.toBounds;*/
+    return latLngs.toBounds;
   }
 
   // *********** Kyoshin Monitor Related ***********
@@ -367,7 +356,6 @@ class MainMapViewModel extends _$MainMapViewModel {
   }) async {
     final controller = _controller;
     if (controller == null) {
-      print('MaplibreMapController is null');
       throw Exception('MaplibreMapController is null');
     }
     // 現在のホームポジションから変更がない場合は何もしない
@@ -745,8 +733,7 @@ class _EewHypocenterService {
     hasInitialized = true;
   }
 
-  Future<void> update(List<TelegramVxse45Body> items) =>
-      controller.setGeoJsonSource(
+  Future<void> update(List<EewV1> items) => controller.setGeoJsonSource(
         sourceLayerId,
         createGeoJson(items),
       );
@@ -789,7 +776,7 @@ class _EewHypocenterService {
     hasInitialized = false;
   }
 
-  static Map<String, dynamic> createGeoJson(List<TelegramVxse45Body> items) =>
+  static Map<String, dynamic> createGeoJson(List<EewV1> items) =>
       <String, dynamic>{
         'type': 'FeatureCollection',
         'features': items
@@ -799,14 +786,15 @@ class _EewHypocenterService {
                 'geometry': {
                   'type': 'Point',
                   'coordinates': [
-                    e.hypocenter!.coordinate!.lon,
-                    e.hypocenter!.coordinate!.lat,
+                    e.longitude,
+                    e.latitude,
                   ],
                 },
                 'properties': _EewHypocenterProperties(
                   depth: e.depth ?? 0,
                   magnitude: e.magnitude ?? 0,
-                  isLowPrecise: e.isPlum || e.isIpfOnePoint || e.isLevelEew,
+                  isLowPrecise:
+                      e.isIpfOnePoint || e.isLevelEew || (e.isPlum ?? false),
                 ).toJson(),
               },
             )
@@ -857,7 +845,7 @@ class _EewPsWaveService {
     //_children.$4.init(),
   }
 
-  List<(TelegramVxse45Body, bool isWarning)> _cachedEews = [];
+  List<(EewV1, bool isWarning)> _cachedEews = [];
 
   /// 表示するEEWが0件になってから GeoJSON Sourceを更新したかどうか
   bool didUpdatedSinceZero = false;
@@ -876,10 +864,11 @@ class _EewPsWaveService {
     }
     for (final e in _cachedEews) {
       final eew = e.$1;
-      final hypocenter = eew.hypocenter?.coordinate;
       final depth = eew.depth;
       final originTime = eew.originTime;
-      if (hypocenter == null || depth == null || originTime == null) {
+      final (lat, lng) = (eew.latitude, eew.longitude);
+
+      if (lat == null || lng == null || depth == null || originTime == null) {
         continue;
       }
       final travel = travelTimeMap.getTravelTime(
@@ -893,7 +882,7 @@ class _EewPsWaveService {
             1000,
       );
       results.add(
-        (travel, hypocenter, e.$2),
+        (travel, lat_lng.LatLng(lat, lng), e.$2),
       );
     }
     // update GeoJSON
@@ -908,8 +897,7 @@ class _EewPsWaveService {
   }
 
   // ignore: use_setters_to_change_properties
-  void update(List<(TelegramVxse45Body, bool isWarning)> items) =>
-      _cachedEews = items;
+  void update(List<(EewV1, bool isWarning)> items) => _cachedEews = items;
 
   static Map<String, dynamic> createGeoJson(
     List<(TravelTimeResult, lat_lng.LatLng, bool isWarning)> results,

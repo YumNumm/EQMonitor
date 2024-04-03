@@ -2797,7 +2797,7 @@ TelegramVxse45Body _$TelegramVxse45BodyFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$TelegramVxse45Body {
   double? get magnitude => throw _privateConstructorUsedError;
-  EewHypocenter? get hypocenter => throw _privateConstructorUsedError;
+  EewHypocenter get hypocenter => throw _privateConstructorUsedError;
   int? get depth => throw _privateConstructorUsedError;
   ForecastMaxInt? get forecastMaxInt => throw _privateConstructorUsedError;
   ForecastMaxLgInt? get forecastMaxLgInt => throw _privateConstructorUsedError;
@@ -2822,7 +2822,7 @@ abstract class $TelegramVxse45BodyCopyWith<$Res> {
   @useResult
   $Res call(
       {double? magnitude,
-      EewHypocenter? hypocenter,
+      EewHypocenter hypocenter,
       int? depth,
       ForecastMaxInt? forecastMaxInt,
       ForecastMaxLgInt? forecastMaxLgInt,
@@ -2833,7 +2833,7 @@ abstract class $TelegramVxse45BodyCopyWith<$Res> {
       bool isPlum,
       bool isLastInfo});
 
-  $EewHypocenterCopyWith<$Res>? get hypocenter;
+  $EewHypocenterCopyWith<$Res> get hypocenter;
   $ForecastMaxIntCopyWith<$Res>? get forecastMaxInt;
   $ForecastMaxLgIntCopyWith<$Res>? get forecastMaxLgInt;
   $EewAccuracyCopyWith<$Res> get accuracy;
@@ -2853,7 +2853,7 @@ class _$TelegramVxse45BodyCopyWithImpl<$Res, $Val extends TelegramVxse45Body>
   @override
   $Res call({
     Object? magnitude = freezed,
-    Object? hypocenter = freezed,
+    Object? hypocenter = null,
     Object? depth = freezed,
     Object? forecastMaxInt = freezed,
     Object? forecastMaxLgInt = freezed,
@@ -2869,10 +2869,10 @@ class _$TelegramVxse45BodyCopyWithImpl<$Res, $Val extends TelegramVxse45Body>
           ? _value.magnitude
           : magnitude // ignore: cast_nullable_to_non_nullable
               as double?,
-      hypocenter: freezed == hypocenter
+      hypocenter: null == hypocenter
           ? _value.hypocenter
           : hypocenter // ignore: cast_nullable_to_non_nullable
-              as EewHypocenter?,
+              as EewHypocenter,
       depth: freezed == depth
           ? _value.depth
           : depth // ignore: cast_nullable_to_non_nullable
@@ -2914,12 +2914,8 @@ class _$TelegramVxse45BodyCopyWithImpl<$Res, $Val extends TelegramVxse45Body>
 
   @override
   @pragma('vm:prefer-inline')
-  $EewHypocenterCopyWith<$Res>? get hypocenter {
-    if (_value.hypocenter == null) {
-      return null;
-    }
-
-    return $EewHypocenterCopyWith<$Res>(_value.hypocenter!, (value) {
+  $EewHypocenterCopyWith<$Res> get hypocenter {
+    return $EewHypocenterCopyWith<$Res>(_value.hypocenter, (value) {
       return _then(_value.copyWith(hypocenter: value) as $Val);
     });
   }
@@ -2967,7 +2963,7 @@ abstract class _$$TelegramVxse45BodyImplCopyWith<$Res>
   @useResult
   $Res call(
       {double? magnitude,
-      EewHypocenter? hypocenter,
+      EewHypocenter hypocenter,
       int? depth,
       ForecastMaxInt? forecastMaxInt,
       ForecastMaxLgInt? forecastMaxLgInt,
@@ -2979,7 +2975,7 @@ abstract class _$$TelegramVxse45BodyImplCopyWith<$Res>
       bool isLastInfo});
 
   @override
-  $EewHypocenterCopyWith<$Res>? get hypocenter;
+  $EewHypocenterCopyWith<$Res> get hypocenter;
   @override
   $ForecastMaxIntCopyWith<$Res>? get forecastMaxInt;
   @override
@@ -3000,7 +2996,7 @@ class __$$TelegramVxse45BodyImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? magnitude = freezed,
-    Object? hypocenter = freezed,
+    Object? hypocenter = null,
     Object? depth = freezed,
     Object? forecastMaxInt = freezed,
     Object? forecastMaxLgInt = freezed,
@@ -3016,10 +3012,10 @@ class __$$TelegramVxse45BodyImplCopyWithImpl<$Res>
           ? _value.magnitude
           : magnitude // ignore: cast_nullable_to_non_nullable
               as double?,
-      hypocenter: freezed == hypocenter
+      hypocenter: null == hypocenter
           ? _value.hypocenter
           : hypocenter // ignore: cast_nullable_to_non_nullable
-              as EewHypocenter?,
+              as EewHypocenter,
       depth: freezed == depth
           ? _value.depth
           : depth // ignore: cast_nullable_to_non_nullable
@@ -3084,7 +3080,7 @@ class _$TelegramVxse45BodyImpl implements _TelegramVxse45Body {
   @override
   final double? magnitude;
   @override
-  final EewHypocenter? hypocenter;
+  final EewHypocenter hypocenter;
   @override
   final int? depth;
   @override
@@ -3177,7 +3173,7 @@ class _$TelegramVxse45BodyImpl implements _TelegramVxse45Body {
 abstract class _TelegramVxse45Body implements TelegramVxse45Body {
   const factory _TelegramVxse45Body(
       {required final double? magnitude,
-      required final EewHypocenter? hypocenter,
+      required final EewHypocenter hypocenter,
       required final int? depth,
       required final ForecastMaxInt? forecastMaxInt,
       required final ForecastMaxLgInt? forecastMaxLgInt,
@@ -3194,7 +3190,7 @@ abstract class _TelegramVxse45Body implements TelegramVxse45Body {
   @override
   double? get magnitude;
   @override
-  EewHypocenter? get hypocenter;
+  EewHypocenter get hypocenter;
   @override
   int? get depth;
   @override

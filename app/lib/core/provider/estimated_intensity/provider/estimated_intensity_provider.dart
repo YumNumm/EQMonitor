@@ -1,5 +1,6 @@
 // ignore_for_file: provider_dependencies
 import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor/core/provider/eew/eew_alive_telegram.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/data/estimated_intensity_data_source.dart';
 import 'package:eqmonitor/core/provider/kmoni_observation_points/model/kmoni_observation_point.dart';
 import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
@@ -12,13 +13,10 @@ part 'estimated_intensity_provider.g.dart';
 class EstimatedIntensity extends _$EstimatedIntensity {
   @override
   List<AnalyzedKmoniObservationPoint> build() {
-    /*
     ref.listen(eewAliveTelegramProvider, (previous, next) {
       state = calc(next ?? []);
     });
-    return calc(ref.read(eewAliveTelegramProvider) ?? []);*/
-    return [];
-    // TODO(YumNumm): Implement build
+    return calc(ref.read(eewAliveTelegramProvider) ?? []);
   }
 
   List<AnalyzedKmoniObservationPoint> calc(List<EewV1> eews) {

@@ -16,7 +16,7 @@ class EewV1 with _$EewV1 implements V1Database {
     required String status,
     required String infoType,
     required DateTime reportTime,
-    int? serialno,
+    int? serialNo,
     String? headline,
     required bool isCanceled,
     bool? isWarning,
@@ -69,7 +69,7 @@ class EewAccuracy with _$EewAccuracy {
     required List<int> epicenters,
     @JsonKey(fromJson: int.parse, toJson: intToString) required int depth,
     @JsonKey(fromJson: int.parse, toJson: intToString)
-    required int magnitudeCalcuration,
+    required int magnitudeCalculation,
     @JsonKey(fromJson: int.parse, toJson: intToString)
     required int numberOfMagnitudeCalculation,
   }) = _EewAccuracy;
@@ -85,7 +85,7 @@ String intToString(int? value) {
   return value.toString();
 }
 
-List<int> stringListToIntList(List<String> value) =>
-    value.map(int.parse).toList();
-List<String> intListToStringList(List<int> value) =>
+List<int> stringListToIntList(List<dynamic> value) =>
+    value.map((v) => int.parse(v.toString())).toList();
+List<dynamic> intListToStringList(List<int> value) =>
     value.map((e) => e.toString()).toList();
