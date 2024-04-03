@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:eqapi_types/model/v1/v1_database.dart';
@@ -47,6 +48,7 @@ Stream<Map<String, dynamic>> websocketMessages(
   final socket = ref.watch(websocketProvider);
 
   await for (final message in socket.messages) {
+    log('WebSocket message: $message');
     yield jsonDecode(message.toString()) as Map<String, dynamic>;
   }
 }

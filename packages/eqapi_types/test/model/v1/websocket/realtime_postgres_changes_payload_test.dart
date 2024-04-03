@@ -1,5 +1,4 @@
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqapi_types/model/v1/websocket/realtime_postgres_changes_payload.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -44,6 +43,7 @@ void main() {
             'regions': <void>[],
             'forecast_max_intensity_is_over': null,
             'forecast_max_lpgm_intensity_is_over': null,
+            'report_time': '2024-03-29T00:14:33+09:00',
           },
         };
         final result = RealtimePostgresChangesPayloadBase.fromJson(payload);

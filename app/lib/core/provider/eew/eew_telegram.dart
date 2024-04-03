@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqapi_types/model/v1/websocket/realtime_postgres_changes_payload.dart';
 import 'package:eqmonitor/core/api/eq_api.dart';
 import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:extensions/extensions.dart';

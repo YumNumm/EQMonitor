@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/provider/time_ticker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'eew_alive_telegram.g.dart';
+
 // TODO(YumNumm): EEWの結合
 /// イベント終了していないEEWのうち、精度が低いものを除外したもの
 @riverpod
@@ -13,10 +14,10 @@ List<EewV1> eewAliveNormalTelegram(
 ) {
   final state = ref.watch(eewAliveTelegramProvider) ?? [];
   return state.where((e) {
-      if (e.isPlum ??false || e.isLevelEew || e.isIpfOnePoint) {
-        return false;
-      }
-      return true;
+    if (e.isPlum ?? false || e.isLevelEew || e.isIpfOnePoint) {
+      return false;
+    }
+    return true;
   }).toList();
 }
 

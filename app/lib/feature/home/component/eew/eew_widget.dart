@@ -1,5 +1,6 @@
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/provider/eew/eew_telegram.dart';
+import 'package:eqmonitor/core/provider/eew/eew_alive_telegram.dart';
+import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -9,7 +10,17 @@ class EewWidgets extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO(YumNumm): EEWの結合
-    return Text(ref.watch(eewProvider).toString());
+    return Column(
+      children: [
+        ElevatedButton(
+          child: const Text('SAMPLE'),
+          onPressed: () {
+            ref.read(websocketProvider).send('sample/eew');
+          },
+        ),
+        Text(ref.watch(eewAliveTelegramProvider).toString()),
+      ],
+    );
 /*
     final state = ref.watch(eewAliveTelegramProvider) ?? [];
     if (state.isEmpty) {

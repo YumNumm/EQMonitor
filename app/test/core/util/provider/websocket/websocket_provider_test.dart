@@ -35,6 +35,7 @@ void main() {
             'magnitude': 3.6,
             'origin_time': '2024-04-01T21:09:37+09:00',
             'regions': <void>[],
+            'report_time': '2024-04-01T21:09:37+09:00',
           },
           'old': <void, void>{},
           'schema': 'public',
