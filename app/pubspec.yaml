@@ -50,6 +50,7 @@ dependencies:
   group_button: ^5.3.4
   hooks_riverpod: ^3.0.0-dev.3
   image: ^4.1.7
+  in_app_review: ^2.0.9
   integration_test:
     sdk: flutter
   intl: ^0.18.1
@@ -84,9 +85,11 @@ dependencies:
   package_info_plus: ^5.0.1
   path_provider: ^2.1.1
   permission_handler: ^11.0.1
+  purchases_flutter: ^6.25.0
   retrofit: ^4.0.3
   riverpod_annotation: ^3.0.0-dev.3
   screenshot: any
+  share_plus: ^7.2.2
   shared_preferences: ^2.2.2
   sheet:
     git:
