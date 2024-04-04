@@ -116,6 +116,11 @@ class _DebugWidget extends ConsumerWidget {
               onTap: () async =>
                   FirebaseMessaging.instance.subscribeToTopic('kevi'),
             ),
+            ListTile(
+              title: const Text('セットアップ 画面'),
+              leading: const Icon(Icons.settings),
+              onTap: () => const SetupRoute().push<void>(context),
+            ),
           ],
         ),
       ),
