@@ -21,41 +21,6 @@ class _V3 implements V3 {
   String? baseUrl;
 
   @override
-  Future<TelegramHistoryV3> getTelegramHistory({
-    bool includeEew = false,
-    int limit = 100,
-    int offset = 0,
-  }) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{
-      r'includeEew': includeEew,
-      r'limit': limit,
-      r'offset': offset,
-    };
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<TelegramHistoryV3>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/v3/telegram',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final value = TelegramHistoryV3.fromJson(_result.data!);
-    return value;
-  }
-
-  @override
   Future<InformationV3Result> getInformation({
     int offset = 0,
     int limit = 10,

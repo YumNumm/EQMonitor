@@ -26,7 +26,8 @@ mixin _$EewV1 {
   String get schemaType => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
   String get infoType => throw _privateConstructorUsedError;
-  int? get serialno => throw _privateConstructorUsedError;
+  DateTime get reportTime => throw _privateConstructorUsedError;
+  int? get serialNo => throw _privateConstructorUsedError;
   String? get headline => throw _privateConstructorUsedError;
   bool get isCanceled => throw _privateConstructorUsedError;
   bool? get isWarning => throw _privateConstructorUsedError;
@@ -35,11 +36,20 @@ mixin _$EewV1 {
   DateTime? get arrivalTime => throw _privateConstructorUsedError;
   String? get hypoName => throw _privateConstructorUsedError;
   int? get depth => throw _privateConstructorUsedError;
+  double? get latitude => throw _privateConstructorUsedError;
+  double? get longitude => throw _privateConstructorUsedError;
   double? get magnitude => throw _privateConstructorUsedError;
   JmaForecastIntensity? get forecastMaxIntensity =>
       throw _privateConstructorUsedError;
+  bool? get forecastMaxIntensityIsOver => throw _privateConstructorUsedError;
   JmaForecastLgIntensity? get forecastMaxLpgmIntensity =>
       throw _privateConstructorUsedError;
+  bool? get forecastMaxLpgmIntensityIsOver =>
+      throw _privateConstructorUsedError;
+  List<EstimatedIntensityRegion>? get regions =>
+      throw _privateConstructorUsedError;
+  bool? get isPlum => throw _privateConstructorUsedError;
+  EewAccuracy? get accuracy => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -58,7 +68,8 @@ abstract class $EewV1CopyWith<$Res> {
       String schemaType,
       String status,
       String infoType,
-      int? serialno,
+      DateTime reportTime,
+      int? serialNo,
       String? headline,
       bool isCanceled,
       bool? isWarning,
@@ -67,9 +78,18 @@ abstract class $EewV1CopyWith<$Res> {
       DateTime? arrivalTime,
       String? hypoName,
       int? depth,
+      double? latitude,
+      double? longitude,
       double? magnitude,
       JmaForecastIntensity? forecastMaxIntensity,
-      JmaForecastLgIntensity? forecastMaxLpgmIntensity});
+      bool? forecastMaxIntensityIsOver,
+      JmaForecastLgIntensity? forecastMaxLpgmIntensity,
+      bool? forecastMaxLpgmIntensityIsOver,
+      List<EstimatedIntensityRegion>? regions,
+      bool? isPlum,
+      EewAccuracy? accuracy});
+
+  $EewAccuracyCopyWith<$Res>? get accuracy;
 }
 
 /// @nodoc
@@ -91,7 +111,8 @@ class _$EewV1CopyWithImpl<$Res, $Val extends EewV1>
     Object? schemaType = null,
     Object? status = null,
     Object? infoType = null,
-    Object? serialno = freezed,
+    Object? reportTime = null,
+    Object? serialNo = freezed,
     Object? headline = freezed,
     Object? isCanceled = null,
     Object? isWarning = freezed,
@@ -100,9 +121,16 @@ class _$EewV1CopyWithImpl<$Res, $Val extends EewV1>
     Object? arrivalTime = freezed,
     Object? hypoName = freezed,
     Object? depth = freezed,
+    Object? latitude = freezed,
+    Object? longitude = freezed,
     Object? magnitude = freezed,
     Object? forecastMaxIntensity = freezed,
+    Object? forecastMaxIntensityIsOver = freezed,
     Object? forecastMaxLpgmIntensity = freezed,
+    Object? forecastMaxLpgmIntensityIsOver = freezed,
+    Object? regions = freezed,
+    Object? isPlum = freezed,
+    Object? accuracy = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -129,9 +157,13 @@ class _$EewV1CopyWithImpl<$Res, $Val extends EewV1>
           ? _value.infoType
           : infoType // ignore: cast_nullable_to_non_nullable
               as String,
-      serialno: freezed == serialno
-          ? _value.serialno
-          : serialno // ignore: cast_nullable_to_non_nullable
+      reportTime: null == reportTime
+          ? _value.reportTime
+          : reportTime // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      serialNo: freezed == serialNo
+          ? _value.serialNo
+          : serialNo // ignore: cast_nullable_to_non_nullable
               as int?,
       headline: freezed == headline
           ? _value.headline
@@ -165,6 +197,14 @@ class _$EewV1CopyWithImpl<$Res, $Val extends EewV1>
           ? _value.depth
           : depth // ignore: cast_nullable_to_non_nullable
               as int?,
+      latitude: freezed == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double?,
+      longitude: freezed == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double?,
       magnitude: freezed == magnitude
           ? _value.magnitude
           : magnitude // ignore: cast_nullable_to_non_nullable
@@ -173,11 +213,43 @@ class _$EewV1CopyWithImpl<$Res, $Val extends EewV1>
           ? _value.forecastMaxIntensity
           : forecastMaxIntensity // ignore: cast_nullable_to_non_nullable
               as JmaForecastIntensity?,
+      forecastMaxIntensityIsOver: freezed == forecastMaxIntensityIsOver
+          ? _value.forecastMaxIntensityIsOver
+          : forecastMaxIntensityIsOver // ignore: cast_nullable_to_non_nullable
+              as bool?,
       forecastMaxLpgmIntensity: freezed == forecastMaxLpgmIntensity
           ? _value.forecastMaxLpgmIntensity
           : forecastMaxLpgmIntensity // ignore: cast_nullable_to_non_nullable
               as JmaForecastLgIntensity?,
+      forecastMaxLpgmIntensityIsOver: freezed == forecastMaxLpgmIntensityIsOver
+          ? _value.forecastMaxLpgmIntensityIsOver
+          : forecastMaxLpgmIntensityIsOver // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      regions: freezed == regions
+          ? _value.regions
+          : regions // ignore: cast_nullable_to_non_nullable
+              as List<EstimatedIntensityRegion>?,
+      isPlum: freezed == isPlum
+          ? _value.isPlum
+          : isPlum // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      accuracy: freezed == accuracy
+          ? _value.accuracy
+          : accuracy // ignore: cast_nullable_to_non_nullable
+              as EewAccuracy?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $EewAccuracyCopyWith<$Res>? get accuracy {
+    if (_value.accuracy == null) {
+      return null;
+    }
+
+    return $EewAccuracyCopyWith<$Res>(_value.accuracy!, (value) {
+      return _then(_value.copyWith(accuracy: value) as $Val);
+    });
   }
 }
 
@@ -195,7 +267,8 @@ abstract class _$$EewV1ImplCopyWith<$Res> implements $EewV1CopyWith<$Res> {
       String schemaType,
       String status,
       String infoType,
-      int? serialno,
+      DateTime reportTime,
+      int? serialNo,
       String? headline,
       bool isCanceled,
       bool? isWarning,
@@ -204,9 +277,19 @@ abstract class _$$EewV1ImplCopyWith<$Res> implements $EewV1CopyWith<$Res> {
       DateTime? arrivalTime,
       String? hypoName,
       int? depth,
+      double? latitude,
+      double? longitude,
       double? magnitude,
       JmaForecastIntensity? forecastMaxIntensity,
-      JmaForecastLgIntensity? forecastMaxLpgmIntensity});
+      bool? forecastMaxIntensityIsOver,
+      JmaForecastLgIntensity? forecastMaxLpgmIntensity,
+      bool? forecastMaxLpgmIntensityIsOver,
+      List<EstimatedIntensityRegion>? regions,
+      bool? isPlum,
+      EewAccuracy? accuracy});
+
+  @override
+  $EewAccuracyCopyWith<$Res>? get accuracy;
 }
 
 /// @nodoc
@@ -226,7 +309,8 @@ class __$$EewV1ImplCopyWithImpl<$Res>
     Object? schemaType = null,
     Object? status = null,
     Object? infoType = null,
-    Object? serialno = freezed,
+    Object? reportTime = null,
+    Object? serialNo = freezed,
     Object? headline = freezed,
     Object? isCanceled = null,
     Object? isWarning = freezed,
@@ -235,9 +319,16 @@ class __$$EewV1ImplCopyWithImpl<$Res>
     Object? arrivalTime = freezed,
     Object? hypoName = freezed,
     Object? depth = freezed,
+    Object? latitude = freezed,
+    Object? longitude = freezed,
     Object? magnitude = freezed,
     Object? forecastMaxIntensity = freezed,
+    Object? forecastMaxIntensityIsOver = freezed,
     Object? forecastMaxLpgmIntensity = freezed,
+    Object? forecastMaxLpgmIntensityIsOver = freezed,
+    Object? regions = freezed,
+    Object? isPlum = freezed,
+    Object? accuracy = freezed,
   }) {
     return _then(_$EewV1Impl(
       id: null == id
@@ -264,9 +355,13 @@ class __$$EewV1ImplCopyWithImpl<$Res>
           ? _value.infoType
           : infoType // ignore: cast_nullable_to_non_nullable
               as String,
-      serialno: freezed == serialno
-          ? _value.serialno
-          : serialno // ignore: cast_nullable_to_non_nullable
+      reportTime: null == reportTime
+          ? _value.reportTime
+          : reportTime // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      serialNo: freezed == serialNo
+          ? _value.serialNo
+          : serialNo // ignore: cast_nullable_to_non_nullable
               as int?,
       headline: freezed == headline
           ? _value.headline
@@ -300,6 +395,14 @@ class __$$EewV1ImplCopyWithImpl<$Res>
           ? _value.depth
           : depth // ignore: cast_nullable_to_non_nullable
               as int?,
+      latitude: freezed == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double?,
+      longitude: freezed == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double?,
       magnitude: freezed == magnitude
           ? _value.magnitude
           : magnitude // ignore: cast_nullable_to_non_nullable
@@ -308,10 +411,30 @@ class __$$EewV1ImplCopyWithImpl<$Res>
           ? _value.forecastMaxIntensity
           : forecastMaxIntensity // ignore: cast_nullable_to_non_nullable
               as JmaForecastIntensity?,
+      forecastMaxIntensityIsOver: freezed == forecastMaxIntensityIsOver
+          ? _value.forecastMaxIntensityIsOver
+          : forecastMaxIntensityIsOver // ignore: cast_nullable_to_non_nullable
+              as bool?,
       forecastMaxLpgmIntensity: freezed == forecastMaxLpgmIntensity
           ? _value.forecastMaxLpgmIntensity
           : forecastMaxLpgmIntensity // ignore: cast_nullable_to_non_nullable
               as JmaForecastLgIntensity?,
+      forecastMaxLpgmIntensityIsOver: freezed == forecastMaxLpgmIntensityIsOver
+          ? _value.forecastMaxLpgmIntensityIsOver
+          : forecastMaxLpgmIntensityIsOver // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      regions: freezed == regions
+          ? _value._regions
+          : regions // ignore: cast_nullable_to_non_nullable
+              as List<EstimatedIntensityRegion>?,
+      isPlum: freezed == isPlum
+          ? _value.isPlum
+          : isPlum // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      accuracy: freezed == accuracy
+          ? _value.accuracy
+          : accuracy // ignore: cast_nullable_to_non_nullable
+              as EewAccuracy?,
     ));
   }
 }
@@ -326,7 +449,8 @@ class _$EewV1Impl implements _EewV1 {
       required this.schemaType,
       required this.status,
       required this.infoType,
-      this.serialno,
+      required this.reportTime,
+      this.serialNo,
       this.headline,
       required this.isCanceled,
       this.isWarning,
@@ -335,9 +459,17 @@ class _$EewV1Impl implements _EewV1 {
       this.arrivalTime,
       this.hypoName,
       this.depth,
+      this.latitude,
+      this.longitude,
       this.magnitude,
       this.forecastMaxIntensity,
-      this.forecastMaxLpgmIntensity});
+      this.forecastMaxIntensityIsOver,
+      this.forecastMaxLpgmIntensity,
+      this.forecastMaxLpgmIntensityIsOver,
+      final List<EstimatedIntensityRegion>? regions,
+      required this.isPlum,
+      required this.accuracy})
+      : _regions = regions;
 
   factory _$EewV1Impl.fromJson(Map<String, dynamic> json) =>
       _$$EewV1ImplFromJson(json);
@@ -355,7 +487,9 @@ class _$EewV1Impl implements _EewV1 {
   @override
   final String infoType;
   @override
-  final int? serialno;
+  final DateTime reportTime;
+  @override
+  final int? serialNo;
   @override
   final String? headline;
   @override
@@ -373,15 +507,37 @@ class _$EewV1Impl implements _EewV1 {
   @override
   final int? depth;
   @override
+  final double? latitude;
+  @override
+  final double? longitude;
+  @override
   final double? magnitude;
   @override
   final JmaForecastIntensity? forecastMaxIntensity;
   @override
+  final bool? forecastMaxIntensityIsOver;
+  @override
   final JmaForecastLgIntensity? forecastMaxLpgmIntensity;
+  @override
+  final bool? forecastMaxLpgmIntensityIsOver;
+  final List<EstimatedIntensityRegion>? _regions;
+  @override
+  List<EstimatedIntensityRegion>? get regions {
+    final value = _regions;
+    if (value == null) return null;
+    if (_regions is EqualUnmodifiableListView) return _regions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  final bool? isPlum;
+  @override
+  final EewAccuracy? accuracy;
 
   @override
   String toString() {
-    return 'EewV1(id: $id, eventId: $eventId, type: $type, schemaType: $schemaType, status: $status, infoType: $infoType, serialno: $serialno, headline: $headline, isCanceled: $isCanceled, isWarning: $isWarning, isLastInfo: $isLastInfo, originTime: $originTime, arrivalTime: $arrivalTime, hypoName: $hypoName, depth: $depth, magnitude: $magnitude, forecastMaxIntensity: $forecastMaxIntensity, forecastMaxLpgmIntensity: $forecastMaxLpgmIntensity)';
+    return 'EewV1(id: $id, eventId: $eventId, type: $type, schemaType: $schemaType, status: $status, infoType: $infoType, reportTime: $reportTime, serialNo: $serialNo, headline: $headline, isCanceled: $isCanceled, isWarning: $isWarning, isLastInfo: $isLastInfo, originTime: $originTime, arrivalTime: $arrivalTime, hypoName: $hypoName, depth: $depth, latitude: $latitude, longitude: $longitude, magnitude: $magnitude, forecastMaxIntensity: $forecastMaxIntensity, forecastMaxIntensityIsOver: $forecastMaxIntensityIsOver, forecastMaxLpgmIntensity: $forecastMaxLpgmIntensity, forecastMaxLpgmIntensityIsOver: $forecastMaxLpgmIntensityIsOver, regions: $regions, isPlum: $isPlum, accuracy: $accuracy)';
   }
 
   @override
@@ -397,8 +553,10 @@ class _$EewV1Impl implements _EewV1 {
             (identical(other.status, status) || other.status == status) &&
             (identical(other.infoType, infoType) ||
                 other.infoType == infoType) &&
-            (identical(other.serialno, serialno) ||
-                other.serialno == serialno) &&
+            (identical(other.reportTime, reportTime) ||
+                other.reportTime == reportTime) &&
+            (identical(other.serialNo, serialNo) ||
+                other.serialNo == serialNo) &&
             (identical(other.headline, headline) ||
                 other.headline == headline) &&
             (identical(other.isCanceled, isCanceled) ||
@@ -414,37 +572,62 @@ class _$EewV1Impl implements _EewV1 {
             (identical(other.hypoName, hypoName) ||
                 other.hypoName == hypoName) &&
             (identical(other.depth, depth) || other.depth == depth) &&
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude) &&
             (identical(other.magnitude, magnitude) ||
                 other.magnitude == magnitude) &&
             (identical(other.forecastMaxIntensity, forecastMaxIntensity) ||
                 other.forecastMaxIntensity == forecastMaxIntensity) &&
+            (identical(other.forecastMaxIntensityIsOver,
+                    forecastMaxIntensityIsOver) ||
+                other.forecastMaxIntensityIsOver ==
+                    forecastMaxIntensityIsOver) &&
             (identical(
                     other.forecastMaxLpgmIntensity, forecastMaxLpgmIntensity) ||
-                other.forecastMaxLpgmIntensity == forecastMaxLpgmIntensity));
+                other.forecastMaxLpgmIntensity == forecastMaxLpgmIntensity) &&
+            (identical(other.forecastMaxLpgmIntensityIsOver,
+                    forecastMaxLpgmIntensityIsOver) ||
+                other.forecastMaxLpgmIntensityIsOver ==
+                    forecastMaxLpgmIntensityIsOver) &&
+            const DeepCollectionEquality().equals(other._regions, _regions) &&
+            (identical(other.isPlum, isPlum) || other.isPlum == isPlum) &&
+            (identical(other.accuracy, accuracy) ||
+                other.accuracy == accuracy));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      eventId,
-      type,
-      schemaType,
-      status,
-      infoType,
-      serialno,
-      headline,
-      isCanceled,
-      isWarning,
-      isLastInfo,
-      originTime,
-      arrivalTime,
-      hypoName,
-      depth,
-      magnitude,
-      forecastMaxIntensity,
-      forecastMaxLpgmIntensity);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        id,
+        eventId,
+        type,
+        schemaType,
+        status,
+        infoType,
+        reportTime,
+        serialNo,
+        headline,
+        isCanceled,
+        isWarning,
+        isLastInfo,
+        originTime,
+        arrivalTime,
+        hypoName,
+        depth,
+        latitude,
+        longitude,
+        magnitude,
+        forecastMaxIntensity,
+        forecastMaxIntensityIsOver,
+        forecastMaxLpgmIntensity,
+        forecastMaxLpgmIntensityIsOver,
+        const DeepCollectionEquality().hash(_regions),
+        isPlum,
+        accuracy
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -468,7 +651,8 @@ abstract class _EewV1 implements EewV1 {
       required final String schemaType,
       required final String status,
       required final String infoType,
-      final int? serialno,
+      required final DateTime reportTime,
+      final int? serialNo,
       final String? headline,
       required final bool isCanceled,
       final bool? isWarning,
@@ -477,9 +661,16 @@ abstract class _EewV1 implements EewV1 {
       final DateTime? arrivalTime,
       final String? hypoName,
       final int? depth,
+      final double? latitude,
+      final double? longitude,
       final double? magnitude,
       final JmaForecastIntensity? forecastMaxIntensity,
-      final JmaForecastLgIntensity? forecastMaxLpgmIntensity}) = _$EewV1Impl;
+      final bool? forecastMaxIntensityIsOver,
+      final JmaForecastLgIntensity? forecastMaxLpgmIntensity,
+      final bool? forecastMaxLpgmIntensityIsOver,
+      final List<EstimatedIntensityRegion>? regions,
+      required final bool? isPlum,
+      required final EewAccuracy? accuracy}) = _$EewV1Impl;
 
   factory _EewV1.fromJson(Map<String, dynamic> json) = _$EewV1Impl.fromJson;
 
@@ -496,7 +687,9 @@ abstract class _EewV1 implements EewV1 {
   @override
   String get infoType;
   @override
-  int? get serialno;
+  DateTime get reportTime;
+  @override
+  int? get serialNo;
   @override
   String? get headline;
   @override
@@ -514,11 +707,25 @@ abstract class _EewV1 implements EewV1 {
   @override
   int? get depth;
   @override
+  double? get latitude;
+  @override
+  double? get longitude;
+  @override
   double? get magnitude;
   @override
   JmaForecastIntensity? get forecastMaxIntensity;
   @override
+  bool? get forecastMaxIntensityIsOver;
+  @override
   JmaForecastLgIntensity? get forecastMaxLpgmIntensity;
+  @override
+  bool? get forecastMaxLpgmIntensityIsOver;
+  @override
+  List<EstimatedIntensityRegion>? get regions;
+  @override
+  bool? get isPlum;
+  @override
+  EewAccuracy? get accuracy;
   @override
   @JsonKey(ignore: true)
   _$$EewV1ImplCopyWith<_$EewV1Impl> get copyWith =>
@@ -842,4 +1049,257 @@ abstract class _EstimatedIntensityRegion implements EstimatedIntensityRegion {
   @JsonKey(ignore: true)
   _$$EstimatedIntensityRegionImplCopyWith<_$EstimatedIntensityRegionImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+EewAccuracy _$EewAccuracyFromJson(Map<String, dynamic> json) {
+  return _EewAccuracy.fromJson(json);
+}
+
+/// @nodoc
+mixin _$EewAccuracy {
+  /// ['0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8',
+  /// '0' | '1' | '2' | '3' | '4' | '9']
+  @JsonKey(fromJson: stringListToIntList, toJson: intListToStringList)
+  List<int> get epicenters => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: int.parse, toJson: intToString)
+  int get depth => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: int.parse, toJson: intToString)
+  int get magnitudeCalculation => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: int.parse, toJson: intToString)
+  int get numberOfMagnitudeCalculation => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $EewAccuracyCopyWith<EewAccuracy> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $EewAccuracyCopyWith<$Res> {
+  factory $EewAccuracyCopyWith(
+          EewAccuracy value, $Res Function(EewAccuracy) then) =
+      _$EewAccuracyCopyWithImpl<$Res, EewAccuracy>;
+  @useResult
+  $Res call(
+      {@JsonKey(fromJson: stringListToIntList, toJson: intListToStringList)
+      List<int> epicenters,
+      @JsonKey(fromJson: int.parse, toJson: intToString) int depth,
+      @JsonKey(fromJson: int.parse, toJson: intToString)
+      int magnitudeCalculation,
+      @JsonKey(fromJson: int.parse, toJson: intToString)
+      int numberOfMagnitudeCalculation});
+}
+
+/// @nodoc
+class _$EewAccuracyCopyWithImpl<$Res, $Val extends EewAccuracy>
+    implements $EewAccuracyCopyWith<$Res> {
+  _$EewAccuracyCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? epicenters = null,
+    Object? depth = null,
+    Object? magnitudeCalculation = null,
+    Object? numberOfMagnitudeCalculation = null,
+  }) {
+    return _then(_value.copyWith(
+      epicenters: null == epicenters
+          ? _value.epicenters
+          : epicenters // ignore: cast_nullable_to_non_nullable
+              as List<int>,
+      depth: null == depth
+          ? _value.depth
+          : depth // ignore: cast_nullable_to_non_nullable
+              as int,
+      magnitudeCalculation: null == magnitudeCalculation
+          ? _value.magnitudeCalculation
+          : magnitudeCalculation // ignore: cast_nullable_to_non_nullable
+              as int,
+      numberOfMagnitudeCalculation: null == numberOfMagnitudeCalculation
+          ? _value.numberOfMagnitudeCalculation
+          : numberOfMagnitudeCalculation // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$EewAccuracyImplCopyWith<$Res>
+    implements $EewAccuracyCopyWith<$Res> {
+  factory _$$EewAccuracyImplCopyWith(
+          _$EewAccuracyImpl value, $Res Function(_$EewAccuracyImpl) then) =
+      __$$EewAccuracyImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(fromJson: stringListToIntList, toJson: intListToStringList)
+      List<int> epicenters,
+      @JsonKey(fromJson: int.parse, toJson: intToString) int depth,
+      @JsonKey(fromJson: int.parse, toJson: intToString)
+      int magnitudeCalculation,
+      @JsonKey(fromJson: int.parse, toJson: intToString)
+      int numberOfMagnitudeCalculation});
+}
+
+/// @nodoc
+class __$$EewAccuracyImplCopyWithImpl<$Res>
+    extends _$EewAccuracyCopyWithImpl<$Res, _$EewAccuracyImpl>
+    implements _$$EewAccuracyImplCopyWith<$Res> {
+  __$$EewAccuracyImplCopyWithImpl(
+      _$EewAccuracyImpl _value, $Res Function(_$EewAccuracyImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? epicenters = null,
+    Object? depth = null,
+    Object? magnitudeCalculation = null,
+    Object? numberOfMagnitudeCalculation = null,
+  }) {
+    return _then(_$EewAccuracyImpl(
+      epicenters: null == epicenters
+          ? _value._epicenters
+          : epicenters // ignore: cast_nullable_to_non_nullable
+              as List<int>,
+      depth: null == depth
+          ? _value.depth
+          : depth // ignore: cast_nullable_to_non_nullable
+              as int,
+      magnitudeCalculation: null == magnitudeCalculation
+          ? _value.magnitudeCalculation
+          : magnitudeCalculation // ignore: cast_nullable_to_non_nullable
+              as int,
+      numberOfMagnitudeCalculation: null == numberOfMagnitudeCalculation
+          ? _value.numberOfMagnitudeCalculation
+          : numberOfMagnitudeCalculation // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+@JsonSerializable(fieldRename: FieldRename.none)
+class _$EewAccuracyImpl implements _EewAccuracy {
+  const _$EewAccuracyImpl(
+      {@JsonKey(fromJson: stringListToIntList, toJson: intListToStringList)
+      required final List<int> epicenters,
+      @JsonKey(fromJson: int.parse, toJson: intToString) required this.depth,
+      @JsonKey(fromJson: int.parse, toJson: intToString)
+      required this.magnitudeCalculation,
+      @JsonKey(fromJson: int.parse, toJson: intToString)
+      required this.numberOfMagnitudeCalculation})
+      : _epicenters = epicenters;
+
+  factory _$EewAccuracyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$EewAccuracyImplFromJson(json);
+
+  /// ['0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8',
+  /// '0' | '1' | '2' | '3' | '4' | '9']
+  final List<int> _epicenters;
+
+  /// ['0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8',
+  /// '0' | '1' | '2' | '3' | '4' | '9']
+  @override
+  @JsonKey(fromJson: stringListToIntList, toJson: intListToStringList)
+  List<int> get epicenters {
+    if (_epicenters is EqualUnmodifiableListView) return _epicenters;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_epicenters);
+  }
+
+  @override
+  @JsonKey(fromJson: int.parse, toJson: intToString)
+  final int depth;
+  @override
+  @JsonKey(fromJson: int.parse, toJson: intToString)
+  final int magnitudeCalculation;
+  @override
+  @JsonKey(fromJson: int.parse, toJson: intToString)
+  final int numberOfMagnitudeCalculation;
+
+  @override
+  String toString() {
+    return 'EewAccuracy(epicenters: $epicenters, depth: $depth, magnitudeCalculation: $magnitudeCalculation, numberOfMagnitudeCalculation: $numberOfMagnitudeCalculation)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$EewAccuracyImpl &&
+            const DeepCollectionEquality()
+                .equals(other._epicenters, _epicenters) &&
+            (identical(other.depth, depth) || other.depth == depth) &&
+            (identical(other.magnitudeCalculation, magnitudeCalculation) ||
+                other.magnitudeCalculation == magnitudeCalculation) &&
+            (identical(other.numberOfMagnitudeCalculation,
+                    numberOfMagnitudeCalculation) ||
+                other.numberOfMagnitudeCalculation ==
+                    numberOfMagnitudeCalculation));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_epicenters),
+      depth,
+      magnitudeCalculation,
+      numberOfMagnitudeCalculation);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$EewAccuracyImplCopyWith<_$EewAccuracyImpl> get copyWith =>
+      __$$EewAccuracyImplCopyWithImpl<_$EewAccuracyImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$EewAccuracyImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _EewAccuracy implements EewAccuracy {
+  const factory _EewAccuracy(
+      {@JsonKey(fromJson: stringListToIntList, toJson: intListToStringList)
+      required final List<int> epicenters,
+      @JsonKey(fromJson: int.parse, toJson: intToString)
+      required final int depth,
+      @JsonKey(fromJson: int.parse, toJson: intToString)
+      required final int magnitudeCalculation,
+      @JsonKey(fromJson: int.parse, toJson: intToString)
+      required final int numberOfMagnitudeCalculation}) = _$EewAccuracyImpl;
+
+  factory _EewAccuracy.fromJson(Map<String, dynamic> json) =
+      _$EewAccuracyImpl.fromJson;
+
+  @override
+
+  /// ['0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8',
+  /// '0' | '1' | '2' | '3' | '4' | '9']
+  @JsonKey(fromJson: stringListToIntList, toJson: intListToStringList)
+  List<int> get epicenters;
+  @override
+  @JsonKey(fromJson: int.parse, toJson: intToString)
+  int get depth;
+  @override
+  @JsonKey(fromJson: int.parse, toJson: intToString)
+  int get magnitudeCalculation;
+  @override
+  @JsonKey(fromJson: int.parse, toJson: intToString)
+  int get numberOfMagnitudeCalculation;
+  @override
+  @JsonKey(ignore: true)
+  _$$EewAccuracyImplCopyWith<_$EewAccuracyImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

@@ -31,7 +31,7 @@ class MapStyle {
   Future<String> getStyle({
     required bool isDark,
     required ColorScheme scheme,
-  }) async{
+  }) async {
     if (kIsWeb) {
       return 'https://map.eqmonitor.app/tiles/style.json';
     }

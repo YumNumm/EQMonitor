@@ -11,11 +11,9 @@ part of 'router.dart';
 List<RouteBase> get $appRoutes => [
       $setupRoute,
       $earthquakeHistoryRoute,
-      $deprecatedEarthquakeHistoryRoute,
       $earthquakeHistoryDetailsRoute,
       $informationHistoryRoute,
       $informationHistoryDetailsRoute,
-      $eewHisotryDetailRoute,
       $homeRoute,
       $talkerRoute,
       $kmoniRoute,
@@ -67,18 +65,20 @@ extension $EarthquakeHistoryRouteExtension on EarthquakeHistoryRoute {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $deprecatedEarthquakeHistoryRoute => GoRouteData.$route(
-      path: '/deprecated-earthquake-history',
-      factory: $DeprecatedEarthquakeHistoryRouteExtension._fromState,
+RouteBase get $earthquakeHistoryDetailsRoute => GoRouteData.$route(
+      path: '/earthquake-history-details/:eventId',
+      factory: $EarthquakeHistoryDetailsRouteExtension._fromState,
     );
 
-extension $DeprecatedEarthquakeHistoryRouteExtension
-    on DeprecatedEarthquakeHistoryRoute {
-  static DeprecatedEarthquakeHistoryRoute _fromState(GoRouterState state) =>
-      const DeprecatedEarthquakeHistoryRoute();
+extension $EarthquakeHistoryDetailsRouteExtension
+    on EarthquakeHistoryDetailsRoute {
+  static EarthquakeHistoryDetailsRoute _fromState(GoRouterState state) =>
+      EarthquakeHistoryDetailsRoute(
+        eventId: state.pathParameters['eventId']!,
+      );
 
   String get location => GoRouteData.$location(
-        '/deprecated-earthquake-history',
+        '/earthquake-history-details/${Uri.encodeComponent(eventId)}',
       );
 
   void go(BuildContext context) => context.go(location);
@@ -89,34 +89,6 @@ extension $DeprecatedEarthquakeHistoryRouteExtension
       context.pushReplacement(location);
 
   void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $earthquakeHistoryDetailsRoute => GoRouteData.$route(
-      path: '/earthquake-history-details',
-      factory: $EarthquakeHistoryDetailsRouteExtension._fromState,
-    );
-
-extension $EarthquakeHistoryDetailsRouteExtension
-    on EarthquakeHistoryDetailsRoute {
-  static EarthquakeHistoryDetailsRoute _fromState(GoRouterState state) =>
-      EarthquakeHistoryDetailsRoute(
-        $extra: state.extra as EarthquakeHistoryItem,
-      );
-
-  String get location => GoRouteData.$location(
-        '/earthquake-history-details',
-      );
-
-  void go(BuildContext context) => context.go(location, extra: $extra);
-
-  Future<T?> push<T>(BuildContext context) =>
-      context.push<T>(location, extra: $extra);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: $extra);
-
-  void replace(BuildContext context) =>
-      context.replace(location, extra: $extra);
 }
 
 RouteBase get $informationHistoryRoute => GoRouteData.$route(
@@ -156,33 +128,6 @@ extension $InformationHistoryDetailsRouteExtension
 
   String get location => GoRouteData.$location(
         '/information-history-details',
-      );
-
-  void go(BuildContext context) => context.go(location, extra: $extra);
-
-  Future<T?> push<T>(BuildContext context) =>
-      context.push<T>(location, extra: $extra);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: $extra);
-
-  void replace(BuildContext context) =>
-      context.replace(location, extra: $extra);
-}
-
-RouteBase get $eewHisotryDetailRoute => GoRouteData.$route(
-      path: '/eew-history-detailed',
-      factory: $EewHisotryDetailRouteExtension._fromState,
-    );
-
-extension $EewHisotryDetailRouteExtension on EewHisotryDetailRoute {
-  static EewHisotryDetailRoute _fromState(GoRouterState state) =>
-      EewHisotryDetailRoute(
-        $extra: state.extra as EarthquakeHistoryItem,
-      );
-
-  String get location => GoRouteData.$location(
-        '/eew-history-detailed',
       );
 
   void go(BuildContext context) => context.go(location, extra: $extra);
@@ -596,4 +541,4 @@ final goRouterProvider = Provider<GoRouter>.internal(
 
 typedef GoRouterRef = ProviderRef<GoRouter>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

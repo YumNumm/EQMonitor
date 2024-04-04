@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:eqmonitor/feature/home/features/telegram_url/provider/telegram_url_provider.dart';
+import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

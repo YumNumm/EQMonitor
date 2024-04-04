@@ -14,16 +14,17 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'jma_parameter.g.dart';
 
+typedef JmaParameterState = ({
+  EarthquakeParameter earthquake,
+  TsunamiParameter tsunami,
+});
+
 @Riverpod(
   keepAlive: true,
 )
 class JmaParameter extends _$JmaParameter {
   @override
-  Future<
-      ({
-        EarthquakeParameter earthquake,
-        TsunamiParameter tsunami,
-      })> build() async {
+  Future<JmaParameterState> build() async {
     return (
       earthquake: await getEarthquake(),
       tsunami: await getTsunami(),

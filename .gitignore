@@ -168,3 +168,6 @@ ios/*.p8
 
 # FVM Version Cache
 .fvm/
+
+# Secret Folder
+secret/

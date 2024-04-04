@@ -1,8 +1,8 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/theme/build_theme.dart';
 import 'package:eqmonitor/core/theme/custom_colors.dart';
-import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -54,17 +54,13 @@ class App extends HookConsumerWidget {
         return MaterialApp.router(
           title: 'EQMonitor',
           routerConfig: ref.watch(goRouterProvider),
-          theme: ThemeData(
+          theme: buildTheme(
             colorScheme: lightColorScheme,
-            extensions: [lightCustomColors],
-            useMaterial3: true,
-            fontFamily: FontFamily.notoSansJP,
+            customColors: lightCustomColors,
           ),
-          darkTheme: ThemeData(
+          darkTheme: buildTheme(
             colorScheme: darkColorScheme,
-            extensions: [darkCustomColors],
-            useMaterial3: true,
-            fontFamily: FontFamily.notoSansJP,
+            customColors: darkCustomColors,
           ),
         );
       },

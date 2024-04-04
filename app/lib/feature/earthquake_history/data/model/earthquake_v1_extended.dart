@@ -82,6 +82,8 @@ class EarthquakeV1Extended implements EarthquakeV1 {
   @override
   String? get text => _earthquake.text;
 
+  EarthquakeV1 get v1 => _earthquake;
+
   @override
   Map<String, dynamic> toJson() => _earthquake.toJson();
 }

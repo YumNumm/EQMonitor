@@ -2,10 +2,10 @@ name: eqmonitor
 description: An earthquake monitoring Application
 publish_to: "none"
 
-version: 2.3.3+1110
+version: 2.4.0+1111
 
 environment:
-  sdk: ^3.1.5
+  sdk: ^3.3.0
 
 dependencies:
   adaptive_dialog: ^2.0.0
@@ -31,22 +31,27 @@ dependencies:
     git:
       url: https://github.com/YumNumm/EQMonitor.git
       path: packages/extensions
-  firebase_analytics: ^10.6.0
-  firebase_core: 2.22.0
-  firebase_crashlytics: ^3.4.0
-  firebase_messaging: ^14.0.0
+  firebase_analytics: ^10.7.0
+  firebase_core: ^2.27.0
+  firebase_crashlytics: ^3.4.4
+  firebase_messaging: ^14.7.4
   flutter:
     sdk: flutter
   flutter_hooks: ^0.20.5
-  flutter_html: ^3.0.0-beta.2
-  flutter_local_notifications: ^16.1.0
-  flutter_markdown: ^0.6.18+2
+  flutter_html: ^3.0.0-alpha.2
+  flutter_local_notifications: ^17.0.0
+  flutter_markdown: ^0.6.21
+  flutter_test:
+    sdk: flutter
+  flutter_xlider: ^3.5.0
   freezed_annotation: ^2.4.1
   go_router: ^11.1.4
-  google_fonts: ^6.2.0
+  google_fonts: ^6.2.1
   group_button: ^5.3.4
-  hooks_riverpod: ^2.4.10
+  hooks_riverpod: ^3.0.0-dev.3
   image: ^4.1.7
+  integration_test:
+    sdk: flutter
   intl: ^0.18.1
   jma_code_table_types:
     git:
@@ -61,6 +66,10 @@ dependencies:
       url: https://github.com/YumNumm/EQMonitor.git
       path: packages/jma_parameter_api_client
   json_annotation: ^4.8.1
+  kyoshin_observation_point_types:
+    git:
+      url: https://github.com/YumNumm/EQMonitor.git
+      path: packages/kyoshin_observation_point_types
   lat_lng:
     git:
       url: https://github.com/YumNumm/EQMonitor.git
@@ -76,7 +85,7 @@ dependencies:
   path_provider: ^2.1.1
   permission_handler: ^11.0.1
   retrofit: ^4.0.3
-  riverpod_annotation: ^2.3.1
+  riverpod_annotation: ^3.0.0-dev.3
   screenshot: any
   shared_preferences: ^2.2.2
   sheet:
@@ -104,7 +113,7 @@ dependencies:
   uuid: ^4.3.3
   vector_math: ^2.1.4
   version: ^3.0.2
-  web_socket_client: ^0.1.0
+  web_socket_client: ^0.1.1
   widgetbook: ^3.7.1
   widgetbook_annotation: ^3.1.0
 
@@ -113,15 +122,13 @@ dev_dependencies:
   custom_lint: ^0.5.3
   envied_generator: ^0.5.2
   flutter_gen_runner: ^5.3.2
-  flutter_test:
-    sdk: flutter
   freezed: ^2.4.5
   go_router_builder: ^2.3.4
   json_serializable: ^6.7.1
   pedantic_mono: ^1.24.0+1
   retrofit_generator: ^8.0.4
-  riverpod_generator: ^2.3.7
-  riverpod_lint: ^2.3.5
+  riverpod_generator: ^3.0.0-dev.11
+  riverpod_lint: ^3.0.0-dev.4
   widgetbook_generator: ^3.7.0
 
 flutter:
@@ -129,7 +136,6 @@ flutter:
   assets:
     - assets/
     - assets/images/
-    - assets/kmoni/
     - assets/fonts/
     - assets/docs/
 

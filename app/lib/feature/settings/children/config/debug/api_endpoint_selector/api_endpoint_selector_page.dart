@@ -1,5 +1,5 @@
+import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/env/env.dart';
-import 'package:eqmonitor/feature/home/features/telegram_url/provider/telegram_url_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

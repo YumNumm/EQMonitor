@@ -42,7 +42,7 @@ class EewNotificationsSettingsViewModel
 
   Future<Result<void, Exception>> unregisterFromTopic() async {
     if (state == null) {
-      return  Result.success(null);
+      return Result.success(null);
     }
     final result = await ref
         .read(fcmTopicManagerProvider.notifier)

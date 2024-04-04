@@ -1,10 +1,11 @@
+import 'package:eqapi_types/model/v1/v1_database.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'information.freezed.dart';
 part 'information.g.dart';
 
 @freezed
-class InformationV1 with _$InformationV1 {
+class InformationV1 with _$InformationV1  implements V1Database{
   const factory InformationV1({
     @JsonKey(
       unknownEnumValue: InformationAuthor.unknown,
@@ -14,7 +15,7 @@ class InformationV1 with _$InformationV1 {
     required Map<String, dynamic> body,
     @JsonKey(
       name: 'created_at',
-      
+
     )
     required DateTime createdAt,
     required int id,

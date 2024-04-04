@@ -1,5 +1,4 @@
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -43,8 +42,6 @@ class InformationHistoryDetailsPage extends HookConsumerWidget {
                               .format(data.createdAt.toLocal()),
                           style: theme.textTheme.bodyMedium!.copyWith(
                             color: onSecondaryContainer,
-                            fontFamily: FontFamily.jetBrainsMono,
-                            fontFamilyFallback: [FontFamily.notoSansJP],
                           ),
                         ),
                       ],

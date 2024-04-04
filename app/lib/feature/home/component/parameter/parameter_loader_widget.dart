@@ -52,7 +52,7 @@ class ParameterLoaderWidget extends HookConsumerWidget {
             ],
           ),
         ),
-      AsyncData() || AsyncError() => const AnimatedSwitcher(
+      AsyncData() => const AnimatedSwitcher(
           duration: Duration(milliseconds: 150),
           child: SizedBox.shrink(
             key: ValueKey('non'),

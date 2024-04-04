@@ -1,12 +1,12 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/model/kmoni_view_model_state.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_model.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_view_settings.dart';
-import 'package:eqmonitor/feature/home/features/telegram_ws/provider/telegram_provider.dart';
-import 'package:eqmonitor/gen/fonts.gen.dart';
-import 'package:flutter/material.dart';
+import 'package:eqmonitor/core/provider/kmoni/model/kmoni_view_model_state.dart';
+import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_view_model.dart';
+import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_view_settings.dart';
+import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
+import 'package:flutter/material.dart' hide ConnectionState;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:web_socket_client/web_socket_client.dart';
 
 class SheetStatusWidget extends ConsumerWidget {
   const SheetStatusWidget({super.key});
@@ -25,7 +25,6 @@ class SheetStatusWidget extends ConsumerWidget {
     );
     final useKmoni =
         ref.watch(kmoniSettingsProvider.select((value) => value.useKmoni));
-    final socketStatus = ref.watch(socketStatusProvider);
     final theme = Theme.of(context);
 
     Future<void> adjustKmoniDelay() async {
@@ -88,9 +87,7 @@ class SheetStatusWidget extends ConsumerWidget {
                             Flexible(
                               child: Text(
                                 '強震モニタ 停止中',
-                                style: theme.textTheme.bodyMedium!.copyWith(
-                                  fontFamily: FontFamily.jetBrainsMono,
-                                ),
+                                style: theme.textTheme.bodyMedium,
                               ),
                             ),
                           ],
@@ -99,9 +96,7 @@ class SheetStatusWidget extends ConsumerWidget {
                               child: Text(
                                 DateFormat('yyyy/MM/dd HH:mm:ss')
                                     .format(latestTime),
-                                style: theme.textTheme.bodyMedium!.copyWith(
-                                  fontFamily: FontFamily.jetBrainsMono,
-                                ),
+                                style: theme.textTheme.bodyMedium,
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -121,7 +116,6 @@ class SheetStatusWidget extends ConsumerWidget {
                                 DateFormat('yyyy/MM/dd HH:mm:ss')
                                     .format(latestTime),
                                 style: theme.textTheme.bodyMedium!.copyWith(
-                                  fontFamily: FontFamily.jetBrainsMono,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.redAccent,
                                 ),
@@ -134,9 +128,7 @@ class SheetStatusWidget extends ConsumerWidget {
                                 DateFormat('yyyy/MM/dd HH:mm:ss').format(
                                   latestTime,
                                 ),
-                                style: theme.textTheme.bodyMedium!.copyWith(
-                                  fontFamily: FontFamily.jetBrainsMono,
-                                ),
+                                style: theme.textTheme.bodyMedium,
                               ),
                             ),
                           ],
@@ -152,25 +144,79 @@ class SheetStatusWidget extends ConsumerWidget {
                   ),
                 ),
               ),
-            ),
+            )
+          else
+            const Spacer(),
           // WS接続状態
-          if (socketStatus.connected) ...[
-            const Icon(
-              Icons.cloud_sync_rounded,
-              color: Colors.green,
-            ),
-            const SizedBox(width: 4),
-            const Text('接続済み'),
-          ] else ...[
-            const Icon(
-              Icons.cloud_off_rounded,
-              color: Colors.red,
-            ),
-            const SizedBox(width: 4),
-            const Text('接続試行中...'),
-          ],
+          const _WebsocketStatusWidget(),
         ],
       ),
     );
+  }
+}
+
+class _WebsocketStatusWidget extends ConsumerWidget {
+  const _WebsocketStatusWidget();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final status = ref.watch(websocketStatusProvider);
+    return switch (status) {
+      Connecting() => Tooltip(
+          message: 'WebSocket接続試行中',
+          child: Row(
+            children: [
+              Icon(
+                Icons.cloud_off_rounded,
+                color: colorScheme.error,
+              ),
+              const SizedBox(width: 4),
+              const Text('接続試行中...'),
+            ],
+          ),
+        ),
+      Connected() || Reconnected() => Tooltip(
+          message: 'WebSocket接続済み',
+          child: Row(
+            children: [
+              Icon(
+                Icons.cloud_done_outlined,
+                color: colorScheme.primary,
+              ),
+              const SizedBox(width: 4),
+              const Text('接続済み'),
+            ],
+          ),
+        ),
+      Reconnecting() => Tooltip(
+          message: 'WebSocket再接続中',
+          child: Row(
+            children: [
+              Icon(
+                Icons.cloud_sync_outlined,
+                color: colorScheme.error,
+              ),
+              const SizedBox(width: 4),
+              const Text('再接続中...'),
+            ],
+          ),
+        ),
+      Disconnected() || Disconnecting() => Tooltip(
+          message: 'WebSocket未接続',
+          child: Row(
+            children: [
+              Icon(
+                Icons.cloud_off_rounded,
+                color: colorScheme.error,
+              ),
+              const SizedBox(width: 4),
+              const Text('未接続'),
+            ],
+          ),
+        ),
+      _ => const Text('不明'),
+    };
   }
 }

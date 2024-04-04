@@ -8,12 +8,12 @@ part of 'jma_parameter.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$jmaParameterHash() => r'778c903288d44df594fbb91198d68712d8dcf6b7';
+String _$jmaParameterHash() => r'494d462517d6e93a473b3161ecb244af68d0d309';
 
 /// See also [JmaParameter].
 @ProviderFor(JmaParameter)
-final jmaParameterProvider = AsyncNotifierProvider<JmaParameter,
-    ({EarthquakeParameter earthquake, TsunamiParameter tsunami})>.internal(
+final jmaParameterProvider =
+    AsyncNotifierProvider<JmaParameter, JmaParameterState>.internal(
   JmaParameter.new,
   name: r'jmaParameterProvider',
   debugGetCreateSourceHash:
@@ -22,8 +22,7 @@ final jmaParameterProvider = AsyncNotifierProvider<JmaParameter,
   allTransitiveDependencies: null,
 );
 
-typedef _$JmaParameter = AsyncNotifier<
-    ({EarthquakeParameter earthquake, TsunamiParameter tsunami})>;
+typedef _$JmaParameter = AsyncNotifier<JmaParameterState>;
 String _$earthquakeParameterEtagHash() =>
     r'2351454514903ab08fe4100dc59680743b4ee26d';
 
@@ -42,4 +41,4 @@ final earthquakeParameterEtagProvider =
 
 typedef _$EarthquakeParameterEtag = Notifier<String?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
