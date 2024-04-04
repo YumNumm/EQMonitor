@@ -2,8 +2,6 @@
 
 ## 地震速報・監視アプリケーション
 
-[![45BD36DF-05A4-4875-B913-2F53FDAA48FF](https://github.com/YumNumm/EQMonitor/blob/develop/assets/header.png?raw=true)](https://github.com/EQMonitor/EQMonitor)
-
 [![Github All Releases](https://img.shields.io/github/downloads/EQMonitor/EQMonitor/total.svg)](https://github.com/EQMonitor/EQMonitor/tags)
 [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/EQMonitor/EQMonitor?color=blue&include_prereleases&label=Release)](https://github.com/EQMonitor/EQMonitor/releases/latest)
 
