@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqapi_types/lib.dart';
-import 'package:eqapi_types/model/v1/information.dart';
-import 'package:eqapi_types/model/v1/response/region.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'v1.g.dart';
@@ -11,7 +9,7 @@ part 'v1.g.dart';
 abstract class V1 {
   factory V1(Dio dio, {String baseUrl}) = _V1;
 
-  @GET('/v1/earthquake')
+  @GET('/v1/earthquake/list')
   Future<HttpResponse<List<EarthquakeV1>>> getEarthquakes({
     /// 1~100
     @Query('limit') int limit = 10,
@@ -30,8 +28,13 @@ abstract class V1 {
 
     /// 0~1000
     @Query('depthGte') double? depthGte,
-    @Query('intensityLte') JmaIntensity? intensityLte,
-    @Query('intensityGte') JmaIntensity? intensityGte,
+    @Query('intensityLte') String? intensityLte,
+    @Query('intensityGte') String? intensityGte,
+  });
+
+  @GET('/v1/earthquake/detail/{eventId}')
+  Future<HttpResponse<EarthquakeV1>> getEarthquakeDetail({
+    @Path('eventId') required String eventId,
   });
 
   @GET('/v1/earthquake/region')
@@ -42,8 +45,8 @@ abstract class V1 {
     /// 0~10000
     @Query('offset') int offset = 0,
     @Query('regionCode') required String regionCode,
-    @Query('intensityLte') JmaIntensity? intensityLte,
-    @Query('intensityGte') JmaIntensity? intensityGte,
+    @Query('intensityLte') String? intensityLte,
+    @Query('intensityGte') String? intensityGte,
   });
 
   @GET('/v1/information')

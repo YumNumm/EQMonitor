@@ -73,7 +73,7 @@ jobs:
           pod install
 
       - name: Get Firebase Configuration
-        run: echo '${{ secrets.FIREBASE_IOS }}' | base64 -d > app/ios/GoogleService-Info.plist
+        run: echo '${{ secrets.FIREBASE_IOS }}' | base64 -d > app/ios/Runner/GoogleService-Info.plist
 
       - name: Prebuild
         working-directory: app

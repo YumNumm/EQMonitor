@@ -35,8 +35,8 @@ class EarthquakeHistoryRepository {
       magnitudeGte: magnitudeGte,
       depthLte: depthLte,
       depthGte: depthGte,
-      intensityLte: intensityLte,
-      intensityGte: intensityGte,
+      intensityLte: intensityLte?.type,
+      intensityGte: intensityGte?.type,
     );
     return (
       count: result.response.count,

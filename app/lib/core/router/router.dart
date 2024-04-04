@@ -1,14 +1,11 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/app.dart';
+import 'package:eqmonitor/core/provider/kmoni/page/kmoni_settings_page.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/feature/debug/earthquake_parameter/ui/earthquake_parameter_list_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_screen.dart';
-import 'package:eqmonitor/feature/earthquake_history_details_old/screen/earthquake_history_details.dart';
-import 'package:eqmonitor/feature/earthquake_history_old/model/state/earthquake_history_item.dart';
-import 'package:eqmonitor/feature/earthquake_history_old/page/earthquake_history.dart';
-import 'package:eqmonitor/feature/eew_detailed_history/eew_detailed_history_screen.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/page/kmoni_settings_page.dart';
+import 'package:eqmonitor/feature/earthquake_history_details/screen/earthquake_history_details.dart';
 import 'package:eqmonitor/feature/home/view/home_view.dart';
 import 'package:eqmonitor/feature/information_history/page/information_history_page.dart';
 import 'package:eqmonitor/feature/information_history_details/information_history_details_page.dart';
@@ -71,28 +68,20 @@ class EarthquakeHistoryRoute extends GoRouteData {
       const EarthquakeHistoryScreen();
 }
 
-@TypedGoRoute<DeprecatedEarthquakeHistoryRoute>(
-  path: '/deprecated-earthquake-history',
-)
-class DeprecatedEarthquakeHistoryRoute extends GoRouteData {
-  const DeprecatedEarthquakeHistoryRoute();
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const EarthquakeHistoryPage();
-}
-
 @TypedGoRoute<EarthquakeHistoryDetailsRoute>(
-  path: '/earthquake-history-details',
+  path: '/earthquake-history-details/:eventId',
 )
 class EarthquakeHistoryDetailsRoute extends GoRouteData {
   const EarthquakeHistoryDetailsRoute({
-    required this.$extra,
+    required this.eventId,
   });
-  final EarthquakeHistoryItem $extra;
+
+  final String eventId;
+
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       EarthquakeHistoryDetailsPage(
-        data: $extra,
+        eventId: eventId,
       );
 }
 
@@ -115,23 +104,6 @@ class InformationHistoryDetailsRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       InformationHistoryDetailsPage(
-        data: $extra,
-      );
-}
-
-@TypedGoRoute<EewHisotryDetailRoute>(
-  path: '/eew-history-detailed',
-)
-class EewHisotryDetailRoute extends GoRouteData {
-  const EewHisotryDetailRoute({
-    required this.$extra,
-  });
-
-  final EarthquakeHistoryItem $extra;
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      EewDetailedHistoryScreen(
         data: $extra,
       );
 }

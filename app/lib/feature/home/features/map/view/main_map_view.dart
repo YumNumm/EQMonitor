@@ -4,13 +4,12 @@ import 'dart:developer';
 
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
+import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
+import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_provider.dart';
 import 'package:eqmonitor/core/provider/map/map_style.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
-import 'package:eqmonitor/feature/home/features/debugger/debugger_provider.dart';
-import 'package:eqmonitor/feature/home/features/estimated_intensity/provider/estimated_intensity_provider.dart';
+import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
-import 'package:eqmonitor/feature/home/features/travel_time/provider/travel_time_provider.dart';
-import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -152,6 +151,7 @@ class MainMapView extends HookConsumerWidget {
           );
           await notifier.onMapControllerRegistered();
           await notifier.startUpdateEew();
+          await notifier.animateCameraToDefaultPosition();
         },
         rotateGesturesEnabled: false,
         tiltGesturesEnabled: false,
@@ -187,12 +187,7 @@ class _MapDebugWidget extends HookConsumerWidget {
             padding: const EdgeInsets.all(8),
             child: FilledButton.tonalIcon(
               onPressed: () => isExpanded.value = true,
-              label: const Text(
-                'Debug',
-                style: TextStyle(
-                  fontFamily: FontFamily.jetBrainsMono,
-                ),
-              ),
+              label: const Text('Debug'),
               icon: const Icon(Icons.bug_report),
             ),
           ),
@@ -216,7 +211,6 @@ class _MapDebugWidget extends HookConsumerWidget {
                   'EewEstimatedIntensity: ${ref.watch(estimatedIntensityProvider).firstOrNull}',
                   style: const TextStyle(
                     fontSize: 10,
-                    fontFamily: FontFamily.jetBrainsMono,
                   ),
                 ),
               ],

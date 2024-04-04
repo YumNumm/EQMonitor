@@ -28,8 +28,8 @@ class _V1 implements V1 {
     double? magnitudeGte,
     double? depthLte,
     double? depthGte,
-    JmaIntensity? intensityLte,
-    JmaIntensity? intensityGte,
+    String? intensityLte,
+    String? intensityGte,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -39,8 +39,8 @@ class _V1 implements V1 {
       r'magnitudeGte': magnitudeGte,
       r'depthLte': depthLte,
       r'depthGte': depthGte,
-      r'intensityLte': intensityLte?.name,
-      r'intensityGte': intensityGte?.name,
+      r'intensityLte': intensityLte,
+      r'intensityGte': intensityGte,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
@@ -53,7 +53,7 @@ class _V1 implements V1 {
     )
             .compose(
               _dio.options,
-              '/v1/earthquake',
+              '/v1/earthquake/list',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -70,20 +70,49 @@ class _V1 implements V1 {
   }
 
   @override
+  Future<HttpResponse<EarthquakeV1>> getEarthquakeDetail(
+      {required String eventId}) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<EarthquakeV1>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/v1/earthquake/detail/${eventId}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = EarthquakeV1.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
   Future<HttpResponse<List<RegionItem>>> getEarthquakeRegions({
     int limit = 10,
     int offset = 0,
     required String regionCode,
-    JmaIntensity? intensityLte,
-    JmaIntensity? intensityGte,
+    String? intensityLte,
+    String? intensityGte,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'limit': limit,
       r'offset': offset,
       r'regionCode': regionCode,
-      r'intensityLte': intensityLte?.name,
-      r'intensityGte': intensityGte?.name,
+      r'intensityLte': intensityLte,
+      r'intensityGte': intensityGte,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};

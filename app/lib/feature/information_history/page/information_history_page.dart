@@ -1,7 +1,6 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/information_history/viewmodel/information_history_view_model.dart';
-import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -96,9 +95,9 @@ class _InformationDataView extends HookConsumerWidget {
             if (hasNext) {
               return const Center(
                 child: Padding(
-                padding: EdgeInsets.all(16),
-                child: CircularProgressIndicator.adaptive(),
-              ),
+                  padding: EdgeInsets.all(16),
+                  child: CircularProgressIndicator.adaptive(),
+                ),
               );
             } else {
               return const Padding(
@@ -118,10 +117,6 @@ class _InformationDataView extends HookConsumerWidget {
             title: Text(item.title.toHalfWidth),
             subtitle: Text(
               '${dateFormat.format(item.createdAt.toLocal())}頃発表',
-              style: const TextStyle(
-                fontFamily: FontFamily.jetBrainsMono,
-                fontFamilyFallback: [FontFamily.notoSansJP],
-              ),
             ),
             onTap: () =>
                 InformationHistoryDetailsRoute($extra: item).push<void>(

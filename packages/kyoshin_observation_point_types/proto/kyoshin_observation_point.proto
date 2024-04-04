@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+message KyoshinObservationPoints {
+  repeated KyoshinObservationPoint points = 1;
+}
+
+message KyoshinObservationPoint {
+  string code = 1;
+  string name = 2;
+  string region = 3;
+  LatLng location = 4;
+  Point point = 5;
+  // 工学的基盤（Vs=400m/s）から地表に至る最大速度の増幅率
+  double arv_400 = 6;
+
+  message LatLng {
+    double latitude = 1;
+    double longitude = 2;
+  }
+
+  message Point {
+    int32 x = 1;
+    int32 y = 2;
+  }
+}

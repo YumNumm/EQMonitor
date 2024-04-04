@@ -1,12 +1,13 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqapi_types/lib.dart';
+import 'package:eqapi_types/model/components/eew_intensity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'eew.freezed.dart';
 part 'eew.g.dart';
 
 @freezed
-class EewV1 with _$EewV1 {
+class EewV1 with _$EewV1 implements V1Database {
   const factory EewV1({
     required int id,
     required int eventId,
@@ -14,7 +15,8 @@ class EewV1 with _$EewV1 {
     required String schemaType,
     required String status,
     required String infoType,
-    int? serialno,
+    required DateTime reportTime,
+    int? serialNo,
     String? headline,
     required bool isCanceled,
     bool? isWarning,
@@ -23,9 +25,16 @@ class EewV1 with _$EewV1 {
     DateTime? arrivalTime,
     String? hypoName,
     int? depth,
+    double? latitude,
+    double? longitude,
     double? magnitude,
     JmaForecastIntensity? forecastMaxIntensity,
+    bool? forecastMaxIntensityIsOver,
     JmaForecastLgIntensity? forecastMaxLpgmIntensity,
+    bool? forecastMaxLpgmIntensityIsOver,
+    List<EstimatedIntensityRegion>? regions,
+    required bool? isPlum,
+    required EewAccuracy? accuracy,
   }) = _EewV1;
 
   factory EewV1.fromJson(Map<String, dynamic> json) => _$EewV1FromJson(json);
@@ -49,3 +58,34 @@ class EstimatedIntensityRegion with _$EstimatedIntensityRegion {
   factory EstimatedIntensityRegion.fromJson(Map<String, dynamic> json) =>
       _$EstimatedIntensityRegionFromJson(json);
 }
+
+@freezed
+class EewAccuracy with _$EewAccuracy {
+  @JsonSerializable(fieldRename: FieldRename.none)
+  const factory EewAccuracy({
+    /// ['0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8',
+    /// '0' | '1' | '2' | '3' | '4' | '9']
+    @JsonKey(fromJson: stringListToIntList, toJson: intListToStringList)
+    required List<int> epicenters,
+    @JsonKey(fromJson: int.parse, toJson: intToString) required int depth,
+    @JsonKey(fromJson: int.parse, toJson: intToString)
+    required int magnitudeCalculation,
+    @JsonKey(fromJson: int.parse, toJson: intToString)
+    required int numberOfMagnitudeCalculation,
+  }) = _EewAccuracy;
+
+  factory EewAccuracy.fromJson(Map<String, dynamic> json) =>
+      _$EewAccuracyFromJson(json);
+}
+
+String intToString(int? value) {
+  if (value == null) {
+    return '';
+  }
+  return value.toString();
+}
+
+List<int> stringListToIntList(List<dynamic> value) =>
+    value.map((v) => int.parse(v.toString())).toList();
+List<dynamic> intListToStringList(List<int> value) =>
+    value.map((e) => e.toString()).toList();
