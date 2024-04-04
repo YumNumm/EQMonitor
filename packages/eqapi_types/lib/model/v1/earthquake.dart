@@ -1,12 +1,9 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqapi_types/lib.dart';
-import 'package:eqapi_types/model/v1/v1_database.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake.freezed.dart';
 part 'earthquake.g.dart';
-
-
 
 @freezed
 class EarthquakeV1 with _$EarthquakeV1 implements V1Database {
@@ -40,10 +37,9 @@ class EarthquakeV1 with _$EarthquakeV1 implements V1Database {
       _$EarthquakeV1FromJson(json);
 }
 
-
 /// `/v1/earthquake/region` の `$.[*].earthquake` で利用
 @freezed
- class EarthquakeV1Base with _$EarthquakeV1Base {
+class EarthquakeV1Base with _$EarthquakeV1Base {
   const factory EarthquakeV1Base({
     DateTime? arrivalTime,
     int? depth,

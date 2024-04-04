@@ -7,7 +7,6 @@ import 'package:eqapi_types/eqapi_types.dart' as eqapi_types;
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqapi_types/lib.dart';
 import 'package:eqapi_types/model/components/eew_intensity.dart';
-import 'package:eqapi_types/model/components/eew_region.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
@@ -170,11 +169,7 @@ class MainMapViewModel extends _$MainMapViewModel {
     _eewPsWaveService!.update(normalEews);
     await _eewHypocenterService!.update(aliveBodies);
     final transformed = _EewEstimatedIntensityService.transform(
-      aliveBodies
-          .map((e) => e.regions)
-          .whereType<List<EewRegion>>()
-          .flattened
-          .toList(),
+      aliveBodies.map((e) => e.regions).whereNotNull().flattened.toList(),
     );
     await _eewEstimatedIntensityService!.update(transformed);
   }
@@ -195,6 +190,9 @@ class MainMapViewModel extends _$MainMapViewModel {
   LatLngBounds? _getEstimatedIntensityBoundary(
     List<AnalyzedKmoniObservationPoint> points,
   ) {
+    if (points.isEmpty) {
+      return null;
+    }
     final aliveEews = ref.read(eewAliveTelegramProvider);
 
     final coords = aliveEews
@@ -276,12 +274,9 @@ class MainMapViewModel extends _$MainMapViewModel {
 
     _isEewInitialized = true;
     // 初回EEW State更新
-    // TODO(YumNumm): EEWの結合
-/*
     await _onEewStateChanged(
       ref.read(eewAliveTelegramProvider) ?? [],
     );
-    */
   }
 
   // *********** Utilities ***********
@@ -594,7 +589,7 @@ class _EewEstimatedIntensityService {
         (_) => init(model),
       );
   static Map<JmaForecastIntensity, List<String>> transform(
-    List<EewRegion> regions,
+    List<EstimatedIntensityRegion> regions,
   ) {
     // 同じ地域をまとめる
     final regionsGrouped = regions.groupListsBy(

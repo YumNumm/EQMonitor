@@ -1,14 +1,18 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
 import 'package:eqmonitor/core/hook/use_sheet_controller.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/config/notification/fcm_topic_manager.dart';
 import 'package:eqmonitor/core/provider/config/permission/permission_status_provider.dart';
+import 'package:eqmonitor/core/provider/eew/eew_alive_telegram.dart';
 import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/core/provider/kmoni/widget/kmoni_maintenance_widget.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
@@ -212,15 +216,9 @@ class _IntensityIcons extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const SizedBox.shrink();
-    // TODO(YumNumm): EEWの結合
-    /*
     final aliveEews = ref.watch(eewAliveNormalTelegramProvider);
-    final maxEstimatedIntensities = aliveEews
-        .map((e) => e.latestEew)
-        .whereType<TelegramVxse45Body>()
-        .map((e) => e.forecastMaxInt?.toDisplayMaxInt().maxInt)
-        .whereNotNull();
+    final maxEstimatedIntensities =
+        aliveEews.map((e) => e.forecastMaxIntensity).whereNotNull().toList();
     final maxIntensity = maxEstimatedIntensities.isNotEmpty
         ? maxEstimatedIntensities.reduce((a, b) => a > b ? a : b)
         : null;
@@ -262,7 +260,7 @@ class _IntensityIcons extends ConsumerWidget {
           ),
         ),
       ),
-    );*/
+    );
   }
 }
 

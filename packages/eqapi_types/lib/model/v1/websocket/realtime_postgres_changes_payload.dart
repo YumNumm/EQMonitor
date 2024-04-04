@@ -1,8 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqapi_types/model/v1/information.dart';
-import 'package:eqapi_types/model/v1/tsunami.dart';
-import 'package:eqapi_types/model/v1/v1_database.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'realtime_postgres_changes_payload.freezed.dart';

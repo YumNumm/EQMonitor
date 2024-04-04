@@ -1,5 +1,4 @@
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqapi_types/model/v1/v1_database.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'intensity_sub_division.freezed.dart';
