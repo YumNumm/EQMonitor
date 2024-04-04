@@ -35,8 +35,7 @@ Map<String, dynamic> _$$_EewHypocenterPropertiesImplToJson(
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mainMapViewModelHash() => r'34b0f8f0ad546b7e4ef600f2d0db1d6392e51f65';
->>>>>>> cb27a7a3 (新サーバ 地震履歴・緊急地震速報の繋ぎこみ (#611))
+String _$mainMapViewModelHash() => r'4de519b34d15f466b51a3012ec7017a52a4207cf';
 
 /// See also [MainMapViewModel].
 @ProviderFor(MainMapViewModel)
