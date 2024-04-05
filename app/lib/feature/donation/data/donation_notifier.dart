@@ -9,9 +9,11 @@ Future<void> initInAppPurchase() async {
     kDebugMode ? LogLevel.debug : LogLevel.warn,
   );
 
+  // Public App-specific API Keys
   final configuration = switch (defaultTargetPlatform) {
-    // TODO(YumNumm): Android側の設定やる
-    TargetPlatform.android => throw UnimplementedError(),
+    TargetPlatform.android => PurchasesConfiguration(
+        'goog_aEcAyBNviKgaKzmCwAOXSiXwHIb',
+      ),
     TargetPlatform.iOS => PurchasesConfiguration(
         'appl_BUymtTPkwhhVuihBlVOddLxOBaQ',
       ),
