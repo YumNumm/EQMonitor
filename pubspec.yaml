@@ -6,4 +6,4 @@ environment:
   sdk: ^3.3.0
 
 dependencies:
-  melos: ^4.1.0
+  melos: ">=4.1.0 <6.0.0"
