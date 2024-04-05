@@ -233,6 +233,16 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $EarthquakeHistoryConfigRouteExtension._fromState,
         ),
         GoRouteData.$route(
+          path: 'donation',
+          factory: $DonationRouteExtension._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'executed',
+              factory: $DonationExecutedRouteExtension._fromState,
+            ),
+          ],
+        ),
+        GoRouteData.$route(
           path: 'notification',
           factory: $NotificationSettingsRouteExtension._fromState,
           routes: [
@@ -390,6 +400,45 @@ extension $EarthquakeHistoryConfigRouteExtension
       context.pushReplacement(location);
 
   void replace(BuildContext context) => context.replace(location);
+}
+
+extension $DonationRouteExtension on DonationRoute {
+  static DonationRoute _fromState(GoRouterState state) => const DonationRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/donation',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $DonationExecutedRouteExtension on DonationExecutedRoute {
+  static DonationExecutedRoute _fromState(GoRouterState state) =>
+      DonationExecutedRoute(
+        $extra: state.extra as (StoreProduct, CustomerInfo),
+      );
+
+  String get location => GoRouteData.$location(
+        '/settings/donation/executed',
+      );
+
+  void go(BuildContext context) => context.go(location, extra: $extra);
+
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: $extra);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: $extra);
+
+  void replace(BuildContext context) =>
+      context.replace(location, extra: $extra);
 }
 
 extension $NotificationSettingsRouteExtension on NotificationSettingsRoute {
