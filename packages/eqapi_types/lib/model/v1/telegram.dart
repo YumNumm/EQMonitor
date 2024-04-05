@@ -5,7 +5,7 @@ part 'telegram.freezed.dart';
 part 'telegram.g.dart';
 
 @freezed
-class TelegramV1 with _$TelegramV1 implements V1Database {
+class TelegramV1 with _$TelegramV1  implements V1Database {
   const factory TelegramV1({
     required int id,
     required int eventId,

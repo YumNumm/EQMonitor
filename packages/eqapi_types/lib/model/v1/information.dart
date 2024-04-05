@@ -5,7 +5,7 @@ part 'information.freezed.dart';
 part 'information.g.dart';
 
 @freezed
-class InformationV1 with _$InformationV1 implements V1Database {
+class InformationV1 with _$InformationV1  implements V1Database{
   const factory InformationV1({
     @JsonKey(
       unknownEnumValue: InformationAuthor.unknown,
