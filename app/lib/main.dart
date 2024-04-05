@@ -103,8 +103,10 @@ Future<void> main() async {
                 requestBadgePermission: false,
               ),
             ),
-          )
+          ),
   ).wait;
+
+  await initInAppPurchase();
 
   FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
   if (!kIsWeb) {

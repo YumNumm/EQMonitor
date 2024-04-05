@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/extension/string_ex.dart';
 import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
@@ -64,6 +65,18 @@ class SettingsScreen extends HookConsumerWidget {
                 elevation: 4,
                 child: Assets.header.image(),
               ),
+            ),
+          ),
+          BorderedContainer(
+            padding: EdgeInsets.zero,
+            elevation: 1,
+            child: ListTile(
+              title: const Text('EQMonitorを応援する'),
+              subtitle: const Text(
+                '開発者に寄付することで、アプリの開発を支援できます',
+              ),
+              leading: const Icon(Icons.upcoming),
+              onTap: () => const DonationRoute().push<void>(context),
             ),
           ),
           const SettingsSectionHeader(text: '各種設定'),

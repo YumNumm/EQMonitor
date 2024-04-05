@@ -4,6 +4,8 @@ import 'package:eqmonitor/core/provider/kmoni/page/kmoni_settings_page.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/feature/debug/earthquake_parameter/ui/earthquake_parameter_list_screen.dart';
+import 'package:eqmonitor/feature/donation/ui/donation_executed_screen.dart';
+import 'package:eqmonitor/feature/donation/ui/donation_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/screen/earthquake_history_details.dart';
 import 'package:eqmonitor/feature/home/view/home_view.dart';
@@ -27,6 +29,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide LicensePage;
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
@@ -148,6 +151,14 @@ class KmoniRoute extends GoRouteData {
     ),
     TypedGoRoute<EarthquakeHistoryConfigRoute>(
       path: 'earthquake-history',
+    ),
+    TypedGoRoute<DonationRoute>(
+      path: 'donation',
+      routes: [
+        TypedGoRoute<DonationExecutedRoute>(
+          path: 'executed',
+        ),
+      ],
     ),
     TypedGoRoute<NotificationSettingsRoute>(
       path: 'notification',
@@ -282,6 +293,32 @@ class EarthquakeParameterListRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const EarthquakeParameterListScreen();
+}
+
+class DonationRoute extends GoRouteData {
+  const DonationRoute();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) =>
+      CustomTransitionPage(
+        child: const DonationScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+            FadeTransition(
+          opacity: animation,
+          child: child,
+        ),
+      );
+}
+
+class DonationExecutedRoute extends GoRouteData {
+  const DonationExecutedRoute({
+    required this.$extra,
+  });
+  final (StoreProduct, CustomerInfo) $extra;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      DonationExecutedScreen(result: $extra);
 }
 
 class _NavigatorObserver extends NavigatorObserver {

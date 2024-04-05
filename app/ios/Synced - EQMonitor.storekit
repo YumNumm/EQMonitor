@@ -1,0 +1,130 @@
+{
+  "identifier" : "670D0C9E",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "100",
+      "familyShareable" : false,
+      "internalID" : "6480587817",
+      "localizations" : [
+        {
+          "description" : "開発者にホットコーヒーをおごる",
+          "displayName" : "コーヒー",
+          "locale" : "ja"
+        }
+      ],
+      "productID" : "0001",
+      "referenceName" : "coffee(100-yen)",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "400",
+      "familyShareable" : false,
+      "internalID" : "6480588095",
+      "localizations" : [
+        {
+          "description" : "開発者の深夜のアプリケーション開発を応援する",
+          "displayName" : "エナジードリンクセット",
+          "locale" : "ja"
+        }
+      ],
+      "productID" : "400",
+      "referenceName" : "energy-drink-set(400-yen)",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "3000",
+      "familyShareable" : false,
+      "internalID" : "6480588793",
+      "localizations" : [
+        {
+          "description" : "開発者へ美味しいうな重をご馳走する",
+          "displayName" : "うな重",
+          "locale" : "ja"
+        }
+      ],
+      "productID" : "3000",
+      "referenceName" : "unajyu-3000",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "1000",
+      "familyShareable" : false,
+      "internalID" : "6480588775",
+      "localizations" : [
+        {
+          "description" : "開発者に美味しい牛肉をおごる",
+          "displayName" : "美味しい牛肉",
+          "locale" : "ja"
+        }
+      ],
+      "productID" : "1000",
+      "referenceName" : "yummy-meat(1000yen)",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6447546703",
+    "_developerTeamID" : "CPL7H8SHVM",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 733966551.39814103,
+    "_locale" : "ja",
+    "_storefront" : "JPN",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

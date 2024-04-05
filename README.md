@@ -5,13 +5,11 @@
 [![Github All Releases](https://img.shields.io/github/downloads/EQMonitor/EQMonitor/total.svg)](https://github.com/EQMonitor/EQMonitor/tags)
 [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/EQMonitor/EQMonitor?color=blue&include_prereleases&label=Release)](https://github.com/EQMonitor/EQMonitor/releases/latest)
 
+|                                                                                    Android                                                                                     |                                                                                                iOS                                                                                                |
+| :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| [<img src="https://github.com/YumNumm/YumNumm/raw/main/resources/img/google-play-badge.png" height="50">](https://play.google.com/store/apps/details?id=net.yumnumm.eqmonitor) | [<img src="https://github.com/YumNumm/YumNumm/raw/main/resources/img/appstore-badge.png" height="50">](https://apps.apple.com/ja/app/eqmonitor-%E5%9C%B0%E9%9C%87%E9%80%9F%E5%A0%B1/id6447546703) |
 
-| Android | iOS |
-|:-:|:-:|
-| [<img src="https://github.com/YumNumm/YumNumm/raw/main/resources/img/google-play-badge.png" height="50">](https://play.google.com/store/apps/details?id=net.yumnumm.eqmonitor) |  [<img src="https://github.com/YumNumm/YumNumm/raw/main/resources/img/appstore-badge.png" height="50">](https://apps.apple.com/ja/app/eqmonitor-%E5%9C%B0%E9%9C%87%E9%80%9F%E5%A0%B1/id6447546703) |
-
-> [!WARNING]
-> [利用規約](https://github.com/EQMonitor/EQMonitor/blob/main/assets/docs/term_of_service.md)を必ずご確認の上ご利用ください。
+> [!WARNING] > [利用規約](https://github.com/EQMonitor/EQMonitor/blob/main/assets/docs/term_of_service.md)を必ずご確認の上ご利用ください。
 
 ![iPad 2](https://github.com/YumNumm/EQMonitor/assets/73390859/127f88f5-9e4f-40b5-a7f2-48efe0932c0c)
 
