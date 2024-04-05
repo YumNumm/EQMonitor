@@ -4,6 +4,6 @@ version: 1.0.0
 
 environment:
   sdk: ^3.3.0
+
 dependencies:
-  in_app_review: ^2.0.9
   melos: ^4.1.0
