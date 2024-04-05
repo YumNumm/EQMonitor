@@ -4,5 +4,6 @@ version: 1.0.0
 
 environment:
   sdk: ^3.3.0
+
 dependencies:
   melos: ^4.1.0

@@ -30,12 +30,12 @@ android {
 
         // Flag to enable support for the new language APIs
         coreLibraryDesugaringEnabled true
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     sourceSets {
@@ -45,7 +45,7 @@ android {
     defaultConfig {
         applicationId 'net.yumnumm.eqmonitor'
         minSdkVersion 26
-        targetSdkVersion 34
+        targetSdk 34
         multiDexEnabled true
         versionCode localProperties.getProperty('flutter.versionCode').toInteger()
         versionName localProperties.getProperty('flutter.versionName')

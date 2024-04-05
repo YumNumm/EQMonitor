@@ -13,6 +13,7 @@ import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshi
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
+import 'package:eqmonitor/feature/donation/data/donation_notifier.dart';
 import 'package:eqmonitor/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
