@@ -233,6 +233,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           factory: $EarthquakeHistoryConfigRouteExtension._fromState,
         ),
         GoRouteData.$route(
+          path: 'about-this-app',
+          factory: $AboutThisAppRouteExtension._fromState,
+        ),
+        GoRouteData.$route(
           path: 'donation',
           factory: $DonationRouteExtension._fromState,
           routes: [
@@ -390,6 +394,24 @@ extension $EarthquakeHistoryConfigRouteExtension
 
   String get location => GoRouteData.$location(
         '/settings/earthquake-history',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $AboutThisAppRouteExtension on AboutThisAppRoute {
+  static AboutThisAppRoute _fromState(GoRouterState state) =>
+      const AboutThisAppRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/about-this-app',
       );
 
   void go(BuildContext context) => context.go(location);

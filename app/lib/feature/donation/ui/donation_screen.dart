@@ -182,8 +182,9 @@ class _ShowDonationButton extends HookConsumerWidget {
                               showDialog<void>(
                                 context: context,
                                 barrierDismissible: false,
-                                builder: (context) =>
-                                    const CircularProgressIndicator.adaptive(),
+                                builder: (context) => const Center(
+                                  child: CircularProgressIndicator.adaptive(),
+                                ),
                               ),
                             );
                             try {

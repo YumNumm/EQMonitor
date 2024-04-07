@@ -111,26 +111,11 @@ class SettingsScreen extends HookConsumerWidget {
             onTap: () => _onInquiryTap(context, ref),
           ),
           ListTile(
-            title: const Text('利用規約'),
+            title: const Text('このアプリケーションについて'),
+            subtitle: const Text('利用規約やプライバシーポリシーを確認できます'),
             leading: const Icon(Icons.description),
-            onTap: () => context.push(
-              const TermOfServiceRoute($extra: null).location,
-            ),
-          ),
-          ListTile(
-            title: const Text('プライバシーポリシー'),
-            leading: const Icon(Icons.info),
-            onTap: () => context.push(
-              const PrivacyPolicyRoute($extra: null).location,
-            ),
-          ),
-          ListTile(
-            title: const Text('ライセンス情報'),
-            subtitle: Text('MIT License ${DateTime.now().year} Ryotaro Onoue'),
-            leading: const Icon(Icons.settings),
-            onTap: () => context.push(
-              const LicenseRoute().location,
-            ),
+
+            onTap: () => const AboutThisAppRoute().push<void>(context),
           ),
           ListTile(
             title: const Text('サーバの稼働状況'),
@@ -139,14 +124,6 @@ class SettingsScreen extends HookConsumerWidget {
             onTap: () => launchUrlString(
               'https://status.eqmonitor.app/',
               mode: LaunchMode.externalApplication,
-            ),
-          ),
-          ListTile(
-            title: const Text('ロードマップ'),
-            subtitle: const Text('アプリの開発ロードマップを確認できます'),
-            leading: const Icon(Icons.view_timeline),
-            onTap: () => launchUrlString(
-              'https://github.com/YumNumm/EQMonitor/issues/412',
             ),
           ),
           Center(

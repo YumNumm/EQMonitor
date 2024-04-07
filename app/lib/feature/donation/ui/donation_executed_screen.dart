@@ -163,8 +163,16 @@ class _ScrollView extends StatelessWidget {
                               ),
                             ),
                             TextSpan(
-                              text: 'あなたの支援のお陰で、より良いアプリを作ることができます。\n\n'
-                                  'Twitter(X)やメールで私へ連絡いただけると嬉しいです!'
+                              text: 'あなたの支援のお陰で、より良いアプリを作ることができます。\n\n',
+                            ),
+                            TextSpan(
+                              text: '皆様の声が励みになります!\n',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            TextSpan(
+                              text: 'Twitter(X)やメールで私へ連絡いただけると嬉しいです!'
                                   'もしくは、アプリストアへのレビューもお待ちしております\n\n'
                                   'ご意見やご要望があれば、お気軽にお知らせください!\n\n'
                                   '- Ryotaro Onoue',
@@ -190,23 +198,25 @@ class _Detail extends StatelessWidget {
     required this.product,
     required this.textTheme,
     required this.customer,
+    this.isScreenshot = false,
   });
 
   final Products productEnum;
   final StoreProduct product;
   final TextTheme textTheme;
   final CustomerInfo customer;
+  final bool isScreenshot;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Padding(
-          padding: EdgeInsets.all(8),
+        Padding(
+          padding: const EdgeInsets.all(8),
           child: Center(
             child: Text(
-              'ありがとうございます! 💖',
-              style: TextStyle(
+              isScreenshot ? 'EQMontorを支援しました✌' : 'ありがとうございます! 💖',
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 24,
                 fontWeight: FontWeight.w900,
