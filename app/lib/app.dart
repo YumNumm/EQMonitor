@@ -72,7 +72,6 @@ class App extends HookConsumerWidget {
         child: Banner(
           message: 'v${packageInfo.version}-${packageInfo.buildNumber}',
           location: BannerLocation.bottomStart,
-          color: Colors.red.shade900,
           child: app,
         ),
       );
