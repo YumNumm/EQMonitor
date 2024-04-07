@@ -62,7 +62,7 @@ class DonationChoiceModal extends HookConsumerWidget {
               final product = e.$2;
               final emoji = product.emoji;
               return ListTile(
-                title: Text(choice.title),
+                title: Text(product.productName),
                 subtitle: Text(choice.description),
                 trailing: Text(
                   choice.priceString,
@@ -106,4 +106,11 @@ extension ProductEx on Products {
         return '🍱';
     }
   }
+
+  String get productName => switch (this) {
+        Products.coffee => 'コーヒー',
+        Products.enegyDrink => 'エナジードリンクセット',
+        Products.meat => '美味しい牛肉',
+        Products.eel => 'うな重'
+      };
 }

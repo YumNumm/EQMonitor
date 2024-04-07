@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqapi_types/model/components/eew_intensity.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
@@ -217,16 +218,29 @@ class _IntensityIcons extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final aliveEews = ref.watch(eewAliveNormalTelegramProvider);
-    final maxEstimatedIntensities =
-        aliveEews.map((e) => e.forecastMaxIntensity).whereNotNull().toList();
+    final maxEstimatedIntensities = aliveEews
+        .map(
+          (e) => e.regions
+              ?.map(
+                (region) => region.forecastMaxInt.toDisplayMaxInt().maxInt,
+              )
+              .toList(),
+        )
+        .whereNotNull()
+        .flattened
+        .whereNotNull()
+        .toList();
     final maxIntensity = maxEstimatedIntensities.isNotEmpty
         ? maxEstimatedIntensities.reduce((a, b) => a > b ? a : b)
         : null;
-    final intensities = maxIntensity != null
+    final minIntensity = maxEstimatedIntensities.isNotEmpty
+        ? maxEstimatedIntensities.reduce((a, b) => a < b ? a : b)
+        : null;
+    final intensities = maxIntensity != null && minIntensity != null
         ? [
             ...JmaForecastIntensity.values,
           ].where(
-            (e) => e <= maxIntensity && e >= JmaForecastIntensity.four,
+            (e) => e <= maxIntensity && e >= minIntensity,
           )
         : null;
     if (intensities == null || intensities.isEmpty) {
@@ -246,12 +260,8 @@ class _IntensityIcons extends ConsumerWidget {
             spacing: 8,
             runSpacing: 8,
             children: [
-              if (maxIntensity != null)
-                for (final intensity in [
-                  ...JmaForecastIntensity.values,
-                ].where(
-                  (e) => e <= maxIntensity && e >= JmaForecastIntensity.four,
-                ))
+              if (maxIntensity != null && minIntensity != null)
+                for (final intensity in intensities)
                   JmaForecastIntensityWidget(
                     intensity: intensity,
                     size: 25,

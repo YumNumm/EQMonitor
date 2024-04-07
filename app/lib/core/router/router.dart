@@ -11,6 +11,7 @@ import 'package:eqmonitor/feature/earthquake_history_details/screen/earthquake_h
 import 'package:eqmonitor/feature/home/view/home_view.dart';
 import 'package:eqmonitor/feature/information_history/page/information_history_page.dart';
 import 'package:eqmonitor/feature/information_history_details/information_history_details_page.dart';
+import 'package:eqmonitor/feature/settings/children/application_info/about_this_app.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/license_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_screen.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_screen.dart';
@@ -152,6 +153,9 @@ class KmoniRoute extends GoRouteData {
     TypedGoRoute<EarthquakeHistoryConfigRoute>(
       path: 'earthquake-history',
     ),
+    TypedGoRoute<AboutThisAppRoute>(
+      path: 'about-this-app',
+    ),
     TypedGoRoute<DonationRoute>(
       path: 'donation',
       routes: [
@@ -261,6 +265,14 @@ class LicenseRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const LicensePage();
+}
+
+class AboutThisAppRoute extends GoRouteData {
+  const AboutThisAppRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const AboutThisAppScreen();
 }
 
 class NotificationSettingsRoute extends GoRouteData {

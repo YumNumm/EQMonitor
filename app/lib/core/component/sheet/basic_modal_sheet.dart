@@ -63,27 +63,25 @@ class BasicModalSheet extends HookWidget {
             child: SafeArea(
               top: hasAppBar,
               bottom: false,
-              child: RepaintBoundary(
-                child: Column(
-                  children: <Widget>[
-                    barWidget,
-                    if (useColumn)
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: children,
-                          ),
-                        ),
-                      )
-                    else
-                      Expanded(
-                        child: ListView(
-                          padding: const EdgeInsets.all(2),
+              child: Column(
+                children: <Widget>[
+                  barWidget,
+                  if (useColumn)
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
                           children: children,
                         ),
                       ),
-                  ],
-                ),
+                    )
+                  else
+                    Expanded(
+                      child: ListView(
+                        padding: const EdgeInsets.all(2),
+                        children: children,
+                      ),
+                    ),
+                ],
               ),
             ),
           ),

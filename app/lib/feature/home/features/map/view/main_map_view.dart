@@ -46,7 +46,6 @@ class MainMapView extends HookConsumerWidget {
     final controller = useAnimationController(
       duration: const Duration(microseconds: 1000),
     );
-    useAnimation(controller);
     useEffect(
       () {
         controller
@@ -95,7 +94,7 @@ class MainMapView extends HookConsumerWidget {
       child: MaplibreMap(
         initialCameraPosition: const CameraPosition(
           target: LatLng(35.681236, 139.767125),
-          zoom: 3,
+          zoom: 5,
         ),
         styleString: stylePath.value ?? '',
         onMapCreated: (controller) {
