@@ -7,8 +7,8 @@ class EarthquakeHistoryNotFound extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const before2021 = Text(
-      '2021年11月18日以前の地震情報は、本アプリでは扱っていません。',
+    const before2020 = Text(
+      '2020年11月18日以前の地震情報は、本アプリでは扱っていません。',
       textAlign: TextAlign.center,
     );
     return const Center(
@@ -26,7 +26,7 @@ class EarthquakeHistoryNotFound extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
-            before2021,
+            before2020,
           ],
         ),
       ),
@@ -39,8 +39,8 @@ class EarthquakeHistoryAllFetched extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const before2021 = Text(
-      '2021年11月18日以前の地震情報は、本アプリでは扱っていません。',
+    const before2020 = Text(
+      '2020年11月18日以前の地震情報は、本アプリでは扱っていません。',
       textAlign: TextAlign.center,
     );
     return const SafeArea(
@@ -59,7 +59,7 @@ class EarthquakeHistoryAllFetched extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
-              before2021,
+              before2020,
             ],
           ),
         ),
