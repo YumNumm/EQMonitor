@@ -52,7 +52,10 @@ class MainMapViewModel extends _$MainMapViewModel {
       )
       ..listen(
         estimatedIntensityProvider,
-        (_, value) => _onEstimatedIntensityChanged(value),
+        (current, value) => _onEstimatedIntensityChanged(
+          value,
+          current?.length != value.length,
+        ),
       )
       ..listen(
         kmoniSettingsProvider.select((e) => e.useKmoni),
@@ -176,11 +179,13 @@ class MainMapViewModel extends _$MainMapViewModel {
 
   Future<void> _onEstimatedIntensityChanged(
     List<AnalyzedKmoniObservationPoint> points,
+    bool isForce,
   ) async {
     final boundary = _getEstimatedIntensityBoundary(points);
     try {
       await changeHomeBoundaryWithAnimation(
         bounds: boundary ?? defaultBoundary,
+        isForce: isForce,
       );
     } on Exception catch (e) {
       log('error $e');
