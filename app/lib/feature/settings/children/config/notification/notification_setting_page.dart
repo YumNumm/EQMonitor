@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/config/notification/fcm_topic_manager.dart';
 import 'package:eqmonitor/core/provider/config/permission/permission_status_provider.dart';
+import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
 import 'package:eqmonitor/core/provider/notification_token.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/fullscreen_loading_overlay.dart';
@@ -189,58 +190,63 @@ class _OnNotificationPermissionAllowed extends ConsumerWidget {
           title: const Text('お知らせ'),
           subtitle: const Text('アップデート情報や開発者からのお知らせをお伝えします'),
         ),
-        const SettingsSectionHeader(text: 'FCM DEBUG'),
-        Consumer(
-          builder: (context, ref, _) {
-            final notificationTokenState = ref.watch(notificationTokenProvider);
-            return notificationTokenState.when(
-              data: (value) => Column(
-                children: [
-                  ListTile(
-                    title: const Text('FCM デバイストークン'),
-                    trailing: Text(
-                      value.fcmToken?.obfuscate ?? '不明',
+        if (ref.watch(debuggerProvider.select(
+          (value) => value.isDebugger,
+        ))) ...[
+          const SettingsSectionHeader(text: 'FCM DEBUG'),
+          Consumer(
+            builder: (context, ref, _) {
+              final notificationTokenState =
+                  ref.watch(notificationTokenProvider);
+              return notificationTokenState.when(
+                data: (value) => Column(
+                  children: [
+                    ListTile(
+                      title: const Text('FCM デバイストークン'),
+                      trailing: Text(
+                        value.fcmToken?.obfuscate ?? '不明',
+                      ),
+                      onTap: () => Clipboard.setData(
+                        ClipboardData(text: value.fcmToken ?? ''),
+                      ).then((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('コピーしました'),
+                          ),
+                        );
+                      }),
+                      visualDensity: VisualDensity.compact,
                     ),
-                    onTap: () => Clipboard.setData(
-                      ClipboardData(text: value.fcmToken ?? ''),
-                    ).then((_) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('コピーしました'),
-                        ),
-                      );
-                    }),
-                    visualDensity: VisualDensity.compact,
-                  ),
-                  ListTile(
-                    title: const Text(
-                      'APNS デバイストークン',
+                    ListTile(
+                      title: const Text(
+                        'APNS デバイストークン',
+                      ),
+                      trailing: Text(
+                        value.apnsToken?.obfuscate ?? '不明',
+                      ),
+                      onTap: () => Clipboard.setData(
+                        ClipboardData(text: value.apnsToken ?? ''),
+                      ).then((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('コピーしました'),
+                          ),
+                        );
+                      }),
+                      visualDensity: VisualDensity.compact,
                     ),
-                    trailing: Text(
-                      value.apnsToken?.obfuscate ?? '不明',
-                    ),
-                    onTap: () => Clipboard.setData(
-                      ClipboardData(text: value.apnsToken ?? ''),
-                    ).then((_) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('コピーしました'),
-                        ),
-                      );
-                    }),
-                    visualDensity: VisualDensity.compact,
-                  ),
-                ],
-              ),
-              error: (error, stackTrace) => Text(
-                'エラーが発生しました: $error',
-              ),
-              loading: () => const Center(
-                child: CircularProgressIndicator.adaptive(),
-              ),
-            );
-          },
-        ),
+                  ],
+                ),
+                error: (error, stackTrace) => Text(
+                  'エラーが発生しました: $error',
+                ),
+                loading: () => const Center(
+                  child: CircularProgressIndicator.adaptive(),
+                ),
+              );
+            },
+          ),
+        ],
       ],
     );
   }
