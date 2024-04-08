@@ -78,7 +78,7 @@ class EewAliveChecker {
     final depth = eew.depth;
 
     // EEW警報の場合、420秒でイベント終了と判定する
-    final isWarning = (eew.headline ?? '').contains('強い揺れ');
+    final isWarning = eew.isWarning ?? eew.headline?.contains('強い揺れ') ?? false;
     if (isWarning) {
       return happenedDiff > 420;
     }

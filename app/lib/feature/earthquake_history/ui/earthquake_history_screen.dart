@@ -174,7 +174,7 @@ class _SliverListBody extends HookConsumerWidget {
             return EarthquakeHistoryListTile(
               item: item,
               onTap: () => EarthquakeHistoryDetailsRoute(
-                eventId: item.eventId.toString(),
+                eventId: item.eventId,
               ).push<void>(context),
             );
           },

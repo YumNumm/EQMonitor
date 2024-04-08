@@ -48,7 +48,7 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
                         (e) => EarthquakeHistoryListTile(
                           item: e,
                           onTap: () => EarthquakeHistoryDetailsRoute(
-                            eventId: e.eventId.toString(),
+                            eventId: e.eventId,
                           ).push<void>(context),
                           showBackgroundColor: false,
                         ),

@@ -8,6 +8,7 @@ import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_c
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/eew/eew_alive_telegram.dart';
 import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
+import 'package:eqmonitor/core/theme/build_theme.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/foundation.dart';
@@ -114,7 +115,7 @@ class EewWidget extends ConsumerWidget {
     final (_, backgroundColor) =
         (intensityScheme.foreground, intensityScheme.background);
     // 「緊急地震速報 警報 [SPACE] #5(最終)」
-    final isWarning = eew.headline?.contains('強い揺れ') ?? false;
+    final isWarning = eew.isWarning ?? eew.headline?.contains('強い揺れ') ?? false;
     final header = Wrap(
       alignment: WrapAlignment.spaceBetween,
       crossAxisAlignment: WrapCrossAlignment.center,
@@ -417,7 +418,7 @@ class EewWidget extends ConsumerWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        if (index != null) ...[
+        if (index != null)
           Center(
             child: FittedBox(
               child: Text(
@@ -425,27 +426,12 @@ class EewWidget extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 100,
                   fontWeight: FontWeight.w900,
+                  fontFamily: monoFont,
                   color: textTheme.bodyMedium!.color!.withOpacity(0.3),
                 ),
               ),
             ),
           ),
-          Center(
-            child: FittedBox(
-              child: Text(
-                (index).toString(),
-                style: TextStyle(
-                  fontSize: 100,
-                  fontWeight: FontWeight.w900,
-                  foreground: Paint()
-                    ..style = PaintingStyle.stroke
-                    ..strokeWidth = 0
-                    ..color = textTheme.bodyMedium!.color!.withOpacity(0.3),
-                ),
-              ),
-            ),
-          ),
-        ],
         card,
         if (eew.status != TelegramStatus.normal.type)
           Center(
