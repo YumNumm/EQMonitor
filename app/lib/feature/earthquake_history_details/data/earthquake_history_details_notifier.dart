@@ -11,7 +11,8 @@ Future<EarthquakeV1Extended> earthquakeHistoryDetailsNotifier(
   int eventId,
 ) async {
   final api = ref.watch(eqApiProvider);
-  final response = await api.v1.getEarthquakeDetail(eventId: eventId.toString());
+  final response =
+      await api.v1.getEarthquakeDetail(eventId: eventId.toString());
   final data = response.data;
 
   final extended = await ref.read(earthquakeV1ExtendedProvider(data).future);

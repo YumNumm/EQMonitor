@@ -84,10 +84,9 @@ class EarthquakeHistoryDetailsRoute extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-
     return EarthquakeHistoryDetailsPage(
-        eventId: eventId,
-      );
+      eventId: eventId,
+    );
   }
 }
 
