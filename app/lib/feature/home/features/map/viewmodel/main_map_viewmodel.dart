@@ -95,8 +95,6 @@ class MainMapViewModel extends _$MainMapViewModel {
       controller: controller,
     );
 
-    await moveToHomeBoundary();
-
     await (
       _kmoniObservationPointService!.init(),
       _eewHypocenterService!.init(
@@ -127,9 +125,22 @@ class MainMapViewModel extends _$MainMapViewModel {
         _eewEstimatedIntensityService!.dispose(),
       ).wait;
     });
-    await _onEewStateChanged(
-      ref.read(eewAliveTelegramProvider) ?? [],
-    );
+    log('_onEewStateChanged called!', name: 'MainMapViewModel');
+
+    final aliveEews = ref.read(eewAliveTelegramProvider);
+    if (aliveEews != null && aliveEews.isNotEmpty) {
+      await (
+        _onEewStateChanged(
+          ref.read(eewAliveTelegramProvider) ?? [],
+        ),
+        _onEstimatedIntensityChanged(
+          ref.read(estimatedIntensityProvider) ?? [],
+          true,
+        )
+      ).wait;
+    } else {
+      await moveToHomeBoundary();
+    }
   }
 
   Future<void> onTick(DateTime now) async {
@@ -159,7 +170,7 @@ class MainMapViewModel extends _$MainMapViewModel {
   Future<void> _onEewStateChanged(List<EewV1> values) async {
     // 初期化が終わっていない場合は何もしない
     if (!_isEewInitialized) {
-      log('not initialized! ');
+      log('not initialized!', name: 'MainMapViewModel');
       return;
     }
     final aliveBodies = values
