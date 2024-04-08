@@ -8,7 +8,7 @@ part of 'dio_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dioHash() => r'bd28b67c413f4bbbd07c40a59b381fc3849327da';
+String _$dioHash() => r'd4571410c0b9cc61a83739afebd9a2572c87c435';
 
 /// See also [dio].
 @ProviderFor(dio)
@@ -22,7 +22,7 @@ final dioProvider = Provider<Dio>.internal(
 );
 
 typedef DioRef = ProviderRef<Dio>;
-String _$isDioProxyEnabledHash() => r'a5c4653d2988019714e097651a4981a455b0c030';
+String _$isDioProxyEnabledHash() => r'716d5c817b377684285a697bf988ce19f0645c81';
 
 /// See also [IsDioProxyEnabled].
 @ProviderFor(IsDioProxyEnabled)
