@@ -80,8 +80,11 @@ jobs:
         env:
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_BASE64: ${{secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
         run: |
           flutter build ipa --release --no-codesign
+          echo '${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}' | base64 -d > AuthKey_NGL2W4BQP6.p8
+          cp *.p8 ios/
           xcodebuild \
             -workspace ios/Runner.xcworkspace \
             -scheme Runner \
@@ -97,7 +100,7 @@ jobs:
             -exportPath build/ios/ipa -allowProvisioningUpdates \
             -authenticationKeyIssuerID ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }} \
             -authenticationKeyID ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }} \
-            -authenticationKeyPath `pwd`/private_keys/AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8
+            -authenticationKeyPath `pwd`/AuthKey_NGL2W4BQP6.p8
 
       - name: Upload to App Store Connect
         working-directory: app
@@ -106,7 +109,4 @@ jobs:
           SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA: false
           APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
           LANG: ja_JP.UTF-8
-        run: |
-          cd app
-          echo '${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}' | base64 -d > AuthKey_NGL2W4BQP6.p8
-          fastlane beta
+        run: fastlane beta
