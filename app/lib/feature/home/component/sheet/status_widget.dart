@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/provider/kmoni/model/kmoni_view_model_state.dart'
 import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_view_settings.dart';
 import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
+import 'package:eqmonitor/core/theme/build_theme.dart';
 import 'package:flutter/material.dart' hide ConnectionState;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -128,7 +129,10 @@ class SheetStatusWidget extends ConsumerWidget {
                                 DateFormat('yyyy/MM/dd HH:mm:ss').format(
                                   latestTime,
                                 ),
-                                style: theme.textTheme.bodyMedium,
+                                style: theme.textTheme.bodyMedium!.copyWith(
+                                  fontFamily: monoFont,
+                                  letterSpacing: -0.2,
+                                ),
                               ),
                             ),
                           ],
