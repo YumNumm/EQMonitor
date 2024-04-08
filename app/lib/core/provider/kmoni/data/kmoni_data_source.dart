@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/provider/kmoni/model/kmoni_maintenance_message_model.dart';
 import 'package:eqmonitor/core/provider/kmoni/util/kmoni_web_api_url_generator.dart';
@@ -33,6 +35,14 @@ class KmoniDataSource {
         responseType: ResponseType.bytes,
         receiveTimeout: const Duration(milliseconds: 2000),
         sendTimeout: const Duration(milliseconds: 2000),
+        headers: {
+          HttpHeaders.userAgentHeader:
+              'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+          HttpHeaders.refererHeader: 'http://www.kmoni.bosai.go.jp/',
+          HttpHeaders.hostHeader: 'www.kmoni.bosai.go.jp',
+          HttpHeaders.cacheControlHeader: 'no-cache',
+          HttpHeaders.acceptHeader: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+        },
       ),
     );
     return res;

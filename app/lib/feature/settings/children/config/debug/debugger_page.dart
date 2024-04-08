@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/provider/dio_provider.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
@@ -115,6 +116,14 @@ class _DebugWidget extends ConsumerWidget {
               leading: const Icon(Icons.notifications_active),
               onTap: () async =>
                   FirebaseMessaging.instance.subscribeToTopic('kevi'),
+            ),
+            SwitchListTile.adaptive(
+              value: ref.watch(isDioProxyEnabledProvider),
+              onChanged: (value) => ref
+                  .read(isDioProxyEnabledProvider.notifier)
+                  .set(value: value),
+              title: const Text('Dio Proxy'),
+              subtitle: const Text('mac-mini:9090へのPROXY'),
             ),
           ],
         ),

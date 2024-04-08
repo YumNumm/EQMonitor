@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
+import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -22,5 +24,40 @@ Dio dio(DioRef ref) {
       baseUrl: ref.watch(telegramUrlProvider).restApiUrl,
     ),
   );
+  if (ref.watch(isDioProxyEnabledProvider)) {
+    dio.httpClientAdapter = IOHttpClientAdapter(
+      createHttpClient: () =>
+          HttpClient()..findProxy = (url) => 'PROXY macbook-pro:9090',
+    );
+    HttpOverrides.global = MyHttpOverrides();
+  }
   return dio;
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..findProxy = (url) => 'PROXY macbook-pro:9090';
+  }
+}
+
+@Riverpod(keepAlive: true)
+class IsDioProxyEnabled extends _$IsDioProxyEnabled {
+  @override
+  bool build() {
+    if (kIsWeb || !kDebugMode) {
+      return false;
+    }
+    final prefs = ref.read(sharedPreferencesProvider);
+    return prefs.getBool(_key) ?? false;
+  }
+
+  Future<void> set({required bool value}) async {
+    state = value;
+    final prefs = ref.read(sharedPreferencesProvider);
+    await prefs.setBool(_key, value);
+  }
+
+  static const String _key = 'is_dio_proxy_enabled';
 }

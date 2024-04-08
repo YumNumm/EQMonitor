@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
+import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/earthquake_history_repository.dart';
@@ -10,6 +11,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_histo
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/data/earthquake_history_details_notifier.dart';
 import 'package:extensions/extensions.dart';
+import 'package:flutter/material.dart';
 import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:web_socket_client/web_socket_client.dart';
@@ -42,7 +44,18 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
         const Duration(seconds: 30),
         (_) => _refreshIfWebsocketNotConnected(),
       );
-      ref.onDispose(refetchTimer.cancel);
+      ref
+        ..onDispose(refetchTimer.cancel)
+
+        // アプリがバックグラウンドからフォアグラウンドに戻った際にデータを再取得する
+        ..listen(
+          appLifeCycleProvider,
+          (_, next) async {
+            if (next == AppLifecycleState.resumed) {
+              await _onResumed();
+            }
+          },
+        );
     }
     return _fetchInitialData(
       param: parameter,
@@ -139,6 +152,16 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
         );
       },
     );
+  }
+
+  Future<void> _onResumed() async {
+    // パラメータが指定されている場合は何もしない
+    if (parameter != EarthquakeHistoryParameter.empty()) {
+      return;
+    }
+    final repository = ref.read(earthquakeHistoryRepositoryProvider);
+    final result = await repository.fetchEarthquakeLists();
+    await _upsertEarthquakeV1s(result.items);
   }
 
   Future<void> _refreshIfWebsocketNotConnected() async {

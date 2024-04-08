@@ -190,9 +190,11 @@ class _OnNotificationPermissionAllowed extends ConsumerWidget {
           title: const Text('お知らせ'),
           subtitle: const Text('アップデート情報や開発者からのお知らせをお伝えします'),
         ),
-        if (ref.watch(debuggerProvider.select(
-          (value) => value.isDebugger,
-        ))) ...[
+        if (ref.watch(
+          debuggerProvider.select(
+            (value) => value.isDebugger,
+          ),
+        )) ...[
           const SettingsSectionHeader(text: 'FCM DEBUG'),
           Consumer(
             builder: (context, ref, _) {

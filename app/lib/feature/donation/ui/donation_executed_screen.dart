@@ -33,23 +33,26 @@ class DonationExecutedScreen extends HookConsumerWidget {
     );
     final body = Stack(
       children: [
-        Column(
-          children: [
-            Screenshot(
-              controller: controller,
-              child: Material(
-                child: ColoredBox(
-                  color: const Color.fromARGB(255, 1, 32, 78),
-                  child: _Detail(
-                    productEnum: productEnum,
-                    product: product,
-                    textTheme: textTheme,
-                    customer: customer,
+        SingleChildScrollView(
+          child: Column(
+            children: [
+              Screenshot(
+                controller: controller,
+                child: Material(
+                  child: ColoredBox(
+                    color: const Color.fromARGB(255, 1, 32, 78),
+                    child: _Detail(
+                      productEnum: productEnum,
+                      product: product,
+                      textTheme: textTheme,
+                      customer: customer,
+                      isScreenshot: true,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         SetupBackgroundImageWidget(
           child: Scaffold(
@@ -163,7 +166,7 @@ class _ScrollView extends StatelessWidget {
                               ),
                             ),
                             TextSpan(
-                              text: 'あなたの支援のお陰で、より良いアプリを作ることができます。\n\n',
+                              text: 'あなたのご支援のお陰で、より良いアプリを作ることができます。\n\n',
                             ),
                             TextSpan(
                               text: '皆様の声が励みになります!\n',
@@ -232,7 +235,7 @@ class _Detail extends StatelessWidget {
             children: [
               const Row(),
               Text(
-                '${productEnum.emoji} ${product.title}',
+                '${productEnum.emoji} ${productEnum.productName}',
                 style: textTheme.titleLarge!.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
