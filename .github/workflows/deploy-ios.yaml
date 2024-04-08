@@ -77,20 +77,36 @@ jobs:
 
       - name: Prebuild
         working-directory: app
-        run: flutter build ios --release --no-codesign
+        env:
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+        run: |
+          flutter build ipa --release --no-codesign
+          xcodebuild \
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -sdk iphoneos \
+            -configuration Release archive \
+            -archivePath build/ios/Runner.xcarchive \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+
+          xcodebuild -exportArchive \
+            -archivePath build/ios/Runner.xcarchive \
+            -exportOptionsPlist ios/ExportOptions.plist \
+            -exportPath build/ios/ipa -allowProvisioningUpdates \
+            -authenticationKeyIssuerID ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }} \
+            -authenticationKeyID ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }} \
+            -authenticationKeyPath `pwd`/private_keys/AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8
 
       - name: Upload to App Store Connect
+        working-directory: app
         env:
-          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-          MATCH_USERNAME: ${{ secrets.MATCH_USERNAME }}
           PRODUCE_USERNAME: ${{ secrets.PRODUCE_USERNAME }}
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
           SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA: false
-          APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_KEY }}
+          APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
           LANG: ja_JP.UTF-8
         run: |
-          cd app/ios
-          echo '${{ secrets.APP_STORE_CONNECT_KEY }}' | base64 -d > AuthKey_HAZX33F4T7.p8
+          cd app
+          echo '${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}' | base64 -d > AuthKey_NGL2W4BQP6.p8
           fastlane beta

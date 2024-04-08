@@ -4,17 +4,13 @@ platform :ios do
   desc "Push a new beta build to TestFlight"
   lane :beta do
     app_store_connect_api_key(
-      key_id: "HAZX33F4T7",
+      key_id: "NGL2W4BQP6",
       issuer_id: "fd4cca56-716b-4f03-8e44-de72a03453db",
-      key_filepath: "./AuthKey_HAZX33F4T7.p8"
+      key_filepath: "./AuthKey_NGL2W4BQP6.p8"
     )
     increment_build_number(
       build_number: latest_testflight_build_number + 1,
       xcodeproj: "Runner.xcodeproj",
-    )
-    # Step 2 - Download provisioning profiles and certificates
-    match(
-      readonly: true,
     )
 
     # Step 3 - Build the project
