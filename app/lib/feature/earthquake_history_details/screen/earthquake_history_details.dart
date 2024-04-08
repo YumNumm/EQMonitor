@@ -31,7 +31,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
     super.key,
   });
 
-  final String eventId;
+  final int eventId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

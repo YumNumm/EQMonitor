@@ -95,8 +95,6 @@ class MainMapViewModel extends _$MainMapViewModel {
       controller: controller,
     );
 
-    await moveToHomeBoundary();
-
     await (
       _kmoniObservationPointService!.init(),
       _eewHypocenterService!.init(
@@ -127,6 +125,22 @@ class MainMapViewModel extends _$MainMapViewModel {
         _eewEstimatedIntensityService!.dispose(),
       ).wait;
     });
+    log('_onEewStateChanged called!', name: 'MainMapViewModel');
+
+    final aliveEews = ref.read(eewAliveTelegramProvider);
+    if (aliveEews != null && aliveEews.isNotEmpty) {
+      await (
+        _onEewStateChanged(
+          ref.read(eewAliveTelegramProvider) ?? [],
+        ),
+        _onEstimatedIntensityChanged(
+          ref.read(estimatedIntensityProvider) ?? [],
+          true,
+        )
+      ).wait;
+    } else {
+      await moveToHomeBoundary();
+    }
   }
 
   Future<void> onTick(DateTime now) async {
@@ -156,6 +170,7 @@ class MainMapViewModel extends _$MainMapViewModel {
   Future<void> _onEewStateChanged(List<EewV1> values) async {
     // 初期化が終わっていない場合は何もしない
     if (!_isEewInitialized) {
+      log('not initialized!', name: 'MainMapViewModel');
       return;
     }
     final aliveBodies = values
@@ -166,9 +181,12 @@ class MainMapViewModel extends _$MainMapViewModel {
     final normalEews = aliveBodies
         .where((e) => !(e.isIpfOnePoint || e.isLevelEew || (e.isPlum ?? false)))
         .map(
-          (e) => (e, e.headline?.contains('強い揺れ') ?? false),
-        )
-        .toList();
+      (eew) {
+        final isWarning =
+            eew.isWarning ?? eew.headline?.contains('強い揺れ') ?? false;
+        return (eew, isWarning);
+      },
+    ).toList();
     _eewPsWaveService!.update(normalEews);
     await _eewHypocenterService!.update(aliveBodies);
     final transformed = _EewEstimatedIntensityService.transform(

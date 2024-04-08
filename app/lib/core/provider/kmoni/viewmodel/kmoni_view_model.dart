@@ -57,14 +57,12 @@ class KmoniViewModel extends _$KmoniViewModel {
   Future<void> initialize() async {
     // Timer開始
     while (true) {
-      try {
-        await syncDelayWithKmoni();
-        // ignore: avoid_catches_without_on_clauses
-      } catch (e) {
-        log('error $e');
-        await Future<void>.delayed(const Duration(milliseconds: 1000));
-        continue;
+      final result = await syncDelayWithKmoni();
+      if (result != null) {
+        break;
       }
+      await Future<void>.delayed(const Duration(milliseconds: 1000));
+
       break;
     }
     state = state.copyWith(

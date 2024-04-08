@@ -38,7 +38,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       throw EarthquakeParameterHasNotInitializedException();
     }
     // 検索条件を指定していないNotifierでのみ、30秒ごとにデータ再取得するタイマーを設定
-    if (parameter == EarthquakeHistoryParameter.empty()) {
+    if (parameter == const EarthquakeHistoryParameter()) {
       // 30秒ごとにデータ再取得するタイマー
       final refetchTimer = Timer.periodic(
         const Duration(seconds: 30),
@@ -55,8 +55,27 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
               await _onResumed();
             }
           },
+        )
+        // WebSocketからのデータを適用する
+        ..listen(
+          websocketTableMessagesProvider<EarthquakeV1>(),
+          (_, next) {
+            if (next case AsyncData(value: final value)) {
+              if (value is RealtimePostgresInsertPayload<EarthquakeV1>) {
+                _upsertEarthquakeV1s([value.newData]);
+              }
+              final _ = switch (value) {
+                RealtimePostgresInsertPayload<EarthquakeV1>(:final newData) =>
+                  _upsertEarthquakeV1s([newData]),
+                RealtimePostgresUpdatePayload<EarthquakeV1>(:final newData) =>
+                  _upsertEarthquakeV1s([newData]),
+                RealtimePostgresDeletePayload<EarthquakeV1>() => null,
+              };
+            }
+          },
         );
     }
+
     return _fetchInitialData(
       param: parameter,
       regions: earthquakeParameter.regions,
@@ -156,7 +175,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
 
   Future<void> _onResumed() async {
     // パラメータが指定されている場合は何もしない
-    if (parameter != EarthquakeHistoryParameter.empty()) {
+    if (parameter != const EarthquakeHistoryParameter()) {
       return;
     }
     final repository = ref.read(earthquakeHistoryRepositoryProvider);
@@ -175,7 +194,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       return;
     }
     // パラメータが指定されている場合は何もしない
-    if (parameter != EarthquakeHistoryParameter.empty()) {
+    if (parameter != const EarthquakeHistoryParameter()) {
       return;
     }
 

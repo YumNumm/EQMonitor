@@ -150,7 +150,6 @@ class MainMapView extends HookConsumerWidget {
           );
           await notifier.onMapControllerRegistered();
           await notifier.startUpdateEew();
-          await notifier.animateCameraToDefaultPosition();
         },
         rotateGesturesEnabled: false,
         tiltGesturesEnabled: false,

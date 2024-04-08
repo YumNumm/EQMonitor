@@ -80,13 +80,15 @@ class EarthquakeHistoryDetailsRoute extends GoRouteData {
     required this.eventId,
   });
 
-  final String eventId;
+  final int eventId;
 
   @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      EarthquakeHistoryDetailsPage(
+  Widget build(BuildContext context, GoRouterState state) {
+
+    return EarthquakeHistoryDetailsPage(
         eventId: eventId,
       );
+  }
 }
 
 @TypedGoRoute<InformationHistoryRoute>(path: '/information-history')

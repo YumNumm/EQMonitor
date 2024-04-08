@@ -9,7 +9,7 @@ part of 'earthquake_history_details_notifier.dart';
 // **************************************************************************
 
 String _$earthquakeHistoryDetailsNotifierHash() =>
-    r'e5ebdd73e7eb20ea51d9bb5298315f11f1d8d8f5';
+    r'fba4b50fde4d4f30b998853546cca98511e088c6';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -58,7 +58,7 @@ class EarthquakeHistoryDetailsNotifierFamily extends Family {
 
   /// See also [earthquakeHistoryDetailsNotifier].
   EarthquakeHistoryDetailsNotifierProvider call(
-    String eventId,
+    int eventId,
   ) {
     return EarthquakeHistoryDetailsNotifierProvider(
       eventId,
@@ -105,10 +105,10 @@ class _$EarthquakeHistoryDetailsNotifierFamilyOverride
 
 /// See also [earthquakeHistoryDetailsNotifier].
 class EarthquakeHistoryDetailsNotifierProvider
-    extends FutureProvider<EarthquakeV1Extended> {
+    extends AutoDisposeFutureProvider<EarthquakeV1Extended> {
   /// See also [earthquakeHistoryDetailsNotifier].
   EarthquakeHistoryDetailsNotifierProvider(
-    String eventId,
+    int eventId,
   ) : this._internal(
           (ref) => earthquakeHistoryDetailsNotifier(
             ref as EarthquakeHistoryDetailsNotifierRef,
@@ -136,7 +136,7 @@ class EarthquakeHistoryDetailsNotifierProvider
     required this.eventId,
   }) : super.internal();
 
-  final String eventId;
+  final int eventId;
 
   @override
   Override overrideWith(
@@ -159,12 +159,12 @@ class EarthquakeHistoryDetailsNotifierProvider
   }
 
   @override
-  (String,) get argument {
+  (int,) get argument {
     return (eventId,);
   }
 
   @override
-  FutureProviderElement<EarthquakeV1Extended> createElement() {
+  AutoDisposeFutureProviderElement<EarthquakeV1Extended> createElement() {
     return _EarthquakeHistoryDetailsNotifierProviderElement(this);
   }
 
@@ -200,18 +200,18 @@ class EarthquakeHistoryDetailsNotifierProvider
 }
 
 mixin EarthquakeHistoryDetailsNotifierRef
-    on FutureProviderRef<EarthquakeV1Extended> {
+    on AutoDisposeFutureProviderRef<EarthquakeV1Extended> {
   /// The parameter `eventId` of this provider.
-  String get eventId;
+  int get eventId;
 }
 
 class _EarthquakeHistoryDetailsNotifierProviderElement
-    extends FutureProviderElement<EarthquakeV1Extended>
+    extends AutoDisposeFutureProviderElement<EarthquakeV1Extended>
     with EarthquakeHistoryDetailsNotifierRef {
   _EarthquakeHistoryDetailsNotifierProviderElement(super.provider);
 
   @override
-  String get eventId =>
+  int get eventId =>
       (origin as EarthquakeHistoryDetailsNotifierProvider).eventId;
 }
 // ignore_for_file: type=lint

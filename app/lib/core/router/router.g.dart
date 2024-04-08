@@ -74,11 +74,11 @@ extension $EarthquakeHistoryDetailsRouteExtension
     on EarthquakeHistoryDetailsRoute {
   static EarthquakeHistoryDetailsRoute _fromState(GoRouterState state) =>
       EarthquakeHistoryDetailsRoute(
-        eventId: state.pathParameters['eventId']!,
+        eventId: int.parse(state.pathParameters['eventId']!),
       );
 
   String get location => GoRouteData.$location(
-        '/earthquake-history-details/${Uri.encodeComponent(eventId)}',
+        '/earthquake-history-details/${Uri.encodeComponent(eventId.toString())}',
       );
 
   void go(BuildContext context) => context.go(location);

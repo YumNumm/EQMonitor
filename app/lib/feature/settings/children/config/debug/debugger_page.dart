@@ -123,7 +123,7 @@ class _DebugWidget extends ConsumerWidget {
                   .read(isDioProxyEnabledProvider.notifier)
                   .set(value: value),
               title: const Text('Dio Proxy'),
-              subtitle: const Text('mac-mini:9090へのPROXY'),
+              subtitle: const Text('macbook-pro:9090へのPROXY'),
             ),
           ],
         ),

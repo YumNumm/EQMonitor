@@ -5,15 +5,14 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_history_details_notifier.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<EarthquakeV1Extended> earthquakeHistoryDetailsNotifier(
   EarthquakeHistoryDetailsNotifierRef ref,
-  String eventId,
+  int eventId,
 ) async {
   final api = ref.watch(eqApiProvider);
-  final response = await api.v1.getEarthquakeDetail(eventId: eventId);
+  final response = await api.v1.getEarthquakeDetail(eventId: eventId.toString());
   final data = response.data;
-  // TODO(YumNumm): ここでWebSocketからの地震情報を結合する
 
   final extended = await ref.read(earthquakeV1ExtendedProvider(data).future);
   return extended;

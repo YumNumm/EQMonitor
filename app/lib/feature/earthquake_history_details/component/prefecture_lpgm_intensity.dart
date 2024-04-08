@@ -101,6 +101,7 @@ class PrefectureLpgmIntensityWidget extends HookConsumerWidget {
             child: CircularProgressIndicator.adaptive(),
           ),
         ),
+      AsyncData(:final value) when value.isEmpty => const SizedBox.shrink(),
       AsyncData(:final value) => BorderedContainer(
           elevation: 1,
           padding: const EdgeInsets.symmetric(

@@ -29,12 +29,12 @@ Dio dio(DioRef ref) {
       createHttpClient: () =>
           HttpClient()..findProxy = (url) => 'PROXY macbook-pro:9090',
     );
-    HttpOverrides.global = MyHttpOverrides();
+    HttpOverrides.global = _HttpOverrides();
   }
   return dio;
 }
 
-class MyHttpOverrides extends HttpOverrides {
+class _HttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
