@@ -24,7 +24,6 @@ jobs:
       SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
       KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
       KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-      ALIAS: ${{ secrets.ALIAS }}
       KEY_PATH: key.jks
       FLUTTER_VERSION:
       FLUTTER_CHANNEL:
@@ -47,10 +46,6 @@ jobs:
           eval $(ssh-agent -s)
           echo "Host github.com \n\tIdentityFile ~/.ssh/id_ed25519\n\tUser git\n\tIdentityiesOnly yes" >> ~/.ssh/config
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-
-      - uses: pocket-apps/action-setup-firebase@v2
-        with:
-          firebase-token: ${{ secrets.FIREBASE_TOKEN }}
 
       # https://github.com/kuhnroyal/flutter-fvm-config-action
       - name: Fetch flutter config
