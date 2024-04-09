@@ -2,3 +2,4 @@
 
 brew "direnv"
 brew "fastlane"
+brew "xcbeautify"
