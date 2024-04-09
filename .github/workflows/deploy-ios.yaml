@@ -104,6 +104,7 @@ jobs:
         run: echo '${{ secrets.FIREBASE_IOS }}' | base64 -d > app/ios/Runner/GoogleService-Info.plist
 
       - name: Set App Store Connect Configuration
+        working-directory: app
         run: |
           echo '${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}' | base64 -d > AuthKey_NGL2W4BQP6.p8
           cp *.p8 ios/
