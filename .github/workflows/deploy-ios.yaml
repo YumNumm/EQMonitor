@@ -21,7 +21,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          # Fetch all history for all tags and branches
+          fetch-depth: 0
 
       - name: Set up ssh
         run: |
@@ -138,7 +139,7 @@ jobs:
             -configuration Release archive \
             -archivePath build/ios/Runner.xcarchive \
             CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO
+            CODE_SIGNING_ALLOWED=NO | xcbeautify
 
           xcodebuild -exportArchive \
             -archivePath build/ios/Runner.xcarchive \
@@ -146,7 +147,7 @@ jobs:
             -exportPath build/ios/ipa -allowProvisioningUpdates \
             -authenticationKeyIssuerID ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }} \
             -authenticationKeyID ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }} \
-            -authenticationKeyPath `pwd`/AuthKey_NGL2W4BQP6.p8
+            -authenticationKeyPath `pwd`/AuthKey_NGL2W4BQP6.p8 | xcbeautify
 
       - name: Upload to App Store Connect
         working-directory: app/ios

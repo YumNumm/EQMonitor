@@ -2,7 +2,9 @@ name: Deploy Android
 
 on:
   push:
-    branches: [main, develop, release/*]
+    branches:
+      - develop
+      - fix/ios-deploy
   workflow_dispatch:
 
 jobs:
