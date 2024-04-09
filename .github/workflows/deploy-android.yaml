@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - develop
-      - fix/ios-deploy
   workflow_dispatch:
 
 jobs:
