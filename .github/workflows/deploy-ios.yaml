@@ -103,7 +103,7 @@ jobs:
             -authenticationKeyPath `pwd`/AuthKey_NGL2W4BQP6.p8
 
       - name: Upload to App Store Connect
-        working-directory: app
+        working-directory: app/ios
         env:
           PRODUCE_USERNAME: ${{ secrets.PRODUCE_USERNAME }}
           SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA: false
