@@ -149,10 +149,10 @@ jobs:
             -authenticationKeyID ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }} \
             -authenticationKeyPath `pwd`/AuthKey_NGL2W4BQP6.p8 | xcbeautify
 
-          mv eqmonitor.ipa Runner.ipa
+          mv eqmonitor.ipa ios/Runner.ipa
 
       - name: Upload to App Store Connect
-        working-directory: app
+        working-directory: app/ios
         env:
           PRODUCE_USERNAME: ${{ secrets.PRODUCE_USERNAME }}
           SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA: false
