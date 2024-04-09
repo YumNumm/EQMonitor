@@ -103,6 +103,11 @@ jobs:
       - name: Set Firebase Configuration
         run: echo '${{ secrets.FIREBASE_IOS }}' | base64 -d > app/ios/Runner/GoogleService-Info.plist
 
+      - name: Set App Store Connect Configuration
+        run: |
+          echo '${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}' | base64 -d > AuthKey_NGL2W4BQP6.p8
+          cp *.p8 ios/
+
       - name: Increment build number
         working-directory: app/ios
         env:
@@ -125,8 +130,6 @@ jobs:
           APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_BASE64: ${{secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
         run: |
-          echo '${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}' | base64 -d > AuthKey_NGL2W4BQP6.p8
-          cp *.p8 ios/
           xcodebuild \
             -workspace ios/Runner.xcworkspace \
             -scheme Runner \
