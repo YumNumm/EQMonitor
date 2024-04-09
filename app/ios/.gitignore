@@ -34,3 +34,5 @@ Runner/GeneratedPluginRegistrant.*
 !default.perspectivev3
 
 *.p8
+
+vendor/
