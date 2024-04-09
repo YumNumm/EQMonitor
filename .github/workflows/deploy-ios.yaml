@@ -108,5 +108,7 @@ jobs:
           PRODUCE_USERNAME: ${{ secrets.PRODUCE_USERNAME }}
           SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA: false
           APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
+          FASTLANE_USER: yumnumm@icloud.com
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
           LANG: ja_JP.UTF-8
         run: fastlane beta
