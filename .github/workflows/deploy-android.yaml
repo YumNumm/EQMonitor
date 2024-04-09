@@ -32,6 +32,11 @@ jobs:
           echo "Host github.com \n\tIdentityFile ~/.ssh/id_ed25519\n\tUser git\n\tIdentityiesOnly yes" >> ~/.ssh/config
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 
+      - uses: actions/setup-java@v4
+        with:
+          distribution: "oracle"
+          java-version: "17"
+
       # https://github.com/kuhnroyal/flutter-fvm-config-action
       - name: Fetch flutter config
         uses: kuhnroyal/flutter-fvm-config-action@v2

@@ -144,13 +144,15 @@ jobs:
           xcodebuild -exportArchive \
             -archivePath build/ios/Runner.xcarchive \
             -exportOptionsPlist ios/ExportOptions.plist \
-            -exportPath build/ios/ipa -allowProvisioningUpdates \
+            -exportPath . -allowProvisioningUpdates \
             -authenticationKeyIssuerID ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }} \
             -authenticationKeyID ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }} \
             -authenticationKeyPath `pwd`/AuthKey_NGL2W4BQP6.p8 | xcbeautify
 
+          mv eqmonitor.ipa Runner.ipa
+
       - name: Upload to App Store Connect
-        working-directory: app/ios
+        working-directory: app
         env:
           PRODUCE_USERNAME: ${{ secrets.PRODUCE_USERNAME }}
           SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA: false
