@@ -30,10 +30,6 @@ jobs:
           echo "Host github.com \n\tIdentityFile ~/.ssh/id_ed25519\n\tUser git\n\tIdentityiesOnly yes" >> ~/.ssh/config
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 
-      - uses: pocket-apps/action-setup-firebase@v2
-        with:
-          firebase-token: ${{ secrets.FIREBASE_TOKEN }}
-
       # https://github.com/kuhnroyal/flutter-fvm-config-action
       - name: Fetch flutter config
         uses: kuhnroyal/flutter-fvm-config-action@v2
