@@ -2,7 +2,9 @@ name: Deploy iOS
 on:
   workflow_dispatch:
   push:
-    branches: [main, develop, release/*]
+    branches:
+      - develop
+      - fix/ios-deploy
 
 jobs:
   build:
@@ -38,6 +40,7 @@ jobs:
         run: xcodebuild -version
 
       - name: Fetch flutter config
+        id: fvm-config-action
         uses: kuhnroyal/flutter-fvm-config-action@v2
 
       # https://github.com/subosito/flutter-action
@@ -46,12 +49,38 @@ jobs:
         with:
           flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
           channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
+          cache: true
+
+      - name: Install Gems
+        working-directory: app/ios
+        run: |
+          gem install bundler
+          bundle install
+
+      - name: Install Brewfile dependencies
+        working-directory: app/ios
+        run: brew bundle
+
+      - name: Cache pubspec dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ env.FLUTTER_HOME }}/.pub-cache
+            **/.packages
+            **/.flutter-plugins
+            **/.flutter-plugin-dependencies
+            **/.dart_tool/package_config.json
+          key: build-pubspec-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            build-pubspec-
 
       - name: Setup melos
         run: |
           ln -s $FLUTTER_ROOT .fvm/flutter_sdk
           dart pub global activate melos
-          melos bootstrap
+
+      - name: Resolve dependencies
+        run: melos bootstrap
 
       - name: Run build_runner
         run: |
@@ -67,22 +96,35 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pods-
 
-      - name: Install CocoaPods
-        run: |
-          cd app/ios
-          pod install
+      - name: Install dependencies
+        working-directory: app/ios
+        run: pod install
 
-      - name: Get Firebase Configuration
+      - name: Set Firebase Configuration
         run: echo '${{ secrets.FIREBASE_IOS }}' | base64 -d > app/ios/Runner/GoogleService-Info.plist
 
+      - name: Increment build number
+        working-directory: app/ios
+        env:
+          PRODUCE_USERNAME: ${{ secrets.PRODUCE_USERNAME }}
+          SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA: false
+          APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
+          FASTLANE_USER: yumnumm@icloud.com
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          LANG: ja_JP.UTF-8
+        run: fastlane setup_build_number
+
       - name: Prebuild
+        working-directory: app
+        run: flutter build ios --release --no-codesign
+
+      - name: Build IPA
         working-directory: app
         env:
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_BASE64: ${{secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
         run: |
-          flutter build ipa --release --no-codesign
           echo '${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}' | base64 -d > AuthKey_NGL2W4BQP6.p8
           cp *.p8 ios/
           xcodebuild \
@@ -111,4 +153,4 @@ jobs:
           FASTLANE_USER: yumnumm@icloud.com
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
           LANG: ja_JP.UTF-8
-        run: fastlane beta
+        run: fastlane upload
