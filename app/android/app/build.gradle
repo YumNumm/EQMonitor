@@ -1,3 +1,11 @@
+plugins {
+    id "com.android.application"
+    id "dev.flutter.flutter-gradle-plugin"
+    id "org.jetbrains.kotlin.android"
+    id "com.google.gms.google-services"
+    id "com.google.firebase.crashlytics"
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -11,20 +19,9 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    throw new GradleException('Flutter SDK not found. Define location with flutter.sdk in the local.properties file.')
-}
-
-apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.firebase-perf'
-apply plugin: 'kotlin-android'
-
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
     namespace "net.yumnmm.eqmonitor"
-    compileSdk 33
+    compileSdk 34
 
     compileOptions {
 
@@ -68,7 +65,6 @@ android {
             minifyEnabled true
             shrinkResources true
             multiDexEnabled true
-            versionNameSuffix '.r'
             resValue "string", "app_name", "EQMonitor"
         }
         debug {
@@ -88,7 +84,7 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.23"
     implementation 'com.android.support:multidex:1.0.3'
     // Import the BoM for the Firebase platform
     implementation platform('com.google.firebase:firebase-bom:31.5.0')
@@ -105,5 +101,3 @@ dependencies {
     implementation 'androidx.window:window-java:1.0.0'
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
 }
-
-apply plugin: 'com.google.firebase.crashlytics'
