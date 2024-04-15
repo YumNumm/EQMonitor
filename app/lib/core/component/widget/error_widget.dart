@@ -30,12 +30,21 @@ class ErrorInfoWidget extends StatelessWidget {
               if (error is DioException)
                 ...() {
                   final exception = error as DioException;
+                  final data = exception.response?.data;
                   return [
                     DioExceptionText(
                       exception: exception,
                     ),
                     Text(
-                      '${exception.response?.statusCode} ${exception.response?.statusMessage}',
+                      '${exception.response?.statusCode} ${exception.response?.statusMessage}${switch (data) {
+                        {
+                          'code': final String code,
+                          'details': final String details,
+                        } =>
+                          "\nエラーコード $code: $details",
+                        _ => "",
+                      }}',
+                      textAlign: TextAlign.center,
                     ),
                   ];
                 }()
