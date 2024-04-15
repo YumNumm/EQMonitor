@@ -14,9 +14,11 @@ class KmoniScaleWidget extends ConsumerWidget {
   const KmoniScaleWidget({
     super.key,
     this.showText = true,
+    this.markers = const [],
   });
 
   final bool showText;
+  final List<double> markers;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,6 +31,7 @@ class KmoniScaleWidget extends ConsumerWidget {
         colorMap: colorMap,
         lineColor: colorScheme.onSurface,
         showText: showText,
+        markers: markers,
       ),
     );
   }
@@ -39,6 +42,7 @@ class _KmoniScalePainter extends CustomPainter {
     required this.colorMap,
     this.lineColor = Colors.black,
     this.showText = true,
+    this.markers = const [],
   });
 
   final List<KyoshinColorMapModel> colorMap;
@@ -47,6 +51,7 @@ class _KmoniScalePainter extends CustomPainter {
   final Color lineColor;
 
   final bool showText;
+  final List<double> markers;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -54,6 +59,9 @@ class _KmoniScalePainter extends CustomPainter {
 
     drawBackground(canvas, rect);
     drawRealtimeIntensityChange(canvas, rect, drawText: showText);
+    for (final e in markers) {
+      drawMarker(canvas, rect, e);
+    }
   }
 
   // 背景のグラデーションを描画
@@ -145,8 +153,47 @@ class _KmoniScalePainter extends CustomPainter {
     });
   }
 
+  // 赤三角
+  void drawMarker(Canvas canvas, Rect rect, double intensity) {
+    final lower = colorMap.lastWhereOrNull((e) => e.intensity <= intensity);
+    final upper = colorMap.firstWhereOrNull((e) => e.intensity >= intensity);
+
+    final double x;
+    if (lower == null) {
+      x = 0;
+    } else if (upper == null) {
+      x = 1;
+    } else {
+      x = (colorMap.indexOf(lower) +
+              (intensity - lower.intensity) /
+                  (upper.intensity - lower.intensity)) /
+          colorMap.length;
+    }
+
+    final paint = Paint()
+      ..color = Colors.red
+      ..style = PaintingStyle.fill;
+    final outlinePaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 0;
+
+    final path = Path()
+      ..moveTo(rect.width * x - 5, rect.top)
+      ..lineTo(rect.width * x + 5, rect.top)
+      ..lineTo(rect.width * x, rect.top + 10)
+      ..close();
+
+    canvas
+      ..drawPath(path, paint)
+      ..drawPath(path, outlinePaint);
+  }
+
   @override
-  bool shouldRepaint(_KmoniScalePainter oldDelegate) => true;
+  bool shouldRepaint(_KmoniScalePainter oldDelegate) =>
+      oldDelegate.colorMap != colorMap ||
+      oldDelegate.showText != showText ||
+      !const ListEquality<double>().equals(oldDelegate.markers, markers);
 
   @override
   bool shouldRebuildSemantics(_KmoniScalePainter oldDelegate) => false;

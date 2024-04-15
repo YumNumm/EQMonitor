@@ -287,9 +287,9 @@ class _Fabs extends ConsumerWidget {
         FloatingActionButton.small(
           heroTag: 'sheet',
           tooltip: '強震モニタの設定',
-          onPressed: () => showDialog<void>(
+          onPressed: () => showModalBottomSheet<void>(
             context: context,
-            builder: (context) => const KmoniSettingsDialogWidget(),
+            builder: (context) => const KmoniSettingsWidget(),
           ),
           elevation: 0,
           child: const Icon(Icons.settings),
@@ -353,6 +353,7 @@ class _KmoniScale extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(kmoniSettingsProvider);
     final body = Padding(
       padding: const EdgeInsets.all(8),
       child: Tooltip(
@@ -363,13 +364,18 @@ class _KmoniScale extends ConsumerWidget {
             borderRadius: BorderRadius.circular(4),
           ),
           child: InkWell(
-            child: const KmoniScaleWidget(),
+            child: KmoniScaleWidget(
+              markers: [
+                if (state.minRealtimeShindo != null &&
+                    state.minRealtimeShindo != -3.0)
+                  state.minRealtimeShindo!,
+              ],
+            ),
             onTap: () {},
           ),
         ),
       ),
     );
-    final state = ref.watch(kmoniSettingsProvider);
 
     if (!state.showRealtimeShindoScale || !state.useKmoni) {
       return const SizedBox.shrink();

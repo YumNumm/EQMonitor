@@ -1,77 +1,91 @@
 import 'package:eqmonitor/core/provider/kmoni/provider/kmoni_color_provider.dart';
 import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_scale.dart';
+import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class KmoniSettingsDialogWidget extends HookConsumerWidget {
-  const KmoniSettingsDialogWidget({super.key});
+class KmoniSettingsWidget extends HookConsumerWidget {
+  const KmoniSettingsWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(kmoniSettingsProvider);
     final colorMap = ref.watch(kyoshinColorMapProvider);
     final (min, max) = (colorMap.first, colorMap.last);
-
-    final currentState = useState(state.minRealtimeShindo ?? min.intensity);
     final theme = Theme.of(context);
-    return AlertDialog(
-      title: const Text('強震モニタの設定'),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('閉じる'),
+
+    final barWidget = Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      width: 36,
+      height: 4,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: theme.colorScheme.onBackground,
+        boxShadow: const <BoxShadow>[
+          BoxShadow(color: Colors.black12, blurRadius: 12),
+        ],
+      ),
+    );
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        barWidget,
+        SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SettingsSectionHeader(
+                text: '表示する最低リアルタイム震度',
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                child: SizedBox(
+                  height: 30,
+                  child: KmoniScaleWidget(
+                    showText: false,
+                    markers: [
+                      if (state.minRealtimeShindo != null &&
+                          state.minRealtimeShindo != -3.0)
+                        state.minRealtimeShindo!,
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: SliderTheme(
+                  data: theme.sliderTheme.copyWith(
+                    trackShape: _CustomTrackShape(),
+                  ),
+                  child: Slider(
+                    min: min.intensity,
+                    max: max.intensity,
+                    value: state.minRealtimeShindo ?? min.intensity,
+                    onChanged: (value) => ref
+                        .read(kmoniSettingsProvider.notifier)
+                        .setMinRealtimeShindo(
+                          value: value,
+                        ),
+                  ),
+                ),
+              ),
+              SwitchListTile.adaptive(
+                value: state.showRealtimeShindoScale,
+                onChanged: (value) => ref
+                    .read(kmoniSettingsProvider.notifier)
+                    .setShowRealtimeShindoScale(
+                      value: value,
+                    ),
+                title: const Text('リアルタイム震度のスケールを表示'),
+              ),
+            ],
+          ),
         ),
       ],
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ListTile(
-              title: const Text(
-                '表示する最低リアルタイム震度',
-              ),
-              subtitle: Column(
-                children: [
-                  const SizedBox(
-                    height: 30,
-                    child: KmoniScaleWidget(
-                      showText: false,
-                    ),
-                  ),
-                  SliderTheme(
-                    data: theme.sliderTheme.copyWith(
-                      trackShape: _CustomTrackShape(),
-                    ),
-                    child: Slider(
-                      onChangeEnd: (value) => ref
-                          .read(kmoniSettingsProvider.notifier)
-                          .setMinRealtimeShindo(
-                            value: value,
-                          ),
-                      min: min.intensity,
-                      max: max.intensity,
-                      value: currentState.value,
-                      onChanged: (value) => currentState.value = value,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SwitchListTile.adaptive(
-              value: state.showRealtimeShindoScale,
-              onChanged: (value) => ref
-                  .read(kmoniSettingsProvider.notifier)
-                  .setShowRealtimeShindoScale(
-                    value: value,
-                  ),
-              title: const Text('リアルタイム震度のスケールを表示'),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
