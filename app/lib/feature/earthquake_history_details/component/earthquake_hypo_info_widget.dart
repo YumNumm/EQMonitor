@@ -136,26 +136,32 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,
       children: [
-        Text(
-          'M',
-          style: textTheme.titleMedium!.copyWith(
-            color: textTheme.titleMedium!.color!.withOpacity(0.8),
+        if (item.magnitudeCondition == null)
+          Text(
+            'M',
+            style: textTheme.titleMedium!.copyWith(
+              color: textTheme.titleMedium!.color!.withOpacity(0.8),
+            ),
           ),
-        ),
-        Text(
-          switch ((
-            item.magnitudeCondition,
-            item.magnitude,
-          )) {
-            (final String cond, _) => cond.toHalfWidth.replaceAll('M不明', '不明'),
-            (_, final double value) => value.toStringAsFixed(1),
-            // vxse53がある場合
-            _ when item.intensityCities != null => '不明',
-            _ => '調査中',
-          },
-          style: textTheme.displaySmall!.copyWith(
-            fontWeight: FontWeight.w900,
-            fontFamily: FontFamily.notoSansJP,
+        Flexible(
+          child: Text(
+            switch ((
+              item.magnitudeCondition,
+              item.magnitude,
+            )) {
+              (final String cond, _) => cond.toHalfWidth,
+              (_, final double value) => value.toStringAsFixed(1),
+              // vxse53がある場合
+              _ when item.intensityCities != null => '不明',
+              _ => '調査中',
+            },
+            style: (item.magnitudeCondition != null
+                    ? textTheme.headlineLarge
+                    : textTheme.displaySmall)!
+                .copyWith(
+              fontWeight: FontWeight.bold,
+              fontFamily: FontFamily.notoSansJP,
+            ),
           ),
         ),
       ],
@@ -175,7 +181,7 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
           Text(
             item.depth.toString(),
             style: textTheme.displaySmall!.copyWith(
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.bold,
               fontFamily: FontFamily.notoSansJP,
             ),
           ),
@@ -195,7 +201,7 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
               _ => '調査中',
             },
             style: textTheme.displaySmall!.copyWith(
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.bold,
               fontFamily: FontFamily.notoSansJP,
             ),
           ),
