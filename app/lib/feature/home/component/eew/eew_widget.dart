@@ -60,6 +60,40 @@ class EewWidgets extends ConsumerWidget {
                   ref.read(websocketProvider).send('sample/eew-cancel');
                 },
               ),
+              FilledButton.tonal(
+                onPressed: () async {
+                  final earthquake =
+                      RealtimePostgresInsertPayload<EarthquakeV1>(
+                    schema: 'public',
+                    table: 'earthquake',
+                    commitTimestamp: DateTime.now(),
+                    errors: [],
+                    newData: EarthquakeV1(
+                      eventId: int.parse(
+                        DateFormat('yyyyMMddHHmmss').format(DateTime.now()),
+                      ),
+                      status: 'test',
+                      arrivalTime: DateTime.now(),
+                      depth: 40,
+                      epicenterCode: 101,
+                      longitude: 40,
+                      latitude: 140,
+                      magnitude: 4.5,
+                      maxIntensity: JmaIntensity.fiveLower,
+                      maxLpgmIntensity: JmaLgIntensity.one,
+                      originTime: DateTime.now(),
+                    ),
+                  );
+                  final json = {
+                    ...earthquake.toJson(
+                      (p0) => p0.toJson(),
+                    ),
+                    'eventType': 'INSERT',
+                  };
+                  ref.read(websocketMessagesProvider.notifier).emit(json);
+                },
+                child: const Text('EEW TEST'),
+              ),
             ],
           ),
         body,
@@ -450,3 +484,80 @@ class EewWidget extends ConsumerWidget {
     );
   }
 }
+
+List<Widget> preview() => [
+      //  EEW 警報
+      EewWidget(
+        eew: EewV1(
+          id: -1,
+          eventId: 20220101000000,
+          isPlum: false,
+          type: 'eew',
+          schemaType: 'eew-information',
+          status: TelegramStatus.normal.type,
+          infoType: TelegramInfoType.issue.type,
+          reportTime: DateTime.now(),
+          isCanceled: false,
+          isLastInfo: true,
+          isWarning: true,
+          accuracy: null,
+          hypoName: 'XX沖',
+          arrivalTime: DateTime.now(),
+          depth: 50,
+          headline: 'XX沖で地震 XX地方では強い揺れに警戒',
+          magnitude: 6.7,
+          originTime: DateTime.now(),
+          serialNo: 12,
+          forecastMaxIntensity: JmaForecastIntensity.sixLower,
+        ),
+        index: null,
+      ),
+      // EEW 予報
+      EewWidget(
+        eew: EewV1(
+          id: -1,
+          eventId: 20220101000000,
+          isPlum: false,
+          type: 'eew',
+          schemaType: 'eew-information',
+          status: TelegramStatus.normal.type,
+          infoType: TelegramInfoType.issue.type,
+          reportTime: DateTime.now(),
+          isCanceled: false,
+          isLastInfo: false,
+          accuracy: null,
+          hypoName: 'XX沖',
+          arrivalTime: DateTime.now(),
+          depth: 40,
+          magnitude: 4.7,
+          forecastMaxIntensity: JmaForecastIntensity.fiveLower,
+        ),
+        index: null,
+      ),
+      // EEW キャンセル報
+      EewWidget(
+        eew: EewV1(
+          id: -1,
+          eventId: 20220101000000,
+          isPlum: false,
+          type: 'eew',
+          schemaType: 'eew-information',
+          status: TelegramStatus.normal.type,
+          infoType: TelegramInfoType.issue.type,
+          reportTime: DateTime.now(),
+          isCanceled: true,
+          isLastInfo: true,
+          accuracy: null,
+        ),
+        index: null,
+      ),
+    ]
+        .map(
+          (e) => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              e,
+            ],
+          ),
+        )
+        .toList();

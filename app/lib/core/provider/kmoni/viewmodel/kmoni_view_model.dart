@@ -62,8 +62,6 @@ class KmoniViewModel extends _$KmoniViewModel {
         break;
       }
       await Future<void>.delayed(const Duration(milliseconds: 1000));
-
-      break;
     }
     state = state.copyWith(
       isInitialized: true,

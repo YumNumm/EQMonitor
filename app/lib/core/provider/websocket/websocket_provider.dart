@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:eqapi_types/model/v1/v1_database.dart';
@@ -42,15 +41,28 @@ class WebsocketStatus extends _$WebsocketStatus {
 }
 
 @Riverpod(keepAlive: true)
-Stream<Map<String, dynamic>> websocketMessages(
-  WebsocketMessagesRef ref,
-) async* {
-  final socket = ref.watch(websocketProvider);
+class WebsocketMessages extends _$WebsocketMessages {
+  late final StreamController<dynamic> _controller;
 
-  await for (final message in socket.messages) {
-    log('WebSocket message: $message');
-    yield jsonDecode(message.toString()) as Map<String, dynamic>;
+  @override
+  Stream<Map<String, dynamic>> build() async* {
+    final socket = ref.watch(websocketProvider);
+    _controller = StreamController<dynamic>();
+    socket.messages.listen(
+      (message) {
+        final decoded = jsonDecode(message.toString());
+        if (decoded is Map<String, dynamic>) {
+          _controller.add(decoded);
+        }
+      },
+    );
+
+    await for (final message in _controller.stream) {
+      yield message as Map<String, dynamic>;
+    }
   }
+
+  void emit(Map<String, dynamic> data) => _controller.add(data);
 }
 
 @Riverpod(keepAlive: true)
@@ -80,6 +92,9 @@ Stream<RealtimePostgresChangesPayloadTable<T>>
   ref
     ..listen(websocketParsedMessagesProvider, (previous, next) {
       final value = next.value;
+      if (value == null || next.isLoading) {
+        return;
+      }
       final _ = switch (value) {
         RealtimePostgresInsertPayload<T>() => controller.add(value),
         RealtimePostgresUpdatePayload<T>() => controller.add(value),

@@ -9,7 +9,7 @@ part of 'earthquake_history_details_notifier.dart';
 // **************************************************************************
 
 String _$earthquakeHistoryDetailsNotifierHash() =>
-    r'fba4b50fde4d4f30b998853546cca98511e088c6';
+    r'a19d83357a61395d9c3ff501b4501f2a6f4d6d12';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -32,14 +32,23 @@ class _SystemHash {
   }
 }
 
-/// See also [earthquakeHistoryDetailsNotifier].
-@ProviderFor(earthquakeHistoryDetailsNotifier)
+abstract class _$EarthquakeHistoryDetailsNotifier
+    extends BuildlessAutoDisposeAsyncNotifier<EarthquakeV1Extended> {
+  late final int eventId;
+
+  FutureOr<EarthquakeV1Extended> build(
+    int eventId,
+  );
+}
+
+/// See also [EarthquakeHistoryDetailsNotifier].
+@ProviderFor(EarthquakeHistoryDetailsNotifier)
 const earthquakeHistoryDetailsNotifierProvider =
     EarthquakeHistoryDetailsNotifierFamily();
 
-/// See also [earthquakeHistoryDetailsNotifier].
+/// See also [EarthquakeHistoryDetailsNotifier].
 class EarthquakeHistoryDetailsNotifierFamily extends Family {
-  /// See also [earthquakeHistoryDetailsNotifier].
+  /// See also [EarthquakeHistoryDetailsNotifier].
   const EarthquakeHistoryDetailsNotifierFamily();
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -56,7 +65,7 @@ class EarthquakeHistoryDetailsNotifierFamily extends Family {
   @override
   String? get name => r'earthquakeHistoryDetailsNotifierProvider';
 
-  /// See also [earthquakeHistoryDetailsNotifier].
+  /// See also [EarthquakeHistoryDetailsNotifier].
   EarthquakeHistoryDetailsNotifierProvider call(
     int eventId,
   ) {
@@ -76,10 +85,7 @@ class EarthquakeHistoryDetailsNotifierFamily extends Family {
   }
 
   /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<EarthquakeV1Extended> Function(
-              EarthquakeHistoryDetailsNotifierRef ref)
-          create) {
+  Override overrideWith(EarthquakeHistoryDetailsNotifier Function() create) {
     return _$EarthquakeHistoryDetailsNotifierFamilyOverride(this, create);
   }
 }
@@ -89,8 +95,7 @@ class _$EarthquakeHistoryDetailsNotifierFamilyOverride
   _$EarthquakeHistoryDetailsNotifierFamilyOverride(
       this.overriddenFamily, this.create);
 
-  final FutureOr<EarthquakeV1Extended> Function(
-      EarthquakeHistoryDetailsNotifierRef ref) create;
+  final EarthquakeHistoryDetailsNotifier Function() create;
 
   @override
   final EarthquakeHistoryDetailsNotifierFamily overriddenFamily;
@@ -103,17 +108,15 @@ class _$EarthquakeHistoryDetailsNotifierFamilyOverride
   }
 }
 
-/// See also [earthquakeHistoryDetailsNotifier].
+/// See also [EarthquakeHistoryDetailsNotifier].
 class EarthquakeHistoryDetailsNotifierProvider
-    extends AutoDisposeFutureProvider<EarthquakeV1Extended> {
-  /// See also [earthquakeHistoryDetailsNotifier].
+    extends AutoDisposeAsyncNotifierProviderImpl<
+        EarthquakeHistoryDetailsNotifier, EarthquakeV1Extended> {
+  /// See also [EarthquakeHistoryDetailsNotifier].
   EarthquakeHistoryDetailsNotifierProvider(
     int eventId,
   ) : this._internal(
-          (ref) => earthquakeHistoryDetailsNotifier(
-            ref as EarthquakeHistoryDetailsNotifierRef,
-            eventId,
-          ),
+          () => EarthquakeHistoryDetailsNotifier()..eventId = eventId,
           from: earthquakeHistoryDetailsNotifierProvider,
           name: r'earthquakeHistoryDetailsNotifierProvider',
           debugGetCreateSourceHash:
@@ -139,15 +142,20 @@ class EarthquakeHistoryDetailsNotifierProvider
   final int eventId;
 
   @override
-  Override overrideWith(
-    FutureOr<EarthquakeV1Extended> Function(
-            EarthquakeHistoryDetailsNotifierRef ref)
-        create,
+  FutureOr<EarthquakeV1Extended> runNotifierBuild(
+    covariant EarthquakeHistoryDetailsNotifier notifier,
   ) {
+    return notifier.build(
+      eventId,
+    );
+  }
+
+  @override
+  Override overrideWith(EarthquakeHistoryDetailsNotifier Function() create) {
     return ProviderOverride(
       origin: this,
       override: EarthquakeHistoryDetailsNotifierProvider._internal(
-        (ref) => create(ref as EarthquakeHistoryDetailsNotifierRef),
+        () => create()..eventId = eventId,
         from: from,
         name: null,
         dependencies: null,
@@ -164,17 +172,16 @@ class EarthquakeHistoryDetailsNotifierProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<EarthquakeV1Extended> createElement() {
+  AutoDisposeAsyncNotifierProviderElement<EarthquakeHistoryDetailsNotifier,
+      EarthquakeV1Extended> createElement() {
     return _EarthquakeHistoryDetailsNotifierProviderElement(this);
   }
 
   EarthquakeHistoryDetailsNotifierProvider _copyWith(
-    FutureOr<EarthquakeV1Extended> Function(
-            EarthquakeHistoryDetailsNotifierRef ref)
-        create,
+    EarthquakeHistoryDetailsNotifier Function() create,
   ) {
     return EarthquakeHistoryDetailsNotifierProvider._internal(
-      (ref) => create(ref as EarthquakeHistoryDetailsNotifierRef),
+      () => create()..eventId = eventId,
       name: name,
       dependencies: dependencies,
       allTransitiveDependencies: allTransitiveDependencies,
@@ -200,14 +207,15 @@ class EarthquakeHistoryDetailsNotifierProvider
 }
 
 mixin EarthquakeHistoryDetailsNotifierRef
-    on AutoDisposeFutureProviderRef<EarthquakeV1Extended> {
+    on AutoDisposeAsyncNotifierProviderRef<EarthquakeV1Extended> {
   /// The parameter `eventId` of this provider.
   int get eventId;
 }
 
 class _EarthquakeHistoryDetailsNotifierProviderElement
-    extends AutoDisposeFutureProviderElement<EarthquakeV1Extended>
-    with EarthquakeHistoryDetailsNotifierRef {
+    extends AutoDisposeAsyncNotifierProviderElement<
+        EarthquakeHistoryDetailsNotifier,
+        EarthquakeV1Extended> with EarthquakeHistoryDetailsNotifierRef {
   _EarthquakeHistoryDetailsNotifierProviderElement(super.provider);
 
   @override

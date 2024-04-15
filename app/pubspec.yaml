@@ -98,12 +98,7 @@ dependencies:
       path: sheet
   simplify: ^1.0.2
   socket_io_client: ^2.0.3+1
-  talker_dio_logger:
-    git:
-      url: https://github.com/Frezyx/talker.git
-      branch: dev
-      ref: 6425594b611b5f44ad88258cc97641ff96aba014
-      path: packages/talker_dio_logger
+  talker_dio_logger: ^2.4.0
   talker_flutter:
     git:
       url: https://github.com/Frezyx/talker.git

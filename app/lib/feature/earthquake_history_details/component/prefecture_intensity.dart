@@ -33,11 +33,12 @@ Future<Map<JmaIntensity, List<_MergedRegionIntensity>>> _calculator(
         final prefectures = arg.prefectures;
         final stations = arg.stations;
 
+        final Map<JmaIntensity, List<_MergedRegionIntensity>> result;
         if (stations != null && cities != null) {
           final stationsGroupedByIntensity = stations
               .where((e) => e.intensity != null)
               .groupListsBy((e) => e.intensity!);
-          return stationsGroupedByIntensity.map((intensity, stations) {
+          result = stationsGroupedByIntensity.map((intensity, stations) {
             final stationsGroupedByCity =
                 stations.groupListsBy((e) => '${e.code.substring(0, 5)}00');
             // マージ
@@ -85,7 +86,7 @@ Future<Map<JmaIntensity, List<_MergedRegionIntensity>>> _calculator(
             return MapEntry(intensity, mergedPrefecture);
           });
         } else {
-          return prefectures
+          result = prefectures
               .where((e) => e.intensity != null)
               .groupListsBy((e) => e.intensity!)
               .map(
@@ -104,6 +105,12 @@ Future<Map<JmaIntensity, List<_MergedRegionIntensity>>> _calculator(
                 ),
               );
         }
+        final reorderedResult = result.entries
+            .sorted((a, b) => a.key.index.compareTo(b.key.index))
+            .toList()
+            .reversed
+            .toList();
+        return Map.fromEntries(reorderedResult);
       },
       arg,
     );

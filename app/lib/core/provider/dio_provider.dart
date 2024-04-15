@@ -2,10 +2,14 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
+import 'package:talker_dio_logger/talker_dio_logger_settings.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 part 'dio_provider.g.dart';
 
@@ -31,6 +35,16 @@ Dio dio(DioRef ref) {
     );
     HttpOverrides.global = _HttpOverrides();
   }
+  dio.interceptors.add(
+    TalkerDioLogger(
+      settings: TalkerDioLoggerSettings(
+        errorPen: AnsiPen()..red(),
+        requestPen: AnsiPen()..yellow(),
+        responsePen: AnsiPen()..green(),
+      ),
+      talker: ref.watch(talkerProvider),
+    ),
+  );
   return dio;
 }
 

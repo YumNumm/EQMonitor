@@ -37,7 +37,7 @@ void main() async {
               ),
             ),
           ),
-          intensityColorProvider.overrideWith(FakeIntensityColor.new),
+          intensityColorProvider.overrideWith(_FakeIntensityColor.new),
         ],
         child: MaterialApp(
           home: Scaffold(
@@ -680,7 +680,7 @@ void main() async {
   });
 }
 
-class FakeIntensityColor extends IntensityColor {
+class _FakeIntensityColor extends IntensityColor {
   @override
   IntensityColorModel build() => IntensityColorModel.eqmonitor();
 }

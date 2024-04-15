@@ -1,5 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
@@ -8,7 +11,9 @@ import 'package:eqmonitor/core/component/intenisty/jma_lg_intensity_icon.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
 import 'package:eqmonitor/core/component/widget/error_widget.dart';
+import 'package:eqmonitor/core/extension/random_select.dart';
 import 'package:eqmonitor/core/provider/config/earthquake_history/earthquake_history_config_provider.dart';
+import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/earthquake_hypo_info_widget.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/component/earthquake_map.dart';
@@ -17,6 +22,7 @@ import 'package:eqmonitor/feature/earthquake_history_details/component/prefectur
 import 'package:eqmonitor/feature/earthquake_history_details/data/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:extensions/extensions.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -44,7 +50,14 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
       return Scaffold(
         appBar: AppBar(),
         body: switch (detailsState) {
-          AsyncLoading() => Center(
+          AsyncError(:final error) when !detailsState.isLoading =>
+            ErrorInfoWidget(
+              error: error,
+              onRefresh: () => ref.invalidate(
+                earthquakeHistoryDetailsNotifierProvider(eventId),
+              ),
+            ),
+          AsyncLoading() || _ when detailsState.isLoading => Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -59,21 +72,14 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                 ],
               ),
             ),
-          AsyncError(:final error) => ErrorInfoWidget(
-              error: error,
-              onRefresh: () => ref.invalidate(
-                earthquakeHistoryDetailsNotifierProvider(eventId),
-              ),
-            ),
           _ => const Center(
               child: CircularProgressIndicator.adaptive(),
             ),
         },
       );
     }
-    final data = details;
-    final maxIntensity = data.maxIntensity;
-    final maxLgIntensity = data.maxLpgmIntensity;
+    final maxIntensity = details.maxIntensity;
+    final maxLgIntensity = details.maxLpgmIntensity;
 
     final config = ref
         .watch(earthquakeHistoryConfigProvider.select((value) => value.detail));
@@ -87,7 +93,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
       body: Stack(
         children: [
           EarthquakeMapWidget(
-            item: data,
+            item: details,
             showIntensityIcon: true,
             registerNavigateToHome: (func) =>
                 navigateToHomeFunction.value = func,
@@ -155,15 +161,15 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                   Column(
                     children: [
                       // layer controller
-                      if (data.maxIntensity != null)
+                      if (details.maxIntensity != null)
                         FloatingActionButton.small(
                           heroTag: 'earthquake_history_details_layer_fab',
                           tooltip: '地図の表示レイヤーを切り替える',
                           onPressed: () =>
                               showEarthquakeHistoryDetailConfigDialog(
                             context,
-                            showCitySelector: data.intensityCities != null,
-                            hasLpgmIntensity: data.maxLpgmIntensity != null,
+                            showCitySelector: details.intensityCities != null,
+                            hasLpgmIntensity: details.maxLpgmIntensity != null,
                           ),
                           elevation: 4,
                           child: const Icon(Icons.layers),
@@ -188,7 +194,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
           // Sheet
           _Sheet(
             sheetController: sheetController,
-            item: data,
+            item: details,
           ),
           if (Navigator.canPop(context))
             // 戻るボタン
@@ -227,6 +233,7 @@ class _Sheet extends StatelessWidget {
         useColumn: true,
         controller: sheetController,
         children: [
+          if (kDebugMode) _DebugInserter(item: item),
           EarthquakeHypoInfoWidget(item: item),
           const Divider(),
           PrefectureIntensityWidget(item: item.v1),
@@ -236,6 +243,80 @@ class _Sheet extends StatelessWidget {
             ),
           _EarthquakeCommentWidget(item: item),
         ],
+      ),
+    );
+  }
+}
+
+class _DebugInserter extends StatelessWidget {
+  const _DebugInserter({
+    required this.item,
+  });
+
+  final EarthquakeV1Extended item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, child) => FilledButton.tonal(
+        child: const Text('INSERT Earthquake'),
+        onPressed: () async {
+          final payload = RealtimePostgresUpdatePayload(
+            commitTimestamp: DateTime.now(),
+            errors: [],
+            newData: item.v1.copyWith(
+              status: TelegramStatus.training.type,
+              depth: 150,
+              arrivalTime: DateTime.now(),
+              originTime: DateTime.now(),
+              latitude: (item.latitude ?? 0) - 0.5 + Random().nextDouble(),
+              longitude: (item.longitude ?? 0) - 0.5 + Random().nextDouble(),
+              magnitude: Random().nextDouble() * 10,
+              maxIntensity: JmaIntensity.values.randomSelect,
+              maxLpgmIntensity: JmaLgIntensity.values.randomSelect,
+              intensityCities: item.v1.intensityCities
+                  ?.map(
+                    (e) => e.copyWith(
+                      intensity: JmaIntensity.values.randomSelect,
+                    ),
+                  )
+                  .toList(),
+              intensityPrefectures: item.v1.intensityPrefectures
+                  ?.map(
+                    (e) => e.copyWith(
+                      intensity: JmaIntensity.values.randomSelect,
+                    ),
+                  )
+                  .toList(),
+              intensityRegions: item.v1.intensityRegions
+                  ?.map(
+                    (e) => e.copyWith(
+                      intensity: JmaIntensity.values.randomSelect,
+                    ),
+                  )
+                  .toList(),
+              intensityStations: item.v1.intensityStations
+                  ?.map(
+                    (e) => e.copyWith(
+                      intensity: JmaIntensity.values.randomSelect,
+                    ),
+                  )
+                  .toList(),
+            ),
+            old: {},
+            schema: 'public',
+            table: 'earthquake',
+          );
+          ref.read(websocketMessagesProvider.notifier).emit(
+                jsonDecode(
+                  jsonEncode({
+                    ...payload.toJson((p0) => p0.toJson()),
+                    'eventType':
+                        RealtimePostgresChangesListenEvent.insert.value,
+                  }),
+                ) as Map<String, dynamic>,
+              );
+        },
       ),
     );
   }
