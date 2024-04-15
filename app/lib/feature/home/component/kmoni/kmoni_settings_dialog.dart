@@ -42,7 +42,7 @@ class KmoniSettingsWidget extends HookConsumerWidget {
               ),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
                 child: SizedBox(
                   height: 30,
                   child: KmoniScaleWidget(
@@ -56,7 +56,7 @@ class KmoniSettingsWidget extends HookConsumerWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: SliderTheme(
                   data: theme.sliderTheme.copyWith(
                     trackShape: _CustomTrackShape(),
