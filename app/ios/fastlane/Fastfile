@@ -15,6 +15,19 @@ platform :ios do
     )
   end
 
+  desc "Download the provisioning profiles"
+  lane :download_provisioning_profiles do
+    setup_ci if ENV['CI']
+    app_store_connect_api_key(
+      key_id: "NGL2W4BQP6",
+      issuer_id: "fd4cca56-716b-4f03-8e44-de72a03453db",
+      key_filepath: "./AuthKey_NGL2W4BQP6.p8"
+    )
+    match(
+      readonly: true,
+    )
+  end
+
   desc "Push a new beta build to TestFlight"
   lane :beta do
     setup_ci if ENV['CI']
@@ -26,6 +39,10 @@ platform :ios do
     increment_build_number(
       build_number: latest_testflight_build_number + 1,
       xcodeproj: "Runner.xcodeproj",
+    )
+
+    match(
+      readonly: true,
     )
 
     # Build the project
