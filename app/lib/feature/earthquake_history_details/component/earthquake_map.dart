@@ -108,18 +108,18 @@ class EarthquakeMapWidget extends HookConsumerWidget {
       );
     }
 
-    final itemCalcurateFutureing = useMemoized(
+    final itemCalculateFutureing = useMemoized(
       () {
         return _compute(colorModel, item, earthquakeParams);
       },
-      [item, jmaMap],
+      [colorModel, item, earthquakeParams],
     );
-    final itemCalcurateFuture = useFuture(itemCalcurateFutureing);
-    final result = itemCalcurateFuture.data;
-    if (itemCalcurateFuture.hasError) {
+    final itemCalculateFuture = useFuture(itemCalculateFutureing);
+    final result = itemCalculateFuture.data;
+    if (itemCalculateFuture.hasError) {
       return Scaffold(
         body: Center(
-          child: Text('地図情報の取得に失敗しました\nエラー: ${itemCalcurateFuture.error}'),
+          child: Text('地図情報の取得に失敗しました\nエラー: ${itemCalculateFuture.error}'),
         ),
       );
     }
@@ -285,19 +285,29 @@ class EarthquakeMapWidget extends HookConsumerWidget {
     useEffect(
       () {
         WidgetsBinding.instance.endOfFrame.then(
-          (_) => registerNavigateToHome(() {
+          (_) {
+            registerNavigateToHome(() {
+              final controller = mapController.value;
+              if (controller == null) {
+                return;
+              }
+              controller.animateCamera(
+                cameraUpdate,
+              );
+            });
             final controller = mapController.value;
             if (controller == null) {
               return;
             }
-            controller.animateCamera(
-              cameraUpdate,
+            onDisplayModeChanged(
+              controller: mapController.value!,
+              config: config,
             );
-          }),
+          },
         );
         return null;
       },
-      [],
+      [item],
     );
     final maxZoomLevel = useState<double>(6);
 

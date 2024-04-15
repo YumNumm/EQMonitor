@@ -1,5 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
@@ -8,6 +11,7 @@ import 'package:eqmonitor/core/component/intenisty/jma_lg_intensity_icon.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
 import 'package:eqmonitor/core/component/widget/error_widget.dart';
+import 'package:eqmonitor/core/extension/random_select.dart';
 import 'package:eqmonitor/core/provider/config/earthquake_history/earthquake_history_config_provider.dart';
 import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
@@ -229,6 +233,7 @@ class _Sheet extends StatelessWidget {
         useColumn: true,
         controller: sheetController,
         children: [
+          if (kDebugMode) _DebugInserter(item: item),
           EarthquakeHypoInfoWidget(item: item),
           const Divider(),
           PrefectureIntensityWidget(item: item.v1),
@@ -237,44 +242,81 @@ class _Sheet extends StatelessWidget {
               item: item,
             ),
           _EarthquakeCommentWidget(item: item),
-          if (kDebugMode)
-            Consumer(
-              builder: (context, ref, child) => FilledButton.tonal(
-                child: const Text('INSERT Earthquake'),
-                onPressed: () async {
-                  final payload = RealtimePostgresUpdatePayload(
-                    commitTimestamp: DateTime.now(),
-                    errors: [],
-                    newData: item.v1.copyWith(
-                      depth: 150,
-                      magnitudeCondition:
-                          EarthquakeMagnitudeCondition.huge.value,
-                      arrivalTime: DateTime.now(),
-                      originTime: DateTime.now(),
-                      latitude: 37,
-                      longitude: 140,
-                      maxIntensity: JmaIntensity.sixLower,
-                      maxLpgmIntensity: JmaLgIntensity.two,
-                      intensityCities: [],
-                      intensityPrefectures: [],
-                      intensityRegions: [],
-                      intensityStations: [],
-                    ),
-                    old: {},
-                    schema: 'public',
-                    table: 'earthquake',
-                  );
-                  ref.read(websocketMessagesProvider.notifier).emit(
-                    {
-                      ...payload.toJson((p0) => p0.toJson()),
-                      'eventType':
-                          RealtimePostgresChangesListenEvent.insert.value,
-                    },
-                  );
-                },
-              ),
-            ),
         ],
+      ),
+    );
+  }
+}
+
+class _DebugInserter extends StatelessWidget {
+  const _DebugInserter({
+    required this.item,
+  });
+
+  final EarthquakeV1Extended item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, child) => FilledButton.tonal(
+        child: const Text('INSERT Earthquake'),
+        onPressed: () async {
+          final payload = RealtimePostgresUpdatePayload(
+            commitTimestamp: DateTime.now(),
+            errors: [],
+            newData: item.v1.copyWith(
+              status: TelegramStatus.training.type,
+              depth: 150,
+              arrivalTime: DateTime.now(),
+              originTime: DateTime.now(),
+              latitude: (item.latitude ?? 0) - 0.5 + Random().nextDouble(),
+              longitude: (item.longitude ?? 0) - 0.5 + Random().nextDouble(),
+              magnitude: Random().nextDouble() * 10,
+              maxIntensity: JmaIntensity.values.randomSelect,
+              maxLpgmIntensity: JmaLgIntensity.values.randomSelect,
+              intensityCities: item.v1.intensityCities
+                  ?.map(
+                    (e) => e.copyWith(
+                      intensity: JmaIntensity.values.randomSelect,
+                    ),
+                  )
+                  .toList(),
+              intensityPrefectures: item.v1.intensityPrefectures
+                  ?.map(
+                    (e) => e.copyWith(
+                      intensity: JmaIntensity.values.randomSelect,
+                    ),
+                  )
+                  .toList(),
+              intensityRegions: item.v1.intensityRegions
+                  ?.map(
+                    (e) => e.copyWith(
+                      intensity: JmaIntensity.values.randomSelect,
+                    ),
+                  )
+                  .toList(),
+              intensityStations: item.v1.intensityStations
+                  ?.map(
+                    (e) => e.copyWith(
+                      intensity: JmaIntensity.values.randomSelect,
+                    ),
+                  )
+                  .toList(),
+            ),
+            old: {},
+            schema: 'public',
+            table: 'earthquake',
+          );
+          ref.read(websocketMessagesProvider.notifier).emit(
+                jsonDecode(
+                  jsonEncode({
+                    ...payload.toJson((p0) => p0.toJson()),
+                    'eventType':
+                        RealtimePostgresChangesListenEvent.insert.value,
+                  }),
+                ) as Map<String, dynamic>,
+              );
+        },
       ),
     );
   }
