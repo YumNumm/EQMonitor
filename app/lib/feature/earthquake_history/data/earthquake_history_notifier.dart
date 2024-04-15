@@ -61,9 +61,6 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
           websocketTableMessagesProvider<EarthquakeV1>(),
           (_, next) {
             if (next case AsyncData(value: final value)) {
-              if (value is RealtimePostgresInsertPayload<EarthquakeV1>) {
-                _upsertEarthquakeV1s([value.newData]);
-              }
               final _ = switch (value) {
                 RealtimePostgresInsertPayload<EarthquakeV1>(:final newData) =>
                   _upsertEarthquakeV1s([newData]),
@@ -229,6 +226,8 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
         histories[index] = item;
       }
     }
+    // event_idで降順ソート
+    histories.sort((a, b) => b.eventId.compareTo(a.eventId));
     state = AsyncData(
       (histories, currentData.$2),
     );
