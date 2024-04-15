@@ -22,21 +22,6 @@ final websocketProvider = Provider<WebSocket>.internal(
 );
 
 typedef WebsocketRef = ProviderRef<WebSocket>;
-String _$websocketMessagesHash() => r'fdee9f3642d4edf9e918511f85a43087a98e9c76';
-
-/// See also [websocketMessages].
-@ProviderFor(websocketMessages)
-final websocketMessagesProvider = StreamProvider<Map<String, dynamic>>.internal(
-  websocketMessages,
-  name: r'websocketMessagesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$websocketMessagesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef WebsocketMessagesRef = StreamProviderRef<Map<String, dynamic>>;
 String _$websocketParsedMessagesHash() =>
     r'5a18e83f5c10c6e092adcc0cae8350271f028a71';
 
@@ -56,7 +41,7 @@ final websocketParsedMessagesProvider =
 typedef WebsocketParsedMessagesRef
     = StreamProviderRef<RealtimePostgresChangesPayloadBase>;
 String _$websocketTableMessagesHash() =>
-    r'0d338e0f4e024a4494b985dd40ce654ee70c9685';
+    r'0a9ac03d694b8afd31b1fc8bb975921002df0c63';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -255,5 +240,21 @@ final websocketStatusProvider =
 );
 
 typedef _$WebsocketStatus = Notifier<ConnectionState>;
+String _$websocketMessagesHash() => r'd5b60867379617c80f06ee68ecd0fe4fe5fd9de5';
+
+/// See also [WebsocketMessages].
+@ProviderFor(WebsocketMessages)
+final websocketMessagesProvider =
+    StreamNotifierProvider<WebsocketMessages, Map<String, dynamic>>.internal(
+  WebsocketMessages.new,
+  name: r'websocketMessagesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$websocketMessagesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$WebsocketMessages = StreamNotifier<Map<String, dynamic>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

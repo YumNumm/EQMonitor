@@ -13,6 +13,40 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:jma_code_table_types/jma_code_table_types.dart';
 
+List<Widget> preview() => [
+      EarthquakeHistoryListTile(
+        item: EarthquakeV1Extended(
+          maxIntensityRegionNames: [],
+          earthquake: EarthquakeV1(
+            eventId: 20220101000000,
+            status: TelegramStatus.normal.type,
+            depth: 150,
+            magnitude: 5.3,
+            arrivalTime: DateTime.now(),
+            originTime: DateTime.now(),
+            epicenterCode: 100,
+            maxIntensity: JmaIntensity.fiveUpper,
+            maxLpgmIntensity: JmaLgIntensity.two,
+          ),
+        ),
+      ),
+      EarthquakeHistoryListTile(
+        item: EarthquakeV1Extended(
+          maxIntensityRegionNames: [],
+          earthquake: EarthquakeV1(
+            eventId: 20220101000000,
+            status: '',
+            depth: 0,
+            magnitudeCondition: EarthquakeMagnitudeCondition.unknown.value,
+            arrivalTime: DateTime.now(),
+            originTime: DateTime.now(),
+            epicenterCode: 100,
+            maxIntensity: JmaIntensity.two,
+          ),
+        ),
+      ),
+    ];
+
 class EarthquakeHistoryListTile extends HookConsumerWidget {
   const EarthquakeHistoryListTile({
     required this.item,
