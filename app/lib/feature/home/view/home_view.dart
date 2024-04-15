@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:developer';
+import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
@@ -14,11 +14,14 @@ import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/config/notification/fcm_topic_manager.dart';
 import 'package:eqmonitor/core/provider/config/permission/permission_status_provider.dart';
 import 'package:eqmonitor/core/provider/eew/eew_alive_telegram.dart';
+import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/core/provider/kmoni/widget/kmoni_maintenance_widget.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
+import 'package:eqmonitor/feature/home/component/kmoni/kmoni_scale.dart';
+import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
 import 'package:eqmonitor/feature/home/component/parameter/parameter_loader_widget.dart';
 import 'package:eqmonitor/feature/home/component/render/map_components_renderer.dart';
 import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
@@ -179,7 +182,6 @@ class _HomeBodyWidget extends HookConsumerWidget {
                 return true;
                 // ignore: avoid_catches_without_on_clauses
               } catch (e) {
-                log('画像のキャッシュ 失敗: $e');
                 await Future<void>.delayed(const Duration(milliseconds: 1000));
                 return true;
               }
@@ -194,6 +196,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
     final child = Stack(
       children: [
         const MainMapView(),
+        const _KmoniScale(),
         SheetFloatingActionButtons(
           controller: sheetController,
           fab: const [
@@ -282,6 +285,16 @@ class _Fabs extends ConsumerWidget {
     return Column(
       children: [
         FloatingActionButton.small(
+          heroTag: 'sheet',
+          tooltip: '強震モニタの設定',
+          onPressed: () => showDialog<void>(
+            context: context,
+            builder: (context) => const KmoniSettingsDialogWidget(),
+          ),
+          elevation: 0,
+          child: const Icon(Icons.settings),
+        ),
+        FloatingActionButton.small(
           heroTag: 'home',
           tooltip: '表示領域領域を戻す',
           onPressed: () async {
@@ -331,6 +344,50 @@ class _Sheet extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _KmoniScale extends ConsumerWidget {
+  const _KmoniScale();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final body = Padding(
+      padding: const EdgeInsets.all(8),
+      child: Tooltip(
+        message: '強震モニタ リアルタイム震度のスケール',
+        child: Card(
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: InkWell(
+            child: const KmoniScaleWidget(),
+            onTap: () {},
+          ),
+        ),
+      ),
+    );
+    final state = ref.watch(kmoniSettingsProvider);
+
+    if (!state.showRealtimeShindoScale || !state.useKmoni) {
+      return const SizedBox.shrink();
+    }
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // 横幅は 画面2/3 もしくは 300px 以下
+        final width = min(constraints.maxWidth * 2 / 3, 300);
+        return Align(
+          alignment: Alignment.topRight,
+          child: SizedBox(
+            width: width.toDouble(),
+            height: 50,
+            child: body,
+          ),
+        );
+      },
     );
   }
 }

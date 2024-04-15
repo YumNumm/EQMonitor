@@ -2,7 +2,7 @@
 
 // ignore_for_file: type=lint, duplicate_ignore
 
-part of 'kmoni_view_settings.dart';
+part of 'kmoni_settings.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -15,10 +15,10 @@ _$KmoniSettingsStateImpl _$$KmoniSettingsStateImplFromJson(
       json,
       ($checkedConvert) {
         final val = _$KmoniSettingsStateImpl(
-          isUpper0Only:
-              $checkedConvert('isUpper0Only', (v) => v as bool? ?? false),
-          isShowIntensityIcon: $checkedConvert(
-              'isShowIntensityIcon', (v) => v as bool? ?? false),
+          minRealtimeShindo: $checkedConvert(
+              'minRealtimeShindo', (v) => (v as num?)?.toDouble() ?? null),
+          showRealtimeShindoScale: $checkedConvert(
+              'showRealtimeShindoScale', (v) => v as bool? ?? true),
           useKmoni: $checkedConvert('useKmoni', (v) => v as bool? ?? false),
         );
         return val;
@@ -28,8 +28,8 @@ _$KmoniSettingsStateImpl _$$KmoniSettingsStateImplFromJson(
 Map<String, dynamic> _$$KmoniSettingsStateImplToJson(
         _$KmoniSettingsStateImpl instance) =>
     <String, dynamic>{
-      'isUpper0Only': instance.isUpper0Only,
-      'isShowIntensityIcon': instance.isShowIntensityIcon,
+      'minRealtimeShindo': instance.minRealtimeShindo,
+      'showRealtimeShindoScale': instance.showRealtimeShindoScale,
       'useKmoni': instance.useKmoni,
     };
 
@@ -37,7 +37,7 @@ Map<String, dynamic> _$$KmoniSettingsStateImplToJson(
 // RiverpodGenerator
 // **************************************************************************
 
-String _$kmoniSettingsHash() => r'3a624489de7f8bd258d81cbd5e30d570bbe2951a';
+String _$kmoniSettingsHash() => r'5bfee9dfe90781154d43ff084a82cf74202b8631';
 
 /// See also [KmoniSettings].
 @ProviderFor(KmoniSettings)
