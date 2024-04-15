@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/provider/kmoni/model/kmoni_view_model_state.dart';
+import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_view_model.dart';
-import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_view_settings.dart';
 import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:eqmonitor/core/theme/build_theme.dart';
 import 'package:flutter/material.dart' hide ConnectionState;

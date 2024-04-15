@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:eqmonitor/core/provider/kmoni/data/kyoshin_color_map_data_source.dart';
 import 'package:eqmonitor/core/provider/kmoni/model/kyoshin_color_map_model.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -7,10 +6,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'kmoni_color_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<List<KyoshinColorMapModel>> kyoshinColorMap(
+List<KyoshinColorMapModel> kyoshinColorMap(
   KyoshinColorMapRef ref,
 ) =>
-    ref.watch(kyoshinColorMapDataSourceProvider).getKyoshinColorMap();
+    throw UnimplementedError();
 
 extension IntensityToKyoshinColor on List<KyoshinColorMapModel> {
   Color intensityToColor(double intensity) {
