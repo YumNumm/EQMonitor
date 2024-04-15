@@ -117,8 +117,8 @@ class _KmoniScalePainter extends CustomPainter {
       final x = rect.width * (index / colorMap.length) + rect.left;
       final width = rect.width / colorMap.length;
       canvas.drawLine(
-        Offset(x + width, rect.top),
-        Offset(x + width, rect.bottom),
+        Offset(x + width / 2, rect.top),
+        Offset(x + width / 2, rect.bottom),
         paint..color = color,
       );
 
@@ -137,10 +137,9 @@ class _KmoniScalePainter extends CustomPainter {
         )..layout();
         final offset = Offset(
           x +
-              width / 2 +
               switch (element.intensity) {
                 7.0 => -textPainter.width,
-                _ => textPainter.width / 2,
+                _ => 4,
               } +
               rect.left,
           rect.bottom - textPainter.height,
