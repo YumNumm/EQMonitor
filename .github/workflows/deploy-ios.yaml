@@ -14,6 +14,12 @@ jobs:
       FLUTTER_VERSION:
       FLUTTER_CHANNEL:
       FLUTTER_HOME:
+      PRODUCE_USERNAME: yumnumm@icloud.com
+      SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA: false
+      FASTLANE_USER: yumnumm@icloud.com
+      MATCH_USERNAME: yumnumm@icloud.com
+      MATCH_GIT_URL: git@github.com:YumNumm/EQMonitor_secret.git
+      LANG: ja_JP.UTF-8
 
     steps:
       # https://github.com/actions/checkout
@@ -104,9 +110,20 @@ jobs:
 
       - name: Set App Store Connect Configuration
         working-directory: app
+        env:
+          APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
         run: |
           echo '${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}' | base64 -d > AuthKey_NGL2W4BQP6.p8
           cp *.p8 ios/
+
+      - name: Download the provisioning profiles
+        working-directory: app/ios
+        env:
+          APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        run: fastlane download_provisioning_profiles
 
       - name: Increment build number
         working-directory: app/ios
