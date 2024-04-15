@@ -8,7 +8,7 @@ part of 'prefecture_intensity.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$calculatorHash() => r'8f639dd4d60bda645dfc32e57a8efe6ebb4d1e5e';
+String _$calculatorHash() => r'ec6f3bf8790c9360816212ab548ae098f3b31ad0';
 
 /// Copied from Dart SDK
 class _SystemHash {

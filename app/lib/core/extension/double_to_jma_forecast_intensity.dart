@@ -15,3 +15,19 @@ extension JmaForecastIntensityDouble on double {
         _ => JmaForecastIntensity.seven,
       };
 }
+
+extension JmaForecastIntensityEx on JmaForecastIntensity {
+  (double min, double max) get toRealtimeValue => switch (this) {
+        JmaForecastIntensity.zero => (double.negativeInfinity, 0.5),
+        JmaForecastIntensity.one => (0.5, 1.5),
+        JmaForecastIntensity.two => (1.5, 2.5),
+        JmaForecastIntensity.three => (2.5, 3.5),
+        JmaForecastIntensity.four => (3.5, 4.5),
+        JmaForecastIntensity.fiveLower => (4.5, 5.0),
+        JmaForecastIntensity.fiveUpper => (5.0, 5.5),
+        JmaForecastIntensity.sixLower => (5.5, 6.0),
+        JmaForecastIntensity.sixUpper => (6.0, 6.5),
+        JmaForecastIntensity.seven => (6.5, double.infinity),
+        _ => throw UnimplementedError(),
+      };
+}

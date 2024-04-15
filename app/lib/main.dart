@@ -9,6 +9,8 @@ import 'package:eqmonitor/core/provider/application_documents_directory.dart';
 import 'package:eqmonitor/core/provider/custom_provider_observer.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
+import 'package:eqmonitor/core/provider/kmoni/data/kyoshin_color_map_data_source.dart';
+import 'package:eqmonitor/core/provider/kmoni/provider/kmoni_color_provider.dart';
 import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
@@ -83,41 +85,43 @@ Future<void> main() async {
   final deviceInfo = DeviceInfoPlugin();
 
   final results = await (
-    SharedPreferences.getInstance(),
-    loadKmoniObservationPoints(),
-    PackageInfo.fromPlatform(),
-    // ignore: prefer_void_to_null
-    (!kIsWeb && Platform.isAndroid
-        ? deviceInfo.androidInfo
-        : Future<Null>.value()),
-    // ignore: prefer_void_to_null
-    (!kIsWeb && Platform.isIOS ? deviceInfo.iosInfo : Future<Null>.value()),
+    (
+      SharedPreferences.getInstance(),
+      loadKmoniObservationPoints(),
+      PackageInfo.fromPlatform(),
+      // ignore: prefer_void_to_null
+      (!kIsWeb && Platform.isAndroid
+          ? deviceInfo.androidInfo
+          : Future<Null>.value()),
+      // ignore: prefer_void_to_null
+      (!kIsWeb && Platform.isIOS ? deviceInfo.iosInfo : Future<Null>.value()),
 
-    kIsWeb ? Future<Null>.value() : _registerNotificationChannelIfNeeded(),
-    kIsWeb ? Future<Null>.value() : getApplicationDocumentsDirectory(),
-    loadJmaCodeTable(),
-    kIsWeb
-        ? Future<Null>.value()
-        : FlutterLocalNotificationsPlugin().initialize(
-            const InitializationSettings(
-              iOS: DarwinInitializationSettings(
-                requestAlertPermission: false,
-                requestSoundPermission: false,
-                requestBadgePermission: false,
-              ),
-              android: AndroidInitializationSettings('mipmap/ic_launcher'),
-              macOS: DarwinInitializationSettings(
-                requestAlertPermission: false,
-                requestSoundPermission: false,
-                requestBadgePermission: false,
+      kIsWeb ? Future<Null>.value() : _registerNotificationChannelIfNeeded(),
+      kIsWeb ? Future<Null>.value() : getApplicationDocumentsDirectory(),
+      loadJmaCodeTable(),
+      kIsWeb
+          ? Future<Null>.value()
+          : FlutterLocalNotificationsPlugin().initialize(
+              const InitializationSettings(
+                iOS: DarwinInitializationSettings(
+                  requestAlertPermission: false,
+                  requestSoundPermission: false,
+                  requestBadgePermission: false,
+                ),
+                android: AndroidInitializationSettings('mipmap/ic_launcher'),
+                macOS: DarwinInitializationSettings(
+                  requestAlertPermission: false,
+                  requestSoundPermission: false,
+                  requestBadgePermission: false,
+                ),
               ),
             ),
-          ),
-  ).wait;
-
-  await (
-    initInAppPurchase(),
-    initLicenses(),
+    ).wait,
+    (
+      initInAppPurchase(),
+      initLicenses(),
+      kIsWeb ? Future<Null>.value() : getKyoshinColorMap(),
+    ).wait,
   ).wait;
 
   FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
@@ -128,17 +132,19 @@ Future<void> main() async {
   }
   container = ProviderContainer(
     overrides: [
-      sharedPreferencesProvider.overrideWithValue(results.$1),
-      kyoshinObservationPointsProvider.overrideWithValue(results.$2),
+      sharedPreferencesProvider.overrideWithValue(results.$1.$1),
+      kyoshinObservationPointsProvider.overrideWithValue(results.$1.$2),
       talkerProvider.overrideWithValue(talker),
-      packageInfoProvider.overrideWithValue(results.$3),
-      if (results.$4 != null)
-        androidDeviceInfoProvider.overrideWithValue(results.$4!),
-      if (results.$5 != null)
-        iosDeviceInfoProvider.overrideWithValue(results.$5!),
-      if (results.$7 != null)
-        applicationDocumentsDirectoryProvider.overrideWithValue(results.$7!),
-      jmaCodeTableProvider.overrideWithValue(results.$8),
+      packageInfoProvider.overrideWithValue(results.$1.$3),
+      if (results.$1.$4 != null)
+        androidDeviceInfoProvider.overrideWithValue(results.$1.$4!),
+      if (results.$1.$5 != null)
+        iosDeviceInfoProvider.overrideWithValue(results.$1.$5!),
+      if (results.$1.$7 != null)
+        applicationDocumentsDirectoryProvider.overrideWithValue(results.$1.$7!),
+      jmaCodeTableProvider.overrideWithValue(results.$1.$8),
+      if (results.$2.$3 != null)
+        kyoshinColorMapProvider.overrideWithValue(results.$2.$3!),
     ],
     observers: [
       if (kDebugMode)

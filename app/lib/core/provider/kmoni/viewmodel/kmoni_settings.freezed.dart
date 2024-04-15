@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'kmoni_view_settings.dart';
+part of 'kmoni_settings.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -12,7 +12,7 @@ part of 'kmoni_view_settings.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 KmoniSettingsState _$KmoniSettingsStateFromJson(Map<String, dynamic> json) {
   return _KmoniSettingsState.fromJson(json);
@@ -20,15 +20,11 @@ KmoniSettingsState _$KmoniSettingsStateFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$KmoniSettingsState {
-// 設定
-  /// 震度0以上のみ表示するかどうか
-  /// 震度0-1: グレーで表示
-  /// 震度1-: isShowIntensityIcon が true の場合はアイコンを表示
-  /// 震度1-: isShowIntensityIcon が false の場合は色で表示
-  bool get isUpper0Only => throw _privateConstructorUsedError;
+  /// 強震モニタの表示最低リアルタイム震度
+  double? get minRealtimeShindo => throw _privateConstructorUsedError;
 
-  /// 震度アイコンを表示するかどうか
-  bool get isShowIntensityIcon => throw _privateConstructorUsedError;
+  /// スケールを表示するかどうか
+  bool get showRealtimeShindoScale => throw _privateConstructorUsedError;
 
   /// 強震モニタを使用するかどうか
   bool get useKmoni => throw _privateConstructorUsedError;
@@ -45,7 +41,8 @@ abstract class $KmoniSettingsStateCopyWith<$Res> {
           KmoniSettingsState value, $Res Function(KmoniSettingsState) then) =
       _$KmoniSettingsStateCopyWithImpl<$Res, KmoniSettingsState>;
   @useResult
-  $Res call({bool isUpper0Only, bool isShowIntensityIcon, bool useKmoni});
+  $Res call(
+      {double? minRealtimeShindo, bool showRealtimeShindoScale, bool useKmoni});
 }
 
 /// @nodoc
@@ -61,18 +58,18 @@ class _$KmoniSettingsStateCopyWithImpl<$Res, $Val extends KmoniSettingsState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? isUpper0Only = null,
-    Object? isShowIntensityIcon = null,
+    Object? minRealtimeShindo = freezed,
+    Object? showRealtimeShindoScale = null,
     Object? useKmoni = null,
   }) {
     return _then(_value.copyWith(
-      isUpper0Only: null == isUpper0Only
-          ? _value.isUpper0Only
-          : isUpper0Only // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isShowIntensityIcon: null == isShowIntensityIcon
-          ? _value.isShowIntensityIcon
-          : isShowIntensityIcon // ignore: cast_nullable_to_non_nullable
+      minRealtimeShindo: freezed == minRealtimeShindo
+          ? _value.minRealtimeShindo
+          : minRealtimeShindo // ignore: cast_nullable_to_non_nullable
+              as double?,
+      showRealtimeShindoScale: null == showRealtimeShindoScale
+          ? _value.showRealtimeShindoScale
+          : showRealtimeShindoScale // ignore: cast_nullable_to_non_nullable
               as bool,
       useKmoni: null == useKmoni
           ? _value.useKmoni
@@ -90,7 +87,8 @@ abstract class _$$KmoniSettingsStateImplCopyWith<$Res>
       __$$KmoniSettingsStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isUpper0Only, bool isShowIntensityIcon, bool useKmoni});
+  $Res call(
+      {double? minRealtimeShindo, bool showRealtimeShindoScale, bool useKmoni});
 }
 
 /// @nodoc
@@ -104,18 +102,18 @@ class __$$KmoniSettingsStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? isUpper0Only = null,
-    Object? isShowIntensityIcon = null,
+    Object? minRealtimeShindo = freezed,
+    Object? showRealtimeShindoScale = null,
     Object? useKmoni = null,
   }) {
     return _then(_$KmoniSettingsStateImpl(
-      isUpper0Only: null == isUpper0Only
-          ? _value.isUpper0Only
-          : isUpper0Only // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isShowIntensityIcon: null == isShowIntensityIcon
-          ? _value.isShowIntensityIcon
-          : isShowIntensityIcon // ignore: cast_nullable_to_non_nullable
+      minRealtimeShindo: freezed == minRealtimeShindo
+          ? _value.minRealtimeShindo
+          : minRealtimeShindo // ignore: cast_nullable_to_non_nullable
+              as double?,
+      showRealtimeShindoScale: null == showRealtimeShindoScale
+          ? _value.showRealtimeShindoScale
+          : showRealtimeShindoScale // ignore: cast_nullable_to_non_nullable
               as bool,
       useKmoni: null == useKmoni
           ? _value.useKmoni
@@ -129,26 +127,22 @@ class __$$KmoniSettingsStateImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$KmoniSettingsStateImpl implements _KmoniSettingsState {
   const _$KmoniSettingsStateImpl(
-      {this.isUpper0Only = false,
-      this.isShowIntensityIcon = false,
+      {this.minRealtimeShindo = null,
+      this.showRealtimeShindoScale = true,
       this.useKmoni = false});
 
   factory _$KmoniSettingsStateImpl.fromJson(Map<String, dynamic> json) =>
       _$$KmoniSettingsStateImplFromJson(json);
 
-// 設定
-  /// 震度0以上のみ表示するかどうか
-  /// 震度0-1: グレーで表示
-  /// 震度1-: isShowIntensityIcon が true の場合はアイコンを表示
-  /// 震度1-: isShowIntensityIcon が false の場合は色で表示
+  /// 強震モニタの表示最低リアルタイム震度
   @override
   @JsonKey()
-  final bool isUpper0Only;
+  final double? minRealtimeShindo;
 
-  /// 震度アイコンを表示するかどうか
+  /// スケールを表示するかどうか
   @override
   @JsonKey()
-  final bool isShowIntensityIcon;
+  final bool showRealtimeShindoScale;
 
   /// 強震モニタを使用するかどうか
   @override
@@ -157,7 +151,7 @@ class _$KmoniSettingsStateImpl implements _KmoniSettingsState {
 
   @override
   String toString() {
-    return 'KmoniSettingsState(isUpper0Only: $isUpper0Only, isShowIntensityIcon: $isShowIntensityIcon, useKmoni: $useKmoni)';
+    return 'KmoniSettingsState(minRealtimeShindo: $minRealtimeShindo, showRealtimeShindoScale: $showRealtimeShindoScale, useKmoni: $useKmoni)';
   }
 
   @override
@@ -165,18 +159,19 @@ class _$KmoniSettingsStateImpl implements _KmoniSettingsState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$KmoniSettingsStateImpl &&
-            (identical(other.isUpper0Only, isUpper0Only) ||
-                other.isUpper0Only == isUpper0Only) &&
-            (identical(other.isShowIntensityIcon, isShowIntensityIcon) ||
-                other.isShowIntensityIcon == isShowIntensityIcon) &&
+            (identical(other.minRealtimeShindo, minRealtimeShindo) ||
+                other.minRealtimeShindo == minRealtimeShindo) &&
+            (identical(
+                    other.showRealtimeShindoScale, showRealtimeShindoScale) ||
+                other.showRealtimeShindoScale == showRealtimeShindoScale) &&
             (identical(other.useKmoni, useKmoni) ||
                 other.useKmoni == useKmoni));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, isUpper0Only, isShowIntensityIcon, useKmoni);
+  int get hashCode => Object.hash(
+      runtimeType, minRealtimeShindo, showRealtimeShindoScale, useKmoni);
 
   @JsonKey(ignore: true)
   @override
@@ -195,23 +190,21 @@ class _$KmoniSettingsStateImpl implements _KmoniSettingsState {
 
 abstract class _KmoniSettingsState implements KmoniSettingsState {
   const factory _KmoniSettingsState(
-      {final bool isUpper0Only,
-      final bool isShowIntensityIcon,
+      {final double? minRealtimeShindo,
+      final bool showRealtimeShindoScale,
       final bool useKmoni}) = _$KmoniSettingsStateImpl;
 
   factory _KmoniSettingsState.fromJson(Map<String, dynamic> json) =
       _$KmoniSettingsStateImpl.fromJson;
 
-  @override // 設定
-  /// 震度0以上のみ表示するかどうか
-  /// 震度0-1: グレーで表示
-  /// 震度1-: isShowIntensityIcon が true の場合はアイコンを表示
-  /// 震度1-: isShowIntensityIcon が false の場合は色で表示
-  bool get isUpper0Only;
   @override
 
-  /// 震度アイコンを表示するかどうか
-  bool get isShowIntensityIcon;
+  /// 強震モニタの表示最低リアルタイム震度
+  double? get minRealtimeShindo;
+  @override
+
+  /// スケールを表示するかどうか
+  bool get showRealtimeShindoScale;
   @override
 
   /// 強震モニタを使用するかどうか

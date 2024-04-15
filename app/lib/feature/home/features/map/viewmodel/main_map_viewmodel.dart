@@ -12,8 +12,8 @@ import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_c
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/eew/eew_alive_telegram.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_provider.dart';
+import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_view_model.dart';
-import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_view_settings.dart';
 import 'package:eqmonitor/core/provider/kmoni_observation_points/model/kmoni_observation_point.dart';
 import 'package:eqmonitor/core/provider/map/map_style.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';

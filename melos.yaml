@@ -1,6 +1,5 @@
 name: eqmonitor_workspace
 repository: https://github.com/YumNumm/EQMonitor
-sdkPath: .fvm/flutter_sdk
 
 command:
   version:

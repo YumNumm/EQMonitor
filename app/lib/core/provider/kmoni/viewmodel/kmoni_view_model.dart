@@ -6,7 +6,8 @@ import 'package:dio/dio.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/kmoni/model/kmoni_view_model_state.dart';
 import 'package:eqmonitor/core/provider/kmoni/use_case/kmoni_use_case.dart';
-import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_view_settings.dart';
+import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_settings.dart';
+import 'package:eqmonitor/core/provider/kmoni_observation_points/model/kmoni_observation_point.dart';
 import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -17,20 +18,25 @@ part 'kmoni_view_model.g.dart';
 class KmoniViewModel extends _$KmoniViewModel {
   @override
   KmoniViewModelState build() {
-    ref.listen(appLifeCycleProvider, (_, next) async {
-      if (next == AppLifecycleState.resumed) {
+    ref
+      ..listen(appLifeCycleProvider, (_, next) async {
+        if (next == AppLifecycleState.resumed) {
+          state = state.copyWith(
+            status: KmoniStatus.none,
+          );
+          await syncDelayWithKmoni();
+          await _update();
+          return;
+        }
+        // 停止
         state = state.copyWith(
-          status: KmoniStatus.none,
+          status: KmoniStatus.stopped,
         );
-        await syncDelayWithKmoni();
-        await _update();
-        return;
-      }
-      // 停止
-      state = state.copyWith(
-        status: KmoniStatus.stopped,
+      })
+      ..listen(
+        kmoniSettingsProvider.select((v) => v.minRealtimeShindo),
+        (_, __) => _updateState(),
       );
-    });
     return const KmoniViewModelState(
       isInitialized: false,
       lastUpdatedAt: null,
@@ -74,6 +80,8 @@ class KmoniViewModel extends _$KmoniViewModel {
     );
   }
 
+  List<AnalyzedKmoniObservationPoint>? _cache;
+
   /// 画像取得
   Future<void> _update() async {
     if (state.status == KmoniStatus.stopped ||
@@ -90,13 +98,20 @@ class KmoniViewModel extends _$KmoniViewModel {
     }
 
     try {
-      final result = await ref.read(kmoniUseCaseProvider).fetchRealtimeShindo(
+      _cache = await ref.read(kmoniUseCaseProvider).fetchRealtimeShindo(
             now,
             obsPoints: ref.read(kyoshinObservationPointsProvider).points,
           );
+      final minRealtimeIntensity =
+          ref.read(kmoniSettingsProvider).minRealtimeShindo;
+      final filtered = minRealtimeIntensity == null
+          ? _cache
+          : _cache
+              ?.where((e) => (e.intensityValue ?? -3) >= minRealtimeIntensity)
+              .toList();
       state = state.copyWith(
         lastUpdatedAt: now,
-        analyzedPoints: result,
+        analyzedPoints: filtered,
         status: KmoniStatus.realtime,
       );
     } on DioException catch (e) {
@@ -110,6 +125,22 @@ class KmoniViewModel extends _$KmoniViewModel {
         );
       }
       log('error $e');
+    }
+  }
+
+  /// 状態更新のみ
+  void _updateState() {
+    if (_cache != null) {
+      final minRealtimeIntensity =
+          ref.read(kmoniSettingsProvider).minRealtimeShindo;
+      final filtered = minRealtimeIntensity == null
+          ? _cache
+          : _cache
+              ?.where((e) => (e.intensityValue ?? -3) >= minRealtimeIntensity)
+              .toList();
+      state = state.copyWith(
+        analyzedPoints: filtered,
+      );
     }
   }
 
