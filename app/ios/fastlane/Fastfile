@@ -42,7 +42,8 @@ platform :ios do
     )
 
     match(
-      readonly: true,
+      type: "appstore",
+      readonly: is_ci,
     )
 
     # Build the project
