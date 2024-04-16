@@ -23,13 +23,19 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Increment the build number
 
+### ios download_provisioning_profiles
+
+```sh
+[bundle exec] fastlane ios download_provisioning_profiles
+```
+
+Download the provisioning profiles
+
 ### ios beta
 
 ```sh
 [bundle exec] fastlane ios beta
 ```
-
-
 
 Push a new beta build to TestFlight
 
