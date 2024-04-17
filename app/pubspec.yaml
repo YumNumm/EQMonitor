@@ -138,9 +138,5 @@ flutter:
           weight: 900
     - family: JetBrainsMono
       fonts:
-        - asset: assets/fonts/JetBrainsMono-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/JetBrainsMono-Bold.ttf
-          weight: 700
         - asset: assets/fonts/JetBrainsMono-ExtraBold.ttf
-          weight: 800
+          weight: 900
