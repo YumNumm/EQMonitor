@@ -196,7 +196,6 @@ class _HomeBodyWidget extends HookConsumerWidget {
     final child = Stack(
       children: [
         const MainMapView(),
-        const _KmoniScale(),
         SheetFloatingActionButtons(
           controller: sheetController,
           fab: const [
@@ -206,7 +205,16 @@ class _HomeBodyWidget extends HookConsumerWidget {
         // Sheet
         const Align(
           alignment: Alignment.topRight,
-          child: _IntensityIcons(),
+          child: IgnorePointer(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                _KmoniScale(),
+                _IntensityIcons(),
+              ],
+            ),
+          ),
         ),
         _Sheet(sheetController: sheetController),
       ],
@@ -249,28 +257,26 @@ class _IntensityIcons extends ConsumerWidget {
     if (intensities == null || intensities.isEmpty) {
       return const SizedBox.shrink();
     }
-    return IgnorePointer(
-      child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 250),
-        child: BorderedContainer(
-          key: ValueKey(
-            maxIntensity,
-          ),
-          margin: const EdgeInsets.all(4),
-          padding: const EdgeInsets.all(4),
-          borderRadius: BorderRadius.circular((25 / 5) + 5),
-          child: Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              if (maxIntensity != null && minIntensity != null)
-                for (final intensity in intensities)
-                  JmaForecastIntensityWidget(
-                    intensity: intensity,
-                    size: 25,
-                  ),
-            ],
-          ),
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 250),
+      child: BorderedContainer(
+        key: ValueKey(
+          maxIntensity,
+        ),
+        margin: const EdgeInsets.all(4),
+        padding: const EdgeInsets.all(4),
+        borderRadius: BorderRadius.circular((25 / 5) + 5),
+        child: Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            if (maxIntensity != null && minIntensity != null)
+              for (final intensity in intensities)
+                JmaForecastIntensityWidget(
+                  intensity: intensity,
+                  size: 25,
+                ),
+          ],
         ),
       ),
     );
@@ -355,7 +361,7 @@ class _KmoniScale extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(kmoniSettingsProvider);
     final body = Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(4),
       child: Tooltip(
         message: '強震モニタ リアルタイム震度のスケール',
         child: Card(
@@ -376,24 +382,35 @@ class _KmoniScale extends ConsumerWidget {
         ),
       ),
     );
+    final Widget child;
 
     if (!state.showRealtimeShindoScale || !state.useKmoni) {
-      return const SizedBox.shrink();
+      child = const KeyedSubtree(
+        key: ValueKey('kmoni_scale_none'),
+        child: SizedBox.shrink(),
+      );
+    } else {
+      child = KeyedSubtree(
+        key: const ValueKey('kmoni_scale'),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            // 横幅は 画面2/3 もしくは 300px 以下
+            final width = min(constraints.maxWidth * 2 / 3, 300);
+            return Align(
+              alignment: Alignment.topRight,
+              child: SizedBox(
+                width: width.toDouble(),
+                height: 40,
+                child: body,
+              ),
+            );
+          },
+        ),
+      );
     }
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        // 横幅は 画面2/3 もしくは 300px 以下
-        final width = min(constraints.maxWidth * 2 / 3, 300);
-        return Align(
-          alignment: Alignment.topRight,
-          child: SizedBox(
-            width: width.toDouble(),
-            height: 50,
-            child: body,
-          ),
-        );
-      },
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 200),
+      child: child,
     );
   }
 }

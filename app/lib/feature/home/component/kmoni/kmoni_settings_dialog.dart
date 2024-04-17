@@ -14,6 +14,7 @@ class KmoniSettingsModal extends HookConsumerWidget {
     final colorMap = ref.watch(kyoshinColorMapProvider);
     final (min, max) = (colorMap.first, colorMap.last);
     final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
 
     final barWidget = Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -37,8 +38,17 @@ class KmoniSettingsModal extends HookConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                child: Text(
+                  '強震モニタ設定',
+                  style: textTheme.titleMedium,
+                ),
+              ),
               const SettingsSectionHeader(
-                text: '表示する最低リアルタイム震度',
+                // text: '一定未満のリアルタイム震度の観測点を表示しない',
+                text: 'リアルタイム震度の表示しきい値',
               ),
               Padding(
                 padding:
