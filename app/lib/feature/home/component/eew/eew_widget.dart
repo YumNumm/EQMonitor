@@ -7,11 +7,9 @@ import 'package:eqmonitor/core/component/intenisty/jma_forecast_lg_intensity_ico
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/eew/eew_alive_telegram.dart';
-import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:eqmonitor/core/theme/build_theme.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:extensions/extensions.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -40,65 +38,7 @@ class EewWidgets extends ConsumerWidget {
         );
       },
     );
-
-    return Column(
-      children: [
-        if (kDebugMode)
-          Wrap(
-            spacing: 8,
-            runSpacing: 4,
-            children: [
-              FilledButton.tonal(
-                child: const Text('SAMPLE EEW Telegram'),
-                onPressed: () {
-                  ref.read(websocketProvider).send('sample/eew');
-                },
-              ),
-              FilledButton.tonal(
-                child: const Text('キャンセル報'),
-                onPressed: () {
-                  ref.read(websocketProvider).send('sample/eew-cancel');
-                },
-              ),
-              FilledButton.tonal(
-                onPressed: () async {
-                  final earthquake =
-                      RealtimePostgresInsertPayload<EarthquakeV1>(
-                    schema: 'public',
-                    table: 'earthquake',
-                    commitTimestamp: DateTime.now(),
-                    errors: [],
-                    newData: EarthquakeV1(
-                      eventId: int.parse(
-                        DateFormat('yyyyMMddHHmmss').format(DateTime.now()),
-                      ),
-                      status: 'test',
-                      arrivalTime: DateTime.now(),
-                      depth: 40,
-                      epicenterCode: 101,
-                      longitude: 40,
-                      latitude: 140,
-                      magnitude: 4.5,
-                      maxIntensity: JmaIntensity.fiveLower,
-                      maxLpgmIntensity: JmaLgIntensity.one,
-                      originTime: DateTime.now(),
-                    ),
-                  );
-                  final json = {
-                    ...earthquake.toJson(
-                      (p0) => p0.toJson(),
-                    ),
-                    'eventType': 'INSERT',
-                  };
-                  ref.read(websocketMessagesProvider.notifier).emit(json);
-                },
-                child: const Text('EEW TEST'),
-              ),
-            ],
-          ),
-        body,
-      ],
-    );
+    return body;
   }
 }
 

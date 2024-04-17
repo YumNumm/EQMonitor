@@ -29,7 +29,11 @@ class EarthquakeHistoryDetailsNotifier
           (earthquake) => earthquake.eventId == eventId,
         );
         if (target != null) {
-          state = AsyncData(target);
+          if (target.intensityRegions != null) {
+            state = AsyncData(target);
+          } else {
+            ref.invalidateSelf();
+          }
         }
       }
     });

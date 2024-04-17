@@ -77,14 +77,10 @@ class EewAliveChecker {
     final happenedDiff = now.toUtc().difference(happenedTime).inSeconds;
     final depth = eew.depth;
 
-    // EEW警報の場合、420秒でイベント終了と判定する
+    // M6.0以上 or EEW警報の場合、360秒でイベント終了と判定する
     final isWarning = eew.isWarning ?? eew.headline?.contains('強い揺れ') ?? false;
-    if (isWarning) {
-      return happenedDiff > 420;
-    }
-    // M6.0以上の場合、360秒でイベント終了と判定する
     final magnitude = eew.magnitude;
-    if (magnitude != null && magnitude >= 6.0) {
+    if ((magnitude != null && magnitude >= 6.0) || isWarning) {
       return happenedDiff > 360;
     }
     // 深さ不明/150km未満の場合、地震発生/検知から250秒でイベント終了と判定する

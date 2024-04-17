@@ -64,7 +64,7 @@ void main(void){
     vec2 st = FlutterFragCoord().xy/resolution.xy;
     st.x *= resolution.x/resolution.y;
 
-    float f = fbm(st*3.0 + time/50) / 4.0;
+    float f = fbm(st*3.0 + time/20) / 3.0;
 
     vec3 v = vec3(
         f,

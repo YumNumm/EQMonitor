@@ -114,7 +114,6 @@ class SettingsScreen extends HookConsumerWidget {
             title: const Text('このアプリケーションについて'),
             subtitle: const Text('利用規約やプライバシーポリシーを確認できます'),
             leading: const Icon(Icons.description),
-
             onTap: () => const AboutThisAppRoute().push<void>(context),
           ),
           ListTile(
@@ -161,25 +160,6 @@ class SettingsScreen extends HookConsumerWidget {
 }
 
 Future<void> _onInquiryTap(BuildContext context, WidgetRef ref) async {
-  // 問い合わせ方法を選択するダイアログを表示
-  final result = await showModalActionSheet<bool>(
-    context: context,
-    title: 'お問い合わせ方法を選択してください',
-    cancelLabel: 'キャンセル',
-    actions: [
-      const SheetAction(
-        key: true,
-        label: 'メールで問い合わせ',
-      ),
-      const SheetAction(
-        key: false,
-        label: 'Xで問い合わせ',
-      ),
-    ],
-  );
-  if (result == null || !context.mounted) {
-    return;
-  }
   unawaited(
     showDialog<void>(
       barrierDismissible: false,
@@ -216,34 +196,18 @@ Future<void> _onInquiryTap(BuildContext context, WidgetRef ref) async {
         .join('&');
   }
 
-  if (result) {
-    // メール
-    final uri = Uri(
-      scheme: 'mailto',
-      path: 'contacts@eqmonitor.app',
-      query: encodeQueryParameters(
-        <String, String>{
-          'subject': 'EQMonitor 問い合わせ: ',
-          'body': '\n[こちらに内容を記載してください]\n\n$base',
-        },
-      ),
-    );
-    await launchUrl(uri);
-  } else {
-    // X
-    final uri = Uri(
-      scheme: 'https',
-      host: 'twitter.com',
-      path: 'messages/compose',
-      query: encodeQueryParameters(
-        <String, String>{
-          'recipient_id': '1443896594529619970',
-          'text': '\n[こちらに内容を記載してください]\n\n$base',
-        },
-      ),
-    );
-    await launchUrl(uri, mode: LaunchMode.externalNonBrowserApplication);
-  }
+  // メール
+  final uri = Uri(
+    scheme: 'mailto',
+    path: 'contacts@eqmonitor.app',
+    query: encodeQueryParameters(
+      <String, String>{
+        'subject': 'EQMonitor 問い合わせ: ',
+        'body': '\n[こちらに内容を記載してください]\n\n$base',
+      },
+    ),
+  );
+  await launchUrl(uri);
   if (!context.mounted) {
     return;
   }
