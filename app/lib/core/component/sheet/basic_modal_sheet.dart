@@ -51,14 +51,12 @@ class BasicModalSheet extends HookWidget {
           ),
           child: DecoratedBox(
             decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(28)),
+              color: theme.colorScheme.background,
+              border: Border.all(
+                color: theme.colorScheme.onSurface.withOpacity(0.1),
               ),
-              color: theme.colorScheme.surface,
-              boxShadow: const <BoxShadow>[
-                BoxShadow(color: Colors.black12, blurRadius: 12),
-              ],
             ),
             child: SafeArea(
               top: hasAppBar,

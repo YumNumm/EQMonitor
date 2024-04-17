@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
@@ -183,17 +184,21 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
   Future<void> _refreshIfWebsocketNotConnected() async {
     // AsyncData以外の場合は何もしない
     if (state is! AsyncData<EarthquakeHistoryNotifierState>) {
+      log('state is not AsyncData<EarthquakeHistoryNotifierState>');
       return;
     }
     // WebSocketが接続されている場合は何もしない
     final webSocketState = ref.read(websocketStatusProvider);
-    if (webSocketState is Connected || webSocketState is Connecting) {
+    if (webSocketState is Connected || webSocketState is Reconnected) {
+      log('WebSocket is ${webSocketState.runtimeType}');
       return;
     }
     // パラメータが指定されている場合は何もしない
     if (parameter != const EarthquakeHistoryParameter()) {
+      log('parameter is not default');
       return;
     }
+    log('refreshIfWebsocketNotConnected');
 
     // リフレッシュ処理を実行
     final repository = ref.read(earthquakeHistoryRepositoryProvider);
