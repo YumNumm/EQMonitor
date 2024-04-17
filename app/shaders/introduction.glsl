@@ -75,4 +75,3 @@ void main(void){
 
    // FragColor=vec4(r,g,l,1.);
 }
-
