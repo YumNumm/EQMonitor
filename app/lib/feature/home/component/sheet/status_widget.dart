@@ -97,7 +97,9 @@ class SheetStatusWidget extends ConsumerWidget {
                               child: Text(
                                 DateFormat('yyyy/MM/dd HH:mm:ss')
                                     .format(latestTime),
-                                style: theme.textTheme.bodyMedium,
+                                style: theme.textTheme.bodyMedium!.copyWith(
+                                  fontFamily: monoFont,
+                                ),
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -117,6 +119,7 @@ class SheetStatusWidget extends ConsumerWidget {
                                 DateFormat('yyyy/MM/dd HH:mm:ss')
                                     .format(latestTime),
                                 style: theme.textTheme.bodyMedium!.copyWith(
+                                  fontFamily: monoFont,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.redAccent,
                                 ),

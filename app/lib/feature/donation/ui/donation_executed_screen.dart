@@ -218,7 +218,7 @@ class _Detail extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: Center(
             child: Text(
-              isScreenshot ? 'EQMontorを支援しました✌' : 'ありがとうございます! 💖',
+              isScreenshot ? 'EQMonitorを支援しました✌' : 'ありがとうございます! 💖',
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 24,
