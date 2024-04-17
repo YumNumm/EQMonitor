@@ -1,4 +1,3 @@
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:eqmonitor/core/component/widget/kmoni_caution.dart';
 import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
@@ -27,15 +26,28 @@ class KmoniSettingsPage extends ConsumerWidget {
                 value: state.useKmoni,
                 onChanged: (value) async {
                   if (value) {
-                    final result = await showOkCancelAlertDialog(
+                    final result = await showModalBottomSheet<bool>(
                       context: context,
-                      title: '強震モニタの注意',
-                      message: '強震モニタを有効すると、'
-                          '強震モニタの注意点に同意したものとみなします。',
-                      okLabel: '同意する',
-                      cancelLabel: 'キャンセル',
+                      isScrollControlled: true,
+                      builder: (context) => SafeArea(
+                        child: DraggableScrollableSheet(
+                          expand: false,
+                          builder: (context, scrollController) =>
+                              SingleChildScrollView(
+                            controller: scrollController,
+                            child: const SafeArea(
+                              child: Column(
+                                children: [
+                                  SheetHeader(title: '強震モニタの注意点'),
+                                  KmoniCautionWidget(),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     );
-                    final isAccepted = result == OkCancelResult.ok;
+                    final isAccepted = result == true;
 
                     if (isAccepted) {
                       ref.read(kmoniSettingsProvider.notifier).toggleUseKmoni();
@@ -49,15 +61,6 @@ class KmoniSettingsPage extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             const Divider(),
-            const Padding(
-              padding: EdgeInsets.all(8),
-              child: Column(
-                children: [
-                  SheetHeader(title: '強震モニタの注意点'),
-                  KmoniCautionWidget(),
-                ],
-              ),
-            ),
           ],
         ),
       ),

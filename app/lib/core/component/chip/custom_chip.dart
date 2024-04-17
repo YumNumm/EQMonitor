@@ -18,7 +18,7 @@ class CustomChip extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: backgroundColor ?? Theme.of(context).colorScheme.background,
+          color: backgroundColor ?? Theme.of(context).colorScheme.surface,
           border: Border.all(
             color: Theme.of(context).colorScheme.onSurface,
             width: borderWidth,

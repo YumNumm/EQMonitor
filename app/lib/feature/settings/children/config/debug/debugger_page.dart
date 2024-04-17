@@ -64,7 +64,7 @@ class _DebugWidget extends ConsumerWidget {
               leading: const Icon(Icons.settings),
               onTap: () => showDialog<void>(
                 context: context,
-                builder: (context) => const KmoniSettingsWidget(),
+                builder: (context) => const KmoniSettingsModal(),
               ),
             ),
             ListTile(
