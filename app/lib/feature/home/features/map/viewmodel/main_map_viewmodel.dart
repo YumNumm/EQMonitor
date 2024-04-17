@@ -97,16 +97,16 @@ class MainMapViewModel extends _$MainMapViewModel {
 
     await (
       _kmoniObservationPointService!.init(),
-      _eewHypocenterService!.init(
-        hypocenterIcon: ref.read(hypocenterIconRenderProvider)!,
-        hypocenterLowPreciseIcon:
-            ref.read(hypocenterLowPreciseIconRenderProvider)!,
-      ),
       _eewPsWaveService!.init(),
       _eewEstimatedIntensityService!.init(
         ref.read(intensityColorProvider),
       ),
     ).wait;
+    await _eewHypocenterService!.init(
+      hypocenterIcon: ref.read(hypocenterIconRenderProvider)!,
+      hypocenterLowPreciseIcon:
+          ref.read(hypocenterLowPreciseIconRenderProvider)!,
+    );
 
     // 地図の移動を監視
     controller.addListener(() {
@@ -506,6 +506,7 @@ class _KmoniObservationPointService {
         ],
       ),
       sourceLayer: layerId,
+      belowLayerId: _EewHypocenterService.sourceLayerId,
     );
   }
 
