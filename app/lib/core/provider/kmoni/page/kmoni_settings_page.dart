@@ -12,7 +12,6 @@ class KmoniSettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(kmoniSettingsProvider);
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('強震モニタ設定'),
