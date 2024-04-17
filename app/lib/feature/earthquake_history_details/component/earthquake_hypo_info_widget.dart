@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/extension/earthquake_v1.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
@@ -28,10 +29,12 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
     final textTheme = theme.textTheme;
     final intensityColorScheme = ref.watch(intensityColorProvider);
 
+    final isVolcano = item.isVolcano;
     final maxIntensity = item.maxIntensity;
     final colorScheme = switch (maxIntensity) {
       final JmaIntensity intensity =>
         intensityColorScheme.fromJmaIntensity(intensity),
+      _ when isVolcano => intensityColorScheme.sixUpper,
       _ => null,
     };
     final codeTable = ref.watch(jmaCodeTableProvider);
@@ -61,6 +64,61 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
                 intensity: maxIntensity,
               ),
             ],
+          )
+        : null;
+    // 「分頃(日本時間)」の後から「火山で大規模な噴火が発生しました」 の間の文字列
+    final volcanoName = item.volcanoName;
+    final volcanoWidget = isVolcano
+        ? Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        '火山の大規模な噴火',
+                        style: textTheme.titleMedium!.copyWith(
+                          color: textTheme.titleMedium!.color!.withOpacity(0.8),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        volcanoName ?? '不明',
+                        style: textTheme.headlineMedium!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Flexible(
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: hypoName?.name ?? '不明',
+                          style: textTheme.titleMedium,
+                        ),
+                        if (hypoDetailName != null) ...[
+                          const TextSpan(text: ' '),
+                          TextSpan(
+                            text: '(${hypoDetailName.name})',
+                            style: textTheme.titleSmall,
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           )
         : null;
     // 「MaxInt, 震源地, 規模」
@@ -269,7 +327,9 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
       alignment: WrapAlignment.center,
       children: [
         const Row(),
-        if (isEarthquakeNull)
+        if (volcanoWidget != null)
+          volcanoWidget
+        else if (isEarthquakeNull)
           earthquakeNullWidget
         else if (isMagnitudeAndDepthUnknown) ...[
           magnitudeDepthUnknownWidget,
@@ -284,8 +344,13 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
     );
 
     final card = Card(
-      margin: const EdgeInsets.all(4),
+      margin: const EdgeInsets.symmetric(
+        horizontal: 8,
+      ).add(
+        const EdgeInsets.only(bottom: 4),
+      ),
       elevation: 0,
+
       shadowColor: Colors.transparent,
       // 角丸にして Border
       shape: RoundedRectangleBorder(
@@ -303,7 +368,6 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
         ),
         child: Column(
           children: [
-            const SizedBox(height: 2),
             Row(
               children: [
                 if (maxIntensityWidget != null) maxIntensityWidget,
