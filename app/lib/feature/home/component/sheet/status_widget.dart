@@ -99,6 +99,7 @@ class SheetStatusWidget extends ConsumerWidget {
                                     .format(latestTime),
                                 style: theme.textTheme.bodyMedium!.copyWith(
                                   fontFamily: monoFont,
+                                  letterSpacing: -0.2,
                                 ),
                               ),
                             ),
@@ -120,8 +121,8 @@ class SheetStatusWidget extends ConsumerWidget {
                                     .format(latestTime),
                                 style: theme.textTheme.bodyMedium!.copyWith(
                                   fontFamily: monoFont,
-                                  fontWeight: FontWeight.bold,
                                   color: Colors.redAccent,
+                                  letterSpacing: -0.2,
                                 ),
                               ),
                             ),
