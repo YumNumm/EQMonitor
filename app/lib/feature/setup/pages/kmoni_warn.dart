@@ -42,48 +42,63 @@ class KmoniWarnPage extends ConsumerWidget {
                 ),
                 const KmoniCautionWidget(),
                 const Spacer(),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ActionButton.text(
-                          context: context,
-                          accentColor: Colors.grey[800],
-                          text: '利用しない',
-                          onPressed: () {
-                            ref
-                                .read(kmoniSettingsProvider.notifier)
-                                .setUseKmoni(
-                                  value: false,
-                                );
-                            onNext();
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: ActionButton.text(
-                          context: context,
-                          text: '利用する',
-                          onPressed: () {
-                            ref
-                                .read(kmoniSettingsProvider.notifier)
-                                .setUseKmoni(
-                                  value: true,
-                                );
-                            onNext();
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+                UseKmoniButton(
+                  onDisabled: () {
+                    ref.read(kmoniSettingsProvider.notifier).setUseKmoni(
+                          value: false,
+                        );
+                    onNext();
+                  },
+                  onEnabled: () {
+                    ref.read(kmoniSettingsProvider.notifier).setUseKmoni(
+                          value: false,
+                        );
+                    onNext();
+                  },
                 ),
               ],
             ),
           ),
         ),
       ],
+    );
+  }
+}
+
+class UseKmoniButton extends StatelessWidget {
+  const UseKmoniButton({
+    super.key,
+    required this.onDisabled,
+    required this.onEnabled,
+  });
+
+  final void Function() onDisabled;
+  final void Function() onEnabled;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          Expanded(
+            child: ActionButton.text(
+              context: context,
+              accentColor: Colors.grey[800],
+              text: '利用しない',
+              onPressed: onDisabled,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: ActionButton.text(
+              context: context,
+              text: '利用する',
+              onPressed: onEnabled,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

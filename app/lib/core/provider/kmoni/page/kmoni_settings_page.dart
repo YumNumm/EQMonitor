@@ -1,6 +1,8 @@
 import 'package:eqmonitor/core/component/widget/kmoni_caution.dart';
 import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_settings.dart';
+import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
 import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
+import 'package:eqmonitor/feature/setup/pages/kmoni_warn.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -18,51 +20,88 @@ class KmoniSettingsPage extends ConsumerWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Card(
-              clipBehavior: Clip.antiAlias,
-              elevation: 0,
-              color: theme.colorScheme.primaryContainer,
-              child: SwitchListTile.adaptive(
-                value: state.useKmoni,
-                onChanged: (value) async {
-                  if (value) {
-                    final result = await showModalBottomSheet<bool>(
-                      context: context,
-                      isScrollControlled: true,
-                      builder: (context) => SafeArea(
-                        child: DraggableScrollableSheet(
-                          expand: false,
-                          builder: (context, scrollController) =>
-                              SingleChildScrollView(
-                            controller: scrollController,
-                            child: const SafeArea(
-                              child: Column(
-                                children: [
-                                  SheetHeader(title: '強震モニタの注意点'),
-                                  KmoniCautionWidget(),
-                                ],
-                              ),
+            const KmoniSettingsUseToggle(),
+            const SizedBox(height: 8),
+            const Divider(),
+            if (state.useKmoni) const KmoniSettingsDialogInside(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class KmoniSettingsUseToggle extends ConsumerWidget {
+  const KmoniSettingsUseToggle({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(kmoniSettingsProvider);
+    final theme = Theme.of(context);
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      elevation: 0,
+      color: theme.colorScheme.primaryContainer,
+      child: SwitchListTile.adaptive(
+        value: state.useKmoni,
+        onChanged: (value) async {
+          if (value) {
+            final barWidget = Container(
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              width: 36,
+              height: 4,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: theme.colorScheme.onBackground,
+                boxShadow: const <BoxShadow>[
+                  BoxShadow(color: Colors.black12, blurRadius: 12),
+                ],
+              ),
+            );
+            final result = await showModalBottomSheet<bool>(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) => SafeArea(
+                child: SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.8,
+                  child: Column(
+                    children: [
+                      barWidget,
+                      const Expanded(
+                        child: SingleChildScrollView(
+                          child: SafeArea(
+                            child: Column(
+                              children: [
+                                SheetHeader(title: '強震モニタの注意点'),
+                                KmoniCautionWidget(),
+                              ],
                             ),
                           ),
                         ),
                       ),
-                    );
-                    final isAccepted = result == true;
-
-                    if (isAccepted) {
-                      ref.read(kmoniSettingsProvider.notifier).toggleUseKmoni();
-                    }
-                    return;
-                  }
-                  ref.read(kmoniSettingsProvider.notifier).toggleUseKmoni();
-                },
-                title: const Text('強震モニタを表示する'),
+                      UseKmoniButton(
+                        onDisabled: () => Navigator.of(context).pop(false),
+                        onEnabled: () => Navigator.of(context).pop(true),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            const Divider(),
-          ],
-        ),
+            );
+            final isAccepted = result == true;
+
+            if (isAccepted) {
+              ref.read(kmoniSettingsProvider.notifier).toggleUseKmoni();
+            }
+            return;
+          } else {
+            ref.read(kmoniSettingsProvider.notifier).toggleUseKmoni();
+          }
+        },
+        title: const Text('強震モニタを表示する'),
       ),
     );
   }

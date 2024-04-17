@@ -1,7 +1,7 @@
+import 'package:eqmonitor/core/provider/kmoni/page/kmoni_settings_page.dart';
 import 'package:eqmonitor/core/provider/kmoni/provider/kmoni_color_provider.dart';
 import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_scale.dart';
-import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -34,45 +34,61 @@ class KmoniSettingsModal extends HookConsumerWidget {
       children: [
         barWidget,
         SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                child: Text(
-                  '強震モニタ設定',
-                  style: textTheme.titleMedium,
-                ),
-              ),
-              const SettingsSectionHeader(
-                // text: '一定未満のリアルタイム震度の観測点を表示しない',
-                text: 'リアルタイム震度の表示しきい値',
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
-                child: SizedBox(
-                  height: 30,
-                  child: KmoniScaleWidget(
-                    showText: false,
-                    markers: [
-                      if (state.minRealtimeShindo != null &&
-                          state.minRealtimeShindo != -3.0)
-                        state.minRealtimeShindo!,
-                    ],
-                    position: KmoniIntensityPosition.under,
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              children: [
+                const KmoniSettingsUseToggle(),
+                if (state.useKmoni) const KmoniSettingsDialogInside(),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class KmoniSettingsDialogInside extends ConsumerWidget {
+  const KmoniSettingsDialogInside({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(kmoniSettingsProvider);
+    final colorMap = ref.watch(kyoshinColorMapProvider);
+    final (min, max) = (colorMap.first, colorMap.last);
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ListTile(
+          title: const Text('リアルタイム震度の表示しきい値'),
+          subtitle: SliderTheme(
+            data: theme.sliderTheme.copyWith(
+              trackShape: _CustomTrackShape(),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 30,
+                    child: KmoniScaleWidget(
+                      showText: false,
+                      markers: [
+                        if (state.minRealtimeShindo != null &&
+                            state.minRealtimeShindo != -3.0)
+                          state.minRealtimeShindo!,
+                      ],
+                      position: KmoniIntensityPosition.under,
+                    ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: SliderTheme(
-                  data: theme.sliderTheme.copyWith(
-                    trackShape: _CustomTrackShape(),
-                  ),
-                  child: Slider(
+                  Slider(
                     min: min.intensity,
                     max: max.intensity,
                     value: state.minRealtimeShindo ?? min.intensity,
@@ -82,19 +98,19 @@ class KmoniSettingsModal extends HookConsumerWidget {
                           value: value,
                         ),
                   ),
-                ),
+                ],
               ),
-              SwitchListTile.adaptive(
-                value: state.showRealtimeShindoScale,
-                onChanged: (value) => ref
-                    .read(kmoniSettingsProvider.notifier)
-                    .setShowRealtimeShindoScale(
-                      value: value,
-                    ),
-                title: const Text('リアルタイム震度のスケールを表示'),
-              ),
-            ],
+            ),
           ),
+        ),
+        SwitchListTile.adaptive(
+          value: state.showRealtimeShindoScale,
+          onChanged: (value) => ref
+              .read(kmoniSettingsProvider.notifier)
+              .setShowRealtimeShindoScale(
+                value: value,
+              ),
+          title: const Text('リアルタイム震度のスケールを表示'),
         ),
       ],
     );
