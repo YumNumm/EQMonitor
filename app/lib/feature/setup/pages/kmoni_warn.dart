@@ -51,7 +51,7 @@ class KmoniWarnPage extends ConsumerWidget {
                   },
                   onEnabled: () {
                     ref.read(kmoniSettingsProvider.notifier).setUseKmoni(
-                          value: false,
+                          value: true,
                         );
                     onNext();
                   },
