@@ -1,5 +1,29 @@
 # Changelog
 
+## [v2.4.0](https://github.com/YumNumm/EQMonitor/compare/v2.3.3...v2.4.0) - 2024-04-17
+- 新サーバ 地震履歴・緊急地震速報の繋ぎこみ by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/611
+- チップ機能の実装 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/609
+- Auto format - ref: develop by @github-actions in https://github.com/YumNumm/EQMonitor/pull/621
+- AndroidのApp内課金の実装 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/622
+- build(deps): bump melos from 4.1.0 to 5.3.0 by @dependabot in https://github.com/YumNumm/EQMonitor/pull/623
+- ライセンス周りの調整 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/626
+- Fragment Shaderの更新 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/628
+- プロキシ設定の実装 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/630
+- Auto format - ref: develop by @github-actions in https://github.com/YumNumm/EQMonitor/pull/631
+- 地震履歴のWebSocket結合 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/632
+- iOSの署名管理をCloud-managed certificatesへ変更 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/635
+- iOSデプロイ設定ミス by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/637
+- Auto format - ref: develop by @github-actions in https://github.com/YumNumm/EQMonitor/pull/638
+- iOSとAndroidのCD修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/640
+- 地震履歴詳細画面のWebSocket結合 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/643
+- 強震モニタのスケール実装 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/645
+- Auto format - ref: develop by @github-actions in https://github.com/YumNumm/EQMonitor/pull/647
+- 強震モニタスケール設定 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/648
+- 海外大規模噴火の扱い修正  by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/649
+- 強震モニタ設定の修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/650
+- バグ修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/651
+- Restyled/fix/support by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/652
+
 ## [v2.3.3](https://github.com/YumNumm/EQMonitor/compare/v2.3.2...v2.3.3) - 2024-03-03
 - API v3を_oldへ移行し、deprecatedとしてマーク by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/587
 - API v1 仮実装 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/589
