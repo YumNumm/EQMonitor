@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/extension/earthquake_v1.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
@@ -64,11 +65,26 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
     final theme = Theme.of(context);
 
     final codeTable = ref.watch(jmaCodeTableProvider);
+
+    /// 遠地地震かどうか
+    final isFarEarthquake = item.headline?.contains('海外で規模の大きな地震') ?? false;
+
+    /// 噴火かどうか
+    final isVolcano = item.isVolcano;
+
     final hypoName = useMemoized(
-      () => codeTable.areaEpicenter.items.firstWhereOrNull(
-        (e) => int.tryParse(e.code) == item.epicenterCode,
-      ),
-      [item.epicenterCode],
+      () {
+        final volcanoName = item.volcanoName;
+        if (volcanoName != null) {
+          return volcanoName;
+        }
+        return codeTable.areaEpicenter.items
+            .firstWhereOrNull(
+              (e) => int.tryParse(e.code) == item.epicenterCode,
+            )
+            ?.name;
+      },
+      [item],
     );
     final hypoDetailName = useMemoized(
       () => codeTable.areaEpicenterDetail.items.firstWhereOrNull(
@@ -76,13 +92,6 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
       ),
       [item.epicenterDetailCode],
     );
-
-    /// 遠地地震かどうか
-    final isFarEarthquake = item.headline?.contains('海外で規模の大きな地震') ?? false;
-
-    /// 噴火かどうか
-    final isVolcano = (item.text?.contains('大規模な噴火が発生しました') ?? false) &&
-        (item.text?.contains('実際には、規模の大きな地震は発生していない点に留意') ?? false);
 
     final maxIntensityRegionNames = item.maxIntensityRegionNames;
     final maxIntensity = item.maxIntensity;
@@ -93,19 +102,19 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
       maxIntensityRegionNames
     )) {
       (
-        final AreaEpicenter_AreaEpicenterItem hypoName,
+        final String hypoName,
         final AreaEpicenterDetail_AreaEpicenterDetailItem hypoDetailName,
         _,
         _
       ) =>
-        '${hypoName.name}(${hypoDetailName.name})',
+        '$hypoName(${hypoDetailName.name})',
       (
-        final AreaEpicenter_AreaEpicenterItem hypoName,
+        final String hypoName,
         _,
         _,
         _,
       ) =>
-        hypoName.name,
+        hypoName,
       (_, _, final JmaIntensity intensity, final List<String> regionNames)
           when regionNames.isNotEmpty && regionNames.length >= 2 =>
         '最大震度$intensityを${regionNames.first}などで観測',
