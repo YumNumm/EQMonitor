@@ -11,10 +11,7 @@ class KmoniSettingsModal extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(kmoniSettingsProvider);
-    final colorMap = ref.watch(kyoshinColorMapProvider);
-    final (min, max) = (colorMap.first, colorMap.last);
     final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
 
     final barWidget = Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -60,7 +57,6 @@ class KmoniSettingsDialogInside extends ConsumerWidget {
     final colorMap = ref.watch(kyoshinColorMapProvider);
     final (min, max) = (colorMap.first, colorMap.last);
     final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
