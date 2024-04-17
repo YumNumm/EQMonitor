@@ -5,8 +5,8 @@ import 'package:eqmonitor/feature/settings/component/settings_section_header.dar
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class KmoniSettingsWidget extends HookConsumerWidget {
-  const KmoniSettingsWidget({super.key});
+class KmoniSettingsModal extends HookConsumerWidget {
+  const KmoniSettingsModal({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -14,6 +14,7 @@ class KmoniSettingsWidget extends HookConsumerWidget {
     final colorMap = ref.watch(kyoshinColorMapProvider);
     final (min, max) = (colorMap.first, colorMap.last);
     final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
 
     final barWidget = Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -22,7 +23,7 @@ class KmoniSettingsWidget extends HookConsumerWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: theme.colorScheme.onBackground,
+        color: theme.colorScheme.onSurface,
         boxShadow: const <BoxShadow>[
           BoxShadow(color: Colors.black12, blurRadius: 12),
         ],
@@ -37,8 +38,17 @@ class KmoniSettingsWidget extends HookConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                child: Text(
+                  '強震モニタ設定',
+                  style: textTheme.titleMedium,
+                ),
+              ),
               const SettingsSectionHeader(
-                text: '表示する最低リアルタイム震度',
+                // text: '一定未満のリアルタイム震度の観測点を表示しない',
+                text: 'リアルタイム震度の表示しきい値',
               ),
               Padding(
                 padding:
@@ -52,6 +62,7 @@ class KmoniSettingsWidget extends HookConsumerWidget {
                           state.minRealtimeShindo != -3.0)
                         state.minRealtimeShindo!,
                     ],
+                    position: KmoniIntensityPosition.under,
                   ),
                 ),
               ),

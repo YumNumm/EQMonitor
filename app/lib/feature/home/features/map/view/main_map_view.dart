@@ -92,6 +92,10 @@ class MainMapView extends HookConsumerWidget {
 
     final map = RepaintBoundary(
       child: MaplibreMap(
+        minMaxZoomPreference: const MinMaxZoomPreference(
+          0,
+          10,
+        ),
         initialCameraPosition: const CameraPosition(
           target: LatLng(35.681236, 139.767125),
           zoom: 5,
