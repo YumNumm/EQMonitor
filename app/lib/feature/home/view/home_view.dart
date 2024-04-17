@@ -289,7 +289,7 @@ class _Fabs extends ConsumerWidget {
           tooltip: '強震モニタの設定',
           onPressed: () => showModalBottomSheet<void>(
             context: context,
-            builder: (context) => const KmoniSettingsWidget(),
+            builder: (context) => const KmoniSettingsModal(),
           ),
           elevation: 0,
           child: const Icon(Icons.settings),

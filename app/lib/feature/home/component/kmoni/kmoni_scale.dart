@@ -15,10 +15,12 @@ class KmoniScaleWidget extends ConsumerWidget {
     super.key,
     this.showText = true,
     this.markers = const [],
+    this.position = KmoniIntensityPosition.inside,
   });
 
   final bool showText;
   final List<double> markers;
+  final KmoniIntensityPosition position;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,6 +34,8 @@ class KmoniScaleWidget extends ConsumerWidget {
         lineColor: colorScheme.onSurface,
         showText: showText,
         markers: markers,
+        position: position,
+        onSurface: colorScheme.onSurface,
       ),
     );
   }
@@ -40,9 +44,11 @@ class KmoniScaleWidget extends ConsumerWidget {
 class _KmoniScalePainter extends CustomPainter {
   _KmoniScalePainter({
     required this.colorMap,
-    this.lineColor = Colors.black,
-    this.showText = true,
-    this.markers = const [],
+    required this.lineColor,
+    required this.onSurface,
+    required this.showText,
+    required this.markers,
+    required this.position,
   });
 
   final List<KyoshinColorMapModel> colorMap;
@@ -53,12 +59,27 @@ class _KmoniScalePainter extends CustomPainter {
   final bool showText;
   final List<double> markers;
 
+  final KmoniIntensityPosition position;
+  final Color onSurface;
+
+  static const _kUnderPadding = 8;
+
   @override
   void paint(Canvas canvas, Size size) {
-    final rect = Offset.zero & size;
+    final rect = switch (position) {
+      KmoniIntensityPosition.inside =>
+        Rect.fromLTWH(0, 0, size.width, size.height),
+      KmoniIntensityPosition.under =>
+        Rect.fromLTWH(0, 0, size.width, size.height - _kUnderPadding),
+    };
 
     drawBackground(canvas, rect);
-    drawRealtimeIntensityChange(canvas, rect, drawText: showText);
+    drawRealtimeIntensityChange(
+      canvas,
+      rect,
+      drawText: showText,
+      position: position,
+    );
     for (final e in markers) {
       drawMarker(canvas, rect, e);
     }
@@ -87,9 +108,10 @@ class _KmoniScalePainter extends CustomPainter {
       final intensity = element.intensity.toJmaForecastIntensity;
       if (lastIntensity != null && lastIntensity != intensity) {
         final x = rect.width * (index / colorMap.length);
+        final shouldAdd = position == KmoniIntensityPosition.under;
         canvas.drawLine(
           Offset(x, rect.top),
-          Offset(x, rect.bottom),
+          Offset(x, rect.bottom + (shouldAdd ? 4 : 0)),
           paint,
         );
       }
@@ -102,6 +124,7 @@ class _KmoniScalePainter extends CustomPainter {
     Canvas canvas,
     Rect rect, {
     bool drawText = true,
+    KmoniIntensityPosition position = KmoniIntensityPosition.inside,
   }) {
     final paint = Paint()
       ..color = lineColor
@@ -111,23 +134,31 @@ class _KmoniScalePainter extends CustomPainter {
       if (element.intensity % 1 != 0) {
         return;
       }
-      final color =
-          (element.color.computeLuminance() > 0.5 ? Colors.black : Colors.white)
-              .withOpacity(0.8);
+      final color = (element.color.computeLuminance() > 0.5
+          ? Colors.black
+          : Colors.white);
       final x = rect.width * (index / colorMap.length) + rect.left;
       final width = rect.width / colorMap.length;
+      final shouldAdd = position == KmoniIntensityPosition.under;
       canvas.drawLine(
         Offset(x + width / 2, rect.top),
         Offset(x + width / 2, rect.bottom),
         paint..color = color,
       );
+      if (shouldAdd) {
+        canvas.drawLine(
+          Offset(x + width / 2, rect.bottom),
+          Offset(x + width / 2, rect.bottom + (shouldAdd ? 4 : 0)),
+          paint..color = onSurface,
+        );
+      }
 
       if (drawText) {
         final textPainter = TextPainter(
           text: TextSpan(
             text: element.intensity.toStringAsFixed(0),
             style: TextStyle(
-              color: color,
+              color: shouldAdd ? onSurface : color,
               fontSize: 10,
               fontFamily: monoFont,
               fontWeight: FontWeight.bold,
@@ -135,15 +166,21 @@ class _KmoniScalePainter extends CustomPainter {
           ),
           textDirection: TextDirection.ltr,
         )..layout();
-        final offset = Offset(
-          x +
-              switch (element.intensity) {
-                7.0 => -textPainter.width,
-                _ => 4,
-              } +
-              rect.left,
-          rect.bottom - textPainter.height,
-        );
+        final offset = switch (position) {
+          KmoniIntensityPosition.inside => Offset(
+              x +
+                  switch (element.intensity) {
+                    7.0 => -textPainter.width,
+                    _ => 4,
+                  } +
+                  rect.left,
+              rect.bottom - textPainter.height,
+            ),
+          KmoniIntensityPosition.under => Offset(
+              x + rect.left - textPainter.width / 2,
+              rect.bottom + _kUnderPadding / 2,
+            ),
+        };
         textPainter.paint(
           canvas,
           offset,
@@ -192,8 +229,15 @@ class _KmoniScalePainter extends CustomPainter {
   bool shouldRepaint(_KmoniScalePainter oldDelegate) =>
       oldDelegate.colorMap != colorMap ||
       oldDelegate.showText != showText ||
-      !const ListEquality<double>().equals(oldDelegate.markers, markers);
+      !const ListEquality<double>().equals(oldDelegate.markers, markers) ||
+      oldDelegate.position != position;
 
   @override
   bool shouldRebuildSemantics(_KmoniScalePainter oldDelegate) => false;
+}
+
+enum KmoniIntensityPosition {
+  inside,
+  under,
+  ;
 }

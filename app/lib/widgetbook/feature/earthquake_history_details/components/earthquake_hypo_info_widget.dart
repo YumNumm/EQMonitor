@@ -68,7 +68,6 @@ class _Body extends ConsumerWidget {
         options: detailedEpicenters.map((e) => int.parse(e.code)).toList(),
         label: 'epicenter_detail_code',
         description: '詳細震央地名(コード表43: AreaEpicenterDetail)より\n(遠地地震で利用)',
-        initialOption: null,
         labelBuilder: (value) => value.toString(),
       ),
       magnitude: context.knobs.doubleOrNull.slider(
@@ -81,7 +80,6 @@ class _Body extends ConsumerWidget {
         label: 'magnitude_condition',
         options: ['Ｍ不明', 'Ｍ８を超える巨大地震'],
         description: 'マグニチュードの数値が求まらない事項を記載',
-        initialOption: null,
       ),
       maxIntensity: context.knobs.listOrNull(
         options: JmaIntensity.values,

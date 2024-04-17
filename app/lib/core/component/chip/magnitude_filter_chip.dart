@@ -74,7 +74,7 @@ class _MagnitudeFilterModal extends HookWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: theme.colorScheme.onBackground,
+        color: theme.colorScheme.onSurface,
         boxShadow: const <BoxShadow>[
           BoxShadow(color: Colors.black12, blurRadius: 12),
         ],
@@ -131,7 +131,7 @@ class _MagnitudeFilterModal extends HookWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               TextButton(
-                onPressed: () => Navigator.of(context).pop(null),
+                onPressed: () => Navigator.of(context).pop(),
                 child: const Text('キャンセル'),
               ),
               TextButton(

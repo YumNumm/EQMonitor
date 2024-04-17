@@ -5,8 +5,8 @@ import 'package:eqmonitor/feature/settings/component/settings_section_header.dar
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class KmoniSettingsWidget extends HookConsumerWidget {
-  const KmoniSettingsWidget({super.key});
+class KmoniSettingsModal extends HookConsumerWidget {
+  const KmoniSettingsModal({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,7 +22,7 @@ class KmoniSettingsWidget extends HookConsumerWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: theme.colorScheme.onBackground,
+        color: theme.colorScheme.onSurface,
         boxShadow: const <BoxShadow>[
           BoxShadow(color: Colors.black12, blurRadius: 12),
         ],
@@ -52,6 +52,7 @@ class KmoniSettingsWidget extends HookConsumerWidget {
                           state.minRealtimeShindo != -3.0)
                         state.minRealtimeShindo!,
                     ],
+                    position: KmoniIntensityPosition.under,
                   ),
                 ),
               ),
