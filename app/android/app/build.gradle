@@ -24,7 +24,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
     namespace "net.yumnmm.eqmonitor"
-    compileSdk 33
+    compileSdk 34
 
     compileOptions {
 
@@ -45,7 +45,7 @@ android {
     defaultConfig {
         applicationId 'net.yumnumm.eqmonitor'
         minSdkVersion 26
-        targetSdkVersion 33
+        targetSdkVersion 34
         multiDexEnabled true
         versionCode localProperties.getProperty('flutter.versionCode').toInteger()
         versionName localProperties.getProperty('flutter.versionName')
