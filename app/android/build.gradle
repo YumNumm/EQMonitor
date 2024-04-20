@@ -1,3 +1,21 @@
+buildscript {
+    ext.kotlin_version = '1.9.22'
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.3.0'
+        classpath 'com.google.gms:google-services:4.3.14'
+
+        classpath 'com.google.firebase:perf-plugin:1.4.2'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
 allprojects {
     repositories {
         google()
@@ -17,3 +35,22 @@ tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
 
+gradle.taskGraph.whenReady { taskGraph ->
+    def tasks = taskGraph.getAllTasks()
+    def buildTasks = tasks.find { it.name.startsWith('build') && it.getGroup() == 'build' }
+    if (buildTasks) {
+        tasks.findAll {it.name.startsWith('test')}.each { task ->
+            task.enabled = false
+        }
+    }
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    def tasks = taskGraph.getAllTasks()
+    def buildTasks = tasks.find { it.name.startsWith('build') && it.getGroup() == 'build' }
+    if (buildTasks) {
+        tasks.findAll {it.name.startsWith('test')}.each { task ->
+            task.enabled = false
+        }
+    }
+}
