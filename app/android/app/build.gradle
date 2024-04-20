@@ -68,7 +68,6 @@ android {
             minifyEnabled true
             shrinkResources true
             multiDexEnabled true
-            versionNameSuffix '.r'
             resValue "string", "app_name", "EQMonitor"
         }
         debug {
