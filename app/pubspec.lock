@@ -591,10 +591,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_local_notifications
-      sha256: a701df4866f9a38bb8e4450a54c143bbeeb0ce2381e7df5a36e1006f3b43bb28
+      sha256: "8cdc719114ab1c86c64bb7a86d3a679674c3637edd229e3a994797d4a1504ce4"
       url: "https://pub.dev"
     source: hosted
-    version: "17.0.1"
+    version: "17.1.0"
   flutter_local_notifications_linux:
     dependency: transitive
     description:
@@ -607,10 +607,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_local_notifications_platform_interface
-      sha256: "7cf643d6d5022f3baed0be777b0662cce5919c0a7b86e700299f22dc4ae660ef"
+      sha256: "340abf67df238f7f0ef58f4a26d2a83e1ab74c77ab03cd2b2d5018ac64db30b7"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.0+1"
+    version: "7.1.0"
   flutter_markdown:
     dependency: "direct main"
     description:
@@ -963,8 +963,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: main
-      resolved-ref: f21cf9c1384712bc15a0acd6c138bf77482fe237
+      ref: "355a5c832160521eb4d2b0ee5ac1d3c3642b7277"
+      resolved-ref: "355a5c832160521eb4d2b0ee5ac1d3c3642b7277"
       url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
     source: git
     version: "0.18.0"
@@ -973,7 +973,7 @@ packages:
     description:
       path: maplibre_gl_platform_interface
       ref: main
-      resolved-ref: f21cf9c1384712bc15a0acd6c138bf77482fe237
+      resolved-ref: "6c4b2b4bcf0311afe662439fb508a09c10038cc5"
       url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
     source: git
     version: "0.18.0"
@@ -982,7 +982,7 @@ packages:
     description:
       path: maplibre_gl_web
       ref: main
-      resolved-ref: f21cf9c1384712bc15a0acd6c138bf77482fe237
+      resolved-ref: "6c4b2b4bcf0311afe662439fb508a09c10038cc5"
       url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
     source: git
     version: "0.18.0"
@@ -1214,10 +1214,10 @@ packages:
     dependency: transitive
     description:
       name: pointycastle
-      sha256: "70fe966348fe08c34bf929582f1d8247d9d9408130723206472b4687227e4333"
+      sha256: "79fbafed02cfdbe85ef3fd06c7f4bc2cbcba0177e61b765264853d4253b21744"
       url: "https://pub.dev"
     source: hosted
-    version: "3.8.0"
+    version: "3.9.0"
   pool:
     dependency: transitive
     description:
@@ -1254,10 +1254,10 @@ packages:
     dependency: "direct main"
     description:
       name: purchases_flutter
-      sha256: "4a818d3f50a657837dcd3b4e1f62303ec4f85e413fed633d24f0e37df183d7b8"
+      sha256: "375eee487e4098b99b7d7d360f1c6033e6ed6b8e4b9c1e92c6df7a3dd44846cf"
       url: "https://pub.dev"
     source: hosted
-    version: "6.26.0"
+    version: "6.27.0"
   recase:
     dependency: transitive
     description:
