@@ -297,7 +297,7 @@ class _Fabs extends ConsumerWidget {
             context: context,
             builder: (context) => const KmoniSettingsModal(),
           ),
-          elevation: 0,
+          elevation: 4,
           child: const Icon(Icons.settings),
         ),
         FloatingActionButton.small(
