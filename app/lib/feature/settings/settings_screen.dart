@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
@@ -49,7 +50,7 @@ class SettingsScreen extends HookConsumerWidget {
                       .setDebugger(value: false);
                 } else {
                   final result = await _debugAttempt(context);
-                  if (result) {
+                  if (result == _DebugAttemptResult.debugger) {
                     await ref
                         .read(debuggerProvider.notifier)
                         .setDebugger(value: true);
@@ -216,10 +217,7 @@ Future<void> _onInquiryTap(BuildContext context, WidgetRef ref) async {
   }
 }
 
-Future<bool> _debugAttempt(BuildContext context) async {
-  if (kDebugMode) {
-    return true;
-  }
+Future<_DebugAttemptResult> _debugAttempt(BuildContext context) async {
   final str = await showTextInputDialog(
     context: context,
     barrierDismissible: false,
@@ -229,13 +227,20 @@ Future<bool> _debugAttempt(BuildContext context) async {
       DialogTextField(),
     ],
   );
-  if (str == null) {
-    return false;
-  }
-  if ('SALT${str}SALT'.sha512 ==
-      // ignore: lines_longer_than_80_chars
-      'debf7168f29c6b58d15ba0168663d36804d16f143ef3d81ff8c205bb8e840ddb5fcf0d0ab33a3f8b13fa44b772f852130986f0dc2d259f04e1587bbd559260b1') {
-    return true;
-  }
-  return false;
+  final hash = 'SALT${str}SALT'.sha512;
+  log('hash: $hash');
+
+  return switch (hash) {
+    'debf7168f29c6b58d15ba0168663d36804d16f143ef3d81ff8c205bb8e840ddb5fcf0d0ab33a3f8b13fa44b772f852130986f0dc2d259f04e1587bbd559260b1' =>
+      _DebugAttemptResult.debugger,
+    '' => _DebugAttemptResult.keviNotifier,
+    _ => _DebugAttemptResult.none,
+  };
+}
+
+enum _DebugAttemptResult {
+  debugger,
+  keviNotifier,
+  none,
+  ;
 }

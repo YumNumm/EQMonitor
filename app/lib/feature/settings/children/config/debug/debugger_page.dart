@@ -112,10 +112,45 @@ class _DebugWidget extends ConsumerWidget {
                   const EarthquakeParameterListRoute().push<void>(context),
             ),
             ListTile(
-              title: const Text('揺れ検知通知 Subscribe'),
+              title: const Text('揺れ検知通知 購読'),
               leading: const Icon(Icons.notifications_active),
-              onTap: () async =>
-                  FirebaseMessaging.instance.subscribeToTopic('kevi'),
+              onTap: () async {
+                try {
+                  final result =
+                      await FirebaseMessaging.instance.subscribeToTopic('kevi');
+                } catch (e) {
+                  if (context.mounted) {
+                    await showDialog<void>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('揺れ検知通知 購読エラー'),
+                        content: Text(e.toString()),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                }
+                if (context.mounted) {
+                  await showDialog<void>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('揺れ検知通知 購読結果'),
+                      content: const Text('OK'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
             ),
             SwitchListTile.adaptive(
               value: ref.watch(isDioProxyEnabledProvider),

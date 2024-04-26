@@ -179,12 +179,12 @@ PODS:
   - PromisesObjC (2.4.0)
   - PromisesSwift (2.4.0):
     - PromisesObjC (= 2.4.0)
-  - purchases_flutter (6.26.0):
+  - purchases_flutter (6.27.0):
     - Flutter
-    - PurchasesHybridCommon (= 10.4.0)
-  - PurchasesHybridCommon (10.4.0):
-    - RevenueCat (= 4.40.0)
-  - RevenueCat (4.40.0)
+    - PurchasesHybridCommon (= 10.4.1)
+  - PurchasesHybridCommon (10.4.1):
+    - RevenueCat (= 4.40.1)
+  - RevenueCat (4.40.1)
   - share_plus (0.0.1):
     - Flutter
   - shared_preferences_foundation (0.0.1):
@@ -301,9 +301,9 @@ SPEC CHECKSUMS:
   permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
-  purchases_flutter: 8dae74795cc654391454da4cc99b5f9ca5e53c34
-  PurchasesHybridCommon: 70b93acd428e5f67a4d2f13de4c4eb229e4ff39f
-  RevenueCat: f33d2bb58e75afc68d3a8cf193971f008f553a2c
+  purchases_flutter: 5a1857a77feec2e518cf0ea84e090ee0a7441c26
+  PurchasesHybridCommon: 596ac8a54be4e03cc1398b012bd9cdf134111b70
+  RevenueCat: 9f6b84da3f00953b2eeaaa6fc4710c1d280a5710
   share_plus: c3fef564749587fc939ef86ffb283ceac0baf9f5
   shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
   url_launcher_ios: 6116280ddcfe98ab8820085d8d76ae7449447586
