@@ -31,19 +31,23 @@ class ErrorInfoWidget extends StatelessWidget {
                 ...() {
                   final exception = error as DioException;
                   final data = exception.response?.data;
+                  final response = exception.response;
                   return [
                     DioExceptionText(
                       exception: exception,
                     ),
                     Text(
-                      '${exception.response?.statusCode} ${exception.response?.statusMessage}${switch (data) {
-                        {
-                          'code': final String code,
-                          'details': final String details,
-                        } =>
-                          "\nエラーコード $code: $details",
-                        _ => "",
-                      }}',
+                      (response != null
+                              ? '${exception.response?.statusCode} ${exception.response?.statusMessage}'
+                              : '') +
+                          switch (data) {
+                            {
+                              'code': final String code,
+                              'details': final String details,
+                            } =>
+                              '\nエラーコード $code: $details',
+                            _ => '',
+                          },
                       textAlign: TextAlign.center,
                     ),
                   ];
