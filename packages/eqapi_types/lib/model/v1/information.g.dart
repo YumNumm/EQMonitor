@@ -23,7 +23,7 @@ _$InformationV1Impl _$$InformationV1ImplFromJson(Map<String, dynamic> json) =>
           body: $checkedConvert('body', (v) => v as Map<String, dynamic>),
           createdAt:
               $checkedConvert('created_at', (v) => DateTime.parse(v as String)),
-          id: $checkedConvert('id', (v) => v as int),
+          id: $checkedConvert('id', (v) => (v as num).toInt()),
           level: $checkedConvert(
               'level',
               (v) =>
