@@ -83,7 +83,7 @@ class CrashlyticsTalkerObserver implements TalkerObserver {
       );
 
   @override
-  void onLog(TalkerDataInterface log) {
+  void onLog(TalkerData log) {
     if (log.title == TelegramWebSocketLog('').title) {
       return;
     }

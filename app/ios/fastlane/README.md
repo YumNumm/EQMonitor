@@ -15,6 +15,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## iOS
 
+### ios certificates
+
+```sh
+[bundle exec] fastlane ios certificates
+```
+
+Download and install certificates and provisioning profiles for all configurations: development, AppStore and AdHoc
+
 ### ios setup_build_number
 
 ```sh
