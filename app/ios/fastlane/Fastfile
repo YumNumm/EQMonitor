@@ -1,6 +1,14 @@
 default_platform(:ios)
 
 platform :ios do
+
+  desc "Download and install certificates and provisioning profiles for all configurations: development, AppStore and AdHoc"
+  lane :certificates do
+    match(type: "development")
+    match(type: "appstore")
+    match(type: "adhoc")
+  end
+
   desc "Increment the build number"
   lane :setup_build_number do
     setup_ci if ENV['CI']

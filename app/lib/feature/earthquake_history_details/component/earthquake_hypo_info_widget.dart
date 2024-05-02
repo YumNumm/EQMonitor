@@ -69,56 +69,53 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
     // 「分頃(日本時間)」の後から「火山で大規模な噴火が発生しました」 の間の文字列
     final volcanoName = item.volcanoName;
     final volcanoWidget = isVolcano
-        ? Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        '火山の大規模な噴火',
-                        style: textTheme.titleMedium!.copyWith(
-                          color: textTheme.titleMedium!.color!.withOpacity(0.8),
-                        ),
+        ? Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Flexible(
+                    child: Text(
+                      '火山の大規模な噴火',
+                      style: textTheme.titleMedium!.copyWith(
+                        color: textTheme.titleMedium!.color!.withOpacity(0.8),
                       ),
-                    ),
-                    const SizedBox(width: 4),
-                    Flexible(
-                      child: Text(
-                        volcanoName ?? '不明',
-                        style: textTheme.headlineMedium!.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Flexible(
-                  child: Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: hypoName?.name ?? '不明',
-                          style: textTheme.titleMedium,
-                        ),
-                        if (hypoDetailName != null) ...[
-                          const TextSpan(text: ' '),
-                          TextSpan(
-                            text: '(${hypoDetailName.name})',
-                            style: textTheme.titleSmall,
-                          ),
-                        ],
-                      ],
                     ),
                   ),
+                  const SizedBox(width: 4),
+                  Flexible(
+                    child: Text(
+                      volcanoName ?? '不明',
+                      style: textTheme.headlineMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Flexible(
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: hypoName?.name ?? '不明',
+                        style: textTheme.titleMedium,
+                      ),
+                      if (hypoDetailName != null) ...[
+                        const TextSpan(text: ' '),
+                        TextSpan(
+                          text: '(${hypoDetailName.name})',
+                          style: textTheme.titleSmall,
+                        ),
+                      ],
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           )
         : null;
     // 「MaxInt, 震源地, 規模」
@@ -166,25 +163,31 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
     // 地震発生時刻
     final timeText =
         switch ((item.originTime, item.arrivalTime, creationDateFromEventId)) {
-      (final DateTime originTime, _, _) =>
-        DateFormat('yyyy/MM/dd HH:mm頃').format(
+      (final DateTime originTime, _, _) when isVolcano =>
+        "噴火時刻: ${DateFormat('yyyy/MM/dd HH:mm頃').format(
           originTime.toLocal(),
-        ),
+        )}",
+      (final DateTime originTime, _, _) =>
+        "発生時刻: ${DateFormat('yyyy/MM/dd HH:mm頃').format(
+          originTime.toLocal(),
+        )}",
       (_, final DateTime arrivalTime, _) =>
-        DateFormat('yyyy/MM/dd HH:mm頃').format(
+        "検知時刻: ${DateFormat('yyyy/MM/dd HH:mm頃').format(
           arrivalTime.toLocal(),
-        ),
+        )}",
       (_, _, final DateTime creationDateFromEventId) =>
-        DateFormat('yyyy/MM/dd HH:mm頃').format(
+        "時刻: ${DateFormat('yyyy/MM/dd HH:mm頃').format(
           creationDateFromEventId,
-        ),
+        )}",
       _ => null,
     };
     final timeWidget = timeText != null
-        ? Center(
-            child: Text(
-              timeText,
-            ),
+        ? Wrap(
+            children: [
+              Text(
+                timeText,
+              ),
+            ],
           )
         : null;
 
