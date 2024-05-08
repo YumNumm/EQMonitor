@@ -15,7 +15,7 @@ _$_EewHypocenterPropertiesImpl _$$_EewHypocenterPropertiesImplFromJson(
       json,
       ($checkedConvert) {
         final val = _$_EewHypocenterPropertiesImpl(
-          depth: $checkedConvert('depth', (v) => v as int),
+          depth: $checkedConvert('depth', (v) => (v as num).toInt()),
           magnitude: $checkedConvert('magnitude', (v) => (v as num).toDouble()),
           isLowPrecise: $checkedConvert('isLowPrecise', (v) => v as bool),
         );

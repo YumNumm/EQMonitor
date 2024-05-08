@@ -14,7 +14,7 @@ _$NtpStateModelImpl _$$NtpStateModelImplFromJson(Map<String, dynamic> json) =>
       json,
       ($checkedConvert) {
         final val = _$NtpStateModelImpl(
-          offset: $checkedConvert('offset', (v) => v as int?),
+          offset: $checkedConvert('offset', (v) => (v as num?)?.toInt()),
           updatedAt: $checkedConvert('updatedAt',
               (v) => v == null ? null : DateTime.parse(v as String)),
         );

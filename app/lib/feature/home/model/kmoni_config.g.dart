@@ -14,7 +14,7 @@ _$KmoniConfigImpl _$$KmoniConfigImplFromJson(Map<String, dynamic> json) =>
       json,
       ($checkedConvert) {
         final val = _$KmoniConfigImpl(
-          counter: $checkedConvert('counter', (v) => v as int? ?? 0),
+          counter: $checkedConvert('counter', (v) => (v as num?)?.toInt() ?? 0),
         );
         return val;
       },

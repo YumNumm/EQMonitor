@@ -19,6 +19,7 @@ dependencies:
   eqapi_client:
     git:
       url: https://github.com/YumNumm/EQMonitor.git
+
       path: packages/eqapi_client
   eqapi_types:
     git:

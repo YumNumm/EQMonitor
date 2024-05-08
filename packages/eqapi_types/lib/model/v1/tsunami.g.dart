@@ -14,15 +14,15 @@ _$_TsunamiV1BaseImpl _$$_TsunamiV1BaseImplFromJson(Map<String, dynamic> json) =>
       json,
       ($checkedConvert) {
         final val = _$_TsunamiV1BaseImpl(
-          eventId: $checkedConvert('event_id', (v) => v as int),
+          eventId: $checkedConvert('event_id', (v) => (v as num).toInt()),
           headline: $checkedConvert('headline', (v) => v as String?),
-          id: $checkedConvert('id', (v) => v as int),
+          id: $checkedConvert('id', (v) => (v as num).toInt()),
           infoType: $checkedConvert('info_type', (v) => v as String),
           pressAt:
               $checkedConvert('press_at', (v) => DateTime.parse(v as String)),
           reportAt:
               $checkedConvert('report_at', (v) => DateTime.parse(v as String)),
-          serialNo: $checkedConvert('serial_no', (v) => v as int?),
+          serialNo: $checkedConvert('serial_no', (v) => (v as num?)?.toInt()),
           status: $checkedConvert('status', (v) => v as String),
           type: $checkedConvert('type', (v) => v as String),
           validAt: $checkedConvert('valid_at',
@@ -631,7 +631,7 @@ _$EarthquakeHypocenterImpl _$$EarthquakeHypocenterImplFromJson(
         final val = _$EarthquakeHypocenterImpl(
           name: $checkedConvert('name', (v) => v as String),
           code: $checkedConvert('code', (v) => v as String),
-          depth: $checkedConvert('depth', (v) => v as int?),
+          depth: $checkedConvert('depth', (v) => (v as num?)?.toInt()),
           detailed: $checkedConvert(
               'detailed',
               (v) => v == null
