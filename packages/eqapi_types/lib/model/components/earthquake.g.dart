@@ -44,7 +44,7 @@ _$EarthquakeHypocenterImpl _$$EarthquakeHypocenterImplFromJson(
         final val = _$EarthquakeHypocenterImpl(
           name: $checkedConvert('name', (v) => v as String),
           code: $checkedConvert('code', (v) => v as String),
-          depth: $checkedConvert('depth', (v) => v as int?),
+          depth: $checkedConvert('depth', (v) => (v as num?)?.toInt()),
           detailed: $checkedConvert(
               'detailed',
               (v) => v == null

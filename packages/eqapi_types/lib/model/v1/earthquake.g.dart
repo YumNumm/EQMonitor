@@ -16,11 +16,12 @@ _$EarthquakeV1Impl _$$EarthquakeV1ImplFromJson(Map<String, dynamic> json) =>
         final val = _$EarthquakeV1Impl(
           arrivalTime: $checkedConvert('arrival_time',
               (v) => v == null ? null : DateTime.parse(v as String)),
-          depth: $checkedConvert('depth', (v) => v as int?),
-          epicenterCode: $checkedConvert('epicenter_code', (v) => v as int?),
-          epicenterDetailCode:
-              $checkedConvert('epicenter_detail_code', (v) => v as int?),
-          eventId: $checkedConvert('event_id', (v) => v as int),
+          depth: $checkedConvert('depth', (v) => (v as num?)?.toInt()),
+          epicenterCode:
+              $checkedConvert('epicenter_code', (v) => (v as num?)?.toInt()),
+          epicenterDetailCode: $checkedConvert(
+              'epicenter_detail_code', (v) => (v as num?)?.toInt()),
+          eventId: $checkedConvert('event_id', (v) => (v as num).toInt()),
           headline: $checkedConvert('headline', (v) => v as String?),
           intensityCities: $checkedConvert(
               'intensity_cities',
@@ -73,8 +74,11 @@ _$EarthquakeV1Impl _$$EarthquakeV1ImplFromJson(Map<String, dynamic> json) =>
               $checkedConvert('magnitude_condition', (v) => v as String?),
           maxIntensity: $checkedConvert('max_intensity',
               (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v)),
-          maxIntensityRegionIds: $checkedConvert('max_intensity_region_ids',
-              (v) => (v as List<dynamic>?)?.map((e) => e as int).toList()),
+          maxIntensityRegionIds: $checkedConvert(
+              'max_intensity_region_ids',
+              (v) => (v as List<dynamic>?)
+                  ?.map((e) => (e as num).toInt())
+                  .toList()),
           maxLpgmIntensity: $checkedConvert('max_lpgm_intensity',
               (v) => $enumDecodeNullable(_$JmaLgIntensityEnumMap, v)),
           originTime: $checkedConvert('origin_time',
@@ -161,11 +165,12 @@ _$EarthquakeV1BaseImpl _$$EarthquakeV1BaseImplFromJson(
         final val = _$EarthquakeV1BaseImpl(
           arrivalTime: $checkedConvert('arrival_time',
               (v) => v == null ? null : DateTime.parse(v as String)),
-          depth: $checkedConvert('depth', (v) => v as int?),
-          epicenterCode: $checkedConvert('epicenter_code', (v) => v as int?),
-          epicenterDetailCode:
-              $checkedConvert('epicenter_detail_code', (v) => v as int?),
-          eventId: $checkedConvert('event_id', (v) => v as int),
+          depth: $checkedConvert('depth', (v) => (v as num?)?.toInt()),
+          epicenterCode:
+              $checkedConvert('epicenter_code', (v) => (v as num?)?.toInt()),
+          epicenterDetailCode: $checkedConvert(
+              'epicenter_detail_code', (v) => (v as num?)?.toInt()),
+          eventId: $checkedConvert('event_id', (v) => (v as num).toInt()),
           headline: $checkedConvert('headline', (v) => v as String?),
           latitude: $checkedConvert('latitude', (v) => (v as num?)?.toDouble()),
           longitude:
@@ -176,8 +181,11 @@ _$EarthquakeV1BaseImpl _$$EarthquakeV1BaseImplFromJson(
               $checkedConvert('magnitude_condition', (v) => v as String?),
           maxIntensity: $checkedConvert('max_intensity',
               (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v)),
-          maxIntensityRegionIds: $checkedConvert('max_intensity_region_ids',
-              (v) => (v as List<dynamic>?)?.map((e) => e as int).toList()),
+          maxIntensityRegionIds: $checkedConvert(
+              'max_intensity_region_ids',
+              (v) => (v as List<dynamic>?)
+                  ?.map((e) => (e as num).toInt())
+                  .toList()),
           maxLpgmIntensity: $checkedConvert('max_lpgm_intensity',
               (v) => $enumDecodeNullable(_$JmaLgIntensityEnumMap, v)),
           originTime: $checkedConvert('origin_time',

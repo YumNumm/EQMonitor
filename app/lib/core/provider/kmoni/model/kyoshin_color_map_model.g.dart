@@ -16,9 +16,9 @@ _$KyoshinColorMapModelImpl _$$KyoshinColorMapModelImplFromJson(
       ($checkedConvert) {
         final val = _$KyoshinColorMapModelImpl(
           intensity: $checkedConvert('intensity', (v) => (v as num).toDouble()),
-          r: $checkedConvert('r', (v) => v as int),
-          g: $checkedConvert('g', (v) => v as int),
-          b: $checkedConvert('b', (v) => v as int),
+          r: $checkedConvert('r', (v) => (v as num).toInt()),
+          g: $checkedConvert('g', (v) => (v as num).toInt()),
+          b: $checkedConvert('b', (v) => (v as num).toInt()),
         );
         return val;
       },
