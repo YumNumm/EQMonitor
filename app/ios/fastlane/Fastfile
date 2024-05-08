@@ -2,6 +2,9 @@ default_platform(:ios)
 
 platform :ios do
 
+  FIREBASE_CLI_TOKEN = ENV['FIREBASE_CLI_TOKEN']
+  FIREBASE_APP_ID = "1:179553945248:ios:a738f33a18702c7f6fabc5"
+
   desc "Download and install certificates and provisioning profiles for all configurations: development, AppStore and AdHoc"
   lane :certificates do
     match(type: "development")
@@ -9,8 +12,8 @@ platform :ios do
     match(type: "adhoc")
   end
 
-  desc "Increment the build number"
-  lane :setup_build_number do
+  desc "Increment the build number by testflight"
+  lane :setup_build_number_by_testflight do
     setup_ci if ENV['CI']
     app_store_connect_api_key(
       key_id: "NGL2W4BQP6",
@@ -21,6 +24,15 @@ platform :ios do
       build_number: latest_testflight_build_number + 1,
       xcodeproj: "Runner.xcodeproj",
     )
+  end
+
+  desc "Increment the build number by Firebase App Distribution"
+  lane :setup_build_number_by_firebase do
+    latest_release = firebase_app_distribution_get_latest_release(
+      app: FIREBASE_APP_ID,
+      service_credentials_file: "./credentials.json",
+    )
+    increment_build_number({ build_number: latest_release[:buildVersion].to_i + 1 })
   end
 
   desc "Download the provisioning profiles"
@@ -39,16 +51,6 @@ platform :ios do
   desc "Push a new beta build to TestFlight"
   lane :beta do
     setup_ci if ENV['CI']
-    app_store_connect_api_key(
-      key_id: "NGL2W4BQP6",
-      issuer_id: "fd4cca56-716b-4f03-8e44-de72a03453db",
-      key_filepath: "./AuthKey_NGL2W4BQP6.p8"
-    )
-    increment_build_number(
-      build_number: latest_testflight_build_number + 1,
-      xcodeproj: "Runner.xcodeproj",
-    )
-
     match(
       type: "appstore",
       readonly: is_ci,
@@ -66,7 +68,6 @@ platform :ios do
       date_format: "%Y-%m-%d",
       between: [last_git_tag, "HEAD"],
       pretty: "- %s",
-      date_format: "short",
       match_lightweight_tag: false,
       merge_commit_filtering: "exclude_merges"
     )
@@ -80,17 +81,11 @@ platform :ios do
   desc "Push a new build to App Store Connect"
   lane :upload do
     setup_ci if ENV['CI']
-    app_store_connect_api_key(
-      key_id: "NGL2W4BQP6",
-      issuer_id: "fd4cca56-716b-4f03-8e44-de72a03453db",
-      key_filepath: "./AuthKey_NGL2W4BQP6.p8"
-    )
     # Upload the project
     changelog = changelog_from_git_commits(
       date_format: "%Y-%m-%d",
       between: [last_git_tag, "HEAD"],
       pretty: "- %s",
-      date_format: "short",
       match_lightweight_tag: false,
       merge_commit_filtering: "exclude_merges"
     )
@@ -98,6 +93,50 @@ platform :ios do
       ipa: "./Runner.ipa",
       changelog: changelog,
       skip_waiting_for_build_processing: ENV['CI'],
+    )
+  end
+
+  # 配布用にアイコンを変えたり、バージョンをいじったり
+  def set_debug_info(buildNumber)
+    # アプリアイコン変更
+    add_badge(
+      shield: "Build-#{buildNumber}-blue",
+      dark: true,
+    )
+  end
+
+  desc "Push a new build to Firebase App Distribution"
+  lane :beta_firebase do
+    certificates
+    sh("fvm", "flutter", "build", "ios", "--release", "--no-codesign")
+    buildNumber = setup_build_number_by_firebase
+    set_debug_info(buildNumber)
+    match(
+      type: "adhoc",
+      readonly: is_ci,
+    )
+
+    # Build the project
+    build_app(
+      archive_path: "../build/ios/archive/Runner.xcarchive",
+      export_method: "ad-hoc",
+      xcargs: "-allowProvisioningUpdates",
+    )
+
+    # Upload the project
+    changelog = changelog_from_git_commits(
+      date_format: "%Y-%m-%d",
+      between: [last_git_tag, "HEAD"],
+      pretty: "- %s",
+      match_lightweight_tag: false,
+      merge_commit_filtering: "exclude_merges"
+    )
+    firebase_app_distribution(
+      app: FIREBASE_APP_ID,
+      ipa_path: "Runner.ipa",
+      groups: "main",
+      release_notes_file: changelog,
+      service_credentials_file: "./credentials.json",
     )
   end
 end

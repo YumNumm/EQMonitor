@@ -15,8 +15,8 @@ _$IntensitySubDivisionImpl _$$IntensitySubDivisionImplFromJson(
       json,
       ($checkedConvert) {
         final val = _$IntensitySubDivisionImpl(
-          id: $checkedConvert('id', (v) => v as int),
-          eventId: $checkedConvert('event_id', (v) => v as int),
+          id: $checkedConvert('id', (v) => (v as num).toInt()),
+          eventId: $checkedConvert('event_id', (v) => (v as num).toInt()),
           areaCode: $checkedConvert('area_code', (v) => v as String),
           maxIntensity: $checkedConvert(
               'max_intensity', (v) => $enumDecode(_$JmaIntensityEnumMap, v)),
