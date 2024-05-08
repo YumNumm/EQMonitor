@@ -549,7 +549,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution: Ryotaro Onoue (CPL7H8SHVM)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1174;
+				CURRENT_PROJECT_VERSION = 1163;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = CPL7H8SHVM;
 				ENABLE_BITCODE = NO;
@@ -585,7 +585,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1174;
+				CURRENT_PROJECT_VERSION = 1163;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = CPL7H8SHVM;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -628,7 +628,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1174;
+				CURRENT_PROJECT_VERSION = 1163;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = CPL7H8SHVM;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -670,7 +670,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1174;
+				CURRENT_PROJECT_VERSION = 1163;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = CPL7H8SHVM;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -817,7 +817,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development: Ryotaro Onoue (7PWJ49VWRZ)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1174;
+				CURRENT_PROJECT_VERSION = 1163;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = CPL7H8SHVM;
 				ENABLE_BITCODE = NO;
@@ -850,7 +850,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution: Ryotaro Onoue (CPL7H8SHVM)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1174;
+				CURRENT_PROJECT_VERSION = 1163;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = CPL7H8SHVM;
 				ENABLE_BITCODE = NO;

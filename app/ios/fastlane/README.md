@@ -23,13 +23,21 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Download and install certificates and provisioning profiles for all configurations: development, AppStore and AdHoc
 
-### ios setup_build_number
+### ios setup_build_number_by_testflight
 
 ```sh
-[bundle exec] fastlane ios setup_build_number
+[bundle exec] fastlane ios setup_build_number_by_testflight
 ```
 
-Increment the build number
+Increment the build number by testflight
+
+### ios setup_build_number_by_firebase
+
+```sh
+[bundle exec] fastlane ios setup_build_number_by_firebase
+```
+
+Increment the build number by Firebase App Distribution
 
 ### ios download_provisioning_profiles
 
@@ -54,6 +62,14 @@ Push a new beta build to TestFlight
 ```
 
 Push a new build to App Store Connect
+
+### ios beta_firebase
+
+```sh
+[bundle exec] fastlane ios beta_firebase
+```
+
+Push a new build to Firebase App Distribution
 
 ----
 
