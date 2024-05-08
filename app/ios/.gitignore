@@ -36,3 +36,5 @@ Runner/GeneratedPluginRegistrant.*
 *.p8
 
 vendor/
+
+credentials.json
