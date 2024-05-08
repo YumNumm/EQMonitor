@@ -20,12 +20,12 @@ _$NtpConfigModelImpl _$$NtpConfigModelImplFromJson(Map<String, dynamic> json) =>
               'timeout',
               (v) => v == null
                   ? const Duration(seconds: 10)
-                  : Duration(microseconds: v as int)),
+                  : Duration(microseconds: (v as num).toInt())),
           interval: $checkedConvert(
               'interval',
               (v) => v == null
                   ? const Duration(minutes: 1)
-                  : Duration(microseconds: v as int)),
+                  : Duration(microseconds: (v as num).toInt())),
         );
         return val;
       },

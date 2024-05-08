@@ -14,8 +14,8 @@ _$TelegramV1Impl _$$TelegramV1ImplFromJson(Map<String, dynamic> json) =>
       json,
       ($checkedConvert) {
         final val = _$TelegramV1Impl(
-          id: $checkedConvert('id', (v) => v as int),
-          eventId: $checkedConvert('event_id', (v) => v as int),
+          id: $checkedConvert('id', (v) => (v as num).toInt()),
+          eventId: $checkedConvert('event_id', (v) => (v as num).toInt()),
           type: $checkedConvert('type', (v) => v as String),
           schemaType: $checkedConvert('schema_type', (v) => v as String),
           status: $checkedConvert('status', (v) => v as String),
@@ -26,7 +26,7 @@ _$TelegramV1Impl _$$TelegramV1ImplFromJson(Map<String, dynamic> json) =>
               'report_time', (v) => DateTime.parse(v as String)),
           validTime: $checkedConvert('valid_time',
               (v) => v == null ? null : DateTime.parse(v as String)),
-          serialNo: $checkedConvert('serial_no', (v) => v as int?),
+          serialNo: $checkedConvert('serial_no', (v) => (v as num?)?.toInt()),
           headline: $checkedConvert('headline', (v) => v as String?),
           body: $checkedConvert('body', (v) => v as Map<String, dynamic>),
         );
