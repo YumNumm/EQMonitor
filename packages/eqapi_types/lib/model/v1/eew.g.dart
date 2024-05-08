@@ -13,15 +13,15 @@ _$EewV1Impl _$$EewV1ImplFromJson(Map<String, dynamic> json) => $checkedCreate(
       json,
       ($checkedConvert) {
         final val = _$EewV1Impl(
-          id: $checkedConvert('id', (v) => v as int),
-          eventId: $checkedConvert('event_id', (v) => v as int),
+          id: $checkedConvert('id', (v) => (v as num).toInt()),
+          eventId: $checkedConvert('event_id', (v) => (v as num).toInt()),
           type: $checkedConvert('type', (v) => v as String),
           schemaType: $checkedConvert('schema_type', (v) => v as String),
           status: $checkedConvert('status', (v) => v as String),
           infoType: $checkedConvert('info_type', (v) => v as String),
           reportTime: $checkedConvert(
               'report_time', (v) => DateTime.parse(v as String)),
-          serialNo: $checkedConvert('serial_no', (v) => v as int?),
+          serialNo: $checkedConvert('serial_no', (v) => (v as num?)?.toInt()),
           headline: $checkedConvert('headline', (v) => v as String?),
           isCanceled: $checkedConvert('is_canceled', (v) => v as bool),
           isWarning: $checkedConvert('is_warning', (v) => v as bool?),
@@ -31,7 +31,7 @@ _$EewV1Impl _$$EewV1ImplFromJson(Map<String, dynamic> json) => $checkedCreate(
           arrivalTime: $checkedConvert('arrival_time',
               (v) => v == null ? null : DateTime.parse(v as String)),
           hypoName: $checkedConvert('hypo_name', (v) => v as String?),
-          depth: $checkedConvert('depth', (v) => v as int?),
+          depth: $checkedConvert('depth', (v) => (v as num?)?.toInt()),
           latitude: $checkedConvert('latitude', (v) => (v as num?)?.toDouble()),
           longitude:
               $checkedConvert('longitude', (v) => (v as num?)?.toDouble()),

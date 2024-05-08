@@ -37,7 +37,7 @@ _$InformationV3Impl _$$InformationV3ImplFromJson(Map<String, dynamic> json) =>
       json,
       ($checkedConvert) {
         final val = _$InformationV3Impl(
-          id: $checkedConvert('id', (v) => v as int),
+          id: $checkedConvert('id', (v) => (v as num).toInt()),
           title: $checkedConvert('title', (v) => v as String),
           body: $checkedConvert('body', (v) => v as String),
           author: $checkedConvert(
@@ -48,7 +48,7 @@ _$InformationV3Impl _$$InformationV3ImplFromJson(Map<String, dynamic> json) =>
               $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
           level: $checkedConvert('level',
               (v) => $enumDecode(_$LevelEnumMap, v, unknownValue: Level.info)),
-          eventId: $checkedConvert('event_id', (v) => v as int?),
+          eventId: $checkedConvert('event_id', (v) => (v as num?)?.toInt()),
         );
         return val;
       },
