@@ -5,7 +5,8 @@ publish_to: "none"
 version: 2.4.3+1115
 
 environment:
-  sdk: ^3.3.0
+  sdk: ^3.4.0
+  flutter: ^3.22.0
 
 dependencies:
   adaptive_dialog: ^2.1.0

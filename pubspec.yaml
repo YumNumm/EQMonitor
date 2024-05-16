@@ -1,9 +1,8 @@
 name: eqmonitor_workspace
-description: Thr workspace for the EQMonitor project.
-version: 1.0.0
+description: The workspace for the EQMonitor project.
 
 environment:
-  sdk: ^3.3.0
+  sdk: ^3.4.0
 
 dependencies:
-  melos: ">=4.1.0 <6.0.0"
+  melos: ^6.0.0
