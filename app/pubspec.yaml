@@ -73,7 +73,7 @@ dependencies:
   maplibre_gl:
     git:
       url: https://github.com/YumNumm/flutter-maplibre-gl.git
-      ref: 6ce6fb040a297ad1f6cb1f897d26bfb54541a02c
+      ref: 689e03748242f31103bea4a22f5bc2c63f3873fc
   ntp: ^2.0.0
   package_info_plus: ^8.0.0
   path_provider: ^2.1.3
