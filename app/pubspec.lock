@@ -963,8 +963,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "355a5c832160521eb4d2b0ee5ac1d3c3642b7277"
-      resolved-ref: "355a5c832160521eb4d2b0ee5ac1d3c3642b7277"
+      ref: "6ce6fb040a297ad1f6cb1f897d26bfb54541a02c"
+      resolved-ref: "6ce6fb040a297ad1f6cb1f897d26bfb54541a02c"
       url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
     source: git
     version: "0.18.0"
