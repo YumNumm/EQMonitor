@@ -1,5 +1,5 @@
 {
-  "dart.flutterSdkPath": ".fvm/versions/c719f03ded",
+  "dart.flutterSdkPath": ".fvm/versions/3.22.0",
   "search.exclude": {
     "**/.fvm": true,
     "*.geojson": true
