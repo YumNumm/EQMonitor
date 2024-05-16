@@ -973,7 +973,7 @@ packages:
     description:
       path: maplibre_gl_platform_interface
       ref: main
-      resolved-ref: "355a5c832160521eb4d2b0ee5ac1d3c3642b7277"
+      resolved-ref: "689e03748242f31103bea4a22f5bc2c63f3873fc"
       url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
     source: git
     version: "0.18.0"
@@ -982,7 +982,7 @@ packages:
     description:
       path: maplibre_gl_web
       ref: main
-      resolved-ref: "355a5c832160521eb4d2b0ee5ac1d3c3642b7277"
+      resolved-ref: "689e03748242f31103bea4a22f5bc2c63f3873fc"
       url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
     source: git
     version: "0.18.0"
