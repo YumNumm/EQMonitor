@@ -1334,10 +1334,10 @@ packages:
     dependency: "direct main"
     description:
       name: screenshot
-      sha256: "455284ff1f5b911d94a43c25e1385485cf6b4f288293eba68f15dad711c7b81c"
+      sha256: "63817697a7835e6ce82add4228e15d233b74d42975c143ad8cfe07009fab866b"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "3.0.0"
   share_plus:
     dependency: "direct main"
     description:
@@ -1564,10 +1564,10 @@ packages:
     dependency: "direct main"
     description:
       name: talker_flutter
-      sha256: "981da0bb1501a9937f914574b5987f839e363a8402f613addbbf9ebe7e8393c1"
+      sha256: "8b10ea148e16410abc950ab596a9cb9b2ae4380640dec9a88dc80503f41902b8"
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.5"
+    version: "4.2.0"
   talker_logger:
     dependency: transitive
     description:
