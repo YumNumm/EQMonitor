@@ -54,7 +54,7 @@ class KmoniSettingsUseToggle extends ConsumerWidget {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                color: theme.colorScheme.onBackground,
+                color: theme.colorScheme.onSurface,
                 boxShadow: const <BoxShadow>[
                   BoxShadow(color: Colors.black12, blurRadius: 12),
                 ],
