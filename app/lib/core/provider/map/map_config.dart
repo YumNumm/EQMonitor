@@ -40,7 +40,7 @@ class MapColorScheme with _$MapColorScheme {
 
   factory MapColorScheme.light({required ColorScheme colorScheme}) =>
       MapColorScheme(
-        backgroundColor: colorScheme.surfaceVariant,
+        backgroundColor: colorScheme.surfaceContainerHighest,
         worldLandColor: colorScheme.surface,
         worldLineColor: colorScheme.onSurfaceVariant,
         japanLandColor: colorScheme.surface,
@@ -66,9 +66,9 @@ class MapColorScheme with _$MapColorScheme {
       );*/
       MapColorScheme(
         backgroundColor: colorScheme.surface,
-        worldLandColor: colorScheme.surfaceVariant,
+        worldLandColor: colorScheme.surfaceContainerHighest,
         worldLineColor: colorScheme.onSurfaceVariant,
-        japanLandColor: colorScheme.surfaceVariant,
+        japanLandColor: colorScheme.surfaceContainerHighest,
         japanLineColor: colorScheme.onSurfaceVariant,
       );
 }

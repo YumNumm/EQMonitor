@@ -3,9 +3,7 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "app/**.dart"
-      - "!app/test/**"
+      - develop
   workflow_dispatch:
 
 jobs:
@@ -50,7 +48,7 @@ jobs:
 
       - name: Build web
         working-directory: app
-        run: flutter build web --release -t ./lib/widgetbook.dart
+        run: flutter build web --release --wasm -t ./lib/widgetbook.dart
 
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@v1

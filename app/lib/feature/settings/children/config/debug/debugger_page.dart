@@ -116,9 +116,8 @@ class _DebugWidget extends ConsumerWidget {
               leading: const Icon(Icons.notifications_active),
               onTap: () async {
                 try {
-                  final result =
-                      await FirebaseMessaging.instance.subscribeToTopic('kevi');
-                } catch (e) {
+                  await FirebaseMessaging.instance.subscribeToTopic('kevi');
+                } on Exception catch (e) {
                   if (context.mounted) {
                     await showDialog<void>(
                       context: context,
