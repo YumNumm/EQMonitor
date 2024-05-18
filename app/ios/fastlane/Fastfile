@@ -65,11 +65,9 @@ platform :ios do
 
     # Upload the project
     changelog = changelog_from_git_commits(
-      date_format: "%Y-%m-%d",
-      between: [last_git_tag, "HEAD"],
-      pretty: "- %s",
-      match_lightweight_tag: false,
-      merge_commit_filtering: "exclude_merges"
+      between: [last_git_tag , "HEAD"],
+      pretty: "- [%ad] %an: %s %h",
+      date_format: "short",
     )
     upload_to_testflight(
       ipa: "./Runner.ipa",
@@ -83,11 +81,9 @@ platform :ios do
     setup_ci if ENV['CI']
     # Upload the project
     changelog = changelog_from_git_commits(
-      date_format: "%Y-%m-%d",
-      between: [last_git_tag, "HEAD"],
-      pretty: "- %s",
-      match_lightweight_tag: false,
-      merge_commit_filtering: "exclude_merges"
+      between: [last_git_tag , "HEAD"],
+      pretty: "- [%ad] %an: %s %h",
+      date_format: "short",
     )
     upload_to_testflight(
       ipa: "./Runner.ipa",
@@ -125,17 +121,15 @@ platform :ios do
 
     # Upload the project
     changelog = changelog_from_git_commits(
-      date_format: "%Y-%m-%d",
-      between: [last_git_tag, "HEAD"],
-      pretty: "- %s",
-      match_lightweight_tag: false,
-      merge_commit_filtering: "exclude_merges"
+      between: [last_git_tag , "HEAD"],
+      pretty: "- [%ad] %an: %s %h",
+      date_format: "short",
     )
     firebase_app_distribution(
       app: FIREBASE_APP_ID,
       ipa_path: "Runner.ipa",
       groups: "main",
-      release_notes_file: changelog,
+      release_notes: changelog,
       service_credentials_file: "./credentials.json",
     )
   end
