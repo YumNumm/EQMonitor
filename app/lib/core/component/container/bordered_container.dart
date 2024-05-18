@@ -54,11 +54,11 @@ class BorderedContainer extends StatelessWidget {
     return Card(
       clipBehavior: Clip.antiAlias,
       elevation: elevation,
-      color: accentColor ?? theme.cardColor,
+      color: accentColor ?? theme.colorScheme.surfaceContainer,
       // border
       shape: RoundedRectangleBorder(
         side: BorderSide(
-          color: theme.colorScheme.onSurface.withOpacity(0.2),
+          color: theme.colorScheme.onSurfaceVariant.withOpacity(0.3),
         ),
         borderRadius: borderRadius,
       ),

@@ -53,7 +53,7 @@ class BasicModalSheet extends HookWidget {
             decoration: BoxDecoration(
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(28)),
-              color: theme.colorScheme.surface,
+              color: theme.colorScheme.surfaceContainerLowest,
               border: Border.all(
                 color: theme.colorScheme.onSurface.withOpacity(0.1),
               ),
