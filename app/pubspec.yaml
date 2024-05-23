@@ -74,6 +74,10 @@ dependencies:
     git:
       url: https://github.com/YumNumm/flutter-maplibre-gl.git
       ref: 689e03748242f31103bea4a22f5bc2c63f3873fc
+  notification_setting_types:
+    git:
+      url: https://github.com/YumNumm/EQMonitor.git
+      path: packages/notification_setting_types
   ntp: ^2.0.0
   package_info_plus: ^8.0.0
   path_provider: ^2.1.3

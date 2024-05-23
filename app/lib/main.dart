@@ -28,6 +28,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preference_app_group/shared_preference_app_group.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
@@ -124,6 +125,9 @@ Future<void> main() async {
       initInAppPurchase(),
       initLicenses(),
       kIsWeb ? Future<Null>.value() : getKyoshinColorMap(),
+      !kIsWeb && Platform.isIOS
+          ? SharedPreferenceAppGroup.setAppGroup('group.net.yumnumm.eqmonitor')
+          : Future<void>.value(),
     ).wait,
   ).wait;
 

@@ -16,11 +16,19 @@ import 'package:protobuf/protobuf.dart' as $pb;
 /// 気象庁地震関連コード表
 class JmaCodeTable extends $pb.GeneratedMessage {
   factory JmaCodeTable({
+    AreaForecastLocalEew? areaForecastLocalEew,
+    AreaInformationPrefectureEarthquake? areaInformationPrefectureEarthquake,
     AreaEpicenter? areaEpicenter,
     AreaEpicenterAbbreviation? areaEpicenterAbbreviation,
     AreaEpicenterDetail? areaEpicenterDetail,
   }) {
     final $result = create();
+    if (areaForecastLocalEew != null) {
+      $result.areaForecastLocalEew = areaForecastLocalEew;
+    }
+    if (areaInformationPrefectureEarthquake != null) {
+      $result.areaInformationPrefectureEarthquake = areaInformationPrefectureEarthquake;
+    }
     if (areaEpicenter != null) {
       $result.areaEpicenter = areaEpicenter;
     }
@@ -37,9 +45,11 @@ class JmaCodeTable extends $pb.GeneratedMessage {
   factory JmaCodeTable.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'JmaCodeTable', createEmptyInstance: create)
-    ..aOM<AreaEpicenter>(41, _omitFieldNames ? '' : 'areaEpicenter', protoName: 'areaEpicenter', subBuilder: AreaEpicenter.create)
-    ..aOM<AreaEpicenterAbbreviation>(42, _omitFieldNames ? '' : 'areaEpicenterAbbreviation', protoName: 'areaEpicenterAbbreviation', subBuilder: AreaEpicenterAbbreviation.create)
-    ..aOM<AreaEpicenterDetail>(43, _omitFieldNames ? '' : 'areaEpicenterDetail', protoName: 'areaEpicenterDetail', subBuilder: AreaEpicenterDetail.create)
+    ..aOM<AreaForecastLocalEew>(22, _omitFieldNames ? '' : 'areaForecastLocalEew', subBuilder: AreaForecastLocalEew.create)
+    ..aOM<AreaInformationPrefectureEarthquake>(23, _omitFieldNames ? '' : 'areaInformationPrefectureEarthquake', subBuilder: AreaInformationPrefectureEarthquake.create)
+    ..aOM<AreaEpicenter>(41, _omitFieldNames ? '' : 'areaEpicenter', subBuilder: AreaEpicenter.create)
+    ..aOM<AreaEpicenterAbbreviation>(42, _omitFieldNames ? '' : 'areaEpicenterAbbreviation', subBuilder: AreaEpicenterAbbreviation.create)
+    ..aOM<AreaEpicenterDetail>(43, _omitFieldNames ? '' : 'areaEpicenterDetail', subBuilder: AreaEpicenterDetail.create)
     ..hasRequiredFields = false
   ;
 
@@ -64,38 +74,306 @@ class JmaCodeTable extends $pb.GeneratedMessage {
   static JmaCodeTable getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<JmaCodeTable>(create);
   static JmaCodeTable? _defaultInstance;
 
+  @$pb.TagNumber(22)
+  AreaForecastLocalEew get areaForecastLocalEew => $_getN(0);
+  @$pb.TagNumber(22)
+  set areaForecastLocalEew(AreaForecastLocalEew v) { setField(22, v); }
+  @$pb.TagNumber(22)
+  $core.bool hasAreaForecastLocalEew() => $_has(0);
+  @$pb.TagNumber(22)
+  void clearAreaForecastLocalEew() => clearField(22);
+  @$pb.TagNumber(22)
+  AreaForecastLocalEew ensureAreaForecastLocalEew() => $_ensure(0);
+
+  @$pb.TagNumber(23)
+  AreaInformationPrefectureEarthquake get areaInformationPrefectureEarthquake => $_getN(1);
+  @$pb.TagNumber(23)
+  set areaInformationPrefectureEarthquake(AreaInformationPrefectureEarthquake v) { setField(23, v); }
+  @$pb.TagNumber(23)
+  $core.bool hasAreaInformationPrefectureEarthquake() => $_has(1);
+  @$pb.TagNumber(23)
+  void clearAreaInformationPrefectureEarthquake() => clearField(23);
+  @$pb.TagNumber(23)
+  AreaInformationPrefectureEarthquake ensureAreaInformationPrefectureEarthquake() => $_ensure(1);
+
   @$pb.TagNumber(41)
-  AreaEpicenter get areaEpicenter => $_getN(0);
+  AreaEpicenter get areaEpicenter => $_getN(2);
   @$pb.TagNumber(41)
   set areaEpicenter(AreaEpicenter v) { setField(41, v); }
   @$pb.TagNumber(41)
-  $core.bool hasAreaEpicenter() => $_has(0);
+  $core.bool hasAreaEpicenter() => $_has(2);
   @$pb.TagNumber(41)
   void clearAreaEpicenter() => clearField(41);
   @$pb.TagNumber(41)
-  AreaEpicenter ensureAreaEpicenter() => $_ensure(0);
+  AreaEpicenter ensureAreaEpicenter() => $_ensure(2);
 
   @$pb.TagNumber(42)
-  AreaEpicenterAbbreviation get areaEpicenterAbbreviation => $_getN(1);
+  AreaEpicenterAbbreviation get areaEpicenterAbbreviation => $_getN(3);
   @$pb.TagNumber(42)
   set areaEpicenterAbbreviation(AreaEpicenterAbbreviation v) { setField(42, v); }
   @$pb.TagNumber(42)
-  $core.bool hasAreaEpicenterAbbreviation() => $_has(1);
+  $core.bool hasAreaEpicenterAbbreviation() => $_has(3);
   @$pb.TagNumber(42)
   void clearAreaEpicenterAbbreviation() => clearField(42);
   @$pb.TagNumber(42)
-  AreaEpicenterAbbreviation ensureAreaEpicenterAbbreviation() => $_ensure(1);
+  AreaEpicenterAbbreviation ensureAreaEpicenterAbbreviation() => $_ensure(3);
 
   @$pb.TagNumber(43)
-  AreaEpicenterDetail get areaEpicenterDetail => $_getN(2);
+  AreaEpicenterDetail get areaEpicenterDetail => $_getN(4);
   @$pb.TagNumber(43)
   set areaEpicenterDetail(AreaEpicenterDetail v) { setField(43, v); }
   @$pb.TagNumber(43)
-  $core.bool hasAreaEpicenterDetail() => $_has(2);
+  $core.bool hasAreaEpicenterDetail() => $_has(4);
   @$pb.TagNumber(43)
   void clearAreaEpicenterDetail() => clearField(43);
   @$pb.TagNumber(43)
-  AreaEpicenterDetail ensureAreaEpicenterDetail() => $_ensure(2);
+  AreaEpicenterDetail ensureAreaEpicenterDetail() => $_ensure(4);
+}
+
+class AreaForecastLocalEew_AreaForecastLocalEewItem extends $pb.GeneratedMessage {
+  factory AreaForecastLocalEew_AreaForecastLocalEewItem({
+    $core.String? code,
+    $core.String? name,
+    $core.String? nameKana,
+    $core.String? description,
+  }) {
+    final $result = create();
+    if (code != null) {
+      $result.code = code;
+    }
+    if (name != null) {
+      $result.name = name;
+    }
+    if (nameKana != null) {
+      $result.nameKana = nameKana;
+    }
+    if (description != null) {
+      $result.description = description;
+    }
+    return $result;
+  }
+  AreaForecastLocalEew_AreaForecastLocalEewItem._() : super();
+  factory AreaForecastLocalEew_AreaForecastLocalEewItem.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory AreaForecastLocalEew_AreaForecastLocalEewItem.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'AreaForecastLocalEew.AreaForecastLocalEewItem', createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'code')
+    ..aOS(2, _omitFieldNames ? '' : 'name')
+    ..aOS(3, _omitFieldNames ? '' : 'nameKana')
+    ..aOS(4, _omitFieldNames ? '' : 'description')
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  AreaForecastLocalEew_AreaForecastLocalEewItem clone() => AreaForecastLocalEew_AreaForecastLocalEewItem()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  AreaForecastLocalEew_AreaForecastLocalEewItem copyWith(void Function(AreaForecastLocalEew_AreaForecastLocalEewItem) updates) => super.copyWith((message) => updates(message as AreaForecastLocalEew_AreaForecastLocalEewItem)) as AreaForecastLocalEew_AreaForecastLocalEewItem;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AreaForecastLocalEew_AreaForecastLocalEewItem create() => AreaForecastLocalEew_AreaForecastLocalEewItem._();
+  AreaForecastLocalEew_AreaForecastLocalEewItem createEmptyInstance() => create();
+  static $pb.PbList<AreaForecastLocalEew_AreaForecastLocalEewItem> createRepeated() => $pb.PbList<AreaForecastLocalEew_AreaForecastLocalEewItem>();
+  @$core.pragma('dart2js:noInline')
+  static AreaForecastLocalEew_AreaForecastLocalEewItem getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AreaForecastLocalEew_AreaForecastLocalEewItem>(create);
+  static AreaForecastLocalEew_AreaForecastLocalEewItem? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get code => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set code($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasCode() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCode() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get name => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set name($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearName() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get nameKana => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set nameKana($core.String v) { $_setString(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasNameKana() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearNameKana() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get description => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set description($core.String v) { $_setString(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasDescription() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearDescription() => clearField(4);
+}
+
+/// 22. 緊急地震速報／府県予報区
+class AreaForecastLocalEew extends $pb.GeneratedMessage {
+  factory AreaForecastLocalEew({
+    $core.Iterable<AreaForecastLocalEew_AreaForecastLocalEewItem>? items,
+  }) {
+    final $result = create();
+    if (items != null) {
+      $result.items.addAll(items);
+    }
+    return $result;
+  }
+  AreaForecastLocalEew._() : super();
+  factory AreaForecastLocalEew.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory AreaForecastLocalEew.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'AreaForecastLocalEew', createEmptyInstance: create)
+    ..pc<AreaForecastLocalEew_AreaForecastLocalEewItem>(1, _omitFieldNames ? '' : 'items', $pb.PbFieldType.PM, subBuilder: AreaForecastLocalEew_AreaForecastLocalEewItem.create)
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  AreaForecastLocalEew clone() => AreaForecastLocalEew()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  AreaForecastLocalEew copyWith(void Function(AreaForecastLocalEew) updates) => super.copyWith((message) => updates(message as AreaForecastLocalEew)) as AreaForecastLocalEew;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AreaForecastLocalEew create() => AreaForecastLocalEew._();
+  AreaForecastLocalEew createEmptyInstance() => create();
+  static $pb.PbList<AreaForecastLocalEew> createRepeated() => $pb.PbList<AreaForecastLocalEew>();
+  @$core.pragma('dart2js:noInline')
+  static AreaForecastLocalEew getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AreaForecastLocalEew>(create);
+  static AreaForecastLocalEew? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.List<AreaForecastLocalEew_AreaForecastLocalEewItem> get items => $_getList(0);
+}
+
+class AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem extends $pb.GeneratedMessage {
+  factory AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem({
+    $core.String? code,
+    $core.String? name,
+  }) {
+    final $result = create();
+    if (code != null) {
+      $result.code = code;
+    }
+    if (name != null) {
+      $result.name = name;
+    }
+    return $result;
+  }
+  AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem._() : super();
+  factory AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'AreaInformationPrefectureEarthquake.AreaInformationPrefectureEarthquakeItem', createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'code')
+    ..aOS(2, _omitFieldNames ? '' : 'name')
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem clone() => AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem copyWith(void Function(AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem) updates) => super.copyWith((message) => updates(message as AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem)) as AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem create() => AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem._();
+  AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem createEmptyInstance() => create();
+  static $pb.PbList<AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem> createRepeated() => $pb.PbList<AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem>();
+  @$core.pragma('dart2js:noInline')
+  static AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem>(create);
+  static AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get code => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set code($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasCode() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCode() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get name => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set name($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearName() => clearField(2);
+}
+
+/// 23. 地震情報／都道府県等
+class AreaInformationPrefectureEarthquake extends $pb.GeneratedMessage {
+  factory AreaInformationPrefectureEarthquake({
+    $core.Iterable<AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem>? items,
+  }) {
+    final $result = create();
+    if (items != null) {
+      $result.items.addAll(items);
+    }
+    return $result;
+  }
+  AreaInformationPrefectureEarthquake._() : super();
+  factory AreaInformationPrefectureEarthquake.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory AreaInformationPrefectureEarthquake.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(_omitMessageNames ? '' : 'AreaInformationPrefectureEarthquake', createEmptyInstance: create)
+    ..pc<AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem>(1, _omitFieldNames ? '' : 'items', $pb.PbFieldType.PM, subBuilder: AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem.create)
+    ..hasRequiredFields = false
+  ;
+
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  AreaInformationPrefectureEarthquake clone() => AreaInformationPrefectureEarthquake()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  AreaInformationPrefectureEarthquake copyWith(void Function(AreaInformationPrefectureEarthquake) updates) => super.copyWith((message) => updates(message as AreaInformationPrefectureEarthquake)) as AreaInformationPrefectureEarthquake;
+
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AreaInformationPrefectureEarthquake create() => AreaInformationPrefectureEarthquake._();
+  AreaInformationPrefectureEarthquake createEmptyInstance() => create();
+  static $pb.PbList<AreaInformationPrefectureEarthquake> createRepeated() => $pb.PbList<AreaInformationPrefectureEarthquake>();
+  @$core.pragma('dart2js:noInline')
+  static AreaInformationPrefectureEarthquake getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AreaInformationPrefectureEarthquake>(create);
+  static AreaInformationPrefectureEarthquake? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.List<AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem> get items => $_getList(0);
 }
 
 class AreaEpicenter_AreaEpicenterItem extends $pb.GeneratedMessage {

@@ -190,6 +190,8 @@ PODS:
   - RevenueCat (4.41.2)
   - share_plus (0.0.1):
     - Flutter
+  - shared_preference_app_group (1.0.0):
+    - Flutter
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -215,6 +217,7 @@ DEPENDENCIES:
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - purchases_flutter (from `.symlinks/plugins/purchases_flutter/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
+  - shared_preference_app_group (from `.symlinks/plugins/shared_preference_app_group/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - SwiftProtobuf (~> 1.0)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
@@ -273,6 +276,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/purchases_flutter/ios"
   share_plus:
     :path: ".symlinks/plugins/share_plus/ios"
+  shared_preference_app_group:
+    :path: ".symlinks/plugins/shared_preference_app_group/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   url_launcher_ios:
@@ -313,6 +318,7 @@ SPEC CHECKSUMS:
   PurchasesHybridCommon: 120cdca2b40fb5947a51b75e121da4f2cde0a137
   RevenueCat: 0250867579677899de94f96ad9be342be865560f
   share_plus: 8875f4f2500512ea181eef553c3e27dba5135aad
+  shared_preference_app_group: 46aee3873e1da581d4904bece9876596d7f66725
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
   SwiftProtobuf: 5e8349171e7c2f88f5b9e683cb3cb79d1dc780b3
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
