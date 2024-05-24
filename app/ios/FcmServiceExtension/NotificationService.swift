@@ -33,7 +33,7 @@ class NotificationService: UNNotificationServiceExtension {
         // EEW
         if(notificationPayload!.type == .eew){
             var shouldSilent = false
-            var shouldCritical = false
+            var shouldCritical = true // false
             
             // 最大震度の検証
             if (notificationPayload!.eewInformation.maxIntensity.rawValue >= notificationSettings!.eewSettings.emergencyIntensity.rawValue ){
