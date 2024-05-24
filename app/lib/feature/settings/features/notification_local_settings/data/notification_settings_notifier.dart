@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/feature/settings/features/notification_settings/data/notification_settings_model.dart';
+import 'package:eqmonitor/feature/settings/features/notification_local_settings/data/notification_settings_model.dart';
 import 'package:notification_setting_types/notification_payload.pbenum.dart'
     as pb_enum;
 import 'package:notification_setting_types/notification_settings.pb.dart';
