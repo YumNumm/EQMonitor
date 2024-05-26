@@ -26,15 +26,18 @@ Dio dio(DioRef ref) {
         if (authorization != null) 'authorization': authorization,
       },
       baseUrl: ref.watch(telegramUrlProvider).restApiUrl,
+      contentType: ContentType.json.value,
+      connectTimeout: const Duration(milliseconds: 5000),
+      sendTimeout: const Duration(milliseconds: 5000),
     ),
   );
-  if (ref.watch(isDioProxyEnabledProvider)) {
+  if (ref.watch(isDioProxyEnabledProvider) || kDebugMode) {
     dio.httpClientAdapter = IOHttpClientAdapter(
       createHttpClient: () =>
-          HttpClient()..findProxy = (url) => 'PROXY macbook-pro:9090',
+          HttpClient()..findProxy = (url) => 'PROXY 192.168.151.154:9090',
     );
-    HttpOverrides.global = _HttpOverrides();
   }
+  HttpOverrides.global = _HttpOverrides();
   dio.interceptors.add(
     TalkerDioLogger(
       settings: TalkerDioLoggerSettings(
@@ -52,7 +55,7 @@ class _HttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
-      ..findProxy = (url) => 'PROXY macbook-pro:9090';
+      ..findProxy = (url) => 'PROXY 192.168.151.154:9090';
   }
 }
 

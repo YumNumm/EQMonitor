@@ -19,9 +19,6 @@ import 'package:eqmonitor/feature/settings/children/config/color_scheme/color_sc
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/debugger_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
-import 'package:eqmonitor/feature/settings/children/config/notification/children/earthquake/earthquake_notification_settings_page.dart';
-import 'package:eqmonitor/feature/settings/children/config/notification/children/eew/eew_notification_settings_page.dart';
-import 'package:eqmonitor/feature/settings/children/config/notification/notification_setting_page.dart';
 import 'package:eqmonitor/feature/settings/settings_screen.dart';
 import 'package:eqmonitor/feature/setup/screen/setup_screen.dart';
 import 'package:eqmonitor/feature/talker/talker_page.dart';
@@ -84,10 +81,9 @@ class EarthquakeHistoryDetailsRoute extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-
     return EarthquakeHistoryDetailsPage(
-        eventId: eventId,
-      );
+      eventId: eventId,
+    );
   }
 }
 
@@ -163,17 +159,6 @@ class KmoniRoute extends GoRouteData {
       routes: [
         TypedGoRoute<DonationExecutedRoute>(
           path: 'executed',
-        ),
-      ],
-    ),
-    TypedGoRoute<NotificationSettingsRoute>(
-      path: 'notification',
-      routes: [
-        TypedGoRoute<EewNotificationSettingsRoute>(
-          path: 'eew',
-        ),
-        TypedGoRoute<EarthquakeNotificationSettingsRoute>(
-          path: 'earthquake',
         ),
       ],
     ),
@@ -275,30 +260,6 @@ class AboutThisAppRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const AboutThisAppScreen();
-}
-
-class NotificationSettingsRoute extends GoRouteData {
-  const NotificationSettingsRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const NotificationSettingsPage();
-}
-
-class EewNotificationSettingsRoute extends GoRouteData {
-  const EewNotificationSettingsRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const EewNotificationSettingsPage();
-}
-
-class EarthquakeNotificationSettingsRoute extends GoRouteData {
-  const EarthquakeNotificationSettingsRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const EarthquakeNotificationSettingsPage();
 }
 
 class EarthquakeParameterListRoute extends GoRouteData {

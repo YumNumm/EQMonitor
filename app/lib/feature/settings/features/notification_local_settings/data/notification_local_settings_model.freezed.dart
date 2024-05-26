@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'notification_settings_model.dart';
+part of 'notification_local_settings_model.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,27 +14,29 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-NotificationSettingsModel _$NotificationSettingsModelFromJson(
+NotificationLocalSettingsModel _$NotificationLocalSettingsModelFromJson(
     Map<String, dynamic> json) {
-  return _NotificationSettingsModel.fromJson(json);
+  return _NotificationLocalSettingsModel.fromJson(json);
 }
 
 /// @nodoc
-mixin _$NotificationSettingsModel {
+mixin _$NotificationLocalSettingsModel {
   EewSettings get eew => throw _privateConstructorUsedError;
   EarthquakeSettings get earthquake => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $NotificationSettingsModelCopyWith<NotificationSettingsModel> get copyWith =>
-      throw _privateConstructorUsedError;
+  $NotificationLocalSettingsModelCopyWith<NotificationLocalSettingsModel>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $NotificationSettingsModelCopyWith<$Res> {
-  factory $NotificationSettingsModelCopyWith(NotificationSettingsModel value,
-          $Res Function(NotificationSettingsModel) then) =
-      _$NotificationSettingsModelCopyWithImpl<$Res, NotificationSettingsModel>;
+abstract class $NotificationLocalSettingsModelCopyWith<$Res> {
+  factory $NotificationLocalSettingsModelCopyWith(
+          NotificationLocalSettingsModel value,
+          $Res Function(NotificationLocalSettingsModel) then) =
+      _$NotificationLocalSettingsModelCopyWithImpl<$Res,
+          NotificationLocalSettingsModel>;
   @useResult
   $Res call({EewSettings eew, EarthquakeSettings earthquake});
 
@@ -43,10 +45,10 @@ abstract class $NotificationSettingsModelCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$NotificationSettingsModelCopyWithImpl<$Res,
-        $Val extends NotificationSettingsModel>
-    implements $NotificationSettingsModelCopyWith<$Res> {
-  _$NotificationSettingsModelCopyWithImpl(this._value, this._then);
+class _$NotificationLocalSettingsModelCopyWithImpl<$Res,
+        $Val extends NotificationLocalSettingsModel>
+    implements $NotificationLocalSettingsModelCopyWith<$Res> {
+  _$NotificationLocalSettingsModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -89,12 +91,12 @@ class _$NotificationSettingsModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$NotificationSettingsModelImplCopyWith<$Res>
-    implements $NotificationSettingsModelCopyWith<$Res> {
-  factory _$$NotificationSettingsModelImplCopyWith(
-          _$NotificationSettingsModelImpl value,
-          $Res Function(_$NotificationSettingsModelImpl) then) =
-      __$$NotificationSettingsModelImplCopyWithImpl<$Res>;
+abstract class _$$NotificationLocalSettingsModelImplCopyWith<$Res>
+    implements $NotificationLocalSettingsModelCopyWith<$Res> {
+  factory _$$NotificationLocalSettingsModelImplCopyWith(
+          _$NotificationLocalSettingsModelImpl value,
+          $Res Function(_$NotificationLocalSettingsModelImpl) then) =
+      __$$NotificationLocalSettingsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({EewSettings eew, EarthquakeSettings earthquake});
@@ -106,13 +108,13 @@ abstract class _$$NotificationSettingsModelImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$NotificationSettingsModelImplCopyWithImpl<$Res>
-    extends _$NotificationSettingsModelCopyWithImpl<$Res,
-        _$NotificationSettingsModelImpl>
-    implements _$$NotificationSettingsModelImplCopyWith<$Res> {
-  __$$NotificationSettingsModelImplCopyWithImpl(
-      _$NotificationSettingsModelImpl _value,
-      $Res Function(_$NotificationSettingsModelImpl) _then)
+class __$$NotificationLocalSettingsModelImplCopyWithImpl<$Res>
+    extends _$NotificationLocalSettingsModelCopyWithImpl<$Res,
+        _$NotificationLocalSettingsModelImpl>
+    implements _$$NotificationLocalSettingsModelImplCopyWith<$Res> {
+  __$$NotificationLocalSettingsModelImplCopyWithImpl(
+      _$NotificationLocalSettingsModelImpl _value,
+      $Res Function(_$NotificationLocalSettingsModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -121,7 +123,7 @@ class __$$NotificationSettingsModelImplCopyWithImpl<$Res>
     Object? eew = null,
     Object? earthquake = null,
   }) {
-    return _then(_$NotificationSettingsModelImpl(
+    return _then(_$NotificationLocalSettingsModelImpl(
       eew: null == eew
           ? _value.eew
           : eew // ignore: cast_nullable_to_non_nullable
@@ -136,13 +138,15 @@ class __$$NotificationSettingsModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$NotificationSettingsModelImpl implements _NotificationSettingsModel {
-  const _$NotificationSettingsModelImpl(
+class _$NotificationLocalSettingsModelImpl
+    implements _NotificationLocalSettingsModel {
+  const _$NotificationLocalSettingsModelImpl(
       {this.eew = const EewSettings(),
       this.earthquake = const EarthquakeSettings()});
 
-  factory _$NotificationSettingsModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$NotificationSettingsModelImplFromJson(json);
+  factory _$NotificationLocalSettingsModelImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$NotificationLocalSettingsModelImplFromJson(json);
 
   @override
   @JsonKey()
@@ -153,14 +157,14 @@ class _$NotificationSettingsModelImpl implements _NotificationSettingsModel {
 
   @override
   String toString() {
-    return 'NotificationSettingsModel(eew: $eew, earthquake: $earthquake)';
+    return 'NotificationLocalSettingsModel(eew: $eew, earthquake: $earthquake)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$NotificationSettingsModelImpl &&
+            other is _$NotificationLocalSettingsModelImpl &&
             (identical(other.eew, eew) || other.eew == eew) &&
             (identical(other.earthquake, earthquake) ||
                 other.earthquake == earthquake));
@@ -173,25 +177,27 @@ class _$NotificationSettingsModelImpl implements _NotificationSettingsModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$NotificationSettingsModelImplCopyWith<_$NotificationSettingsModelImpl>
-      get copyWith => __$$NotificationSettingsModelImplCopyWithImpl<
-          _$NotificationSettingsModelImpl>(this, _$identity);
+  _$$NotificationLocalSettingsModelImplCopyWith<
+          _$NotificationLocalSettingsModelImpl>
+      get copyWith => __$$NotificationLocalSettingsModelImplCopyWithImpl<
+          _$NotificationLocalSettingsModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$NotificationSettingsModelImplToJson(
+    return _$$NotificationLocalSettingsModelImplToJson(
       this,
     );
   }
 }
 
-abstract class _NotificationSettingsModel implements NotificationSettingsModel {
-  const factory _NotificationSettingsModel(
-      {final EewSettings eew,
-      final EarthquakeSettings earthquake}) = _$NotificationSettingsModelImpl;
+abstract class _NotificationLocalSettingsModel
+    implements NotificationLocalSettingsModel {
+  const factory _NotificationLocalSettingsModel(
+          {final EewSettings eew, final EarthquakeSettings earthquake}) =
+      _$NotificationLocalSettingsModelImpl;
 
-  factory _NotificationSettingsModel.fromJson(Map<String, dynamic> json) =
-      _$NotificationSettingsModelImpl.fromJson;
+  factory _NotificationLocalSettingsModel.fromJson(Map<String, dynamic> json) =
+      _$NotificationLocalSettingsModelImpl.fromJson;
 
   @override
   EewSettings get eew;
@@ -199,7 +205,8 @@ abstract class _NotificationSettingsModel implements NotificationSettingsModel {
   EarthquakeSettings get earthquake;
   @override
   @JsonKey(ignore: true)
-  _$$NotificationSettingsModelImplCopyWith<_$NotificationSettingsModelImpl>
+  _$$NotificationLocalSettingsModelImplCopyWith<
+          _$NotificationLocalSettingsModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 

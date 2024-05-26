@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class NotificationSettingsPage extends StatelessWidget {
-  const NotificationSettingsPage({super.key});
+class NotificationLocalSettingsPage extends StatelessWidget {
+  const NotificationLocalSettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {

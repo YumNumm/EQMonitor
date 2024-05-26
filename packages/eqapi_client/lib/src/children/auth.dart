@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:eqapi_types/model/v1/auth/fcm_token_request.dart';
 import 'package:eqapi_types/model/v1/auth/fcm_token_response.dart';
 import 'package:eqapi_types/model/v1/auth/notification_settings_request.dart';
 import 'package:eqapi_types/model/v1/auth/notification_settings_response.dart';
@@ -12,12 +13,12 @@ abstract class AuthApiClient {
 
   @PUT("/v1/auth/register")
   Future<HttpResponse<FcmTokenUpdateResponse>> register({
-    @Query("fcmToken") required String token,
+    @Body() required FcmTokenRequest request,
   });
 
   @PUT("/v1/auth/update")
   Future<HttpResponse<FcmTokenUpdateResponse>> update({
-    @Query("fcmToken") required String token,
+    @Body() required FcmTokenRequest request,
     @Header("Authorization") required String authorization,
   });
 

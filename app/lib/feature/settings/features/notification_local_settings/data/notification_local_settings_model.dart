@@ -3,18 +3,18 @@ import 'package:eqapi_types/lib.dart';
 import 'package:eqapi_types/model/components/core/core.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'notification_settings_model.freezed.dart';
-part 'notification_settings_model.g.dart';
+part 'notification_local_settings_model.freezed.dart';
+part 'notification_local_settings_model.g.dart';
 
 @freezed
-class NotificationSettingsModel with _$NotificationSettingsModel {
-  const factory NotificationSettingsModel({
+class NotificationLocalSettingsModel with _$NotificationLocalSettingsModel {
+  const factory NotificationLocalSettingsModel({
     @Default(EewSettings()) EewSettings eew,
     @Default(EarthquakeSettings()) EarthquakeSettings earthquake,
-  }) = _NotificationSettingsModel;
+  }) = _NotificationLocalSettingsModel;
 
-  factory NotificationSettingsModel.fromJson(Map<String, dynamic> json) =>
-      _$NotificationSettingsModelFromJson(json);
+  factory NotificationLocalSettingsModel.fromJson(Map<String, dynamic> json) =>
+      _$NotificationLocalSettingsModelFromJson(json);
 }
 
 @freezed

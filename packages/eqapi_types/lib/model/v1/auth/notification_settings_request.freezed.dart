@@ -21,7 +21,9 @@ NotificationSettingsRequest _$NotificationSettingsRequestFromJson(
 
 /// @nodoc
 mixin _$NotificationSettingsRequest {
-  NotificationSettingsGlobal get global => throw _privateConstructorUsedError;
+  NotificationSettingsGlobal? get global => throw _privateConstructorUsedError;
+  List<NotificationSettingsRegion>? get regions =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -37,9 +39,11 @@ abstract class $NotificationSettingsRequestCopyWith<$Res> {
       _$NotificationSettingsRequestCopyWithImpl<$Res,
           NotificationSettingsRequest>;
   @useResult
-  $Res call({NotificationSettingsGlobal global});
+  $Res call(
+      {NotificationSettingsGlobal? global,
+      List<NotificationSettingsRegion>? regions});
 
-  $NotificationSettingsGlobalCopyWith<$Res> get global;
+  $NotificationSettingsGlobalCopyWith<$Res>? get global;
 }
 
 /// @nodoc
@@ -56,20 +60,29 @@ class _$NotificationSettingsRequestCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? global = null,
+    Object? global = freezed,
+    Object? regions = freezed,
   }) {
     return _then(_value.copyWith(
-      global: null == global
+      global: freezed == global
           ? _value.global
           : global // ignore: cast_nullable_to_non_nullable
-              as NotificationSettingsGlobal,
+              as NotificationSettingsGlobal?,
+      regions: freezed == regions
+          ? _value.regions
+          : regions // ignore: cast_nullable_to_non_nullable
+              as List<NotificationSettingsRegion>?,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $NotificationSettingsGlobalCopyWith<$Res> get global {
-    return $NotificationSettingsGlobalCopyWith<$Res>(_value.global, (value) {
+  $NotificationSettingsGlobalCopyWith<$Res>? get global {
+    if (_value.global == null) {
+      return null;
+    }
+
+    return $NotificationSettingsGlobalCopyWith<$Res>(_value.global!, (value) {
       return _then(_value.copyWith(global: value) as $Val);
     });
   }
@@ -84,10 +97,12 @@ abstract class _$$NotificationSettingsRequestImplCopyWith<$Res>
       __$$NotificationSettingsRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({NotificationSettingsGlobal global});
+  $Res call(
+      {NotificationSettingsGlobal? global,
+      List<NotificationSettingsRegion>? regions});
 
   @override
-  $NotificationSettingsGlobalCopyWith<$Res> get global;
+  $NotificationSettingsGlobalCopyWith<$Res>? get global;
 }
 
 /// @nodoc
@@ -103,13 +118,18 @@ class __$$NotificationSettingsRequestImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? global = null,
+    Object? global = freezed,
+    Object? regions = freezed,
   }) {
     return _then(_$NotificationSettingsRequestImpl(
-      global: null == global
+      global: freezed == global
           ? _value.global
           : global // ignore: cast_nullable_to_non_nullable
-              as NotificationSettingsGlobal,
+              as NotificationSettingsGlobal?,
+      regions: freezed == regions
+          ? _value._regions
+          : regions // ignore: cast_nullable_to_non_nullable
+              as List<NotificationSettingsRegion>?,
     ));
   }
 }
@@ -118,18 +138,29 @@ class __$$NotificationSettingsRequestImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$NotificationSettingsRequestImpl
     implements _NotificationSettingsRequest {
-  const _$NotificationSettingsRequestImpl({required this.global});
+  const _$NotificationSettingsRequestImpl(
+      {this.global, final List<NotificationSettingsRegion>? regions})
+      : _regions = regions;
 
   factory _$NotificationSettingsRequestImpl.fromJson(
           Map<String, dynamic> json) =>
       _$$NotificationSettingsRequestImplFromJson(json);
 
   @override
-  final NotificationSettingsGlobal global;
+  final NotificationSettingsGlobal? global;
+  final List<NotificationSettingsRegion>? _regions;
+  @override
+  List<NotificationSettingsRegion>? get regions {
+    final value = _regions;
+    if (value == null) return null;
+    if (_regions is EqualUnmodifiableListView) return _regions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'NotificationSettingsRequest(global: $global)';
+    return 'NotificationSettingsRequest(global: $global, regions: $regions)';
   }
 
   @override
@@ -137,12 +168,14 @@ class _$NotificationSettingsRequestImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$NotificationSettingsRequestImpl &&
-            (identical(other.global, global) || other.global == global));
+            (identical(other.global, global) || other.global == global) &&
+            const DeepCollectionEquality().equals(other._regions, _regions));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, global);
+  int get hashCode => Object.hash(
+      runtimeType, global, const DeepCollectionEquality().hash(_regions));
 
   @JsonKey(ignore: true)
   @override
@@ -162,14 +195,17 @@ class _$NotificationSettingsRequestImpl
 abstract class _NotificationSettingsRequest
     implements NotificationSettingsRequest {
   const factory _NotificationSettingsRequest(
-          {required final NotificationSettingsGlobal global}) =
+          {final NotificationSettingsGlobal? global,
+          final List<NotificationSettingsRegion>? regions}) =
       _$NotificationSettingsRequestImpl;
 
   factory _NotificationSettingsRequest.fromJson(Map<String, dynamic> json) =
       _$NotificationSettingsRequestImpl.fromJson;
 
   @override
-  NotificationSettingsGlobal get global;
+  NotificationSettingsGlobal? get global;
+  @override
+  List<NotificationSettingsRegion>? get regions;
   @override
   @JsonKey(ignore: true)
   _$$NotificationSettingsRequestImplCopyWith<_$NotificationSettingsRequestImpl>
@@ -185,8 +221,6 @@ NotificationSettingsGlobal _$NotificationSettingsGlobalFromJson(
 mixin _$NotificationSettingsGlobal {
   JmaForecastIntensity get minJmaIntensity =>
       throw _privateConstructorUsedError;
-  List<NotificationSettingsRegion>? get regions =>
-      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -201,9 +235,7 @@ abstract class $NotificationSettingsGlobalCopyWith<$Res> {
       _$NotificationSettingsGlobalCopyWithImpl<$Res,
           NotificationSettingsGlobal>;
   @useResult
-  $Res call(
-      {JmaForecastIntensity minJmaIntensity,
-      List<NotificationSettingsRegion>? regions});
+  $Res call({JmaForecastIntensity minJmaIntensity});
 }
 
 /// @nodoc
@@ -221,17 +253,12 @@ class _$NotificationSettingsGlobalCopyWithImpl<$Res,
   @override
   $Res call({
     Object? minJmaIntensity = null,
-    Object? regions = freezed,
   }) {
     return _then(_value.copyWith(
       minJmaIntensity: null == minJmaIntensity
           ? _value.minJmaIntensity
           : minJmaIntensity // ignore: cast_nullable_to_non_nullable
               as JmaForecastIntensity,
-      regions: freezed == regions
-          ? _value.regions
-          : regions // ignore: cast_nullable_to_non_nullable
-              as List<NotificationSettingsRegion>?,
     ) as $Val);
   }
 }
@@ -245,9 +272,7 @@ abstract class _$$NotificationSettingsGlobalImplCopyWith<$Res>
       __$$NotificationSettingsGlobalImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {JmaForecastIntensity minJmaIntensity,
-      List<NotificationSettingsRegion>? regions});
+  $Res call({JmaForecastIntensity minJmaIntensity});
 }
 
 /// @nodoc
@@ -264,17 +289,12 @@ class __$$NotificationSettingsGlobalImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? minJmaIntensity = null,
-    Object? regions = freezed,
   }) {
     return _then(_$NotificationSettingsGlobalImpl(
       minJmaIntensity: null == minJmaIntensity
           ? _value.minJmaIntensity
           : minJmaIntensity // ignore: cast_nullable_to_non_nullable
               as JmaForecastIntensity,
-      regions: freezed == regions
-          ? _value._regions
-          : regions // ignore: cast_nullable_to_non_nullable
-              as List<NotificationSettingsRegion>?,
     ));
   }
 }
@@ -282,10 +302,7 @@ class __$$NotificationSettingsGlobalImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$NotificationSettingsGlobalImpl implements _NotificationSettingsGlobal {
-  const _$NotificationSettingsGlobalImpl(
-      {required this.minJmaIntensity,
-      final List<NotificationSettingsRegion>? regions})
-      : _regions = regions;
+  const _$NotificationSettingsGlobalImpl({required this.minJmaIntensity});
 
   factory _$NotificationSettingsGlobalImpl.fromJson(
           Map<String, dynamic> json) =>
@@ -293,19 +310,10 @@ class _$NotificationSettingsGlobalImpl implements _NotificationSettingsGlobal {
 
   @override
   final JmaForecastIntensity minJmaIntensity;
-  final List<NotificationSettingsRegion>? _regions;
-  @override
-  List<NotificationSettingsRegion>? get regions {
-    final value = _regions;
-    if (value == null) return null;
-    if (_regions is EqualUnmodifiableListView) return _regions;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
 
   @override
   String toString() {
-    return 'NotificationSettingsGlobal(minJmaIntensity: $minJmaIntensity, regions: $regions)';
+    return 'NotificationSettingsGlobal(minJmaIntensity: $minJmaIntensity)';
   }
 
   @override
@@ -314,14 +322,12 @@ class _$NotificationSettingsGlobalImpl implements _NotificationSettingsGlobal {
         (other.runtimeType == runtimeType &&
             other is _$NotificationSettingsGlobalImpl &&
             (identical(other.minJmaIntensity, minJmaIntensity) ||
-                other.minJmaIntensity == minJmaIntensity) &&
-            const DeepCollectionEquality().equals(other._regions, _regions));
+                other.minJmaIntensity == minJmaIntensity));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, minJmaIntensity,
-      const DeepCollectionEquality().hash(_regions));
+  int get hashCode => Object.hash(runtimeType, minJmaIntensity);
 
   @JsonKey(ignore: true)
   @override
@@ -341,8 +347,7 @@ class _$NotificationSettingsGlobalImpl implements _NotificationSettingsGlobal {
 abstract class _NotificationSettingsGlobal
     implements NotificationSettingsGlobal {
   const factory _NotificationSettingsGlobal(
-          {required final JmaForecastIntensity minJmaIntensity,
-          final List<NotificationSettingsRegion>? regions}) =
+          {required final JmaForecastIntensity minJmaIntensity}) =
       _$NotificationSettingsGlobalImpl;
 
   factory _NotificationSettingsGlobal.fromJson(Map<String, dynamic> json) =
@@ -350,8 +355,6 @@ abstract class _NotificationSettingsGlobal
 
   @override
   JmaForecastIntensity get minJmaIntensity;
-  @override
-  List<NotificationSettingsRegion>? get regions;
   @override
   @JsonKey(ignore: true)
   _$$NotificationSettingsGlobalImplCopyWith<_$NotificationSettingsGlobalImpl>

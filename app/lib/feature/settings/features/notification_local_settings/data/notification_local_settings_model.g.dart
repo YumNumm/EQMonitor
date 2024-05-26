@@ -2,36 +2,36 @@
 
 // ignore_for_file: type=lint, duplicate_ignore
 
-part of 'notification_settings_model.dart';
+part of 'notification_local_settings_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$NotificationSettingsModelImpl _$$NotificationSettingsModelImplFromJson(
-        Map<String, dynamic> json) =>
-    $checkedCreate(
-      r'_$NotificationSettingsModelImpl',
-      json,
-      ($checkedConvert) {
-        final val = _$NotificationSettingsModelImpl(
-          eew: $checkedConvert(
-              'eew',
-              (v) => v == null
-                  ? const EewSettings()
-                  : EewSettings.fromJson(v as Map<String, dynamic>)),
-          earthquake: $checkedConvert(
-              'earthquake',
-              (v) => v == null
-                  ? const EarthquakeSettings()
-                  : EarthquakeSettings.fromJson(v as Map<String, dynamic>)),
+_$NotificationLocalSettingsModelImpl
+    _$$NotificationLocalSettingsModelImplFromJson(Map<String, dynamic> json) =>
+        $checkedCreate(
+          r'_$NotificationLocalSettingsModelImpl',
+          json,
+          ($checkedConvert) {
+            final val = _$NotificationLocalSettingsModelImpl(
+              eew: $checkedConvert(
+                  'eew',
+                  (v) => v == null
+                      ? const EewSettings()
+                      : EewSettings.fromJson(v as Map<String, dynamic>)),
+              earthquake: $checkedConvert(
+                  'earthquake',
+                  (v) => v == null
+                      ? const EarthquakeSettings()
+                      : EarthquakeSettings.fromJson(v as Map<String, dynamic>)),
+            );
+            return val;
+          },
         );
-        return val;
-      },
-    );
 
-Map<String, dynamic> _$$NotificationSettingsModelImplToJson(
-        _$NotificationSettingsModelImpl instance) =>
+Map<String, dynamic> _$$NotificationLocalSettingsModelImplToJson(
+        _$NotificationLocalSettingsModelImpl instance) =>
     <String, dynamic>{
       'eew': instance.eew,
       'earthquake': instance.earthquake,

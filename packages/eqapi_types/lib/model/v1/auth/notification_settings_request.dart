@@ -7,7 +7,8 @@ part 'notification_settings_request.g.dart';
 @freezed
 class NotificationSettingsRequest with _$NotificationSettingsRequest {
   const factory NotificationSettingsRequest({
-    required NotificationSettingsGlobal global,
+     NotificationSettingsGlobal? global,
+    List<NotificationSettingsRegion>? regions,
   }) = _NotificationSettingsRequest;
 
   factory NotificationSettingsRequest.fromJson(Map<String, dynamic> json) =>
@@ -18,7 +19,6 @@ class NotificationSettingsRequest with _$NotificationSettingsRequest {
 class NotificationSettingsGlobal with _$NotificationSettingsGlobal {
   const factory NotificationSettingsGlobal({
     required JmaForecastIntensity minJmaIntensity,
-    List<NotificationSettingsRegion>? regions,
   }) = _NotificationSettingsGlobal;
 
   factory NotificationSettingsGlobal.fromJson(Map<String, dynamic> json) =>

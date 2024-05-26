@@ -1,28 +1,29 @@
 import 'dart:convert';
 
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/feature/settings/features/notification_local_settings/data/notification_settings_model.dart';
+import 'package:eqmonitor/feature/settings/features/notification_local_settings/data/notification_local_settings_model.dart';
 import 'package:notification_setting_types/notification_payload.pbenum.dart'
     as pb_enum;
 import 'package:notification_setting_types/notification_settings.pb.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preference_app_group/shared_preference_app_group.dart';
 
-part 'notification_settings_notifier.g.dart';
+part 'notification_local_settings_notifier.g.dart';
 
 @Riverpod(keepAlive: true)
-class NotificationSettingsNotifier extends _$NotificationSettingsNotifier {
+class NotificationLocalSettingsNotifier
+    extends _$NotificationLocalSettingsNotifier {
   @override
-  Future<NotificationSettingsModel> build() async {
+  Future<NotificationLocalSettingsModel> build() async {
     final value =
         await SharedPreferenceAppGroup.getString('notification_settings');
     if (value == null) {
-      return const NotificationSettingsModel();
+      return const NotificationLocalSettingsModel();
     }
     // base64でdecode
     final buffer = base64Decode(value);
     final savedState = NotificationSettings.fromBuffer(buffer);
-    return NotificationSettingsModel(
+    return NotificationLocalSettingsModel(
       earthquake: EarthquakeSettings(
         emergencyIntensity:
             savedState.earthquakeSettings.emergencyIntensity.jmaIntensity,
@@ -59,7 +60,7 @@ class NotificationSettingsNotifier extends _$NotificationSettingsNotifier {
     );
   }
 
-  Future<void> save(NotificationSettingsModel state) async {
+  Future<void> save(NotificationLocalSettingsModel state) async {
     final pb = NotificationSettings(
       earthquakeSettings: NotificationSettings_EarthquakeSettings(
         emergencyIntensity: state.earthquake.emergencyIntensity?.toPb,

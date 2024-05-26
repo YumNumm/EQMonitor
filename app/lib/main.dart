@@ -47,10 +47,7 @@ Future<void> main() async {
   );
 
   final talker = TalkerFlutter.init(
-    settings: TalkerSettings(
-      enabled: !kDebugMode,
-      useConsoleLogs: !kDebugMode,
-    ),
+    settings: TalkerSettings(),
   );
   if (!kIsWeb) {
     talker.configure(

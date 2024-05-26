@@ -22,11 +22,12 @@ class _AuthApiClient implements AuthApiClient {
 
   @override
   Future<HttpResponse<FcmTokenUpdateResponse>> register(
-      {required String token}) async {
+      {required FcmTokenRequest request}) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'fcmToken': token};
+    final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<FcmTokenUpdateResponse>>(Options(
       method: 'PUT',
@@ -51,14 +52,15 @@ class _AuthApiClient implements AuthApiClient {
 
   @override
   Future<HttpResponse<FcmTokenUpdateResponse>> update({
-    required String token,
+    required FcmTokenRequest request,
     required String authorization,
   }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'fcmToken': token};
+    final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Authorization': authorization};
     _headers.removeWhere((k, v) => v == null);
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<FcmTokenUpdateResponse>>(Options(
       method: 'PUT',
