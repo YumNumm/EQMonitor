@@ -10,6 +10,7 @@ environment:
 
 dependencies:
   adaptive_dialog: ^2.1.0
+  animations: ^2.0.11
   app_settings: ^5.1.1
   collection: ^1.17.1
   crypto: ^3.0.3
@@ -31,6 +32,7 @@ dependencies:
       url: https://github.com/YumNumm/EQMonitor.git
       path: packages/extensions
   firebase_analytics: ^10.10.5
+  firebase_app_installations: ^0.2.5+6
   firebase_core: ^2.31.0
   firebase_crashlytics: ^3.5.5
   firebase_messaging: ^14.9.2
@@ -40,6 +42,7 @@ dependencies:
   flutter_html: ^3.0.0-alpha.2
   flutter_local_notifications: ^17.1.1
   flutter_markdown: ^0.7.1
+  flutter_secure_storage: ^9.2.2
   flutter_test:
     sdk: flutter
   freezed_annotation: ^2.4.1
@@ -61,6 +64,7 @@ dependencies:
     git:
       url: https://github.com/YumNumm/EQMonitor.git
       path: packages/jma_parameter_api_client
+  json_annotation: ^4.9.0
   kyoshin_observation_point_types:
     git:
       url: https://github.com/YumNumm/EQMonitor.git
@@ -74,6 +78,10 @@ dependencies:
     git:
       url: https://github.com/YumNumm/flutter-maplibre-gl.git
       ref: 689e03748242f31103bea4a22f5bc2c63f3873fc
+  notification_setting_types:
+    git:
+      url: https://github.com/YumNumm/EQMonitor.git
+      path: packages/notification_setting_types
   ntp: ^2.0.0
   package_info_plus: ^8.0.0
   path_provider: ^2.1.3
@@ -82,6 +90,7 @@ dependencies:
   riverpod_annotation: ^3.0.0-dev.3
   screenshot: 3.0.0
   share_plus: ^9.0.0
+  shared_preference_app_group: ^1.1.1
   shared_preferences: ^2.2.3
   sheet:
     git:

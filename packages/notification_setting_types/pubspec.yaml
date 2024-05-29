@@ -1,0 +1,7 @@
+name: notification_setting_types
+
+environment:
+  sdk: ^3.4.0
+
+dependencies:
+  protobuf: ^3.1.0

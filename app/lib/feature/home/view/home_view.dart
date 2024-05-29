@@ -11,12 +11,12 @@ import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
 import 'package:eqmonitor/core/hook/use_sheet_controller.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
-import 'package:eqmonitor/core/provider/config/notification/fcm_topic_manager.dart';
 import 'package:eqmonitor/core/provider/config/permission/permission_status_provider.dart';
 import 'package:eqmonitor/core/provider/eew/eew_alive_telegram.dart';
 import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/core/provider/kmoni/widget/kmoni_maintenance_widget.dart';
+import 'package:eqmonitor/core/provider/notification_token.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
@@ -29,6 +29,9 @@ import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/update_widget.dart';
 import 'package:eqmonitor/feature/home/features/map/view/main_map_view.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
+import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/fcm_token_change_detector.dart';
+import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_authentication_service.dart';
+import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_settings_migrate_service.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -72,8 +75,24 @@ class _HomeBodyWidget extends HookConsumerWidget {
           (
             ref.read(kmoniViewModelProvider.notifier).initialize(),
             ref.read(permissionProvider.notifier).initialize(),
-            ref.read(fcmTopicManagerProvider.notifier).setup(),
             ref.read(ntpProvider.notifier).sync(),
+            () async {
+              final fcmTokenHasChanged =
+                  await ref.read(fcmTokenChangeDetectorProvider.future);
+              if (fcmTokenHasChanged) {
+                final token = await ref.read(notificationTokenProvider.future);
+                final fcmToken = token.fcmToken;
+                if (fcmToken == null) {
+                  return;
+                }
+                await ref
+                    .read(notificationRemoteAuthenticateServiceProvider)
+                    .updateToken(fcmToken: fcmToken);
+                await ref
+                    .read(fcmTokenChangeDetectorProvider.notifier)
+                    .save(fcmToken);
+              }
+            }(),
             Future.doWhile(() async {
               try {
                 final renderer = MapComponentsRenderer();
@@ -335,6 +354,7 @@ class _Sheet extends StatelessWidget {
           const EewWidgets(),
           const SheetStatusWidget(),
           const KmoniMaintenanceWidget(),
+          const _NotificationMigrationWidget(),
           const ParameterLoaderWidget(),
           const UpdateWidget(),
           const EarthquakeHistorySheetWidget(),
@@ -412,5 +432,47 @@ class _KmoniScale extends ConsumerWidget {
       duration: const Duration(milliseconds: 200),
       child: child,
     );
+  }
+}
+
+class _NotificationMigrationWidget extends ConsumerWidget {
+  const _NotificationMigrationWidget();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state =
+        ref.watch(notificationRemoteSettingsInitialSetupNotifierProvider);
+    return switch (state) {
+      AsyncLoading() => const SizedBox.shrink(),
+      AsyncError(:final error) => ListTile(
+          title: const Text('通知設定の移行に失敗しました'),
+          subtitle: Text(error.toString()),
+          leading: const Icon(Icons.error),
+        ),
+      AsyncData(:final value) => switch (value) {
+          NotificationRemoteSettingsSetupState.initial =>
+            const SizedBox.shrink(),
+          NotificationRemoteSettingsSetupState.waitingForFcmToken =>
+            const ListTile(
+              title: Text('FCMトークンの取得中'),
+              leading: CircularProgressIndicator(),
+            ),
+          NotificationRemoteSettingsSetupState.registering => const ListTile(
+              title: Text('FCMトークンの登録中'),
+              leading: CircularProgressIndicator(),
+            ),
+          NotificationRemoteSettingsSetupState.migrating => const ListTile(
+              title: Text('通知設定の移行中'),
+              leading: CircularProgressIndicator(),
+            ),
+          NotificationRemoteSettingsSetupState.unsubscribingOldTopics =>
+            const ListTile(
+              title: Text('旧通知設定の解除中'),
+              leading: CircularProgressIndicator(),
+            ),
+          NotificationRemoteSettingsSetupState.completed =>
+            const SizedBox.shrink(),
+        },
+    };
   }
 }

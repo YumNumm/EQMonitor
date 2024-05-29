@@ -2,9 +2,7 @@ import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_crashlytics.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
-import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
-import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'fcm_topic_manager.g.dart';
@@ -15,60 +13,10 @@ class FcmTopicManager extends _$FcmTopicManager {
   List<String> build() {
     final prefs = ref.watch(sharedPreferencesProvider);
     final list = prefs.getStringList(_prefsKey);
-    ref.listenSelf((_, __) => _save());
     return list ?? [];
   }
 
   static const String _prefsKey = 'fcmTopicManager';
-
-  /// デフォルトで購読すべきトピックを登録する
-  Future<void> setup() async {
-    if (kIsWeb) {
-      ref.read(talkerProvider).log('FcmTopicManager.setup: Skipped! (Web)');
-    }
-    final futures = <Future<void>>[];
-    final requireTopics = [
-      FcmBasicTopic(FcmTopics.all),
-    ];
-    for (final topic in requireTopics) {
-      futures.add(registerToTopic(topic));
-    }
-    final shouldBeUnregisteredTopics = [
-      'earthquake',
-      'eew',
-      'everyone',
-    ];
-    final messaging = ref.read(firebaseMessagingProvider);
-    for (final topic in shouldBeUnregisteredTopics) {
-      // bypass prefs check
-      futures.add(messaging.unsubscribeFromTopic(topic));
-    }
-    await futures.wait;
-  }
-
-  Future<void> _save() async {
-    final prefs = ref.read(sharedPreferencesProvider);
-    await prefs.setStringList(_prefsKey, state);
-  }
-
-  Future<Result<void, Exception>> registerToTopic(FcmTopic topic) async {
-    // 既に登録済みの場合は何もしない
-    if (state.contains(topic.topic)) {
-      return Result.success(null);
-    }
-    final messaging = ref.read(firebaseMessagingProvider);
-    try {
-      await messaging.subscribeToTopic(topic.topic);
-      state = [...state, topic.topic];
-      return Result.success(null);
-    } on Exception catch (error, stackTrace) {
-      await ref.read(firebaseCrashlyticsProvider).recordError(
-            error,
-            stackTrace,
-          );
-      return Result.failure(error);
-    }
-  }
 
   Future<Result<void, Exception>> unregisterFromTopic(FcmTopic topic) async {
     // 登録されていない場合は何もしない

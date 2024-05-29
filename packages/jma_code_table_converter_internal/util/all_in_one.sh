@@ -25,10 +25,10 @@ rm -rf output
 dart run
 
 echo "------ Copy to Application Assets ------"
-cp output/jma_code_table.pb ../../assets/
+cp output/jma_code_table.pb ../../app/assets/
 echo "OK."
 
 echo "------ Cleaning up ------"
-rm -rf tmp
+#rm -rf tmp
 
 echo "------ Done ------"
