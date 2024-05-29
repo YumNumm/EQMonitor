@@ -36,20 +36,6 @@ class NotificationService: UNNotificationServiceExtension {
             contentHandler(bestAttemptContent!)
             return
         }
-        /* DEBUG */
-        // notificationPayloadをJSON化
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
-        
-        let jsonData = try!
-        encoder.encode(notificationPayload)
-        
-        let jsonString = String(data: jsonData, encoding: .utf8)!
-        bestAttemptContent!.body = bestAttemptContent!.body + "\n" + jsonString
-        
-        contentHandler(bestAttemptContent!)
-        return
-        /* DEBUG END */
         
         // EEW
         if notificationPayload!.type == .eew

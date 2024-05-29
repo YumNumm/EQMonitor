@@ -12,12 +12,11 @@
 		4A6E6F82172719E05F9BD593 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD5D302A98B76C01E6D49E1B /* GoogleService-Info.plist */; };
 		4F115C462BE9682B00DAAD73 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 4F115C452BE9682B00DAAD73 /* PrivacyInfo.xcprivacy */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
-		7B7B782513B5BD61B436275F /* Pods_FcmServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99B391858A4EFC95F561B05E /* Pods_FcmServiceExtension.framework */; };
 		854858802BFF92D90025EC74 /* notification_settings.proto in Sources */ = {isa = PBXBuildFile; fileRef = 8548587E2BFF92D90025EC74 /* notification_settings.proto */; };
 		854858812BFF92D90025EC74 /* notification_settings.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8548587F2BFF92D90025EC74 /* notification_settings.pb.swift */; };
+		856D29292C07B84E0015B9FD /* Pods_FcmServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99B391858A4EFC95F561B05E /* Pods_FcmServiceExtension.framework */; };
 		859DF75C2BBE9FFC00B827B1 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 859DF75B2BBE9FFC00B827B1 /* StoreKit.framework */; };
 		859DF75E2BBEA0F000B827B1 /* Synced - EQMonitor.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 859DF75D2BBEA0F000B827B1 /* Synced - EQMonitor.storekit */; };
-		85B0048F2C077A9B0063ADD5 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = 85B0048E2C077A9B0063ADD5 /* Gzip */; };
 		85E609552BFF792C00C21983 /* FcmServiceExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 85E6094E2BFF792C00C21983 /* FcmServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		85E6095B2BFF7AC300C21983 /* notification_payload.proto in Sources */ = {isa = PBXBuildFile; fileRef = 85E6095A2BFF7AC300C21983 /* notification_payload.proto */; };
 		85E6095E2BFF7B6400C21983 /* notification_payload.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6095C2BFF7B6400C21983 /* notification_payload.pb.swift */; };
@@ -106,8 +105,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				85B0048F2C077A9B0063ADD5 /* Gzip in Frameworks */,
-				7B7B782513B5BD61B436275F /* Pods_FcmServiceExtension.framework in Frameworks */,
+				856D29292C07B84E0015B9FD /* Pods_FcmServiceExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,7 +235,6 @@
 			);
 			name = FcmServiceExtension;
 			packageProductDependencies = (
-				85B0048E2C077A9B0063ADD5 /* Gzip */,
 			);
 			productName = FcmServiceExtension;
 			productReference = 85E6094E2BFF792C00C21983 /* FcmServiceExtension.appex */;
@@ -964,14 +961,6 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		85B0048E2C077A9B0063ADD5 /* Gzip */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 85B0048D2C077A9B0063ADD5 /* XCRemoteSwiftPackageReference "GzipSwift" */;
-			productName = Gzip;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 97C146E61CF9000F007C117D /* Project object */;
 }
