@@ -7,7 +7,7 @@ part 'notification_settings_request.g.dart';
 @freezed
 class NotificationSettingsRequest with _$NotificationSettingsRequest {
   const factory NotificationSettingsRequest({
-     NotificationSettingsGlobal? global,
+    NotificationSettingsGlobal? global,
     List<NotificationSettingsRegion>? regions,
   }) = _NotificationSettingsRequest;
 

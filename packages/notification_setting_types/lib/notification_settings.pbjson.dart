@@ -17,19 +17,61 @@ import 'dart:typed_data' as $typed_data;
 const NotificationSettings$json = {
   '1': 'NotificationSettings',
   '2': [
-    {'1': 'eew_settings', '3': 1, '4': 1, '5': 11, '6': '.eqmonitor.NotificationSettings.EewSettings', '10': 'eewSettings'},
-    {'1': 'earthquake_settings', '3': 2, '4': 1, '5': 11, '6': '.eqmonitor.NotificationSettings.EarthquakeSettings', '10': 'earthquakeSettings'},
+    {
+      '1': 'eew_settings',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.eqmonitor.NotificationSettings.EewSettings',
+      '10': 'eewSettings'
+    },
+    {
+      '1': 'earthquake_settings',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.eqmonitor.NotificationSettings.EarthquakeSettings',
+      '10': 'earthquakeSettings'
+    },
   ],
-  '3': [NotificationSettings_EewSettings$json, NotificationSettings_EarthquakeSettings$json],
+  '3': [
+    NotificationSettings_EewSettings$json,
+    NotificationSettings_EarthquakeSettings$json
+  ],
 };
 
 @$core.Deprecated('Use notificationSettingsDescriptor instead')
 const NotificationSettings_EewSettings$json = {
   '1': 'EewSettings',
   '2': [
-    {'1': 'emergency_intensity', '3': 1, '4': 1, '5': 14, '6': '.eqmonitor.JmaIntensity', '9': 0, '10': 'emergencyIntensity', '17': true},
-    {'1': 'silent_intensity', '3': 2, '4': 1, '5': 14, '6': '.eqmonitor.JmaIntensity', '9': 1, '10': 'silentIntensity', '17': true},
-    {'1': 'regions', '3': 3, '4': 3, '5': 11, '6': '.eqmonitor.NotificationSettings.EewSettings.Region', '10': 'regions'},
+    {
+      '1': 'emergency_intensity',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.eqmonitor.JmaIntensity',
+      '9': 0,
+      '10': 'emergencyIntensity',
+      '17': true
+    },
+    {
+      '1': 'silent_intensity',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.eqmonitor.JmaIntensity',
+      '9': 1,
+      '10': 'silentIntensity',
+      '17': true
+    },
+    {
+      '1': 'regions',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.eqmonitor.NotificationSettings.EewSettings.Region',
+      '10': 'regions'
+    },
   ],
   '3': [NotificationSettings_EewSettings_Region$json],
   '8': [
@@ -44,8 +86,22 @@ const NotificationSettings_EewSettings_Region$json = {
   '2': [
     {'1': 'code', '3': 1, '4': 1, '5': 9, '10': 'code'},
     {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
-    {'1': 'emergency_intensity', '3': 3, '4': 1, '5': 14, '6': '.eqmonitor.JmaIntensity', '10': 'emergencyIntensity'},
-    {'1': 'silent_intensity', '3': 4, '4': 1, '5': 14, '6': '.eqmonitor.JmaIntensity', '10': 'silentIntensity'},
+    {
+      '1': 'emergency_intensity',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.eqmonitor.JmaIntensity',
+      '10': 'emergencyIntensity'
+    },
+    {
+      '1': 'silent_intensity',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.eqmonitor.JmaIntensity',
+      '10': 'silentIntensity'
+    },
     {'1': 'is_main', '3': 5, '4': 1, '5': 8, '10': 'isMain'},
   ],
 };
@@ -54,9 +110,34 @@ const NotificationSettings_EewSettings_Region$json = {
 const NotificationSettings_EarthquakeSettings$json = {
   '1': 'EarthquakeSettings',
   '2': [
-    {'1': 'emergency_intensity', '3': 1, '4': 1, '5': 14, '6': '.eqmonitor.JmaIntensity', '9': 0, '10': 'emergencyIntensity', '17': true},
-    {'1': 'silent_intensity', '3': 2, '4': 1, '5': 14, '6': '.eqmonitor.JmaIntensity', '9': 1, '10': 'silentIntensity', '17': true},
-    {'1': 'regions', '3': 3, '4': 3, '5': 11, '6': '.eqmonitor.NotificationSettings.EarthquakeSettings.Region', '10': 'regions'},
+    {
+      '1': 'emergency_intensity',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.eqmonitor.JmaIntensity',
+      '9': 0,
+      '10': 'emergencyIntensity',
+      '17': true
+    },
+    {
+      '1': 'silent_intensity',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.eqmonitor.JmaIntensity',
+      '9': 1,
+      '10': 'silentIntensity',
+      '17': true
+    },
+    {
+      '1': 'regions',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.eqmonitor.NotificationSettings.EarthquakeSettings.Region',
+      '10': 'regions'
+    },
   ],
   '3': [NotificationSettings_EarthquakeSettings_Region$json],
   '8': [
@@ -71,8 +152,22 @@ const NotificationSettings_EarthquakeSettings_Region$json = {
   '2': [
     {'1': 'code', '3': 1, '4': 1, '5': 9, '10': 'code'},
     {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
-    {'1': 'emergency_intensity', '3': 3, '4': 1, '5': 14, '6': '.eqmonitor.JmaIntensity', '10': 'emergencyIntensity'},
-    {'1': 'silent_intensity', '3': 4, '4': 1, '5': 14, '6': '.eqmonitor.JmaIntensity', '10': 'silentIntensity'},
+    {
+      '1': 'emergency_intensity',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.eqmonitor.JmaIntensity',
+      '10': 'emergencyIntensity'
+    },
+    {
+      '1': 'silent_intensity',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.eqmonitor.JmaIntensity',
+      '10': 'silentIntensity'
+    },
     {'1': 'is_main', '3': 5, '4': 1, '5': 8, '10': 'isMain'},
   ],
 };
@@ -102,4 +197,3 @@ final $typed_data.Uint8List notificationSettingsDescriptor = $convert.base64Deco
     'dGVuc2l0eRgEIAEoDjIXLmVxbW9uaXRvci5KbWFJbnRlbnNpdHlSD3NpbGVudEludGVuc2l0eR'
     'IXCgdpc19tYWluGAUgASgIUgZpc01haW5CFgoUX2VtZXJnZW5jeV9pbnRlbnNpdHlCEwoRX3Np'
     'bGVudF9pbnRlbnNpdHk=');
-
