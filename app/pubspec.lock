@@ -13,10 +13,10 @@ packages:
     dependency: transitive
     description:
       name: _flutterfire_internals
-      sha256: "2350805d7afefb0efe7acd325cb19d3ae8ba4039b906eade3807ffb69938a01f"
+      sha256: e4be6711f96d3d4eebe79728897d645b7a5585bbfdd6d534878d202c171266d7
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.33"
+    version: "1.3.34"
   accessibility_tools:
     dependency: transitive
     description:
@@ -50,7 +50,7 @@ packages:
     source: hosted
     version: "0.11.3"
   animations:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: animations
       sha256: d3d6dcfb218225bbe68e87ccf6378bbb2e32a94900722c5f81611dad089911cb
@@ -470,14 +470,38 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.7+5"
+  firebase_app_installations:
+    dependency: "direct main"
+    description:
+      name: firebase_app_installations
+      sha256: "0670ecbea9defa88556a9d73bc770642cc7dd4f148268620bf1c25da34a37950"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.5+6"
+  firebase_app_installations_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_app_installations_platform_interface
+      sha256: "2dadcab8d06d8e97ebf1a89d3434b6d5a001356c1291daaa3c076bd5c287d90f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.4+34"
+  firebase_app_installations_web:
+    dependency: transitive
+    description:
+      name: firebase_app_installations_web
+      sha256: "30a966e01c84dcab48f44a3c1aaf96f77aafe6dbfcb63bcc781606f033abe6aa"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.5+6"
   firebase_core:
     dependency: "direct main"
     description:
       name: firebase_core
-      sha256: "372d94ced114b9c40cb85e18c50ac94a7e998c8eec630c50d7aec047847d27bf"
+      sha256: "4b5100e2dbc3fe72c2d4241a046d3f01457fe11293283a324f5c52575e3406f8"
       url: "https://pub.dev"
     source: hosted
-    version: "2.31.0"
+    version: "2.31.1"
   firebase_core_platform_interface:
     dependency: transitive
     description:
@@ -627,6 +651,54 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0-dev.3"
+  flutter_secure_storage:
+    dependency: "direct main"
+    description:
+      name: flutter_secure_storage
+      sha256: "165164745e6afb5c0e3e3fcc72a012fb9e58496fb26ffb92cf22e16a821e85d0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.2.2"
+  flutter_secure_storage_linux:
+    dependency: transitive
+    description:
+      name: flutter_secure_storage_linux
+      sha256: "4d91bfc23047422cbcd73ac684bc169859ee766482517c22172c86596bf1464b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.1"
+  flutter_secure_storage_macos:
+    dependency: transitive
+    description:
+      name: flutter_secure_storage_macos
+      sha256: "1693ab11121a5f925bbea0be725abfcfbbcf36c1e29e571f84a0c0f436147a81"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.2"
+  flutter_secure_storage_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_secure_storage_platform_interface
+      sha256: cf91ad32ce5adef6fba4d736a542baca9daf3beac4db2d04be350b87f69ac4a8
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.2"
+  flutter_secure_storage_web:
+    dependency: transitive
+    description:
+      name: flutter_secure_storage_web
+      sha256: f4ebff989b4f07b2656fb16b47852c0aab9fed9b4ec1c70103368337bc1886a9
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.1"
+  flutter_secure_storage_windows:
+    dependency: transitive
+    description:
+      name: flutter_secure_storage_windows
+      sha256: b20b07cb5ed4ed74fc567b78a72936203f587eba460af1df11281c9326cd3709
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.2"
   flutter_test:
     dependency: "direct main"
     description: flutter
@@ -858,7 +930,7 @@ packages:
     source: hosted
     version: "0.6.7"
   json_annotation:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: json_annotation
       sha256: "1ce844379ca14835a50d2f019a3099f419082cfdd231cd86a142af94dd5c6bb1"
@@ -1042,6 +1114,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.2"
+  notification_setting_types:
+    dependency: "direct main"
+    description:
+      path: "../packages/notification_setting_types"
+      relative: true
+    source: path
+    version: "0.0.0"
   ntp:
     dependency: "direct main"
     description:
@@ -1354,6 +1433,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
+  shared_preference_app_group:
+    dependency: "direct main"
+    description:
+      name: shared_preference_app_group
+      sha256: "478ad76d03397a930a964d3b0e64f9d4fca816c83c1c059542032eafeb29b607"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   shared_preferences:
     dependency: "direct main"
     description:

@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_consistency
 
 import 'package:dio/dio.dart';
+import 'package:eqapi_client/src/children/auth.dart';
 import 'package:eqapi_client/src/children/v1.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqapi_types/lib.dart';
@@ -16,6 +17,8 @@ class EqApi {
   final Dio dio;
 
   V1 get v1 => V1(dio);
+
+  AuthApiClient get auth => AuthApiClient(dio);
 
   V3 get v3 => V3(dio);
 }

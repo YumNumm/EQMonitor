@@ -7,6 +7,8 @@ Future<void> main(List<String> arguments) async {
   print("Converting JMA code table...");
   final converter = JmaCodeTableConverter();
   final table = JmaCodeTable(
+    areaForecastLocalEew: await converter.convert22(),
+    areaInformationPrefectureEarthquake: await converter.convert23(),
     areaEpicenter: await converter.convert41(),
     areaEpicenterAbbreviation: await converter.convert42(),
     areaEpicenterDetail: await converter.convert43(),

@@ -8,7 +8,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hi
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jma_code_table_types/jma_code_table_types.dart';
+import 'package:jma_code_table_types/jma_code_table.pb.dart';
 
 void main() async {
   const baseV1 = EarthquakeV1(

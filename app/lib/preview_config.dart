@@ -4,7 +4,7 @@ import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/core/theme/build_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jma_code_table_types/jma_code_table_types.dart';
+import 'package:jma_code_table_types/jma_code_table.pb.dart';
 
 Widget buildPreview(BuildContext context, Widget child) {
   const brandBlue = Color(0xFF1E88E5);

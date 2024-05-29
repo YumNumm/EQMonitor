@@ -1,3 +1,4 @@
+import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/provider/dio_provider.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -159,9 +160,56 @@ class _DebugWidget extends ConsumerWidget {
               title: const Text('Dio Proxy'),
               subtitle: const Text('macbook-pro:9090へのPROXY'),
             ),
+            BorderedContainer(
+              child: Column(
+                children:
+                    ref.watch(goRouterProvider).configuration.routes.map((e) {
+                  final route = e as GoRoute;
+                  return _Route(
+                    routes: [route],
+                  );
+                }).toList(),
+              ),
+            ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _Route extends StatelessWidget {
+  const _Route({
+    required this.routes,
+    this.depth = 0,
+    this.parent = const [],
+  });
+
+  final List<GoRoute> routes;
+  final int depth;
+  final List<GoRoute> parent;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: routes.map(
+        (route) {
+          if (route.routes.isNotEmpty) {
+            return _Route(
+              routes: route.routes.cast<GoRoute>(),
+              depth: depth + 1,
+              parent: [...parent, route],
+            );
+          }
+          return ListTile(
+            title: Text([...parent, route].map((e) => e.path).join('/')),
+            onTap: () => context.push(
+              [...parent, route].map((e) => e.path).join('/'),
+            ),
+            visualDensity: VisualDensity.compact,
+          );
+        },
+      ).toList(),
     );
   }
 }

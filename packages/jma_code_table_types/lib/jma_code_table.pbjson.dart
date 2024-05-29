@@ -17,19 +17,77 @@ import 'dart:typed_data' as $typed_data;
 const JmaCodeTable$json = {
   '1': 'JmaCodeTable',
   '2': [
-    {'1': 'areaEpicenter', '3': 41, '4': 1, '5': 11, '6': '.AreaEpicenter', '10': 'areaEpicenter'},
-    {'1': 'areaEpicenterAbbreviation', '3': 42, '4': 1, '5': 11, '6': '.AreaEpicenterAbbreviation', '10': 'areaEpicenterAbbreviation'},
-    {'1': 'areaEpicenterDetail', '3': 43, '4': 1, '5': 11, '6': '.AreaEpicenterDetail', '10': 'areaEpicenterDetail'},
+    {'1': 'area_forecast_local_eew', '3': 22, '4': 1, '5': 11, '6': '.AreaForecastLocalEew', '10': 'areaForecastLocalEew'},
+    {'1': 'area_information_prefecture_earthquake', '3': 23, '4': 1, '5': 11, '6': '.AreaInformationPrefectureEarthquake', '10': 'areaInformationPrefectureEarthquake'},
+    {'1': 'area_epicenter', '3': 41, '4': 1, '5': 11, '6': '.AreaEpicenter', '10': 'areaEpicenter'},
+    {'1': 'area_epicenter_abbreviation', '3': 42, '4': 1, '5': 11, '6': '.AreaEpicenterAbbreviation', '10': 'areaEpicenterAbbreviation'},
+    {'1': 'area_epicenter_detail', '3': 43, '4': 1, '5': 11, '6': '.AreaEpicenterDetail', '10': 'areaEpicenterDetail'},
   ],
 };
 
 /// Descriptor for `JmaCodeTable`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List jmaCodeTableDescriptor = $convert.base64Decode(
-    'CgxKbWFDb2RlVGFibGUSNAoNYXJlYUVwaWNlbnRlchgpIAEoCzIOLkFyZWFFcGljZW50ZXJSDW'
-    'FyZWFFcGljZW50ZXISWAoZYXJlYUVwaWNlbnRlckFiYnJldmlhdGlvbhgqIAEoCzIaLkFyZWFF'
-    'cGljZW50ZXJBYmJyZXZpYXRpb25SGWFyZWFFcGljZW50ZXJBYmJyZXZpYXRpb24SRgoTYXJlYU'
-    'VwaWNlbnRlckRldGFpbBgrIAEoCzIULkFyZWFFcGljZW50ZXJEZXRhaWxSE2FyZWFFcGljZW50'
-    'ZXJEZXRhaWw=');
+    'CgxKbWFDb2RlVGFibGUSTAoXYXJlYV9mb3JlY2FzdF9sb2NhbF9lZXcYFiABKAsyFS5BcmVhRm'
+    '9yZWNhc3RMb2NhbEVld1IUYXJlYUZvcmVjYXN0TG9jYWxFZXcSeQomYXJlYV9pbmZvcm1hdGlv'
+    'bl9wcmVmZWN0dXJlX2VhcnRocXVha2UYFyABKAsyJC5BcmVhSW5mb3JtYXRpb25QcmVmZWN0dX'
+    'JlRWFydGhxdWFrZVIjYXJlYUluZm9ybWF0aW9uUHJlZmVjdHVyZUVhcnRocXVha2USNQoOYXJl'
+    'YV9lcGljZW50ZXIYKSABKAsyDi5BcmVhRXBpY2VudGVyUg1hcmVhRXBpY2VudGVyEloKG2FyZW'
+    'FfZXBpY2VudGVyX2FiYnJldmlhdGlvbhgqIAEoCzIaLkFyZWFFcGljZW50ZXJBYmJyZXZpYXRp'
+    'b25SGWFyZWFFcGljZW50ZXJBYmJyZXZpYXRpb24SSAoVYXJlYV9lcGljZW50ZXJfZGV0YWlsGC'
+    'sgASgLMhQuQXJlYUVwaWNlbnRlckRldGFpbFITYXJlYUVwaWNlbnRlckRldGFpbA==');
+
+@$core.Deprecated('Use areaForecastLocalEewDescriptor instead')
+const AreaForecastLocalEew$json = {
+  '1': 'AreaForecastLocalEew',
+  '2': [
+    {'1': 'items', '3': 1, '4': 3, '5': 11, '6': '.AreaForecastLocalEew.AreaForecastLocalEewItem', '10': 'items'},
+  ],
+  '3': [AreaForecastLocalEew_AreaForecastLocalEewItem$json],
+};
+
+@$core.Deprecated('Use areaForecastLocalEewDescriptor instead')
+const AreaForecastLocalEew_AreaForecastLocalEewItem$json = {
+  '1': 'AreaForecastLocalEewItem',
+  '2': [
+    {'1': 'code', '3': 1, '4': 1, '5': 9, '10': 'code'},
+    {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
+    {'1': 'name_kana', '3': 3, '4': 1, '5': 9, '10': 'nameKana'},
+    {'1': 'description', '3': 4, '4': 1, '5': 9, '10': 'description'},
+  ],
+};
+
+/// Descriptor for `AreaForecastLocalEew`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List areaForecastLocalEewDescriptor = $convert.base64Decode(
+    'ChRBcmVhRm9yZWNhc3RMb2NhbEVldxJECgVpdGVtcxgBIAMoCzIuLkFyZWFGb3JlY2FzdExvY2'
+    'FsRWV3LkFyZWFGb3JlY2FzdExvY2FsRWV3SXRlbVIFaXRlbXMagQEKGEFyZWFGb3JlY2FzdExv'
+    'Y2FsRWV3SXRlbRISCgRjb2RlGAEgASgJUgRjb2RlEhIKBG5hbWUYAiABKAlSBG5hbWUSGwoJbm'
+    'FtZV9rYW5hGAMgASgJUghuYW1lS2FuYRIgCgtkZXNjcmlwdGlvbhgEIAEoCVILZGVzY3JpcHRp'
+    'b24=');
+
+@$core.Deprecated('Use areaInformationPrefectureEarthquakeDescriptor instead')
+const AreaInformationPrefectureEarthquake$json = {
+  '1': 'AreaInformationPrefectureEarthquake',
+  '2': [
+    {'1': 'items', '3': 1, '4': 3, '5': 11, '6': '.AreaInformationPrefectureEarthquake.AreaInformationPrefectureEarthquakeItem', '10': 'items'},
+  ],
+  '3': [AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem$json],
+};
+
+@$core.Deprecated('Use areaInformationPrefectureEarthquakeDescriptor instead')
+const AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem$json = {
+  '1': 'AreaInformationPrefectureEarthquakeItem',
+  '2': [
+    {'1': 'code', '3': 1, '4': 1, '5': 9, '10': 'code'},
+    {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
+  ],
+};
+
+/// Descriptor for `AreaInformationPrefectureEarthquake`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List areaInformationPrefectureEarthquakeDescriptor = $convert.base64Decode(
+    'CiNBcmVhSW5mb3JtYXRpb25QcmVmZWN0dXJlRWFydGhxdWFrZRJiCgVpdGVtcxgBIAMoCzJMLk'
+    'FyZWFJbmZvcm1hdGlvblByZWZlY3R1cmVFYXJ0aHF1YWtlLkFyZWFJbmZvcm1hdGlvblByZWZl'
+    'Y3R1cmVFYXJ0aHF1YWtlSXRlbVIFaXRlbXMaUQonQXJlYUluZm9ybWF0aW9uUHJlZmVjdHVyZU'
+    'VhcnRocXVha2VJdGVtEhIKBGNvZGUYASABKAlSBGNvZGUSEgoEbmFtZRgCIAEoCVIEbmFtZQ==');
 
 @$core.Deprecated('Use areaEpicenterDescriptor instead')
 const AreaEpicenter$json = {

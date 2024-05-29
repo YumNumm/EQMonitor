@@ -2,10 +2,36 @@ syntax = "proto3";
 
 // 気象庁地震関連コード表
 message JmaCodeTable {
-  AreaEpicenter areaEpicenter = 41;
-  AreaEpicenterAbbreviation areaEpicenterAbbreviation = 42;
-  AreaEpicenterDetail areaEpicenterDetail = 43;
+  AreaForecastLocalEew area_forecast_local_eew = 22;
+  AreaInformationPrefectureEarthquake area_information_prefecture_earthquake = 23;
+  AreaEpicenter area_epicenter = 41;
+  AreaEpicenterAbbreviation area_epicenter_abbreviation = 42;
+  AreaEpicenterDetail area_epicenter_detail = 43;
 }
+
+// 22. 緊急地震速報／府県予報区
+message AreaForecastLocalEew {
+  repeated AreaForecastLocalEewItem items = 1;
+
+  message AreaForecastLocalEewItem {
+    string code = 1;
+    string name = 2;
+    string name_kana = 3;
+    string description = 4;
+  }
+}
+
+// 23. 地震情報／都道府県等
+message AreaInformationPrefectureEarthquake {
+  repeated AreaInformationPrefectureEarthquakeItem items = 1;
+
+  message AreaInformationPrefectureEarthquakeItem {
+    string code = 1;
+    string name = 2;
+  }
+
+}
+
 
 // 41. 震央地名
 // (011, 北海道地方)

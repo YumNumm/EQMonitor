@@ -15,6 +15,46 @@ class JmaCodeTableConverter {
         .toList();
   }
 
+  Future<AreaForecastLocalEew> convert22() async {
+    final csv = await _getCsv("tmp/output_22.csv");
+    // ["Code", "Name"]以降を取得
+    final index = csv.indexWhere(
+      (line) => line[0] == "Code" && line[1] == "Name",
+    );
+    final data = csv
+        .sublist(index + 1)
+        .where((e) => e.length == 4)
+        .where((e) => e[0] != "None");
+    return AreaForecastLocalEew(items: [
+      for (final e in data)
+        AreaForecastLocalEew_AreaForecastLocalEewItem(
+          code: e[0],
+          name: e[1],
+          nameKana: e[2],
+          description: e[3] == "None" ? "" : e[3],
+        ),
+    ]);
+  }
+
+  Future<AreaInformationPrefectureEarthquake> convert23() async {
+    final csv = await _getCsv("tmp/output_23.csv");
+    // ["Code", "Name"]以降を取得
+    final index = csv.indexWhere(
+      (line) => line[0] == "Code" && line[1] == "Name",
+    );
+    final data = csv
+        .sublist(index + 1)
+        .where((e) => e.length == 2)
+        .where((e) => e[0] != "None");
+    return AreaInformationPrefectureEarthquake(items: [
+      for (final e in data)
+        AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem(
+          code: e[0],
+          name: e[1],
+        ),
+    ]);
+  }
+
   Future<AreaEpicenter> convert41() async {
     final csv = await _getCsv("tmp/output_41.csv");
     // ["Code", "Name"]以降を取得

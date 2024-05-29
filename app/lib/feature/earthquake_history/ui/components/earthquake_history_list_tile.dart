@@ -12,7 +12,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:jma_code_table_types/jma_code_table_types.dart';
+import 'package:jma_code_table_types/jma_code_table.pb.dart';
 
 List<Widget> preview() => [
       EarthquakeHistoryListTile(

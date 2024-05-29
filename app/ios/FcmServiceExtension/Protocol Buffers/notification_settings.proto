@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+import "notification_payload.proto";
+package eqmonitor;
+
+message NotificationSettings {
+  EewSettings eew_settings = 1;
+  EarthquakeSettings earthquake_settings = 2;
+
+  message EewSettings {
+    optional JmaIntensity emergency_intensity = 1;
+    optional JmaIntensity silent_intensity = 2;
+    repeated Region regions = 3;
+
+    message Region {
+      string code = 1;
+      string name = 2;
+      JmaIntensity emergency_intensity = 3;
+      JmaIntensity silent_intensity = 4;
+      bool is_main = 5;
+    }
+  }
+
+  message EarthquakeSettings {
+    optional JmaIntensity emergency_intensity = 1;
+    optional JmaIntensity silent_intensity = 2;
+    repeated Region regions = 3;
+
+    message Region {
+      string code = 1;
+      string name = 2;
+      JmaIntensity emergency_intensity = 3;
+      JmaIntensity silent_intensity = 4;
+      bool is_main = 5;
+    }
+  }
+}

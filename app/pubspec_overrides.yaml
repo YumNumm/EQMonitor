@@ -1,4 +1,4 @@
-# melos_managed_dependency_overrides: eqapi_client,eqapi_types,extensions,jma_code_table_types,jma_map,jma_parameter_api_client,jma_parameter_types,lat_lng,kyoshin_observation_point_types
+# melos_managed_dependency_overrides: eqapi_client,eqapi_types,extensions,jma_code_table_types,jma_map,jma_parameter_api_client,jma_parameter_types,lat_lng,kyoshin_observation_point_types,notification_setting_types
 dependency_overrides:
   eqapi_client:
     path: ../packages/eqapi_client
@@ -18,3 +18,5 @@ dependency_overrides:
     path: ../packages/kyoshin_observation_point_types
   lat_lng:
     path: ../packages/lat_lng
+  notification_setting_types:
+    path: ../packages/notification_setting_types

@@ -82,10 +82,9 @@ class SettingsScreen extends HookConsumerWidget {
           ),
           const SettingsSectionHeader(text: '各種設定'),
           ListTile(
-            title: const Text('通知設定'),
+            title: const Text('通知条件設定'),
             leading: const Icon(Icons.notifications),
-            onTap: () =>
-                context.push(const NotificationSettingsRoute().location),
+            onTap: () => const NotificationRoute().push<void>(context),
           ),
           ListTile(
             title: const Text('強震モニタ設定'),
