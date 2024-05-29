@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:eqmonitor/core/provider/secure_storage.dart';
-import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/notification_remote_settings.dart';
+import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/notification_remote_settings_saved_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'api_authentication_service.g.dart';

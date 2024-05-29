@@ -2,19 +2,20 @@
 
 // ignore_for_file: type=lint, duplicate_ignore
 
-part of 'notification_remote_settings.dart';
+part of 'notification_remote_settings_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
 String _$notificationRemoteSettingsNotifierHash() =>
-    r'ce0d49d6466e6dcd4f3aa0d246be91d973778a49';
+    r'f031aeb87d6a778140e38ef24fe3618e35d369a0';
 
 /// See also [NotificationRemoteSettingsNotifier].
 @ProviderFor(NotificationRemoteSettingsNotifier)
 final notificationRemoteSettingsNotifierProvider = AsyncNotifierProvider<
-    NotificationRemoteSettingsNotifier, NotificationSettingsResponse>.internal(
+    NotificationRemoteSettingsNotifier,
+    NotificationRemoteSettingsState>.internal(
   NotificationRemoteSettingsNotifier.new,
   name: r'notificationRemoteSettingsNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -25,6 +26,6 @@ final notificationRemoteSettingsNotifierProvider = AsyncNotifierProvider<
 );
 
 typedef _$NotificationRemoteSettingsNotifier
-    = AsyncNotifier<NotificationSettingsResponse>;
+    = AsyncNotifier<NotificationRemoteSettingsState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

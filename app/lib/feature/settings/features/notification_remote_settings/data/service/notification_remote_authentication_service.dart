@@ -3,7 +3,7 @@ import 'package:eqapi_types/model/v1/auth/fcm_token_request.dart';
 import 'package:eqapi_types/model/v1/auth/fcm_token_response.dart';
 import 'package:eqmonitor/core/api/api_authentication_service.dart';
 import 'package:eqmonitor/core/api/eq_api.dart';
-import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/notification_remote_settings.dart';
+import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/notification_remote_settings_saved_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notification_remote_authentication_service.g.dart';

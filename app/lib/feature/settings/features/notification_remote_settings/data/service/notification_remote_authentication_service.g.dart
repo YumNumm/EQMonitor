@@ -9,7 +9,7 @@ part of 'notification_remote_authentication_service.dart';
 // **************************************************************************
 
 String _$notificationRemoteAuthenticateServiceHash() =>
-    r'467ed265148e0730958c81e11fa74c5f23924fad';
+    r'2b489c3623656dad6bcae5acf9afad2ed9ffa670';
 
 /// See also [notificationRemoteAuthenticateService].
 @ProviderFor(notificationRemoteAuthenticateService)

@@ -213,6 +213,20 @@ RouteBase get $settingsRoute => GoRouteData.$route(
       factory: $SettingsRouteExtension._fromState,
       routes: [
         GoRouteData.$route(
+          path: 'notification',
+          factory: $NotificationRouteExtension._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'earthquake',
+              factory: $NotificationEarthquakeRouteExtension._fromState,
+            ),
+            GoRouteData.$route(
+              path: 'eew',
+              factory: $NotificationEewRouteExtension._fromState,
+            ),
+          ],
+        ),
+        GoRouteData.$route(
           path: 'term-of-service',
           factory: $TermOfServiceRouteExtension._fromState,
         ),
@@ -268,6 +282,60 @@ extension $SettingsRouteExtension on SettingsRoute {
 
   String get location => GoRouteData.$location(
         '/settings',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $NotificationRouteExtension on NotificationRoute {
+  static NotificationRoute _fromState(GoRouterState state) =>
+      const NotificationRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/notification',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $NotificationEarthquakeRouteExtension on NotificationEarthquakeRoute {
+  static NotificationEarthquakeRoute _fromState(GoRouterState state) =>
+      const NotificationEarthquakeRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/notification/earthquake',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $NotificationEewRouteExtension on NotificationEewRoute {
+  static NotificationEewRoute _fromState(GoRouterState state) =>
+      const NotificationEewRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/notification/eew',
       );
 
   void go(BuildContext context) => context.go(location);
@@ -527,7 +595,7 @@ bool _$boolConverter(String value) {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$goRouterHash() => r'ca25653fd56b61e1ab0e3745908c1e74b25bdf8e';
+String _$goRouterHash() => r'34628ddaf293391bee61bfe6a91ef969868b751a';
 
 /// See also [goRouter].
 @ProviderFor(goRouter)

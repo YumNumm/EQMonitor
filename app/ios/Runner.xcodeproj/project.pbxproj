@@ -17,11 +17,11 @@
 		854858812BFF92D90025EC74 /* notification_settings.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8548587F2BFF92D90025EC74 /* notification_settings.pb.swift */; };
 		859DF75C2BBE9FFC00B827B1 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 859DF75B2BBE9FFC00B827B1 /* StoreKit.framework */; };
 		859DF75E2BBEA0F000B827B1 /* Synced - EQMonitor.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 859DF75D2BBEA0F000B827B1 /* Synced - EQMonitor.storekit */; };
+		85B0048F2C077A9B0063ADD5 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = 85B0048E2C077A9B0063ADD5 /* Gzip */; };
 		85E609552BFF792C00C21983 /* FcmServiceExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 85E6094E2BFF792C00C21983 /* FcmServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		85E6095B2BFF7AC300C21983 /* notification_payload.proto in Sources */ = {isa = PBXBuildFile; fileRef = 85E6095A2BFF7AC300C21983 /* notification_payload.proto */; };
 		85E6095E2BFF7B6400C21983 /* notification_payload.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6095C2BFF7B6400C21983 /* notification_payload.pb.swift */; };
 		85E6095F2BFF7B6400C21983 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E6095D2BFF7B6400C21983 /* NotificationService.swift */; };
-		85E609642BFF826900C21983 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = 85E609632BFF826900C21983 /* Gzip */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
@@ -106,7 +106,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				85E609642BFF826900C21983 /* Gzip in Frameworks */,
+				85B0048F2C077A9B0063ADD5 /* Gzip in Frameworks */,
 				7B7B782513B5BD61B436275F /* Pods_FcmServiceExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -237,7 +237,7 @@
 			);
 			name = FcmServiceExtension;
 			packageProductDependencies = (
-				85E609632BFF826900C21983 /* Gzip */,
+				85B0048E2C077A9B0063ADD5 /* Gzip */,
 			);
 			productName = FcmServiceExtension;
 			productReference = 85E6094E2BFF792C00C21983 /* FcmServiceExtension.appex */;
@@ -299,7 +299,7 @@
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
-				85E609622BFF826900C21983 /* XCRemoteSwiftPackageReference "GzipSwift" */,
+				85B0048D2C077A9B0063ADD5 /* XCRemoteSwiftPackageReference "GzipSwift" */,
 			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
@@ -632,7 +632,7 @@
 				INFOPLIST_FILE = FcmServiceExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = FcmServiceExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -679,7 +679,7 @@
 				INFOPLIST_FILE = FcmServiceExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = FcmServiceExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -723,7 +723,7 @@
 				INFOPLIST_FILE = FcmServiceExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = FcmServiceExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -955,7 +955,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		85E609622BFF826900C21983 /* XCRemoteSwiftPackageReference "GzipSwift" */ = {
+		85B0048D2C077A9B0063ADD5 /* XCRemoteSwiftPackageReference "GzipSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/1024jp/GzipSwift";
 			requirement = {
@@ -966,9 +966,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		85E609632BFF826900C21983 /* Gzip */ = {
+		85B0048E2C077A9B0063ADD5 /* Gzip */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 85E609622BFF826900C21983 /* XCRemoteSwiftPackageReference "GzipSwift" */;
+			package = 85B0048D2C077A9B0063ADD5 /* XCRemoteSwiftPackageReference "GzipSwift" */;
 			productName = Gzip;
 		};
 /* End XCSwiftPackageProductDependency section */

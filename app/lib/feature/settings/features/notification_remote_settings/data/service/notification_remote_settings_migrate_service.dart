@@ -4,13 +4,11 @@ import 'package:collection/collection.dart';
 import 'package:eqapi_types/lib.dart';
 import 'package:eqapi_types/model/v1/auth/notification_settings_request.dart';
 import 'package:eqmonitor/core/api/api_authentication_service.dart';
-import 'package:eqmonitor/core/provider/config/notification/fcm_topic_manager.dart';
-import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:eqmonitor/core/provider/notification_token.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/feature/settings/children/config/notification/earthquake/earthquake_notification_settings_view_model.dart';
 import 'package:eqmonitor/feature/settings/children/config/notification/eew/eew_notification_settings_view_model.dart';
-import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/notification_remote_settings.dart';
+import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/notification_remote_settings_saved_state.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_authentication_service.dart';
 import 'package:firebase_app_installations/firebase_app_installations.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -91,7 +89,7 @@ class NotificationRemoteSettingsInitialSetupNotifier
               : null,
         );
         await ref
-            .read(notificationRemoteSettingsNotifierProvider.notifier)
+            .read(notificationRemoteSettingsSavedStateNotifierProvider.notifier)
             .updateEarthquake(
               request: request,
             );
@@ -107,7 +105,7 @@ class NotificationRemoteSettingsInitialSetupNotifier
       );
     }
     await Future<void>.delayed(const Duration(seconds: 1));
-    ref.invalidate(notificationRemoteSettingsNotifierProvider);
+    ref.invalidate(notificationRemoteSettingsSavedStateNotifierProvider);
 
     // EEW
     try {
@@ -139,7 +137,7 @@ class NotificationRemoteSettingsInitialSetupNotifier
             : null,
       );
       await ref
-          .read(notificationRemoteSettingsNotifierProvider.notifier)
+          .read(notificationRemoteSettingsSavedStateNotifierProvider.notifier)
           .updateEew(
             request: request,
           );
@@ -155,21 +153,6 @@ class NotificationRemoteSettingsInitialSetupNotifier
     }
 
     await _setIsMigrated();
-  }
-
-  Future<void> unsubscribeOldTopics() async {
-    final registeredTopics = ref.read(fcmTopicManagerProvider);
-    final excludeTopics = [
-      FcmBasicTopic(FcmTopics.all),
-    ];
-    final topics =
-        registeredTopics.where((t) => !excludeTopics.contains(t)).toList();
-    final messaging = ref.read(firebaseMessagingProvider);
-    final futures = <Future<void>>[];
-    for (final topic in topics) {
-      futures.add(messaging.unsubscribeFromTopic(topic));
-    }
-    await Future.wait(futures);
   }
 
   bool _getIsMigrated() {

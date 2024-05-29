@@ -31,13 +31,13 @@ Dio dio(DioRef ref) {
       sendTimeout: const Duration(milliseconds: 5000),
     ),
   );
-  if (ref.watch(isDioProxyEnabledProvider) || kDebugMode) {
+  if (ref.watch(isDioProxyEnabledProvider)) {
+    HttpOverrides.global = _HttpOverrides();
     dio.httpClientAdapter = IOHttpClientAdapter(
       createHttpClient: () =>
           HttpClient()..findProxy = (url) => 'PROXY 192.168.151.154:9090',
     );
   }
-  HttpOverrides.global = _HttpOverrides();
   dio.interceptors.add(
     TalkerDioLogger(
       settings: TalkerDioLoggerSettings(
