@@ -15,13 +15,9 @@ Future<TravelTimeTables> travelTime(TravelTimeRef ref) async {
 @Riverpod(keepAlive: true)
 Future<TravelTimeDepthMap> travelTimeDepthMap(
   TravelTimeDepthMapRef ref,
-) {
-  final state = ref.watch(travelTimeProvider);
-  final value = state.value;
-  if (value == null) {
-    return Future.value({});
-  }
-  return Future.value(value.table.groupListsBy((e) => e.depth));
+) async {
+  final state = await ref.watch(travelTimeProvider.future);
+  return state.table.groupListsBy((e) => e.depth);
 }
 
 typedef TravelTimeDepthMap = Map<int, List<TravelTimeTable>>;
@@ -36,8 +32,8 @@ extension TravelTimeDepthMapCalc on TravelTimeDepthMap {
       return TravelTimeResult(null, null);
     }
     final p = () {
-      final p1 = lists.firstWhereOrNull((e) => e.p <= duration);
-      final p2 = lists.lastWhereOrNull((e) => e.p >= duration);
+      final p1 = lists.lastWhereOrNull((e) => e.p <= duration);
+      final p2 = lists.firstWhereOrNull((e) => e.p >= duration);
       if (p1 == null || p2 == null) {
         return null;
       }
@@ -47,8 +43,8 @@ extension TravelTimeDepthMapCalc on TravelTimeDepthMap {
       return p;
     }();
     final s = () {
-      final s1 = lists.firstWhereOrNull((e) => e.s <= duration);
-      final s2 = lists.lastWhereOrNull((e) => e.s >= duration);
+      final s1 = lists.lastWhereOrNull((e) => e.s <= duration);
+      final s2 = lists.firstWhereOrNull((e) => e.s >= duration);
       if (s1 == null || s2 == null) {
         return null;
       }
