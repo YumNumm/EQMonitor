@@ -23,7 +23,7 @@ final travelTimeProvider = FutureProvider<TravelTimeTables>.internal(
 
 typedef TravelTimeRef = FutureProviderRef<TravelTimeTables>;
 String _$travelTimeDepthMapHash() =>
-    r'241005fd772514c36e310f6d4757d33429dea0f2';
+    r'4eef1655bcfc042cf7169446012c0cc0049c386b';
 
 /// See also [travelTimeDepthMap].
 @ProviderFor(travelTimeDepthMap)

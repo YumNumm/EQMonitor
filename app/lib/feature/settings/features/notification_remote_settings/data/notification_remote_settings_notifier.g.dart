@@ -9,7 +9,7 @@ part of 'notification_remote_settings_notifier.dart';
 // **************************************************************************
 
 String _$notificationRemoteSettingsNotifierHash() =>
-    r'f031aeb87d6a778140e38ef24fe3618e35d369a0';
+    r'9ecb399e9c2f72c0b9d1b009fdbb05d88debc6aa';
 
 /// See also [NotificationRemoteSettingsNotifier].
 @ProviderFor(NotificationRemoteSettingsNotifier)
