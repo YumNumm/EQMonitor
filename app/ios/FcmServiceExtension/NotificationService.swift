@@ -5,78 +5,106 @@
 //  Created by 尾上 遼太朗 on 2024/05/23.
 //
 
-import UserNotifications
 import Gzip
+import UserNotifications
 
 class NotificationService: UNNotificationServiceExtension {
     
     var contentHandler: ((UNNotificationContent) -> Void)?
     var bestAttemptContent: UNMutableNotificationContent?
     
-    override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
+    override func didReceive(
+        _ request: UNNotificationRequest,
+        withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void
+    ) {
         self.contentHandler = contentHandler
         bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
         
         let notificationSettings = try? loadNotificationSettings()
         let payload = request.content.userInfo["payload"] as? String
-        if(notificationSettings == nil || payload == nil) {
+        if notificationSettings == nil || payload == nil {
             contentHandler(bestAttemptContent!)
             return
         }
+        
+        /* DEBUG */
+        bestAttemptContent!.interruptionLevel = .critical
+        /* DEBUG END*/
         
         let notificationPayload = try? decodePayload(payload: payload!)
-        if(notificationPayload == nil) {
+        if notificationPayload == nil {
             contentHandler(bestAttemptContent!)
             return
         }
+        /* DEBUG */
+        // notificationPayloadをJSON化
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        
+        let jsonData = try!
+        encoder.encode(notificationPayload)
+        
+        let jsonString = String(data: jsonData, encoding: .utf8)!
+        bestAttemptContent!.body = bestAttemptContent!.body + "\n" + jsonString
+        
+        contentHandler(bestAttemptContent!)
+        return
+        /* DEBUG END */
         
         // EEW
-        if(notificationPayload!.type == .eew){
+        if notificationPayload!.type == .eew
+        {
             var shouldSilent = false
-            var shouldCritical = true // false
+            var shouldCritical = true  // false
             
             // 最大震度の検証
-            if (notificationPayload!.eewInformation.maxIntensity.rawValue >= notificationSettings!.eewSettings.emergencyIntensity.rawValue ){
+            if notificationPayload!.eewInformation.maxIntensity.rawValue
+                >= notificationSettings!.eewSettings.emergencyIntensity.rawValue
+            {
                 shouldCritical = true
             }
-            if (notificationPayload!.eewInformation.maxIntensity.rawValue <= notificationSettings!.eewSettings.silentIntensity.rawValue) {
+            if notificationPayload!.eewInformation.maxIntensity.rawValue
+                <= notificationSettings!.eewSettings.silentIntensity.rawValue
+            {
                 shouldSilent = true
             }
             var replaceSubTitle: String?
             // 各地域ごとの検証
             for area in notificationPayload!.eewInformation.regionIntensities {
-                let matchedArea = notificationSettings!.eewSettings.regions.first(where: {$0.code == area.code})
-                if (matchedArea != nil){
-                    if (area.intensity.rawValue >= matchedArea!.emergencyIntensity.rawValue){
+                let matchedArea = notificationSettings!.eewSettings.regions.first(where: {
+                    $0.code == area.code
+                })
+                if matchedArea != nil {
+                    if area.intensity.rawValue >= matchedArea!.emergencyIntensity.rawValue {
                         shouldCritical = true
                     }
-                    if (area.intensity.rawValue <= matchedArea!.silentIntensity.rawValue){
+                    if area.intensity.rawValue <= matchedArea!.silentIntensity.rawValue {
                         shouldSilent = true
                     }
-                    if(matchedArea!.isMain){
+                    if matchedArea!.isMain {
                         replaceSubTitle = "\(matchedArea!.name)で予想震度\(area.intensity)"
-                        if(area.hasArrivalTime){
+                        if area.hasArrivalTime {
                             let arrivalTime = area.arrivalTime.date
                             let now = Date()
                             let diffInSeconds = arrivalTime.timeIntervalSince(now)
-                            if(diffInSeconds > 0){
+                            if diffInSeconds > 0 {
                                 replaceSubTitle = "あと\(diffInSeconds)秒で到達 \(replaceSubTitle!)"
-                            }else {
+                            } else {
                                 replaceSubTitle = "到達済み \(replaceSubTitle!)"
                             }
                         }
                     }
                 }
             }
-            if (shouldSilent) {
+            if shouldSilent {
                 bestAttemptContent!.sound = nil
                 bestAttemptContent!.interruptionLevel = .passive
             }
-            if(shouldCritical){
+            if shouldCritical {
                 bestAttemptContent!.interruptionLevel = .critical
             }
             
-            if(replaceSubTitle != nil){
+            if replaceSubTitle != nil {
                 bestAttemptContent!.subtitle = replaceSubTitle!
             }
             
@@ -90,11 +118,10 @@ class NotificationService: UNNotificationServiceExtension {
     override func serviceExtensionTimeWillExpire() {
         // Called just before the extension will be terminated by the system.
         // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
-        if let contentHandler = contentHandler, let bestAttemptContent =  bestAttemptContent {
+        if let contentHandler = contentHandler, let bestAttemptContent = bestAttemptContent {
             contentHandler(bestAttemptContent)
         }
     }
-    
     
     /// ProtoBufのデコード
     func decodePayload(payload: String) throws -> Eqmonitor_NotificationPayload {
