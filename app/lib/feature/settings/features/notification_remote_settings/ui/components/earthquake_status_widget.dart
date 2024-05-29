@@ -39,10 +39,7 @@ class EarthquakeStatusWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                if (earthquake.global == JmaForecastIntensity.zero)
-                  const Text('すべての地震情報を通知します')
-                else
-                  EarthquakeNotificationStatusText(earthquake: earthquake),
+                EarthquakeNotificationStatusText(earthquake: earthquake),
               ],
             ),
           ),
@@ -71,6 +68,9 @@ class EarthquakeNotificationStatusText extends StatelessWidget {
           (earthquake.global == null) ||
           e.minJmaIntensity < (earthquake.global!),
     );
+    if (earthquake.global == null && earthquake.regions.isEmpty) {
+      return const Text('地震情報の通知は無効です');
+    }
     return Text.rich(
       TextSpan(
         children: (earthquake.global == JmaForecastIntensity.zero)

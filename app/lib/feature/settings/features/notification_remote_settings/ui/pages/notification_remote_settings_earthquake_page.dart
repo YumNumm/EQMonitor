@@ -157,54 +157,10 @@ class _GlobalChoiceTile extends ConsumerWidget {
                 .toList() +
             [
               const DropdownMenuItem(
-                child: Text('指定しない'),
+                child: Text('通知しない'),
               ),
             ],
       ),
-      onTap: () async {
-        final result = await showDialog<JmaForecastIntensity>(
-          context: context,
-          builder: (context) {
-            return SimpleDialog(
-              title: const Text('全国の地震情報'),
-              children: JmaForecastIntensity.values
-                      .whereNot(
-                        (e) => [
-                          JmaForecastIntensity.zero,
-                          JmaForecastIntensity.unknown,
-                        ].contains(e),
-                      )
-                      .map(
-                        (e) => SimpleDialogOption(
-                          onPressed: () => Navigator.pop(context, e),
-                          child: Text(
-                            '震度${e.type.fromPlusMinus}'
-                            "${e == JmaForecastIntensity.seven ? "" : " 以上"}",
-                            style: const TextStyle(),
-                          ),
-                        ),
-                      )
-                      .toList() +
-                  [
-                    SimpleDialogOption(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text(
-                        '指定しない',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                      ),
-                    ),
-                  ],
-            );
-          },
-        );
-        if (result != null) {
-          ref
-              .read(notificationRemoteSettingsNotifierProvider.notifier)
-              .updateEarthquakeGlobal(result);
-        }
-      },
     );
   }
 }

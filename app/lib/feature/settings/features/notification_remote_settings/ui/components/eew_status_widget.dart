@@ -39,10 +39,7 @@ class EewStatusWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                if (eew.global == JmaForecastIntensity.zero)
-                  const Text('すべての緊急地震速報を通知します')
-                else
-                  EewNotificationStatusWidget(eew: eew),
+                EewNotificationStatusWidget(eew: eew),
               ],
             ),
           ),
@@ -69,6 +66,10 @@ class EewNotificationStatusWidget extends StatelessWidget {
     final enabledRegions = eew.regions.where(
       (e) => (eew.global == null) || e.minJmaIntensity < (eew.global!),
     );
+
+    if (eew.global == null && eew.regions.isEmpty) {
+      return const Text('地震情報の通知は無効です');
+    }
     return Text.rich(
       TextSpan(
         children: (eew.global == JmaForecastIntensity.zero)

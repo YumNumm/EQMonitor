@@ -213,4 +213,3 @@ enum LgType {
   const LgType(this.type);
   final String type;
 }
-
