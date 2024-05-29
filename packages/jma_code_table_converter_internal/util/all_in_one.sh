@@ -11,7 +11,7 @@ echo "unzipping..."
 unzip -O sjis tmp/jmaxml_20240216_Code.zip -d tmp > /dev/null
 
 echo "------ Converting XLS to CSV ------"
-cd util/xls_to_csv
+cd util/xls_to_csv || exit
 echo "syncing rye..."
 rye sync > /dev/null
 echo "converting..."
