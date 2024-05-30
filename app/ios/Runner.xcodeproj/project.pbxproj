@@ -17,7 +17,6 @@
 		859DF75C2BBE9FFC00B827B1 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 859DF75B2BBE9FFC00B827B1 /* StoreKit.framework */; };
 		859DF75E2BBEA0F000B827B1 /* Synced - EQMonitor.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 859DF75D2BBEA0F000B827B1 /* Synced - EQMonitor.storekit */; };
 		85B405132C08E0DA00EB3835 /* Pods_FcmServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99B391858A4EFC95F561B05E /* Pods_FcmServiceExtension.framework */; };
-		85B405142C08E0DA00EB3835 /* Pods_FcmServiceExtension.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 99B391858A4EFC95F561B05E /* Pods_FcmServiceExtension.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		85B4051A2C08E73300EB3835 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = 85B405192C08E73300EB3835 /* Gzip */; };
 		85E609552BFF792C00C21983 /* FcmServiceExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 85E6094E2BFF792C00C21983 /* FcmServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		85E6095B2BFF7AC300C21983 /* notification_payload.proto in Sources */ = {isa = PBXBuildFile; fileRef = 85E6095A2BFF7AC300C21983 /* notification_payload.proto */; };
@@ -49,17 +48,6 @@
 				85E609552BFF792C00C21983 /* FcmServiceExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		85B405152C08E0DA00EB3835 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				85B405142C08E0DA00EB3835 /* Pods_FcmServiceExtension.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
@@ -242,7 +230,6 @@
 				85E6094A2BFF792C00C21983 /* Sources */,
 				85E6094B2BFF792C00C21983 /* Frameworks */,
 				85E6094C2BFF792C00C21983 /* Resources */,
-				85B405152C08E0DA00EB3835 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -625,7 +612,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BAD419430E9ED3DD1D1D656D /* Pods-FcmServiceExtension.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -673,7 +659,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BB2485496F3FDA0206409B97 /* Pods-FcmServiceExtension.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -718,7 +703,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A44F22D7804610848A5A41DF /* Pods-FcmServiceExtension.profile.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
