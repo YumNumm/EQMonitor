@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/theme/build_theme.dart';
 import 'package:eqmonitor/core/theme/custom_colors.dart';
+import 'package:eqmonitor/core/theme/theme_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,6 +15,7 @@ class App extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeModeNotifierProvider);
     final app = DynamicColorBuilder(
       builder: (lightDynamic, darkDynamic) {
         // Fictitious brand color.
@@ -53,6 +55,7 @@ class App extends HookConsumerWidget {
         }
         return MaterialApp.router(
           title: 'EQMonitor',
+          themeMode: theme,
           routerConfig: ref.watch(goRouterProvider),
           theme: buildTheme(
             colorScheme: lightColorScheme,

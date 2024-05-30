@@ -127,6 +127,7 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/images/theme/
     - assets/fonts/
     - assets/docs/
 
