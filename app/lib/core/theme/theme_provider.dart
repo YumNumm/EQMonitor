@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
