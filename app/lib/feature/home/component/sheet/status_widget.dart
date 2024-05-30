@@ -69,86 +69,89 @@ class SheetStatusWidget extends ConsumerWidget {
           // kmoni
           if (useKmoni)
             Expanded(
-              child: InkWell(
-                borderRadius: BorderRadius.circular(8),
-                onTap: adjustKmoniDelay,
-                child: Padding(
-                  padding: const EdgeInsets.all(2),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // 現在時刻
-                      ...switch (status) {
-                        KmoniStatus.stopped => [
-                            const Icon(
-                              Icons.access_time_rounded,
-                              size: 16,
-                            ),
-                            const SizedBox(width: 4),
-                            Flexible(
-                              child: Text(
-                                '強震モニタ 停止中',
-                                style: theme.textTheme.bodyMedium,
+              child: Tooltip(
+                message: '強震モニタ遅延調整',
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: adjustKmoniDelay,
+                  child: Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // 現在時刻
+                        ...switch (status) {
+                          KmoniStatus.stopped => [
+                              const Icon(
+                                Icons.access_time_rounded,
+                                size: 16,
                               ),
-                            ),
-                          ],
-                        _ when isDelayAdjusting && latestTime != null => [
-                            Flexible(
-                              child: Text(
-                                DateFormat('yyyy/MM/dd HH:mm:ss')
-                                    .format(latestTime),
-                                style: theme.textTheme.bodyMedium!.copyWith(
-                                  fontFamily: monoFont,
-                                  letterSpacing: -0.2,
+                              const SizedBox(width: 4),
+                              Flexible(
+                                child: Text(
+                                  '強震モニタ 停止中',
+                                  style: theme.textTheme.bodyMedium,
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator.adaptive(),
-                            ),
-                          ],
-                        _
-                            when isInitialized &&
-                                latestTime != null &&
-                                status == KmoniStatus.delay =>
-                          [
-                            Flexible(
-                              child: Text(
-                                DateFormat('yyyy/MM/dd HH:mm:ss')
-                                    .format(latestTime),
-                                style: theme.textTheme.bodyMedium!.copyWith(
-                                  fontFamily: monoFont,
-                                  color: Colors.redAccent,
-                                  letterSpacing: -0.2,
+                            ],
+                          _ when isDelayAdjusting && latestTime != null => [
+                              Flexible(
+                                child: Text(
+                                  DateFormat('yyyy/MM/dd HH:mm:ss')
+                                      .format(latestTime),
+                                  style: theme.textTheme.bodyMedium!.copyWith(
+                                    fontFamily: monoFont,
+                                    letterSpacing: -0.2,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        _ when isInitialized && latestTime != null => [
-                            Flexible(
-                              child: Text(
-                                DateFormat('yyyy/MM/dd HH:mm:ss').format(
-                                  latestTime,
-                                ),
-                                style: theme.textTheme.bodyMedium!.copyWith(
-                                  fontFamily: monoFont,
-                                  letterSpacing: -0.2,
+                              const SizedBox(width: 8),
+                              const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator.adaptive(),
+                              ),
+                            ],
+                          _
+                              when isInitialized &&
+                                  latestTime != null &&
+                                  status == KmoniStatus.delay =>
+                            [
+                              Flexible(
+                                child: Text(
+                                  DateFormat('yyyy/MM/dd HH:mm:ss')
+                                      .format(latestTime),
+                                  style: theme.textTheme.bodyMedium!.copyWith(
+                                    fontFamily: monoFont,
+                                    color: Colors.redAccent,
+                                    letterSpacing: -0.2,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        _ => [
-                            const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator.adaptive(),
-                            ),
-                          ],
-                      },
-                    ],
+                            ],
+                          _ when isInitialized && latestTime != null => [
+                              Flexible(
+                                child: Text(
+                                  DateFormat('yyyy/MM/dd HH:mm:ss').format(
+                                    latestTime,
+                                  ),
+                                  style: theme.textTheme.bodyMedium!.copyWith(
+                                    fontFamily: monoFont,
+                                    letterSpacing: -0.2,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          _ => [
+                              const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator.adaptive(),
+                              ),
+                            ],
+                        },
+                      ],
+                    ),
                   ),
                 ),
               ),
