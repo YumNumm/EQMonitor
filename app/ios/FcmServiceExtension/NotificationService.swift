@@ -9,40 +9,36 @@ import Gzip
 import UserNotifications
 
 class NotificationService: UNNotificationServiceExtension {
-    
+
     var contentHandler: ((UNNotificationContent) -> Void)?
     var bestAttemptContent: UNMutableNotificationContent?
-    
+
     override func didReceive(
         _ request: UNNotificationRequest,
         withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void
     ) {
         self.contentHandler = contentHandler
         bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
-        
+
         let notificationSettings = try? loadNotificationSettings()
         let payload = request.content.userInfo["payload"] as? String
         if notificationSettings == nil || payload == nil {
             contentHandler(bestAttemptContent!)
             return
         }
-        
-        /* DEBUG */
-        bestAttemptContent!.interruptionLevel = .critical
-        /* DEBUG END*/
-        
+
         let notificationPayload = try? decodePayload(payload: payload!)
         if notificationPayload == nil {
             contentHandler(bestAttemptContent!)
             return
         }
-        
+
         // EEW
         if notificationPayload!.type == .eew
         {
             var shouldSilent = false
-            var shouldCritical = true  // false
-            
+            var shouldCritical = false
+
             // 最大震度の検証
             if notificationPayload!.eewInformation.maxIntensity.rawValue
                 >= notificationSettings!.eewSettings.emergencyIntensity.rawValue
@@ -89,18 +85,18 @@ class NotificationService: UNNotificationServiceExtension {
             if shouldCritical {
                 bestAttemptContent!.interruptionLevel = .critical
             }
-            
+
             if replaceSubTitle != nil {
                 bestAttemptContent!.subtitle = replaceSubTitle!
             }
-            
+
             contentHandler(bestAttemptContent!)
             return
-            
+
         }
-        
+
     }
-    
+
     override func serviceExtensionTimeWillExpire() {
         // Called just before the extension will be terminated by the system.
         // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
@@ -108,7 +104,7 @@ class NotificationService: UNNotificationServiceExtension {
             contentHandler(bestAttemptContent)
         }
     }
-    
+
     /// ProtoBufのデコード
     func decodePayload(payload: String) throws -> Eqmonitor_NotificationPayload {
         // decode base64
@@ -120,7 +116,7 @@ class NotificationService: UNNotificationServiceExtension {
         let notificationPayload = try Eqmonitor_NotificationPayload(serializedData: gunzippedData)
         return notificationPayload
     }
-    
+
     // 設定の読み出し
     func loadNotificationSettings() throws -> Eqmonitor_NotificationSettings {
         let appGroup = UserDefaults(suiteName: "group.net.yumnumm.eqmonitor")!
@@ -130,6 +126,6 @@ class NotificationService: UNNotificationServiceExtension {
             return try Eqmonitor_NotificationSettings(serializedData: data)
         }
         throw NSError()
-        
+
     }
 }
