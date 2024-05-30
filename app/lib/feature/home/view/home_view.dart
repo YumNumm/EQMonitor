@@ -261,12 +261,6 @@ class _HomeBodyWidget extends HookConsumerWidget {
           bottom: false,
           child: Stack(
             children: [
-              SheetFloatingActionButtons(
-                controller: sheetController,
-                fab: const [
-                  _Fabs(),
-                ],
-              ),
               // Sheet
               const Align(
                 alignment: Alignment.topRight,
@@ -284,6 +278,13 @@ class _HomeBodyWidget extends HookConsumerWidget {
               _Sheet(sheetController: sheetController),
             ],
           ),
+        ),
+        SheetFloatingActionButtons(
+          hasAppBar: false,
+          controller: sheetController,
+          fab: const [
+            _Fabs(),
+          ],
         ),
       ],
     );
