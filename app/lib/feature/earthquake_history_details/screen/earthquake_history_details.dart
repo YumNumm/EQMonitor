@@ -92,94 +92,89 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
             registerNavigateToHome: (func) =>
                 navigateToHomeFunction.value = func,
           ),
+
+          if (maxIntensity != null)
+            IgnorePointer(
+              child: SafeArea(
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 250),
+                      child: BorderedContainer(
+                        key: ValueKey(
+                          (config, maxIntensity, maxLgIntensity),
+                        ),
+                        margin: const EdgeInsets.all(4),
+                        padding: const EdgeInsets.all(4),
+                        borderRadius: BorderRadius.circular((25 / 5) + 5),
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            if (config.showingLpgmIntensity &&
+                                maxLgIntensity != null)
+                              for (final intensity in [
+                                ...JmaLgIntensity.values,
+                              ].where(
+                                (e) =>
+                                    e != JmaLgIntensity.zero &&
+                                    e <= maxLgIntensity,
+                              ))
+                                JmaLgIntensityIcon(
+                                  type: IntensityIconType.filled,
+                                  intensity: intensity,
+                                  size: 25,
+                                )
+                            else
+                              for (final intensity in [
+                                ...JmaIntensity.values,
+                              ].where(
+                                (e) => e <= maxIntensity,
+                              ))
+                                JmaIntensityIcon(
+                                  type: IntensityIconType.filled,
+                                  intensity: intensity,
+                                  size: 25,
+                                ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           SheetFloatingActionButtons(
             hasAppBar: false,
             controller: sheetController,
             fab: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
                 children: [
-                  if (maxIntensity != null)
-                    Expanded(
-                      child: Container(
-                        alignment: Alignment.centerLeft,
-                        child: IgnorePointer(
-                          child: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 250),
-                            child: BorderedContainer(
-                              key: ValueKey(
-                                (config, maxIntensity, maxLgIntensity),
-                              ),
-                              margin: const EdgeInsets.all(4),
-                              padding: const EdgeInsets.all(4),
-                              borderRadius: BorderRadius.circular((25 / 5) + 5),
-                              child: Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
-                                children: [
-                                  if (config.showingLpgmIntensity &&
-                                      maxLgIntensity != null)
-                                    for (final intensity in [
-                                      ...JmaLgIntensity.values,
-                                    ].where(
-                                      (e) =>
-                                          e != JmaLgIntensity.zero &&
-                                          e <= maxLgIntensity,
-                                    ))
-                                      JmaLgIntensityIcon(
-                                        type: IntensityIconType.filled,
-                                        intensity: intensity,
-                                        size: 25,
-                                      )
-                                  else
-                                    for (final intensity in [
-                                      ...JmaIntensity.values,
-                                    ].where(
-                                      (e) => e <= maxIntensity,
-                                    ))
-                                      JmaIntensityIcon(
-                                        type: IntensityIconType.filled,
-                                        intensity: intensity,
-                                        size: 25,
-                                      ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                  // layer controller
+                  if (details.maxIntensity != null)
+                    FloatingActionButton.small(
+                      heroTag: 'earthquake_history_details_layer_fab',
+                      tooltip: '地図の表示レイヤーを切り替える',
+                      onPressed: () => showEarthquakeHistoryDetailConfigDialog(
+                        context,
+                        showCitySelector: details.intensityCities != null,
+                        hasLpgmIntensity: details.maxLpgmIntensity != null,
                       ),
-                    )
-                  else
-                    const Spacer(),
-                  Column(
-                    children: [
-                      // layer controller
-                      if (details.maxIntensity != null)
-                        FloatingActionButton.small(
-                          heroTag: 'earthquake_history_details_layer_fab',
-                          tooltip: '地図の表示レイヤーを切り替える',
-                          onPressed: () =>
-                              showEarthquakeHistoryDetailConfigDialog(
-                            context,
-                            showCitySelector: details.intensityCities != null,
-                            hasLpgmIntensity: details.maxLpgmIntensity != null,
-                          ),
-                          elevation: 4,
-                          child: const Icon(Icons.layers),
-                        ),
-                      FloatingActionButton.small(
-                        heroTag: 'earthquake_history_details_fab',
-                        tooltip: '表示領域を地図に合わせる',
-                        onPressed: () {
-                          if (navigateToHomeFunction.value != null) {
-                            navigateToHomeFunction.value!.call();
-                          }
-                        },
-                        elevation: 4,
-                        child: const Icon(Icons.home),
-                      ),
-                    ],
+                      elevation: 4,
+                      child: const Icon(Icons.layers),
+                    ),
+                  FloatingActionButton.small(
+                    heroTag: 'earthquake_history_details_fab',
+                    tooltip: '表示領域を地図に合わせる',
+                    onPressed: () {
+                      if (navigateToHomeFunction.value != null) {
+                        navigateToHomeFunction.value!.call();
+                      }
+                    },
+                    elevation: 4,
+                    child: const Icon(Icons.home),
                   ),
                 ],
               ),
@@ -192,25 +187,21 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
           ),
           if (Navigator.canPop(context))
             // 戻るボタン
-            Positioned(
-              top: 0,
-              left: 0,
-              child: SafeArea(
-                child: IconButton.filledTonal(
-                  style: ButtonStyle(
-                    shape: MaterialStatePropertyAll(
-                      RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: colorScheme.primary.withOpacity(0.2),
-                        ),
-                        borderRadius: BorderRadius.circular(128),
+            SafeArea(
+              child: IconButton.filledTonal(
+                style: ButtonStyle(
+                  shape: MaterialStatePropertyAll(
+                    RoundedRectangleBorder(
+                      side: BorderSide(
+                        color: colorScheme.primary.withOpacity(0.2),
                       ),
+                      borderRadius: BorderRadius.circular(128),
                     ),
                   ),
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () => context.pop(),
-                  color: colorScheme.primary,
                 ),
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => context.pop(),
+                color: colorScheme.primary,
               ),
             ),
         ],
