@@ -58,13 +58,31 @@ class SettingsScreen extends HookConsumerWidget {
                 }
               }
             },
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: SizedBox(
+                  width: 80,
+                  height: 80,
+                  child: Material(
+                    borderRadius: BorderRadius.circular(16),
+                    clipBehavior: Clip.antiAlias,
+                    elevation: 4,
+                    child: Assets.images.icon.image(
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Center(
             child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Material(
-                borderRadius: BorderRadius.circular(16),
-                clipBehavior: Clip.antiAlias,
-                elevation: 4,
-                child: Assets.header.image(),
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Text(
+                'EQMonitor v${packageInfo.version} '
+                '(${packageInfo.buildNumber})',
+                style: textTheme.bodyMedium,
               ),
             ),
           ),
@@ -87,6 +105,11 @@ class SettingsScreen extends HookConsumerWidget {
             onTap: () => const NotificationRoute().push<void>(context),
           ),
           ListTile(
+            title: const Text('表示設定'),
+            leading: const Icon(Icons.color_lens),
+            onTap: () => const DisplayRoute().push<void>(context),
+          ),
+          ListTile(
             title: const Text('強震モニタ設定'),
             leading: const Icon(Icons.settings),
             onTap: () => context.push(const KmoniRoute().location),
@@ -97,11 +120,6 @@ class SettingsScreen extends HookConsumerWidget {
             onTap: () => context.push(
               const EarthquakeHistoryConfigRoute().location,
             ),
-          ),
-          ListTile(
-            title: const Text('震度配色設定'),
-            leading: const Icon(Icons.color_lens),
-            onTap: () => context.push(const ColorSchemeConfigRoute().location),
           ),
           const SettingsSectionHeader(text: 'アプリの情報と問い合わせ'),
           ListTile(
@@ -123,18 +141,6 @@ class SettingsScreen extends HookConsumerWidget {
             onTap: () => launchUrlString(
               'https://status.eqmonitor.app/',
               mode: LaunchMode.externalApplication,
-            ),
-          ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Text(
-                'EQMonitor v${packageInfo.version} '
-                '(${packageInfo.buildNumber})',
-                style: textTheme.bodySmall!.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.8),
-                ),
-              ),
             ),
           ),
           if (isDebugger) ...[

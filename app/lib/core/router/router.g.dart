@@ -227,6 +227,16 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           ],
         ),
         GoRouteData.$route(
+          path: 'display',
+          factory: $DisplayRouteExtension._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'color-schema',
+              factory: $ColorSchemeConfigRouteExtension._fromState,
+            ),
+          ],
+        ),
+        GoRouteData.$route(
           path: 'term-of-service',
           factory: $TermOfServiceRouteExtension._fromState,
         ),
@@ -237,10 +247,6 @@ RouteBase get $settingsRoute => GoRouteData.$route(
         GoRouteData.$route(
           path: 'license',
           factory: $LicenseRouteExtension._fromState,
-        ),
-        GoRouteData.$route(
-          path: 'color-schema',
-          factory: $ColorSchemeConfigRouteExtension._fromState,
         ),
         GoRouteData.$route(
           path: 'earthquake-history',
@@ -348,6 +354,41 @@ extension $NotificationEewRouteExtension on NotificationEewRoute {
   void replace(BuildContext context) => context.replace(location);
 }
 
+extension $DisplayRouteExtension on DisplayRoute {
+  static DisplayRoute _fromState(GoRouterState state) => const DisplayRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/display',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $ColorSchemeConfigRouteExtension on ColorSchemeConfigRoute {
+  static ColorSchemeConfigRoute _fromState(GoRouterState state) =>
+      const ColorSchemeConfigRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/display/color-schema',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
 extension $TermOfServiceRouteExtension on TermOfServiceRoute {
   static TermOfServiceRoute _fromState(GoRouterState state) =>
       TermOfServiceRoute(
@@ -411,24 +452,6 @@ extension $LicenseRouteExtension on LicenseRoute {
 
   String get location => GoRouteData.$location(
         '/settings/license',
-      );
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
-extension $ColorSchemeConfigRouteExtension on ColorSchemeConfigRoute {
-  static ColorSchemeConfigRoute _fromState(GoRouterState state) =>
-      const ColorSchemeConfigRoute();
-
-  String get location => GoRouteData.$location(
-        '/settings/color-schema',
       );
 
   void go(BuildContext context) => context.go(location);

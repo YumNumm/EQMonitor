@@ -15,10 +15,11 @@ import 'package:eqmonitor/feature/settings/children/application_info/about_this_
 import 'package:eqmonitor/feature/settings/children/application_info/license_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_screen.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_screen.dart';
-import 'package:eqmonitor/feature/settings/children/config/color_scheme/color_scheme_config_page.dart';
+import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/debugger_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
+import 'package:eqmonitor/feature/settings/features/display_settings/ui/display_settings.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/ui/notification_remote_settings_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/ui/pages/notification_remote_settings_earthquake_page.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/ui/pages/notification_remote_settings_eew_page.dart';
@@ -151,6 +152,14 @@ class KmoniRoute extends GoRouteData {
         ),
       ],
     ),
+    TypedGoRoute<DisplayRoute>(
+      path: 'display',
+      routes: [
+        TypedGoRoute<ColorSchemeConfigRoute>(
+          path: 'color-schema',
+        ),
+      ],
+    ),
     TypedGoRoute<TermOfServiceRoute>(
       path: 'term-of-service',
     ),
@@ -159,9 +168,6 @@ class KmoniRoute extends GoRouteData {
     ),
     TypedGoRoute<LicenseRoute>(
       path: 'license',
-    ),
-    TypedGoRoute<ColorSchemeConfigRoute>(
-      path: 'color-schema',
     ),
     TypedGoRoute<EarthquakeHistoryConfigRoute>(
       path: 'earthquake-history',
@@ -203,6 +209,13 @@ class NotificationRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const NotificationRemoteSettingsPage();
+}
+
+class DisplayRoute extends GoRouteData {
+  const DisplayRoute();
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const DisplaySettingsScreen();
 }
 
 class NotificationEarthquakeRoute extends GoRouteData {
