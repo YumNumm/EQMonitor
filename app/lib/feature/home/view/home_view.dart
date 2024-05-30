@@ -443,35 +443,45 @@ class _NotificationMigrationWidget extends ConsumerWidget {
     final state =
         ref.watch(notificationRemoteSettingsInitialSetupNotifierProvider);
     return switch (state) {
-      AsyncLoading() => const SizedBox.shrink(),
+      AsyncLoading() => const ListTile(
+          title: Text('通知設定の移行中'),
+          leading: CircularProgressIndicator(),
+        ),
       AsyncError(:final error) => ListTile(
           title: const Text('通知設定の移行に失敗しました'),
           subtitle: Text(error.toString()),
           leading: const Icon(Icons.error),
         ),
       AsyncData(:final value) => switch (value) {
-          NotificationRemoteSettingsSetupState.initial =>
-            const SizedBox.shrink(),
-          NotificationRemoteSettingsSetupState.waitingForFcmToken =>
-            const ListTile(
-              title: Text('FCMトークンの取得中'),
-              leading: CircularProgressIndicator(),
-            ),
-          NotificationRemoteSettingsSetupState.registering => const ListTile(
-              title: Text('FCMトークンの登録中'),
-              leading: CircularProgressIndicator(),
-            ),
-          NotificationRemoteSettingsSetupState.migrating => const ListTile(
-              title: Text('通知設定の移行中'),
-              leading: CircularProgressIndicator(),
-            ),
-          NotificationRemoteSettingsSetupState.unsubscribingOldTopics =>
-            const ListTile(
-              title: Text('旧通知設定の解除中'),
-              leading: CircularProgressIndicator(),
-            ),
+          NotificationRemoteSettingsSetupState.initial ||
           NotificationRemoteSettingsSetupState.completed =>
             const SizedBox.shrink(),
+          _ => BorderedContainer(
+              elevation: 1,
+              child: switch (value) {
+                NotificationRemoteSettingsSetupState.waitingForFcmToken =>
+                  const ListTile(
+                    title: Text('FCMトークンの取得中'),
+                    leading: CircularProgressIndicator(),
+                  ),
+                NotificationRemoteSettingsSetupState.registering =>
+                  const ListTile(
+                    title: Text('FCMトークンの登録中'),
+                    leading: CircularProgressIndicator(),
+                  ),
+                NotificationRemoteSettingsSetupState.migrating =>
+                  const ListTile(
+                    title: Text('通知設定の移行中'),
+                    leading: CircularProgressIndicator(),
+                  ),
+                NotificationRemoteSettingsSetupState.unsubscribingOldTopics =>
+                  const ListTile(
+                    title: Text('旧通知設定の解除中'),
+                    leading: CircularProgressIndicator(),
+                  ),
+                _ => const SizedBox.shrink(),
+              },
+            ),
         },
     };
   }

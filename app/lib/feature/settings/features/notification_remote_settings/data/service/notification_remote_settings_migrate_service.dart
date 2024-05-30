@@ -28,6 +28,10 @@ class NotificationRemoteSettingsInitialSetupNotifier
         await ref.read(apiAuthenticationServiceProvider.future);
     if (isMigrated && authorization != null) {
       yield NotificationRemoteSettingsSetupState.completed;
+      log(
+        'Already migrated',
+        name: 'NotificationRemoteSettingsInitialSetupNotifier',
+      );
       return;
     }
 

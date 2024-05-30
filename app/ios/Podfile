@@ -38,8 +38,8 @@ end
 target 'FcmServiceExtension' do
   use_frameworks!
   pod 'Firebase/Messaging'
-  pod 'SwiftProtobuf', '~> 1.0'
-  pod 'GzipSwift'
+  pod 'SwiftProtobuf'
+  #pod 'GzipSwift'
 end
 
 post_install do |installer|
