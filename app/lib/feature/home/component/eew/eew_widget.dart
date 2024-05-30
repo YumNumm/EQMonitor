@@ -174,10 +174,12 @@ class EewWidget extends ConsumerWidget {
           ),
         ),
         const SizedBox(width: 4),
-        Text(
-          eew.hypoName ?? '不明',
-          style: textTheme.headlineMedium!.copyWith(
-            fontWeight: FontWeight.w900,
+        Flexible(
+          child: Text(
+            eew.hypoName ?? '不明',
+            style: textTheme.headlineMedium!.copyWith(
+              fontWeight: FontWeight.w900,
+            ),
           ),
         ),
       ],
