@@ -164,7 +164,9 @@ class MainMapView extends HookConsumerWidget {
       children: [
         map,
         if (ref.watch(debuggerProvider.select((value) => value.isDebugger)))
-          _MapDebugWidget(cameraPosition: cameraPosition),
+          SafeArea(
+            child: _MapDebugWidget(cameraPosition: cameraPosition),
+          ),
       ],
     );
   }
