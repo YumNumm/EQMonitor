@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_provider.dart';
 import 'package:eqmonitor/core/provider/map/map_style.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
+import 'package:eqmonitor/core/theme/platform_brightness.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -21,11 +21,11 @@ class MainMapView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(mainMapViewModelProvider);
     final isDark = useState(Theme.of(context).brightness == Brightness.dark);
-    ref.listen(appLifeCycleProvider, (_, value) {
-      if (value == AppLifecycleState.resumed) {
-        isDark.value = Theme.of(context).brightness == Brightness.dark;
-      }
-    });
+    ref.listen(
+      platformBrightnessProvider,
+      (_, value) =>
+          isDark.value = Theme.of(context).brightness == Brightness.dark,
+    );
     final mapStyle = ref.watch(mapStyleProvider);
     final stylePath = useState<String?>(null);
     final getStyleJsonFuture = useMemoized(

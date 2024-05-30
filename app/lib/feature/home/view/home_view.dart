@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
@@ -47,19 +48,30 @@ class HomeView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight * 0.8),
-        child: AppBar(
-          title: Text(
-            'EQMonitor',
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  fontWeight: FontWeight.bold,
+        child: ClipRRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+            child: ColoredBox(
+              color: colorScheme.primaryContainer.withOpacity(0.1),
+              child: AppBar(
+                title: Text(
+                  'EQMonitor',
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
+                forceMaterialTransparency: true,
+              ),
+            ),
           ),
-          forceMaterialTransparency: true,
         ),
       ),
+      extendBodyBehindAppBar: true,
       body: const _HomeBodyWidget(),
     );
   }
@@ -245,27 +257,34 @@ class _HomeBodyWidget extends HookConsumerWidget {
     final child = Stack(
       children: [
         const MainMapView(),
-        SheetFloatingActionButtons(
-          controller: sheetController,
-          fab: const [
-            _Fabs(),
-          ],
-        ),
-        // Sheet
-        const Align(
-          alignment: Alignment.topRight,
-          child: IgnorePointer(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                _KmoniScale(),
-                _IntensityIcons(),
-              ],
-            ),
+        SafeArea(
+          bottom: false,
+          child: Stack(
+            children: [
+              SheetFloatingActionButtons(
+                controller: sheetController,
+                fab: const [
+                  _Fabs(),
+                ],
+              ),
+              // Sheet
+              const Align(
+                alignment: Alignment.topRight,
+                child: IgnorePointer(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      _KmoniScale(),
+                      _IntensityIcons(),
+                    ],
+                  ),
+                ),
+              ),
+              _Sheet(sheetController: sheetController),
+            ],
           ),
         ),
-        _Sheet(sheetController: sheetController),
       ],
     );
     return child;
