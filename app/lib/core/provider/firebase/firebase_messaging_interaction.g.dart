@@ -9,7 +9,7 @@ part of 'firebase_messaging_interaction.dart';
 // **************************************************************************
 
 String _$firebaseMessagingInteractionHash() =>
-    r'991b7b483ec1c1c934d9ae2e67b093ba48746cf1';
+    r'e9f5c9192138ef904cba11702ebc8863edf59f7a';
 
 /// See also [firebaseMessagingInteraction].
 @ProviderFor(firebaseMessagingInteraction)
