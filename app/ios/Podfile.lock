@@ -170,7 +170,6 @@ PODS:
   - GoogleUtilities/UserDefaults (7.13.3):
     - GoogleUtilities/Logger
     - GoogleUtilities/Privacy
-  - GzipSwift (5.1.1)
   - in_app_review (0.2.0):
     - Flutter
   - MapLibre (6.4.1)
@@ -222,7 +221,6 @@ DEPENDENCIES:
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - GoogleUtilities
-  - GzipSwift
   - in_app_review (from `.symlinks/plugins/in_app_review/ios`)
   - maplibre_gl (from `.symlinks/plugins/maplibre_gl/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
@@ -232,7 +230,7 @@ DEPENDENCIES:
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preference_app_group (from `.symlinks/plugins/shared_preference_app_group/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
-  - SwiftProtobuf (~> 1.0)
+  - SwiftProtobuf
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
@@ -250,7 +248,6 @@ SPEC REPOS:
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleUtilities
-    - GzipSwift
     - MapLibre
     - nanopb
     - PromisesObjC
@@ -325,7 +322,6 @@ SPEC CHECKSUMS:
   GoogleAppMeasurement: 9abf64b682732fed36da827aa2a68f0221fd2356
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
-  GzipSwift: 893f3e48e597a1a4f62fafcb6514220fcf8287fa
   in_app_review: 318597b3a06c22bb46dc454d56828c85f444f99d
   MapLibre: 33d082810e1ca968c561dfc85e7e20346f943f11
   maplibre_gl: 71d457d869fa39ff03cbec0aa32fb96d749411ac
@@ -344,6 +340,6 @@ SPEC CHECKSUMS:
   SwiftProtobuf: 5e8349171e7c2f88f5b9e683cb3cb79d1dc780b3
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
 
-PODFILE CHECKSUM: 5b1ff22cce7ecf6771bedc54b4591b1e2d330a56
+PODFILE CHECKSUM: 8e5aa5d08af8232635ea339a8242f513defbf785
 
 COCOAPODS: 1.15.2

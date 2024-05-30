@@ -7,6 +7,7 @@ import 'package:eqmonitor/core/util/fullscreen_loading_overlay.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/model/notification_remote_settings_state.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/notification_remote_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/notification_remote_settings_saved_state.dart';
+import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_settings_migrate_service.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/ui/components/earthquake_status_widget.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/ui/components/eew_status_widget.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,23 @@ class NotificationRemoteSettingsPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final hasChanged =
         ref.watch(notificationRemoteSettingsHasChangedFromSavedStateProvider);
+    final initialSetup =
+        ref.watch(notificationRemoteSettingsInitialSetupNotifierProvider);
+
+    if (initialSetup case AsyncLoading()) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator.adaptive(),
+        ),
+      );
+    }
+    if (initialSetup case AsyncError(:final error)) {
+      return ErrorInfoWidget(
+        error: error,
+        onRefresh: () =>
+            ref.refresh(notificationRemoteSettingsInitialSetupNotifierProvider),
+      );
+    }
 
     return PopScope(
       canPop: !hasChanged,
