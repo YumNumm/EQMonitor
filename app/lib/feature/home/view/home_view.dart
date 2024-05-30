@@ -57,7 +57,7 @@ class HomeView extends HookConsumerWidget {
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
             child: ColoredBox(
-              color: colorScheme.primaryContainer.withOpacity(0.1),
+              color: colorScheme.surfaceContainer.withOpacity(0.8),
               child: AppBar(
                 title: Text(
                   'EQMonitor',

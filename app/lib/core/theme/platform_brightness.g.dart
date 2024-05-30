@@ -9,7 +9,7 @@ part of 'platform_brightness.dart';
 // **************************************************************************
 
 String _$platformBrightnessHash() =>
-    r'f9865295fbe553321ffa9af63872313cc7c61c1e';
+    r'e43fc04a4fd2a5fecc5c7c47cc022f3e56179bc9';
 
 /// See also [PlatformBrightness].
 @ProviderFor(PlatformBrightness)
