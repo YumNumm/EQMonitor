@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:collection/collection.dart';
@@ -13,9 +14,11 @@ import 'package:eqmonitor/core/hook/use_sheet_controller.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/config/permission/permission_status_provider.dart';
 import 'package:eqmonitor/core/provider/eew/eew_alive_telegram.dart';
+import 'package:eqmonitor/core/provider/firebase/firebase_messaging_interaction.dart';
 import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/core/provider/kmoni/widget/kmoni_maintenance_widget.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/notification_token.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -37,6 +40,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sheet/sheet.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class HomeView extends HookConsumerWidget {
   const HomeView({super.key});
@@ -210,6 +214,32 @@ class _HomeBodyWidget extends HookConsumerWidget {
         return null;
       },
       [],
+    );
+
+    ref.listen(
+      firebaseMessagingInteractionProvider,
+      (_, next) async {
+        if (next case AsyncData(:final value)) {
+          ref.read(talkerProvider).log(
+                'Handle Firebase Message: '
+                "${const JsonEncoder.withIndent(' ').convert(value.toMap())}",
+              );
+
+          final route = value.data['route'];
+          if (route is String) {
+            ref.read(goRouterProvider).go(route);
+            return;
+          }
+          final url = value.data['url'];
+          if (url is String) {
+            final canLaunch = await canLaunchUrlString(url);
+            if (canLaunch) {
+              await launchUrlString(url);
+            }
+            return;
+          }
+        }
+      },
     );
 
     final child = Stack(
