@@ -7,9 +7,9 @@ platform :ios do
 
   desc "Download and install certificates and provisioning profiles for all configurations: development, AppStore and AdHoc"
   lane :certificates do
-    match(type: "development")
-    match(type: "appstore")
-    match(type: "adhoc")
+    match(type: "development", force: true)
+    match(type: "appstore", force: true)
+    match(type: "adhoc", force: true)
   end
 
   desc "Increment the build number by testflight"
