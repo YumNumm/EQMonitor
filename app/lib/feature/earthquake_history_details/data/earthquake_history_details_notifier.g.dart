@@ -9,7 +9,7 @@ part of 'earthquake_history_details_notifier.dart';
 // **************************************************************************
 
 String _$earthquakeHistoryDetailsNotifierHash() =>
-    r'bdf4df2a7b2de0b1f49e718644f7e16880f9d845';
+    r'3bf3752970a9b7c234278bf72fa2f338c9bf5235';
 
 /// Copied from Dart SDK
 class _SystemHash {
