@@ -9,7 +9,7 @@ part of 'notification_remote_settings_migrate_service.dart';
 // **************************************************************************
 
 String _$notificationRemoteSettingsInitialSetupNotifierHash() =>
-    r'02782eb79aca9e4c1c2beeb9e6350bd433554b3b';
+    r'c6af2f782176ce8e3007b04d6576a4ec0c38f502';
 
 /// See also [NotificationRemoteSettingsInitialSetupNotifier].
 @ProviderFor(NotificationRemoteSettingsInitialSetupNotifier)
