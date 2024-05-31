@@ -28,12 +28,8 @@ class EarthquakeHistoryDetailsNotifier
         final target = earthquakes?.$1.firstWhereOrNull(
           (earthquake) => earthquake.eventId == eventId,
         );
-        if (target != null) {
-          if (target.intensityRegions != null) {
-            state = AsyncData(target);
-          } else {
-            ref.invalidateSelf();
-          }
+        if (target?.intensityRegions != null) {
+          state = AsyncData(target!);
         }
       }
     });

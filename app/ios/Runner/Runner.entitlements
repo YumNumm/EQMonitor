@@ -4,6 +4,11 @@
 <dict>
 	<key>aps-environment</key>
 	<string>production</string>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:deeplink.eqmonitor.app</string>
+		<string>applinks:deeplink.eqmonitor.app?mode=developer</string>
+	</array>
 	<key>com.apple.developer.usernotifications.critical-alerts</key>
 	<true/>
 	<key>com.apple.developer.usernotifications.time-sensitive</key>
