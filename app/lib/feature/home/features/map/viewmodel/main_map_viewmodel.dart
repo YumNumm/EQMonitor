@@ -759,6 +759,21 @@ class _EewHypocenterService {
 
   double _lastOpacity = 0;
 
+  Future<void> _changeOpacity(double opacity) => (
+        controller.setLayerProperties(
+          hypocenterIconId,
+          SymbolLayerProperties(
+            iconOpacity: opacity,
+          ),
+        ),
+        controller.setLayerProperties(
+          hypocenterLowPreciseIconId,
+          SymbolLayerProperties(
+            iconOpacity: opacity,
+          ),
+        ),
+      ).wait;
+
   Future<void> tick() async {
     if (!hasInitialized) {
       return;
@@ -768,24 +783,13 @@ class _EewHypocenterService {
       if (_lastOpacity == 1.0) {
         return;
       }
-      _lastOpacity = 1.0;
-      await controller.setLayerProperties(
-        hypocenterIconId,
-        const SymbolLayerProperties(
-          iconOpacity: 1.0,
-        ),
-      );
+      await _changeOpacity(1);
     } else {
       if (_lastOpacity == 0.5) {
         return;
       }
       _lastOpacity = 0.5;
-      await controller.setLayerProperties(
-        hypocenterIconId,
-        const SymbolLayerProperties(
-          iconOpacity: 0.5,
-        ),
-      );
+      await _changeOpacity(0.5);
     }
   }
 
@@ -834,7 +838,7 @@ class _EewPsWaveService {
           _EewPWaveLineService(controller: controller),
           _EewSWaveLineService(controller: controller),
           //  _EewPWaveFillService(controller: controller),
-          // _EewSWaveFillService(controller: controller),
+          _EewSWaveFillService(controller: controller),
         );
 
   final MaplibreMapController controller;
@@ -844,7 +848,7 @@ class _EewPsWaveService {
     _EewPWaveLineService,
     _EewSWaveLineService,
     // _EewPWaveFillService,
-    // _EewSWaveFillService
+    _EewSWaveFillService
   ) _children;
 
   Future<void> init() async {
@@ -860,7 +864,7 @@ class _EewPsWaveService {
       _children.$2.init(),
     ).wait;
     // fill
-    // await _children.$3.init();
+    await _children.$3.init();
     //_children.$4.init(),
   }
 
@@ -930,26 +934,28 @@ class _EewPsWaveService {
               {
                 'type': 'Feature',
                 'geometry': {
-                  'type': 'LineString',
+                  'type': 'Polygon',
                   'coordinates': [
-                    // 0...360
-                    for (final bearing
-                        in List<int>.generate(361, (index) => index))
-                      () {
-                        final latLng = const latlong2.Distance().offset(
-                          latlong2.LatLng(
-                            result.$2.lat,
-                            result.$2.lon,
-                          ),
-                          ((type == _WaveType.sWave
-                                      ? result.$1.sDistance ?? 0
-                                      : result.$1.pDistance ?? 0) *
-                                  1000)
-                              .toInt(),
-                          bearing,
-                        );
-                        return [latLng.longitude, latLng.latitude];
-                      }(),
+                    [
+                      // 0...360
+                      for (final bearing
+                          in List<int>.generate(181, (index) => index * 2))
+                        () {
+                          final latLng = const latlong2.Distance().offset(
+                            latlong2.LatLng(
+                              result.$2.lat,
+                              result.$2.lon,
+                            ),
+                            ((type == _WaveType.sWave
+                                        ? result.$1.sDistance ?? 0
+                                        : result.$1.pDistance ?? 0) *
+                                    1000)
+                                .toInt(),
+                            bearing,
+                          );
+                          return [latLng.longitude, latLng.latitude];
+                        }(),
+                    ]
                   ],
                 },
                 'properties': {
@@ -1044,7 +1050,6 @@ class _EewSWaveLineService {
   static String get layerId => 's-wave-line';
 }
 
-/*
 class _EewPWaveFillService {
   _EewPWaveFillService({
     required this.controller,
@@ -1104,7 +1109,6 @@ class _EewSWaveFillService {
 
   static String get layerId => 's-wave-fill';
 }
-*/
 
 @freezed
 class _EewHypocenterProperties with _$EewHypocenterProperties {
