@@ -54,6 +54,8 @@ class NotificationRemoteSettingsInitialSetupNotifier
       await _migrate();
     }
 
+    yield NotificationRemoteSettingsSetupState.completing;
+    await Future<void>.delayed(const Duration(seconds: 1));
     yield NotificationRemoteSettingsSetupState.completed;
   }
 
@@ -179,6 +181,7 @@ enum NotificationRemoteSettingsSetupState {
   registering,
   migrating,
   unsubscribingOldTopics,
+  completing,
   completed,
   ;
 }

@@ -232,24 +232,28 @@ class _HomeBodyWidget extends HookConsumerWidget {
       firebaseMessagingInteractionProvider,
       (_, next) async {
         if (next case AsyncData(:final value)) {
-          ref.read(talkerProvider).log(
-                'Handle Firebase Message: '
-                "${const JsonEncoder.withIndent(' ').convert(value.toMap())}",
-              );
+          await WidgetsBinding.instance.endOfFrame.then((_) async {
+            ref.read(talkerProvider).log(
+                  'Handle Firebase Message: '
+                  "${const JsonEncoder.withIndent(' ').convert(value.toMap())}",
+                );
 
-          final route = value.data['route'];
-          if (route is String) {
-            ref.read(goRouterProvider).go(route);
-            return;
-          }
-          final url = value.data['url'];
-          if (url is String) {
-            final canLaunch = await canLaunchUrlString(url);
-            if (canLaunch) {
-              await launchUrlString(url);
+            final route = value.data['route'];
+            if (route is String) {
+              unawaited(
+                ref.read(goRouterProvider).push<void>(route),
+              );
+              return;
             }
-            return;
-          }
+            final url = value.data['url'];
+            if (url is String) {
+              final canLaunch = await canLaunchUrlString(url);
+              if (canLaunch) {
+                await launchUrlString(url);
+              }
+              return;
+            }
+          });
         }
       },
     );
@@ -495,12 +499,15 @@ class _NotificationMigrationWidget extends ConsumerWidget {
     return switch (state) {
       AsyncLoading() => const ListTile(
           title: Text('通知設定の移行中'),
-          leading: CircularProgressIndicator(),
+          leading: CircularProgressIndicator.adaptive(),
         ),
-      AsyncError(:final error) => ListTile(
-          title: const Text('通知設定の移行に失敗しました'),
-          subtitle: Text(error.toString()),
-          leading: const Icon(Icons.error),
+      AsyncError(:final error) => BorderedContainer(
+          elevation: 1,
+          child: ListTile(
+            title: const Text('通知設定の初期化に失敗しました。アプリケーションを再起動することで 再度初期化を試みます。'),
+            subtitle: Text(error.runtimeType.toString()),
+            leading: const Icon(Icons.error),
+          ),
         ),
       AsyncData(:final value) => switch (value) {
           NotificationRemoteSettingsSetupState.initial ||
@@ -511,23 +518,28 @@ class _NotificationMigrationWidget extends ConsumerWidget {
               child: switch (value) {
                 NotificationRemoteSettingsSetupState.waitingForFcmToken =>
                   const ListTile(
-                    title: Text('FCMトークンの取得中'),
-                    leading: CircularProgressIndicator(),
+                    title: Text('通知配信用トークンの取得中...'),
+                    leading: CircularProgressIndicator.adaptive(),
                   ),
                 NotificationRemoteSettingsSetupState.registering =>
                   const ListTile(
-                    title: Text('FCMトークンの登録中'),
-                    leading: CircularProgressIndicator(),
+                    title: Text('通知配信用トークンの登録中...'),
+                    leading: CircularProgressIndicator.adaptive(),
                   ),
                 NotificationRemoteSettingsSetupState.migrating =>
                   const ListTile(
-                    title: Text('通知設定の移行中'),
-                    leading: CircularProgressIndicator(),
+                    title: Text('通知設定の初期化中...'),
+                    leading: CircularProgressIndicator.adaptive(),
                   ),
                 NotificationRemoteSettingsSetupState.unsubscribingOldTopics =>
                   const ListTile(
                     title: Text('旧通知設定の解除中'),
-                    leading: CircularProgressIndicator(),
+                    leading: CircularProgressIndicator.adaptive(),
+                  ),
+                NotificationRemoteSettingsSetupState.completing =>
+                  const ListTile(
+                    title: Text('通知設定のセットアップが完了しました'),
+                    leading: Icon(Icons.check),
                   ),
                 _ => const SizedBox.shrink(),
               },

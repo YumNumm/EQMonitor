@@ -59,7 +59,6 @@ class SheetStatusWidget extends ConsumerWidget {
     }
 
     return BorderedContainer(
-      elevation: 1,
       padding: const EdgeInsets.symmetric(
         horizontal: 8,
         vertical: 4,
