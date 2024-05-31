@@ -19,12 +19,10 @@ class EewStatusWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-    final cardColor = theme.colorScheme.primaryContainer.withOpacity(0.1);
 
     return BorderedContainer(
-      accentColor: cardColor,
       margin: EdgeInsets.zero,
-      elevation: 4,
+      accentColor: Theme.of(context).colorScheme.secondaryContainer,
       onPressed: action,
       child: Row(
         children: [

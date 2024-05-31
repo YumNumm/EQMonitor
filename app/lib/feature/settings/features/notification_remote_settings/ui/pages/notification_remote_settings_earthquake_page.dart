@@ -49,18 +49,23 @@ class _Body extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final colorScheme = Theme.of(context).colorScheme;
     final statusWidget = switch ((state.global, state.regions)) {
       (null, []) => BorderedContainer(
-          accentColor: Theme.of(context).colorScheme.error.withOpacity(0.2),
-          child: const Row(
+          accentColor: colorScheme.errorContainer,
+          child: Row(
             children: [
-              Icon(Icons.error),
-              SizedBox(width: 8),
+              Icon(
+                Icons.error,
+                color: colorScheme.onErrorContainer,
+              ),
+              const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   '地震情報の通知は行いません',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
+                    color: colorScheme.onErrorContainer,
                   ),
                 ),
               ),
@@ -68,10 +73,13 @@ class _Body extends HookConsumerWidget {
           ),
         ),
       (_, _) => BorderedContainer(
-          accentColor: Theme.of(context).colorScheme.secondary.withOpacity(0.2),
+          accentColor: colorScheme.secondaryContainer,
           child: Row(
             children: [
-              const Icon(Icons.check_circle),
+              Icon(
+                Icons.check_circle,
+                color: colorScheme.onSecondaryContainer,
+              ),
               const SizedBox(width: 8),
               Expanded(
                 child: EarthquakeNotificationStatusText(
@@ -133,6 +141,8 @@ class _GlobalChoiceTile extends ConsumerWidget {
       ),
       subtitle: const Text('いずれかの地域で指定した震度を観測した場合に通知します'),
       trailing: DropdownButton<JmaForecastIntensity>(
+        borderRadius: BorderRadius.circular(16),
+        elevation: 1,
         value: global,
         onChanged: (value) => ref
             .read(notificationRemoteSettingsNotifierProvider.notifier)
