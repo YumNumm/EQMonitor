@@ -19,10 +19,10 @@ class EarthquakeStatusWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-    
+
     return BorderedContainer(
+      accentColor: Theme.of(context).colorScheme.secondaryContainer,
       margin: EdgeInsets.zero,
-      elevation: 4,
       onPressed: action,
       child: Row(
         children: [
