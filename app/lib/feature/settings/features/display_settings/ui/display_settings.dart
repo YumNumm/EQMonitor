@@ -126,6 +126,7 @@ class _ThemeSelector extends ConsumerWidget {
     );
 
     return BorderedContainer(
+      accentColor: Theme.of(context).colorScheme.secondaryContainer,
       margin: const EdgeInsets.all(16),
       child: Column(
         children: [

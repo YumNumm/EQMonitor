@@ -33,6 +33,12 @@ class LicensePage extends ConsumerWidget {
             onPressed: () =>
                 launchUrlString('https://github.com/YumNumm/EQMonitor'),
           ),
+          TextButton(
+            child: const Text('https://license.eqmonitor.app'),
+            onPressed: () => launchUrlString(
+              'https://license.eqmonitor.app',
+            ),
+          ),
         ],
       ),
     );

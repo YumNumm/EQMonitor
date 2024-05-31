@@ -22,7 +22,7 @@ class EewStatusWidget extends StatelessWidget {
 
     return BorderedContainer(
       margin: EdgeInsets.zero,
-      elevation: 4,
+      accentColor: Theme.of(context).colorScheme.secondaryContainer,
       onPressed: action,
       child: Row(
         children: [

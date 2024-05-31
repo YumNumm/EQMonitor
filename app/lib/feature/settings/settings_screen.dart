@@ -87,14 +87,14 @@ class SettingsScreen extends HookConsumerWidget {
             ),
           ),
           BorderedContainer(
+            accentColor: Theme.of(context).colorScheme.secondaryContainer,
             padding: EdgeInsets.zero,
-            elevation: 1,
             child: ListTile(
               title: const Text('EQMonitorを応援する'),
               subtitle: const Text(
                 '開発者に寄付することで、アプリの開発を支援できます',
               ),
-              leading: const Icon(Icons.upcoming),
+              leading: const Icon(Icons.lightbulb),
               onTap: () => const DonationRoute().push<void>(context),
             ),
           ),
@@ -125,7 +125,7 @@ class SettingsScreen extends HookConsumerWidget {
           ListTile(
             title: const Text('お問い合わせ'),
             subtitle: const Text('ご意見・ご要望などもこちらからお願いします'),
-            leading: const Icon(Icons.contact_support),
+            leading: const Icon(Icons.mail),
             onTap: () => _onInquiryTap(context, ref),
           ),
           ListTile(
@@ -141,6 +141,14 @@ class SettingsScreen extends HookConsumerWidget {
             onTap: () => launchUrlString(
               'https://status.eqmonitor.app/',
               mode: LaunchMode.externalApplication,
+            ),
+          ),
+          Center(
+            child: Text(
+              'Powered by Flutter',
+              style: textTheme.bodySmall!.copyWith(
+                color: theme.colorScheme.onSurface.withOpacity(0.8),
+              ),
             ),
           ),
           if (isDebugger) ...[
