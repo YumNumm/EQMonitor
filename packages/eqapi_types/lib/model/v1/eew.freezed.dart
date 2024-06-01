@@ -748,7 +748,7 @@ mixin _$EstimatedIntensityRegion {
   @JsonKey(name: 'forecastMaxInt')
   ForecastMaxInt get forecastMaxInt => throw _privateConstructorUsedError;
   @JsonKey(name: 'forecastMaxLgInt')
-  ForecastMaxLgInt get forecastMaxLgInt => throw _privateConstructorUsedError;
+  ForecastMaxLgInt? get forecastMaxLgInt => throw _privateConstructorUsedError;
 
   /// nullの場合 `既に主要動到達と推測`
   @JsonKey(name: 'arrivalTime')
@@ -772,11 +772,11 @@ abstract class $EstimatedIntensityRegionCopyWith<$Res> {
       @JsonKey(name: 'isPlum') bool isPlum,
       @JsonKey(name: 'isWarning') bool isWarning,
       @JsonKey(name: 'forecastMaxInt') ForecastMaxInt forecastMaxInt,
-      @JsonKey(name: 'forecastMaxLgInt') ForecastMaxLgInt forecastMaxLgInt,
+      @JsonKey(name: 'forecastMaxLgInt') ForecastMaxLgInt? forecastMaxLgInt,
       @JsonKey(name: 'arrivalTime') DateTime? arrivalTime});
 
   $ForecastMaxIntCopyWith<$Res> get forecastMaxInt;
-  $ForecastMaxLgIntCopyWith<$Res> get forecastMaxLgInt;
+  $ForecastMaxLgIntCopyWith<$Res>? get forecastMaxLgInt;
 }
 
 /// @nodoc
@@ -798,7 +798,7 @@ class _$EstimatedIntensityRegionCopyWithImpl<$Res,
     Object? isPlum = null,
     Object? isWarning = null,
     Object? forecastMaxInt = null,
-    Object? forecastMaxLgInt = null,
+    Object? forecastMaxLgInt = freezed,
     Object? arrivalTime = freezed,
   }) {
     return _then(_value.copyWith(
@@ -822,10 +822,10 @@ class _$EstimatedIntensityRegionCopyWithImpl<$Res,
           ? _value.forecastMaxInt
           : forecastMaxInt // ignore: cast_nullable_to_non_nullable
               as ForecastMaxInt,
-      forecastMaxLgInt: null == forecastMaxLgInt
+      forecastMaxLgInt: freezed == forecastMaxLgInt
           ? _value.forecastMaxLgInt
           : forecastMaxLgInt // ignore: cast_nullable_to_non_nullable
-              as ForecastMaxLgInt,
+              as ForecastMaxLgInt?,
       arrivalTime: freezed == arrivalTime
           ? _value.arrivalTime
           : arrivalTime // ignore: cast_nullable_to_non_nullable
@@ -843,8 +843,12 @@ class _$EstimatedIntensityRegionCopyWithImpl<$Res,
 
   @override
   @pragma('vm:prefer-inline')
-  $ForecastMaxLgIntCopyWith<$Res> get forecastMaxLgInt {
-    return $ForecastMaxLgIntCopyWith<$Res>(_value.forecastMaxLgInt, (value) {
+  $ForecastMaxLgIntCopyWith<$Res>? get forecastMaxLgInt {
+    if (_value.forecastMaxLgInt == null) {
+      return null;
+    }
+
+    return $ForecastMaxLgIntCopyWith<$Res>(_value.forecastMaxLgInt!, (value) {
       return _then(_value.copyWith(forecastMaxLgInt: value) as $Val);
     });
   }
@@ -865,13 +869,13 @@ abstract class _$$EstimatedIntensityRegionImplCopyWith<$Res>
       @JsonKey(name: 'isPlum') bool isPlum,
       @JsonKey(name: 'isWarning') bool isWarning,
       @JsonKey(name: 'forecastMaxInt') ForecastMaxInt forecastMaxInt,
-      @JsonKey(name: 'forecastMaxLgInt') ForecastMaxLgInt forecastMaxLgInt,
+      @JsonKey(name: 'forecastMaxLgInt') ForecastMaxLgInt? forecastMaxLgInt,
       @JsonKey(name: 'arrivalTime') DateTime? arrivalTime});
 
   @override
   $ForecastMaxIntCopyWith<$Res> get forecastMaxInt;
   @override
-  $ForecastMaxLgIntCopyWith<$Res> get forecastMaxLgInt;
+  $ForecastMaxLgIntCopyWith<$Res>? get forecastMaxLgInt;
 }
 
 /// @nodoc
@@ -892,7 +896,7 @@ class __$$EstimatedIntensityRegionImplCopyWithImpl<$Res>
     Object? isPlum = null,
     Object? isWarning = null,
     Object? forecastMaxInt = null,
-    Object? forecastMaxLgInt = null,
+    Object? forecastMaxLgInt = freezed,
     Object? arrivalTime = freezed,
   }) {
     return _then(_$EstimatedIntensityRegionImpl(
@@ -916,10 +920,10 @@ class __$$EstimatedIntensityRegionImplCopyWithImpl<$Res>
           ? _value.forecastMaxInt
           : forecastMaxInt // ignore: cast_nullable_to_non_nullable
               as ForecastMaxInt,
-      forecastMaxLgInt: null == forecastMaxLgInt
+      forecastMaxLgInt: freezed == forecastMaxLgInt
           ? _value.forecastMaxLgInt
           : forecastMaxLgInt // ignore: cast_nullable_to_non_nullable
-              as ForecastMaxLgInt,
+              as ForecastMaxLgInt?,
       arrivalTime: freezed == arrivalTime
           ? _value.arrivalTime
           : arrivalTime // ignore: cast_nullable_to_non_nullable
@@ -958,7 +962,7 @@ class _$EstimatedIntensityRegionImpl implements _EstimatedIntensityRegion {
   final ForecastMaxInt forecastMaxInt;
   @override
   @JsonKey(name: 'forecastMaxLgInt')
-  final ForecastMaxLgInt forecastMaxLgInt;
+  final ForecastMaxLgInt? forecastMaxLgInt;
 
   /// nullの場合 `既に主要動到達と推測`
   @override
@@ -1017,7 +1021,7 @@ abstract class _EstimatedIntensityRegion implements EstimatedIntensityRegion {
           @JsonKey(name: 'forecastMaxInt')
           required final ForecastMaxInt forecastMaxInt,
           @JsonKey(name: 'forecastMaxLgInt')
-          required final ForecastMaxLgInt forecastMaxLgInt,
+          required final ForecastMaxLgInt? forecastMaxLgInt,
           @JsonKey(name: 'arrivalTime') required final DateTime? arrivalTime}) =
       _$EstimatedIntensityRegionImpl;
 
@@ -1039,7 +1043,7 @@ abstract class _EstimatedIntensityRegion implements EstimatedIntensityRegion {
   ForecastMaxInt get forecastMaxInt;
   @override
   @JsonKey(name: 'forecastMaxLgInt')
-  ForecastMaxLgInt get forecastMaxLgInt;
+  ForecastMaxLgInt? get forecastMaxLgInt;
   @override
 
   /// nullの場合 `既に主要動到達と推測`

@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:eqapi_types/model/v1/v1_database.dart';
 import 'package:eqapi_types/model/v1/websocket/realtime_postgres_changes_payload.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
+import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/env/env.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:web_socket_client/web_socket_client.dart';
@@ -13,7 +14,8 @@ part 'websocket_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 WebSocket websocket(WebsocketRef ref) {
-  final uri = Uri.parse(Env.wsApiUrl);
+  final apiUrl = ref.watch(telegramUrlProvider.select((v) => v.wsApiUrl));
+  final uri = Uri.parse(apiUrl);
   final socket = WebSocket(
     uri,
     headers: {
@@ -50,6 +52,7 @@ class WebsocketMessages extends _$WebsocketMessages {
     _controller = StreamController<dynamic>();
     socket.messages.listen(
       (message) {
+        ref.read(talkerProvider).log('WebSocket message: $message');
         final decoded = jsonDecode(message.toString());
         if (decoded is Map<String, dynamic>) {
           _controller.add(decoded);
