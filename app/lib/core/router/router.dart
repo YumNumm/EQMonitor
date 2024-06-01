@@ -16,6 +16,7 @@ import 'package:eqmonitor/feature/settings/children/application_info/license_pag
 import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_screen.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_screen.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/http_api_endpoint_selector_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/websocket_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/debugger_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
@@ -189,6 +190,9 @@ class KmoniRoute extends GoRouteData {
         TypedGoRoute<HttpApiEndpointSelectorRoute>(
           path: 'api-endpoint-selector',
         ),
+        TypedGoRoute<WebsocketEndpointSelectorRoute>(
+          path: 'websocket-api-endpoint-selector',
+        ),
         TypedGoRoute<EarthquakeParameterListRoute>(
           path: 'earthquake-parameter-list',
         ),
@@ -246,6 +250,14 @@ class HttpApiEndpointSelectorRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const HttpApiEndpointSelectorPage();
+}
+
+class WebsocketEndpointSelectorRoute extends GoRouteData {
+  const WebsocketEndpointSelectorRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const WebSocketApiEndpointSelectorPage();
 }
 
 class EarthquakeHistoryConfigRoute extends GoRouteData {
@@ -338,7 +350,10 @@ class DonationExecutedRoute extends GoRouteData {
   const DonationExecutedRoute({
     required this.$extra,
   });
-  final (StoreProduct, CustomerInfo) $extra;
+  final (
+    StoreProduct,
+    CustomerInfo,
+  ) $extra;
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>

@@ -275,6 +275,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
               factory: $HttpApiEndpointSelectorRouteExtension._fromState,
             ),
             GoRouteData.$route(
+              path: 'websocket-api-endpoint-selector',
+              factory: $WebsocketEndpointSelectorRouteExtension._fromState,
+            ),
+            GoRouteData.$route(
               path: 'earthquake-parameter-list',
               factory: $EarthquakeParameterListRouteExtension._fromState,
             ),
@@ -564,6 +568,25 @@ extension $HttpApiEndpointSelectorRouteExtension
 
   String get location => GoRouteData.$location(
         '/settings/debugger/api-endpoint-selector',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $WebsocketEndpointSelectorRouteExtension
+    on WebsocketEndpointSelectorRoute {
+  static WebsocketEndpointSelectorRoute _fromState(GoRouterState state) =>
+      const WebsocketEndpointSelectorRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/debugger/websocket-api-endpoint-selector',
       );
 
   void go(BuildContext context) => context.go(location);

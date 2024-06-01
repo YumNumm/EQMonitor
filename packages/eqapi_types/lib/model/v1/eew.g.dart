@@ -150,8 +150,11 @@ _$EstimatedIntensityRegionImpl _$$EstimatedIntensityRegionImplFromJson(
           isWarning: $checkedConvert('isWarning', (v) => v as bool),
           forecastMaxInt: $checkedConvert('forecastMaxInt',
               (v) => ForecastMaxInt.fromJson(v as Map<String, dynamic>)),
-          forecastMaxLgInt: $checkedConvert('forecastMaxLgInt',
-              (v) => ForecastMaxLgInt.fromJson(v as Map<String, dynamic>)),
+          forecastMaxLgInt: $checkedConvert(
+              'forecastMaxLgInt',
+              (v) => v == null
+                  ? null
+                  : ForecastMaxLgInt.fromJson(v as Map<String, dynamic>)),
           arrivalTime: $checkedConvert('arrivalTime',
               (v) => v == null ? null : DateTime.parse(v as String)),
         );

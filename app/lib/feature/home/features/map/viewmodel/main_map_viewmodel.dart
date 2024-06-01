@@ -759,20 +759,23 @@ class _EewHypocenterService {
 
   double _lastOpacity = 0;
 
-  Future<void> _changeOpacity(double opacity) => (
-        controller.setLayerProperties(
-          hypocenterIconId,
-          SymbolLayerProperties(
-            iconOpacity: opacity,
-          ),
+  Future<void> _changeOpacity(double opacity) async {
+    _lastOpacity = opacity;
+    await (
+      controller.setLayerProperties(
+        hypocenterIconId,
+        SymbolLayerProperties(
+          iconOpacity: opacity,
         ),
-        controller.setLayerProperties(
-          hypocenterLowPreciseIconId,
-          SymbolLayerProperties(
-            iconOpacity: opacity,
-          ),
+      ),
+      controller.setLayerProperties(
+        hypocenterLowPreciseIconId,
+        SymbolLayerProperties(
+          iconOpacity: opacity,
         ),
-      ).wait;
+      ),
+    ).wait;
+  }
 
   Future<void> tick() async {
     if (!hasInitialized) {

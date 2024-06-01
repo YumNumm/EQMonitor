@@ -9,9 +9,9 @@ class WebSocketApiEndpointSelectorPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final defaultUrl = Env.restApiUrl;
+    final defaultUrl = Env.wsApiUrl;
     final developUrl = defaultUrl.replaceAll('api.', 'dev.api.');
-    final state = ref.watch(telegramUrlProvider.select((v) => v.restApiUrl));
+    final state = ref.watch(telegramUrlProvider.select((v) => v.wsApiUrl));
     return Scaffold(
       appBar: AppBar(
         title: const Text('WebSocket Endpoint Selector'),
