@@ -12,7 +12,8 @@
 		4A6E6F82172719E05F9BD593 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD5D302A98B76C01E6D49E1B /* GoogleService-Info.plist */; };
 		4F115C462BE9682B00DAAD73 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 4F115C452BE9682B00DAAD73 /* PrivacyInfo.xcprivacy */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
-		769AC4BFD2FCC3BD38BB5A16 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86D3A5225875F01D12D8F080 /* Pods_Runner.framework */; };
+		851540AA2C0B971E00C096DC /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86D3A5225875F01D12D8F080 /* Pods_Runner.framework */; };
+		851540AB2C0B971E00C096DC /* Pods_Runner.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 86D3A5225875F01D12D8F080 /* Pods_Runner.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		854858802BFF92D90025EC74 /* notification_settings.proto in Sources */ = {isa = PBXBuildFile; fileRef = 8548587E2BFF92D90025EC74 /* notification_settings.proto */; };
 		854858812BFF92D90025EC74 /* notification_settings.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8548587F2BFF92D90025EC74 /* notification_settings.pb.swift */; };
 		859DF75C2BBE9FFC00B827B1 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 859DF75B2BBE9FFC00B827B1 /* StoreKit.framework */; };
@@ -56,6 +57,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				851540AB2C0B971E00C096DC /* Pods_Runner.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -115,8 +117,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				851540AA2C0B971E00C096DC /* Pods_Runner.framework in Frameworks */,
 				859DF75C2BBE9FFC00B827B1 /* StoreKit.framework in Frameworks */,
-				769AC4BFD2FCC3BD38BB5A16 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -253,9 +255,9 @@
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				85145B192B1F59D100784C85 /* Embed Foundation Extensions */,
 				97C146EC1CF9000F007C117D /* Resources */,
+				82EEBE268738BCF11B78DD00 /* [CP] Embed Pods Frameworks */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
-				82EEBE268738BCF11B78DD00 /* [CP] Embed Pods Frameworks */,
 				23806EEB4DC576BCF93C1F07 /* [firebase_crashlytics] Crashlytics Upload Symbols */,
 				50C4937DDA12C2AC1BB894E2 /* [CP] Copy Pods Resources */,
 			);
