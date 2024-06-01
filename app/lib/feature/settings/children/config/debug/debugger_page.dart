@@ -2,9 +2,7 @@ import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/provider/dio_provider.dart';
 import 'package:eqmonitor/core/provider/notification_token.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
-import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
 import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -66,89 +64,21 @@ class _DebugWidget extends ConsumerWidget {
             ListTile(
               title: const Text('EEW Test'),
               leading: const Icon(Icons.list),
-              onTap: () async {
-                final demoPayload = <String, dynamic>{
-                  'commit_timestamp': '2024-04-01T12:10:32.747Z',
-                  'eventType': 'INSERT',
-                  'new': {
-                    'id': -1,
-                    'event_id': 20240401210952,
-                    'info_type': '発表',
-                    'schema_type': 'eew-information',
-                    'status': '訓練',
-                    'type': '緊急地震速報（地震動予報）',
-                    'headline': null,
-                    'serial_no': 1,
-                    'is_canceled': false,
-                    'is_last_info': false,
-                    'arrival_time': DateTime.now().toIso8601String(),
-                    'depth': 40,
-                    'forecast_max_intensity': '1',
-                    'forecast_max_intensity_is_over': false,
-                    'forecast_max_lpgm_intensity': '0',
-                    'forecast_max_lpgm_intensity_is_over': false,
-                    'hypo_name': '石垣島北西沖',
-                    'is_warning': false,
-                    'latitude': 25.2,
-                    'longitude': 123.6,
-                    'magnitude': 3.6,
-                    'origin_time': DateTime.now().toIso8601String(),
-                    'regions': <void>[],
-                    'report_time': DateTime.now().toIso8601String(),
-                  },
-                  'old': <void, void>{},
-                  'schema': 'public',
-                  'table': 'eew',
-                  'errors': null,
-                };
-                ref.read(websocketMessagesProvider.notifier).emit(demoPayload);
-              },
-            ),
-            ListTile(
-              title: const Text('強震モニタ'),
-              leading: const Icon(Icons.settings),
-              onTap: () => showDialog<void>(
-                context: context,
-                builder: (context) => const KmoniSettingsModal(),
-              ),
-            ),
-            ListTile(
-              title: const Text('重大な通知権限'),
-              leading: const Icon(Icons.notifications_active),
-              onTap: () async {
-                {
-                  final result =
-                      await FirebaseMessaging.instance.requestPermission(
-                    criticalAlert: true,
-                  );
-                  if (context.mounted) {
-                    await showDialog<void>(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text('重大な通知権限 (FirebaseMessaging)'),
-                        content: Text(result.toString()),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: const Text('OK'),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                }
-              },
+              onTap: () async {},
             ),
             ListTile(
               title: const Text('REST APIエンドポイント'),
               leading: const Icon(Icons.http),
               subtitle: Text(ref.watch(telegramUrlProvider).restApiUrl),
-              onTap: () => const ApiEndpointSelectorRoute().push<void>(context),
+              onTap: () =>
+                  const HttpApiEndpointSelectorRoute().push<void>(context),
             ),
             ListTile(
               title: const Text('WebSocketエンドポイント'),
               leading: const Icon(Icons.http),
               subtitle: Text(ref.watch(telegramUrlProvider).wsApiUrl),
+              onTap: () =>
+                  const WebsocketEndpointSelectorRoute().push<void>(context),
             ),
             ListTile(
               title: const Text('Earthquake Parameter'),

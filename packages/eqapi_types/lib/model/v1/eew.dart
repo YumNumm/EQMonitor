@@ -49,7 +49,7 @@ class EstimatedIntensityRegion with _$EstimatedIntensityRegion {
     @JsonKey(name: 'isWarning') required bool isWarning,
     @JsonKey(name: 'forecastMaxInt') required ForecastMaxInt forecastMaxInt,
     @JsonKey(name: 'forecastMaxLgInt')
-    required ForecastMaxLgInt forecastMaxLgInt,
+    required ForecastMaxLgInt? forecastMaxLgInt,
 
     /// nullの場合 `既に主要動到達と推測`
     @JsonKey(name: 'arrivalTime') required DateTime? arrivalTime,
