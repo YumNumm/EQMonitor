@@ -1049,7 +1049,7 @@ class _EewSWaveLineService {
 
   static String get layerId => 's-wave-line';
 }
-
+/*
 class _EewPWaveFillService {
   _EewPWaveFillService({
     required this.controller,
@@ -1078,7 +1078,7 @@ class _EewPWaveFillService {
   Future<void> dispose() => controller.removeLayer(layerId);
 
   static String get layerId => 'p-wave-fill';
-}
+}*/
 
 class _EewSWaveFillService {
   _EewSWaveFillService({
