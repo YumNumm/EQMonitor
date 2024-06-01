@@ -143,7 +143,8 @@ class _DebugWidget extends ConsumerWidget {
               title: const Text('REST APIエンドポイント'),
               leading: const Icon(Icons.http),
               subtitle: Text(ref.watch(telegramUrlProvider).restApiUrl),
-              onTap: () => const ApiEndpointSelectorRoute().push<void>(context),
+              onTap: () =>
+                  const HttpApiEndpointSelectorRoute().push<void>(context),
             ),
             ListTile(
               title: const Text('WebSocketエンドポイント'),

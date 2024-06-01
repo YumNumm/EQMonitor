@@ -12,6 +12,7 @@
 		4A6E6F82172719E05F9BD593 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD5D302A98B76C01E6D49E1B /* GoogleService-Info.plist */; };
 		4F115C462BE9682B00DAAD73 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 4F115C452BE9682B00DAAD73 /* PrivacyInfo.xcprivacy */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
+		769AC4BFD2FCC3BD38BB5A16 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86D3A5225875F01D12D8F080 /* Pods_Runner.framework */; };
 		854858802BFF92D90025EC74 /* notification_settings.proto in Sources */ = {isa = PBXBuildFile; fileRef = 8548587E2BFF92D90025EC74 /* notification_settings.proto */; };
 		854858812BFF92D90025EC74 /* notification_settings.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8548587F2BFF92D90025EC74 /* notification_settings.pb.swift */; };
 		859DF75C2BBE9FFC00B827B1 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 859DF75B2BBE9FFC00B827B1 /* StoreKit.framework */; };
@@ -25,7 +26,6 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
-		BB08B283114FDA153EA368D7 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86D3A5225875F01D12D8F080 /* Pods_Runner.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,8 +115,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BB08B283114FDA153EA368D7 /* Pods_Runner.framework in Frameworks */,
 				859DF75C2BBE9FFC00B827B1 /* StoreKit.framework in Frameworks */,
+				769AC4BFD2FCC3BD38BB5A16 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
