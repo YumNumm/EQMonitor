@@ -180,12 +180,10 @@ class _DebugWidget extends ConsumerWidget {
 class _Route extends StatelessWidget {
   const _Route({
     required this.routes,
-    this.depth = 0,
     this.parent = const [],
   });
 
   final List<GoRoute> routes;
-  final int depth;
   final List<GoRoute> parent;
 
   @override
@@ -195,15 +193,15 @@ class _Route extends StatelessWidget {
         (route) {
           if (route.routes.isNotEmpty) {
             return _Route(
-              routes: route.routes.cast<GoRoute>(),
-              depth: depth + 1,
+              routes: route.routes.whereType<GoRoute>().toList(),
               parent: [...parent, route],
             );
           }
+          final path = [...parent, route].map((e) => e.path).join('/');
           return ListTile(
-            title: Text([...parent, route].map((e) => e.path).join('/')),
+            title: Text(path),
             onTap: () => context.push(
-              [...parent, route].map((e) => e.path).join('/'),
+              path,
             ),
             visualDensity: VisualDensity.compact,
           );
