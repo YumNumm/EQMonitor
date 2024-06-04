@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "179553945248",
+    "project_id": "eqmonitor-main",
+    "storage_bucket": "eqmonitor-main.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:179553945248:android:11ffcfb483c098ad6fabc5",
+        "android_client_info": {
+          "package_name": "net.yumnumm.eqmonitor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "179553945248-hdg52ajg05mjjqhin0qpmq002rlhscui.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkDpYc8eF_zrLEWPufW0O2A1TvA-gBMa0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "179553945248-hdg52ajg05mjjqhin0qpmq002rlhscui.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "179553945248-3r5sui3ebeomd0i9h2v8ihbs037dkj76.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "net.yumnumm.eqmonitor.FcmServiceExtension"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
