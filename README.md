@@ -46,10 +46,6 @@ EQMonitorは、日本全国の地震情報をいち早く受信できるアプ�
 
 1. `cd EQMonitor` でカレントディレクトリを移動します。
 
-1. `fvm flutter pub get` で必要なパッケージをインストールします。
-
-   - 本プロジェクトでは、Flutterのバージョン管理に[FVM](https://fvm.app/)を利用しています。
-
 1. Dartプロジェクトを管理するためのツールである[melos](https://melos.invertase.dev/)をインストールします。
 
    - `dart pub global activate melos` を実行してください。
@@ -59,24 +55,13 @@ EQMonitorは、日本全国の地震情報をいち早く受信できるアプ�
 
    - これにより、各パッケージの依存関係が解決されます。
 
-1. `mv .env.example .env` を実行してください。
+1. `mv app/.env.example app/.env` を実行してください。
 
-   - 環境変数の値を設定してください。
-   - API保護のため、環境変数の値は公開しません。
+   - HTTP APIのみ Staging APIへ接続できます。(事前設定済み)
+     - 常に最新の地震情報が提供されることを保証しません。
+     - 事前の予告なしに、APIの仕様が変更される可能性があります。
+     - アプリストアで公開しているAPIとは異なり、APIの実行環境やWAFの設定が異なります。
+   - その他の値は、そのままでも問題ありません。
+     - WebSocket APIは公開していないため、リアルタイムでの緊急地震速報の受信などはできません。
 
 1. `fvm flutter run` でアプリケーションを起動します。
-
-<!--
-## Setup
-
-Run the following commands from your terminal:
-
-1. `git clone https://github.com/YumNumm/EQMonitor` to clone this repository
-
-1. `cd EQMonitor` to change directory
-
-1. `flutter pub get` to install the required packages
-
-1. If you are not installed melos which is a tool for managing Dart projects with multiple packages, run `dart pub global activate melos` to install melos
-   * See [Get Started](https://melos.invertase.dev/~melos-latest/getting-started) for more information
--->
