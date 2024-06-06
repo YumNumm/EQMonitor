@@ -9,7 +9,7 @@ part of 'api_authentication_service.dart';
 // **************************************************************************
 
 String _$apiAuthenticationServiceHash() =>
-    r'ad69d966052714f99e0d0dad0a10a386000fe19c';
+    r'81cab09e5606fc0989fa584435e156cb8c42bf7a';
 
 /// See also [ApiAuthenticationService].
 @ProviderFor(ApiAuthenticationService)
