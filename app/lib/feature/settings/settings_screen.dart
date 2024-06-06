@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:eqmonitor/core/api/api_authentication_service.dart';
@@ -9,12 +11,16 @@ import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
+import 'package:eqmonitor/feature/settings/features/feedback/data/custom_feedback.dart';
 import 'package:eqmonitor/gen/assets.gen.dart';
+import 'package:feedback/feedback.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class SettingsScreen extends HookConsumerWidget {
@@ -119,9 +125,9 @@ class SettingsScreen extends HookConsumerWidget {
           ),
           const SettingsSectionHeader(text: 'アプリの情報と問い合わせ'),
           ListTile(
-            title: const Text('お問い合わせ'),
+            title: const Text('フィードバック'),
             subtitle: const Text('ご意見・ご要望などもこちらからお願いします'),
-            leading: const Icon(Icons.mail),
+            leading: const Icon(Icons.feedback),
             onTap: () => _onInquiryTap(context, ref),
           ),
           ListTile(
@@ -170,50 +176,40 @@ class SettingsScreen extends HookConsumerWidget {
 }
 
 Future<void> _onInquiryTap(BuildContext context, WidgetRef ref) async {
-  unawaited(
-    showDialog<void>(
-      barrierDismissible: false,
-      context: context,
-      builder: (_) => const Center(child: CircularProgressIndicator.adaptive()),
-    ),
+  BetterFeedback.of(context).show(
+    (feedback) async {
+      final packageInfo = ref.read(packageInfoProvider);
+      final payload = await ref
+          .read(apiAuthenticationServiceProvider.notifier)
+          .extractPayload();
+
+      final base = '--------------------------\n'
+          'EQMonitor v${packageInfo.version}+${packageInfo.buildNumber}\n'
+          'Payload: $payload\n'
+          '--------------------------';
+      // draft an email and send to developer
+      final screenshotFilePath = await writeImageToStorage(feedback.screenshot);
+      final extra = CustomFeedback.fromJson(feedback.extra!);
+
+      final email = Email(
+        body: '${feedback.text}\n\n$base\n\n${jsonEncode(extra.toJson())}',
+        subject: 'EQMonitor Feedback',
+        recipients: ['feedback@eqmonitor.app'],
+        attachmentPaths: [
+          if (extra.isScreenshotAttached ?? true) screenshotFilePath,
+        ],
+      );
+      await FlutterEmailSender.send(email);
+    },
   );
-  final packageInfo = ref.read(packageInfoProvider);
-  final payload = await ref
-      .read(apiAuthenticationServiceProvider.notifier)
-      .extractPayload();
+}
 
-  final base = '--------------------------\n'
-      'EQMonitor v${packageInfo.version}+${packageInfo.buildNumber}\n'
-      'Payload: $payload\n'
-      '--------------------------';
-
-  String? encodeQueryParameters(Map<String, String> params) {
-    return params.entries
-        .map(
-          (MapEntry<String, String> e) =>
-              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
-        )
-        .join('&');
-  }
-
-  // メール
-  final uri = Uri(
-    scheme: 'mailto',
-    path: 'contacts@eqmonitor.app',
-    query: encodeQueryParameters(
-      <String, String>{
-        'subject': 'EQMonitor 問い合わせ: ',
-        'body': '\n[こちらに内容を記載してください]\n\n$base',
-      },
-    ),
-  );
-  await launchUrl(uri);
-  if (!context.mounted) {
-    return;
-  }
-  if (Navigator.of(context).canPop()) {
-    Navigator.of(context).pop();
-  }
+Future<String> writeImageToStorage(Uint8List feedbackScreenshot) async {
+  final output = await getTemporaryDirectory();
+  final screenshotFilePath = '${output.path}/feedback.png';
+  final screenshotFile = File(screenshotFilePath);
+  await screenshotFile.writeAsBytes(feedbackScreenshot);
+  return screenshotFilePath;
 }
 
 Future<_DebugAttemptResult> _debugAttempt(BuildContext context) async {
