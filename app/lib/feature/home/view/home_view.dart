@@ -93,21 +93,17 @@ class _HomeBodyWidget extends HookConsumerWidget {
             ref.read(permissionProvider.notifier).initialize(),
             ref.read(ntpProvider.notifier).sync(),
             () async {
-              final fcmTokenHasChanged =
-                  await ref.read(fcmTokenChangeDetectorProvider.future);
-              if (fcmTokenHasChanged) {
-                final token = await ref.read(notificationTokenProvider.future);
-                final fcmToken = token.fcmToken;
-                if (fcmToken == null) {
-                  return;
-                }
-                await ref
-                    .read(notificationRemoteAuthenticateServiceProvider)
-                    .updateToken(fcmToken: fcmToken);
-                await ref
-                    .read(fcmTokenChangeDetectorProvider.notifier)
-                    .save(fcmToken);
+              final token = await ref.read(notificationTokenProvider.future);
+              final fcmToken = token.fcmToken;
+              if (fcmToken == null) {
+                return;
               }
+              await ref
+                  .read(notificationRemoteAuthenticateServiceProvider)
+                  .updateToken(fcmToken: fcmToken);
+              await ref
+                  .read(fcmTokenChangeDetectorProvider.notifier)
+                  .save(fcmToken);
             }(),
             Future.doWhile(() async {
               try {
@@ -361,30 +357,37 @@ class _Fabs extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        FloatingActionButton.small(
-          heroTag: 'sheet',
-          tooltip: '強震モニタの設定',
-          onPressed: () => showModalBottomSheet<void>(
-            context: context,
-            builder: (context) => const KmoniSettingsModal(),
-          ),
-          elevation: 4,
-          child: const Icon(Icons.settings),
-        ),
-        FloatingActionButton.small(
-          heroTag: 'home',
-          tooltip: '表示領域領域を戻す',
-          onPressed: () async {
-            final notifier = ref.read(mainMapViewModelProvider.notifier);
-            if (!notifier.isMapControllerRegistered()) {
-              return;
-            }
-            await notifier.animateToHomeBoundary();
-          },
-          elevation: 4,
-          child: const Icon(Icons.home),
+        const KmoniStatusWidget(),
+        Column(
+          children: [
+            FloatingActionButton.small(
+              heroTag: 'sheet',
+              tooltip: '強震モニタの設定',
+              onPressed: () => showModalBottomSheet<void>(
+                context: context,
+                builder: (context) => const KmoniSettingsModal(),
+              ),
+              elevation: 4,
+              child: const Icon(Icons.settings),
+            ),
+            FloatingActionButton.small(
+              heroTag: 'home',
+              tooltip: '表示領域領域を戻す',
+              onPressed: () async {
+                final notifier = ref.read(mainMapViewModelProvider.notifier);
+                if (!notifier.isMapControllerRegistered()) {
+                  return;
+                }
+                await notifier.animateToHomeBoundary();
+              },
+              elevation: 4,
+              child: const Icon(Icons.home),
+            ),
+          ],
         ),
       ],
     );
@@ -405,14 +408,10 @@ class _Sheet extends StatelessWidget {
         controller: sheetController,
         children: [
           const EewWidgets(),
-          const SheetStatusWidget(),
           const KmoniMaintenanceWidget(),
           const ParameterLoaderWidget(),
           const UpdateWidget(),
           const _NotificationPermission(),
-          const EarthquakeHistorySheetWidget(),
-          const EarthquakeHistorySheetWidget(),
-          const EarthquakeHistorySheetWidget(),
           const EarthquakeHistorySheetWidget(),
           const _NotificationMigrationWidget(),
           ListTile(
@@ -425,6 +424,7 @@ class _Sheet extends StatelessWidget {
             leading: const Icon(Icons.settings),
             onTap: () => const SettingsRoute().push<void>(context),
           ),
+          const SizedBox(height: 200),
         ],
       ),
     );
