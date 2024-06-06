@@ -14,16 +14,15 @@ import 'package:eqmonitor/feature/settings/component/settings_section_header.dar
 import 'package:eqmonitor/feature/settings/features/feedback/data/custom_feedback.dart';
 import 'package:eqmonitor/gen/assets.gen.dart';
 import 'package:feedback/feedback.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class SettingsScreen extends HookConsumerWidget {
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
@@ -33,46 +32,24 @@ class SettingsScreen extends HookConsumerWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
 
-    final debugAttemptCount = useState(0);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('設定'),
       ),
       body: ListView(
         children: [
-          GestureDetector(
-            onTapDown: (_) async {
-              debugAttemptCount.value++;
-              if (debugAttemptCount.value >= 10) {
-                debugAttemptCount.value = 0;
-                if (isDebugger) {
-                  await ref
-                      .read(debuggerProvider.notifier)
-                      .setDebugger(value: false);
-                } else {
-                  final result = await _debugAttempt(context);
-                  if (result == _DebugAttemptResult.debugger) {
-                    await ref
-                        .read(debuggerProvider.notifier)
-                        .setDebugger(value: true);
-                  }
-                }
-              }
-            },
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: SizedBox(
-                  width: 80,
-                  height: 80,
-                  child: Material(
-                    borderRadius: BorderRadius.circular(16),
-                    clipBehavior: Clip.antiAlias,
-                    elevation: 4,
-                    child: Assets.images.icon.image(
-                      fit: BoxFit.contain,
-                    ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: SizedBox(
+                width: 80,
+                height: 80,
+                child: Material(
+                  borderRadius: BorderRadius.circular(16),
+                  clipBehavior: Clip.antiAlias,
+                  elevation: 4,
+                  child: Assets.images.icon.image(
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),
@@ -196,10 +173,20 @@ Future<void> _onInquiryTap(BuildContext context, WidgetRef ref) async {
         subject: 'EQMonitor Feedback',
         recipients: ['feedback@eqmonitor.app'],
         attachmentPaths: [
-          if (extra.isScreenshotAttached ?? true) screenshotFilePath,
+          if (extra.isScreenshotAttached) screenshotFilePath,
         ],
       );
-      await FlutterEmailSender.send(email);
+      try {
+        await FlutterEmailSender.send(email);
+      } on PlatformException catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('エラーが発生しました: ${e.message}'),
+            ),
+          );
+        }
+      }
     },
   );
 }
