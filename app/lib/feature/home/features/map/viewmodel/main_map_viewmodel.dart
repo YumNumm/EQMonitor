@@ -942,7 +942,7 @@ class _EewPsWaveService {
                     [
                       // 0...360
                       for (final bearing
-                          in List<int>.generate(181, (index) => index * 2))
+                          in List<int>.generate(91, (index) => index * 4))
                         () {
                           final latLng = const latlong2.Distance().offset(
                             latlong2.LatLng(
@@ -962,15 +962,7 @@ class _EewPsWaveService {
                   ],
                 },
                 'properties': {
-                  'distance': result.$1.sDistance,
-                  'hypocenter': {
-                    'type': 'Point',
-                    'coordinates': [
-                      result.$2.lon,
-                      result.$2.lat,
-                    ],
-                    'isWarning': result.$3,
-                  },
+                  'is_warning': result.$3,
                   'type': type.name,
                 },
               },
@@ -1034,23 +1026,41 @@ class _EewSWaveLineService {
     await dispose();
     await controller.addLineLayer(
       _EewPsWaveService.sourceId,
-      layerId,
+      layerId(isWarning: true),
       LineLayerProperties(
         lineColor: Colors.redAccent.toHexStringRGB(),
         lineWidth: 2,
         lineCap: 'round',
       ),
       filter: [
-        '==',
-        'type',
-        _WaveType.sWave.name,
+        'all',
+        ['==', 'type', _WaveType.sWave.name],
+        ['==', 'is_warning', true],
+      ],
+    );
+
+    await controller.addLineLayer(
+      _EewPsWaveService.sourceId,
+      layerId(isWarning: false),
+      LineLayerProperties(
+        lineColor: Colors.orangeAccent.toHexStringRGB(),
+        lineWidth: 2,
+        lineCap: 'round',
+      ),
+      filter: [
+        'all',
+        ['==', 'type', _WaveType.sWave.name],
+        ['==', 'is_warning', false],
       ],
     );
   }
 
-  Future<void> dispose() => controller.removeLayer(layerId);
+  Future<void> dispose() => (
+        controller.removeLayer(layerId(isWarning: true)),
+        controller.removeLayer(layerId(isWarning: false)),
+      ).wait;
 
-  static String get layerId => 's-wave-line';
+  static String layerId({required bool isWarning}) => 's-wave-line-$isWarning';
 }
 /*
 class _EewPWaveFillService {
@@ -1094,7 +1104,7 @@ class _EewSWaveFillService {
     await dispose();
     await controller.addFillLayer(
       _EewPsWaveService.sourceId,
-      layerId,
+      layerId(isWarning: true),
       FillLayerProperties(
         fillColor: Colors.red.toHexStringRGB(),
         fillOpacity: 0.2,
@@ -1106,11 +1116,31 @@ class _EewSWaveFillService {
       ],
       belowLayerId: BaseLayer.countriesFill.name,
     );
+    await controller.addFillLayer(
+      _EewPsWaveService.sourceId,
+      layerId(isWarning: false),
+      FillLayerProperties(
+        fillColor: Colors.orangeAccent.toHexStringRGB(),
+        fillOpacity: 0.2,
+      ),
+      filter: [
+        '==',
+        'type',
+        _WaveType.sWave.name,
+      ],
+      belowLayerId: BaseLayer.countriesFill.name,
+    );
   }
 
-  Future<void> dispose() => controller.removeLayer(layerId);
+  Future<void> dispose() => (
+        controller.removeLayer(layerId(isWarning: true)),
+        controller.removeLayer(layerId(isWarning: false)),
+      ).wait;
 
-  static String get layerId => 's-wave-fill';
+  static String layerId({
+    required bool isWarning,
+  }) =>
+      's-wave-fill-$isWarning';
 }
 
 @freezed
