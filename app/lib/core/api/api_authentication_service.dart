@@ -35,21 +35,46 @@ class ApiAuthenticationService extends _$ApiAuthenticationService {
     if (token == null) {
       throw UnauthorizedException();
     }
+    final payload = parseJwt(token);
+    final map = payload;
 
-    final parts = token.split('.');
-    if (parts.length != 3) {
-      throw UnauthorizedException();
-    }
-
-    final payload = parts[1];
-    final decoded = base64Decode(payload);
-    final json = utf8.decode(decoded);
-    final map = jsonDecode(json) as Map<String, dynamic>;
-    final id = map['sub'] as String;
+    final id = map['id'] as String;
     final role = map['role'] as String;
     return (
       id: id,
       role: role,
     );
+  }
+
+  static Map<String, dynamic> parseJwt(String token) {
+    final parts = token.split('.');
+    if (parts.length != 3) {
+      throw const FormatException('Invalid token.');
+    }
+
+    final payload = _decodeBase64(parts[1]);
+    final payloadMap = json.decode(payload);
+    if (payloadMap is! Map<String, dynamic>) {
+      throw const FormatException('Invalid payload.');
+    }
+
+    return payloadMap;
+  }
+
+  static String _decodeBase64(String str) {
+    var output = str.replaceAll('-', '+').replaceAll('_', '/');
+
+    switch (output.length % 4) {
+      case 0:
+        break;
+      case 2:
+        output += '==';
+      case 3:
+        output += '=';
+      default:
+        throw Exception('Illegal base64 string.');
+    }
+
+    return utf8.decode(base64Url.decode(output));
   }
 }

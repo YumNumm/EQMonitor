@@ -93,21 +93,17 @@ class _HomeBodyWidget extends HookConsumerWidget {
             ref.read(permissionProvider.notifier).initialize(),
             ref.read(ntpProvider.notifier).sync(),
             () async {
-              final fcmTokenHasChanged =
-                  await ref.read(fcmTokenChangeDetectorProvider.future);
-              if (fcmTokenHasChanged) {
-                final token = await ref.read(notificationTokenProvider.future);
-                final fcmToken = token.fcmToken;
-                if (fcmToken == null) {
-                  return;
-                }
-                await ref
-                    .read(notificationRemoteAuthenticateServiceProvider)
-                    .updateToken(fcmToken: fcmToken);
-                await ref
-                    .read(fcmTokenChangeDetectorProvider.notifier)
-                    .save(fcmToken);
+              final token = await ref.read(notificationTokenProvider.future);
+              final fcmToken = token.fcmToken;
+              if (fcmToken == null) {
+                return;
               }
+              await ref
+                  .read(notificationRemoteAuthenticateServiceProvider)
+                  .updateToken(fcmToken: fcmToken);
+              await ref
+                  .read(fcmTokenChangeDetectorProvider.notifier)
+                  .save(fcmToken);
             }(),
             Future.doWhile(() async {
               try {
@@ -361,30 +357,37 @@ class _Fabs extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        FloatingActionButton.small(
-          heroTag: 'sheet',
-          tooltip: '強震モニタの設定',
-          onPressed: () => showModalBottomSheet<void>(
-            context: context,
-            builder: (context) => const KmoniSettingsModal(),
-          ),
-          elevation: 4,
-          child: const Icon(Icons.settings),
-        ),
-        FloatingActionButton.small(
-          heroTag: 'home',
-          tooltip: '表示領域領域を戻す',
-          onPressed: () async {
-            final notifier = ref.read(mainMapViewModelProvider.notifier);
-            if (!notifier.isMapControllerRegistered()) {
-              return;
-            }
-            await notifier.animateToHomeBoundary();
-          },
-          elevation: 4,
-          child: const Icon(Icons.home),
+        const KmoniStatusWidget(),
+        Column(
+          children: [
+            FloatingActionButton.small(
+              heroTag: 'sheet',
+              tooltip: '強震モニタの設定',
+              onPressed: () => showModalBottomSheet<void>(
+                context: context,
+                builder: (context) => const KmoniSettingsModal(),
+              ),
+              elevation: 4,
+              child: const Icon(Icons.settings),
+            ),
+            FloatingActionButton.small(
+              heroTag: 'home',
+              tooltip: '表示領域領域を戻す',
+              onPressed: () async {
+                final notifier = ref.read(mainMapViewModelProvider.notifier);
+                if (!notifier.isMapControllerRegistered()) {
+                  return;
+                }
+                await notifier.animateToHomeBoundary();
+              },
+              elevation: 4,
+              child: const Icon(Icons.home),
+            ),
+          ],
         ),
       ],
     );
@@ -402,16 +405,15 @@ class _Sheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return RepaintBoundary(
       child: BasicModalSheet(
-        useColumn: true,
         controller: sheetController,
         children: [
           const EewWidgets(),
-          const SheetStatusWidget(),
           const KmoniMaintenanceWidget(),
-          const _NotificationMigrationWidget(),
           const ParameterLoaderWidget(),
           const UpdateWidget(),
+          const _NotificationPermission(),
           const EarthquakeHistorySheetWidget(),
+          const _NotificationMigrationWidget(),
           ListTile(
             title: const Text('地震・津波に関するお知らせ'),
             leading: const Icon(Icons.info),
@@ -422,9 +424,45 @@ class _Sheet extends StatelessWidget {
             leading: const Icon(Icons.settings),
             onTap: () => const SettingsRoute().push<void>(context),
           ),
+          const SizedBox(height: 200),
         ],
       ),
     );
+  }
+}
+
+class _NotificationPermission extends ConsumerWidget {
+  const _NotificationPermission();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(permissionProvider);
+    if (!state.notification) {
+      return BorderedContainer(
+        accentColor: Colors.redAccent.withOpacity(0.2),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 8,
+          vertical: 4,
+        ),
+        child: ListTile(
+          title: const Text('通知権限の許可がされていません'),
+          subtitle: Column(
+            children: [
+              const Text('通知を受け取るためには、通知の許可が必要です。'),
+              TextButton.icon(
+                onPressed: () => ref
+                    .read(permissionProvider.notifier)
+                    .requestNotificationPermission(),
+                icon: const Icon(Icons.notifications),
+                label: const Text('通知権限を許可する'),
+              ),
+            ],
+          ),
+          leading: const Icon(Icons.error),
+        ),
+      );
+    }
+    return Container();
   }
 }
 
