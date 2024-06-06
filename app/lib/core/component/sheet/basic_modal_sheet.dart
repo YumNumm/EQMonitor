@@ -8,12 +8,10 @@ class BasicModalSheet extends HookWidget {
     required this.controller,
     required this.children,
     this.hasAppBar = true,
-    this.useColumn = false,
   });
   final SheetController controller;
   final List<Widget> children;
   final bool hasAppBar;
-  final bool useColumn;
 
   static double width(BoxConstraints constraints) {
     final isTablet = constraints.maxWidth > 600 &&
@@ -61,25 +59,19 @@ class BasicModalSheet extends HookWidget {
             child: SafeArea(
               top: hasAppBar,
               bottom: false,
-              child: Column(
-                children: <Widget>[
-                  barWidget,
-                  if (useColumn)
+              child: RepaintBoundary(
+                child: Column(
+                  children: <Widget>[
+                    barWidget,
                     Expanded(
                       child: SingleChildScrollView(
                         child: Column(
                           children: children,
                         ),
                       ),
-                    )
-                  else
-                    Expanded(
-                      child: ListView(
-                        padding: const EdgeInsets.all(2),
-                        children: children,
-                      ),
                     ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

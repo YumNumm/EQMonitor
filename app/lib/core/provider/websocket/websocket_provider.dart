@@ -16,11 +16,17 @@ part 'websocket_provider.g.dart';
 WebSocket websocket(WebsocketRef ref) {
   final apiUrl = ref.watch(telegramUrlProvider.select((v) => v.wsApiUrl));
   final uri = Uri.parse(apiUrl);
+  final backoff = BinaryExponentialBackoff(
+    initial: const Duration(seconds: 1),
+    maximumStep: 3,
+  );
   final socket = WebSocket(
     uri,
     headers: {
       HttpHeaders.authorizationHeader: Env.apiAuthorization,
     },
+    pingInterval: const Duration(seconds: 5),
+    backoff: backoff,
   );
   ref.onDispose(() {
     socket.close(1000, 'Connection closed');
