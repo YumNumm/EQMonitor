@@ -191,7 +191,7 @@ class _RegionsChoiceView extends ConsumerWidget {
         const ListTile(
           visualDensity: VisualDensity.compact,
           title: Text(
-            '地域ごとの地震情報',
+            '地域ごとの緊急地震速報',
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
@@ -290,7 +290,7 @@ class _RegionsChoiceView extends ConsumerWidget {
                           SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              ' (この震度は全国の地震情報に含まれています)',
+                              ' (この震度は全国の緊急地震速報に含まれています)',
                             ),
                           ),
                         ],

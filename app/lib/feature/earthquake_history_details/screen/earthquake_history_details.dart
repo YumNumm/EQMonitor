@@ -225,7 +225,6 @@ class _Sheet extends StatelessWidget {
       bottom: false,
       child: BasicModalSheet(
         hasAppBar: false,
-        useColumn: true,
         controller: sheetController,
         children: [
           EarthquakeHypoInfoWidget(item: item),

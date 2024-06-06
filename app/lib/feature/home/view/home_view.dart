@@ -402,16 +402,19 @@ class _Sheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return RepaintBoundary(
       child: BasicModalSheet(
-        useColumn: true,
         controller: sheetController,
         children: [
           const EewWidgets(),
           const SheetStatusWidget(),
           const KmoniMaintenanceWidget(),
-          const _NotificationMigrationWidget(),
           const ParameterLoaderWidget(),
           const UpdateWidget(),
+          const _NotificationPermission(),
           const EarthquakeHistorySheetWidget(),
+          const EarthquakeHistorySheetWidget(),
+          const EarthquakeHistorySheetWidget(),
+          const EarthquakeHistorySheetWidget(),
+          const _NotificationMigrationWidget(),
           ListTile(
             title: const Text('地震・津波に関するお知らせ'),
             leading: const Icon(Icons.info),
@@ -425,6 +428,41 @@ class _Sheet extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _NotificationPermission extends ConsumerWidget {
+  const _NotificationPermission();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(permissionProvider);
+    if (!state.notification) {
+      return BorderedContainer(
+        accentColor: Colors.redAccent.withOpacity(0.2),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 8,
+          vertical: 4,
+        ),
+        child: ListTile(
+          title: const Text('通知権限の許可がされていません'),
+          subtitle: Column(
+            children: [
+              const Text('通知を受け取るためには、通知の許可が必要です。'),
+              TextButton.icon(
+                onPressed: () => ref
+                    .read(permissionProvider.notifier)
+                    .requestNotificationPermission(),
+                icon: const Icon(Icons.notifications),
+                label: const Text('通知権限を許可する'),
+              ),
+            ],
+          ),
+          leading: const Icon(Icons.error),
+        ),
+      );
+    }
+    return Container();
   }
 }
 
