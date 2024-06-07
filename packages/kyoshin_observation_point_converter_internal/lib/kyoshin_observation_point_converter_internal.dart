@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:geojson_vi/geojson_vi.dart';
 import 'package:http/http.dart' as http;
 import 'package:kyoshin_observation_point_types/kyoshin_observation_point.pb.dart';
-import 'package:maps_toolkit/maps_toolkit.dart';
 
 class KyoshinObservationPointConverter {
   Future<List<ObservationModel>> readFile(String path) async {
@@ -94,41 +93,6 @@ class KyoshinObservationPointConverter {
       jsonEncode(json),
     );
     print("ARV: $arv");
-    return null;
-  }
-
-  int? _getRegionCode(GeoJSON map, double latitude, double longitude) {
-    bool checkPolygon(List<List<List<double>>> polygon) {
-      for (final p in polygon) {
-        final latlngs = p.map((e) => LatLng(e[1], e[0])).toList();
-        if (PolygonUtil.containsLocation(
-            LatLng(latitude, longitude), latlngs, true)) {
-          print("Found");
-          return true;
-        }
-      }
-      return false;
-    }
-
-    for (final feature in (map as GeoJSONFeatureCollection).features) {
-      if (feature!.geometry.type == GeoJSONType.multiPolygon) {
-        final g = feature.geometry as GeoJSONMultiPolygon;
-        final code = int.tryParse(feature.properties!["code"] as String)!;
-        for (final polygon in g.coordinates) {
-          if (checkPolygon(polygon)) {
-            return code;
-          }
-        }
-      }
-      if (feature.geometry.type == GeoJSONType.polygon) {
-        final g = feature.geometry as GeoJSONPolygon;
-        final code = int.tryParse(feature.properties!["code"] as String)!;
-        if (checkPolygon(g.coordinates)) {
-          return code;
-        }
-      }
-    }
-
     return null;
   }
 }

@@ -1,12 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
-import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:eqmonitor/core/api/api_authentication_service.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
-import 'package:eqmonitor/core/extension/string_ex.dart';
 import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -197,32 +194,4 @@ Future<String> writeImageToStorage(Uint8List feedbackScreenshot) async {
   final screenshotFile = File(screenshotFilePath);
   await screenshotFile.writeAsBytes(feedbackScreenshot);
   return screenshotFilePath;
-}
-
-Future<_DebugAttemptResult> _debugAttempt(BuildContext context) async {
-  final str = await showTextInputDialog(
-    context: context,
-    barrierDismissible: false,
-    title: 'Debug Attempt',
-    message: 'Input debug key.',
-    textFields: const [
-      DialogTextField(),
-    ],
-  );
-  final hash = 'SALT${str}SALT'.sha512;
-  log('hash: $hash');
-
-  return switch (hash) {
-    'debf7168f29c6b58d15ba0168663d36804d16f143ef3d81ff8c205bb8e840ddb5fcf0d0ab33a3f8b13fa44b772f852130986f0dc2d259f04e1587bbd559260b1' =>
-      _DebugAttemptResult.debugger,
-    '' => _DebugAttemptResult.keviNotifier,
-    _ => _DebugAttemptResult.none,
-  };
-}
-
-enum _DebugAttemptResult {
-  debugger,
-  keviNotifier,
-  none,
-  ;
 }

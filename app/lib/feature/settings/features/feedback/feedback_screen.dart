@@ -116,7 +116,7 @@ class CustomFeedbackForm extends HookConsumerWidget {
                 : null,
             label: const Text('メール送信画面を開く'),
             icon: Icon(
-              (customFeedback.value.isScreenshotAttached ?? false)
+              (customFeedback.value.isScreenshotAttached)
                   ? Icons.attach_email_rounded
                   : Icons.email,
             ),
