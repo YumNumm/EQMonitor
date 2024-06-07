@@ -67,3 +67,4 @@ final $typed_data.Uint8List kyoshinObservationPointDescriptor = $convert.base64D
     'BmFydjQwMBpCCgZMYXRMbmcSGgoIbGF0aXR1ZGUYASABKAFSCGxhdGl0dWRlEhwKCWxvbmdpdH'
     'VkZRgCIAEoAVIJbG9uZ2l0dWRlGiMKBVBvaW50EgwKAXgYASABKAVSAXgSDAoBeRgCIAEoBVIB'
     'eQ==');
+
