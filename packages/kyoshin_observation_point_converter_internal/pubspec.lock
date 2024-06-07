@@ -25,6 +25,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  geojson_vi:
+    dependency: "direct main"
+    description:
+      name: geojson_vi
+      sha256: f269ba5713b823466630f30711355180591c40c4860de49fb4b9c46026528b2d
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.4"
   http:
     dependency: "direct main"
     description:
@@ -48,6 +56,14 @@ packages:
       relative: true
     source: path
     version: "1.0.0"
+  maps_toolkit:
+    dependency: "direct main"
+    description:
+      name: maps_toolkit
+      sha256: "277877f9505208acacd2a0794ef190e836a5ffee58ebc8efc5b9ca8de50e3e2f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   meta:
     dependency: transitive
     description:

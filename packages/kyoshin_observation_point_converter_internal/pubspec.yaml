@@ -11,3 +11,5 @@ dependencies:
     git:
       url: https://github.com/YumNumm/EQMonitor.git
       path: packages/kyoshin_observation_point_types
+  geojson_vi: ^2.2.4
+  maps_toolkit: ^3.0.0

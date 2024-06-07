@@ -4,7 +4,7 @@
 //
 // @dart = 2.12
 
-// ignore_for_file: annotate_overrides, camel_case_types, comment_references, prefer_constructors_over_static_methods
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
 // ignore_for_file: constant_identifier_names, library_prefixes
 // ignore_for_file: non_constant_identifier_names, prefer_final_fields
 // ignore_for_file: unnecessary_import, unnecessary_this, unused_import
@@ -207,6 +207,7 @@ class EarthquakeParameterStationItem extends $pb.GeneratedMessage {
     $core.String? name,
     $core.double? latitude,
     $core.double? longitude,
+    $core.double? arv400,
   }) {
     final $result = create();
     if (code != null) {
@@ -221,6 +222,9 @@ class EarthquakeParameterStationItem extends $pb.GeneratedMessage {
     if (longitude != null) {
       $result.longitude = longitude;
     }
+    if (arv400 != null) {
+      $result.arv400 = arv400;
+    }
     return $result;
   }
   EarthquakeParameterStationItem._() : super();
@@ -232,6 +236,7 @@ class EarthquakeParameterStationItem extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..a<$core.double>(3, _omitFieldNames ? '' : 'latitude', $pb.PbFieldType.OD)
     ..a<$core.double>(4, _omitFieldNames ? '' : 'longitude', $pb.PbFieldType.OD)
+    ..a<$core.double>(6, _omitFieldNames ? '' : 'arv400', $pb.PbFieldType.OD, protoName: 'arv_400')
     ..hasRequiredFields = false
   ;
 
@@ -291,6 +296,16 @@ class EarthquakeParameterStationItem extends $pb.GeneratedMessage {
   $core.bool hasLongitude() => $_has(3);
   @$pb.TagNumber(4)
   void clearLongitude() => clearField(4);
+
+  /// 工学的基盤（Vs=400m/s）から地表に至る最大速度の増幅率
+  @$pb.TagNumber(6)
+  $core.double get arv400 => $_getN(4);
+  @$pb.TagNumber(6)
+  set arv400($core.double v) { $_setDouble(4, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasArv400() => $_has(4);
+  @$pb.TagNumber(6)
+  void clearArv400() => clearField(6);
 }
 
 

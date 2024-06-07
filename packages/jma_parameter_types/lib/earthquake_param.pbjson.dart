@@ -66,6 +66,7 @@ const EarthquakeParameterStationItem$json = {
     {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
     {'1': 'latitude', '3': 3, '4': 1, '5': 1, '10': 'latitude'},
     {'1': 'longitude', '3': 4, '4': 1, '5': 1, '10': 'longitude'},
+    {'1': 'arv_400', '3': 6, '4': 1, '5': 1, '10': 'arv400'},
   ],
 };
 
@@ -73,4 +74,5 @@ const EarthquakeParameterStationItem$json = {
 final $typed_data.Uint8List earthquakeParameterStationItemDescriptor = $convert.base64Decode(
     'Ch5FYXJ0aHF1YWtlUGFyYW1ldGVyU3RhdGlvbkl0ZW0SEgoEY29kZRgBIAEoCVIEY29kZRISCg'
     'RuYW1lGAIgASgJUgRuYW1lEhoKCGxhdGl0dWRlGAMgASgBUghsYXRpdHVkZRIcCglsb25naXR1'
-    'ZGUYBCABKAFSCWxvbmdpdHVkZQ==');
+    'ZGUYBCABKAFSCWxvbmdpdHVkZRIXCgdhcnZfNDAwGAYgASgBUgZhcnY0MDA=');
+
