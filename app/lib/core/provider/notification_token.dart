@@ -14,14 +14,12 @@ Future<NotificationTokenModel> notificationToken(
     throw UnimplementedError();
   }
   final messaging = ref.watch(firebaseMessagingProvider);
-  final results = await (
-    messaging.getAPNSToken(),
-    messaging.getToken(),
-  ).wait;
+  final apnsToken = await messaging.getAPNSToken();
+  final fcmToken = await messaging.getToken();
 
   return NotificationTokenModel(
-    apnsToken: results.$1,
-    fcmToken: results.$2,
+    apnsToken: apnsToken,
+    fcmToken: fcmToken,
   );
 }
 

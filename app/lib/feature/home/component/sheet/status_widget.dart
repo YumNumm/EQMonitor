@@ -23,6 +23,9 @@ class KmoniStatusWidget extends ConsumerWidget {
     );
     final useKmoni =
         ref.watch(kmoniSettingsProvider.select((value) => value.useKmoni));
+    if (!useKmoni) {
+      return const SizedBox.shrink();
+    }
     final theme = Theme.of(context);
 
     Future<void> adjustKmoniDelay() async {
