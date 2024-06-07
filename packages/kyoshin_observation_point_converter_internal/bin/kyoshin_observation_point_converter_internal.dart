@@ -8,10 +8,12 @@ Future<void> main(List<String> args) async {
     print("Usage: kyoshin_observation_point_converter_internal <path>");
     return;
   }
-  print("Converting Kyoshin Observation Point...");
   final converter = KyoshinObservationPointConverter();
+  print("Loading GeoJSON...");
+  final geojson = await converter.loadMap();
+  print("Converting Kyoshin Observation Point...");
   final points = await converter.readFile(path);
-  final table = await converter.convert(points);
+  final table = await converter.convert(points, geojson);
   // delete output file if exists
   final file = (
     json: File("kyoshin_observation_point.json"),

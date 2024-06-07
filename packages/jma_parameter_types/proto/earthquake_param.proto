@@ -21,4 +21,7 @@ message EarthquakeParameterStationItem {
   string name = 2;
   double latitude = 3;
   double longitude = 4;
+
+  // 工学的基盤（Vs=400m/s）から地表に至る最大速度の増幅率
+  double arv_400 = 6;
 }

@@ -6,7 +6,11 @@ if ! type -P protoc-gen-dart &>/dev/null; then
     exit 1
 fi
 
-rm lib/*
+# If lib/* exists, remove it
+if [ -d "lib" ]; then
+    rm -rf lib/*
+fi
+
 protoc \
     --dart_out="grpc:lib" \
     -I="./proto" \
