@@ -33,7 +33,7 @@ Map<String, dynamic> _$$NotificationTokenModelImplToJson(
 // RiverpodGenerator
 // **************************************************************************
 
-String _$notificationTokenHash() => r'f9a95c9ef52b81c3ca575f8ef9b0af0d6d23ebfd';
+String _$notificationTokenHash() => r'7d0de2e227d63aff19b465b15eb7ff29b499be95';
 
 /// See also [notificationToken].
 @ProviderFor(notificationToken)
