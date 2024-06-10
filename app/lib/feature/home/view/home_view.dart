@@ -357,39 +357,48 @@ class _Fabs extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const KmoniStatusWidget(),
-        Column(
+    final size = MediaQuery.sizeOf(context);
+    final sheetWidth = BasicModalSheet.width(size);
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: SizedBox(
+        width: sheetWidth,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            FloatingActionButton.small(
-              heroTag: 'sheet',
-              tooltip: '強震モニタの設定',
-              onPressed: () => showModalBottomSheet<void>(
-                context: context,
-                builder: (context) => const KmoniSettingsModal(),
-              ),
-              elevation: 4,
-              child: const Icon(Icons.settings),
-            ),
-            FloatingActionButton.small(
-              heroTag: 'home',
-              tooltip: '表示領域領域を戻す',
-              onPressed: () async {
-                final notifier = ref.read(mainMapViewModelProvider.notifier);
-                if (!notifier.isMapControllerRegistered()) {
-                  return;
-                }
-                await notifier.animateToHomeBoundary();
-              },
-              elevation: 4,
-              child: const Icon(Icons.home),
+            const KmoniStatusWidget(),
+            Column(
+              children: [
+                FloatingActionButton.small(
+                  heroTag: 'sheet',
+                  tooltip: '強震モニタの設定',
+                  onPressed: () => showModalBottomSheet<void>(
+                    context: context,
+                    builder: (context) => const KmoniSettingsModal(),
+                  ),
+                  elevation: 4,
+                  child: const Icon(Icons.settings),
+                ),
+                FloatingActionButton.small(
+                  heroTag: 'home',
+                  tooltip: '表示領域領域を戻す',
+                  onPressed: () async {
+                    final notifier =
+                        ref.read(mainMapViewModelProvider.notifier);
+                    if (!notifier.isMapControllerRegistered()) {
+                      return;
+                    }
+                    await notifier.animateToHomeBoundary();
+                  },
+                  elevation: 4,
+                  child: const Icon(Icons.home),
+                ),
+              ],
             ),
           ],
         ),
-      ],
+      ),
     );
   }
 }
