@@ -53,6 +53,9 @@ GoRouter goRouter(GoRouterRef ref) => GoRouter(
         _NavigatorObserver(
           ref.watch(talkerProvider),
         ),
+        FirebaseAnalyticsObserver(
+          analytics: FirebaseAnalytics.instance,
+        ),
       ],
       debugLogDiagnostics: true,
     );

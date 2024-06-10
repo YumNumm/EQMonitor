@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqapi_types/model/components/eew_intensity.dart';
+import 'package:eqmonitor/core/api/api_authentication_service.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
@@ -36,6 +37,7 @@ import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/fcm_token_change_detector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_authentication_service.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_settings_migrate_service.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -104,6 +106,19 @@ class _HomeBodyWidget extends HookConsumerWidget {
               await ref
                   .read(fcmTokenChangeDetectorProvider.notifier)
                   .save(fcmToken);
+              final authenticationService =
+                  ref.read(apiAuthenticationServiceProvider.notifier);
+              final (
+                id: id,
+                role: role,
+              ) = await authenticationService.extractPayload();
+              ref.read(talkerProvider).log(
+                    'Authentication: id=$id, role=$role',
+                  );
+              await FirebaseCrashlytics.instance.setUserIdentifier(id);
+              await FirebaseAnalytics.instance.setUserId(
+                id: id,
+              );
             }(),
             Future.doWhile(() async {
               try {
