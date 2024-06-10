@@ -13,26 +13,23 @@ class BasicModalSheet extends HookWidget {
   final List<Widget> children;
   final bool hasAppBar;
 
-  static double width(Size size) {
-    return size.width > 600 && size.height < size.width
-        ? size.width / 2
-        : size.width;
+  static double? width(Size size) {
+    return size.width > 600 && size.height < size.width ? size.width / 2 : null;
   }
+
+  static const double kSheetBorderRadius = 28;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final barWidget = Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
+      margin: const EdgeInsets.symmetric(vertical: 4),
       width: 36,
       height: 4,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: theme.colorScheme.onSurface,
-        boxShadow: const <BoxShadow>[
-          BoxShadow(color: Colors.black12, blurRadius: 12),
-        ],
       ),
     );
 
@@ -49,7 +46,9 @@ class BasicModalSheet extends HookWidget {
       ),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(kSheetBorderRadius),
+          ),
           color: theme.colorScheme.surfaceContainerLowest,
           border: Border.all(
             color: theme.colorScheme.onSurface.withOpacity(0.1),
@@ -75,6 +74,9 @@ class BasicModalSheet extends HookWidget {
         ),
       ),
     );
+    if (sheetWidth == null) {
+      return sheet;
+    }
     return Align(
       alignment: Alignment.bottomRight,
       child: SafeArea(
