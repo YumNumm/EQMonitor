@@ -58,77 +58,87 @@ class KmoniStatusWidget extends ConsumerWidget {
       }
     }
 
-    return Card(
-      elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest,
-      child: Tooltip(
-        message: '強震モニタ遅延調整',
-        child: InkWell(
-          borderRadius: BorderRadius.circular(8),
-          onTap: adjustKmoniDelay,
-          child: Padding(
-            padding: const EdgeInsets.all(4),
-            child: DefaultTextStyle(
-              style: theme.textTheme.bodyMedium!.copyWith(
-                fontFamily: monoFont,
-                letterSpacing: -0.5,
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // 現在時刻
-                  ...switch (status) {
-                    KmoniStatus.stopped => [
-                        const Icon(
-                          Icons.access_time_rounded,
-                          size: 16,
-                        ),
-                        const SizedBox(width: 4),
-                        const Text(
-                          '強震モニタ 取得停止中',
-                        ),
-                      ],
-                    _ when isDelayAdjusting && latestTime != null => [
-                        Text(
-                          DateFormat('表示時刻: yyyy/MM/dd HH:mm:ss')
-                              .format(latestTime),
-                        ),
-                        const SizedBox(width: 8),
-                        const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator.adaptive(),
-                        ),
-                      ],
-                    _
-                        when isInitialized &&
-                            latestTime != null &&
-                            status == KmoniStatus.delay =>
-                      [
-                        Text(
-                          DateFormat('表示時刻: yyyy/MM/dd HH:mm:ss')
-                              .format(latestTime),
-                          style: const TextStyle(
-                            color: Colors.redAccent,
+    return Flexible(
+      child: Card(
+        elevation: 0,
+        color: theme.colorScheme.surfaceContainerHighest,
+        child: Tooltip(
+          message: '強震モニタ遅延調整',
+          child: InkWell(
+            borderRadius: BorderRadius.circular(8),
+            onTap: adjustKmoniDelay,
+            child: Padding(
+              padding: const EdgeInsets.all(4),
+              child: DefaultTextStyle(
+                style: theme.textTheme.bodyMedium!.copyWith(
+                  fontFamily: monoFont,
+                  letterSpacing: -0.5,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // 現在時刻
+                    ...switch (status) {
+                      KmoniStatus.stopped => [
+                          const Icon(
+                            Icons.access_time_rounded,
+                            size: 16,
                           ),
-                        ),
-                      ],
-                    _ when isInitialized && latestTime != null => [
-                        Text(
-                          DateFormat('表示時刻: yyyy/MM/dd HH:mm:ss').format(
-                            latestTime,
+                          const SizedBox(width: 4),
+                          const Flexible(
+                            child: Text(
+                              '強震モニタ 取得停止中',
+                            ),
                           ),
-                        ),
-                      ],
-                    _ => [
-                        const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator.adaptive(),
-                        ),
-                      ],
-                  },
-                ],
+                        ],
+                      _ when isDelayAdjusting && latestTime != null => [
+                          Flexible(
+                            child: Text(
+                              DateFormat('表示時刻: yyyy/MM/dd HH:mm:ss')
+                                  .format(latestTime),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator.adaptive(),
+                          ),
+                        ],
+                      _
+                          when isInitialized &&
+                              latestTime != null &&
+                              status == KmoniStatus.delay =>
+                        [
+                          Flexible(
+                            child: Text(
+                              DateFormat('表示時刻: yyyy/MM/dd HH:mm:ss')
+                                  .format(latestTime),
+                              style: const TextStyle(
+                                color: Colors.redAccent,
+                              ),
+                            ),
+                          ),
+                        ],
+                      _ when isInitialized && latestTime != null => [
+                          Flexible(
+                            child: Text(
+                              DateFormat('表示時刻: yyyy/MM/dd HH:mm:ss').format(
+                                latestTime,
+                              ),
+                            ),
+                          ),
+                        ],
+                      _ => [
+                          const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator.adaptive(),
+                          ),
+                        ],
+                    },
+                  ],
+                ),
               ),
             ),
           ),
