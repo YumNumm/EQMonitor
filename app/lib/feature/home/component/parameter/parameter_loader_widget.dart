@@ -58,12 +58,22 @@ class ParameterLoaderWidget extends HookConsumerWidget {
             key: ValueKey('non'),
           ),
         ),
-      _ => const AnimatedSwitcher(
-          duration: Duration(milliseconds: 150),
+      _ => AnimatedSwitcher(
+          duration: const Duration(milliseconds: 150),
           child: BorderedContainer(
-            key: ValueKey('loading'),
+            key: const ValueKey('loading'),
             elevation: 1,
-            child: Row(
+            margin: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                ) +
+                const EdgeInsets.only(
+                  bottom: 8,
+                ),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8,
+              vertical: 8,
+            ),
+            child: const Row(
               children: [
                 Text('観測点の情報を取得中...'),
                 SizedBox(width: 8),

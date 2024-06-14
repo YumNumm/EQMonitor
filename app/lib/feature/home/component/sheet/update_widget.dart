@@ -68,27 +68,30 @@ class UpdateWidget extends HookConsumerWidget {
 
     final state = ref.watch(appInformationProvider);
     return switch (state) {
-      AsyncData(:final value) when value.hasUpdate => Ink(
-          child: InkWell(
-            onTap: () {
-              launchUrl(
-                value.downloadUrl ??
-                    Uri.parse('https://eqmonitor.page.link/app'),
-                mode: LaunchMode.externalApplication,
-              );
-            },
-            child: BorderedContainer(
-              elevation: 1,
-              padding: const EdgeInsets.all(8),
-              child: ListTile(
-                title: Text(
-                  'アプリの更新があります: v${value.latestVersion}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: const Text('利用可能なアップデートがあります'),
-                trailing: const Icon(Icons.arrow_forward_ios),
+      AsyncData(:final value) when value.hasUpdate => BorderedContainer(
+          onPressed: () async => launchUrl(
+            value.downloadUrl ?? Uri.parse('https://eqmonitor.app'),
+            mode: LaunchMode.externalApplication,
+          ),
+          elevation: 1,
+          margin: const EdgeInsets.symmetric(
+                horizontal: 12,
+              ) +
+              const EdgeInsets.only(
+                bottom: 8,
               ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8,
+            vertical: 4,
+          ),
+          child: ListTile(
+            tileColor: Colors.transparent,
+            title: Text(
+              'アプリの更新があります: v${value.latestVersion}',
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
+            subtitle: const Text('利用可能なアップデートがあります'),
+            trailing: const Icon(Icons.arrow_forward_ios),
           ),
         ),
       _ => const SizedBox.shrink(),

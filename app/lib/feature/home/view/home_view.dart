@@ -433,7 +433,6 @@ class _Sheet extends StatelessWidget {
         children: [
           const EewWidgets(),
           const KmoniMaintenanceWidget(),
-          const ParameterLoaderWidget(),
           const UpdateWidget(),
           const _NotificationPermission(),
           const EarthquakeHistorySheetWidget(),
@@ -448,6 +447,7 @@ class _Sheet extends StatelessWidget {
             leading: const Icon(Icons.settings),
             onTap: () => const SettingsRoute().push<void>(context),
           ),
+          const ParameterLoaderWidget(),
           const SizedBox(height: 200),
         ],
       ),

@@ -28,8 +28,11 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
     return BorderedContainer(
       elevation: 1,
       margin: const EdgeInsets.symmetric(
-        horizontal: 12,
-      ),
+            horizontal: 12,
+          ) +
+          const EdgeInsets.only(
+            bottom: 8,
+          ),
       padding: const EdgeInsets.symmetric(
         horizontal: 8,
         vertical: 4,

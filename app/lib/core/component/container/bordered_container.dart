@@ -25,33 +25,8 @@ class BorderedContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    if (onPressed != null) {
-      return Ink(
-        child: Card(
-          elevation: elevation,
-          color: accentColor ?? theme.cardColor,
-          // border
-          shape: RoundedRectangleBorder(
-            side: BorderSide(
-              color: theme.colorScheme.onSurface,
-              width: 0,
-            ),
-            borderRadius: borderRadius,
-          ),
-          margin: margin,
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: onPressed,
-            child: Padding(
-              padding: padding,
-              child: child,
-            ),
-          ),
-        ),
-      );
-    }
 
-    return Card(
+    final card = Card(
       clipBehavior: Clip.antiAlias,
       elevation: elevation,
       color: accentColor ?? theme.colorScheme.surfaceContainer,
@@ -63,10 +38,19 @@ class BorderedContainer extends StatelessWidget {
         borderRadius: borderRadius,
       ),
       margin: margin,
-      child: Padding(
-        padding: padding,
-        child: child,
+      child: InkWell(
+        onTap: onPressed,
+        child: Padding(
+          padding: padding,
+          child: child,
+        ),
       ),
     );
+    if (onPressed != null) {
+      return Ink(
+        child: card,
+      );
+    }
+    return card;
   }
 }
