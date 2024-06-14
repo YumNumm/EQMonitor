@@ -20,25 +20,16 @@ class EewWidgets extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(eewAliveTelegramProvider) ?? [];
-
-    final body = LayoutBuilder(
-      builder: (context, constraints) {
-        return AnimatedSwitcher(
-          duration: const Duration(milliseconds: 250),
-          child: Column(
-            children: state.reversed
-                .mapIndexed(
-                  (index, element) => EewWidget(
-                    eew: element,
-                    index: (state.length > 1) ? '${index + 1}' : null,
-                  ),
-                )
-                .toList(),
-          ),
-        );
-      },
+    return Column(
+      children: state.reversed
+          .mapIndexed(
+            (index, element) => EewWidget(
+              eew: element,
+              index: (state.length > 1) ? '${index + 1}' : null,
+            ),
+          )
+          .toList(),
     );
-    return body;
   }
 }
 
@@ -59,25 +50,22 @@ class EewWidget extends ConsumerWidget {
     final colorTheme = theme.colorScheme;
     final intensityColorScheme = ref.watch(intensityColorProvider);
     if (eew.isCanceled) {
-      return Padding(
-        padding: const EdgeInsets.all(8),
-        child: Card(
-          margin: const EdgeInsets.all(4),
-          elevation: 1,
-          shadowColor: Colors.transparent,
-          // 角丸にして Border
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-            side: BorderSide(
-              color: theme.dividerColor.withOpacity(0.6),
-              width: 0,
+      return BorderedContainer(
+        elevation: 1,
+        margin: const EdgeInsets.symmetric(
+              horizontal: 12,
+            ) +
+            const EdgeInsets.only(
+              bottom: 8,
             ),
-          ),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Text(eew.headline ?? '先ほどの緊急地震速報は取り消されました'),
-            ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 8,
+          vertical: 4,
+        ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Text(eew.headline ?? '先ほどの緊急地震速報は取り消されました'),
           ),
         ),
       );
@@ -336,6 +324,13 @@ class EewWidget extends ConsumerWidget {
           ]
         : null;
     final card = BorderedContainer(
+      elevation: 1,
+      margin: const EdgeInsets.symmetric(
+            horizontal: 12,
+          ) +
+          const EdgeInsets.only(
+            bottom: 8,
+          ),
       padding: EdgeInsets.zero,
       accentColor: backgroundColor.withOpacity(0.3),
       child: Padding(

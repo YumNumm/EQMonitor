@@ -23,6 +23,13 @@ class KmoniMaintenanceWidget extends ConsumerWidget {
             accentColor: data.type == KmoniMaintenanceMessageType.highLight
                 ? Colors.orangeAccent.withOpacity(0.2)
                 : null,
+            elevation: 1,
+            margin: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                ) +
+                const EdgeInsets.only(
+                  bottom: 8,
+                ),
             padding: const EdgeInsets.symmetric(
               horizontal: 8,
               vertical: 4,
