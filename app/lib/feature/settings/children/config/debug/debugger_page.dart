@@ -191,19 +191,22 @@ class _Route extends StatelessWidget {
     return Column(
       children: routes.map(
         (route) {
-          if (route.routes.isNotEmpty) {
-            return _Route(
-              routes: route.routes.whereType<GoRoute>().toList(),
-              parent: [...parent, route],
+          final currentPath = [...parent, route];
+          if (route.routes.isEmpty) {
+            final path = [...parent, route].map((e) => e.path).join('/');
+
+            return ListTile(
+              title: Text(path),
+              onTap: () => context.push(
+                path,
+              ),
+              visualDensity: VisualDensity.compact,
             );
           }
-          final path = [...parent, route].map((e) => e.path).join('/');
-          return ListTile(
-            title: Text(path),
-            onTap: () => context.push(
-              path,
-            ),
-            visualDensity: VisualDensity.compact,
+
+          return _Route(
+            routes: route.routes.whereType<GoRoute>().toList(),
+            parent: currentPath,
           );
         },
       ).toList(),
