@@ -15,7 +15,7 @@ Future<void> initInAppPurchase() async {
     TargetPlatform.android => PurchasesConfiguration(
         'goog_aEcAyBNviKgaKzmCwAOXSiXwHIb',
       ),
-    TargetPlatform.iOS || TargetPlatform.macOS=> PurchasesConfiguration(
+    TargetPlatform.iOS || TargetPlatform.macOS => PurchasesConfiguration(
         'appl_BUymtTPkwhhVuihBlVOddLxOBaQ',
       ),
     _ => throw UnimplementedError(),
