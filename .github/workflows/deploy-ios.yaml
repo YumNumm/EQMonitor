@@ -114,11 +114,10 @@ jobs:
           APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
         run: |
-          echo '${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}' | base64 -d > AuthKey_NGL2W4BQP6.p8
-          cp *.p8 ios/
+          echo '${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}' | base64 -d > ios/AuthKey_NGL2W4BQP6.p8
 
       - name: Build IPA
-        working-directory: app
+        working-directory: app/ios
         env:
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
@@ -128,5 +127,55 @@ jobs:
           APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
           FASTLANE_USER: yumnumm@icloud.com
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          MATCH_USERNAME: yumnumm@icloud.com
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD}}
+          MATCH_GIT_URL: git@github.com:YumNumm/EQMonitor_secret.git
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
           LANG: ja_JP.UTF-8
-        run: bundle exec fastlane beta
+        run: bundle exec fastlane build
+
+      - name: Upload artifact ipa
+        uses: actions/upload-artifact@v4
+        with:
+          path: app/ios/Runner.ipa
+          name: release-ios
+
+  deploy:
+    runs-on: macos-latest
+    needs: build
+    steps:
+      - name: Download artifact ipa
+        uses: actions/download-artifact@v4
+        with:
+          name: release-ios
+          path: app/ios/Runner.ipa
+
+      - name: Install Gems
+        working-directory: app/ios
+        run: |
+          gem install bundler
+          bundle install
+
+      - name: Install Brewfile dependencies
+        working-directory: app/ios
+        run: brew bundle
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Set App Store Connect Configuration
+        working-directory: app
+        env:
+          APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+        run: |
+          echo '${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}' | base64 -d > ios/AuthKey_NGL2W4BQP6.p8
+
+      - name: Upload
+        run: |
+          bundle exec fastlane upload
+        working-directory: app/ios
