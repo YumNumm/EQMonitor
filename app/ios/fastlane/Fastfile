@@ -48,6 +48,26 @@ platform :ios do
     )
   end
 
+  lane :build do
+    app_store_connect_api_key(
+      key_id: "NGL2W4BQP6",
+      issuer_id: "fd4cca56-716b-4f03-8e44-de72a03453db",
+      key_filepath: "./AuthKey_NGL2W4BQP6.p8"
+    )
+    setup_ci if ENV['CI']
+    match(
+      type: "appstore",
+      readonly: is_ci,
+    )
+
+    # Build the project
+    build_app(
+      archive_path: "../build/ios/archive/Runner.xcarchive",
+      export_method: "app-store",
+      xcargs: "-allowProvisioningUpdates",
+    )
+  end
+
   desc "Push a new beta build to TestFlight"
   lane :beta do
     app_store_connect_api_key(
@@ -84,6 +104,11 @@ platform :ios do
   desc "Push a new build to App Store Connect"
   lane :upload do
     setup_ci if ENV['CI']
+    app_store_connect_api_key(
+      key_id: "NGL2W4BQP6",
+      issuer_id: "fd4cca56-716b-4f03-8e44-de72a03453db",
+      key_filepath: "./AuthKey_NGL2W4BQP6.p8"
+    )
     # Upload the project
     changelog = changelog_from_git_commits(
       between: [last_git_tag , "HEAD"],

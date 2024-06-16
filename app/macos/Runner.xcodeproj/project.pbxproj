@@ -211,6 +211,7 @@
 				1EFB4DABB499A52EEE0605E2 /* [CP] Embed Pods Frameworks */,
 				8523B0482A1376DF00F00AFF /* Embed Foundation Extensions */,
 				75E3AEDAD100DB95BC5AEDA5 /* [firebase_crashlytics] Crashlytics Upload Symbols */,
+				4A94A37E9DD993157DE81D65 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -334,6 +335,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"$FLUTTER_ROOT\"/packages/flutter_tools/bin/macos_assemble.sh && touch Flutter/ephemeral/tripwire";
+		};
+		4A94A37E9DD993157DE81D65 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		6768927A71B604F4573D3342 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
