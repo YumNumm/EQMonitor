@@ -148,7 +148,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          # Fetch all history for all tags and branches
+          fetch-depth: 0
 
       - name: Download artifact ipa
         uses: actions/download-artifact@v4
