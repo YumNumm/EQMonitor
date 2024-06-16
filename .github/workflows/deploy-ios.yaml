@@ -128,7 +128,9 @@ jobs:
           APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
           FASTLANE_USER: yumnumm@icloud.com
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          MATCH_USERNAME: yumnumm@icloud.com
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD}}
+          MATCH_GIT_URL: git@github.com:YumNumm/EQMonitor_secret.git
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
           LANG: ja_JP.UTF-8
         run: bundle exec fastlane beta
