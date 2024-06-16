@@ -66,15 +66,17 @@ jobs:
           echo '${{ secrets.FIREBASE_ANDROID }}' | base64 -d > app/android/app/google-services.json
           echo '${{ secrets.KEY_PROPERTIES }}' | base64 -d  > app/android/key.properties
 
-      - name: Build apk
+
+
+      - name: Build aab
         working-directory: app
-        run: flutter build apk --release
+        run: flutter build appbundle --release
 
       - name: Upload artifact aab
         uses: actions/upload-artifact@v1.0.0
         with:
           name: release-android
-          path: app/build/app/outputs/flutter-apk/app-release.apk
+          path: app/build/app/outputs/bundle/release/app-release.aab
 
       #-- Slack通知 --#
       # 成功
@@ -98,3 +100,23 @@ jobs:
           SLACK_ICON: https://github.com/YumNumm/EQMonitor/blob/6bedf4314134ecf614654f7284841390d3d0a4f3/assets/images/icon.png?raw=true
           SLACK_USERNAME: EQMonitor
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  upload:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifact aab
+        uses: actions/download-artifact@v4
+        with:
+          name: release-android
+          path: out.aab
+
+      - name: Upload to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: net.yumnumm.eqmonitor
+          releaseFiles: out.aab
+          track: internal
+          status: inProgress
