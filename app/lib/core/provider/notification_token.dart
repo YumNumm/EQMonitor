@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -14,7 +16,10 @@ Future<NotificationTokenModel> notificationToken(
     throw UnimplementedError();
   }
   final messaging = ref.watch(firebaseMessagingProvider);
-  final apnsToken = await messaging.getAPNSToken();
+  String? apnsToken;
+  if (!kIsWeb && (Platform.isIOS || Platform.isMacOS)) {
+    apnsToken = await messaging.getAPNSToken();
+  }
   final fcmToken = await messaging.getToken();
 
   return NotificationTokenModel(

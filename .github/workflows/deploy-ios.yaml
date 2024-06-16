@@ -117,62 +117,16 @@ jobs:
           echo '${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}' | base64 -d > AuthKey_NGL2W4BQP6.p8
           cp *.p8 ios/
 
-      - name: Download the provisioning profiles
-        working-directory: app/ios
-        env:
-          APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-        run: fastlane download_provisioning_profiles
-
-      - name: Increment build number
-        working-directory: app/ios
-        env:
-          PRODUCE_USERNAME: ${{ secrets.PRODUCE_USERNAME }}
-          SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA: false
-          APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
-          FASTLANE_USER: yumnumm@icloud.com
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-          LANG: ja_JP.UTF-8
-        run: fastlane setup_build_number
-
-      - name: Prebuild
-        working-directory: app
-        run: flutter build ios --release --no-codesign
-
       - name: Build IPA
         working-directory: app
         env:
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY_BASE64: ${{secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
-        run: |
-          xcodebuild \
-            -workspace ios/Runner.xcworkspace \
-            -scheme Runner \
-            -sdk iphoneos \
-            -configuration Release archive \
-            -archivePath build/ios/Runner.xcarchive \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO | xcbeautify
-
-          xcodebuild -exportArchive \
-            -archivePath build/ios/Runner.xcarchive \
-            -exportOptionsPlist ios/ExportOptions.plist \
-            -exportPath . -allowProvisioningUpdates \
-            -authenticationKeyIssuerID ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }} \
-            -authenticationKeyID ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }} \
-            -authenticationKeyPath `pwd`/AuthKey_NGL2W4BQP6.p8 | xcbeautify
-
-          mv eqmonitor.ipa ios/Runner.ipa
-
-      - name: Upload to App Store Connect
-        working-directory: app/ios
-        env:
           PRODUCE_USERNAME: ${{ secrets.PRODUCE_USERNAME }}
           SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA: false
           APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
           FASTLANE_USER: yumnumm@icloud.com
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
           LANG: ja_JP.UTF-8
-        run: fastlane upload
+        run: bundle exec fastlane beta
