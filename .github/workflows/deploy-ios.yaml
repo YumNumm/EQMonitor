@@ -144,6 +144,12 @@ jobs:
     runs-on: macos-latest
     needs: build
     steps:
+      # https://github.com/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
       - name: Download artifact ipa
         uses: actions/download-artifact@v4
         with:
