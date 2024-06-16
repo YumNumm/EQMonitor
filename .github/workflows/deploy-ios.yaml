@@ -118,7 +118,7 @@ jobs:
           echo '${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}' | base64 -d > ios/AuthKey_NGL2W4BQP6.p8
 
       - name: Build IPA
-        working-directory: app/iod
+        working-directory: app/ios
         env:
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
