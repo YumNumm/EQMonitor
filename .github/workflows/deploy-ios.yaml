@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - fix/ci
 
 jobs:
   build:
@@ -114,11 +115,10 @@ jobs:
           APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
         run: |
-          echo '${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}' | base64 -d > AuthKey_NGL2W4BQP6.p8
-          cp *.p8 ios/
+          echo '${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}' | base64 -d > ios/AuthKey_NGL2W4BQP6.p8
 
       - name: Build IPA
-        working-directory: app
+        working-directory: app/iod
         env:
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
