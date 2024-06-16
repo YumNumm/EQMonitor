@@ -50,6 +50,11 @@ platform :ios do
 
   desc "Push a new beta build to TestFlight"
   lane :beta do
+    app_store_connect_api_key(
+      key_id: "NGL2W4BQP6",
+      issuer_id: "fd4cca56-716b-4f03-8e44-de72a03453db",
+      key_filepath: "./AuthKey_NGL2W4BQP6.p8"
+    )
     setup_ci if ENV['CI']
     match(
       type: "appstore",
