@@ -26,6 +26,33 @@ class IntensityColorModel with _$IntensityColorModel {
   factory IntensityColorModel.fromJson(Map<String, dynamic> json) =>
       _$IntensityColorModelFromJson(json);
 
+  factory IntensityColorModel.fromBaseColors({
+    required Color unknwon,
+    required Color zero,
+    required Color one,
+    required Color two,
+    required Color three,
+    required Color four,
+    required Color fiveLower,
+    required Color fiveUpper,
+    required Color sixLower,
+    required Color sixUpper,
+    required Color seven,
+  }) =>
+      IntensityColorModel(
+        unknown: TextColorModel.fromBackground(unknwon),
+        zero: TextColorModel.fromBackground(zero),
+        one: TextColorModel.fromBackground(one),
+        two: TextColorModel.fromBackground(two),
+        three: TextColorModel.fromBackground(three),
+        four: TextColorModel.fromBackground(four),
+        fiveLower: TextColorModel.fromBackground(fiveLower),
+        fiveUpper: TextColorModel.fromBackground(fiveUpper),
+        sixLower: TextColorModel.fromBackground(sixLower),
+        sixUpper: TextColorModel.fromBackground(sixUpper),
+        seven: TextColorModel.fromBackground(seven),
+      );
+
   factory IntensityColorModel.jma() => const IntensityColorModel(
         zero: TextColorModel(
           foreground: Colors.black,
@@ -165,6 +192,8 @@ class IntensityColorModel with _$IntensityColorModel {
           background: Color.fromARGB(255, 47, 79, 79),
         ),
       );
+
+  
 }
 
 @freezed
@@ -178,6 +207,12 @@ class TextColorModel with _$TextColorModel {
 
   factory TextColorModel.fromJson(Map<String, dynamic> json) =>
       _$TextColorModelFromJson(json);
+
+  factory TextColorModel.fromBackground(Color background) => TextColorModel(
+        foreground:
+            background.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+        background: background,
+      );
 }
 
 extension IntensityColorModelExt on IntensityColorModel {
