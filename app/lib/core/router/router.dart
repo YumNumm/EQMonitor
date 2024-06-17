@@ -1,5 +1,6 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/app.dart';
+import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
 import 'package:eqmonitor/core/provider/kmoni/page/kmoni_settings_page.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
@@ -58,7 +59,22 @@ GoRouter goRouter(GoRouterRef ref) => GoRouter(
         ),
       ],
       debugLogDiagnostics: true,
+      redirect: (context, state) {
+        final isDebugger = ref.read(debuggerProvider).isDebugger;
+        if ((state.fullPath?.contains('debug') ?? false) && !isDebugger) {
+          throw GoRouterRedirectException(
+            'Debugger is not enabled in production mode.',
+          );
+        }
+        return null;
+      },
     );
+
+class GoRouterRedirectException implements Exception {
+  GoRouterRedirectException(this.message);
+
+  final String message;
+}
 
 @TypedGoRoute<SetupRoute>(
   path: '/setup',

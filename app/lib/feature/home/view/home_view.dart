@@ -15,6 +15,7 @@ import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dar
 import 'package:eqmonitor/core/hook/use_sheet_controller.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/config/permission/permission_status_provider.dart';
+import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
 import 'package:eqmonitor/core/provider/eew/eew_alive_telegram.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging_interaction.dart';
 import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_settings.dart';
@@ -262,6 +263,18 @@ class _HomeBodyWidget extends HookConsumerWidget {
               if (canLaunch) {
                 await launchUrlString(url);
               }
+              return;
+            }
+
+            // Debug mode周り
+            final debug = value.data['enableDebugMode'];
+            if (debug == 'true') {
+              ref.read(talkerProvider).log(
+                    'Debug Mode: $debug',
+                  );
+              await ref
+                  .read(debuggerProvider.notifier)
+                  .setDebugger(value: true);
               return;
             }
           });

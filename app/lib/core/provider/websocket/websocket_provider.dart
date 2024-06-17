@@ -17,8 +17,8 @@ WebSocket websocket(WebsocketRef ref) {
   final apiUrl = ref.watch(telegramUrlProvider.select((v) => v.wsApiUrl));
   final uri = Uri.parse(apiUrl);
   final backoff = BinaryExponentialBackoff(
-    initial: const Duration(seconds: 1),
-    maximumStep: 3,
+    initial: const Duration(milliseconds: 100),
+    maximumStep: 10,
   );
   final socket = WebSocket(
     uri,
