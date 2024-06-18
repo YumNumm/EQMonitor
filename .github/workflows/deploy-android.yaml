@@ -66,14 +66,12 @@ jobs:
           echo '${{ secrets.FIREBASE_ANDROID }}' | base64 -d > app/android/app/google-services.json
           echo '${{ secrets.KEY_PROPERTIES }}' | base64 -d  > app/android/key.properties
 
-
-
       - name: Build aab
         working-directory: app
         run: flutter build appbundle --release
 
       - name: Upload artifact aab
-        uses: actions/upload-artifact@v1.0.0
+        uses: actions/upload-artifact@v4
         with:
           name: release-android
           path: app/build/app/outputs/bundle/release/app-release.aab
