@@ -1,6 +1,4 @@
-# EQMonitor
-
-## 地震速報・監視アプリケーション
+# EQMonitor - 地震速報・監視アプリケーション
 
 [![Github All Releases](https://img.shields.io/github/downloads/EQMonitor/EQMonitor/total.svg)](https://github.com/EQMonitor/EQMonitor/tags)
 [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/EQMonitor/EQMonitor?color=blue&include_prereleases&label=Release)](https://github.com/EQMonitor/EQMonitor/releases/latest)
@@ -12,8 +10,7 @@
 > [!WARNING]
 > [利用規約 - Term of Service](https://github.com/EQMonitor/EQMonitor/blob/main/assets/docs/term_of_service.md)を必ずご確認の上ご利用ください。
 
-![iPad1](https://github.com/YumNumm/EQMonitor/assets/73390859/27077058-397d-4f87-9adf-a4a9797b2605)
-
+![iPad1](https://github.com/YumNumm/EQMonitor/assets/73390859/4196623d-222e-4eac-991a-fee5a976be76)
 
 ## 概要
 
