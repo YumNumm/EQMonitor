@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:eqmonitor/core/component/button/action_button.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -188,10 +189,13 @@ class _ShowDonationButton extends HookConsumerWidget {
                               ),
                             );
                             try {
+                              log('購入処理を開始します: ${item.identifier}');
                               final purchaseResult =
                                   await ref.read(purchaseProvider(item).future);
+                              log('購入処理が完了しました: ${item.identifier}');
 
                               if (context.mounted) {
+                                Navigator.of(context).pop();
                                 // 完了画面へ遷移
                                 await DonationExecutedRoute(
                                   $extra: (item, purchaseResult),
