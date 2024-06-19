@@ -14,9 +14,11 @@ import 'package:feedback/feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shorebird_code_push/shorebird_code_push.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -52,16 +54,7 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
           ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Text(
-                'EQMonitor v${packageInfo.version} '
-                '(${packageInfo.buildNumber})',
-                style: textTheme.bodyMedium,
-              ),
-            ),
-          ),
+          const _AppVersionInformation(),
           BorderedContainer(
             accentColor: Theme.of(context).colorScheme.secondaryContainer,
             padding: EdgeInsets.zero,
@@ -144,6 +137,52 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+class _AppVersionInformation extends HookConsumerWidget {
+  const _AppVersionInformation();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final packageInfo = ref.watch(packageInfoProvider);
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+
+    final patchInfoFuture = useMemoized(
+      () => (
+        ShorebirdCodePush().currentPatchNumber(),
+        ShorebirdCodePush().nextPatchNumber(),
+      ).wait,
+    );
+    final patchInfo = useFuture(patchInfoFuture);
+
+    var text = 'EQMonitor v${packageInfo.version} '
+        '(${packageInfo.buildNumber}';
+    if (patchInfo.hasData) {
+      final currentPatch = patchInfo.data!.$1;
+      final nextPatch = patchInfo.data!.$2;
+      text += switch ((currentPatch, nextPatch)) {
+        (null, null) => ')',
+        (null, final int next) => '+$next)\n&'
+            '新しいパッチが利用可能です。2回アプリケーションを再起動して適用できます。',
+        (final int current, null) => '+$current)',
+        (final int current, final int next) => '+$current->$next)\n'
+            '新しいパッチが利用可能です。2回アプリケーションを再起動して適用できます。',
+      };
+    } else {
+      text += ')';
+    }
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 16),
+        child: Text(
+          text,
+          style: textTheme.bodyMedium,
+        ),
       ),
     );
   }

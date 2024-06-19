@@ -2,7 +2,7 @@ name: eqmonitor
 description: An earthquake monitoring Application
 publish_to: "none"
 
-version: 2.5.1+1190
+version: 2.5.1+1200
 
 environment:
   sdk: ^3.4.0
@@ -96,6 +96,7 @@ dependencies:
       url: https://github.com/YumNumm/modal_bottom_sheet.git
       branch: main
       path: sheet
+  shorebird_code_push: ^1.1.3
   talker_dio_logger: ^4.2.4
   talker_flutter: 4.2.4
   url_launcher: ^6.3.0
@@ -129,6 +130,7 @@ flutter:
     - assets/images/theme/
     - assets/fonts/
     - assets/docs/
+    - shorebird.yaml
 
   shaders:
     - shaders/introduction.glsl
