@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -14,7 +15,7 @@ Future<void> initInAppPurchase() async {
     TargetPlatform.android => PurchasesConfiguration(
         'goog_aEcAyBNviKgaKzmCwAOXSiXwHIb',
       ),
-    TargetPlatform.iOS => PurchasesConfiguration(
+    TargetPlatform.iOS || TargetPlatform.macOS => PurchasesConfiguration(
         'appl_BUymtTPkwhhVuihBlVOddLxOBaQ',
       ),
     _ => throw UnimplementedError(),

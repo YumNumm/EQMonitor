@@ -36,6 +36,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
         ref.watch(jmaParameterProvider).valueOrNull?.earthquake;
 
     if (earthquakeParameter == null) {
+      ref.invalidate(jmaParameterProvider);
       throw EarthquakeParameterHasNotInitializedException();
     }
     // 検索条件を指定していないNotifierでのみ、30秒ごとにデータ再取得するタイマーを設定
@@ -112,6 +113,9 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
         await AsyncValue.guard<(List<EarthquakeV1Extended>, int totalCount)>(
             () async {
       // ensure earthquakeParameter has been initialized.
+      if (ref.read(jmaParameterProvider).hasError) {
+        ref.invalidate(jmaParameterProvider);
+      }
       await ref.read(jmaParameterProvider.future);
       final earthquakeParameter =
           ref.watch(jmaParameterProvider).valueOrNull!.earthquake;
