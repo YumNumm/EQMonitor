@@ -72,7 +72,7 @@ class MainMapViewModel extends _$MainMapViewModel {
     northeast: const LatLng(45.8, 145.1),
   );
 
-  MaplibreMapController? _controller;
+  MapLibreMapController? _controller;
 
   /// 実行前に `travelTimeDepthMapProvider`, `hypocenterIconRenderProvider`,
   /// `hypocenterLowPreciseIconRenderProvider` が初期化済みであることを確認すること
@@ -312,7 +312,7 @@ class MainMapViewModel extends _$MainMapViewModel {
   }
 
   // ignore: use_setters_to_change_properties
-  void registerMapController(MaplibreMapController controller) {
+  void registerMapController(MapLibreMapController controller) {
     // ignore: void_checks
     _controller = controller;
   }
@@ -326,7 +326,7 @@ class MainMapViewModel extends _$MainMapViewModel {
     double top = 0,
   }) async {
     if (_controller == null) {
-      throw Exception('MaplibreMapController is null');
+      throw Exception('MapLibreMapController is null');
     }
     await _controller!.moveCamera(
       CameraUpdate.newLatLngBounds(
@@ -347,7 +347,7 @@ class MainMapViewModel extends _$MainMapViewModel {
   }) async {
     final controller = _controller;
     if (controller == null) {
-      throw Exception('MaplibreMapController is null');
+      throw Exception('MapLibreMapController is null');
     }
     await controller.animateCamera(
       CameraUpdate.newLatLngBounds(
@@ -374,7 +374,7 @@ class MainMapViewModel extends _$MainMapViewModel {
   }) async {
     final controller = _controller;
     if (controller == null) {
-      throw Exception('MaplibreMapController is null');
+      throw Exception('MapLibreMapController is null');
     }
     // 現在のホームポジションから変更がない場合は何もしない
     if (!isForce && state.isHomePosition && state.homeBoundary == bounds) {
@@ -417,7 +417,7 @@ class MainMapViewModel extends _$MainMapViewModel {
   }) async {
     final controller = _controller;
     if (controller == null) {
-      throw Exception('MaplibreMapController is null');
+      throw Exception('MapLibreMapController is null');
     }
     await controller.animateCamera(
       CameraUpdate.newLatLngBounds(
@@ -442,7 +442,7 @@ class MainMapViewModel extends _$MainMapViewModel {
   }) async {
     final controller = _controller;
     if (controller == null) {
-      throw Exception('MaplibreMapController is null');
+      throw Exception('MapLibreMapController is null');
     }
     await controller.moveCamera(
       CameraUpdate.newLatLngBounds(
@@ -462,7 +462,7 @@ class MainMapViewModel extends _$MainMapViewModel {
 class _KmoniObservationPointService {
   _KmoniObservationPointService({required this.controller});
 
-  final MaplibreMapController controller;
+  final MapLibreMapController controller;
 
   Future<void> init() async {
     await dispose();
@@ -556,7 +556,7 @@ class _KmoniObservationPointService {
 class _EewEstimatedIntensityService {
   _EewEstimatedIntensityService({required this.controller});
 
-  final MaplibreMapController controller;
+  final MapLibreMapController controller;
   Future<void> init(IntensityColorModel colorModel) async {
     await dispose();
     await [
@@ -657,7 +657,7 @@ class _EewEstimatedIntensityService {
 class _EewHypocenterService {
   _EewHypocenterService({required this.controller});
 
-  final MaplibreMapController controller;
+  final MapLibreMapController controller;
 
   bool hasInitialized = false;
 
@@ -844,7 +844,7 @@ class _EewPsWaveService {
           _EewSWaveFillService(controller: controller),
         );
 
-  final MaplibreMapController controller;
+  final MapLibreMapController controller;
   final TravelTimeDepthMap travelTimeMap;
 
   late final (
@@ -991,7 +991,7 @@ class _EewPWaveLineService {
     required this.controller,
   });
 
-  final MaplibreMapController controller;
+  final MapLibreMapController controller;
 
   Future<void> init() async {
     await dispose();
@@ -1020,7 +1020,7 @@ class _EewSWaveLineService {
     required this.controller,
   });
 
-  final MaplibreMapController controller;
+  final MapLibreMapController controller;
 
   Future<void> init() async {
     await dispose();
@@ -1068,7 +1068,7 @@ class _EewPWaveFillService {
     required this.controller,
   });
 
-  final MaplibreMapController controller;
+  final MapLibreMapController controller;
 
   Future<void> init() async {
     await dispose();
@@ -1098,7 +1098,7 @@ class _EewSWaveFillService {
     required this.controller,
   });
 
-  final MaplibreMapController controller;
+  final MapLibreMapController controller;
 
   Future<void> init() async {
     await dispose();

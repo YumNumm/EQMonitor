@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/feature/donation/data/donation_notifier.dart';
 import 'package:eqmonitor/feature/donation/ui/donation_choice_modal.dart';
 import 'package:eqmonitor/feature/setup/component/background_image.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -11,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class DonationExecutedScreen extends HookConsumerWidget {
   const DonationExecutedScreen({
@@ -148,6 +150,7 @@ class _ScrollView extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               BorderedContainer(
+                accentColor: Colors.blueGrey.shade900,
                 padding: const EdgeInsets.all(16),
                 margin: const EdgeInsets.all(16),
                 child: Row(
@@ -158,28 +161,39 @@ class _ScrollView extends StatelessWidget {
                           style: textTheme.bodyMedium!.copyWith(
                             color: Colors.white,
                           ),
-                          children: const [
-                            TextSpan(
+                          children: [
+                            const TextSpan(
                               text: 'ご支援頂きありがとうございます!\n',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            TextSpan(
+                            const TextSpan(
                               text: 'あなたのご支援のお陰で、より良いアプリを作ることができます。\n\n',
                             ),
-                            TextSpan(
+                            const TextSpan(
                               text: '皆様の声が励みになります!\n',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            TextSpan(
+                            const TextSpan(
                               text: 'Twitter(X)やメールで私へ連絡いただけると嬉しいです!'
                                   'もしくは、アプリストアへのレビューもお待ちしております\n\n'
                                   'ご意見やご要望があれば、お気軽にお知らせください!\n\n'
-                                  '- Ryotaro Onoue',
+                                  '- Ryotaro Onoue (Twitter: ',
                             ),
+                            for (final account in ['YumNumm', 'EQMonitorApp'])
+                              TextSpan(
+                                text: '@$account',
+                                style: TextStyle(
+                                  color: Colors.blue.shade400,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () => launchUrlString(
+                                        'https://twitter.com/$account',
+                                      ),
+                              ),
                           ],
                         ),
                       ),
@@ -228,6 +242,7 @@ class _Detail extends StatelessWidget {
           ),
         ),
         BorderedContainer(
+          accentColor: Colors.blueGrey.shade900,
           elevation: 16,
           padding: const EdgeInsets.all(16),
           margin: const EdgeInsets.all(16),
@@ -236,24 +251,26 @@ class _Detail extends StatelessWidget {
               const Row(),
               Text(
                 '${productEnum.emoji} ${productEnum.productName}',
-                style: textTheme.titleLarge!.copyWith(
+                style: textTheme.titleLarge?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
                 product.priceString,
-                style: textTheme.titleMedium!.copyWith(
+                style: textTheme.titleMedium?.copyWith(
                   color: Colors.white,
                 ),
               ),
               Text(
-                "Tipped on ${DateFormat('yyyy/MM/dd HH:mm:ss').format(
+                "Tipped at ${DateFormat('yyyy/MM/dd HH:mm').format(
                   DateTime.parse(
                     customer.requestDate,
                   ).toLocal(),
                 )}",
-                style: textTheme.labelLarge,
+                style: textTheme.labelLarge?.copyWith(
+                  color: Colors.white,
+                ),
               ),
             ],
           ),

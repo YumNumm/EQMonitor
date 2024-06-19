@@ -89,10 +89,10 @@ class MainMapView extends HookConsumerWidget {
       );
     }
 
-    final mapController = useState<MaplibreMapController?>(null);
+    final mapController = useState<MapLibreMapController?>(null);
 
     final map = RepaintBoundary(
-      child: MaplibreMap(
+      child: MapLibreMap(
         minMaxZoomPreference: const MinMaxZoomPreference(
           0,
           10,
