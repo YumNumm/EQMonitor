@@ -16,8 +16,11 @@ class NtpConfig extends _$NtpConfig {
   NtpConfigModel _load() {
     final prefs = ref.read(sharedPreferencesProvider);
     final json = prefs.getString(_prefsKey);
+    if (json == null) {
+      return const NtpConfigModel();
+    }
     try {
-      return NtpConfigModel.fromJson(jsonDecode(json!) as Map<String, dynamic>);
+      return NtpConfigModel.fromJson(jsonDecode(json) as Map<String, dynamic>);
       // ignore: avoid_catches_without_on_clauses
     } catch (e) {
       return const NtpConfigModel();

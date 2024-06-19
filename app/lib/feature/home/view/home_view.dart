@@ -40,6 +40,7 @@ import 'package:eqmonitor/feature/settings/features/notification_remote_settings
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_settings_migrate_service.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -96,30 +97,48 @@ class _HomeBodyWidget extends HookConsumerWidget {
             ref.read(permissionProvider.notifier).initialize(),
             ref.read(ntpProvider.notifier).sync(),
             () async {
-              final token = await ref.read(notificationTokenProvider.future);
-              final fcmToken = token.fcmToken;
-              if (fcmToken == null) {
-                return;
+              final talker = ref.read(talkerProvider);
+              try {
+                talker.log('Start Initialize');
+                final token = await ref.read(notificationTokenProvider.future);
+                talker.log('Token: ${token.toJson()}');
+                final fcmToken = token.fcmToken;
+                if (fcmToken == null) {
+                  throw Exception('fcmToken is null');
+                }
+                talker.log('updateToken...');
+                await ref
+                    .read(notificationRemoteAuthenticateServiceProvider)
+                    .updateToken(fcmToken: fcmToken);
+                talker.log('updateToken... Done');
+                await ref
+                    .read(fcmTokenChangeDetectorProvider.notifier)
+                    .save(fcmToken);
+                talker.log('fcmTokenChangeDetectorProvider... Done');
+                final authenticationService =
+                    ref.read(apiAuthenticationServiceProvider.notifier);
+                final (
+                  id: id,
+                  role: role,
+                ) = await authenticationService.extractPayload();
+                talker.log(
+                  'Authentication: id=$id, role=$role',
+                );
+                await FirebaseCrashlytics.instance.setUserIdentifier(id);
+                await FirebaseAnalytics.instance.setUserId(
+                  id: id,
+                );
+                // ignore: avoid_catches_without_on_clauses
+              } catch (e) {
+                ref.read(talkerProvider).log(
+                      'Authentication Error: $e',
+                    );
+                await FirebaseCrashlytics.instance.recordError(
+                  e,
+                  StackTrace.current,
+                );
+                rethrow;
               }
-              await ref
-                  .read(notificationRemoteAuthenticateServiceProvider)
-                  .updateToken(fcmToken: fcmToken);
-              await ref
-                  .read(fcmTokenChangeDetectorProvider.notifier)
-                  .save(fcmToken);
-              final authenticationService =
-                  ref.read(apiAuthenticationServiceProvider.notifier);
-              final (
-                id: id,
-                role: role,
-              ) = await authenticationService.extractPayload();
-              ref.read(talkerProvider).log(
-                    'Authentication: id=$id, role=$role',
-                  );
-              await FirebaseCrashlytics.instance.setUserIdentifier(id);
-              await FirebaseAnalytics.instance.setUserId(
-                id: id,
-              );
             }(),
             Future.doWhile(() async {
               try {
