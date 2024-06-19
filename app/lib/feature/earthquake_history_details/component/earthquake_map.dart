@@ -50,7 +50,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
   final void Function(void Function() func) registerNavigateToHome;
 
   Future<void> addImageFromAsset(
-    MaplibreMapController controller,
+    MapLibreMapController controller,
     String name,
     String assetName,
   ) async {
@@ -60,7 +60,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
   }
 
   Future<void> addImageFromBuffer(
-    MaplibreMapController controller,
+    MapLibreMapController controller,
     String name,
     Uint8List buffer,
   ) =>
@@ -167,7 +167,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
       [regionsItem],
     );
 
-    final mapController = useState<MaplibreMapController?>(null);
+    final mapController = useState<MapLibreMapController?>(null);
 
     final cameraUpdate = useMemoized(
       () {
@@ -261,7 +261,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
     }
 
     Future<void> onDisplayModeChanged({
-      required map_libre.MaplibreMapController controller,
+      required map_libre.MapLibreMapController controller,
       required EarthquakeHistoryDetailConfig config,
     }) async {
       // まずはdispose
@@ -312,7 +312,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
     final maxZoomLevel = useState<double>(6);
 
     return RepaintBoundary(
-      child: MaplibreMap(
+      child: MapLibreMap(
         initialCameraPosition: CameraPosition(
           target: map_libre.LatLng(
             item.latitude ?? 35,
@@ -322,9 +322,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         ),
         styleString: path,
         minMaxZoomPreference: MinMaxZoomPreference(0, maxZoomLevel.value),
-        onMapCreated: (controller) async {
-          mapController.value = controller;
-        },
+        onMapCreated: (controller) => mapController.value = controller,
         onStyleLoadedCallback: () async {
           final controller = mapController.value!;
           await [
@@ -518,8 +516,8 @@ class EarthquakeMapWidget extends HookConsumerWidget {
 }
 
 sealed class _Action {
-  Future<void> init(map_libre.MaplibreMapController controller);
-  Future<void> dispose(map_libre.MaplibreMapController controller);
+  Future<void> init(map_libre.MapLibreMapController controller);
+  Future<void> dispose(map_libre.MapLibreMapController controller);
 }
 
 class _FillRegionAction extends _Action {
@@ -536,7 +534,7 @@ class _FillRegionAction extends _Action {
       '$name-fill-${intensity.type}-${intensity.hashCode}';
 
   @override
-  Future<void> init(map_libre.MaplibreMapController controller) async {
+  Future<void> init(map_libre.MapLibreMapController controller) async {
     await dispose(controller);
     await [
       for (final item in regionsItem) ...[
@@ -581,7 +579,7 @@ class _FillRegionAction extends _Action {
   }
 
   @override
-  Future<void> dispose(map_libre.MaplibreMapController controller) => [
+  Future<void> dispose(map_libre.MapLibreMapController controller) => [
         for (final item in regionsItem) ...[
           controller.removeLayer(
             getLineLayerName(item.intensity),
@@ -601,7 +599,7 @@ class _FillCityAction extends _Action {
   final List<_RegionColorItem> citiesItem;
 
   @override
-  Future<void> init(map_libre.MaplibreMapController controller) async {
+  Future<void> init(map_libre.MapLibreMapController controller) async {
     await dispose(controller);
     for (final item in citiesItem) {
       await controller.addLayer(
@@ -644,7 +642,7 @@ class _FillCityAction extends _Action {
   }
 
   @override
-  Future<void> dispose(map_libre.MaplibreMapController controller) => [
+  Future<void> dispose(map_libre.MapLibreMapController controller) => [
         for (final item
             in citiesItem.groupListsBy((e) => e.intensity).entries) ...[
           controller.removeLayer(
@@ -681,7 +679,7 @@ class _StationAction extends _Action {
 
   @override
   Future<void> init(
-    map_libre.MaplibreMapController controller,
+    map_libre.MapLibreMapController controller,
   ) async {
     await dispose(controller);
     await controller.setSymbolIconAllowOverlap(true);
@@ -801,7 +799,7 @@ class _StationAction extends _Action {
   }
 
   @override
-  Future<void> dispose(map_libre.MaplibreMapController controller) async {
+  Future<void> dispose(map_libre.MapLibreMapController controller) async {
     // Layer
     await [
       for (final intensity in JmaIntensity.values)
@@ -823,7 +821,7 @@ class _HypocenterAction extends _Action {
   final EarthquakeV1Extended earthquake;
 
   @override
-  Future<void> init(map_libre.MaplibreMapController controller) async {
+  Future<void> init(map_libre.MapLibreMapController controller) async {
     /// 震源地
     final (latitude, longitude) = (earthquake.latitude, earthquake.longitude);
     if (latitude != null && longitude != null) {
@@ -876,7 +874,7 @@ class _HypocenterAction extends _Action {
   }
 
   @override
-  Future<void> dispose(map_libre.MaplibreMapController controller) async {
+  Future<void> dispose(map_libre.MapLibreMapController controller) async {
     await controller.removeLayer('hypocenter');
     await controller.removeSource('hypocenter');
   }
@@ -896,7 +894,7 @@ class _FillRegionLpgmIntensityAction extends _Action {
       '$name-LPGM-fill-${intensity.type}-${intensity.hashCode}';
 
   @override
-  Future<void> init(map_libre.MaplibreMapController controller) async {
+  Future<void> init(map_libre.MapLibreMapController controller) async {
     await dispose(controller);
     await [
       for (final item in regionsItem) ...[
@@ -941,7 +939,7 @@ class _FillRegionLpgmIntensityAction extends _Action {
   }
 
   @override
-  Future<void> dispose(map_libre.MaplibreMapController controller) => [
+  Future<void> dispose(map_libre.MapLibreMapController controller) => [
         for (final item in regionsItem) ...[
           controller.removeLayer(
             getLineLayerName(item.intensity),
@@ -977,7 +975,7 @@ class _StationIntensityLpgmAction extends _Action {
 
   @override
   Future<void> init(
-    map_libre.MaplibreMapController controller,
+    map_libre.MapLibreMapController controller,
   ) async {
     await dispose(controller);
     await controller.setSymbolIconAllowOverlap(true);
@@ -1092,7 +1090,7 @@ class _StationIntensityLpgmAction extends _Action {
   }
 
   @override
-  Future<void> dispose(map_libre.MaplibreMapController controller) async {
+  Future<void> dispose(map_libre.MapLibreMapController controller) async {
     // Layer
     await [
       for (final intensity in JmaLgIntensity.values)

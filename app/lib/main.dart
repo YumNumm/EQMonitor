@@ -49,7 +49,10 @@ Future<void> main() async {
   );
 
   final talker = TalkerFlutter.init(
-    settings: TalkerSettings(),
+    settings: TalkerSettings(
+      // ignore: avoid_redundant_argument_values
+      useConsoleLogs: kDebugMode,
+    ),
   );
   if (!kIsWeb) {
     talker.configure(

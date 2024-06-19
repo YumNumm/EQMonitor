@@ -137,7 +137,6 @@ class WidgetbookApp extends ConsumerWidget {
     final child = Widgetbook.material(
       directories: directories,
       addons: [
-        AccessibilityAddon(),
         InspectorAddon(enabled: true),
         MaterialThemeAddon(
           themes: [
