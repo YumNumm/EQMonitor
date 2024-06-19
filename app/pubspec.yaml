@@ -129,6 +129,7 @@ flutter:
     - assets/images/theme/
     - assets/fonts/
     - assets/docs/
+    - shorebird.yaml
 
   shaders:
     - shaders/introduction.glsl
