@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:eqapi_types/model/v1/v1_database.dart';
 import 'package:eqapi_types/model/v1/websocket/realtime_postgres_changes_payload.dart';
+import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/env/env.dart';
@@ -28,9 +31,22 @@ WebSocket websocket(WebsocketRef ref) {
     pingInterval: const Duration(seconds: 5),
     backoff: backoff,
   );
-  ref.onDispose(() {
-    socket.close(1000, 'Connection closed');
-  });
+  ref
+    ..onDispose(() {
+      socket.close(1000, 'Connection closed');
+    })
+    ..listen(appLifeCycleProvider, (_, next) {
+      // backgroundになったら接続を閉じる
+      if (next == AppLifecycleState.paused) {
+        socket.close(1000, 'Connection closed');
+        log('WebSocket connection closed');
+      }
+      if (next == AppLifecycleState.resumed) {
+        ref.invalidateSelf();
+      }
+    });
+
+    log('WebSocket connection created');
   return socket;
 }
 
@@ -50,12 +66,15 @@ class WebsocketStatus extends _$WebsocketStatus {
 
 @Riverpod(keepAlive: true)
 class WebsocketMessages extends _$WebsocketMessages {
-  late final StreamController<dynamic> _controller;
+  late  StreamController<dynamic> _controller;
 
   @override
   Stream<Map<String, dynamic>> build() async* {
     final socket = ref.watch(websocketProvider);
     _controller = StreamController<dynamic>();
+    ref.onDispose(() {
+      _controller.close();
+    });
     socket.messages.listen(
       (message) {
         ref.read(talkerProvider).log('WebSocket message: $message');
