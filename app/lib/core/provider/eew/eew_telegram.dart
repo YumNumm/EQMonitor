@@ -1,7 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
+import 'dart:ui';
 
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/api/eq_api.dart';
+import 'package:eqmonitor/core/provider/app_lifecycle.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:extensions/extensions.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -21,7 +25,7 @@ class Eew extends _$Eew {
     }
 
     // WebSocketのListen開始
-    ref.listen(
+    ref..listen(
       websocketTableMessagesProvider<EewV1>(),
       (_, next) {
         final valueOrNull = next.valueOrNull;
@@ -29,6 +33,15 @@ class Eew extends _$Eew {
           _upsert(valueOrNull.newData);
         }
       },
+    )
+    ..listen(
+      appLifeCycleProvider,
+      (_ , next) {
+        if (next == AppLifecycleState.resumed) {
+          log('AppLifecycleState.resumed: Refetch EEW');
+          _refetchRestApi();
+        }
+      }
     );
 
     final refreshTimer = Timer.periodic(
@@ -45,6 +58,10 @@ class Eew extends _$Eew {
     if (webSocketState is Connected || webSocketState is Reconnected) {
       return;
     }
+    if(ref.read(appLifeCycleProvider) != AppLifecycleState.resumed) {
+      return;
+    }
+    ref.read(talkerProvider).log('Refetch EEW');
     ref.invalidate(_eewRestProvider);
   }
 

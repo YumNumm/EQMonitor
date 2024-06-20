@@ -47,6 +47,14 @@ Increment the build number by Firebase App Distribution
 
 Download the provisioning profiles
 
+### ios build
+
+```sh
+[bundle exec] fastlane ios build
+```
+
+
+
 ### ios beta
 
 ```sh

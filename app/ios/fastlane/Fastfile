@@ -93,11 +93,7 @@ platform :ios do
     )
 
     # Build the project
-    build_app(
-      archive_path: "../build/ios/archive/Runner.xcarchive",
-      export_method: "app-store",
-      xcargs: "-allowProvisioningUpdates",
-    )
+    shorebird_release(platform: "ios")
 
     # Upload the project
     changelog = changelog_from_git_commits(
