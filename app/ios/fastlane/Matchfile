@@ -4,5 +4,5 @@ storage_mode("git")
 
 type("appstore") # The default type, can be: appstore, adhoc, enterprise or development
 
-app_identifier(["net.yumnumm.eqmonitor", "net.yumnumm.eqmonitor.FcmServiceExtension"])
+app_identifier(["net.yumnumm.eqmonitor", "net.yumnumm.eqmonitor.FcmServiceExtension", "net.yumnumm.eqmonitor.Widget"])
 username("yumnumm@icloud.com") # Your Apple Developer Portal username
