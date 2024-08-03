@@ -68,9 +68,14 @@ class EarthquakeHistoryEarlyNotifier extends _$EarthquakeHistoryEarlyNotifier {
           magnitudeGte: parameter.magnitudeGte,
           magnitudeLte: parameter.magnitudeLte,
           offset: currentData?.$1.length ?? 0,
+          sort: parameter.sort,
+          ascending: parameter.ascending,
         );
         return (
-          currentData?.$1 ?? [],
+          <EarthquakeEarly>[
+            ...currentData?.$1 ?? [],
+            ...result.items,
+          ],
           result.count,
         );
       },
