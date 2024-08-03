@@ -149,6 +149,12 @@ RouteBase get $homeRoute => GoRouteData.$route(
         GoRouteData.$route(
           path: 'earthquake-history-early',
           factory: $EarthquakeHistoryEarlyRouteExtension._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'details/:id',
+              factory: $EarthquakeHistoryEarlyDetailsRouteExtension._fromState,
+            ),
+          ],
         ),
       ],
     );
@@ -176,6 +182,27 @@ extension $EarthquakeHistoryEarlyRouteExtension on EarthquakeHistoryEarlyRoute {
 
   String get location => GoRouteData.$location(
         '/earthquake-history-early',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $EarthquakeHistoryEarlyDetailsRouteExtension
+    on EarthquakeHistoryEarlyDetailsRoute {
+  static EarthquakeHistoryEarlyDetailsRoute _fromState(GoRouterState state) =>
+      EarthquakeHistoryEarlyDetailsRoute(
+        id: state.pathParameters['id']!,
+      );
+
+  String get location => GoRouteData.$location(
+        '/earthquake-history-early/details/${Uri.encodeComponent(id)}',
       );
 
   void go(BuildContext context) => context.go(location);

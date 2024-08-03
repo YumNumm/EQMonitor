@@ -66,31 +66,35 @@ class JmaIntensityIcon extends ConsumerWidget {
             child: (intensity == JmaIntensity.fiveUpperNoInput)
                 ? const SizedBox.shrink()
                 : Center(
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            intensityMainText,
-                            style: TextStyle(
-                              color: fg,
-                              fontSize: 100,
-                              fontWeight: FontWeight.w900,
-                              fontFamily: FontFamily.jetBrainsMono,
+                    child: Padding(
+                      padding: const EdgeInsets.all(2),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              intensityMainText,
+                              style: TextStyle(
+                                color: fg,
+                                fontSize: 100,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: FontFamily.jetBrainsMono,
+                              ),
                             ),
-                          ),
-                          Text(
-                            suffix,
-                            style: TextStyle(
-                              color: fg,
-                              fontSize: 80,
-                              fontWeight: FontWeight.w900,
-                              fontFamily: FontFamily.jetBrainsMono,
-                              fontFamilyFallback: const [FontFamily.notoSansJP],
+                            Text(
+                              suffix,
+                              style: TextStyle(
+                                color: fg,
+                                fontSize: 80,
+                                fontFamily: FontFamily.jetBrainsMono,
+                                fontFamilyFallback: const [
+                                  FontFamily.notoSansJP,
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),

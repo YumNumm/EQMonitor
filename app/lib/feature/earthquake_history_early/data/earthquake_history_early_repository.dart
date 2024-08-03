@@ -55,4 +55,11 @@ class EarthquakeHistoryEarlyRepository {
       items: response.data,
     );
   }
+
+  Future<EarthquakeEarlyEvent> fetchEarthquakeEarlyEvent({
+    required String id,
+  }) async {
+    final result = await _api.objects.getEarthquakeEarlyEvent(id: id);
+    return result.data;
+  }
 }

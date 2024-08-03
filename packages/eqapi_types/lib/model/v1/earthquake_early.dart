@@ -12,7 +12,7 @@ class EarthquakeEarly with _$EarthquakeEarly {
     required double? latitude,
     required double? longitude,
     required double? magnitude,
-    required JmaIntensity? maxIntensity,
+    required JmaForecastIntensity? maxIntensity,
     required bool maxIntensityIsEarly,
     required String name,
     required DateTime originTime,
@@ -38,14 +38,16 @@ class EarthquakeEarlyEvent with _$EarthquakeEarlyEvent {
   const factory EarthquakeEarlyEvent({
     required String id,
     required String name,
-    required double? latitude,
-    required double? longitude,
+    required double? lat,
+    required double? lon,
     required double? depth,
     required double? magnitude,
     required DateTime originTime,
     required OriginTimePrecision originTimePrecision,
-    required JmaIntensity? maxIntensity,
+    required JmaForecastIntensity? maxIntensity,
+    required bool maxIntensityIsEarly,
     required List<EarthquakeEarlyRegion> regions,
+    required List<EarthquakeEarlyCity> cities,
   }) = _EarthquakeEarlyEvent;
 
   factory EarthquakeEarlyEvent.fromJson(Map<String, dynamic> json) =>
@@ -56,9 +58,8 @@ class EarthquakeEarlyEvent with _$EarthquakeEarlyEvent {
 class EarthquakeEarlyRegion with _$EarthquakeEarlyRegion {
   const factory EarthquakeEarlyRegion({
     required String name,
-    required int code,
-    required JmaIntensity maxIntensity,
-    required List<EarthquakeEarlyCity> cities,
+    required String code,
+    required JmaForecastIntensity maxIntensity,
   }) = _EarthquakeEarlyRegion;
 
   factory EarthquakeEarlyRegion.fromJson(Map<String, dynamic> json) =>
@@ -69,8 +70,8 @@ class EarthquakeEarlyRegion with _$EarthquakeEarlyRegion {
 class EarthquakeEarlyCity with _$EarthquakeEarlyCity {
   const factory EarthquakeEarlyCity({
     required String name,
-    required int code,
-    required JmaIntensity maxIntensity,
+    required String code,
+    required JmaForecastIntensity maxIntensity,
     required List<EarthquakeEarlyObservationPoint> observationPoints,
   }) = _EarthquakeEarlyCity;
 
@@ -82,9 +83,9 @@ class EarthquakeEarlyCity with _$EarthquakeEarlyCity {
 class EarthquakeEarlyObservationPoint with _$EarthquakeEarlyObservationPoint {
   const factory EarthquakeEarlyObservationPoint({
     required String name,
-    required double latitude,
-    required double longitude,
-    required JmaIntensity intensity,
+    required double lat,
+    required double lon,
+    required JmaForecastIntensity intensity,
   }) = _EarthquakeEarlyObservationPoint;
 
   factory EarthquakeEarlyObservationPoint.fromJson(Map<String, dynamic> json) =>

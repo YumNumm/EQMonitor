@@ -1,7 +1,7 @@
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqapi_types/model/v1/earthquake_early.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
-import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +34,7 @@ class EarthquakeHistoryEarlyListTile extends HookConsumerWidget {
     )) {
       (
         final String hypoName,
-        final JmaIntensity _,
+        final JmaForecastIntensity _,
       ) =>
         hypoName,
       (
@@ -65,7 +65,7 @@ class EarthquakeHistoryEarlyListTile extends HookConsumerWidget {
         };
     final intensityColorState = ref.watch(intensityColorProvider);
     final intensityColor = maxIntensity != null
-        ? intensityColorState.fromJmaIntensity(maxIntensity).background
+        ? intensityColorState.fromJmaForecastIntensity(maxIntensity).background
         : null;
     // 5 -> 5.0, 5.123 -> 5.1
     final magnitude = item.magnitude?.toStringAsFixed(1);
@@ -94,7 +94,7 @@ class EarthquakeHistoryEarlyListTile extends HookConsumerWidget {
         ],
       ),
       leading: maxIntensity != null
-          ? JmaIntensityIcon(
+          ? JmaForecastIntensityIcon(
               intensity: maxIntensity,
               type: IntensityIconType.filled,
               showSuffix: !item.maxIntensityIsEarly,

@@ -5,11 +5,13 @@ import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
 import 'package:eqmonitor/core/component/widget/error_widget.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/data/earthquake_history_early_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/data/model/earthquake_history_early_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/components/chip/earthquake_history_early_sort_chip.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/components/earthquake_history_early_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/components/earthquake_history_early_not_found.dart';
+import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -209,6 +211,9 @@ class _SliverListBody extends HookConsumerWidget {
               final item = data.$1[index];
               return EarthquakeHistoryEarlyListTile(
                 item: item,
+                onTap: () async => EarthquakeHistoryEarlyDetailsRoute(
+                  id: item.id,
+                ).push<void>(context),
               );
             },
           ),
