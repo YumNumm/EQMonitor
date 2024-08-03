@@ -13,7 +13,15 @@ EqApi eqApi(EqApiRef ref) {
     connectTimeout: const Duration(seconds: 10),
     receiveTimeout: const Duration(seconds: 10),
   );
-  return EqApi(dio: dio);
+
+  return EqApi(
+    dio: dio,
+    objectsDio: Dio(
+      BaseOptions(
+        baseUrl: 'https://objects.eqmonitor.app',
+      ),
+    ),
+  );
 }
 
 /// Repositoryで利用
