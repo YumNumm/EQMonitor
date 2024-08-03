@@ -12,3 +12,4 @@ ALTER TABLE earthquake_early_regions ENABLE ROW LEVEL SECURITY;
 CREATE POLICY select_earthquake_early_regions ON earthquake_early_regions
     FOR SELECT
         USING (TRUE);
+
