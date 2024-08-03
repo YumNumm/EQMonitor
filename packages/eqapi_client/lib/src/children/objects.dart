@@ -8,7 +8,7 @@ part 'objects.g.dart';
 abstract class Objects {
   factory Objects(Dio dio, {String baseUrl}) = _Objects;
 
-  @GET('/earthquake-early/{id},json')
+  @GET('/earthquake-early/{id}.json')
   Future<HttpResponse<EarthquakeEarlyEvent>> getEarthquakeEarlyEvent({
     @Path('id') required String id,
   });

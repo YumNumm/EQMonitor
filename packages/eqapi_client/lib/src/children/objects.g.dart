@@ -35,7 +35,7 @@ class _Objects implements Objects {
     )
             .compose(
               _dio.options,
-              '/earthquake-early/${id},json',
+              '/earthquake-early/${id}.json',
               queryParameters: queryParameters,
               data: _data,
             )
