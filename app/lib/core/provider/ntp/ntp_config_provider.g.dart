@@ -8,7 +8,7 @@ part of 'ntp_config_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ntpConfigHash() => r'9cc4a1dbef4552e812009a9bce06f7a0c8b5770b';
+String _$ntpConfigHash() => r'ea839c3c8aa2d5b12e392bacb05eb123541d753b';
 
 /// See also [NtpConfig].
 @ProviderFor(NtpConfig)

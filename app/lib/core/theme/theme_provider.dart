@@ -1,7 +1,7 @@
+import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 
 part 'theme_provider.g.dart';
 
