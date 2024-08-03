@@ -157,35 +157,35 @@ class JmaForecastIntensityIcon extends ConsumerWidget {
                 width: 5,
               ),
             ),
-            child:Center(
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            intensityMainText,
-                            style: TextStyle(
-                              color: fg,
-                              fontSize: 100,
-                              fontWeight: FontWeight.w900,
-                              fontFamily: FontFamily.jetBrainsMono,
-                            ),
-                          ),
-                          Text(
-                            suffix,
-                            style: TextStyle(
-                              color: fg,
-                              fontSize: 80,
-                              fontWeight: FontWeight.w900,
-                              fontFamily: FontFamily.jetBrainsMono,
-                              fontFamilyFallback: const [FontFamily.notoSansJP],
-                            ),
-                          ),
-                        ],
+            child: Center(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      intensityMainText,
+                      style: TextStyle(
+                        color: fg,
+                        fontSize: 100,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: FontFamily.jetBrainsMono,
                       ),
                     ),
-                  ),
+                    Text(
+                      suffix,
+                      style: TextStyle(
+                        color: fg,
+                        fontSize: 80,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: FontFamily.jetBrainsMono,
+                        fontFamilyFallback: const [FontFamily.notoSansJP],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
       IntensityIconType.smallWithoutText => SizedBox(
