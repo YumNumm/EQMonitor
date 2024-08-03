@@ -46,7 +46,7 @@ class EarthquakeHistoryEarlyAllFetched extends StatelessWidget {
                 size: 48,
               ),
               Text(
-                '全件取得済みです。',
+                '全件取得済みです',
                 style: TextStyle(fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
