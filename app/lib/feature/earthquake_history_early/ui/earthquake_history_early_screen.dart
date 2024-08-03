@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 
 class EarthquakeHistoryEarlyRoute extends GoRouteData {
   const EarthquakeHistoryEarlyRoute();
@@ -30,7 +31,7 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final parameter = useState(
       const EarthquakeHistoryEarlyParameter(
-        sort: EarthquakeEarlySortType.origin_time,
+        sort: EarthquakeEarlySortType.max_intensity,
         ascending: false,
       ),
     );
@@ -175,7 +176,6 @@ class _SliverListBody extends HookConsumerWidget {
       return PrimaryScrollController(
         controller: controller,
         child: ListView.builder(
-          clipBehavior: Clip.antiAlias,
           padding: EdgeInsets.zero,
           itemCount: data.$1.length + 1,
           itemBuilder: (context, index) {
@@ -223,7 +223,29 @@ class _SliverListBody extends HookConsumerWidget {
                   ref.invalidate(earthquakeHistoryEarlyNotifierProvider),
             );
           }(),
-        AsyncData(:final value) => listView(data: value),
+        AsyncData(:final value) => Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      const TextSpan(text: '全'),
+                      TextSpan(
+                        text: NumberFormat('#,###').format(value.$2),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const TextSpan(text: '件の地震情報が見つかりました'),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: listView(data: value),
+              ),
+            ],
+          ),
       },
     );
   }

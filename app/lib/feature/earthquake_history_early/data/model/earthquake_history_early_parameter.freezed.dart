@@ -27,6 +27,8 @@ mixin _$EarthquakeHistoryEarlyParameter {
   double? get depthGte => throw _privateConstructorUsedError;
   JmaIntensity? get intensityLte => throw _privateConstructorUsedError;
   JmaIntensity? get intensityGte => throw _privateConstructorUsedError;
+  DateTime? get originTimeLte => throw _privateConstructorUsedError;
+  DateTime? get originTimeGte => throw _privateConstructorUsedError;
   EarthquakeEarlySortType get sort => throw _privateConstructorUsedError;
   bool get ascending => throw _privateConstructorUsedError;
 
@@ -51,6 +53,8 @@ abstract class $EarthquakeHistoryEarlyParameterCopyWith<$Res> {
       double? depthGte,
       JmaIntensity? intensityLte,
       JmaIntensity? intensityGte,
+      DateTime? originTimeLte,
+      DateTime? originTimeGte,
       EarthquakeEarlySortType sort,
       bool ascending});
 }
@@ -75,6 +79,8 @@ class _$EarthquakeHistoryEarlyParameterCopyWithImpl<$Res,
     Object? depthGte = freezed,
     Object? intensityLte = freezed,
     Object? intensityGte = freezed,
+    Object? originTimeLte = freezed,
+    Object? originTimeGte = freezed,
     Object? sort = null,
     Object? ascending = null,
   }) {
@@ -103,6 +109,14 @@ class _$EarthquakeHistoryEarlyParameterCopyWithImpl<$Res,
           ? _value.intensityGte
           : intensityGte // ignore: cast_nullable_to_non_nullable
               as JmaIntensity?,
+      originTimeLte: freezed == originTimeLte
+          ? _value.originTimeLte
+          : originTimeLte // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      originTimeGte: freezed == originTimeGte
+          ? _value.originTimeGte
+          : originTimeGte // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       sort: null == sort
           ? _value.sort
           : sort // ignore: cast_nullable_to_non_nullable
@@ -131,6 +145,8 @@ abstract class _$$EarthquakeHistoryEarlyParameterImplCopyWith<$Res>
       double? depthGte,
       JmaIntensity? intensityLte,
       JmaIntensity? intensityGte,
+      DateTime? originTimeLte,
+      DateTime? originTimeGte,
       EarthquakeEarlySortType sort,
       bool ascending});
 }
@@ -154,6 +170,8 @@ class __$$EarthquakeHistoryEarlyParameterImplCopyWithImpl<$Res>
     Object? depthGte = freezed,
     Object? intensityLte = freezed,
     Object? intensityGte = freezed,
+    Object? originTimeLte = freezed,
+    Object? originTimeGte = freezed,
     Object? sort = null,
     Object? ascending = null,
   }) {
@@ -182,6 +200,14 @@ class __$$EarthquakeHistoryEarlyParameterImplCopyWithImpl<$Res>
           ? _value.intensityGte
           : intensityGte // ignore: cast_nullable_to_non_nullable
               as JmaIntensity?,
+      originTimeLte: freezed == originTimeLte
+          ? _value.originTimeLte
+          : originTimeLte // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      originTimeGte: freezed == originTimeGte
+          ? _value.originTimeGte
+          : originTimeGte // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       sort: null == sort
           ? _value.sort
           : sort // ignore: cast_nullable_to_non_nullable
@@ -205,6 +231,8 @@ class _$EarthquakeHistoryEarlyParameterImpl
       this.depthGte,
       this.intensityLte,
       this.intensityGte,
+      this.originTimeLte,
+      this.originTimeGte,
       required this.sort,
       required this.ascending});
 
@@ -225,13 +253,17 @@ class _$EarthquakeHistoryEarlyParameterImpl
   @override
   final JmaIntensity? intensityGte;
   @override
+  final DateTime? originTimeLte;
+  @override
+  final DateTime? originTimeGte;
+  @override
   final EarthquakeEarlySortType sort;
   @override
   final bool ascending;
 
   @override
   String toString() {
-    return 'EarthquakeHistoryEarlyParameter(magnitudeLte: $magnitudeLte, magnitudeGte: $magnitudeGte, depthLte: $depthLte, depthGte: $depthGte, intensityLte: $intensityLte, intensityGte: $intensityGte, sort: $sort, ascending: $ascending)';
+    return 'EarthquakeHistoryEarlyParameter(magnitudeLte: $magnitudeLte, magnitudeGte: $magnitudeGte, depthLte: $depthLte, depthGte: $depthGte, intensityLte: $intensityLte, intensityGte: $intensityGte, originTimeLte: $originTimeLte, originTimeGte: $originTimeGte, sort: $sort, ascending: $ascending)';
   }
 
   @override
@@ -251,6 +283,10 @@ class _$EarthquakeHistoryEarlyParameterImpl
                 other.intensityLte == intensityLte) &&
             (identical(other.intensityGte, intensityGte) ||
                 other.intensityGte == intensityGte) &&
+            (identical(other.originTimeLte, originTimeLte) ||
+                other.originTimeLte == originTimeLte) &&
+            (identical(other.originTimeGte, originTimeGte) ||
+                other.originTimeGte == originTimeGte) &&
             (identical(other.sort, sort) || other.sort == sort) &&
             (identical(other.ascending, ascending) ||
                 other.ascending == ascending));
@@ -258,8 +294,18 @@ class _$EarthquakeHistoryEarlyParameterImpl
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, magnitudeLte, magnitudeGte,
-      depthLte, depthGte, intensityLte, intensityGte, sort, ascending);
+  int get hashCode => Object.hash(
+      runtimeType,
+      magnitudeLte,
+      magnitudeGte,
+      depthLte,
+      depthGte,
+      intensityLte,
+      intensityGte,
+      originTimeLte,
+      originTimeGte,
+      sort,
+      ascending);
 
   @JsonKey(ignore: true)
   @override
@@ -286,6 +332,8 @@ abstract class _EarthquakeHistoryEarlyParameter
       final double? depthGte,
       final JmaIntensity? intensityLte,
       final JmaIntensity? intensityGte,
+      final DateTime? originTimeLte,
+      final DateTime? originTimeGte,
       required final EarthquakeEarlySortType sort,
       required final bool ascending}) = _$EarthquakeHistoryEarlyParameterImpl;
 
@@ -304,6 +352,10 @@ abstract class _EarthquakeHistoryEarlyParameter
   JmaIntensity? get intensityLte;
   @override
   JmaIntensity? get intensityGte;
+  @override
+  DateTime? get originTimeLte;
+  @override
+  DateTime? get originTimeGte;
   @override
   EarthquakeEarlySortType get sort;
   @override
