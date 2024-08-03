@@ -68,7 +68,7 @@ jobs:
         run: brew bundle
 
       - name: Cache pubspec dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             ${{ env.FLUTTER_HOME }}/.pub-cache
@@ -94,7 +94,7 @@ jobs:
           melos generate
 
       - name: Cache Pods
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: app/ios/Pods
           key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
@@ -135,7 +135,7 @@ jobs:
         run: bundle exec fastlane build
 
       - name: Upload artifact ipa
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.5
         with:
           path: app/ios/Runner.ipa
           name: release-ios
