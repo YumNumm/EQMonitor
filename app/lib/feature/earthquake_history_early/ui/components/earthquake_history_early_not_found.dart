@@ -29,8 +29,6 @@ class EarthquakeHistoryEarlyNotFound extends StatelessWidget {
   }
 }
 
-
-
 class EarthquakeHistoryEarlyAllFetched extends StatelessWidget {
   const EarthquakeHistoryEarlyAllFetched({super.key});
 
