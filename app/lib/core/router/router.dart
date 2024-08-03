@@ -9,6 +9,7 @@ import 'package:eqmonitor/feature/donation/ui/donation_executed_screen.dart';
 import 'package:eqmonitor/feature/donation/ui/donation_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/screen/earthquake_history_details.dart';
+import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_screen.dart';
 import 'package:eqmonitor/feature/home/view/home_view.dart';
 import 'package:eqmonitor/feature/information_history/page/information_history_page.dart';
 import 'package:eqmonitor/feature/information_history_details/information_history_details_page.dart';
@@ -135,7 +136,14 @@ class InformationHistoryDetailsRoute extends GoRouteData {
       );
 }
 
-@TypedGoRoute<HomeRoute>(path: '/')
+@TypedGoRoute<HomeRoute>(
+  path: '/',
+  routes: [
+    TypedGoRoute<EarthquakeHistoryEarlyRoute>(
+      path: 'earthquake-history-early',
+    ),
+  ],
+)
 class HomeRoute extends GoRouteData {
   const HomeRoute();
   @override

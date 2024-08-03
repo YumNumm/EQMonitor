@@ -7,6 +7,8 @@ import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqapi_types/lib.dart';
 import 'package:retrofit/retrofit.dart';
 
+export 'children/v1.dart';
+
 part 'eqapi_client.g.dart';
 
 class EqApi {

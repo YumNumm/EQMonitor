@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 
-class EarthquakeHistoryNotFound extends StatelessWidget {
-  const EarthquakeHistoryNotFound({
+class EarthquakeHistoryEarlyNotFound extends StatelessWidget {
+  const EarthquakeHistoryEarlyNotFound({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    const before2020 = Text(
-      '2020年11月18日以前の地震情報は、本アプリでは扱っていません',
-      textAlign: TextAlign.center,
-    );
     return const Center(
       child: Padding(
         padding: EdgeInsets.all(8),
@@ -22,11 +18,10 @@ class EarthquakeHistoryNotFound extends StatelessWidget {
               size: 48,
             ),
             Text(
-              '条件を満たす地震情報は見つかりませんでした',
+              '条件を満たす地震情報は見つかりませんでした。',
               style: TextStyle(fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
-            before2020,
           ],
         ),
       ),
@@ -34,15 +29,13 @@ class EarthquakeHistoryNotFound extends StatelessWidget {
   }
 }
 
-class EarthquakeHistoryAllFetched extends StatelessWidget {
-  const EarthquakeHistoryAllFetched({super.key});
+
+
+class EarthquakeHistoryEarlyAllFetched extends StatelessWidget {
+  const EarthquakeHistoryEarlyAllFetched({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const before2020 = Text(
-      '2020年11月18日以前の地震情報は、本アプリでは扱っていません',
-      textAlign: TextAlign.center,
-    );
     return const SafeArea(
       child: Padding(
         padding: EdgeInsets.all(12),
@@ -55,11 +48,10 @@ class EarthquakeHistoryAllFetched extends StatelessWidget {
                 size: 48,
               ),
               Text(
-                '全件取得済みです',
+                '全件取得済みです。',
                 style: TextStyle(fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
-              before2020,
             ],
           ),
         ),
