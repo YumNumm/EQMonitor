@@ -243,6 +243,59 @@ class _V1 implements V1 {
     return httpResponse;
   }
 
+  @override
+  Future<HttpResponse<List<EarthquakeEarly>>> getEarthquakeEarlies({
+    int limit = 10,
+    int offset = 0,
+    double? magnitudeLte,
+    double? magnitudeGte,
+    double? depthLte,
+    double? depthGte,
+    String? intensityLte,
+    String? intensityGte,
+    EarthquakeEarlySortType sort = EarthquakeEarlySortType.origin_time,
+    bool ascending = false,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'limit': limit,
+      r'offset': offset,
+      r'magnitudeLte': magnitudeLte,
+      r'magnitudeGte': magnitudeGte,
+      r'depthLte': depthLte,
+      r'depthGte': depthGte,
+      r'intensityLte': intensityLte,
+      r'intensityGte': intensityGte,
+      r'sort': sort.name,
+      r'ascending': ascending,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<List<dynamic>>(
+        _setStreamType<HttpResponse<List<EarthquakeEarly>>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/v1/earthquake-early/list',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) => EarthquakeEarly.fromJson(i as Map<String, dynamic>))
+        .toList();
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||
