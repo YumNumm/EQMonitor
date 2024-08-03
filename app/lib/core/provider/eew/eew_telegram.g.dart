@@ -22,7 +22,7 @@ final _eewRestProvider = FutureProvider<List<EewV1>>.internal(
 );
 
 typedef _EewRestRef = FutureProviderRef<List<EewV1>>;
-String _$eewHash() => r'3003bd1a50994ca806c2a864ffc7a5e8b2cbc6d1';
+String _$eewHash() => r'b74e1ad905f030b053144a18a16054d05cf29e17';
 
 /// See also [Eew].
 @ProviderFor(Eew)

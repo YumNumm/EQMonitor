@@ -785,16 +785,18 @@ class _StationAction extends _Action {
       'station-intensity-symbol',
       SymbolLayerProperties(
         textField: ['get', 'name'],
-        textSize: 12,
+        textSize: 13,
+        textColor: Colors.black.toHexStringRGB(),
         textHaloColor: Colors.white.toHexStringRGB(),
-        textHaloWidth: 0.5,
+        textHaloWidth: 2,
+        textFont: ['Noto Sans CJK JP Bold'],
         textOffset: [
           map_libre.Expressions.literal,
           [0, 2],
         ],
       ),
       sourceLayer: 'station-intensity',
-      minzoom: 10,
+      minzoom: 9,
     );
   }
 

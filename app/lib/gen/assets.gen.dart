@@ -72,6 +72,7 @@ class $AssetsImagesGen {
   AssetGenImage get iconForeground =>
       const AssetGenImage('assets/images/icon_foreground.png');
 
+  /// Directory path: assets/images/theme
   $AssetsImagesThemeGen get theme => const $AssetsImagesThemeGen();
 
   /// List of all assets
@@ -106,6 +107,7 @@ class Assets {
   static const String kyoshinObservationPoint =
       'assets/kyoshin_observation_point.pb';
   static const String tjma2001 = 'assets/tjma2001.csv';
+  static const String shorebird = 'shorebird.yaml';
 
   /// List of all assets
   static List<dynamic> get values => [
@@ -114,14 +116,22 @@ class Assets {
         jmaCodeTable,
         jmaMap,
         kyoshinObservationPoint,
-        tjma2001
+        tjma2001,
+        shorebird
       ];
 }
 
 class AssetGenImage {
-  const AssetGenImage(this._assetName);
+  const AssetGenImage(
+    this._assetName, {
+    this.size,
+    this.flavors = const {},
+  });
 
   final String _assetName;
+
+  final Size? size;
+  final Set<String> flavors;
 
   Image image({
     Key? key,

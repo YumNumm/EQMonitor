@@ -660,7 +660,7 @@ packages:
     source: hosted
     version: "7.1.0"
   flutter_localizations:
-    dependency: transitive
+    dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -1693,10 +1693,10 @@ packages:
     dependency: transitive
     description:
       name: talker
-      sha256: d44c5cb4add0a5bd46d97201eb459e4ada805bf6af0cbe9f1bb867ffabd5880a
+      sha256: "556ffa26387072702199a7bcf7c9a4672c46aaf28d99d122d72a2c5b6c9e1614"
       url: "https://pub.dev"
     source: hosted
-    version: "4.3.2"
+    version: "4.4.0"
   talker_dio_logger:
     dependency: "direct main"
     description:
@@ -1709,18 +1709,18 @@ packages:
     dependency: "direct main"
     description:
       name: talker_flutter
-      sha256: a8463780ef8e878177f17da6f2f039c53d6b8d649a7afc5670fb193674509c4e
+      sha256: a24b977f1241714f18d714e2675a97cb9ac15c18ac602edf9426dd85f15cfd60
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.4"
+    version: "4.4.0"
   talker_logger:
     dependency: transitive
     description:
       name: talker_logger
-      sha256: c913434aae8b6e3952eb8dd721d018da1bf50fda101469cb1dd625f1cffa4afb
+      sha256: a0d06d9d29792251145bf19be540bb3bd6c8fb15478b2ea9b26c051dbda39669
       url: "https://pub.dev"
     source: hosted
-    version: "4.3.2"
+    version: "4.4.0"
   term_glyph:
     dependency: transitive
     description:
@@ -1861,10 +1861,10 @@ packages:
     dependency: "direct main"
     description:
       name: uuid
-      sha256: "814e9e88f21a176ae1359149021870e87f7cddaf633ab678a5d2b0bff7fd1ba8"
+      sha256: "83d37c7ad7aaf9aa8e275490669535c8080377cfa7a7004c24dfac53afffaa90"
       url: "https://pub.dev"
     source: hosted
-    version: "4.4.0"
+    version: "4.4.2"
   vector_graphics_codec:
     dependency: transitive
     description:

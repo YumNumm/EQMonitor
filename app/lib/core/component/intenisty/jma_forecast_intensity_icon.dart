@@ -104,3 +104,158 @@ class JmaForecastIntensityWidget extends ConsumerWidget {
     );
   }
 }
+
+class JmaForecastIntensityIcon extends ConsumerWidget {
+  const JmaForecastIntensityIcon({
+    required this.intensity,
+    required this.type,
+    this.customText,
+    super.key,
+    this.size = 50,
+    this.showSuffix = true,
+  });
+  final JmaForecastIntensity intensity;
+  final IntensityIconType type;
+  final double size;
+  final String? customText;
+  final bool showSuffix;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final intensityColorModel = ref.watch(intensityColorProvider);
+    final colorScheme = intensityColorModel.fromJmaForecastIntensity(intensity);
+    final (fg, bg) = (colorScheme.foreground, colorScheme.background);
+    // 震度の整数部分
+    final intensityMainText =
+        intensity.type.replaceAll('-', '').replaceAll('+', '');
+    // 震度の弱・強の表記
+    final suffix = intensity.type.contains('-')
+        ? '-'
+        : intensity.type.contains('+')
+            ? '+'
+            : '';
+    final intensitySubText = intensity.type.contains('-')
+        ? '弱'
+        : intensity.type.contains('+')
+            ? '強'
+            : '';
+    final borderColor = Color.lerp(
+      bg,
+      fg,
+      0.3,
+    )!;
+    return switch (type) {
+      IntensityIconType.small => SizedBox(
+          height: size,
+          width: size,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: bg,
+              border: Border.all(
+                color: borderColor,
+                width: 5,
+              ),
+            ),
+            child: Center(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      intensityMainText,
+                      style: TextStyle(
+                        color: fg,
+                        fontSize: 100,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: FontFamily.jetBrainsMono,
+                      ),
+                    ),
+                    Text(
+                      suffix,
+                      style: TextStyle(
+                        color: fg,
+                        fontSize: 80,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: FontFamily.jetBrainsMono,
+                        fontFamilyFallback: const [FontFamily.notoSansJP],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      IntensityIconType.smallWithoutText => SizedBox(
+          height: size,
+          width: size,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: bg,
+              border: Border.all(
+                color: borderColor,
+                width: 5,
+              ),
+            ),
+          ),
+        ),
+      IntensityIconType.filled => SizedBox(
+          height: size,
+          width: size,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: bg,
+              // 角丸にする
+              borderRadius: BorderRadius.circular(size / 5),
+            ),
+            child: Center(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    if (customText != null)
+                      Text(
+                        customText!,
+                        style: TextStyle(
+                          color: fg,
+                          fontSize: 100,
+                          fontWeight: FontWeight.w900,
+                          fontFamily: FontFamily.jetBrainsMono,
+                        ),
+                      )
+                    else ...[
+                      Text(
+                        intensityMainText,
+                        style: TextStyle(
+                          color: fg,
+                          fontSize: 100,
+                          fontWeight: FontWeight.w900,
+                          fontFamily: FontFamily.jetBrainsMono,
+                        ),
+                      ),
+                      if (showSuffix)
+                        Text(
+                          intensitySubText,
+                          style: TextStyle(
+                            color: fg,
+                            fontSize: 50,
+                            fontWeight: FontWeight.w900,
+                            fontFamily: FontFamily.jetBrainsMono,
+                            fontFamilyFallback: const [FontFamily.notoSansJP],
+                          ),
+                        ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+    };
+  }
+}
