@@ -469,8 +469,10 @@ class _Sheet extends StatelessWidget {
           const _NotificationPermission(),
           const EarthquakeHistorySheetWidget(),
           ListTile(
-            title: const Text('過去の地震履歴'),
-            subtitle: const Text('震度データベースを用いて、1919年以降の地震情報を検索できます'),
+            title: const Text('過去の地震履歴(名前変える)'),
+            subtitle: const Text(
+              '震度データベースを用いて、過去の地震情報を検索できます(仮)',
+            ),
             leading: const Icon(Icons.history),
             onTap: () =>
                 const EarthquakeHistoryEarlyRoute().push<void>(context),

@@ -14,6 +14,8 @@ class EarthquakeHistoryEarlyParameter with _$EarthquakeHistoryEarlyParameter {
     double? depthGte,
     JmaIntensity? intensityLte,
     JmaIntensity? intensityGte,
+    DateTime? originTimeLte,
+    DateTime? originTimeGte,
     required EarthquakeEarlySortType sort,
     required bool ascending,
   }) = _EarthquakeHistoryEarlyParameter;
@@ -48,6 +50,15 @@ extension EarthquakeHistoryEarlyParameterEx on EarthquakeHistoryEarlyParameter {
       copyWith(
         depthGte: min,
         depthLte: max,
+      );
+
+  EarthquakeHistoryEarlyParameter updateOriginTime(
+    DateTime? min,
+    DateTime? max,
+  ) =>
+      copyWith(
+        originTimeGte: min,
+        originTimeLte: max,
       );
 
   EarthquakeHistoryEarlyParameter updateSort({

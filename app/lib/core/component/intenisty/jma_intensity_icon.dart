@@ -13,11 +13,13 @@ class JmaIntensityIcon extends ConsumerWidget {
     this.customText,
     super.key,
     this.size = 50,
+    this.showSuffix = true,
   });
   final JmaIntensity intensity;
   final IntensityIconType type;
   final double size;
   final String? customText;
+  final bool showSuffix;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
