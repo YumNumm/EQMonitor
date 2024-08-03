@@ -13,9 +13,6 @@ JmaParameterApiClient jmaParameterApiClient(JmaParameterApiClientRef ref) {
     client: Dio(
       BaseOptions(
         headers: {
-          'user-agent': 'eqmonitor-${kIsWeb ? "web" : Platform.version}',
-          'x-operation-system-version':
-              kIsWeb ? 'web' : Platform.operatingSystemVersion,
         },
         baseUrl: 'https://object.eqmonitor.app',
       ),

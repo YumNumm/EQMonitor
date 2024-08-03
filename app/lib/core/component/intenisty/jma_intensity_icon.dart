@@ -146,16 +146,17 @@ class JmaIntensityIcon extends ConsumerWidget {
                           fontFamily: FontFamily.jetBrainsMono,
                         ),
                       ),
-                      Text(
-                        intensitySubText,
-                        style: TextStyle(
-                          color: fg,
-                          fontSize: 50,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: FontFamily.jetBrainsMono,
-                          fontFamilyFallback: const [FontFamily.notoSansJP],
+                      if (showSuffix)
+                        Text(
+                          intensitySubText,
+                          style: TextStyle(
+                            color: fg,
+                            fontSize: 50,
+                            fontWeight: FontWeight.w900,
+                            fontFamily: FontFamily.jetBrainsMono,
+                            fontFamilyFallback: const [FontFamily.notoSansJP],
+                          ),
                         ),
-                      ),
                     ],
                   ],
                 ),

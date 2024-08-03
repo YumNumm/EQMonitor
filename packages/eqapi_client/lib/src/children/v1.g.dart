@@ -253,6 +253,8 @@ class _V1 implements V1 {
     double? depthGte,
     String? intensityLte,
     String? intensityGte,
+    DateTime? originTimeLte,
+    DateTime? originTimeGte,
     EarthquakeEarlySortType sort = EarthquakeEarlySortType.origin_time,
     bool ascending = false,
   }) async {
@@ -266,6 +268,8 @@ class _V1 implements V1 {
       r'depthGte': depthGte,
       r'intensityLte': intensityLte,
       r'intensityGte': intensityGte,
+      r'originTimeLte': originTimeLte?.toIso8601String(),
+      r'originTimeGte': originTimeGte?.toIso8601String(),
       r'sort': sort.name,
       r'ascending': ascending,
     };

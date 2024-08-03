@@ -43,18 +43,19 @@ class EarthquakeHistoryEarlyListTile extends HookConsumerWidget {
       ) =>
         hypoName,
     };
+    final originTime = item.originTime.toLocal();
     final subTitle = switch (item.originTimePrecision) {
           OriginTimePrecision.millisecond ||
           OriginTimePrecision.second =>
-            DateFormat('yyyy/MM/dd HH:mm:ss ').format(item.originTime),
+            DateFormat('yyyy/MM/dd HH:mm:ss ').format(originTime),
           OriginTimePrecision.minute =>
-            DateFormat('yyyy/MM/dd HH:mm ').format(item.originTime),
+            DateFormat('yyyy/MM/dd HH:mm ').format(originTime),
           OriginTimePrecision.hour =>
-            DateFormat('yyyy/MM/dd HH ').format(item.originTime),
+            DateFormat('yyyy/MM/dd HH ').format(originTime),
           OriginTimePrecision.day =>
-            DateFormat('yyyy/MM/dd ').format(item.originTime),
+            DateFormat('yyyy/MM/dd ').format(originTime),
           OriginTimePrecision.month =>
-            DateFormat('yyyy/MM ').format(item.originTime),
+            DateFormat('yyyy/MM ').format(originTime),
         } +
         switch (item.depth) {
           (final int depth) when depth == 0 => '深さ ごく浅い',
@@ -96,6 +97,7 @@ class EarthquakeHistoryEarlyListTile extends HookConsumerWidget {
           ? JmaIntensityIcon(
               intensity: maxIntensity,
               type: IntensityIconType.filled,
+              showSuffix: !item.maxIntensityIsEarly,
             )
           : null,
       trailing: Text(

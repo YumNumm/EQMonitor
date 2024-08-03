@@ -22,7 +22,7 @@ class EarthquakeHistoryEarlyRepository {
   final EqApi _api;
 
   Future<EqApiV1Response<EarthquakeEarly>> fetchEarthquakeEarlyLists({
-    int limit = 50,
+    int limit = 100,
     int offset = 0,
     double? magnitudeLte,
     double? magnitudeGte,
@@ -30,6 +30,8 @@ class EarthquakeHistoryEarlyRepository {
     double? depthGte,
     JmaIntensity? intensityLte,
     JmaIntensity? intensityGte,
+    DateTime? originTimeLte,
+    DateTime? originTimeGte,
     EarthquakeEarlySortType sort = EarthquakeEarlySortType.origin_time,
     bool ascending = false,
   }) async {
@@ -42,6 +44,8 @@ class EarthquakeHistoryEarlyRepository {
       depthGte: depthGte,
       intensityLte: intensityLte?.type,
       intensityGte: intensityGte?.type,
+      originTimeLte: originTimeLte,
+      originTimeGte: originTimeGte,
       sort: sort,
       ascending: ascending,
     );

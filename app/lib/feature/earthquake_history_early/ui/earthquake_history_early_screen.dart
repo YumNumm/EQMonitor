@@ -1,5 +1,6 @@
 import 'package:eqapi_client/eqapi_client.dart';
 import 'package:eqapi_types/model/v1/earthquake_early.dart';
+import 'package:eqmonitor/core/component/chip/date_range_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
@@ -116,6 +117,13 @@ class _SearchParameter extends StatelessWidget {
                   ),
                 ),
               ),
+              DateRangeFilterChip(
+                min: parameter.originTimeGte,
+                max: parameter.originTimeLte,
+                onChanged: (min, max) => onChanged(
+                  parameter.updateOriginTime(min, max),
+                ),
+              ),
             ]
                 .map(
                   (e) => Padding(
@@ -173,35 +181,37 @@ class _SliverListBody extends HookConsumerWidget {
       if (data.$1.isEmpty) {
         return const EarthquakeHistoryEarlyNotFound();
       }
-      return PrimaryScrollController(
-        controller: controller,
-        child: ListView.builder(
-          padding: EdgeInsets.zero,
-          itemCount: data.$1.length + 1,
-          itemBuilder: (context, index) {
-            if (index == data.$1.length) {
-              if (state.isLoading) {
-                return loading;
+      return Material(
+        child: PrimaryScrollController(
+          controller: controller,
+          child: ListView.builder(
+            padding: EdgeInsets.zero,
+            itemCount: data.$1.length + 1,
+            itemBuilder: (context, index) {
+              if (index == data.$1.length) {
+                if (state.isLoading) {
+                  return loading;
+                }
+                if (state.hasError) {
+                  final error = state.error!;
+                  return ErrorInfoWidget(
+                    error: error,
+                    onRefresh: onRefresh,
+                  );
+                }
+                final hasNext = state.valueOrNull?.hasNext ?? false;
+                if (hasNext) {
+                  return loading;
+                } else {
+                  return const EarthquakeHistoryEarlyAllFetched();
+                }
               }
-              if (state.hasError) {
-                final error = state.error!;
-                return ErrorInfoWidget(
-                  error: error,
-                  onRefresh: onRefresh,
-                );
-              }
-              final hasNext = state.valueOrNull?.hasNext ?? false;
-              if (hasNext) {
-                return loading;
-              } else {
-                return const EarthquakeHistoryEarlyAllFetched();
-              }
-            }
-            final item = data.$1[index];
-            return EarthquakeHistoryEarlyListTile(
-              item: item,
-            );
-          },
+              final item = data.$1[index];
+              return EarthquakeHistoryEarlyListTile(
+                item: item,
+              );
+            },
+          ),
         ),
       );
     }
@@ -227,7 +237,7 @@ class _SliverListBody extends HookConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(4),
                 child: Text.rich(
                   TextSpan(
                     children: [
