@@ -92,6 +92,8 @@ abstract class V1 {
     @Query('depthGte') double? depthGte,
     @Query('intensityLte') String? intensityLte,
     @Query('intensityGte') String? intensityGte,
+    @Query('originTimeLte') DateTime? originTimeLte,
+    @Query('originTimeGte') DateTime? originTimeGte,
     @Query('sort')
     EarthquakeEarlySortType sort = EarthquakeEarlySortType.origin_time,
     @Query("ascending") bool ascending = false,

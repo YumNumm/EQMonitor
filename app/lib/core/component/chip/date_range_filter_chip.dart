@@ -17,7 +17,7 @@ class DateRangeFilterChip extends StatelessWidget {
   final DateTime? min;
   final DateTime? max;
 
-  static DateTime initialMin = DateTime(2021);
+  static DateTime initialMin = DateTime(1919);
   static DateTime initialMax = DateTime.now();
 
   static DateFormat format = DateFormat('yyyy/MM/dd');
@@ -33,6 +33,8 @@ class DateRangeFilterChip extends StatelessWidget {
           firstDate: initialMin,
           lastDate: initialMax,
           currentDate: DateTime.now(),
+          locale: const Locale('ja'),
+          initialEntryMode: DatePickerEntryMode.input,
         );
         if (result != null) {
           onChanged?.call(result.start, result.end);

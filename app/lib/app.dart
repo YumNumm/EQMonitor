@@ -8,6 +8,7 @@ import 'package:eqmonitor/feature/settings/features/feedback/feedback_screen.dar
 import 'package:feedback/feedback.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class App extends HookConsumerWidget {
@@ -72,6 +73,12 @@ class App extends HookConsumerWidget {
               colorScheme: darkColorScheme,
               customColors: darkCustomColors,
             ),
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('ja', 'JP'),
+            ],
           );
         },
       ),

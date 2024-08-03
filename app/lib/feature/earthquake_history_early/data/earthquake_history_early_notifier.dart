@@ -35,6 +35,8 @@ class EarthquakeHistoryEarlyNotifier extends _$EarthquakeHistoryEarlyNotifier {
       depthGte: parameter.depthGte,
       intensityLte: parameter.intensityLte,
       intensityGte: parameter.intensityGte,
+      originTimeLte: parameter.originTimeLte,
+      originTimeGte: parameter.originTimeGte,
       sort: parameter.sort,
       ascending: parameter.ascending,
     );
@@ -67,6 +69,8 @@ class EarthquakeHistoryEarlyNotifier extends _$EarthquakeHistoryEarlyNotifier {
           intensityLte: parameter.intensityLte,
           magnitudeGte: parameter.magnitudeGte,
           magnitudeLte: parameter.magnitudeLte,
+          originTimeLte: parameter.originTimeLte,
+          originTimeGte: parameter.originTimeGte,
           offset: currentData?.$1.length ?? 0,
           sort: parameter.sort,
           ascending: parameter.ascending,
