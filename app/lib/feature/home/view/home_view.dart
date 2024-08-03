@@ -25,6 +25,7 @@ import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/notification_token.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_screen.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_scale.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
@@ -467,6 +468,13 @@ class _Sheet extends StatelessWidget {
           const UpdateWidget(),
           const _NotificationPermission(),
           const EarthquakeHistorySheetWidget(),
+          ListTile(
+            title: const Text('過去の地震履歴'),
+            subtitle: const Text('震度データベースを用いて、1919年以降の地震情報を検索できます'),
+            leading: const Icon(Icons.history),
+            onTap: () =>
+                const EarthquakeHistoryEarlyRoute().push<void>(context),
+          ),
           const _NotificationMigrationWidget(),
           ListTile(
             title: const Text('地震・津波に関するお知らせ'),
