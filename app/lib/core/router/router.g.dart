@@ -145,6 +145,18 @@ extension $InformationHistoryDetailsRouteExtension
 RouteBase get $homeRoute => GoRouteData.$route(
       path: '/',
       factory: $HomeRouteExtension._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'earthquake-history-early',
+          factory: $EarthquakeHistoryEarlyRouteExtension._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'details/:id',
+              factory: $EarthquakeHistoryEarlyDetailsRouteExtension._fromState,
+            ),
+          ],
+        ),
+      ],
     );
 
 extension $HomeRouteExtension on HomeRoute {
@@ -152,6 +164,45 @@ extension $HomeRouteExtension on HomeRoute {
 
   String get location => GoRouteData.$location(
         '/',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $EarthquakeHistoryEarlyRouteExtension on EarthquakeHistoryEarlyRoute {
+  static EarthquakeHistoryEarlyRoute _fromState(GoRouterState state) =>
+      const EarthquakeHistoryEarlyRoute();
+
+  String get location => GoRouteData.$location(
+        '/earthquake-history-early',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $EarthquakeHistoryEarlyDetailsRouteExtension
+    on EarthquakeHistoryEarlyDetailsRoute {
+  static EarthquakeHistoryEarlyDetailsRoute _fromState(GoRouterState state) =>
+      EarthquakeHistoryEarlyDetailsRoute(
+        id: state.pathParameters['id']!,
+      );
+
+  String get location => GoRouteData.$location(
+        '/earthquake-history-early/details/${Uri.encodeComponent(id)}',
       );
 
   void go(BuildContext context) => context.go(location);
@@ -642,7 +693,7 @@ bool _$boolConverter(String value) {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$goRouterHash() => r'34628ddaf293391bee61bfe6a91ef969868b751a';
+String _$goRouterHash() => r'5017366471d09076354eacf09323884a4feff4c2';
 
 /// See also [goRouter].
 @ProviderFor(goRouter)

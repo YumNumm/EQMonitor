@@ -51,7 +51,8 @@ class MapStyle {
       },
       'sprite': '',
       'glyphs':
-          'https://orangemug.github.io/font-glyphs/glyphs/{fontstack}/{range}.pbf',
+//          'https://orangemug.github.io/font-glyphs/glyphs/{fontstack}/{range}.pbf',
+          'https://glyphs.geolonia.com/{fontstack}/{range}.pbf',
       'layers': [
         {
           'id': BaseLayer.background.name,

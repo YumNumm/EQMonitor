@@ -8,7 +8,7 @@ part of 'websocket_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$websocketHash() => r'c68d4699c7f74ecd50e8ed3556671f47a5598dd4';
+String _$websocketHash() => r'713cd86acd6c99ea37b035179cad5d756335c0ea';
 
 /// See also [websocket].
 @ProviderFor(websocket)
@@ -240,7 +240,7 @@ final websocketStatusProvider =
 );
 
 typedef _$WebsocketStatus = Notifier<ConnectionState>;
-String _$websocketMessagesHash() => r'01f80f3a9550b25447458916cd6725a01006470f';
+String _$websocketMessagesHash() => r'96ee774ba01aef655b2ceec0d1af8b49e2878935';
 
 /// See also [WebsocketMessages].
 @ProviderFor(WebsocketMessages)

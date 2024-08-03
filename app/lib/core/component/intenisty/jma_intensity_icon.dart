@@ -13,11 +13,13 @@ class JmaIntensityIcon extends ConsumerWidget {
     this.customText,
     super.key,
     this.size = 50,
+    this.showSuffix = true,
   });
   final JmaIntensity intensity;
   final IntensityIconType type;
   final double size;
   final String? customText;
+  final bool showSuffix;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -64,31 +66,35 @@ class JmaIntensityIcon extends ConsumerWidget {
             child: (intensity == JmaIntensity.fiveUpperNoInput)
                 ? const SizedBox.shrink()
                 : Center(
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            intensityMainText,
-                            style: TextStyle(
-                              color: fg,
-                              fontSize: 100,
-                              fontWeight: FontWeight.w900,
-                              fontFamily: FontFamily.jetBrainsMono,
+                    child: Padding(
+                      padding: const EdgeInsets.all(2),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              intensityMainText,
+                              style: TextStyle(
+                                color: fg,
+                                fontSize: 100,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: FontFamily.jetBrainsMono,
+                              ),
                             ),
-                          ),
-                          Text(
-                            suffix,
-                            style: TextStyle(
-                              color: fg,
-                              fontSize: 80,
-                              fontWeight: FontWeight.w900,
-                              fontFamily: FontFamily.jetBrainsMono,
-                              fontFamilyFallback: const [FontFamily.notoSansJP],
+                            Text(
+                              suffix,
+                              style: TextStyle(
+                                color: fg,
+                                fontSize: 80,
+                                fontFamily: FontFamily.jetBrainsMono,
+                                fontFamilyFallback: const [
+                                  FontFamily.notoSansJP,
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -144,16 +150,17 @@ class JmaIntensityIcon extends ConsumerWidget {
                           fontFamily: FontFamily.jetBrainsMono,
                         ),
                       ),
-                      Text(
-                        intensitySubText,
-                        style: TextStyle(
-                          color: fg,
-                          fontSize: 50,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: FontFamily.jetBrainsMono,
-                          fontFamilyFallback: const [FontFamily.notoSansJP],
+                      if (showSuffix)
+                        Text(
+                          intensitySubText,
+                          style: TextStyle(
+                            color: fg,
+                            fontSize: 50,
+                            fontWeight: FontWeight.w900,
+                            fontFamily: FontFamily.jetBrainsMono,
+                            fontFamilyFallback: const [FontFamily.notoSansJP],
+                          ),
                         ),
-                      ),
                     ],
                   ],
                 ),
