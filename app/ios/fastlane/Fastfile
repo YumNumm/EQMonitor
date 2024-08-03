@@ -93,7 +93,10 @@ platform :ios do
     )
 
     # Build the project
-    shorebird_release(platform: "ios")
+    build_app(
+      archive_path: "../build/ios/archive/Runner.xcarchive",
+      export_method: "app-store",
+    )
 
     # Upload the project
     changelog = changelog_from_git_commits(
@@ -102,7 +105,8 @@ platform :ios do
       date_format: "short",
     )
     upload_to_testflight(
-      ipa: "./Runner.ipa",
+      ipa: "Runner.ipa",
+      #ipa: "./Runner.ipa",
       changelog: changelog,
       skip_waiting_for_build_processing: ENV['CI'],
     )

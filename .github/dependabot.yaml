@@ -1,8 +1,42 @@
-# https://github.blog/changelog/2022-04-05-pub-beta-support-for-dependabot-version-updates/
 version: 2
-enable-beta-ecosystems: true
 updates:
-  - package-ecosystem: "pub"
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "daily"
+      # Monday at 9am JST
+      timezone: "Asia/Tokyo"
+      time: "09:00"
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+  - package-ecosystem: "pub"
+    directories:
+      - /
+      - /app
+      - /packages/*
+    schedule:
+      interval: "daily"
+      # Monday at 9am JST
+      timezone: "Asia/Tokyo"
+      time: "09:00"
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+  - package-ecosystem: "bundler"
+    directory: "/app/android"
+    schedule:
+      interval: "daily"
+      # Monday at 9am JST
+      timezone: "Asia/Tokyo"
+      time: "09:00"
+  - package-ecosystem: "bundler"
+    directory: "/app/ios"
+    schedule:
+      interval: "daily"
+      # Monday at 9am JST
+      timezone: "Asia/Tokyo"
+      time: "09:00"
