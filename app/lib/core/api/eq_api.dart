@@ -23,7 +23,6 @@ EqApi eqApi(EqApiRef ref) {
     objectsDio: Dio(
       BaseOptions(
         baseUrl: 'https://object.eqmonitor.app',
-
       ),
     )..interceptors.add(
         TalkerDioLogger(
