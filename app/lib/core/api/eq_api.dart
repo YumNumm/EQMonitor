@@ -1,7 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:eqapi_client/eqapi_client.dart';
 import 'package:eqmonitor/core/provider/dio_provider.dart';
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
+import 'package:talker_dio_logger/talker_dio_logger_settings.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 part 'eq_api.g.dart';
 
@@ -18,9 +22,19 @@ EqApi eqApi(EqApiRef ref) {
     dio: dio,
     objectsDio: Dio(
       BaseOptions(
-        baseUrl: 'https://objects.eqmonitor.app',
+        baseUrl: 'https://object.eqmonitor.app',
+
       ),
-    ),
+    )..interceptors.add(
+        TalkerDioLogger(
+          settings: TalkerDioLoggerSettings(
+            errorPen: AnsiPen()..red(),
+            requestPen: AnsiPen()..yellow(),
+            responsePen: AnsiPen()..green(),
+          ),
+          talker: ref.watch(talkerProvider),
+        ),
+      ),
   );
 }
 
