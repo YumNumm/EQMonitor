@@ -6,10 +6,10 @@ environment:
   sdk: ^3.3.0
 
 dependencies:
-  http: ^1.2.1
+  http: ^1.2.2
   kyoshin_observation_point_types:
     git:
       url: https://github.com/YumNumm/EQMonitor.git
       path: packages/kyoshin_observation_point_types
-  geojson_vi: ^2.2.4
+  geojson_vi: ^2.2.5
   maps_toolkit: ^3.0.0
