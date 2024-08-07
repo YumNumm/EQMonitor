@@ -71,7 +71,7 @@ jobs:
         run: flutter build appbundle --release
 
       - name: Upload artifact aab
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.6
         with:
           name: release-android
           path: app/build/app/outputs/bundle/release/app-release.aab
