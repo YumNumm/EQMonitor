@@ -29,18 +29,18 @@ packages:
     dependency: "direct main"
     description:
       name: geojson_vi
-      sha256: f269ba5713b823466630f30711355180591c40c4860de49fb4b9c46026528b2d
+      sha256: a47e0efd17617aef8b239719ea2a3ef743563e873709531ee5498ccfd04069f2
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.4"
+    version: "2.2.5"
   http:
     dependency: "direct main"
     description:
       name: http
-      sha256: "761a297c042deedc1ffbb156d6e2af13886bb305c2a343a4d972504cd67dd938"
+      sha256: b9c29a161230ee03d3ccf545097fccd9b87a5264228c5d348202e0f0c28f9010
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.1"
+    version: "1.2.2"
   http_parser:
     dependency: transitive
     description:
@@ -52,9 +52,11 @@ packages:
   kyoshin_observation_point_types:
     dependency: "direct main"
     description:
-      path: "../kyoshin_observation_point_types"
-      relative: true
-    source: path
+      path: "packages/kyoshin_observation_point_types"
+      ref: HEAD
+      resolved-ref: a24d039a62a7420a807dd2213604bf92b06f2af3
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   maps_toolkit:
     dependency: "direct main"
