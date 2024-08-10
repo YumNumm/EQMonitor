@@ -1,5 +1,6 @@
 import 'package:eqapi_client/eqapi_client.dart';
 import 'package:eqapi_types/model/v1/earthquake_early.dart';
+import 'package:eqmonitor/core/component/button/action_button.dart';
 import 'package:eqmonitor/core/component/chip/date_range_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
@@ -14,9 +15,11 @@ import 'package:eqmonitor/feature/earthquake_history_early/ui/components/earthqu
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class EarthquakeHistoryEarlyRoute extends GoRouteData {
   const EarthquakeHistoryEarlyRoute();
@@ -43,7 +46,7 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
     );
     return Scaffold(
       appBar: AppBar(
-        title: const Text('過去の地震履歴(仮)'),
+        title: const Text('震度データベース'),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48),
           child: _SearchParameter(
@@ -51,6 +54,13 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
             onChanged: (value) => parameter.value = value,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info),
+            onPressed: () async =>
+                _EarthquakeHistoryEarlyInformationModal.show(context),
+          ),
+        ],
       ),
       body: _SliverListBody(
         state: state,
@@ -262,6 +272,69 @@ class _SliverListBody extends HookConsumerWidget {
             ],
           ),
       },
+    );
+  }
+}
+
+class _EarthquakeHistoryEarlyInformationModal extends StatelessWidget {
+  const _EarthquakeHistoryEarlyInformationModal();
+
+  static Future<void> show(BuildContext context) async => showModalBottomSheet(
+        context: context,
+        builder: (_) => const _EarthquakeHistoryEarlyInformationModal(),
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final sheetBar = Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      width: 36,
+      height: 4,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: theme.colorScheme.onSurface,
+        boxShadow: const <BoxShadow>[
+          BoxShadow(color: Colors.black12, blurRadius: 12),
+        ],
+      ),
+    );
+    return SafeArea(
+      child: Column(
+        children: [
+          Center(child: sheetBar),
+          Expanded(
+            child: Markdown(
+              onTapLink: (_, url, __) async {
+                if (url != null && await canLaunchUrlString(url)) {
+                  await launchUrlString(url);
+                }
+              },
+              data: '''
+### **震度データベースについて**
+震度データベースは、1919年からの気象庁震度データを取りまとめたものです。
+
+### **利用上の注意**
+- 本アプリケーションで表示される震度データは、本アプリケーション用に構築した独自のサーバーにより提供されています。そのため、**気象庁の公開する震度データベースに掲載されてから本アプリケーションに反映されるまでには数週間程度のタイムラグ**が生じる場合があります。
+  - 最新の地震情報については、アプリケーション内の地震履歴画面や気象庁の公式サイトなどをご確認ください。
+- **本データベースには、一部計測時刻が不明なデータが含まれています。**(「日時分不明データ」や「時分不明データ」「分不明データ」と記載)
+- 1996(平成8年)9月以前の震度5・6は、便宜上 それぞれ震度5弱・6弱と表記している箇所があります。
+
+### **データの取得元**
+- [気象庁 震度データベース](https://www.data.jma.go.jp/svd/eqdb/data/shindo/)
+
+''',
+              softLineBreak: true,
+            ),
+          ),
+          ActionButton.text(
+            context: context,
+            text: '閉じる',
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
     );
   }
 }
