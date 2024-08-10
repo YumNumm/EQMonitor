@@ -1,0 +1,37 @@
+name: "Setup Application Runtime"
+description: "Setup application runtime for Flutter"
+
+runs:
+  using: "composite"
+  steps:
+    # https://github.com/kuhnroyal/flutter-fvm-config-action/tree/v2.0
+    - name: Fetch flutter config
+      uses: kuhnroyal/flutter-fvm-config-action@34c3905bc939a4ff9d9cb07d5a977493fa73b2aa
+      id: fvm-config-action
+
+    # https://github.com/subosito/flutter-action/tree/v2.16.0
+    - name: Setup flutter
+      uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1
+      with:
+        flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
+        channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
+        cache: true
+
+    # https://github.com/actions/cache/tree/v4
+    - name: Cache pubspec dependencies
+      uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+      with:
+        path: |
+          ~/.pub-cache
+        key: pubspec-${{ hashFiles('**/pubspec.lock') }}
+        restore-keys: |
+          pubspec-
+
+    - name: Setup melos
+      run: |
+        mkdir -p .fvm
+        ln -s $FLUTTER_ROOT .fvm/flutter_sdk
+        MELOS_VERSION=$(cat pubspec.lock | yq ".packages.melos.version" -r)
+        dart pub global activate melos $MELOS_VERSION
+        melos bootstrap
+      shell: bash
