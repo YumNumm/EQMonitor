@@ -1,9 +1,17 @@
 name: eqmonitor_workspace
 repository: https://github.com/YumNumm/EQMonitor
+sdkPath: .fvm/flutter_sdk/
 
 command:
   version:
     linkToCommits: true
+  bootstrap:
+    # "pub get"を並列実行すると、いくつかの問題が発生するようです
+    # (https://github.com/dart-lang/pub/issues/3404)
+    # この機能を無効にすることで、CIの安定性が向上します。
+    runPubGetInParallel: false
+    environment:
+      sdk: ^3.5.0
 
 scripts:
   analyze:
@@ -34,7 +42,13 @@ scripts:
   clean-all:
     run: melos clean &&  melos exec "flutter clean"
 
+  upgrade:
+    run: melos exec "flutter pub upgrade --major-versions"
+
 packages:
   - app
   - packages/*
 
+ide:
+  intellij:
+    enabled: false
