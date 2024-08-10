@@ -50,16 +50,6 @@ jobs:
       - name: Show Xcode version
         run: xcodebuild -version
 
-      - name: Pre set up ruby
-        run: cp .ruby-version app/ios/.ruby-version
-
-      - name: Set up ruby
-        # https://github.com/ruby/setup-ruby/tree/v1/
-        uses: ruby/setup-ruby@a6e6f86333f0a2523ece813039b8b4be04560854
-        with:
-          bundler-cache: true
-          working-directory: app/ios
-
       - name: Install brew dependencies
         working-directory: app/ios
         run: brew bundle
