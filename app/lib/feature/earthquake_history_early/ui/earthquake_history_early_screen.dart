@@ -13,6 +13,7 @@ import 'package:eqmonitor/feature/earthquake_history_early/ui/components/chip/ea
 import 'package:eqmonitor/feature/earthquake_history_early/ui/components/earthquake_history_early_list_tile.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/components/earthquake_history_early_not_found.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_details_screen.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -72,6 +73,9 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
               earthquakeHistoryEarlyNotifierProvider(parameter.value).notifier,
             )
             .fetchNextData(),
+        shouldShowLatestEarthquakeMessage:
+            parameter.value.sort == EarthquakeEarlySortType.origin_time &&
+                !parameter.value.ascending,
       ),
     );
   }
@@ -156,11 +160,15 @@ class _SliverListBody extends HookConsumerWidget {
     required this.state,
     this.onRefresh,
     this.onScrollEnd,
+    this.shouldShowLatestEarthquakeMessage = false,
   });
 
   final void Function()? onRefresh;
   final void Function()? onScrollEnd;
   final AsyncValue<(List<EarthquakeEarly>, int)> state;
+
+  /// 「最新の地震情報を見るためには地震履歴を使ってください」メッセージを表示するかどうか
+  final bool shouldShowLatestEarthquakeMessage;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -180,6 +188,8 @@ class _SliverListBody extends HookConsumerWidget {
       },
       [controller, state, onScrollEnd, onRefresh],
     );
+    final theme = Theme.of(context);
+    final colorSchema = theme.colorScheme;
 
     Widget listView({
       required (List<EarthquakeEarly>, int) data,
@@ -251,6 +261,31 @@ class _SliverListBody extends HookConsumerWidget {
         AsyncData(:final value) => Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
+              if (shouldShowLatestEarthquakeMessage)
+                Card(
+                  color: colorSchema.secondaryContainer,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          const TextSpan(text: '最新の地震情報を見るためには'),
+                          TextSpan(
+                            text: '地震履歴',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () =>
+                                  EarthquakeHistoryRoute().push<void>(context),
+                          ),
+                          const TextSpan(text: 'を使ってください'),
+                        ],
+                      ),
+                      style: TextStyle(
+                        color: colorSchema.onSecondaryContainer,
+                      ),
+                    ),
+                  ),
+                ),
               Padding(
                 padding: const EdgeInsets.all(4),
                 child: Text.rich(

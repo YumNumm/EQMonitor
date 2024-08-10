@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqapi_types/model/v1/earthquake_early.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
@@ -79,7 +77,7 @@ class EarthquakeHistoryEarlyDetailsScreen extends HookConsumerWidget {
                 item: value,
                 showIntensityIcon: true,
                 registerNavigateToHome: (func) {
-                  log('registerNavigateToHome');
+                  navigateToHomeFunction.value = func;
                 },
               ),
 
@@ -187,7 +185,6 @@ class _Sheet extends StatelessWidget {
         controller: sheetController,
         children: [
           EarthquakeEarlyHypoInfoWidget(item: item),
-          const Divider(),
         ],
       ),
     );

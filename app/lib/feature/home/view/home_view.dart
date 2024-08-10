@@ -465,7 +465,6 @@ class _Sheet extends StatelessWidget {
         children: [
           const EewWidgets(),
           const KmoniMaintenanceWidget(),
-          const UpdateWidget(),
           const _NotificationPermission(),
           const EarthquakeHistorySheetWidget(),
           ListTile(
