@@ -1,5 +1,7 @@
 import 'package:eqapi_types/eqapi_types.dart';
+import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -100,12 +102,18 @@ class InformationHistoryDetailsPage extends HookConsumerWidget {
               padding: const EdgeInsets.all(16),
               child: SafeArea(
                 top: false,
-                child: Text(
-                  data.body
+                child: MarkdownBody(
+                  data: data.body
                       .split('\n本件問い合わせ先\n')
                       .first
                       .split('\n本件に関する問い合わせ先\n')
-                      .first,
+                      .first
+                      .toHalfWidth
+                      .replaceAll('* ', '*')
+                      .replaceAll(' *', '*')
+                      .replaceAll('○', '- ')
+                      .replaceAll('・', '  - '),
+                  softLineBreak: true,
                 ),
               ),
             ),

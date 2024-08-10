@@ -81,7 +81,6 @@ final List<AndroidNotificationChannel> notificationChannels = [
     description: '長周期地震動階級1以上を観測した地震について、観測した要素などを地震発生後10分程度で発表',
     importance: Importance.high,
   ),
-
   const AndroidNotificationChannel(
     'VZSE40',
     groupId: 'earthquake',
@@ -120,6 +119,7 @@ final List<AndroidNotificationChannel> notificationChannels = [
         '北西太平洋域でM6.5以上の地震が発生した場合、北西太平洋域の各国が津波警報等の発表に資するための支援情報として発表するものを複製した国内向け配信',
     importance: Importance.high,
   ),
+  */
   const AndroidNotificationChannel(
     'VYSE50',
     groupId: 'earthquake',
@@ -141,7 +141,7 @@ final List<AndroidNotificationChannel> notificationChannels = [
     '南海トラフ地震関連解説情報(定例)',
     description: '南海トラフ沿いの地震に関する評価検討会の定例会合における調査結果の発表',
     importance: Importance.high,
-  ),*/
+  ),
 ];
 
 final List<AndroidNotificationChannelGroup> notificationChannelGroups = [
