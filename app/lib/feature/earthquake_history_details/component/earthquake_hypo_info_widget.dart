@@ -342,6 +342,7 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
           depthWidget,
           hypoWidget,
         ],
+        Row(),
         if (timeWidget != null) timeWidget,
       ],
     );

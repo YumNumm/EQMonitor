@@ -1,6 +1,7 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'dart:async';
+import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
@@ -97,10 +98,36 @@ class EarthquakeEarlyMapWidget extends HookConsumerWidget {
     final cameraUpdate = useMemoized(
       () {
         final (latitude, longitude) = (item.lat, item.lon);
-        if (latitude != null && longitude != null) {
+        final stations = item.cities
+            .map((city) => city.observationPoints)
+            .flattened
+            .map((e) => LatLng(e.lat, e.lon))
+            .toList();
+        if (stations.length < 2) {
           return CameraUpdate.newLatLngZoom(
-            map_libre.LatLng(latitude, longitude),
-            2,
+            LatLng(stations.first.latitude, stations.first.longitude),
+            6,
+          );
+        }
+
+        var minLat = double.infinity, minLon = double.infinity;
+        var maxLat = double.negativeInfinity, maxLon = double.negativeInfinity;
+        for (final latLng in stations) {
+          minLat = min(minLat, latLng.latitude);
+          maxLat = max(maxLat, latLng.latitude);
+          minLon = min(minLon, latLng.longitude);
+          maxLon = max(maxLon, latLng.longitude);
+        }
+        if (latitude != null && longitude != null) {
+          return CameraUpdate.newLatLngBounds(
+            LatLngBounds(
+              southwest: LatLng(minLat, minLon),
+              northeast: LatLng(maxLat, maxLon),
+            ),
+            bottom: 30,
+            top: 30,
+            left: 30,
+            right: 30,
           );
         } else {
           return CameraUpdate.newLatLngZoom(
@@ -219,6 +246,7 @@ class EarthquakeEarlyMapWidget extends HookConsumerWidget {
         styleString: path,
         minMaxZoomPreference: MinMaxZoomPreference(0, maxZoomLevel.value),
         onMapCreated: (controller) => mapController.value = controller,
+        compassViewMargins: Point(8, 48),
         onStyleLoadedCallback: () async {
           final controller = mapController.value!;
           await [
@@ -256,8 +284,6 @@ class EarthquakeEarlyMapWidget extends HookConsumerWidget {
           await controller.moveCamera(cameraUpdate);
           maxZoomLevel.value = 12;
         },
-        rotateGesturesEnabled: false,
-        tiltGesturesEnabled: false,
       ),
     );
   }
@@ -312,7 +338,7 @@ class _StationAction extends _Action {
                   'properties': {
                     'color': color.background.toHexStringRGB(),
                     'intensity': e.key?.type,
-                    'name': point.name,
+                    'name': point.name.replaceAll('＊', ""),
                   },
                 },
               );
@@ -332,9 +358,9 @@ class _StationAction extends _Action {
             ['linear'],
             ['zoom'],
             3,
-            0.2,
+            0.3,
             20,
-            1,
+            1.0,
           ],
           textAllowOverlap: true,
           iconAllowOverlap: true,
@@ -358,7 +384,7 @@ class _StationAction extends _Action {
             ['linear'],
             ['zoom'],
             3,
-            0.04,
+            0.2,
             7,
             0.3,
           ],
@@ -383,7 +409,7 @@ class _StationAction extends _Action {
         textField: ['get', 'name'],
         textSize: 13,
         textColor: Colors.black.toHexStringRGB(),
-        textHaloColor: Colors.white.toHexStringRGB(),
+        textHaloColor: Colors.grey.shade300.toHexStringRGB(),
         textHaloWidth: 2,
         textFont: ['Noto Sans CJK JP Bold'],
         textOffset: [

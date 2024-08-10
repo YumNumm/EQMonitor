@@ -47,35 +47,37 @@ class EarthquakeEarlyHypoInfoWidget extends HookConsumerWidget {
         : null;
 
     // 「MaxInt, 震源地, 規模」
-    final hypoWidget = Row(
-      textBaseline: TextBaseline.ideographic,
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      children: [
-        Text(
-          '震源地',
-          style: textTheme.bodyMedium!.copyWith(
-            fontWeight: FontWeight.bold,
-            color: textTheme.bodyMedium!.color!.withOpacity(0.8),
-          ),
-        ),
-        const SizedBox(width: 4),
-        Flexible(
-          child: Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: item.name,
-                  style: textTheme.headlineMedium!.copyWith(
-                    fontWeight: FontWeight.bold,
+    final hypoWidget = item.name == "詳細不明"
+        ? null
+        : Row(
+            textBaseline: TextBaseline.ideographic,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            children: [
+              Text(
+                '震源地',
+                style: textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: textTheme.bodyMedium!.color!.withOpacity(0.8),
+                ),
+              ),
+              const SizedBox(width: 4),
+              Flexible(
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: item.name,
+                        style: textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
+              ),
+            ],
+          );
 
     // 地震発生時刻
     final originTime = item.originTime.toLocal();
@@ -90,7 +92,26 @@ class EarthquakeEarlyHypoInfoWidget extends HookConsumerWidget {
       OriginTimePrecision.day => DateFormat('yyyy/MM/dd ').format(originTime),
       OriginTimePrecision.month => DateFormat('yyyy/MM ').format(originTime),
     };
-    final timeWidget = Text(timeText);
+    final timeWidget = Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: '発生時刻 ',
+            style: textTheme.bodySmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: textTheme.bodyMedium!.color!.withOpacity(0.8),
+            ),
+          ),
+          TextSpan(
+            text: timeText,
+            style: textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: textTheme.bodyMedium?.color,
+            ),
+          ),
+        ],
+      ),
+    );
 
     // 「M 8.0 / 深さ100km」
     final magnitudeWidget = Row(
@@ -100,8 +121,8 @@ class EarthquakeEarlyHypoInfoWidget extends HookConsumerWidget {
       children: [
         Text(
           'M',
-          style: textTheme.titleMedium!.copyWith(
-            color: textTheme.titleMedium!.color!.withOpacity(0.8),
+          style: textTheme.titleMedium?.copyWith(
+            color: textTheme.titleMedium?.color?.withOpacity(0.8),
           ),
         ),
         Flexible(
@@ -132,7 +153,7 @@ class EarthquakeEarlyHypoInfoWidget extends HookConsumerWidget {
         ),
         if (item.depth != null && item.depth != 0) ...[
           Text(
-            item.depth.toString(),
+            item.depth!.toInt().toString(),
             style: textTheme.displaySmall!.copyWith(
               fontWeight: FontWeight.bold,
               fontFamily: FontFamily.notoSansJP,
@@ -167,8 +188,9 @@ class EarthquakeEarlyHypoInfoWidget extends HookConsumerWidget {
       children: [
         Text(
           'M・深さ',
-          style: textTheme.titleMedium!.copyWith(
-            color: textTheme.titleMedium!.color!.withOpacity(0.8),
+          style: textTheme.bodyMedium!.copyWith(
+            fontWeight: FontWeight.bold,
+            color: textTheme.bodyMedium!.color!.withOpacity(0.8),
           ),
         ),
         Text(
@@ -192,12 +214,13 @@ class EarthquakeEarlyHypoInfoWidget extends HookConsumerWidget {
         const Row(),
         if (isMagnitudeAndDepthUnknown) ...[
           magnitudeDepthUnknownWidget,
-          hypoWidget,
+          if (hypoWidget != null) hypoWidget,
         ] else ...[
           magnitudeWidget,
           depthWidget,
-          hypoWidget,
+          if (hypoWidget != null) hypoWidget,
         ],
+        Row(),
         timeWidget,
       ],
     );

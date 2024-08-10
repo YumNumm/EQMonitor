@@ -57,7 +57,7 @@ class NotificationRemoteSettingsPage extends HookConsumerWidget {
 
     return PopScope(
       canPop: !hasChanged,
-      onPopInvoked: (value) async {
+      onPopInvokedWithResult: (value, _) async {
         if (!value) {
           // 保存しなくてよいか確認
           final result = await showOkCancelAlertDialog(

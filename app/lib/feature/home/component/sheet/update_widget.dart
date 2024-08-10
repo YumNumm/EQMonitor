@@ -41,7 +41,7 @@ class UpdateWidget extends HookConsumerWidget {
                       ),
                       subtitle: Text(value.forceUpdateMessage ?? 'アップデートがあります'),
                     ),
-                    ButtonBar(
+                    OverflowBar(
                       children: [
                         TextButton(
                           onPressed: () {
