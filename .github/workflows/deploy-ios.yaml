@@ -130,7 +130,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: release-ios
-          path: app/ios/Runner.ipa
+          path: app/ios/output
 
       - name: Install Gems
         working-directory: app/ios
@@ -159,5 +159,6 @@ jobs:
 
       - name: Upload
         run: |
+          mv output/Runner.ipa Runner.ipa
           bundle exec fastlane upload
         working-directory: app/ios
