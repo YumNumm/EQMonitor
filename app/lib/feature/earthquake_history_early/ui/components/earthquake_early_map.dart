@@ -312,7 +312,6 @@ class _StationAction extends _Action {
   ) async {
     await dispose(controller);
     await controller.setSymbolIconAllowOverlap(true);
-    await controller.setSymbolIconIgnorePlacement(true);
     await controller.addGeoJsonSource(
       'station-intensity',
       {
@@ -362,7 +361,6 @@ class _StationAction extends _Action {
             20,
             1.0,
           ],
-          textAllowOverlap: true,
           iconAllowOverlap: true,
         ),
         filter: [
@@ -388,7 +386,6 @@ class _StationAction extends _Action {
             7,
             0.3,
           ],
-          textAllowOverlap: true,
           iconAllowOverlap: true,
         ),
         maxzoom: 7,
@@ -408,10 +405,11 @@ class _StationAction extends _Action {
       SymbolLayerProperties(
         textField: ['get', 'name'],
         textSize: 13,
-        textColor: Colors.black.toHexStringRGB(),
-        textHaloColor: Colors.grey.shade300.toHexStringRGB(),
-        textHaloWidth: 2,
-        textFont: ['Noto Sans CJK JP Bold'],
+        textColor: Colors.white.toHexStringRGB(),
+        textHaloColor: Colors.black.toHexStringRGB(),
+        textHaloBlur: 1,
+        textHaloWidth: 1,
+        textFont: ['Noto Sans CJK JP'],
         textOffset: [
           map_libre.Expressions.literal,
           [0, 2],

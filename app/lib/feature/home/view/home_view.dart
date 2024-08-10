@@ -33,7 +33,6 @@ import 'package:eqmonitor/feature/home/component/parameter/parameter_loader_widg
 import 'package:eqmonitor/feature/home/component/render/map_components_renderer.dart';
 import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
-import 'package:eqmonitor/feature/home/component/sheet/update_widget.dart';
 import 'package:eqmonitor/feature/home/features/map/view/main_map_view.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/fcm_token_change_detector.dart';
