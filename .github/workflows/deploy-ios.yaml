@@ -67,6 +67,10 @@ jobs:
       - name: Resolve dependencies
         run: melos bootstrap
 
+      - name: Install Pods
+        working-directory: app/ios
+        run: bundle exec pod install
+
       - name: Set Firebase Configuration
         run: echo '${{ secrets.FIREBASE_IOS }}' | base64 -d > app/ios/Runner/GoogleService-Info.plist
 
