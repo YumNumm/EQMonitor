@@ -122,6 +122,11 @@ class _InformationDataView extends HookConsumerWidget {
                 InformationHistoryDetailsRoute($extra: item).push<void>(
               context,
             ),
+            tileColor: switch (item.level) {
+              Level.info => Colors.transparent,
+              Level.warning => Colors.yellow.withOpacity(0.2),
+              Level.critical => Colors.red.withOpacity(0.2),
+            },
           );
         },
       ),

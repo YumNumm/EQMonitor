@@ -42,7 +42,7 @@ enum Author {
 enum Level {
   info,
   warning,
-  danger,
+  critical,
   ;
 }
 

@@ -75,5 +75,5 @@ const _$AuthorEnumMap = {
 const _$LevelEnumMap = {
   Level.info: 'info',
   Level.warning: 'warning',
-  Level.danger: 'danger',
+  Level.critical: 'critical',
 };
