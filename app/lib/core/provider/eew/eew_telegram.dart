@@ -20,29 +20,30 @@ class Eew extends _$Eew {
     final restResult = ref.watch(_eewRestProvider);
     // AsyncData以外の場合は、そのまま返す
     // ^ AsyncError, AsyncLoading
-    if (restResult is! AsyncData) {
+    if (restResult is AsyncError) {
+      ref.invalidate(_eewRestProvider);
+      ref.invalidateSelf();
+
       return restResult;
     }
 
     // WebSocketのListen開始
-    ref..listen(
-      websocketTableMessagesProvider<EewV1>(),
-      (_, next) {
-        final valueOrNull = next.valueOrNull;
-        if (valueOrNull is RealtimePostgresInsertPayload<EewV1>) {
-          _upsert(valueOrNull.newData);
-        }
-      },
-    )
-    ..listen(
-      appLifeCycleProvider,
-      (_ , next) {
+    ref
+      ..listen(
+        websocketTableMessagesProvider<EewV1>(),
+        (_, next) {
+          final valueOrNull = next.valueOrNull;
+          if (valueOrNull is RealtimePostgresInsertPayload<EewV1>) {
+            _upsert(valueOrNull.newData);
+          }
+        },
+      )
+      ..listen(appLifeCycleProvider, (_, next) {
         if (next == AppLifecycleState.resumed) {
           log('AppLifecycleState.resumed: Refetch EEW');
           _refetchRestApi();
         }
-      }
-    );
+      });
 
     final refreshTimer = Timer.periodic(
       const Duration(seconds: 10),
@@ -58,7 +59,7 @@ class Eew extends _$Eew {
     if (webSocketState is Connected || webSocketState is Reconnected) {
       return;
     }
-    if(ref.read(appLifeCycleProvider) != AppLifecycleState.resumed) {
+    if (ref.read(appLifeCycleProvider) != AppLifecycleState.resumed) {
       return;
     }
     ref.read(talkerProvider).log('Refetch EEW');
