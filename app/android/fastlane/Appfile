@@ -1,2 +1,2 @@
-json_key_file("~/.secret/play_store_secret_key.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+json_key_file("eqmonitor-main-4325501acd45.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
 package_name("net.yumnumm.eqmonitor") # e.g. com.krausefx.app
