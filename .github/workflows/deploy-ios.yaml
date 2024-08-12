@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - fix/ios-cd
 
 jobs:
   build:
@@ -66,6 +67,10 @@ jobs:
       - name: Resolve dependencies
         run: melos bootstrap
 
+      - name: Install Pods
+        working-directory: app/ios
+        run: bundle exec pod install
+
       - name: Set Firebase Configuration
         run: echo '${{ secrets.FIREBASE_IOS }}' | base64 -d > app/ios/Runner/GoogleService-Info.plist
 
@@ -76,6 +81,15 @@ jobs:
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
         run: |
           echo '${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}' | base64 -d > ios/AuthKey_NGL2W4BQP6.p8
+
+      - name: Set .env
+        working-directory: app
+        run:
+          echo '${{ secrets.ENV}}' | base64 -d > .env
+
+      - name: Regenerate code
+        working-directory: app
+        run: dart run build_runner build --delete-conflicting-outputs
 
       - name: Build IPA
         working-directory: app/ios
@@ -116,7 +130,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: release-ios
-          path: app/ios/Runner.ipa
+          path: app/ios/output
 
       - name: Install Gems
         working-directory: app/ios
@@ -145,5 +159,6 @@ jobs:
 
       - name: Upload
         run: |
+          mv output/Runner.ipa Runner.ipa
           bundle exec fastlane upload
         working-directory: app/ios
