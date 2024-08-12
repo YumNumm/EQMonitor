@@ -43,10 +43,6 @@ jobs:
           bundler-cache: true
           working-directory: app/android
 
-      - name: Install Pods
-        working-directory: app/android
-        run: bundle exec pod install
-
       - name: Resolve dependencies
         run: melos bootstrap
 
