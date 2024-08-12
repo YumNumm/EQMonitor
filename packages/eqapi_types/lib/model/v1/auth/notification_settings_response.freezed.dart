@@ -25,8 +25,12 @@ mixin _$NotificationSettingsResponse {
       throw _privateConstructorUsedError;
   List<DevicesEewSettings> get eew => throw _privateConstructorUsedError;
 
+  /// Serializes this NotificationSettingsResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NotificationSettingsResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $NotificationSettingsResponseCopyWith<NotificationSettingsResponse>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -55,6 +59,8 @@ class _$NotificationSettingsResponseCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of NotificationSettingsResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -98,6 +104,8 @@ class __$$NotificationSettingsResponseImplCopyWithImpl<$Res>
       $Res Function(_$NotificationSettingsResponseImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NotificationSettingsResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -162,14 +170,16 @@ class _$NotificationSettingsResponseImpl
             const DeepCollectionEquality().equals(other._eew, _eew));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_earthquake),
       const DeepCollectionEquality().hash(_eew));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NotificationSettingsResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NotificationSettingsResponseImplCopyWith<
@@ -199,8 +209,11 @@ abstract class _NotificationSettingsResponse
   List<DevicesEarthquakeSettings> get earthquake;
   @override
   List<DevicesEewSettings> get eew;
+
+  /// Create a copy of NotificationSettingsResponse
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotificationSettingsResponseImplCopyWith<
           _$NotificationSettingsResponseImpl>
       get copyWith => throw _privateConstructorUsedError;

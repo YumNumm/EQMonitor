@@ -27,8 +27,12 @@ mixin _$RegionItem {
   JmaLgIntensity? get maxLpgmIntensity => throw _privateConstructorUsedError;
   EarthquakeV1Base get earthquake => throw _privateConstructorUsedError;
 
+  /// Serializes this RegionItem to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RegionItem
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $RegionItemCopyWith<RegionItem> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -60,6 +64,8 @@ class _$RegionItemCopyWithImpl<$Res, $Val extends RegionItem>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of RegionItem
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -98,6 +104,8 @@ class _$RegionItemCopyWithImpl<$Res, $Val extends RegionItem>
     ) as $Val);
   }
 
+  /// Create a copy of RegionItem
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $EarthquakeV1BaseCopyWith<$Res> get earthquake {
@@ -135,6 +143,8 @@ class __$$RegionItemImplCopyWithImpl<$Res>
       _$RegionItemImpl _value, $Res Function(_$RegionItemImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RegionItem
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -223,12 +233,14 @@ class _$RegionItemImpl implements _RegionItem {
                 other.earthquake == earthquake));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, eventId, areaCode,
       maxIntensity, maxLpgmIntensity, earthquake);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RegionItem
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RegionItemImplCopyWith<_$RegionItemImpl> get copyWith =>
@@ -266,8 +278,11 @@ abstract class _RegionItem implements RegionItem {
   JmaLgIntensity? get maxLpgmIntensity;
   @override
   EarthquakeV1Base get earthquake;
+
+  /// Create a copy of RegionItem
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RegionItemImplCopyWith<_$RegionItemImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

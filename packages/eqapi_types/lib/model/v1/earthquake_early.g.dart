@@ -177,7 +177,7 @@ _$EarthquakeEarlyCityImpl _$$EarthquakeEarlyCityImplFromJson(
       ($checkedConvert) {
         final val = _$EarthquakeEarlyCityImpl(
           name: $checkedConvert('name', (v) => v as String),
-          code: $checkedConvert('code', (v) => v as String),
+          code: $checkedConvert('code', (v) => v as String?),
           maxIntensity: $checkedConvert('max_intensity',
               (v) => $enumDecode(_$JmaForecastIntensityEnumMap, v)),
           observationPoints: $checkedConvert(

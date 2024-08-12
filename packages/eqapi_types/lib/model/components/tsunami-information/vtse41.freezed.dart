@@ -23,8 +23,12 @@ PublicBodyVtse41Tsunami _$PublicBodyVtse41TsunamiFromJson(
 mixin _$PublicBodyVtse41Tsunami {
   List<TsunamiForecast> get forecasts => throw _privateConstructorUsedError;
 
+  /// Serializes this PublicBodyVtse41Tsunami to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of PublicBodyVtse41Tsunami
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PublicBodyVtse41TsunamiCopyWith<PublicBodyVtse41Tsunami> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -49,6 +53,8 @@ class _$PublicBodyVtse41TsunamiCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PublicBodyVtse41Tsunami
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -85,6 +91,8 @@ class __$$PublicBodyVtse41TsunamiImplCopyWithImpl<$Res>
       $Res Function(_$PublicBodyVtse41TsunamiImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of PublicBodyVtse41Tsunami
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -131,12 +139,14 @@ class _$PublicBodyVtse41TsunamiImpl implements _PublicBodyVtse41Tsunami {
                 .equals(other._forecasts, _forecasts));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(_forecasts));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PublicBodyVtse41Tsunami
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PublicBodyVtse41TsunamiImplCopyWith<_$PublicBodyVtse41TsunamiImpl>
@@ -161,8 +171,11 @@ abstract class _PublicBodyVtse41Tsunami implements PublicBodyVtse41Tsunami {
 
   @override
   List<TsunamiForecast> get forecasts;
+
+  /// Create a copy of PublicBodyVtse41Tsunami
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PublicBodyVtse41TsunamiImplCopyWith<_$PublicBodyVtse41TsunamiImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

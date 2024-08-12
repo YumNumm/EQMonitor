@@ -70,7 +70,7 @@ class EarthquakeEarlyRegion with _$EarthquakeEarlyRegion {
 class EarthquakeEarlyCity with _$EarthquakeEarlyCity {
   const factory EarthquakeEarlyCity({
     required String name,
-    required String code,
+    required String? code,
     required JmaForecastIntensity maxIntensity,
     required List<EarthquakeEarlyObservationPoint> observationPoints,
   }) = _EarthquakeEarlyCity;

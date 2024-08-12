@@ -32,8 +32,12 @@ mixin _$TsunamiEstimation {
       throw _privateConstructorUsedError;
   bool? get isObserving => throw _privateConstructorUsedError;
 
+  /// Serializes this TsunamiEstimation to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of TsunamiEstimation
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TsunamiEstimationCopyWith<TsunamiEstimation> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -66,6 +70,8 @@ class _$TsunamiEstimationCopyWithImpl<$Res, $Val extends TsunamiEstimation>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TsunamiEstimation
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -148,6 +154,8 @@ class __$$TsunamiEstimationImplCopyWithImpl<$Res>
       $Res Function(_$TsunamiEstimationImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TsunamiEstimation
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -266,7 +274,7 @@ class _$TsunamiEstimationImpl implements _TsunamiEstimation {
                 other.isObserving == isObserving));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -280,7 +288,9 @@ class _$TsunamiEstimationImpl implements _TsunamiEstimation {
       maxHeightCondition,
       isObserving);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TsunamiEstimation
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TsunamiEstimationImplCopyWith<_$TsunamiEstimationImpl> get copyWith =>
@@ -329,8 +339,11 @@ abstract class _TsunamiEstimation implements TsunamiEstimation {
   TsunamiEstimationMaxHeightCondition? get maxHeightCondition;
   @override
   bool? get isObserving;
+
+  /// Create a copy of TsunamiEstimation
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TsunamiEstimationImplCopyWith<_$TsunamiEstimationImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

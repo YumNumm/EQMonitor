@@ -22,8 +22,12 @@ FcmTokenRequest _$FcmTokenRequestFromJson(Map<String, dynamic> json) {
 mixin _$FcmTokenRequest {
   String get fcmToken => throw _privateConstructorUsedError;
 
+  /// Serializes this FcmTokenRequest to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FcmTokenRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $FcmTokenRequestCopyWith<FcmTokenRequest> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -47,6 +51,8 @@ class _$FcmTokenRequestCopyWithImpl<$Res, $Val extends FcmTokenRequest>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of FcmTokenRequest
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -80,6 +86,8 @@ class __$$FcmTokenRequestImplCopyWithImpl<$Res>
       _$FcmTokenRequestImpl _value, $Res Function(_$FcmTokenRequestImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of FcmTokenRequest
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -119,11 +127,13 @@ class _$FcmTokenRequestImpl implements _FcmTokenRequest {
                 other.fcmToken == fcmToken));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, fcmToken);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FcmTokenRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FcmTokenRequestImplCopyWith<_$FcmTokenRequestImpl> get copyWith =>
@@ -147,8 +157,11 @@ abstract class _FcmTokenRequest implements FcmTokenRequest {
 
   @override
   String get fcmToken;
+
+  /// Create a copy of FcmTokenRequest
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FcmTokenRequestImplCopyWith<_$FcmTokenRequestImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

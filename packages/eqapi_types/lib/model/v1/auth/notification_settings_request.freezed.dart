@@ -25,8 +25,12 @@ mixin _$NotificationSettingsRequest {
   List<NotificationSettingsRegion>? get regions =>
       throw _privateConstructorUsedError;
 
+  /// Serializes this NotificationSettingsRequest to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NotificationSettingsRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $NotificationSettingsRequestCopyWith<NotificationSettingsRequest>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -57,6 +61,8 @@ class _$NotificationSettingsRequestCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of NotificationSettingsRequest
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -75,6 +81,8 @@ class _$NotificationSettingsRequestCopyWithImpl<$Res,
     ) as $Val);
   }
 
+  /// Create a copy of NotificationSettingsRequest
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $NotificationSettingsGlobalCopyWith<$Res>? get global {
@@ -115,6 +123,8 @@ class __$$NotificationSettingsRequestImplCopyWithImpl<$Res>
       $Res Function(_$NotificationSettingsRequestImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NotificationSettingsRequest
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -172,12 +182,14 @@ class _$NotificationSettingsRequestImpl
             const DeepCollectionEquality().equals(other._regions, _regions));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, global, const DeepCollectionEquality().hash(_regions));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NotificationSettingsRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NotificationSettingsRequestImplCopyWith<_$NotificationSettingsRequestImpl>
@@ -206,8 +218,11 @@ abstract class _NotificationSettingsRequest
   NotificationSettingsGlobal? get global;
   @override
   List<NotificationSettingsRegion>? get regions;
+
+  /// Create a copy of NotificationSettingsRequest
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotificationSettingsRequestImplCopyWith<_$NotificationSettingsRequestImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -222,8 +237,12 @@ mixin _$NotificationSettingsGlobal {
   JmaForecastIntensity get minJmaIntensity =>
       throw _privateConstructorUsedError;
 
+  /// Serializes this NotificationSettingsGlobal to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NotificationSettingsGlobal
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $NotificationSettingsGlobalCopyWith<NotificationSettingsGlobal>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -249,6 +268,8 @@ class _$NotificationSettingsGlobalCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of NotificationSettingsGlobal
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -285,6 +306,8 @@ class __$$NotificationSettingsGlobalImplCopyWithImpl<$Res>
       $Res Function(_$NotificationSettingsGlobalImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NotificationSettingsGlobal
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -325,11 +348,13 @@ class _$NotificationSettingsGlobalImpl implements _NotificationSettingsGlobal {
                 other.minJmaIntensity == minJmaIntensity));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, minJmaIntensity);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NotificationSettingsGlobal
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NotificationSettingsGlobalImplCopyWith<_$NotificationSettingsGlobalImpl>
@@ -355,8 +380,11 @@ abstract class _NotificationSettingsGlobal
 
   @override
   JmaForecastIntensity get minJmaIntensity;
+
+  /// Create a copy of NotificationSettingsGlobal
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotificationSettingsGlobalImplCopyWith<_$NotificationSettingsGlobalImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -371,8 +399,12 @@ mixin _$NotificationSettingsRegion {
   int get code => throw _privateConstructorUsedError;
   JmaForecastIntensity get minIntensity => throw _privateConstructorUsedError;
 
+  /// Serializes this NotificationSettingsRegion to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NotificationSettingsRegion
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $NotificationSettingsRegionCopyWith<NotificationSettingsRegion>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -398,6 +430,8 @@ class _$NotificationSettingsRegionCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of NotificationSettingsRegion
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -439,6 +473,8 @@ class __$$NotificationSettingsRegionImplCopyWithImpl<$Res>
       $Res Function(_$NotificationSettingsRegionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NotificationSettingsRegion
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -488,11 +524,13 @@ class _$NotificationSettingsRegionImpl implements _NotificationSettingsRegion {
                 other.minIntensity == minIntensity));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, code, minIntensity);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NotificationSettingsRegion
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NotificationSettingsRegionImplCopyWith<_$NotificationSettingsRegionImpl>
@@ -521,8 +559,11 @@ abstract class _NotificationSettingsRegion
   int get code;
   @override
   JmaForecastIntensity get minIntensity;
+
+  /// Create a copy of NotificationSettingsRegion
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotificationSettingsRegionImplCopyWith<_$NotificationSettingsRegionImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

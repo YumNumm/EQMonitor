@@ -23,8 +23,12 @@ mixin _$ForecastMaxInt {
   JmaForecastIntensity get from => throw _privateConstructorUsedError;
   JmaForecastIntensityOver get to => throw _privateConstructorUsedError;
 
+  /// Serializes this ForecastMaxInt to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ForecastMaxInt
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ForecastMaxIntCopyWith<ForecastMaxInt> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -48,6 +52,8 @@ class _$ForecastMaxIntCopyWithImpl<$Res, $Val extends ForecastMaxInt>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ForecastMaxInt
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -86,6 +92,8 @@ class __$$ForecastMaxIntImplCopyWithImpl<$Res>
       _$ForecastMaxIntImpl _value, $Res Function(_$ForecastMaxIntImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ForecastMaxInt
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -133,11 +141,13 @@ class _$ForecastMaxIntImpl implements _ForecastMaxInt {
             (identical(other.to, to) || other.to == to));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, from, to);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ForecastMaxInt
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ForecastMaxIntImplCopyWith<_$ForecastMaxIntImpl> get copyWith =>
@@ -164,8 +174,11 @@ abstract class _ForecastMaxInt implements ForecastMaxInt {
   JmaForecastIntensity get from;
   @override
   JmaForecastIntensityOver get to;
+
+  /// Create a copy of ForecastMaxInt
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ForecastMaxIntImplCopyWith<_$ForecastMaxIntImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -179,8 +192,12 @@ mixin _$ForecastMaxLgInt {
   JmaForecastLgIntensity get from => throw _privateConstructorUsedError;
   JmaForecastLgIntensityOver get to => throw _privateConstructorUsedError;
 
+  /// Serializes this ForecastMaxLgInt to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ForecastMaxLgInt
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ForecastMaxLgIntCopyWith<ForecastMaxLgInt> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -204,6 +221,8 @@ class _$ForecastMaxLgIntCopyWithImpl<$Res, $Val extends ForecastMaxLgInt>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ForecastMaxLgInt
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -242,6 +261,8 @@ class __$$ForecastMaxLgIntImplCopyWithImpl<$Res>
       $Res Function(_$ForecastMaxLgIntImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ForecastMaxLgInt
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -289,11 +310,13 @@ class _$ForecastMaxLgIntImpl implements _ForecastMaxLgInt {
             (identical(other.to, to) || other.to == to));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, from, to);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ForecastMaxLgInt
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ForecastMaxLgIntImplCopyWith<_$ForecastMaxLgIntImpl> get copyWith =>
@@ -320,8 +343,11 @@ abstract class _ForecastMaxLgInt implements ForecastMaxLgInt {
   JmaForecastLgIntensity get from;
   @override
   JmaForecastLgIntensityOver get to;
+
+  /// Create a copy of ForecastMaxLgInt
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ForecastMaxLgIntImplCopyWith<_$ForecastMaxLgIntImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
