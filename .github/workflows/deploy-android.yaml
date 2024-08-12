@@ -5,6 +5,9 @@ on:
       - develop
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}
+
 jobs:
   build:
     runs-on: ubuntu-latest

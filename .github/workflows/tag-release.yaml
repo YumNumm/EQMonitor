@@ -6,142 +6,260 @@ on:
       - "v*"
   workflow_dispatch:
 
-jobs:
-  release-android:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      matrix:
-        target:
-          [
-            "android-arm",
-            "android-arm64",
-            "android-x64",
-            "android-all",
-            "android-aab",
-          ]
-    env:
-      SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-      KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
-      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-      KEY_PATH: key.jks
-      FLUTTER_VERSION:
-      FLUTTER_CHANNEL:
-      FLUTTER_HOME:
-      CI_ACTION_REF_NAME:
+concurrency:
+  group: ${{ github.workflow }}
 
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
     timeout-minutes: 45
+    env:
+      TZ: Asia/Tokyo
+      LANG: ja_JP.UTF-8
+
+    steps:
+      # https://github.com/actions/checkout/tree/v4/
+      - name: Checkout
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+        with:
+          fetch-depth: 0
+
+      - name: Setup Application Runtime
+        uses: ./.github/actions/setup-application-runtime
+
+      # Certificateを取得するために、Deploy Keyを設定
+      - name: Set up ssh key
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_ID_ED25519 }}" | base64 -d > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          eval $(ssh-agent -s)
+          echo "Host github.com \n\tIdentityFile ~/.ssh/id_ed25519\n\tUser git\n\tIdentityiesOnly yes" >> ~/.ssh/config
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+
+      - name: Pre set up ruby
+        run: cp .ruby-version app/android/.ruby-version
+
+      - name: Set up ruby
+        # https://github.com/ruby/setup-ruby/tree/v1/
+        uses: ruby/setup-ruby@a6e6f86333f0a2523ece813039b8b4be04560854
+        with:
+          bundler-cache: true
+          working-directory: app/android
+
+      - name: Resolve dependencies
+        run: melos bootstrap
+
+      - name: Set Google Play Service Account
+        run: |
+          echo '${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}' | base64 -d > app/android/eqmonitor-main-4325501acd45.json
+
+      - name: Set .env
+        working-directory: app
+        run: echo '${{ secrets.ENV}}' | base64 -d > .env
+
+      - name: Regenerate code
+        working-directory: app
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Build AAB
+        working-directory: app/android
+        run: bundle exec fastlane build
+
+      - name: Upload artifact aab
+        uses: actions/upload-artifact@v4.3.6
+        with:
+          path: app/build/app/outputs/bundle/release/app-release.aab
+          name: release-aab
+
+  deploy-android:
+    runs-on: ubuntu-latest
+    needs: build-android
     steps:
       # https://github.com/actions/checkout
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          # Fetch all history for all tags and branches
+          fetch-depth: 0
 
-      - name: Set up ssh
+      - name: Download artifact aab
+        uses: actions/download-artifact@v4
+        with:
+          name: release-aab
+          path: app/android/output
+
+      - name: Install Gems
+        working-directory: app/android
         run: |
-          mkdir -p ~/.ssh
+          gem install bundler
+          bundle install
+
+      - name: Set Google Play Service Account
+        run: |
+          echo '${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}' | base64 -d > app/android/eqmonitor-main-4325501acd45.json
+
+      - name: Move aab
+        working-directory: app/android
+        run: mv output/app-release.aab output.aab
+
+      - name: Upload
+        working-directory: app/android
+        run: bundle exec fastlane upload
+
+
+
+  build-ios:
+    runs-on: macos-14
+    timeout-minutes: 60
+    env:
+      TZ: Asia/Tokyo
+      FLUTTER_VERSION:
+      FLUTTER_CHANNEL:
+      FLUTTER_HOME:
+      PRODUCE_USERNAME: yumnumm@icloud.com
+      SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA: false
+      FASTLANE_USER: yumnumm@icloud.com
+      MATCH_USERNAME: yumnumm@icloud.com
+      MATCH_GIT_URL: git@github.com:YumNumm/EQMonitor_secret.git
+      LANG: ja_JP.UTF-8
+
+    steps:
+      # https://github.com/actions/checkout/tree/v4/
+      - name: Checkout
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+        with:
+          fetch-depth: 0
+
+      - name: Setup Application Runtime
+        uses: ./.github/actions/setup-application-runtime
+
+      # Certificateを取得するために、Deploy Keyを設定
+      - name: Set up ssh key
+        run: |
+          mkdir -p ~/.ssh/
           echo "${{ secrets.SSH_ID_ED25519 }}" | base64 -d > ~/.ssh/id_ed25519
-          chmod 700 ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
           eval $(ssh-agent -s)
           echo "Host github.com \n\tIdentityFile ~/.ssh/id_ed25519\n\tUser git\n\tIdentityiesOnly yes" >> ~/.ssh/config
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 
-      # https://github.com/kuhnroyal/flutter-fvm-config-action
-      - name: Fetch flutter config
-        uses: kuhnroyal/flutter-fvm-config-action@v2
-
-      # https://github.com/subosito/flutter-action
-      - name: Setup flutter
-        uses: subosito/flutter-action@v2
+      # https://github.com/maxim-lobanov/setup-xcode/tree/v1/
+      - uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd
         with:
-          flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
-          channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
+          xcode-version: latest-stable
 
-      - name: Setup melos
-        run: |
-          ln -s $FLUTTER_ROOT .fvm/flutter_sdk
-          dart pub global activate melos
-          melos bootstrap
+      - name: Show Xcode version
+        run: xcodebuild -version
 
-      - name: build_runner
-        run: |
-          echo '${{ secrets.ENV }}' | base64 -d > app/.env
-          melos generate
+      - name: Pre set up ruby
+        run: cp .ruby-version app/ios/.ruby-version
 
-      - name: Accept Android License
-        run: yes | flutter doctor --android-licenses
+      - name: Set up ruby
+        # https://github.com/ruby/setup-ruby/tree/v1/
+        uses: ruby/setup-ruby@a6e6f86333f0a2523ece813039b8b4be04560854
+        with:
+          bundler-cache: true
+          working-directory: app/ios
 
-      - name: Extract Environment Variables
-        run: |
-          echo '${{ secrets.SIGNING_KEY }}' | base64 -d > app/android/app/key.jks
-          echo '${{ secrets.FIREBASE_ANDROID }}' | base64 -d > app/android/app/google-services.json
-          echo '${{ secrets.KEY_PROPERTIES }}' | base64 -d  >app/android/key.properties
+      - name: Install brew dependencies
+        working-directory: app/ios
+        run: brew bundle
 
-      - name: Build APK
-        if: ${{ matrix.target }} != "android-all" && ${{ matrix.target }} != "android-aab"
+      - name: Resolve dependencies
+        run: melos bootstrap
+
+      - name: Install Pods
+        working-directory: app/ios
+        run: bundle exec pod install
+
+      - name: Set Firebase Configuration
+        run: echo '${{ secrets.FIREBASE_IOS }}' | base64 -d > app/ios/Runner/GoogleService-Info.plist
+
+      - name: Set App Store Connect Configuration
         working-directory: app
-        run: flutter build apk --release --target-platform=${{ matrix.target }}
-
-      - name: Build APK (All Targets)
-        if: ${{ matrix.target }} == "android-all"
-        working-directory: app
-        run: flutter build apk --release
-
-      - name: Build AAB
-        if: ${{ matrix.target }} == "android-aab"
-        working-directory: app
-        run: flutter build appbundle --release
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4.3.6
-        if: ${{ matrix.target }} != "android-aab"
-        with:
-          name: EQMonitor-${{ matrix.target }}.apk
-          path: app/build/app/outputs/flutter-apk/app-release.apk
-
-      - name: Upload artifact (AAB)
-        uses: actions/upload-artifact@v4.3.6
-        if: ${{ matrix.target }} == "android-aab"
-        with:
-          name: EQMonitor-${{ matrix.target }}.aab
-          path: app/build/app/outputs/bundle/release/app-release.aab
-
-      - name: Release
-        uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: EQMonitor-${{ matrix.target }}.apk
-          name: v${{ env.CI_ACTION_REF_NAME }}
-          draft: true
-
-      - name: Release (AAB)
-        uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/') && ${{ matrix.target }} == "android-aab"
-        with:
-          files: EQMonitor-${{ matrix.target }}.aab
-          name: v${{ env.CI_ACTION_REF_NAME }}
-          draft: true
-
-      #-- Slack通知 --#
-      # 成功
-      - name: Slack Notification on Success
-        if: ${{ success() }}
-        uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_TITLE: Deploy Success
-          SLACK_COLOR: good
-          SLACK_ICON: https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/assets/icon.png
-          SLACK_USERNAME: EQMonitor
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+        run: |
+          echo '${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}' | base64 -d > ios/AuthKey_NGL2W4BQP6.p8
 
-      # 失敗
-      - name: Slack Notification on Failure
-        if: ${{ failure() }}
-        uses: rtCamp/action-slack-notify@v2
+      - name: Set .env
+        working-directory: app
+        run: echo '${{ secrets.ENV}}' | base64 -d > .env
+
+      - name: Regenerate code
+        working-directory: app
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Build IPA
+        working-directory: app/ios
         env:
-          SLACK_TITLE: Deploy Failure
-          SLACK_COLOR: danger
-          SLACK_ICON: https://raw.githubusercontent.com/EQMonitor/EQMonitor/main/assets/icon.png
-          SLACK_USERNAME: EQMonitor
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_BASE64: ${{secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
+          PRODUCE_USERNAME: ${{ secrets.PRODUCE_USERNAME }}
+          SPACESHIP_ONLY_ALLOW_INTERACTIVE_2FA: false
+          APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
+          FASTLANE_USER: yumnumm@icloud.com
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          MATCH_USERNAME: yumnumm@icloud.com
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD}}
+          MATCH_GIT_URL: git@github.com:YumNumm/EQMonitor_secret.git
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+          LANG: ja_JP.UTF-8
+        run: bundle exec fastlane build
+
+      - name: Upload artifact ipa
+        uses: actions/upload-artifact@v4.3.6
+        with:
+          path: app/ios/Runner.ipa
+          name: release-ios
+
+  deploy-ios:
+    runs-on: macos-latest
+    needs: build-ios
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Fetch all history for all tags and branches
+          fetch-depth: 0
+
+      - name: Download artifact ipa
+        uses: actions/download-artifact@v4
+        with:
+          name: release-ios
+          path: app/ios/output
+
+      - name: Install Gems
+        working-directory: app/ios
+        run: |
+          gem install bundler
+          bundle install
+
+      - name: Install Brewfile dependencies
+        working-directory: app/ios
+        run: brew bundle
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Set App Store Connect Configuration
+        working-directory: app
+        env:
+          APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+        run: |
+          echo '${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}' | base64 -d > ios/AuthKey_NGL2W4BQP6.p8
+
+      - name: Upload
+        run: |
+          mv output/Runner.ipa Runner.ipa
+          bundle exec fastlane upload
+        working-directory: app/ios

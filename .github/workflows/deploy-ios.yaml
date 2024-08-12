@@ -5,6 +5,9 @@ on:
     branches:
       - develop
 
+concurrency:
+  group: ${{ github.workflow }}
+
 jobs:
   build:
     runs-on: macos-14
@@ -83,8 +86,7 @@ jobs:
 
       - name: Set .env
         working-directory: app
-        run:
-          echo '${{ secrets.ENV}}' | base64 -d > .env
+        run: echo '${{ secrets.ENV}}' | base64 -d > .env
 
       - name: Regenerate code
         working-directory: app
