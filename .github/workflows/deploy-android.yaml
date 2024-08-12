@@ -34,14 +34,18 @@ jobs:
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 
       - name: Pre set up ruby
-        run: cp .ruby-version app/ios/.ruby-version
+        run: cp .ruby-version app/android/.ruby-version
 
       - name: Set up ruby
         # https://github.com/ruby/setup-ruby/tree/v1/
         uses: ruby/setup-ruby@a6e6f86333f0a2523ece813039b8b4be04560854
         with:
           bundler-cache: true
-          working-directory: app/ios
+          working-directory: app/android
+
+      - name: Install Pods
+        working-directory: app/android
+        run: bundle exec pod install
 
       - name: Resolve dependencies
         run: melos bootstrap
@@ -86,10 +90,14 @@ jobs:
           path: app/android/output
 
       - name: Install Gems
-        working-directory: app/ios
+        working-directory: app/android
         run: |
           gem install bundler
           bundle install
+
+      - name: Install Pods
+        working-directory: app/android
+        run: bundle exec pod install
 
       - name: Set Google Play Service Account
         run: |
