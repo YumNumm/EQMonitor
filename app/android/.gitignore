@@ -13,3 +13,7 @@ key.properties
 **/*.jks
 *.jks
 keystore.properties
+
+/eqmonitor-main-4325501acd45.json
+/output.aab
+/fastlane/metadata

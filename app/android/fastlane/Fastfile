@@ -1,38 +1,106 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
-
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
+require "fileutils"
 
 default_platform(:android)
 
 platform :android do
-  desc "Runs all the tests"
-  lane :test do
-    gradle(task: "test")
+
+  def get_version_from_pubspec
+    # pubspec.yamlの読み込み
+    pubspec = YAML.load_file("../../pubspec.yaml")
+    # x.y.zの形式でバージョンを取得
+    version = pubspec["version"].match(/(\d+\.\d+\.\d+)/)[0]
+    version
   end
 
-  desc "Submit a new Beta Build to Crashlytics Beta"
-  lane :beta do
-    gradle(task: "clean assembleRelease")
-    crashlytics
-  
-    # sh "your_script.sh"
-    # You can also use other beta testing services here
+  private_lane :build_aab do |options|
+    command = [
+      "flutter",
+      "build",
+      "appbundle",
+      "--release",
+      "--build-number",
+      options[:version_code],
+    ]
+    if !ENV["CI"]
+      # CI環境ではない場合は、fvmを使う
+      command.unshift("fvm")
+    end
+    if sh(command) { |s| s.success? }
+      UI.success("Successfully built the AAB")
+    else
+      UI.shell_error!("Failed to build the AAB")
+    end
   end
 
-  desc "Deploy a new version to the Google Play"
+  private_lane :create_changelog do |options|
+    versionCode = options[:version_code]
+    UI.message("Creating a changelog for version_name: #{versionCode}")
+    changelog = changelog_from_git_commits(
+      between: [last_git_tag, "HEAD"],
+      pretty: "- [%ad] %an: %s %h",
+      date_format: "short",
+    )
+
+    # changelogは最大500文字までなので、500文字以降は切り捨てる
+    if changelog.length > 500
+      # 497文字目までを取得し、末尾に"..."を追加
+      changelog = changelog[0..496] + "..."
+    end
+
+    # `metadata/android/ja-JP/changelogs` ディレクトリを再帰的に作成
+    dir = "metadata/android/ja-JP/changelogs"
+    FileUtils.mkdir_p(dir)
+    UI.message("Created a directory: #{dir}")
+    Dir.chdir(dir) do
+      # `versionCode.txt` ファイルを作成
+      File.write("#{versionCode}.txt", changelog)
+      UI.message("Created a file: #{versionCode}.txt")
+    end
+  end
+
+  private_lane :playstore do |options|
+    create_changelog(
+      version_code: options[:version_code],
+    )
+    upload_to_play_store(
+      track: "internal",
+      aab: options[:aab],
+      version_name: options[:version_name],
+    )
+  end
+
+  lane :build do
+    latest_version_code = (
+      google_play_track_version_codes(
+        track: "internal",
+      )
+    ).max
+    next_version_code = latest_version_code + 1
+    UI.important("Latest version code is #{latest_version_code}, so the next version code is #{next_version_code}")
+    build_aab(
+      version_code: next_version_code,
+    )
+  end
+
+  lane :upload do
+    latest_version_code = (
+      google_play_track_version_codes(
+        track: "internal",
+      )
+    ).max
+    next_version_code = latest_version_code + 1
+    playstore(
+      aab: "output.aab",
+      version_name: "#{get_version_from_pubspec}+#{next_version_code}",
+      version_code: next_version_code,
+      track: "internal",
+    )
+  end
+
   lane :deploy do
-    gradle(task: "clean assembleRelease")
-    upload_to_play_store
+    build_aab
+    sh("mv build/app/outputs/bundle/release/app-release.aab output.aab")
+    deploy
   end
+
 end
