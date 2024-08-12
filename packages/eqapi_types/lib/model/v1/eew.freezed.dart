@@ -51,8 +51,12 @@ mixin _$EewV1 {
   bool? get isPlum => throw _privateConstructorUsedError;
   EewAccuracy? get accuracy => throw _privateConstructorUsedError;
 
+  /// Serializes this EewV1 to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EewV1
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EewV1CopyWith<EewV1> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -102,6 +106,8 @@ class _$EewV1CopyWithImpl<$Res, $Val extends EewV1>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EewV1
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -240,6 +246,8 @@ class _$EewV1CopyWithImpl<$Res, $Val extends EewV1>
     ) as $Val);
   }
 
+  /// Create a copy of EewV1
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $EewAccuracyCopyWith<$Res>? get accuracy {
@@ -300,6 +308,8 @@ class __$$EewV1ImplCopyWithImpl<$Res>
       _$EewV1Impl _value, $Res Function(_$EewV1Impl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EewV1
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -597,7 +607,7 @@ class _$EewV1Impl implements _EewV1 {
                 other.accuracy == accuracy));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -629,7 +639,9 @@ class _$EewV1Impl implements _EewV1 {
         accuracy
       ]);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EewV1
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EewV1ImplCopyWith<_$EewV1Impl> get copyWith =>
@@ -726,8 +738,11 @@ abstract class _EewV1 implements EewV1 {
   bool? get isPlum;
   @override
   EewAccuracy? get accuracy;
+
+  /// Create a copy of EewV1
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EewV1ImplCopyWith<_$EewV1Impl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -754,8 +769,12 @@ mixin _$EstimatedIntensityRegion {
   @JsonKey(name: 'arrivalTime')
   DateTime? get arrivalTime => throw _privateConstructorUsedError;
 
+  /// Serializes this EstimatedIntensityRegion to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EstimatedIntensityRegion
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EstimatedIntensityRegionCopyWith<EstimatedIntensityRegion> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -790,6 +809,8 @@ class _$EstimatedIntensityRegionCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EstimatedIntensityRegion
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -833,6 +854,8 @@ class _$EstimatedIntensityRegionCopyWithImpl<$Res,
     ) as $Val);
   }
 
+  /// Create a copy of EstimatedIntensityRegion
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ForecastMaxIntCopyWith<$Res> get forecastMaxInt {
@@ -841,6 +864,8 @@ class _$EstimatedIntensityRegionCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of EstimatedIntensityRegion
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ForecastMaxLgIntCopyWith<$Res>? get forecastMaxLgInt {
@@ -888,6 +913,8 @@ class __$$EstimatedIntensityRegionImplCopyWithImpl<$Res>
       $Res Function(_$EstimatedIntensityRegionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EstimatedIntensityRegion
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -992,12 +1019,14 @@ class _$EstimatedIntensityRegionImpl implements _EstimatedIntensityRegion {
                 other.arrivalTime == arrivalTime));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, code, name, isPlum, isWarning,
       forecastMaxInt, forecastMaxLgInt, arrivalTime);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EstimatedIntensityRegion
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EstimatedIntensityRegionImplCopyWith<_$EstimatedIntensityRegionImpl>
@@ -1044,13 +1073,16 @@ abstract class _EstimatedIntensityRegion implements EstimatedIntensityRegion {
   @override
   @JsonKey(name: 'forecastMaxLgInt')
   ForecastMaxLgInt? get forecastMaxLgInt;
-  @override
 
   /// nullの場合 `既に主要動到達と推測`
+  @override
   @JsonKey(name: 'arrivalTime')
   DateTime? get arrivalTime;
+
+  /// Create a copy of EstimatedIntensityRegion
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EstimatedIntensityRegionImplCopyWith<_$EstimatedIntensityRegionImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -1072,8 +1104,12 @@ mixin _$EewAccuracy {
   @JsonKey(fromJson: int.parse, toJson: intToString)
   int get numberOfMagnitudeCalculation => throw _privateConstructorUsedError;
 
+  /// Serializes this EewAccuracy to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EewAccuracy
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EewAccuracyCopyWith<EewAccuracy> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1104,6 +1140,8 @@ class _$EewAccuracyCopyWithImpl<$Res, $Val extends EewAccuracy>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EewAccuracy
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1159,6 +1197,8 @@ class __$$EewAccuracyImplCopyWithImpl<$Res>
       _$EewAccuracyImpl _value, $Res Function(_$EewAccuracyImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EewAccuracy
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1250,7 +1290,7 @@ class _$EewAccuracyImpl implements _EewAccuracy {
                     numberOfMagnitudeCalculation));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -1259,7 +1299,9 @@ class _$EewAccuracyImpl implements _EewAccuracy {
       magnitudeCalculation,
       numberOfMagnitudeCalculation);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EewAccuracy
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EewAccuracyImplCopyWith<_$EewAccuracyImpl> get copyWith =>
@@ -1287,10 +1329,9 @@ abstract class _EewAccuracy implements EewAccuracy {
   factory _EewAccuracy.fromJson(Map<String, dynamic> json) =
       _$EewAccuracyImpl.fromJson;
 
-  @override
-
   /// ['0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8',
   /// '0' | '1' | '2' | '3' | '4' | '9']
+  @override
   @JsonKey(fromJson: stringListToIntList, toJson: intListToStringList)
   List<int> get epicenters;
   @override
@@ -1302,8 +1343,11 @@ abstract class _EewAccuracy implements EewAccuracy {
   @override
   @JsonKey(fromJson: int.parse, toJson: intToString)
   int get numberOfMagnitudeCalculation;
+
+  /// Create a copy of EewAccuracy
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EewAccuracyImplCopyWith<_$EewAccuracyImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -29,9 +29,13 @@ mixin _$RealtimePostgresInsertPayload<T extends V1Database> {
   @JsonKey(name: 'new')
   T get newData => throw _privateConstructorUsedError;
 
+  /// Serializes this RealtimePostgresInsertPayload to a JSON map.
   Map<String, dynamic> toJson(Object? Function(T) toJsonT) =>
       throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RealtimePostgresInsertPayload
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $RealtimePostgresInsertPayloadCopyWith<T, RealtimePostgresInsertPayload<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -64,6 +68,8 @@ class _$RealtimePostgresInsertPayloadCopyWithImpl<T extends V1Database, $Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of RealtimePostgresInsertPayload
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -127,6 +133,8 @@ class __$$RealtimePostgresInsertPayloadImplCopyWithImpl<T extends V1Database,
       $Res Function(_$RealtimePostgresInsertPayloadImpl<T>) _then)
       : super(_value, _then);
 
+  /// Create a copy of RealtimePostgresInsertPayload
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -215,7 +223,7 @@ class _$RealtimePostgresInsertPayloadImpl<T extends V1Database>
             const DeepCollectionEquality().equals(other.newData, newData));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -225,7 +233,9 @@ class _$RealtimePostgresInsertPayloadImpl<T extends V1Database>
       const DeepCollectionEquality().hash(_errors),
       const DeepCollectionEquality().hash(newData));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RealtimePostgresInsertPayload
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RealtimePostgresInsertPayloadImplCopyWith<T,
@@ -264,8 +274,11 @@ abstract class _RealtimePostgresInsertPayload<T extends V1Database>
   @override
   @JsonKey(name: 'new')
   T get newData;
+
+  /// Create a copy of RealtimePostgresInsertPayload
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RealtimePostgresInsertPayloadImplCopyWith<T,
           _$RealtimePostgresInsertPayloadImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
@@ -289,9 +302,13 @@ mixin _$RealtimePostgresUpdatePayload<T extends V1Database> {
   /// Partical<T> | null
   Map<String, dynamic>? get old => throw _privateConstructorUsedError;
 
+  /// Serializes this RealtimePostgresUpdatePayload to a JSON map.
   Map<String, dynamic> toJson(Object? Function(T) toJsonT) =>
       throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RealtimePostgresUpdatePayload
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $RealtimePostgresUpdatePayloadCopyWith<T, RealtimePostgresUpdatePayload<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -325,6 +342,8 @@ class _$RealtimePostgresUpdatePayloadCopyWithImpl<T extends V1Database, $Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of RealtimePostgresUpdatePayload
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -394,6 +413,8 @@ class __$$RealtimePostgresUpdatePayloadImplCopyWithImpl<T extends V1Database,
       $Res Function(_$RealtimePostgresUpdatePayloadImpl<T>) _then)
       : super(_value, _then);
 
+  /// Create a copy of RealtimePostgresUpdatePayload
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -503,7 +524,7 @@ class _$RealtimePostgresUpdatePayloadImpl<T extends V1Database>
             const DeepCollectionEquality().equals(other._old, _old));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -514,7 +535,9 @@ class _$RealtimePostgresUpdatePayloadImpl<T extends V1Database>
       const DeepCollectionEquality().hash(newData),
       const DeepCollectionEquality().hash(_old));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RealtimePostgresUpdatePayload
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RealtimePostgresUpdatePayloadImplCopyWith<T,
@@ -554,12 +577,15 @@ abstract class _RealtimePostgresUpdatePayload<T extends V1Database>
   @override
   @JsonKey(name: 'new')
   T get newData;
-  @override
 
   /// Partical<T> | null
-  Map<String, dynamic>? get old;
   @override
-  @JsonKey(ignore: true)
+  Map<String, dynamic>? get old;
+
+  /// Create a copy of RealtimePostgresUpdatePayload
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RealtimePostgresUpdatePayloadImplCopyWith<T,
           _$RealtimePostgresUpdatePayloadImpl<T>>
       get copyWith => throw _privateConstructorUsedError;
@@ -581,9 +607,13 @@ mixin _$RealtimePostgresDeletePayload<T extends V1Database> {
   /// Partical<T> | null
   Map<String, dynamic>? get old => throw _privateConstructorUsedError;
 
+  /// Serializes this RealtimePostgresDeletePayload to a JSON map.
   Map<String, dynamic> toJson(Object? Function(T) toJsonT) =>
       throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RealtimePostgresDeletePayload
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $RealtimePostgresDeletePayloadCopyWith<T, RealtimePostgresDeletePayload<T>>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -616,6 +646,8 @@ class _$RealtimePostgresDeletePayloadCopyWithImpl<T extends V1Database, $Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of RealtimePostgresDeletePayload
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -679,6 +711,8 @@ class __$$RealtimePostgresDeletePayloadImplCopyWithImpl<T extends V1Database,
       $Res Function(_$RealtimePostgresDeletePayloadImpl<T>) _then)
       : super(_value, _then);
 
+  /// Create a copy of RealtimePostgresDeletePayload
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -777,7 +811,7 @@ class _$RealtimePostgresDeletePayloadImpl<T extends V1Database>
             const DeepCollectionEquality().equals(other._old, _old));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -787,7 +821,9 @@ class _$RealtimePostgresDeletePayloadImpl<T extends V1Database>
       const DeepCollectionEquality().hash(_errors),
       const DeepCollectionEquality().hash(_old));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RealtimePostgresDeletePayload
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RealtimePostgresDeletePayloadImplCopyWith<T,
@@ -823,12 +859,15 @@ abstract class _RealtimePostgresDeletePayload<T extends V1Database>
   DateTime get commitTimestamp;
   @override
   List<String>? get errors;
-  @override
 
   /// Partical<T> | null
-  Map<String, dynamic>? get old;
   @override
-  @JsonKey(ignore: true)
+  Map<String, dynamic>? get old;
+
+  /// Create a copy of RealtimePostgresDeletePayload
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RealtimePostgresDeletePayloadImplCopyWith<T,
           _$RealtimePostgresDeletePayloadImpl<T>>
       get copyWith => throw _privateConstructorUsedError;

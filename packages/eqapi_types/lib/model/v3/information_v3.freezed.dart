@@ -22,8 +22,12 @@ InformationV3Result _$InformationV3ResultFromJson(Map<String, dynamic> json) {
 mixin _$InformationV3Result {
   List<InformationV3> get items => throw _privateConstructorUsedError;
 
+  /// Serializes this InformationV3Result to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of InformationV3Result
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $InformationV3ResultCopyWith<InformationV3Result> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -47,6 +51,8 @@ class _$InformationV3ResultCopyWithImpl<$Res, $Val extends InformationV3Result>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of InformationV3Result
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -80,6 +86,8 @@ class __$$InformationV3ResultImplCopyWithImpl<$Res>
       $Res Function(_$InformationV3ResultImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of InformationV3Result
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -124,12 +132,14 @@ class _$InformationV3ResultImpl implements _InformationV3Result {
             const DeepCollectionEquality().equals(other._items, _items));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(_items));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of InformationV3Result
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$InformationV3ResultImplCopyWith<_$InformationV3ResultImpl> get copyWith =>
@@ -153,8 +163,11 @@ abstract class _InformationV3Result implements InformationV3Result {
 
   @override
   List<InformationV3> get items;
+
+  /// Create a copy of InformationV3Result
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$InformationV3ResultImplCopyWith<_$InformationV3ResultImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -176,8 +189,12 @@ mixin _$InformationV3 {
   Level get level => throw _privateConstructorUsedError;
   int? get eventId => throw _privateConstructorUsedError;
 
+  /// Serializes this InformationV3 to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of InformationV3
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $InformationV3CopyWith<InformationV3> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -208,6 +225,8 @@ class _$InformationV3CopyWithImpl<$Res, $Val extends InformationV3>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of InformationV3
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -278,6 +297,8 @@ class __$$InformationV3ImplCopyWithImpl<$Res>
       _$InformationV3Impl _value, $Res Function(_$InformationV3Impl) _then)
       : super(_value, _then);
 
+  /// Create a copy of InformationV3
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -375,12 +396,14 @@ class _$InformationV3Impl implements _InformationV3 {
             (identical(other.eventId, eventId) || other.eventId == eventId));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, id, title, body, author, createdAt, level, eventId);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of InformationV3
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$InformationV3ImplCopyWith<_$InformationV3Impl> get copyWith =>
@@ -424,8 +447,11 @@ abstract class _InformationV3 implements InformationV3 {
   Level get level;
   @override
   int? get eventId;
+
+  /// Create a copy of InformationV3
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$InformationV3ImplCopyWith<_$InformationV3Impl> get copyWith =>
       throw _privateConstructorUsedError;
 }

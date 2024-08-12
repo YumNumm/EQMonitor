@@ -25,8 +25,12 @@ mixin _$RegionIntensity {
   JmaIntensity? get maxInt => throw _privateConstructorUsedError;
   JmaLgIntensity? get maxLgInt => throw _privateConstructorUsedError;
 
+  /// Serializes this RegionIntensity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RegionIntensity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $RegionIntensityCopyWith<RegionIntensity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -54,6 +58,8 @@ class _$RegionIntensityCopyWithImpl<$Res, $Val extends RegionIntensity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of RegionIntensity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -106,6 +112,8 @@ class __$$RegionIntensityImplCopyWithImpl<$Res>
       _$RegionIntensityImpl _value, $Res Function(_$RegionIntensityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RegionIntensity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -174,11 +182,13 @@ class _$RegionIntensityImpl implements _RegionIntensity {
                 other.maxLgInt == maxLgInt));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, code, name, maxInt, maxLgInt);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RegionIntensity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RegionIntensityImplCopyWith<_$RegionIntensityImpl> get copyWith =>
@@ -211,8 +221,11 @@ abstract class _RegionIntensity implements RegionIntensity {
   JmaIntensity? get maxInt;
   @override
   JmaLgIntensity? get maxLgInt;
+
+  /// Create a copy of RegionIntensity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RegionIntensityImplCopyWith<_$RegionIntensityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

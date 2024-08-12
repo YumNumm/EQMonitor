@@ -25,8 +25,12 @@ mixin _$Earthquake {
   EarthquakeHypocenter get hypocenter => throw _privateConstructorUsedError;
   EarthquakeMagnitude get magnitude => throw _privateConstructorUsedError;
 
+  /// Serializes this Earthquake to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Earthquake
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EarthquakeCopyWith<Earthquake> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -57,6 +61,8 @@ class _$EarthquakeCopyWithImpl<$Res, $Val extends Earthquake>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Earthquake
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -85,6 +91,8 @@ class _$EarthquakeCopyWithImpl<$Res, $Val extends Earthquake>
     ) as $Val);
   }
 
+  /// Create a copy of Earthquake
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $EarthquakeHypocenterCopyWith<$Res> get hypocenter {
@@ -93,6 +101,8 @@ class _$EarthquakeCopyWithImpl<$Res, $Val extends Earthquake>
     });
   }
 
+  /// Create a copy of Earthquake
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $EarthquakeMagnitudeCopyWith<$Res> get magnitude {
@@ -130,6 +140,8 @@ class __$$EarthquakeImplCopyWithImpl<$Res>
       _$EarthquakeImpl _value, $Res Function(_$EarthquakeImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Earthquake
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -201,12 +213,14 @@ class _$EarthquakeImpl implements _Earthquake {
                 other.magnitude == magnitude));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, originTime, arrivalTime, hypocenter, magnitude);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Earthquake
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeImplCopyWith<_$EarthquakeImpl> get copyWith =>
@@ -238,8 +252,11 @@ abstract class _Earthquake implements Earthquake {
   EarthquakeHypocenter get hypocenter;
   @override
   EarthquakeMagnitude get magnitude;
+
+  /// Create a copy of Earthquake
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeImplCopyWith<_$EarthquakeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -261,8 +278,12 @@ mixin _$EarthquakeHypocenter {
       throw _privateConstructorUsedError;
   LatLng? get coordinate => throw _privateConstructorUsedError;
 
+  /// Serializes this EarthquakeHypocenter to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EarthquakeHypocenter
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EarthquakeHypocenterCopyWith<EarthquakeHypocenter> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -294,6 +315,8 @@ class _$EarthquakeHypocenterCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EarthquakeHypocenter
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -327,6 +350,8 @@ class _$EarthquakeHypocenterCopyWithImpl<$Res,
     ) as $Val);
   }
 
+  /// Create a copy of EarthquakeHypocenter
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $EarthquakeHypocenterDetailedCopyWith<$Res>? get detailed {
@@ -368,6 +393,8 @@ class __$$EarthquakeHypocenterImplCopyWithImpl<$Res>
       $Res Function(_$EarthquakeHypocenterImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EarthquakeHypocenter
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -450,12 +477,14 @@ class _$EarthquakeHypocenterImpl implements _EarthquakeHypocenter {
                 other.coordinate == coordinate));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, name, code, depth, detailed, coordinate);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EarthquakeHypocenter
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeHypocenterImplCopyWith<_$EarthquakeHypocenterImpl>
@@ -486,18 +515,21 @@ abstract class _EarthquakeHypocenter implements EarthquakeHypocenter {
   String get name;
   @override
   String get code;
-  @override
 
   /// 0: ごく浅い
   /// 700: 700km以上
   /// null: 不明
+  @override
   int? get depth;
   @override
   EarthquakeHypocenterDetailed? get detailed;
   @override
   LatLng? get coordinate;
+
+  /// Create a copy of EarthquakeHypocenter
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeHypocenterImplCopyWith<_$EarthquakeHypocenterImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -512,8 +544,12 @@ mixin _$EarthquakeHypocenterDetailed {
   String get code => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
 
+  /// Serializes this EarthquakeHypocenterDetailed to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EarthquakeHypocenterDetailed
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EarthquakeHypocenterDetailedCopyWith<EarthquakeHypocenterDetailed>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -540,6 +576,8 @@ class _$EarthquakeHypocenterDetailedCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EarthquakeHypocenterDetailed
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -581,6 +619,8 @@ class __$$EarthquakeHypocenterDetailedImplCopyWithImpl<$Res>
       $Res Function(_$EarthquakeHypocenterDetailedImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EarthquakeHypocenterDetailed
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -631,11 +671,13 @@ class _$EarthquakeHypocenterDetailedImpl
             (identical(other.name, name) || other.name == name));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, code, name);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EarthquakeHypocenterDetailed
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeHypocenterDetailedImplCopyWith<
@@ -664,8 +706,11 @@ abstract class _EarthquakeHypocenterDetailed
   String get code;
   @override
   String get name;
+
+  /// Create a copy of EarthquakeHypocenterDetailed
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeHypocenterDetailedImplCopyWith<
           _$EarthquakeHypocenterDetailedImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -680,8 +725,12 @@ mixin _$EarthquakeMagnitude {
   double? get value => throw _privateConstructorUsedError;
   String? get condition => throw _privateConstructorUsedError;
 
+  /// Serializes this EarthquakeMagnitude to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EarthquakeMagnitude
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EarthquakeMagnitudeCopyWith<EarthquakeMagnitude> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -705,6 +754,8 @@ class _$EarthquakeMagnitudeCopyWithImpl<$Res, $Val extends EarthquakeMagnitude>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EarthquakeMagnitude
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -743,6 +794,8 @@ class __$$EarthquakeMagnitudeImplCopyWithImpl<$Res>
       $Res Function(_$EarthquakeMagnitudeImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EarthquakeMagnitude
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -792,11 +845,13 @@ class _$EarthquakeMagnitudeImpl implements _EarthquakeMagnitude {
                 other.condition == condition));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, value, condition);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EarthquakeMagnitude
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeMagnitudeImplCopyWith<_$EarthquakeMagnitudeImpl> get copyWith =>
@@ -823,8 +878,11 @@ abstract class _EarthquakeMagnitude implements EarthquakeMagnitude {
   double? get value;
   @override
   String? get condition;
+
+  /// Create a copy of EarthquakeMagnitude
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeMagnitudeImplCopyWith<_$EarthquakeMagnitudeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

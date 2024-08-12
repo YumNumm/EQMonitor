@@ -33,8 +33,12 @@ mixin _$TelegramV1 {
   String? get headline => throw _privateConstructorUsedError;
   Map<String, dynamic> get body => throw _privateConstructorUsedError;
 
+  /// Serializes this TelegramV1 to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of TelegramV1
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TelegramV1CopyWith<TelegramV1> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -70,6 +74,8 @@ class _$TelegramV1CopyWithImpl<$Res, $Val extends TelegramV1>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TelegramV1
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -170,6 +176,8 @@ class __$$TelegramV1ImplCopyWithImpl<$Res>
       _$TelegramV1Impl _value, $Res Function(_$TelegramV1Impl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TelegramV1
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -321,7 +329,7 @@ class _$TelegramV1Impl implements _TelegramV1 {
             const DeepCollectionEquality().equals(other._body, _body));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -338,7 +346,9 @@ class _$TelegramV1Impl implements _TelegramV1 {
       headline,
       const DeepCollectionEquality().hash(_body));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TelegramV1
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TelegramV1ImplCopyWith<_$TelegramV1Impl> get copyWith =>
@@ -394,8 +404,11 @@ abstract class _TelegramV1 implements TelegramV1 {
   String? get headline;
   @override
   Map<String, dynamic> get body;
+
+  /// Create a copy of TelegramV1
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TelegramV1ImplCopyWith<_$TelegramV1Impl> get copyWith =>
       throw _privateConstructorUsedError;
 }

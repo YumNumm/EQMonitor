@@ -28,8 +28,12 @@ mixin _$Intensity {
   List<RegionIntensity>? get cities => throw _privateConstructorUsedError;
   List<RegionIntensity>? get stations => throw _privateConstructorUsedError;
 
+  /// Serializes this Intensity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Intensity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $IntensityCopyWith<Intensity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -59,6 +63,8 @@ class _$IntensityCopyWithImpl<$Res, $Val extends Intensity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Intensity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -129,6 +135,8 @@ class __$$IntensityImplCopyWithImpl<$Res>
       _$IntensityImpl _value, $Res Function(_$IntensityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Intensity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -259,7 +267,7 @@ class _$IntensityImpl implements _Intensity {
             const DeepCollectionEquality().equals(other._stations, _stations));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -271,7 +279,9 @@ class _$IntensityImpl implements _Intensity {
       const DeepCollectionEquality().hash(_cities),
       const DeepCollectionEquality().hash(_stations));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Intensity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$IntensityImplCopyWith<_$IntensityImpl> get copyWith =>
@@ -312,8 +322,11 @@ abstract class _Intensity implements Intensity {
   List<RegionIntensity>? get cities;
   @override
   List<RegionIntensity>? get stations;
+
+  /// Create a copy of Intensity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$IntensityImplCopyWith<_$IntensityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

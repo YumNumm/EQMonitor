@@ -32,8 +32,12 @@ mixin _$TsunamiForecast {
   List<TsunamiForecastStation>? get stations =>
       throw _privateConstructorUsedError;
 
+  /// Serializes this TsunamiForecast to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of TsunamiForecast
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TsunamiForecastCopyWith<TsunamiForecast> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -67,6 +71,8 @@ class _$TsunamiForecastCopyWithImpl<$Res, $Val extends TsunamiForecast>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TsunamiForecast
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -110,6 +116,8 @@ class _$TsunamiForecastCopyWithImpl<$Res, $Val extends TsunamiForecast>
     ) as $Val);
   }
 
+  /// Create a copy of TsunamiForecast
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $TsunamiForecastFirstHeightCopyWith<$Res>? get firstHeight {
@@ -123,6 +131,8 @@ class _$TsunamiForecastCopyWithImpl<$Res, $Val extends TsunamiForecast>
     });
   }
 
+  /// Create a copy of TsunamiForecast
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $TsunamiForecastMaxHeightCopyWith<$Res>? get maxHeight {
@@ -167,6 +177,8 @@ class __$$TsunamiForecastImplCopyWithImpl<$Res>
       _$TsunamiForecastImpl _value, $Res Function(_$TsunamiForecastImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TsunamiForecast
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -273,12 +285,14 @@ class _$TsunamiForecastImpl implements _TsunamiForecast {
             const DeepCollectionEquality().equals(other._stations, _stations));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, code, name, kind, lastKind,
       firstHeight, maxHeight, const DeepCollectionEquality().hash(_stations));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TsunamiForecast
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TsunamiForecastImplCopyWith<_$TsunamiForecastImpl> get copyWith =>
@@ -311,9 +325,9 @@ abstract class _TsunamiForecast implements TsunamiForecast {
   String get code;
   @override
   String get name;
-  @override
 
   /// 種別コードを用いる
+  @override
   String get kind;
   @override
   String get lastKind;
@@ -323,8 +337,11 @@ abstract class _TsunamiForecast implements TsunamiForecast {
   TsunamiForecastMaxHeight? get maxHeight;
   @override
   List<TsunamiForecastStation>? get stations;
+
+  /// Create a copy of TsunamiForecast
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TsunamiForecastImplCopyWith<_$TsunamiForecastImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -339,8 +356,12 @@ mixin _$TsunamiForecastFirstHeight {
   DateTime? get arrivalTime => throw _privateConstructorUsedError;
   TsunamiForecastCondition? get condition => throw _privateConstructorUsedError;
 
+  /// Serializes this TsunamiForecastFirstHeight to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of TsunamiForecastFirstHeight
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TsunamiForecastFirstHeightCopyWith<TsunamiForecastFirstHeight>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -366,6 +387,8 @@ class _$TsunamiForecastFirstHeightCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TsunamiForecastFirstHeight
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -407,6 +430,8 @@ class __$$TsunamiForecastFirstHeightImplCopyWithImpl<$Res>
       $Res Function(_$TsunamiForecastFirstHeightImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TsunamiForecastFirstHeight
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -457,11 +482,13 @@ class _$TsunamiForecastFirstHeightImpl implements _TsunamiForecastFirstHeight {
                 other.condition == condition));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, arrivalTime, condition);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TsunamiForecastFirstHeight
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TsunamiForecastFirstHeightImplCopyWith<_$TsunamiForecastFirstHeightImpl>
@@ -490,8 +517,11 @@ abstract class _TsunamiForecastFirstHeight
   DateTime? get arrivalTime;
   @override
   TsunamiForecastCondition? get condition;
+
+  /// Create a copy of TsunamiForecastFirstHeight
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TsunamiForecastFirstHeightImplCopyWith<_$TsunamiForecastFirstHeightImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -508,8 +538,12 @@ mixin _$TsunamiForecastMaxHeight {
   TsunamiForecastMaxHeightCondition? get condition =>
       throw _privateConstructorUsedError;
 
+  /// Serializes this TsunamiForecastMaxHeight to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of TsunamiForecastMaxHeight
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TsunamiForecastMaxHeightCopyWith<TsunamiForecastMaxHeight> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -537,6 +571,8 @@ class _$TsunamiForecastMaxHeightCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TsunamiForecastMaxHeight
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -586,6 +622,8 @@ class __$$TsunamiForecastMaxHeightImplCopyWithImpl<$Res>
       $Res Function(_$TsunamiForecastMaxHeightImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TsunamiForecastMaxHeight
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -642,11 +680,13 @@ class _$TsunamiForecastMaxHeightImpl implements _TsunamiForecastMaxHeight {
                 other.condition == condition));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, value, isOver, condition);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TsunamiForecastMaxHeight
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TsunamiForecastMaxHeightImplCopyWith<_$TsunamiForecastMaxHeightImpl>
@@ -677,8 +717,11 @@ abstract class _TsunamiForecastMaxHeight implements TsunamiForecastMaxHeight {
   bool? get isOver;
   @override
   TsunamiForecastMaxHeightCondition? get condition;
+
+  /// Create a copy of TsunamiForecastMaxHeight
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TsunamiForecastMaxHeightImplCopyWith<_$TsunamiForecastMaxHeightImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -697,8 +740,12 @@ mixin _$TsunamiForecastStation {
   TsunamiForecastStationCondition? get condition =>
       throw _privateConstructorUsedError;
 
+  /// Serializes this TsunamiForecastStation to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of TsunamiForecastStation
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TsunamiForecastStationCopyWith<TsunamiForecastStation> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -728,6 +775,8 @@ class _$TsunamiForecastStationCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TsunamiForecastStation
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -789,6 +838,8 @@ class __$$TsunamiForecastStationImplCopyWithImpl<$Res>
       $Res Function(_$TsunamiForecastStationImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TsunamiForecastStation
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -867,12 +918,14 @@ class _$TsunamiForecastStationImpl implements _TsunamiForecastStation {
                 other.condition == condition));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, code, name, highTideTime, firstHeightTime, condition);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TsunamiForecastStation
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TsunamiForecastStationImplCopyWith<_$TsunamiForecastStationImpl>
@@ -909,8 +962,11 @@ abstract class _TsunamiForecastStation implements TsunamiForecastStation {
   DateTime? get firstHeightTime;
   @override
   TsunamiForecastStationCondition? get condition;
+
+  /// Create a copy of TsunamiForecastStation
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TsunamiForecastStationImplCopyWith<_$TsunamiForecastStationImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

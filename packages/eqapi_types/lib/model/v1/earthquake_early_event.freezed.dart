@@ -35,8 +35,12 @@ mixin _$EarthquakeEarlyEvent {
   List<EarthquakeEarlyEventObservationCity> get cities =>
       throw _privateConstructorUsedError;
 
+  /// Serializes this EarthquakeEarlyEvent to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EarthquakeEarlyEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EarthquakeEarlyEventCopyWith<EarthquakeEarlyEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -72,6 +76,8 @@ class _$EarthquakeEarlyEventCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EarthquakeEarlyEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -166,6 +172,8 @@ class __$$EarthquakeEarlyEventImplCopyWithImpl<$Res>
       $Res Function(_$EarthquakeEarlyEventImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EarthquakeEarlyEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -314,7 +322,7 @@ class _$EarthquakeEarlyEventImpl implements _EarthquakeEarlyEvent {
             const DeepCollectionEquality().equals(other._cities, _cities));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -330,7 +338,9 @@ class _$EarthquakeEarlyEventImpl implements _EarthquakeEarlyEvent {
       const DeepCollectionEquality().hash(_regions),
       const DeepCollectionEquality().hash(_cities));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EarthquakeEarlyEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeEarlyEventImplCopyWith<_$EarthquakeEarlyEventImpl>
@@ -386,8 +396,11 @@ abstract class _EarthquakeEarlyEvent implements EarthquakeEarlyEvent {
   List<EarthquakeEarlyEventRegion> get regions;
   @override
   List<EarthquakeEarlyEventObservationCity> get cities;
+
+  /// Create a copy of EarthquakeEarlyEvent
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeEarlyEventImplCopyWith<_$EarthquakeEarlyEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -403,8 +416,12 @@ mixin _$EarthquakeEarlyEventRegion {
   String? get code => throw _privateConstructorUsedError;
   JmaIntensity? get maxIntensity => throw _privateConstructorUsedError;
 
+  /// Serializes this EarthquakeEarlyEventRegion to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EarthquakeEarlyEventRegion
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EarthquakeEarlyEventRegionCopyWith<EarthquakeEarlyEventRegion>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -430,6 +447,8 @@ class _$EarthquakeEarlyEventRegionCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EarthquakeEarlyEventRegion
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -476,6 +495,8 @@ class __$$EarthquakeEarlyEventRegionImplCopyWithImpl<$Res>
       $Res Function(_$EarthquakeEarlyEventRegionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EarthquakeEarlyEventRegion
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -533,11 +554,13 @@ class _$EarthquakeEarlyEventRegionImpl implements _EarthquakeEarlyEventRegion {
                 other.maxIntensity == maxIntensity));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, name, code, maxIntensity);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EarthquakeEarlyEventRegion
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeEarlyEventRegionImplCopyWith<_$EarthquakeEarlyEventRegionImpl>
@@ -569,8 +592,11 @@ abstract class _EarthquakeEarlyEventRegion
   String? get code;
   @override
   JmaIntensity? get maxIntensity;
+
+  /// Create a copy of EarthquakeEarlyEventRegion
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeEarlyEventRegionImplCopyWith<_$EarthquakeEarlyEventRegionImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -588,8 +614,12 @@ mixin _$EarthquakeEarlyEventObservationCity {
   List<EarthquakeEarlyEventObservationPoint> get observationPoints =>
       throw _privateConstructorUsedError;
 
+  /// Serializes this EarthquakeEarlyEventObservationCity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EarthquakeEarlyEventObservationCity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EarthquakeEarlyEventObservationCityCopyWith<
           EarthquakeEarlyEventObservationCity>
       get copyWith => throw _privateConstructorUsedError;
@@ -621,6 +651,8 @@ class _$EarthquakeEarlyEventObservationCityCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EarthquakeEarlyEventObservationCity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -676,6 +708,8 @@ class __$$EarthquakeEarlyEventObservationCityImplCopyWithImpl<$Res>
       $Res Function(_$EarthquakeEarlyEventObservationCityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EarthquakeEarlyEventObservationCity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -754,12 +788,14 @@ class _$EarthquakeEarlyEventObservationCityImpl
                 .equals(other._observationPoints, _observationPoints));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, name, code, maxIntensity,
       const DeepCollectionEquality().hash(_observationPoints));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EarthquakeEarlyEventObservationCity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeEarlyEventObservationCityImplCopyWith<
@@ -796,8 +832,11 @@ abstract class _EarthquakeEarlyEventObservationCity
   JmaIntensity? get maxIntensity;
   @override
   List<EarthquakeEarlyEventObservationPoint> get observationPoints;
+
+  /// Create a copy of EarthquakeEarlyEventObservationCity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeEarlyEventObservationCityImplCopyWith<
           _$EarthquakeEarlyEventObservationCityImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -815,8 +854,12 @@ mixin _$EarthquakeEarlyEventObservationPoint {
   String get name => throw _privateConstructorUsedError;
   JmaIntensity get intensity => throw _privateConstructorUsedError;
 
+  /// Serializes this EarthquakeEarlyEventObservationPoint to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EarthquakeEarlyEventObservationPoint
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EarthquakeEarlyEventObservationPointCopyWith<
           EarthquakeEarlyEventObservationPoint>
       get copyWith => throw _privateConstructorUsedError;
@@ -844,6 +887,8 @@ class _$EarthquakeEarlyEventObservationPointCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EarthquakeEarlyEventObservationPoint
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -895,6 +940,8 @@ class __$$EarthquakeEarlyEventObservationPointImplCopyWithImpl<$Res>
       $Res Function(_$EarthquakeEarlyEventObservationPointImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EarthquakeEarlyEventObservationPoint
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -964,11 +1011,13 @@ class _$EarthquakeEarlyEventObservationPointImpl
                 other.intensity == intensity));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, lat, lon, name, intensity);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EarthquakeEarlyEventObservationPoint
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeEarlyEventObservationPointImplCopyWith<
@@ -1005,8 +1054,11 @@ abstract class _EarthquakeEarlyEventObservationPoint
   String get name;
   @override
   JmaIntensity get intensity;
+
+  /// Create a copy of EarthquakeEarlyEventObservationPoint
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeEarlyEventObservationPointImplCopyWith<
           _$EarthquakeEarlyEventObservationPointImpl>
       get copyWith => throw _privateConstructorUsedError;
