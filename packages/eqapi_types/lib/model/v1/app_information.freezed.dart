@@ -23,8 +23,12 @@ mixin _$AppInformation {
   PlatformAppInformation get ios => throw _privateConstructorUsedError;
   PlatformAppInformation get android => throw _privateConstructorUsedError;
 
+  /// Serializes this AppInformation to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AppInformation
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AppInformationCopyWith<AppInformation> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -51,6 +55,8 @@ class _$AppInformationCopyWithImpl<$Res, $Val extends AppInformation>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AppInformation
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -69,6 +75,8 @@ class _$AppInformationCopyWithImpl<$Res, $Val extends AppInformation>
     ) as $Val);
   }
 
+  /// Create a copy of AppInformation
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PlatformAppInformationCopyWith<$Res> get ios {
@@ -77,6 +85,8 @@ class _$AppInformationCopyWithImpl<$Res, $Val extends AppInformation>
     });
   }
 
+  /// Create a copy of AppInformation
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PlatformAppInformationCopyWith<$Res> get android {
@@ -110,6 +120,8 @@ class __$$AppInformationImplCopyWithImpl<$Res>
       _$AppInformationImpl _value, $Res Function(_$AppInformationImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AppInformation
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -156,11 +168,13 @@ class _$AppInformationImpl implements _AppInformation {
             (identical(other.android, android) || other.android == android));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, ios, android);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AppInformation
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AppInformationImplCopyWith<_$AppInformationImpl> get copyWith =>
@@ -187,8 +201,11 @@ abstract class _AppInformation implements AppInformation {
   PlatformAppInformation get ios;
   @override
   PlatformAppInformation get android;
+
+  /// Create a copy of AppInformation
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AppInformationImplCopyWith<_$AppInformationImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -204,8 +221,12 @@ mixin _$PlatformAppInformation {
   AppVersion? get minimum => throw _privateConstructorUsedError;
   String? get downloadUrl => throw _privateConstructorUsedError;
 
+  /// Serializes this PlatformAppInformation to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of PlatformAppInformation
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PlatformAppInformationCopyWith<PlatformAppInformation> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -233,6 +254,8 @@ class _$PlatformAppInformationCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PlatformAppInformation
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -256,6 +279,8 @@ class _$PlatformAppInformationCopyWithImpl<$Res,
     ) as $Val);
   }
 
+  /// Create a copy of PlatformAppInformation
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $AppVersionCopyWith<$Res>? get latest {
@@ -268,6 +293,8 @@ class _$PlatformAppInformationCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of PlatformAppInformation
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $AppVersionCopyWith<$Res>? get minimum {
@@ -308,6 +335,8 @@ class __$$PlatformAppInformationImplCopyWithImpl<$Res>
       $Res Function(_$PlatformAppInformationImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of PlatformAppInformation
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -364,11 +393,13 @@ class _$PlatformAppInformationImpl implements _PlatformAppInformation {
                 other.downloadUrl == downloadUrl));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, latest, minimum, downloadUrl);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PlatformAppInformation
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PlatformAppInformationImplCopyWith<_$PlatformAppInformationImpl>
@@ -398,8 +429,11 @@ abstract class _PlatformAppInformation implements PlatformAppInformation {
   AppVersion? get minimum;
   @override
   String? get downloadUrl;
+
+  /// Create a copy of PlatformAppInformation
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PlatformAppInformationImplCopyWith<_$PlatformAppInformationImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -413,8 +447,12 @@ mixin _$AppVersion {
   String get version => throw _privateConstructorUsedError;
   String? get message => throw _privateConstructorUsedError;
 
+  /// Serializes this AppVersion to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AppVersion
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AppVersionCopyWith<AppVersion> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -438,6 +476,8 @@ class _$AppVersionCopyWithImpl<$Res, $Val extends AppVersion>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AppVersion
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -476,6 +516,8 @@ class __$$AppVersionImplCopyWithImpl<$Res>
       _$AppVersionImpl _value, $Res Function(_$AppVersionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AppVersion
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -522,11 +564,13 @@ class _$AppVersionImpl implements _AppVersion {
             (identical(other.message, message) || other.message == message));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, version, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AppVersion
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AppVersionImplCopyWith<_$AppVersionImpl> get copyWith =>
@@ -552,8 +596,11 @@ abstract class _AppVersion implements AppVersion {
   String get version;
   @override
   String? get message;
+
+  /// Create a copy of AppVersion
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AppVersionImplCopyWith<_$AppVersionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

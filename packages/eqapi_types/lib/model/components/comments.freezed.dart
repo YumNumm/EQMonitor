@@ -25,8 +25,12 @@ mixin _$Comments {
   @JsonValue('var')
   VarComments? get varComments => throw _privateConstructorUsedError;
 
+  /// Serializes this Comments to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Comments
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CommentsCopyWith<Comments> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -55,6 +59,8 @@ class _$CommentsCopyWithImpl<$Res, $Val extends Comments>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Comments
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -78,6 +84,8 @@ class _$CommentsCopyWithImpl<$Res, $Val extends Comments>
     ) as $Val);
   }
 
+  /// Create a copy of Comments
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ForecastCommentsCopyWith<$Res>? get forecast {
@@ -90,6 +98,8 @@ class _$CommentsCopyWithImpl<$Res, $Val extends Comments>
     });
   }
 
+  /// Create a copy of Comments
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $VarCommentsCopyWith<$Res>? get varComments {
@@ -130,6 +140,8 @@ class __$$CommentsImplCopyWithImpl<$Res>
       _$CommentsImpl _value, $Res Function(_$CommentsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Comments
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -191,11 +203,13 @@ class _$CommentsImpl implements _Comments {
                 other.varComments == varComments));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, free, forecast, varComments);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Comments
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CommentsImplCopyWith<_$CommentsImpl> get copyWith =>
@@ -226,8 +240,11 @@ abstract class _Comments implements Comments {
   @override
   @JsonValue('var')
   VarComments? get varComments;
+
+  /// Create a copy of Comments
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CommentsImplCopyWith<_$CommentsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -241,8 +258,12 @@ mixin _$CommentsOmitVar {
   String? get free => throw _privateConstructorUsedError;
   ForecastComments? get forecast => throw _privateConstructorUsedError;
 
+  /// Serializes this CommentsOmitVar to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of CommentsOmitVar
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CommentsOmitVarCopyWith<CommentsOmitVar> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -268,6 +289,8 @@ class _$CommentsOmitVarCopyWithImpl<$Res, $Val extends CommentsOmitVar>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CommentsOmitVar
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -286,6 +309,8 @@ class _$CommentsOmitVarCopyWithImpl<$Res, $Val extends CommentsOmitVar>
     ) as $Val);
   }
 
+  /// Create a copy of CommentsOmitVar
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ForecastCommentsCopyWith<$Res>? get forecast {
@@ -321,6 +346,8 @@ class __$$CommentsOmitVarImplCopyWithImpl<$Res>
       _$CommentsOmitVarImpl _value, $Res Function(_$CommentsOmitVarImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CommentsOmitVar
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -369,11 +396,13 @@ class _$CommentsOmitVarImpl implements _CommentsOmitVar {
                 other.forecast == forecast));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, free, forecast);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CommentsOmitVar
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CommentsOmitVarImplCopyWith<_$CommentsOmitVarImpl> get copyWith =>
@@ -400,8 +429,11 @@ abstract class _CommentsOmitVar implements CommentsOmitVar {
   String? get free;
   @override
   ForecastComments? get forecast;
+
+  /// Create a copy of CommentsOmitVar
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CommentsOmitVarImplCopyWith<_$CommentsOmitVarImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -415,8 +447,12 @@ mixin _$ForecastComments {
   String get text => throw _privateConstructorUsedError;
   List<String> get codes => throw _privateConstructorUsedError;
 
+  /// Serializes this ForecastComments to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ForecastComments
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ForecastCommentsCopyWith<ForecastComments> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -440,6 +476,8 @@ class _$ForecastCommentsCopyWithImpl<$Res, $Val extends ForecastComments>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ForecastComments
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -478,6 +516,8 @@ class __$$ForecastCommentsImplCopyWithImpl<$Res>
       $Res Function(_$ForecastCommentsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ForecastComments
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -532,12 +572,14 @@ class _$ForecastCommentsImpl implements _ForecastComments {
             const DeepCollectionEquality().equals(other._codes, _codes));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, text, const DeepCollectionEquality().hash(_codes));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ForecastComments
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ForecastCommentsImplCopyWith<_$ForecastCommentsImpl> get copyWith =>
@@ -564,8 +606,11 @@ abstract class _ForecastComments implements ForecastComments {
   String get text;
   @override
   List<String> get codes;
+
+  /// Create a copy of ForecastComments
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ForecastCommentsImplCopyWith<_$ForecastCommentsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -579,8 +624,12 @@ mixin _$VarComments {
   String get text => throw _privateConstructorUsedError;
   List<String> get codes => throw _privateConstructorUsedError;
 
+  /// Serializes this VarComments to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of VarComments
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $VarCommentsCopyWith<VarComments> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -604,6 +653,8 @@ class _$VarCommentsCopyWithImpl<$Res, $Val extends VarComments>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of VarComments
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -642,6 +693,8 @@ class __$$VarCommentsImplCopyWithImpl<$Res>
       _$VarCommentsImpl _value, $Res Function(_$VarCommentsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of VarComments
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -696,12 +749,14 @@ class _$VarCommentsImpl implements _VarComments {
             const DeepCollectionEquality().equals(other._codes, _codes));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, text, const DeepCollectionEquality().hash(_codes));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of VarComments
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$VarCommentsImplCopyWith<_$VarCommentsImpl> get copyWith =>
@@ -727,8 +782,11 @@ abstract class _VarComments implements VarComments {
   String get text;
   @override
   List<String> get codes;
+
+  /// Create a copy of VarComments
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$VarCommentsImplCopyWith<_$VarCommentsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -741,8 +799,12 @@ CommentsOnlyFree _$CommentsOnlyFreeFromJson(Map<String, dynamic> json) {
 mixin _$CommentsOnlyFree {
   String get free => throw _privateConstructorUsedError;
 
+  /// Serializes this CommentsOnlyFree to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of CommentsOnlyFree
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CommentsOnlyFreeCopyWith<CommentsOnlyFree> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -766,6 +828,8 @@ class _$CommentsOnlyFreeCopyWithImpl<$Res, $Val extends CommentsOnlyFree>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CommentsOnlyFree
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -799,6 +863,8 @@ class __$$CommentsOnlyFreeImplCopyWithImpl<$Res>
       $Res Function(_$CommentsOnlyFreeImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CommentsOnlyFree
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -838,11 +904,13 @@ class _$CommentsOnlyFreeImpl implements _CommentsOnlyFree {
             (identical(other.free, free) || other.free == free));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, free);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CommentsOnlyFree
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CommentsOnlyFreeImplCopyWith<_$CommentsOnlyFreeImpl> get copyWith =>
@@ -866,8 +934,11 @@ abstract class _CommentsOnlyFree implements CommentsOnlyFree {
 
   @override
   String get free;
+
+  /// Create a copy of CommentsOnlyFree
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CommentsOnlyFreeImplCopyWith<_$CommentsOnlyFreeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

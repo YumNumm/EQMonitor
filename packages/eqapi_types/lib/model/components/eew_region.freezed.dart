@@ -31,8 +31,12 @@ mixin _$EewRegion {
   /// PLUM法の場合は最初にその階級震度を予測した時刻
   DateTime? get arrivalTime => throw _privateConstructorUsedError;
 
+  /// Serializes this EewRegion to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EewRegion
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EewRegionCopyWith<EewRegion> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -65,6 +69,8 @@ class _$EewRegionCopyWithImpl<$Res, $Val extends EewRegion>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EewRegion
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -108,6 +114,8 @@ class _$EewRegionCopyWithImpl<$Res, $Val extends EewRegion>
     ) as $Val);
   }
 
+  /// Create a copy of EewRegion
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ForecastMaxIntCopyWith<$Res> get forecastMaxInt {
@@ -116,6 +124,8 @@ class _$EewRegionCopyWithImpl<$Res, $Val extends EewRegion>
     });
   }
 
+  /// Create a copy of EewRegion
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ForecastMaxLgIntCopyWith<$Res>? get forecastMaxLgInt {
@@ -160,6 +170,8 @@ class __$$EewRegionImplCopyWithImpl<$Res>
       _$EewRegionImpl _value, $Res Function(_$EewRegionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EewRegion
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -261,12 +273,14 @@ class _$EewRegionImpl implements _EewRegion {
                 other.arrivalTime == arrivalTime));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, code, name, isPlum, isWarning,
       forecastMaxInt, forecastMaxLgInt, arrivalTime);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EewRegion
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EewRegionImplCopyWith<_$EewRegionImpl> get copyWith =>
@@ -305,13 +319,16 @@ abstract class _EewRegion implements EewRegion {
   ForecastMaxInt get forecastMaxInt;
   @override
   ForecastMaxLgInt? get forecastMaxLgInt;
-  @override
 
   /// undefinedの場合は null
   /// PLUM法の場合は最初にその階級震度を予測した時刻
-  DateTime? get arrivalTime;
   @override
-  @JsonKey(ignore: true)
+  DateTime? get arrivalTime;
+
+  /// Create a copy of EewRegion
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EewRegionImplCopyWith<_$EewRegionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

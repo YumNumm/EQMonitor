@@ -27,8 +27,12 @@ mixin _$DevicesEewSettings {
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
 
+  /// Serializes this DevicesEewSettings to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of DevicesEewSettings
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $DevicesEewSettingsCopyWith<DevicesEewSettings> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -57,6 +61,8 @@ class _$DevicesEewSettingsCopyWithImpl<$Res, $Val extends DevicesEewSettings>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of DevicesEewSettings
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -115,6 +121,8 @@ class __$$DevicesEewSettingsImplCopyWithImpl<$Res>
       $Res Function(_$DevicesEewSettingsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of DevicesEewSettings
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -194,12 +202,14 @@ class _$DevicesEewSettingsImpl implements _DevicesEewSettings {
                 other.updatedAt == updatedAt));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, id, minJmaIntensity, regionId, createdAt, updatedAt);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DevicesEewSettings
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$DevicesEewSettingsImplCopyWith<_$DevicesEewSettingsImpl> get copyWith =>
@@ -235,8 +245,11 @@ abstract class _DevicesEewSettings implements DevicesEewSettings {
   DateTime get createdAt;
   @override
   DateTime get updatedAt;
+
+  /// Create a copy of DevicesEewSettings
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$DevicesEewSettingsImplCopyWith<_$DevicesEewSettingsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -24,8 +24,12 @@ mixin _$EarthquakeNankaiInfo {
   String? get appendix => throw _privateConstructorUsedError;
   EarthquakeNankaiKind? get kind => throw _privateConstructorUsedError;
 
+  /// Serializes this EarthquakeNankaiInfo to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EarthquakeNankaiInfo
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EarthquakeNankaiInfoCopyWith<EarthquakeNankaiInfo> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -52,6 +56,8 @@ class _$EarthquakeNankaiInfoCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EarthquakeNankaiInfo
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -75,6 +81,8 @@ class _$EarthquakeNankaiInfoCopyWithImpl<$Res,
     ) as $Val);
   }
 
+  /// Create a copy of EarthquakeNankaiInfo
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $EarthquakeNankaiKindCopyWith<$Res>? get kind {
@@ -110,6 +118,8 @@ class __$$EarthquakeNankaiInfoImplCopyWithImpl<$Res>
       $Res Function(_$EarthquakeNankaiInfoImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EarthquakeNankaiInfo
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -166,11 +176,13 @@ class _$EarthquakeNankaiInfoImpl implements _EarthquakeNankaiInfo {
             (identical(other.kind, kind) || other.kind == kind));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, text, appendix, kind);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EarthquakeNankaiInfo
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeNankaiInfoImplCopyWith<_$EarthquakeNankaiInfoImpl>
@@ -201,8 +213,11 @@ abstract class _EarthquakeNankaiInfo implements EarthquakeNankaiInfo {
   String? get appendix;
   @override
   EarthquakeNankaiKind? get kind;
+
+  /// Create a copy of EarthquakeNankaiInfo
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeNankaiInfoImplCopyWith<_$EarthquakeNankaiInfoImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -216,8 +231,12 @@ mixin _$EarthquakeNankaiKind {
   String get code => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
 
+  /// Serializes this EarthquakeNankaiKind to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EarthquakeNankaiKind
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EarthquakeNankaiKindCopyWith<EarthquakeNankaiKind> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -242,6 +261,8 @@ class _$EarthquakeNankaiKindCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EarthquakeNankaiKind
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -280,6 +301,8 @@ class __$$EarthquakeNankaiKindImplCopyWithImpl<$Res>
       $Res Function(_$EarthquakeNankaiKindImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EarthquakeNankaiKind
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -326,11 +349,13 @@ class _$EarthquakeNankaiKindImpl implements _EarthquakeNankaiKind {
             (identical(other.name, name) || other.name == name));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, code, name);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EarthquakeNankaiKind
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeNankaiKindImplCopyWith<_$EarthquakeNankaiKindImpl>
@@ -358,8 +383,11 @@ abstract class _EarthquakeNankaiKind implements EarthquakeNankaiKind {
   String get code;
   @override
   String get name;
+
+  /// Create a copy of EarthquakeNankaiKind
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeNankaiKindImplCopyWith<_$EarthquakeNankaiKindImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

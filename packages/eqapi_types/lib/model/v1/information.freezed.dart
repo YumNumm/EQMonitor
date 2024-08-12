@@ -35,8 +35,12 @@ mixin _$InformationV1 {
   String get title => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
 
+  /// Serializes this InformationV1 to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of InformationV1
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $InformationV1CopyWith<InformationV1> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -73,6 +77,8 @@ class _$InformationV1CopyWithImpl<$Res, $Val extends InformationV1>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of InformationV1
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -149,6 +155,8 @@ class __$$InformationV1ImplCopyWithImpl<$Res>
       _$InformationV1Impl _value, $Res Function(_$InformationV1Impl) _then)
       : super(_value, _then);
 
+  /// Create a copy of InformationV1
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -263,7 +271,7 @@ class _$InformationV1Impl implements _InformationV1 {
             (identical(other.type, type) || other.type == type));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -275,7 +283,9 @@ class _$InformationV1Impl implements _InformationV1 {
       title,
       type);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of InformationV1
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$InformationV1ImplCopyWith<_$InformationV1Impl> get copyWith =>
@@ -329,8 +339,11 @@ abstract class _InformationV1 implements InformationV1 {
   String get title;
   @override
   String get type;
+
+  /// Create a copy of InformationV1
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$InformationV1ImplCopyWith<_$InformationV1Impl> get copyWith =>
       throw _privateConstructorUsedError;
 }

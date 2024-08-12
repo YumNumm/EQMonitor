@@ -24,8 +24,12 @@ mixin _$TsunamiComments {
   TsunamiForecastCommentWarning? get warning =>
       throw _privateConstructorUsedError;
 
+  /// Serializes this TsunamiComments to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of TsunamiComments
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TsunamiCommentsCopyWith<TsunamiComments> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -51,6 +55,8 @@ class _$TsunamiCommentsCopyWithImpl<$Res, $Val extends TsunamiComments>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TsunamiComments
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -69,6 +75,8 @@ class _$TsunamiCommentsCopyWithImpl<$Res, $Val extends TsunamiComments>
     ) as $Val);
   }
 
+  /// Create a copy of TsunamiComments
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $TsunamiForecastCommentWarningCopyWith<$Res>? get warning {
@@ -105,6 +113,8 @@ class __$$TsunamiCommentsImplCopyWithImpl<$Res>
       _$TsunamiCommentsImpl _value, $Res Function(_$TsunamiCommentsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TsunamiComments
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -151,11 +161,13 @@ class _$TsunamiCommentsImpl implements _TsunamiComments {
             (identical(other.warning, warning) || other.warning == warning));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, free, warning);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TsunamiComments
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TsunamiCommentsImplCopyWith<_$TsunamiCommentsImpl> get copyWith =>
@@ -183,8 +195,11 @@ abstract class _TsunamiComments implements TsunamiComments {
   String? get free;
   @override
   TsunamiForecastCommentWarning? get warning;
+
+  /// Create a copy of TsunamiComments
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TsunamiCommentsImplCopyWith<_$TsunamiCommentsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -199,8 +214,12 @@ mixin _$TsunamiForecastCommentWarning {
   String get text => throw _privateConstructorUsedError;
   List<String> get codes => throw _privateConstructorUsedError;
 
+  /// Serializes this TsunamiForecastCommentWarning to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of TsunamiForecastCommentWarning
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TsunamiForecastCommentWarningCopyWith<TsunamiForecastCommentWarning>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -227,6 +246,8 @@ class _$TsunamiForecastCommentWarningCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TsunamiForecastCommentWarning
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -268,6 +289,8 @@ class __$$TsunamiForecastCommentWarningImplCopyWithImpl<$Res>
       $Res Function(_$TsunamiForecastCommentWarningImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TsunamiForecastCommentWarning
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -323,12 +346,14 @@ class _$TsunamiForecastCommentWarningImpl
             const DeepCollectionEquality().equals(other._codes, _codes));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, text, const DeepCollectionEquality().hash(_codes));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TsunamiForecastCommentWarning
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TsunamiForecastCommentWarningImplCopyWith<
@@ -357,8 +382,11 @@ abstract class _TsunamiForecastCommentWarning
   String get text;
   @override
   List<String> get codes;
+
+  /// Create a copy of TsunamiForecastCommentWarning
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TsunamiForecastCommentWarningImplCopyWith<
           _$TsunamiForecastCommentWarningImpl>
       get copyWith => throw _privateConstructorUsedError;
