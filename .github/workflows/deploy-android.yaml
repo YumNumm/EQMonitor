@@ -46,8 +46,11 @@ jobs:
           bundler-cache: true
           working-directory: app/android
 
-      - name: Resolve dependencies
-        run: melos bootstrap
+      # https://github.com/actions/setup-java/tree/v4/
+      - uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018
+        with:
+          distribution: "oracle"
+          java-version: "17"
 
       - name: Set Google Play Service Account
         run: |
