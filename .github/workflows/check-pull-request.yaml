@@ -1,18 +1,49 @@
-name: Check Pull Request
+name: Check PR
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, ready_for_review, synchronize]
+    branches-ignore:
+      - "auto-format/*" # このActionで作成されたPRは対象外 (無限ループを防ぐため)
 
 jobs:
-  check:
+  pre-check:
+    permissions:
+      pull-requests: write
+    outputs:
+      src: ${{ steps.filter.outputs.src }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      FLUTTER_VERSION:
-      FLUTTER_CHANNEL:
-      FLUTTER_HOME:
-      PUB_CACHE:
+    timeout-minutes: 1
+
+    steps:
+      # https://github.com/dorny/paths-filter/tree/v3.0.2/
+      - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
+        id: filter
+        with:
+          filters: |
+            src:
+              - "**.dart"
+              - "**.yaml"
+              - "**/pubspec.lock"
+              - "scripts/**"
+
+      # https://github.com/peter-evans/create-or-update-comment/tree/v4/
+      - name: Comment
+        if: ${{ steps.filter.outputs.src == 'false' }}
+        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            > [!WARNING]
+            > チェック対象ファイルの変更がなかったため、checkジョブをスキップしました
+
+  regenerate-code:
+    name: Regenerate code
+    needs: pre-check
+    if: ${{ needs.pre-check.outputs.src == 'true' }}
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions
     permissions:
@@ -22,72 +53,83 @@ jobs:
       pull-requests: write
 
     steps:
-      # https://github.com/actions/checkout
+      # https://github.com/actions/checkout/tree/v4/
       - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
-      - name: Set up ssh
+      - name: Setup Application Runtime
+        uses: ./.github/actions/setup-application-runtime
+
+      - name: re-generated code
+        run: melos run regenerate_code --no-select
+
+      - name: check difference
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_ID_ED25519 }}" | base64 -d > ~/.ssh/id_ed25519
-          chmod 700 ~/.ssh/id_ed25519
-          eval $(ssh-agent -s)
-          echo "Host github.com \n\tIdentityFile ~/.ssh/id_ed25519\n\tUser git\n\tIdentityiesOnly yes" >> ~/.ssh/config
-          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+          git add -N .
+          git diff --name-only --exit-code
 
-      - name: Fetch flutter config
-        uses: kuhnroyal/flutter-fvm-config-action@v2
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+      # https://github.com/peter-evans/create-pull-request/tree/v6/
+      - name: Create or update pull request
+        uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c
+        if: failure()
+        id: cpr
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: ${{ env.FLUTTER_CHANNEL }}
-          cache: true
+          delete-branch: true
+          commit-message: "Auto format"
+          committer: "GitHub Actions <noreply@github.com>"
+          base: ${{ github.head_ref }}
+          branch: "auto-format/${{ github.head_ref }}"
+          title: "Auto format - ${{ github.head_ref }}"
+          body: "Auto format by GitHub Actions on ${{ github.ref }}\nby: ${{github.actor}}"
+          labels: "Auto Format"
+          reviewers: ${{ github.actor }}
 
-      # https://github.com/actions/cache
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ${{ env.PUB_CACHE }}
-            ${{ github.workspace }}/.packages
-            ${{ github.workspace }}/.flutter-plugins
-            ${{ github.workspace }}/.flutter-plugin-dependencies
-            ${{ github.workspace }}/.dart_tool/package_config.json
-          key: build-pubspec-${{ hashFiles(format('{0}{1}', github.workspace, '/pubspec.lock')) }}
-          restore-keys: |
-            build-pubspec-
-
-      - name: Install Melos
-        run: dart pub global activate melos
-
-      - name: Melos bootstrap
+      - name: Check outputs
+        if: ${{ steps.cpr.outputs.pull-request-number }}
         run: |
-          ln -s $FLUTTER_ROOT .fvm/flutter_sdk
-          melos bootstrap
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
 
-      - name: flutter analyze
-        run: flutter analyze --write=flutter_analyze.log
-        continue-on-error: true
+  test:
+    name: Check format and Run test
+    needs: pre-check
+    if: ${{ needs.pre-check.outputs.src == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
 
-        # use flutter-analyze-commenter
-      - uses: yorifuji/flutter-analyze-commenter@v1
+    steps:
+      # https://github.com/actions/checkout/tree/v4/
+      - name: Checkout
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+
+      - name: Setup Application Runtime
+        uses: ./.github/actions/setup-application-runtime
+
+      # https://github.com/invertase/github-action-dart-analyzer/tree/v3/
+      - name: Report analyze
+        uses: invertase/github-action-dart-analyzer@e981b01a458d0bab71ee5da182e5b26687b7101b
         with:
-          analyze-log: flutter_analyze.log # file path for analyze log
+          fatal-infos: true
+
+      - name: Report custom_lint result
+        run: |
+          echo "::add-matcher::.github/problem_matchers/custom_lint.json"
+          melos run report_custom_lint:ci --no-select || result=$?
+          echo "::remove-matcher owner=custom_lint::"
+
+          if [ -n "$result" ]; then
+            exit 1
+          fi
 
       - name: Run test
-        run: flutter test --file-reporter="json:test-results.json"
+        run: melos run report_test --no-select
         continue-on-error: true
 
-      # https://github.com/dorny/test-reporter
-      - name: report test
-        uses: dorny/test-reporter@v1
-        if: success() || failure()
+      # https://github.com/dorny/test-reporter/tree/v1.9.1/
+      - name: Report test
+        uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
         with:
           name: "flutter test"
-          path: "test-results.json"
+          path: "(app|catalog|packages/**)/test_report.log"
           reporter: "flutter-json"
           fail-on-error: "true"
