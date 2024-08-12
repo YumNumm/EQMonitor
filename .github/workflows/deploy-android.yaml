@@ -95,10 +95,6 @@ jobs:
           gem install bundler
           bundle install
 
-      - name: Install Pods
-        working-directory: app/android
-        run: bundle exec pod install
-
       - name: Set Google Play Service Account
         run: |
           echo '${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}' | base64 -d > app/android/eqmonitor-main-4325501acd45.json
