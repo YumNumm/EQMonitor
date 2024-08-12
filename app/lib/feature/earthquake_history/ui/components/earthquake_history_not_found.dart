@@ -26,7 +26,7 @@ class EarthquakeHistoryNotFound extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             const Text(
-              '2020年11月18日以降の地震情報は、震度データベースで検索できます',
+              '2020年11月18日以前の地震情報は、震度データベースで検索できます',
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 4),
@@ -65,7 +65,7 @@ class EarthquakeHistoryAllFetched extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                '2020年11月18日以降の地震情報は、震度データベースで検索できます',
+                '2020年11月18日以前の地震情報は、震度データベースで検索できます',
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 4),
