@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - develop
-      - fix/ios-cd
 
 jobs:
   build:
