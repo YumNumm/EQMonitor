@@ -136,6 +136,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
       ),
       subtitle: Wrap(
         spacing: 4,
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           Text(
             subTitle,
