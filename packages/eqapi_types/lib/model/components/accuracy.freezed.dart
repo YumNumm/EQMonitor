@@ -25,8 +25,12 @@ mixin _$EewAccuracy {
   String get magnitudeCalculation => throw _privateConstructorUsedError;
   String get numberOfMagnitudeCalculation => throw _privateConstructorUsedError;
 
+  /// Serializes this EewAccuracy to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EewAccuracy
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EewAccuracyCopyWith<EewAccuracy> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -54,6 +58,8 @@ class _$EewAccuracyCopyWithImpl<$Res, $Val extends EewAccuracy>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EewAccuracy
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -106,6 +112,8 @@ class __$$EewAccuracyImplCopyWithImpl<$Res>
       _$EewAccuracyImpl _value, $Res Function(_$EewAccuracyImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EewAccuracy
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -185,7 +193,7 @@ class _$EewAccuracyImpl implements _EewAccuracy {
                     numberOfMagnitudeCalculation));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -194,7 +202,9 @@ class _$EewAccuracyImpl implements _EewAccuracy {
       magnitudeCalculation,
       numberOfMagnitudeCalculation);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EewAccuracy
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EewAccuracyImplCopyWith<_$EewAccuracyImpl> get copyWith =>
@@ -226,8 +236,11 @@ abstract class _EewAccuracy implements EewAccuracy {
   String get magnitudeCalculation;
   @override
   String get numberOfMagnitudeCalculation;
+
+  /// Create a copy of EewAccuracy
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EewAccuracyImplCopyWith<_$EewAccuracyImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

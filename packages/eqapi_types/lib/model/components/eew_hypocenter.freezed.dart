@@ -24,8 +24,12 @@ mixin _$EewHypocenter {
   String get code => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
 
+  /// Serializes this EewHypocenter to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EewHypocenter
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EewHypocenterCopyWith<EewHypocenter> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -49,6 +53,8 @@ class _$EewHypocenterCopyWithImpl<$Res, $Val extends EewHypocenter>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EewHypocenter
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -92,6 +98,8 @@ class __$$EewHypocenterImplCopyWithImpl<$Res>
       _$EewHypocenterImpl _value, $Res Function(_$EewHypocenterImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EewHypocenter
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -149,11 +157,13 @@ class _$EewHypocenterImpl implements _EewHypocenter {
             (identical(other.name, name) || other.name == name));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, coordinate, code, name);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EewHypocenter
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EewHypocenterImplCopyWith<_$EewHypocenterImpl> get copyWith =>
@@ -182,8 +192,11 @@ abstract class _EewHypocenter implements EewHypocenter {
   String get code;
   @override
   String get name;
+
+  /// Create a copy of EewHypocenter
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EewHypocenterImplCopyWith<_$EewHypocenterImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

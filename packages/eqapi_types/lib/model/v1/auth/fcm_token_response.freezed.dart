@@ -24,8 +24,12 @@ mixin _$FcmTokenUpdateResponse {
   String? get token => throw _privateConstructorUsedError;
   String? get fcmVerify => throw _privateConstructorUsedError;
 
+  /// Serializes this FcmTokenUpdateResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FcmTokenUpdateResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $FcmTokenUpdateResponseCopyWith<FcmTokenUpdateResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -50,6 +54,8 @@ class _$FcmTokenUpdateResponseCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of FcmTokenUpdateResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -91,6 +97,8 @@ class __$$FcmTokenUpdateResponseImplCopyWithImpl<$Res>
       $Res Function(_$FcmTokenUpdateResponseImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of FcmTokenUpdateResponse
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -139,11 +147,13 @@ class _$FcmTokenUpdateResponseImpl implements _FcmTokenUpdateResponse {
                 other.fcmVerify == fcmVerify));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, token, fcmVerify);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FcmTokenUpdateResponse
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FcmTokenUpdateResponseImplCopyWith<_$FcmTokenUpdateResponseImpl>
@@ -170,8 +180,11 @@ abstract class _FcmTokenUpdateResponse implements FcmTokenUpdateResponse {
   String? get token;
   @override
   String? get fcmVerify;
+
+  /// Create a copy of FcmTokenUpdateResponse
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FcmTokenUpdateResponseImplCopyWith<_$FcmTokenUpdateResponseImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

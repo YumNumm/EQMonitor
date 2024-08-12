@@ -28,8 +28,12 @@ mixin _$DevicesEarthquakeSettings {
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
 
+  /// Serializes this DevicesEarthquakeSettings to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of DevicesEarthquakeSettings
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $DevicesEarthquakeSettingsCopyWith<DevicesEarthquakeSettings> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -59,6 +63,8 @@ class _$DevicesEarthquakeSettingsCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of DevicesEarthquakeSettings
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -120,6 +126,8 @@ class __$$DevicesEarthquakeSettingsImplCopyWithImpl<$Res>
       $Res Function(_$DevicesEarthquakeSettingsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of DevicesEarthquakeSettings
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -199,12 +207,14 @@ class _$DevicesEarthquakeSettingsImpl implements _DevicesEarthquakeSettings {
                 other.updatedAt == updatedAt));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, id, minJmaIntensity, regionId, createdAt, updatedAt);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DevicesEarthquakeSettings
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$DevicesEarthquakeSettingsImplCopyWith<_$DevicesEarthquakeSettingsImpl>
@@ -240,8 +250,11 @@ abstract class _DevicesEarthquakeSettings implements DevicesEarthquakeSettings {
   DateTime get createdAt;
   @override
   DateTime get updatedAt;
+
+  /// Create a copy of DevicesEarthquakeSettings
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$DevicesEarthquakeSettingsImplCopyWith<_$DevicesEarthquakeSettingsImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

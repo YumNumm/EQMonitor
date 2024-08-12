@@ -28,8 +28,12 @@ mixin _$AppInformation {
   String? get androidDownloadUrl => throw _privateConstructorUsedError;
   String? get forceUpdateMessage => throw _privateConstructorUsedError;
 
+  /// Serializes this AppInformation to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AppInformation
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AppInformationCopyWith<AppInformation> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -60,6 +64,8 @@ class _$AppInformationCopyWithImpl<$Res, $Val extends AppInformation>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AppInformation
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -130,6 +136,8 @@ class __$$AppInformationImplCopyWithImpl<$Res>
       _$AppInformationImpl _value, $Res Function(_$AppInformationImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AppInformation
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -230,7 +238,7 @@ class _$AppInformationImpl implements _AppInformation {
                 other.forceUpdateMessage == forceUpdateMessage));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -242,7 +250,9 @@ class _$AppInformationImpl implements _AppInformation {
       androidDownloadUrl,
       forceUpdateMessage);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AppInformation
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AppInformationImplCopyWith<_$AppInformationImpl> get copyWith =>
@@ -284,8 +294,11 @@ abstract class _AppInformation implements AppInformation {
   String? get androidDownloadUrl;
   @override
   String? get forceUpdateMessage;
+
+  /// Create a copy of AppInformation
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AppInformationImplCopyWith<_$AppInformationImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

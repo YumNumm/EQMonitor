@@ -51,8 +51,12 @@ mixin _$EarthquakeV1 {
   String get status => throw _privateConstructorUsedError;
   String? get text => throw _privateConstructorUsedError;
 
+  /// Serializes this EarthquakeV1 to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EarthquakeV1
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EarthquakeV1CopyWith<EarthquakeV1> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -99,6 +103,8 @@ class _$EarthquakeV1CopyWithImpl<$Res, $Val extends EarthquakeV1>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EarthquakeV1
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -265,6 +271,8 @@ class __$$EarthquakeV1ImplCopyWithImpl<$Res>
       _$EarthquakeV1Impl _value, $Res Function(_$EarthquakeV1Impl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EarthquakeV1
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -600,7 +608,7 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
             (identical(other.text, text) || other.text == text));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -629,7 +637,9 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
         text
       ]);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EarthquakeV1
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeV1ImplCopyWith<_$EarthquakeV1Impl> get copyWith =>
@@ -718,8 +728,11 @@ abstract class _EarthquakeV1 implements EarthquakeV1 {
   String get status;
   @override
   String? get text;
+
+  /// Create a copy of EarthquakeV1
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeV1ImplCopyWith<_$EarthquakeV1Impl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -747,8 +760,12 @@ mixin _$EarthquakeV1Base {
   String get status => throw _privateConstructorUsedError;
   String? get text => throw _privateConstructorUsedError;
 
+  /// Serializes this EarthquakeV1Base to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EarthquakeV1Base
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EarthquakeV1BaseCopyWith<EarthquakeV1Base> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -788,6 +805,8 @@ class _$EarthquakeV1BaseCopyWithImpl<$Res, $Val extends EarthquakeV1Base>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EarthquakeV1Base
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -912,6 +931,8 @@ class __$$EarthquakeV1BaseImplCopyWithImpl<$Res>
       $Res Function(_$EarthquakeV1BaseImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EarthquakeV1Base
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1108,7 +1129,7 @@ class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
             (identical(other.text, text) || other.text == text));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -1129,7 +1150,9 @@ class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
       status,
       text);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EarthquakeV1Base
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeV1BaseImplCopyWith<_$EarthquakeV1BaseImpl> get copyWith =>
@@ -1198,8 +1221,11 @@ abstract class _EarthquakeV1Base implements EarthquakeV1Base {
   String get status;
   @override
   String? get text;
+
+  /// Create a copy of EarthquakeV1Base
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeV1BaseImplCopyWith<_$EarthquakeV1BaseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1216,8 +1242,12 @@ mixin _$ObservedRegionIntensity {
   @JsonKey(name: 'maxInt')
   JmaIntensity? get intensity => throw _privateConstructorUsedError;
 
+  /// Serializes this ObservedRegionIntensity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ObservedRegionIntensity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ObservedRegionIntensityCopyWith<ObservedRegionIntensity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1245,6 +1275,8 @@ class _$ObservedRegionIntensityCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ObservedRegionIntensity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1294,6 +1326,8 @@ class __$$ObservedRegionIntensityImplCopyWithImpl<$Res>
       $Res Function(_$ObservedRegionIntensityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ObservedRegionIntensity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1353,11 +1387,13 @@ class _$ObservedRegionIntensityImpl implements _ObservedRegionIntensity {
                 other.intensity == intensity));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, code, name, intensity);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ObservedRegionIntensity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ObservedRegionIntensityImplCopyWith<_$ObservedRegionIntensityImpl>
@@ -1389,8 +1425,11 @@ abstract class _ObservedRegionIntensity implements ObservedRegionIntensity {
   @override
   @JsonKey(name: 'maxInt')
   JmaIntensity? get intensity;
+
+  /// Create a copy of ObservedRegionIntensity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ObservedRegionIntensityImplCopyWith<_$ObservedRegionIntensityImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -1409,8 +1448,12 @@ mixin _$ObservedRegionLpgmIntensity {
   @JsonKey(name: 'maxLgInt')
   JmaLgIntensity? get lpgmIntensity => throw _privateConstructorUsedError;
 
+  /// Serializes this ObservedRegionLpgmIntensity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ObservedRegionLpgmIntensity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ObservedRegionLpgmIntensityCopyWith<ObservedRegionLpgmIntensity>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -1441,6 +1484,8 @@ class _$ObservedRegionLpgmIntensityCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ObservedRegionLpgmIntensity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1496,6 +1541,8 @@ class __$$ObservedRegionLpgmIntensityImplCopyWithImpl<$Res>
       $Res Function(_$ObservedRegionLpgmIntensityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ObservedRegionLpgmIntensity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1568,12 +1615,14 @@ class _$ObservedRegionLpgmIntensityImpl
                 other.lpgmIntensity == lpgmIntensity));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, code, name, intensity, lpgmIntensity);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ObservedRegionLpgmIntensity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ObservedRegionLpgmIntensityImplCopyWith<_$ObservedRegionLpgmIntensityImpl>
@@ -1611,8 +1660,11 @@ abstract class _ObservedRegionLpgmIntensity
   @override
   @JsonKey(name: 'maxLgInt')
   JmaLgIntensity? get lpgmIntensity;
+
+  /// Create a copy of ObservedRegionLpgmIntensity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ObservedRegionLpgmIntensityImplCopyWith<_$ObservedRegionLpgmIntensityImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
