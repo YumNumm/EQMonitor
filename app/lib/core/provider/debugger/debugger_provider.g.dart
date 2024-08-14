@@ -8,7 +8,7 @@ part of 'debugger_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$debuggerHash() => r'41f7686422606cc077bcc98c2510d15d7ded0de7';
+String _$debuggerHash() => r'47038438ce2de44da4407b1b1baff28455e5a8d1';
 
 /// See also [Debugger].
 @ProviderFor(Debugger)
