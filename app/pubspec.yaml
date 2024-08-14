@@ -12,9 +12,9 @@ dependencies:
   adaptive_dialog: ^2.1.0
   app_settings: ^5.1.1
   collection: ^1.17.1
-  crypto: ^3.0.3
+  crypto: ^3.0.4
   device_info_plus: ^10.1.0
-  dio: ^5.4.3+1
+  dio: ^5.6.0
   dynamic_color: ^1.7.0
   envied: ^0.5.4+1
   eqapi_client:
@@ -87,7 +87,7 @@ dependencies:
   package_info_plus: ^8.0.0
   path_provider: ^2.1.3
   permission_handler: ^11.3.1
-  purchases_flutter: ^7.0.1
+  purchases_flutter: ^7.0.2
   riverpod_annotation: ^3.0.0-dev.3
   screenshot: 3.0.0
   share_plus: ^9.0.0
@@ -99,7 +99,7 @@ dependencies:
       branch: main
       path: sheet
   shorebird_code_push: ^1.1.3
-  talker_dio_logger: ^4.2.4
+  talker_dio_logger: ^4.4.1
   talker_flutter: 4.4.0
   upgrader: ^10.3.0
   url_launcher: ^6.3.0
@@ -119,7 +119,7 @@ dev_dependencies:
   go_router_builder: ^2.7.0
   json_serializable: ^6.8.0
   pedantic_mono: ^1.27.0
-  retrofit_generator: ^8.1.0
+  retrofit_generator: ^8.2.0
   riverpod_generator: ^3.0.0-dev.11
   riverpod_lint: ^3.0.0-dev.4
   test: ^1.24.9
