@@ -97,19 +97,19 @@ jobs:
           name: release-aab
           path: app/android/output
 
-      - name: Install Gems
-        working-directory: app/android
-        run: |
-          gem install bundler
-          bundle install
-
-      - name: Set Google Play Service Account
-        run: |
-          echo '${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}' | base64 -d > app/android/eqmonitor-main-4325501acd45.json
-
       - name: Move aab
         working-directory: app/android
         run: mv output/app-release.aab output.aab
+
+      - name: Pre set up ruby
+        run: cp .ruby-version app/android/.ruby-version
+
+      - name: Set up ruby
+        # https://github.com/ruby/setup-ruby/tree/v1/
+        uses: ruby/setup-ruby@a6e6f86333f0a2523ece813039b8b4be04560854
+        with:
+          bundler-cache: true
+          working-directory: app/android
 
       - name: Upload
         working-directory: app/android
