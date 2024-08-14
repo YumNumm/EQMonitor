@@ -111,6 +111,10 @@ jobs:
           bundler-cache: true
           working-directory: app/android
 
+      - name: Set Google Play Service Account
+        run: |
+          echo '${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}' | base64 -d > app/android/eqmonitor-main-4325501acd45.json
+
       - name: Upload
         working-directory: app/android
         run: bundle exec fastlane upload
