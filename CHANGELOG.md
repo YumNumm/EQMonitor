@@ -1,5 +1,12 @@
 # Changelog
 
+## [v2.6.2](https://github.com/YumNumm/EQMonitor/compare/v2.6.1...v2.6.2) - 2024-08-14
+- deploy-android.yaml を更新 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/773
+- build(deps): bump the dependencies group across 1 directory with 17 updates by @dependabot in https://github.com/YumNumm/EQMonitor/pull/775
+- Auto format - dependabot/pub/app/dependencies-770a5a817c by @github-actions in https://github.com/YumNumm/EQMonitor/pull/776
+- エラーハンドリングの強化 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/780
+- Restyled by dart-format by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/781
+
 ## [v2.6.1](https://github.com/YumNumm/EQMonitor/compare/v2.6.0...v2.6.1) - 2024-08-12
 - Fix/ios cd by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/764
 - build(deps): bump the dependencies group with 3 updates by @dependabot in https://github.com/YumNumm/EQMonitor/pull/765
