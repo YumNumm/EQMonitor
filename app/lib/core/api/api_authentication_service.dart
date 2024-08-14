@@ -78,4 +78,3 @@ class ApiAuthenticationService extends _$ApiAuthenticationService {
     return utf8.decode(base64Url.decode(output));
   }
 }
-

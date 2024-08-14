@@ -34,7 +34,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     final jmaParameterState = await ref.watch(jmaParameterProvider.future);
 
     final earthquakeParameter = jmaParameterState.earthquake;
-    
+
     // 検索条件を指定していないNotifierでのみ、30秒ごとにデータ再取得するタイマーを設定
     if (parameter == const EarthquakeHistoryParameter()) {
       // 30秒ごとにデータ再取得するタイマー
