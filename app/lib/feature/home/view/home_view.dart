@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
+import 'dart:developer';
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
@@ -40,6 +41,7 @@ import 'package:eqmonitor/feature/settings/features/notification_remote_settings
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_settings_migrate_service.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -91,6 +93,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
     useEffect(
       () {
         WidgetsBinding.instance.endOfFrame.then((_) {
+          log('Start Initialize');
           (
             ref.read(kmoniViewModelProvider.notifier).initialize(),
             ref.read(permissionProvider.notifier).initialize(),
@@ -466,6 +469,7 @@ class _Sheet extends StatelessWidget {
           const KmoniMaintenanceWidget(),
           const _NotificationPermission(),
           const EarthquakeHistorySheetWidget(),
+          const ParameterLoaderWidget(),
           ListTile(
             title: const Text('震度データベース'),
             subtitle: const Text(
@@ -486,7 +490,12 @@ class _Sheet extends StatelessWidget {
             leading: const Icon(Icons.settings),
             onTap: () => const SettingsRoute().push<void>(context),
           ),
-          const ParameterLoaderWidget(),
+          if (kDebugMode)
+            ListTile(
+              title: const Text('Debug'),
+              leading: const Icon(Icons.bug_report),
+              onTap: () => const DebuggerRoute().push<void>(context),
+            ),
           const SizedBox(height: 200),
         ],
       ),
@@ -570,7 +579,7 @@ class _KmoniScale extends ConsumerWidget {
         child: LayoutBuilder(
           builder: (context, constraints) {
             // 横幅は 画面2/3 もしくは 300px 以下
-            final width = min(constraints.maxWidth * 2 / 3, 300);
+            final width = math.min(constraints.maxWidth * 2 / 3, 300);
             return Align(
               alignment: Alignment.topRight,
               child: SizedBox(

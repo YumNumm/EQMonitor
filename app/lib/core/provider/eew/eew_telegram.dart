@@ -18,14 +18,6 @@ class Eew extends _$Eew {
   @override
   AsyncValue<List<EewV1>> build() {
     final restResult = ref.watch(_eewRestProvider);
-    // AsyncData以外の場合は、そのまま返す
-    // ^ AsyncError, AsyncLoading
-    if (restResult is AsyncError) {
-      ref.invalidate(_eewRestProvider);
-      ref.invalidateSelf();
-
-      return restResult;
-    }
 
     // WebSocketのListen開始
     ref
@@ -69,25 +61,20 @@ class Eew extends _$Eew {
   /// [item]をstateに追加する
   /// 既に同じeventIdが存在する場合は、serialNoが大きい方を採用する
   void _upsert(EewV1 item) {
-    if (state is AsyncData) {
-      final dataView = state.value;
-      if (dataView == null) {
-        return;
+    final dataView = state.valueOrNull ?? [];
+    final data = [...dataView];
+    final index = data.indexWhereOrNull((e) => e.eventId == item.eventId);
+    if (index != null) {
+      final previous = data[index];
+      final previousSerialNo = previous.serialNo ?? 0;
+      final newSerialNo = item.serialNo ?? 0;
+      if (previousSerialNo <= newSerialNo) {
+        data[index] = item;
       }
-      final data = [...dataView];
-      final index = data.indexWhereOrNull((e) => e.eventId == item.eventId);
-      if (index != null) {
-        final previous = data[index];
-        final previousSerialNo = previous.serialNo ?? 0;
-        final newSerialNo = item.serialNo ?? 0;
-        if (previousSerialNo <= newSerialNo) {
-          data[index] = item;
-        }
-      } else {
-        data.add(item);
-      }
-      state = AsyncData(data);
+    } else {
+      data.add(item);
     }
+    state = AsyncData(data);
   }
 }
 
@@ -97,36 +84,3 @@ Future<List<EewV1>> _eewRest(_EewRestRef ref) async {
   final result = await api.v1.getEewLatest();
   return result.data;
 }
-
-/*
-class EewTelegram extends _$EewTelegram {
-  @override
-  List<EarthquakeHistoryItem> build() {
-    /*
-    ref.listen(earthquakeHistoryViewModelProvider, (previous, next) {
-      for (final item in (next?.value ?? <EarthquakeHistoryItem>[])
-          .where((e) => e.latestEew != null)) {
-        if (_shouldShow(item)) {
-          upsert(item);
-        }
-      }
-    });
-
-    /// 古くなったEEWを棄却するタイマー
-    Timer.periodic(const Duration(seconds: 2), (_) {
-      final result = state.where(_shouldShow).toList();
-      if (result.length != state.length) {
-        log('UPDATE EEW LIST(${result.length})');
-
-        state = result;
-      }
-    });
-
-    ref.listenSelf((previous, next) {
-      log(next.toString());
-    });
-*/
-    return [];
-  }
-}
-*/

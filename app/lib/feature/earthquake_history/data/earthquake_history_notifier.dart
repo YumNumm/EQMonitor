@@ -31,14 +31,10 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     EarthquakeHistoryParameter parameter,
   ) async {
     // ensure earthquakeParameter has been initialized.
-    await ref.read(jmaParameterProvider.future);
-    final earthquakeParameter =
-        ref.watch(jmaParameterProvider).valueOrNull?.earthquake;
+    final jmaParameterState = await ref.watch(jmaParameterProvider.future);
 
-    if (earthquakeParameter == null) {
-      ref.invalidate(jmaParameterProvider);
-      throw EarthquakeParameterHasNotInitializedException();
-    }
+    final earthquakeParameter = jmaParameterState.earthquake;
+    
     // 検索条件を指定していないNotifierでのみ、30秒ごとにデータ再取得するタイマーを設定
     if (parameter == const EarthquakeHistoryParameter()) {
       // 30秒ごとにデータ再取得するタイマー

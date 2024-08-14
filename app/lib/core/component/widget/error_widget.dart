@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:eqmonitor/core/api/api_authentication_payload.dart';
 import 'package:eqmonitor/core/component/widget/dio_exception_text.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ErrorInfoWidget extends StatelessWidget {
   const ErrorInfoWidget({
@@ -36,6 +38,7 @@ class ErrorInfoWidget extends StatelessWidget {
                     DioExceptionText(
                       exception: exception,
                     ),
+                    SizedBox(height: 8),
                     Text(
                       (response != null
                               ? '${exception.response?.statusCode} ${exception.response?.statusMessage}'
@@ -54,6 +57,13 @@ class ErrorInfoWidget extends StatelessWidget {
                 }()
               else
                 const Text('エラーが発生しました'),
+              Text("少し時間をおいて再度お試しください。\n"
+                  "解消されない場合は、この画面のスクリーンショットを開発者へ送信してください"),
+              _DeviceIdText(),
+              Text(
+                "エラータイプ: " + error.runtimeType.toString(),
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 16),
               if (onRefresh != null)
                 FilledButton.icon(
@@ -65,6 +75,17 @@ class ErrorInfoWidget extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _DeviceIdText extends ConsumerWidget {
+  const _DeviceIdText();
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(apiAuthenticationPayloadProvider).valueOrNull;
+    return Text(
+      'デバイスID: ${state?.id ?? "Unknown"}',
     );
   }
 }

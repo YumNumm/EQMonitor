@@ -5,6 +5,7 @@ import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
+import 'package:eqmonitor/core/component/widget/error_widget.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/data/earthquake_history_early_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/components/earthquake_early_hypo_info_widget.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/components/earthquake_early_map.dart';
@@ -48,8 +49,10 @@ class EarthquakeHistoryEarlyDetailsScreen extends HookConsumerWidget {
     return switch (state) {
       AsyncError(:final error) => Scaffold(
           appBar: AppBar(),
-          body: Center(
-            child: Text('Error: $error'),
+          body: ErrorInfoWidget(
+            error: error,
+            onRefresh: () async =>
+                ref.refresh(earthquakeHistoryEarlyEventProvider(id)),
           ),
         ),
       AsyncLoading() => Scaffold(
