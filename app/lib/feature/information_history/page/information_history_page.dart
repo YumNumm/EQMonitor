@@ -1,4 +1,5 @@
 import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor/core/component/widget/error_widget.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/information_history/viewmodel/information_history_view_model.dart';
 import 'package:extensions/extensions.dart';
@@ -40,32 +41,17 @@ class InformationHistoryPage extends HookConsumerWidget {
           const SliverAppBar.medium(
             title: Text('地震・津波に関するお知らせ'),
           ),
-          state?.whenOrNull(
-                data: (data) => _InformationDataView(data: data),
-                error: (error, stackTrace) => SliverFillRemaining(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text(
-                        'お知らせの取得中にエラーが発生しました',
-                      ),
-                      Text(error.toString()),
-                      FilledButton.tonal(
-                        onPressed: () async => ref
-                            .read(
-                              informationHistoryViewModelProvider.notifier,
-                            )
-                            .update(
-                              loadMore: false,
-                            ),
-                        child: const Text('再読み込み'),
-                      ),
-                    ],
-                  ),
+          switch (state) {
+            AsyncData(:final value) => _InformationDataView(data: value),
+            AsyncError(:final error) => SliverFillRemaining(
+                child: ErrorInfoWidget(
+                  error: error,
+                  onRefresh: () async =>
+                      ref.invalidate(informationHistoryViewModelProvider),
                 ),
-              ) ??
-              const _Loading(),
+              ),
+            AsyncLoading() || null => const _Loading(),
+          },
         ],
       ),
     );

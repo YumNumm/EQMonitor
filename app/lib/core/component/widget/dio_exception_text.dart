@@ -18,8 +18,10 @@ class DioExceptionText extends StatelessWidget {
       DioExceptionType.connectionError => '接続エラーが発生しました',
       DioExceptionType.unknown => 'その他のエラーが発生しました',
     };
+    final errorCode = exception.type.index + 12000;
+    final errorCodeText = ' (エラーコード: $errorCode)';
     return Text(
-      text,
+      text + errorCodeText,
       style: const TextStyle(
         fontWeight: FontWeight.bold,
       ),

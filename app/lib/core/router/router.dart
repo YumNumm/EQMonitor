@@ -62,7 +62,7 @@ GoRouter goRouter(GoRouterRef ref) => GoRouter(
       ],
       debugLogDiagnostics: true,
       redirect: (context, state) {
-        final isDebugger = ref.read(debuggerProvider).isDebugger;
+        final isDebugger = ref.read(debuggerProvider).isDebugger || kDebugMode;
         if ((state.fullPath?.contains('debug') ?? false) && !isDebugger) {
           throw GoRouterRedirectException(
             'Debugger is not enabled in production mode.',

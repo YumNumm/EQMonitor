@@ -254,7 +254,7 @@ class _SliverListBody extends HookConsumerWidget {
             }
             return ErrorInfoWidget(
               error: error,
-              onRefresh: () =>
+              onRefresh: ()  =>
                   ref.invalidate(earthquakeHistoryEarlyNotifierProvider),
             );
           }(),

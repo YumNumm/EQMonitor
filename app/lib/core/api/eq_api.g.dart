@@ -8,7 +8,7 @@ part of 'eq_api.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$eqApiHash() => r'2d428be676594b0a88b12075bd528aebf9d491a8';
+String _$eqApiHash() => r'686065a770d45b1464ec7f0cdf382cf132038822';
 
 /// See also [eqApi].
 @ProviderFor(eqApi)
