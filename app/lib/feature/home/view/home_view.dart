@@ -19,9 +19,9 @@ import 'package:eqmonitor/core/provider/config/permission/permission_status_prov
 import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
 import 'package:eqmonitor/core/provider/eew/eew_alive_telegram.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging_interaction.dart';
-import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_settings.dart';
-import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_view_model.dart';
-import 'package:eqmonitor/core/provider/kmoni/widget/kmoni_maintenance_widget.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/provider/kmoni_view_model.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_widget.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/notification_token.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';

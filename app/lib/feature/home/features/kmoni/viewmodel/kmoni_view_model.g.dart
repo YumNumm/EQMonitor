@@ -2,7 +2,7 @@
 
 // ignore_for_file: type=lint, duplicate_ignore
 
-part of 'kmoni_view_model.dart';
+part of '../provider/kmoni_view_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
