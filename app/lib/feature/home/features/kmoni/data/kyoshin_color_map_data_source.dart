@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:eqmonitor/core/provider/kmoni/model/kyoshin_color_map_model.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/model/kyoshin_color_map_model.dart';
 import 'package:eqmonitor/gen/assets.gen.dart';
 import 'package:flutter/services.dart';
 

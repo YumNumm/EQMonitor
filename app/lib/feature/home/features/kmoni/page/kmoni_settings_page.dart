@@ -1,5 +1,5 @@
 import 'package:eqmonitor/core/component/widget/kmoni_caution.dart';
-import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_settings.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
 import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
 import 'package:eqmonitor/feature/setup/pages/kmoni_warn.dart';

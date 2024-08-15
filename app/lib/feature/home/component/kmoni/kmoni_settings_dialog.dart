@@ -1,6 +1,6 @@
-import 'package:eqmonitor/core/provider/kmoni/page/kmoni_settings_page.dart';
-import 'package:eqmonitor/core/provider/kmoni/provider/kmoni_color_provider.dart';
-import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_settings.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/page/kmoni_settings_page.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/provider/kmoni_color_provider.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_scale.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
