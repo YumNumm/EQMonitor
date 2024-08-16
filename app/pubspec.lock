@@ -269,10 +269,10 @@ packages:
     dependency: "direct main"
     description:
       name: crypto
-      sha256: "1dceb0cf05cb63a7852c11560060e53ec2f182079a16ced6f4395c5b0875baf8"
+      sha256: ec30d999af904f33454ba22ed9a86162b35e52b44ac4807d1d93c288041d7d27
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.4"
+    version: "3.0.5"
   csslib:
     dependency: transitive
     description:
@@ -404,16 +404,20 @@ packages:
   eqapi_client:
     dependency: "direct main"
     description:
-      path: "../packages/eqapi_client"
-      relative: true
-    source: path
+      path: "packages/eqapi_client"
+      ref: HEAD
+      resolved-ref: feb677dca866cd312fb1079d335eefda8803005c
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   eqapi_types:
     dependency: "direct main"
     description:
-      path: "../packages/eqapi_types"
-      relative: true
-    source: path
+      path: "packages/eqapi_types"
+      ref: HEAD
+      resolved-ref: feb677dca866cd312fb1079d335eefda8803005c
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   equatable:
     dependency: transitive
@@ -426,9 +430,11 @@ packages:
   extensions:
     dependency: "direct main"
     description:
-      path: "../packages/extensions"
-      relative: true
-    source: path
+      path: "packages/extensions"
+      ref: HEAD
+      resolved-ref: feb677dca866cd312fb1079d335eefda8803005c
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   fake_async:
     dependency: transitive
@@ -949,30 +955,38 @@ packages:
   jma_code_table_types:
     dependency: "direct main"
     description:
-      path: "../packages/jma_code_table_types"
-      relative: true
-    source: path
+      path: "packages/jma_code_table_types"
+      ref: HEAD
+      resolved-ref: feb677dca866cd312fb1079d335eefda8803005c
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   jma_map:
     dependency: "direct main"
     description:
-      path: "../packages/jma_map"
-      relative: true
-    source: path
+      path: "packages/jma_map"
+      ref: HEAD
+      resolved-ref: feb677dca866cd312fb1079d335eefda8803005c
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   jma_parameter_api_client:
     dependency: "direct main"
     description:
-      path: "../packages/jma_parameter_api_client"
-      relative: true
-    source: path
+      path: "packages/jma_parameter_api_client"
+      ref: HEAD
+      resolved-ref: feb677dca866cd312fb1079d335eefda8803005c
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   jma_parameter_types:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "../packages/jma_parameter_types"
-      relative: true
-    source: path
+      path: "packages/jma_parameter_types"
+      ref: HEAD
+      resolved-ref: feb677dca866cd312fb1079d335eefda8803005c
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   js:
     dependency: transitive
@@ -1001,16 +1015,20 @@ packages:
   kyoshin_observation_point_types:
     dependency: "direct main"
     description:
-      path: "../packages/kyoshin_observation_point_types"
-      relative: true
-    source: path
+      path: "packages/kyoshin_observation_point_types"
+      ref: HEAD
+      resolved-ref: feb677dca866cd312fb1079d335eefda8803005c
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   lat_lng:
     dependency: "direct main"
     description:
-      path: "../packages/lat_lng"
-      relative: true
-    source: path
+      path: "packages/lat_lng"
+      ref: HEAD
+      resolved-ref: feb677dca866cd312fb1079d335eefda8803005c
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   latlong2:
     dependency: "direct main"
@@ -1167,9 +1185,11 @@ packages:
   notification_setting_types:
     dependency: "direct main"
     description:
-      path: "../packages/notification_setting_types"
-      relative: true
-    source: path
+      path: "packages/notification_setting_types"
+      ref: HEAD
+      resolved-ref: feb677dca866cd312fb1079d335eefda8803005c
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "0.0.0"
   ntp:
     dependency: "direct main"
@@ -1511,10 +1531,10 @@ packages:
     dependency: "direct main"
     description:
       name: shared_preferences
-      sha256: c272f9cabca5a81adc9b0894381e9c1def363e980f960fa903c604c471b22f68
+      sha256: "746e5369a43170c25816cc472ee016d3a66bc13fcf430c0bc41ad7b4b2922051"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.1"
+    version: "2.3.2"
   shared_preferences_android:
     dependency: transitive
     description:
