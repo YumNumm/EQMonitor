@@ -404,20 +404,16 @@ packages:
   eqapi_client:
     dependency: "direct main"
     description:
-      path: "packages/eqapi_client"
-      ref: HEAD
-      resolved-ref: feb677dca866cd312fb1079d335eefda8803005c
-      url: "https://github.com/YumNumm/EQMonitor.git"
-    source: git
+      path: "../packages/eqapi_client"
+      relative: true
+    source: path
     version: "1.0.0"
   eqapi_types:
     dependency: "direct main"
     description:
-      path: "packages/eqapi_types"
-      ref: HEAD
-      resolved-ref: feb677dca866cd312fb1079d335eefda8803005c
-      url: "https://github.com/YumNumm/EQMonitor.git"
-    source: git
+      path: "../packages/eqapi_types"
+      relative: true
+    source: path
     version: "1.0.1"
   equatable:
     dependency: transitive
@@ -430,11 +426,9 @@ packages:
   extensions:
     dependency: "direct main"
     description:
-      path: "packages/extensions"
-      ref: HEAD
-      resolved-ref: feb677dca866cd312fb1079d335eefda8803005c
-      url: "https://github.com/YumNumm/EQMonitor.git"
-    source: git
+      path: "../packages/extensions"
+      relative: true
+    source: path
     version: "1.0.0"
   fake_async:
     dependency: transitive
@@ -955,38 +949,30 @@ packages:
   jma_code_table_types:
     dependency: "direct main"
     description:
-      path: "packages/jma_code_table_types"
-      ref: HEAD
-      resolved-ref: feb677dca866cd312fb1079d335eefda8803005c
-      url: "https://github.com/YumNumm/EQMonitor.git"
-    source: git
+      path: "../packages/jma_code_table_types"
+      relative: true
+    source: path
     version: "1.0.0"
   jma_map:
     dependency: "direct main"
     description:
-      path: "packages/jma_map"
-      ref: HEAD
-      resolved-ref: feb677dca866cd312fb1079d335eefda8803005c
-      url: "https://github.com/YumNumm/EQMonitor.git"
-    source: git
+      path: "../packages/jma_map"
+      relative: true
+    source: path
     version: "1.0.0"
   jma_parameter_api_client:
     dependency: "direct main"
     description:
-      path: "packages/jma_parameter_api_client"
-      ref: HEAD
-      resolved-ref: feb677dca866cd312fb1079d335eefda8803005c
-      url: "https://github.com/YumNumm/EQMonitor.git"
-    source: git
+      path: "../packages/jma_parameter_api_client"
+      relative: true
+    source: path
     version: "1.0.0"
   jma_parameter_types:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      path: "packages/jma_parameter_types"
-      ref: HEAD
-      resolved-ref: feb677dca866cd312fb1079d335eefda8803005c
-      url: "https://github.com/YumNumm/EQMonitor.git"
-    source: git
+      path: "../packages/jma_parameter_types"
+      relative: true
+    source: path
     version: "1.0.0"
   js:
     dependency: transitive
@@ -1015,20 +1001,16 @@ packages:
   kyoshin_observation_point_types:
     dependency: "direct main"
     description:
-      path: "packages/kyoshin_observation_point_types"
-      ref: HEAD
-      resolved-ref: feb677dca866cd312fb1079d335eefda8803005c
-      url: "https://github.com/YumNumm/EQMonitor.git"
-    source: git
+      path: "../packages/kyoshin_observation_point_types"
+      relative: true
+    source: path
     version: "1.0.0"
   lat_lng:
     dependency: "direct main"
     description:
-      path: "packages/lat_lng"
-      ref: HEAD
-      resolved-ref: feb677dca866cd312fb1079d335eefda8803005c
-      url: "https://github.com/YumNumm/EQMonitor.git"
-    source: git
+      path: "../packages/lat_lng"
+      relative: true
+    source: path
     version: "1.0.1"
   latlong2:
     dependency: "direct main"
@@ -1186,11 +1168,9 @@ packages:
   notification_setting_types:
     dependency: "direct main"
     description:
-      path: "packages/notification_setting_types"
-      ref: HEAD
-      resolved-ref: feb677dca866cd312fb1079d335eefda8803005c
-      url: "https://github.com/YumNumm/EQMonitor.git"
-    source: git
+      path: "../packages/notification_setting_types"
+      relative: true
+    source: path
     version: "0.0.0"
   ntp:
     dependency: "direct main"
