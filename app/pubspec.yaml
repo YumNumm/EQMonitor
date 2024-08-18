@@ -12,7 +12,7 @@ dependencies:
   adaptive_dialog: ^2.1.0
   app_settings: ^5.1.1
   collection: ^1.17.1
-  crypto: ^3.0.4
+  crypto: ^3.0.5
   device_info_plus: ^10.1.0
   dio: ^5.6.0
   dynamic_color: ^1.7.0
@@ -92,7 +92,7 @@ dependencies:
   screenshot: 3.0.0
   share_plus: ^9.0.0
   shared_preference_app_group: ^1.1.1
-  shared_preferences: ^2.2.3
+  shared_preferences: ^2.3.2
   sheet:
     git:
       url: https://github.com/YumNumm/modal_bottom_sheet.git
