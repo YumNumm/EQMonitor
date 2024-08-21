@@ -404,16 +404,20 @@ packages:
   eqapi_client:
     dependency: "direct main"
     description:
-      path: "../packages/eqapi_client"
-      relative: true
-    source: path
+      path: "packages/eqapi_client"
+      ref: HEAD
+      resolved-ref: "3875134786ea6036eed2c5a0a58098d02f56850c"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   eqapi_types:
     dependency: "direct main"
     description:
-      path: "../packages/eqapi_types"
-      relative: true
-    source: path
+      path: "packages/eqapi_types"
+      ref: HEAD
+      resolved-ref: "3875134786ea6036eed2c5a0a58098d02f56850c"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   equatable:
     dependency: transitive
@@ -426,9 +430,11 @@ packages:
   extensions:
     dependency: "direct main"
     description:
-      path: "../packages/extensions"
-      relative: true
-    source: path
+      path: "packages/extensions"
+      ref: HEAD
+      resolved-ref: "3875134786ea6036eed2c5a0a58098d02f56850c"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   fake_async:
     dependency: transitive
@@ -639,10 +645,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_lints
-      sha256: "9e8c3858111da373efc5aa341de011d9bd23e2c5c5e0c62bccf32438e192d7b1"
+      sha256: "3f41d009ba7172d5ff9be5f6e6e6abb4300e263aab8866d2a0842ed2a70f8f0c"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.2"
+    version: "4.0.0"
   flutter_local_notifications:
     dependency: "direct main"
     description:
@@ -782,10 +788,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: ddc16d34b0d74cb313986918c0f0885a7ba2fc24d8fb8419de75f0015144ccfe
+      sha256: "48d03a1e4887b00fe622695139246e3c778ac814eeb32421467b56d23fa64034"
       url: "https://pub.dev"
     source: hosted
-    version: "14.2.3"
+    version: "14.2.6"
   go_router_builder:
     dependency: "direct dev"
     description:
@@ -949,30 +955,38 @@ packages:
   jma_code_table_types:
     dependency: "direct main"
     description:
-      path: "../packages/jma_code_table_types"
-      relative: true
-    source: path
+      path: "packages/jma_code_table_types"
+      ref: HEAD
+      resolved-ref: "3875134786ea6036eed2c5a0a58098d02f56850c"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   jma_map:
     dependency: "direct main"
     description:
-      path: "../packages/jma_map"
-      relative: true
-    source: path
+      path: "packages/jma_map"
+      ref: HEAD
+      resolved-ref: "3875134786ea6036eed2c5a0a58098d02f56850c"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   jma_parameter_api_client:
     dependency: "direct main"
     description:
-      path: "../packages/jma_parameter_api_client"
-      relative: true
-    source: path
+      path: "packages/jma_parameter_api_client"
+      ref: HEAD
+      resolved-ref: "3875134786ea6036eed2c5a0a58098d02f56850c"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   jma_parameter_types:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "../packages/jma_parameter_types"
-      relative: true
-    source: path
+      path: "packages/jma_parameter_types"
+      ref: HEAD
+      resolved-ref: "3875134786ea6036eed2c5a0a58098d02f56850c"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   js:
     dependency: transitive
@@ -1001,16 +1015,20 @@ packages:
   kyoshin_observation_point_types:
     dependency: "direct main"
     description:
-      path: "../packages/kyoshin_observation_point_types"
-      relative: true
-    source: path
+      path: "packages/kyoshin_observation_point_types"
+      ref: HEAD
+      resolved-ref: "3875134786ea6036eed2c5a0a58098d02f56850c"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   lat_lng:
     dependency: "direct main"
     description:
-      path: "../packages/lat_lng"
-      relative: true
-    source: path
+      path: "packages/lat_lng"
+      ref: HEAD
+      resolved-ref: "3875134786ea6036eed2c5a0a58098d02f56850c"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   latlong2:
     dependency: "direct main"
@@ -1048,10 +1066,10 @@ packages:
     dependency: transitive
     description:
       name: lints
-      sha256: cbf8d4b858bb0134ef3ef87841abdf8d63bfc255c266b7bf6b39daa1085c4290
+      sha256: "976c774dd944a42e83e2467f4cc670daef7eed6295b10b36ae8c85bcbf828235"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.0"
+    version: "4.0.0"
   list_counter:
     dependency: transitive
     description:
@@ -1167,9 +1185,11 @@ packages:
   notification_setting_types:
     dependency: "direct main"
     description:
-      path: "../packages/notification_setting_types"
-      relative: true
-    source: path
+      path: "packages/notification_setting_types"
+      ref: HEAD
+      resolved-ref: "3875134786ea6036eed2c5a0a58098d02f56850c"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "0.0.0"
   ntp:
     dependency: "direct main"
@@ -1279,10 +1299,10 @@ packages:
     dependency: "direct dev"
     description:
       name: pedantic_mono
-      sha256: "0197e56fec98841900c246b6f9a1f21e2ffbd74c7a8704083ab18b08d71e146c"
+      sha256: f0f869df1f7172aee045980b4f2f8e37be9e485018d8b33b01111148595eb895
       url: "https://pub.dev"
     source: hosted
-    version: "1.27.0"
+    version: "1.28.0"
   permission_handler:
     dependency: "direct main"
     description:
