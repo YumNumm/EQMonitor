@@ -22,4 +22,4 @@ dev_dependencies:
   build_runner: ^2.4.4
   freezed: ^2.3.4
   json_serializable: ^6.7.0
-  pedantic_mono: ^1.23.0
+  pedantic_mono: ^1.28.0
