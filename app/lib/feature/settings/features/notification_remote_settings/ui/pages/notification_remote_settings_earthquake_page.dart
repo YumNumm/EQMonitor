@@ -26,7 +26,8 @@ class NotificationRemoteSettingsEarthquakePage extends ConsumerWidget {
     }
     return WillPopScope(
       onWillPop: () async {
-        final notifier = ref.read(notificationRemoteSettingsNotifierProvider.notifier);
+        final notifier =
+            ref.read(notificationRemoteSettingsNotifierProvider.notifier);
         await notifier.save();
         return true;
       },
