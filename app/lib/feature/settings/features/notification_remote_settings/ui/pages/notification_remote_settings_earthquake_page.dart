@@ -24,18 +24,25 @@ class NotificationRemoteSettingsEarthquakePage extends ConsumerWidget {
         child: CircularProgressIndicator.adaptive(),
       );
     }
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('地震情報の通知条件設定'),
+    return WillPopScope(
+      onWillPop: () async {
+        final notifier = ref.read(notificationRemoteSettingsNotifierProvider.notifier);
+        await notifier.save();
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('地震情報の通知条件設定'),
+        ),
+        body: _Body(
+          state: state,
+        ),
+        floatingActionButton: (state.global != JmaForecastIntensity.zero)
+            ? _AddRegionFloatingActionButton(
+                regions: state.regions,
+              )
+            : null,
       ),
-      body: _Body(
-        state: state,
-      ),
-      floatingActionButton: (state.global != JmaForecastIntensity.zero)
-          ? _AddRegionFloatingActionButton(
-              regions: state.regions,
-            )
-          : null,
     );
   }
 }
