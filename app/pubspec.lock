@@ -404,16 +404,20 @@ packages:
   eqapi_client:
     dependency: "direct main"
     description:
-      path: "../packages/eqapi_client"
-      relative: true
-    source: path
+      path: "packages/eqapi_client"
+      ref: HEAD
+      resolved-ref: "3875134786ea6036eed2c5a0a58098d02f56850c"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   eqapi_types:
     dependency: "direct main"
     description:
-      path: "../packages/eqapi_types"
-      relative: true
-    source: path
+      path: "packages/eqapi_types"
+      ref: HEAD
+      resolved-ref: "3875134786ea6036eed2c5a0a58098d02f56850c"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   equatable:
     dependency: transitive
@@ -426,9 +430,11 @@ packages:
   extensions:
     dependency: "direct main"
     description:
-      path: "../packages/extensions"
-      relative: true
-    source: path
+      path: "packages/extensions"
+      ref: HEAD
+      resolved-ref: "3875134786ea6036eed2c5a0a58098d02f56850c"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   fake_async:
     dependency: transitive
@@ -949,30 +955,38 @@ packages:
   jma_code_table_types:
     dependency: "direct main"
     description:
-      path: "../packages/jma_code_table_types"
-      relative: true
-    source: path
+      path: "packages/jma_code_table_types"
+      ref: HEAD
+      resolved-ref: "3875134786ea6036eed2c5a0a58098d02f56850c"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   jma_map:
     dependency: "direct main"
     description:
-      path: "../packages/jma_map"
-      relative: true
-    source: path
+      path: "packages/jma_map"
+      ref: HEAD
+      resolved-ref: "3875134786ea6036eed2c5a0a58098d02f56850c"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   jma_parameter_api_client:
     dependency: "direct main"
     description:
-      path: "../packages/jma_parameter_api_client"
-      relative: true
-    source: path
+      path: "packages/jma_parameter_api_client"
+      ref: HEAD
+      resolved-ref: "3875134786ea6036eed2c5a0a58098d02f56850c"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   jma_parameter_types:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "../packages/jma_parameter_types"
-      relative: true
-    source: path
+      path: "packages/jma_parameter_types"
+      ref: HEAD
+      resolved-ref: "3875134786ea6036eed2c5a0a58098d02f56850c"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   js:
     dependency: transitive
@@ -1001,16 +1015,20 @@ packages:
   kyoshin_observation_point_types:
     dependency: "direct main"
     description:
-      path: "../packages/kyoshin_observation_point_types"
-      relative: true
-    source: path
+      path: "packages/kyoshin_observation_point_types"
+      ref: HEAD
+      resolved-ref: "3875134786ea6036eed2c5a0a58098d02f56850c"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   lat_lng:
     dependency: "direct main"
     description:
-      path: "../packages/lat_lng"
-      relative: true
-    source: path
+      path: "packages/lat_lng"
+      ref: HEAD
+      resolved-ref: "3875134786ea6036eed2c5a0a58098d02f56850c"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   latlong2:
     dependency: "direct main"
@@ -1168,9 +1186,11 @@ packages:
   notification_setting_types:
     dependency: "direct main"
     description:
-      path: "../packages/notification_setting_types"
-      relative: true
-    source: path
+      path: "packages/notification_setting_types"
+      ref: HEAD
+      resolved-ref: "3875134786ea6036eed2c5a0a58098d02f56850c"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "0.0.0"
   ntp:
     dependency: "direct main"
@@ -1392,10 +1412,10 @@ packages:
     dependency: "direct main"
     description:
       name: purchases_flutter
-      sha256: "4d33c0c310ac4b166dbad02bc4994bf882d0ef42783d1c27b9aa6d0e8e2bc268"
+      sha256: "3724f32ff64dd2b55a2ef64f10d927d30b127734b6b0a48cbaf0a47bab89b380"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.2"
+    version: "8.1.0"
   recase:
     dependency: transitive
     description:
