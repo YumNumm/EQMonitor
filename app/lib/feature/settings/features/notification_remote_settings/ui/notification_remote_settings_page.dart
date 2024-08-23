@@ -91,20 +91,6 @@ class NotificationRemoteSettingsPage extends HookConsumerWidget {
           title: const Text('通知条件設定'),
         ),
         body: const _Body(),
-        floatingActionButton: hasChanged
-            ? FloatingActionButton.extended(
-                heroTag: 'save',
-                onPressed: () async {
-                  final notifier = ref.read(
-                    notificationRemoteSettingsNotifierProvider.notifier,
-                  );
-                  await _save(context, notifier);
-                  ref.invalidate(notificationRemoteSettingsNotifierProvider);
-                },
-                label: const Text('保存する'),
-                icon: const Icon(Icons.save),
-              )
-            : null,
       ),
     );
   }

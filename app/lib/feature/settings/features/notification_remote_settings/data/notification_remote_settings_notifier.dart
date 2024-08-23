@@ -15,6 +15,14 @@ class NotificationRemoteSettingsNotifier
   Future<NotificationRemoteSettingsState> build() async {
     final savedState =
         ref.watch(notificationRemoteSettingsSavedStateNotifierProvider.future);
+    ref.listen<NotificationRemoteSettingsState>(
+      notificationRemoteSettingsNotifierProvider,
+      (previous, next) {
+        if (previous != next) {
+          save();
+        }
+      },
+    );
     return savedState;
   }
 
