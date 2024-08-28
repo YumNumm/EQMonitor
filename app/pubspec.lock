@@ -13,10 +13,10 @@ packages:
     dependency: transitive
     description:
       name: _flutterfire_internals
-      sha256: b1595874fbc8f7a50da90f5d8f327bb0bfd6a95dc906c390efe991540c3b54aa
+      sha256: "9371d13b8ee442e3bfc08a24e3a1b3742c839abbfaf5eef11b79c4b862c89bf7"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.40"
+    version: "1.3.41"
   accessibility_tools:
     dependency: transitive
     description:
@@ -29,10 +29,10 @@ packages:
     dependency: "direct main"
     description:
       name: adaptive_dialog
-      sha256: "817ff9b4bb441434d1fcb39a8d4492e50be456cd3507e4f19c5c7455c9e279e0"
+      sha256: "165018c7520eb42ea8184b87601f7489c100c87abce15cd06e0a036c60f954e6"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.2.0"
   analyzer:
     dependency: transitive
     description:
@@ -404,16 +404,20 @@ packages:
   eqapi_client:
     dependency: "direct main"
     description:
-      path: "../packages/eqapi_client"
-      relative: true
-    source: path
+      path: "packages/eqapi_client"
+      ref: HEAD
+      resolved-ref: "65b1ed0fb9ac6ddd062bfd52b9b2294add314934"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   eqapi_types:
     dependency: "direct main"
     description:
-      path: "../packages/eqapi_types"
-      relative: true
-    source: path
+      path: "packages/eqapi_types"
+      ref: HEAD
+      resolved-ref: "65b1ed0fb9ac6ddd062bfd52b9b2294add314934"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   equatable:
     dependency: transitive
@@ -426,9 +430,11 @@ packages:
   extensions:
     dependency: "direct main"
     description:
-      path: "../packages/extensions"
-      relative: true
-    source: path
+      path: "packages/extensions"
+      ref: HEAD
+      resolved-ref: "65b1ed0fb9ac6ddd062bfd52b9b2294add314934"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   fake_async:
     dependency: transitive
@@ -466,114 +472,114 @@ packages:
     dependency: "direct main"
     description:
       name: firebase_analytics
-      sha256: "064e5b57b0693305946b7caa6a80ed80a918f46804c247b6cd7ed9cd327df48f"
+      sha256: "7e032ade38dec2a92f543ba02c5f72f54ffaa095c60d2132b867eab56de3bc73"
       url: "https://pub.dev"
     source: hosted
-    version: "11.2.1"
+    version: "11.3.0"
   firebase_analytics_platform_interface:
     dependency: transitive
     description:
       name: firebase_analytics_platform_interface
-      sha256: d094547c9022c404b5ca39b7209607fc80e75e39d38875f050508fa4346b3e74
+      sha256: b62a2444767d95067a7e36b1d6e335e0b877968574bbbfb656168c46f2e95a13
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.1"
+    version: "4.2.2"
   firebase_analytics_web:
     dependency: transitive
     description:
       name: firebase_analytics_web
-      sha256: "06dc023b0144c0df630a56b6262cc9e7d6069fe78148853d97614dbefb6ea923"
+      sha256: bad44f71f96cfca6c16c9dd4f70b85f123ddca7d5dd698977449fadf298b1782
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.9+1"
+    version: "0.5.9+2"
   firebase_app_installations:
     dependency: "direct main"
     description:
       name: firebase_app_installations
-      sha256: "2c9a2c0ee5b868958de2ed4a64066b61ee6cc7baab50e7c570f4f3d3fb61f8db"
+      sha256: "91847231ef23cd4785df899b1c4f88488b1752590addcae49745b59524ccf825"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.0+4"
+    version: "0.3.1"
   firebase_app_installations_platform_interface:
     dependency: transitive
     description:
       name: firebase_app_installations_platform_interface
-      sha256: "8f3660037fddaef8a2bdeb99dea324fc105daf573d6723694171bd5c9de6afb9"
+      sha256: "70cfa6e2257df9bc1df70710cc2ce9d7581123f281ff26dabbb31218bdc95e76"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.4+40"
+    version: "0.1.4+41"
   firebase_app_installations_web:
     dependency: transitive
     description:
       name: firebase_app_installations_web
-      sha256: "96269b9f1612b1ce4cca3570a7aedda2969dad9ab9ec6012b172600861231287"
+      sha256: "74911ba3644c38993cb92760ddaa23cc9389c30b089bbb7700c51b4a7192d894"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.5+12"
+    version: "0.1.5+13"
   firebase_core:
     dependency: "direct main"
     description:
       name: firebase_core
-      sha256: "3187f4f8e49968573fd7403011dca67ba95aae419bc0d8131500fae160d94f92"
+      sha256: "06537da27db981947fa535bb91ca120b4e9cb59cb87278dbdde718558cafc9ff"
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.0"
+    version: "3.4.0"
   firebase_core_platform_interface:
     dependency: transitive
     description:
       name: firebase_core_platform_interface
-      sha256: "3c3a1e92d6f4916c32deea79c4a7587aa0e9dbbe5889c7a16afcf005a485ee02"
+      sha256: f7d7180c7f99babd4b4c517754d41a09a4943a0f7a69b65c894ca5c68ba66315
       url: "https://pub.dev"
     source: hosted
-    version: "5.2.0"
+    version: "5.2.1"
   firebase_core_web:
     dependency: transitive
     description:
       name: firebase_core_web
-      sha256: e8d1e22de72cb21cdcfc5eed7acddab3e99cd83f3b317f54f7a96c32f25fd11e
+      sha256: "362e52457ed2b7b180964769c1e04d1e0ea0259fdf7025fdfedd019d4ae2bd88"
       url: "https://pub.dev"
     source: hosted
-    version: "2.17.4"
+    version: "2.17.5"
   firebase_crashlytics:
     dependency: "direct main"
     description:
       name: firebase_crashlytics
-      sha256: "30260e1b8ad1464b41ca4531b44ce63d752daaf2f12c92ca6cdcd82b270abecc"
+      sha256: "4c9872020c0d97a161362ee6af7000cfdb8666234ddc290a15252ad379bb235a"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.4"
+    version: "4.1.0"
   firebase_crashlytics_platform_interface:
     dependency: transitive
     description:
       name: firebase_crashlytics_platform_interface
-      sha256: a75e1826d92ea4e86e4a753c7b5d64b844a362676fa653185f1581c859186d18
+      sha256: ede8a199ff03378857d3c8cbb7fa58d37c27bb5a6b75faf8415ff6925dcaae2a
       url: "https://pub.dev"
     source: hosted
-    version: "3.6.40"
+    version: "3.6.41"
   firebase_messaging:
     dependency: "direct main"
     description:
       name: firebase_messaging
-      sha256: "1b0a4f9ecbaf9007771bac152afad738ddfacc4b8431a7591c00829480d99553"
+      sha256: "29941ba5a3204d80656c0e52103369aa9a53edfd9ceae05a2bb3376f24fda453"
       url: "https://pub.dev"
     source: hosted
-    version: "15.0.4"
+    version: "15.1.0"
   firebase_messaging_platform_interface:
     dependency: transitive
     description:
       name: firebase_messaging_platform_interface
-      sha256: c5a6443e66ae064fe186901d740ee7ce648ca2a6fd0484b8c5e963849ac0fc28
+      sha256: "26c5370d3a79b15c8032724a68a4741e28f63e1f1a45699c4f0a8ae740aadd72"
       url: "https://pub.dev"
     source: hosted
-    version: "4.5.42"
+    version: "4.5.43"
   firebase_messaging_web:
     dependency: transitive
     description:
       name: firebase_messaging_web
-      sha256: "232ef63b986467ae5b5577a09c2502b26e2e2aebab5b85e6c966a5ca9b038b89"
+      sha256: "58276cd5d9e22a9320ef9e5bc358628920f770f93c91221f8b638e8346ed5df4"
       url: "https://pub.dev"
     source: hosted
-    version: "3.8.12"
+    version: "3.8.13"
   fixnum:
     dependency: transitive
     description:
@@ -782,10 +788,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "48d03a1e4887b00fe622695139246e3c778ac814eeb32421467b56d23fa64034"
+      sha256: "2ddb88e9ad56ae15ee144ed10e33886777eb5ca2509a914850a5faa7b52ff459"
       url: "https://pub.dev"
     source: hosted
-    version: "14.2.6"
+    version: "14.2.7"
   go_router_builder:
     dependency: "direct dev"
     description:
@@ -949,30 +955,38 @@ packages:
   jma_code_table_types:
     dependency: "direct main"
     description:
-      path: "../packages/jma_code_table_types"
-      relative: true
-    source: path
+      path: "packages/jma_code_table_types"
+      ref: HEAD
+      resolved-ref: "65b1ed0fb9ac6ddd062bfd52b9b2294add314934"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   jma_map:
     dependency: "direct main"
     description:
-      path: "../packages/jma_map"
-      relative: true
-    source: path
+      path: "packages/jma_map"
+      ref: HEAD
+      resolved-ref: "65b1ed0fb9ac6ddd062bfd52b9b2294add314934"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   jma_parameter_api_client:
     dependency: "direct main"
     description:
-      path: "../packages/jma_parameter_api_client"
-      relative: true
-    source: path
+      path: "packages/jma_parameter_api_client"
+      ref: HEAD
+      resolved-ref: "65b1ed0fb9ac6ddd062bfd52b9b2294add314934"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   jma_parameter_types:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "../packages/jma_parameter_types"
-      relative: true
-    source: path
+      path: "packages/jma_parameter_types"
+      ref: HEAD
+      resolved-ref: "65b1ed0fb9ac6ddd062bfd52b9b2294add314934"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   js:
     dependency: transitive
@@ -1001,16 +1015,20 @@ packages:
   kyoshin_observation_point_types:
     dependency: "direct main"
     description:
-      path: "../packages/kyoshin_observation_point_types"
-      relative: true
-    source: path
+      path: "packages/kyoshin_observation_point_types"
+      ref: HEAD
+      resolved-ref: "65b1ed0fb9ac6ddd062bfd52b9b2294add314934"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.0"
   lat_lng:
     dependency: "direct main"
     description:
-      path: "../packages/lat_lng"
-      relative: true
-    source: path
+      path: "packages/lat_lng"
+      ref: HEAD
+      resolved-ref: "65b1ed0fb9ac6ddd062bfd52b9b2294add314934"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "1.0.1"
   latlong2:
     dependency: "direct main"
@@ -1167,9 +1185,11 @@ packages:
   notification_setting_types:
     dependency: "direct main"
     description:
-      path: "../packages/notification_setting_types"
-      relative: true
-    source: path
+      path: "packages/notification_setting_types"
+      ref: HEAD
+      resolved-ref: "65b1ed0fb9ac6ddd062bfd52b9b2294add314934"
+      url: "https://github.com/YumNumm/EQMonitor.git"
+    source: git
     version: "0.0.0"
   ntp:
     dependency: "direct main"
@@ -1391,10 +1411,10 @@ packages:
     dependency: "direct main"
     description:
       name: purchases_flutter
-      sha256: "4d33c0c310ac4b166dbad02bc4994bf882d0ef42783d1c27b9aa6d0e8e2bc268"
+      sha256: "3724f32ff64dd2b55a2ef64f10d927d30b127734b6b0a48cbaf0a47bab89b380"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.2"
+    version: "8.1.0"
   recase:
     dependency: transitive
     description:
@@ -1925,10 +1945,10 @@ packages:
     dependency: transitive
     description:
       name: vm_service
-      sha256: f652077d0bdf60abe4c1f6377448e8655008eef28f128bc023f7b5e8dfeb48fc
+      sha256: "5c5f338a667b4c644744b661f309fb8080bb94b18a7e91ef1dbd343bed00ed6d"
       url: "https://pub.dev"
     source: hosted
-    version: "14.2.4"
+    version: "14.2.5"
   watcher:
     dependency: transitive
     description:
