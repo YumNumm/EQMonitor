@@ -26,7 +26,7 @@ class SetupBackgroundImageWidget extends HookWidget {
         (DateTime.now().millisecondsSinceEpoch - startTime.value) / 1000;
     final shader = useFuture(
       FragmentProgram.fromAsset(
-        'shaders/introduction.glsl',
+        'shaders/introduction.frag',
       ),
     );
     final animationController = useAnimationController(
