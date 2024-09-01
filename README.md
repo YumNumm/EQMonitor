@@ -64,3 +64,23 @@ EQMonitorは、日本全国の地震情報をいち早く受信できるアプ�
      - WebSocket APIは公開していないため、リアルタイムでの緊急地震速報の受信などはできません。
 
 1. `fvm flutter run` でアプリケーションを起動します。
+
+
+## アーキテクチャ
+
+- アプリケーション
+  - 状態管理: Riverpod, Flutter Hooks
+  - データ取得: Dio, retrofit, eqapi_client(自作)
+  - JSONシリアライズ/デシリアライズ: freezed, json_serializable
+  - マップ: maplibre_gl
+
+- エッジサーバサイド(API)
+  - 実行環境: Cloudflare Workers
+  - データベース: Cloudflare D1 + Supabase
+  - キャッシュ: Cloudflare KV
+  - WebSocket(Fallback): Cloudflare Durable Objects
+
+- バックエンド(通知配信, DB追加, データ加工, WebSocket, 揺れ検知)
+  - 実行環境: Oracle Cloud Infrastructure Compute Instance, Docker Compose(12個のコンテナを管理)
+  - データベース(キャッシュ用): PostgreSQL
+  - 言語: Node.js(TS), Bun(TS), Golang, C#
