@@ -18,18 +18,11 @@ dependencies:
   dynamic_color: ^1.7.0
   envied: ^0.5.4+1
   eqapi_client:
-    git:
-      url: https://github.com/YumNumm/EQMonitor.git
-
-      path: packages/eqapi_client
+    path: ../packages/eqapi_client
   eqapi_types:
-    git:
-      url: https://github.com/YumNumm/EQMonitor.git
-      path: packages/eqapi_types
+    path: ../packages/eqapi_types
   extensions:
-    git:
-      url: https://github.com/YumNumm/EQMonitor.git
-      path: packages/extensions
+    path: ../packages/extensions
   feedback: ^3.1.0
   firebase_analytics: ^11.0.1
   firebase_app_installations: ^0.3.0
@@ -57,32 +50,24 @@ dependencies:
   in_app_review: ^2.0.9
   intl: ^0.19.0
   jma_code_table_types:
-    git:
-      url: https://github.com/YumNumm/EQMonitor.git
-      path: packages/jma_code_table_types
+    path: ../packages/jma_code_table_types
   jma_map:
-    git:
-      url: https://github.com/YumNumm/EQMonitor.git
-      path: packages/jma_map
+    path: ../packages/jma_map
   jma_parameter_api_client:
-    git:
-      url: https://github.com/YumNumm/EQMonitor.git
-      path: packages/jma_parameter_api_client
+    path: ../packages/jma_parameter_api_client
   json_annotation: ^4.9.0
   kyoshin_observation_point_types:
-    git:
-      url: https://github.com/YumNumm/EQMonitor.git
-      path: packages/kyoshin_observation_point_types
+    path: ../packages/kyoshin_observation_point_types
   lat_lng:
-    git:
-      url: https://github.com/YumNumm/EQMonitor.git
-      path: packages/lat_lng
+    path: ../packages/lat_lng
   latlong2: ^0.9.1
-  maplibre_gl: 0.20.0
-  notification_setting_types:
+  maplibre_gl:
     git:
-      url: https://github.com/YumNumm/EQMonitor.git
-      path: packages/notification_setting_types
+      url: https://github.com/maplibre/flutter-maplibre-gl.git
+      ref: b077b956b54141e46f6765fe9b71af2b726ad53b # 2024/07/24
+      path: maplibre_gl
+  notification_setting_types:
+    path: ../packages/notification_setting_types
   ntp: ^2.0.0
   package_info_plus: ^8.0.0
   path_provider: ^2.1.3
@@ -135,7 +120,7 @@ flutter:
     - shorebird.yaml
 
   shaders:
-    - shaders/introduction.glsl
+    - shaders/introduction.frag
 
   fonts:
     - family: NotoSansJP
