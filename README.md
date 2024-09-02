@@ -7,8 +7,7 @@
 | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | [<img src="https://github.com/YumNumm/YumNumm/raw/main/resources/img/google-play-badge.png" height="50">](https://play.google.com/store/apps/details?id=net.yumnumm.eqmonitor) | [<img src="https://github.com/YumNumm/YumNumm/raw/main/resources/img/appstore-badge.png" height="50">](https://apps.apple.com/ja/app/eqmonitor-%E5%9C%B0%E9%9C%87%E9%80%9F%E5%A0%B1/id6447546703) |
 
-> [!WARNING]
-> [利用規約 - Term of Service](https://github.com/EQMonitor/EQMonitor/blob/main/assets/docs/term_of_service.md)を必ずご確認の上ご利用ください。
+> [!WARNING] > [利用規約 - Term of Service](https://github.com/EQMonitor/EQMonitor/blob/main/assets/docs/term_of_service.md)を必ずご確認の上ご利用ください。
 
 ![iPad1](https://github.com/YumNumm/EQMonitor/assets/73390859/4196623d-222e-4eac-991a-fee5a976be76)
 
@@ -65,16 +64,17 @@ EQMonitorは、日本全国の地震情報をいち早く受信できるアプ�
 
 1. `fvm flutter run` でアプリケーションを起動します。
 
-
 ## アーキテクチャ
 
 - アプリケーション
+
   - 状態管理: Riverpod, Flutter Hooks
   - データ取得: Dio, retrofit, eqapi_client(自作)
   - JSONシリアライズ/デシリアライズ: freezed, json_serializable
   - マップ: maplibre_gl
 
 - エッジサーバサイド(API)
+
   - 実行環境: Cloudflare Workers
   - データベース: Cloudflare D1 + Supabase
   - キャッシュ: Cloudflare KV
