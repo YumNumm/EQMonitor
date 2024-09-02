@@ -1,4 +1,4 @@
-git_url("git@github.com:YumNumm/EQMonitor_secret.git")
+git_url("git@github.com:YumNumm/apple_secret.git")
 
 storage_mode("git")
 
