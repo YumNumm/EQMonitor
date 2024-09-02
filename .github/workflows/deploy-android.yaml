@@ -75,7 +75,7 @@ jobs:
         run: bundle exec fastlane build
 
       - name: Upload artifact aab
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.4.0
         with:
           path: app/build/app/outputs/bundle/release/app-release.aab
           name: release-aab
