@@ -48,6 +48,8 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>FlutterDeepLinkingEnabled</key>
 	<true/>
 	<key>UISupportedInterfaceOrientations</key>
