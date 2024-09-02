@@ -4,7 +4,7 @@ version: 1.0.1
 publish_to: "none"
 
 environment:
-  sdk: ^3.5.0
+  sdk: ^3.5.1
 
 # Add regular dependencies here.
 dependencies:
