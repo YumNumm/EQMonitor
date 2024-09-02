@@ -47,7 +47,7 @@ class EarthquakeEarlyHypoInfoWidget extends HookConsumerWidget {
         : null;
 
     // 「MaxInt, 震源地, 規模」
-    final hypoWidget = item.name == "詳細不明"
+    final hypoWidget = item.name == '詳細不明'
         ? null
         : Row(
             textBaseline: TextBaseline.ideographic,
@@ -220,7 +220,7 @@ class EarthquakeEarlyHypoInfoWidget extends HookConsumerWidget {
           depthWidget,
           if (hypoWidget != null) hypoWidget,
         ],
-        Row(),
+        const Row(),
         timeWidget,
       ],
     );
