@@ -41,7 +41,8 @@ class KmoniDataSource {
           HttpHeaders.refererHeader: 'http://www.kmoni.bosai.go.jp/',
           HttpHeaders.hostHeader: 'www.kmoni.bosai.go.jp',
           HttpHeaders.cacheControlHeader: 'no-cache',
-          HttpHeaders.acceptHeader: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+          HttpHeaders.acceptHeader:
+              'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
         },
       ),
     );
