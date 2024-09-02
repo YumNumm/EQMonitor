@@ -111,7 +111,7 @@ jobs:
         run: bundle exec fastlane build
 
       - name: Upload artifact ipa
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.4.0
         with:
           path: app/ios/Runner.ipa
           name: release-ios
