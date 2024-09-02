@@ -1,5 +1,5 @@
 import 'package:eqapi_client/eqapi_client.dart';
-import 'package:eqapi_types/model/v1/earthquake_early.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/button/action_button.dart';
 import 'package:eqmonitor/core/component/chip/date_range_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
@@ -274,8 +274,8 @@ class _SliverListBody extends HookConsumerWidget {
                             text: '地震履歴',
                             style: const TextStyle(fontWeight: FontWeight.bold),
                             recognizer: TapGestureRecognizer()
-                              ..onTap = () =>
-                                  EarthquakeHistoryRoute().push<void>(context),
+                              ..onTap = () => const EarthquakeHistoryRoute()
+                                  .push<void>(context),
                           ),
                           const TextSpan(text: 'を使ってください'),
                         ],

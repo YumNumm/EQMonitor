@@ -25,8 +25,12 @@ mixin _$MainMapViewmodelState {
   @JsonKey(fromJson: _latLngBoundsFromJson, toJson: _latLngBoundsToJson)
   LatLngBounds get homeBoundary => throw _privateConstructorUsedError;
 
+  /// Serializes this MainMapViewmodelState to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of MainMapViewmodelState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MainMapViewmodelStateCopyWith<MainMapViewmodelState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -54,6 +58,8 @@ class _$MainMapViewmodelStateCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of MainMapViewmodelState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -97,6 +103,8 @@ class __$$MainMapViewmodelStateImplCopyWithImpl<$Res>
       $Res Function(_$MainMapViewmodelStateImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of MainMapViewmodelState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -149,11 +157,13 @@ class _$MainMapViewmodelStateImpl implements _MainMapViewmodelState {
                 other.homeBoundary == homeBoundary));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, isHomePosition, homeBoundary);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MainMapViewmodelState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$MainMapViewmodelStateImplCopyWith<_$MainMapViewmodelStateImpl>
@@ -182,8 +192,11 @@ abstract class _MainMapViewmodelState implements MainMapViewmodelState {
   @override
   @JsonKey(fromJson: _latLngBoundsFromJson, toJson: _latLngBoundsToJson)
   LatLngBounds get homeBoundary;
+
+  /// Create a copy of MainMapViewmodelState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MainMapViewmodelStateImplCopyWith<_$MainMapViewmodelStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

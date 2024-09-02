@@ -1,6 +1,5 @@
 import 'package:eqapi_client/eqapi_client.dart';
-import 'package:eqapi_types/model/v1/auth/fcm_token_request.dart';
-import 'package:eqapi_types/model/v1/auth/fcm_token_response.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/api/api_authentication_service.dart';
 import 'package:eqmonitor/core/api/eq_api.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/notification_remote_settings_saved_state.dart';

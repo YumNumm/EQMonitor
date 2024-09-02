@@ -1,10 +1,10 @@
 import 'dart:math';
 
+import 'package:eqmonitor/core/provider/kmoni_observation_points/model/kmoni_observation_point.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/data/kmoni_data_source.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/model/kmoni_maintenance_message_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/util/kmoni_web_api_url_generator.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/util/realtime_data_type.dart';
-import 'package:eqmonitor/core/provider/kmoni_observation_points/model/kmoni_observation_point.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image/image.dart' as image;

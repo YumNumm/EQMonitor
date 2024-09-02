@@ -27,8 +27,12 @@ mixin _$KmoniMaintenanceMessageModel {
       toJson: kmoniMaintenanceMessageTypeToJson)
   KmoniMaintenanceMessageType get type => throw _privateConstructorUsedError;
 
+  /// Serializes this KmoniMaintenanceMessageModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of KmoniMaintenanceMessageModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $KmoniMaintenanceMessageModelCopyWith<KmoniMaintenanceMessageModel>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -60,6 +64,8 @@ class _$KmoniMaintenanceMessageModelCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of KmoniMaintenanceMessageModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -106,6 +112,8 @@ class __$$KmoniMaintenanceMessageModelImplCopyWithImpl<$Res>
       $Res Function(_$KmoniMaintenanceMessageModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of KmoniMaintenanceMessageModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -163,11 +171,13 @@ class _$KmoniMaintenanceMessageModelImpl
             (identical(other.type, type) || other.type == type));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, message, type);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of KmoniMaintenanceMessageModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$KmoniMaintenanceMessageModelImplCopyWith<
@@ -203,8 +213,11 @@ abstract class _KmoniMaintenanceMessageModel
       fromJson: kmoniMaintenanceMessageTypeFromJson,
       toJson: kmoniMaintenanceMessageTypeToJson)
   KmoniMaintenanceMessageType get type;
+
+  /// Create a copy of KmoniMaintenanceMessageModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$KmoniMaintenanceMessageModelImplCopyWith<
           _$KmoniMaintenanceMessageModelImpl>
       get copyWith => throw _privateConstructorUsedError;

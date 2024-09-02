@@ -23,8 +23,12 @@ CrashlyticsSettingModel _$CrashlyticsSettingModelFromJson(
 mixin _$CrashlyticsSettingModel {
   bool get isEnabled => throw _privateConstructorUsedError;
 
+  /// Serializes this CrashlyticsSettingModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of CrashlyticsSettingModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CrashlyticsSettingModelCopyWith<CrashlyticsSettingModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -49,6 +53,8 @@ class _$CrashlyticsSettingModelCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CrashlyticsSettingModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -85,6 +91,8 @@ class __$$CrashlyticsSettingModelImplCopyWithImpl<$Res>
       $Res Function(_$CrashlyticsSettingModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CrashlyticsSettingModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -125,11 +133,13 @@ class _$CrashlyticsSettingModelImpl implements _CrashlyticsSettingModel {
                 other.isEnabled == isEnabled));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, isEnabled);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CrashlyticsSettingModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CrashlyticsSettingModelImplCopyWith<_$CrashlyticsSettingModelImpl>
@@ -153,8 +163,11 @@ abstract class _CrashlyticsSettingModel implements CrashlyticsSettingModel {
 
   @override
   bool get isEnabled;
+
+  /// Create a copy of CrashlyticsSettingModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CrashlyticsSettingModelImplCopyWith<_$CrashlyticsSettingModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

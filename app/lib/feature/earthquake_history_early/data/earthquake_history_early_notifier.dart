@@ -1,4 +1,4 @@
-import 'package:eqapi_types/model/v1/earthquake_early.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/extension/async_value.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/data/earthquake_history_early_repository.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/data/model/earthquake_history_early_parameter.dart';

@@ -3,20 +3,17 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
-import 'package:eqapi_types/eqapi_types.dart' as eqapi_types;
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqapi_types/lib.dart';
-import 'package:eqapi_types/model/components/eew_intensity.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/eew/eew_alive_telegram.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_provider.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/provider/kmoni_view_model.dart';
 import 'package:eqmonitor/core/provider/kmoni_observation_points/model/kmoni_observation_point.dart';
 import 'package:eqmonitor/core/provider/map/map_style.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/provider/kmoni_view_model.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/feature/home/features/map/model/main_map_viewmodel_state.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -98,7 +95,7 @@ class MainMapViewModel extends _$MainMapViewModel {
     await (
       _kmoniObservationPointService!.init(),
       _eewPsWaveService!.init(),
-      _eewEstimatedIntensityService!.init(
+      _eewEstimatedIntensityService.init(
         ref.read(intensityColorProvider),
       ),
     ).wait;
@@ -122,7 +119,7 @@ class MainMapViewModel extends _$MainMapViewModel {
         _kmoniObservationPointService!.dispose(),
         _eewHypocenterService!.dispose(),
         _eewPsWaveService!.dispose(),
-        _eewEstimatedIntensityService!.dispose(),
+        _eewEstimatedIntensityService.dispose(),
       ).wait;
     });
     log('_onEewStateChanged called!', name: 'MainMapViewModel');
@@ -165,7 +162,7 @@ class MainMapViewModel extends _$MainMapViewModel {
 
   _EewHypocenterService? _eewHypocenterService;
   _EewPsWaveService? _eewPsWaveService;
-  _EewEstimatedIntensityService? _eewEstimatedIntensityService;
+  late _EewEstimatedIntensityService _eewEstimatedIntensityService;
 
   Future<void> _onEewStateChanged(List<EewV1> values) async {
     // 初期化が終わっていない場合は何もしない
@@ -192,7 +189,7 @@ class MainMapViewModel extends _$MainMapViewModel {
     final transformed = _EewEstimatedIntensityService.transform(
       aliveBodies.map((e) => e.regions).whereNotNull().flattened.toList(),
     );
-    await _eewEstimatedIntensityService!.update(transformed);
+    await _eewEstimatedIntensityService.update(transformed);
   }
 
   Future<void> _onEstimatedIntensityChanged(
@@ -586,7 +583,7 @@ class _EewEstimatedIntensityService {
   }
 
   /// 予想震度を更新する
-  /// [areas] は Map<予想震度, List<地域コード>>
+  /// [areas] は Map{予想震度, 地域コード[]}
   Future<void> update(Map<JmaForecastIntensity, List<String>> areas) => [
         // 各予想震度ごとにFill Layerを追加
         for (final intensity in JmaForecastIntensity.values)

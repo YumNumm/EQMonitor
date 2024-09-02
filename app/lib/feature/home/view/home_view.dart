@@ -6,7 +6,6 @@ import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqapi_types/model/components/eew_intensity.dart';
 import 'package:eqmonitor/core/api/api_authentication_service.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
@@ -19,9 +18,6 @@ import 'package:eqmonitor/core/provider/config/permission/permission_status_prov
 import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
 import 'package:eqmonitor/core/provider/eew/eew_alive_telegram.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging_interaction.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/provider/kmoni_view_model.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_widget.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/notification_token.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
@@ -34,6 +30,9 @@ import 'package:eqmonitor/feature/home/component/parameter/parameter_loader_widg
 import 'package:eqmonitor/feature/home/component/render/map_components_renderer.dart';
 import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/provider/kmoni_view_model.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_widget.dart';
 import 'package:eqmonitor/feature/home/features/map/view/main_map_view.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/fcm_token_change_detector.dart';
@@ -145,6 +144,9 @@ class _HomeBodyWidget extends HookConsumerWidget {
             Future.doWhile(() async {
               try {
                 final renderer = MapComponentsRenderer();
+                if (!context.mounted) {
+                  return false;
+                }
                 final futures = <Future<void>>[
                   for (final type in [
                     IntensityIconType.small,

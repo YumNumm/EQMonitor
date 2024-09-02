@@ -29,7 +29,9 @@ mixin _$KmoniViewModelState {
   /// 遅延調整中かどうか
   bool get isDelayAdjusting => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of KmoniViewModelState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $KmoniViewModelStateCopyWith<KmoniViewModelState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -59,6 +61,8 @@ class _$KmoniViewModelStateCopyWithImpl<$Res, $Val extends KmoniViewModelState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of KmoniViewModelState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -123,6 +127,8 @@ class __$$KmoniViewModelStateImplCopyWithImpl<$Res>
       $Res Function(_$KmoniViewModelStateImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of KmoniViewModelState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -231,7 +237,9 @@ class _$KmoniViewModelStateImpl implements _KmoniViewModelState {
       const DeepCollectionEquality().hash(_analyzedPoints),
       isDelayAdjusting);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of KmoniViewModelState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$KmoniViewModelStateImplCopyWith<_$KmoniViewModelStateImpl> get copyWith =>
@@ -248,26 +256,28 @@ abstract class _KmoniViewModelState implements KmoniViewModelState {
       required final List<AnalyzedKmoniObservationPoint>? analyzedPoints,
       required final bool isDelayAdjusting}) = _$KmoniViewModelStateImpl;
 
-  @override
-
   /// 初期化済みかどうか
+  @override
   bool get isInitialized;
   @override
   DateTime? get lastUpdatedAt;
-  @override
 
   /// 現在時刻からの遅延
+  @override
   Duration? get delay;
   @override
   KmoniStatus get status;
   @override
   List<AnalyzedKmoniObservationPoint>? get analyzedPoints;
-  @override
 
   /// 遅延調整中かどうか
-  bool get isDelayAdjusting;
   @override
-  @JsonKey(ignore: true)
+  bool get isDelayAdjusting;
+
+  /// Create a copy of KmoniViewModelState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$KmoniViewModelStateImplCopyWith<_$KmoniViewModelStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

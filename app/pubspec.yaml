@@ -93,7 +93,9 @@ dependencies:
   web_socket_client: ^0.1.4
   widgetbook: ^3.8.1
   widgetbook_annotation: ^3.1.0
+
 dev_dependencies:
+  analyzer: ^6.7.0
   build_runner: ^2.4.11
   custom_lint: ^0.5.11
   dependency_validator: ^4.1.0

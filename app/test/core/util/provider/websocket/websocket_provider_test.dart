@@ -1,4 +1,4 @@
-import 'package:eqapi_types/lib.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -23,8 +23,12 @@ mixin _$PermissionStateModel {
   bool get notification => throw _privateConstructorUsedError;
   bool get criticalAlert => throw _privateConstructorUsedError;
 
+  /// Serializes this PermissionStateModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of PermissionStateModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PermissionStateModelCopyWith<PermissionStateModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -49,6 +53,8 @@ class _$PermissionStateModelCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PermissionStateModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -87,6 +93,8 @@ class __$$PermissionStateModelImplCopyWithImpl<$Res>
       $Res Function(_$PermissionStateModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of PermissionStateModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -138,11 +146,13 @@ class _$PermissionStateModelImpl implements _PermissionStateModel {
                 other.criticalAlert == criticalAlert));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, notification, criticalAlert);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PermissionStateModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PermissionStateModelImplCopyWith<_$PermissionStateModelImpl>
@@ -170,8 +180,11 @@ abstract class _PermissionStateModel implements PermissionStateModel {
   bool get notification;
   @override
   bool get criticalAlert;
+
+  /// Create a copy of PermissionStateModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PermissionStateModelImplCopyWith<_$PermissionStateModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

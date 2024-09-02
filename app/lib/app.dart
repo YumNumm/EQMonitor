@@ -86,8 +86,8 @@ class App extends HookConsumerWidget {
             ],
             builder: (context, child) {
               return UpgradeAlert(
-                child: child,
                 navigatorKey: routerConfig.routerDelegate.navigatorKey,
+                child: child,
               );
             },
           );

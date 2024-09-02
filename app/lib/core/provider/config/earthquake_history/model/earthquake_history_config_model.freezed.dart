@@ -25,8 +25,12 @@ mixin _$EarthquakeHistoryConfigModel {
   EarthquakeHistoryDetailConfig get detail =>
       throw _privateConstructorUsedError;
 
+  /// Serializes this EarthquakeHistoryConfigModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EarthquakeHistoryConfigModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EarthquakeHistoryConfigModelCopyWith<EarthquakeHistoryConfigModel>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -57,6 +61,8 @@ class _$EarthquakeHistoryConfigModelCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EarthquakeHistoryConfigModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -75,6 +81,8 @@ class _$EarthquakeHistoryConfigModelCopyWithImpl<$Res,
     ) as $Val);
   }
 
+  /// Create a copy of EarthquakeHistoryConfigModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $EarthquakeHistoryListConfigCopyWith<$Res> get list {
@@ -83,6 +91,8 @@ class _$EarthquakeHistoryConfigModelCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of EarthquakeHistoryConfigModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $EarthquakeHistoryDetailConfigCopyWith<$Res> get detail {
@@ -120,6 +130,8 @@ class __$$EarthquakeHistoryConfigModelImplCopyWithImpl<$Res>
       $Res Function(_$EarthquakeHistoryConfigModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EarthquakeHistoryConfigModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -169,11 +181,13 @@ class _$EarthquakeHistoryConfigModelImpl
             (identical(other.detail, detail) || other.detail == detail));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, list, detail);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EarthquakeHistoryConfigModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeHistoryConfigModelImplCopyWith<
@@ -203,8 +217,11 @@ abstract class _EarthquakeHistoryConfigModel
   EarthquakeHistoryListConfig get list;
   @override
   EarthquakeHistoryDetailConfig get detail;
+
+  /// Create a copy of EarthquakeHistoryConfigModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeHistoryConfigModelImplCopyWith<
           _$EarthquakeHistoryConfigModelImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -223,8 +240,12 @@ mixin _$EarthquakeHistoryListConfig {
   /// 訓練・試験用の電文を含めるかどうか
   bool get includeTestTelegrams => throw _privateConstructorUsedError;
 
+  /// Serializes this EarthquakeHistoryListConfig to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EarthquakeHistoryListConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EarthquakeHistoryListConfigCopyWith<EarthquakeHistoryListConfig>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -251,6 +272,8 @@ class _$EarthquakeHistoryListConfigCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EarthquakeHistoryListConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -292,6 +315,8 @@ class __$$EarthquakeHistoryListConfigImplCopyWithImpl<$Res>
       $Res Function(_$EarthquakeHistoryListConfigImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EarthquakeHistoryListConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -348,12 +373,14 @@ class _$EarthquakeHistoryListConfigImpl
                 other.includeTestTelegrams == includeTestTelegrams));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, isFillBackground, includeTestTelegrams);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EarthquakeHistoryListConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeHistoryListConfigImplCopyWith<_$EarthquakeHistoryListConfigImpl>
@@ -377,16 +404,18 @@ abstract class _EarthquakeHistoryListConfig
   factory _EarthquakeHistoryListConfig.fromJson(Map<String, dynamic> json) =
       _$EarthquakeHistoryListConfigImpl.fromJson;
 
-  @override
-
   /// 背景塗りつぶしの有無
-  bool get isFillBackground;
   @override
+  bool get isFillBackground;
 
   /// 訓練・試験用の電文を含めるかどうか
-  bool get includeTestTelegrams;
   @override
-  @JsonKey(ignore: true)
+  bool get includeTestTelegrams;
+
+  /// Create a copy of EarthquakeHistoryListConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeHistoryListConfigImplCopyWith<_$EarthquakeHistoryListConfigImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -407,8 +436,12 @@ mixin _$EarthquakeHistoryDetailConfig {
   /// fromJsonでは、常にfalseを返す
   bool get showingLpgmIntensity => throw _privateConstructorUsedError;
 
+  /// Serializes this EarthquakeHistoryDetailConfig to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EarthquakeHistoryDetailConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EarthquakeHistoryDetailConfigCopyWith<EarthquakeHistoryDetailConfig>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -438,6 +471,8 @@ class _$EarthquakeHistoryDetailConfigCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EarthquakeHistoryDetailConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -487,6 +522,8 @@ class __$$EarthquakeHistoryDetailConfigImplCopyWithImpl<$Res>
       $Res Function(_$EarthquakeHistoryDetailConfigImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EarthquakeHistoryDetailConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -557,12 +594,14 @@ class _$EarthquakeHistoryDetailConfigImpl
                 other.showingLpgmIntensity == showingLpgmIntensity));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, intensityFillMode, showIntensityIcon, showingLpgmIntensity);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EarthquakeHistoryDetailConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeHistoryDetailConfigImplCopyWith<
@@ -588,20 +627,22 @@ abstract class _EarthquakeHistoryDetailConfig
   factory _EarthquakeHistoryDetailConfig.fromJson(Map<String, dynamic> json) =
       _$EarthquakeHistoryDetailConfigImpl.fromJson;
 
-  @override
-
   /// 震度の表示方法
-  IntensityFillMode get intensityFillMode;
   @override
+  IntensityFillMode get intensityFillMode;
 
   /// 震度観測点のアイコン表示
-  bool get showIntensityIcon;
   @override
+  bool get showIntensityIcon;
 
   /// fromJsonでは、常にfalseを返す
-  bool get showingLpgmIntensity;
   @override
-  @JsonKey(ignore: true)
+  bool get showingLpgmIntensity;
+
+  /// Create a copy of EarthquakeHistoryDetailConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeHistoryDetailConfigImplCopyWith<
           _$EarthquakeHistoryDetailConfigImpl>
       get copyWith => throw _privateConstructorUsedError;

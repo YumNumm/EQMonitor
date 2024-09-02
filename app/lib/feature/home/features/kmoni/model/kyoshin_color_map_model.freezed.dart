@@ -25,8 +25,12 @@ mixin _$KyoshinColorMapModel {
   int get g => throw _privateConstructorUsedError;
   int get b => throw _privateConstructorUsedError;
 
+  /// Serializes this KyoshinColorMapModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of KyoshinColorMapModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $KyoshinColorMapModelCopyWith<KyoshinColorMapModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -51,6 +55,8 @@ class _$KyoshinColorMapModelCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of KyoshinColorMapModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -99,6 +105,8 @@ class __$$KyoshinColorMapModelImplCopyWithImpl<$Res>
       $Res Function(_$KyoshinColorMapModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of KyoshinColorMapModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -166,11 +174,13 @@ class _$KyoshinColorMapModelImpl implements _KyoshinColorMapModel {
             (identical(other.b, b) || other.b == b));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, intensity, r, g, b);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of KyoshinColorMapModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$KyoshinColorMapModelImplCopyWith<_$KyoshinColorMapModelImpl>
@@ -204,8 +214,11 @@ abstract class _KyoshinColorMapModel implements KyoshinColorMapModel {
   int get g;
   @override
   int get b;
+
+  /// Create a copy of KyoshinColorMapModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$KyoshinColorMapModelImplCopyWith<_$KyoshinColorMapModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
