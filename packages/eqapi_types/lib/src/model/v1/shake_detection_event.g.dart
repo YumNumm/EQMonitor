@@ -88,6 +88,12 @@ _$ShakeDetectionRegionImpl _$$ShakeDetectionRegionImplFromJson(
           name: $checkedConvert('name', (v) => v as String),
           maxIntensity: $checkedConvert('maxIntensity',
               (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v)),
+          points: $checkedConvert(
+              'points',
+              (v) => (v as List<dynamic>)
+                  .map((e) =>
+                      ShakeDetectionPoint.fromJson(e as Map<String, dynamic>))
+                  .toList()),
         );
         return val;
       },
@@ -98,6 +104,7 @@ Map<String, dynamic> _$$ShakeDetectionRegionImplToJson(
     <String, dynamic>{
       'name': instance.name,
       'maxIntensity': _$JmaIntensityEnumMap[instance.maxIntensity],
+      'points': instance.points,
     };
 
 _$ShakeDetectionPointImpl _$$ShakeDetectionPointImplFromJson(

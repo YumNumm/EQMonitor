@@ -422,6 +422,7 @@ mixin _$ShakeDetectionRegion {
   String get name => throw _privateConstructorUsedError;
   @JsonKey(name: 'maxIntensity', unknownEnumValue: null, defaultValue: null)
   JmaIntensity? get maxIntensity => throw _privateConstructorUsedError;
+  List<ShakeDetectionPoint> get points => throw _privateConstructorUsedError;
 
   /// Serializes this ShakeDetectionRegion to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -442,7 +443,8 @@ abstract class $ShakeDetectionRegionCopyWith<$Res> {
   $Res call(
       {String name,
       @JsonKey(name: 'maxIntensity', unknownEnumValue: null, defaultValue: null)
-      JmaIntensity? maxIntensity});
+      JmaIntensity? maxIntensity,
+      List<ShakeDetectionPoint> points});
 }
 
 /// @nodoc
@@ -463,6 +465,7 @@ class _$ShakeDetectionRegionCopyWithImpl<$Res,
   $Res call({
     Object? name = null,
     Object? maxIntensity = freezed,
+    Object? points = null,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -473,6 +476,10 @@ class _$ShakeDetectionRegionCopyWithImpl<$Res,
           ? _value.maxIntensity
           : maxIntensity // ignore: cast_nullable_to_non_nullable
               as JmaIntensity?,
+      points: null == points
+          ? _value.points
+          : points // ignore: cast_nullable_to_non_nullable
+              as List<ShakeDetectionPoint>,
     ) as $Val);
   }
 }
@@ -488,7 +495,8 @@ abstract class _$$ShakeDetectionRegionImplCopyWith<$Res>
   $Res call(
       {String name,
       @JsonKey(name: 'maxIntensity', unknownEnumValue: null, defaultValue: null)
-      JmaIntensity? maxIntensity});
+      JmaIntensity? maxIntensity,
+      List<ShakeDetectionPoint> points});
 }
 
 /// @nodoc
@@ -506,6 +514,7 @@ class __$$ShakeDetectionRegionImplCopyWithImpl<$Res>
   $Res call({
     Object? name = null,
     Object? maxIntensity = freezed,
+    Object? points = null,
   }) {
     return _then(_$ShakeDetectionRegionImpl(
       name: null == name
@@ -516,6 +525,10 @@ class __$$ShakeDetectionRegionImplCopyWithImpl<$Res>
           ? _value.maxIntensity
           : maxIntensity // ignore: cast_nullable_to_non_nullable
               as JmaIntensity?,
+      points: null == points
+          ? _value._points
+          : points // ignore: cast_nullable_to_non_nullable
+              as List<ShakeDetectionPoint>,
     ));
   }
 }
@@ -526,7 +539,9 @@ class _$ShakeDetectionRegionImpl implements _ShakeDetectionRegion {
   const _$ShakeDetectionRegionImpl(
       {required this.name,
       @JsonKey(name: 'maxIntensity', unknownEnumValue: null, defaultValue: null)
-      required this.maxIntensity});
+      required this.maxIntensity,
+      required final List<ShakeDetectionPoint> points})
+      : _points = points;
 
   factory _$ShakeDetectionRegionImpl.fromJson(Map<String, dynamic> json) =>
       _$$ShakeDetectionRegionImplFromJson(json);
@@ -536,10 +551,17 @@ class _$ShakeDetectionRegionImpl implements _ShakeDetectionRegion {
   @override
   @JsonKey(name: 'maxIntensity', unknownEnumValue: null, defaultValue: null)
   final JmaIntensity? maxIntensity;
+  final List<ShakeDetectionPoint> _points;
+  @override
+  List<ShakeDetectionPoint> get points {
+    if (_points is EqualUnmodifiableListView) return _points;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_points);
+  }
 
   @override
   String toString() {
-    return 'ShakeDetectionRegion(name: $name, maxIntensity: $maxIntensity)';
+    return 'ShakeDetectionRegion(name: $name, maxIntensity: $maxIntensity, points: $points)';
   }
 
   @override
@@ -549,12 +571,14 @@ class _$ShakeDetectionRegionImpl implements _ShakeDetectionRegion {
             other is _$ShakeDetectionRegionImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.maxIntensity, maxIntensity) ||
-                other.maxIntensity == maxIntensity));
+                other.maxIntensity == maxIntensity) &&
+            const DeepCollectionEquality().equals(other._points, _points));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, name, maxIntensity);
+  int get hashCode => Object.hash(runtimeType, name, maxIntensity,
+      const DeepCollectionEquality().hash(_points));
 
   /// Create a copy of ShakeDetectionRegion
   /// with the given fields replaced by the non-null parameter values.
@@ -576,9 +600,12 @@ class _$ShakeDetectionRegionImpl implements _ShakeDetectionRegion {
 
 abstract class _ShakeDetectionRegion implements ShakeDetectionRegion {
   const factory _ShakeDetectionRegion(
-      {required final String name,
-      @JsonKey(name: 'maxIntensity', unknownEnumValue: null, defaultValue: null)
-      required final JmaIntensity? maxIntensity}) = _$ShakeDetectionRegionImpl;
+          {required final String name,
+          @JsonKey(
+              name: 'maxIntensity', unknownEnumValue: null, defaultValue: null)
+          required final JmaIntensity? maxIntensity,
+          required final List<ShakeDetectionPoint> points}) =
+      _$ShakeDetectionRegionImpl;
 
   factory _ShakeDetectionRegion.fromJson(Map<String, dynamic> json) =
       _$ShakeDetectionRegionImpl.fromJson;
@@ -588,6 +615,8 @@ abstract class _ShakeDetectionRegion implements ShakeDetectionRegion {
   @override
   @JsonKey(name: 'maxIntensity', unknownEnumValue: null, defaultValue: null)
   JmaIntensity? get maxIntensity;
+  @override
+  List<ShakeDetectionPoint> get points;
 
   /// Create a copy of ShakeDetectionRegion
   /// with the given fields replaced by the non-null parameter values.

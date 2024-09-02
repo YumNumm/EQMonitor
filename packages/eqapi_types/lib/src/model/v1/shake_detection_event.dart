@@ -34,6 +34,7 @@ class ShakeDetectionRegion with _$ShakeDetectionRegion {
     required String name,
     @JsonKey(name: 'maxIntensity', unknownEnumValue: null, defaultValue: null)
     required JmaIntensity? maxIntensity,
+    required List<ShakeDetectionPoint> points,
   }) = _ShakeDetectionRegion;
 
   factory ShakeDetectionRegion.fromJson(Map<String, dynamic> json) =>
