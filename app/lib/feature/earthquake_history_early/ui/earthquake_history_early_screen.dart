@@ -274,8 +274,8 @@ class _SliverListBody extends HookConsumerWidget {
                             text: '地震履歴',
                             style: const TextStyle(fontWeight: FontWeight.bold),
                             recognizer: TapGestureRecognizer()
-                              ..onTap = () =>
-                                  EarthquakeHistoryRoute().push<void>(context),
+                              ..onTap = () => const EarthquakeHistoryRoute()
+                                  .push<void>(context),
                           ),
                           const TextSpan(text: 'を使ってください'),
                         ],

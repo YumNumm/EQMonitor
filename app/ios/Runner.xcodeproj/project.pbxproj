@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -99,6 +99,7 @@
 		8527822C2C84D2CA00FAD65E /* LiveActivityExtensionBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityExtensionBundle.swift; sourceTree = "<group>"; };
 		8527822D2C84D2CA00FAD65E /* LiveActivityExtensionLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityExtensionLiveActivity.swift; sourceTree = "<group>"; };
 		852782342C84D3A100FAD65E /* LiveActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityManager.swift; sourceTree = "<group>"; };
+		852782432C8614C100FAD65E /* LiveActivityExtensionExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LiveActivityExtensionExtension.entitlements; sourceTree = "<group>"; };
 		8548587E2BFF92D90025EC74 /* notification_settings.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.protobuf; path = notification_settings.proto; sourceTree = "<group>"; };
 		8548587F2BFF92D90025EC74 /* notification_settings.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = notification_settings.pb.swift; sourceTree = "<group>"; };
 		859DF75B2BBE9FFC00B827B1 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
@@ -129,6 +130,10 @@
 		BAD419430E9ED3DD1D1D656D /* Pods-FcmServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FcmServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-FcmServiceExtension/Pods-FcmServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		BB2485496F3FDA0206409B97 /* Pods-FcmServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FcmServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-FcmServiceExtension/Pods-FcmServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		852782382C85F35000FAD65E /* Models */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Models; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		85C3A9BC2C84CEBB00B1DA4A /* Frameworks */ = {
@@ -192,6 +197,7 @@
 				852782292C84D2CA00FAD65E /* Assets.xcassets */,
 				8527822A2C84D2CA00FAD65E /* Info.plist */,
 				8527822B2C84D2CA00FAD65E /* LiveActivityExtension.swift */,
+				852782382C85F35000FAD65E /* Models */,
 				8527822C2C84D2CA00FAD65E /* LiveActivityExtensionBundle.swift */,
 				8527822D2C84D2CA00FAD65E /* LiveActivityExtensionLiveActivity.swift */,
 			);
@@ -234,6 +240,7 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
+				852782432C8614C100FAD65E /* LiveActivityExtensionExtension.entitlements */,
 				859DF75D2BBEA0F000B827B1 /* Synced - EQMonitor.storekit */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
@@ -725,6 +732,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = LiveActivityExtensionExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -769,6 +777,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = LiveActivityExtensionExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -810,6 +819,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = LiveActivityExtensionExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;

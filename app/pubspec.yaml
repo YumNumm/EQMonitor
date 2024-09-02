@@ -61,6 +61,7 @@ dependencies:
   lat_lng:
     path: ../packages/lat_lng
   latlong2: ^0.9.1
+  live_activities: ^1.9.3
   maplibre_gl:
     git:
       url: https://github.com/maplibre/flutter-maplibre-gl.git

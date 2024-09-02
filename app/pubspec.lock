@@ -65,6 +65,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.2"
+  app_group_directory:
+    dependency: transitive
+    description:
+      name: app_group_directory
+      sha256: ad89800fd55133b46e1f6940ac6b974562f7fb6394c662c0f4422b90167f2416
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   app_settings:
     dependency: "direct main"
     description:
@@ -680,6 +688,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.3+1"
+  flutter_native_image:
+    dependency: transitive
+    description:
+      name: flutter_native_image
+      sha256: "0ff23d6222064259df8f85ea56925627ea1ec8658814672c5b6c23fc9174c65e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.6+1"
   flutter_riverpod:
     dependency: transitive
     description:
@@ -1060,6 +1076,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
+  live_activities:
+    dependency: "direct main"
+    description:
+      name: live_activities
+      sha256: "59313436247aa3af1f2b1ab5c7074e273ca7bcb8b69f4c167e6c8ef471d288b4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.9.3"
   logging:
     dependency: transitive
     description:
