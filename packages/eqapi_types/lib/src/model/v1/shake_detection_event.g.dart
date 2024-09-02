@@ -8,6 +8,30 @@ part of 'shake_detection_event.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+_$ShakeDetectionWebSocketTelegramImpl
+    _$$ShakeDetectionWebSocketTelegramImplFromJson(Map<String, dynamic> json) =>
+        $checkedCreate(
+          r'_$ShakeDetectionWebSocketTelegramImpl',
+          json,
+          ($checkedConvert) {
+            final val = _$ShakeDetectionWebSocketTelegramImpl(
+              events: $checkedConvert(
+                  'events',
+                  (v) => (v as List<dynamic>)
+                      .map((e) => ShakeDetectionEvent.fromJson(
+                          e as Map<String, dynamic>))
+                      .toList()),
+            );
+            return val;
+          },
+        );
+
+Map<String, dynamic> _$$ShakeDetectionWebSocketTelegramImplToJson(
+        _$ShakeDetectionWebSocketTelegramImpl instance) =>
+    <String, dynamic>{
+      'events': instance.events,
+    };
+
 _$ShakeDetectionEventImpl _$$ShakeDetectionEventImplFromJson(
         Map<String, dynamic> json) =>
     $checkedCreate(
@@ -15,9 +39,10 @@ _$ShakeDetectionEventImpl _$$ShakeDetectionEventImplFromJson(
       json,
       ($checkedConvert) {
         final val = _$ShakeDetectionEventImpl(
-          id: $checkedConvert('id', (v) => (v as num).toInt()),
+          id: $checkedConvert('id', (v) => (v as num?)?.toInt() ?? -1),
           eventId: $checkedConvert('event_id', (v) => v as String),
-          serialNo: $checkedConvert('serial_no', (v) => (v as num).toInt()),
+          serialNo:
+              $checkedConvert('serial_no', (v) => (v as num?)?.toInt() ?? -1),
           createdAt:
               $checkedConvert('created_at', (v) => DateTime.parse(v as String)),
           insertedAt: $checkedConvert(

@@ -5,12 +5,26 @@ part 'shake_detection_event.freezed.dart';
 part 'shake_detection_event.g.dart';
 
 /// YumNumm/eqproxy-io/server/telegram-proxy-server/src/service/shake-detect.ts
-/// `KyoshinEventWebSocketSchema.entries`に準拠
+/// `KyoshinEventWebSocketSchema`に準拠
 @freezed
-class ShakeDetectionEvent with _$ShakeDetectionEvent {
+class ShakeDetectionWebSocketTelegram
+    with _$ShakeDetectionWebSocketTelegram
+    implements V1Database {
+  const factory ShakeDetectionWebSocketTelegram({
+    required List<ShakeDetectionEvent> events,
+  }) = _ShakeDetectionWebSocketTelegram;
+
+  factory ShakeDetectionWebSocketTelegram.fromJson(Map<String, dynamic> json) =>
+      _$ShakeDetectionWebSocketTelegramFromJson(json);
+}
+
+@freezed
+class ShakeDetectionEvent with _$ShakeDetectionEvent implements V1Database {
   const factory ShakeDetectionEvent({
-    required int id,
+    @Default(-1)
+    required int? id,
     required String eventId,
+    @Default(-1)
     required int serialNo,
     required DateTime createdAt,
     required DateTime insertedAt,

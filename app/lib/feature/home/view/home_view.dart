@@ -10,6 +10,7 @@ import 'package:eqmonitor/core/api/api_authentication_service.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
+import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
 import 'package:eqmonitor/core/hook/use_sheet_controller.dart';
@@ -38,6 +39,7 @@ import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/fcm_token_change_detector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_authentication_service.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_settings_migrate_service.dart';
+import 'package:eqmonitor/feature/shake_detection/provider/shake_detection_provider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -469,6 +471,7 @@ class _Sheet extends StatelessWidget {
         children: [
           const EewWidgets(),
           const KmoniMaintenanceWidget(),
+          const _ShakeDetectionEvents(),
           const _NotificationPermission(),
           const EarthquakeHistorySheetWidget(),
           const ParameterLoaderWidget(),
@@ -501,6 +504,49 @@ class _Sheet extends StatelessWidget {
           const SizedBox(height: 200),
         ],
       ),
+    );
+  }
+}
+
+class _ShakeDetectionEvents extends ConsumerWidget {
+  const _ShakeDetectionEvents();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(shakeDetectionProvider);
+    return BorderedContainer(
+      child: switch (state) {
+        AsyncLoading() => const ListTile(
+            title: Text('揺れ検知のイベントを取得中...'),
+            leading: CircularProgressIndicator.adaptive(),
+          ),
+        AsyncError(:final error) => ListTile(
+            title: Text('揺れ検知のイベントの取得に失敗しました。$error'),
+            leading: const Icon(Icons.error),
+          ),
+        AsyncData(:final value) => ListView.builder(
+            shrinkWrap: true,
+            itemCount: value.length,
+            itemBuilder: (context, index) {
+              final event = value[index];
+              return ListTile(
+                title: Text(
+                  "${event.regions.map((e) => e.name).join(',')}で揺れを検知",
+                ),
+                subtitle: Text(
+                  '${event.createdAt.toIso8601String()}\n'
+                  '${event.pointCount}観測点で検出',
+                ),
+                leading: event.maxIntensity != null
+                    ? JmaIntensityIcon(
+                        intensity: event.maxIntensity!,
+                        type: IntensityIconType.small,
+                      )
+                    : null,
+              );
+            },
+          )
+      },
     );
   }
 }
