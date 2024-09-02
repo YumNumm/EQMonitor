@@ -30,7 +30,7 @@ sealed class RealtimePostgresChangesPayloadBase {
     }
     final tableStr = json['table'].toString();
     final table = PublicTable.values.firstWhereOrNull(
-      (e) => e.name == tableStr,
+      (e) => e.tableName == tableStr,
     );
     if (table == null) {
       throw ArgumentError.value(
@@ -71,6 +71,13 @@ sealed class RealtimePostgresChangesPayloadBase {
               json,
               (v) => TsunamiV1.fromJson(v! as Map<String, dynamic>),
             ),
+          PublicTable.shakeDetectionEvents => RealtimePostgresInsertPayload<
+                ShakeDetectionWebSocketTelegram>.fromJson(
+              json,
+              (v) => ShakeDetectionWebSocketTelegram.fromJson(
+                v! as Map<String, dynamic>,
+              ),
+            ),
         },
       RealtimePostgresChangesListenEvent.update => switch (table) {
           PublicTable.earthquake =>
@@ -101,6 +108,13 @@ sealed class RealtimePostgresChangesPayloadBase {
             RealtimePostgresUpdatePayload<TsunamiV1>.fromJson(
               json,
               (v) => TsunamiV1.fromJson(v! as Map<String, dynamic>),
+            ),
+          PublicTable.shakeDetectionEvents => RealtimePostgresUpdatePayload<
+                ShakeDetectionWebSocketTelegram>.fromJson(
+              json,
+              (v) => ShakeDetectionWebSocketTelegram.fromJson(
+                v! as Map<String, dynamic>,
+              ),
             ),
         },
       RealtimePostgresChangesListenEvent.delete => switch (table) {
@@ -133,6 +147,13 @@ sealed class RealtimePostgresChangesPayloadBase {
               json,
               (v) => TsunamiV1.fromJson(v! as Map<String, dynamic>),
             ),
+          PublicTable.shakeDetectionEvents => RealtimePostgresDeletePayload<
+                ShakeDetectionWebSocketTelegram>.fromJson(
+              json,
+              (v) => ShakeDetectionWebSocketTelegram.fromJson(
+                v! as Map<String, dynamic>,
+              ),
+            ),
         }
     };
   }
@@ -147,13 +168,17 @@ sealed class RealtimePostgresChangesPayloadTable<T extends V1Database>
     implements RealtimePostgresChangesPayloadBase {}
 
 enum PublicTable {
-  earthquake,
-  eew,
-  information,
-  intensitySubDivision,
-  telegram,
-  tsunami,
+  earthquake('earthquake'),
+  eew('eew'),
+  information('information'),
+  intensitySubDivision('intensity_sub_division'),
+  telegram('telegram'),
+  tsunami('tsunami'),
+  shakeDetectionEvents('shake_detection_events'),
   ;
+
+  const PublicTable(this.tableName);
+  final String tableName;
 }
 
 @Freezed(genericArgumentFactories: true)

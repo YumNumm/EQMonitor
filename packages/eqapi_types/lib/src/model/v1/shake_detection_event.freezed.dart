@@ -14,13 +14,185 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
+ShakeDetectionWebSocketTelegram _$ShakeDetectionWebSocketTelegramFromJson(
+    Map<String, dynamic> json) {
+  return _ShakeDetectionWebSocketTelegram.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ShakeDetectionWebSocketTelegram {
+  List<ShakeDetectionEvent> get events => throw _privateConstructorUsedError;
+
+  /// Serializes this ShakeDetectionWebSocketTelegram to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of ShakeDetectionWebSocketTelegram
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $ShakeDetectionWebSocketTelegramCopyWith<ShakeDetectionWebSocketTelegram>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ShakeDetectionWebSocketTelegramCopyWith<$Res> {
+  factory $ShakeDetectionWebSocketTelegramCopyWith(
+          ShakeDetectionWebSocketTelegram value,
+          $Res Function(ShakeDetectionWebSocketTelegram) then) =
+      _$ShakeDetectionWebSocketTelegramCopyWithImpl<$Res,
+          ShakeDetectionWebSocketTelegram>;
+  @useResult
+  $Res call({List<ShakeDetectionEvent> events});
+}
+
+/// @nodoc
+class _$ShakeDetectionWebSocketTelegramCopyWithImpl<$Res,
+        $Val extends ShakeDetectionWebSocketTelegram>
+    implements $ShakeDetectionWebSocketTelegramCopyWith<$Res> {
+  _$ShakeDetectionWebSocketTelegramCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of ShakeDetectionWebSocketTelegram
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? events = null,
+  }) {
+    return _then(_value.copyWith(
+      events: null == events
+          ? _value.events
+          : events // ignore: cast_nullable_to_non_nullable
+              as List<ShakeDetectionEvent>,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$ShakeDetectionWebSocketTelegramImplCopyWith<$Res>
+    implements $ShakeDetectionWebSocketTelegramCopyWith<$Res> {
+  factory _$$ShakeDetectionWebSocketTelegramImplCopyWith(
+          _$ShakeDetectionWebSocketTelegramImpl value,
+          $Res Function(_$ShakeDetectionWebSocketTelegramImpl) then) =
+      __$$ShakeDetectionWebSocketTelegramImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({List<ShakeDetectionEvent> events});
+}
+
+/// @nodoc
+class __$$ShakeDetectionWebSocketTelegramImplCopyWithImpl<$Res>
+    extends _$ShakeDetectionWebSocketTelegramCopyWithImpl<$Res,
+        _$ShakeDetectionWebSocketTelegramImpl>
+    implements _$$ShakeDetectionWebSocketTelegramImplCopyWith<$Res> {
+  __$$ShakeDetectionWebSocketTelegramImplCopyWithImpl(
+      _$ShakeDetectionWebSocketTelegramImpl _value,
+      $Res Function(_$ShakeDetectionWebSocketTelegramImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of ShakeDetectionWebSocketTelegram
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? events = null,
+  }) {
+    return _then(_$ShakeDetectionWebSocketTelegramImpl(
+      events: null == events
+          ? _value._events
+          : events // ignore: cast_nullable_to_non_nullable
+              as List<ShakeDetectionEvent>,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$ShakeDetectionWebSocketTelegramImpl
+    implements _ShakeDetectionWebSocketTelegram {
+  const _$ShakeDetectionWebSocketTelegramImpl(
+      {required final List<ShakeDetectionEvent> events})
+      : _events = events;
+
+  factory _$ShakeDetectionWebSocketTelegramImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$ShakeDetectionWebSocketTelegramImplFromJson(json);
+
+  final List<ShakeDetectionEvent> _events;
+  @override
+  List<ShakeDetectionEvent> get events {
+    if (_events is EqualUnmodifiableListView) return _events;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_events);
+  }
+
+  @override
+  String toString() {
+    return 'ShakeDetectionWebSocketTelegram(events: $events)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ShakeDetectionWebSocketTelegramImpl &&
+            const DeepCollectionEquality().equals(other._events, _events));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_events));
+
+  /// Create a copy of ShakeDetectionWebSocketTelegram
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ShakeDetectionWebSocketTelegramImplCopyWith<
+          _$ShakeDetectionWebSocketTelegramImpl>
+      get copyWith => __$$ShakeDetectionWebSocketTelegramImplCopyWithImpl<
+          _$ShakeDetectionWebSocketTelegramImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ShakeDetectionWebSocketTelegramImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _ShakeDetectionWebSocketTelegram
+    implements ShakeDetectionWebSocketTelegram {
+  const factory _ShakeDetectionWebSocketTelegram(
+          {required final List<ShakeDetectionEvent> events}) =
+      _$ShakeDetectionWebSocketTelegramImpl;
+
+  factory _ShakeDetectionWebSocketTelegram.fromJson(Map<String, dynamic> json) =
+      _$ShakeDetectionWebSocketTelegramImpl.fromJson;
+
+  @override
+  List<ShakeDetectionEvent> get events;
+
+  /// Create a copy of ShakeDetectionWebSocketTelegram
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$ShakeDetectionWebSocketTelegramImplCopyWith<
+          _$ShakeDetectionWebSocketTelegramImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
 ShakeDetectionEvent _$ShakeDetectionEventFromJson(Map<String, dynamic> json) {
   return _ShakeDetectionEvent.fromJson(json);
 }
 
 /// @nodoc
 mixin _$ShakeDetectionEvent {
-  int get id => throw _privateConstructorUsedError;
+  int? get id => throw _privateConstructorUsedError;
   String get eventId => throw _privateConstructorUsedError;
   int get serialNo => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
@@ -51,7 +223,7 @@ abstract class $ShakeDetectionEventCopyWith<$Res> {
       _$ShakeDetectionEventCopyWithImpl<$Res, ShakeDetectionEvent>;
   @useResult
   $Res call(
-      {int id,
+      {int? id,
       String eventId,
       int serialNo,
       DateTime createdAt,
@@ -82,7 +254,7 @@ class _$ShakeDetectionEventCopyWithImpl<$Res, $Val extends ShakeDetectionEvent>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? id = freezed,
     Object? eventId = null,
     Object? serialNo = null,
     Object? createdAt = null,
@@ -94,10 +266,10 @@ class _$ShakeDetectionEventCopyWithImpl<$Res, $Val extends ShakeDetectionEvent>
     Object? pointCount = null,
   }) {
     return _then(_value.copyWith(
-      id: null == id
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       eventId: null == eventId
           ? _value.eventId
           : eventId // ignore: cast_nullable_to_non_nullable
@@ -167,7 +339,7 @@ abstract class _$$ShakeDetectionEventImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int id,
+      {int? id,
       String eventId,
       int serialNo,
       DateTime createdAt,
@@ -198,7 +370,7 @@ class __$$ShakeDetectionEventImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? id = freezed,
     Object? eventId = null,
     Object? serialNo = null,
     Object? createdAt = null,
@@ -210,10 +382,10 @@ class __$$ShakeDetectionEventImplCopyWithImpl<$Res>
     Object? pointCount = null,
   }) {
     return _then(_$ShakeDetectionEventImpl(
-      id: null == id
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       eventId: null == eventId
           ? _value.eventId
           : eventId // ignore: cast_nullable_to_non_nullable
@@ -258,9 +430,9 @@ class __$$ShakeDetectionEventImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ShakeDetectionEventImpl implements _ShakeDetectionEvent {
   const _$ShakeDetectionEventImpl(
-      {required this.id,
+      {required this.id = -1,
       required this.eventId,
-      required this.serialNo,
+      required this.serialNo = -1,
       required this.createdAt,
       required this.insertedAt,
       @JsonKey(unknownEnumValue: null, defaultValue: null)
@@ -275,10 +447,12 @@ class _$ShakeDetectionEventImpl implements _ShakeDetectionEvent {
       _$$ShakeDetectionEventImplFromJson(json);
 
   @override
-  final int id;
+  @JsonKey()
+  final int? id;
   @override
   final String eventId;
   @override
+  @JsonKey()
   final int serialNo;
   @override
   final DateTime createdAt;
@@ -366,7 +540,7 @@ class _$ShakeDetectionEventImpl implements _ShakeDetectionEvent {
 
 abstract class _ShakeDetectionEvent implements ShakeDetectionEvent {
   const factory _ShakeDetectionEvent(
-      {required final int id,
+      {required final int? id,
       required final String eventId,
       required final int serialNo,
       required final DateTime createdAt,
@@ -382,7 +556,7 @@ abstract class _ShakeDetectionEvent implements ShakeDetectionEvent {
       _$ShakeDetectionEventImpl.fromJson;
 
   @override
-  int get id;
+  int? get id;
   @override
   String get eventId;
   @override

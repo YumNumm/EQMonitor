@@ -49,6 +49,54 @@ void main() {
         final result = RealtimePostgresChangesPayloadBase.fromJson(payload);
         expect(result, isA<RealtimePostgresInsertPayload<EewV1>>());
       });
+
+      test(
+        'ShakeDetectionEvent insert',
+        () {
+          final payload = {
+            ...insertPayload,
+            'new': {
+              'events': [
+                {
+                  'id': '59490fd7-2029-4e5e-85f9-0bbde3e70083',
+                  'created_at': '2024-09-03T02:58:33.9009509',
+                  'point_count': 1,
+                  'max_intensity': '0',
+                  'regions': [
+                    {
+                      'name': '愛知県',
+                      'maxIntensity': '0',
+                      'points': [
+                        {
+                          'intensity': '0',
+                          'code': 'AICH18',
+                        }
+                      ],
+                    }
+                  ],
+                  'top_left': {
+                    'latitude': 34.9635,
+                    'longitude': 136.7847,
+                  },
+                  'bottom_right': {
+                    'latitude': 36.1537,
+                    'longitude': 137.7268,
+                  },
+                }
+              ],
+            },
+            'schema': 'public',
+            'table': 'shake_detection_events',
+            'errors': <void>[],
+          };
+          final result = RealtimePostgresChangesPayloadBase.fromJson(payload);
+          expect(
+            result,
+            isA<RealtimePostgresInsertPayload<
+                    ShakeDetectionWebSocketTelegram>>(),
+          );
+        },
+      );
     },
   );
 }
