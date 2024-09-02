@@ -1,7 +1,6 @@
 import 'dart:developer';
 
-import 'package:eqapi_types/lib.dart';
-import 'package:eqapi_types/model/v1/auth/notification_settings_request.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/api/api_authentication_service.dart';
 import 'package:eqmonitor/core/provider/notification_token.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';

@@ -23,8 +23,12 @@ mixin _$DebuggerModel {
   bool get isDebugger => throw _privateConstructorUsedError;
   bool get isDeveloper => throw _privateConstructorUsedError;
 
+  /// Serializes this DebuggerModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of DebuggerModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $DebuggerModelCopyWith<DebuggerModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -48,6 +52,8 @@ class _$DebuggerModelCopyWithImpl<$Res, $Val extends DebuggerModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of DebuggerModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -86,6 +92,8 @@ class __$$DebuggerModelImplCopyWithImpl<$Res>
       _$DebuggerModelImpl _value, $Res Function(_$DebuggerModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of DebuggerModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -137,11 +145,13 @@ class _$DebuggerModelImpl implements _DebuggerModel {
                 other.isDeveloper == isDeveloper));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, isDebugger, isDeveloper);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DebuggerModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$DebuggerModelImplCopyWith<_$DebuggerModelImpl> get copyWith =>
@@ -166,8 +176,11 @@ abstract class _DebuggerModel implements DebuggerModel {
   bool get isDebugger;
   @override
   bool get isDeveloper;
+
+  /// Create a copy of DebuggerModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$DebuggerModelImplCopyWith<_$DebuggerModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

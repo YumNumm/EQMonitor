@@ -1,8 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:eqapi_types/model/v1/auth/fcm_token_request.dart';
-import 'package:eqapi_types/model/v1/auth/fcm_token_response.dart';
-import 'package:eqapi_types/model/v1/auth/notification_settings_request.dart';
-import 'package:eqapi_types/model/v1/auth/notification_settings_response.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'auth.g.dart';

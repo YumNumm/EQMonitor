@@ -22,8 +22,12 @@ KmoniConfig _$KmoniConfigFromJson(Map<String, dynamic> json) {
 mixin _$KmoniConfig {
   int get counter => throw _privateConstructorUsedError;
 
+  /// Serializes this KmoniConfig to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of KmoniConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $KmoniConfigCopyWith<KmoniConfig> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -47,6 +51,8 @@ class _$KmoniConfigCopyWithImpl<$Res, $Val extends KmoniConfig>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of KmoniConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -80,6 +86,8 @@ class __$$KmoniConfigImplCopyWithImpl<$Res>
       _$KmoniConfigImpl _value, $Res Function(_$KmoniConfigImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of KmoniConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -119,11 +127,13 @@ class _$KmoniConfigImpl implements _KmoniConfig {
             (identical(other.counter, counter) || other.counter == counter));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, counter);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of KmoniConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$KmoniConfigImplCopyWith<_$KmoniConfigImpl> get copyWith =>
@@ -145,8 +155,11 @@ abstract class _KmoniConfig implements KmoniConfig {
 
   @override
   int get counter;
+
+  /// Create a copy of KmoniConfig
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$KmoniConfigImplCopyWith<_$KmoniConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

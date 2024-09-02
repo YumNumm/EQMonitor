@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:eqapi_types/lib.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:test/test.dart';
 
 void main() {

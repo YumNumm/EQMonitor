@@ -24,8 +24,12 @@ mixin _$NtpConfigModel {
   Duration get timeout => throw _privateConstructorUsedError;
   Duration get interval => throw _privateConstructorUsedError;
 
+  /// Serializes this NtpConfigModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NtpConfigModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $NtpConfigModelCopyWith<NtpConfigModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -49,6 +53,8 @@ class _$NtpConfigModelCopyWithImpl<$Res, $Val extends NtpConfigModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of NtpConfigModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -92,6 +98,8 @@ class __$$NtpConfigModelImplCopyWithImpl<$Res>
       _$NtpConfigModelImpl _value, $Res Function(_$NtpConfigModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NtpConfigModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -154,12 +162,14 @@ class _$NtpConfigModelImpl implements _NtpConfigModel {
                 other.interval == interval));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, lookUpAddress, timeout, interval);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NtpConfigModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NtpConfigModelImplCopyWith<_$NtpConfigModelImpl> get copyWith =>
@@ -189,8 +199,11 @@ abstract class _NtpConfigModel implements NtpConfigModel {
   Duration get timeout;
   @override
   Duration get interval;
+
+  /// Create a copy of NtpConfigModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NtpConfigModelImplCopyWith<_$NtpConfigModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

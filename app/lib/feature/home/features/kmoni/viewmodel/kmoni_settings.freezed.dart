@@ -29,8 +29,12 @@ mixin _$KmoniSettingsState {
   /// 強震モニタを使用するかどうか
   bool get useKmoni => throw _privateConstructorUsedError;
 
+  /// Serializes this KmoniSettingsState to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of KmoniSettingsState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $KmoniSettingsStateCopyWith<KmoniSettingsState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -55,6 +59,8 @@ class _$KmoniSettingsStateCopyWithImpl<$Res, $Val extends KmoniSettingsState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of KmoniSettingsState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -99,6 +105,8 @@ class __$$KmoniSettingsStateImplCopyWithImpl<$Res>
       $Res Function(_$KmoniSettingsStateImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of KmoniSettingsState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -168,12 +176,14 @@ class _$KmoniSettingsStateImpl implements _KmoniSettingsState {
                 other.useKmoni == useKmoni));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, minRealtimeShindo, showRealtimeShindoScale, useKmoni);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of KmoniSettingsState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$KmoniSettingsStateImplCopyWith<_$KmoniSettingsStateImpl> get copyWith =>
@@ -197,20 +207,22 @@ abstract class _KmoniSettingsState implements KmoniSettingsState {
   factory _KmoniSettingsState.fromJson(Map<String, dynamic> json) =
       _$KmoniSettingsStateImpl.fromJson;
 
-  @override
-
   /// 強震モニタの表示最低リアルタイム震度
-  double? get minRealtimeShindo;
   @override
+  double? get minRealtimeShindo;
 
   /// スケールを表示するかどうか
-  bool get showRealtimeShindoScale;
   @override
+  bool get showRealtimeShindoScale;
 
   /// 強震モニタを使用するかどうか
-  bool get useKmoni;
   @override
-  @JsonKey(ignore: true)
+  bool get useKmoni;
+
+  /// Create a copy of KmoniSettingsState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$KmoniSettingsStateImplCopyWith<_$KmoniSettingsStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

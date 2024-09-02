@@ -24,8 +24,12 @@ mixin _$NotificationLocalSettingsModel {
   EewSettings get eew => throw _privateConstructorUsedError;
   EarthquakeSettings get earthquake => throw _privateConstructorUsedError;
 
+  /// Serializes this NotificationLocalSettingsModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NotificationLocalSettingsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $NotificationLocalSettingsModelCopyWith<NotificationLocalSettingsModel>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -55,6 +59,8 @@ class _$NotificationLocalSettingsModelCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of NotificationLocalSettingsModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -73,6 +79,8 @@ class _$NotificationLocalSettingsModelCopyWithImpl<$Res,
     ) as $Val);
   }
 
+  /// Create a copy of NotificationLocalSettingsModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $EewSettingsCopyWith<$Res> get eew {
@@ -81,6 +89,8 @@ class _$NotificationLocalSettingsModelCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of NotificationLocalSettingsModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $EarthquakeSettingsCopyWith<$Res> get earthquake {
@@ -117,6 +127,8 @@ class __$$NotificationLocalSettingsModelImplCopyWithImpl<$Res>
       $Res Function(_$NotificationLocalSettingsModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NotificationLocalSettingsModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -170,11 +182,13 @@ class _$NotificationLocalSettingsModelImpl
                 other.earthquake == earthquake));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, eew, earthquake);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NotificationLocalSettingsModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NotificationLocalSettingsModelImplCopyWith<
@@ -203,8 +217,11 @@ abstract class _NotificationLocalSettingsModel
   EewSettings get eew;
   @override
   EarthquakeSettings get earthquake;
+
+  /// Create a copy of NotificationLocalSettingsModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotificationLocalSettingsModelImplCopyWith<
           _$NotificationLocalSettingsModelImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -222,8 +239,12 @@ mixin _$EewSettings {
       throw _privateConstructorUsedError;
   List<Region> get regions => throw _privateConstructorUsedError;
 
+  /// Serializes this EewSettings to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EewSettings
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EewSettingsCopyWith<EewSettings> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -250,6 +271,8 @@ class _$EewSettingsCopyWithImpl<$Res, $Val extends EewSettings>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EewSettings
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -296,6 +319,8 @@ class __$$EewSettingsImplCopyWithImpl<$Res>
       _$EewSettingsImpl _value, $Res Function(_$EewSettingsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EewSettings
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -364,12 +389,14 @@ class _$EewSettingsImpl implements _EewSettings {
             const DeepCollectionEquality().equals(other._regions, _regions));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, emergencyIntensity,
       silentIntensity, const DeepCollectionEquality().hash(_regions));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EewSettings
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EewSettingsImplCopyWith<_$EewSettingsImpl> get copyWith =>
@@ -398,8 +425,11 @@ abstract class _EewSettings implements EewSettings {
   JmaForecastIntensity? get silentIntensity;
   @override
   List<Region> get regions;
+
+  /// Create a copy of EewSettings
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EewSettingsImplCopyWith<_$EewSettingsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -416,8 +446,12 @@ mixin _$EarthquakeSettings {
       throw _privateConstructorUsedError;
   List<Region> get regions => throw _privateConstructorUsedError;
 
+  /// Serializes this EarthquakeSettings to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of EarthquakeSettings
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EarthquakeSettingsCopyWith<EarthquakeSettings> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -444,6 +478,8 @@ class _$EarthquakeSettingsCopyWithImpl<$Res, $Val extends EarthquakeSettings>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EarthquakeSettings
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -490,6 +526,8 @@ class __$$EarthquakeSettingsImplCopyWithImpl<$Res>
       $Res Function(_$EarthquakeSettingsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of EarthquakeSettings
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -558,12 +596,14 @@ class _$EarthquakeSettingsImpl implements _EarthquakeSettings {
             const DeepCollectionEquality().equals(other._regions, _regions));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, emergencyIntensity,
       silentIntensity, const DeepCollectionEquality().hash(_regions));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EarthquakeSettings
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeSettingsImplCopyWith<_$EarthquakeSettingsImpl> get copyWith =>
@@ -593,8 +633,11 @@ abstract class _EarthquakeSettings implements EarthquakeSettings {
   JmaForecastIntensity? get silentIntensity;
   @override
   List<Region> get regions;
+
+  /// Create a copy of EarthquakeSettings
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeSettingsImplCopyWith<_$EarthquakeSettingsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -613,8 +656,12 @@ mixin _$Region {
       throw _privateConstructorUsedError;
   bool get isMain => throw _privateConstructorUsedError;
 
+  /// Serializes this Region to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Region
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $RegionCopyWith<Region> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -641,6 +688,8 @@ class _$RegionCopyWithImpl<$Res, $Val extends Region>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Region
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -698,6 +747,8 @@ class __$$RegionImplCopyWithImpl<$Res>
       _$RegionImpl _value, $Res Function(_$RegionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Region
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -775,12 +826,14 @@ class _$RegionImpl implements _Region {
             (identical(other.isMain, isMain) || other.isMain == isMain));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, code, name, emergencyIntensity, silentIntensity, isMain);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Region
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RegionImplCopyWith<_$RegionImpl> get copyWith =>
@@ -814,8 +867,11 @@ abstract class _Region implements Region {
   JmaForecastIntensity get silentIntensity;
   @override
   bool get isMain;
+
+  /// Create a copy of Region
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RegionImplCopyWith<_$RegionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

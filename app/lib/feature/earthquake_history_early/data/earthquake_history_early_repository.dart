@@ -1,6 +1,5 @@
 import 'package:eqapi_client/eqapi_client.dart';
-import 'package:eqapi_types/lib.dart';
-import 'package:eqapi_types/model/v1/earthquake_early.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/api/eq_api.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

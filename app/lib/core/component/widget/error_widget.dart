@@ -38,7 +38,7 @@ class ErrorInfoWidget extends StatelessWidget {
                     DioExceptionText(
                       exception: exception,
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                       (response != null
                               ? '${exception.response?.statusCode} ${exception.response?.statusMessage}'
@@ -57,11 +57,11 @@ class ErrorInfoWidget extends StatelessWidget {
                 }()
               else
                 const Text('エラーが発生しました'),
-              Text("少し時間をおいて再度お試しください。\n"
-                  "解消されない場合は、この画面のスクリーンショットを開発者へ送信してください"),
-              _DeviceIdText(),
+              const Text('少し時間をおいて再度お試しください。\n'
+                  '解消されない場合は、この画面のスクリーンショットを開発者へ送信してください'),
+              const _DeviceIdText(),
               Text(
-                "エラータイプ: " + error.runtimeType.toString(),
+                'エラータイプ: ${error.runtimeType}',
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),

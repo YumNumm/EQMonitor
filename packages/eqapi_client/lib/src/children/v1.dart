@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqapi_types/lib.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'v1.g.dart';

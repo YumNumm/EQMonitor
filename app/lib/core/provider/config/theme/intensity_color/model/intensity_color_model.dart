@@ -192,8 +192,6 @@ class IntensityColorModel with _$IntensityColorModel {
           background: Color.fromARGB(255, 47, 79, 79),
         ),
       );
-
-  
 }
 
 @freezed
