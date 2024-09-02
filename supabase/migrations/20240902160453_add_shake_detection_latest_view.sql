@@ -7,4 +7,3 @@ WHERE
 ORDER BY
     created_at DESC,
     serial_no DESC;
-
