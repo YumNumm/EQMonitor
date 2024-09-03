@@ -1,4 +1,5 @@
 // ignore_for_file: provider_dependencies
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
@@ -16,6 +17,7 @@ import 'package:eqmonitor/feature/home/features/kmoni/provider/kmoni_view_model.
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/feature/home/features/map/model/main_map_viewmodel_state.dart';
 import 'package:eqmonitor/feature/shake_detection/model/shake_detection_kmoni_merged_event.dart';
+import 'package:eqmonitor/feature/shake_detection/provider/shake_detection_provider.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -59,6 +61,10 @@ class MainMapViewModel extends _$MainMapViewModel {
       ..listen(
         kmoniSettingsProvider.select((e) => e.useKmoni),
         (_, value) => _onKmoniSettingsChanged(value: value),
+      )
+      ..listen(
+        shakeDetectionKmoniPointsMergedProvider,
+        (_, value) => _onShakeDetectionStateChanged(value.valueOrNull ?? []),
       );
     return MainMapViewmodelState(
       isHomePosition: true,
@@ -93,12 +99,19 @@ class MainMapViewModel extends _$MainMapViewModel {
     _eewEstimatedIntensityService = _EewEstimatedIntensityService(
       controller: controller,
     );
+    _shakeDetectionBorderService = _ShakeDetectionBorderService(
+      controller: controller,
+      intensityColorModel: ref.watch(intensityColorProvider),
+    );
 
     await (
       _kmoniObservationPointService!.init(),
       _eewPsWaveService!.init(),
       _eewEstimatedIntensityService.init(
         ref.read(intensityColorProvider),
+      ),
+      _shakeDetectionBorderService!.init(
+        ref.read(shakeDetectionKmoniPointsMergedProvider).valueOrNull ?? [],
       ),
     ).wait;
     await _eewHypocenterService!.init(
@@ -122,6 +135,7 @@ class MainMapViewModel extends _$MainMapViewModel {
         _eewHypocenterService!.dispose(),
         _eewPsWaveService!.dispose(),
         _eewEstimatedIntensityService.dispose(),
+        _shakeDetectionBorderService!.dispose(),
       ).wait;
     });
     log('_onEewStateChanged called!', name: 'MainMapViewModel');
@@ -262,6 +276,7 @@ class MainMapViewModel extends _$MainMapViewModel {
 
   // *********** Kyoshin Monitor Related ***********
   _KmoniObservationPointService? _kmoniObservationPointService;
+  _ShakeDetectionBorderService? _shakeDetectionBorderService;
   Future<void> _onKmoniStateChanged(
     List<AnalyzedKmoniObservationPoint> values,
   ) async {
@@ -274,6 +289,15 @@ class MainMapViewModel extends _$MainMapViewModel {
     }
 
     await _kmoniObservationPointService?.update(values);
+  }
+
+  Future<void> _onShakeDetectionStateChanged(
+    List<ShakeDetectionKmoniMergedEvent> values,
+  ) async {
+    if (_shakeDetectionBorderService == null) {
+      return;
+    }
+    await _shakeDetectionBorderService?.update(values);
   }
 
   Future<void> _onKmoniSettingsChanged({required bool value}) async {
@@ -1151,8 +1175,12 @@ class _ShakeDetectionBorderService {
   final MapLibreMapController controller;
   final IntensityColorModel intensityColorModel;
 
-  Future<void> init() async {
+  Future<void> init(List<ShakeDetectionKmoniMergedEvent> events) async {
     await dispose();
+    await controller.addGeoJsonSource(
+      layerId,
+      createGeoJson(events),
+    );
     await controller.addLineLayer(
       layerId,
       layerId,
@@ -1161,7 +1189,7 @@ class _ShakeDetectionBorderService {
           'get',
           'color',
         ],
-        lineWidth: 2,
+        lineWidth: 0.5,
         lineCap: 'round',
       ),
     );
@@ -1169,10 +1197,12 @@ class _ShakeDetectionBorderService {
 
   Future<void> dispose() async {
     await controller.removeLayer(layerId);
+    await controller.removeSource(layerId);
   }
 
   Future<void> update(List<ShakeDetectionKmoniMergedEvent> events) async {
     final geoJson = createGeoJson(events);
+    print(const JsonEncoder().convert(geoJson));
     await controller.setGeoJsonSource(
       layerId,
       geoJson,
@@ -1183,14 +1213,14 @@ class _ShakeDetectionBorderService {
     List<ShakeDetectionKmoniMergedEvent> events,
   ) {
     final grids = createGrids(events);
-    return <String, dynamic>{
+    final json = <String, dynamic>{
       'type': 'FeatureCollection',
       'features': [
         for (final grid in grids)
           {
             'type': 'Feature',
             'geometry': {
-              'type': 'Polygon',
+              'type': 'LineString',
               'coordinates': [
                 [
                   grid.topLeft.lon,
@@ -1223,9 +1253,11 @@ class _ShakeDetectionBorderService {
           },
       ],
     };
+    print(const JsonEncoder().convert(json));
+    return json;
   }
 
-  static const gridSize = 0.2;
+  static const gridSize = 0.5;
 
   List<
       ({

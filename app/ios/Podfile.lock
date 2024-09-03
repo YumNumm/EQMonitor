@@ -325,7 +325,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
   in_app_review: 318597b3a06c22bb46dc454d56828c85f444f99d
   MapLibre: 0ebfa9329d313cec8bf0a5ba5a336a1dc903785e
-  maplibre_gl: be7b98f1c3ed75bf77f321eec04df359d0ff6f62
+  maplibre_gl: 943a491fffb3337c1b9de57fd377206d18c16e34
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   package_info_plus: 58f0028419748fad15bf008b270aaa8e54380b1c
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46

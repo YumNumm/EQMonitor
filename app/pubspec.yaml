@@ -61,11 +61,7 @@ dependencies:
   lat_lng:
     path: ../packages/lat_lng
   latlong2: ^0.9.1
-  maplibre_gl:
-    git:
-      url: https://github.com/maplibre/flutter-maplibre-gl.git
-      ref: b077b956b54141e46f6765fe9b71af2b726ad53b # 2024/07/24
-      path: maplibre_gl
+  maplibre_gl: ^0.20.0
   notification_setting_types:
     path: ../packages/notification_setting_types
   ntp: ^2.0.0

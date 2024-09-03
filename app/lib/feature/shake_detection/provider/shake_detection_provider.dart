@@ -3,10 +3,12 @@ import 'dart:developer';
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/api/eq_api.dart';
+import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
 import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/model/shake_detection_kmoni_merged_event.dart';
 import 'package:extensions/extensions.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'shake_detection_provider.g.dart';
@@ -51,6 +53,9 @@ class ShakeDetection extends _$ShakeDetection {
 
   /// 古くなったイベントを破棄
   List<ShakeDetectionEvent> _pruneOldEvents(List<ShakeDetectionEvent> events) {
+    if (kDebugMode) {
+      return events;
+    }
     const duration = Duration(seconds: 30);
     return events
         .where(
@@ -94,12 +99,47 @@ class ShakeDetection extends _$ShakeDetection {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class ShakeDetectionKmoniPointsMerged
     extends _$ShakeDetectionKmoniPointsMerged {
   @override
-  FutureOr<List<ShakeDetectionKmoniMergedEvent>> build() async {
-    throw UnimplementedError();
+  Future<List<ShakeDetectionKmoniMergedEvent>> build() async {
+    final points = ref.watch(kyoshinObservationPointsProvider);
+    final events = ref.watch(shakeDetectionProvider).valueOrNull ?? [];
+    final merged = <ShakeDetectionKmoniMergedEvent>[];
+    for (final event in events) {
+      final regions = event.regions.map(
+        (e) => ShakeDetectionKmoniMergedRegion(
+          name: e.name,
+          maxIntensity: e.maxIntensity,
+          points: e.points
+              .map(
+                (p) {
+                  final point = points.points.firstWhereOrNull(
+                    (e) => e.code == p.code,
+                  );
+                  if (point == null) {
+                    return null;
+                  }
+                  return ShakeDetectionKmoniMergedPoint(
+                    intensity: p.intensity,
+                    code: p.code,
+                    point: point,
+                  );
+                },
+              )
+              .whereNotNull()
+              .toList(),
+        ),
+      );
+      merged.add(
+        ShakeDetectionKmoniMergedEvent(
+          event: event,
+          regions: regions.toList(),
+        ),
+      );
+    }
+    return merged;
   }
 }
 
