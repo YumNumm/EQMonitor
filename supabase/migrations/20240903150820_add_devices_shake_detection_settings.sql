@@ -1,9 +1,10 @@
 CREATE TABLE devices_shake_detection_settings (
-  id UUID REFERENCES devices(id) ON DELETE CASCADE NOT NULL,
-  region_id smallint NOT NULL,
-  min_jma_intensity jma_intensity NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL
+    id uuid REFERENCES devices (id) ON DELETE CASCADE NOT NULL,
+    region_id smallint NOT NULL,
+    min_jma_intensity jma_intensity NOT NULL,
+    created_at timestamp with time zone DEFAULT NOW() NOT NULL
 );
+
 
 /* seed.sql
 
@@ -31,5 +32,4 @@ CREATE TABLE devices_shake_detection_settings (
  ('00000000-0000-0000-0000-000000000003', 1, '3'),
  ('00000000-0000-0000-0000-000000000003', 2, '3'),
  ('00000000-0000-0000-0000-000000000003', 3, '3');
-
  */

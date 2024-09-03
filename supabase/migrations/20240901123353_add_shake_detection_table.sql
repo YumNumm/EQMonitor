@@ -79,3 +79,4 @@ ALTER TABLE shake_detection_events ENABLE ROW LEVEL SECURITY;
 CREATE POLICY shake_detection_events_policy ON shake_detection_events
     FOR SELECT
         USING (TRUE);
+
