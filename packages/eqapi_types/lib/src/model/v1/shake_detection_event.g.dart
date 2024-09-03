@@ -47,8 +47,12 @@ _$ShakeDetectionEventImpl _$$ShakeDetectionEventImplFromJson(
               $checkedConvert('created_at', (v) => DateTime.parse(v as String)),
           insertedAt: $checkedConvert(
               'inserted_at', (v) => DateTime.parse(v as String)),
-          maxIntensity: $checkedConvert('max_intensity',
-              (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v)),
+          maxIntensity: $checkedConvert(
+              'max_intensity',
+              (v) =>
+                  $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v,
+                      unknownValue: JmaForecastIntensity.unknown) ??
+                  JmaForecastIntensity.unknown),
           regions: $checkedConvert(
               'regions',
               (v) => (v as List<dynamic>)
@@ -83,24 +87,25 @@ Map<String, dynamic> _$$ShakeDetectionEventImplToJson(
       'serial_no': instance.serialNo,
       'created_at': instance.createdAt.toIso8601String(),
       'inserted_at': instance.insertedAt.toIso8601String(),
-      'max_intensity': _$JmaIntensityEnumMap[instance.maxIntensity],
+      'max_intensity': _$JmaForecastIntensityEnumMap[instance.maxIntensity]!,
       'regions': instance.regions,
       'top_left': instance.topLeft,
       'bottom_right': instance.bottomRight,
       'point_count': instance.pointCount,
     };
 
-const _$JmaIntensityEnumMap = {
-  JmaIntensity.one: '1',
-  JmaIntensity.two: '2',
-  JmaIntensity.three: '3',
-  JmaIntensity.four: '4',
-  JmaIntensity.fiveLower: '5-',
-  JmaIntensity.fiveUpper: '5+',
-  JmaIntensity.sixLower: '6-',
-  JmaIntensity.sixUpper: '6+',
-  JmaIntensity.seven: '7',
-  JmaIntensity.fiveUpperNoInput: '!5-',
+const _$JmaForecastIntensityEnumMap = {
+  JmaForecastIntensity.zero: '0',
+  JmaForecastIntensity.one: '1',
+  JmaForecastIntensity.two: '2',
+  JmaForecastIntensity.three: '3',
+  JmaForecastIntensity.four: '4',
+  JmaForecastIntensity.fiveLower: '5-',
+  JmaForecastIntensity.fiveUpper: '5+',
+  JmaForecastIntensity.sixLower: '6-',
+  JmaForecastIntensity.sixUpper: '6+',
+  JmaForecastIntensity.seven: '7',
+  JmaForecastIntensity.unknown: '不明',
 };
 
 _$ShakeDetectionRegionImpl _$$ShakeDetectionRegionImplFromJson(
@@ -111,8 +116,12 @@ _$ShakeDetectionRegionImpl _$$ShakeDetectionRegionImplFromJson(
       ($checkedConvert) {
         final val = _$ShakeDetectionRegionImpl(
           name: $checkedConvert('name', (v) => v as String),
-          maxIntensity: $checkedConvert('maxIntensity',
-              (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v)),
+          maxIntensity: $checkedConvert(
+              'maxIntensity',
+              (v) =>
+                  $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v,
+                      unknownValue: JmaForecastIntensity.unknown) ??
+                  JmaForecastIntensity.unknown),
           points: $checkedConvert(
               'points',
               (v) => (v as List<dynamic>)
@@ -128,7 +137,7 @@ Map<String, dynamic> _$$ShakeDetectionRegionImplToJson(
         _$ShakeDetectionRegionImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
-      'maxIntensity': _$JmaIntensityEnumMap[instance.maxIntensity],
+      'maxIntensity': _$JmaForecastIntensityEnumMap[instance.maxIntensity]!,
       'points': instance.points,
     };
 
@@ -139,8 +148,12 @@ _$ShakeDetectionPointImpl _$$ShakeDetectionPointImplFromJson(
       json,
       ($checkedConvert) {
         final val = _$ShakeDetectionPointImpl(
-          intensity: $checkedConvert('intensity',
-              (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v)),
+          intensity: $checkedConvert(
+              'intensity',
+              (v) =>
+                  $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v,
+                      unknownValue: JmaForecastIntensity.unknown) ??
+                  JmaForecastIntensity.unknown),
           code: $checkedConvert('code', (v) => v as String),
         );
         return val;
@@ -150,7 +163,7 @@ _$ShakeDetectionPointImpl _$$ShakeDetectionPointImplFromJson(
 Map<String, dynamic> _$$ShakeDetectionPointImplToJson(
         _$ShakeDetectionPointImpl instance) =>
     <String, dynamic>{
-      'intensity': _$JmaIntensityEnumMap[instance.intensity],
+      'intensity': _$JmaForecastIntensityEnumMap[instance.intensity]!,
       'code': instance.code,
     };
 

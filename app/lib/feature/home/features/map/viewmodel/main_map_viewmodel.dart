@@ -15,6 +15,8 @@ import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provide
 import 'package:eqmonitor/feature/home/features/kmoni/provider/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/feature/home/features/map/model/main_map_viewmodel_state.dart';
+import 'package:eqmonitor/feature/shake_detection/model/shake_detection_kmoni_merged_event.dart';
+import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:lat_lng/lat_lng.dart' as lat_lng;
@@ -1138,6 +1140,155 @@ class _EewSWaveFillService {
     required bool isWarning,
   }) =>
       's-wave-fill-$isWarning';
+}
+
+class _ShakeDetectionBorderService {
+  _ShakeDetectionBorderService({
+    required this.controller,
+    required this.intensityColorModel,
+  });
+
+  final MapLibreMapController controller;
+  final IntensityColorModel intensityColorModel;
+
+  Future<void> init() async {
+    await dispose();
+    await controller.addLineLayer(
+      layerId,
+      layerId,
+      const LineLayerProperties(
+        lineColor: [
+          'get',
+          'color',
+        ],
+        lineWidth: 2,
+        lineCap: 'round',
+      ),
+    );
+  }
+
+  Future<void> dispose() async {
+    await controller.removeLayer(layerId);
+  }
+
+  Future<void> update(List<ShakeDetectionKmoniMergedEvent> events) async {
+    final geoJson = createGeoJson(events);
+    await controller.setGeoJsonSource(
+      layerId,
+      geoJson,
+    );
+  }
+
+  Map<String, dynamic> createGeoJson(
+    List<ShakeDetectionKmoniMergedEvent> events,
+  ) {
+    final grids = createGrids(events);
+    return <String, dynamic>{
+      'type': 'FeatureCollection',
+      'features': [
+        for (final grid in grids)
+          {
+            'type': 'Feature',
+            'geometry': {
+              'type': 'Polygon',
+              'coordinates': [
+                [
+                  grid.topLeft.lon,
+                  grid.topLeft.lat,
+                ],
+                [
+                  grid.topLeft.lon + gridSize,
+                  grid.topLeft.lat,
+                ],
+                [
+                  grid.topLeft.lon + gridSize,
+                  grid.topLeft.lat + gridSize,
+                ],
+                [
+                  grid.topLeft.lon,
+                  grid.topLeft.lat + gridSize,
+                ],
+                [
+                  grid.topLeft.lon,
+                  grid.topLeft.lat,
+                ],
+              ],
+            },
+            'properties': {
+              'color': intensityColorModel
+                  .fromJmaForecastIntensity(grid.maxIntensity)
+                  .background
+                  .toHexStringRGB(),
+            },
+          },
+      ],
+    };
+  }
+
+  static const gridSize = 0.2;
+
+  List<
+      ({
+        lat_lng.LatLng bottomRight,
+        JmaForecastIntensity maxIntensity,
+        lat_lng.LatLng topLeft
+      })> createGrids(
+    List<ShakeDetectionKmoniMergedEvent> events,
+  ) {
+    // 0.2度毎に協会を作成し、内包するグリッドを取得する
+    final grids = <({
+      lat_lng.LatLng topLeft,
+      lat_lng.LatLng bottomRight,
+      JmaForecastIntensity maxIntensity,
+    })>[];
+    for (final event in events
+        .map((e) => e.regions)
+        .flattened
+        .map((e) => e.points)
+        .flattened) {
+      final latLng = event.point.location;
+      final lat = latLng.latitude;
+      final lng = latLng.longitude;
+
+      final latCount = lat ~/ gridSize;
+      final lngCount = lng ~/ gridSize;
+
+      final topLeft = lat_lng.LatLng(
+        latCount * gridSize,
+        lngCount * gridSize,
+      );
+      final bottomRight = lat_lng.LatLng(
+        (latCount + 1) * gridSize,
+        (lngCount + 1) * gridSize,
+      );
+      final maxIntensity = event.intensity;
+
+      final existingIndex = grids.indexWhereOrNull(
+        (e) => e.topLeft == topLeft && e.bottomRight == bottomRight,
+      );
+      if (existingIndex == null) {
+        grids.add(
+          (
+            topLeft: topLeft,
+            bottomRight: bottomRight,
+            maxIntensity: maxIntensity,
+          ),
+        );
+      } else {
+        final existing = grids[existingIndex];
+        if (existing.maxIntensity < maxIntensity) {
+          grids[existingIndex] = (
+            topLeft: topLeft,
+            bottomRight: bottomRight,
+            maxIntensity: maxIntensity,
+          );
+        }
+      }
+    }
+    return grids;
+  }
+
+  static String get layerId => 'shake-detection-border';
 }
 
 @freezed
