@@ -40,11 +40,11 @@ void main() {
         expect(event.regions, [
           const ShakeDetectionRegion(
             name: '石川県',
-            maxIntensity: JmaIntensity.one,
+            maxIntensity: JmaForecastIntensity.one,
             points: [
               ShakeDetectionPoint(
                 code: 'ISKH05',
-                intensity: JmaIntensity.one,
+                intensity: JmaForecastIntensity.one,
               ),
             ],
           ),

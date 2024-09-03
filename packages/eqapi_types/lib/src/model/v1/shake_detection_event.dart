@@ -21,17 +21,18 @@ class ShakeDetectionWebSocketTelegram
 @freezed
 class ShakeDetectionEvent with _$ShakeDetectionEvent implements V1Database {
   const factory ShakeDetectionEvent({
-    @Default(-1)
-    required int? id,
+    @JsonKey(defaultValue: -1) required int? id,
     required String eventId,
-    @Default(-1)
-    required int serialNo,
+    @JsonKey(defaultValue: -1) required int serialNo,
     required DateTime createdAt,
     required DateTime insertedAt,
 
     /// `Unknown`もしくは`Error`の場合、Nullにフォールバックされます
-    @JsonKey(unknownEnumValue: null, defaultValue: null)
-    required JmaIntensity? maxIntensity,
+    @JsonKey(
+      unknownEnumValue: JmaForecastIntensity.unknown,
+      defaultValue: JmaForecastIntensity.unknown,
+    )
+    required JmaForecastIntensity maxIntensity,
     required List<ShakeDetectionRegion> regions,
     required ShakeDetectionLatLng topLeft,
     required ShakeDetectionLatLng bottomRight,
@@ -46,8 +47,12 @@ class ShakeDetectionEvent with _$ShakeDetectionEvent implements V1Database {
 class ShakeDetectionRegion with _$ShakeDetectionRegion {
   const factory ShakeDetectionRegion({
     required String name,
-    @JsonKey(name: 'maxIntensity', unknownEnumValue: null, defaultValue: null)
-    required JmaIntensity? maxIntensity,
+    @JsonKey(
+      name: 'maxIntensity',
+      unknownEnumValue: JmaForecastIntensity.unknown,
+      defaultValue: JmaForecastIntensity.unknown,
+    )
+    required JmaForecastIntensity maxIntensity,
     required List<ShakeDetectionPoint> points,
   }) = _ShakeDetectionRegion;
 
@@ -58,8 +63,11 @@ class ShakeDetectionRegion with _$ShakeDetectionRegion {
 @freezed
 class ShakeDetectionPoint with _$ShakeDetectionPoint {
   const factory ShakeDetectionPoint({
-    @JsonKey(unknownEnumValue: null, defaultValue: null)
-    required JmaIntensity? intensity,
+    @JsonKey(
+      unknownEnumValue: JmaForecastIntensity.unknown,
+      defaultValue: JmaForecastIntensity.unknown,
+    )
+    required JmaForecastIntensity intensity,
     required String code,
   }) = _ShakeDetectionPoint;
 
