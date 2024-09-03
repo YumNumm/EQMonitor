@@ -92,7 +92,8 @@ void main() {
           final result = RealtimePostgresChangesPayloadBase.fromJson(payload);
           expect(
             result,
-            isA<RealtimePostgresInsertPayload<
+            isA<
+                RealtimePostgresInsertPayload<
                     ShakeDetectionWebSocketTelegram>>(),
           );
         },
