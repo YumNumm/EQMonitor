@@ -26,7 +26,7 @@ final _fetchShakeDetectionEventsProvider =
 
 typedef _FetchShakeDetectionEventsRef
     = FutureProviderRef<List<ShakeDetectionEvent>>;
-String _$shakeDetectionHash() => r'b54028a1050a826cf92e29ce9e33ada581634836';
+String _$shakeDetectionHash() => r'f2c69cc4d594c5e576a5075d52e695c4c51ba003';
 
 /// See also [ShakeDetection].
 @ProviderFor(ShakeDetection)
@@ -43,13 +43,13 @@ final shakeDetectionProvider =
 
 typedef _$ShakeDetection = AsyncNotifier<List<ShakeDetectionEvent>>;
 String _$shakeDetectionKmoniPointsMergedHash() =>
-    r'06d31cd0761e6d90bfd490fe6a6a546fee9d17e4';
+    r'4f856d4adfd1261e6e0c02e4857f47dd9360d4b7';
 
 /// See also [ShakeDetectionKmoniPointsMerged].
 @ProviderFor(ShakeDetectionKmoniPointsMerged)
-final shakeDetectionKmoniPointsMergedProvider =
-    AutoDisposeAsyncNotifierProvider<ShakeDetectionKmoniPointsMerged,
-        List<ShakeDetectionKmoniMergedEvent>>.internal(
+final shakeDetectionKmoniPointsMergedProvider = AsyncNotifierProvider<
+    ShakeDetectionKmoniPointsMerged,
+    List<ShakeDetectionKmoniMergedEvent>>.internal(
   ShakeDetectionKmoniPointsMerged.new,
   name: r'shakeDetectionKmoniPointsMergedProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -60,6 +60,6 @@ final shakeDetectionKmoniPointsMergedProvider =
 );
 
 typedef _$ShakeDetectionKmoniPointsMerged
-    = AutoDisposeAsyncNotifier<List<ShakeDetectionKmoniMergedEvent>>;
+    = AsyncNotifier<List<ShakeDetectionKmoniMergedEvent>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
