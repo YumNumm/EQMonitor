@@ -42,7 +42,7 @@ jobs:
 
       - name: Set up ruby
         # https://github.com/ruby/setup-ruby/tree/v1/
-        uses: ruby/setup-ruby@a6e6f86333f0a2523ece813039b8b4be04560854
+        uses: ruby/setup-ruby@52753b7da854d5c07df37391a986c76ab4615999
         with:
           bundler-cache: true
           working-directory: app/android
@@ -67,7 +67,7 @@ jobs:
         run: bundle exec fastlane build
 
       - name: Upload artifact aab
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.4.0
         with:
           path: app/build/app/outputs/bundle/release/app-release.aab
           name: release-aab
@@ -155,7 +155,7 @@ jobs:
 
       - name: Set up ruby
         # https://github.com/ruby/setup-ruby/tree/v1/
-        uses: ruby/setup-ruby@a6e6f86333f0a2523ece813039b8b4be04560854
+        uses: ruby/setup-ruby@52753b7da854d5c07df37391a986c76ab4615999
         with:
           bundler-cache: true
           working-directory: app/ios
@@ -209,7 +209,7 @@ jobs:
         run: bundle exec fastlane build
 
       - name: Upload artifact ipa
-        uses: actions/upload-artifact@v4.3.6
+        uses: actions/upload-artifact@v4.4.0
         with:
           path: app/ios/Runner.ipa
           name: release-ios
