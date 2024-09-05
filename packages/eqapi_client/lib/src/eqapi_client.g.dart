@@ -8,7 +8,7 @@ part of 'eqapi_client.dart';
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element
 
 class _V3 implements V3 {
   _V3(
@@ -49,8 +49,8 @@ class _V3 implements V3 {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = InformationV3Result.fromJson(_result.data!);
-    return value;
+    final _value = InformationV3Result.fromJson(_result.data!);
+    return _value;
   }
 
   @override
@@ -76,8 +76,8 @@ class _V3 implements V3 {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = AppInformation.fromJson(_result.data!);
-    return value;
+    final _value = AppInformation.fromJson(_result.data!);
+    return _value;
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {

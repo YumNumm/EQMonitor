@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/component/button/action_button.dart';
 import 'package:eqmonitor/core/component/widget/kmoni_caution.dart';
-import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_settings.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

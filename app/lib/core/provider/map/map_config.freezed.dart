@@ -24,8 +24,12 @@ mixin _$MapConfig {
   double get maxScale => throw _privateConstructorUsedError;
   MapColorScheme get colorScheme => throw _privateConstructorUsedError;
 
+  /// Serializes this MapConfig to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of MapConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MapConfigCopyWith<MapConfig> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -50,6 +54,8 @@ class _$MapConfigCopyWithImpl<$Res, $Val extends MapConfig>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of MapConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -73,6 +79,8 @@ class _$MapConfigCopyWithImpl<$Res, $Val extends MapConfig>
     ) as $Val);
   }
 
+  /// Create a copy of MapConfig
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $MapColorSchemeCopyWith<$Res> get colorScheme {
@@ -104,6 +112,8 @@ class __$$MapConfigImplCopyWithImpl<$Res>
       _$MapConfigImpl _value, $Res Function(_$MapConfigImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of MapConfig
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -164,11 +174,13 @@ class _$MapConfigImpl implements _MapConfig {
                 other.colorScheme == colorScheme));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, minScale, maxScale, colorScheme);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MapConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$MapConfigImplCopyWith<_$MapConfigImpl> get copyWith =>
@@ -197,8 +209,11 @@ abstract class _MapConfig implements MapConfig {
   double get maxScale;
   @override
   MapColorScheme get colorScheme;
+
+  /// Create a copy of MapConfig
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MapConfigImplCopyWith<_$MapConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -220,8 +235,12 @@ mixin _$MapColorScheme {
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
   Color get japanLineColor => throw _privateConstructorUsedError;
 
+  /// Serializes this MapColorScheme to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of MapColorScheme
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MapColorSchemeCopyWith<MapColorScheme> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -255,6 +274,8 @@ class _$MapColorSchemeCopyWithImpl<$Res, $Val extends MapColorScheme>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of MapColorScheme
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -318,6 +339,8 @@ class __$$MapColorSchemeImplCopyWithImpl<$Res>
       _$MapColorSchemeImpl _value, $Res Function(_$MapColorSchemeImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of MapColorScheme
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -408,12 +431,14 @@ class _$MapColorSchemeImpl implements _MapColorScheme {
                 other.japanLineColor == japanLineColor));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, backgroundColor, worldLandColor,
       worldLineColor, japanLandColor, japanLineColor);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MapColorScheme
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$MapColorSchemeImplCopyWith<_$MapColorSchemeImpl> get copyWith =>
@@ -459,8 +484,11 @@ abstract class _MapColorScheme implements MapColorScheme {
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
   Color get japanLineColor;
+
+  /// Create a copy of MapColorScheme
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MapColorSchemeImplCopyWith<_$MapColorSchemeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

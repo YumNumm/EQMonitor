@@ -5,7 +5,6 @@ import 'package:eqapi_client/src/children/auth.dart';
 import 'package:eqapi_client/src/children/objects.dart';
 import 'package:eqapi_client/src/children/v1.dart';
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqapi_types/lib.dart';
 import 'package:retrofit/retrofit.dart';
 
 export 'children/v1.dart';

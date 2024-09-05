@@ -2,7 +2,7 @@ name: eqmonitor
 description: An earthquake monitoring Application
 publish_to: "none"
 
-version: 2.6.1
+version: 2.7.0
 
 environment:
   sdk: ^3.5.1
@@ -61,11 +61,7 @@ dependencies:
   lat_lng:
     path: ../packages/lat_lng
   latlong2: ^0.9.1
-  maplibre_gl:
-    git:
-      url: https://github.com/maplibre/flutter-maplibre-gl.git
-      ref: b077b956b54141e46f6765fe9b71af2b726ad53b # 2024/07/24
-      path: maplibre_gl
+  maplibre_gl: ^0.20.0
   notification_setting_types:
     path: ../packages/notification_setting_types
   ntp: ^2.0.0
@@ -93,7 +89,9 @@ dependencies:
   web_socket_client: ^0.1.4
   widgetbook: ^3.8.1
   widgetbook_annotation: ^3.1.0
+
 dev_dependencies:
+  analyzer: ^6.7.0
   build_runner: ^2.4.11
   custom_lint: ^0.5.11
   dependency_validator: ^4.1.0

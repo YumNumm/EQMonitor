@@ -1,12 +1,11 @@
 import 'package:collection/collection.dart';
-import 'package:eqapi_types/model/v1/auth/notification_settings_request.dart';
-import 'package:eqapi_types/model/v1/auth/notification_settings_response.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/api/api_authentication_service.dart';
 import 'package:eqmonitor/core/api/eq_api.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/model/notification_remote_settings_state.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/notification_remote_settings_notifier.dart';
-import 'package:jma_code_table_types/jma_code_table.pb.dart';
+import 'package:jma_code_table_types/jma_code_table.pb.dart' as jma_code_table;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notification_remote_settings_saved_state.g.dart';
@@ -202,12 +201,12 @@ class UnauthorizedException implements Exception {
 }
 
 extension _AreaInformationPrefectureEarthquake
-    on AreaInformationPrefectureEarthquake {
+    on jma_code_table.AreaInformationPrefectureEarthquake {
   String? nameFindByCode(int code) =>
       items.firstWhereOrNull((e) => int.parse(e.code) == code)?.name;
 }
 
-extension _AreaForecastLocalEew on AreaForecastLocalEew {
+extension _AreaForecastLocalEew on jma_code_table.AreaForecastLocalEew {
   String? nameFindByCode(int code) =>
       items.firstWhereOrNull((e) => int.parse(e.code) == code)?.name;
 }

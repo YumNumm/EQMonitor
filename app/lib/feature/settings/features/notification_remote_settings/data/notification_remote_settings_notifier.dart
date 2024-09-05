@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqapi_types/model/v1/auth/notification_settings_request.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/model/notification_remote_settings_state.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/notification_remote_settings_saved_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

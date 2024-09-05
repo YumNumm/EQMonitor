@@ -14,7 +14,6 @@ command:
       sdk: ^3.5.1
       flutter: ^3.24.1
 
-
 scripts:
   analyze:
     # We are setting the concurrency to 1 because a higher concurrency can crash

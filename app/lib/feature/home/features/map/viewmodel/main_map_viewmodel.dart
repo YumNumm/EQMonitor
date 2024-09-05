@@ -1,23 +1,24 @@
 // ignore_for_file: provider_dependencies
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
-import 'package:eqapi_types/eqapi_types.dart' as eqapi_types;
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqapi_types/lib.dart';
-import 'package:eqapi_types/model/components/eew_intensity.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/eew/eew_alive_telegram.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_provider.dart';
-import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_settings.dart';
-import 'package:eqmonitor/core/provider/kmoni/viewmodel/kmoni_view_model.dart';
 import 'package:eqmonitor/core/provider/kmoni_observation_points/model/kmoni_observation_point.dart';
 import 'package:eqmonitor/core/provider/map/map_style.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/provider/kmoni_view_model.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/feature/home/features/map/model/main_map_viewmodel_state.dart';
+import 'package:eqmonitor/feature/shake_detection/model/shake_detection_kmoni_merged_event.dart';
+import 'package:eqmonitor/feature/shake_detection/provider/shake_detection_provider.dart';
+import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:lat_lng/lat_lng.dart' as lat_lng;
@@ -60,6 +61,10 @@ class MainMapViewModel extends _$MainMapViewModel {
       ..listen(
         kmoniSettingsProvider.select((e) => e.useKmoni),
         (_, value) => _onKmoniSettingsChanged(value: value),
+      )
+      ..listen(
+        shakeDetectionKmoniPointsMergedProvider,
+        (_, value) => _onShakeDetectionStateChanged(value.valueOrNull ?? []),
       );
     return MainMapViewmodelState(
       isHomePosition: true,
@@ -94,12 +99,19 @@ class MainMapViewModel extends _$MainMapViewModel {
     _eewEstimatedIntensityService = _EewEstimatedIntensityService(
       controller: controller,
     );
+    _shakeDetectionBorderService = _ShakeDetectionBorderService(
+      controller: controller,
+      intensityColorModel: ref.watch(intensityColorProvider),
+    );
 
     await (
       _kmoniObservationPointService!.init(),
       _eewPsWaveService!.init(),
-      _eewEstimatedIntensityService!.init(
+      _eewEstimatedIntensityService.init(
         ref.read(intensityColorProvider),
+      ),
+      _shakeDetectionBorderService!.init(
+        ref.read(shakeDetectionKmoniPointsMergedProvider).valueOrNull ?? [],
       ),
     ).wait;
     await _eewHypocenterService!.init(
@@ -122,7 +134,8 @@ class MainMapViewModel extends _$MainMapViewModel {
         _kmoniObservationPointService!.dispose(),
         _eewHypocenterService!.dispose(),
         _eewPsWaveService!.dispose(),
-        _eewEstimatedIntensityService!.dispose(),
+        _eewEstimatedIntensityService.dispose(),
+        _shakeDetectionBorderService!.dispose(),
       ).wait;
     });
     log('_onEewStateChanged called!', name: 'MainMapViewModel');
@@ -165,7 +178,7 @@ class MainMapViewModel extends _$MainMapViewModel {
 
   _EewHypocenterService? _eewHypocenterService;
   _EewPsWaveService? _eewPsWaveService;
-  _EewEstimatedIntensityService? _eewEstimatedIntensityService;
+  late _EewEstimatedIntensityService _eewEstimatedIntensityService;
 
   Future<void> _onEewStateChanged(List<EewV1> values) async {
     // 初期化が終わっていない場合は何もしない
@@ -192,7 +205,7 @@ class MainMapViewModel extends _$MainMapViewModel {
     final transformed = _EewEstimatedIntensityService.transform(
       aliveBodies.map((e) => e.regions).whereNotNull().flattened.toList(),
     );
-    await _eewEstimatedIntensityService!.update(transformed);
+    await _eewEstimatedIntensityService.update(transformed);
   }
 
   Future<void> _onEstimatedIntensityChanged(
@@ -263,6 +276,7 @@ class MainMapViewModel extends _$MainMapViewModel {
 
   // *********** Kyoshin Monitor Related ***********
   _KmoniObservationPointService? _kmoniObservationPointService;
+  _ShakeDetectionBorderService? _shakeDetectionBorderService;
   Future<void> _onKmoniStateChanged(
     List<AnalyzedKmoniObservationPoint> values,
   ) async {
@@ -275,6 +289,15 @@ class MainMapViewModel extends _$MainMapViewModel {
     }
 
     await _kmoniObservationPointService?.update(values);
+  }
+
+  Future<void> _onShakeDetectionStateChanged(
+    List<ShakeDetectionKmoniMergedEvent> values,
+  ) async {
+    if (_shakeDetectionBorderService == null) {
+      return;
+    }
+    await _shakeDetectionBorderService?.update(values);
   }
 
   Future<void> _onKmoniSettingsChanged({required bool value}) async {
@@ -586,7 +609,7 @@ class _EewEstimatedIntensityService {
   }
 
   /// 予想震度を更新する
-  /// [areas] は Map<予想震度, List<地域コード>>
+  /// [areas] は Map{予想震度, 地域コード[]}
   Future<void> update(Map<JmaForecastIntensity, List<String>> areas) => [
         // 各予想震度ごとにFill Layerを追加
         for (final intensity in JmaForecastIntensity.values)
@@ -1141,6 +1164,163 @@ class _EewSWaveFillService {
     required bool isWarning,
   }) =>
       's-wave-fill-$isWarning';
+}
+
+class _ShakeDetectionBorderService {
+  _ShakeDetectionBorderService({
+    required this.controller,
+    required this.intensityColorModel,
+  });
+
+  final MapLibreMapController controller;
+  final IntensityColorModel intensityColorModel;
+
+  Future<void> init(List<ShakeDetectionKmoniMergedEvent> events) async {
+    await dispose();
+    await controller.addGeoJsonSource(
+      layerId,
+      createGeoJson(events),
+    );
+    await controller.addLineLayer(
+      layerId,
+      layerId,
+      const LineLayerProperties(
+        lineColor: [
+          'get',
+          'color',
+        ],
+        lineWidth: 2,
+        lineCap: 'round',
+      ),
+    );
+  }
+
+  Future<void> dispose() async {
+    await controller.removeLayer(layerId);
+    await controller.removeSource(layerId);
+  }
+
+  Future<void> update(List<ShakeDetectionKmoniMergedEvent> events) async {
+    final geoJson = createGeoJson(events);
+    print(const JsonEncoder().convert(geoJson));
+    await controller.setGeoJsonSource(
+      layerId,
+      geoJson,
+    );
+  }
+
+  Map<String, dynamic> createGeoJson(
+    List<ShakeDetectionKmoniMergedEvent> events,
+  ) {
+    final grids = createGrids(events);
+    final json = <String, dynamic>{
+      'type': 'FeatureCollection',
+      'features': [
+        for (final grid in grids)
+          {
+            'type': 'Feature',
+            'geometry': {
+              'type': 'LineString',
+              'coordinates': [
+                [
+                  grid.topLeft.lon,
+                  grid.topLeft.lat,
+                ],
+                [
+                  grid.topLeft.lon + gridSize,
+                  grid.topLeft.lat,
+                ],
+                [
+                  grid.topLeft.lon + gridSize,
+                  grid.topLeft.lat + gridSize,
+                ],
+                [
+                  grid.topLeft.lon,
+                  grid.topLeft.lat + gridSize,
+                ],
+                [
+                  grid.topLeft.lon,
+                  grid.topLeft.lat,
+                ],
+              ],
+            },
+            'properties': {
+              'color': intensityColorModel
+                  .fromJmaForecastIntensity(grid.maxIntensity)
+                  .background
+                  .toHexStringRGB(),
+            },
+          },
+      ],
+    };
+    print(const JsonEncoder().convert(json));
+    return json;
+  }
+
+  static const gridSize = 0.5;
+
+  List<
+      ({
+        lat_lng.LatLng bottomRight,
+        JmaForecastIntensity maxIntensity,
+        lat_lng.LatLng topLeft
+      })> createGrids(
+    List<ShakeDetectionKmoniMergedEvent> events,
+  ) {
+    // 0.2度毎に協会を作成し、内包するグリッドを取得する
+    final grids = <({
+      lat_lng.LatLng topLeft,
+      lat_lng.LatLng bottomRight,
+      JmaForecastIntensity maxIntensity,
+    })>[];
+    for (final event in events
+        .map((e) => e.regions)
+        .flattened
+        .map((e) => e.points)
+        .flattened) {
+      final latLng = event.point.location;
+      final lat = latLng.latitude;
+      final lng = latLng.longitude;
+
+      final latCount = lat ~/ gridSize;
+      final lngCount = lng ~/ gridSize;
+
+      final topLeft = lat_lng.LatLng(
+        latCount * gridSize,
+        lngCount * gridSize,
+      );
+      final bottomRight = lat_lng.LatLng(
+        (latCount + 1) * gridSize,
+        (lngCount + 1) * gridSize,
+      );
+      final maxIntensity = event.intensity;
+
+      final existingIndex = grids.indexWhereOrNull(
+        (e) => e.topLeft == topLeft && e.bottomRight == bottomRight,
+      );
+      if (existingIndex == null) {
+        grids.add(
+          (
+            topLeft: topLeft,
+            bottomRight: bottomRight,
+            maxIntensity: maxIntensity,
+          ),
+        );
+      } else {
+        final existing = grids[existingIndex];
+        if (existing.maxIntensity < maxIntensity) {
+          grids[existingIndex] = (
+            topLeft: topLeft,
+            bottomRight: bottomRight,
+            maxIntensity: maxIntensity,
+          );
+        }
+      }
+    }
+    return grids;
+  }
+
+  static String get layerId => 'shake-detection-border';
 }
 
 @freezed

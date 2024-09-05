@@ -24,8 +24,12 @@ mixin _$TelegramUrlModel {
   String get wsApiUrl => throw _privateConstructorUsedError;
   String? get apiAuthorization => throw _privateConstructorUsedError;
 
+  /// Serializes this TelegramUrlModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of TelegramUrlModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TelegramUrlModelCopyWith<TelegramUrlModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -49,6 +53,8 @@ class _$TelegramUrlModelCopyWithImpl<$Res, $Val extends TelegramUrlModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TelegramUrlModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -92,6 +98,8 @@ class __$$TelegramUrlModelImplCopyWithImpl<$Res>
       $Res Function(_$TelegramUrlModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TelegramUrlModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -152,12 +160,14 @@ class _$TelegramUrlModelImpl implements _TelegramUrlModel {
                 other.apiAuthorization == apiAuthorization));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, restApiUrl, wsApiUrl, apiAuthorization);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TelegramUrlModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TelegramUrlModelImplCopyWith<_$TelegramUrlModelImpl> get copyWith =>
@@ -187,8 +197,11 @@ abstract class _TelegramUrlModel implements TelegramUrlModel {
   String get wsApiUrl;
   @override
   String? get apiAuthorization;
+
+  /// Create a copy of TelegramUrlModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TelegramUrlModelImplCopyWith<_$TelegramUrlModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
