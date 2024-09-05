@@ -1189,7 +1189,7 @@ class _ShakeDetectionBorderService {
           'get',
           'color',
         ],
-        lineWidth: 0.5,
+        lineWidth: 2,
         lineCap: 'round',
       ),
     );
