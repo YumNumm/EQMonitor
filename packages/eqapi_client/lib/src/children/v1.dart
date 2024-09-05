@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqapi_types/lib.dart';
-import 'package:eqapi_types/model/v1/earthquake_early.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'v1.g.dart';
@@ -98,6 +96,9 @@ abstract class V1 {
     EarthquakeEarlySortType sort = EarthquakeEarlySortType.origin_time,
     @Query("ascending") bool ascending = false,
   });
+
+  @GET('/v1/shake-detection/latest')
+  Future<List<ShakeDetectionEvent>> getLatestShakeDetectionEvents();
 }
 
 enum EarthquakeEarlySortType {

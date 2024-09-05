@@ -25,8 +25,12 @@ mixin _$EewHypocenterProperties {
   double get magnitude => throw _privateConstructorUsedError;
   bool get isLowPrecise => throw _privateConstructorUsedError;
 
+  /// Serializes this _EewHypocenterProperties to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of _EewHypocenterProperties
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$EewHypocenterPropertiesCopyWith<_EewHypocenterProperties> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -51,6 +55,8 @@ class __$EewHypocenterPropertiesCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of _EewHypocenterProperties
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -97,6 +103,8 @@ class __$$_EewHypocenterPropertiesImplCopyWithImpl<$Res>
       $Res Function(_$_EewHypocenterPropertiesImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of _EewHypocenterProperties
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -156,11 +164,13 @@ class _$_EewHypocenterPropertiesImpl implements __EewHypocenterProperties {
                 other.isLowPrecise == isLowPrecise));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, depth, magnitude, isLowPrecise);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of _EewHypocenterProperties
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$_EewHypocenterPropertiesImplCopyWith<_$_EewHypocenterPropertiesImpl>
@@ -190,8 +200,11 @@ abstract class __EewHypocenterProperties implements _EewHypocenterProperties {
   double get magnitude;
   @override
   bool get isLowPrecise;
+
+  /// Create a copy of _EewHypocenterProperties
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$_EewHypocenterPropertiesImplCopyWith<_$_EewHypocenterPropertiesImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -21,7 +21,9 @@ mixin _$TravelTimeTable {
   int get depth => throw _privateConstructorUsedError;
   int get distance => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TravelTimeTable
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TravelTimeTableCopyWith<TravelTimeTable> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -45,6 +47,8 @@ class _$TravelTimeTableCopyWithImpl<$Res, $Val extends TravelTimeTable>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TravelTimeTable
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -93,6 +97,8 @@ class __$$TravelTimeTableImplCopyWithImpl<$Res>
       _$TravelTimeTableImpl _value, $Res Function(_$TravelTimeTableImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TravelTimeTable
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -160,7 +166,9 @@ class _$TravelTimeTableImpl implements _TravelTimeTable {
   @override
   int get hashCode => Object.hash(runtimeType, p, s, depth, distance);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TravelTimeTable
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TravelTimeTableImplCopyWith<_$TravelTimeTableImpl> get copyWith =>
@@ -183,8 +191,11 @@ abstract class _TravelTimeTable implements TravelTimeTable {
   int get depth;
   @override
   int get distance;
+
+  /// Create a copy of TravelTimeTable
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TravelTimeTableImplCopyWith<_$TravelTimeTableImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -193,7 +204,9 @@ abstract class _TravelTimeTable implements TravelTimeTable {
 mixin _$TravelTimeTables {
   List<TravelTimeTable> get table => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TravelTimeTables
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TravelTimeTablesCopyWith<TravelTimeTables> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -217,6 +230,8 @@ class _$TravelTimeTablesCopyWithImpl<$Res, $Val extends TravelTimeTables>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TravelTimeTables
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -250,6 +265,8 @@ class __$$TravelTimeTablesImplCopyWithImpl<$Res>
       $Res Function(_$TravelTimeTablesImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TravelTimeTables
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -295,7 +312,9 @@ class _$TravelTimeTablesImpl implements _TravelTimeTables {
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(_table));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TravelTimeTables
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TravelTimeTablesImplCopyWith<_$TravelTimeTablesImpl> get copyWith =>
@@ -309,8 +328,11 @@ abstract class _TravelTimeTables implements TravelTimeTables {
 
   @override
   List<TravelTimeTable> get table;
+
+  /// Create a copy of TravelTimeTables
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TravelTimeTablesImplCopyWith<_$TravelTimeTablesImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

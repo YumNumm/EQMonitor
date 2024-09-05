@@ -14,7 +14,7 @@ class Debugger extends _$Debugger {
   DebuggerModel build() {
     _prefs = ref.read(sharedPreferencesProvider);
     if (kDebugMode) {
-      return DebuggerModel(
+      return const DebuggerModel(
         isDebugger: true,
         isDeveloper: true,
       );

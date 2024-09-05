@@ -25,8 +25,12 @@ mixin _$NotificationRemoteSettingsState {
   NotificationRemoteSettingsEarthquake get earthquake =>
       throw _privateConstructorUsedError;
 
+  /// Serializes this NotificationRemoteSettingsState to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NotificationRemoteSettingsState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $NotificationRemoteSettingsStateCopyWith<NotificationRemoteSettingsState>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -58,6 +62,8 @@ class _$NotificationRemoteSettingsStateCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of NotificationRemoteSettingsState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -76,6 +82,8 @@ class _$NotificationRemoteSettingsStateCopyWithImpl<$Res,
     ) as $Val);
   }
 
+  /// Create a copy of NotificationRemoteSettingsState
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $NotificationRemoteSettingsEewCopyWith<$Res> get eew {
@@ -84,6 +92,8 @@ class _$NotificationRemoteSettingsStateCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of NotificationRemoteSettingsState
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $NotificationRemoteSettingsEarthquakeCopyWith<$Res> get earthquake {
@@ -123,6 +133,8 @@ class __$$NotificationRemoteSettingsStateImplCopyWithImpl<$Res>
       $Res Function(_$NotificationRemoteSettingsStateImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NotificationRemoteSettingsState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -173,11 +185,13 @@ class _$NotificationRemoteSettingsStateImpl
                 other.earthquake == earthquake));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, eew, earthquake);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NotificationRemoteSettingsState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NotificationRemoteSettingsStateImplCopyWith<
@@ -207,8 +221,11 @@ abstract class _NotificationRemoteSettingsState
   NotificationRemoteSettingsEew get eew;
   @override
   NotificationRemoteSettingsEarthquake get earthquake;
+
+  /// Create a copy of NotificationRemoteSettingsState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotificationRemoteSettingsStateImplCopyWith<
           _$NotificationRemoteSettingsStateImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -225,8 +242,12 @@ mixin _$NotificationRemoteSettingsEew {
   List<NotificationRemoteSettingsEewRegion> get regions =>
       throw _privateConstructorUsedError;
 
+  /// Serializes this NotificationRemoteSettingsEew to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NotificationRemoteSettingsEew
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $NotificationRemoteSettingsEewCopyWith<NotificationRemoteSettingsEew>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -255,6 +276,8 @@ class _$NotificationRemoteSettingsEewCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of NotificationRemoteSettingsEew
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -298,6 +321,8 @@ class __$$NotificationRemoteSettingsEewImplCopyWithImpl<$Res>
       $Res Function(_$NotificationRemoteSettingsEewImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NotificationRemoteSettingsEew
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -354,12 +379,14 @@ class _$NotificationRemoteSettingsEewImpl
             const DeepCollectionEquality().equals(other._regions, _regions));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, global, const DeepCollectionEquality().hash(_regions));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NotificationRemoteSettingsEew
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NotificationRemoteSettingsEewImplCopyWith<
@@ -389,8 +416,11 @@ abstract class _NotificationRemoteSettingsEew
   JmaForecastIntensity? get global;
   @override
   List<NotificationRemoteSettingsEewRegion> get regions;
+
+  /// Create a copy of NotificationRemoteSettingsEew
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotificationRemoteSettingsEewImplCopyWith<
           _$NotificationRemoteSettingsEewImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -408,8 +438,12 @@ mixin _$NotificationRemoteSettingsEewRegion {
       throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
 
+  /// Serializes this NotificationRemoteSettingsEewRegion to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NotificationRemoteSettingsEewRegion
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $NotificationRemoteSettingsEewRegionCopyWith<
           NotificationRemoteSettingsEewRegion>
       get copyWith => throw _privateConstructorUsedError;
@@ -437,6 +471,8 @@ class _$NotificationRemoteSettingsEewRegionCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of NotificationRemoteSettingsEewRegion
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -483,6 +519,8 @@ class __$$NotificationRemoteSettingsEewRegionImplCopyWithImpl<$Res>
       $Res Function(_$NotificationRemoteSettingsEewRegionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NotificationRemoteSettingsEewRegion
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -544,11 +582,13 @@ class _$NotificationRemoteSettingsEewRegionImpl
             (identical(other.name, name) || other.name == name));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, regionId, minJmaIntensity, name);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NotificationRemoteSettingsEewRegion
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NotificationRemoteSettingsEewRegionImplCopyWith<
@@ -581,8 +621,11 @@ abstract class _NotificationRemoteSettingsEewRegion
   JmaForecastIntensity get minJmaIntensity;
   @override
   String get name;
+
+  /// Create a copy of NotificationRemoteSettingsEewRegion
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotificationRemoteSettingsEewRegionImplCopyWith<
           _$NotificationRemoteSettingsEewRegionImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -599,8 +642,12 @@ mixin _$NotificationRemoteSettingsEarthquake {
   List<NotificationRemoteSettingsEarthquakeRegion> get regions =>
       throw _privateConstructorUsedError;
 
+  /// Serializes this NotificationRemoteSettingsEarthquake to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NotificationRemoteSettingsEarthquake
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $NotificationRemoteSettingsEarthquakeCopyWith<
           NotificationRemoteSettingsEarthquake>
       get copyWith => throw _privateConstructorUsedError;
@@ -630,6 +677,8 @@ class _$NotificationRemoteSettingsEarthquakeCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of NotificationRemoteSettingsEarthquake
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -673,6 +722,8 @@ class __$$NotificationRemoteSettingsEarthquakeImplCopyWithImpl<$Res>
       $Res Function(_$NotificationRemoteSettingsEarthquakeImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NotificationRemoteSettingsEarthquake
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -729,12 +780,14 @@ class _$NotificationRemoteSettingsEarthquakeImpl
             const DeepCollectionEquality().equals(other._regions, _regions));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, global, const DeepCollectionEquality().hash(_regions));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NotificationRemoteSettingsEarthquake
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NotificationRemoteSettingsEarthquakeImplCopyWith<
@@ -765,8 +818,11 @@ abstract class _NotificationRemoteSettingsEarthquake
   JmaForecastIntensity? get global;
   @override
   List<NotificationRemoteSettingsEarthquakeRegion> get regions;
+
+  /// Create a copy of NotificationRemoteSettingsEarthquake
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotificationRemoteSettingsEarthquakeImplCopyWith<
           _$NotificationRemoteSettingsEarthquakeImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -785,8 +841,12 @@ mixin _$NotificationRemoteSettingsEarthquakeRegion {
       throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
 
+  /// Serializes this NotificationRemoteSettingsEarthquakeRegion to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of NotificationRemoteSettingsEarthquakeRegion
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $NotificationRemoteSettingsEarthquakeRegionCopyWith<
           NotificationRemoteSettingsEarthquakeRegion>
       get copyWith => throw _privateConstructorUsedError;
@@ -815,6 +875,8 @@ class _$NotificationRemoteSettingsEarthquakeRegionCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of NotificationRemoteSettingsEarthquakeRegion
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -862,6 +924,8 @@ class __$$NotificationRemoteSettingsEarthquakeRegionImplCopyWithImpl<$Res>
       $Res Function(_$NotificationRemoteSettingsEarthquakeRegionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of NotificationRemoteSettingsEarthquakeRegion
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -923,11 +987,13 @@ class _$NotificationRemoteSettingsEarthquakeRegionImpl
             (identical(other.name, name) || other.name == name));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, regionId, minJmaIntensity, name);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of NotificationRemoteSettingsEarthquakeRegion
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$NotificationRemoteSettingsEarthquakeRegionImplCopyWith<
@@ -963,8 +1029,11 @@ abstract class _NotificationRemoteSettingsEarthquakeRegion
   JmaForecastIntensity get minJmaIntensity;
   @override
   String get name;
+
+  /// Create a copy of NotificationRemoteSettingsEarthquakeRegion
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotificationRemoteSettingsEarthquakeRegionImplCopyWith<
           _$NotificationRemoteSettingsEarthquakeRegionImpl>
       get copyWith => throw _privateConstructorUsedError;

@@ -8,7 +8,7 @@ part of 'auth.dart';
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element
 
 class _AuthApiClient implements AuthApiClient {
   _AuthApiClient(
@@ -45,8 +45,8 @@ class _AuthApiClient implements AuthApiClient {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = FcmTokenUpdateResponse.fromJson(_result.data!);
-    final httpResponse = HttpResponse(value, _result);
+    final _value = FcmTokenUpdateResponse.fromJson(_result.data!);
+    final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }
 
@@ -78,8 +78,8 @@ class _AuthApiClient implements AuthApiClient {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = FcmTokenUpdateResponse.fromJson(_result.data!);
-    final httpResponse = HttpResponse(value, _result);
+    final _value = FcmTokenUpdateResponse.fromJson(_result.data!);
+    final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }
 
@@ -172,8 +172,8 @@ class _AuthApiClient implements AuthApiClient {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = NotificationSettingsResponse.fromJson(_result.data!);
-    final httpResponse = HttpResponse(value, _result);
+    final _value = NotificationSettingsResponse.fromJson(_result.data!);
+    final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }
 

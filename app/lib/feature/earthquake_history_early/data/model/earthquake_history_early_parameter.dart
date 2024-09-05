@@ -1,5 +1,5 @@
 import 'package:eqapi_client/eqapi_client.dart';
-import 'package:eqapi_types/lib.dart';
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'earthquake_history_early_parameter.freezed.dart';

@@ -1,6 +1,4 @@
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqapi_types/lib.dart';
-import 'package:eqapi_types/model/components/core/core.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'notification_local_settings_model.freezed.dart';

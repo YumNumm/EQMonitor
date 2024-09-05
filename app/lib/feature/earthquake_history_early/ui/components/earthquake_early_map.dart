@@ -5,7 +5,6 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqapi_types/model/v1/earthquake_early.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/config/earthquake_history/earthquake_history_config_provider.dart';
 import 'package:eqmonitor/core/provider/config/earthquake_history/model/earthquake_history_config_model.dart';
@@ -110,8 +109,10 @@ class EarthquakeEarlyMapWidget extends HookConsumerWidget {
           );
         }
 
-        var minLat = double.infinity, minLon = double.infinity;
-        var maxLat = double.negativeInfinity, maxLon = double.negativeInfinity;
+        var minLat = double.infinity;
+        var minLon = double.infinity;
+        var maxLat = double.negativeInfinity;
+        var maxLon = double.negativeInfinity;
         for (final latLng in stations) {
           minLat = min(minLat, latLng.latitude);
           maxLat = max(maxLat, latLng.latitude);
@@ -246,7 +247,7 @@ class EarthquakeEarlyMapWidget extends HookConsumerWidget {
         styleString: path,
         minMaxZoomPreference: MinMaxZoomPreference(0, maxZoomLevel.value),
         onMapCreated: (controller) => mapController.value = controller,
-        compassViewMargins: Point(8, 48),
+        compassViewMargins: const Point(8, 48),
         onStyleLoadedCallback: () async {
           final controller = mapController.value!;
           await [
@@ -337,7 +338,7 @@ class _StationAction extends _Action {
                   'properties': {
                     'color': color.background.toHexStringRGB(),
                     'intensity': e.key?.type,
-                    'name': point.name.replaceAll('＊', ""),
+                    'name': point.name.replaceAll('＊', ''),
                   },
                 },
               );

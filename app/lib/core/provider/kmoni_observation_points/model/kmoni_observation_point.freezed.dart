@@ -25,7 +25,9 @@ mixin _$AnalyzedKmoniObservationPoint {
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
   Color? get pgaColor => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AnalyzedKmoniObservationPoint
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AnalyzedKmoniObservationPointCopyWith<AnalyzedKmoniObservationPoint>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -58,6 +60,8 @@ class _$AnalyzedKmoniObservationPointCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AnalyzedKmoniObservationPoint
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -120,6 +124,8 @@ class __$$AnalyzedKmoniObservationPointImplCopyWithImpl<$Res>
       $Res Function(_$AnalyzedKmoniObservationPointImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AnalyzedKmoniObservationPoint
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -204,7 +210,9 @@ class _$AnalyzedKmoniObservationPointImpl
   int get hashCode => Object.hash(
       runtimeType, point, intensityValue, intensityColor, pga, pgaColor);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AnalyzedKmoniObservationPoint
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AnalyzedKmoniObservationPointImplCopyWith<
@@ -225,8 +233,8 @@ abstract class _AnalyzedKmoniObservationPoint
       final Color? pgaColor}) = _$AnalyzedKmoniObservationPointImpl;
 
   @override
-  KyoshinObservationPoint get point;
-  @override // ここから
+  KyoshinObservationPoint get point; // ここから
+  @override
   double? get intensityValue;
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
@@ -236,8 +244,11 @@ abstract class _AnalyzedKmoniObservationPoint
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
   Color? get pgaColor;
+
+  /// Create a copy of AnalyzedKmoniObservationPoint
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AnalyzedKmoniObservationPointImplCopyWith<
           _$AnalyzedKmoniObservationPointImpl>
       get copyWith => throw _privateConstructorUsedError;

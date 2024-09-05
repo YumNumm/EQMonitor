@@ -28,8 +28,12 @@ mixin _$CustomFeedback {
   /// スクリーンショットを添付するかどうか
   bool get isScreenshotAttached => throw _privateConstructorUsedError;
 
+  /// Serializes this CustomFeedback to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of CustomFeedback
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CustomFeedbackCopyWith<CustomFeedback> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -56,6 +60,8 @@ class _$CustomFeedbackCopyWithImpl<$Res, $Val extends CustomFeedback>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CustomFeedback
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -102,6 +108,8 @@ class __$$CustomFeedbackImplCopyWithImpl<$Res>
       _$CustomFeedbackImpl _value, $Res Function(_$CustomFeedbackImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CustomFeedback
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -167,12 +175,14 @@ class _$CustomFeedbackImpl implements _CustomFeedback {
                 other.isScreenshotAttached == isScreenshotAttached));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType, feedbackType, isReplyRequested, isScreenshotAttached);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CustomFeedback
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CustomFeedbackImplCopyWith<_$CustomFeedbackImpl> get copyWith =>
@@ -198,16 +208,19 @@ abstract class _CustomFeedback implements CustomFeedback {
 
   @override
   FeedbackType? get feedbackType;
-  @override
 
   /// 返信を希望するかどうか
-  bool? get isReplyRequested;
   @override
+  bool? get isReplyRequested;
 
   /// スクリーンショットを添付するかどうか
-  bool get isScreenshotAttached;
   @override
-  @JsonKey(ignore: true)
+  bool get isScreenshotAttached;
+
+  /// Create a copy of CustomFeedback
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CustomFeedbackImplCopyWith<_$CustomFeedbackImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
