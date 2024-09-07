@@ -59,7 +59,7 @@ class ShakeDetection extends _$ShakeDetection {
     const duration = Duration(seconds: 30);
     return events
         .where(
-          (event) => event.createdAt.isAfter(
+          (event) => event.insertedAt.isAfter(
             DateTime.now().subtract(duration),
           ),
         )
