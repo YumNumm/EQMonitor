@@ -9,6 +9,7 @@ import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/model/shake_detection_kmoni_merged_event.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'shake_detection_provider.g.dart';
@@ -148,3 +149,35 @@ Future<List<ShakeDetectionEvent>> _fetchShakeDetectionEvents(
   _FetchShakeDetectionEventsRef ref,
 ) async =>
     ref.watch(eqApiProvider).v1.getLatestShakeDetectionEvents();
+
+enum ShakeDetectionLevel {
+  low(Colors.green),
+  middle(Colors.yellow),
+  high(Colors.red),
+  highest(Colors.purple),
+  ;
+
+  const ShakeDetectionLevel(this.color);
+  final Color color;
+
+  static ShakeDetectionLevel fromJmaForecastIntensity(
+    JmaForecastIntensity intensity,
+  ) =>
+      switch (intensity) {
+        JmaForecastIntensity.zero => ShakeDetectionLevel.low,
+        JmaForecastIntensity.one ||
+        JmaForecastIntensity.two ||
+        JmaForecastIntensity.three =>
+          ShakeDetectionLevel.middle,
+        JmaForecastIntensity.four ||
+        JmaForecastIntensity.fiveLower ||
+        JmaForecastIntensity.fiveUpper =>
+          ShakeDetectionLevel.high,
+        JmaForecastIntensity.sixLower ||
+        JmaForecastIntensity.sixUpper ||
+        JmaForecastIntensity.seven =>
+          ShakeDetectionLevel.highest,
+        JmaForecastIntensity.unknown =>
+          throw ArgumentError('unsupported JmaForecastIntensity: $intensity'),
+      };
+}

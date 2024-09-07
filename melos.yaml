@@ -38,7 +38,7 @@ scripts:
     description: Build all generated files for Flutter packages in this project.
 
   format:
-    exec: $PWD/util/shell/format.sh
+    exec: $PWD/tools/formatter/format.sh
 
   clean-all:
     run: melos clean &&  melos exec "flutter clean"

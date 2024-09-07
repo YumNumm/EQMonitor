@@ -1202,7 +1202,6 @@ class _ShakeDetectionBorderService {
 
   Future<void> update(List<ShakeDetectionKmoniMergedEvent> events) async {
     final geoJson = createGeoJson(events);
-    print(const JsonEncoder().convert(geoJson));
     await controller.setGeoJsonSource(
       layerId,
       geoJson,
@@ -1253,11 +1252,10 @@ class _ShakeDetectionBorderService {
           },
       ],
     };
-    print(const JsonEncoder().convert(json));
     return json;
   }
 
-  static const gridSize = 0.5;
+  static const gridSize = 0.75;
 
   List<
       ({
@@ -1267,7 +1265,7 @@ class _ShakeDetectionBorderService {
       })> createGrids(
     List<ShakeDetectionKmoniMergedEvent> events,
   ) {
-    // 0.2度毎に協会を作成し、内包するグリッドを取得する
+    // 境界を作成し、内包するグリッドを取得する
     final grids = <({
       lat_lng.LatLng topLeft,
       lat_lng.LatLng bottomRight,
