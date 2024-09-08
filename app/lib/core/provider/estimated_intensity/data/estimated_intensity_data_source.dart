@@ -1,8 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:eqmonitor/core/provider/kmoni_observation_points/model/kmoni_observation_point.dart';
-import 'package:kyoshin_observation_point_types/kyoshin_observation_point.pb.dart';
-import 'package:lat_lng/lat_lng.dart';
 import 'package:latlong2/latlong.dart' as lat_long_2;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -14,26 +11,31 @@ EstimatedIntensityDataSource estimatedIntensityDataSource(
 ) =>
     EstimatedIntensityDataSource();
 
+typedef CalculationPoint = ({
+  double lat,
+  double lon,
+  double arv400,
+});
+
 class EstimatedIntensityDataSource {
-  List<AnalyzedKmoniObservationPoint> getEstimatedIntensity({
-    required List<KyoshinObservationPoint> points,
+  Iterable<double> getEstimatedIntensity({
+    required List<CalculationPoint> points,
     required double jmaMagnitude,
     required int depth,
-    required LatLng hypocenter,
-  }) {
+    required ({double lat, double lon}) hypocenter,
+  }) sync* {
     // Mjma(気象庁マグニチュード)->Mw(モーメントマグニチュード)
     // 宇津(1982)の経験式を用いる
     final momentMagnitude = jmaMagnitude - 0.171;
     // 断層長計算(半径)
     final faultLength = math.pow(10, 0.5 * momentMagnitude - 1.85) / 2;
-    final result = <AnalyzedKmoniObservationPoint>[];
     const distanceCalcular = lat_long_2.Distance();
     for (final point in points) {
       final epicenterDistance = distanceCalcular.as(
             lat_long_2.LengthUnit.Kilometer,
             lat_long_2.LatLng(
-              point.location.latitude,
-              point.location.longitude,
+              point.lat,
+              point.lon,
             ),
             lat_long_2.LatLng(hypocenter.lat, hypocenter.lon),
           ) -
@@ -63,14 +65,8 @@ class EstimatedIntensityDataSource {
 
       //* 予測する地点の地表面推定最大速度から計測震度への変換
       final intensity = 2.68 + 1.72 * log10(pgv);
-      result.add(
-        AnalyzedKmoniObservationPoint(
-          point: point,
-          intensityValue: intensity,
-        ),
-      );
+      yield intensity;
     }
-    return result;
   }
 }
 

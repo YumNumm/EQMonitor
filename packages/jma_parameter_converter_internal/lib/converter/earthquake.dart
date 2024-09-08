@@ -73,6 +73,7 @@ Future<double?> getArv({
   // Cacheのチェック
   final cacheFile = File("cache/${latitude}_$longitude.json");
   if (await cacheFile.exists()) {
+    print('Cache hit!: $cacheFile');
     final json =
         jsonDecode(await cacheFile.readAsString()) as Map<String, dynamic>;
     final arvStr = (((json["features"] as List<dynamic>?)?.first
@@ -81,7 +82,7 @@ Future<double?> getArv({
     final arv = double.tryParse(arvStr.toString());
     return arv;
   }
-
+  print('Cache miss!: $cacheFile');
   final response = await http.get(
     Uri.parse(
         'https://www.j-shis.bosai.go.jp/map/api/sstrct/V2/meshinfo.geojson'

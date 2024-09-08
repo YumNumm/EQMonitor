@@ -26,7 +26,7 @@ final _fetchShakeDetectionEventsProvider =
 
 typedef _FetchShakeDetectionEventsRef
     = FutureProviderRef<List<ShakeDetectionEvent>>;
-String _$shakeDetectionHash() => r'f2c69cc4d594c5e576a5075d52e695c4c51ba003';
+String _$shakeDetectionHash() => r'e5365b7a64a0befc468a794816fd999a4b9eb174';
 
 /// See also [ShakeDetection].
 @ProviderFor(ShakeDetection)
