@@ -4,7 +4,6 @@ import 'dart:developer';
 
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
-import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_provider.dart';
 import 'package:eqmonitor/core/provider/map/map_style.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
@@ -244,7 +243,6 @@ class _MapDebugWidget extends HookConsumerWidget {
                   },
                 ),
                 Text(
-                  'EewEstimatedIntensity: ${ref.watch(estimatedIntensityProvider).firstOrNull}\n'
                   'Websocket: ${ref.watch(websocketStatusProvider)}\n',
                   style: const TextStyle(
                     fontSize: 10,

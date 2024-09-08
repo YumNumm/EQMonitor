@@ -1,5 +1,4 @@
 // ignore_for_file: provider_dependencies
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
@@ -13,6 +12,8 @@ import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_i
 import 'package:eqmonitor/core/provider/kmoni_observation_points/model/kmoni_observation_point.dart';
 import 'package:eqmonitor/core/provider/map/map_style.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
+import 'package:eqmonitor/feature/home/features/eew_settings/eew_settings_notifier.dart';
+import 'package:eqmonitor/feature/home/features/eew_settings/model/eew_setitngs_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/provider/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/feature/home/features/map/model/main_map_viewmodel_state.dart';
@@ -26,6 +27,7 @@ import 'package:latlong2/latlong.dart' as latlong2;
 import 'package:maplibre_gl/maplibre_gl.dart' as maplibre_gl;
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:synchronized/synchronized.dart';
 
 part 'main_map_viewmodel.freezed.dart';
 part 'main_map_viewmodel.g.dart';
@@ -52,20 +54,46 @@ class MainMapViewModel extends _$MainMapViewModel {
         (_, value) => _onEewStateChanged(value ?? []),
       )
       ..listen(
-        estimatedIntensityProvider,
-        (current, value) => _onEstimatedIntensityChanged(
-          value,
-          current?.length != value.length,
-        ),
-      )
-      ..listen(
         kmoniSettingsProvider.select((e) => e.useKmoni),
         (_, value) => _onKmoniSettingsChanged(value: value),
       )
       ..listen(
         shakeDetectionKmoniPointsMergedProvider,
         (_, value) => _onShakeDetectionStateChanged(value.valueOrNull ?? []),
-      );
+      )
+      ..listen(
+        eewSettingsNotifierProvider,
+        (_, value) => _onEewSettingsChanged(value),
+      )
+      ..listen(
+        estimatedIntensityRegionProvider,
+        (_, state) {
+          final eewSettings = ref.read(eewSettingsNotifierProvider);
+          if (!eewSettings.showCalculatedRegionIntensity) {
+            return;
+          }
+
+          if (state case AsyncData(:final value)) {
+            _onEstimatedIntensityRegionChanged(value);
+          }
+        },
+      )
+      ..listen(
+        estimatedIntensityCityProvider,
+        (_, state) {
+          final eewSettings = ref.read(eewSettingsNotifierProvider);
+          if (!eewSettings.showCalculatedCityIntensity) {
+            return;
+          }
+
+          if (state case AsyncData(:final value)) {
+            _onEstimatedIntensityCityChanged(value);
+          }
+        },
+      )
+      ..listen(eewSettingsNotifierProvider, (_, next) {
+        _onEewSettingsChanged(next);
+      });
     return MainMapViewmodelState(
       isHomePosition: true,
       homeBoundary: defaultBoundary,
@@ -103,6 +131,14 @@ class MainMapViewModel extends _$MainMapViewModel {
       controller: controller,
       intensityColorModel: ref.watch(intensityColorProvider),
     );
+    _eewEstimatedIntensityCalculatedRegionService =
+        _EewEstimatedIntensityCalculatedRegionService(
+      controller: controller,
+    );
+    _eewEstimatedIntensityCalculatedCityService =
+        _EewEstimatedIntensityCalculatedCityService(
+      controller: controller,
+    );
 
     await (
       _kmoniObservationPointService!.init(),
@@ -112,6 +148,12 @@ class MainMapViewModel extends _$MainMapViewModel {
       ),
       _shakeDetectionBorderService!.init(
         ref.read(shakeDetectionKmoniPointsMergedProvider).valueOrNull ?? [],
+      ),
+      _eewEstimatedIntensityCalculatedRegionService!.init(
+        ref.read(intensityColorProvider),
+      ),
+      _eewEstimatedIntensityCalculatedCityService!.init(
+        ref.read(intensityColorProvider),
       ),
     ).wait;
     await _eewHypocenterService!.init(
@@ -142,15 +184,9 @@ class MainMapViewModel extends _$MainMapViewModel {
 
     final aliveEews = ref.read(eewAliveTelegramProvider);
     if (aliveEews != null && aliveEews.isNotEmpty) {
-      await (
-        _onEewStateChanged(
-          ref.read(eewAliveTelegramProvider) ?? [],
-        ),
-        _onEstimatedIntensityChanged(
-          ref.read(estimatedIntensityProvider) ?? [],
-          true,
-        )
-      ).wait;
+      await _onEewStateChanged(
+        ref.read(eewAliveTelegramProvider) ?? [],
+      );
     } else {
       await moveToHomeBoundary();
     }
@@ -179,6 +215,11 @@ class MainMapViewModel extends _$MainMapViewModel {
   _EewHypocenterService? _eewHypocenterService;
   _EewPsWaveService? _eewPsWaveService;
   late _EewEstimatedIntensityService _eewEstimatedIntensityService;
+  _EewEstimatedIntensityCalculatedCityService?
+      _eewEstimatedIntensityCalculatedCityService;
+
+  _EewEstimatedIntensityCalculatedRegionService?
+      _eewEstimatedIntensityCalculatedRegionService;
 
   Future<void> _onEewStateChanged(List<EewV1> values) async {
     // 初期化が終わっていない場合は何もしない
@@ -208,71 +249,44 @@ class MainMapViewModel extends _$MainMapViewModel {
     await _eewEstimatedIntensityService.update(transformed);
   }
 
-  Future<void> _onEstimatedIntensityChanged(
-    List<AnalyzedKmoniObservationPoint> points,
-    bool isForce,
-  ) async {
-    final boundary = _getEstimatedIntensityBoundary(points);
-    try {
-      await changeHomeBoundaryWithAnimation(
-        bounds: boundary ?? defaultBoundary,
-        isForce: isForce,
+  Future<void> _onEewSettingsChanged(EewSetitngs value) async {
+    final colorModel = ref.read(intensityColorProvider);
+    if (value.showCalculatedRegionIntensity) {
+      _eewEstimatedIntensityCalculatedRegionService ??=
+          _EewEstimatedIntensityCalculatedRegionService(
+        controller: _controller!,
       );
-    } on Exception catch (e) {
-      log('error $e');
+      await _eewEstimatedIntensityCalculatedRegionService!.init(colorModel);
+    } else {
+      await _eewEstimatedIntensityCalculatedRegionService?.dispose();
+      _eewEstimatedIntensityCalculatedRegionService = null;
+    }
+
+    if (value.showCalculatedCityIntensity) {
+      _eewEstimatedIntensityCalculatedCityService ??=
+          _EewEstimatedIntensityCalculatedCityService(
+        controller: _controller!,
+      );
+      await _eewEstimatedIntensityCalculatedCityService!.init(colorModel);
+    } else {
+      await _eewEstimatedIntensityCalculatedCityService?.dispose();
+      _eewEstimatedIntensityCalculatedCityService = null;
     }
   }
 
-  LatLngBounds? _getEstimatedIntensityBoundary(
-    List<AnalyzedKmoniObservationPoint> points,
-  ) {
-    if (points.isEmpty) {
-      return null;
-    }
-    final aliveEews = ref.read(eewAliveTelegramProvider);
+  Future<void> _onEstimatedIntensityRegionChanged(
+    Map<String, double> value,
+  ) async =>
+      _eewEstimatedIntensityCalculatedRegionService?.update(
+        _EewEstimatedIntensityCalculatedRegionService.transform(value),
+      );
 
-    final coords = aliveEews
-            ?.where((e) => e.latitude != null && e.longitude != null)
-            .map(
-              (e) => lat_lng.LatLng(
-                e.latitude!,
-                e.longitude!,
-              ),
-            )
-            .whereNotNull() ??
-        [];
-
-    final first = points.first;
-    if (first.intensityValue == null) {
-      return null;
-    }
-
-    final latLngs = [
-      /*
-      ...points
-          .where((e) => first.intensityValue! < e.intensityValue! + 2)
-          .where((e) => e.intensityValue! > 1)
-          .map(
-            (e) => lat_lng.LatLng(
-              e.point.location.latitude,
-              e.point.location.longitude,
-            ),
-          ),*/
-      ...coords.map(
-        (e) => lat_lng.LatLng(
-          e.lat + 3,
-          e.lon + 3,
-        ),
-      ),
-      ...coords.map(
-        (e) => lat_lng.LatLng(
-          e.lat - 3,
-          e.lon - 3,
-        ),
-      ),
-    ];
-    return latLngs.toBounds;
-  }
+  Future<void> _onEstimatedIntensityCityChanged(
+    Map<String, double> value,
+  ) async =>
+      _eewEstimatedIntensityCalculatedCityService?.update(
+        _EewEstimatedIntensityCalculatedCityService.transform(value),
+      );
 
   // *********** Kyoshin Monitor Related ***********
   _KmoniObservationPointService? _kmoniObservationPointService;
@@ -1319,6 +1333,194 @@ class _ShakeDetectionBorderService {
   }
 
   static String get layerId => 'shake-detection-border';
+}
+
+class _EewEstimatedIntensityCalculatedRegionService {
+  _EewEstimatedIntensityCalculatedRegionService({required this.controller})
+      : lock = Lock();
+
+  final MapLibreMapController controller;
+  final Lock lock;
+
+  Future<void> init(IntensityColorModel colorModel) async => lock.synchronized(
+        () async {
+          await dispose();
+          await [
+            // 各予想震度ごとにFill Layerを追加
+            for (final intensity in JmaForecastIntensity.values)
+              controller.addLayer(
+                'eqmonitor_map',
+                getFillLayerId(intensity),
+                FillLayerProperties(
+                  fillColor: colorModel
+                      .fromJmaForecastIntensity(intensity)
+                      .background
+                      .toHexStringRGB(),
+                ),
+                filter: [
+                  'in',
+                  ['get', 'code'],
+                  [
+                    'literal',
+                    <String>[],
+                  ]
+                ],
+                sourceLayer: 'areaForecastLocalE',
+                belowLayerId: BaseLayer.areaForecastLocalELine.name,
+              ),
+          ].wait;
+        },
+        timeout: const Duration(seconds: 5),
+      );
+
+  /// 予想震度を更新する
+  /// [areas] は Map{予想震度, 地域コード[]}
+  Future<void> update(Map<JmaForecastIntensity, List<String>> areas) => [
+        // 各予想震度ごとにFill Layerを追加
+        for (final intensity in JmaForecastIntensity.values)
+          controller.setFilter(
+            getFillLayerId(intensity),
+            [
+              'in',
+              ['get', 'code'],
+              [
+                'literal',
+                areas[intensity] ?? [],
+              ]
+            ],
+          ),
+      ].wait;
+
+  Future<void> dispose() => [
+        for (final intensity in JmaForecastIntensity.values)
+          controller.removeLayer(getFillLayerId(intensity)),
+      ].wait;
+
+  Future<void> onIntensityColorModelChanged(IntensityColorModel model) =>
+      dispose().then(
+        (_) => init(model),
+      );
+
+  static Map<JmaForecastIntensity, List<String>> transform(
+    Map<String, double> regions,
+  ) {
+    // Map<予想震度, List<地域コード>> に変換する
+    final regionsIntensityGrouped = <JmaForecastIntensity, List<String>>{};
+    for (final entry in regions.entries) {
+      final intensity = JmaForecastIntensity.fromRealtimeIntensity(entry.value);
+      if (intensity == null) {
+        continue;
+      }
+      if (!regionsIntensityGrouped.containsKey(intensity)) {
+        regionsIntensityGrouped[intensity] = [entry.key];
+      } else {
+        regionsIntensityGrouped[intensity]!.add(entry.key);
+      }
+    }
+    return regionsIntensityGrouped;
+  }
+
+  static String getFillLayerId(JmaForecastIntensity intensity) {
+    final base = intensity.type
+        .replaceAll('-', 'low')
+        .replaceAll('+', 'high')
+        .replaceAll('不明', 'unknown');
+    return '$_EewEstimatedIntensityCalculatedRegionService-fill-$base';
+  }
+}
+
+class _EewEstimatedIntensityCalculatedCityService {
+  _EewEstimatedIntensityCalculatedCityService({required this.controller})
+      : lock = Lock();
+
+  final MapLibreMapController controller;
+  final Lock lock;
+
+  Future<void> init(IntensityColorModel colorModel) => lock.synchronized(
+        () async {
+          await dispose();
+          await [
+            // 各予想震度ごとにFill Layerを追加
+            for (final intensity in JmaForecastIntensity.values)
+              controller.addLayer(
+                'eqmonitor_map',
+                getFillLayerId(intensity),
+                FillLayerProperties(
+                  fillColor: colorModel
+                      .fromJmaForecastIntensity(intensity)
+                      .background
+                      .toHexStringRGB(),
+                ),
+                filter: [
+                  'in',
+                  ['get', 'regioncode'],
+                  [
+                    'literal',
+                    <String>[],
+                  ]
+                ],
+                sourceLayer: 'areaInformationCityQuake',
+                belowLayerId: BaseLayer.areaForecastLocalELine.name,
+              ),
+          ].wait;
+        },
+        timeout: const Duration(seconds: 5),
+      );
+
+  /// 予想震度を更新する
+  /// [areas] は Map{予想震度, 地域コード[]}
+  Future<void> update(Map<JmaForecastIntensity, List<String>> areas) => [
+        // 各予想震度ごとにFill Layerを追加
+        for (final intensity in JmaForecastIntensity.values)
+          controller.setFilter(
+            getFillLayerId(intensity),
+            [
+              'in',
+              ['get', 'regioncode'],
+              [
+                'literal',
+                areas[intensity] ?? [],
+              ]
+            ],
+          ),
+      ].wait;
+
+  Future<void> dispose() => [
+        for (final intensity in JmaForecastIntensity.values)
+          controller.removeLayer(getFillLayerId(intensity)),
+      ].wait;
+
+  Future<void> onIntensityColorModelChanged(IntensityColorModel model) =>
+      dispose().then(
+        (_) => init(model),
+      );
+
+  static Map<JmaForecastIntensity, List<String>> transform(
+    Map<String, double> regions,
+  ) {
+    // Map<予想震度, List<地域コード>> に変換する
+    final regionsIntensityGrouped = <JmaForecastIntensity, List<String>>{};
+    for (final entry in regions.entries) {
+      final intensity = JmaForecastIntensity.fromRealtimeIntensity(entry.value);
+      if (intensity == null) {
+        continue;
+      }
+      if (!regionsIntensityGrouped.containsKey(intensity)) {
+        regionsIntensityGrouped[intensity] = [entry.key];
+      } else {
+        regionsIntensityGrouped[intensity]!.add(entry.key);
+      }
+    }
+    return regionsIntensityGrouped;
+  }
+
+  static String getFillLayerId(JmaForecastIntensity intensity) {
+    final base = intensity.type
+        .replaceAll('-', 'low')
+        .replaceAll('+', 'high')
+        .replaceAll('不明', 'unknown');
+    return '$_EewEstimatedIntensityCalculatedCityService-fill-$base';
+  }
 }
 
 @freezed

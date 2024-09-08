@@ -18,6 +18,7 @@ class KmoniSettingsState with _$KmoniSettingsState {
 
     /// 強震モニタを使用するかどうか
     @Default(false) bool useKmoni,
+
   }) = _KmoniSettingsState;
 
   factory KmoniSettingsState.fromJson(Map<String, dynamic> json) =>

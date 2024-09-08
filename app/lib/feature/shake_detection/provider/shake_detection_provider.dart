@@ -8,7 +8,6 @@ import 'package:eqmonitor/core/provider/time_ticker.dart';
 import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/model/shake_detection_kmoni_merged_event.dart';
 import 'package:extensions/extensions.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -54,9 +53,6 @@ class ShakeDetection extends _$ShakeDetection {
 
   /// 古くなったイベントを破棄
   List<ShakeDetectionEvent> _pruneOldEvents(List<ShakeDetectionEvent> events) {
-    if (kDebugMode) {
-      return events;
-    }
     const duration = Duration(seconds: 30);
     return events
         .where(

@@ -268,6 +268,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
     ref.listen(
       firebaseMessagingInteractionProvider,
       (_, next) async {
+        log('firebaseMessagingInteractionProvider: $next');
         if (next case AsyncData(:final value)) {
           await WidgetsBinding.instance.endOfFrame.then((_) async {
             ref.read(talkerProvider).log(

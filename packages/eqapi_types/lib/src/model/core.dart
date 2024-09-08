@@ -94,6 +94,21 @@ enum JmaForecastIntensity {
   bool operator >=(JmaForecastIntensity other) {
     return index >= other.index;
   }
+
+  static JmaForecastIntensity? fromRealtimeIntensity(double intensity) =>
+      switch (intensity) {
+        < -0.5 => null,
+        < 0.5 => JmaForecastIntensity.zero,
+        < 1.5 => JmaForecastIntensity.one,
+        < 2.5 => JmaForecastIntensity.two,
+        < 3.5 => JmaForecastIntensity.three,
+        < 4.5 => JmaForecastIntensity.four,
+        < 5.0 => JmaForecastIntensity.fiveLower,
+        < 5.5 => JmaForecastIntensity.fiveUpper,
+        < 6.0 => JmaForecastIntensity.sixLower,
+        < 6.5 => JmaForecastIntensity.sixUpper,
+        _ => JmaForecastIntensity.seven,
+      };
 }
 
 @JsonEnum(valueField: 'type')
