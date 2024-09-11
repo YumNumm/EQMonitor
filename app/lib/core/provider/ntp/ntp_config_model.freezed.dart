@@ -130,7 +130,7 @@ class _$NtpConfigModelImpl implements _NtpConfigModel {
   const _$NtpConfigModelImpl(
       {this.lookUpAddress = 'ntp.nict.jp',
       this.timeout = const Duration(seconds: 10),
-      this.interval = const Duration(minutes: 1)});
+      this.interval = const Duration(minutes: 30)});
 
   factory _$NtpConfigModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$NtpConfigModelImplFromJson(json);
