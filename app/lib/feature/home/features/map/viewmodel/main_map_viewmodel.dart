@@ -1523,6 +1523,58 @@ class _EewEstimatedIntensityCalculatedCityService {
   }
 }
 
+class _CurrentLocationIconService {
+  _CurrentLocationIconService({required this.controller});
+
+  final MapLibreMapController controller;
+
+  Future<void> init() async {
+    await controller.addGeoJsonSource(
+      layerId,
+      {
+        'type': 'FeatureCollection',
+        'features': <void>[],
+      },
+    );
+
+    await controller.addSymbolLayer(
+      layerId,
+      layerId,
+      const SymbolLayerProperties(
+        iconImage: 'current-location',
+      ),
+    );
+  }
+
+  Future<void> dispose() async {
+    await controller.removeLayer(layerId);
+    await controller.removeSource(layerId);
+  }
+
+  Future<void> update((double lat, double lng) position) async {
+    await controller.setGeoJsonSource(
+      layerId,
+      {
+        'type': 'FeatureCollection',
+        'features': <void>[
+          {
+            'type': 'Feature',
+            'geometry': {
+              'type': 'Point',
+              'coordinates': [
+                position.$2,
+                position.$1,
+              ],
+            },
+          },
+        ],
+      },
+    );
+  }
+
+  static String get layerId => 'current-location';
+}
+
 @freezed
 class _EewHypocenterProperties with _$EewHypocenterProperties {
   const factory _EewHypocenterProperties({
