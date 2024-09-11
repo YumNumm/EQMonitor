@@ -43,21 +43,18 @@ class MainMapView extends HookConsumerWidget {
     );
     final cameraPosition = useState<String>('');
 
-    final controller = useAnimationController(
-      duration: const Duration(microseconds: 1000),
-    );
-    useEffect(
+    // 80msごとにtickするタイマー
+    final _ = useEffect(
       () {
-        controller
-          ..repeat()
-          ..addListener(
-            () {
-              final now =
-                  ref.read(ntpProvider.notifier).now() ?? DateTime.now();
-              ref.read(mainMapViewModelProvider.notifier).onTick(now);
-            },
-          );
-        return null;
+        final timer = Timer.periodic(
+          const Duration(milliseconds: 80),
+          (timer) {
+            ref.read(mainMapViewModelProvider.notifier).onTick(
+              ref.read(ntpProvider.notifier).now() ??
+              DateTime.now(),);
+          },
+        );
+        return timer.cancel;
       },
       [],
     );
