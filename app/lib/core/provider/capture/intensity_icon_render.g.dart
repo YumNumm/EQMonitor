@@ -111,5 +111,22 @@ final hypocenterLowPreciseIconRenderProvider =
 );
 
 typedef _$HypocenterLowPreciseIconRender = Notifier<Uint8List?>;
+String _$currentLocationIconRenderHash() =>
+    r'1b5e895d96a9acf6de52b57b63f087b2636dc6c8';
+
+/// See also [CurrentLocationIconRender].
+@ProviderFor(CurrentLocationIconRender)
+final currentLocationIconRenderProvider =
+    NotifierProvider<CurrentLocationIconRender, Uint8List?>.internal(
+  CurrentLocationIconRender.new,
+  name: r'currentLocationIconRenderProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$currentLocationIconRenderHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$CurrentLocationIconRender = Notifier<Uint8List?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package

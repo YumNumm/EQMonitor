@@ -24,7 +24,7 @@ _$NtpConfigModelImpl _$$NtpConfigModelImplFromJson(Map<String, dynamic> json) =>
           interval: $checkedConvert(
               'interval',
               (v) => v == null
-                  ? const Duration(minutes: 1)
+                  ? const Duration(minutes: 30)
                   : Duration(microseconds: (v as num).toInt())),
         );
         return val;
