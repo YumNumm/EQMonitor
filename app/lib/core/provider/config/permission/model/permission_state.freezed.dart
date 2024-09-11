@@ -22,6 +22,8 @@ PermissionStateModel _$PermissionStateModelFromJson(Map<String, dynamic> json) {
 mixin _$PermissionStateModel {
   bool get notification => throw _privateConstructorUsedError;
   bool get criticalAlert => throw _privateConstructorUsedError;
+  bool get location => throw _privateConstructorUsedError;
+  bool get backgroundLocation => throw _privateConstructorUsedError;
 
   /// Serializes this PermissionStateModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -39,7 +41,11 @@ abstract class $PermissionStateModelCopyWith<$Res> {
           $Res Function(PermissionStateModel) then) =
       _$PermissionStateModelCopyWithImpl<$Res, PermissionStateModel>;
   @useResult
-  $Res call({bool notification, bool criticalAlert});
+  $Res call(
+      {bool notification,
+      bool criticalAlert,
+      bool location,
+      bool backgroundLocation});
 }
 
 /// @nodoc
@@ -60,6 +66,8 @@ class _$PermissionStateModelCopyWithImpl<$Res,
   $Res call({
     Object? notification = null,
     Object? criticalAlert = null,
+    Object? location = null,
+    Object? backgroundLocation = null,
   }) {
     return _then(_value.copyWith(
       notification: null == notification
@@ -69,6 +77,14 @@ class _$PermissionStateModelCopyWithImpl<$Res,
       criticalAlert: null == criticalAlert
           ? _value.criticalAlert
           : criticalAlert // ignore: cast_nullable_to_non_nullable
+              as bool,
+      location: null == location
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
+              as bool,
+      backgroundLocation: null == backgroundLocation
+          ? _value.backgroundLocation
+          : backgroundLocation // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
   }
@@ -82,7 +98,11 @@ abstract class _$$PermissionStateModelImplCopyWith<$Res>
       __$$PermissionStateModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool notification, bool criticalAlert});
+  $Res call(
+      {bool notification,
+      bool criticalAlert,
+      bool location,
+      bool backgroundLocation});
 }
 
 /// @nodoc
@@ -100,6 +120,8 @@ class __$$PermissionStateModelImplCopyWithImpl<$Res>
   $Res call({
     Object? notification = null,
     Object? criticalAlert = null,
+    Object? location = null,
+    Object? backgroundLocation = null,
   }) {
     return _then(_$PermissionStateModelImpl(
       notification: null == notification
@@ -110,6 +132,14 @@ class __$$PermissionStateModelImplCopyWithImpl<$Res>
           ? _value.criticalAlert
           : criticalAlert // ignore: cast_nullable_to_non_nullable
               as bool,
+      location: null == location
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
+              as bool,
+      backgroundLocation: null == backgroundLocation
+          ? _value.backgroundLocation
+          : backgroundLocation // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -118,7 +148,10 @@ class __$$PermissionStateModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$PermissionStateModelImpl implements _PermissionStateModel {
   const _$PermissionStateModelImpl(
-      {this.notification = false, this.criticalAlert = false});
+      {this.notification = false,
+      this.criticalAlert = false,
+      this.location = false,
+      this.backgroundLocation = false});
 
   factory _$PermissionStateModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$PermissionStateModelImplFromJson(json);
@@ -129,10 +162,16 @@ class _$PermissionStateModelImpl implements _PermissionStateModel {
   @override
   @JsonKey()
   final bool criticalAlert;
+  @override
+  @JsonKey()
+  final bool location;
+  @override
+  @JsonKey()
+  final bool backgroundLocation;
 
   @override
   String toString() {
-    return 'PermissionStateModel(notification: $notification, criticalAlert: $criticalAlert)';
+    return 'PermissionStateModel(notification: $notification, criticalAlert: $criticalAlert, location: $location, backgroundLocation: $backgroundLocation)';
   }
 
   @override
@@ -143,12 +182,17 @@ class _$PermissionStateModelImpl implements _PermissionStateModel {
             (identical(other.notification, notification) ||
                 other.notification == notification) &&
             (identical(other.criticalAlert, criticalAlert) ||
-                other.criticalAlert == criticalAlert));
+                other.criticalAlert == criticalAlert) &&
+            (identical(other.location, location) ||
+                other.location == location) &&
+            (identical(other.backgroundLocation, backgroundLocation) ||
+                other.backgroundLocation == backgroundLocation));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, notification, criticalAlert);
+  int get hashCode => Object.hash(
+      runtimeType, notification, criticalAlert, location, backgroundLocation);
 
   /// Create a copy of PermissionStateModel
   /// with the given fields replaced by the non-null parameter values.
@@ -171,7 +215,9 @@ class _$PermissionStateModelImpl implements _PermissionStateModel {
 abstract class _PermissionStateModel implements PermissionStateModel {
   const factory _PermissionStateModel(
       {final bool notification,
-      final bool criticalAlert}) = _$PermissionStateModelImpl;
+      final bool criticalAlert,
+      final bool location,
+      final bool backgroundLocation}) = _$PermissionStateModelImpl;
 
   factory _PermissionStateModel.fromJson(Map<String, dynamic> json) =
       _$PermissionStateModelImpl.fromJson;
@@ -180,6 +226,10 @@ abstract class _PermissionStateModel implements PermissionStateModel {
   bool get notification;
   @override
   bool get criticalAlert;
+  @override
+  bool get location;
+  @override
+  bool get backgroundLocation;
 
   /// Create a copy of PermissionStateModel
   /// with the given fields replaced by the non-null parameter values.
