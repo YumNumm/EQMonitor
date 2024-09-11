@@ -108,6 +108,15 @@ class KmoniSettingsDialogInside extends ConsumerWidget {
               ),
           title: const Text('リアルタイム震度のスケールを表示'),
         ),
+        SwitchListTile.adaptive(
+          title: const Text('現在地のマーカーを表示する'),
+          value: state.showCurrentLocationMarker,
+          onChanged: (value) => ref
+              .read(kmoniSettingsProvider.notifier)
+              .setShowCurrentLocationMarker(
+                value: value,
+              ),
+        ),
       ],
     );
   }

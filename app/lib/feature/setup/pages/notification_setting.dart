@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:eqmonitor/core/component/button/action_button.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
-import 'package:eqmonitor/core/provider/config/permission/permission_status_provider.dart';
+import 'package:eqmonitor/core/provider/config/permission/permission_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -63,7 +63,7 @@ class NotificationSettingIntroPage extends HookConsumerWidget {
             onPressed: () async {
               unawaited(
                 ref
-                    .read(permissionProvider.notifier)
+                    .read(permissionNotifierProvider.notifier)
                     .requestNotificationPermission(),
               );
               if (context.mounted) {

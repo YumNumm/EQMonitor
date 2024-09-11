@@ -20,6 +20,13 @@ _$KmoniSettingsStateImpl _$$KmoniSettingsStateImplFromJson(
           showRealtimeShindoScale: $checkedConvert(
               'showRealtimeShindoScale', (v) => v as bool? ?? true),
           useKmoni: $checkedConvert('useKmoni', (v) => v as bool? ?? false),
+          showCurrentLocationMarker: $checkedConvert(
+              'showCurrentLocationMarker', (v) => v as bool? ?? false),
+          kmoniMarkerType: $checkedConvert(
+              'kmoniMarkerType',
+              (v) =>
+                  $enumDecodeNullable(_$KmoniMarkerTypeEnumMap, v) ??
+                  KmoniMarkerType.onlyEew),
         );
         return val;
       },
@@ -31,13 +38,21 @@ Map<String, dynamic> _$$KmoniSettingsStateImplToJson(
       'minRealtimeShindo': instance.minRealtimeShindo,
       'showRealtimeShindoScale': instance.showRealtimeShindoScale,
       'useKmoni': instance.useKmoni,
+      'showCurrentLocationMarker': instance.showCurrentLocationMarker,
+      'kmoniMarkerType': _$KmoniMarkerTypeEnumMap[instance.kmoniMarkerType]!,
     };
+
+const _$KmoniMarkerTypeEnumMap = {
+  KmoniMarkerType.always: 'always',
+  KmoniMarkerType.onlyEew: 'onlyEew',
+  KmoniMarkerType.never: 'never',
+};
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$kmoniSettingsHash() => r'5bfee9dfe90781154d43ff084a82cf74202b8631';
+String _$kmoniSettingsHash() => r'8340b5bb4d12719d1243ff4da13edec4ecfb16cb';
 
 /// See also [KmoniSettings].
 @ProviderFor(KmoniSettings)
