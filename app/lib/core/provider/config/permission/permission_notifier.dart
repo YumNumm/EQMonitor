@@ -41,10 +41,10 @@ class PermissionNotifier extends _$PermissionNotifier {
       },
       criticalAlert: notificationPermission.criticalAlert ==
           AppleNotificationSetting.enabled,
-      backgroundLocation: await Permission.locationAlways.status ==
-          PermissionStatus.granted,
-      location: await Permission.locationWhenInUse.status ==
-          PermissionStatus.granted,
+      backgroundLocation:
+          await Permission.locationAlways.status == PermissionStatus.granted,
+      location:
+          await Permission.locationWhenInUse.status == PermissionStatus.granted,
     );
   }
 
