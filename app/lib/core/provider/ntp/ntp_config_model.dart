@@ -8,7 +8,7 @@ class NtpConfigModel with _$NtpConfigModel {
   const factory NtpConfigModel({
     @Default('ntp.nict.jp') String lookUpAddress,
     @Default(Duration(seconds: 10)) Duration timeout,
-    @Default(Duration(minutes: 1)) Duration interval,
+    @Default(Duration(minutes: 30)) Duration interval,
   }) = _NtpConfigModel;
 
   factory NtpConfigModel.fromJson(Map<String, dynamic> json) =>

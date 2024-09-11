@@ -1630,6 +1630,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  soft_edge_blur:
+    dependency: "direct main"
+    description:
+      name: soft_edge_blur
+      sha256: "3511d9c031cf2ca007a1060d76f9ac8f902368f9e5e5282e7e9c0c9be91c671d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   source_gen:
     dependency: transitive
     description:
