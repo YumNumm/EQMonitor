@@ -110,6 +110,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
+  background_task:
+    dependency: "direct main"
+    description:
+      name: background_task
+      sha256: ef726d409975dd6f7875bd0a92d6043e097952b20794e42cd7bd578d4e27b577
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -775,6 +783,54 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
+  geolocator:
+    dependency: "direct main"
+    description:
+      name: geolocator
+      sha256: "149876cc5207a0f5daf4fdd3bfcf0a0f27258b3fe95108fa084f527ad0568f1b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "12.0.0"
+  geolocator_android:
+    dependency: transitive
+    description:
+      name: geolocator_android
+      sha256: "7aefc530db47d90d0580b552df3242440a10fe60814496a979aa67aa98b1fd47"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.6.1"
+  geolocator_apple:
+    dependency: transitive
+    description:
+      name: geolocator_apple
+      sha256: bc2aca02423ad429cb0556121f56e60360a2b7d694c8570301d06ea0c00732fd
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.7"
+  geolocator_platform_interface:
+    dependency: transitive
+    description:
+      name: geolocator_platform_interface
+      sha256: "386ce3d9cce47838355000070b1d0b13efb5bc430f8ecda7e9238c8409ace012"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.4"
+  geolocator_web:
+    dependency: transitive
+    description:
+      name: geolocator_web
+      sha256: "7a22f400d831f924a89d931ba126a10e6b8b437f31e6b9311320435f3e1571bd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0"
+  geolocator_windows:
+    dependency: transitive
+    description:
+      name: geolocator_windows
+      sha256: "53da08937d07c24b0d9952eb57a3b474e29aae2abf9dd717f7e1230995f13f0e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.3"
   glob:
     dependency: transitive
     description:
