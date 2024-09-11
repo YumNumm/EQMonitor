@@ -379,14 +379,16 @@ class DonationRoute extends GoRouteData {
       );
 }
 
+typedef DonationExecutedRouteExtra = (
+  StoreProduct,
+  CustomerInfo,
+);
+
 class DonationExecutedRoute extends GoRouteData {
   const DonationExecutedRoute({
     required this.$extra,
   });
-  final (
-    StoreProduct,
-    CustomerInfo,
-  ) $extra;
+  final DonationExecutedRouteExtra $extra;
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
