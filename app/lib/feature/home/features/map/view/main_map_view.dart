@@ -66,6 +66,7 @@ class MainMapView extends HookConsumerWidget {
       hypocenterIcon: ref.watch(hypocenterIconRenderProvider),
       hypocenterLowPreciseIcon:
           ref.watch(hypocenterLowPreciseIconRenderProvider),
+      currentLocationIcon: ref.watch(currentLocationIconRenderProvider),
     );
     final hasTravelTimeDepthMapValue = ref.watch(
       travelTimeDepthMapProvider
@@ -77,7 +78,8 @@ class MainMapView extends HookConsumerWidget {
         images.hypocenterLowPreciseIcon == null ||
         !images.intenistyIcon.isAllRendered() ||
         !images.intensityIconFill.isAllRendered() ||
-        !hasTravelTimeDepthMapValue) {
+        !hasTravelTimeDepthMapValue ||
+        images.currentLocationIcon == null) {
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator.adaptive(),
@@ -147,6 +149,10 @@ class MainMapView extends HookConsumerWidget {
                   name: 'intensity-fill-${key.type}',
                   bytes: value,
                 ),
+              notifier.updateImage(
+                name: 'current-location',
+                bytes: images.currentLocationIcon!,
+              ),
             ],
           );
           await notifier.onMapControllerRegistered();
