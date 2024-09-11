@@ -14,7 +14,7 @@ import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
 import 'package:eqmonitor/core/hook/use_sheet_controller.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
-import 'package:eqmonitor/core/provider/config/permission/permission_status_provider.dart';
+import 'package:eqmonitor/core/provider/config/permission/permission_notifier.dart';
 import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
 import 'package:eqmonitor/core/provider/eew/eew_alive_telegram.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging_interaction.dart';
@@ -36,6 +36,7 @@ import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.d
 import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_widget.dart';
 import 'package:eqmonitor/feature/home/features/map/view/main_map_view.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
+import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/fcm_token_change_detector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_authentication_service.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_settings_migrate_service.dart';
@@ -102,7 +103,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
           log('Start Initialize');
           (
             ref.read(kmoniViewModelProvider.notifier).initialize(),
-            ref.read(permissionProvider.notifier).initialize(),
+            ref.read(permissionNotifierProvider.notifier).initialize(),
             ref.read(ntpProvider.notifier).sync(),
             () async {
               final talker = ref.read(talkerProvider);
@@ -238,6 +239,11 @@ class _HomeBodyWidget extends HookConsumerWidget {
                                 ),
                           },
                         ),
+                  renderer.renderCurrentLocationIcon(context).then(
+                        (value) => ref
+                            .read(currentLocationIconRenderProvider.notifier)
+                            .onRendered(value),
+                      ),
                 ];
                 await futures.wait;
                 // 画像のキャッシュが終わったかどうかを確認
@@ -247,11 +253,14 @@ class _HomeBodyWidget extends HookConsumerWidget {
                   hypocenterIcon: ref.read(hypocenterIconRenderProvider),
                   hypocenterLowPreciseIcon:
                       ref.read(hypocenterLowPreciseIconRenderProvider),
+                  currentLocationIcon:
+                      ref.read(currentLocationIconRenderProvider),
                 );
                 if (images.hypocenterIcon != null &&
                     images.hypocenterLowPreciseIcon != null &&
                     images.intenistyIcon.isAllRendered() &&
-                    images.intensityIconFill.isAllRendered()) {
+                    images.intensityIconFill.isAllRendered() &&
+                    images.currentLocationIcon != null) {
                   unawaited(FirebaseCrashlytics.instance.log('画像のキャッシュ 成功'));
                   return false;
                 }
@@ -462,7 +471,7 @@ class _Fabs extends ConsumerWidget {
   }
 }
 
-class _Sheet extends StatelessWidget {
+class _Sheet extends ConsumerWidget {
   const _Sheet({
     required this.sheetController,
   });
@@ -470,7 +479,7 @@ class _Sheet extends StatelessWidget {
   final SheetController sheetController;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return RepaintBoundary(
       child: BasicModalSheet(
         controller: sheetController,
@@ -507,6 +516,9 @@ class _Sheet extends StatelessWidget {
               leading: const Icon(Icons.bug_report),
               onTap: () => const DebuggerRoute().push<void>(context),
             ),
+          Text(
+            ref.watch(locationStreamProvider).toString(),
+          ),
           const SizedBox(height: 200),
         ],
       ),
@@ -542,7 +554,7 @@ class _NotificationPermission extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(permissionProvider);
+    final state = ref.watch(permissionNotifierProvider);
     if (!state.notification) {
       return BorderedContainer(
         accentColor: Colors.redAccent.withOpacity(0.2),
@@ -557,7 +569,7 @@ class _NotificationPermission extends ConsumerWidget {
               const Text('通知を受け取るためには、通知の許可が必要です。'),
               TextButton.icon(
                 onPressed: () => ref
-                    .read(permissionProvider.notifier)
+                    .read(permissionNotifierProvider.notifier)
                     .requestNotificationPermission(),
                 icon: const Icon(Icons.notifications),
                 label: const Text('通知権限を許可する'),

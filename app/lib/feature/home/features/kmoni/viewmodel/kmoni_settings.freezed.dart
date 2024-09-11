@@ -29,6 +29,12 @@ mixin _$KmoniSettingsState {
   /// 強震モニタを使用するかどうか
   bool get useKmoni => throw _privateConstructorUsedError;
 
+  /// 現在地のマーカーを表示するかどうか
+  bool get showCurrentLocationMarker => throw _privateConstructorUsedError;
+
+  /// 強震モニタ観測点のマーカーの種類
+  KmoniMarkerType get kmoniMarkerType => throw _privateConstructorUsedError;
+
   /// Serializes this KmoniSettingsState to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
@@ -46,7 +52,11 @@ abstract class $KmoniSettingsStateCopyWith<$Res> {
       _$KmoniSettingsStateCopyWithImpl<$Res, KmoniSettingsState>;
   @useResult
   $Res call(
-      {double? minRealtimeShindo, bool showRealtimeShindoScale, bool useKmoni});
+      {double? minRealtimeShindo,
+      bool showRealtimeShindoScale,
+      bool useKmoni,
+      bool showCurrentLocationMarker,
+      KmoniMarkerType kmoniMarkerType});
 }
 
 /// @nodoc
@@ -67,6 +77,8 @@ class _$KmoniSettingsStateCopyWithImpl<$Res, $Val extends KmoniSettingsState>
     Object? minRealtimeShindo = freezed,
     Object? showRealtimeShindoScale = null,
     Object? useKmoni = null,
+    Object? showCurrentLocationMarker = null,
+    Object? kmoniMarkerType = null,
   }) {
     return _then(_value.copyWith(
       minRealtimeShindo: freezed == minRealtimeShindo
@@ -81,6 +93,14 @@ class _$KmoniSettingsStateCopyWithImpl<$Res, $Val extends KmoniSettingsState>
           ? _value.useKmoni
           : useKmoni // ignore: cast_nullable_to_non_nullable
               as bool,
+      showCurrentLocationMarker: null == showCurrentLocationMarker
+          ? _value.showCurrentLocationMarker
+          : showCurrentLocationMarker // ignore: cast_nullable_to_non_nullable
+              as bool,
+      kmoniMarkerType: null == kmoniMarkerType
+          ? _value.kmoniMarkerType
+          : kmoniMarkerType // ignore: cast_nullable_to_non_nullable
+              as KmoniMarkerType,
     ) as $Val);
   }
 }
@@ -94,7 +114,11 @@ abstract class _$$KmoniSettingsStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {double? minRealtimeShindo, bool showRealtimeShindoScale, bool useKmoni});
+      {double? minRealtimeShindo,
+      bool showRealtimeShindoScale,
+      bool useKmoni,
+      bool showCurrentLocationMarker,
+      KmoniMarkerType kmoniMarkerType});
 }
 
 /// @nodoc
@@ -113,6 +137,8 @@ class __$$KmoniSettingsStateImplCopyWithImpl<$Res>
     Object? minRealtimeShindo = freezed,
     Object? showRealtimeShindoScale = null,
     Object? useKmoni = null,
+    Object? showCurrentLocationMarker = null,
+    Object? kmoniMarkerType = null,
   }) {
     return _then(_$KmoniSettingsStateImpl(
       minRealtimeShindo: freezed == minRealtimeShindo
@@ -127,6 +153,14 @@ class __$$KmoniSettingsStateImplCopyWithImpl<$Res>
           ? _value.useKmoni
           : useKmoni // ignore: cast_nullable_to_non_nullable
               as bool,
+      showCurrentLocationMarker: null == showCurrentLocationMarker
+          ? _value.showCurrentLocationMarker
+          : showCurrentLocationMarker // ignore: cast_nullable_to_non_nullable
+              as bool,
+      kmoniMarkerType: null == kmoniMarkerType
+          ? _value.kmoniMarkerType
+          : kmoniMarkerType // ignore: cast_nullable_to_non_nullable
+              as KmoniMarkerType,
     ));
   }
 }
@@ -137,7 +171,9 @@ class _$KmoniSettingsStateImpl implements _KmoniSettingsState {
   const _$KmoniSettingsStateImpl(
       {this.minRealtimeShindo = null,
       this.showRealtimeShindoScale = true,
-      this.useKmoni = false});
+      this.useKmoni = false,
+      this.showCurrentLocationMarker = false,
+      this.kmoniMarkerType = KmoniMarkerType.onlyEew});
 
   factory _$KmoniSettingsStateImpl.fromJson(Map<String, dynamic> json) =>
       _$$KmoniSettingsStateImplFromJson(json);
@@ -157,9 +193,19 @@ class _$KmoniSettingsStateImpl implements _KmoniSettingsState {
   @JsonKey()
   final bool useKmoni;
 
+  /// 現在地のマーカーを表示するかどうか
+  @override
+  @JsonKey()
+  final bool showCurrentLocationMarker;
+
+  /// 強震モニタ観測点のマーカーの種類
+  @override
+  @JsonKey()
+  final KmoniMarkerType kmoniMarkerType;
+
   @override
   String toString() {
-    return 'KmoniSettingsState(minRealtimeShindo: $minRealtimeShindo, showRealtimeShindoScale: $showRealtimeShindoScale, useKmoni: $useKmoni)';
+    return 'KmoniSettingsState(minRealtimeShindo: $minRealtimeShindo, showRealtimeShindoScale: $showRealtimeShindoScale, useKmoni: $useKmoni, showCurrentLocationMarker: $showCurrentLocationMarker, kmoniMarkerType: $kmoniMarkerType)';
   }
 
   @override
@@ -173,13 +219,23 @@ class _$KmoniSettingsStateImpl implements _KmoniSettingsState {
                     other.showRealtimeShindoScale, showRealtimeShindoScale) ||
                 other.showRealtimeShindoScale == showRealtimeShindoScale) &&
             (identical(other.useKmoni, useKmoni) ||
-                other.useKmoni == useKmoni));
+                other.useKmoni == useKmoni) &&
+            (identical(other.showCurrentLocationMarker,
+                    showCurrentLocationMarker) ||
+                other.showCurrentLocationMarker == showCurrentLocationMarker) &&
+            (identical(other.kmoniMarkerType, kmoniMarkerType) ||
+                other.kmoniMarkerType == kmoniMarkerType));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, minRealtimeShindo, showRealtimeShindoScale, useKmoni);
+      runtimeType,
+      minRealtimeShindo,
+      showRealtimeShindoScale,
+      useKmoni,
+      showCurrentLocationMarker,
+      kmoniMarkerType);
 
   /// Create a copy of KmoniSettingsState
   /// with the given fields replaced by the non-null parameter values.
@@ -202,7 +258,9 @@ abstract class _KmoniSettingsState implements KmoniSettingsState {
   const factory _KmoniSettingsState(
       {final double? minRealtimeShindo,
       final bool showRealtimeShindoScale,
-      final bool useKmoni}) = _$KmoniSettingsStateImpl;
+      final bool useKmoni,
+      final bool showCurrentLocationMarker,
+      final KmoniMarkerType kmoniMarkerType}) = _$KmoniSettingsStateImpl;
 
   factory _KmoniSettingsState.fromJson(Map<String, dynamic> json) =
       _$KmoniSettingsStateImpl.fromJson;
@@ -218,6 +276,14 @@ abstract class _KmoniSettingsState implements KmoniSettingsState {
   /// 強震モニタを使用するかどうか
   @override
   bool get useKmoni;
+
+  /// 現在地のマーカーを表示するかどうか
+  @override
+  bool get showCurrentLocationMarker;
+
+  /// 強震モニタ観測点のマーカーの種類
+  @override
+  KmoniMarkerType get kmoniMarkerType;
 
   /// Create a copy of KmoniSettingsState
   /// with the given fields replaced by the non-null parameter values.
