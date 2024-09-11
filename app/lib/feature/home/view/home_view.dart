@@ -61,9 +61,13 @@ class HomeView extends HookConsumerWidget {
         preferredSize: const Size.fromHeight(kToolbarHeight * 0.8),
         child: ClipRRect(
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+            filter: ImageFilter.blur(
+              sigmaX: 4,
+              sigmaY: 4,
+              tileMode: TileMode.decal,
+            ),
             child: ColoredBox(
-              color: colorScheme.surfaceContainer.withOpacity(0.8),
+              color: colorScheme.surfaceContainer.withOpacity(0.3),
               child: AppBar(
                 title: Text(
                   'EQMonitor',
@@ -71,6 +75,7 @@ class HomeView extends HookConsumerWidget {
                         fontWeight: FontWeight.bold,
                       ),
                 ),
+                backgroundColor: Colors.transparent,
                 forceMaterialTransparency: true,
               ),
             ),
