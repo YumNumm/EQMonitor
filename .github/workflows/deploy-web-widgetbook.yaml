@@ -28,7 +28,7 @@ jobs:
           echo "Host github.com \n\tIdentityFile ~/.ssh/id_ed25519\n\tUser git\n\tIdentityiesOnly yes" >> ~/.ssh/config
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 
-      - uses: kuhnroyal/flutter-fvm-config-action@v2
+      - uses: kuhnroyal/flutter-fvm-config-action@v3
         id: fvm-config-action
       - uses: subosito/flutter-action@v2
         with:
