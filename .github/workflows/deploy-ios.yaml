@@ -57,7 +57,7 @@ jobs:
 
       - name: Set up ruby
         # https://github.com/ruby/setup-ruby/tree/v1/
-        uses: ruby/setup-ruby@c04af2bb7258bb6a03df1d3c1865998ac9390972
+        uses: ruby/setup-ruby@f26937343756480a8cb3ae1f623b9c8d89ed6984
         with:
           bundler-cache: true
           working-directory: app/ios
@@ -111,7 +111,7 @@ jobs:
         run: bundle exec fastlane build
 
       - name: Upload artifact ipa
-        uses: actions/upload-artifact@v4.4.0
+        uses: actions/upload-artifact@v4.4.2
         with:
           path: app/ios/Runner.ipa
           name: release-ios
