@@ -104,6 +104,14 @@ class KmoniSettings extends _$KmoniSettings {
       showCurrentLocationMarker: value,
     );
   }
+
+  void setMarkerType({
+    required KmoniMarkerType type,
+  }) {
+    state = state.copyWith(
+      kmoniMarkerType: type,
+    );
+  }
 }
 
 enum KmoniMarkerType {

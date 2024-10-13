@@ -54,7 +54,7 @@ class MainMapViewModel extends _$MainMapViewModel {
         (_, value) => _onEewStateChanged(value ?? []),
       )
       ..listen(
-        kmoniSettingsProvider.select((e) => e.useKmoni),
+        kmoniSettingsProvider,
         (_, value) => _onKmoniSettingsChanged(value: value),
       )
       ..listen(
@@ -94,6 +94,7 @@ class MainMapViewModel extends _$MainMapViewModel {
       ..listen(eewSettingsNotifierProvider, (_, next) {
         _onEewSettingsChanged(next);
       });
+    _lastKmoniSettingsState = ref.read(kmoniSettingsProvider);
     return MainMapViewmodelState(
       isHomePosition: true,
       homeBoundary: defaultBoundary,
@@ -202,13 +203,11 @@ class MainMapViewModel extends _$MainMapViewModel {
     if (controller == null) {
       return;
     }
-    if (_eewPsWaveService == null || _eewHypocenterService == null) {
-      return;
-    }
     try {
       await (
-        _eewPsWaveService!.tick(now: now),
-        _eewHypocenterService!.tick(),
+        _eewPsWaveService?.tick(now: now) ?? Future.value(),
+        _eewHypocenterService?.tick() ?? Future.value(),
+        _shakeDetectionBorderService?.tick() ?? Future.value(),
       ).wait;
       // ignore: avoid_catches_without_on_clauses, empty_catches
     } catch (e) {}
@@ -305,11 +304,19 @@ class MainMapViewModel extends _$MainMapViewModel {
       return;
     }
     if (!ref.read(kmoniSettingsProvider).useKmoni) {
-      await _kmoniObservationPointService?.update([]);
+      await _kmoniObservationPointService?.update(
+        points: [],
+        isInEew: false,
+        markerType: ref.read(kmoniSettingsProvider).kmoniMarkerType,
+      );
       return;
     }
 
-    await _kmoniObservationPointService?.update(values);
+    await _kmoniObservationPointService?.update(
+      points: values,
+      isInEew: ref.read(eewAliveTelegramProvider)?.isNotEmpty ?? false,
+      markerType: ref.read(kmoniSettingsProvider).kmoniMarkerType,
+    );
   }
 
   Future<void> _onShakeDetectionStateChanged(
@@ -321,17 +328,43 @@ class MainMapViewModel extends _$MainMapViewModel {
     await _shakeDetectionBorderService?.update(values);
   }
 
-  Future<void> _onKmoniSettingsChanged({required bool value}) async {
-    if (value) {
-      await _kmoniObservationPointService?.dispose();
-      _kmoniObservationPointService = _KmoniObservationPointService(
-        controller: _controller!,
-      );
-      await _kmoniObservationPointService?.init();
-    } else {
-      await _kmoniObservationPointService?.dispose();
-      _kmoniObservationPointService = null;
+  KmoniSettingsState? _lastKmoniSettingsState;
+
+  Future<void> _onKmoniSettingsChanged({
+    required KmoniSettingsState value,
+  }) async {
+    if (_lastKmoniSettingsState == value) {
+      return;
     }
+    if (_lastKmoniSettingsState?.useKmoni != value.useKmoni) {
+      if (value.useKmoni) {
+        await _kmoniObservationPointService?.dispose();
+        _kmoniObservationPointService = _KmoniObservationPointService(
+          controller: _controller!,
+        );
+        await _kmoniObservationPointService?.init();
+      } else {
+        await _kmoniObservationPointService?.dispose();
+        _kmoniObservationPointService = null;
+      }
+    }
+    if (_lastKmoniSettingsState?.kmoniMarkerType != value.kmoniMarkerType) {
+      await _kmoniObservationPointService?.update(
+        points: ref.read(kmoniViewModelProvider).analyzedPoints ?? [],
+        isInEew: ref.read(eewAliveTelegramProvider)?.isNotEmpty ?? false,
+        markerType: value.kmoniMarkerType,
+      );
+    }
+    if (_lastKmoniSettingsState?.showCurrentLocationMarker !=
+        value.showCurrentLocationMarker) {
+      if (value.showCurrentLocationMarker) {
+        await _currentLocationIconService?.dispose();
+        await _currentLocationIconService?.init();
+      } else {
+        await _currentLocationIconService?.dispose();
+      }
+    }
+    _lastKmoniSettingsState = value;
   }
 
   Future<void> startUpdateEew() async {
@@ -509,7 +542,9 @@ class MainMapViewModel extends _$MainMapViewModel {
 }
 
 class _KmoniObservationPointService {
-  _KmoniObservationPointService({required this.controller});
+  _KmoniObservationPointService({
+    required this.controller,
+  });
 
   final MapLibreMapController controller;
 
@@ -540,6 +575,10 @@ class _KmoniObservationPointService {
           'color',
         ],
         circleStrokeColor: Colors.grey.toHexStringRGB(),
+        circleStrokeOpacity: [
+          'get',
+          'strokeOpacity',
+        ],
         circleStrokeWidth: [
           'interpolate',
           ['linear'],
@@ -559,10 +598,18 @@ class _KmoniObservationPointService {
     );
   }
 
-  Future<void> update(List<AnalyzedKmoniObservationPoint> points) =>
+  Future<void> update({
+    required List<AnalyzedKmoniObservationPoint> points,
+    required bool isInEew,
+    required KmoniMarkerType markerType,
+  }) =>
       controller.setGeoJsonSource(
         layerId,
-        createGeoJson(points),
+        createGeoJson(
+          points: points,
+          isInEew: isInEew,
+          markerType: markerType,
+        ),
       );
 
   Future<void> dispose() async {
@@ -572,9 +619,11 @@ class _KmoniObservationPointService {
 
   static const String layerId = 'kmoni-circle';
 
-  Map<String, dynamic> createGeoJson(
-    List<AnalyzedKmoniObservationPoint> points,
-  ) =>
+  Map<String, dynamic> createGeoJson({
+    required List<AnalyzedKmoniObservationPoint> points,
+    required bool isInEew,
+    required KmoniMarkerType markerType,
+  }) =>
       {
         'type': 'FeatureCollection',
         'features': points
@@ -595,6 +644,11 @@ class _KmoniObservationPointService {
                       : null,
                   'intensity': e.intensityValue,
                   'name': e.point.name,
+                  'strokeOpacity': switch (markerType) {
+                    KmoniMarkerType.always => 1.0,
+                    KmoniMarkerType.onlyEew when isInEew => 1.0,
+                    _ => 0.0,
+                  },
                 },
               },
             )
@@ -1204,32 +1258,48 @@ class _ShakeDetectionBorderService {
   Future<void> init(List<ShakeDetectionKmoniMergedEvent> events) async {
     await dispose();
     await controller.addGeoJsonSource(
-      layerId,
+      sourceId,
       createGeoJson(events),
     );
-    await controller.addLineLayer(
-      layerId,
-      layerId,
-      const LineLayerProperties(
-        lineColor: [
-          'get',
-          'color',
+    const allLevels = ShakeDetectionLevel.values;
+    for (final level in allLevels) {
+      await controller.addLineLayer(
+        sourceId,
+        layerId(level: level),
+        LineLayerProperties(
+          lineColor: level.color.toHexStringRGB(),
+          lineWidth: [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            3,
+            2,
+            20,
+            10,
+          ],
+          lineCap: 'round',
+          lineSortKey: level.index,
+        ),
+        filter: [
+          '==',
+          'level',
+          level.name,
         ],
-        lineWidth: 2,
-        lineCap: 'round',
-      ),
-    );
+      );
+    }
   }
 
   Future<void> dispose() async {
-    await controller.removeLayer(layerId);
-    await controller.removeSource(layerId);
+    for (final level in ShakeDetectionLevel.values) {
+      await controller.removeLayer(layerId(level: level));
+    }
+    await controller.removeSource(sourceId);
   }
 
   Future<void> update(List<ShakeDetectionKmoniMergedEvent> events) async {
     final geoJson = createGeoJson(events);
     await controller.setGeoJsonSource(
-      layerId,
+      sourceId,
       geoJson,
     );
   }
@@ -1270,10 +1340,7 @@ class _ShakeDetectionBorderService {
               ],
             },
             'properties': {
-              'color': intensityColorModel
-                  .fromJmaForecastIntensity(grid.maxIntensity)
-                  .background
-                  .toHexStringRGB(),
+              'level': grid.level.name,
             },
           },
       ],
@@ -1281,13 +1348,52 @@ class _ShakeDetectionBorderService {
     return json;
   }
 
+  Future<void> setVisibility({required bool isVisible}) async {
+    if (isVisible) {
+      _isVisible = true;
+      await [
+        for (final level in ShakeDetectionLevel.values)
+          controller.setLayerVisibility(
+            layerId(level: level),
+            true,
+          ),
+      ].wait;
+    } else {
+      _isVisible = false;
+      await [
+        for (final level in ShakeDetectionLevel.values)
+          controller.setLayerVisibility(
+            layerId(level: level),
+            false,
+          ),
+      ].wait;
+    }
+  }
+
+  bool _isVisible = true;
+
+  Future<void> tick() async {
+    final milliseconds = DateTime.now().millisecondsSinceEpoch;
+    if (milliseconds % 1000 < 500) {
+      if (_isVisible) {
+        return;
+      }
+      await setVisibility(isVisible: true);
+    } else {
+      if (!_isVisible) {
+        return;
+      }
+      await setVisibility(isVisible: false);
+    }
+  }
+
   static const gridSize = 0.75;
 
   List<
       ({
         lat_lng.LatLng bottomRight,
-        JmaForecastIntensity maxIntensity,
-        lat_lng.LatLng topLeft
+        lat_lng.LatLng topLeft,
+        ShakeDetectionLevel level,
       })> createGrids(
     List<ShakeDetectionKmoniMergedEvent> events,
   ) {
@@ -1295,7 +1401,7 @@ class _ShakeDetectionBorderService {
     final grids = <({
       lat_lng.LatLng topLeft,
       lat_lng.LatLng bottomRight,
-      JmaForecastIntensity maxIntensity,
+      ShakeDetectionLevel level,
     })>[];
     for (final event in events
         .map((e) => e.regions)
@@ -1317,7 +1423,8 @@ class _ShakeDetectionBorderService {
         (latCount + 1) * gridSize,
         (lngCount + 1) * gridSize,
       );
-      final maxIntensity = event.intensity;
+      final level =
+          ShakeDetectionLevel.fromJmaForecastIntensity(event.intensity);
 
       final existingIndex = grids.indexWhereOrNull(
         (e) => e.topLeft == topLeft && e.bottomRight == bottomRight,
@@ -1327,16 +1434,16 @@ class _ShakeDetectionBorderService {
           (
             topLeft: topLeft,
             bottomRight: bottomRight,
-            maxIntensity: maxIntensity,
+            level: level,
           ),
         );
       } else {
         final existing = grids[existingIndex];
-        if (existing.maxIntensity < maxIntensity) {
+        if (existing.level < level) {
           grids[existingIndex] = (
             topLeft: topLeft,
             bottomRight: bottomRight,
-            maxIntensity: maxIntensity,
+            level: level,
           );
         }
       }
@@ -1344,7 +1451,10 @@ class _ShakeDetectionBorderService {
     return grids;
   }
 
-  static String get layerId => 'shake-detection-border';
+  static String layerId({required ShakeDetectionLevel level}) =>
+      'shake-detection-border-${level.name}';
+
+  static String get sourceId => 'shake-detection-border';
 }
 
 class _EewEstimatedIntensityCalculatedRegionService {

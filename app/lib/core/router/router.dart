@@ -3,7 +3,6 @@ import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
-import 'package:eqmonitor/feature/debug/earthquake_parameter/ui/earthquake_parameter_list_screen.dart';
 import 'package:eqmonitor/feature/donation/ui/donation_executed_screen.dart';
 import 'package:eqmonitor/feature/donation/ui/donation_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_screen.dart';
@@ -226,9 +225,6 @@ class KmoniRoute extends GoRouteData {
         TypedGoRoute<WebsocketEndpointSelectorRoute>(
           path: 'websocket-api-endpoint-selector',
         ),
-        TypedGoRoute<EarthquakeParameterListRoute>(
-          path: 'earthquake-parameter-list',
-        ),
       ],
     ),
   ],
@@ -354,14 +350,6 @@ class AboutThisAppRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const AboutThisAppScreen();
-}
-
-class EarthquakeParameterListRoute extends GoRouteData {
-  const EarthquakeParameterListRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const EarthquakeParameterListScreen();
 }
 
 class DonationRoute extends GoRouteData {
