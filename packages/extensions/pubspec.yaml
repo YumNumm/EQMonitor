@@ -3,6 +3,6 @@ description: A starting point for Dart libraries or applications.
 version: 1.0.0
 
 environment:
-  sdk: ^3.5.1
+  sdk: ^3.5.3
 dev_dependencies:
   pedantic_mono: ^1.23.0
