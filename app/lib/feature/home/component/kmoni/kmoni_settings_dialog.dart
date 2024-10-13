@@ -121,6 +121,22 @@ class KmoniSettingsDialogInside extends ConsumerWidget {
             ref.invalidate(locationStreamProvider);
           },
         ),
+        ListTile(
+          title: const Text('観測点の枠表示モード'),
+          trailing: DropdownMenu(
+            onSelected: (value) =>
+                ref.read(kmoniSettingsProvider.notifier).setMarkerType(
+                      type: value!,
+                    ),
+            dropdownMenuEntries: [
+              for (final type in KmoniMarkerType.values)
+                DropdownMenuEntry(
+                  value: type,
+                  label: type.name,
+                ),
+            ],
+          ),
+        ),
       ],
     );
   }
