@@ -57,7 +57,6 @@ class KmoniSettingsDialogInside extends ConsumerWidget {
     final state = ref.watch(kmoniSettingsProvider);
     final colorMap = ref.watch(kyoshinColorMapProvider);
     final (min, max) = (colorMap.first, colorMap.last);
-    final theme = Theme.of(context);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -65,38 +64,33 @@ class KmoniSettingsDialogInside extends ConsumerWidget {
       children: [
         ListTile(
           title: const Text('リアルタイム震度の表示しきい値'),
-          subtitle: SliderTheme(
-            data: theme.sliderTheme.copyWith(
-              trackShape: _CustomTrackShape(),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 30,
-                    child: KmoniScaleWidget(
-                      showText: false,
-                      markers: [
-                        if (state.minRealtimeShindo != null &&
-                            state.minRealtimeShindo != -3.0)
-                          state.minRealtimeShindo!,
-                      ],
-                      position: KmoniIntensityPosition.under,
-                    ),
+          subtitle: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 30,
+                  child: KmoniScaleWidget(
+                    showText: false,
+                    markers: [
+                      if (state.minRealtimeShindo != null &&
+                          state.minRealtimeShindo != -3.0)
+                        state.minRealtimeShindo!,
+                    ],
+                    position: KmoniIntensityPosition.under,
                   ),
-                  Slider(
-                    min: min.intensity,
-                    max: max.intensity,
-                    value: state.minRealtimeShindo ?? min.intensity,
-                    onChanged: (value) => ref
-                        .read(kmoniSettingsProvider.notifier)
-                        .setMinRealtimeShindo(
-                          value: value,
-                        ),
-                  ),
-                ],
-              ),
+                ),
+                Slider(
+                  min: min.intensity,
+                  max: max.intensity,
+                  value: state.minRealtimeShindo ?? min.intensity,
+                  onChanged: (value) => ref
+                      .read(kmoniSettingsProvider.notifier)
+                      .setMinRealtimeShindo(
+                        value: value,
+                      ),
+                ),
+              ],
             ),
           ),
         ),
@@ -123,22 +117,5 @@ class KmoniSettingsDialogInside extends ConsumerWidget {
         ),
       ],
     );
-  }
-}
-
-class _CustomTrackShape extends RoundedRectSliderTrackShape {
-  @override
-  Rect getPreferredRect({
-    required RenderBox parentBox,
-    Offset offset = Offset.zero,
-    required SliderThemeData sliderTheme,
-    bool isEnabled = false,
-    bool isDiscrete = false,
-  }) {
-    final trackHeight = sliderTheme.trackHeight;
-    final trackLeft = offset.dx;
-    final trackTop = offset.dy + (parentBox.size.height - trackHeight!) / 2;
-    final trackWidth = parentBox.size.width;
-    return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }
 }
