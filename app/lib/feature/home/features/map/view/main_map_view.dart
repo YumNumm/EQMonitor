@@ -9,9 +9,12 @@ import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:eqmonitor/core/theme/platform_brightness.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
+import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
@@ -50,8 +53,8 @@ class MainMapView extends HookConsumerWidget {
           const Duration(milliseconds: 80),
           (timer) {
             ref.read(mainMapViewModelProvider.notifier).onTick(
-              ref.read(ntpProvider.notifier).now() ??
-              DateTime.now(),);
+                  ref.read(ntpProvider.notifier).now() ?? DateTime.now(),
+                );
           },
         );
         return timer.cancel;
@@ -66,6 +69,7 @@ class MainMapView extends HookConsumerWidget {
       hypocenterIcon: ref.watch(hypocenterIconRenderProvider),
       hypocenterLowPreciseIcon:
           ref.watch(hypocenterLowPreciseIconRenderProvider),
+      currentLocationIcon: ref.watch(currentLocationIconRenderProvider),
     );
     final hasTravelTimeDepthMapValue = ref.watch(
       travelTimeDepthMapProvider
@@ -77,7 +81,8 @@ class MainMapView extends HookConsumerWidget {
         images.hypocenterLowPreciseIcon == null ||
         !images.intenistyIcon.isAllRendered() ||
         !images.intensityIconFill.isAllRendered() ||
-        !hasTravelTimeDepthMapValue) {
+        !hasTravelTimeDepthMapValue ||
+        images.currentLocationIcon == null) {
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator.adaptive(),
@@ -86,6 +91,18 @@ class MainMapView extends HookConsumerWidget {
     }
 
     final mapController = useState<MapLibreMapController?>(null);
+
+    if (ref.watch(
+      kmoniSettingsProvider.select((e) => e.showCurrentLocationMarker),
+    )) {
+      ref.listen(locationStreamProvider, (_, next) async {
+        if (next case AsyncData(:final value)) {
+          await ref
+              .read(mainMapViewModelProvider.notifier)
+              .onLocationChanged(value.latitude, value.longitude);
+        }
+      });
+    }
 
     final map = RepaintBoundary(
       child: MapLibreMap(
@@ -147,10 +164,21 @@ class MainMapView extends HookConsumerWidget {
                   name: 'intensity-fill-${key.type}',
                   bytes: value,
                 ),
+              notifier.updateImage(
+                name: 'current-location',
+                bytes: images.currentLocationIcon!,
+              ),
             ],
           );
           await notifier.onMapControllerRegistered();
           await notifier.startUpdateEew();
+
+          if (ref.read(kmoniSettingsProvider).showCurrentLocationMarker) {
+            if (ref.read(locationStreamProvider).valueOrNull
+                case Position(:final latitude, :final longitude)) {
+              await notifier.onLocationChanged(latitude, longitude);
+            }
+          }
         },
         rotateGesturesEnabled: false,
         tiltGesturesEnabled: false,

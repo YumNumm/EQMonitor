@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:eqmonitor/core/provider/config/permission/permission_notifier.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,6 +20,11 @@ class KmoniSettingsState with _$KmoniSettingsState {
     /// 強震モニタを使用するかどうか
     @Default(false) bool useKmoni,
 
+    /// 現在地のマーカーを表示するかどうか
+    @Default(false) bool showCurrentLocationMarker,
+
+    /// 強震モニタ観測点のマーカーの種類
+    @Default(KmoniMarkerType.onlyEew) KmoniMarkerType kmoniMarkerType,
   }) = _KmoniSettingsState;
 
   factory KmoniSettingsState.fromJson(Map<String, dynamic> json) =>
@@ -83,4 +89,31 @@ class KmoniSettings extends _$KmoniSettings {
       showRealtimeShindoScale: value,
     );
   }
+
+  Future<void> setShowCurrentLocationMarker({required bool value}) async {
+    final permissionStatus = ref.read(permissionNotifierProvider);
+    if (!permissionStatus.location) {
+      await ref
+          .read(permissionNotifierProvider.notifier)
+          .requestLocationWhenInUsePermission();
+      if (!permissionStatus.location) {
+        return;
+      }
+    }
+    state = state.copyWith(
+      showCurrentLocationMarker: value,
+    );
+  }
+}
+
+enum KmoniMarkerType {
+  /// 常に枠を表示する
+  always,
+
+  /// EEW時のみ枠を表示する
+  onlyEew,
+
+  /// 常に枠を表示しない
+  never,
+  ;
 }

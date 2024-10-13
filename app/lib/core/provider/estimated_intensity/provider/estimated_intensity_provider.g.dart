@@ -9,7 +9,7 @@ part of 'estimated_intensity_provider.dart';
 // **************************************************************************
 
 String _$estimatedIntensityCityHash() =>
-    r'6d6bcad277d483556c0ef8296acd134e64ed5f4e';
+    r'8fed41327805b67db22bf4e10852f848f72216f7';
 
 /// See also [estimatedIntensityCity].
 @ProviderFor(estimatedIntensityCity)
@@ -26,7 +26,7 @@ final estimatedIntensityCityProvider =
 
 typedef EstimatedIntensityCityRef = StreamProviderRef<Map<String, double>>;
 String _$estimatedIntensityRegionHash() =>
-    r'98e57c27650c780f6cd1fb1e375462526d727470';
+    r'e87900e95ed3a85e8c9186e114dc70ed75fb74ed';
 
 /// See also [estimatedIntensityRegion].
 @ProviderFor(estimatedIntensityRegion)
@@ -43,7 +43,7 @@ final estimatedIntensityRegionProvider =
 
 typedef EstimatedIntensityRegionRef = StreamProviderRef<Map<String, double>>;
 String _$estimatedIntensityHash() =>
-    r'4556cd1859ef20b7583c73527419d394d3cacaf7';
+    r'2b1635766324d17864f9ee350e297952e6ef0d86';
 
 /// See also [EstimatedIntensity].
 @ProviderFor(EstimatedIntensity)

@@ -14,6 +14,8 @@ import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/core/provider/map/map_style.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
+import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
+import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -78,6 +80,8 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         ref.watch(lpgmIntensityIconFillRenderProvider);
 
     final hypocenterIconRender = ref.watch(hypocenterIconRenderProvider);
+    final currentLocationIconRender =
+        ref.watch(currentLocationIconRenderProvider);
     final jmaMap = ref.watch(jmaMapProvider).valueOrNull;
     final mapStyle = ref.watch(mapStyleProvider);
 
@@ -97,6 +101,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         !intensityIconFillData.isAllRendered() ||
         !lpgmIntensityIconData.isAllRendered() ||
         !lpgmIntensityIconFillData.isAllRendered() ||
+        currentLocationIconRender == null ||
         jmaMap == null ||
         hypocenterIconRender == null ||
         path == null) {
@@ -241,6 +246,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
               ),
           ],
         ];
+    final currentLocationService = useMemoized(_CurrentLocationIconService.new);
     final config = ref.watch(
       earthquakeHistoryConfigProvider.select((value) => value.detail),
     );
@@ -250,6 +256,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
       for (final action in actions) {
         await action.dispose(mapController.value!);
       }
+      await currentLocationService.dispose(mapController.value!);
     }
 
     Future<void> initActions(List<_Action> actions) async {
@@ -258,6 +265,21 @@ class EarthquakeMapWidget extends HookConsumerWidget {
             (e) => e.init(mapController.value!),
           )
           .wait;
+      await currentLocationService.init(mapController.value!);
+    }
+
+    if (ref.watch(kmoniSettingsProvider).showCurrentLocationMarker) {
+      ref.listen(
+        locationStreamProvider,
+        (_, next) {
+          if (next case AsyncData(:final value)) {
+            currentLocationService.update(
+              mapController.value!,
+              (value.latitude, value.longitude),
+            );
+          }
+        },
+      );
     }
 
     Future<void> onDisplayModeChanged({
@@ -355,10 +377,24 @@ class EarthquakeMapWidget extends HookConsumerWidget {
                 lpgmIntensityIconFillData.getOrNull(intensity)!,
               ),
             ],
+            addImageFromBuffer(
+              controller,
+              'current-location',
+              currentLocationIconRender,
+            ),
           ].wait;
           await initActions(currentActions.value);
           await controller.moveCamera(cameraUpdate);
           maxZoomLevel.value = 12;
+
+          if (ref.read(kmoniSettingsProvider).showCurrentLocationMarker) {
+            if (ref.read(locationStreamProvider) case AsyncData(:final value)) {
+              await currentLocationService.update(
+                controller,
+                (value.latitude, value.longitude),
+              );
+            }
+          }
         },
         rotateGesturesEnabled: false,
         tiltGesturesEnabled: false,
@@ -1104,4 +1140,68 @@ class _StationIntensityLpgmAction extends _Action {
     // Source
     await controller.removeSource(sourceName);
   }
+}
+
+class _CurrentLocationIconService extends _Action {
+  @override
+  Future<void> init(map_libre.MapLibreMapController controller) async {
+    await controller.addGeoJsonSource(
+      layerId,
+      {
+        'type': 'FeatureCollection',
+        'features': <void>[],
+      },
+    );
+
+    await controller.addSymbolLayer(
+      layerId,
+      layerId,
+      const SymbolLayerProperties(
+        iconImage: 'current-location',
+        iconSize: [
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          3,
+          0.1,
+          20,
+          1,
+        ],
+        iconAllowOverlap: true,
+      ),
+      sourceLayer: layerId,
+    );
+  }
+
+  @override
+  Future<void> dispose(map_libre.MapLibreMapController controller) async {
+    await controller.removeLayer(layerId);
+    await controller.removeSource(layerId);
+  }
+
+  Future<void> update(
+    map_libre.MapLibreMapController controller,
+    (double lat, double lng) position,
+  ) async {
+    await controller.setGeoJsonSource(
+      layerId,
+      {
+        'type': 'FeatureCollection',
+        'features': <void>[
+          {
+            'type': 'Feature',
+            'geometry': {
+              'type': 'Point',
+              'coordinates': [
+                position.$2,
+                position.$1,
+              ],
+            },
+          },
+        ],
+      },
+    );
+  }
+
+  static String get layerId => 'current-location';
 }

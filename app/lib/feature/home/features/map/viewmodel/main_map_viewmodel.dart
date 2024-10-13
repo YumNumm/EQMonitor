@@ -139,6 +139,9 @@ class MainMapViewModel extends _$MainMapViewModel {
         _EewEstimatedIntensityCalculatedCityService(
       controller: controller,
     );
+    _currentLocationIconService = _CurrentLocationIconService(
+      controller: controller,
+    );
 
     await (
       _kmoniObservationPointService!.init(),
@@ -161,6 +164,7 @@ class MainMapViewModel extends _$MainMapViewModel {
       hypocenterLowPreciseIcon:
           ref.read(hypocenterLowPreciseIconRenderProvider)!,
     );
+    await _currentLocationIconService!.init();
 
     // 地図の移動を監視
     controller.addListener(() {
@@ -178,6 +182,7 @@ class MainMapViewModel extends _$MainMapViewModel {
         _eewPsWaveService!.dispose(),
         _eewEstimatedIntensityService.dispose(),
         _shakeDetectionBorderService!.dispose(),
+        _currentLocationIconService!.dispose(),
       ).wait;
     });
     log('_onEewStateChanged called!', name: 'MainMapViewModel');
@@ -220,6 +225,8 @@ class MainMapViewModel extends _$MainMapViewModel {
 
   _EewEstimatedIntensityCalculatedRegionService?
       _eewEstimatedIntensityCalculatedRegionService;
+
+  _CurrentLocationIconService? _currentLocationIconService;
 
   Future<void> _onEewStateChanged(List<EewV1> values) async {
     // 初期化が終わっていない場合は何もしない
@@ -338,6 +345,11 @@ class MainMapViewModel extends _$MainMapViewModel {
       ref.read(eewAliveTelegramProvider) ?? [],
     );
   }
+
+  Future<void> onLocationChanged(double lat, double lng) async =>
+      _currentLocationIconService?.update(
+        (lat, lng),
+      );
 
   // *********** Utilities ***********
   Future<void> updateImage({
@@ -1521,6 +1533,69 @@ class _EewEstimatedIntensityCalculatedCityService {
         .replaceAll('不明', 'unknown');
     return '$_EewEstimatedIntensityCalculatedCityService-fill-$base';
   }
+}
+
+class _CurrentLocationIconService {
+  _CurrentLocationIconService({required this.controller});
+
+  final MapLibreMapController controller;
+
+  Future<void> init() async {
+    await controller.addGeoJsonSource(
+      layerId,
+      {
+        'type': 'FeatureCollection',
+        'features': <void>[],
+      },
+    );
+
+    await controller.addSymbolLayer(
+      layerId,
+      layerId,
+      const SymbolLayerProperties(
+        iconImage: 'current-location',
+        iconSize: [
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          3,
+          0.1,
+          20,
+          1,
+        ],
+        iconAllowOverlap: true,
+      ),
+      sourceLayer: layerId,
+    );
+  }
+
+  Future<void> dispose() async {
+    await controller.removeLayer(layerId);
+    await controller.removeSource(layerId);
+  }
+
+  Future<void> update((double lat, double lng) position) async {
+    await controller.setGeoJsonSource(
+      layerId,
+      {
+        'type': 'FeatureCollection',
+        'features': <void>[
+          {
+            'type': 'Feature',
+            'geometry': {
+              'type': 'Point',
+              'coordinates': [
+                position.$2,
+                position.$1,
+              ],
+            },
+          },
+        ],
+      },
+    );
+  }
+
+  static String get layerId => 'current-location';
 }
 
 @freezed
