@@ -1,5 +1,43 @@
 # Changelog
 
+## [v2.7.0](https://github.com/YumNumm/EQMonitor/compare/v2.6.0...v2.7.0) - 2024-10-13
+- Fix/ios cd by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/764
+- build(deps): bump the dependencies group with 3 updates by @dependabot in https://github.com/YumNumm/EQMonitor/pull/765
+- [FIX] 震度データベースのJSON typesを変更 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/768
+- fix: Android CD by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/770
+- fix: PR Check Workflow by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/771
+- fix: replace `以降` to `以前` by @ChanTsune in https://github.com/YumNumm/EQMonitor/pull/769
+- release: v2.6.1のリリース準備 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/772
+- deploy-android.yaml を更新 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/773
+- build(deps): bump the dependencies group across 1 directory with 17 updates by @dependabot in https://github.com/YumNumm/EQMonitor/pull/775
+- Auto format - dependabot/pub/app/dependencies-770a5a817c by @github-actions in https://github.com/YumNumm/EQMonitor/pull/776
+- エラーハンドリングの強化 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/780
+- Restyled by dart-format by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/781
+- Auto format - dependabot/pub/app/dependencies-68cd607696 by @github-actions in https://github.com/YumNumm/EQMonitor/pull/786
+- build(deps): bump the dependencies group across 1 directory with 11 updates by @dependabot in https://github.com/YumNumm/EQMonitor/pull/785
+- Auto format - dependabot/pub/app/dependencies-bbe4171d1a by @github-actions in https://github.com/YumNumm/EQMonitor/pull/796
+- build(deps): bump rexml from 3.3.3 to 3.3.6 in /app/macos in the bundler group across 1 directory by @dependabot in https://github.com/YumNumm/EQMonitor/pull/793
+- build(deps): bump rexml from 3.3.5 to 3.3.6 in /app/android in the bundler group by @dependabot in https://github.com/YumNumm/EQMonitor/pull/794
+- build(deps): bump the dependencies group across 3 directories with 11 updates by @dependabot in https://github.com/YumNumm/EQMonitor/pull/795
+- build(deps): bump the dependencies group across 1 directory with 2 updates by @dependabot in https://github.com/YumNumm/EQMonitor/pull/810
+- Auto format - dependabot/github_actions/dependencies-8a3b30e1aa by @github-actions in https://github.com/YumNumm/EQMonitor/pull/812
+- build(deps): bump actions/upload-artifact from 4.3.6 to 4.4.0 in the dependencies group by @dependabot in https://github.com/YumNumm/EQMonitor/pull/811
+- Restyle 揺れ検知の実装 Part 1 by @restyled-io in https://github.com/YumNumm/EQMonitor/pull/816
+- Restyle 揺れ検知の実装 Part 1 by @restyled-io in https://github.com/YumNumm/EQMonitor/pull/817
+- build(deps): bump the dependencies group with 2 updates by @dependabot in https://github.com/YumNumm/EQMonitor/pull/818
+- 揺れ検知の実装 Part 1 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/814
+- build(deps): bump the dependencies group across 1 directory with 2 updates by @dependabot in https://github.com/YumNumm/EQMonitor/pull/821
+- Restyle [FEATURE] 現在地に基づく表示 by @restyled-io in https://github.com/YumNumm/EQMonitor/pull/823
+- build(deps): bump peter-evans/create-pull-request from 7.0.1 to 7.0.2 in the dependencies group by @dependabot in https://github.com/YumNumm/EQMonitor/pull/824
+- build(deps): bump fastlane from 2.222.0 to 2.223.1 in /app/android by @dependabot in https://github.com/YumNumm/EQMonitor/pull/832
+- build(deps): bump the dependencies group across 1 directory with 4 updates by @dependabot in https://github.com/YumNumm/EQMonitor/pull/830
+- build(deps): bump the dependencies group across 1 directory with 2 updates by @dependabot in https://github.com/YumNumm/EQMonitor/pull/837
+- build(deps): bump fastlane from 2.223.1 to 2.224.0 in /app/android by @dependabot in https://github.com/YumNumm/EQMonitor/pull/833
+- [FEATURE] 現在地に基づく表示 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/822
+- [feature] iOS18のアイコン対応 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/838
+- update: Flutter 3.24.2 -> 3.24.3 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/839
+- [fix] 位置情報周りの修正 by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/840
+
 ## [v2.6.1](https://github.com/YumNumm/EQMonitor/compare/v2.6.0...v2.6.1) - 2024-08-12
 - Fix/ios cd by @YumNumm in https://github.com/YumNumm/EQMonitor/pull/764
 - build(deps): bump the dependencies group with 3 updates by @dependabot in https://github.com/YumNumm/EQMonitor/pull/765
