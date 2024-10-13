@@ -1,8 +1,10 @@
 import 'dart:developer';
+import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/api/eq_api.dart';
+import 'package:eqmonitor/core/extension/random_select.dart';
 import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
 import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
@@ -48,7 +50,38 @@ class ShakeDetection extends _$ShakeDetection {
           }
         },
       );
-    return _pruneOldEvents(apiResult);
+    return _pruneOldEvents([
+      ...apiResult,
+      ShakeDetectionEvent(
+        id: null,
+        eventId: '1234',
+        bottomRight: const ShakeDetectionLatLng(latitude: 35, longitude: 135),
+        topLeft: const ShakeDetectionLatLng(latitude: 34, longitude: 134),
+        maxIntensity: JmaForecastIntensity.sixLower,
+        pointCount: 10,
+        serialNo: 1,
+        createdAt: DateTime.now().add(const Duration(seconds: 30)),
+        insertedAt: DateTime.now().add(const Duration(seconds: 30)),
+        regions: [
+          ShakeDetectionRegion(
+            name: 'ABSH01',
+            maxIntensity: JmaForecastIntensity.sixLower,
+            points: [
+              for (final point in ref
+                  .read(kyoshinObservationPointsProvider)
+                  .points
+                  .where((e) => math.Random().nextDouble() < 0.1))
+                ShakeDetectionPoint(
+                  code: point.code,
+                  intensity: JmaForecastIntensity.values.randomSelect,
+                ),
+            ]
+                .whereNot((e) => e.intensity == JmaForecastIntensity.unknown)
+                .toList(),
+          ),
+        ],
+      ),
+    ]);
   }
 
   /// 古くなったイベントを破棄
@@ -176,4 +209,6 @@ enum ShakeDetectionLevel {
         JmaForecastIntensity.unknown =>
           throw ArgumentError('unsupported JmaForecastIntensity: $intensity'),
       };
+
+  bool operator <(ShakeDetectionLevel other) => index < other.index;
 }
