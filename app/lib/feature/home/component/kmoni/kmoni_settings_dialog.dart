@@ -2,6 +2,7 @@ import 'package:eqmonitor/feature/home/component/kmoni/kmoni_scale.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/page/kmoni_settings_page.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/provider/kmoni_color_provider.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
+import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -30,14 +31,17 @@ class KmoniSettingsModal extends HookConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         barWidget,
-        SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              children: [
-                const KmoniSettingsUseToggle(),
-                if (state.useKmoni) const KmoniSettingsDialogInside(),
-              ],
+        Expanded(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const KmoniSettingsUseToggle(),
+                  if (state.useKmoni) const KmoniSettingsDialogInside(),
+                ],
+              ),
             ),
           ),
         ),
@@ -111,11 +115,38 @@ class KmoniSettingsDialogInside extends ConsumerWidget {
         SwitchListTile.adaptive(
           title: const Text('現在地のマーカーを表示する'),
           value: state.showCurrentLocationMarker,
-          onChanged: (value) => ref
-              .read(kmoniSettingsProvider.notifier)
-              .setShowCurrentLocationMarker(
-                value: value,
-              ),
+          onChanged: (value) async {
+            await ref
+                .read(kmoniSettingsProvider.notifier)
+                .setShowCurrentLocationMarker(
+                  value: value,
+                );
+            ref.invalidate(locationStreamProvider);
+          },
+        ),
+        ListTile(
+          title: const Text('観測点の枠表示モード'),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: DropdownMenu(
+              initialSelection: state.kmoniMarkerType,
+              onSelected: (value) =>
+                  ref.read(kmoniSettingsProvider.notifier).setMarkerType(
+                        type: value!,
+                      ),
+              dropdownMenuEntries: [
+                for (final type in KmoniMarkerType.values)
+                  DropdownMenuEntry(
+                    value: type,
+                    label: switch (type) {
+                      KmoniMarkerType.always => '常に枠を表示する',
+                      KmoniMarkerType.onlyEew => '緊急地震速報発表時のみ',
+                      KmoniMarkerType.never => '枠を表示しない',
+                    },
+                  ),
+              ],
+            ),
+          ),
         ),
       ],
     );

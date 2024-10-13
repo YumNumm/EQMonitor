@@ -91,8 +91,6 @@ dependencies:
   uuid: ^4.4.2
   version: ^3.0.2
   web_socket_client: ^0.1.4
-  widgetbook: ^3.8.1
-  widgetbook_annotation: ^3.1.0
 
 dev_dependencies:
   analyzer: ^6.7.0
@@ -109,7 +107,6 @@ dev_dependencies:
   riverpod_generator: ^3.0.0-dev.11
   riverpod_lint: ^3.0.0-dev.4
   test: ^1.24.9
-  widgetbook_generator: ^3.8.0
 
 flutter:
   uses-material-design: true

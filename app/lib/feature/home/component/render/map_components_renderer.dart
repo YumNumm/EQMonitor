@@ -208,32 +208,46 @@ class _CurrentLocationPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final offset = Offset(size.width / 2, size.height / 2);
+    // +印を描く
 
     canvas
-      ..drawCircle(
-        offset,
-        25,
+      ..drawLine(
+        Offset(offset.dx - 20, offset.dy),
+        Offset(offset.dx + 20, offset.dy),
         Paint()
           ..color = Colors.black
           ..isAntiAlias = true
+          ..strokeCap = StrokeCap.square
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 25,
+          ..strokeWidth = 20,
       )
-      ..drawCircle(
-        offset,
-        25,
+      ..drawLine(
+        Offset(offset.dx, offset.dy - 20),
+        Offset(offset.dx, offset.dy + 20),
+        Paint()
+          ..color = Colors.black
+          ..isAntiAlias = true
+          ..strokeCap = StrokeCap.square
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 20,
+      )
+      ..drawLine(
+        Offset(offset.dx - 20, offset.dy),
+        Offset(offset.dx + 20, offset.dy),
         Paint()
           ..color = Colors.white
           ..isAntiAlias = true
+          ..strokeCap = StrokeCap.square
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 18,
+          ..strokeWidth = 10,
       )
-      ..drawCircle(
-        offset,
-        25,
+      ..drawLine(
+        Offset(offset.dx, offset.dy - 20),
+        Offset(offset.dx, offset.dy + 20),
         Paint()
-          ..color = Colors.black
+          ..color = Colors.white
           ..isAntiAlias = true
+          ..strokeCap = StrokeCap.square
           ..style = PaintingStyle.stroke
           ..strokeWidth = 10,
       );

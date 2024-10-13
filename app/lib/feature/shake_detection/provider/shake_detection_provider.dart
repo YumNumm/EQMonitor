@@ -48,7 +48,9 @@ class ShakeDetection extends _$ShakeDetection {
           }
         },
       );
-    return _pruneOldEvents(apiResult);
+    return _pruneOldEvents([
+      ...apiResult,
+    ]);
   }
 
   /// 古くなったイベントを破棄
@@ -176,4 +178,6 @@ enum ShakeDetectionLevel {
         JmaForecastIntensity.unknown =>
           throw ArgumentError('unsupported JmaForecastIntensity: $intensity'),
       };
+
+  bool operator <(ShakeDetectionLevel other) => index < other.index;
 }
