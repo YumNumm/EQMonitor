@@ -98,12 +98,6 @@ class _DebugWidget extends ConsumerWidget {
                   const WebsocketEndpointSelectorRoute().push<void>(context),
             ),
             ListTile(
-              title: const Text('Earthquake Parameter'),
-              leading: const Icon(Icons.settings),
-              onTap: () =>
-                  const EarthquakeParameterListRoute().push<void>(context),
-            ),
-            ListTile(
               title: const Text('揺れ検知通知 購読'),
               leading: const Icon(Icons.notifications_active),
               onTap: () async {
