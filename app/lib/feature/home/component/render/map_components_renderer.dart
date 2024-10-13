@@ -67,8 +67,28 @@ class MapComponentsRenderer {
     return result;
   }
 
-  static Widget hypocenterIcon() => const CustomPaint(
+  Future<Uint8List> renderCurrentLocationIcon(
+    BuildContext context,
+  ) async {
+    final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final result = await _controller.captureFromWidget(
+      const CustomPaint(
+        painter: _CurrentLocationPainter(),
+        size: Size(80, 80),
+      ),
+      context: context,
+      pixelRatio: pixelRatio,
+    );
+    return result;
+  }
+
+  Widget hypocenterIcon() => const CustomPaint(
         painter: _HypocenterPainter(type: HypocenterType.normal),
+        size: Size(80, 80),
+      );
+
+  Widget currentLocationIcon() => const CustomPaint(
+        painter: _CurrentLocationPainter(),
         size: Size(80, 80),
       );
 }
@@ -180,6 +200,50 @@ class _HypocenterPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _) => false;
+}
+
+class _CurrentLocationPainter extends CustomPainter {
+  const _CurrentLocationPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final offset = Offset(size.width / 2, size.height / 2);
+
+    canvas
+      ..drawCircle(
+        offset,
+        25,
+        Paint()
+          ..color = Colors.black
+          ..isAntiAlias = true
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 25,
+      )
+      ..drawCircle(
+        offset,
+        25,
+        Paint()
+          ..color = Colors.white
+          ..isAntiAlias = true
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 18,
+      )
+      ..drawCircle(
+        offset,
+        25,
+        Paint()
+          ..color = Colors.black
+          ..isAntiAlias = true
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 10,
+      );
+  }
+
+  @override
+  bool shouldRepaint(covariant _CurrentLocationPainter _) => false;
+
+  @override
+  bool shouldRebuildSemantics(covariant _CurrentLocationPainter _) => false;
 }
 
 enum HypocenterType {

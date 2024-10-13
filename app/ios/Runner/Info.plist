@@ -52,6 +52,12 @@
 	<false/>
 	<key>FlutterDeepLinkingEnabled</key>
 	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>現在地の地震情報を通知・表示するために、位置情報を利用します</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>現在地の地震情報を通知・表示するために、位置情報を利用します</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>現在地に即した地震情報を表示するために、位置情報を利用します</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>

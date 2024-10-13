@@ -71,6 +71,15 @@ class HypocenterLowPreciseIconRender extends _$HypocenterLowPreciseIconRender {
   void onRendered(Uint8List data) => state = data;
 }
 
+@Riverpod(keepAlive: true)
+class CurrentLocationIconRender extends _$CurrentLocationIconRender {
+  @override
+  Uint8List? build() => null;
+
+  // ignore: use_setters_to_change_properties
+  void onRendered(Uint8List data) => state = data;
+}
+
 extension IntensityIconRenderEx on Map<JmaIntensity, Uint8List> {
   bool isAllRendered() => length == JmaIntensity.values.length;
 }

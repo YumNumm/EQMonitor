@@ -1,16 +1,18 @@
+import 'dart:developer';
+
 import 'package:app_settings/app_settings.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/config/permission/model/permission_state.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart' as handler;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'permission_status_provider.g.dart';
+part 'permission_notifier.g.dart';
 
 @Riverpod(keepAlive: true)
-class Permission extends _$Permission {
+class PermissionNotifier extends _$PermissionNotifier {
   @override
   PermissionStateModel build() {
     ref.listen(appLifeCycleProvider, (_, next) {
@@ -39,12 +41,16 @@ class Permission extends _$Permission {
       },
       criticalAlert: notificationPermission.criticalAlert ==
           AppleNotificationSetting.enabled,
+      backgroundLocation:
+          await Permission.locationAlways.status == PermissionStatus.granted,
+      location:
+          await Permission.locationWhenInUse.status == PermissionStatus.granted,
     );
   }
 
   Future<bool> notificationPermission() async {
-    final status = await handler.Permission.notification.status;
-    return status == handler.PermissionStatus.granted;
+    final status = await Permission.notification.status;
+    return status == PermissionStatus.granted;
   }
 
   Future<void> requestNotificationPermission() async {
@@ -58,5 +64,30 @@ class Permission extends _$Permission {
       await AppSettings.openAppSettings(type: AppSettingsType.notification);
     }
     await initialize();
+  }
+
+  Future<void> requestLocationWhenInUsePermission() async {
+    final status = await Permission.locationWhenInUse.request();
+    log(
+      'Permission requested: locationWhenInUse, status: $status',
+      name: 'PermissionNotifier',
+    );
+    if (status == PermissionStatus.permanentlyDenied) {
+      await AppSettings.openAppSettings(type: AppSettingsType.location);
+    }
+    ref.invalidateSelf();
+  }
+
+  Future<void> requestLocationAlwaysPermission() async {
+    final status = await Permission.locationAlways.request();
+    log(
+      'Permission requested: locationAlways, status: $status',
+      name: 'PermissionNotifier',
+    );
+    if (status == PermissionStatus.permanentlyDenied) {
+      await AppSettings.openAppSettings(type: AppSettingsType.location);
+    }
+
+    ref.invalidateSelf();
   }
 }
