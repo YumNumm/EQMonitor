@@ -20,7 +20,9 @@ Stream<Position> locationStream(LocationStreamRef ref) async* {
   }
 
   final currentPosition = await Geolocator.getCurrentPosition(
-    desiredAccuracy: LocationAccuracy.low,
+    locationSettings: const LocationSettings(
+      accuracy: LocationAccuracy.low,
+    ),
   );
   yield currentPosition;
 
