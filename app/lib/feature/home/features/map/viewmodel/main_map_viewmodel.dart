@@ -54,7 +54,7 @@ class MainMapViewModel extends _$MainMapViewModel {
         (_, value) => _onEewStateChanged(value ?? []),
       )
       ..listen(
-        kmoniSettingsProvider.select((e) => e.useKmoni),
+        kmoniSettingsProvider,
         (_, value) => _onKmoniSettingsChanged(value: value),
       )
       ..listen(
@@ -94,6 +94,7 @@ class MainMapViewModel extends _$MainMapViewModel {
       ..listen(eewSettingsNotifierProvider, (_, next) {
         _onEewSettingsChanged(next);
       });
+    _lastKmoniSettingsState = ref.read(kmoniSettingsProvider);
     return MainMapViewmodelState(
       isHomePosition: true,
       homeBoundary: defaultBoundary,
@@ -303,11 +304,19 @@ class MainMapViewModel extends _$MainMapViewModel {
       return;
     }
     if (!ref.read(kmoniSettingsProvider).useKmoni) {
-      await _kmoniObservationPointService?.update([]);
+      await _kmoniObservationPointService?.update(
+        points: [],
+        isInEew: false,
+        markerType: ref.read(kmoniSettingsProvider).kmoniMarkerType,
+      );
       return;
     }
 
-    await _kmoniObservationPointService?.update(values);
+    await _kmoniObservationPointService?.update(
+      points: values,
+      isInEew: ref.read(eewAliveTelegramProvider)?.isNotEmpty ?? false,
+      markerType: ref.read(kmoniSettingsProvider).kmoniMarkerType,
+    );
   }
 
   Future<void> _onShakeDetectionStateChanged(
@@ -319,17 +328,43 @@ class MainMapViewModel extends _$MainMapViewModel {
     await _shakeDetectionBorderService?.update(values);
   }
 
-  Future<void> _onKmoniSettingsChanged({required bool value}) async {
-    if (value) {
-      await _kmoniObservationPointService?.dispose();
-      _kmoniObservationPointService = _KmoniObservationPointService(
-        controller: _controller!,
-      );
-      await _kmoniObservationPointService?.init();
-    } else {
-      await _kmoniObservationPointService?.dispose();
-      _kmoniObservationPointService = null;
+  KmoniSettingsState? _lastKmoniSettingsState;
+
+  Future<void> _onKmoniSettingsChanged({
+    required KmoniSettingsState value,
+  }) async {
+    if (_lastKmoniSettingsState == value) {
+      return;
     }
+    if (_lastKmoniSettingsState?.useKmoni != value.useKmoni) {
+      if (value.useKmoni) {
+        await _kmoniObservationPointService?.dispose();
+        _kmoniObservationPointService = _KmoniObservationPointService(
+          controller: _controller!,
+        );
+        await _kmoniObservationPointService?.init();
+      } else {
+        await _kmoniObservationPointService?.dispose();
+        _kmoniObservationPointService = null;
+      }
+    }
+    if (_lastKmoniSettingsState?.kmoniMarkerType != value.kmoniMarkerType) {
+      await _kmoniObservationPointService?.update(
+        points: ref.read(kmoniViewModelProvider).analyzedPoints ?? [],
+        isInEew: ref.read(eewAliveTelegramProvider)?.isNotEmpty ?? false,
+        markerType: value.kmoniMarkerType,
+      );
+    }
+    if (_lastKmoniSettingsState?.showCurrentLocationMarker !=
+        value.showCurrentLocationMarker) {
+      if (value.showCurrentLocationMarker) {
+        await _currentLocationIconService?.dispose();
+        await _currentLocationIconService?.init();
+      } else {
+        await _currentLocationIconService?.dispose();
+      }
+    }
+    _lastKmoniSettingsState = value;
   }
 
   Future<void> startUpdateEew() async {
@@ -507,7 +542,9 @@ class MainMapViewModel extends _$MainMapViewModel {
 }
 
 class _KmoniObservationPointService {
-  _KmoniObservationPointService({required this.controller});
+  _KmoniObservationPointService({
+    required this.controller,
+  });
 
   final MapLibreMapController controller;
 
@@ -538,6 +575,10 @@ class _KmoniObservationPointService {
           'color',
         ],
         circleStrokeColor: Colors.grey.toHexStringRGB(),
+        circleStrokeOpacity: [
+          'get',
+          'strokeOpacity',
+        ],
         circleStrokeWidth: [
           'interpolate',
           ['linear'],
@@ -557,10 +598,18 @@ class _KmoniObservationPointService {
     );
   }
 
-  Future<void> update(List<AnalyzedKmoniObservationPoint> points) =>
+  Future<void> update({
+    required List<AnalyzedKmoniObservationPoint> points,
+    required bool isInEew,
+    required KmoniMarkerType markerType,
+  }) =>
       controller.setGeoJsonSource(
         layerId,
-        createGeoJson(points),
+        createGeoJson(
+          points: points,
+          isInEew: isInEew,
+          markerType: markerType,
+        ),
       );
 
   Future<void> dispose() async {
@@ -570,9 +619,11 @@ class _KmoniObservationPointService {
 
   static const String layerId = 'kmoni-circle';
 
-  Map<String, dynamic> createGeoJson(
-    List<AnalyzedKmoniObservationPoint> points,
-  ) =>
+  Map<String, dynamic> createGeoJson({
+    required List<AnalyzedKmoniObservationPoint> points,
+    required bool isInEew,
+    required KmoniMarkerType markerType,
+  }) =>
       {
         'type': 'FeatureCollection',
         'features': points
@@ -593,6 +644,11 @@ class _KmoniObservationPointService {
                       : null,
                   'intensity': e.intensityValue,
                   'name': e.point.name,
+                  'strokeOpacity': switch (markerType) {
+                    KmoniMarkerType.always => 1.0,
+                    KmoniMarkerType.onlyEew when isInEew => 1.0,
+                    _ => 0.0,
+                  },
                 },
               },
             )
@@ -1314,7 +1370,7 @@ class _ShakeDetectionBorderService {
     }
   }
 
-   bool _isVisible = true;
+  bool _isVisible = true;
 
   Future<void> tick() async {
     final milliseconds = DateTime.now().millisecondsSinceEpoch;
