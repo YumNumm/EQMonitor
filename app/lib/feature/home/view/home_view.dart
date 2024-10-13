@@ -36,7 +36,6 @@ import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.d
 import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_widget.dart';
 import 'package:eqmonitor/feature/home/features/map/view/main_map_view.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
-import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/fcm_token_change_detector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_authentication_service.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_settings_migrate_service.dart';
@@ -516,9 +515,6 @@ class _Sheet extends ConsumerWidget {
               leading: const Icon(Icons.bug_report),
               onTap: () => const DebuggerRoute().push<void>(context),
             ),
-          Text(
-            ref.watch(locationStreamProvider).toString(),
-          ),
           const SizedBox(height: 200),
         ],
       ),
