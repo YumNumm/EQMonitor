@@ -2,6 +2,7 @@ import 'package:eqmonitor/feature/home/component/kmoni/kmoni_scale.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/page/kmoni_settings_page.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/provider/kmoni_color_provider.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
+import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -111,11 +112,14 @@ class KmoniSettingsDialogInside extends ConsumerWidget {
         SwitchListTile.adaptive(
           title: const Text('現在地のマーカーを表示する'),
           value: state.showCurrentLocationMarker,
-          onChanged: (value) => ref
-              .read(kmoniSettingsProvider.notifier)
-              .setShowCurrentLocationMarker(
-                value: value,
-              ),
+          onChanged: (value) async {
+            await ref
+                .read(kmoniSettingsProvider.notifier)
+                .setShowCurrentLocationMarker(
+                  value: value,
+                );
+            ref.invalidate(locationStreamProvider);
+          },
         ),
       ],
     );
