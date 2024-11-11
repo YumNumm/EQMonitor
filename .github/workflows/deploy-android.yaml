@@ -41,13 +41,13 @@ jobs:
 
       - name: Set up ruby
         # https://github.com/ruby/setup-ruby/tree/v1/
-        uses: ruby/setup-ruby@f26937343756480a8cb3ae1f623b9c8d89ed6984
+        uses: ruby/setup-ruby@a2bbe5b1b236842c1cb7dd11e8e3b51e0a616acc
         with:
           bundler-cache: true
           working-directory: app/android
 
       # https://github.com/actions/setup-java/tree/v4/
-      - uses: actions/setup-java@b36c23c0d998641eff861008f374ee103c25ac73
+      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
         with:
           distribution: "oracle"
           java-version: "17"
@@ -106,7 +106,7 @@ jobs:
 
       - name: Set up ruby
         # https://github.com/ruby/setup-ruby/tree/v1/
-        uses: ruby/setup-ruby@f26937343756480a8cb3ae1f623b9c8d89ed6984
+        uses: ruby/setup-ruby@a2bbe5b1b236842c1cb7dd11e8e3b51e0a616acc
         with:
           bundler-cache: true
           working-directory: app/android
