@@ -17,14 +17,22 @@ import 'dart:typed_data' as $typed_data;
 const KyoshinObservationPoints$json = {
   '1': 'KyoshinObservationPoints',
   '2': [
-    {'1': 'points', '3': 1, '4': 3, '5': 11, '6': '.KyoshinObservationPoint', '10': 'points'},
+    {
+      '1': 'points',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.KyoshinObservationPoint',
+      '10': 'points'
+    },
   ],
 };
 
 /// Descriptor for `KyoshinObservationPoints`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List kyoshinObservationPointsDescriptor = $convert.base64Decode(
-    'ChhLeW9zaGluT2JzZXJ2YXRpb25Qb2ludHMSMAoGcG9pbnRzGAEgAygLMhguS3lvc2hpbk9ic2'
-    'VydmF0aW9uUG9pbnRSBnBvaW50cw==');
+final $typed_data.Uint8List kyoshinObservationPointsDescriptor =
+    $convert.base64Decode(
+        'ChhLeW9zaGluT2JzZXJ2YXRpb25Qb2ludHMSMAoGcG9pbnRzGAEgAygLMhguS3lvc2hpbk9ic2'
+        'VydmF0aW9uUG9pbnRSBnBvaW50cw==');
 
 @$core.Deprecated('Use kyoshinObservationPointDescriptor instead')
 const KyoshinObservationPoint$json = {
@@ -33,11 +41,28 @@ const KyoshinObservationPoint$json = {
     {'1': 'code', '3': 1, '4': 1, '5': 9, '10': 'code'},
     {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
     {'1': 'region', '3': 3, '4': 1, '5': 9, '10': 'region'},
-    {'1': 'location', '3': 4, '4': 1, '5': 11, '6': '.KyoshinObservationPoint.LatLng', '10': 'location'},
-    {'1': 'point', '3': 5, '4': 1, '5': 11, '6': '.KyoshinObservationPoint.Point', '10': 'point'},
+    {
+      '1': 'location',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.KyoshinObservationPoint.LatLng',
+      '10': 'location'
+    },
+    {
+      '1': 'point',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.KyoshinObservationPoint.Point',
+      '10': 'point'
+    },
     {'1': 'arv_400', '3': 6, '4': 1, '5': 1, '10': 'arv400'},
   ],
-  '3': [KyoshinObservationPoint_LatLng$json, KyoshinObservationPoint_Point$json],
+  '3': [
+    KyoshinObservationPoint_LatLng$json,
+    KyoshinObservationPoint_Point$json
+  ],
 };
 
 @$core.Deprecated('Use kyoshinObservationPointDescriptor instead')
@@ -67,4 +92,3 @@ final $typed_data.Uint8List kyoshinObservationPointDescriptor = $convert.base64D
     'BmFydjQwMBpCCgZMYXRMbmcSGgoIbGF0aXR1ZGUYASABKAFSCGxhdGl0dWRlEhwKCWxvbmdpdH'
     'VkZRgCIAEoAVIJbG9uZ2l0dWRlGiMKBVBvaW50EgwKAXgYASABKAVSAXgSDAoBeRgCIAEoBVIB'
     'eQ==');
-

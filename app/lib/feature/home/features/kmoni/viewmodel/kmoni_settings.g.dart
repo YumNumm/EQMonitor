@@ -52,7 +52,7 @@ const _$KmoniMarkerTypeEnumMap = {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$kmoniSettingsHash() => r'8340b5bb4d12719d1243ff4da13edec4ecfb16cb';
+String _$kmoniSettingsHash() => r'4d210d3435704e2155611374de259bf621c9ad49';
 
 /// See also [KmoniSettings].
 @ProviderFor(KmoniSettings)

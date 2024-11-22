@@ -27,8 +27,12 @@ mixin _$TsunamiParameter {
   String get version => throw _privateConstructorUsedError;
   List<TsunamiParameterItem> get items => throw _privateConstructorUsedError;
 
+  /// Serializes this TsunamiParameter to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of TsunamiParameter
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TsunamiParameterCopyWith<TsunamiParameter> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -58,6 +62,8 @@ class _$TsunamiParameterCopyWithImpl<$Res, $Val extends TsunamiParameter>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TsunamiParameter
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -122,6 +128,8 @@ class __$$TsunamiParameterImplCopyWithImpl<$Res>
       $Res Function(_$TsunamiParameterImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TsunamiParameter
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -215,12 +223,14 @@ class _$TsunamiParameterImpl implements _TsunamiParameter {
             const DeepCollectionEquality().equals(other._items, _items));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, responseId, responseTime, status,
       changeTime, version, const DeepCollectionEquality().hash(_items));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TsunamiParameter
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TsunamiParameterImplCopyWith<_$TsunamiParameterImpl> get copyWith =>
@@ -260,8 +270,11 @@ abstract class _TsunamiParameter implements TsunamiParameter {
   String get version;
   @override
   List<TsunamiParameterItem> get items;
+
+  /// Create a copy of TsunamiParameter
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TsunamiParameterImplCopyWith<_$TsunamiParameterImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -283,8 +296,12 @@ mixin _$TsunamiParameterItem {
   @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
   double get longitude => throw _privateConstructorUsedError;
 
+  /// Serializes this TsunamiParameterItem to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of TsunamiParameterItem
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $TsunamiParameterItemCopyWith<TsunamiParameterItem> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -319,6 +336,8 @@ class _$TsunamiParameterItemCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of TsunamiParameterItem
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -397,6 +416,8 @@ class __$$TsunamiParameterItemImplCopyWithImpl<$Res>
       $Res Function(_$TsunamiParameterItemImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of TsunamiParameterItem
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -506,12 +527,14 @@ class _$TsunamiParameterItemImpl implements _TsunamiParameterItem {
                 other.longitude == longitude));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, area, prefecture, code, name,
       kana, owner, latitude, longitude);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of TsunamiParameterItem
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$TsunamiParameterItemImplCopyWith<_$TsunamiParameterItemImpl>
@@ -561,8 +584,11 @@ abstract class _TsunamiParameterItem implements TsunamiParameterItem {
   @override
   @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
   double get longitude;
+
+  /// Create a copy of TsunamiParameterItem
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TsunamiParameterItemImplCopyWith<_$TsunamiParameterItemImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

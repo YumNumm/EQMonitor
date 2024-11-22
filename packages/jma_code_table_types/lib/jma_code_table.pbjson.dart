@@ -17,11 +17,46 @@ import 'dart:typed_data' as $typed_data;
 const JmaCodeTable$json = {
   '1': 'JmaCodeTable',
   '2': [
-    {'1': 'area_forecast_local_eew', '3': 22, '4': 1, '5': 11, '6': '.AreaForecastLocalEew', '10': 'areaForecastLocalEew'},
-    {'1': 'area_information_prefecture_earthquake', '3': 23, '4': 1, '5': 11, '6': '.AreaInformationPrefectureEarthquake', '10': 'areaInformationPrefectureEarthquake'},
-    {'1': 'area_epicenter', '3': 41, '4': 1, '5': 11, '6': '.AreaEpicenter', '10': 'areaEpicenter'},
-    {'1': 'area_epicenter_abbreviation', '3': 42, '4': 1, '5': 11, '6': '.AreaEpicenterAbbreviation', '10': 'areaEpicenterAbbreviation'},
-    {'1': 'area_epicenter_detail', '3': 43, '4': 1, '5': 11, '6': '.AreaEpicenterDetail', '10': 'areaEpicenterDetail'},
+    {
+      '1': 'area_forecast_local_eew',
+      '3': 22,
+      '4': 1,
+      '5': 11,
+      '6': '.AreaForecastLocalEew',
+      '10': 'areaForecastLocalEew'
+    },
+    {
+      '1': 'area_information_prefecture_earthquake',
+      '3': 23,
+      '4': 1,
+      '5': 11,
+      '6': '.AreaInformationPrefectureEarthquake',
+      '10': 'areaInformationPrefectureEarthquake'
+    },
+    {
+      '1': 'area_epicenter',
+      '3': 41,
+      '4': 1,
+      '5': 11,
+      '6': '.AreaEpicenter',
+      '10': 'areaEpicenter'
+    },
+    {
+      '1': 'area_epicenter_abbreviation',
+      '3': 42,
+      '4': 1,
+      '5': 11,
+      '6': '.AreaEpicenterAbbreviation',
+      '10': 'areaEpicenterAbbreviation'
+    },
+    {
+      '1': 'area_epicenter_detail',
+      '3': 43,
+      '4': 1,
+      '5': 11,
+      '6': '.AreaEpicenterDetail',
+      '10': 'areaEpicenterDetail'
+    },
   ],
 };
 
@@ -40,7 +75,14 @@ final $typed_data.Uint8List jmaCodeTableDescriptor = $convert.base64Decode(
 const AreaForecastLocalEew$json = {
   '1': 'AreaForecastLocalEew',
   '2': [
-    {'1': 'items', '3': 1, '4': 3, '5': 11, '6': '.AreaForecastLocalEew.AreaForecastLocalEewItem', '10': 'items'},
+    {
+      '1': 'items',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.AreaForecastLocalEew.AreaForecastLocalEewItem',
+      '10': 'items'
+    },
   ],
   '3': [AreaForecastLocalEew_AreaForecastLocalEewItem$json],
 };
@@ -68,13 +110,24 @@ final $typed_data.Uint8List areaForecastLocalEewDescriptor = $convert.base64Deco
 const AreaInformationPrefectureEarthquake$json = {
   '1': 'AreaInformationPrefectureEarthquake',
   '2': [
-    {'1': 'items', '3': 1, '4': 3, '5': 11, '6': '.AreaInformationPrefectureEarthquake.AreaInformationPrefectureEarthquakeItem', '10': 'items'},
+    {
+      '1': 'items',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6':
+          '.AreaInformationPrefectureEarthquake.AreaInformationPrefectureEarthquakeItem',
+      '10': 'items'
+    },
   ],
-  '3': [AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem$json],
+  '3': [
+    AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem$json
+  ],
 };
 
 @$core.Deprecated('Use areaInformationPrefectureEarthquakeDescriptor instead')
-const AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem$json = {
+const AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeItem$json =
+    {
   '1': 'AreaInformationPrefectureEarthquakeItem',
   '2': [
     {'1': 'code', '3': 1, '4': 1, '5': 9, '10': 'code'},
@@ -83,17 +136,25 @@ const AreaInformationPrefectureEarthquake_AreaInformationPrefectureEarthquakeIte
 };
 
 /// Descriptor for `AreaInformationPrefectureEarthquake`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List areaInformationPrefectureEarthquakeDescriptor = $convert.base64Decode(
-    'CiNBcmVhSW5mb3JtYXRpb25QcmVmZWN0dXJlRWFydGhxdWFrZRJiCgVpdGVtcxgBIAMoCzJMLk'
-    'FyZWFJbmZvcm1hdGlvblByZWZlY3R1cmVFYXJ0aHF1YWtlLkFyZWFJbmZvcm1hdGlvblByZWZl'
-    'Y3R1cmVFYXJ0aHF1YWtlSXRlbVIFaXRlbXMaUQonQXJlYUluZm9ybWF0aW9uUHJlZmVjdHVyZU'
-    'VhcnRocXVha2VJdGVtEhIKBGNvZGUYASABKAlSBGNvZGUSEgoEbmFtZRgCIAEoCVIEbmFtZQ==');
+final $typed_data.Uint8List areaInformationPrefectureEarthquakeDescriptor =
+    $convert.base64Decode(
+        'CiNBcmVhSW5mb3JtYXRpb25QcmVmZWN0dXJlRWFydGhxdWFrZRJiCgVpdGVtcxgBIAMoCzJMLk'
+        'FyZWFJbmZvcm1hdGlvblByZWZlY3R1cmVFYXJ0aHF1YWtlLkFyZWFJbmZvcm1hdGlvblByZWZl'
+        'Y3R1cmVFYXJ0aHF1YWtlSXRlbVIFaXRlbXMaUQonQXJlYUluZm9ybWF0aW9uUHJlZmVjdHVyZU'
+        'VhcnRocXVha2VJdGVtEhIKBGNvZGUYASABKAlSBGNvZGUSEgoEbmFtZRgCIAEoCVIEbmFtZQ==');
 
 @$core.Deprecated('Use areaEpicenterDescriptor instead')
 const AreaEpicenter$json = {
   '1': 'AreaEpicenter',
   '2': [
-    {'1': 'items', '3': 1, '4': 3, '5': 11, '6': '.AreaEpicenter.AreaEpicenterItem', '10': 'items'},
+    {
+      '1': 'items',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.AreaEpicenter.AreaEpicenterItem',
+      '10': 'items'
+    },
   ],
   '3': [AreaEpicenter_AreaEpicenterItem$json],
 };
@@ -117,7 +178,14 @@ final $typed_data.Uint8List areaEpicenterDescriptor = $convert.base64Decode(
 const AreaEpicenterAbbreviation$json = {
   '1': 'AreaEpicenterAbbreviation',
   '2': [
-    {'1': 'items', '3': 1, '4': 3, '5': 11, '6': '.AreaEpicenterAbbreviation.AreaEpicenterAbbreviationItem', '10': 'items'},
+    {
+      '1': 'items',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.AreaEpicenterAbbreviation.AreaEpicenterAbbreviationItem',
+      '10': 'items'
+    },
   ],
   '3': [AreaEpicenterAbbreviation_AreaEpicenterAbbreviationItem$json],
 };
@@ -142,7 +210,14 @@ final $typed_data.Uint8List areaEpicenterAbbreviationDescriptor = $convert.base6
 const AreaEpicenterDetail$json = {
   '1': 'AreaEpicenterDetail',
   '2': [
-    {'1': 'items', '3': 1, '4': 3, '5': 11, '6': '.AreaEpicenterDetail.AreaEpicenterDetailItem', '10': 'items'},
+    {
+      '1': 'items',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.AreaEpicenterDetail.AreaEpicenterDetailItem',
+      '10': 'items'
+    },
   ],
   '3': [AreaEpicenterDetail_AreaEpicenterDetailItem$json],
 };
@@ -161,4 +236,3 @@ final $typed_data.Uint8List areaEpicenterDetailDescriptor = $convert.base64Decod
     'ChNBcmVhRXBpY2VudGVyRGV0YWlsEkIKBWl0ZW1zGAEgAygLMiwuQXJlYUVwaWNlbnRlckRldG'
     'FpbC5BcmVhRXBpY2VudGVyRGV0YWlsSXRlbVIFaXRlbXMaQQoXQXJlYUVwaWNlbnRlckRldGFp'
     'bEl0ZW0SEgoEY29kZRgBIAEoCVIEY29kZRISCgRuYW1lGAIgASgJUgRuYW1l');
-
