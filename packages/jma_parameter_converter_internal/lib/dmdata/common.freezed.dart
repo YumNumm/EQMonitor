@@ -24,8 +24,12 @@ mixin _$ParameterRegion {
   String get name => throw _privateConstructorUsedError;
   String get kana => throw _privateConstructorUsedError;
 
+  /// Serializes this ParameterRegion to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ParameterRegion
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ParameterRegionCopyWith<ParameterRegion> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -49,6 +53,8 @@ class _$ParameterRegionCopyWithImpl<$Res, $Val extends ParameterRegion>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ParameterRegion
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -92,6 +98,8 @@ class __$$ParameterRegionImplCopyWithImpl<$Res>
       _$ParameterRegionImpl _value, $Res Function(_$ParameterRegionImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ParameterRegion
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -147,11 +155,13 @@ class _$ParameterRegionImpl implements _ParameterRegion {
             (identical(other.kana, kana) || other.kana == kana));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, code, name, kana);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ParameterRegion
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ParameterRegionImplCopyWith<_$ParameterRegionImpl> get copyWith =>
@@ -181,8 +191,11 @@ abstract class _ParameterRegion implements ParameterRegion {
   String get name;
   @override
   String get kana;
+
+  /// Create a copy of ParameterRegion
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ParameterRegionImplCopyWith<_$ParameterRegionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -197,8 +210,12 @@ mixin _$ParameterCity {
   String get name => throw _privateConstructorUsedError;
   String get kana => throw _privateConstructorUsedError;
 
+  /// Serializes this ParameterCity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ParameterCity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ParameterCityCopyWith<ParameterCity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -222,6 +239,8 @@ class _$ParameterCityCopyWithImpl<$Res, $Val extends ParameterCity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ParameterCity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -265,6 +284,8 @@ class __$$ParameterCityImplCopyWithImpl<$Res>
       _$ParameterCityImpl _value, $Res Function(_$ParameterCityImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ParameterCity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -320,11 +341,13 @@ class _$ParameterCityImpl implements _ParameterCity {
             (identical(other.kana, kana) || other.kana == kana));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, code, name, kana);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ParameterCity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ParameterCityImplCopyWith<_$ParameterCityImpl> get copyWith =>
@@ -353,8 +376,11 @@ abstract class _ParameterCity implements ParameterCity {
   String get name;
   @override
   String get kana;
+
+  /// Create a copy of ParameterCity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ParameterCityImplCopyWith<_$ParameterCityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
