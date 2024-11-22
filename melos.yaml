@@ -8,13 +8,11 @@ command:
   bootstrap:
     runPubGetInParallel: false
     environment:
-      sdk: ^3.5.3
-      flutter: ^3.24.3
+      sdk: ^3.5.4
+      flutter: ^3.24.5
 
 scripts:
   analyze:
-    # We are setting the concurrency to 1 because a higher concurrency can crash
-    # the analysis server on low performance machines (like GitHub Actions).
     run: |
       melos exec -c 1 -- \
         dart analyze . --fatal-infos
@@ -33,9 +31,6 @@ scripts:
   generate:flutter:
     run: melos exec -c 1 --depends-on="build_runner" --flutter -- "flutter pub run build_runner build --delete-conflicting-outputs"
     description: Build all generated files for Flutter packages in this project.
-
-  format:
-    exec: $PWD/tools/formatter/format.sh
 
   clean-all:
     run: melos clean &&  melos exec "flutter clean"
