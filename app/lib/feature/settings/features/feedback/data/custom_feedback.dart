@@ -12,7 +12,7 @@ class CustomFeedback with _$CustomFeedback {
     bool? isReplyRequested,
 
     /// スクリーンショットを添付するかどうか
-    @Default(true)  bool isScreenshotAttached,
+    @Default(true) bool isScreenshotAttached,
   }) = _CustomFeedback;
 
   factory CustomFeedback.fromJson(Map<String, dynamic> json) =>

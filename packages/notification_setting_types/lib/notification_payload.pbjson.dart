@@ -45,11 +45,40 @@ const NotificationPayload$json = {
   '1': 'NotificationPayload',
   '2': [
     {'1': 'event_id', '3': 1, '4': 1, '5': 9, '10': 'eventId'},
-    {'1': 'type', '3': 2, '4': 1, '5': 14, '6': '.eqmonitor.NotificationPayload.Type', '10': 'type'},
-    {'1': 'eew_information', '3': 3, '4': 1, '5': 11, '6': '.eqmonitor.NotificationPayload.EewInformation', '9': 0, '10': 'eewInformation'},
-    {'1': 'earthquake_information', '3': 4, '4': 1, '5': 11, '6': '.eqmonitor.NotificationPayload.EarthquakeInformation', '9': 0, '10': 'earthquakeInformation'},
+    {
+      '1': 'type',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.eqmonitor.NotificationPayload.Type',
+      '10': 'type'
+    },
+    {
+      '1': 'eew_information',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.eqmonitor.NotificationPayload.EewInformation',
+      '9': 0,
+      '10': 'eewInformation'
+    },
+    {
+      '1': 'earthquake_information',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.eqmonitor.NotificationPayload.EarthquakeInformation',
+      '9': 0,
+      '10': 'earthquakeInformation'
+    },
   ],
-  '3': [NotificationPayload_EewInformation$json, NotificationPayload_EarthquakeInformation$json, NotificationPayload_RegionIntensity$json, NotificationPayload_EewRegionIntensity$json, NotificationPayload_HypoInformation$json],
+  '3': [
+    NotificationPayload_EewInformation$json,
+    NotificationPayload_EarthquakeInformation$json,
+    NotificationPayload_RegionIntensity$json,
+    NotificationPayload_EewRegionIntensity$json,
+    NotificationPayload_HypoInformation$json
+  ],
   '4': [NotificationPayload_Type$json],
   '8': [
     {'1': 'information'},
@@ -60,9 +89,32 @@ const NotificationPayload$json = {
 const NotificationPayload_EewInformation$json = {
   '1': 'EewInformation',
   '2': [
-    {'1': 'hypo_information', '3': 1, '4': 1, '5': 11, '6': '.eqmonitor.NotificationPayload.HypoInformation', '10': 'hypoInformation'},
-    {'1': 'max_intensity', '3': 2, '4': 1, '5': 14, '6': '.eqmonitor.JmaIntensity', '9': 0, '10': 'maxIntensity', '17': true},
-    {'1': 'region_intensities', '3': 3, '4': 3, '5': 11, '6': '.eqmonitor.NotificationPayload.EewRegionIntensity', '10': 'regionIntensities'},
+    {
+      '1': 'hypo_information',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.eqmonitor.NotificationPayload.HypoInformation',
+      '10': 'hypoInformation'
+    },
+    {
+      '1': 'max_intensity',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.eqmonitor.JmaIntensity',
+      '9': 0,
+      '10': 'maxIntensity',
+      '17': true
+    },
+    {
+      '1': 'region_intensities',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.eqmonitor.NotificationPayload.EewRegionIntensity',
+      '10': 'regionIntensities'
+    },
   ],
   '8': [
     {'1': '_max_intensity'},
@@ -73,9 +125,32 @@ const NotificationPayload_EewInformation$json = {
 const NotificationPayload_EarthquakeInformation$json = {
   '1': 'EarthquakeInformation',
   '2': [
-    {'1': 'hypo_information', '3': 1, '4': 1, '5': 11, '6': '.eqmonitor.NotificationPayload.HypoInformation', '10': 'hypoInformation'},
-    {'1': 'max_intensity', '3': 2, '4': 1, '5': 14, '6': '.eqmonitor.JmaIntensity', '9': 0, '10': 'maxIntensity', '17': true},
-    {'1': 'region_intensities', '3': 3, '4': 3, '5': 11, '6': '.eqmonitor.NotificationPayload.RegionIntensity', '10': 'regionIntensities'},
+    {
+      '1': 'hypo_information',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.eqmonitor.NotificationPayload.HypoInformation',
+      '10': 'hypoInformation'
+    },
+    {
+      '1': 'max_intensity',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.eqmonitor.JmaIntensity',
+      '9': 0,
+      '10': 'maxIntensity',
+      '17': true
+    },
+    {
+      '1': 'region_intensities',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.eqmonitor.NotificationPayload.RegionIntensity',
+      '10': 'regionIntensities'
+    },
   ],
   '8': [
     {'1': '_max_intensity'},
@@ -87,7 +162,14 @@ const NotificationPayload_RegionIntensity$json = {
   '1': 'RegionIntensity',
   '2': [
     {'1': 'code', '3': 1, '4': 1, '5': 9, '10': 'code'},
-    {'1': 'intensity', '3': 2, '4': 1, '5': 14, '6': '.eqmonitor.JmaIntensity', '10': 'intensity'},
+    {
+      '1': 'intensity',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.eqmonitor.JmaIntensity',
+      '10': 'intensity'
+    },
   ],
 };
 
@@ -96,8 +178,24 @@ const NotificationPayload_EewRegionIntensity$json = {
   '1': 'EewRegionIntensity',
   '2': [
     {'1': 'code', '3': 1, '4': 1, '5': 9, '10': 'code'},
-    {'1': 'intensity', '3': 2, '4': 1, '5': 14, '6': '.eqmonitor.JmaIntensity', '10': 'intensity'},
-    {'1': 'arrival_time', '3': 3, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '9': 0, '10': 'arrivalTime', '17': true},
+    {
+      '1': 'intensity',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.eqmonitor.JmaIntensity',
+      '10': 'intensity'
+    },
+    {
+      '1': 'arrival_time',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '9': 0,
+      '10': 'arrivalTime',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_arrival_time'},
@@ -155,4 +253,3 @@ final $typed_data.Uint8List notificationPayloadDescriptor = $convert.base64Decod
     'ABKAJSCWxvbmdpdHVkZRIUCgVkZXB0aBgFIAEoBVIFZGVwdGgSHAoJbWFnbml0dWRlGAYgASgC'
     'UgltYWduaXR1ZGUiPwoEVHlwZRIUChBUWVBFX1VOU1BFQ0lGSUVEEAASEwoPVFlQRV9FQVJUSF'
     'FVQUtFEAESDAoIVFlQRV9FRVcQAkINCgtpbmZvcm1hdGlvbg==');
-

@@ -1,7 +1,6 @@
 import 'package:lat_lng/src/lat_lng.dart';
 
 class LatLngBoundary {
-
   factory LatLngBoundary.fromTwo(LatLng one, LatLng two) {
     final northEast = LatLng(
       one.lat > two.lat ? one.lat : two.lat,
