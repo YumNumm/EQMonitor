@@ -17,7 +17,14 @@ import 'dart:typed_data' as $typed_data;
 const JmaMap$json = {
   '1': 'JmaMap',
   '2': [
-    {'1': 'data', '3': 1, '4': 3, '5': 11, '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.JmaMapData', '10': 'data'},
+    {
+      '1': 'data',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.JmaMapData',
+      '10': 'data'
+    },
   ],
   '3': [JmaMap_JmaMapData$json],
 };
@@ -26,8 +33,22 @@ const JmaMap$json = {
 const JmaMap_JmaMapData$json = {
   '1': 'JmaMapData',
   '2': [
-    {'1': 'mapType', '3': 1, '4': 1, '5': 14, '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.JmaMapData.JmaMapType', '10': 'mapType'},
-    {'1': 'data', '3': 2, '4': 3, '5': 11, '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.JmaMapData.JmaMapDataItem', '10': 'data'},
+    {
+      '1': 'mapType',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.JmaMapData.JmaMapType',
+      '10': 'mapType'
+    },
+    {
+      '1': 'data',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.JmaMapData.JmaMapDataItem',
+      '10': 'data'
+    },
   ],
   '3': [JmaMap_JmaMapData_JmaMapDataItem$json],
   '4': [JmaMap_JmaMapData_JmaMapType$json],
@@ -37,8 +58,23 @@ const JmaMap_JmaMapData$json = {
 const JmaMap_JmaMapData_JmaMapDataItem$json = {
   '1': 'JmaMapDataItem',
   '2': [
-    {'1': 'bounds', '3': 1, '4': 1, '5': 11, '6': '.net.yumnumm.eqmonitor.jma_map.LatLngBounds', '10': 'bounds'},
-    {'1': 'property', '3': 2, '4': 1, '5': 11, '6': '.net.yumnumm.eqmonitor.jma_map.JmaMap.JmaMapData.JmaMapDataItem.Property', '10': 'property'},
+    {
+      '1': 'bounds',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.net.yumnumm.eqmonitor.jma_map.LatLngBounds',
+      '10': 'bounds'
+    },
+    {
+      '1': 'property',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6':
+          '.net.yumnumm.eqmonitor.jma_map.JmaMap.JmaMapData.JmaMapDataItem.Property',
+      '10': 'property'
+    },
   ],
   '3': [JmaMap_JmaMapData_JmaMapDataItem_Property$json],
 };
@@ -83,8 +119,22 @@ final $typed_data.Uint8List jmaMapDescriptor = $convert.base64Decode(
 const LatLngBounds$json = {
   '1': 'LatLngBounds',
   '2': [
-    {'1': 'southWest', '3': 1, '4': 1, '5': 11, '6': '.net.yumnumm.eqmonitor.jma_map.LatLng', '10': 'southWest'},
-    {'1': 'northEast', '3': 2, '4': 1, '5': 11, '6': '.net.yumnumm.eqmonitor.jma_map.LatLng', '10': 'northEast'},
+    {
+      '1': 'southWest',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.net.yumnumm.eqmonitor.jma_map.LatLng',
+      '10': 'southWest'
+    },
+    {
+      '1': 'northEast',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.net.yumnumm.eqmonitor.jma_map.LatLng',
+      '10': 'northEast'
+    },
   ],
 };
 
@@ -106,4 +156,3 @@ const LatLng$json = {
 /// Descriptor for `LatLng`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List latLngDescriptor = $convert.base64Decode(
     'CgZMYXRMbmcSEAoDbGF0GAEgASgBUgNsYXQSEAoDbG5nGAIgASgBUgNsbmc=');
-

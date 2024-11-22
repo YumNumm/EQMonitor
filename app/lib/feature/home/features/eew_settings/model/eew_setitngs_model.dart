@@ -11,5 +11,5 @@ class EewSetitngs with _$EewSetitngs {
   }) = _EewSetitngs;
 
   factory EewSetitngs.fromJson(Map<String, dynamic> json) =>
-    _$EewSetitngsFromJson(json);
+      _$EewSetitngsFromJson(json);
 }
