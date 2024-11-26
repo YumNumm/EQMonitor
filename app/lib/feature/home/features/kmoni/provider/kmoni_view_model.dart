@@ -177,7 +177,7 @@ class KmoniViewModel extends _$KmoniViewModel {
           const Duration(seconds: 1),
           (_) => _update(),
         );
-        talker.logTyped(
+        talker.logCustom(
           KmoniLog('遅延調整を行いました ${diff.inMicroseconds / 1000}ms'),
         );
         return diff;
@@ -185,7 +185,7 @@ class KmoniViewModel extends _$KmoniViewModel {
           .timeout(const Duration(seconds: 5));
       // ignore: avoid_catches_without_on_clauses
     } catch (e) {
-      talker.logTyped(
+      talker.logCustom(
         KmoniLog('遅延調整失敗 $e'),
       );
       state = state.copyWith(isDelayAdjusting: false);
