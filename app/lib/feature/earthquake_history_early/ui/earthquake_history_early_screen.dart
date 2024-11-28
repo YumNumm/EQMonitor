@@ -244,9 +244,6 @@ class _SliverListBody extends HookConsumerWidget {
     return RefreshIndicator(
       onRefresh: () async => onRefresh?.call(),
       child: switch (state) {
-        AsyncLoading() => const Center(
-            child: CircularProgressIndicator.adaptive(),
-          ),
         AsyncError(:final error) => () {
             final valueOrNull = state.valueOrNull;
             if (valueOrNull != null) {
@@ -305,6 +302,9 @@ class _SliverListBody extends HookConsumerWidget {
                 child: listView(data: value),
               ),
             ],
+          ),
+        _ => const Center(
+            child: CircularProgressIndicator.adaptive(),
           ),
       },
     );

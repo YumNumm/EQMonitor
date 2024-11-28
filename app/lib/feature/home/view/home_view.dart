@@ -649,10 +649,6 @@ class _NotificationMigrationWidget extends ConsumerWidget {
     final state =
         ref.watch(notificationRemoteSettingsInitialSetupNotifierProvider);
     return switch (state) {
-      AsyncLoading() => const ListTile(
-          title: Text('通知設定の移行中'),
-          leading: CircularProgressIndicator.adaptive(),
-        ),
       AsyncError(:final error) => BorderedContainer(
           elevation: 1,
           child: ListTile(
@@ -697,6 +693,10 @@ class _NotificationMigrationWidget extends ConsumerWidget {
               },
             ),
         },
+      _ => const ListTile(
+          title: Text('通知設定の移行中'),
+          leading: CircularProgressIndicator.adaptive(),
+        ),
     };
   }
 }

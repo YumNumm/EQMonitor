@@ -155,11 +155,6 @@ class _ShowDonationButton extends HookConsumerWidget {
           const SizedBox(width: 8),
           Expanded(
             child: switch (state) {
-              AsyncLoading() => ActionButton.text(
-                  context: context,
-                  text: '読み込み中...',
-                  onPressed: () {},
-                ),
               AsyncError() => ActionButton.text(
                   context: context,
                   text: '読み込みに失敗しました',
@@ -235,6 +230,11 @@ class _ShowDonationButton extends HookConsumerWidget {
                     ],
                   );
                 }(),
+              _ => ActionButton.text(
+                  context: context,
+                  text: '読み込み中...',
+                  onPressed: () {},
+                )
             },
           ),
         ],

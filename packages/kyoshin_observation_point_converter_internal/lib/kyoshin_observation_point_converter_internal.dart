@@ -24,7 +24,7 @@ class KyoshinObservationPointConverter {
   }
 
   Future<GeoJSON> loadMap() async {
-    final file = File("AreaForecastLocalE.json");
+    final file = File('AreaForecastLocalE.json');
 
     final geojson = GeoJSON.fromJSON(await file.readAsString());
     return geojson;
@@ -38,23 +38,25 @@ class KyoshinObservationPointConverter {
     for (final point in points) {
       print(point.code);
 
-      result.add(KyoshinObservationPoint(
-        code: point.code,
-        location: KyoshinObservationPoint_LatLng(
-          latitude: point.latitude,
-          longitude: point.longitude,
+      result.add(
+        KyoshinObservationPoint(
+          code: point.code,
+          location: KyoshinObservationPoint_LatLng(
+            latitude: point.latitude,
+            longitude: point.longitude,
+          ),
+          name: point.name,
+          point: KyoshinObservationPoint_Point(
+            x: point.x,
+            y: point.y,
+          ),
+          region: point.region,
+          arv400: await _getArv(
+            latitude: point.latitude,
+            longitude: point.longitude,
+          ),
         ),
-        name: point.name,
-        point: KyoshinObservationPoint_Point(
-          x: point.x,
-          y: point.y,
-        ),
-        region: point.region,
-        arv400: await _getArv(
-          latitude: point.latitude,
-          longitude: point.longitude,
-        ),
-      ));
+      );
     }
     return KyoshinObservationPoints(
       points: result,
@@ -66,13 +68,13 @@ class KyoshinObservationPointConverter {
     required double longitude,
   }) async {
     // Cacheのチェック
-    final cacheFile = File("cache/${latitude}_$longitude.json");
+    final cacheFile = File('cache/${latitude}_$longitude.json');
     if (await cacheFile.exists()) {
       final json =
           jsonDecode(await cacheFile.readAsString()) as Map<String, dynamic>;
-      final arvStr = (((json["features"] as List<dynamic>?)?.first
-              as Map<String, dynamic>?)?["properties"]
-          as Map<String, dynamic>?)?["ARV"] as String?;
+      final arvStr = (((json['features'] as List<dynamic>?)?.first
+              as Map<String, dynamic>?)?['properties']
+          as Map<String, dynamic>?)?['ARV'] as String?;
       final arv = double.tryParse(arvStr.toString());
       return arv;
     }
@@ -80,32 +82,24 @@ class KyoshinObservationPointConverter {
     final response = await http.get(
       Uri.parse(
           'https://www.j-shis.bosai.go.jp/map/api/sstrct/V2/meshinfo.geojson'
-          '?position=${longitude},${latitude}'
+          '?position=$longitude,$latitude'
           '&epsg=4326'),
     );
     final json = jsonDecode(response.body) as Map<String, dynamic>;
     print(json);
-    final arvStr = (((json["features"] as List<dynamic>?)?.first
-            as Map<String, dynamic>?)?["properties"]
-        as Map<String, dynamic>?)?["ARV"] as String?;
+    final arvStr = (((json['features'] as List<dynamic>?)?.first
+            as Map<String, dynamic>?)?['properties']
+        as Map<String, dynamic>?)?['ARV'] as String?;
     final arv = double.tryParse(arvStr.toString());
     cacheFile.writeAsString(
       jsonEncode(json),
     );
-    print("ARV: $arv");
+    print('ARV: $arv');
     return null;
   }
 }
 
 class ObservationModel {
-  final String code;
-  final String name;
-  final String region;
-  final double latitude;
-  final double longitude;
-  final int x;
-  final int y;
-
   ObservationModel({
     required this.code,
     required this.name,
@@ -117,19 +111,26 @@ class ObservationModel {
   });
 
   factory ObservationModel.fromJson(Map<String, dynamic> json) {
-    if (!json.containsKey("Point")) {
-      throw ArgumentError("Code is required.");
+    if (!json.containsKey('Point')) {
+      throw ArgumentError('Code is required.');
     }
     return ObservationModel(
-      code: json["Code"],
-      name: json["Name"],
-      region: json["Region"],
+      code: json['Code'] as String,
+      name: json['Name'] as String,
+      region: json['Region'] as String,
       latitude:
-          (json["Location"] as Map<String, dynamic>)["Latitude"] as double,
+          (json['Location'] as Map<String, dynamic>)['Latitude'] as double,
       longitude:
-          (json["Location"] as Map<String, dynamic>)["Longitude"] as double,
-      x: (json["Point"] as Map<String, dynamic>)["X"] as int,
-      y: (json["Point"] as Map<String, dynamic>)["Y"] as int,
+          (json['Location'] as Map<String, dynamic>)['Longitude'] as double,
+      x: (json['Point'] as Map<String, dynamic>)['X'] as int,
+      y: (json['Point'] as Map<String, dynamic>)['Y'] as int,
     );
   }
+  final String code;
+  final String name;
+  final String region;
+  final double latitude;
+  final double longitude;
+  final int x;
+  final int y;
 }

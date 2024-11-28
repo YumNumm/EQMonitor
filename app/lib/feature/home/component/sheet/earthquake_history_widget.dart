@@ -62,7 +62,6 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
                       .toList(),
                 );
               }(),
-            AsyncLoading() => loading,
             AsyncError(:final error) => ErrorInfoWidget(
                 error: error,
                 onRefresh: () async {
@@ -71,6 +70,7 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
                       .refresh();
                 },
               ),
+            _ => loading,
           },
           Row(
             children: [
