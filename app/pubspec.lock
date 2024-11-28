@@ -673,10 +673,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_markdown
-      sha256: "999a4e3cb3e1532a971c86d6c73a480264f6a687959d4887cb4e2990821827e4"
+      sha256: "255b00afa1a7bad19727da6a7780cf3db6c3c12e68d302d85e0ff1fdf173db9e"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.4+2"
+    version: "0.7.4+3"
   flutter_riverpod:
     dependency: transitive
     description:
@@ -1276,10 +1276,10 @@ packages:
     dependency: transitive
     description:
       name: path_provider_android
-      sha256: c464428172cb986b758c6d1724c603097febb8fb855aa265aeecc9280c294d4a
+      sha256: "8c4967f8b7cb46dc914e178daa29813d83ae502e0529d7b0478330616a691ef7"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.12"
+    version: "2.2.14"
   path_provider_foundation:
     dependency: transitive
     description:
@@ -1629,10 +1629,10 @@ packages:
     dependency: transitive
     description:
       name: shelf_web_socket
-      sha256: "073c147238594ecd0d193f3456a5fe91c4b0abbcc68bf5cd95b36c4e194ac611"
+      sha256: cc36c297b52866d203dbf9332263c94becc2fe0ceaa9681d07b6ef9807023b67
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   shorebird_code_push:
     dependency: "direct main"
     description:
@@ -1754,34 +1754,34 @@ packages:
     dependency: transitive
     description:
       name: talker
-      sha256: "9d1c777f12ac49db3bf7b3e3977a09041a23da0fc65b7c12f0530c2045128104"
+      sha256: f387ad9137b211ae8cd754325680b7fb76feadaf1f142be7580ae59043a81651
       url: "https://pub.dev"
     source: hosted
-    version: "4.4.7"
+    version: "4.5.1"
   talker_dio_logger:
     dependency: "direct main"
     description:
       name: talker_dio_logger
-      sha256: "9f63452dac8f7ab544b19f7b1f58bf5a5a94ed2e159e3fdb7a010e9db35339f6"
+      sha256: "76877bde30ff555c605234c1ce198488a16d9d24f3a684ba0928204bb5be8a35"
       url: "https://pub.dev"
     source: hosted
-    version: "4.4.7"
+    version: "4.5.1"
   talker_flutter:
     dependency: "direct main"
     description:
       name: talker_flutter
-      sha256: "7557c3088dbf341d1f9b6aac12ed1a15663e5e6a0165a29787070320c7edaa4e"
+      sha256: "4918292d1ac70f6cd23172f4292c7e777ab059edf68196993b912c24b30b236e"
       url: "https://pub.dev"
     source: hosted
-    version: "4.4.7"
+    version: "4.5.1"
   talker_logger:
     dependency: transitive
     description:
       name: talker_logger
-      sha256: e2b59c1708c2677d15017c1b248357a6f55c68bd4c415e878ff5addaba8aaab4
+      sha256: f52be00b01a7cf74ab6ffbb69da8d33755d42b5381a16b963dbd36d75cc98c50
       url: "https://pub.dev"
     source: hosted
-    version: "4.4.7"
+    version: "4.5.1"
   term_glyph:
     dependency: transitive
     description:
@@ -1938,10 +1938,10 @@ packages:
     dependency: transitive
     description:
       name: vector_graphics_compiler
-      sha256: ab9ff38fc771e9ee1139320adbe3d18a60327370c218c60752068ebee4b49ab1
+      sha256: "1b4b9e706a10294258727674a340ae0d6e64a7231980f9f9a3d12e4b42407aad"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.15"
+    version: "1.1.16"
   vector_math:
     dependency: transitive
     description:

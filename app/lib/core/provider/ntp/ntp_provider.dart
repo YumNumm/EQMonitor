@@ -50,7 +50,7 @@ class Ntp extends _$Ntp {
 
     ref
         .read(talkerProvider)
-        .logTyped(NtpLog('NTP Time Sync: offset ${offset}ms'));
+        .logCustom(NtpLog('NTP Time Sync: offset ${offset}ms'));
   }
 
   DateTime? now() {
