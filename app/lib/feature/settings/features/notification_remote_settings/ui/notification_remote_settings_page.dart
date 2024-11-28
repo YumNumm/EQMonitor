@@ -117,7 +117,15 @@ class _Body extends ConsumerWidget {
     final state = ref.watch(notificationRemoteSettingsNotifierProvider);
 
     return switch (state) {
-      AsyncLoading() => const Center(
+      AsyncError(:final error) => ErrorInfoWidget(
+          error: error,
+          onRefresh: () =>
+              ref.refresh(notificationRemoteSettingsNotifierProvider),
+        ),
+      AsyncData(:final value) => _Data(
+          state: value,
+        ),
+      _ => const Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -134,14 +142,6 @@ class _Body extends ConsumerWidget {
               ),
             ],
           ),
-        ),
-      AsyncError(:final error) => ErrorInfoWidget(
-          error: error,
-          onRefresh: () =>
-              ref.refresh(notificationRemoteSettingsNotifierProvider),
-        ),
-      AsyncData(:final value) => _Data(
-          state: value,
         ),
     };
   }

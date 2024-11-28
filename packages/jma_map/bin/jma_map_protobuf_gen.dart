@@ -77,7 +77,7 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
         }
       } else if (geometryType == 'MultiLineString') {
         for (final e in coordinates) {
-          for (final list in e) {
+          for (final list in e as List<dynamic>) {
             latLngs.add(
               LatLng(
                 lat: list[1] as double,

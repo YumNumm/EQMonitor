@@ -50,7 +50,7 @@ class InformationHistoryPage extends HookConsumerWidget {
                       ref.invalidate(informationHistoryViewModelProvider),
                 ),
               ),
-            AsyncLoading() || null => const _Loading(),
+            _ => const _Loading(),
           },
         ],
       ),

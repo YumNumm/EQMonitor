@@ -9,7 +9,7 @@ environment:
 # Add regular dependencies here.
 dependencies:
   collection: ^1.17.1
-  file: ^7.0.0
+  file: ^6.1.4
   freezed_annotation: ^2.2.0
   http: ^1.2.1
   jma_parameter_types:

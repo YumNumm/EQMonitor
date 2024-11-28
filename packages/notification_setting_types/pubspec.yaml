@@ -4,6 +4,7 @@ environment:
   sdk: ^3.5.4
 
 dependencies:
+  fixnum: ^1.1.1
   protobuf: ^3.1.0
 
 dev_dependencies:
