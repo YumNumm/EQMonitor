@@ -12,3 +12,7 @@ dependencies:
     git:
       url: https://github.com/YumNumm/EQMonitor.git
       path: packages/eqapi_types
+
+dev_dependencies:
+  eqmonitor_lints:
+    path: ../eqmonitor_lints
