@@ -26,10 +26,10 @@ packages:
     dependency: "direct main"
     description:
       name: adaptive_dialog
-      sha256: b02055729c225c369f90fdbc9564452e183cb919f83a971f512199084474530f
+      sha256: a87f9e13fdbe0b11d353733a90796129ee79fc0654a27855fa2c9c0a3633a362
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.1+2"
+    version: "2.3.0"
   analyzer:
     dependency: "direct dev"
     description:
