@@ -61,7 +61,10 @@ jobs:
         uses: ./.github/actions/setup-application-runtime
 
       - name: re-generated code
-        run: melos run regenerate_code --no-select
+        run: melos run rebuild --no-select
+
+      - name: format
+        run: melos run format --no-select
 
       - name: check difference
         run: |
