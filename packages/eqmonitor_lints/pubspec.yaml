@@ -1,0 +1,12 @@
+name: eqmonitor_lints
+
+environment:
+  sdk: ^3.5.4
+  flutter: ^3.24.5
+
+dependencies:
+  altive_lints: ^1.16.0
+  custom_lint: ^0.7.0
+  flutter:
+    sdk: flutter
+  yumemi_lints: ^2.2.0
