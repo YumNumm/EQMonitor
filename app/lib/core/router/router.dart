@@ -391,7 +391,7 @@ class _NavigatorObserver extends NavigatorObserver {
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     if (route is PageRoute) {
       final page = route.settings.name;
-      talker.logTyped(GoRouterLog('push to $page'));
+      talker.logCustom(GoRouterLog('push to $page'));
       if (kIsWeb) {
         return;
       }

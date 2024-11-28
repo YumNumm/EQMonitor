@@ -18,7 +18,7 @@ AppLifecycleState appLifeCycle(AppLifeCycleRef ref) {
     ..listenSelf(
       (previous, next) => ref
           .read(talkerProvider)
-          .logTyped(AppLifeCycleLog('$previous -> $next')),
+          .logCustom(AppLifeCycleLog('$previous -> $next')),
     );
   return AppLifecycleState.resumed;
 }
