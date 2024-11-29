@@ -6,8 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'travel_time_data_source.g.dart';
 
 @Riverpod(keepAlive: true)
-TravelTimeDataSource travelTimeDataSource(Ref ref) =>
-    TravelTimeDataSource();
+TravelTimeDataSource travelTimeDataSource(Ref ref) => TravelTimeDataSource();
 
 class TravelTimeDataSource {
   Future<List<TravelTimeTable>> loadTables() async {
