@@ -5,7 +5,7 @@ import 'dart:math';
 import 'package:jma_map/gen/jma_map.pb.dart';
 
 Future<void> main() async {
-  final List<JmaMap_JmaMapData> jmaMapDataList = [];
+  final jmaMapDataList = <JmaMap_JmaMapData>[];
 
   final targets = [
     JmaMap_JmaMapData_JmaMapType.AREA_FORECAST_LOCAL_EEW,
@@ -14,7 +14,7 @@ Future<void> main() async {
     JmaMap_JmaMapData_JmaMapType.AREA_TSUNAMI,
   ];
   for (final target in targets) {
-    final body = await File("maps/${target.toFileName}.geojson").readAsString();
+    final body = await File('maps/${target.toFileName}.geojson').readAsString();
     final json = jsonDecode(body) as Map<String, dynamic>;
 
     final jmaMapData = await _parseGeoJsonToJmaMap(json);
@@ -27,7 +27,7 @@ Future<void> main() async {
     );
   }
   // dump to file
-  final file = File("out.pb");
+  final file = File('out.pb');
   await file.writeAsBytes(
     JmaMap(
       data: jmaMapDataList,
@@ -36,74 +36,95 @@ Future<void> main() async {
 }
 
 Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
-    Map<String, dynamic> geojson) async {
+  Map<String, dynamic> geojson,
+) async {
   final results = <JmaMap_JmaMapData_JmaMapDataItem>[];
-  final features = geojson["features"] as List<dynamic>;
+  final features = geojson['features'] as List<dynamic>;
   for (final feature in features) {
     final json = feature as Map<String, dynamic>;
     if (json
         case {
-          "geometry": {
-            "type": final String geometryType,
-            "coordinates": final List<dynamic> coordinates,
+          'geometry': {
+            'type': final String geometryType,
+            'coordinates': final List<dynamic> coordinates,
           },
-          "properties": final Map<String, dynamic> properties,
+          'properties': final Map<String, dynamic> properties,
         }) {
-      final List<LatLng> latLngs = [];
-      if (geometryType == "Polygon") {
+      final latLngs = <LatLng>[];
+      if (geometryType == 'Polygon') {
         for (final lists in coordinates) {
-          for (final list in lists) {
-            latLngs.add(LatLng(
-              lat: list[1] as double,
-              lng: list[0] as double,
-            ));
+          for (final list in lists as List<dynamic>) {
+            final ld = list as List<dynamic>;
+            final lat = ld[1] as double;
+            final lng = ld[0] as double;
+            latLngs.add(
+              LatLng(
+                lat: lat,
+                lng: lng,
+              ),
+            );
           }
         }
-      } else if (geometryType == "MultiPolygon") {
+      } else if (geometryType == 'MultiPolygon') {
         for (final lists in coordinates) {
-          for (final list in lists) {
-            for (final l in list) {
-              latLngs.add(LatLng(
-                lat: l[1] as double,
-                lng: l[0] as double,
-              ));
+          for (final list in lists as List<dynamic>) {
+            for (final l in list as List<dynamic>) {
+              final ld = l as List<dynamic>;
+              final lat = ld[1] as double;
+              final lng = ld[0] as double;
+              latLngs.add(
+                LatLng(
+                  lat: lat,
+                  lng: lng,
+                ),
+              );
             }
           }
         }
-      } else if (geometryType == "MultiLineString") {
+      } else if (geometryType == 'MultiLineString') {
         for (final e in coordinates) {
-          for (final list in e) {
-            latLngs.add(LatLng(
-              lat: list[1] as double,
-              lng: list[0] as double,
-            ));
+          for (final list in e as List<dynamic>) {
+            final ld = list as List<dynamic>;
+            final lat = ld[1] as double;
+            final lng = ld[0] as double;
+            latLngs.add(
+              LatLng(
+                lat: lat,
+                lng: lng,
+              ),
+            );
           }
         }
-      } else if (geometryType == "LineString") {
+      } else if (geometryType == 'LineString') {
         for (final list in coordinates) {
-          latLngs.add(LatLng(
-            lat: list[1] as double,
-            lng: list[0] as double,
-          ));
+          final ld = list as List<dynamic>;
+          final lat = ld[1] as double;
+          final lng = ld[0] as double;
+          latLngs.add(
+            LatLng(
+              lat: lat,
+              lng: lng,
+            ),
+          );
         }
       } else {
-        throw Exception("Unknown geometry type: $geometryType");
+        throw Exception('Unknown geometry type: $geometryType');
       }
       final bbox = latLngs.toLatLngBounds;
-      bool skipFlag = false;
+      var skipFlag = false;
       final property = JmaMap_JmaMapData_JmaMapDataItem_Property(
-        code: properties["code"] as String? ??
-            properties["regioncode"] as String? ??
+        code: properties['code'] as String? ??
+            properties['regioncode'] as String? ??
             (() {
               skipFlag = true;
-              print("Unknown code: ${properties}");
+              print('Unknown code: $properties');
             }()),
-        name: properties["name"] as String? ??
-            (throw Exception("Unknown name: ${properties}")),
-        nameKana: properties["namekana"] as String? ??
+        name: properties['name'] as String? ??
+            (throw Exception('Unknown name: $properties')),
+        nameKana: properties['namekana'] as String? ??
             (() {
               skipFlag = true;
-              print("Unknown nameKana: ${properties}");
+              print('Unknown nameKana: $properties');
             }()),
       );
       if (skipFlag) {
@@ -116,7 +137,7 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
         ),
       );
     } else {
-      throw Exception("Unknown feature: $json");
+      throw Exception('Unknown feature: $json');
     }
   }
   return results;
@@ -126,7 +147,7 @@ extension LatLngListEx on List<LatLng> {
   LatLngBounds get toLatLngBounds {
     final latLngs = this;
     if (latLngs.isEmpty) {
-      throw Exception("LatLngs is empty");
+      throw Exception('LatLngs is empty');
     }
     var northEastLat = -180.0;
     var northEastLng = -180.0;
@@ -155,12 +176,12 @@ extension LatLngListEx on List<LatLng> {
 extension JmaMapTypeConverter on JmaMap_JmaMapData_JmaMapType {
   String get toFileName => switch (this) {
         JmaMap_JmaMapData_JmaMapType.AREA_FORECAST_LOCAL_E =>
-          "areaForecastLocalE",
+          'areaForecastLocalE',
         JmaMap_JmaMapData_JmaMapType.AREA_FORECAST_LOCAL_EEW =>
-          "areaForecastLocalEew",
+          'areaForecastLocalEew',
         JmaMap_JmaMapData_JmaMapType.AREA_INFORMATION_CITY =>
-          "areaInformationCityQuake",
-        JmaMap_JmaMapData_JmaMapType.AREA_TSUNAMI => "areaTsunami",
+          'areaInformationCityQuake',
+        JmaMap_JmaMapData_JmaMapType.AREA_TSUNAMI => 'areaTsunami',
         _ => throw UnimplementedError(),
       };
 }

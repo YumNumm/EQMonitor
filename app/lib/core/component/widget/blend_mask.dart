@@ -9,6 +9,7 @@ class BlendMask extends SingleChildRenderObjectWidget {
     super.key,
     super.child,
   });
+
   final BlendMode blendMode;
   final double opacity;
 
@@ -27,6 +28,7 @@ class BlendMask extends SingleChildRenderObjectWidget {
 
 class RenderBlendMask extends RenderProxyBox {
   RenderBlendMask(this.blendMode, this.opacity);
+
   BlendMode blendMode;
   double opacity;
 

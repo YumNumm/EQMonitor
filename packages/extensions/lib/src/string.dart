@@ -2,7 +2,7 @@
 extension StringExtension on String {
   /// 全角を半角に変換する
   String get toHalfWidth {
-    return split('').map((String char) {
+    return split('').map((char) {
       final charCode = char.codeUnitAt(0);
       if (charCode >= 0xFF01 && charCode <= 0xFF5E) {
         return String.fromCharCode(charCode - 0xFEE0);
@@ -16,7 +16,7 @@ extension StringExtension on String {
 
   /// 半角を全角に変換する
   String get toFullWidth {
-    return split('').map((String char) {
+    return split('').map((char) {
       final charCode = char.codeUnitAt(0);
       if (charCode >= 0x0021 && charCode <= 0x007E) {
         return String.fromCharCode(charCode + 0xFEE0);

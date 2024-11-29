@@ -17,9 +17,12 @@ class Ntp extends _$Ntp {
     final config = ref.watch(ntpConfigProvider);
     final interval = config.interval;
 
-    final timer = Timer.periodic(interval, (_) {
-      sync();
-    });
+    final timer = Timer.periodic(
+      interval,
+      (_) async {
+        await sync();
+      },
+    );
     ref.onDispose(timer.cancel);
 
     return const NtpStateModel();

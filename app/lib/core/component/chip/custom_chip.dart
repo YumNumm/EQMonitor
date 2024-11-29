@@ -7,6 +7,7 @@ class CustomChip extends StatelessWidget {
     this.borderWidth = 0,
     super.key,
   });
+
   final Widget child;
   final Color? backgroundColor;
   final double borderWidth;

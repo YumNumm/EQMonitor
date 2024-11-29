@@ -5,13 +5,14 @@ const Radius _defaultBarTopRadius = Radius.circular(15);
 
 class BarBottomSheet extends StatelessWidget {
   const BarBottomSheet({
-    super.key,
     required this.child,
+    super.key,
     this.control,
     this.clipBehavior,
     this.shape,
     this.elevation,
   });
+
   final Widget child;
   final Widget? control;
   final Clip? clipBehavior;
@@ -79,7 +80,7 @@ class BarSheetRoute<T> extends SheetRoute<T> {
     Widget? topControl,
     super.duration,
   }) : super(
-          builder: (BuildContext context) {
+          builder: (context) {
             return BarBottomSheet(
               control: topControl,
               clipBehavior: clipBehavior,

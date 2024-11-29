@@ -8,7 +8,7 @@ part of 'prefecture_lpgm_intensity.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$lpgmCalculatorHash() => r'0b31367311caf93e6f6708ea1f0016f6cfacd052';
+String _$lpgmCalculatorHash() => r'6e4fb84f94c2bb397d7704498b6ece2284cd32f2';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -36,34 +36,23 @@ class _SystemHash {
 const _lpgmCalculatorProvider = _LpgmCalculatorFamily();
 
 /// See also [_lpgmCalculator].
-class _LpgmCalculatorFamily extends Family {
+class _LpgmCalculatorFamily extends Family<
+    AsyncValue<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>>> {
   /// See also [_lpgmCalculator].
   const _LpgmCalculatorFamily();
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'_lpgmCalculatorProvider';
-
   /// See also [_lpgmCalculator].
   _LpgmCalculatorProvider call(
-    _Arg arg,
+    ({
+      List<ObservedRegionLpgmIntensity>? prefectures,
+      List<ObservedRegionLpgmIntensity>? stations
+    }) arg,
   ) {
     return _LpgmCalculatorProvider(
       arg,
     );
   }
 
-  @visibleForOverriding
   @override
   _LpgmCalculatorProvider getProviderOverride(
     covariant _LpgmCalculatorProvider provider,
@@ -73,30 +62,19 @@ class _LpgmCalculatorFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>> Function(
-              _LpgmCalculatorRef ref)
-          create) {
-    return _$LpgmCalculatorFamilyOverride(this, create);
-  }
-}
-
-class _$LpgmCalculatorFamilyOverride implements FamilyOverride {
-  _$LpgmCalculatorFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>>
-      Function(_LpgmCalculatorRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final _LpgmCalculatorFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  _LpgmCalculatorProvider getProviderOverride(
-    covariant _LpgmCalculatorProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'_lpgmCalculatorProvider';
 }
 
 /// See also [_lpgmCalculator].
@@ -104,7 +82,10 @@ class _LpgmCalculatorProvider extends AutoDisposeFutureProvider<
     Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>> {
   /// See also [_lpgmCalculator].
   _LpgmCalculatorProvider(
-    _Arg arg,
+    ({
+      List<ObservedRegionLpgmIntensity>? prefectures,
+      List<ObservedRegionLpgmIntensity>? stations
+    }) arg,
   ) : this._internal(
           (ref) => _lpgmCalculator(
             ref as _LpgmCalculatorRef,
@@ -123,7 +104,7 @@ class _LpgmCalculatorProvider extends AutoDisposeFutureProvider<
         );
 
   _LpgmCalculatorProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -132,12 +113,15 @@ class _LpgmCalculatorProvider extends AutoDisposeFutureProvider<
     required this.arg,
   }) : super.internal();
 
-  final _Arg arg;
+  final ({
+    List<ObservedRegionLpgmIntensity>? prefectures,
+    List<ObservedRegionLpgmIntensity>? stations
+  }) arg;
 
   @override
   Override overrideWith(
     FutureOr<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>> Function(
-            _LpgmCalculatorRef ref)
+            _LpgmCalculatorRef provider)
         create,
   ) {
     return ProviderOverride(
@@ -155,30 +139,9 @@ class _LpgmCalculatorProvider extends AutoDisposeFutureProvider<
   }
 
   @override
-  (_Arg,) get argument {
-    return (arg,);
-  }
-
-  @override
   AutoDisposeFutureProviderElement<
       Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>> createElement() {
     return _LpgmCalculatorProviderElement(this);
-  }
-
-  _LpgmCalculatorProvider _copyWith(
-    FutureOr<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>> Function(
-            _LpgmCalculatorRef ref)
-        create,
-  ) {
-    return _LpgmCalculatorProvider._internal(
-      (ref) => create(ref as _LpgmCalculatorRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      arg: arg,
-    );
   }
 
   @override
@@ -195,10 +158,15 @@ class _LpgmCalculatorProvider extends AutoDisposeFutureProvider<
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin _LpgmCalculatorRef on AutoDisposeFutureProviderRef<
     Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>> {
   /// The parameter `arg` of this provider.
-  _Arg get arg;
+  ({
+    List<ObservedRegionLpgmIntensity>? prefectures,
+    List<ObservedRegionLpgmIntensity>? stations
+  }) get arg;
 }
 
 class _LpgmCalculatorProviderElement extends AutoDisposeFutureProviderElement<
@@ -207,7 +175,10 @@ class _LpgmCalculatorProviderElement extends AutoDisposeFutureProviderElement<
   _LpgmCalculatorProviderElement(super.provider);
 
   @override
-  _Arg get arg => (origin as _LpgmCalculatorProvider).arg;
+  ({
+    List<ObservedRegionLpgmIntensity>? prefectures,
+    List<ObservedRegionLpgmIntensity>? stations
+  }) get arg => (origin as _LpgmCalculatorProvider).arg;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -14,7 +14,8 @@ ThemeData buildTheme({
     fontFamily: FontFamily.notoSansJP,
     pageTransitionsTheme: const PageTransitionsTheme(
       builders: {
-        // MEMO(YumNumm): PredictiveBackを使うと、MediaQuery.sizeOf(context)の値が変わるので無効
+        // MEMO(YumNumm): PredictiveBackを使うと、
+        // MediaQuery.sizeOf(context)の値が変わるので無効
         // TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
       },
     ),

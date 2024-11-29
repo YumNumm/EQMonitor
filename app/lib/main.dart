@@ -1,4 +1,4 @@
-// ignore_for_file: unreachable_from_main
+// ignore_for_file: unreachable_from_main, prefer_void_to_null
 
 import 'dart:async';
 import 'dart:developer';
@@ -101,13 +101,10 @@ Future<void> main() async {
       SharedPreferences.getInstance(),
       loadKmoniObservationPoints(),
       PackageInfo.fromPlatform(),
-      // ignore: prefer_void_to_null
       (!kIsWeb && Platform.isAndroid
           ? deviceInfo.androidInfo
           : Future<Null>.value()),
-      // ignore: prefer_void_to_null
       (!kIsWeb && Platform.isIOS ? deviceInfo.iosInfo : Future<Null>.value()),
-
       kIsWeb ? Future<Null>.value() : _registerNotificationChannelIfNeeded(),
       kIsWeb ? Future<Null>.value() : getApplicationDocumentsDirectory(),
       loadJmaCodeTable(),
@@ -169,8 +166,8 @@ Future<void> main() async {
     ],
   );
   runApp(
-    ProviderScope(
-      parent: container,
+    UncontrolledProviderScope(
+      container: container,
       child: const App(),
     ),
   );

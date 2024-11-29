@@ -9,6 +9,7 @@ class SetupBackgroundImageWidget extends HookWidget {
     required this.child,
     super.key,
   });
+
   final Widget child;
 
   @override
@@ -25,6 +26,7 @@ class SetupBackgroundImageWidget extends HookWidget {
     double elapsedTimeInSeconds() =>
         (DateTime.now().millisecondsSinceEpoch - startTime.value) / 1000;
     final shader = useFuture(
+      // ignore: discarded_futures
       FragmentProgram.fromAsset(
         'shaders/introduction.frag',
       ),
@@ -61,7 +63,11 @@ class SetupBackgroundImageWidget extends HookWidget {
 }
 
 class _ShaderPainter extends CustomPainter {
-  const _ShaderPainter(this.shader, this.elapsedSeconds);
+  const _ShaderPainter(
+    this.shader,
+    this.elapsedSeconds,
+  );
+
   final FragmentShader shader;
   final double elapsedSeconds;
 

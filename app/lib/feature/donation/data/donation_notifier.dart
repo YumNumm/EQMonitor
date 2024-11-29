@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -24,13 +25,13 @@ Future<void> initInAppPurchase() async {
 }
 
 @Riverpod(keepAlive: true)
-Future<List<StoreProduct>> products(ProductsRef ref) => Purchases.getProducts(
+Future<List<StoreProduct>> products(Ref ref) => Purchases.getProducts(
       Products.values.map((e) => e.id).toList(),
       productCategory: ProductCategory.nonSubscription,
     );
 
 @riverpod
-Future<CustomerInfo> purchase(PurchaseRef ref, StoreProduct product) =>
+Future<CustomerInfo> purchase(Ref ref, StoreProduct product) =>
     Purchases.purchaseStoreProduct(product);
 
 enum Products {

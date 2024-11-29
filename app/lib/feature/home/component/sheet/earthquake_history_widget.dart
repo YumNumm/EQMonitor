@@ -53,7 +53,7 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
                       .map(
                         (e) => EarthquakeHistoryListTile(
                           item: e,
-                          onTap: () => EarthquakeHistoryDetailsRoute(
+                          onTap: () async => EarthquakeHistoryDetailsRoute(
                             eventId: e.eventId,
                           ).push<void>(context),
                           showBackgroundColor: false,
@@ -62,7 +62,6 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
                       .toList(),
                 );
               }(),
-            AsyncLoading() => loading,
             AsyncError(:final error) => ErrorInfoWidget(
                 error: error,
                 onRefresh: () async {
@@ -71,12 +70,13 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
                       .refresh();
                 },
               ),
+            _ => loading,
           },
           Row(
             children: [
               const Spacer(),
               TextButton(
-                onPressed: () =>
+                onPressed: () async =>
                     const EarthquakeHistoryRoute().push<void>(context),
                 child: const Text('さらに表示'),
               ),

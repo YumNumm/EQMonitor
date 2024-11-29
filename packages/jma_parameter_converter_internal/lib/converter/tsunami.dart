@@ -1,6 +1,5 @@
+import 'package:jma_parameter_converter_internal/dmdata/tsunami.dart' as dmdata;
 import 'package:jma_parameter_types/tsunami_param.pb.dart';
-
-import '../dmdata/tsunami.dart' as dmdata;
 
 TsunamiParameter fromDmdataTsunamiParameter(dmdata.TsunamiParameter parameter) {
   return TsunamiParameter(

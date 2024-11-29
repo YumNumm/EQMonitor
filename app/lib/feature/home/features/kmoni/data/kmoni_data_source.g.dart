@@ -8,7 +8,7 @@ part of 'kmoni_data_source.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$kmoniDataSourceHash() => r'883714d82525510c1a7755cb1d6fc0b72f68ff80';
+String _$kmoniDataSourceHash() => r'cf8d6675835e10ff8959dc92788fd7d2c887208d';
 
 /// See also [kmoniDataSource].
 @ProviderFor(kmoniDataSource)
@@ -22,6 +22,8 @@ final kmoniDataSourceProvider = Provider<KmoniDataSource>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef KmoniDataSourceRef = ProviderRef<KmoniDataSource>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

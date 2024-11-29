@@ -9,7 +9,10 @@ SheetController useSheetController({
 
 class _UseSheetControllerHook extends Hook<SheetController> {
   // ignore: unused_element
-  const _UseSheetControllerHook({this.debugLabel = 'useSheetController'});
+  const _UseSheetControllerHook({
+    this.debugLabel = 'useSheetController',
+  });
+
   final String debugLabel;
 
   @override
@@ -19,7 +22,10 @@ class _UseSheetControllerHook extends Hook<SheetController> {
 
 class _UseSheetControllerHookState
     extends HookState<SheetController, _UseSheetControllerHook> {
-  late final _sheetController = SheetController(debugLabel: hook.debugLabel);
+  late final _sheetController = SheetController(
+    debugLabel: hook.debugLabel,
+  );
+
   @override
   SheetController build(BuildContext context) => SheetController();
 

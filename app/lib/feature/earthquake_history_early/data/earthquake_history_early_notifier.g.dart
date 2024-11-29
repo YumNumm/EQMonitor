@@ -48,23 +48,10 @@ const earthquakeHistoryEarlyNotifierProvider =
     EarthquakeHistoryEarlyNotifierFamily();
 
 /// See also [EarthquakeHistoryEarlyNotifier].
-class EarthquakeHistoryEarlyNotifierFamily extends Family {
+class EarthquakeHistoryEarlyNotifierFamily
+    extends Family<AsyncValue<EarthquakeHistoryEarlyNotifierState>> {
   /// See also [EarthquakeHistoryEarlyNotifier].
   const EarthquakeHistoryEarlyNotifierFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'earthquakeHistoryEarlyNotifierProvider';
 
   /// See also [EarthquakeHistoryEarlyNotifier].
   EarthquakeHistoryEarlyNotifierProvider call(
@@ -75,7 +62,6 @@ class EarthquakeHistoryEarlyNotifierFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   EarthquakeHistoryEarlyNotifierProvider getProviderOverride(
     covariant EarthquakeHistoryEarlyNotifierProvider provider,
@@ -85,27 +71,19 @@ class EarthquakeHistoryEarlyNotifierFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(EarthquakeHistoryEarlyNotifier Function() create) {
-    return _$EarthquakeHistoryEarlyNotifierFamilyOverride(this, create);
-  }
-}
-
-class _$EarthquakeHistoryEarlyNotifierFamilyOverride implements FamilyOverride {
-  _$EarthquakeHistoryEarlyNotifierFamilyOverride(
-      this.overriddenFamily, this.create);
-
-  final EarthquakeHistoryEarlyNotifier Function() create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final EarthquakeHistoryEarlyNotifierFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  EarthquakeHistoryEarlyNotifierProvider getProviderOverride(
-    covariant EarthquakeHistoryEarlyNotifierProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'earthquakeHistoryEarlyNotifierProvider';
 }
 
 /// See also [EarthquakeHistoryEarlyNotifier].
@@ -130,7 +108,7 @@ class EarthquakeHistoryEarlyNotifierProvider
         );
 
   EarthquakeHistoryEarlyNotifierProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -167,28 +145,9 @@ class EarthquakeHistoryEarlyNotifierProvider
   }
 
   @override
-  (EarthquakeHistoryEarlyParameter,) get argument {
-    return (parameter,);
-  }
-
-  @override
   AutoDisposeAsyncNotifierProviderElement<EarthquakeHistoryEarlyNotifier,
       EarthquakeHistoryEarlyNotifierState> createElement() {
     return _EarthquakeHistoryEarlyNotifierProviderElement(this);
-  }
-
-  EarthquakeHistoryEarlyNotifierProvider _copyWith(
-    EarthquakeHistoryEarlyNotifier Function() create,
-  ) {
-    return EarthquakeHistoryEarlyNotifierProvider._internal(
-      () => create()..parameter = parameter,
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      parameter: parameter,
-    );
   }
 
   @override
@@ -206,6 +165,8 @@ class EarthquakeHistoryEarlyNotifierProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin EarthquakeHistoryEarlyNotifierRef on AutoDisposeAsyncNotifierProviderRef<
     EarthquakeHistoryEarlyNotifierState> {
   /// The parameter `parameter` of this provider.
@@ -223,4 +184,4 @@ class _EarthquakeHistoryEarlyNotifierProviderElement
       (origin as EarthquakeHistoryEarlyNotifierProvider).parameter;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

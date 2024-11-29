@@ -47,7 +47,7 @@ dependencies:
   geolocator: ^13.0.2
   go_router: ^14.6.1
   google_fonts: ^6.2.1
-  hooks_riverpod: ^3.0.0-dev.3
+  hooks_riverpod: ^2.6.1
   image: ^4.3.0
   in_app_review: ^2.0.10
   intl: ^0.19.0
@@ -71,7 +71,7 @@ dependencies:
   path_provider: ^2.1.5
   permission_handler: ^11.3.1
   purchases_flutter: ^8.2.2
-  riverpod_annotation: ^3.0.0-dev.3
+  riverpod_annotation: ^2.6.1
   screenshot: 3.0.0
   share_plus: ^10.1.2
   shared_preference_app_group: ^1.1.1
@@ -93,20 +93,24 @@ dependencies:
   web_socket_client: ^0.1.4
 
 dev_dependencies:
+  altive_lints: ^1.16.0
   analyzer: ^6.7.0
   build_runner: ^2.4.13
-  custom_lint: ^0.5.11
+  custom_lint: ^0.7.0
   dependency_validator: ^4.1.1
   envied_generator: ^1.0.0
+  eqmonitor_lints:
+    path: ../packages/eqmonitor_lints
   flutter_gen_runner: ^5.8.0
   freezed: ^2.5.2
   go_router_builder: ^2.7.1
   json_serializable: ^6.9.0
   pedantic_mono: ^1.29.0
   retrofit_generator: ^9.1.5
-  riverpod_generator: ^3.0.0-dev.11
-  riverpod_lint: ^3.0.0-dev.4
+  riverpod_generator: ^2.6.3
+  riverpod_lint: ^2.6.3
   test: ^1.25.7
+
 
 flutter:
   uses-material-design: true

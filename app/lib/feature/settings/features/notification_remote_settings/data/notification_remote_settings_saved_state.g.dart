@@ -9,7 +9,7 @@ part of 'notification_remote_settings_saved_state.dart';
 // **************************************************************************
 
 String _$notificationRemoteSettingsHasChangedFromSavedStateHash() =>
-    r'35840430e86c9631a000ead5de2b0698ea39609b';
+    r'c04adf9bbda4cbfdbdfd8034f0604d332adaa85f';
 
 /// See also [notificationRemoteSettingsHasChangedFromSavedState].
 @ProviderFor(notificationRemoteSettingsHasChangedFromSavedState)
@@ -24,10 +24,12 @@ final notificationRemoteSettingsHasChangedFromSavedStateProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef NotificationRemoteSettingsHasChangedFromSavedStateRef
     = AutoDisposeProviderRef<bool>;
 String _$notificationRemoteSettingsSavedStateNotifierHash() =>
-    r'7c36f54d5a3448e16db80823c1d35fc677e7d065';
+    r'fd1109b2ec2e36e97ed51490d27e29d6972f24d0';
 
 /// See also [NotificationRemoteSettingsSavedStateNotifier].
 @ProviderFor(NotificationRemoteSettingsSavedStateNotifier)
@@ -46,4 +48,4 @@ final notificationRemoteSettingsSavedStateNotifierProvider =
 typedef _$NotificationRemoteSettingsSavedStateNotifier
     = AsyncNotifier<NotificationRemoteSettingsState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

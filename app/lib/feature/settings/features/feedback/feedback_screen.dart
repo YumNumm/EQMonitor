@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:eqmonitor/feature/settings/features/feedback/data/custom_feedback.dart';
 import 'package:feedback/feedback.dart';
 import 'package:flutter/material.dart';
@@ -7,9 +9,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class CustomFeedbackForm extends HookConsumerWidget {
   const CustomFeedbackForm({
-    super.key,
     required this.onSubmit,
     required this.scrollController,
+    super.key,
   });
 
   final OnSubmit onSubmit;
@@ -109,7 +111,7 @@ class CustomFeedbackForm extends HookConsumerWidget {
           FilledButton.tonalIcon(
             // disable this button until the user has specified a feedback type
             onPressed: customFeedback.value.feedbackType != null
-                ? () => onSubmit(
+                ? () async => onSubmit(
                       feedbackText.value,
                       extras: customFeedback.value.toJson(),
                     )

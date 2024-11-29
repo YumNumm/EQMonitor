@@ -54,24 +54,6 @@ class EarthquakeHistoryEarlyDetailsScreen extends HookConsumerWidget {
                 ref.refresh(earthquakeHistoryEarlyEventProvider(id)),
           ),
         ),
-      AsyncLoading() => Scaffold(
-          appBar: AppBar(),
-          body: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const CircularProgressIndicator.adaptive(),
-                const SizedBox(height: 8),
-                Text(
-                  '各地の震度データを取得中...',
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-              ],
-            ),
-          ),
-        ),
       AsyncData(:final value) => Scaffold(
           body: Stack(
             children: [
@@ -163,6 +145,24 @@ class EarthquakeHistoryEarlyDetailsScreen extends HookConsumerWidget {
                   ),
                 ),
             ],
+          ),
+        ),
+      _ => Scaffold(
+          appBar: AppBar(),
+          body: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CircularProgressIndicator.adaptive(),
+                const SizedBox(height: 8),
+                Text(
+                  '各地の震度データを取得中...',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
+            ),
           ),
         ),
     };

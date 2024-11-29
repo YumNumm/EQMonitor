@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class KmoniWarnPage extends ConsumerWidget {
-  const KmoniWarnPage({required this.onNext, super.key});
+  const KmoniWarnPage({
+    required this.onNext,
+    super.key,
+  });
+
   final void Function() onNext;
 
   @override
@@ -67,9 +71,9 @@ class KmoniWarnPage extends ConsumerWidget {
 
 class UseKmoniButton extends StatelessWidget {
   const UseKmoniButton({
-    super.key,
     required this.onDisabled,
     required this.onEnabled,
+    super.key,
   });
 
   final void Function() onDisabled;

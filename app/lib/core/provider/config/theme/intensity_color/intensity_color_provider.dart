@@ -21,10 +21,9 @@ class IntensityColor extends _$IntensityColor {
 
   static const _key = 'intensity_color';
 
-  // ignore: use_setters_to_change_properties
-  void update(IntensityColorModel model) {
+  Future<void> update(IntensityColorModel model) async {
     state = model;
-    ref.read(sharedPreferencesProvider).setString(
+    await ref.read(sharedPreferencesProvider).setString(
           _key,
           jsonEncode(model.toJson()),
         );

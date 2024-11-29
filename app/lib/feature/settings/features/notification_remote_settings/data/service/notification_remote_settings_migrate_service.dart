@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/api/api_authentication_service.dart';
+import 'package:eqmonitor/core/api/api_authentication_notifier.dart';
 import 'package:eqmonitor/core/provider/notification_token.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/notification_remote_settings_saved_state.dart';
@@ -21,7 +21,7 @@ class NotificationRemoteSettingsInitialSetupNotifier
     final isMigrated = _getIsMigrated();
     // Tokenを持っているかどうか確認
     final authorization =
-        await ref.read(apiAuthenticationServiceProvider.future);
+        await ref.read(apiAuthenticationNotifierProvider.future);
     if (isMigrated && authorization != null) {
       yield NotificationRemoteSettingsSetupState.completed;
       log(

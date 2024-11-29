@@ -3,9 +3,9 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:http/http.dart' as http;
+import 'package:jma_parameter_converter_internal/dmdata/earthquake.dart'
+    as dmdata;
 import 'package:jma_parameter_types/earthquake_param.pb.dart';
-
-import '../dmdata/earthquake.dart' as dmdata;
 
 Future<EarthquakeParameter> fromDmdataEarthquakeParameter(
   dmdata.EarthquakeParameter parameter,
@@ -44,7 +44,7 @@ Future<EarthquakeParameter> fromDmdataEarthquakeParameter(
       ),
     ),
   );
-  print("itemsGroupByRegionAndCity: ${itemsGroupByRegionAndCity.length}");
+  print('itemsGroupByRegionAndCity: ${itemsGroupByRegionAndCity.length}');
   final regions = itemsGroupByRegionAndCity.entries.map(
     (e) => EarthquakeParameterRegionItem(
       code: e.key.code,
@@ -53,14 +53,14 @@ Future<EarthquakeParameter> fromDmdataEarthquakeParameter(
         (e) => EarthquakeParameterCityItem(
           code: e.key.code,
           name: e.key.name,
-          stations: (e.value.map(
+          stations: e.value.map(
             (e) => e.$2,
-          )),
+          ),
         ),
       ),
     ),
   );
-  print("regions: ${regions.length}");
+  print('regions: ${regions.length}');
   return EarthquakeParameter(
     regions: regions,
   );
@@ -71,14 +71,14 @@ Future<double?> getArv({
   required double longitude,
 }) async {
   // Cacheのチェック
-  final cacheFile = File("cache/${latitude}_$longitude.json");
-  if (await cacheFile.exists()) {
+  final cacheFile = File('cache/${latitude}_$longitude.json');
+  if (cacheFile.existsSync()) {
     print('Cache hit!: $cacheFile');
     final json =
         jsonDecode(await cacheFile.readAsString()) as Map<String, dynamic>;
-    final arvStr = (((json["features"] as List<dynamic>?)?.first
-            as Map<String, dynamic>?)?["properties"]
-        as Map<String, dynamic>?)?["ARV"] as String?;
+    final arvStr = (((json['features'] as List<dynamic>?)?.first
+            as Map<String, dynamic>?)?['properties']
+        as Map<String, dynamic>?)?['ARV'] as String?;
     final arv = double.tryParse(arvStr.toString());
     return arv;
   }
@@ -91,13 +91,13 @@ Future<double?> getArv({
   );
   final json = jsonDecode(response.body) as Map<String, dynamic>;
   print(json);
-  final arvStr = (((json["features"] as List<dynamic>?)?.first
-          as Map<String, dynamic>?)?["properties"]
-      as Map<String, dynamic>?)?["ARV"] as String?;
+  final arvStr = (((json['features'] as List<dynamic>?)?.first
+          as Map<String, dynamic>?)?['properties']
+      as Map<String, dynamic>?)?['ARV'] as String?;
   final arv = double.tryParse(arvStr.toString());
-  cacheFile.writeAsString(
+  cacheFile.writeAsStringSync(
     jsonEncode(json),
   );
-  print("ARV: $arv");
+  print('ARV: $arv');
   return null;
 }

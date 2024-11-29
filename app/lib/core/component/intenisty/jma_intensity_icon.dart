@@ -15,6 +15,7 @@ class JmaIntensityIcon extends ConsumerWidget {
     this.size = 50,
     this.showSuffix = true,
   });
+
   final JmaIntensity intensity;
   final IntensityIconType type;
   final double size;

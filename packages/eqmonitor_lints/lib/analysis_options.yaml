@@ -1,0 +1,24 @@
+include: package:yumemi_lints/flutter/3.24/recommended.yaml
+
+linter:
+  rules:
+    diagnostic_describe_all_properties: false
+    avoid_print: ignore
+    lines_longer_than_80_chars: ignore
+    document_ignores: false
+
+analyzer:
+  errors:
+    # https://pub.dev/packages/freezed#install
+    invalid_annotation_target: ignore
+  plugins:
+    - custom_lint
+  exclude:
+    - "**/*.*.dart"
+
+custom_lint:
+  rules:
+    - prefer_clock_now: false
+    - avoid_hardcoded_color: false
+    - avoid_hardcoded_japanese: false
+    - avoid_single_child: false

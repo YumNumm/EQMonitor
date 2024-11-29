@@ -40,11 +40,11 @@ class App extends HookConsumerWidget {
 
           if (lightDynamic != null && darkDynamic != null) {
             // On Android S+ devices, use the provided dynamic color scheme.
-            // (Recommended) Harmonize the dynamic color scheme' built-in semantic
-            // colors.
+            // (Recommended) Harmonize the dynamic color scheme'
+            // built-in semantic colors.
             lightColorScheme = lightDynamic.harmonized();
-            // (Optional) Customize the scheme as desired. For example, one might
-            // want to use a brand color to override the dynamic
+            // (Optional) Customize the scheme as desired. For example,
+            // one might want to use a brand color to override the dynamic
             // [ColorScheme.secondary].
             lightColorScheme = lightColorScheme.copyWith(secondary: brandBlue);
             // (Optional) If applicable, harmonize custom colors.

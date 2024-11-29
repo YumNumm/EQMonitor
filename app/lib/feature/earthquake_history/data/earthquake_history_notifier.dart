@@ -13,6 +13,7 @@ import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_ex
 import 'package:eqmonitor/feature/earthquake_history_details/data/earthquake_history_details_notifier.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:web_socket_client/web_socket_client.dart';
@@ -47,7 +48,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
 
         // アプリがバックグラウンドからフォアグラウンドに戻った際にデータを再取得する
         ..listen(
-          appLifeCycleProvider,
+          appLifecycleProvider,
           (_, next) async {
             if (next == AppLifecycleState.resumed) {
               await _onResumed();
@@ -56,9 +57,12 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
         )
         // WebSocketからのデータを適用する
         ..listen(
-          websocketTableMessagesProvider<EarthquakeV1>(),
+          websocketTableMessagesProvider,
           (_, next) {
             if (next case AsyncData(value: final value)) {
+              if (value is! RealtimePostgresChangesPayloadTable<EarthquakeV1>) {
+                return;
+              }
               final _ = switch (value) {
                 RealtimePostgresInsertPayload<EarthquakeV1>(:final newData) =>
                   _upsertEarthquakeV1s([newData]),
@@ -309,7 +313,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
 
 @riverpod
 Future<EarthquakeV1Extended> earthquakeV1Extended(
-  EarthquakeV1ExtendedRef ref,
+  Ref ref,
   EarthquakeV1 data,
 ) async {
   // ensure earthquakeParameter has been initialized.

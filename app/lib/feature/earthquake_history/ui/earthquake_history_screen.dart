@@ -54,6 +54,7 @@ class _SearchParameter extends StatelessWidget {
     required this.parameter,
     required this.onChanged,
   });
+
   final EarthquakeHistoryParameter parameter;
   final void Function(EarthquakeHistoryParameter) onChanged;
 
@@ -173,7 +174,7 @@ class _SliverListBody extends HookConsumerWidget {
             final item = data.$1[index];
             return EarthquakeHistoryListTile(
               item: item,
-              onTap: () => EarthquakeHistoryDetailsRoute(
+              onTap: () async => EarthquakeHistoryDetailsRoute(
                 eventId: item.eventId,
               ).push<void>(context),
             );
@@ -185,9 +186,6 @@ class _SliverListBody extends HookConsumerWidget {
     return RefreshIndicator(
       onRefresh: () async => onRefresh?.call(),
       child: switch (state) {
-        AsyncLoading() => const Center(
-            child: CircularProgressIndicator.adaptive(),
-          ),
         AsyncError(:final error) => () {
             if (error is EarthquakeParameterHasNotInitializedException) {
               final parameterState = ref.watch(jmaParameterProvider);
@@ -219,6 +217,9 @@ class _SliverListBody extends HookConsumerWidget {
             );
           }(),
         AsyncData(:final value) => listView(data: value),
+        _ => const Center(
+            child: CircularProgressIndicator.adaptive(),
+          ),
       },
     );
   }

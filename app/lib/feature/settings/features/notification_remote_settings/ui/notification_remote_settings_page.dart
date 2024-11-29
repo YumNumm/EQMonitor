@@ -112,12 +112,21 @@ class NotificationRemoteSettingsPage extends HookConsumerWidget {
 
 class _Body extends ConsumerWidget {
   const _Body();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(notificationRemoteSettingsNotifierProvider);
 
     return switch (state) {
-      AsyncLoading() => const Center(
+      AsyncError(:final error) => ErrorInfoWidget(
+          error: error,
+          onRefresh: () =>
+              ref.refresh(notificationRemoteSettingsNotifierProvider),
+        ),
+      AsyncData(:final value) => _Data(
+          state: value,
+        ),
+      _ => const Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -135,14 +144,6 @@ class _Body extends ConsumerWidget {
             ],
           ),
         ),
-      AsyncError(:final error) => ErrorInfoWidget(
-          error: error,
-          onRefresh: () =>
-              ref.refresh(notificationRemoteSettingsNotifierProvider),
-        ),
-      AsyncData(:final value) => _Data(
-          state: value,
-        ),
     };
   }
 }
@@ -151,6 +152,7 @@ class _Data extends StatelessWidget {
   const _Data({
     required this.state,
   });
+
   final NotificationRemoteSettingsState state;
 
   @override
@@ -161,13 +163,14 @@ class _Data extends StatelessWidget {
         children: [
           EarthquakeStatusWidget(
             earthquake: state.earthquake,
-            action: () =>
+            action: () async =>
                 const NotificationEarthquakeRoute().push<void>(context),
           ),
           const SizedBox(height: 16),
           EewStatusWidget(
             eew: state.eew,
-            action: () => const NotificationEewRoute().push<void>(context),
+            action: () async =>
+                const NotificationEewRoute().push<void>(context),
           ),
         ],
       ),

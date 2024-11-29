@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:eqmonitor/core/provider/map/map_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -11,7 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'map_style.g.dart';
 
 @Riverpod(keepAlive: true)
-MapStyle mapStyle(MapStyleRef ref) => MapStyle();
+MapStyle mapStyle(Ref ref) => MapStyle();
 
 class MapStyle {
   Future<String> _saveStyleJson(
