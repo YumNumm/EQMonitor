@@ -15,6 +15,6 @@ dependencies:
   maps_toolkit: ^3.0.0
 
 dev_dependencies:
+  altive_lints: ^1.16.0
   eqmonitor_lints:
     path: ../eqmonitor_lints
-  altive_lints: ^1.16.0
