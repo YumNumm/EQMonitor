@@ -20,11 +20,12 @@ EarthquakeV1 _$EarthquakeV1FromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$EarthquakeV1 {
+  int get eventId => throw _privateConstructorUsedError;
+  String get status => throw _privateConstructorUsedError;
   DateTime? get arrivalTime => throw _privateConstructorUsedError;
   int? get depth => throw _privateConstructorUsedError;
   int? get epicenterCode => throw _privateConstructorUsedError;
   int? get epicenterDetailCode => throw _privateConstructorUsedError;
-  int get eventId => throw _privateConstructorUsedError;
   String? get headline => throw _privateConstructorUsedError;
   List<ObservedRegionIntensity>? get intensityCities =>
       throw _privateConstructorUsedError;
@@ -48,7 +49,6 @@ mixin _$EarthquakeV1 {
   List<int>? get maxIntensityRegionIds => throw _privateConstructorUsedError;
   JmaLgIntensity? get maxLpgmIntensity => throw _privateConstructorUsedError;
   DateTime? get originTime => throw _privateConstructorUsedError;
-  String get status => throw _privateConstructorUsedError;
   String? get text => throw _privateConstructorUsedError;
 
   /// Serializes this EarthquakeV1 to a JSON map.
@@ -68,11 +68,12 @@ abstract class $EarthquakeV1CopyWith<$Res> {
       _$EarthquakeV1CopyWithImpl<$Res, EarthquakeV1>;
   @useResult
   $Res call(
-      {DateTime? arrivalTime,
+      {int eventId,
+      String status,
+      DateTime? arrivalTime,
       int? depth,
       int? epicenterCode,
       int? epicenterDetailCode,
-      int eventId,
       String? headline,
       List<ObservedRegionIntensity>? intensityCities,
       List<ObservedRegionIntensity>? intensityPrefectures,
@@ -89,7 +90,6 @@ abstract class $EarthquakeV1CopyWith<$Res> {
       List<int>? maxIntensityRegionIds,
       JmaLgIntensity? maxLpgmIntensity,
       DateTime? originTime,
-      String status,
       String? text});
 }
 
@@ -108,11 +108,12 @@ class _$EarthquakeV1CopyWithImpl<$Res, $Val extends EarthquakeV1>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? eventId = null,
+    Object? status = null,
     Object? arrivalTime = freezed,
     Object? depth = freezed,
     Object? epicenterCode = freezed,
     Object? epicenterDetailCode = freezed,
-    Object? eventId = null,
     Object? headline = freezed,
     Object? intensityCities = freezed,
     Object? intensityPrefectures = freezed,
@@ -129,10 +130,17 @@ class _$EarthquakeV1CopyWithImpl<$Res, $Val extends EarthquakeV1>
     Object? maxIntensityRegionIds = freezed,
     Object? maxLpgmIntensity = freezed,
     Object? originTime = freezed,
-    Object? status = null,
     Object? text = freezed,
   }) {
     return _then(_value.copyWith(
+      eventId: null == eventId
+          ? _value.eventId
+          : eventId // ignore: cast_nullable_to_non_nullable
+              as int,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
       arrivalTime: freezed == arrivalTime
           ? _value.arrivalTime
           : arrivalTime // ignore: cast_nullable_to_non_nullable
@@ -149,10 +157,6 @@ class _$EarthquakeV1CopyWithImpl<$Res, $Val extends EarthquakeV1>
           ? _value.epicenterDetailCode
           : epicenterDetailCode // ignore: cast_nullable_to_non_nullable
               as int?,
-      eventId: null == eventId
-          ? _value.eventId
-          : eventId // ignore: cast_nullable_to_non_nullable
-              as int,
       headline: freezed == headline
           ? _value.headline
           : headline // ignore: cast_nullable_to_non_nullable
@@ -217,10 +221,6 @@ class _$EarthquakeV1CopyWithImpl<$Res, $Val extends EarthquakeV1>
           ? _value.originTime
           : originTime // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
       text: freezed == text
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
@@ -238,11 +238,12 @@ abstract class _$$EarthquakeV1ImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {DateTime? arrivalTime,
+      {int eventId,
+      String status,
+      DateTime? arrivalTime,
       int? depth,
       int? epicenterCode,
       int? epicenterDetailCode,
-      int eventId,
       String? headline,
       List<ObservedRegionIntensity>? intensityCities,
       List<ObservedRegionIntensity>? intensityPrefectures,
@@ -259,7 +260,6 @@ abstract class _$$EarthquakeV1ImplCopyWith<$Res>
       List<int>? maxIntensityRegionIds,
       JmaLgIntensity? maxLpgmIntensity,
       DateTime? originTime,
-      String status,
       String? text});
 }
 
@@ -276,11 +276,12 @@ class __$$EarthquakeV1ImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? eventId = null,
+    Object? status = null,
     Object? arrivalTime = freezed,
     Object? depth = freezed,
     Object? epicenterCode = freezed,
     Object? epicenterDetailCode = freezed,
-    Object? eventId = null,
     Object? headline = freezed,
     Object? intensityCities = freezed,
     Object? intensityPrefectures = freezed,
@@ -297,10 +298,17 @@ class __$$EarthquakeV1ImplCopyWithImpl<$Res>
     Object? maxIntensityRegionIds = freezed,
     Object? maxLpgmIntensity = freezed,
     Object? originTime = freezed,
-    Object? status = null,
     Object? text = freezed,
   }) {
     return _then(_$EarthquakeV1Impl(
+      eventId: null == eventId
+          ? _value.eventId
+          : eventId // ignore: cast_nullable_to_non_nullable
+              as int,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
       arrivalTime: freezed == arrivalTime
           ? _value.arrivalTime
           : arrivalTime // ignore: cast_nullable_to_non_nullable
@@ -317,10 +325,6 @@ class __$$EarthquakeV1ImplCopyWithImpl<$Res>
           ? _value.epicenterDetailCode
           : epicenterDetailCode // ignore: cast_nullable_to_non_nullable
               as int?,
-      eventId: null == eventId
-          ? _value.eventId
-          : eventId // ignore: cast_nullable_to_non_nullable
-              as int,
       headline: freezed == headline
           ? _value.headline
           : headline // ignore: cast_nullable_to_non_nullable
@@ -385,10 +389,6 @@ class __$$EarthquakeV1ImplCopyWithImpl<$Res>
           ? _value.originTime
           : originTime // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
       text: freezed == text
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
@@ -401,11 +401,12 @@ class __$$EarthquakeV1ImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$EarthquakeV1Impl implements _EarthquakeV1 {
   const _$EarthquakeV1Impl(
-      {this.arrivalTime,
+      {required this.eventId,
+      required this.status,
+      this.arrivalTime,
       this.depth,
       this.epicenterCode,
       this.epicenterDetailCode,
-      required this.eventId,
       this.headline,
       final List<ObservedRegionIntensity>? intensityCities,
       final List<ObservedRegionIntensity>? intensityPrefectures,
@@ -422,7 +423,6 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
       final List<int>? maxIntensityRegionIds,
       this.maxLpgmIntensity,
       this.originTime,
-      required this.status,
       this.text})
       : _intensityCities = intensityCities,
         _intensityPrefectures = intensityPrefectures,
@@ -437,6 +437,10 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
       _$$EarthquakeV1ImplFromJson(json);
 
   @override
+  final int eventId;
+  @override
+  final String status;
+  @override
   final DateTime? arrivalTime;
   @override
   final int? depth;
@@ -444,8 +448,6 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
   final int? epicenterCode;
   @override
   final int? epicenterDetailCode;
-  @override
-  final int eventId;
   @override
   final String? headline;
   final List<ObservedRegionIntensity>? _intensityCities;
@@ -550,13 +552,11 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
   @override
   final DateTime? originTime;
   @override
-  final String status;
-  @override
   final String? text;
 
   @override
   String toString() {
-    return 'EarthquakeV1(arrivalTime: $arrivalTime, depth: $depth, epicenterCode: $epicenterCode, epicenterDetailCode: $epicenterDetailCode, eventId: $eventId, headline: $headline, intensityCities: $intensityCities, intensityPrefectures: $intensityPrefectures, intensityRegions: $intensityRegions, intensityStations: $intensityStations, latitude: $latitude, longitude: $longitude, lpgmIntensityPrefectures: $lpgmIntensityPrefectures, lpgmIntensityRegions: $lpgmIntensityRegions, lpgmIntenstiyStations: $lpgmIntenstiyStations, magnitude: $magnitude, magnitudeCondition: $magnitudeCondition, maxIntensity: $maxIntensity, maxIntensityRegionIds: $maxIntensityRegionIds, maxLpgmIntensity: $maxLpgmIntensity, originTime: $originTime, status: $status, text: $text)';
+    return 'EarthquakeV1(eventId: $eventId, status: $status, arrivalTime: $arrivalTime, depth: $depth, epicenterCode: $epicenterCode, epicenterDetailCode: $epicenterDetailCode, headline: $headline, intensityCities: $intensityCities, intensityPrefectures: $intensityPrefectures, intensityRegions: $intensityRegions, intensityStations: $intensityStations, latitude: $latitude, longitude: $longitude, lpgmIntensityPrefectures: $lpgmIntensityPrefectures, lpgmIntensityRegions: $lpgmIntensityRegions, lpgmIntenstiyStations: $lpgmIntenstiyStations, magnitude: $magnitude, magnitudeCondition: $magnitudeCondition, maxIntensity: $maxIntensity, maxIntensityRegionIds: $maxIntensityRegionIds, maxLpgmIntensity: $maxLpgmIntensity, originTime: $originTime, text: $text)';
   }
 
   @override
@@ -564,6 +564,8 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeV1Impl &&
+            (identical(other.eventId, eventId) || other.eventId == eventId) &&
+            (identical(other.status, status) || other.status == status) &&
             (identical(other.arrivalTime, arrivalTime) ||
                 other.arrivalTime == arrivalTime) &&
             (identical(other.depth, depth) || other.depth == depth) &&
@@ -571,7 +573,6 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
                 other.epicenterCode == epicenterCode) &&
             (identical(other.epicenterDetailCode, epicenterDetailCode) ||
                 other.epicenterDetailCode == epicenterDetailCode) &&
-            (identical(other.eventId, eventId) || other.eventId == eventId) &&
             (identical(other.headline, headline) ||
                 other.headline == headline) &&
             const DeepCollectionEquality()
@@ -604,7 +605,6 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
                 other.maxLpgmIntensity == maxLpgmIntensity) &&
             (identical(other.originTime, originTime) ||
                 other.originTime == originTime) &&
-            (identical(other.status, status) || other.status == status) &&
             (identical(other.text, text) || other.text == text));
   }
 
@@ -612,11 +612,12 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
+        eventId,
+        status,
         arrivalTime,
         depth,
         epicenterCode,
         epicenterDetailCode,
-        eventId,
         headline,
         const DeepCollectionEquality().hash(_intensityCities),
         const DeepCollectionEquality().hash(_intensityPrefectures),
@@ -633,7 +634,6 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
         const DeepCollectionEquality().hash(_maxIntensityRegionIds),
         maxLpgmIntensity,
         originTime,
-        status,
         text
       ]);
 
@@ -655,11 +655,12 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
 
 abstract class _EarthquakeV1 implements EarthquakeV1 {
   const factory _EarthquakeV1(
-      {final DateTime? arrivalTime,
+      {required final int eventId,
+      required final String status,
+      final DateTime? arrivalTime,
       final int? depth,
       final int? epicenterCode,
       final int? epicenterDetailCode,
-      required final int eventId,
       final String? headline,
       final List<ObservedRegionIntensity>? intensityCities,
       final List<ObservedRegionIntensity>? intensityPrefectures,
@@ -676,12 +677,15 @@ abstract class _EarthquakeV1 implements EarthquakeV1 {
       final List<int>? maxIntensityRegionIds,
       final JmaLgIntensity? maxLpgmIntensity,
       final DateTime? originTime,
-      required final String status,
       final String? text}) = _$EarthquakeV1Impl;
 
   factory _EarthquakeV1.fromJson(Map<String, dynamic> json) =
       _$EarthquakeV1Impl.fromJson;
 
+  @override
+  int get eventId;
+  @override
+  String get status;
   @override
   DateTime? get arrivalTime;
   @override
@@ -690,8 +694,6 @@ abstract class _EarthquakeV1 implements EarthquakeV1 {
   int? get epicenterCode;
   @override
   int? get epicenterDetailCode;
-  @override
-  int get eventId;
   @override
   String? get headline;
   @override
@@ -725,8 +727,6 @@ abstract class _EarthquakeV1 implements EarthquakeV1 {
   @override
   DateTime? get originTime;
   @override
-  String get status;
-  @override
   String? get text;
 
   /// Create a copy of EarthquakeV1
@@ -743,11 +743,12 @@ EarthquakeV1Base _$EarthquakeV1BaseFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$EarthquakeV1Base {
+  int get eventId => throw _privateConstructorUsedError;
+  String get status => throw _privateConstructorUsedError;
   DateTime? get arrivalTime => throw _privateConstructorUsedError;
   int? get depth => throw _privateConstructorUsedError;
   int? get epicenterCode => throw _privateConstructorUsedError;
   int? get epicenterDetailCode => throw _privateConstructorUsedError;
-  int get eventId => throw _privateConstructorUsedError;
   String? get headline => throw _privateConstructorUsedError;
   double? get latitude => throw _privateConstructorUsedError;
   double? get longitude => throw _privateConstructorUsedError;
@@ -757,7 +758,6 @@ mixin _$EarthquakeV1Base {
   List<int>? get maxIntensityRegionIds => throw _privateConstructorUsedError;
   JmaLgIntensity? get maxLpgmIntensity => throw _privateConstructorUsedError;
   DateTime? get originTime => throw _privateConstructorUsedError;
-  String get status => throw _privateConstructorUsedError;
   String? get text => throw _privateConstructorUsedError;
 
   /// Serializes this EarthquakeV1Base to a JSON map.
@@ -777,11 +777,12 @@ abstract class $EarthquakeV1BaseCopyWith<$Res> {
       _$EarthquakeV1BaseCopyWithImpl<$Res, EarthquakeV1Base>;
   @useResult
   $Res call(
-      {DateTime? arrivalTime,
+      {int eventId,
+      String status,
+      DateTime? arrivalTime,
       int? depth,
       int? epicenterCode,
       int? epicenterDetailCode,
-      int eventId,
       String? headline,
       double? latitude,
       double? longitude,
@@ -791,7 +792,6 @@ abstract class $EarthquakeV1BaseCopyWith<$Res> {
       List<int>? maxIntensityRegionIds,
       JmaLgIntensity? maxLpgmIntensity,
       DateTime? originTime,
-      String status,
       String? text});
 }
 
@@ -810,11 +810,12 @@ class _$EarthquakeV1BaseCopyWithImpl<$Res, $Val extends EarthquakeV1Base>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? eventId = null,
+    Object? status = null,
     Object? arrivalTime = freezed,
     Object? depth = freezed,
     Object? epicenterCode = freezed,
     Object? epicenterDetailCode = freezed,
-    Object? eventId = null,
     Object? headline = freezed,
     Object? latitude = freezed,
     Object? longitude = freezed,
@@ -824,10 +825,17 @@ class _$EarthquakeV1BaseCopyWithImpl<$Res, $Val extends EarthquakeV1Base>
     Object? maxIntensityRegionIds = freezed,
     Object? maxLpgmIntensity = freezed,
     Object? originTime = freezed,
-    Object? status = null,
     Object? text = freezed,
   }) {
     return _then(_value.copyWith(
+      eventId: null == eventId
+          ? _value.eventId
+          : eventId // ignore: cast_nullable_to_non_nullable
+              as int,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
       arrivalTime: freezed == arrivalTime
           ? _value.arrivalTime
           : arrivalTime // ignore: cast_nullable_to_non_nullable
@@ -844,10 +852,6 @@ class _$EarthquakeV1BaseCopyWithImpl<$Res, $Val extends EarthquakeV1Base>
           ? _value.epicenterDetailCode
           : epicenterDetailCode // ignore: cast_nullable_to_non_nullable
               as int?,
-      eventId: null == eventId
-          ? _value.eventId
-          : eventId // ignore: cast_nullable_to_non_nullable
-              as int,
       headline: freezed == headline
           ? _value.headline
           : headline // ignore: cast_nullable_to_non_nullable
@@ -884,10 +888,6 @@ class _$EarthquakeV1BaseCopyWithImpl<$Res, $Val extends EarthquakeV1Base>
           ? _value.originTime
           : originTime // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
       text: freezed == text
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
@@ -905,11 +905,12 @@ abstract class _$$EarthquakeV1BaseImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {DateTime? arrivalTime,
+      {int eventId,
+      String status,
+      DateTime? arrivalTime,
       int? depth,
       int? epicenterCode,
       int? epicenterDetailCode,
-      int eventId,
       String? headline,
       double? latitude,
       double? longitude,
@@ -919,7 +920,6 @@ abstract class _$$EarthquakeV1BaseImplCopyWith<$Res>
       List<int>? maxIntensityRegionIds,
       JmaLgIntensity? maxLpgmIntensity,
       DateTime? originTime,
-      String status,
       String? text});
 }
 
@@ -936,11 +936,12 @@ class __$$EarthquakeV1BaseImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? eventId = null,
+    Object? status = null,
     Object? arrivalTime = freezed,
     Object? depth = freezed,
     Object? epicenterCode = freezed,
     Object? epicenterDetailCode = freezed,
-    Object? eventId = null,
     Object? headline = freezed,
     Object? latitude = freezed,
     Object? longitude = freezed,
@@ -950,10 +951,17 @@ class __$$EarthquakeV1BaseImplCopyWithImpl<$Res>
     Object? maxIntensityRegionIds = freezed,
     Object? maxLpgmIntensity = freezed,
     Object? originTime = freezed,
-    Object? status = null,
     Object? text = freezed,
   }) {
     return _then(_$EarthquakeV1BaseImpl(
+      eventId: null == eventId
+          ? _value.eventId
+          : eventId // ignore: cast_nullable_to_non_nullable
+              as int,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
       arrivalTime: freezed == arrivalTime
           ? _value.arrivalTime
           : arrivalTime // ignore: cast_nullable_to_non_nullable
@@ -970,10 +978,6 @@ class __$$EarthquakeV1BaseImplCopyWithImpl<$Res>
           ? _value.epicenterDetailCode
           : epicenterDetailCode // ignore: cast_nullable_to_non_nullable
               as int?,
-      eventId: null == eventId
-          ? _value.eventId
-          : eventId // ignore: cast_nullable_to_non_nullable
-              as int,
       headline: freezed == headline
           ? _value.headline
           : headline // ignore: cast_nullable_to_non_nullable
@@ -1010,10 +1014,6 @@ class __$$EarthquakeV1BaseImplCopyWithImpl<$Res>
           ? _value.originTime
           : originTime // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
       text: freezed == text
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
@@ -1026,11 +1026,12 @@ class __$$EarthquakeV1BaseImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
   const _$EarthquakeV1BaseImpl(
-      {this.arrivalTime,
+      {required this.eventId,
+      required this.status,
+      this.arrivalTime,
       this.depth,
       this.epicenterCode,
       this.epicenterDetailCode,
-      required this.eventId,
       this.headline,
       this.latitude,
       this.longitude,
@@ -1040,13 +1041,16 @@ class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
       final List<int>? maxIntensityRegionIds,
       this.maxLpgmIntensity,
       this.originTime,
-      required this.status,
       this.text})
       : _maxIntensityRegionIds = maxIntensityRegionIds;
 
   factory _$EarthquakeV1BaseImpl.fromJson(Map<String, dynamic> json) =>
       _$$EarthquakeV1BaseImplFromJson(json);
 
+  @override
+  final int eventId;
+  @override
+  final String status;
   @override
   final DateTime? arrivalTime;
   @override
@@ -1055,8 +1059,6 @@ class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
   final int? epicenterCode;
   @override
   final int? epicenterDetailCode;
-  @override
-  final int eventId;
   @override
   final String? headline;
   @override
@@ -1085,13 +1087,11 @@ class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
   @override
   final DateTime? originTime;
   @override
-  final String status;
-  @override
   final String? text;
 
   @override
   String toString() {
-    return 'EarthquakeV1Base(arrivalTime: $arrivalTime, depth: $depth, epicenterCode: $epicenterCode, epicenterDetailCode: $epicenterDetailCode, eventId: $eventId, headline: $headline, latitude: $latitude, longitude: $longitude, magnitude: $magnitude, magnitudeCondition: $magnitudeCondition, maxIntensity: $maxIntensity, maxIntensityRegionIds: $maxIntensityRegionIds, maxLpgmIntensity: $maxLpgmIntensity, originTime: $originTime, status: $status, text: $text)';
+    return 'EarthquakeV1Base(eventId: $eventId, status: $status, arrivalTime: $arrivalTime, depth: $depth, epicenterCode: $epicenterCode, epicenterDetailCode: $epicenterDetailCode, headline: $headline, latitude: $latitude, longitude: $longitude, magnitude: $magnitude, magnitudeCondition: $magnitudeCondition, maxIntensity: $maxIntensity, maxIntensityRegionIds: $maxIntensityRegionIds, maxLpgmIntensity: $maxLpgmIntensity, originTime: $originTime, text: $text)';
   }
 
   @override
@@ -1099,6 +1099,8 @@ class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeV1BaseImpl &&
+            (identical(other.eventId, eventId) || other.eventId == eventId) &&
+            (identical(other.status, status) || other.status == status) &&
             (identical(other.arrivalTime, arrivalTime) ||
                 other.arrivalTime == arrivalTime) &&
             (identical(other.depth, depth) || other.depth == depth) &&
@@ -1106,7 +1108,6 @@ class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
                 other.epicenterCode == epicenterCode) &&
             (identical(other.epicenterDetailCode, epicenterDetailCode) ||
                 other.epicenterDetailCode == epicenterDetailCode) &&
-            (identical(other.eventId, eventId) || other.eventId == eventId) &&
             (identical(other.headline, headline) ||
                 other.headline == headline) &&
             (identical(other.latitude, latitude) ||
@@ -1125,7 +1126,6 @@ class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
                 other.maxLpgmIntensity == maxLpgmIntensity) &&
             (identical(other.originTime, originTime) ||
                 other.originTime == originTime) &&
-            (identical(other.status, status) || other.status == status) &&
             (identical(other.text, text) || other.text == text));
   }
 
@@ -1133,11 +1133,12 @@ class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      eventId,
+      status,
       arrivalTime,
       depth,
       epicenterCode,
       epicenterDetailCode,
-      eventId,
       headline,
       latitude,
       longitude,
@@ -1147,7 +1148,6 @@ class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
       const DeepCollectionEquality().hash(_maxIntensityRegionIds),
       maxLpgmIntensity,
       originTime,
-      status,
       text);
 
   /// Create a copy of EarthquakeV1Base
@@ -1169,11 +1169,12 @@ class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
 
 abstract class _EarthquakeV1Base implements EarthquakeV1Base {
   const factory _EarthquakeV1Base(
-      {final DateTime? arrivalTime,
+      {required final int eventId,
+      required final String status,
+      final DateTime? arrivalTime,
       final int? depth,
       final int? epicenterCode,
       final int? epicenterDetailCode,
-      required final int eventId,
       final String? headline,
       final double? latitude,
       final double? longitude,
@@ -1183,12 +1184,15 @@ abstract class _EarthquakeV1Base implements EarthquakeV1Base {
       final List<int>? maxIntensityRegionIds,
       final JmaLgIntensity? maxLpgmIntensity,
       final DateTime? originTime,
-      required final String status,
       final String? text}) = _$EarthquakeV1BaseImpl;
 
   factory _EarthquakeV1Base.fromJson(Map<String, dynamic> json) =
       _$EarthquakeV1BaseImpl.fromJson;
 
+  @override
+  int get eventId;
+  @override
+  String get status;
   @override
   DateTime? get arrivalTime;
   @override
@@ -1197,8 +1201,6 @@ abstract class _EarthquakeV1Base implements EarthquakeV1Base {
   int? get epicenterCode;
   @override
   int? get epicenterDetailCode;
-  @override
-  int get eventId;
   @override
   String? get headline;
   @override
@@ -1217,8 +1219,6 @@ abstract class _EarthquakeV1Base implements EarthquakeV1Base {
   JmaLgIntensity? get maxLpgmIntensity;
   @override
   DateTime? get originTime;
-  @override
-  String get status;
   @override
   String? get text;
 

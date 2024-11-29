@@ -24,11 +24,11 @@ _$TelegramV1Impl _$$TelegramV1ImplFromJson(Map<String, dynamic> json) =>
               $checkedConvert('press_time', (v) => DateTime.parse(v as String)),
           reportTime: $checkedConvert(
               'report_time', (v) => DateTime.parse(v as String)),
+          body: $checkedConvert('body', (v) => v as Map<String, dynamic>),
           validTime: $checkedConvert('valid_time',
               (v) => v == null ? null : DateTime.parse(v as String)),
           serialNo: $checkedConvert('serial_no', (v) => (v as num?)?.toInt()),
           headline: $checkedConvert('headline', (v) => v as String?),
-          body: $checkedConvert('body', (v) => v as Map<String, dynamic>),
         );
         return val;
       },
@@ -53,8 +53,8 @@ Map<String, dynamic> _$$TelegramV1ImplToJson(_$TelegramV1Impl instance) =>
       'info_type': instance.infoType,
       'press_time': instance.pressTime.toIso8601String(),
       'report_time': instance.reportTime.toIso8601String(),
+      'body': instance.body,
       'valid_time': instance.validTime?.toIso8601String(),
       'serial_no': instance.serialNo,
       'headline': instance.headline,
-      'body': instance.body,
     };
