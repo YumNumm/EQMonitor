@@ -27,11 +27,13 @@ mixin _$EewV1 {
   String get status => throw _privateConstructorUsedError;
   String get infoType => throw _privateConstructorUsedError;
   DateTime get reportTime => throw _privateConstructorUsedError;
+  bool get isCanceled => throw _privateConstructorUsedError;
+  bool get isLastInfo => throw _privateConstructorUsedError;
+  bool? get isPlum => throw _privateConstructorUsedError;
+  EewAccuracy? get accuracy => throw _privateConstructorUsedError;
   int? get serialNo => throw _privateConstructorUsedError;
   String? get headline => throw _privateConstructorUsedError;
-  bool get isCanceled => throw _privateConstructorUsedError;
   bool? get isWarning => throw _privateConstructorUsedError;
-  bool get isLastInfo => throw _privateConstructorUsedError;
   DateTime? get originTime => throw _privateConstructorUsedError;
   DateTime? get arrivalTime => throw _privateConstructorUsedError;
   String? get hypoName => throw _privateConstructorUsedError;
@@ -48,8 +50,6 @@ mixin _$EewV1 {
       throw _privateConstructorUsedError;
   List<EstimatedIntensityRegion>? get regions =>
       throw _privateConstructorUsedError;
-  bool? get isPlum => throw _privateConstructorUsedError;
-  EewAccuracy? get accuracy => throw _privateConstructorUsedError;
 
   /// Serializes this EewV1 to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -73,11 +73,13 @@ abstract class $EewV1CopyWith<$Res> {
       String status,
       String infoType,
       DateTime reportTime,
+      bool isCanceled,
+      bool isLastInfo,
+      bool? isPlum,
+      EewAccuracy? accuracy,
       int? serialNo,
       String? headline,
-      bool isCanceled,
       bool? isWarning,
-      bool isLastInfo,
       DateTime? originTime,
       DateTime? arrivalTime,
       String? hypoName,
@@ -89,9 +91,7 @@ abstract class $EewV1CopyWith<$Res> {
       bool? forecastMaxIntensityIsOver,
       JmaForecastLgIntensity? forecastMaxLpgmIntensity,
       bool? forecastMaxLpgmIntensityIsOver,
-      List<EstimatedIntensityRegion>? regions,
-      bool? isPlum,
-      EewAccuracy? accuracy});
+      List<EstimatedIntensityRegion>? regions});
 
   $EewAccuracyCopyWith<$Res>? get accuracy;
 }
@@ -118,11 +118,13 @@ class _$EewV1CopyWithImpl<$Res, $Val extends EewV1>
     Object? status = null,
     Object? infoType = null,
     Object? reportTime = null,
+    Object? isCanceled = null,
+    Object? isLastInfo = null,
+    Object? isPlum = freezed,
+    Object? accuracy = freezed,
     Object? serialNo = freezed,
     Object? headline = freezed,
-    Object? isCanceled = null,
     Object? isWarning = freezed,
-    Object? isLastInfo = null,
     Object? originTime = freezed,
     Object? arrivalTime = freezed,
     Object? hypoName = freezed,
@@ -135,8 +137,6 @@ class _$EewV1CopyWithImpl<$Res, $Val extends EewV1>
     Object? forecastMaxLpgmIntensity = freezed,
     Object? forecastMaxLpgmIntensityIsOver = freezed,
     Object? regions = freezed,
-    Object? isPlum = freezed,
-    Object? accuracy = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -167,6 +167,22 @@ class _$EewV1CopyWithImpl<$Res, $Val extends EewV1>
           ? _value.reportTime
           : reportTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      isCanceled: null == isCanceled
+          ? _value.isCanceled
+          : isCanceled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLastInfo: null == isLastInfo
+          ? _value.isLastInfo
+          : isLastInfo // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isPlum: freezed == isPlum
+          ? _value.isPlum
+          : isPlum // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      accuracy: freezed == accuracy
+          ? _value.accuracy
+          : accuracy // ignore: cast_nullable_to_non_nullable
+              as EewAccuracy?,
       serialNo: freezed == serialNo
           ? _value.serialNo
           : serialNo // ignore: cast_nullable_to_non_nullable
@@ -175,18 +191,10 @@ class _$EewV1CopyWithImpl<$Res, $Val extends EewV1>
           ? _value.headline
           : headline // ignore: cast_nullable_to_non_nullable
               as String?,
-      isCanceled: null == isCanceled
-          ? _value.isCanceled
-          : isCanceled // ignore: cast_nullable_to_non_nullable
-              as bool,
       isWarning: freezed == isWarning
           ? _value.isWarning
           : isWarning // ignore: cast_nullable_to_non_nullable
               as bool?,
-      isLastInfo: null == isLastInfo
-          ? _value.isLastInfo
-          : isLastInfo // ignore: cast_nullable_to_non_nullable
-              as bool,
       originTime: freezed == originTime
           ? _value.originTime
           : originTime // ignore: cast_nullable_to_non_nullable
@@ -235,14 +243,6 @@ class _$EewV1CopyWithImpl<$Res, $Val extends EewV1>
           ? _value.regions
           : regions // ignore: cast_nullable_to_non_nullable
               as List<EstimatedIntensityRegion>?,
-      isPlum: freezed == isPlum
-          ? _value.isPlum
-          : isPlum // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      accuracy: freezed == accuracy
-          ? _value.accuracy
-          : accuracy // ignore: cast_nullable_to_non_nullable
-              as EewAccuracy?,
     ) as $Val);
   }
 
@@ -276,11 +276,13 @@ abstract class _$$EewV1ImplCopyWith<$Res> implements $EewV1CopyWith<$Res> {
       String status,
       String infoType,
       DateTime reportTime,
+      bool isCanceled,
+      bool isLastInfo,
+      bool? isPlum,
+      EewAccuracy? accuracy,
       int? serialNo,
       String? headline,
-      bool isCanceled,
       bool? isWarning,
-      bool isLastInfo,
       DateTime? originTime,
       DateTime? arrivalTime,
       String? hypoName,
@@ -292,9 +294,7 @@ abstract class _$$EewV1ImplCopyWith<$Res> implements $EewV1CopyWith<$Res> {
       bool? forecastMaxIntensityIsOver,
       JmaForecastLgIntensity? forecastMaxLpgmIntensity,
       bool? forecastMaxLpgmIntensityIsOver,
-      List<EstimatedIntensityRegion>? regions,
-      bool? isPlum,
-      EewAccuracy? accuracy});
+      List<EstimatedIntensityRegion>? regions});
 
   @override
   $EewAccuracyCopyWith<$Res>? get accuracy;
@@ -320,11 +320,13 @@ class __$$EewV1ImplCopyWithImpl<$Res>
     Object? status = null,
     Object? infoType = null,
     Object? reportTime = null,
+    Object? isCanceled = null,
+    Object? isLastInfo = null,
+    Object? isPlum = freezed,
+    Object? accuracy = freezed,
     Object? serialNo = freezed,
     Object? headline = freezed,
-    Object? isCanceled = null,
     Object? isWarning = freezed,
-    Object? isLastInfo = null,
     Object? originTime = freezed,
     Object? arrivalTime = freezed,
     Object? hypoName = freezed,
@@ -337,8 +339,6 @@ class __$$EewV1ImplCopyWithImpl<$Res>
     Object? forecastMaxLpgmIntensity = freezed,
     Object? forecastMaxLpgmIntensityIsOver = freezed,
     Object? regions = freezed,
-    Object? isPlum = freezed,
-    Object? accuracy = freezed,
   }) {
     return _then(_$EewV1Impl(
       id: null == id
@@ -369,6 +369,22 @@ class __$$EewV1ImplCopyWithImpl<$Res>
           ? _value.reportTime
           : reportTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      isCanceled: null == isCanceled
+          ? _value.isCanceled
+          : isCanceled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isLastInfo: null == isLastInfo
+          ? _value.isLastInfo
+          : isLastInfo // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isPlum: freezed == isPlum
+          ? _value.isPlum
+          : isPlum // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      accuracy: freezed == accuracy
+          ? _value.accuracy
+          : accuracy // ignore: cast_nullable_to_non_nullable
+              as EewAccuracy?,
       serialNo: freezed == serialNo
           ? _value.serialNo
           : serialNo // ignore: cast_nullable_to_non_nullable
@@ -377,18 +393,10 @@ class __$$EewV1ImplCopyWithImpl<$Res>
           ? _value.headline
           : headline // ignore: cast_nullable_to_non_nullable
               as String?,
-      isCanceled: null == isCanceled
-          ? _value.isCanceled
-          : isCanceled // ignore: cast_nullable_to_non_nullable
-              as bool,
       isWarning: freezed == isWarning
           ? _value.isWarning
           : isWarning // ignore: cast_nullable_to_non_nullable
               as bool?,
-      isLastInfo: null == isLastInfo
-          ? _value.isLastInfo
-          : isLastInfo // ignore: cast_nullable_to_non_nullable
-              as bool,
       originTime: freezed == originTime
           ? _value.originTime
           : originTime // ignore: cast_nullable_to_non_nullable
@@ -437,14 +445,6 @@ class __$$EewV1ImplCopyWithImpl<$Res>
           ? _value._regions
           : regions // ignore: cast_nullable_to_non_nullable
               as List<EstimatedIntensityRegion>?,
-      isPlum: freezed == isPlum
-          ? _value.isPlum
-          : isPlum // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      accuracy: freezed == accuracy
-          ? _value.accuracy
-          : accuracy // ignore: cast_nullable_to_non_nullable
-              as EewAccuracy?,
     ));
   }
 }
@@ -460,11 +460,13 @@ class _$EewV1Impl implements _EewV1 {
       required this.status,
       required this.infoType,
       required this.reportTime,
+      required this.isCanceled,
+      required this.isLastInfo,
+      required this.isPlum,
+      required this.accuracy,
       this.serialNo,
       this.headline,
-      required this.isCanceled,
       this.isWarning,
-      required this.isLastInfo,
       this.originTime,
       this.arrivalTime,
       this.hypoName,
@@ -476,9 +478,7 @@ class _$EewV1Impl implements _EewV1 {
       this.forecastMaxIntensityIsOver,
       this.forecastMaxLpgmIntensity,
       this.forecastMaxLpgmIntensityIsOver,
-      final List<EstimatedIntensityRegion>? regions,
-      required this.isPlum,
-      required this.accuracy})
+      final List<EstimatedIntensityRegion>? regions})
       : _regions = regions;
 
   factory _$EewV1Impl.fromJson(Map<String, dynamic> json) =>
@@ -499,15 +499,19 @@ class _$EewV1Impl implements _EewV1 {
   @override
   final DateTime reportTime;
   @override
+  final bool isCanceled;
+  @override
+  final bool isLastInfo;
+  @override
+  final bool? isPlum;
+  @override
+  final EewAccuracy? accuracy;
+  @override
   final int? serialNo;
   @override
   final String? headline;
   @override
-  final bool isCanceled;
-  @override
   final bool? isWarning;
-  @override
-  final bool isLastInfo;
   @override
   final DateTime? originTime;
   @override
@@ -541,13 +545,8 @@ class _$EewV1Impl implements _EewV1 {
   }
 
   @override
-  final bool? isPlum;
-  @override
-  final EewAccuracy? accuracy;
-
-  @override
   String toString() {
-    return 'EewV1(id: $id, eventId: $eventId, type: $type, schemaType: $schemaType, status: $status, infoType: $infoType, reportTime: $reportTime, serialNo: $serialNo, headline: $headline, isCanceled: $isCanceled, isWarning: $isWarning, isLastInfo: $isLastInfo, originTime: $originTime, arrivalTime: $arrivalTime, hypoName: $hypoName, depth: $depth, latitude: $latitude, longitude: $longitude, magnitude: $magnitude, forecastMaxIntensity: $forecastMaxIntensity, forecastMaxIntensityIsOver: $forecastMaxIntensityIsOver, forecastMaxLpgmIntensity: $forecastMaxLpgmIntensity, forecastMaxLpgmIntensityIsOver: $forecastMaxLpgmIntensityIsOver, regions: $regions, isPlum: $isPlum, accuracy: $accuracy)';
+    return 'EewV1(id: $id, eventId: $eventId, type: $type, schemaType: $schemaType, status: $status, infoType: $infoType, reportTime: $reportTime, isCanceled: $isCanceled, isLastInfo: $isLastInfo, isPlum: $isPlum, accuracy: $accuracy, serialNo: $serialNo, headline: $headline, isWarning: $isWarning, originTime: $originTime, arrivalTime: $arrivalTime, hypoName: $hypoName, depth: $depth, latitude: $latitude, longitude: $longitude, magnitude: $magnitude, forecastMaxIntensity: $forecastMaxIntensity, forecastMaxIntensityIsOver: $forecastMaxIntensityIsOver, forecastMaxLpgmIntensity: $forecastMaxLpgmIntensity, forecastMaxLpgmIntensityIsOver: $forecastMaxLpgmIntensityIsOver, regions: $regions)';
   }
 
   @override
@@ -565,16 +564,19 @@ class _$EewV1Impl implements _EewV1 {
                 other.infoType == infoType) &&
             (identical(other.reportTime, reportTime) ||
                 other.reportTime == reportTime) &&
+            (identical(other.isCanceled, isCanceled) ||
+                other.isCanceled == isCanceled) &&
+            (identical(other.isLastInfo, isLastInfo) ||
+                other.isLastInfo == isLastInfo) &&
+            (identical(other.isPlum, isPlum) || other.isPlum == isPlum) &&
+            (identical(other.accuracy, accuracy) ||
+                other.accuracy == accuracy) &&
             (identical(other.serialNo, serialNo) ||
                 other.serialNo == serialNo) &&
             (identical(other.headline, headline) ||
                 other.headline == headline) &&
-            (identical(other.isCanceled, isCanceled) ||
-                other.isCanceled == isCanceled) &&
             (identical(other.isWarning, isWarning) ||
                 other.isWarning == isWarning) &&
-            (identical(other.isLastInfo, isLastInfo) ||
-                other.isLastInfo == isLastInfo) &&
             (identical(other.originTime, originTime) ||
                 other.originTime == originTime) &&
             (identical(other.arrivalTime, arrivalTime) ||
@@ -601,10 +603,7 @@ class _$EewV1Impl implements _EewV1 {
                     forecastMaxLpgmIntensityIsOver) ||
                 other.forecastMaxLpgmIntensityIsOver ==
                     forecastMaxLpgmIntensityIsOver) &&
-            const DeepCollectionEquality().equals(other._regions, _regions) &&
-            (identical(other.isPlum, isPlum) || other.isPlum == isPlum) &&
-            (identical(other.accuracy, accuracy) ||
-                other.accuracy == accuracy));
+            const DeepCollectionEquality().equals(other._regions, _regions));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -618,11 +617,13 @@ class _$EewV1Impl implements _EewV1 {
         status,
         infoType,
         reportTime,
+        isCanceled,
+        isLastInfo,
+        isPlum,
+        accuracy,
         serialNo,
         headline,
-        isCanceled,
         isWarning,
-        isLastInfo,
         originTime,
         arrivalTime,
         hypoName,
@@ -634,9 +635,7 @@ class _$EewV1Impl implements _EewV1 {
         forecastMaxIntensityIsOver,
         forecastMaxLpgmIntensity,
         forecastMaxLpgmIntensityIsOver,
-        const DeepCollectionEquality().hash(_regions),
-        isPlum,
-        accuracy
+        const DeepCollectionEquality().hash(_regions)
       ]);
 
   /// Create a copy of EewV1
@@ -664,11 +663,13 @@ abstract class _EewV1 implements EewV1 {
       required final String status,
       required final String infoType,
       required final DateTime reportTime,
+      required final bool isCanceled,
+      required final bool isLastInfo,
+      required final bool? isPlum,
+      required final EewAccuracy? accuracy,
       final int? serialNo,
       final String? headline,
-      required final bool isCanceled,
       final bool? isWarning,
-      required final bool isLastInfo,
       final DateTime? originTime,
       final DateTime? arrivalTime,
       final String? hypoName,
@@ -680,9 +681,7 @@ abstract class _EewV1 implements EewV1 {
       final bool? forecastMaxIntensityIsOver,
       final JmaForecastLgIntensity? forecastMaxLpgmIntensity,
       final bool? forecastMaxLpgmIntensityIsOver,
-      final List<EstimatedIntensityRegion>? regions,
-      required final bool? isPlum,
-      required final EewAccuracy? accuracy}) = _$EewV1Impl;
+      final List<EstimatedIntensityRegion>? regions}) = _$EewV1Impl;
 
   factory _EewV1.fromJson(Map<String, dynamic> json) = _$EewV1Impl.fromJson;
 
@@ -701,15 +700,19 @@ abstract class _EewV1 implements EewV1 {
   @override
   DateTime get reportTime;
   @override
+  bool get isCanceled;
+  @override
+  bool get isLastInfo;
+  @override
+  bool? get isPlum;
+  @override
+  EewAccuracy? get accuracy;
+  @override
   int? get serialNo;
   @override
   String? get headline;
   @override
-  bool get isCanceled;
-  @override
   bool? get isWarning;
-  @override
-  bool get isLastInfo;
   @override
   DateTime? get originTime;
   @override
@@ -734,10 +737,6 @@ abstract class _EewV1 implements EewV1 {
   bool? get forecastMaxLpgmIntensityIsOver;
   @override
   List<EstimatedIntensityRegion>? get regions;
-  @override
-  bool? get isPlum;
-  @override
-  EewAccuracy? get accuracy;
 
   /// Create a copy of EewV1
   /// with the given fields replaced by the non-null parameter values.

@@ -28,10 +28,10 @@ mixin _$TelegramV1 {
   String get infoType => throw _privateConstructorUsedError;
   DateTime get pressTime => throw _privateConstructorUsedError;
   DateTime get reportTime => throw _privateConstructorUsedError;
+  Map<String, dynamic> get body => throw _privateConstructorUsedError;
   DateTime? get validTime => throw _privateConstructorUsedError;
   int? get serialNo => throw _privateConstructorUsedError;
   String? get headline => throw _privateConstructorUsedError;
-  Map<String, dynamic> get body => throw _privateConstructorUsedError;
 
   /// Serializes this TelegramV1 to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -58,10 +58,10 @@ abstract class $TelegramV1CopyWith<$Res> {
       String infoType,
       DateTime pressTime,
       DateTime reportTime,
+      Map<String, dynamic> body,
       DateTime? validTime,
       int? serialNo,
-      String? headline,
-      Map<String, dynamic> body});
+      String? headline});
 }
 
 /// @nodoc
@@ -87,10 +87,10 @@ class _$TelegramV1CopyWithImpl<$Res, $Val extends TelegramV1>
     Object? infoType = null,
     Object? pressTime = null,
     Object? reportTime = null,
+    Object? body = null,
     Object? validTime = freezed,
     Object? serialNo = freezed,
     Object? headline = freezed,
-    Object? body = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -125,6 +125,10 @@ class _$TelegramV1CopyWithImpl<$Res, $Val extends TelegramV1>
           ? _value.reportTime
           : reportTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      body: null == body
+          ? _value.body
+          : body // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
       validTime: freezed == validTime
           ? _value.validTime
           : validTime // ignore: cast_nullable_to_non_nullable
@@ -137,10 +141,6 @@ class _$TelegramV1CopyWithImpl<$Res, $Val extends TelegramV1>
           ? _value.headline
           : headline // ignore: cast_nullable_to_non_nullable
               as String?,
-      body: null == body
-          ? _value.body
-          : body // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
     ) as $Val);
   }
 }
@@ -162,10 +162,10 @@ abstract class _$$TelegramV1ImplCopyWith<$Res>
       String infoType,
       DateTime pressTime,
       DateTime reportTime,
+      Map<String, dynamic> body,
       DateTime? validTime,
       int? serialNo,
-      String? headline,
-      Map<String, dynamic> body});
+      String? headline});
 }
 
 /// @nodoc
@@ -189,10 +189,10 @@ class __$$TelegramV1ImplCopyWithImpl<$Res>
     Object? infoType = null,
     Object? pressTime = null,
     Object? reportTime = null,
+    Object? body = null,
     Object? validTime = freezed,
     Object? serialNo = freezed,
     Object? headline = freezed,
-    Object? body = null,
   }) {
     return _then(_$TelegramV1Impl(
       id: null == id
@@ -227,6 +227,10 @@ class __$$TelegramV1ImplCopyWithImpl<$Res>
           ? _value.reportTime
           : reportTime // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      body: null == body
+          ? _value._body
+          : body // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
       validTime: freezed == validTime
           ? _value.validTime
           : validTime // ignore: cast_nullable_to_non_nullable
@@ -239,10 +243,6 @@ class __$$TelegramV1ImplCopyWithImpl<$Res>
           ? _value.headline
           : headline // ignore: cast_nullable_to_non_nullable
               as String?,
-      body: null == body
-          ? _value._body
-          : body // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
     ));
   }
 }
@@ -259,10 +259,10 @@ class _$TelegramV1Impl implements _TelegramV1 {
       required this.infoType,
       required this.pressTime,
       required this.reportTime,
+      required final Map<String, dynamic> body,
       this.validTime,
       this.serialNo,
-      this.headline,
-      required final Map<String, dynamic> body})
+      this.headline})
       : _body = body;
 
   factory _$TelegramV1Impl.fromJson(Map<String, dynamic> json) =>
@@ -284,12 +284,6 @@ class _$TelegramV1Impl implements _TelegramV1 {
   final DateTime pressTime;
   @override
   final DateTime reportTime;
-  @override
-  final DateTime? validTime;
-  @override
-  final int? serialNo;
-  @override
-  final String? headline;
   final Map<String, dynamic> _body;
   @override
   Map<String, dynamic> get body {
@@ -299,8 +293,15 @@ class _$TelegramV1Impl implements _TelegramV1 {
   }
 
   @override
+  final DateTime? validTime;
+  @override
+  final int? serialNo;
+  @override
+  final String? headline;
+
+  @override
   String toString() {
-    return 'TelegramV1(id: $id, eventId: $eventId, type: $type, schemaType: $schemaType, status: $status, infoType: $infoType, pressTime: $pressTime, reportTime: $reportTime, validTime: $validTime, serialNo: $serialNo, headline: $headline, body: $body)';
+    return 'TelegramV1(id: $id, eventId: $eventId, type: $type, schemaType: $schemaType, status: $status, infoType: $infoType, pressTime: $pressTime, reportTime: $reportTime, body: $body, validTime: $validTime, serialNo: $serialNo, headline: $headline)';
   }
 
   @override
@@ -320,13 +321,13 @@ class _$TelegramV1Impl implements _TelegramV1 {
                 other.pressTime == pressTime) &&
             (identical(other.reportTime, reportTime) ||
                 other.reportTime == reportTime) &&
+            const DeepCollectionEquality().equals(other._body, _body) &&
             (identical(other.validTime, validTime) ||
                 other.validTime == validTime) &&
             (identical(other.serialNo, serialNo) ||
                 other.serialNo == serialNo) &&
             (identical(other.headline, headline) ||
-                other.headline == headline) &&
-            const DeepCollectionEquality().equals(other._body, _body));
+                other.headline == headline));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -341,10 +342,10 @@ class _$TelegramV1Impl implements _TelegramV1 {
       infoType,
       pressTime,
       reportTime,
+      const DeepCollectionEquality().hash(_body),
       validTime,
       serialNo,
-      headline,
-      const DeepCollectionEquality().hash(_body));
+      headline);
 
   /// Create a copy of TelegramV1
   /// with the given fields replaced by the non-null parameter values.
@@ -372,10 +373,10 @@ abstract class _TelegramV1 implements TelegramV1 {
       required final String infoType,
       required final DateTime pressTime,
       required final DateTime reportTime,
+      required final Map<String, dynamic> body,
       final DateTime? validTime,
       final int? serialNo,
-      final String? headline,
-      required final Map<String, dynamic> body}) = _$TelegramV1Impl;
+      final String? headline}) = _$TelegramV1Impl;
 
   factory _TelegramV1.fromJson(Map<String, dynamic> json) =
       _$TelegramV1Impl.fromJson;
@@ -397,13 +398,13 @@ abstract class _TelegramV1 implements TelegramV1 {
   @override
   DateTime get reportTime;
   @override
+  Map<String, dynamic> get body;
+  @override
   DateTime? get validTime;
   @override
   int? get serialNo;
   @override
   String? get headline;
-  @override
-  Map<String, dynamic> get body;
 
   /// Create a copy of TelegramV1
   /// with the given fields replaced by the non-null parameter values.
