@@ -31,7 +31,7 @@ packages:
     source: hosted
     version: "2.3.0"
   altive_lints:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: altive_lints
       sha256: e9cace896453be6f97b9b41e3d02bd7f7c8c96c3fbe5e900a4d47d6f8d5c99d0

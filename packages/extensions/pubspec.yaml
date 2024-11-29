@@ -7,3 +7,4 @@ environment:
 dev_dependencies:
   eqmonitor_lints:
     path: ../eqmonitor_lints
+  altive_lints: ^1.16.0
