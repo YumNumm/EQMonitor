@@ -21,11 +21,17 @@ _$EewV1Impl _$$EewV1ImplFromJson(Map<String, dynamic> json) => $checkedCreate(
           infoType: $checkedConvert('info_type', (v) => v as String),
           reportTime: $checkedConvert(
               'report_time', (v) => DateTime.parse(v as String)),
+          isCanceled: $checkedConvert('is_canceled', (v) => v as bool),
+          isLastInfo: $checkedConvert('is_last_info', (v) => v as bool),
+          isPlum: $checkedConvert('is_plum', (v) => v as bool?),
+          accuracy: $checkedConvert(
+              'accuracy',
+              (v) => v == null
+                  ? null
+                  : EewAccuracy.fromJson(v as Map<String, dynamic>)),
           serialNo: $checkedConvert('serial_no', (v) => (v as num?)?.toInt()),
           headline: $checkedConvert('headline', (v) => v as String?),
-          isCanceled: $checkedConvert('is_canceled', (v) => v as bool),
           isWarning: $checkedConvert('is_warning', (v) => v as bool?),
-          isLastInfo: $checkedConvert('is_last_info', (v) => v as bool),
           originTime: $checkedConvert('origin_time',
               (v) => v == null ? null : DateTime.parse(v as String)),
           arrivalTime: $checkedConvert('arrival_time',
@@ -52,12 +58,6 @@ _$EewV1Impl _$$EewV1ImplFromJson(Map<String, dynamic> json) => $checkedCreate(
                   ?.map((e) => EstimatedIntensityRegion.fromJson(
                       e as Map<String, dynamic>))
                   .toList()),
-          isPlum: $checkedConvert('is_plum', (v) => v as bool?),
-          accuracy: $checkedConvert(
-              'accuracy',
-              (v) => v == null
-                  ? null
-                  : EewAccuracy.fromJson(v as Map<String, dynamic>)),
         );
         return val;
       },
@@ -66,18 +66,18 @@ _$EewV1Impl _$$EewV1ImplFromJson(Map<String, dynamic> json) => $checkedCreate(
         'schemaType': 'schema_type',
         'infoType': 'info_type',
         'reportTime': 'report_time',
-        'serialNo': 'serial_no',
         'isCanceled': 'is_canceled',
-        'isWarning': 'is_warning',
         'isLastInfo': 'is_last_info',
+        'isPlum': 'is_plum',
+        'serialNo': 'serial_no',
+        'isWarning': 'is_warning',
         'originTime': 'origin_time',
         'arrivalTime': 'arrival_time',
         'hypoName': 'hypo_name',
         'forecastMaxIntensity': 'forecast_max_intensity',
         'forecastMaxIntensityIsOver': 'forecast_max_intensity_is_over',
         'forecastMaxLpgmIntensity': 'forecast_max_lpgm_intensity',
-        'forecastMaxLpgmIntensityIsOver': 'forecast_max_lpgm_intensity_is_over',
-        'isPlum': 'is_plum'
+        'forecastMaxLpgmIntensityIsOver': 'forecast_max_lpgm_intensity_is_over'
       },
     );
 
@@ -90,11 +90,13 @@ Map<String, dynamic> _$$EewV1ImplToJson(_$EewV1Impl instance) =>
       'status': instance.status,
       'info_type': instance.infoType,
       'report_time': instance.reportTime.toIso8601String(),
+      'is_canceled': instance.isCanceled,
+      'is_last_info': instance.isLastInfo,
+      'is_plum': instance.isPlum,
+      'accuracy': instance.accuracy,
       'serial_no': instance.serialNo,
       'headline': instance.headline,
-      'is_canceled': instance.isCanceled,
       'is_warning': instance.isWarning,
-      'is_last_info': instance.isLastInfo,
       'origin_time': instance.originTime?.toIso8601String(),
       'arrival_time': instance.arrivalTime?.toIso8601String(),
       'hypo_name': instance.hypoName,
@@ -110,8 +112,6 @@ Map<String, dynamic> _$$EewV1ImplToJson(_$EewV1Impl instance) =>
       'forecast_max_lpgm_intensity_is_over':
           instance.forecastMaxLpgmIntensityIsOver,
       'regions': instance.regions,
-      'is_plum': instance.isPlum,
-      'accuracy': instance.accuracy,
     };
 
 const _$JmaForecastIntensityEnumMap = {

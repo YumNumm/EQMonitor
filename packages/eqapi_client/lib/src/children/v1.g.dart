@@ -115,17 +115,17 @@ class _V1 implements V1 {
 
   @override
   Future<HttpResponse<List<RegionItem>>> getEarthquakeRegions({
+    required String regionCode,
     int limit = 10,
     int offset = 0,
-    required String regionCode,
     String? intensityLte,
     String? intensityGte,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
+      r'regionCode': regionCode,
       r'limit': limit,
       r'offset': offset,
-      r'regionCode': regionCode,
       r'intensityLte': intensityLte,
       r'intensityGte': intensityGte,
     };
