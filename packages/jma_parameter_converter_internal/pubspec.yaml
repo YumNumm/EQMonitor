@@ -19,6 +19,7 @@ dependencies:
   json_annotation: ^4.8.1
 
 dev_dependencies:
+  altive_lints: ^1.16.0
   build_runner: ^2.4.4
   eqmonitor_lints:
     path: ../eqmonitor_lints
