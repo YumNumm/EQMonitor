@@ -87,6 +87,16 @@ class MainMapView extends HookConsumerWidget {
         !images.intensityIconFill.isAllRendered() ||
         !hasTravelTimeDepthMapValue ||
         images.currentLocationIcon == null) {
+      final progress = [
+        stylePath.value == null,
+        images.hypocenterIcon == null,
+        images.hypocenterLowPreciseIcon == null,
+        !images.intenistyIcon.isAllRendered(),
+        !images.intensityIconFill.isAllRendered(),
+        !hasTravelTimeDepthMapValue,
+        images.currentLocationIcon == null,
+      ];
+      log('progress: $progress');
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator.adaptive(),

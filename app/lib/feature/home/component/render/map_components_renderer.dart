@@ -4,7 +4,6 @@ import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_intensity_icon.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_lg_intensity_icon.dart';
-import 'package:eqmonitor/main.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:screenshot/screenshot.dart';
@@ -17,6 +16,10 @@ class MapComponentsRenderer {
     IntensityIconType type,
   ) async {
     final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final parentContainer = ProviderScope.containerOf(context);
+    final container = ProviderContainer(
+      parent: parentContainer,
+    );
     final result = await _controller.captureFromWidget(
       UncontrolledProviderScope(
         container: container,
@@ -37,6 +40,10 @@ class MapComponentsRenderer {
     IntensityIconType type,
   ) async {
     final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final parentContainer = ProviderScope.containerOf(context);
+    final container = ProviderContainer(
+      parent: parentContainer,
+    );
     final result = await _controller.captureFromWidget(
       UncontrolledProviderScope(
         container: container,
@@ -56,10 +63,17 @@ class MapComponentsRenderer {
     HypocenterType type,
   ) async {
     final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final parentContainer = ProviderScope.containerOf(context);
+    final container = ProviderContainer(
+      parent: parentContainer,
+    );
     final result = await _controller.captureFromWidget(
-      CustomPaint(
+      UncontrolledProviderScope(
+        container: container,
+        child: CustomPaint(
         painter: _HypocenterPainter(type: type),
-        size: const Size(80, 80),
+          size: const Size(80, 80),
+        ),
       ),
       context: context,
       pixelRatio: pixelRatio,
@@ -71,10 +85,17 @@ class MapComponentsRenderer {
     BuildContext context,
   ) async {
     final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final parentContainer = ProviderScope.containerOf(context);
+    final container = ProviderContainer(
+      parent: parentContainer,
+    );
     final result = await _controller.captureFromWidget(
-      const CustomPaint(
+      UncontrolledProviderScope(
+        container: container,
+        child: const CustomPaint(
         painter: _CurrentLocationPainter(),
-        size: Size(80, 80),
+          size: Size(80, 80),
+        ),
       ),
       context: context,
       pixelRatio: pixelRatio,

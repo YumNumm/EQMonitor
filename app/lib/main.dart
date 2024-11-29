@@ -34,7 +34,6 @@ import 'package:shared_preference_app_group/shared_preference_app_group.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
-late final ProviderContainer container;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -142,32 +141,30 @@ Future<void> main() async {
       FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode),
     );
   }
-  container = ProviderContainer(
-    overrides: [
-      sharedPreferencesProvider.overrideWithValue(results.$1.$1),
-      kyoshinObservationPointsProvider.overrideWithValue(results.$1.$2),
-      talkerProvider.overrideWithValue(talker),
-      packageInfoProvider.overrideWithValue(results.$1.$3),
-      if (results.$1.$4 != null)
-        androidDeviceInfoProvider.overrideWithValue(results.$1.$4!),
-      if (results.$1.$5 != null)
-        iosDeviceInfoProvider.overrideWithValue(results.$1.$5!),
-      if (results.$1.$7 != null)
-        applicationDocumentsDirectoryProvider.overrideWithValue(results.$1.$7!),
-      jmaCodeTableProvider.overrideWithValue(results.$1.$8),
-      if (results.$2.$3 != null)
-        kyoshinColorMapProvider.overrideWithValue(results.$2.$3!),
-    ],
-    observers: [
-      if (kDebugMode)
-        CustomProviderObserver(
-          talker,
-        ),
-    ],
-  );
   runApp(
-    UncontrolledProviderScope(
-      container: container,
+    ProviderScope(
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(results.$1.$1),
+        kyoshinObservationPointsProvider.overrideWithValue(results.$1.$2),
+        talkerProvider.overrideWithValue(talker),
+        packageInfoProvider.overrideWithValue(results.$1.$3),
+        if (results.$1.$4 != null)
+          androidDeviceInfoProvider.overrideWithValue(results.$1.$4!),
+        if (results.$1.$5 != null)
+          iosDeviceInfoProvider.overrideWithValue(results.$1.$5!),
+        if (results.$1.$7 != null)
+          applicationDocumentsDirectoryProvider
+              .overrideWithValue(results.$1.$7!),
+        jmaCodeTableProvider.overrideWithValue(results.$1.$8),
+        if (results.$2.$3 != null)
+          kyoshinColorMapProvider.overrideWithValue(results.$2.$3!),
+      ],
+      observers: [
+        if (kDebugMode)
+          CustomProviderObserver(
+            talker,
+          ),
+      ],
       child: const App(),
     ),
   );
