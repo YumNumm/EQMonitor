@@ -58,7 +58,7 @@ class _MagnitudeFilterModal extends HookWidget {
     this.currentMin = MagnitudeFilterChip.initialMin,
     this.currentMax = MagnitudeFilterChip.initialMax,
   });
-  
+
   final double? currentMin;
   final double? currentMax;
 
