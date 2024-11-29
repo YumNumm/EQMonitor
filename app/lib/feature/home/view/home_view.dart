@@ -281,6 +281,7 @@ class _HomeBodyWidget extends HookConsumerWidget {
                     return true;
                     // ignore: avoid_catches_without_on_clauses
                   } catch (e) {
+                    log('画像のキャッシュ 失敗: $e');
                     await Future<void>.delayed(
                       const Duration(milliseconds: 1000),
                     );
