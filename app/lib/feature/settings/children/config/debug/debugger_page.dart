@@ -61,14 +61,14 @@ class _DebugWidget extends ConsumerWidget {
             const SheetHeader(title: 'デバッグメニュー'),
             SwitchListTile.adaptive(
               value: eewSettings.showCalculatedRegionIntensity,
-              onChanged: (value) => ref
+              onChanged: (value) async => ref
                   .read(eewSettingsNotifierProvider.notifier)
                   .setShowCalculatedRegionIntensity(value: value),
               title: const Text('距離減衰式による予想震度(Region)'),
             ),
             SwitchListTile.adaptive(
               value: eewSettings.showCalculatedCityIntensity,
-              onChanged: (value) => ref
+              onChanged: (value) async => ref
                   .read(eewSettingsNotifierProvider.notifier)
                   .setShowCalculatedCityIntensity(value: value),
               title: const Text('距離減衰式による予想震度(City)'),
@@ -76,7 +76,7 @@ class _DebugWidget extends ConsumerWidget {
             ListTile(
               title: const Text('ログ'),
               leading: const Icon(Icons.list),
-              onTap: () => context.push(const TalkerRoute().location),
+              onTap: () async => context.push(const TalkerRoute().location),
             ),
             ListTile(
               title: const Text('EEW Test'),
@@ -87,14 +87,14 @@ class _DebugWidget extends ConsumerWidget {
               title: const Text('REST APIエンドポイント'),
               leading: const Icon(Icons.http),
               subtitle: Text(ref.watch(telegramUrlProvider).restApiUrl),
-              onTap: () =>
+              onTap: () async =>
                   const HttpApiEndpointSelectorRoute().push<void>(context),
             ),
             ListTile(
               title: const Text('WebSocketエンドポイント'),
               leading: const Icon(Icons.http),
               subtitle: Text(ref.watch(telegramUrlProvider).wsApiUrl),
-              onTap: () =>
+              onTap: () async =>
                   const WebsocketEndpointSelectorRoute().push<void>(context),
             ),
             ListTile(
@@ -153,10 +153,8 @@ class _DebugWidget extends ConsumerWidget {
               },
             ),
             FilledButton.icon(
-              onPressed: () =>
+              onPressed: () async =>
                   context.push('/earthquake-history-details/20240526142329'),
-              //     const EarthquakeHistoryDetailsRoute(eventId: 20201122190603)
-              //         .push<void>(context),
               icon: const Icon(Icons.list),
               label: const Text(
                 "context.push('/earthquake-history-details/20240526142329')",
@@ -164,7 +162,7 @@ class _DebugWidget extends ConsumerWidget {
             ),
             SwitchListTile.adaptive(
               value: ref.watch(isDioProxyEnabledProvider),
-              onChanged: (value) => ref
+              onChanged: (value) async => ref
                   .read(isDioProxyEnabledProvider.notifier)
                   .set(value: value),
               title: const Text('Dio Proxy'),
@@ -208,7 +206,7 @@ class _Route extends StatelessWidget {
 
             return ListTile(
               title: Text(path),
-              onTap: () => context.push(
+              onTap: () async => context.push(
                 path,
               ),
               visualDensity: VisualDensity.compact,

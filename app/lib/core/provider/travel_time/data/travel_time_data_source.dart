@@ -1,11 +1,12 @@
 import 'package:eqmonitor/core/provider/travel_time/model/travel_time_table.dart';
 import 'package:flutter/services.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'travel_time_data_source.g.dart';
 
 @Riverpod(keepAlive: true)
-TravelTimeDataSource travelTimeDataSource(TravelTimeDataSourceRef ref) =>
+TravelTimeDataSource travelTimeDataSource(Ref ref) =>
     TravelTimeDataSource();
 
 class TravelTimeDataSource {

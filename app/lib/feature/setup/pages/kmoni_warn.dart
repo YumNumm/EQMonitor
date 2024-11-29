@@ -67,9 +67,9 @@ class KmoniWarnPage extends ConsumerWidget {
 
 class UseKmoniButton extends StatelessWidget {
   const UseKmoniButton({
-    super.key,
     required this.onDisabled,
     required this.onEnabled,
+    super.key,
   });
 
   final void Function() onDisabled;

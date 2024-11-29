@@ -294,7 +294,7 @@ class _V1 implements V1 {
     String? intensityGte,
     DateTime? originTimeLte,
     DateTime? originTimeGte,
-    EarthquakeEarlySortType sort = EarthquakeEarlySortType.origin_time,
+    EarthquakeEarlySortType sort = EarthquakeEarlySortType.originTime,
     bool ascending = false,
   }) async {
     final _extra = <String, dynamic>{};

@@ -72,7 +72,10 @@ class ShakeDetectionCard extends ConsumerWidget {
             ),
           ),
           Text(
-            "検知時刻: ${DateFormat('yyyy/MM/dd HH:mm').format(event.createdAt.toLocal())}頃",
+            '検知時刻: '
+            // ignore: lines_longer_than_80_chars
+            "${DateFormat('yyyy/MM/dd HH:mm').format(event.createdAt.toLocal())}"
+            '頃',
             style: theme.textTheme.bodyMedium,
           ),
         ],

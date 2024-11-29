@@ -81,6 +81,7 @@ extension MinMaxDateTime on (DateTime?, DateTime?) {
       return '${DateRangeFilterChip.format.format(max!)} 以前';
     }
     // それ以外
-    return '${DateRangeFilterChip.format.format(min!)} ~ ${DateRangeFilterChip.format.format(max!)}';
+    return '${DateRangeFilterChip.format.format(min!)} ~ '
+        '${DateRangeFilterChip.format.format(max!)}';
   }
 }

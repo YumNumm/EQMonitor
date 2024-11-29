@@ -9,7 +9,7 @@ part of 'earthquake_history_early_details_notifier.dart';
 // **************************************************************************
 
 String _$earthquakeHistoryEarlyEventHash() =>
-    r'13fa4d382824e1367de0f53cd8c9fa2a360de781';
+    r'45706d786f53b6d4c9396fbe2ac974d757ec1014';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -37,23 +37,10 @@ class _SystemHash {
 const earthquakeHistoryEarlyEventProvider = EarthquakeHistoryEarlyEventFamily();
 
 /// See also [earthquakeHistoryEarlyEvent].
-class EarthquakeHistoryEarlyEventFamily extends Family {
+class EarthquakeHistoryEarlyEventFamily
+    extends Family<AsyncValue<EarthquakeEarlyEvent>> {
   /// See also [earthquakeHistoryEarlyEvent].
   const EarthquakeHistoryEarlyEventFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'earthquakeHistoryEarlyEventProvider';
 
   /// See also [earthquakeHistoryEarlyEvent].
   EarthquakeHistoryEarlyEventProvider call(
@@ -64,7 +51,6 @@ class EarthquakeHistoryEarlyEventFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   EarthquakeHistoryEarlyEventProvider getProviderOverride(
     covariant EarthquakeHistoryEarlyEventProvider provider,
@@ -74,31 +60,19 @@ class EarthquakeHistoryEarlyEventFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<EarthquakeEarlyEvent> Function(
-              EarthquakeHistoryEarlyEventRef ref)
-          create) {
-    return _$EarthquakeHistoryEarlyEventFamilyOverride(this, create);
-  }
-}
-
-class _$EarthquakeHistoryEarlyEventFamilyOverride implements FamilyOverride {
-  _$EarthquakeHistoryEarlyEventFamilyOverride(
-      this.overriddenFamily, this.create);
-
-  final FutureOr<EarthquakeEarlyEvent> Function(
-      EarthquakeHistoryEarlyEventRef ref) create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final EarthquakeHistoryEarlyEventFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  EarthquakeHistoryEarlyEventProvider getProviderOverride(
-    covariant EarthquakeHistoryEarlyEventProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'earthquakeHistoryEarlyEventProvider';
 }
 
 /// See also [earthquakeHistoryEarlyEvent].
@@ -125,7 +99,7 @@ class EarthquakeHistoryEarlyEventProvider
         );
 
   EarthquakeHistoryEarlyEventProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -138,7 +112,8 @@ class EarthquakeHistoryEarlyEventProvider
 
   @override
   Override overrideWith(
-    FutureOr<EarthquakeEarlyEvent> Function(EarthquakeHistoryEarlyEventRef ref)
+    FutureOr<EarthquakeEarlyEvent> Function(
+            EarthquakeHistoryEarlyEventRef provider)
         create,
   ) {
     return ProviderOverride(
@@ -156,28 +131,8 @@ class EarthquakeHistoryEarlyEventProvider
   }
 
   @override
-  (String,) get argument {
-    return (id,);
-  }
-
-  @override
   AutoDisposeFutureProviderElement<EarthquakeEarlyEvent> createElement() {
     return _EarthquakeHistoryEarlyEventProviderElement(this);
-  }
-
-  EarthquakeHistoryEarlyEventProvider _copyWith(
-    FutureOr<EarthquakeEarlyEvent> Function(EarthquakeHistoryEarlyEventRef ref)
-        create,
-  ) {
-    return EarthquakeHistoryEarlyEventProvider._internal(
-      (ref) => create(ref as EarthquakeHistoryEarlyEventRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      id: id,
-    );
   }
 
   @override
@@ -194,6 +149,8 @@ class EarthquakeHistoryEarlyEventProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin EarthquakeHistoryEarlyEventRef
     on AutoDisposeFutureProviderRef<EarthquakeEarlyEvent> {
   /// The parameter `id` of this provider.
@@ -209,4 +166,4 @@ class _EarthquakeHistoryEarlyEventProviderElement
   String get id => (origin as EarthquakeHistoryEarlyEventProvider).id;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

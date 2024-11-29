@@ -1,5 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
+// ignore_for_file: type=lint, duplicate_ignore
+
 part of 'tsunami.dart';
 
 // **************************************************************************
@@ -8,15 +10,27 @@ part of 'tsunami.dart';
 
 _$TsunamiParameterImpl _$$TsunamiParameterImplFromJson(
         Map<String, dynamic> json) =>
-    _$TsunamiParameterImpl(
-      responseId: json['responseId'] as String,
-      responseTime: DateTime.parse(json['responseTime'] as String),
-      status: json['status'] as String,
-      changeTime: DateTime.parse(json['changeTime'] as String),
-      version: json['version'] as String,
-      items: (json['items'] as List<dynamic>)
-          .map((e) => TsunamiParameterItem.fromJson(e as Map<String, dynamic>))
-          .toList(),
+    $checkedCreate(
+      r'_$TsunamiParameterImpl',
+      json,
+      ($checkedConvert) {
+        final val = _$TsunamiParameterImpl(
+          responseId: $checkedConvert('responseId', (v) => v as String),
+          responseTime: $checkedConvert(
+              'responseTime', (v) => DateTime.parse(v as String)),
+          status: $checkedConvert('status', (v) => v as String),
+          changeTime:
+              $checkedConvert('changeTime', (v) => DateTime.parse(v as String)),
+          version: $checkedConvert('version', (v) => v as String),
+          items: $checkedConvert(
+              'items',
+              (v) => (v as List<dynamic>)
+                  .map((e) =>
+                      TsunamiParameterItem.fromJson(e as Map<String, dynamic>))
+                  .toList()),
+        );
+        return val;
+      },
     );
 
 Map<String, dynamic> _$$TsunamiParameterImplToJson(
@@ -32,15 +46,24 @@ Map<String, dynamic> _$$TsunamiParameterImplToJson(
 
 _$TsunamiParameterItemImpl _$$TsunamiParameterItemImplFromJson(
         Map<String, dynamic> json) =>
-    _$TsunamiParameterItemImpl(
-      area: json['area'] as String?,
-      prefecture: json['prefecture'] as String,
-      code: json['code'] as String,
-      name: json['name'] as String,
-      kana: json['kana'] as String,
-      owner: json['owner'] as String,
-      latitude: doubleFromString(json['latitude'] as String),
-      longitude: doubleFromString(json['longitude'] as String),
+    $checkedCreate(
+      r'_$TsunamiParameterItemImpl',
+      json,
+      ($checkedConvert) {
+        final val = _$TsunamiParameterItemImpl(
+          area: $checkedConvert('area', (v) => v as String?),
+          prefecture: $checkedConvert('prefecture', (v) => v as String),
+          code: $checkedConvert('code', (v) => v as String),
+          name: $checkedConvert('name', (v) => v as String),
+          kana: $checkedConvert('kana', (v) => v as String),
+          owner: $checkedConvert('owner', (v) => v as String),
+          latitude:
+              $checkedConvert('latitude', (v) => doubleFromString(v as String)),
+          longitude: $checkedConvert(
+              'longitude', (v) => doubleFromString(v as String)),
+        );
+        return val;
+      },
     );
 
 Map<String, dynamic> _$$TsunamiParameterItemImplToJson(

@@ -21,11 +21,9 @@ class ColorSchemeConfigPage extends ConsumerWidget {
             RadioListTile.adaptive(
               value: IntensityColorModel.eqmonitor(),
               groupValue: state,
-              onChanged: (value) {
-                ref
-                    .read(intensityColorProvider.notifier)
-                    .update(IntensityColorModel.eqmonitor());
-              },
+              onChanged: (value) async => ref
+                  .read(intensityColorProvider.notifier)
+                  .update(IntensityColorModel.eqmonitor()),
               title: const Text('EQMonitor'),
               subtitle: Padding(
                 padding: const EdgeInsets.all(4),
@@ -37,11 +35,9 @@ class ColorSchemeConfigPage extends ConsumerWidget {
             RadioListTile.adaptive(
               value: IntensityColorModel.jma(),
               groupValue: state,
-              onChanged: (value) {
-                ref
-                    .read(intensityColorProvider.notifier)
-                    .update(IntensityColorModel.jma());
-              },
+              onChanged: (value) async => ref
+                  .read(intensityColorProvider.notifier)
+                  .update(IntensityColorModel.jma()),
               title: const Text('気象庁配色'),
               subtitle: Padding(
                 padding: const EdgeInsets.all(4),
@@ -51,11 +47,10 @@ class ColorSchemeConfigPage extends ConsumerWidget {
             RadioListTile.adaptive(
               value: IntensityColorModel.earthQuickly(),
               groupValue: state,
-              onChanged: (value) {
-                ref
-                    .read(intensityColorProvider.notifier)
-                    .update(IntensityColorModel.earthQuickly());
-              },
+              onChanged: (value) async =>
+                  ref.read(intensityColorProvider.notifier).update(
+                        IntensityColorModel.earthQuickly(),
+                      ),
               title: const Text('EarthQuickly'),
               subtitle: Padding(
                 padding: const EdgeInsets.all(4),

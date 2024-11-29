@@ -46,7 +46,7 @@ class InformationHistoryViewModel extends _$InformationHistoryViewModel {
     }
   }
 
-  void onScrollPositionChanged(ScrollController controller) {
+  Future<void> onScrollPositionChanged(ScrollController controller) async {
     // エラー発生時・リロード中は何もしない
     if (state == null) {
       return;
@@ -55,7 +55,7 @@ class InformationHistoryViewModel extends _$InformationHistoryViewModel {
       return;
     }
     if (controller.position.maxScrollExtent - controller.position.pixels < 20) {
-      update(loadMore: true);
+      await update(loadMore: true);
     }
   }
 }

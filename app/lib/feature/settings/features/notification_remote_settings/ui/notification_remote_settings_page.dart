@@ -161,13 +161,14 @@ class _Data extends StatelessWidget {
         children: [
           EarthquakeStatusWidget(
             earthquake: state.earthquake,
-            action: () =>
+            action: () async =>
                 const NotificationEarthquakeRoute().push<void>(context),
           ),
           const SizedBox(height: 16),
           EewStatusWidget(
             eew: state.eew,
-            action: () => const NotificationEewRoute().push<void>(context),
+            action: () async =>
+                const NotificationEewRoute().push<void>(context),
           ),
         ],
       ),

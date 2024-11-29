@@ -8,7 +8,7 @@ part of 'talker.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$talkerHash() => r'4509d8da008ccf8ac469ff99e62b8a26328b1cf1';
+String _$talkerHash() => r'd325c49b84b3fee9aa8b793dfed6b5ab8be197ee';
 
 /// See also [talker].
 @ProviderFor(talker)
@@ -21,6 +21,8 @@ final talkerProvider = Provider<Talker>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef TalkerRef = ProviderRef<Talker>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

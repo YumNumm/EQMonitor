@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latlong2/latlong.dart' as lat_long_2;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -7,7 +8,7 @@ part 'estimated_intensity_data_source.g.dart';
 
 @Riverpod(keepAlive: true)
 EstimatedIntensityDataSource estimatedIntensityDataSource(
-  EstimatedIntensityDataSourceRef ref,
+  Ref ref,
 ) =>
     EstimatedIntensityDataSource();
 

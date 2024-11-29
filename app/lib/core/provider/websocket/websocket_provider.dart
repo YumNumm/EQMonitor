@@ -9,13 +9,14 @@ import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/env/env.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:web_socket_client/web_socket_client.dart';
 
 part 'websocket_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-WebSocket websocket(WebsocketRef ref) {
+WebSocket websocket(Ref ref) {
   final apiUrl = ref.watch(telegramUrlProvider.select((v) => v.wsApiUrl));
   final uri = Uri.parse(apiUrl);
   final backoff = BinaryExponentialBackoff(
@@ -34,7 +35,7 @@ WebSocket websocket(WebsocketRef ref) {
     ..onDispose(() {
       socket.close(1000, 'Connection closed');
     })
-    ..listen(appLifeCycleProvider, (_, next) {
+    ..listen(appLifecycleProvider, (_, next) {
       // backgroundになったら接続を閉じる
       if (next == AppLifecycleState.paused) {
         socket.close(1000, 'Connection closed');
@@ -94,7 +95,7 @@ class WebsocketMessages extends _$WebsocketMessages {
 
 @Riverpod(keepAlive: true)
 Stream<RealtimePostgresChangesPayloadBase> websocketParsedMessages(
-  WebsocketParsedMessagesRef ref,
+  Ref ref,
 ) {
   final controller = StreamController<RealtimePostgresChangesPayloadBase>();
   ref
@@ -111,23 +112,19 @@ Stream<RealtimePostgresChangesPayloadBase> websocketParsedMessages(
 }
 
 @Riverpod(keepAlive: true)
-Stream<RealtimePostgresChangesPayloadTable<T>>
-    websocketTableMessages<T extends V1Database>(
-  WebsocketTableMessagesRef<T> ref,
+Stream<RealtimePostgresChangesPayloadTable> websocketTableMessages(
+  Ref ref,
 ) {
-  final controller = StreamController<RealtimePostgresChangesPayloadTable<T>>();
+  final controller = StreamController<RealtimePostgresChangesPayloadTable>();
   ref
     ..listen(websocketParsedMessagesProvider, (previous, next) {
       final value = next.value;
       if (value == null || next.isLoading) {
         return;
       }
-      final _ = switch (value) {
-        RealtimePostgresInsertPayload<T>() => controller.add(value),
-        RealtimePostgresUpdatePayload<T>() => controller.add(value),
-        RealtimePostgresDeletePayload<T>() => controller.add(value),
-        _ => null,
-      };
+      if (value is RealtimePostgresChangesPayloadTable) {
+        controller.add(value);
+      }
     })
     ..onDispose(controller.close);
   return controller.stream;

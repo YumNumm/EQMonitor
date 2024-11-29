@@ -41,7 +41,8 @@ class ErrorInfoWidget extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(
                       (response != null
-                              ? '${exception.response?.statusCode} ${exception.response?.statusMessage}'
+                              ? '${exception.response?.statusCode} '
+                                  '${exception.response?.statusMessage}'
                               : '') +
                           switch (data) {
                             {

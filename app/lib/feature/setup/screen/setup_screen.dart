@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/setup/component/background_image.dart';
@@ -15,12 +17,10 @@ class SetupScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pageController = usePageController();
-    void next() {
-      pageController.nextPage(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-      );
-    }
+    Future<void> next() async => pageController.nextPage(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
+        );
 
     final pages = <Widget>[
       IntroductionPage(
@@ -31,8 +31,10 @@ class SetupScreen extends HookConsumerWidget {
       ),
       KmoniWarnPage(onNext: next),
       NotificationSettingIntroPage(
-        onNext: () {
-          ref.read(sharedPreferencesProvider).setBool('isInitialized', true);
+        onNext: () async {
+          unawaited(
+            ref.read(sharedPreferencesProvider).setBool('isInitialized', true),
+          );
           const HomeRoute().pushReplacement(context);
         },
       ),

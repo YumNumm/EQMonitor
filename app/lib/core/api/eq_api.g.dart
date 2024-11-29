@@ -8,7 +8,7 @@ part of 'eq_api.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$eqApiHash() => r'686065a770d45b1464ec7f0cdf382cf132038822';
+String _$eqApiHash() => r'e024f84d6ae97012b1ecf706a24e19c5b620a015';
 
 /// See also [eqApi].
 @ProviderFor(eqApi)
@@ -21,6 +21,8 @@ final eqApiProvider = Provider<EqApi>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef EqApiRef = ProviderRef<EqApi>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

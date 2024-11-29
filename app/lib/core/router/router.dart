@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
@@ -43,7 +45,7 @@ part 'router.g.dart';
 final isInitializedStateProvider = StateProvider<bool>((ref) => false);
 
 @Riverpod(keepAlive: true)
-GoRouter goRouter(GoRouterRef ref) => GoRouter(
+GoRouter goRouter(Ref ref) => GoRouter(
       routes: $appRoutes,
       navigatorKey: App.navigatorKey,
       initialLocation:
@@ -395,8 +397,10 @@ class _NavigatorObserver extends NavigatorObserver {
       if (kIsWeb) {
         return;
       }
-      FirebaseAnalytics.instance.logScreenView(
-        screenName: page,
+      unawaited(
+        FirebaseAnalytics.instance.logScreenView(
+          screenName: page,
+        ),
       );
     }
   }

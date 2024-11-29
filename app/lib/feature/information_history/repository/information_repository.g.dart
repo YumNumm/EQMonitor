@@ -9,7 +9,7 @@ part of 'information_repository.dart';
 // **************************************************************************
 
 String _$informationRepositoryHash() =>
-    r'5cfdd4f2b17b34f872c535daaee98bcc4c7a1bb2';
+    r'75d6f6f782d220137ee4574b68b6dbb676b98ec3';
 
 /// See also [informationRepository].
 @ProviderFor(informationRepository)
@@ -23,6 +23,8 @@ final informationRepositoryProvider = Provider<InformationRepository>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef InformationRepositoryRef = ProviderRef<InformationRepository>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

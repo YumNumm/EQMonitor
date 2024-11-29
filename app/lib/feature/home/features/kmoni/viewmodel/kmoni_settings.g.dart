@@ -52,7 +52,7 @@ const _$KmoniMarkerTypeEnumMap = {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$kmoniSettingsHash() => r'4d210d3435704e2155611374de259bf621c9ad49';
+String _$kmoniSettingsHash() => r'16a1d4dff95ea66075a34354e8c49a12d5580d9f';
 
 /// See also [KmoniSettings].
 @ProviderFor(KmoniSettings)
@@ -69,4 +69,4 @@ final kmoniSettingsProvider =
 
 typedef _$KmoniSettings = Notifier<KmoniSettingsState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

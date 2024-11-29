@@ -1,10 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/api/api_authentication_service.dart';
+import 'package:eqmonitor/core/api/api_authentication_notifier.dart';
 import 'package:eqmonitor/core/api/eq_api.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/model/notification_remote_settings_state.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/notification_remote_settings_notifier.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_code_table_types/jma_code_table.pb.dart' as jma_code_table;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -12,7 +13,7 @@ part 'notification_remote_settings_saved_state.g.dart';
 
 @riverpod
 bool notificationRemoteSettingsHasChangedFromSavedState(
-  NotificationRemoteSettingsHasChangedFromSavedStateRef ref,
+  Ref ref,
 ) =>
     ref.watch(notificationRemoteSettingsSavedStateNotifierProvider) !=
     ref.watch(notificationRemoteSettingsNotifierProvider);
@@ -25,7 +26,7 @@ class NotificationRemoteSettingsSavedStateNotifier
     final api = ref.read(eqApiProvider);
     final String? token;
     try {
-      token = await ref.read(apiAuthenticationServiceProvider.future);
+      token = await ref.read(apiAuthenticationNotifierProvider.future);
     } on Exception catch (e) {
       throw UnauthorizedException(
         innerException: e,
@@ -41,7 +42,7 @@ class NotificationRemoteSettingsSavedStateNotifier
   Future<void> updateEarthquake({
     required NotificationSettingsRequest request,
   }) async {
-    final token = await ref.read(apiAuthenticationServiceProvider.future);
+    final token = await ref.read(apiAuthenticationNotifierProvider.future);
     if (token == null) {
       throw UnauthorizedException();
     }
@@ -89,7 +90,7 @@ class NotificationRemoteSettingsSavedStateNotifier
   Future<void> updateEew({
     required NotificationSettingsRequest request,
   }) async {
-    final token = await ref.read(apiAuthenticationServiceProvider.future);
+    final token = await ref.read(apiAuthenticationNotifierProvider.future);
     if (token == null) {
       throw UnauthorizedException();
     }

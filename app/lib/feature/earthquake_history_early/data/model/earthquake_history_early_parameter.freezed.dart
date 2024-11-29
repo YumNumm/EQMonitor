@@ -21,6 +21,8 @@ EarthquakeHistoryEarlyParameter _$EarthquakeHistoryEarlyParameterFromJson(
 
 /// @nodoc
 mixin _$EarthquakeHistoryEarlyParameter {
+  EarthquakeEarlySortType get sort => throw _privateConstructorUsedError;
+  bool get ascending => throw _privateConstructorUsedError;
   double? get magnitudeLte => throw _privateConstructorUsedError;
   double? get magnitudeGte => throw _privateConstructorUsedError;
   double? get depthLte => throw _privateConstructorUsedError;
@@ -29,8 +31,6 @@ mixin _$EarthquakeHistoryEarlyParameter {
   JmaIntensity? get intensityGte => throw _privateConstructorUsedError;
   DateTime? get originTimeLte => throw _privateConstructorUsedError;
   DateTime? get originTimeGte => throw _privateConstructorUsedError;
-  EarthquakeEarlySortType get sort => throw _privateConstructorUsedError;
-  bool get ascending => throw _privateConstructorUsedError;
 
   /// Serializes this EarthquakeHistoryEarlyParameter to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,16 +51,16 @@ abstract class $EarthquakeHistoryEarlyParameterCopyWith<$Res> {
           EarthquakeHistoryEarlyParameter>;
   @useResult
   $Res call(
-      {double? magnitudeLte,
+      {EarthquakeEarlySortType sort,
+      bool ascending,
+      double? magnitudeLte,
       double? magnitudeGte,
       double? depthLte,
       double? depthGte,
       JmaIntensity? intensityLte,
       JmaIntensity? intensityGte,
       DateTime? originTimeLte,
-      DateTime? originTimeGte,
-      EarthquakeEarlySortType sort,
-      bool ascending});
+      DateTime? originTimeGte});
 }
 
 /// @nodoc
@@ -79,6 +79,8 @@ class _$EarthquakeHistoryEarlyParameterCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? sort = null,
+    Object? ascending = null,
     Object? magnitudeLte = freezed,
     Object? magnitudeGte = freezed,
     Object? depthLte = freezed,
@@ -87,10 +89,16 @@ class _$EarthquakeHistoryEarlyParameterCopyWithImpl<$Res,
     Object? intensityGte = freezed,
     Object? originTimeLte = freezed,
     Object? originTimeGte = freezed,
-    Object? sort = null,
-    Object? ascending = null,
   }) {
     return _then(_value.copyWith(
+      sort: null == sort
+          ? _value.sort
+          : sort // ignore: cast_nullable_to_non_nullable
+              as EarthquakeEarlySortType,
+      ascending: null == ascending
+          ? _value.ascending
+          : ascending // ignore: cast_nullable_to_non_nullable
+              as bool,
       magnitudeLte: freezed == magnitudeLte
           ? _value.magnitudeLte
           : magnitudeLte // ignore: cast_nullable_to_non_nullable
@@ -123,14 +131,6 @@ class _$EarthquakeHistoryEarlyParameterCopyWithImpl<$Res,
           ? _value.originTimeGte
           : originTimeGte // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      sort: null == sort
-          ? _value.sort
-          : sort // ignore: cast_nullable_to_non_nullable
-              as EarthquakeEarlySortType,
-      ascending: null == ascending
-          ? _value.ascending
-          : ascending // ignore: cast_nullable_to_non_nullable
-              as bool,
     ) as $Val);
   }
 }
@@ -145,16 +145,16 @@ abstract class _$$EarthquakeHistoryEarlyParameterImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {double? magnitudeLte,
+      {EarthquakeEarlySortType sort,
+      bool ascending,
+      double? magnitudeLte,
       double? magnitudeGte,
       double? depthLte,
       double? depthGte,
       JmaIntensity? intensityLte,
       JmaIntensity? intensityGte,
       DateTime? originTimeLte,
-      DateTime? originTimeGte,
-      EarthquakeEarlySortType sort,
-      bool ascending});
+      DateTime? originTimeGte});
 }
 
 /// @nodoc
@@ -172,6 +172,8 @@ class __$$EarthquakeHistoryEarlyParameterImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? sort = null,
+    Object? ascending = null,
     Object? magnitudeLte = freezed,
     Object? magnitudeGte = freezed,
     Object? depthLte = freezed,
@@ -180,10 +182,16 @@ class __$$EarthquakeHistoryEarlyParameterImplCopyWithImpl<$Res>
     Object? intensityGte = freezed,
     Object? originTimeLte = freezed,
     Object? originTimeGte = freezed,
-    Object? sort = null,
-    Object? ascending = null,
   }) {
     return _then(_$EarthquakeHistoryEarlyParameterImpl(
+      sort: null == sort
+          ? _value.sort
+          : sort // ignore: cast_nullable_to_non_nullable
+              as EarthquakeEarlySortType,
+      ascending: null == ascending
+          ? _value.ascending
+          : ascending // ignore: cast_nullable_to_non_nullable
+              as bool,
       magnitudeLte: freezed == magnitudeLte
           ? _value.magnitudeLte
           : magnitudeLte // ignore: cast_nullable_to_non_nullable
@@ -216,14 +224,6 @@ class __$$EarthquakeHistoryEarlyParameterImplCopyWithImpl<$Res>
           ? _value.originTimeGte
           : originTimeGte // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      sort: null == sort
-          ? _value.sort
-          : sort // ignore: cast_nullable_to_non_nullable
-              as EarthquakeEarlySortType,
-      ascending: null == ascending
-          ? _value.ascending
-          : ascending // ignore: cast_nullable_to_non_nullable
-              as bool,
     ));
   }
 }
@@ -233,21 +233,25 @@ class __$$EarthquakeHistoryEarlyParameterImplCopyWithImpl<$Res>
 class _$EarthquakeHistoryEarlyParameterImpl
     implements _EarthquakeHistoryEarlyParameter {
   const _$EarthquakeHistoryEarlyParameterImpl(
-      {this.magnitudeLte,
+      {required this.sort,
+      required this.ascending,
+      this.magnitudeLte,
       this.magnitudeGte,
       this.depthLte,
       this.depthGte,
       this.intensityLte,
       this.intensityGte,
       this.originTimeLte,
-      this.originTimeGte,
-      required this.sort,
-      required this.ascending});
+      this.originTimeGte});
 
   factory _$EarthquakeHistoryEarlyParameterImpl.fromJson(
           Map<String, dynamic> json) =>
       _$$EarthquakeHistoryEarlyParameterImplFromJson(json);
 
+  @override
+  final EarthquakeEarlySortType sort;
+  @override
+  final bool ascending;
   @override
   final double? magnitudeLte;
   @override
@@ -264,14 +268,10 @@ class _$EarthquakeHistoryEarlyParameterImpl
   final DateTime? originTimeLte;
   @override
   final DateTime? originTimeGte;
-  @override
-  final EarthquakeEarlySortType sort;
-  @override
-  final bool ascending;
 
   @override
   String toString() {
-    return 'EarthquakeHistoryEarlyParameter(magnitudeLte: $magnitudeLte, magnitudeGte: $magnitudeGte, depthLte: $depthLte, depthGte: $depthGte, intensityLte: $intensityLte, intensityGte: $intensityGte, originTimeLte: $originTimeLte, originTimeGte: $originTimeGte, sort: $sort, ascending: $ascending)';
+    return 'EarthquakeHistoryEarlyParameter(sort: $sort, ascending: $ascending, magnitudeLte: $magnitudeLte, magnitudeGte: $magnitudeGte, depthLte: $depthLte, depthGte: $depthGte, intensityLte: $intensityLte, intensityGte: $intensityGte, originTimeLte: $originTimeLte, originTimeGte: $originTimeGte)';
   }
 
   @override
@@ -279,6 +279,9 @@ class _$EarthquakeHistoryEarlyParameterImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeHistoryEarlyParameterImpl &&
+            (identical(other.sort, sort) || other.sort == sort) &&
+            (identical(other.ascending, ascending) ||
+                other.ascending == ascending) &&
             (identical(other.magnitudeLte, magnitudeLte) ||
                 other.magnitudeLte == magnitudeLte) &&
             (identical(other.magnitudeGte, magnitudeGte) ||
@@ -294,16 +297,15 @@ class _$EarthquakeHistoryEarlyParameterImpl
             (identical(other.originTimeLte, originTimeLte) ||
                 other.originTimeLte == originTimeLte) &&
             (identical(other.originTimeGte, originTimeGte) ||
-                other.originTimeGte == originTimeGte) &&
-            (identical(other.sort, sort) || other.sort == sort) &&
-            (identical(other.ascending, ascending) ||
-                other.ascending == ascending));
+                other.originTimeGte == originTimeGte));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      sort,
+      ascending,
       magnitudeLte,
       magnitudeGte,
       depthLte,
@@ -311,9 +313,7 @@ class _$EarthquakeHistoryEarlyParameterImpl
       intensityLte,
       intensityGte,
       originTimeLte,
-      originTimeGte,
-      sort,
-      ascending);
+      originTimeGte);
 
   /// Create a copy of EarthquakeHistoryEarlyParameter
   /// with the given fields replaced by the non-null parameter values.
@@ -336,20 +336,24 @@ class _$EarthquakeHistoryEarlyParameterImpl
 abstract class _EarthquakeHistoryEarlyParameter
     implements EarthquakeHistoryEarlyParameter {
   const factory _EarthquakeHistoryEarlyParameter(
-      {final double? magnitudeLte,
+      {required final EarthquakeEarlySortType sort,
+      required final bool ascending,
+      final double? magnitudeLte,
       final double? magnitudeGte,
       final double? depthLte,
       final double? depthGte,
       final JmaIntensity? intensityLte,
       final JmaIntensity? intensityGte,
       final DateTime? originTimeLte,
-      final DateTime? originTimeGte,
-      required final EarthquakeEarlySortType sort,
-      required final bool ascending}) = _$EarthquakeHistoryEarlyParameterImpl;
+      final DateTime? originTimeGte}) = _$EarthquakeHistoryEarlyParameterImpl;
 
   factory _EarthquakeHistoryEarlyParameter.fromJson(Map<String, dynamic> json) =
       _$EarthquakeHistoryEarlyParameterImpl.fromJson;
 
+  @override
+  EarthquakeEarlySortType get sort;
+  @override
+  bool get ascending;
   @override
   double? get magnitudeLte;
   @override
@@ -366,10 +370,6 @@ abstract class _EarthquakeHistoryEarlyParameter
   DateTime? get originTimeLte;
   @override
   DateTime? get originTimeGte;
-  @override
-  EarthquakeEarlySortType get sort;
-  @override
-  bool get ascending;
 
   /// Create a copy of EarthquakeHistoryEarlyParameter
   /// with the given fields replaced by the non-null parameter values.

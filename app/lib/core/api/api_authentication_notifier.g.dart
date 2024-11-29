@@ -2,29 +2,28 @@
 
 // ignore_for_file: type=lint, duplicate_ignore
 
-part of 'earthquake_history_config_provider.dart';
+part of 'api_authentication_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$earthquakeHistoryConfigHash() =>
-    r'453f49269fbf832c29a5b1363665b4b05884eb3f';
+String _$apiAuthenticationNotifierHash() =>
+    r'0545a5e734e8f4585d2aefb2eda67fb10791d1ba';
 
-/// See also [EarthquakeHistoryConfig].
-@ProviderFor(EarthquakeHistoryConfig)
-final earthquakeHistoryConfigProvider = AutoDisposeNotifierProvider<
-    EarthquakeHistoryConfig, EarthquakeHistoryConfigModel>.internal(
-  EarthquakeHistoryConfig.new,
-  name: r'earthquakeHistoryConfigProvider',
+/// See also [ApiAuthenticationNotifier].
+@ProviderFor(ApiAuthenticationNotifier)
+final apiAuthenticationNotifierProvider =
+    AsyncNotifierProvider<ApiAuthenticationNotifier, String?>.internal(
+  ApiAuthenticationNotifier.new,
+  name: r'apiAuthenticationNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$earthquakeHistoryConfigHash,
+      : _$apiAuthenticationNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$EarthquakeHistoryConfig
-    = AutoDisposeNotifier<EarthquakeHistoryConfigModel>;
+typedef _$ApiAuthenticationNotifier = AsyncNotifier<String?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

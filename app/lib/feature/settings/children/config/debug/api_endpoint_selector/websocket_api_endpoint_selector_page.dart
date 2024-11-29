@@ -26,22 +26,18 @@ class WebSocketApiEndpointSelectorPage extends ConsumerWidget {
                   subtitle: Text(defaultUrl),
                   value: defaultUrl,
                   groupValue: state,
-                  onChanged: (value) {
-                    ref
-                        .read(telegramUrlProvider.notifier)
-                        .updateWebSocketUrl(value!);
-                  },
+                  onChanged: (value) async => ref
+                      .read(telegramUrlProvider.notifier)
+                      .updateWebSocketUrl(value!),
                 ),
                 RadioListTile.adaptive(
                   title: const Text('[WebSocket API] Development Endpoint'),
                   value: developUrl,
                   subtitle: Text(developUrl),
                   groupValue: state,
-                  onChanged: (value) {
-                    ref
-                        .read(telegramUrlProvider.notifier)
-                        .updateWebSocketUrl(value!);
-                  },
+                  onChanged: (value) async => ref
+                      .read(telegramUrlProvider.notifier)
+                      .updateWebSocketUrl(value!),
                 ),
               ],
             ),

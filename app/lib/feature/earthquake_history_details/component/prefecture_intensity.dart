@@ -22,12 +22,12 @@ typedef _Arg = ({
 
 @riverpod
 Future<Map<JmaIntensity, List<_MergedRegionIntensity>>> _calculator(
-  _CalculatorRef ref,
+  Ref ref,
   _Arg arg,
 ) =>
     compute<_Arg, Map<JmaIntensity, List<_MergedRegionIntensity>>>(
       (
-        _Arg arg,
+        arg,
       ) {
         final cities = arg.cities;
         final prefectures = arg.prefectures;
@@ -117,8 +117,8 @@ Future<Map<JmaIntensity, List<_MergedRegionIntensity>>> _calculator(
 
 class PrefectureIntensityWidget extends HookConsumerWidget {
   const PrefectureIntensityWidget({
-    super.key,
     required this.item,
+    super.key,
   });
 
   final EarthquakeV1 item;
@@ -190,7 +190,7 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
                       ),
                     ),
                     onTap: hasCities
-                        ? () => _PrefectureModalBottomSheet.show(
+                        ? () async => _PrefectureModalBottomSheet.show(
                               context: context,
                               intensity: kv.key,
                               prefectures: kv.value,
