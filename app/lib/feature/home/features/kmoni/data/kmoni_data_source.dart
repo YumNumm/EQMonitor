@@ -10,12 +10,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'kmoni_data_source.g.dart';
 
 @Riverpod(keepAlive: true)
-KmoniDataSource kmoniDataSource(Ref ref) =>
-    KmoniDataSource(Dio());
+KmoniDataSource kmoniDataSource(Ref ref) => KmoniDataSource(Dio());
 
 class KmoniDataSource {
   KmoniDataSource(this.dio);
-  
+
   final Dio dio;
 
   final _urlGenerator = KmoniWebApiUrlGenerator();
