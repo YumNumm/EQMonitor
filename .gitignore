@@ -170,3 +170,6 @@ ios/*.p8
 
 # Secret Folder
 secret/
+
+# DerivedData
+**/DerivedData/
