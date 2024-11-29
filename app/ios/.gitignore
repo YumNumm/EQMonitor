@@ -38,3 +38,5 @@ Runner/GeneratedPluginRegistrant.*
 vendor/
 
 credentials.json
+
+.bundle
