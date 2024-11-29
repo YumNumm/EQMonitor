@@ -9,6 +9,7 @@ class BasicModalSheet extends HookWidget {
     super.key,
     this.hasAppBar = true,
   });
+
   final SheetController controller;
   final List<Widget> children;
   final bool hasAppBar;

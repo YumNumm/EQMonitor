@@ -14,6 +14,7 @@ class BorderedContainer extends StatelessWidget {
     this.onPressed,
     super.key,
   });
+  
   final Widget child;
   final Color? accentColor;
   final EdgeInsetsGeometry padding;

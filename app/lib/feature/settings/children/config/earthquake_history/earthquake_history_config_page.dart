@@ -169,6 +169,7 @@ class _EarthquakeHistoryDetailConfigBody extends HookConsumerWidget {
     required this.showCitySelector,
     required this.hasLpgmIntensity,
   });
+
   final bool showCitySelector;
   final bool hasLpgmIntensity;
 
@@ -252,6 +253,7 @@ class _IntensityFillModeSegmentedControl extends ConsumerStatefulWidget {
   const _IntensityFillModeSegmentedControl({
     required this.showCitySelector,
   });
+
   final bool showCitySelector;
 
   @override
@@ -336,6 +338,7 @@ class _IntensityModeSegmentedControl extends StatelessWidget {
     required this.onSelected,
     required this.selected,
   });
+
   final void Function(_IntensityMode) onSelected;
   final _IntensityMode selected;
 

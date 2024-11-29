@@ -48,21 +48,17 @@ class ActionButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(
           vertical: 4,
         ),
-        child: Row(
-          children: [
-            Flexible(
-              child: Center(
-                child: Text(
-                  text,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 1.1,
-                      ),
-                ),
-              ),
+        child: Flexible(
+          child: Center(
+            child: Text(
+              text,
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    letterSpacing: 1.1,
+                  ),
             ),
-          ],
+          ),
         ),
       );
 

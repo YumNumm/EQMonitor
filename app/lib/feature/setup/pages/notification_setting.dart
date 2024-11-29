@@ -7,7 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class NotificationSettingIntroPage extends HookConsumerWidget {
-  const NotificationSettingIntroPage({required this.onNext, super.key});
+  const NotificationSettingIntroPage({
+    required this.onNext,
+    super.key,
+  });
+
   final void Function() onNext;
 
   @override

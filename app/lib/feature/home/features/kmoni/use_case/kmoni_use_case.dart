@@ -158,6 +158,7 @@ class KmoniUseCase {
 
 class KmoniIsolateArg {
   KmoniIsolateArg(this.$1, this.$2, this.$3);
+
   final List<int> $1;
   final List<KyoshinObservationPoint> $2;
   final RealtimeDataType $3;

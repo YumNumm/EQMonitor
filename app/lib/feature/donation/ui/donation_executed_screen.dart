@@ -19,6 +19,7 @@ class DonationExecutedScreen extends HookConsumerWidget {
     required this.result,
     super.key,
   });
+
   final (StoreProduct, CustomerInfo) result;
 
   @override

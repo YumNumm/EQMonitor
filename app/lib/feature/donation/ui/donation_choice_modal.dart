@@ -9,6 +9,7 @@ class DonationChoiceModal extends HookConsumerWidget {
   const DonationChoiceModal._({
     required this.choices,
   });
+
   final List<StoreProduct> choices;
 
   static Future<StoreProduct?> show(

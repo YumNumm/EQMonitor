@@ -97,6 +97,7 @@ class _HypocenterPainter extends CustomPainter {
   const _HypocenterPainter({
     required this.type,
   });
+
   final HypocenterType type;
 
   @override
