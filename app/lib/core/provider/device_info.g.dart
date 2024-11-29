@@ -8,7 +8,7 @@ part of 'device_info.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$androidDeviceInfoHash() => r'458369b0c5f4d1058e744561e6c84af623330d1a';
+String _$androidDeviceInfoHash() => r'02f1a66ec8a7e96d418eb9cb0a981fd40d5d2523';
 
 /// See also [androidDeviceInfo].
 @ProviderFor(androidDeviceInfo)
@@ -22,8 +22,10 @@ final androidDeviceInfoProvider = Provider<AndroidDeviceInfo>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef AndroidDeviceInfoRef = ProviderRef<AndroidDeviceInfo>;
-String _$iosDeviceInfoHash() => r'524afbbda4c23aa698f034aa8b2735affcbdc08c';
+String _$iosDeviceInfoHash() => r'5c95b3efca6425549ed7e884f54f041a61267149';
 
 /// See also [iosDeviceInfo].
 @ProviderFor(iosDeviceInfo)
@@ -37,6 +39,8 @@ final iosDeviceInfoProvider = Provider<IosDeviceInfo>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef IosDeviceInfoRef = ProviderRef<IosDeviceInfo>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

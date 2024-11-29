@@ -22,12 +22,12 @@ typedef _Arg = ({
 
 @riverpod
 Future<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>> _lpgmCalculator(
-  _LpgmCalculatorRef ref,
+  Ref ref,
   _Arg arg,
 ) =>
     compute<_Arg, Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>>(
       (
-        _Arg arg,
+        arg,
       ) {
         final prefectures = arg.prefectures;
         final stations = arg.stations;
@@ -74,8 +74,8 @@ Future<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>> _lpgmCalculator(
 
 class PrefectureLpgmIntensityWidget extends HookConsumerWidget {
   const PrefectureLpgmIntensityWidget({
-    super.key,
     required this.item,
+    super.key,
   });
 
   final EarthquakeV1 item;
@@ -134,7 +134,7 @@ class PrefectureLpgmIntensityWidget extends HookConsumerWidget {
                       kv.value.map((e) => e.name).join(', ').toHalfWidth,
                     ),
                     onTap: hasStations
-                        ? () => _PrefectureModalBottomSheet.show(
+                        ? () async => _PrefectureModalBottomSheet.show(
                               context: context,
                               intensity: kv.key,
                               prefectures: kv.value,

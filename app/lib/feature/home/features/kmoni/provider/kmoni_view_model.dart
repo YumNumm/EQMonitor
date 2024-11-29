@@ -19,7 +19,7 @@ class KmoniViewModel extends _$KmoniViewModel {
   @override
   KmoniViewModelState build() {
     ref
-      ..listen(appLifeCycleProvider, (_, next) async {
+      ..listen(appLifecycleProvider, (_, next) async {
         if (next == AppLifecycleState.resumed) {
           state = state.copyWith(
             status: KmoniStatus.none,

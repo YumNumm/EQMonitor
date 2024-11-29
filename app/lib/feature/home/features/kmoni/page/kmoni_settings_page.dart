@@ -90,7 +90,7 @@ class KmoniSettingsUseToggle extends ConsumerWidget {
                 ),
               ),
             );
-            final isAccepted = result == true;
+            final isAccepted = result != null && result;
 
             if (isAccepted) {
               ref.read(kmoniSettingsProvider.notifier).toggleUseKmoni();

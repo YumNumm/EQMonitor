@@ -9,7 +9,7 @@ part of 'eew_alive_telegram.dart';
 // **************************************************************************
 
 String _$eewAliveNormalTelegramHash() =>
-    r'29da2deaf8b2611744f88585a5fa215e7c14d99a';
+    r'3d5ba64b3f98437062584f49208f9898a32358f3';
 
 /// イベント終了していないEEWのうち、精度が低いものを除外したもの
 ///
@@ -25,8 +25,10 @@ final eewAliveNormalTelegramProvider = Provider<List<EewV1>>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef EewAliveNormalTelegramRef = ProviderRef<List<EewV1>>;
-String _$eewAliveCheckerHash() => r'9a37a3cc06eecdcaf74ecf1e717f9f34a6761948';
+String _$eewAliveCheckerHash() => r'f092d121ff9d9ea2b58fb253608779403a4ce39f';
 
 /// See also [eewAliveChecker].
 @ProviderFor(eewAliveChecker)
@@ -40,6 +42,8 @@ final eewAliveCheckerProvider = Provider<EewAliveChecker>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef EewAliveCheckerRef = ProviderRef<EewAliveChecker>;
 String _$eewAliveTelegramHash() => r'75a2a8e24ee834cde6895bc29ff84cdc69470cb7';
 
@@ -60,4 +64,4 @@ final eewAliveTelegramProvider =
 
 typedef _$EewAliveTelegram = Notifier<List<EewV1>?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

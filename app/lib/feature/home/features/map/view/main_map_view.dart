@@ -19,7 +19,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
 class MainMapView extends HookConsumerWidget {
-  const MainMapView({super.key});
+  const MainMapView({
+    super.key,
+  });
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(mainMapViewModelProvider);
@@ -31,6 +34,7 @@ class MainMapView extends HookConsumerWidget {
     );
     final mapStyle = ref.watch(mapStyleProvider);
     final stylePath = useState<String?>(null);
+    // ignore: discarded_futures
     final getStyleJsonFuture = useMemoized(
       () async {
         final path = await mapStyle.getStyle(
@@ -51,8 +55,8 @@ class MainMapView extends HookConsumerWidget {
       () {
         final timer = Timer.periodic(
           const Duration(milliseconds: 80),
-          (timer) {
-            ref.read(mainMapViewModelProvider.notifier).onTick(
+          (timer) async {
+            await ref.read(mainMapViewModelProvider.notifier).onTick(
                   ref.read(ntpProvider.notifier).now() ?? DateTime.now(),
                 );
           },

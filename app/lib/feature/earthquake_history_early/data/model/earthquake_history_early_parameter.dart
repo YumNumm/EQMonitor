@@ -8,6 +8,8 @@ part 'earthquake_history_early_parameter.g.dart';
 @freezed
 class EarthquakeHistoryEarlyParameter with _$EarthquakeHistoryEarlyParameter {
   const factory EarthquakeHistoryEarlyParameter({
+    required EarthquakeEarlySortType sort,
+    required bool ascending,
     double? magnitudeLte,
     double? magnitudeGte,
     double? depthLte,
@@ -16,8 +18,6 @@ class EarthquakeHistoryEarlyParameter with _$EarthquakeHistoryEarlyParameter {
     JmaIntensity? intensityGte,
     DateTime? originTimeLte,
     DateTime? originTimeGte,
-    required EarthquakeEarlySortType sort,
-    required bool ascending,
   }) = _EarthquakeHistoryEarlyParameter;
 
   factory EarthquakeHistoryEarlyParameter.fromJson(Map<String, dynamic> json) =>

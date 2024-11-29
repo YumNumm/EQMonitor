@@ -1,13 +1,16 @@
 // ignore_for_file: overridden_fields
 
+import 'dart:async';
+
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 part 'talker.g.dart';
 
 @Riverpod(keepAlive: true)
-Talker talker(TalkerRef ref) => throw UnimplementedError();
+Talker talker(Ref ref) => throw UnimplementedError();
 
 class TelegramWebSocketLog extends TalkerLog {
   TelegramWebSocketLog(super.message);
@@ -73,13 +76,17 @@ class CrashlyticsTalkerObserver implements TalkerObserver {
   CrashlyticsTalkerObserver();
 
   @override
-  void onError(TalkerError err) => FirebaseCrashlytics.instance.log(
-        'Error: ${err.message}, ${err.exception}, ${err.stackTrace}',
+  void onError(TalkerError err) => unawaited(
+        FirebaseCrashlytics.instance.log(
+          'Error: ${err.message}, ${err.exception}, ${err.stackTrace}',
+        ),
       );
 
   @override
-  void onException(TalkerException err) => FirebaseCrashlytics.instance.log(
-        'Exception: ${err.message}, ${err.exception}, ${err.stackTrace}',
+  void onException(TalkerException err) => unawaited(
+        FirebaseCrashlytics.instance.log(
+          'Exception: ${err.message}, ${err.exception}, ${err.stackTrace}',
+        ),
       );
 
   @override
@@ -87,8 +94,10 @@ class CrashlyticsTalkerObserver implements TalkerObserver {
     if (log.title == TelegramWebSocketLog('').title) {
       return;
     }
-    FirebaseCrashlytics.instance.log(
-      log.message.toString(),
+    unawaited(
+      FirebaseCrashlytics.instance.log(
+        log.message.toString(),
+      ),
     );
   }
 }

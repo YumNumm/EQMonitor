@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 
 class EarthquakeStatusWidget extends StatelessWidget {
   const EarthquakeStatusWidget({
-    super.key,
     required this.earthquake,
     required this.action,
+    super.key,
   });
 
   final NotificationRemoteSettingsEarthquake earthquake;
@@ -53,8 +53,8 @@ class EarthquakeStatusWidget extends StatelessWidget {
 
 class EarthquakeNotificationStatusText extends StatelessWidget {
   const EarthquakeNotificationStatusText({
-    super.key,
     required this.earthquake,
+    super.key,
   });
 
   final NotificationRemoteSettingsEarthquake earthquake;

@@ -14,12 +14,12 @@ _$MapConfigImpl _$$MapConfigImplFromJson(Map<String, dynamic> json) =>
       json,
       ($checkedConvert) {
         final val = _$MapConfigImpl(
+          colorScheme: $checkedConvert('colorScheme',
+              (v) => MapColorScheme.fromJson(v as Map<String, dynamic>)),
           minScale: $checkedConvert(
               'minScale', (v) => (v as num?)?.toDouble() ?? 0.8),
           maxScale:
               $checkedConvert('maxScale', (v) => (v as num?)?.toDouble() ?? 20),
-          colorScheme: $checkedConvert('colorScheme',
-              (v) => MapColorScheme.fromJson(v as Map<String, dynamic>)),
         );
         return val;
       },
@@ -27,9 +27,9 @@ _$MapConfigImpl _$$MapConfigImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$MapConfigImplToJson(_$MapConfigImpl instance) =>
     <String, dynamic>{
+      'colorScheme': instance.colorScheme,
       'minScale': instance.minScale,
       'maxScale': instance.maxScale,
-      'colorScheme': instance.colorScheme,
     };
 
 _$MapColorSchemeImpl _$$MapColorSchemeImplFromJson(Map<String, dynamic> json) =>

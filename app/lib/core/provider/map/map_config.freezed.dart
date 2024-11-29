@@ -20,9 +20,9 @@ MapConfig _$MapConfigFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$MapConfig {
+  MapColorScheme get colorScheme => throw _privateConstructorUsedError;
   double get minScale => throw _privateConstructorUsedError;
   double get maxScale => throw _privateConstructorUsedError;
-  MapColorScheme get colorScheme => throw _privateConstructorUsedError;
 
   /// Serializes this MapConfig to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -39,7 +39,7 @@ abstract class $MapConfigCopyWith<$Res> {
   factory $MapConfigCopyWith(MapConfig value, $Res Function(MapConfig) then) =
       _$MapConfigCopyWithImpl<$Res, MapConfig>;
   @useResult
-  $Res call({double minScale, double maxScale, MapColorScheme colorScheme});
+  $Res call({MapColorScheme colorScheme, double minScale, double maxScale});
 
   $MapColorSchemeCopyWith<$Res> get colorScheme;
 }
@@ -59,11 +59,15 @@ class _$MapConfigCopyWithImpl<$Res, $Val extends MapConfig>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? colorScheme = null,
     Object? minScale = null,
     Object? maxScale = null,
-    Object? colorScheme = null,
   }) {
     return _then(_value.copyWith(
+      colorScheme: null == colorScheme
+          ? _value.colorScheme
+          : colorScheme // ignore: cast_nullable_to_non_nullable
+              as MapColorScheme,
       minScale: null == minScale
           ? _value.minScale
           : minScale // ignore: cast_nullable_to_non_nullable
@@ -72,10 +76,6 @@ class _$MapConfigCopyWithImpl<$Res, $Val extends MapConfig>
           ? _value.maxScale
           : maxScale // ignore: cast_nullable_to_non_nullable
               as double,
-      colorScheme: null == colorScheme
-          ? _value.colorScheme
-          : colorScheme // ignore: cast_nullable_to_non_nullable
-              as MapColorScheme,
     ) as $Val);
   }
 
@@ -98,7 +98,7 @@ abstract class _$$MapConfigImplCopyWith<$Res>
       __$$MapConfigImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({double minScale, double maxScale, MapColorScheme colorScheme});
+  $Res call({MapColorScheme colorScheme, double minScale, double maxScale});
 
   @override
   $MapColorSchemeCopyWith<$Res> get colorScheme;
@@ -117,11 +117,15 @@ class __$$MapConfigImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? colorScheme = null,
     Object? minScale = null,
     Object? maxScale = null,
-    Object? colorScheme = null,
   }) {
     return _then(_$MapConfigImpl(
+      colorScheme: null == colorScheme
+          ? _value.colorScheme
+          : colorScheme // ignore: cast_nullable_to_non_nullable
+              as MapColorScheme,
       minScale: null == minScale
           ? _value.minScale
           : minScale // ignore: cast_nullable_to_non_nullable
@@ -130,10 +134,6 @@ class __$$MapConfigImplCopyWithImpl<$Res>
           ? _value.maxScale
           : maxScale // ignore: cast_nullable_to_non_nullable
               as double,
-      colorScheme: null == colorScheme
-          ? _value.colorScheme
-          : colorScheme // ignore: cast_nullable_to_non_nullable
-              as MapColorScheme,
     ));
   }
 }
@@ -142,23 +142,23 @@ class __$$MapConfigImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$MapConfigImpl implements _MapConfig {
   const _$MapConfigImpl(
-      {this.minScale = 0.8, this.maxScale = 20, required this.colorScheme});
+      {required this.colorScheme, this.minScale = 0.8, this.maxScale = 20});
 
   factory _$MapConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$MapConfigImplFromJson(json);
 
+  @override
+  final MapColorScheme colorScheme;
   @override
   @JsonKey()
   final double minScale;
   @override
   @JsonKey()
   final double maxScale;
-  @override
-  final MapColorScheme colorScheme;
 
   @override
   String toString() {
-    return 'MapConfig(minScale: $minScale, maxScale: $maxScale, colorScheme: $colorScheme)';
+    return 'MapConfig(colorScheme: $colorScheme, minScale: $minScale, maxScale: $maxScale)';
   }
 
   @override
@@ -166,17 +166,17 @@ class _$MapConfigImpl implements _MapConfig {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MapConfigImpl &&
+            (identical(other.colorScheme, colorScheme) ||
+                other.colorScheme == colorScheme) &&
             (identical(other.minScale, minScale) ||
                 other.minScale == minScale) &&
             (identical(other.maxScale, maxScale) ||
-                other.maxScale == maxScale) &&
-            (identical(other.colorScheme, colorScheme) ||
-                other.colorScheme == colorScheme));
+                other.maxScale == maxScale));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, minScale, maxScale, colorScheme);
+  int get hashCode => Object.hash(runtimeType, colorScheme, minScale, maxScale);
 
   /// Create a copy of MapConfig
   /// with the given fields replaced by the non-null parameter values.
@@ -196,19 +196,19 @@ class _$MapConfigImpl implements _MapConfig {
 
 abstract class _MapConfig implements MapConfig {
   const factory _MapConfig(
-      {final double minScale,
-      final double maxScale,
-      required final MapColorScheme colorScheme}) = _$MapConfigImpl;
+      {required final MapColorScheme colorScheme,
+      final double minScale,
+      final double maxScale}) = _$MapConfigImpl;
 
   factory _MapConfig.fromJson(Map<String, dynamic> json) =
       _$MapConfigImpl.fromJson;
 
   @override
+  MapColorScheme get colorScheme;
+  @override
   double get minScale;
   @override
   double get maxScale;
-  @override
-  MapColorScheme get colorScheme;
 
   /// Create a copy of MapConfig
   /// with the given fields replaced by the non-null parameter values.

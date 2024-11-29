@@ -14,11 +14,13 @@ class EewV1 with _$EewV1 implements V1Database {
     required String status,
     required String infoType,
     required DateTime reportTime,
+    required bool isCanceled,
+    required bool isLastInfo,
+    required bool? isPlum,
+    required EewAccuracy? accuracy,
     int? serialNo,
     String? headline,
-    required bool isCanceled,
     bool? isWarning,
-    required bool isLastInfo,
     DateTime? originTime,
     DateTime? arrivalTime,
     String? hypoName,
@@ -31,8 +33,6 @@ class EewV1 with _$EewV1 implements V1Database {
     JmaForecastLgIntensity? forecastMaxLpgmIntensity,
     bool? forecastMaxLpgmIntensityIsOver,
     List<EstimatedIntensityRegion>? regions,
-    required bool? isPlum,
-    required EewAccuracy? accuracy,
   }) = _EewV1;
 
   factory EewV1.fromJson(Map<String, dynamic> json) => _$EewV1FromJson(json);

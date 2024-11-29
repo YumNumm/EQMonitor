@@ -15,6 +15,7 @@ class JmaForecastIntensityWidget extends ConsumerWidget {
     super.key,
     this.size = 50,
   });
+
   final JmaForecastIntensity intensity;
   final IntensityIconType type;
   final double size;
@@ -114,6 +115,7 @@ class JmaForecastIntensityIcon extends ConsumerWidget {
     this.size = 50,
     this.showSuffix = true,
   });
+  
   final JmaForecastIntensity intensity;
   final IntensityIconType type;
   final double size;

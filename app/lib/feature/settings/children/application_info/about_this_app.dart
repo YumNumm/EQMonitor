@@ -12,8 +12,10 @@ class AboutThisAppScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final markdownFuture =
-        useMemoized(() => rootBundle.loadString(Assets.docs.aboutThisApp));
+    // ignore: discarded_futures
+    final markdownFuture = useMemoized(
+      () async => rootBundle.loadString(Assets.docs.aboutThisApp),
+    );
     final markdown = useFuture(markdownFuture);
     return Scaffold(
       appBar: AppBar(
@@ -26,13 +28,13 @@ class AboutThisAppScreen extends HookWidget {
               ListTile(
                 title: const Text('利用規約'),
                 leading: const Icon(Icons.description),
-                onTap: () =>
+                onTap: () async =>
                     const TermOfServiceRoute($extra: null).push<void>(context),
               ),
               ListTile(
                 title: const Text('プライバシーポリシー'),
                 leading: const Icon(Icons.info),
-                onTap: () =>
+                onTap: () async =>
                     const PrivacyPolicyRoute($extra: null).push<void>(context),
               ),
               ListTile(
@@ -40,7 +42,7 @@ class AboutThisAppScreen extends HookWidget {
                 subtitle:
                     Text('MIT License ${DateTime.now().year} Ryotaro Onoue'),
                 leading: const Icon(Icons.settings),
-                onTap: () => const LicenseRoute().push<void>(context),
+                onTap: () async => const LicenseRoute().push<void>(context),
               ),
               const Divider(),
               BorderedContainer(

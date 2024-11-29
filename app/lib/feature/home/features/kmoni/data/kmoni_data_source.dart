@@ -4,16 +4,18 @@ import 'package:dio/dio.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/model/kmoni_maintenance_message_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/util/kmoni_web_api_url_generator.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/util/realtime_data_type.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kmoni_data_source.g.dart';
 
 @Riverpod(keepAlive: true)
-KmoniDataSource kmoniDataSource(KmoniDataSourceRef ref) =>
+KmoniDataSource kmoniDataSource(Ref ref) =>
     KmoniDataSource(Dio());
 
 class KmoniDataSource {
   KmoniDataSource(this.dio);
+  
   final Dio dio;
 
   final _urlGenerator = KmoniWebApiUrlGenerator();

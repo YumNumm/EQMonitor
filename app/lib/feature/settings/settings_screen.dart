@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:eqmonitor/core/api/api_authentication_service.dart';
+import 'package:eqmonitor/core/api/api_authentication_notifier.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
@@ -61,29 +61,29 @@ class SettingsScreen extends ConsumerWidget {
                 '開発者に寄付することで、アプリの開発を支援できます',
               ),
               leading: const Icon(Icons.lightbulb),
-              onTap: () => const DonationRoute().push<void>(context),
+              onTap: () async => const DonationRoute().push<void>(context),
             ),
           ),
           const SettingsSectionHeader(text: '各種設定'),
           ListTile(
             title: const Text('通知条件設定'),
             leading: const Icon(Icons.notifications),
-            onTap: () => const NotificationRoute().push<void>(context),
+            onTap: () async => const NotificationRoute().push<void>(context),
           ),
           ListTile(
             title: const Text('表示設定'),
             leading: const Icon(Icons.color_lens),
-            onTap: () => const DisplayRoute().push<void>(context),
+            onTap: () async => const DisplayRoute().push<void>(context),
           ),
           ListTile(
             title: const Text('強震モニタ設定'),
             leading: const Icon(Icons.settings),
-            onTap: () => context.push(const KmoniRoute().location),
+            onTap: () async => context.push(const KmoniRoute().location),
           ),
           ListTile(
             title: const Text('地震履歴設定'),
             leading: const Icon(Icons.history),
-            onTap: () => context.push(
+            onTap: () async => context.push(
               const EarthquakeHistoryConfigRoute().location,
             ),
           ),
@@ -92,19 +92,19 @@ class SettingsScreen extends ConsumerWidget {
             title: const Text('フィードバック'),
             subtitle: const Text('ご意見・ご要望などもこちらからお願いします'),
             leading: const Icon(Icons.feedback),
-            onTap: () => _onInquiryTap(context, ref),
+            onTap: () async => _onInquiryTap(context, ref),
           ),
           ListTile(
             title: const Text('このアプリケーションについて'),
             subtitle: const Text('利用規約やプライバシーポリシーを確認できます'),
             leading: const Icon(Icons.description),
-            onTap: () => const AboutThisAppRoute().push<void>(context),
+            onTap: () async => const AboutThisAppRoute().push<void>(context),
           ),
           ListTile(
             title: const Text('サーバの稼働状況'),
             subtitle: const Text('外部Webサイトへ遷移します'),
             leading: const Icon(Icons.network_ping),
-            onTap: () => launchUrlString(
+            onTap: () async => launchUrlString(
               'https://status.eqmonitor.app/',
               mode: LaunchMode.externalApplication,
             ),
@@ -130,7 +130,7 @@ class SettingsScreen extends ConsumerWidget {
             ListTile(
               title: const Text('デバッグメニュー'),
               leading: const Icon(Icons.bug_report),
-              onTap: () => context.push(const DebuggerRoute().location),
+              onTap: () async => context.push(const DebuggerRoute().location),
             ),
           ],
         ],
@@ -168,7 +168,7 @@ Future<void> _onInquiryTap(BuildContext context, WidgetRef ref) async {
     (feedback) async {
       final packageInfo = ref.read(packageInfoProvider);
       final payload = await ref
-          .read(apiAuthenticationServiceProvider.notifier)
+          .read(apiAuthenticationNotifierProvider.notifier)
           .extractPayload();
 
       final base = '--------------------------\n'

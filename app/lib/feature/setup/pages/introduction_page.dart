@@ -75,7 +75,7 @@ class IntroductionPage extends StatelessWidget {
                       decoration: TextDecoration.underline,
                     ),
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () => context.push(
+                      ..onTap = () async => context.push(
                             const TermOfServiceRoute($extra: null).location,
                           ),
                   ),
@@ -88,7 +88,7 @@ class IntroductionPage extends StatelessWidget {
                       decoration: TextDecoration.underline,
                     ),
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () => context.push(
+                      ..onTap = () async => context.push(
                             const PrivacyPolicyRoute($extra: null).location,
                           ),
                   ),

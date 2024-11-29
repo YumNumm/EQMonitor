@@ -10,6 +10,7 @@ class ErrorInfoWidget extends StatelessWidget {
     this.onRefresh,
     super.key,
   });
+
   final Object error;
   final void Function()? onRefresh;
 
@@ -41,7 +42,8 @@ class ErrorInfoWidget extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(
                       (response != null
-                              ? '${exception.response?.statusCode} ${exception.response?.statusMessage}'
+                              ? '${exception.response?.statusCode} '
+                                  '${exception.response?.statusMessage}'
                               : '') +
                           switch (data) {
                             {
@@ -81,6 +83,7 @@ class ErrorInfoWidget extends StatelessWidget {
 
 class _DeviceIdText extends ConsumerWidget {
   const _DeviceIdText();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(apiAuthenticationPayloadProvider).valueOrNull;

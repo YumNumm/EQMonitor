@@ -41,58 +41,59 @@ class MainMapViewModel extends _$MainMapViewModel {
     ref
       ..listen(
         kmoniViewModelProvider,
-        (_, value) {
+        (_, value) async {
           final analyzedPoints = value.analyzedPoints;
           if (analyzedPoints == null) {
             return;
           }
-          _onKmoniStateChanged(analyzedPoints);
+          await _onKmoniStateChanged(analyzedPoints);
         },
       )
       ..listen(
         eewAliveTelegramProvider,
-        (_, value) => _onEewStateChanged(value ?? []),
+        (_, value) async => _onEewStateChanged(value ?? []),
       )
       ..listen(
         kmoniSettingsProvider,
-        (_, value) => _onKmoniSettingsChanged(value: value),
+        (_, value) async => _onKmoniSettingsChanged(value: value),
       )
       ..listen(
         shakeDetectionKmoniPointsMergedProvider,
-        (_, value) => _onShakeDetectionStateChanged(value.valueOrNull ?? []),
+        (_, value) async =>
+            _onShakeDetectionStateChanged(value.valueOrNull ?? []),
       )
       ..listen(
         eewSettingsNotifierProvider,
-        (_, value) => _onEewSettingsChanged(value),
+        (_, value) async => _onEewSettingsChanged(value),
       )
       ..listen(
         estimatedIntensityRegionProvider,
-        (_, state) {
+        (_, state) async {
           final eewSettings = ref.read(eewSettingsNotifierProvider);
           if (!eewSettings.showCalculatedRegionIntensity) {
             return;
           }
 
           if (state case AsyncData(:final value)) {
-            _onEstimatedIntensityRegionChanged(value);
+            await _onEstimatedIntensityRegionChanged(value);
           }
         },
       )
       ..listen(
         estimatedIntensityCityProvider,
-        (_, state) {
+        (_, state) async {
           final eewSettings = ref.read(eewSettingsNotifierProvider);
           if (!eewSettings.showCalculatedCityIntensity) {
             return;
           }
 
           if (state case AsyncData(:final value)) {
-            _onEstimatedIntensityCityChanged(value);
+            await _onEstimatedIntensityCityChanged(value);
           }
         },
       )
-      ..listen(eewSettingsNotifierProvider, (_, next) {
-        _onEewSettingsChanged(next);
+      ..listen(eewSettingsNotifierProvider, (_, next) async {
+        await _onEewSettingsChanged(next);
       });
     _lastKmoniSettingsState = ref.read(kmoniSettingsProvider);
     return MainMapViewmodelState(

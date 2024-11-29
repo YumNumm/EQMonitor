@@ -38,12 +38,13 @@ abstract class V1 {
 
   @GET('/v1/earthquake/region')
   Future<HttpResponse<List<RegionItem>>> getEarthquakeRegions({
+    @Query('regionCode') required String regionCode,
+
     /// 1~100
     @Query('limit') int limit = 10,
 
     /// 0~10000
     @Query('offset') int offset = 0,
-    @Query('regionCode') required String regionCode,
     @Query('intensityLte') String? intensityLte,
     @Query('intensityGte') String? intensityGte,
   });
@@ -93,8 +94,8 @@ abstract class V1 {
     @Query('originTimeLte') DateTime? originTimeLte,
     @Query('originTimeGte') DateTime? originTimeGte,
     @Query('sort')
-    EarthquakeEarlySortType sort = EarthquakeEarlySortType.origin_time,
-    @Query("ascending") bool ascending = false,
+    EarthquakeEarlySortType sort = EarthquakeEarlySortType.originTime,
+    @Query('ascending') bool ascending = false,
   });
 
   @GET('/v1/shake-detection/latest')
@@ -102,8 +103,8 @@ abstract class V1 {
 }
 
 enum EarthquakeEarlySortType {
-  origin_time,
+  originTime,
   magnitude,
   depth,
-  max_intensity,
+  maxIntensity,
 }

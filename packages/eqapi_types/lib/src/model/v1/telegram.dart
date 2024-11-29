@@ -15,10 +15,10 @@ class TelegramV1 with _$TelegramV1 implements V1Database {
     required String infoType,
     required DateTime pressTime,
     required DateTime reportTime,
+    required Map<String, dynamic> body,
     DateTime? validTime,
     int? serialNo,
     String? headline,
-    required Map<String, dynamic> body,
   }) = _TelegramV1;
 
   factory TelegramV1.fromJson(Map<String, dynamic> json) =>

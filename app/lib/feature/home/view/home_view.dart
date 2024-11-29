@@ -6,7 +6,7 @@ import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/api/api_authentication_service.dart';
+import 'package:eqmonitor/core/api/api_authentication_notifier.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_forecast_intensity_icon.dart';
@@ -98,181 +98,199 @@ class _HomeBodyWidget extends HookConsumerWidget {
     final sheetController = useSheetController();
     useEffect(
       () {
-        WidgetsBinding.instance.endOfFrame.then((_) {
-          log('Start Initialize');
-          (
-            ref.read(kmoniViewModelProvider.notifier).initialize(),
-            ref.read(permissionNotifierProvider.notifier).initialize(),
-            ref.read(ntpProvider.notifier).sync(),
-            () async {
-              final talker = ref.read(talkerProvider);
-              try {
-                talker.log('Start Initialize');
-                final token = await ref.read(notificationTokenProvider.future);
-                talker.log('Token: ${token.toJson()}');
-                final fcmToken = token.fcmToken;
-                if (fcmToken == null) {
-                  throw Exception('fcmToken is null');
-                }
-                talker.log('updateToken...');
-                await ref
-                    .read(notificationRemoteAuthenticateServiceProvider)
-                    .updateToken(fcmToken: fcmToken);
-                talker.log('updateToken... Done');
-                await ref
-                    .read(fcmTokenChangeDetectorProvider.notifier)
-                    .save(fcmToken);
-                talker.log('fcmTokenChangeDetectorProvider... Done');
-                final authenticationService =
-                    ref.read(apiAuthenticationServiceProvider.notifier);
-                final (
-                  id: id,
-                  role: role,
-                ) = await authenticationService.extractPayload();
-                talker.log(
-                  'Authentication: id=$id, role=$role',
-                );
-                await FirebaseCrashlytics.instance.setUserIdentifier(id);
-                await FirebaseAnalytics.instance.setUserId(
-                  id: id,
-                );
-                // ignore: avoid_catches_without_on_clauses
-              } catch (e) {
-                ref.read(talkerProvider).log(
-                      'Authentication Error: $e',
+        unawaited(
+          WidgetsBinding.instance.endOfFrame.then(
+            (_) async {
+              log('Start Initialize');
+              await (
+                ref.read(kmoniViewModelProvider.notifier).initialize(),
+                ref.read(permissionNotifierProvider.notifier).initialize(),
+                ref.read(ntpProvider.notifier).sync(),
+                () async {
+                  final talker = ref.read(talkerProvider);
+                  try {
+                    talker.log('Start Initialize');
+                    final token =
+                        await ref.read(notificationTokenProvider.future);
+                    talker.log('Token: ${token.toJson()}');
+                    final fcmToken = token.fcmToken;
+                    if (fcmToken == null) {
+                      throw Exception('fcmToken is null');
+                    }
+                    talker.log('updateToken...');
+                    await ref
+                        .read(notificationRemoteAuthenticateServiceProvider)
+                        .updateToken(fcmToken: fcmToken);
+                    talker.log('updateToken... Done');
+                    await ref
+                        .read(fcmTokenChangeDetectorProvider.notifier)
+                        .save(fcmToken);
+                    talker.log('fcmTokenChangeDetectorProvider... Done');
+                    final authenticationService =
+                        ref.read(apiAuthenticationNotifierProvider.notifier);
+                    final (
+                      id: id,
+                      role: role,
+                    ) = await authenticationService.extractPayload();
+                    talker.log(
+                      'Authentication: id=$id, role=$role',
                     );
-                await FirebaseCrashlytics.instance.recordError(
-                  e,
-                  StackTrace.current,
-                );
-                rethrow;
-              }
-            }(),
-            Future.doWhile(() async {
-              try {
-                final renderer = MapComponentsRenderer();
-                if (!context.mounted) {
-                  return false;
-                }
-                final futures = <Future<void>>[
-                  for (final type in [
-                    IntensityIconType.small,
-                    IntensityIconType.smallWithoutText,
-                  ]) ...[
-                    for (final intensity in JmaIntensity.values)
-                      renderer
-                          .renderIntensityIcon(
-                            context,
-                            intensity,
-                            type,
-                          )
-                          .then(
-                            (value) => switch (type) {
-                              IntensityIconType.small => ref
-                                  .read(intensityIconRenderProvider.notifier)
-                                  .onRendered(
-                                    value,
-                                    intensity,
-                                  ),
-                              IntensityIconType.smallWithoutText => ref
-                                  .read(
-                                    intensityIconFillRenderProvider.notifier,
-                                  )
-                                  .onRendered(
-                                    value,
-                                    intensity,
-                                  ),
-                              _ => null,
-                            },
-                          ),
-                    for (final intensity in JmaLgIntensity.values)
-                      renderer
-                          .renderLpgmIntensityIcon(
-                            context,
-                            intensity,
-                            type,
-                          )
-                          .then(
-                            (value) => switch (type) {
-                              IntensityIconType.small => ref
-                                  .read(
-                                    lpgmIntensityIconRenderProvider.notifier,
-                                  )
-                                  .onRendered(
-                                    value,
-                                    intensity,
-                                  ),
-                              IntensityIconType.smallWithoutText => ref
-                                  .read(
-                                    lpgmIntensityIconFillRenderProvider
-                                        .notifier,
-                                  )
-                                  .onRendered(
-                                    value,
-                                    intensity,
-                                  ),
-                              _ => null,
-                            },
-                          ),
-                  ],
-                  for (final type in HypocenterType.values)
-                    renderer
-                        .renderHypocenterIcon(
-                          context,
-                          type,
-                        )
-                        .then(
-                          (value) => switch (type) {
-                            HypocenterType.normal => ref
-                                .read(hypocenterIconRenderProvider.notifier)
-                                .onRendered(
-                                  value,
-                                ),
-                            HypocenterType.lowPrecise => ref
+                    await FirebaseCrashlytics.instance.setUserIdentifier(id);
+                    await FirebaseAnalytics.instance.setUserId(
+                      id: id,
+                    );
+                    // ignore: avoid_catches_without_on_clauses
+                  } catch (e) {
+                    ref.read(talkerProvider).log(
+                          'Authentication Error: $e',
+                        );
+                    await FirebaseCrashlytics.instance.recordError(
+                      e,
+                      StackTrace.current,
+                    );
+                    rethrow;
+                  }
+                }(),
+                Future.doWhile(() async {
+                  try {
+                    final renderer = MapComponentsRenderer();
+                    if (!context.mounted) {
+                      return false;
+                    }
+                    final futures = <Future<void>>[
+                      for (final type in [
+                        IntensityIconType.small,
+                        IntensityIconType.smallWithoutText,
+                      ]) ...[
+                        for (final intensity in JmaIntensity.values)
+                          renderer
+                              .renderIntensityIcon(
+                                context,
+                                intensity,
+                                type,
+                              )
+                              .then(
+                                (value) => switch (type) {
+                                  IntensityIconType.small => ref
+                                      .read(
+                                        intensityIconRenderProvider.notifier,
+                                      )
+                                      .onRendered(
+                                        value,
+                                        intensity,
+                                      ),
+                                  IntensityIconType.smallWithoutText => ref
+                                      .read(
+                                        intensityIconFillRenderProvider
+                                            .notifier,
+                                      )
+                                      .onRendered(
+                                        value,
+                                        intensity,
+                                      ),
+                                  _ => null,
+                                },
+                              ),
+                        for (final intensity in JmaLgIntensity.values)
+                          renderer
+                              .renderLpgmIntensityIcon(
+                                context,
+                                intensity,
+                                type,
+                              )
+                              .then(
+                                (value) => switch (type) {
+                                  IntensityIconType.small => ref
+                                      .read(
+                                        lpgmIntensityIconRenderProvider
+                                            .notifier,
+                                      )
+                                      .onRendered(
+                                        value,
+                                        intensity,
+                                      ),
+                                  IntensityIconType.smallWithoutText => ref
+                                      .read(
+                                        lpgmIntensityIconFillRenderProvider
+                                            .notifier,
+                                      )
+                                      .onRendered(
+                                        value,
+                                        intensity,
+                                      ),
+                                  _ => null,
+                                },
+                              ),
+                      ],
+                      for (final type in HypocenterType.values)
+                        renderer
+                            .renderHypocenterIcon(
+                              context,
+                              type,
+                            )
+                            .then(
+                              (value) => switch (type) {
+                                HypocenterType.normal => ref
+                                    .read(hypocenterIconRenderProvider.notifier)
+                                    .onRendered(
+                                      value,
+                                    ),
+                                HypocenterType.lowPrecise => ref
+                                    .read(
+                                      hypocenterLowPreciseIconRenderProvider
+                                          .notifier,
+                                    )
+                                    .onRendered(
+                                      value,
+                                    ),
+                              },
+                            ),
+                      renderer.renderCurrentLocationIcon(context).then(
+                            (value) => ref
                                 .read(
-                                  hypocenterLowPreciseIconRenderProvider
-                                      .notifier,
+                                  currentLocationIconRenderProvider.notifier,
                                 )
-                                .onRendered(
-                                  value,
-                                ),
-                          },
-                        ),
-                  renderer.renderCurrentLocationIcon(context).then(
-                        (value) => ref
-                            .read(currentLocationIconRenderProvider.notifier)
-                            .onRendered(value),
-                      ),
-                ];
-                await futures.wait;
-                // 画像のキャッシュが終わったかどうかを確認
-                final images = (
-                  intenistyIcon: ref.read(intensityIconRenderProvider),
-                  intensityIconFill: ref.read(intensityIconFillRenderProvider),
-                  hypocenterIcon: ref.read(hypocenterIconRenderProvider),
-                  hypocenterLowPreciseIcon:
-                      ref.read(hypocenterLowPreciseIconRenderProvider),
-                  currentLocationIcon:
-                      ref.read(currentLocationIconRenderProvider),
-                );
-                if (images.hypocenterIcon != null &&
-                    images.hypocenterLowPreciseIcon != null &&
-                    images.intenistyIcon.isAllRendered() &&
-                    images.intensityIconFill.isAllRendered() &&
-                    images.currentLocationIcon != null) {
-                  unawaited(FirebaseCrashlytics.instance.log('画像のキャッシュ 成功'));
-                  return false;
-                }
-                await Future<void>.delayed(const Duration(milliseconds: 1000));
-                return true;
-                // ignore: avoid_catches_without_on_clauses
-              } catch (e) {
-                await Future<void>.delayed(const Duration(milliseconds: 1000));
-                return true;
-              }
-            }),
-          ).wait;
-        });
+                                .onRendered(value),
+                          ),
+                    ];
+                    await futures.wait;
+                    // 画像のキャッシュが終わったかどうかを確認
+                    final images = (
+                      intenistyIcon: ref.read(intensityIconRenderProvider),
+                      intensityIconFill:
+                          ref.read(intensityIconFillRenderProvider),
+                      hypocenterIcon: ref.read(hypocenterIconRenderProvider),
+                      hypocenterLowPreciseIcon:
+                          ref.read(hypocenterLowPreciseIconRenderProvider),
+                      currentLocationIcon:
+                          ref.read(currentLocationIconRenderProvider),
+                    );
+                    if (images.hypocenterIcon != null &&
+                        images.hypocenterLowPreciseIcon != null &&
+                        images.intenistyIcon.isAllRendered() &&
+                        images.intensityIconFill.isAllRendered() &&
+                        images.currentLocationIcon != null) {
+                      unawaited(
+                        FirebaseCrashlytics.instance.log('画像のキャッシュ 成功'),
+                      );
+                      return false;
+                    }
+                    await Future<void>.delayed(
+                      const Duration(milliseconds: 1000),
+                    );
+                    return true;
+                    // ignore: avoid_catches_without_on_clauses
+                  } catch (e) {
+                    await Future<void>.delayed(
+                      const Duration(milliseconds: 1000),
+                    );
+                    return true;
+                  }
+                }),
+              ).wait;
+            },
+          ),
+        );
         return null;
       },
       [],
@@ -440,7 +458,7 @@ class _Fabs extends ConsumerWidget {
                 FloatingActionButton.small(
                   heroTag: 'sheet',
                   tooltip: '強震モニタの設定',
-                  onPressed: () => showModalBottomSheet<void>(
+                  onPressed: () async => showModalBottomSheet<void>(
                     context: context,
                     builder: (context) => const KmoniSettingsModal(),
                   ),
@@ -495,25 +513,26 @@ class _Sheet extends ConsumerWidget {
               '震度データベースを用いて、より過去の地震情報を検索できます',
             ),
             leading: const Icon(Icons.history),
-            onTap: () =>
+            onTap: () async =>
                 const EarthquakeHistoryEarlyRoute().push<void>(context),
           ),
           const _NotificationMigrationWidget(),
           ListTile(
             title: const Text('地震・津波に関するお知らせ'),
             leading: const Icon(Icons.info),
-            onTap: () => const InformationHistoryRoute().push<void>(context),
+            onTap: () async =>
+                const InformationHistoryRoute().push<void>(context),
           ),
           ListTile(
             title: const Text('設定'),
             leading: const Icon(Icons.settings),
-            onTap: () => const SettingsRoute().push<void>(context),
+            onTap: () async => const SettingsRoute().push<void>(context),
           ),
           if (kDebugMode)
             ListTile(
               title: const Text('Debug'),
               leading: const Icon(Icons.bug_report),
-              onTap: () => const DebuggerRoute().push<void>(context),
+              onTap: () async => const DebuggerRoute().push<void>(context),
             ),
           const SizedBox(height: 200),
         ],
@@ -564,7 +583,7 @@ class _NotificationPermission extends ConsumerWidget {
             children: [
               const Text('通知を受け取るためには、通知の許可が必要です。'),
               TextButton.icon(
-                onPressed: () => ref
+                onPressed: () async => ref
                     .read(permissionNotifierProvider.notifier)
                     .requestNotificationPermission(),
                 icon: const Icon(Icons.notifications),
@@ -649,10 +668,6 @@ class _NotificationMigrationWidget extends ConsumerWidget {
     final state =
         ref.watch(notificationRemoteSettingsInitialSetupNotifierProvider);
     return switch (state) {
-      AsyncLoading() => const ListTile(
-          title: Text('通知設定の移行中'),
-          leading: CircularProgressIndicator.adaptive(),
-        ),
       AsyncError(:final error) => BorderedContainer(
           elevation: 1,
           child: ListTile(
@@ -697,6 +712,10 @@ class _NotificationMigrationWidget extends ConsumerWidget {
               },
             ),
         },
+      _ => const ListTile(
+          title: Text('通知設定の移行中'),
+          leading: CircularProgressIndicator.adaptive(),
+        ),
     };
   }
 }

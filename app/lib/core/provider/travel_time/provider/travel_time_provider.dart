@@ -2,19 +2,20 @@ import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/provider/travel_time/data/travel_time_data_source.dart';
 import 'package:eqmonitor/core/provider/travel_time/model/travel_time_table.dart';
 import 'package:extensions/extensions.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'travel_time_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<TravelTimeTables> travelTime(TravelTimeRef ref) async {
+Future<TravelTimeTables> travelTime(Ref ref) async {
   final dataSource = ref.watch(travelTimeDataSourceProvider);
   return TravelTimeTables(table: await dataSource.loadTables());
 }
 
 @Riverpod(keepAlive: true)
 Future<TravelTimeDepthMap> travelTimeDepthMap(
-  TravelTimeDepthMapRef ref,
+  Ref ref,
 ) async {
   final state = await ref.watch(travelTimeProvider.future);
   return state.table.groupListsBy((e) => e.depth);

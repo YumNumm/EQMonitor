@@ -1,13 +1,14 @@
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/model/kyoshin_color_map_model.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kmoni_color_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 List<KyoshinColorMapModel> kyoshinColorMap(
-  KyoshinColorMapRef ref,
+  Ref ref,
 ) =>
     throw UnimplementedError();
 

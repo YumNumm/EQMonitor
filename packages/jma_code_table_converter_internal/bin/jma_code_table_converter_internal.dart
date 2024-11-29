@@ -1,10 +1,10 @@
-import "dart:io";
+import 'dart:io';
 
-import "package:jma_code_table_converter_internal/jma_code_table_converter_internal.dart";
-import "package:jma_code_table_types/jma_code_table.pb.dart";
+import 'package:jma_code_table_converter_internal/jma_code_table_converter_internal.dart';
+import 'package:jma_code_table_types/jma_code_table.pb.dart';
 
 Future<void> main(List<String> arguments) async {
-  print("Converting JMA code table...");
+  print('Converting JMA code table...');
   final converter = JmaCodeTableConverter();
   final table = JmaCodeTable(
     areaForecastLocalEew: await converter.convert22(),
@@ -15,7 +15,7 @@ Future<void> main(List<String> arguments) async {
   );
 
   // mkdir output
-  final outputDir = Directory("output");
+  final outputDir = Directory('output');
   if (!outputDir.existsSync()) {
     outputDir.createSync();
   }
@@ -24,13 +24,13 @@ Future<void> main(List<String> arguments) async {
     file.deleteSync();
   }
   // json
-  final jsonFile = File("output/jma_code_table.json");
+  final jsonFile = File('output/jma_code_table.json');
   await jsonFile.writeAsString(table.toBuilder().writeToJson());
 
   // binary
-  final binaryPath = "output/jma_code_table.pb";
+  const binaryPath = 'output/jma_code_table.pb';
   final binaryFile = File(binaryPath);
   await binaryFile.writeAsBytes(table.writeToBuffer());
-  print("Done.");
-  print("Output: ${binaryPath}");
+  print('Done.');
+  print('Output: $binaryPath');
 }

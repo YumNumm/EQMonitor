@@ -8,21 +8,22 @@ part of 'app_lifecycle.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appLifeCycleHash() => r'2125fa2be4911e573a97302e962110e735c0a91b';
+String _$appLifecycleHash() => r'9e357a2c4983fa88f3ed65162de86ce5813fb838';
 
 /// ref: https://zenn.dev/riscait/books/flutter-riverpod-practical-introduction/viewer/v2-app-lifecycle
 ///
-/// Copied from [appLifeCycle].
-@ProviderFor(appLifeCycle)
-final appLifeCycleProvider = Provider<AppLifecycleState>.internal(
-  appLifeCycle,
-  name: r'appLifeCycleProvider',
+/// Copied from [AppLifecycle].
+@ProviderFor(AppLifecycle)
+final appLifecycleProvider =
+    NotifierProvider<AppLifecycle, AppLifecycleState>.internal(
+  AppLifecycle.new,
+  name: r'appLifecycleProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$appLifeCycleHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$appLifecycleHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef AppLifeCycleRef = ProviderRef<AppLifecycleState>;
+typedef _$AppLifecycle = Notifier<AppLifecycleState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

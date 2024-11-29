@@ -35,7 +35,7 @@ class KmoniSettingsState with _$KmoniSettingsState {
 class KmoniSettings extends _$KmoniSettings {
   @override
   KmoniSettingsState build() {
-    ref.listenSelf((_, __) => _save());
+    listenSelf((_, __) async => _save());
     final result = _loadFromPrefs();
     if (result != null) {
       return result;

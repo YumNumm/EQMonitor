@@ -1,5 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
+// ignore_for_file: type=lint, duplicate_ignore
+
 part of 'common.dart';
 
 // **************************************************************************
@@ -8,10 +10,17 @@ part of 'common.dart';
 
 _$ParameterRegionImpl _$$ParameterRegionImplFromJson(
         Map<String, dynamic> json) =>
-    _$ParameterRegionImpl(
-      code: json['code'] as String,
-      name: json['name'] as String,
-      kana: json['kana'] as String,
+    $checkedCreate(
+      r'_$ParameterRegionImpl',
+      json,
+      ($checkedConvert) {
+        final val = _$ParameterRegionImpl(
+          code: $checkedConvert('code', (v) => v as String),
+          name: $checkedConvert('name', (v) => v as String),
+          kana: $checkedConvert('kana', (v) => v as String),
+        );
+        return val;
+      },
     );
 
 Map<String, dynamic> _$$ParameterRegionImplToJson(
@@ -23,10 +32,17 @@ Map<String, dynamic> _$$ParameterRegionImplToJson(
     };
 
 _$ParameterCityImpl _$$ParameterCityImplFromJson(Map<String, dynamic> json) =>
-    _$ParameterCityImpl(
-      code: json['code'] as String,
-      name: json['name'] as String,
-      kana: json['kana'] as String,
+    $checkedCreate(
+      r'_$ParameterCityImpl',
+      json,
+      ($checkedConvert) {
+        final val = _$ParameterCityImpl(
+          code: $checkedConvert('code', (v) => v as String),
+          name: $checkedConvert('name', (v) => v as String),
+          kana: $checkedConvert('kana', (v) => v as String),
+        );
+        return val;
+      },
     );
 
 Map<String, dynamic> _$$ParameterCityImplToJson(_$ParameterCityImpl instance) =>

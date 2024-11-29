@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/provider/eew/eew_telegram.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'eew_alive_telegram.g.dart';
@@ -9,7 +10,7 @@ part 'eew_alive_telegram.g.dart';
 /// イベント終了していないEEWのうち、精度が低いものを除外したもの
 @Riverpod(keepAlive: true)
 List<EewV1> eewAliveNormalTelegram(
-  EewAliveNormalTelegramRef ref,
+  Ref ref,
 ) {
   final state = ref.watch(eewAliveTelegramProvider) ?? [];
   return state.where((e) {
@@ -49,7 +50,7 @@ class EewAliveTelegram extends _$EewAliveTelegram {
 }
 
 @Riverpod(keepAlive: true)
-EewAliveChecker eewAliveChecker(EewAliveCheckerRef ref) => EewAliveChecker();
+EewAliveChecker eewAliveChecker(Ref ref) => EewAliveChecker();
 
 class EewAliveChecker {
   /// イベント終了の判定

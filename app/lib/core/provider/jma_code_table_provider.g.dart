@@ -8,7 +8,7 @@ part of 'jma_code_table_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$jmaCodeTableHash() => r'50be79b70cc2d0df15ecdef34f971ed408a059b2';
+String _$jmaCodeTableHash() => r'94db7e0261aaf71cfee48960a72415da70d378c7';
 
 /// See also [jmaCodeTable].
 @ProviderFor(jmaCodeTable)
@@ -21,6 +21,8 @@ final jmaCodeTableProvider = Provider<JmaCodeTable>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef JmaCodeTableRef = ProviderRef<JmaCodeTable>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -38,7 +38,7 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final parameter = useState(
       const EarthquakeHistoryEarlyParameter(
-        sort: EarthquakeEarlySortType.max_intensity,
+        sort: EarthquakeEarlySortType.maxIntensity,
         ascending: false,
       ),
     );
@@ -74,7 +74,7 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
             )
             .fetchNextData(),
         shouldShowLatestEarthquakeMessage:
-            parameter.value.sort == EarthquakeEarlySortType.origin_time &&
+            parameter.value.sort == EarthquakeEarlySortType.originTime &&
                 !parameter.value.ascending,
       ),
     );
@@ -86,6 +86,7 @@ class _SearchParameter extends StatelessWidget {
     required this.parameter,
     required this.onChanged,
   });
+
   final EarthquakeHistoryEarlyParameter parameter;
   final void Function(EarthquakeHistoryEarlyParameter) onChanged;
 
@@ -244,9 +245,6 @@ class _SliverListBody extends HookConsumerWidget {
     return RefreshIndicator(
       onRefresh: () async => onRefresh?.call(),
       child: switch (state) {
-        AsyncLoading() => const Center(
-            child: CircularProgressIndicator.adaptive(),
-          ),
         AsyncError(:final error) => () {
             final valueOrNull = state.valueOrNull;
             if (valueOrNull != null) {
@@ -274,8 +272,10 @@ class _SliverListBody extends HookConsumerWidget {
                             text: '地震履歴',
                             style: const TextStyle(fontWeight: FontWeight.bold),
                             recognizer: TapGestureRecognizer()
-                              ..onTap = () => const EarthquakeHistoryRoute()
-                                  .push<void>(context),
+                              ..onTap = () async =>
+                                  const EarthquakeHistoryRoute().push<void>(
+                                    context,
+                                  ),
                           ),
                           const TextSpan(text: 'を使ってください'),
                         ],
@@ -305,6 +305,9 @@ class _SliverListBody extends HookConsumerWidget {
                 child: listView(data: value),
               ),
             ],
+          ),
+        _ => const Center(
+            child: CircularProgressIndicator.adaptive(),
           ),
       },
     );

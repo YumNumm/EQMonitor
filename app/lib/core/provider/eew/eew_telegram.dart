@@ -8,6 +8,7 @@ import 'package:eqmonitor/core/provider/app_lifecycle.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:extensions/extensions.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:web_socket_client/web_socket_client.dart';
 
@@ -22,7 +23,7 @@ class Eew extends _$Eew {
     // WebSocketのListen開始
     ref
       ..listen(
-        websocketTableMessagesProvider<EewV1>(),
+        websocketTableMessagesProvider,
         (_, next) {
           final valueOrNull = next.valueOrNull;
           if (valueOrNull is RealtimePostgresInsertPayload<EewV1>) {
@@ -30,7 +31,7 @@ class Eew extends _$Eew {
           }
         },
       )
-      ..listen(appLifeCycleProvider, (_, next) {
+      ..listen(appLifecycleProvider, (_, next) {
         if (next == AppLifecycleState.resumed) {
           log('AppLifecycleState.resumed: Refetch EEW');
           _refetchRestApi();
@@ -51,7 +52,7 @@ class Eew extends _$Eew {
     if (webSocketState is Connected || webSocketState is Reconnected) {
       return;
     }
-    if (ref.read(appLifeCycleProvider) != AppLifecycleState.resumed) {
+    if (ref.read(appLifecycleProvider) != AppLifecycleState.resumed) {
       return;
     }
     ref.read(talkerProvider).log('Refetch EEW');
@@ -79,7 +80,7 @@ class Eew extends _$Eew {
 }
 
 @Riverpod(keepAlive: true)
-Future<List<EewV1>> _eewRest(_EewRestRef ref) async {
+Future<List<EewV1>> _eewRest(Ref ref) async {
   final api = ref.watch(eqApiProvider);
   final result = await api.v1.getEewLatest();
   return result.data;

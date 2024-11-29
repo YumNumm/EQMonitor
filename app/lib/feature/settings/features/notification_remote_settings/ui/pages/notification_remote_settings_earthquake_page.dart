@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
@@ -180,6 +182,7 @@ class _RegionsChoiceView extends ConsumerWidget {
     required this.regions,
     required this.global,
   });
+
   final List<NotificationRemoteSettingsEarthquakeRegion> regions;
   final JmaForecastIntensity? global;
 
@@ -219,8 +222,10 @@ class _RegionsChoiceView extends ConsumerWidget {
                 (global == null) || region.minJmaIntensity < (global!);
             final child = Dismissible(
               key: ValueKey(region.regionId),
-              onDismissed: (direction) {
-                HapticFeedback.mediumImpact();
+              onDismissed: (direction) async {
+                unawaited(
+                  HapticFeedback.mediumImpact(),
+                );
                 ref
                     .read(notificationRemoteSettingsNotifierProvider.notifier)
                     .updateEarthquakeRegions(
@@ -360,18 +365,15 @@ class _AddRegionFloatingActionButton extends StatelessWidget {
       label: const Text('地域を追加'),
       icon: const Icon(Icons.add),
       onPressed: canAddRegion
-          ? () {
-              showDialog<void>(
+          ? () async => showDialog<void>(
                 context: context,
                 builder: (context) {
                   return _AddRegionChoiceDialog(
                     alreadySelectedRegions: regions,
                   );
                 },
-              );
-            }
-          : () {
-              showDialog<void>(
+              )
+          : () async => showDialog<void>(
                 context: context,
                 builder: (context) {
                   return DefaultTextStyle(
@@ -394,8 +396,7 @@ class _AddRegionFloatingActionButton extends StatelessWidget {
                     ),
                   );
                 },
-              );
-            },
+              ),
     );
   }
 }

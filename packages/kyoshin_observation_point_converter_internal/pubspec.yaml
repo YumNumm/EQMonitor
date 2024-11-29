@@ -6,10 +6,15 @@ environment:
   sdk: ^3.5.4
 
 dependencies:
+  geojson_vi: ^2.2.4
   http: ^1.2.1
   kyoshin_observation_point_types:
     git:
       url: https://github.com/YumNumm/EQMonitor.git
       path: packages/kyoshin_observation_point_types
-  geojson_vi: ^2.2.4
   maps_toolkit: ^3.0.0
+
+dev_dependencies:
+  altive_lints: ^1.16.0
+  eqmonitor_lints:
+    path: ../eqmonitor_lints

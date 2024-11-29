@@ -1,13 +1,14 @@
 import 'package:eqapi_client/eqapi_client.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/api/eq_api.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'earthquake_history_early_repository.g.dart';
 
 @Riverpod(keepAlive: true)
 EarthquakeHistoryEarlyRepository earthquakeHistoryEarlyRepository(
-  EarthquakeHistoryEarlyRepositoryRef ref,
+  Ref ref,
 ) =>
     EarthquakeHistoryEarlyRepository(
       api: ref.watch(eqApiProvider),
@@ -31,7 +32,7 @@ class EarthquakeHistoryEarlyRepository {
     JmaIntensity? intensityGte,
     DateTime? originTimeLte,
     DateTime? originTimeGte,
-    EarthquakeEarlySortType sort = EarthquakeEarlySortType.origin_time,
+    EarthquakeEarlySortType sort = EarthquakeEarlySortType.originTime,
     bool ascending = false,
   }) async {
     final response = await _api.v1.getEarthquakeEarlies(

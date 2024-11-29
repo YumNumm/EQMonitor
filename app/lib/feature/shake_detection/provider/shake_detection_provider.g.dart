@@ -9,7 +9,7 @@ part of 'shake_detection_provider.dart';
 // **************************************************************************
 
 String _$fetchShakeDetectionEventsHash() =>
-    r'c7a8c166b5fbb423b855af2eb2d6e49ebc4b7d77';
+    r'f38c3e2f402f56379e8ee0ebb8c8eef755723690';
 
 /// See also [_fetchShakeDetectionEvents].
 @ProviderFor(_fetchShakeDetectionEvents)
@@ -24,9 +24,11 @@ final _fetchShakeDetectionEventsProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef _FetchShakeDetectionEventsRef
     = FutureProviderRef<List<ShakeDetectionEvent>>;
-String _$shakeDetectionHash() => r'e116f36edfee2d4c06bf0d970baa511438c26d1d';
+String _$shakeDetectionHash() => r'c024f21bfe5df28a1f5c43bc979dd1e3708d0bea';
 
 /// See also [ShakeDetection].
 @ProviderFor(ShakeDetection)
@@ -62,4 +64,4 @@ final shakeDetectionKmoniPointsMergedProvider = AsyncNotifierProvider<
 typedef _$ShakeDetectionKmoniPointsMerged
     = AsyncNotifier<List<ShakeDetectionKmoniMergedEvent>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

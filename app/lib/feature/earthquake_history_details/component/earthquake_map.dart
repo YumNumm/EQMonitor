@@ -86,8 +86,9 @@ class EarthquakeMapWidget extends HookConsumerWidget {
     final mapStyle = ref.watch(mapStyleProvider);
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    // ignore: discarded_futures
     final styleJsonFutureing = useMemoized(
-      () => mapStyle.getStyle(
+      () async => mapStyle.getStyle(
         isDark: isDark,
         scheme: Theme.of(context).colorScheme,
       ),
@@ -113,8 +114,9 @@ class EarthquakeMapWidget extends HookConsumerWidget {
       );
     }
 
+    // ignore: discarded_futures
     final itemCalculateFutureing = useMemoized(
-      () {
+      () async {
         return _compute(colorModel, item, earthquakeParams);
       },
       [colorModel, item, earthquakeParams],
@@ -271,9 +273,9 @@ class EarthquakeMapWidget extends HookConsumerWidget {
     if (ref.watch(kmoniSettingsProvider).showCurrentLocationMarker) {
       ref.listen(
         locationStreamProvider,
-        (_, next) {
+        (_, next) async {
           if (next case AsyncData(:final value)) {
-            currentLocationService.update(
+            await currentLocationService.update(
               mapController.value!,
               (value.latitude, value.longitude),
             );
@@ -306,26 +308,28 @@ class EarthquakeMapWidget extends HookConsumerWidget {
 
     useEffect(
       () {
-        WidgetsBinding.instance.endOfFrame.then(
-          (_) {
-            registerNavigateToHome(() {
+        unawaited(
+          WidgetsBinding.instance.endOfFrame.then(
+            (_) async {
+              registerNavigateToHome(() async {
+                final controller = mapController.value;
+                if (controller == null) {
+                  return;
+                }
+                await controller.animateCamera(
+                  cameraUpdate,
+                );
+              });
               final controller = mapController.value;
               if (controller == null) {
                 return;
               }
-              controller.animateCamera(
-                cameraUpdate,
+              await onDisplayModeChanged(
+                controller: mapController.value!,
+                config: config,
               );
-            });
-            final controller = mapController.value;
-            if (controller == null) {
-              return;
-            }
-            onDisplayModeChanged(
-              controller: mapController.value!,
-              config: config,
-            );
-          },
+            },
+          ),
         );
         return null;
       },

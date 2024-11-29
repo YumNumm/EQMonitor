@@ -47,7 +47,7 @@ class _EarthquakeHistoryListConfigWidget extends ConsumerWidget {
         SwitchListTile.adaptive(
           title: const Text('最大震度ごとの背景塗りつぶし'),
           value: state.isFillBackground,
-          onChanged: (value) => ref
+          onChanged: (value) async => ref
               .read(earthquakeHistoryConfigProvider.notifier)
               .updateListConfig(
                 state.copyWith(
@@ -61,7 +61,7 @@ class _EarthquakeHistoryListConfigWidget extends ConsumerWidget {
           title: const Text('訓練・試験報の情報を表示する'),
           subtitle: const Text('気象庁により作成された、訓練・試験用の緊急地震速報の情報を表示します。※非推奨'),
           value: state.includeTestTelegrams,
-          onChanged: (value) => ref
+          onChanged: (value) async => ref
               .read(earthquakeHistoryConfigProvider.notifier)
               .updateListConfig(
                 state.copyWith(
@@ -169,6 +169,7 @@ class _EarthquakeHistoryDetailConfigBody extends HookConsumerWidget {
     required this.showCitySelector,
     required this.hasLpgmIntensity,
   });
+
   final bool showCitySelector;
   final bool hasLpgmIntensity;
 
@@ -229,7 +230,7 @@ class _EarthquakeHistoryDetailConfigBody extends HookConsumerWidget {
                 selected: showingLpgmIntensity
                     ? _IntensityMode.lpgm
                     : _IntensityMode.intensity,
-                onSelected: (value) => ref
+                onSelected: (value) async => ref
                     .read(earthquakeHistoryConfigProvider.notifier)
                     .updateDetailConfig(
                       ref
@@ -252,6 +253,7 @@ class _IntensityFillModeSegmentedControl extends ConsumerStatefulWidget {
   const _IntensityFillModeSegmentedControl({
     required this.showCitySelector,
   });
+
   final bool showCitySelector;
 
   @override
@@ -281,7 +283,7 @@ class __IntensityFillModeSegmentedControlState
                   : const TextStyle(color: Colors.grey),
             ),
         },
-        onValueChanged: (value) {
+        onValueChanged: (value) async {
           if (value != null) {
             final isAllowed =
                 showCitySelector || value != IntensityFillMode.fillCity;
@@ -293,7 +295,7 @@ class __IntensityFillModeSegmentedControlState
               setState(() {});
               return;
             }
-            ref
+            await ref
                 .read(earthquakeHistoryConfigProvider.notifier)
                 .updateDetailConfig(
                   state.copyWith(intensityFillMode: value),
@@ -304,7 +306,7 @@ class __IntensityFillModeSegmentedControlState
     } else {
       return SegmentedButton(
         selected: {state.intensityFillMode},
-        onSelectionChanged: (p0) => ref
+        onSelectionChanged: (p0) async => ref
             .read(earthquakeHistoryConfigProvider.notifier)
             .updateDetailConfig(
               state.copyWith(intensityFillMode: p0.first),
@@ -336,6 +338,7 @@ class _IntensityModeSegmentedControl extends StatelessWidget {
     required this.onSelected,
     required this.selected,
   });
+
   final void Function(_IntensityMode) onSelected;
   final _IntensityMode selected;
 
@@ -380,7 +383,7 @@ class _IntensityStationIconModeSegmentedButton extends ConsumerWidget {
     return SwitchListTile.adaptive(
       title: Text(isShowingLpgmIntensity ? '長周期地震動階級アイコンを表示する' : '震度アイコンを表示する'),
       value: state.showIntensityIcon,
-      onChanged: (value) =>
+      onChanged: (value) async =>
           ref.read(earthquakeHistoryConfigProvider.notifier).updateDetailConfig(
                 state.copyWith(showIntensityIcon: value),
               ),

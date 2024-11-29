@@ -9,7 +9,7 @@ part of 'information_history_view_model.dart';
 // **************************************************************************
 
 String _$informationHistoryViewModelHash() =>
-    r'b25c689d00bd14df0d5ea02d8f6c1cf2104a84d5';
+    r'5fa73ce0ed26b966a84c97d115460103977f7868';
 
 /// See also [InformationHistoryViewModel].
 @ProviderFor(InformationHistoryViewModel)
@@ -27,4 +27,4 @@ final informationHistoryViewModelProvider = NotifierProvider<
 typedef _$InformationHistoryViewModel
     = Notifier<AsyncValue<List<InformationV3>>?>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

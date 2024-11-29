@@ -157,7 +157,8 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                     FloatingActionButton.small(
                       heroTag: 'earthquake_history_details_layer_fab',
                       tooltip: '地図の表示レイヤーを切り替える',
-                      onPressed: () => showEarthquakeHistoryDetailConfigDialog(
+                      onPressed: () async =>
+                          showEarthquakeHistoryDetailConfigDialog(
                         context,
                         showCitySelector: details.intensityCities != null,
                         hasLpgmIntensity: details.maxLpgmIntensity != null,

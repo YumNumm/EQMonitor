@@ -17,6 +17,7 @@ class NotificationLocalSettingsPage extends StatelessWidget {
 
 class _Body extends ConsumerWidget {
   const _Body();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container();
