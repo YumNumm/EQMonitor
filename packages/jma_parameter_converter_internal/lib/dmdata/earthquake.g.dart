@@ -1,5 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
+// ignore_for_file: type=lint, duplicate_ignore
+
 part of 'earthquake.dart';
 
 // **************************************************************************
@@ -8,16 +10,27 @@ part of 'earthquake.dart';
 
 _$EarthquakeParameterImpl _$$EarthquakeParameterImplFromJson(
         Map<String, dynamic> json) =>
-    _$EarthquakeParameterImpl(
-      responseId: json['responseId'] as String,
-      responseTime: DateTime.parse(json['responseTime'] as String),
-      status: json['status'] as String,
-      changeTime: DateTime.parse(json['changeTime'] as String),
-      version: json['version'] as String,
-      items: (json['items'] as List<dynamic>)
-          .map((e) =>
-              EarthquakeParmaeterItem.fromJson(e as Map<String, dynamic>))
-          .toList(),
+    $checkedCreate(
+      r'_$EarthquakeParameterImpl',
+      json,
+      ($checkedConvert) {
+        final val = _$EarthquakeParameterImpl(
+          responseId: $checkedConvert('responseId', (v) => v as String),
+          responseTime: $checkedConvert(
+              'responseTime', (v) => DateTime.parse(v as String)),
+          status: $checkedConvert('status', (v) => v as String),
+          changeTime:
+              $checkedConvert('changeTime', (v) => DateTime.parse(v as String)),
+          version: $checkedConvert('version', (v) => v as String),
+          items: $checkedConvert(
+              'items',
+              (v) => (v as List<dynamic>)
+                  .map((e) => EarthquakeParmaeterItem.fromJson(
+                      e as Map<String, dynamic>))
+                  .toList()),
+        );
+        return val;
+      },
     );
 
 Map<String, dynamic> _$$EarthquakeParameterImplToJson(
@@ -33,17 +46,28 @@ Map<String, dynamic> _$$EarthquakeParameterImplToJson(
 
 _$EarthquakeParmaeterItemImpl _$$EarthquakeParmaeterItemImplFromJson(
         Map<String, dynamic> json) =>
-    _$EarthquakeParmaeterItemImpl(
-      region: ParameterRegion.fromJson(json['region'] as Map<String, dynamic>),
-      city: ParameterCity.fromJson(json['city'] as Map<String, dynamic>),
-      noCode: json['noCode'] as String,
-      code: json['code'] as String,
-      name: json['name'] as String,
-      kana: json['kana'] as String,
-      status: json['status'] as String,
-      owner: json['owner'] as String,
-      latitude: doubleFromString(json['latitude'] as String),
-      longitude: doubleFromString(json['longitude'] as String),
+    $checkedCreate(
+      r'_$EarthquakeParmaeterItemImpl',
+      json,
+      ($checkedConvert) {
+        final val = _$EarthquakeParmaeterItemImpl(
+          region: $checkedConvert('region',
+              (v) => ParameterRegion.fromJson(v as Map<String, dynamic>)),
+          city: $checkedConvert(
+              'city', (v) => ParameterCity.fromJson(v as Map<String, dynamic>)),
+          noCode: $checkedConvert('noCode', (v) => v as String),
+          code: $checkedConvert('code', (v) => v as String),
+          name: $checkedConvert('name', (v) => v as String),
+          kana: $checkedConvert('kana', (v) => v as String),
+          status: $checkedConvert('status', (v) => v as String),
+          owner: $checkedConvert('owner', (v) => v as String),
+          latitude:
+              $checkedConvert('latitude', (v) => doubleFromString(v as String)),
+          longitude: $checkedConvert(
+              'longitude', (v) => doubleFromString(v as String)),
+        );
+        return val;
+      },
     );
 
 Map<String, dynamic> _$$EarthquakeParmaeterItemImplToJson(

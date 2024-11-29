@@ -10,8 +10,8 @@ import 'package:intl/intl.dart';
 
 class EarthquakeEarlyHypoInfoWidget extends HookConsumerWidget {
   const EarthquakeEarlyHypoInfoWidget({
-    super.key,
     required this.item,
+    super.key,
   });
 
   final EarthquakeEarlyEvent item;

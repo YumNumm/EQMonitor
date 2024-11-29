@@ -8,7 +8,7 @@ part of 'location.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$locationStreamHash() => r'8da3ef598118ac847f76a6d2d9440955493b3690';
+String _$locationStreamHash() => r'512cf5869f3db7a5bc88d1c027ab5cc84e006ab8';
 
 /// See also [locationStream].
 @ProviderFor(locationStream)
@@ -22,9 +22,11 @@ final locationStreamProvider = AutoDisposeStreamProvider<Position>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef LocationStreamRef = AutoDisposeStreamProviderRef<Position>;
 String _$closestKmoniObservationPointStreamHash() =>
-    r'9ed9db9ec44171fb92f9f211d659cbc490538f43';
+    r'0094c2c47c008397a4f460398410ce01c5f4847a';
 
 /// See also [closestKmoniObservationPointStream].
 @ProviderFor(closestKmoniObservationPointStream)
@@ -39,7 +41,9 @@ final closestKmoniObservationPointStreamProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef ClosestKmoniObservationPointStreamRef
     = AutoDisposeStreamProviderRef<(KyoshinObservationPoint, double km)>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

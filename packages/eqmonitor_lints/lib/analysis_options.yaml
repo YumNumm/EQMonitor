@@ -3,6 +3,9 @@ include: package:yumemi_lints/flutter/3.24/recommended.yaml
 linter:
   rules:
     diagnostic_describe_all_properties: false
+    avoid_print: ignore
+    lines_longer_than_80_chars: ignore
+    document_ignores: false
 
 analyzer:
   errors:
@@ -10,6 +13,8 @@ analyzer:
     invalid_annotation_target: ignore
   plugins:
     - custom_lint
+  exclude:
+    - "**/*.*.dart"
 
 custom_lint:
   rules:

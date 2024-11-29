@@ -9,7 +9,7 @@ part of 'permission_notifier.dart';
 // **************************************************************************
 
 String _$permissionNotifierHash() =>
-    r'5b6cb19c6735ab50f46b092b19413866f8e4223a';
+    r'9148f70192bfa7e7a23b910cd3e111566b64994d';
 
 /// See also [PermissionNotifier].
 @ProviderFor(PermissionNotifier)
@@ -26,4 +26,4 @@ final permissionNotifierProvider =
 
 typedef _$PermissionNotifier = Notifier<PermissionStateModel>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'jma_parameter_api.g.dart';
 
 @Riverpod(keepAlive: true)
-JmaParameterApiClient jmaParameterApiClient(JmaParameterApiClientRef ref) {
+JmaParameterApiClient jmaParameterApiClient(Ref ref) {
   return JmaParameterApiClient(
     client: Dio(
       BaseOptions(

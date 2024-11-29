@@ -34,7 +34,10 @@ class LatLngBoundary {
   }
 
   factory LatLngBoundary.fromList(List<LatLng> points) {
-    assert(points.isNotEmpty && points.length > 1);
+    assert(
+      points.isNotEmpty && points.length > 1,
+      'points must be not empty',
+    );
     var northEastLat = double.negativeInfinity;
     var northEastLon = double.negativeInfinity;
     var southWestLat = double.infinity;

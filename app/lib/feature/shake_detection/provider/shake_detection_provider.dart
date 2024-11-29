@@ -9,6 +9,7 @@ import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:eqmonitor/feature/shake_detection/model/shake_detection_kmoni_merged_event.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'shake_detection_provider.g.dart';
@@ -21,7 +22,7 @@ class ShakeDetection extends _$ShakeDetection {
         await ref.watch(_fetchShakeDetectionEventsProvider.future);
     ref
       ..listen(
-        websocketTableMessagesProvider<ShakeDetectionWebSocketTelegram>(),
+        websocketTableMessagesProvider,
         (_, next) {
           if (next case AsyncData(value: final value)) {
             if (value
@@ -144,7 +145,7 @@ class ShakeDetectionKmoniPointsMerged
 
 @Riverpod(keepAlive: true)
 Future<List<ShakeDetectionEvent>> _fetchShakeDetectionEvents(
-  _FetchShakeDetectionEventsRef ref,
+  Ref ref,
 ) async =>
     ref.watch(eqApiProvider).v1.getLatestShakeDetectionEvents();
 

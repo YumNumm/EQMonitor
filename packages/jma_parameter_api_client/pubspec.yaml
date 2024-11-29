@@ -17,6 +17,6 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.4.7
-  retrofit_generator: ^9.1.2
   eqmonitor_lints:
     path: ../eqmonitor_lints
+  retrofit_generator: ^9.1.2

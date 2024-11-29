@@ -8,6 +8,7 @@ import 'package:eqmonitor/core/provider/estimated_intensity/data/estimated_inten
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:jma_parameter_api_client/jma_parameter_api_client.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -73,7 +74,10 @@ class EstimatedIntensity extends _$EstimatedIntensity {
     }
 
     // resultsのIterableそれぞれは同じ長さであることを確認
-    assert(results.every((e) => e.length == _calculationPoints!.length));
+    assert(
+      results.every((e) => e.length == _calculationPoints!.length),
+      'results length must be same as calculationPoints length',
+    );
 
     final result = <EstimatedIntensityPoint>[];
     // それぞれについて最大の値を取る
@@ -138,7 +142,7 @@ class EstimatedIntensity extends _$EstimatedIntensity {
 
 @Riverpod(keepAlive: true)
 Stream<Map<String, double>> estimatedIntensityCity(
-  EstimatedIntensityCityRef ref,
+  Ref ref,
 ) async* {
   final estimatedIntensity = ref.watch(estimatedIntensityProvider).valueOrNull;
   if (estimatedIntensity != null) {
@@ -157,11 +161,12 @@ Stream<Map<String, double>> estimatedIntensityCity(
 
 @Riverpod(keepAlive: true)
 Stream<Map<String, double>> estimatedIntensityRegion(
-  EstimatedIntensityRegionRef ref,
+  Ref ref,
 ) async* {
   final estimatedIntensity = ref.watch(estimatedIntensityProvider).valueOrNull;
   log(
-    'estimatedIntensityRegion: ${estimatedIntensity.runtimeType}, ${estimatedIntensity?.length}',
+    'estimatedIntensityRegion: ${estimatedIntensity.runtimeType}, '
+    '${estimatedIntensity?.length}',
     name: 'estimatedIntensityRegion',
   );
   if (estimatedIntensity != null) {

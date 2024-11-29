@@ -35,7 +35,7 @@ Map<String, dynamic> _$$_EewHypocenterPropertiesImplToJson(
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mainMapViewModelHash() => r'c31508e0aaa4959479f72fa803a07fca907c553a';
+String _$mainMapViewModelHash() => r'65c65c924cc31e090ceec31b1503385048b85e82';
 
 /// See also [MainMapViewModel].
 @ProviderFor(MainMapViewModel)
@@ -52,4 +52,4 @@ final mainMapViewModelProvider =
 
 typedef _$MainMapViewModel = Notifier<MainMapViewmodelState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

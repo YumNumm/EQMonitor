@@ -8,7 +8,7 @@ part of 'travel_time_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$travelTimeHash() => r'b309b731b7ecb63f9896067485571d5e34249361';
+String _$travelTimeHash() => r'390c9a0aec373a40dec642325d1da143ea74862a';
 
 /// See also [travelTime].
 @ProviderFor(travelTime)
@@ -21,9 +21,11 @@ final travelTimeProvider = FutureProvider<TravelTimeTables>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef TravelTimeRef = FutureProviderRef<TravelTimeTables>;
 String _$travelTimeDepthMapHash() =>
-    r'4eef1655bcfc042cf7169446012c0cc0049c386b';
+    r'371546dc657fab0f9a010710f05044931d62b973';
 
 /// See also [travelTimeDepthMap].
 @ProviderFor(travelTimeDepthMap)
@@ -37,6 +39,8 @@ final travelTimeDepthMapProvider = FutureProvider<TravelTimeDepthMap>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef TravelTimeDepthMapRef = FutureProviderRef<TravelTimeDepthMap>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

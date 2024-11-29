@@ -18,8 +18,8 @@ class MapComponentsRenderer {
   ) async {
     final pixelRatio = MediaQuery.devicePixelRatioOf(context);
     final result = await _controller.captureFromWidget(
-      ProviderScope(
-        parent: container,
+      UncontrolledProviderScope(
+        container: container,
         child: JmaIntensityIcon(
           intensity: intensity,
           type: type,
@@ -38,8 +38,8 @@ class MapComponentsRenderer {
   ) async {
     final pixelRatio = MediaQuery.devicePixelRatioOf(context);
     final result = await _controller.captureFromWidget(
-      ProviderScope(
-        parent: container,
+      UncontrolledProviderScope(
+        container: container,
         child: JmaLgIntensityIcon(
           intensity: intensity,
           type: type,

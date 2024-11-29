@@ -1,5 +1,6 @@
 import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kyoshin_observation_point_types/kyoshin_observation_point.pb.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -7,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'location.g.dart';
 
 @riverpod
-Stream<Position> locationStream(LocationStreamRef ref) async* {
+Stream<Position> locationStream(Ref ref) async* {
   final stream = Geolocator.getPositionStream(
     locationSettings: const LocationSettings(
       accuracy: LocationAccuracy.low,
@@ -33,7 +34,7 @@ Stream<Position> locationStream(LocationStreamRef ref) async* {
 
 @riverpod
 Stream<(KyoshinObservationPoint, double km)> closestKmoniObservationPointStream(
-  ClosestKmoniObservationPointStreamRef ref,
+  Ref ref,
 ) async* {
   final kmoniObservationPoints = ref.watch(kyoshinObservationPointsProvider);
 

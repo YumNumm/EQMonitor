@@ -4,9 +4,9 @@ import 'package:sheet/sheet.dart';
 
 class SheetFloatingActionButtons extends HookWidget {
   const SheetFloatingActionButtons({
-    super.key,
     required this.controller,
     required this.fab,
+    super.key,
     this.maxHeight = 0.3,
     this.hasAppBar = true,
   });
@@ -32,7 +32,7 @@ class SheetFloatingActionButtons extends HookWidget {
             (hasAppBar ? AppBar().preferredSize.height : 0));
     return AnimatedBuilder(
       animation: controller.animation,
-      builder: (BuildContext context, Widget? child) {
+      builder: (context, child) {
         final bottom = height * controller.animation.value;
         return Positioned(
           right: padding.right,

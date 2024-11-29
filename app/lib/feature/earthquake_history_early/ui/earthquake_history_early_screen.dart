@@ -38,7 +38,7 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final parameter = useState(
       const EarthquakeHistoryEarlyParameter(
-        sort: EarthquakeEarlySortType.max_intensity,
+        sort: EarthquakeEarlySortType.maxIntensity,
         ascending: false,
       ),
     );
@@ -74,7 +74,7 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
             )
             .fetchNextData(),
         shouldShowLatestEarthquakeMessage:
-            parameter.value.sort == EarthquakeEarlySortType.origin_time &&
+            parameter.value.sort == EarthquakeEarlySortType.originTime &&
                 !parameter.value.ascending,
       ),
     );
@@ -271,8 +271,10 @@ class _SliverListBody extends HookConsumerWidget {
                             text: '地震履歴',
                             style: const TextStyle(fontWeight: FontWeight.bold),
                             recognizer: TapGestureRecognizer()
-                              ..onTap = () => const EarthquakeHistoryRoute()
-                                  .push<void>(context),
+                              ..onTap = () async =>
+                                  const EarthquakeHistoryRoute().push<void>(
+                                    context,
+                                  ),
                           ),
                           const TextSpan(text: 'を使ってください'),
                         ],

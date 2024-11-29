@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 
 class EewStatusWidget extends StatelessWidget {
   const EewStatusWidget({
-    super.key,
     required this.eew,
     required this.action,
+    super.key,
   });
 
   final NotificationRemoteSettingsEew eew;
@@ -53,8 +53,8 @@ class EewStatusWidget extends StatelessWidget {
 
 class EewNotificationStatusWidget extends StatelessWidget {
   const EewNotificationStatusWidget({
-    super.key,
     required this.eew,
+    super.key,
   });
 
   final NotificationRemoteSettingsEew eew;

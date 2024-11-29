@@ -9,7 +9,7 @@ part of 'estimated_intensity_data_source.dart';
 // **************************************************************************
 
 String _$estimatedIntensityDataSourceHash() =>
-    r'0ead37256b9a00cecfc4ffbb15270ad2e69ccd10';
+    r'a8dc59d604c60eb6292bd73c63664558890fd43c';
 
 /// See also [estimatedIntensityDataSource].
 @ProviderFor(estimatedIntensityDataSource)
@@ -24,7 +24,9 @@ final estimatedIntensityDataSourceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef EstimatedIntensityDataSourceRef
     = ProviderRef<EstimatedIntensityDataSource>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

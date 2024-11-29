@@ -4,9 +4,9 @@ import 'package:sheet/sheet.dart';
 
 class BasicModalSheet extends HookWidget {
   const BasicModalSheet({
-    super.key,
     required this.controller,
     required this.children,
+    super.key,
     this.hasAppBar = true,
   });
   final SheetController controller;

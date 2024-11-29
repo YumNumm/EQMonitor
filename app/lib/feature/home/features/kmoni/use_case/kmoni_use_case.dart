@@ -7,6 +7,7 @@ import 'package:eqmonitor/feature/home/features/kmoni/util/kmoni_web_api_url_gen
 import 'package:eqmonitor/feature/home/features/kmoni/util/realtime_data_type.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image/image.dart' as image;
 import 'package:kyoshin_observation_point_types/kyoshin_observation_point.pb.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -14,7 +15,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'kmoni_use_case.g.dart';
 
 @Riverpod(keepAlive: true)
-KmoniUseCase kmoniUseCase(KmoniUseCaseRef ref) => KmoniUseCase(
+KmoniUseCase kmoniUseCase(Ref ref) => KmoniUseCase(
       ref.watch(kmoniDataSourceProvider),
     );
 

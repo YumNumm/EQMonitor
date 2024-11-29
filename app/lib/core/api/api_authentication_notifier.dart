@@ -4,10 +4,10 @@ import 'package:eqmonitor/core/provider/secure_storage.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/notification_remote_settings_saved_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'api_authentication_service.g.dart';
+part 'api_authentication_notifier.g.dart';
 
 @Riverpod(keepAlive: true)
-class ApiAuthenticationService extends _$ApiAuthenticationService {
+class ApiAuthenticationNotifier extends _$ApiAuthenticationNotifier {
   @override
   Future<String?> build() async {
     final secureStorage = ref.watch(secureStorageProvider);

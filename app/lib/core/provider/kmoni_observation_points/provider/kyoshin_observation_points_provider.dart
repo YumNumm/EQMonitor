@@ -1,6 +1,7 @@
 import 'package:eqmonitor/gen/assets.gen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kyoshin_observation_point_types/kyoshin_observation_point.pb.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -8,7 +9,7 @@ part 'kyoshin_observation_points_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 KyoshinObservationPoints kyoshinObservationPoints(
-  KyoshinObservationPointsRef ref,
+  Ref ref,
 ) =>
     throw UnimplementedError();
 

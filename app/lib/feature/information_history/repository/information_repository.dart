@@ -2,12 +2,13 @@ import 'package:eqapi_client/eqapi_client.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/api/eq_api.dart';
 import 'package:eqmonitor/core/foundation/result.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'information_repository.g.dart';
 
 @Riverpod(keepAlive: true)
-InformationRepository informationRepository(InformationRepositoryRef ref) =>
+InformationRepository informationRepository(Ref ref) =>
     InformationRepository(ref.watch(eqApiProvider));
 
 class InformationRepository {

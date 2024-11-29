@@ -7,9 +7,9 @@ part 'map_config.g.dart';
 @freezed
 class MapConfig with _$MapConfig {
   const factory MapConfig({
+    required MapColorScheme colorScheme,
     @Default(0.8) double minScale,
     @Default(20) double maxScale,
-    required MapColorScheme colorScheme,
   }) = _MapConfig;
 
   factory MapConfig.fromJson(Map<String, dynamic> json) =>

@@ -9,7 +9,7 @@ part of 'earthquake_history_notifier.dart';
 // **************************************************************************
 
 String _$earthquakeV1ExtendedHash() =>
-    r'0e75d744275dd72ce35fa905707e3b3c9758308d';
+    r'6059e33aa04e55267335423e23fb56b95f7c2238';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -37,23 +37,10 @@ class _SystemHash {
 const earthquakeV1ExtendedProvider = EarthquakeV1ExtendedFamily();
 
 /// See also [earthquakeV1Extended].
-class EarthquakeV1ExtendedFamily extends Family {
+class EarthquakeV1ExtendedFamily
+    extends Family<AsyncValue<EarthquakeV1Extended>> {
   /// See also [earthquakeV1Extended].
   const EarthquakeV1ExtendedFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'earthquakeV1ExtendedProvider';
 
   /// See also [earthquakeV1Extended].
   EarthquakeV1ExtendedProvider call(
@@ -64,7 +51,6 @@ class EarthquakeV1ExtendedFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   EarthquakeV1ExtendedProvider getProviderOverride(
     covariant EarthquakeV1ExtendedProvider provider,
@@ -74,29 +60,19 @@ class EarthquakeV1ExtendedFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(
-      FutureOr<EarthquakeV1Extended> Function(EarthquakeV1ExtendedRef ref)
-          create) {
-    return _$EarthquakeV1ExtendedFamilyOverride(this, create);
-  }
-}
-
-class _$EarthquakeV1ExtendedFamilyOverride implements FamilyOverride {
-  _$EarthquakeV1ExtendedFamilyOverride(this.overriddenFamily, this.create);
-
-  final FutureOr<EarthquakeV1Extended> Function(EarthquakeV1ExtendedRef ref)
-      create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final EarthquakeV1ExtendedFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  EarthquakeV1ExtendedProvider getProviderOverride(
-    covariant EarthquakeV1ExtendedProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'earthquakeV1ExtendedProvider';
 }
 
 /// See also [earthquakeV1Extended].
@@ -123,7 +99,7 @@ class EarthquakeV1ExtendedProvider
         );
 
   EarthquakeV1ExtendedProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -136,7 +112,8 @@ class EarthquakeV1ExtendedProvider
 
   @override
   Override overrideWith(
-    FutureOr<EarthquakeV1Extended> Function(EarthquakeV1ExtendedRef ref) create,
+    FutureOr<EarthquakeV1Extended> Function(EarthquakeV1ExtendedRef provider)
+        create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -153,27 +130,8 @@ class EarthquakeV1ExtendedProvider
   }
 
   @override
-  (EarthquakeV1,) get argument {
-    return (data,);
-  }
-
-  @override
   AutoDisposeFutureProviderElement<EarthquakeV1Extended> createElement() {
     return _EarthquakeV1ExtendedProviderElement(this);
-  }
-
-  EarthquakeV1ExtendedProvider _copyWith(
-    FutureOr<EarthquakeV1Extended> Function(EarthquakeV1ExtendedRef ref) create,
-  ) {
-    return EarthquakeV1ExtendedProvider._internal(
-      (ref) => create(ref as EarthquakeV1ExtendedRef),
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      data: data,
-    );
   }
 
   @override
@@ -190,6 +148,8 @@ class EarthquakeV1ExtendedProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin EarthquakeV1ExtendedRef
     on AutoDisposeFutureProviderRef<EarthquakeV1Extended> {
   /// The parameter `data` of this provider.
@@ -206,7 +166,7 @@ class _EarthquakeV1ExtendedProviderElement
 }
 
 String _$earthquakeHistoryNotifierHash() =>
-    r'4c689cd77494fde61fc62deba390d4f3e0d3dbe9';
+    r'7c78143baf759149f9630d3a62d706d4b0239041';
 
 abstract class _$EarthquakeHistoryNotifier
     extends BuildlessAutoDisposeAsyncNotifier<EarthquakeHistoryNotifierState> {
@@ -222,23 +182,10 @@ abstract class _$EarthquakeHistoryNotifier
 const earthquakeHistoryNotifierProvider = EarthquakeHistoryNotifierFamily();
 
 /// See also [EarthquakeHistoryNotifier].
-class EarthquakeHistoryNotifierFamily extends Family {
+class EarthquakeHistoryNotifierFamily
+    extends Family<AsyncValue<EarthquakeHistoryNotifierState>> {
   /// See also [EarthquakeHistoryNotifier].
   const EarthquakeHistoryNotifierFamily();
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'earthquakeHistoryNotifierProvider';
 
   /// See also [EarthquakeHistoryNotifier].
   EarthquakeHistoryNotifierProvider call(
@@ -249,7 +196,6 @@ class EarthquakeHistoryNotifierFamily extends Family {
     );
   }
 
-  @visibleForOverriding
   @override
   EarthquakeHistoryNotifierProvider getProviderOverride(
     covariant EarthquakeHistoryNotifierProvider provider,
@@ -259,26 +205,19 @@ class EarthquakeHistoryNotifierFamily extends Family {
     );
   }
 
-  /// Enables overriding the behavior of this provider, no matter the parameters.
-  Override overrideWith(EarthquakeHistoryNotifier Function() create) {
-    return _$EarthquakeHistoryNotifierFamilyOverride(this, create);
-  }
-}
-
-class _$EarthquakeHistoryNotifierFamilyOverride implements FamilyOverride {
-  _$EarthquakeHistoryNotifierFamilyOverride(this.overriddenFamily, this.create);
-
-  final EarthquakeHistoryNotifier Function() create;
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
 
   @override
-  final EarthquakeHistoryNotifierFamily overriddenFamily;
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  EarthquakeHistoryNotifierProvider getProviderOverride(
-    covariant EarthquakeHistoryNotifierProvider provider,
-  ) {
-    return provider._copyWith(create);
-  }
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'earthquakeHistoryNotifierProvider';
 }
 
 /// See also [EarthquakeHistoryNotifier].
@@ -303,7 +242,7 @@ class EarthquakeHistoryNotifierProvider
         );
 
   EarthquakeHistoryNotifierProvider._internal(
-    super.create, {
+    super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
@@ -340,28 +279,9 @@ class EarthquakeHistoryNotifierProvider
   }
 
   @override
-  (EarthquakeHistoryParameter,) get argument {
-    return (parameter,);
-  }
-
-  @override
   AutoDisposeAsyncNotifierProviderElement<EarthquakeHistoryNotifier,
       EarthquakeHistoryNotifierState> createElement() {
     return _EarthquakeHistoryNotifierProviderElement(this);
-  }
-
-  EarthquakeHistoryNotifierProvider _copyWith(
-    EarthquakeHistoryNotifier Function() create,
-  ) {
-    return EarthquakeHistoryNotifierProvider._internal(
-      () => create()..parameter = parameter,
-      name: name,
-      dependencies: dependencies,
-      allTransitiveDependencies: allTransitiveDependencies,
-      debugGetCreateSourceHash: debugGetCreateSourceHash,
-      from: from,
-      parameter: parameter,
-    );
   }
 
   @override
@@ -379,6 +299,8 @@ class EarthquakeHistoryNotifierProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin EarthquakeHistoryNotifierRef
     on AutoDisposeAsyncNotifierProviderRef<EarthquakeHistoryNotifierState> {
   /// The parameter `parameter` of this provider.
@@ -395,4 +317,4 @@ class _EarthquakeHistoryNotifierProviderElement
       (origin as EarthquakeHistoryNotifierProvider).parameter;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

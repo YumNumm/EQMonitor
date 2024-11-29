@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_consistency
-
 import 'package:dio/dio.dart';
 import 'package:eqapi_client/src/children/auth.dart';
 import 'package:eqapi_client/src/children/objects.dart';

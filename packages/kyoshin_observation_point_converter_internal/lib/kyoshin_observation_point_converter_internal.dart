@@ -14,7 +14,7 @@ class KyoshinObservationPointConverter {
         .map((e) {
           try {
             return ObservationModel.fromJson(e as Map<String, dynamic>);
-          } catch (_) {
+          } on Exception catch (_) {
             return null;
           }
         })
@@ -69,7 +69,7 @@ class KyoshinObservationPointConverter {
   }) async {
     // Cacheのチェック
     final cacheFile = File('cache/${latitude}_$longitude.json');
-    if (await cacheFile.exists()) {
+    if (cacheFile.existsSync()) {
       final json =
           jsonDecode(await cacheFile.readAsString()) as Map<String, dynamic>;
       final arvStr = (((json['features'] as List<dynamic>?)?.first
@@ -91,7 +91,7 @@ class KyoshinObservationPointConverter {
             as Map<String, dynamic>?)?['properties']
         as Map<String, dynamic>?)?['ARV'] as String?;
     final arv = double.tryParse(arvStr.toString());
-    cacheFile.writeAsString(
+    cacheFile.writeAsStringSync(
       jsonEncode(json),
     );
     print('ARV: $arv');

@@ -15,9 +15,9 @@ part 'permission_notifier.g.dart';
 class PermissionNotifier extends _$PermissionNotifier {
   @override
   PermissionStateModel build() {
-    ref.listen(appLifeCycleProvider, (_, next) {
+    ref.listen(appLifecycleProvider, (_, next) async {
       if (next == AppLifecycleState.resumed) {
-        initialize();
+        await initialize();
       }
     });
     return const PermissionStateModel();

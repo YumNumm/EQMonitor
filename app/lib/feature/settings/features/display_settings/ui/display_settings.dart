@@ -38,7 +38,8 @@ class _Body extends StatelessWidget {
             ListTile(
               title: const Text('震度配色設定'),
               leading: const Icon(Icons.color_lens),
-              onTap: () => const ColorSchemeConfigRoute().push<void>(context),
+              onTap: () async =>
+                  const ColorSchemeConfigRoute().push<void>(context),
             ),
           ],
         ),
@@ -61,9 +62,8 @@ class _ThemeSelector extends ConsumerWidget {
           mode == ThemeMode.light ? Brightness.light : Brightness.dark;
       return Expanded(
         child: GestureDetector(
-          onTap: () {
-            ref.read(themeModeNotifierProvider.notifier).update(mode);
-          },
+          onTap: () async =>
+              ref.read(themeModeNotifierProvider.notifier).update(mode),
           child: Column(
             children: [
               SizedBox(
@@ -99,9 +99,8 @@ class _ThemeSelector extends ConsumerWidget {
                         : null
                     : mode,
                 groupValue: state,
-                onChanged: (value) {
-                  ref.read(themeModeNotifierProvider.notifier).update(mode);
-                },
+                onChanged: (value) async =>
+                    ref.read(themeModeNotifierProvider.notifier).update(mode),
               ),
             ],
           ),
@@ -142,16 +141,15 @@ class _ThemeSelector extends ConsumerWidget {
             visualDensity: VisualDensity.compact,
             title: const Text('システム設定に従う'),
             value: state == ThemeMode.system,
-            onChanged: (value) {
-              ref.read(themeModeNotifierProvider.notifier).update(
-                    value
-                        ? ThemeMode.system
-                        : PlatformDispatcher.instance.platformBrightness ==
-                                Brightness.light
-                            ? ThemeMode.light
-                            : ThemeMode.dark,
-                  );
-            },
+            onChanged: (value) async =>
+                ref.read(themeModeNotifierProvider.notifier).update(
+                      value
+                          ? ThemeMode.system
+                          : PlatformDispatcher.instance.platformBrightness ==
+                                  Brightness.light
+                              ? ThemeMode.light
+                              : ThemeMode.dark,
+                    ),
           ),
         ],
       ),

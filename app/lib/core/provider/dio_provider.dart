@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
 import 'package:talker_dio_logger/talker_dio_logger_settings.dart';
@@ -14,7 +15,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 part 'dio_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Dio dio(DioRef ref) {
+Dio dio(Ref ref) {
   final key = ref.watch(telegramUrlProvider).apiAuthorization;
   final authorization = key != null ? 'Bearer $key' : null;
   final dio = Dio(

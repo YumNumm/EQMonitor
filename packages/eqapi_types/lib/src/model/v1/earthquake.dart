@@ -7,11 +7,12 @@ part 'earthquake.g.dart';
 @freezed
 class EarthquakeV1 with _$EarthquakeV1 implements V1Database {
   const factory EarthquakeV1({
+    required int eventId,
+    required String status,
     DateTime? arrivalTime,
     int? depth,
     int? epicenterCode,
     int? epicenterDetailCode,
-    required int eventId,
     String? headline,
     List<ObservedRegionIntensity>? intensityCities,
     List<ObservedRegionIntensity>? intensityPrefectures,
@@ -28,7 +29,6 @@ class EarthquakeV1 with _$EarthquakeV1 implements V1Database {
     List<int>? maxIntensityRegionIds,
     JmaLgIntensity? maxLpgmIntensity,
     DateTime? originTime,
-    required String status,
     String? text,
   }) = _EarthquakeV1;
 
@@ -40,11 +40,12 @@ class EarthquakeV1 with _$EarthquakeV1 implements V1Database {
 @freezed
 class EarthquakeV1Base with _$EarthquakeV1Base {
   const factory EarthquakeV1Base({
+    required int eventId,
+    required String status,
     DateTime? arrivalTime,
     int? depth,
     int? epicenterCode,
     int? epicenterDetailCode,
-    required int eventId,
     String? headline,
     double? latitude,
     double? longitude,
@@ -54,7 +55,6 @@ class EarthquakeV1Base with _$EarthquakeV1Base {
     List<int>? maxIntensityRegionIds,
     JmaLgIntensity? maxLpgmIntensity,
     DateTime? originTime,
-    required String status,
     String? text,
   }) = _EarthquakeV1Base;
 

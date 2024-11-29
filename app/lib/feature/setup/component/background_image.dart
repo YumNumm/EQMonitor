@@ -25,6 +25,7 @@ class SetupBackgroundImageWidget extends HookWidget {
     double elapsedTimeInSeconds() =>
         (DateTime.now().millisecondsSinceEpoch - startTime.value) / 1000;
     final shader = useFuture(
+      // ignore: discarded_futures
       FragmentProgram.fromAsset(
         'shaders/introduction.frag',
       ),

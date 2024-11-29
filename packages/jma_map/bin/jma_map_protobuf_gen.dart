@@ -54,10 +54,13 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
       if (geometryType == 'Polygon') {
         for (final lists in coordinates) {
           for (final list in lists as List<dynamic>) {
+            final ld = list as List<dynamic>;
+            final lat = ld[1] as double;
+            final lng = ld[0] as double;
             latLngs.add(
               LatLng(
-                lat: list[1] as double,
-                lng: list[0] as double,
+                lat: lat,
+                lng: lng,
               ),
             );
           }
@@ -66,10 +69,13 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
         for (final lists in coordinates) {
           for (final list in lists as List<dynamic>) {
             for (final l in list as List<dynamic>) {
+              final ld = l as List<dynamic>;
+              final lat = ld[1] as double;
+              final lng = ld[0] as double;
               latLngs.add(
                 LatLng(
-                  lat: l[1] as double,
-                  lng: l[0] as double,
+                  lat: lat,
+                  lng: lng,
                 ),
               );
             }
@@ -78,20 +84,26 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
       } else if (geometryType == 'MultiLineString') {
         for (final e in coordinates) {
           for (final list in e as List<dynamic>) {
+            final ld = list as List<dynamic>;
+            final lat = ld[1] as double;
+            final lng = ld[0] as double;
             latLngs.add(
               LatLng(
-                lat: list[1] as double,
-                lng: list[0] as double,
+                lat: lat,
+                lng: lng,
               ),
             );
           }
         }
       } else if (geometryType == 'LineString') {
         for (final list in coordinates) {
+          final ld = list as List<dynamic>;
+          final lat = ld[1] as double;
+          final lng = ld[0] as double;
           latLngs.add(
             LatLng(
-              lat: list[1] as double,
-              lng: list[0] as double,
+              lat: lat,
+              lng: lng,
             ),
           );
         }

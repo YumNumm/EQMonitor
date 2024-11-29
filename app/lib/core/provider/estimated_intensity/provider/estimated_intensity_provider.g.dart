@@ -9,7 +9,7 @@ part of 'estimated_intensity_provider.dart';
 // **************************************************************************
 
 String _$estimatedIntensityCityHash() =>
-    r'8fed41327805b67db22bf4e10852f848f72216f7';
+    r'9bcbac883935662bc3388807662d7d6a4c8f7da6';
 
 /// See also [estimatedIntensityCity].
 @ProviderFor(estimatedIntensityCity)
@@ -24,9 +24,11 @@ final estimatedIntensityCityProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef EstimatedIntensityCityRef = StreamProviderRef<Map<String, double>>;
 String _$estimatedIntensityRegionHash() =>
-    r'e87900e95ed3a85e8c9186e114dc70ed75fb74ed';
+    r'bc6d5fcbeeb39c3b9705951ed3412df7bf83645e';
 
 /// See also [estimatedIntensityRegion].
 @ProviderFor(estimatedIntensityRegion)
@@ -41,9 +43,11 @@ final estimatedIntensityRegionProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef EstimatedIntensityRegionRef = StreamProviderRef<Map<String, double>>;
 String _$estimatedIntensityHash() =>
-    r'2b1635766324d17864f9ee350e297952e6ef0d86';
+    r'd60154c92ffedbd45ee522e8f26d8000cc8c74fd';
 
 /// See also [EstimatedIntensity].
 @ProviderFor(EstimatedIntensity)
@@ -60,4 +64,4 @@ final estimatedIntensityProvider = AsyncNotifierProvider<EstimatedIntensity,
 
 typedef _$EstimatedIntensity = AsyncNotifier<List<EstimatedIntensityPoint>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -9,7 +9,7 @@ part of 'earthquake_history_early_repository.dart';
 // **************************************************************************
 
 String _$earthquakeHistoryEarlyRepositoryHash() =>
-    r'f0cd21fe4c00f1632860e7b3785fe5b69e478607';
+    r'14743c564b12bc04659775b6dad5c119c1392720';
 
 /// See also [earthquakeHistoryEarlyRepository].
 @ProviderFor(earthquakeHistoryEarlyRepository)
@@ -24,7 +24,9 @@ final earthquakeHistoryEarlyRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef EarthquakeHistoryEarlyRepositoryRef
     = ProviderRef<EarthquakeHistoryEarlyRepository>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, inference_failure_on_uninitialized_variable, inference_failure_on_function_return_type, inference_failure_on_untyped_parameter, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

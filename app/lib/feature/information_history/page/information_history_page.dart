@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/widget/error_widget.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -16,19 +18,21 @@ class InformationHistoryPage extends HookConsumerWidget {
     final scrollController = PrimaryScrollController.of(context);
     useEffect(
       () {
-        WidgetsBinding.instance.endOfFrame.then(
-          (_) {
-            scrollController.addListener(
-              () => ref
+        unawaited(
+          WidgetsBinding.instance.endOfFrame.then(
+            (_) async {
+              scrollController.addListener(
+                () => ref
+                    .read(informationHistoryViewModelProvider.notifier)
+                    .onScrollPositionChanged(
+                      scrollController,
+                    ),
+              );
+              await ref
                   .read(informationHistoryViewModelProvider.notifier)
-                  .onScrollPositionChanged(
-                    scrollController,
-                  ),
-            );
-            ref
-                .read(informationHistoryViewModelProvider.notifier)
-                .updateIfNull();
-          },
+                  .updateIfNull();
+            },
+          ),
         );
         return null;
       },
@@ -104,7 +108,7 @@ class _InformationDataView extends HookConsumerWidget {
             subtitle: Text(
               '${dateFormat.format(item.createdAt.toLocal())}頃発表',
             ),
-            onTap: () =>
+            onTap: () async =>
                 InformationHistoryDetailsRoute($extra: item).push<void>(
               context,
             ),

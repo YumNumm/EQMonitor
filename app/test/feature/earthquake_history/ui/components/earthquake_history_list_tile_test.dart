@@ -46,8 +46,7 @@ void main() async {
         ),
       );
 
-  testWidgets("遠地地震の場合、'遠地地震'が表示されること(20210121212726)",
-      (WidgetTester tester) async {
+  testWidgets("遠地地震の場合、'遠地地震'が表示されること(20210121212726)", (tester) async {
     // Arrange
     final v1Extended = EarthquakeV1Extended(
       earthquake: baseV1.copyWith(
@@ -67,8 +66,8 @@ void main() async {
     expect(find.text('遠地\n地震'), findsOneWidget);
   });
   testWidgets(
-    '大規模な噴火の場合、\'大規模な噴火\'が表示されること(20210813033300)',
-    (WidgetTester tester) async {
+    "大規模な噴火の場合、'大規模な噴火'が表示されること(20210813033300)",
+    (tester) async {
       // Arrange
       final v1Extended = EarthquakeV1Extended(
         earthquake: baseV1.copyWith(
@@ -97,7 +96,7 @@ void main() async {
     () {
       testWidgets(
         'マグニチュードがある場合、マグニチュードが表示されること',
-        (WidgetTester tester) async {
+        (tester) async {
           // Arrange
           final v1Extended = EarthquakeV1Extended(
             earthquake: baseV1.copyWith(
@@ -127,7 +126,7 @@ void main() async {
       );
       testWidgets(
         'マグニチュードが整数の場合、小数第1位まで表示されること',
-        (WidgetTester tester) async {
+        (tester) async {
           // Arrange
           final v1Extended = EarthquakeV1Extended(
             earthquake: baseV1.copyWith(
@@ -157,7 +156,7 @@ void main() async {
       );
       testWidgets(
         'マグニチュードが小数第2位以降ある場合、四捨五入されて小数第1位まで表示されること(繰り下げケース)',
-        (WidgetTester tester) async {
+        (tester) async {
           // Arrange
           final v1Extended = EarthquakeV1Extended(
             earthquake: baseV1.copyWith(
@@ -187,7 +186,7 @@ void main() async {
       );
       testWidgets(
         'マグニチュードが小数第2位以降ある場合、四捨五入されて小数第1位まで表示されること(繰り上げケース)',
-        (WidgetTester tester) async {
+        (tester) async {
           // Arrange
           final v1Extended = EarthquakeV1Extended(
             earthquake: baseV1.copyWith(
