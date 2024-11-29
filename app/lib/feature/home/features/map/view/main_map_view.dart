@@ -19,7 +19,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
 class MainMapView extends HookConsumerWidget {
-  const MainMapView({super.key});
+  const MainMapView({
+    super.key,
+  });
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(mainMapViewModelProvider);

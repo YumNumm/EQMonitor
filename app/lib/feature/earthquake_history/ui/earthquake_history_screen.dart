@@ -54,6 +54,7 @@ class _SearchParameter extends StatelessWidget {
     required this.parameter,
     required this.onChanged,
   });
+
   final EarthquakeHistoryParameter parameter;
   final void Function(EarthquakeHistoryParameter) onChanged;
 

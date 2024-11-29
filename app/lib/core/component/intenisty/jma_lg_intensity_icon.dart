@@ -14,6 +14,7 @@ class JmaLgIntensityIcon extends ConsumerWidget {
     super.key,
     this.size = 50,
   });
+
   final JmaLgIntensity intensity;
   final IntensityIconType type;
   final double size;

@@ -60,6 +60,7 @@ class _IntensityFilterModal extends HookWidget {
     this.currentMin = initialMin,
     this.currentMax = initialMax,
   });
+  
   final JmaIntensity? currentMin;
   final JmaIntensity? currentMax;
 

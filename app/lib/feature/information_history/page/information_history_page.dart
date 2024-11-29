@@ -11,7 +11,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class InformationHistoryPage extends HookConsumerWidget {
-  const InformationHistoryPage({super.key});
+  const InformationHistoryPage({
+    super.key,
+  });
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(informationHistoryViewModelProvider);
@@ -46,7 +49,8 @@ class InformationHistoryPage extends HookConsumerWidget {
             title: Text('地震・津波に関するお知らせ'),
           ),
           switch (state) {
-            AsyncData(:final value) => _InformationDataView(data: value),
+            AsyncData(:final value) =>
+              _InformationDataSliverListView(data: value),
             AsyncError(:final error) => SliverFillRemaining(
                 child: ErrorInfoWidget(
                   error: error,
@@ -54,7 +58,7 @@ class InformationHistoryPage extends HookConsumerWidget {
                       ref.invalidate(informationHistoryViewModelProvider),
                 ),
               ),
-            _ => const _Loading(),
+            _ => const _LoadingSliverview(),
           },
         ],
       ),
@@ -69,8 +73,11 @@ class InformationHistoryPage extends HookConsumerWidget {
   }
 }
 
-class _InformationDataView extends HookConsumerWidget {
-  const _InformationDataView({required this.data});
+class _InformationDataSliverListView extends HookConsumerWidget {
+  const _InformationDataSliverListView({
+    required this.data,
+  });
+
   final List<InformationV3> data;
 
   @override
@@ -124,8 +131,8 @@ class _InformationDataView extends HookConsumerWidget {
   }
 }
 
-class _Loading extends StatelessWidget {
-  const _Loading();
+class _LoadingSliverview extends StatelessWidget {
+  const _LoadingSliverview();
 
   @override
   Widget build(BuildContext context) {

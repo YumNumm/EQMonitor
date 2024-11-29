@@ -182,6 +182,7 @@ class _RegionsChoiceView extends ConsumerWidget {
     required this.regions,
     required this.global,
   });
+
   final List<NotificationRemoteSettingsEarthquakeRegion> regions;
   final JmaForecastIntensity? global;
 
@@ -222,7 +223,9 @@ class _RegionsChoiceView extends ConsumerWidget {
             final child = Dismissible(
               key: ValueKey(region.regionId),
               onDismissed: (direction) async {
-                unawaited(HapticFeedback.mediumImpact(),);
+                unawaited(
+                  HapticFeedback.mediumImpact(),
+                );
                 ref
                     .read(notificationRemoteSettingsNotifierProvider.notifier)
                     .updateEarthquakeRegions(

@@ -12,6 +12,7 @@ class BarBottomSheet extends StatelessWidget {
     this.shape,
     this.elevation,
   });
+
   final Widget child;
   final Widget? control;
   final Clip? clipBehavior;

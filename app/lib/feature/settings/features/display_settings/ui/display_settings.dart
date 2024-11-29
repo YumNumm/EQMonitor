@@ -23,6 +23,7 @@ class DisplaySettingsScreen extends StatelessWidget {
 
 class _Body extends StatelessWidget {
   const _Body();
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -108,7 +109,7 @@ class _ThemeSelector extends ConsumerWidget {
       );
     }
 
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     final width = size.width > 600.0 ? 300.0 : null;
 
     final choice = Center(

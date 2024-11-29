@@ -126,6 +126,7 @@ class ObservationModel {
       y: (json['Point'] as Map<String, dynamic>)['Y'] as int,
     );
   }
+
   final String code;
   final String name;
   final String region;

@@ -10,6 +10,7 @@ class InformationHistoryDetailsPage extends HookConsumerWidget {
     required this.data,
     super.key,
   });
+
   final InformationV3 data;
 
   @override

@@ -84,6 +84,7 @@ class GoRouterRedirectException implements Exception {
 )
 class SetupRoute extends GoRouteData {
   const SetupRoute();
+
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const SetupScreen();
@@ -92,6 +93,7 @@ class SetupRoute extends GoRouteData {
 @TypedGoRoute<EarthquakeHistoryRoute>(path: '/earthquake-history')
 class EarthquakeHistoryRoute extends GoRouteData {
   const EarthquakeHistoryRoute();
+
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const EarthquakeHistoryScreen();
@@ -118,6 +120,7 @@ class EarthquakeHistoryDetailsRoute extends GoRouteData {
 @TypedGoRoute<InformationHistoryRoute>(path: '/information-history')
 class InformationHistoryRoute extends GoRouteData {
   const InformationHistoryRoute();
+
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const InformationHistoryPage();
@@ -130,7 +133,9 @@ class InformationHistoryDetailsRoute extends GoRouteData {
   const InformationHistoryDetailsRoute({
     required this.$extra,
   });
+
   final InformationV3 $extra;
+
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       InformationHistoryDetailsPage(
@@ -153,6 +158,7 @@ class InformationHistoryDetailsRoute extends GoRouteData {
 )
 class HomeRoute extends GoRouteData {
   const HomeRoute();
+
   @override
   Widget build(BuildContext context, GoRouterState state) => const HomeView();
 }
@@ -160,6 +166,7 @@ class HomeRoute extends GoRouteData {
 @TypedGoRoute<TalkerRoute>(path: '/talker')
 class TalkerRoute extends GoRouteData {
   const TalkerRoute();
+
   @override
   Widget build(BuildContext context, GoRouterState state) => const TalkerPage();
 }
@@ -241,6 +248,7 @@ class SettingsRoute extends GoRouteData {
 
 class NotificationRoute extends GoRouteData {
   const NotificationRoute();
+
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const NotificationRemoteSettingsPage();
@@ -248,6 +256,7 @@ class NotificationRoute extends GoRouteData {
 
 class DisplayRoute extends GoRouteData {
   const DisplayRoute();
+
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const DisplaySettingsScreen();
@@ -255,6 +264,7 @@ class DisplayRoute extends GoRouteData {
 
 class NotificationEarthquakeRoute extends GoRouteData {
   const NotificationEarthquakeRoute();
+
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const NotificationRemoteSettingsEarthquakePage();
@@ -262,6 +272,7 @@ class NotificationEarthquakeRoute extends GoRouteData {
 
 class NotificationEewRoute extends GoRouteData {
   const NotificationEewRoute();
+
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const NotificationRemoteSettingsEewPage();
@@ -304,7 +315,10 @@ class TermOfServiceRoute extends GoRouteData {
     required this.$extra,
     this.showAcceptButton = false,
   });
-  final void Function({bool isAccepted})? $extra;
+
+  final void Function({
+    bool isAccepted,
+  })? $extra;
   final bool showAcceptButton;
 
   @override
@@ -317,6 +331,7 @@ class TermOfServiceRoute extends GoRouteData {
 
 class ColorSchemeConfigRoute extends GoRouteData {
   const ColorSchemeConfigRoute();
+
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const ColorSchemeConfigPage();
@@ -327,7 +342,10 @@ class PrivacyPolicyRoute extends GoRouteData {
     required this.$extra,
     this.showAcceptButton = false,
   });
-  final void Function({bool isAccepted})? $extra;
+
+  final void Function({
+    bool isAccepted,
+  })? $extra;
   final bool showAcceptButton;
 
   @override
@@ -378,6 +396,7 @@ class DonationExecutedRoute extends GoRouteData {
   const DonationExecutedRoute({
     required this.$extra,
   });
+
   final DonationExecutedRouteExtra $extra;
 
   @override

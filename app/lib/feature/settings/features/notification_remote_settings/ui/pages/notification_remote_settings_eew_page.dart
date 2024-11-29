@@ -183,6 +183,7 @@ class _RegionsChoiceView extends ConsumerWidget {
     required this.regions,
     required this.global,
   });
+
   final List<NotificationRemoteSettingsEewRegion> regions;
   final JmaForecastIntensity? global;
 

@@ -15,6 +15,7 @@ KmoniDataSource kmoniDataSource(Ref ref) =>
 
 class KmoniDataSource {
   KmoniDataSource(this.dio);
+  
   final Dio dio;
 
   final _urlGenerator = KmoniWebApiUrlGenerator();

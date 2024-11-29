@@ -112,6 +112,7 @@ class NotificationRemoteSettingsPage extends HookConsumerWidget {
 
 class _Body extends ConsumerWidget {
   const _Body();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(notificationRemoteSettingsNotifierProvider);
@@ -151,6 +152,7 @@ class _Data extends StatelessWidget {
   const _Data({
     required this.state,
   });
+
   final NotificationRemoteSettingsState state;
 
   @override

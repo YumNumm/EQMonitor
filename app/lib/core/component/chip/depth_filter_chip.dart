@@ -58,6 +58,7 @@ class _DepthFilterModal extends HookWidget {
     this.currentMin = initialMin,
     this.currentMax = initialMax,
   });
+  
   final int? currentMin;
   final int? currentMax;
 
