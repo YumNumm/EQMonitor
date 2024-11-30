@@ -8,7 +8,7 @@ part of 'time_ticker.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$timeTickerHash() => r'b1e4f0bdc4174efb4e7d7f31e5d94d54a9ef1dc8';
+String _$timeTickerHash() => r'1da2250f8420935b7a6f942fe951df8a3dbb6817';
 
 /// See also [timeTicker].
 @ProviderFor(timeTicker)
@@ -17,8 +17,8 @@ final timeTickerProvider = StreamProvider<DateTime>.internal(
   name: r'timeTickerProvider',
   debugGetCreateSourceHash:
       const bool.fromEnvironment('dart.vm.product') ? null : _$timeTickerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
+  dependencies: const <ProviderOrFamily>[],
+  allTransitiveDependencies: const <ProviderOrFamily>{},
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')

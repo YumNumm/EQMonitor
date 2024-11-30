@@ -10,11 +10,11 @@ import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dar
 import 'package:eqmonitor/core/component/widget/error_widget.dart';
 import 'package:eqmonitor/core/provider/config/earthquake_history/earthquake_history_config_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
+import 'package:eqmonitor/feature/earthquake_history_details/data/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/ui/component/earthquake_hypo_info_widget.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/ui/component/earthquake_map.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/ui/component/prefecture_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/ui/component/prefecture_lpgm_intensity.dart';
-import 'package:eqmonitor/feature/earthquake_history_details/data/earthquake_history_details_notifier.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';

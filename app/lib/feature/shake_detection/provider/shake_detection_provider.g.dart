@@ -28,7 +28,7 @@ final _fetchShakeDetectionEventsProvider =
 // ignore: unused_element
 typedef _FetchShakeDetectionEventsRef
     = FutureProviderRef<List<ShakeDetectionEvent>>;
-String _$shakeDetectionHash() => r'c024f21bfe5df28a1f5c43bc979dd1e3708d0bea';
+String _$shakeDetectionHash() => r'451b7778a93fe735e240aa9a96e6aa940cf6cd17';
 
 /// See also [ShakeDetection].
 @ProviderFor(ShakeDetection)
@@ -39,13 +39,16 @@ final shakeDetectionProvider =
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
       : _$shakeDetectionHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
+  dependencies: <ProviderOrFamily>[timeTickerProvider],
+  allTransitiveDependencies: <ProviderOrFamily>{
+    timeTickerProvider,
+    ...?timeTickerProvider.allTransitiveDependencies
+  },
 );
 
 typedef _$ShakeDetection = AsyncNotifier<List<ShakeDetectionEvent>>;
 String _$shakeDetectionKmoniPointsMergedHash() =>
-    r'4f856d4adfd1261e6e0c02e4857f47dd9360d4b7';
+    r'1961cac434b99fccb79150d988f1723f8bcec5fa';
 
 /// See also [ShakeDetectionKmoniPointsMerged].
 @ProviderFor(ShakeDetectionKmoniPointsMerged)
@@ -57,8 +60,11 @@ final shakeDetectionKmoniPointsMergedProvider = AsyncNotifierProvider<
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
       : _$shakeDetectionKmoniPointsMergedHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
+  dependencies: <ProviderOrFamily>[shakeDetectionProvider],
+  allTransitiveDependencies: <ProviderOrFamily>{
+    shakeDetectionProvider,
+    ...?shakeDetectionProvider.allTransitiveDependencies
+  },
 );
 
 typedef _$ShakeDetectionKmoniPointsMerged
