@@ -1,5 +1,5 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
-import 'package:eqmonitor/core/component/widget/error_widget.dart';
+import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
@@ -62,13 +62,11 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
                       .toList(),
                 );
               }(),
-            AsyncError(:final error) => ErrorInfoWidget(
+            AsyncError(:final error) => ErrorCard(
                 error: error,
-                onRefresh: () async {
-                  await ref
-                      .read(defaultEarthquakeHistoryNotifierProvider.notifier)
-                      .refresh();
-                },
+                onReload: () async => ref
+                    .read(defaultEarthquakeHistoryNotifierProvider.notifier)
+                    .refresh(),
               ),
             _ => loading,
           },
