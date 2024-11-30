@@ -11,6 +11,7 @@ import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_scree
 import 'package:eqmonitor/feature/earthquake_history_details/ui/screen/earthquake_history_details.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_details_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_screen.dart';
+import 'package:eqmonitor/feature/eew/ui/screen/eew_details_by_event_id_page.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/page/kmoni_settings_page.dart';
 import 'package:eqmonitor/feature/home/view/home_view.dart';
 import 'package:eqmonitor/feature/information_history/page/information_history_page.dart';
@@ -153,6 +154,9 @@ class InformationHistoryDetailsRoute extends GoRouteData {
           path: 'details/:id',
         ),
       ],
+    ),
+    TypedGoRoute<EewDetailsByEventIdRoute>(
+      path: 'eew-details-by-event-id/:eventId',
     ),
   ],
 )

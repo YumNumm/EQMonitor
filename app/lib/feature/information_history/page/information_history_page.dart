@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/component/widget/error_widget.dart';
+import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/information_history/viewmodel/information_history_view_model.dart';
 import 'package:extensions/extensions.dart';
@@ -52,10 +52,10 @@ class InformationHistoryPage extends HookConsumerWidget {
             AsyncData(:final value) =>
               _InformationDataSliverListView(data: value),
             AsyncError(:final error) => SliverFillRemaining(
-                child: ErrorInfoWidget(
+                child: ErrorCard(
                   error: error,
-                  onRefresh: () async =>
-                      ref.invalidate(informationHistoryViewModelProvider),
+                  onReload: () async =>
+                      ref.refresh(informationHistoryViewModelProvider),
                 ),
               ),
             _ => const _LoadingSliverview(),

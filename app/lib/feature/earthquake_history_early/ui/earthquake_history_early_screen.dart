@@ -5,7 +5,7 @@ import 'package:eqmonitor/core/component/chip/date_range_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
-import 'package:eqmonitor/core/component/widget/error_widget.dart';
+import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/data/earthquake_history_early_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/data/model/earthquake_history_early_parameter.dart';
@@ -64,6 +64,7 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
         ],
       ),
       body: _SliverListBody(
+        parameter: parameter.value,
         state: state,
         onRefresh: () async => ref.refresh(
           earthquakeHistoryEarlyNotifierProvider(parameter.value).notifier,
@@ -159,14 +160,16 @@ class _SearchParameter extends StatelessWidget {
 class _SliverListBody extends HookConsumerWidget {
   const _SliverListBody({
     required this.state,
+    required this.parameter,
     this.onRefresh,
     this.onScrollEnd,
     this.shouldShowLatestEarthquakeMessage = false,
   });
 
-  final void Function()? onRefresh;
+  final Future<void> Function()? onRefresh;
   final void Function()? onScrollEnd;
   final AsyncValue<(List<EarthquakeEarly>, int)> state;
+  final EarthquakeHistoryEarlyParameter parameter;
 
   /// 「最新の地震情報を見るためには地震履歴を使ってください」メッセージを表示するかどうか
   final bool shouldShowLatestEarthquakeMessage;
@@ -217,9 +220,9 @@ class _SliverListBody extends HookConsumerWidget {
                 }
                 if (state.hasError) {
                   final error = state.error!;
-                  return ErrorInfoWidget(
+                  return ErrorCard(
                     error: error,
-                    onRefresh: onRefresh,
+                    onReload: onRefresh,
                   );
                 }
                 final hasNext = state.valueOrNull?.hasNext ?? false;
@@ -250,10 +253,11 @@ class _SliverListBody extends HookConsumerWidget {
             if (valueOrNull != null) {
               return listView(data: valueOrNull);
             }
-            return ErrorInfoWidget(
+            return ErrorCard(
               error: error,
-              onRefresh: () =>
-                  ref.invalidate(earthquakeHistoryEarlyNotifierProvider),
+              onReload: () async => ref.refresh(
+                earthquakeHistoryEarlyNotifierProvider(parameter),
+              ),
             );
           }(),
         AsyncData(:final value) => Column(
