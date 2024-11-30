@@ -8,7 +8,7 @@ import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/feature/donation/ui/donation_executed_screen.dart';
 import 'package:eqmonitor/feature/donation/ui/donation_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/earthquake_history_screen.dart';
-import 'package:eqmonitor/feature/earthquake_history_details/screen/earthquake_history_details.dart';
+import 'package:eqmonitor/feature/earthquake_history_details/ui/screen/earthquake_history_details.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_details_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_screen.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/page/kmoni_settings_page.dart';
