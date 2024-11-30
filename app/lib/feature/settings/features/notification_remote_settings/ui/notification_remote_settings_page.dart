@@ -48,10 +48,15 @@ class NotificationRemoteSettingsPage extends HookConsumerWidget {
       );
     }
     if (initialSetup case AsyncError(:final error)) {
-      return ErrorInfoWidget(
-        error: error,
-        onRefresh: () =>
-            ref.refresh(notificationRemoteSettingsInitialSetupNotifierProvider),
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('通知条件設定'),
+        ),
+        body: ErrorInfoWidget(
+          error: error,
+          onRefresh: () => ref
+              .refresh(notificationRemoteSettingsInitialSetupNotifierProvider),
+        ),
       );
     }
 
