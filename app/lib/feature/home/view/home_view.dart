@@ -36,6 +36,7 @@ import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.d
 import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_widget.dart';
 import 'package:eqmonitor/feature/home/features/map/view/main_map_view.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
+import 'package:eqmonitor/feature/location/data/location_tracking_mode.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/fcm_token_change_detector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_authentication_service.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_settings_migrate_service.dart';
@@ -445,6 +446,9 @@ class _Fabs extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.sizeOf(context);
     final sheetWidth = BasicModalSheet.width(size);
+
+    final isMyLocationEnabled = ref.watch(locationTrackingModeProvider);
+
     return Align(
       alignment: Alignment.bottomRight,
       child: SizedBox(
@@ -456,6 +460,19 @@ class _Fabs extends ConsumerWidget {
             const KmoniStatusWidget(),
             Column(
               children: [
+                FloatingActionButton.small(
+                  heroTag: 'my-location',
+                  tooltip: '現在地の表示',
+                  onPressed: () async => ref
+                      .read(locationTrackingModeProvider.notifier)
+                      .set(value: !isMyLocationEnabled),
+                  elevation: 4,
+                  child: Icon(
+                    isMyLocationEnabled
+                        ? Icons.location_on
+                        : Icons.location_off,
+                  ),
+                ),
                 FloatingActionButton.small(
                   heroTag: 'sheet',
                   tooltip: '強震モニタの設定',
