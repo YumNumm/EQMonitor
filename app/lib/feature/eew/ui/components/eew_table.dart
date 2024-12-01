@@ -15,43 +15,60 @@ class EewTable extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return SingleChildScrollView(
-      primary: true,
+    return SizedBox.expand(
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: DataTable(
-          border: TableBorder.symmetric(
-            borderRadius: BorderRadius.circular(8),
-            outside: BorderSide(color: colorScheme.surface),
-          ),
-          columns: _EewTableColumn.values
-              .map(
-                (e) => DataColumn(
-                  label: Row(
-                    children: [
-                      Text(e.name),
-                    ],
-                  ),
-                  numeric: e.isNumeric,
-                  headingRowAlignment: MainAxisAlignment.center,
-                ),
-              )
-              .toList(),
-          rows: eews
-              .map(
-                (eew) => DataRow(
-                  cells: _EewTableColumn.values
-                      .map(
-                        (c) => DataCell(
-                          Text(
-                            c.value(eew).value,
+        child: SingleChildScrollView(
+          primary: true,
+          child: DataTable(
+            horizontalMargin: 0,
+            columnSpacing: 10,
+            border: TableBorder.symmetric(
+              borderRadius: BorderRadius.circular(8),
+              outside: BorderSide(color: colorScheme.surface),
+            ),
+            columns: _EewTableColumn.values
+                .map(
+                  (e) => DataColumn(
+                    label: Row(
+                      children: [
+                        Text(e.name),
+                        if (e.tooltip != null) ...[
+                          const SizedBox(width: 4),
+                          Tooltip(
+                            message: e.tooltip,
+                            triggerMode: TooltipTriggerMode.tap,
+                            child: const Icon(Icons.info_outline),
                           ),
-                        ),
-                      )
-                      .toList(),
-                ),
-              )
-              .toList(),
+                        ],
+                      ],
+                    ),
+                    numeric: e.isNumeric,
+                    headingRowAlignment: MainAxisAlignment.center,
+                  ),
+                )
+                .toList(),
+            rows: eews
+                .map(
+                  (eew) => DataRow(
+                    color: WidgetStateProperty.all(
+                      eew.isWarning ?? false
+                          ? colorScheme.errorContainer.withOpacity(0.7)
+                          : colorScheme.surfaceContainer,
+                    ),
+                    cells: _EewTableColumn.values
+                        .map(
+                          (c) => DataCell(
+                            Text(
+                              c.value(eew).value,
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                )
+                .toList(),
+          ),
         ),
       ),
     );
@@ -60,17 +77,22 @@ class EewTable extends StatelessWidget {
 
 enum _EewTableColumn {
   serialNo(name: 'No.', isNumeric: true),
+  type(name: '種別', isNumeric: false),
   originTime(name: '発表時刻', isNumeric: true),
-  elapsedTime(name: '経過時間', isNumeric: true),
+  elapsedTime(
+    name: '経過時間',
+    isNumeric: true,
+    tooltip: '気象庁が地震を検知してから、緊急地震速報が発表されるまでの時間',
+  ),
   epicenterName(name: '震源地名', isNumeric: false),
   epicenterLatitude(name: '緯度', isNumeric: true),
   epicenterLongitude(name: '経度', isNumeric: true),
   epicenterDepth(name: '深さ', isNumeric: true),
   magnitude(name: 'M', isNumeric: true),
   maxIntensity(name: '予想最大震度', isNumeric: true),
-  maxLongPeriodIntensity(name: '予想最大長周期地震動階級', isNumeric: true),
+  maxLongPeriodIntensity(name: '予想最大長周期\n地震動階級', isNumeric: true),
   accuracy(name: '精度', isNumeric: false),
-  type(name: '種別', isNumeric: false);
+  ;
 
   const _EewTableColumn({
     required this.name,
@@ -116,19 +138,24 @@ extension _EewTableColumnEx on _EewTableColumn {
             isNumeric: true,
           ),
         _EewTableColumn.magnitude => _EewTableColumnValue(
-            value: eew.magnitude?.toString() ?? '',
+            value: eew.magnitude != null ? 'M${eew.magnitude}' : '',
             isNumeric: true,
           ),
         _EewTableColumn.maxIntensity => _EewTableColumnValue(
-            value: eew.forecastMaxIntensity?.type ?? '',
+            value: eew.forecastMaxIntensity != null
+                ? '震度 ${eew.forecastMaxIntensity!.type.replaceAll('-', '弱').replaceAll('+', '強')}'
+                    '${eew.forecastMaxIntensityIsOver ?? false ? '以上' : ''}'
+                : '',
             isNumeric: false,
           ),
         _EewTableColumn.epicenterDepth => _EewTableColumnValue(
-            value: eew.depth?.toString() ?? '',
+            value: eew.depth != null ? '${eew.depth}km' : '',
             isNumeric: true,
           ),
         _EewTableColumn.maxLongPeriodIntensity => _EewTableColumnValue(
-            value: eew.forecastMaxLpgmIntensity?.type ?? '',
+            value: eew.forecastMaxLpgmIntensity?.type != null
+                ? '長周期地震動階級 ${eew.forecastMaxLpgmIntensity!.type}'
+                : '',
             isNumeric: false,
           ),
         _EewTableColumn.accuracy when eew.accuracy != null =>
@@ -144,7 +171,7 @@ extension _EewTableColumnEx on _EewTableColumn {
             isNumeric: false,
           ),
         _EewTableColumn.type => _EewTableColumnValue(
-            value: eew.type,
+            value: (eew.isWarning ?? false) ? '緊急地震速報 (警報)' : '緊急地震速報 (予報)',
             isNumeric: false,
           ),
       };
