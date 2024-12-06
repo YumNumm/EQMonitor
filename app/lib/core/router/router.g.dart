@@ -156,6 +156,10 @@ RouteBase get $homeRoute => GoRouteData.$route(
             ),
           ],
         ),
+        GoRouteData.$route(
+          path: 'eew-details-by-event-id/:eventId',
+          factory: $EewDetailsByEventIdRouteExtension._fromState,
+        ),
       ],
     );
 
@@ -203,6 +207,26 @@ extension $EarthquakeHistoryEarlyDetailsRouteExtension
 
   String get location => GoRouteData.$location(
         '/earthquake-history-early/details/${Uri.encodeComponent(id)}',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $EewDetailsByEventIdRouteExtension on EewDetailsByEventIdRoute {
+  static EewDetailsByEventIdRoute _fromState(GoRouterState state) =>
+      EewDetailsByEventIdRoute(
+        eventId: state.pathParameters['eventId']!,
+      );
+
+  String get location => GoRouteData.$location(
+        '/eew-details-by-event-id/${Uri.encodeComponent(eventId)}',
       );
 
   void go(BuildContext context) => context.go(location);

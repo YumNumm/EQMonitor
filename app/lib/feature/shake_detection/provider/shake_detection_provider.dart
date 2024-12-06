@@ -14,7 +14,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'shake_detection_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@Riverpod(keepAlive: true, dependencies: [timeTicker])
 class ShakeDetection extends _$ShakeDetection {
   @override
   Future<List<ShakeDetectionEvent>> build() async {
@@ -99,7 +99,7 @@ class ShakeDetection extends _$ShakeDetection {
   }
 }
 
-@Riverpod(keepAlive: true)
+@Riverpod(keepAlive: true, dependencies: [ShakeDetection])
 class ShakeDetectionKmoniPointsMerged
     extends _$ShakeDetectionKmoniPointsMerged {
   @override

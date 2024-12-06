@@ -70,6 +70,11 @@ abstract class V1 {
   @GET('/v1/eew/latest')
   Future<HttpResponse<List<EewV1>>> getEewLatest();
 
+  @GET('/v1/eew/search')
+  Future<HttpResponse<List<EewV1>>> getEewByEventId({
+    @Query('eventId') required String eventId,
+  });
+
   @GET('/v1/earthquake-early/list')
   Future<HttpResponse<List<EarthquakeEarly>>> getEarthquakeEarlies({
     /// 1~100

@@ -9,7 +9,7 @@ part of 'eew_alive_telegram.dart';
 // **************************************************************************
 
 String _$eewAliveNormalTelegramHash() =>
-    r'3d5ba64b3f98437062584f49208f9898a32358f3';
+    r'ee0e8fc7b4db6455d819f9cd4d0295347c8e3dac';
 
 /// イベント終了していないEEWのうち、精度が低いものを除外したもの
 ///
@@ -21,14 +21,17 @@ final eewAliveNormalTelegramProvider = Provider<List<EewV1>>.internal(
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
       : _$eewAliveNormalTelegramHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
+  dependencies: <ProviderOrFamily>[eewAliveTelegramProvider],
+  allTransitiveDependencies: <ProviderOrFamily>{
+    eewAliveTelegramProvider,
+    ...?eewAliveTelegramProvider.allTransitiveDependencies
+  },
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef EewAliveNormalTelegramRef = ProviderRef<List<EewV1>>;
-String _$eewAliveCheckerHash() => r'f092d121ff9d9ea2b58fb253608779403a4ce39f';
+String _$eewAliveCheckerHash() => r'21c8182cab2a3bb009efd938202257d2580030c9';
 
 /// See also [eewAliveChecker].
 @ProviderFor(eewAliveChecker)
@@ -38,14 +41,14 @@ final eewAliveCheckerProvider = Provider<EewAliveChecker>.internal(
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
       : _$eewAliveCheckerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
+  dependencies: const <ProviderOrFamily>[],
+  allTransitiveDependencies: const <ProviderOrFamily>{},
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef EewAliveCheckerRef = ProviderRef<EewAliveChecker>;
-String _$eewAliveTelegramHash() => r'75a2a8e24ee834cde6895bc29ff84cdc69470cb7';
+String _$eewAliveTelegramHash() => r'0f34793e7fbbc2dcc781d51e6bd49413e495555a';
 
 /// イベント終了していないEEW
 ///
@@ -58,8 +61,13 @@ final eewAliveTelegramProvider =
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
       : _$eewAliveTelegramHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
+  dependencies: <ProviderOrFamily>[timeTickerProvider, eewAliveCheckerProvider],
+  allTransitiveDependencies: <ProviderOrFamily>{
+    timeTickerProvider,
+    ...?timeTickerProvider.allTransitiveDependencies,
+    eewAliveCheckerProvider,
+    ...?eewAliveCheckerProvider.allTransitiveDependencies
+  },
 );
 
 typedef _$EewAliveTelegram = Notifier<List<EewV1>?>;

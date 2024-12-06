@@ -12,6 +12,7 @@ import 'package:eqmonitor/core/theme/platform_brightness.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
+import 'package:eqmonitor/feature/location/data/location_tracking_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:geolocator/geolocator.dart';
@@ -68,12 +69,9 @@ class MainMapView extends HookConsumerWidget {
 
     // 震央画像 / 震度アイコンの登録
     final images = (
-      intenistyIcon: ref.watch(intensityIconRenderProvider),
-      intensityIconFill: ref.watch(intensityIconFillRenderProvider),
       hypocenterIcon: ref.watch(hypocenterIconRenderProvider),
       hypocenterLowPreciseIcon:
           ref.watch(hypocenterLowPreciseIconRenderProvider),
-      currentLocationIcon: ref.watch(currentLocationIconRenderProvider),
     );
     final hasTravelTimeDepthMapValue = ref.watch(
       travelTimeDepthMapProvider
@@ -83,18 +81,12 @@ class MainMapView extends HookConsumerWidget {
     if (stylePath.value == null ||
         images.hypocenterIcon == null ||
         images.hypocenterLowPreciseIcon == null ||
-        !images.intenistyIcon.isAllRendered() ||
-        !images.intensityIconFill.isAllRendered() ||
-        !hasTravelTimeDepthMapValue ||
-        images.currentLocationIcon == null) {
+        !hasTravelTimeDepthMapValue) {
       final progress = [
         stylePath.value == null,
         images.hypocenterIcon == null,
         images.hypocenterLowPreciseIcon == null,
-        !images.intenistyIcon.isAllRendered(),
-        !images.intensityIconFill.isAllRendered(),
         !hasTravelTimeDepthMapValue,
-        images.currentLocationIcon == null,
       ];
       log('progress: $progress');
       return const Scaffold(
@@ -167,21 +159,6 @@ class MainMapView extends HookConsumerWidget {
                 name: 'hypocenter-low-precise',
                 bytes: images.hypocenterLowPreciseIcon!,
               ),
-              for (final MapEntry(:key, :value) in images.intenistyIcon.entries)
-                notifier.updateImage(
-                  name: 'intensity-${key.type}',
-                  bytes: value,
-                ),
-              for (final MapEntry(:key, :value)
-                  in images.intensityIconFill.entries)
-                notifier.updateImage(
-                  name: 'intensity-fill-${key.type}',
-                  bytes: value,
-                ),
-              notifier.updateImage(
-                name: 'current-location',
-                bytes: images.currentLocationIcon!,
-              ),
             ],
           );
           await notifier.onMapControllerRegistered();
@@ -197,6 +174,7 @@ class MainMapView extends HookConsumerWidget {
         rotateGesturesEnabled: false,
         tiltGesturesEnabled: false,
         trackCameraPosition: true,
+        myLocationEnabled: ref.watch(locationTrackingModeProvider),
       ),
     );
     return Stack(

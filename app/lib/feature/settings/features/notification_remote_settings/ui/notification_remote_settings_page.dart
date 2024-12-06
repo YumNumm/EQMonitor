@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:adaptive_dialog/adaptive_dialog.dart';
-import 'package:eqmonitor/core/component/widget/error_widget.dart';
+import 'package:eqmonitor/core/component/error/error_card.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/fullscreen_loading_overlay.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/model/notification_remote_settings_state.dart';
@@ -17,9 +17,9 @@ Future<void> _save(
   BuildContext context,
   NotificationRemoteSettingsNotifier notifier,
 ) async {
-  await showFullScreenLoadingOverlay(
+  await FullScreenCircularProgressIndicator.showUntil(
     context,
-    notifier.save(),
+    () async => notifier.save(),
   );
   if (context.mounted) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -48,10 +48,15 @@ class NotificationRemoteSettingsPage extends HookConsumerWidget {
       );
     }
     if (initialSetup case AsyncError(:final error)) {
-      return ErrorInfoWidget(
-        error: error,
-        onRefresh: () =>
-            ref.refresh(notificationRemoteSettingsInitialSetupNotifierProvider),
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('通知条件設定'),
+        ),
+        body: ErrorCard(
+          error: error,
+          onReload: () async => ref
+              .refresh(notificationRemoteSettingsInitialSetupNotifierProvider),
+        ),
       );
     }
 
@@ -118,9 +123,9 @@ class _Body extends ConsumerWidget {
     final state = ref.watch(notificationRemoteSettingsNotifierProvider);
 
     return switch (state) {
-      AsyncError(:final error) => ErrorInfoWidget(
+      AsyncError(:final error) => ErrorCard(
           error: error,
-          onRefresh: () =>
+          onReload: () async =>
               ref.refresh(notificationRemoteSettingsNotifierProvider),
         ),
       AsyncData(:final value) => _Data(
