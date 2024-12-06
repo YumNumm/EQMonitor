@@ -283,6 +283,43 @@ class _V1 implements V1 {
   }
 
   @override
+  Future<HttpResponse<List<EewV1>>> getEewByEventId(
+      {required String eventId}) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'eventId': eventId};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<HttpResponse<List<EewV1>>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/v1/eew/search',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<EewV1> _value;
+    try {
+      _value = _result.data!
+          .map((dynamic i) => EewV1.fromJson(i as Map<String, dynamic>))
+          .toList();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
   Future<HttpResponse<List<EarthquakeEarly>>> getEarthquakeEarlies({
     int limit = 10,
     int offset = 0,

@@ -16,13 +16,13 @@ import 'package:eqmonitor/core/hook/use_sheet_controller.dart';
 import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/config/permission/permission_notifier.dart';
 import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
-import 'package:eqmonitor/core/provider/eew/eew_alive_telegram.dart';
 import 'package:eqmonitor/core/provider/firebase/firebase_messaging_interaction.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/notification_token.dart';
 import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_screen.dart';
+import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_scale.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
@@ -36,6 +36,7 @@ import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.d
 import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_widget.dart';
 import 'package:eqmonitor/feature/home/features/map/view/main_map_view.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
+import 'package:eqmonitor/feature/location/data/location_tracking_mode.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/fcm_token_change_detector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_authentication_service.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_settings_migrate_service.dart';
@@ -445,6 +446,9 @@ class _Fabs extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.sizeOf(context);
     final sheetWidth = BasicModalSheet.width(size);
+
+    final isMyLocationEnabled = ref.watch(locationTrackingModeProvider);
+
     return Align(
       alignment: Alignment.bottomRight,
       child: SizedBox(
@@ -456,6 +460,19 @@ class _Fabs extends ConsumerWidget {
             const KmoniStatusWidget(),
             Column(
               children: [
+                FloatingActionButton.small(
+                  heroTag: 'my-location',
+                  tooltip: '現在地の表示',
+                  onPressed: () async => ref
+                      .read(locationTrackingModeProvider.notifier)
+                      .set(value: !isMyLocationEnabled),
+                  elevation: 4,
+                  child: Icon(
+                    isMyLocationEnabled
+                        ? Icons.location_on
+                        : Icons.location_off,
+                  ),
+                ),
                 FloatingActionButton.small(
                   heroTag: 'sheet',
                   tooltip: '強震モニタの設定',
