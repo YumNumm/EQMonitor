@@ -66,12 +66,12 @@ class WebsocketStatus extends _$WebsocketStatus {
 
 @Riverpod(keepAlive: true)
 class WebsocketMessages extends _$WebsocketMessages {
-  late StreamController<dynamic> _controller;
+  late StreamController<Map<String, dynamic>> _controller;
 
   @override
   Stream<Map<String, dynamic>> build() async* {
     final socket = ref.watch(websocketProvider);
-    _controller = StreamController<dynamic>();
+    _controller = StreamController<Map<String, dynamic>>();
     ref.onDispose(() {
       _controller.close();
     });
@@ -85,9 +85,7 @@ class WebsocketMessages extends _$WebsocketMessages {
       },
     );
 
-    await for (final message in _controller.stream) {
-      yield message as Map<String, dynamic>;
-    }
+    yield* _controller.stream;
   }
 
   void emit(Map<String, dynamic> data) => _controller.add(data);
