@@ -121,8 +121,8 @@ class _InformationDataSliverListView extends HookConsumerWidget {
             ),
             tileColor: switch (item.level) {
               Level.info => Colors.transparent,
-              Level.warning => Colors.yellow.withOpacity(0.2),
-              Level.critical => Colors.red.withOpacity(0.2),
+              Level.warning => Colors.yellow.withValues(alpha: 0.2),
+              Level.critical => Colors.red.withValues(alpha: 0.2),
             },
           );
         },

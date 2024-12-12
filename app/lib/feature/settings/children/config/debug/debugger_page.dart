@@ -46,7 +46,7 @@ class _DebugWidget extends ConsumerWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
-          color: theme.dividerColor.withOpacity(0.6),
+          color: theme.dividerColor.withValues(alpha: 0.6),
           width: 0,
         ),
       ),

@@ -68,7 +68,7 @@ class HomeView extends HookConsumerWidget {
               tileMode: TileMode.decal,
             ),
             child: ColoredBox(
-              color: colorScheme.surfaceContainer.withOpacity(0.3),
+              color: colorScheme.surfaceContainer.withValues(alpha: 0.3),
               child: AppBar(
                 title: Text(
                   'EQMonitor',
@@ -393,9 +393,9 @@ class _IntensityIcons extends ConsumerWidget {
               )
               .toList(),
         )
-        .whereNotNull()
+        .nonNulls
         .flattened
-        .whereNotNull()
+        .nonNulls
         .toList();
     final maxIntensity = maxEstimatedIntensities.isNotEmpty
         ? maxEstimatedIntensities.reduce((a, b) => a > b ? a : b)
@@ -590,7 +590,7 @@ class _NotificationPermission extends ConsumerWidget {
     final state = ref.watch(permissionNotifierProvider);
     if (!state.notification) {
       return BorderedContainer(
-        accentColor: Colors.redAccent.withOpacity(0.2),
+        accentColor: Colors.redAccent.withValues(alpha: 0.2),
         padding: const EdgeInsets.symmetric(
           horizontal: 8,
           vertical: 4,

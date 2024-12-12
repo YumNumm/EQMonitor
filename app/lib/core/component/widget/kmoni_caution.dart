@@ -35,7 +35,7 @@ class KmoniCautionWidget extends StatelessWidget {
           .mapIndexed(
             (index, e) => BorderedContainer(
               accentColor:
-                  index == 0 ? Colors.redAccent.withOpacity(0.8) : null,
+                  index == 0 ? Colors.redAccent.withValues(alpha: 0.8) : null,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

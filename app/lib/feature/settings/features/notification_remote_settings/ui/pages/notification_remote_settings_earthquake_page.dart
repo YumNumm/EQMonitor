@@ -489,7 +489,7 @@ class _AddRegionChoiceDialog extends ConsumerWidget {
                           color: Theme.of(context)
                               .colorScheme
                               .onSurface
-                              .withOpacity(0.7),
+                              .withValues(alpha: 0.7),
                         ),
                       )
                     : Text(region.name),

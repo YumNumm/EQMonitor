@@ -1,8 +1,8 @@
 name: eqmonitor_lints
 
 environment:
-  sdk: ^3.5.4
-  flutter: ^3.24.5
+  sdk: ^3.6.0
+  flutter: ^3.27.0
 
 dependencies:
   altive_lints: ^1.16.0

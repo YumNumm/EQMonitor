@@ -251,7 +251,7 @@ class MainMapViewModel extends _$MainMapViewModel {
     _eewPsWaveService!.update(normalEews);
     await _eewHypocenterService!.update(aliveBodies);
     final transformed = _EewEstimatedIntensityService.transform(
-      aliveBodies.map((e) => e.regions).whereNotNull().flattened.toList(),
+      aliveBodies.map((e) => e.regions).nonNulls.flattened.toList(),
     );
     await _eewEstimatedIntensityService.update(transformed);
   }
