@@ -249,7 +249,7 @@ void main() async {
         final expectedColor = IntensityColorModel.eqmonitor()
             .fromJmaIntensity(maxIntensity)
             .background
-            .withOpacity(0.4);
+            .withValues(alpha: 0.4);
         testWidgets(
           '最大震度$maxIntensityの場合',
           (tester) async {

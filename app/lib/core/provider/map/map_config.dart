@@ -1,3 +1,4 @@
+import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -16,7 +17,7 @@ class MapConfig with _$MapConfig {
       _$MapConfigFromJson(json);
 }
 
-String colorToJson(Color color) => '#${color.value.toRadixString(16)}';
+String colorToJson(Color color) => '#${color.sRgbValue.toRadixString(16)}';
 Color colorFromJson(String color) =>
     Color(int.parse(color.substring(1), radix: 16));
 

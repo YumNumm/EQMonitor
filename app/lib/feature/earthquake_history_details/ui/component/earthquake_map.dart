@@ -159,7 +159,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
                   .firstWhereOrNull((region) => region.property.code == e)
                   ?.bounds,
             )
-            .whereNotNull()
+            .nonNulls
             .toList();
         var bbox = bboxs.marge();
         // 震源地を含める

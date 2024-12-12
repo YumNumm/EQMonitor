@@ -57,7 +57,7 @@ class EarthquakeEarlyHypoInfoWidget extends HookConsumerWidget {
                 '震源地',
                 style: textTheme.bodyMedium!.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: textTheme.bodyMedium!.color!.withOpacity(0.8),
+                  color: textTheme.bodyMedium!.color!.withValues(alpha: 0.8),
                 ),
               ),
               const SizedBox(width: 4),
@@ -98,7 +98,7 @@ class EarthquakeEarlyHypoInfoWidget extends HookConsumerWidget {
             text: '発生時刻 ',
             style: textTheme.bodySmall?.copyWith(
               fontWeight: FontWeight.bold,
-              color: textTheme.bodyMedium!.color!.withOpacity(0.8),
+              color: textTheme.bodyMedium!.color!.withValues(alpha: 0.8),
             ),
           ),
           TextSpan(
@@ -121,7 +121,7 @@ class EarthquakeEarlyHypoInfoWidget extends HookConsumerWidget {
         Text(
           'M',
           style: textTheme.titleMedium?.copyWith(
-            color: textTheme.titleMedium?.color?.withOpacity(0.8),
+            color: textTheme.titleMedium?.color?.withValues(alpha: 0.8),
           ),
         ),
         Flexible(
@@ -147,7 +147,7 @@ class EarthquakeEarlyHypoInfoWidget extends HookConsumerWidget {
         Text(
           '深さ',
           style: textTheme.titleMedium!.copyWith(
-            color: textTheme.titleMedium!.color!.withOpacity(0.8),
+            color: textTheme.titleMedium!.color!.withValues(alpha: 0.8),
           ),
         ),
         if (item.depth != null && item.depth != 0) ...[
@@ -161,7 +161,7 @@ class EarthquakeEarlyHypoInfoWidget extends HookConsumerWidget {
           Text(
             'km',
             style: textTheme.titleMedium!.copyWith(
-              color: textTheme.titleMedium!.color!.withOpacity(0.8),
+              color: textTheme.titleMedium!.color!.withValues(alpha: 0.8),
             ),
           ),
         ] else
@@ -189,7 +189,7 @@ class EarthquakeEarlyHypoInfoWidget extends HookConsumerWidget {
           'M・深さ',
           style: textTheme.bodyMedium!.copyWith(
             fontWeight: FontWeight.bold,
-            color: textTheme.bodyMedium!.color!.withOpacity(0.8),
+            color: textTheme.bodyMedium!.color!.withValues(alpha: 0.8),
           ),
         ),
         Text(
@@ -241,7 +241,8 @@ class EarthquakeEarlyHypoInfoWidget extends HookConsumerWidget {
           width: 0,
         ),
       ),
-      color: (colorScheme?.background ?? Colors.transparent).withOpacity(0.3),
+      color: (colorScheme?.background ?? Colors.transparent)
+          .withValues(alpha: 0.3),
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 8,

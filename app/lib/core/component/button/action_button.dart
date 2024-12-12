@@ -107,7 +107,7 @@ class ActionButton extends StatelessWidget {
     final disabledWidget = DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(16)),
-        color: Colors.white.withOpacity(0.75),
+        color: Colors.white.withValues(alpha: 0.75),
         border: const Border.fromBorderSide(
           BorderSide(
             color: Colors.grey,

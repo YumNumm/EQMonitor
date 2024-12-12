@@ -1,5 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
+import 'dart:ui';
+
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -292,5 +294,13 @@ extension IntensityColorModelExt on IntensityColorModel {
 }
 
 Color colorFromJson(String color) => Color(int.parse(color, radix: 16));
-String colorToJson(Color color) =>
-    color.value.toRadixString(16).padLeft(8, '0');
+String colorToJson(Color color) {
+  final sRgb = color.withValues(
+    colorSpace: ColorSpace.sRGB,
+  );
+  final r = (sRgb.r * 255).toInt();
+  final g = (sRgb.g * 255).toInt();
+  final b = (sRgb.b * 255).toInt();
+  final hex = r << 16 | g << 8 | b;
+  return hex.toRadixString(16).padLeft(8, '0');
+}
