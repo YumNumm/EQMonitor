@@ -53,7 +53,7 @@ class EewTable extends StatelessWidget {
                   (eew) => DataRow(
                     color: WidgetStateProperty.all(
                       eew.isWarning ?? false
-                          ? colorScheme.errorContainer.withOpacity(0.7)
+                          ? colorScheme.errorContainer.withValues(alpha: 0.7)
                           : colorScheme.surfaceContainer,
                     ),
                     cells: _EewTableColumn.values

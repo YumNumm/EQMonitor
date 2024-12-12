@@ -128,7 +128,7 @@ class ShakeDetectionKmoniPointsMerged
                   );
                 },
               )
-              .whereNotNull()
+              .nonNulls
               .toList(),
         ),
       );

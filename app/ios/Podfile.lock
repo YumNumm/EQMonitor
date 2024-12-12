@@ -21,22 +21,22 @@ PODS:
   - Firebase/Messaging (11.4.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 11.4.0)
-  - firebase_analytics (11.3.5):
+  - firebase_analytics (11.3.6):
     - Firebase/Analytics (= 11.4.0)
     - firebase_core
     - Flutter
-  - firebase_app_installations (0.3.1-6):
+  - firebase_app_installations (0.3.1-7):
     - Firebase/Installations (= 11.4.0)
     - firebase_core
     - Flutter
-  - firebase_core (3.8.0):
+  - firebase_core (3.8.1):
     - Firebase/CoreOnly (= 11.4.0)
     - Flutter
-  - firebase_crashlytics (4.1.5):
+  - firebase_crashlytics (4.2.0):
     - Firebase/Crashlytics (= 11.4.0)
     - firebase_core
     - Flutter
-  - firebase_messaging (15.1.5):
+  - firebase_messaging (15.1.6):
     - Firebase/Messaging (= 11.4.0)
     - firebase_core
     - Flutter
@@ -192,12 +192,12 @@ PODS:
   - PromisesObjC (2.4.0)
   - PromisesSwift (2.4.0):
     - PromisesObjC (= 2.4.0)
-  - purchases_flutter (8.2.2):
+  - purchases_flutter (8.3.1):
     - Flutter
-    - PurchasesHybridCommon (= 13.9.0)
-  - PurchasesHybridCommon (13.9.0):
-    - RevenueCat (= 5.8.0)
-  - RevenueCat (5.8.0)
+    - PurchasesHybridCommon (= 13.12.1)
+  - PurchasesHybridCommon (13.12.1):
+    - RevenueCat (= 5.12.1)
+  - RevenueCat (5.12.1)
   - share_plus (0.0.1):
     - Flutter
   - shared_preference_app_group (1.0.0):
@@ -313,11 +313,11 @@ SPEC CHECKSUMS:
   background_task: a584ba6e093a60641252e89f7cd404ec92a30c8d
   device_info_plus: bf2e3232933866d73fe290f2942f2156cdd10342
   Firebase: cf1b19f21410b029b6786a54e9764a0cacad3c99
-  firebase_analytics: fa7e5b20c2b58042e3301f5112a473d365bd490c
-  firebase_app_installations: c3aa0a5feb5c04dfe6d14ae6a4789a4fe01ee94b
-  firebase_core: 9efc3ecf689cdbc90f13f4dc58108c83ea46b266
-  firebase_crashlytics: 72a8b504422ba8bb435a7a0c0a9341320cbcbe29
-  firebase_messaging: 6bf60adb4b33a848d135e16bc363fb4924f98fba
+  firebase_analytics: 2815af29d49c1a994652abd37a5b001a88bc7b75
+  firebase_app_installations: 1134fbec8eb64f89f1486dd213c93fefa0b0b167
+  firebase_core: 418aed674e9a0b8b6088aec16cde82a811f6261f
+  firebase_crashlytics: 757e252772ed3dd37c07638f9fcd4dceb5f101c8
+  firebase_messaging: 98619a0572d82cfb3668e78859ba9f1110e268c9
   FirebaseAnalytics: 3feef9ae8733c567866342a1000691baaa7cad49
   FirebaseCore: e0510f1523bc0eb21653cac00792e1e2bd6f1771
   FirebaseCoreExtension: f1bc67a4702931a7caa097d8e4ac0a1b0d16720e
@@ -344,9 +344,9 @@ SPEC CHECKSUMS:
   permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
-  purchases_flutter: 279ea4decfaaa493fe32dcc88efb74c30d13f98c
-  PurchasesHybridCommon: 2e684a22e4aaf33c5fc10fd9e2ca2e27e6b7abff
-  RevenueCat: 4cd1daad3a57d2b4015ed2b4aef0a0f24ffce0a1
+  purchases_flutter: 613f27a4b8c3a34cd754936cdb93b6fc9e2ee0ed
+  PurchasesHybridCommon: 6c07c9abb12b96413ee583c017957f52f5f4ceaa
+  RevenueCat: c6a6faaaab1ca8903416b36a51470cca0ea6b5b5
   share_plus: 8b6f8b3447e494cca5317c8c3073de39b3600d1f
   shared_preference_app_group: 46aee3873e1da581d4904bece9876596d7f66725
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78

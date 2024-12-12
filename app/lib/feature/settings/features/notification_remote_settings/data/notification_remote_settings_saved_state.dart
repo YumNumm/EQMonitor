@@ -78,7 +78,7 @@ class NotificationRemoteSettingsSavedStateNotifier
                         );
                       },
                     )
-                    .whereNotNull()
+                    .nonNulls
                     .toList() ??
                 [],
           ),
@@ -125,7 +125,7 @@ class NotificationRemoteSettingsSavedStateNotifier
                         );
                       },
                     )
-                    .whereNotNull()
+                    .nonNulls
                     .toList() ??
                 [],
           ),
@@ -163,7 +163,7 @@ class NotificationRemoteSettingsSavedStateNotifier
                 );
               },
             )
-            .whereNotNull()
+            .nonNulls
             .toList(),
       ),
       eew: NotificationRemoteSettingsEew(
@@ -186,7 +186,7 @@ class NotificationRemoteSettingsSavedStateNotifier
                 );
               },
             )
-            .whereNotNull()
+            .nonNulls
             .toList(),
       ),
     );

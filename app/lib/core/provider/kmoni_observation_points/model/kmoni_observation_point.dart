@@ -1,3 +1,4 @@
+import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kyoshin_observation_point_types/kyoshin_observation_point.pb.dart';
@@ -18,7 +19,7 @@ class AnalyzedKmoniObservationPoint with _$AnalyzedKmoniObservationPoint {
 }
 
 String? colorToJson(Color? color) {
-  return color?.value.toRadixString(16);
+  return color?.sRgbValue.toRadixString(16);
 }
 
 Color? colorFromJson(String? color) {

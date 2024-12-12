@@ -21,7 +21,7 @@ class KmoniMaintenanceWidget extends ConsumerWidget {
         KmoniMaintenanceMessageType.non => const SizedBox.shrink(),
         _ => BorderedContainer(
             accentColor: data.type == KmoniMaintenanceMessageType.highLight
-                ? Colors.orangeAccent.withOpacity(0.2)
+                ? Colors.orangeAccent.withValues(alpha: 0.2)
                 : null,
             elevation: 1,
             margin: const EdgeInsets.symmetric(
