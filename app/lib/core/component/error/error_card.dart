@@ -102,6 +102,7 @@ class ErrorCard extends StatelessWidget {
                   style: FilledButton.styleFrom(
                     backgroundColor: colorScheme.error,
                     foregroundColor: colorScheme.onError,
+                    iconColor: colorScheme.onError,
                   ),
                 ),
               ],
