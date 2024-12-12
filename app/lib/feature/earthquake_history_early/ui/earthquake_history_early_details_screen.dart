@@ -133,7 +133,7 @@ class EarthquakeHistoryEarlyDetailsScreen extends HookConsumerWidget {
                       shape: WidgetStatePropertyAll(
                         RoundedRectangleBorder(
                           side: BorderSide(
-                            color: colorScheme.primary.withOpacity(0.2),
+                            color: colorScheme.primary.withValues(alpha: 0.2),
                           ),
                           borderRadius: BorderRadius.circular(128),
                         ),

@@ -258,7 +258,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
                     )
                     ?.name,
               )
-              .whereNotNull()
+              .nonNulls
               .toList(),
         ),
     ];
@@ -337,7 +337,7 @@ Future<EarthquakeV1Extended> earthquakeV1Extended(
               )
               ?.name,
         )
-        .whereNotNull()
+        .nonNulls
         .toList(),
   );
 }

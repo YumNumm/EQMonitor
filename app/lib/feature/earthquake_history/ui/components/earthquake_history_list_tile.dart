@@ -126,7 +126,8 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
         ),
     ];
     return ListTile(
-      tileColor: showBackgroundColor ? intensityColor?.withOpacity(0.4) : null,
+      tileColor:
+          showBackgroundColor ? intensityColor?.withValues(alpha: 0.4) : null,
       onTap: onTap,
       title: Text(
         title,

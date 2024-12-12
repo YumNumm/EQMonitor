@@ -133,7 +133,7 @@ class EewWidget extends ConsumerWidget {
           '${eew.isLastInfo ? "(最終)" : ""}',
           style: textTheme.titleMedium!.copyWith(
             fontWeight: FontWeight.bold,
-            color: textTheme.titleMedium!.color!.withOpacity(0.8),
+            color: textTheme.titleMedium!.color!.withValues(alpha: 0.8),
           ),
         ),
       ],
@@ -158,7 +158,7 @@ class EewWidget extends ConsumerWidget {
           (eew.isPlum ?? false || eew.isLevelEew) ? '検知観測点' : '震源地',
           style: textTheme.bodyMedium!.copyWith(
             fontWeight: FontWeight.bold,
-            color: textTheme.bodyMedium!.color!.withOpacity(0.8),
+            color: textTheme.bodyMedium!.color!.withValues(alpha: 0.8),
           ),
         ),
         const SizedBox(width: 4),
@@ -196,7 +196,7 @@ class EewWidget extends ConsumerWidget {
         Text(
           'M',
           style: textTheme.titleMedium!.copyWith(
-            color: textTheme.titleMedium!.color!.withOpacity(0.8),
+            color: textTheme.titleMedium!.color!.withValues(alpha: 0.8),
           ),
         ),
         if (eew.magnitude != null) ...[
@@ -242,7 +242,7 @@ class EewWidget extends ConsumerWidget {
         Text(
           '深さ',
           style: textTheme.titleMedium!.copyWith(
-            color: textTheme.titleMedium!.color!.withOpacity(0.8),
+            color: textTheme.titleMedium!.color!.withValues(alpha: 0.8),
           ),
         ),
         if (eew.depth != null) ...[
@@ -255,7 +255,7 @@ class EewWidget extends ConsumerWidget {
           Text(
             'km',
             style: textTheme.titleMedium!.copyWith(
-              color: textTheme.titleMedium!.color!.withOpacity(0.8),
+              color: textTheme.titleMedium!.color!.withValues(alpha: 0.8),
             ),
           ),
         ] else
@@ -319,7 +319,7 @@ class EewWidget extends ConsumerWidget {
               ),
             ),
             Divider(
-              color: colorTheme.onSurface.withOpacity(0.6),
+              color: colorTheme.onSurface.withValues(alpha: 0.6),
             ),
           ]
         : null;
@@ -332,7 +332,7 @@ class EewWidget extends ConsumerWidget {
             bottom: 8,
           ),
       padding: EdgeInsets.zero,
-      accentColor: backgroundColor.withOpacity(0.3),
+      accentColor: backgroundColor.withValues(alpha: 0.3),
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 8,
@@ -398,7 +398,7 @@ class EewWidget extends ConsumerWidget {
                   fontSize: 100,
                   fontWeight: FontWeight.w900,
                   fontFamily: monoFont,
-                  color: textTheme.bodyMedium!.color!.withOpacity(0.3),
+                  color: textTheme.bodyMedium!.color!.withValues(alpha: 0.3),
                 ),
               ),
             ),
@@ -412,7 +412,7 @@ class EewWidget extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 100,
                   fontWeight: FontWeight.w900,
-                  color: textTheme.bodyMedium!.color!.withOpacity(0.4),
+                  color: textTheme.bodyMedium!.color!.withValues(alpha: 0.4),
                 ),
               ),
             ),

@@ -220,7 +220,7 @@ class _MapDebugWidget extends HookConsumerWidget {
       child: InkWell(
         onTap: () => isExpanded.value = false,
         child: Card(
-          color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
+          color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.8),
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Column(

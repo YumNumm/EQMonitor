@@ -113,7 +113,7 @@ class SettingsScreen extends ConsumerWidget {
             child: Text(
               'Powered by Flutter',
               style: textTheme.bodySmall!.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.8),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
               ),
             ),
           ),
@@ -122,7 +122,7 @@ class SettingsScreen extends ConsumerWidget {
               child: Text(
                 'Debug Mode',
                 style: textTheme.bodySmall!.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.8),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                 ),
               ),
             ),

@@ -45,8 +45,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
       return Scaffold(
         appBar: AppBar(),
         body: switch (detailsState) {
-          AsyncError(:final error) when !detailsState.isLoading =>
-            ErrorCard(
+          AsyncError(:final error) when !detailsState.isLoading => ErrorCard(
               error: error,
               onReload: () async => ref.refresh(
                 earthquakeHistoryDetailsNotifierProvider(eventId),
@@ -195,7 +194,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                   shape: MaterialStatePropertyAll(
                     RoundedRectangleBorder(
                       side: BorderSide(
-                        color: colorScheme.primary.withOpacity(0.2),
+                        color: colorScheme.primary.withValues(alpha: 0.2),
                       ),
                       borderRadius: BorderRadius.circular(128),
                     ),
