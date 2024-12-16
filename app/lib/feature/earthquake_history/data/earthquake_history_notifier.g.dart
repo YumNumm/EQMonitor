@@ -9,7 +9,7 @@ part of 'earthquake_history_notifier.dart';
 // **************************************************************************
 
 String _$earthquakeV1ExtendedHash() =>
-    r'6059e33aa04e55267335423e23fb56b95f7c2238';
+    r'067c099ee066ba7229a2fe4eb7d7d625b89bd65b';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -166,7 +166,7 @@ class _EarthquakeV1ExtendedProviderElement
 }
 
 String _$earthquakeHistoryNotifierHash() =>
-    r'7c78143baf759149f9630d3a62d706d4b0239041';
+    r'fa465b7f21b189b63e4f3c8281f9062044a6c764';
 
 abstract class _$EarthquakeHistoryNotifier
     extends BuildlessAutoDisposeAsyncNotifier<EarthquakeHistoryNotifierState> {
