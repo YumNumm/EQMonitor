@@ -41,13 +41,13 @@ jobs:
 
       - name: Set up ruby
         # https://github.com/ruby/setup-ruby/tree/v1/
-        uses: ruby/setup-ruby@a2bbe5b1b236842c1cb7dd11e8e3b51e0a616acc
+        uses: ruby/setup-ruby@540484a3c0f308b08619664ec40bf6c371d172c3
         with:
           bundler-cache: true
           working-directory: app/android
 
       # https://github.com/actions/setup-java/tree/v4/
-      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b
+      - uses: actions/setup-java@7a6d8a8234af8eb26422e24e3006232cccaa061b
         with:
           distribution: "oracle"
           java-version: "17"
@@ -75,7 +75,7 @@ jobs:
         run: bundle exec fastlane build
 
       - name: Upload artifact aab
-        uses: actions/upload-artifact@v4.4.3
+        uses: actions/upload-artifact@v4.5.0
         with:
           path: app/build/app/outputs/bundle/release/app-release.aab
           name: release-aab
@@ -106,7 +106,7 @@ jobs:
 
       - name: Set up ruby
         # https://github.com/ruby/setup-ruby/tree/v1/
-        uses: ruby/setup-ruby@a2bbe5b1b236842c1cb7dd11e8e3b51e0a616acc
+        uses: ruby/setup-ruby@540484a3c0f308b08619664ec40bf6c371d172c3
         with:
           bundler-cache: true
           working-directory: app/android
