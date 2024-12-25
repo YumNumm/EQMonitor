@@ -48,7 +48,7 @@ final shakeDetectionProvider =
 
 typedef _$ShakeDetection = AsyncNotifier<List<ShakeDetectionEvent>>;
 String _$shakeDetectionKmoniPointsMergedHash() =>
-    r'1961cac434b99fccb79150d988f1723f8bcec5fa';
+    r'a8a638bd1ec8f32ddf7250c8ce4d4bb52759d19a';
 
 /// See also [ShakeDetectionKmoniPointsMerged].
 @ProviderFor(ShakeDetectionKmoniPointsMerged)
