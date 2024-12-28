@@ -80,7 +80,7 @@ final websocketStatusProvider =
 );
 
 typedef _$WebsocketStatus = Notifier<ConnectionState>;
-String _$websocketMessagesHash() => r'96ee774ba01aef655b2ceec0d1af8b49e2878935';
+String _$websocketMessagesHash() => r'd7c1cce655b291f9015bfea3981749ddcad28d52';
 
 /// See also [WebsocketMessages].
 @ProviderFor(WebsocketMessages)
