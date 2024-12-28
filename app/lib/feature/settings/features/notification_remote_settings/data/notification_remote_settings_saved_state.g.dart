@@ -29,7 +29,7 @@ final notificationRemoteSettingsHasChangedFromSavedStateProvider =
 typedef NotificationRemoteSettingsHasChangedFromSavedStateRef
     = AutoDisposeProviderRef<bool>;
 String _$notificationRemoteSettingsSavedStateNotifierHash() =>
-    r'fd1109b2ec2e36e97ed51490d27e29d6972f24d0';
+    r'025f0ceee184a458195f2fc5ed2a87e8c80efea4';
 
 /// See also [NotificationRemoteSettingsSavedStateNotifier].
 @ProviderFor(NotificationRemoteSettingsSavedStateNotifier)

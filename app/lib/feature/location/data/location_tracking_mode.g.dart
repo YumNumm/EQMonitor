@@ -9,7 +9,7 @@ part of 'location_tracking_mode.dart';
 // **************************************************************************
 
 String _$locationTrackingModeHash() =>
-    r'053df6c1533f7a9a1feda9dee2fe2fffced8b5b3';
+    r'8ad1dc68a71bc2c4324e184080a68ee6be3aacae';
 
 /// See also [LocationTrackingMode].
 @ProviderFor(LocationTrackingMode)
