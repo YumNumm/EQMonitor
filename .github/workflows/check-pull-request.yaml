@@ -2,9 +2,10 @@ name: Check PR
 
 on:
   pull_request:
-    types: [opened, ready_for_review, synchronize]
-    branches-ignore:
-      - "auto-format/*" # このActionで作成されたPRは対象外 (無限ループを防ぐため)
+    types:
+      - opened
+      - ready_for_review
+      - synchronize
 
 jobs:
   pre-check:
