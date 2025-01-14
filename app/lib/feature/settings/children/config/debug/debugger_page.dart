@@ -3,6 +3,7 @@ import 'package:eqmonitor/core/provider/dio_provider.dart';
 import 'package:eqmonitor/core/provider/notification_token.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/core/util/env.dart';
 import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
 import 'package:eqmonitor/feature/home/features/eew_settings/eew_settings_notifier.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -72,6 +73,11 @@ class _DebugWidget extends ConsumerWidget {
                   .read(eewSettingsNotifierProvider.notifier)
                   .setShowCalculatedCityIntensity(value: value),
               title: const Text('距離減衰式による予想震度(City)'),
+            ),
+            ListTile(
+              title: const Text('Flavor'),
+              leading: const Icon(Icons.flag),
+              subtitle: Text(Env.flavor.name),
             ),
             ListTile(
               title: const Text('ログ'),
