@@ -123,6 +123,7 @@ jobs:
           echo "${{ secrets.DOTENV }}" | base64 -d > environment.tar.gz
           tar -xzf environment.tar.gz
           rm environment.tar.gz
+          ls -l environment/
 
       - name: Build iOS
         working-directory: app
@@ -130,7 +131,10 @@ jobs:
           BUILD_NUMBER: ${{ steps.fetch-latest-build-number.outputs.build_number }}
         run: |
           echo "BUILD_NUMBER=${BUILD_NUMBER}"
-          flutter build ipa --no-codesign --build-number=${BUILD_NUMBER} --dart-define-from-file=environment/.env.prod
+          flutter build ipa \
+            --no-codesign \
+            --build-number=${BUILD_NUMBER} \
+            --dart-define-from-file=../environment/.env.prod
 
       - name: Extract App Store Connect API Key
         working-directory: app/ios
@@ -190,7 +194,8 @@ jobs:
       - name: Extract App Store Connect API Key
         run: |
           mkdir ~/.private_keys
-          echo "${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}" | base64 -d > ~/.private_keys/AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8
+          echo "${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}" | base64 -d \
+            > ~/.private_keys/AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8
           ls -l ~/.private_keys/AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8
 
       - name: Upload Ipa to App Store Connect
@@ -221,10 +226,13 @@ jobs:
           echo "${{ secrets.DOTENV }}" | base64 -d > environment.tar.gz
           tar -xzf environment.tar.gz
           rm environment.tar.gz
+          ls -l environment/
 
       - name: Build Android
         working-directory: app
-        run: flutter build appbundle --release --dart-define-from-file=environment/.env.prod
+        run: flutter build appbundle \
+          --release \
+          --dart-define-from-file=../environment/.env.prod
 
       - name: Upload apk as artifact
         uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
