@@ -144,12 +144,13 @@ class __$$JmaXmlTelegramReplayDataImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$JmaXmlTelegramReplayDataImpl implements _JmaXmlTelegramReplayData {
+class _$JmaXmlTelegramReplayDataImpl extends _JmaXmlTelegramReplayData {
   const _$JmaXmlTelegramReplayDataImpl(
       {required this.type,
       required this.time,
       required this.title,
-      required this.telegram});
+      required this.telegram})
+      : super._();
 
   factory _$JmaXmlTelegramReplayDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$JmaXmlTelegramReplayDataImplFromJson(json);
@@ -196,12 +197,13 @@ class _$JmaXmlTelegramReplayDataImpl implements _JmaXmlTelegramReplayData {
   }
 }
 
-abstract class _JmaXmlTelegramReplayData implements JmaXmlTelegramReplayData {
+abstract class _JmaXmlTelegramReplayData extends JmaXmlTelegramReplayData {
   const factory _JmaXmlTelegramReplayData(
       {required final ReplayDataType type,
       required final DateTime time,
       required final String title,
       required final String telegram}) = _$JmaXmlTelegramReplayDataImpl;
+  const _JmaXmlTelegramReplayData._() : super._();
 
   factory _JmaXmlTelegramReplayData.fromJson(Map<String, dynamic> json) =
       _$JmaXmlTelegramReplayDataImpl.fromJson;
@@ -361,14 +363,14 @@ class __$$JmaBinaryTelegramReplayDataImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$JmaBinaryTelegramReplayDataImpl
-    implements _JmaBinaryTelegramReplayData {
+class _$JmaBinaryTelegramReplayDataImpl extends _JmaBinaryTelegramReplayData {
   const _$JmaBinaryTelegramReplayDataImpl(
       {required this.type,
       required this.time,
       required this.telegramType,
       required final List<int> data})
-      : _data = data;
+      : _data = data,
+        super._();
 
   factory _$JmaBinaryTelegramReplayDataImpl.fromJson(
           Map<String, dynamic> json) =>
@@ -423,12 +425,13 @@ class _$JmaBinaryTelegramReplayDataImpl
 }
 
 abstract class _JmaBinaryTelegramReplayData
-    implements JmaBinaryTelegramReplayData {
+    extends JmaBinaryTelegramReplayData {
   const factory _JmaBinaryTelegramReplayData(
       {required final ReplayDataType type,
       required final DateTime time,
       required final String telegramType,
       required final List<int> data}) = _$JmaBinaryTelegramReplayDataImpl;
+  const _JmaBinaryTelegramReplayData._() : super._();
 
   factory _JmaBinaryTelegramReplayData.fromJson(Map<String, dynamic> json) =
       _$JmaBinaryTelegramReplayDataImpl.fromJson;
@@ -572,12 +575,13 @@ class __$$KyoshinMonitorImageReplayDataImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$KyoshinMonitorImageReplayDataImpl
-    implements _KyoshinMonitorImageReplayData {
+    extends _KyoshinMonitorImageReplayData {
   const _$KyoshinMonitorImageReplayDataImpl(
       {required this.type,
       required this.time,
       required final Map<ImageType, List<int>> images})
-      : _images = images;
+      : _images = images,
+        super._();
 
   factory _$KyoshinMonitorImageReplayDataImpl.fromJson(
           Map<String, dynamic> json) =>
@@ -629,12 +633,13 @@ class _$KyoshinMonitorImageReplayDataImpl
 }
 
 abstract class _KyoshinMonitorImageReplayData
-    implements KyoshinMonitorImageReplayData {
+    extends KyoshinMonitorImageReplayData {
   const factory _KyoshinMonitorImageReplayData(
           {required final ReplayDataType type,
           required final DateTime time,
           required final Map<ImageType, List<int>> images}) =
       _$KyoshinMonitorImageReplayDataImpl;
+  const _KyoshinMonitorImageReplayData._() : super._();
 
   factory _KyoshinMonitorImageReplayData.fromJson(Map<String, dynamic> json) =
       _$KyoshinMonitorImageReplayDataImpl.fromJson;
@@ -775,9 +780,10 @@ class __$$KyoshinMonitorEewJsonReplayDataImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$KyoshinMonitorEewJsonReplayDataImpl
-    implements _KyoshinMonitorEewJsonReplayData {
+    extends _KyoshinMonitorEewJsonReplayData {
   const _$KyoshinMonitorEewJsonReplayDataImpl(
-      {required this.type, required this.time, required this.json});
+      {required this.type, required this.time, required this.json})
+      : super._();
 
   factory _$KyoshinMonitorEewJsonReplayDataImpl.fromJson(
           Map<String, dynamic> json) =>
@@ -823,11 +829,12 @@ class _$KyoshinMonitorEewJsonReplayDataImpl
 }
 
 abstract class _KyoshinMonitorEewJsonReplayData
-    implements KyoshinMonitorEewJsonReplayData {
+    extends KyoshinMonitorEewJsonReplayData {
   const factory _KyoshinMonitorEewJsonReplayData(
       {required final ReplayDataType type,
       required final DateTime time,
       required final String json}) = _$KyoshinMonitorEewJsonReplayDataImpl;
+  const _KyoshinMonitorEewJsonReplayData._() : super._();
 
   factory _KyoshinMonitorEewJsonReplayData.fromJson(Map<String, dynamic> json) =
       _$KyoshinMonitorEewJsonReplayDataImpl.fromJson;
@@ -973,12 +980,13 @@ class __$$KeviJsonReplayDataImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$KeviJsonReplayDataImpl implements _KeviJsonReplayData {
+class _$KeviJsonReplayDataImpl extends _KeviJsonReplayData {
   const _$KeviJsonReplayDataImpl(
       {required this.type,
       required this.time,
       required this.jsonType,
-      required this.json});
+      required this.json})
+      : super._();
 
   factory _$KeviJsonReplayDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$KeviJsonReplayDataImplFromJson(json);
@@ -1025,12 +1033,13 @@ class _$KeviJsonReplayDataImpl implements _KeviJsonReplayData {
   }
 }
 
-abstract class _KeviJsonReplayData implements KeviJsonReplayData {
+abstract class _KeviJsonReplayData extends KeviJsonReplayData {
   const factory _KeviJsonReplayData(
       {required final ReplayDataType type,
       required final DateTime time,
       required final JsonType jsonType,
       required final String json}) = _$KeviJsonReplayDataImpl;
+  const _KeviJsonReplayData._() : super._();
 
   factory _KeviJsonReplayData.fromJson(Map<String, dynamic> json) =
       _$KeviJsonReplayDataImpl.fromJson;
@@ -1168,9 +1177,10 @@ class __$$SnpLogEntryReplayDataImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$SnpLogEntryReplayDataImpl implements _SnpLogEntryReplayData {
+class _$SnpLogEntryReplayDataImpl extends _SnpLogEntryReplayData {
   const _$SnpLogEntryReplayDataImpl(
-      {required this.type, required this.time, required this.message});
+      {required this.type, required this.time, required this.message})
+      : super._();
 
   factory _$SnpLogEntryReplayDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$SnpLogEntryReplayDataImplFromJson(json);
@@ -1213,11 +1223,12 @@ class _$SnpLogEntryReplayDataImpl implements _SnpLogEntryReplayData {
   }
 }
 
-abstract class _SnpLogEntryReplayData implements SnpLogEntryReplayData {
+abstract class _SnpLogEntryReplayData extends SnpLogEntryReplayData {
   const factory _SnpLogEntryReplayData(
       {required final ReplayDataType type,
       required final DateTime time,
       required final String message}) = _$SnpLogEntryReplayDataImpl;
+  const _SnpLogEntryReplayData._() : super._();
 
   factory _SnpLogEntryReplayData.fromJson(Map<String, dynamic> json) =
       _$SnpLogEntryReplayDataImpl.fromJson;
@@ -1349,9 +1360,10 @@ class __$$AxisJsonReplayDataImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$AxisJsonReplayDataImpl implements _AxisJsonReplayData {
+class _$AxisJsonReplayDataImpl extends _AxisJsonReplayData {
   const _$AxisJsonReplayDataImpl(
-      {required this.type, required this.time, required this.json});
+      {required this.type, required this.time, required this.json})
+      : super._();
 
   factory _$AxisJsonReplayDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$AxisJsonReplayDataImplFromJson(json);
@@ -1394,11 +1406,12 @@ class _$AxisJsonReplayDataImpl implements _AxisJsonReplayData {
   }
 }
 
-abstract class _AxisJsonReplayData implements AxisJsonReplayData {
+abstract class _AxisJsonReplayData extends AxisJsonReplayData {
   const factory _AxisJsonReplayData(
       {required final ReplayDataType type,
       required final DateTime time,
       required final String json}) = _$AxisJsonReplayDataImpl;
+  const _AxisJsonReplayData._() : super._();
 
   factory _AxisJsonReplayData.fromJson(Map<String, dynamic> json) =
       _$AxisJsonReplayDataImpl.fromJson;

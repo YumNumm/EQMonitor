@@ -98,5 +98,5 @@ class ReplayFile {
   final List<ReplayData> data;
 
   @override
-  String toString() => 'ReplayFile(header: $header, data: $data)';
+  String toString() => 'ReplayFile(header: $header, data: ${data.join(', ')})';
 }
