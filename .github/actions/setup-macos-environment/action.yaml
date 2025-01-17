@@ -1,0 +1,18 @@
+name: "Setup macOS Environment"
+description: "Setup macOS environment for Flutter to build iOS/macOS apps"
+
+runs:
+  using: "composite"
+  steps:
+      # https://github.com/maxim-lobanov/setup-xcode
+      - uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
+        with:
+          xcode-version: 16.1
+
+      - name: Show Xcode version
+        shell: bash
+        run: xcodebuild -version
+
+      - name: Install brew dependencies
+        shell: bash
+        run: brew bundle install

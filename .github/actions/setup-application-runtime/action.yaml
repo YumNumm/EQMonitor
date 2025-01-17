@@ -4,22 +4,22 @@ description: "Setup application runtime for Flutter"
 runs:
   using: "composite"
   steps:
-    # https://github.com/kuhnroyal/flutter-fvm-config-action/tree/v2.0
+    # https://github.com/kuhnroyal/flutter-fvm-config-action
     - name: Fetch flutter config
-      uses: kuhnroyal/flutter-fvm-config-action@34c3905bc939a4ff9d9cb07d5a977493fa73b2aa
+      uses: kuhnroyal/flutter-fvm-config-action@60c14af316b09f8819202d845391260cf3b979c9 # v3.0
       id: fvm-config-action
 
-    # https://github.com/subosito/flutter-action/tree/v2.16.0
+    # https://github.com/subosito/flutter-action
     - name: Setup flutter
-      uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1
+      uses: subosito/flutter-action@f2c4f6686ca8e8d6e6d0f28410eeef506ed66aff # v2.18.0
       with:
         flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
         channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
         cache: true
 
-    # https://github.com/actions/cache/tree/v4
+    # https://github.com/actions/cache
     - name: Cache pubspec dependencies
-      uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+      uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4.2.0
       with:
         path: |
           ~/.pub-cache
@@ -28,10 +28,13 @@ runs:
           pubspec-
 
     - name: Setup melos
+      shell: bash
       run: |
         mkdir -p .fvm
         ln -s $FLUTTER_ROOT .fvm/flutter_sdk
         MELOS_VERSION=$(cat pubspec.lock | yq ".packages.melos.version" -r)
         dart pub global activate melos $MELOS_VERSION
-        melos bootstrap
+
+    - name: Resolve dependencies
       shell: bash
+      run: dart run melos bootstrap

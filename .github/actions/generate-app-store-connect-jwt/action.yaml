@@ -1,0 +1,29 @@
+name: Generate App Store Connect JWT
+description: Generate App Store Connect JWT
+
+inputs:
+  app_store_connect_api_key_base64:
+    required: true
+    description: App Store Connect API Key Base64
+
+outputs:
+  jwt:
+    description: App Store Connect JWT
+    value: ${{ steps.asc-token.outputs.jwt }}
+
+runs:
+  using: "composite"
+  steps:
+    # https://github.com/oven-sh/setup-bun
+    - uses: oven-sh/setup-bun@4bc047ad259df6fc24a6c9b0f9a0cb08cf17fbe5 # v2.0.1
+
+    - name: Extract App Store Connect API Key
+      shell: bash
+      run: |
+        echo '${{ inputs.app_store_connect_api_key_base64 }}' | base64 -d > AuthKey.p8
+
+    - name: Generate App Store Connect API JWT
+      shell: bash
+      run: |
+        jwt=$(bun run scripts/app-store-connect-api-key.ts)
+        echo "jwt=$jwt" >> $GITHUB_OUTPUT
