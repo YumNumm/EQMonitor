@@ -10,7 +10,15 @@ environment:
 
 resolution: workspace
 
+dependencies:
+  msgpack_dart: ^1.0.1
+  freezed_annotation: ^2.4.4
+  json_annotation: ^4.9.0
+
 dev_dependencies:
   altive_lints: ^1.14.1
+  build_runner: ^2.4.14
   eqmonitor_lints:
     path: ../eqmonitor_lints
+  freezed: ^2.5.7
+  json_serializable: ^6.9.0
