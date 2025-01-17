@@ -1,0 +1,16 @@
+name: earthquake_replay
+description: A starting point for Dart libraries or applications.
+version: 1.0.0
+
+publish_to: "none"
+
+environment:
+  sdk: ^3.6.1
+  flutter: ^3.27.2
+
+resolution: workspace
+
+dev_dependencies:
+  altive_lints: ^1.14.1
+  eqmonitor_lints:
+    path: ../eqmonitor_lints
