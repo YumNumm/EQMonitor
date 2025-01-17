@@ -21,8 +21,8 @@ class ReplayFileHeader with _$ReplayFileHeader {
     return ReplayFileHeader(
       version: data[0] as int,
       softwareName: data[1] as String,
-      startTime: DateTime.fromMillisecondsSinceEpoch(data[2] as int),
-      endTime: DateTime.fromMillisecondsSinceEpoch(data[3] as int),
+      startTime: data[2] as DateTime,
+      endTime: data[3] as DateTime,
       compressionMode: ReplayFileCompressionMode.values.firstWhere(
         (e) => e.value == compressionModeValue,
       ),
@@ -34,7 +34,7 @@ enum ReplayFileCompressionMode {
   none(0),
   messagePackCSharpLz4BlockArray(1),
   gzip(2),
-  brotil(3),
+  brotli(3),
   ;
 
   const ReplayFileCompressionMode(this.value);
