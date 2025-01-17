@@ -53,6 +53,20 @@ for f in $(find packages/$PACKAGE_NAME -type f -name "*_base*"); do
   mv "$f" "${f/_base/$PACKAGE_NAME}"
 done
 
+# Add the new package to workspace in pubspec.yaml before the comment line
+info "Adding package to workspace in pubspec.yaml..."
+python3 -c "
+import sys
+with open('pubspec.yaml', 'r') as f:
+    lines = f.readlines()
+for i, line in enumerate(lines):
+    if '<ADD_PACKAGE_HERE>' in line:
+        lines.insert(i, '    - packages/$PACKAGE_NAME\n')
+        break
+with open('pubspec.yaml', 'w') as f:
+    f.writelines(lines)
+"
+
 info "Executing bootstrap script for $PACKAGE_NAME ... Please wait..."
 
 melos bootstrap &>/dev/null
