@@ -1,6 +1,6 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
-import 'package:eqmonitor/env/env.dart';
+import 'package:eqmonitor/core/util/env.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -9,7 +9,7 @@ class WebSocketApiEndpointSelectorPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final defaultUrl = Env.wsApiUrl;
+    const defaultUrl = Env.wsApiUrl;
     final developUrl = defaultUrl.replaceAll('api.', 'dev.api.');
     final state = ref.watch(telegramUrlProvider.select((v) => v.wsApiUrl));
     return Scaffold(
@@ -23,7 +23,7 @@ class WebSocketApiEndpointSelectorPage extends ConsumerWidget {
               children: [
                 RadioListTile<String>.adaptive(
                   title: const Text('[WebSocket API] Production Endpoint'),
-                  subtitle: Text(defaultUrl),
+                  subtitle: const Text(defaultUrl),
                   value: defaultUrl,
                   groupValue: state,
                   onChanged: (value) async => ref
