@@ -11,9 +11,13 @@ environment:
 resolution: workspace
 
 dependencies:
-  msgpack_dart: ^1.0.1
+  collection: ^1.19.0
   freezed_annotation: ^2.4.4
   json_annotation: ^4.9.0
+  msgpack2:
+    git:
+      url: https://github.com/YumNumm/msgpack2.git
+      ref: master
 
 dev_dependencies:
   altive_lints: ^1.14.1
