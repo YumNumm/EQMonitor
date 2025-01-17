@@ -38,23 +38,25 @@ sealed class ReplayData {
 class JmaXmlTelegramReplayData
     with _$JmaXmlTelegramReplayData
     implements ReplayData {
-  const factory JmaXmlTelegramReplayData._({
+  const factory JmaXmlTelegramReplayData({
     required ReplayDataType type,
     required DateTime time,
     required String title,
     required String telegram,
   }) = _JmaXmlTelegramReplayData;
+  const JmaXmlTelegramReplayData._();
 
   factory JmaXmlTelegramReplayData.fromJson(Map<String, dynamic> json) =>
       _$JmaXmlTelegramReplayDataFromJson(json);
 
-  factory JmaXmlTelegramReplayData.fromMsgPack(List<dynamic> data) =>
-      JmaXmlTelegramReplayData._(
-        type: ReplayDataType.jmaXmlTelegram,
-        time: data[0] as DateTime,
-        title: data[1] as String,
-        telegram: data[2] as String,
-      );
+  factory JmaXmlTelegramReplayData.fromMsgPack(List<dynamic> data) {
+    return JmaXmlTelegramReplayData(
+      type: ReplayDataType.jmaXmlTelegram,
+      time: data[0] as DateTime,
+      title: data[1] as String,
+      telegram: data[2] as String,
+    );
+  }
 
   @override
   String toString() =>
@@ -65,23 +67,25 @@ class JmaXmlTelegramReplayData
 class JmaBinaryTelegramReplayData
     with _$JmaBinaryTelegramReplayData
     implements ReplayData {
-  const factory JmaBinaryTelegramReplayData._({
+  const factory JmaBinaryTelegramReplayData({
     required ReplayDataType type,
     required DateTime time,
     required String telegramType,
     required List<int> data,
   }) = _JmaBinaryTelegramReplayData;
+  const JmaBinaryTelegramReplayData._();
 
   factory JmaBinaryTelegramReplayData.fromJson(Map<String, dynamic> json) =>
       _$JmaBinaryTelegramReplayDataFromJson(json);
 
-  factory JmaBinaryTelegramReplayData.fromMsgPack(List<dynamic> data) =>
-      JmaBinaryTelegramReplayData._(
-        type: ReplayDataType.jmaBinaryTelegram,
-        time: data[0] as DateTime,
-        telegramType: data[1] as String,
-        data: (data[2] as List<dynamic>).cast<int>(),
-      );
+  factory JmaBinaryTelegramReplayData.fromMsgPack(List<dynamic> data) {
+    return JmaBinaryTelegramReplayData(
+      type: ReplayDataType.jmaBinaryTelegram,
+      time: data[0] as DateTime,
+      telegramType: data[1] as String,
+      data: (data[2] as List<dynamic>).cast<int>(),
+    );
+  }
 
   @override
   String toString() =>
@@ -92,17 +96,18 @@ class JmaBinaryTelegramReplayData
 class KyoshinMonitorImageReplayData
     with _$KyoshinMonitorImageReplayData
     implements ReplayData {
-  const factory KyoshinMonitorImageReplayData._({
+  const factory KyoshinMonitorImageReplayData({
     required ReplayDataType type,
     required DateTime time,
     required Map<ImageType, List<int>> images,
   }) = _KyoshinMonitorImageReplayData;
+  const KyoshinMonitorImageReplayData._();
 
   factory KyoshinMonitorImageReplayData.fromJson(Map<String, dynamic> json) =>
       _$KyoshinMonitorImageReplayDataFromJson(json);
 
   factory KyoshinMonitorImageReplayData.fromMsgPack(List<dynamic> data) =>
-      KyoshinMonitorImageReplayData._(
+      KyoshinMonitorImageReplayData(
         type: ReplayDataType.kyoshinMonitorImage,
         time: data[0] as DateTime,
         images: (data[1] as Map<dynamic, dynamic>).map(
@@ -122,17 +127,18 @@ class KyoshinMonitorImageReplayData
 class KyoshinMonitorEewJsonReplayData
     with _$KyoshinMonitorEewJsonReplayData
     implements ReplayData {
-  const factory KyoshinMonitorEewJsonReplayData._({
+  const factory KyoshinMonitorEewJsonReplayData({
     required ReplayDataType type,
     required DateTime time,
     required String json,
   }) = _KyoshinMonitorEewJsonReplayData;
+  const KyoshinMonitorEewJsonReplayData._();
 
   factory KyoshinMonitorEewJsonReplayData.fromJson(Map<String, dynamic> json) =>
       _$KyoshinMonitorEewJsonReplayDataFromJson(json);
 
   factory KyoshinMonitorEewJsonReplayData.fromMsgPack(List<dynamic> data) {
-    return KyoshinMonitorEewJsonReplayData._(
+    return KyoshinMonitorEewJsonReplayData(
       type: ReplayDataType.kyoshinMonitorEewJson,
       time: data[0] as DateTime,
       json: data[1] as String,
@@ -146,23 +152,25 @@ class KyoshinMonitorEewJsonReplayData
 
 @freezed
 class KeviJsonReplayData with _$KeviJsonReplayData implements ReplayData {
-  const factory KeviJsonReplayData._({
+  const factory KeviJsonReplayData({
     required ReplayDataType type,
     required DateTime time,
     required JsonType jsonType,
     required String json,
   }) = _KeviJsonReplayData;
+  const KeviJsonReplayData._();
 
   factory KeviJsonReplayData.fromJson(Map<String, dynamic> json) =>
       _$KeviJsonReplayDataFromJson(json);
 
-  factory KeviJsonReplayData.fromMsgPack(List<dynamic> data) =>
-      KeviJsonReplayData._(
-        type: ReplayDataType.keviJson,
-        time: data[0] as DateTime,
-        jsonType: JsonType.values[data[1] as int],
-        json: data[2] as String,
-      );
+  factory KeviJsonReplayData.fromMsgPack(List<dynamic> data) {
+    return KeviJsonReplayData(
+      type: ReplayDataType.keviJson,
+      time: data[0] as DateTime,
+      jsonType: JsonType.values[data[1] as int],
+      json: data[2] as String,
+    );
+  }
 
   @override
   String toString() =>
@@ -171,21 +179,23 @@ class KeviJsonReplayData with _$KeviJsonReplayData implements ReplayData {
 
 @freezed
 class SnpLogEntryReplayData with _$SnpLogEntryReplayData implements ReplayData {
-  const factory SnpLogEntryReplayData._({
+  const factory SnpLogEntryReplayData({
     required ReplayDataType type,
     required DateTime time,
     required String message,
   }) = _SnpLogEntryReplayData;
+  const SnpLogEntryReplayData._();
 
   factory SnpLogEntryReplayData.fromJson(Map<String, dynamic> json) =>
       _$SnpLogEntryReplayDataFromJson(json);
 
-  factory SnpLogEntryReplayData.fromMsgPack(List<dynamic> data) =>
-      SnpLogEntryReplayData._(
-        type: ReplayDataType.snpLogEntry,
-        time: data[0] as DateTime,
-        message: data[1] as String,
-      );
+  factory SnpLogEntryReplayData.fromMsgPack(List<dynamic> data) {
+    return SnpLogEntryReplayData(
+      type: ReplayDataType.snpLogEntry,
+      time: data[0] as DateTime,
+      message: data[1] as String,
+    );
+  }
 
   @override
   String toString() =>
@@ -194,21 +204,23 @@ class SnpLogEntryReplayData with _$SnpLogEntryReplayData implements ReplayData {
 
 @freezed
 class AxisJsonReplayData with _$AxisJsonReplayData implements ReplayData {
-  const factory AxisJsonReplayData._({
+  const factory AxisJsonReplayData({
     required ReplayDataType type,
     required DateTime time,
     required String json,
   }) = _AxisJsonReplayData;
+  const AxisJsonReplayData._();
 
   factory AxisJsonReplayData.fromJson(Map<String, dynamic> json) =>
       _$AxisJsonReplayDataFromJson(json);
 
-  factory AxisJsonReplayData.fromMsgPack(List<dynamic> data) =>
-      AxisJsonReplayData._(
-        type: ReplayDataType.axisJson,
-        time: data[0] as DateTime,
-        json: data[1] as String,
-      );
+  factory AxisJsonReplayData.fromMsgPack(List<dynamic> data) {
+    return AxisJsonReplayData(
+      type: ReplayDataType.axisJson,
+      time: data[0] as DateTime,
+      json: data[1] as String,
+    );
+  }
 
   @override
   String toString() =>
