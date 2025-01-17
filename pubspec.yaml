@@ -22,6 +22,7 @@ workspace:
     - packages/lat_lng
     - packages/notification_setting_types
     - packages/earthquake_replay
+    - packages/msgpack_dart
     # <ADD_PACKAGE_HERE>
 
 dependencies:

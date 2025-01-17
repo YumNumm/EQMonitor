@@ -6,6 +6,7 @@ import 'dart:typed_data';
 part 'src/common.dart';
 part 'src/data_writer.dart';
 part 'src/deserializer.dart';
+part 'src/extension/ext_decoder.dart';
 part 'src/serializer.dart';
 
 Uint8List serialize(

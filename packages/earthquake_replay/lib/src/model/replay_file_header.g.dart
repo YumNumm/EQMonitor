@@ -50,5 +50,5 @@ const _$ReplayFileCompressionModeEnumMap = {
   ReplayFileCompressionMode.messagePackCSharpLz4BlockArray:
       'messagePackCSharpLz4BlockArray',
   ReplayFileCompressionMode.gzip: 'gzip',
-  ReplayFileCompressionMode.brotil: 'brotil',
+  ReplayFileCompressionMode.brotli: 'brotli',
 };
