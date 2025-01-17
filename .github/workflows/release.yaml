@@ -118,13 +118,19 @@ jobs:
           echo "build_number=${build_number}" >> $GITHUB_OUTPUT
           echo "Build Number set to ${build_number}."
 
+      - name: Extract Dotenv
+        run: |
+          echo "${{ secrets.DOTENV }}" | base64 -d > environment.tar.gz
+          tar -xzf environment.tar.gz
+          rm environment.tar.gz
+
       - name: Build iOS
         working-directory: app
         env:
           BUILD_NUMBER: ${{ steps.fetch-latest-build-number.outputs.build_number }}
         run: |
           echo "BUILD_NUMBER=${BUILD_NUMBER}"
-          flutter build ipa --no-codesign --build-number=${BUILD_NUMBER}
+          flutter build ipa --no-codesign --build-number=${BUILD_NUMBER} --dart-define-from-file=environment/.env.prod
 
       - name: Extract App Store Connect API Key
         working-directory: app/ios
@@ -209,6 +215,12 @@ jobs:
 
       - name: Setup application runtime & Resolve dependencies
         uses: ./.github/actions/setup-application-runtime
+
+      - name: Extract Dotenv
+        run: |
+          echo "${{ secrets.DOTENV }}" | base64 -d > environment.tar.gz
+          tar -xzf environment.tar.gz
+          rm environment.tar.gz
 
       - name: Build Android
         working-directory: app
