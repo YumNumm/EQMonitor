@@ -1,6 +1,0 @@
-# melos_managed_dependency_overrides: jma_parameter_types,eqmonitor_lints
-dependency_overrides:
-  eqmonitor_lints:
-    path: ../eqmonitor_lints
-  jma_parameter_types:
-    path: ../jma_parameter_types
