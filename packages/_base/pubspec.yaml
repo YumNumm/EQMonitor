@@ -5,8 +5,10 @@ version: 1.0.0
 publish_to: "none"
 
 environment:
-  sdk: ^3.6.0
-  flutter: ^3.27.0
+  sdk: ^3.6.1
+  flutter: ^3.27.2
+
+resolution: workspace
 
 dev_dependencies:
   altive_lints: ^1.14.1

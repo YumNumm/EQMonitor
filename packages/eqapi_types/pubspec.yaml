@@ -6,6 +6,9 @@ publish_to: "none"
 environment:
   sdk: ^3.6.1
 
+resolution: workspace
+
+
 # Add regular dependencies here.
 dependencies:
   collection: ^1.17.2
