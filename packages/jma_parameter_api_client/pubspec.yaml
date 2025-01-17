@@ -6,7 +6,8 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 environment:
   sdk: ^3.6.1
 
-# Add regular dependencies here.
+resolution: workspace
+
 dependencies:
   dio: ^5.3.4
   jma_parameter_types:

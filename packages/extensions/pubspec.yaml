@@ -4,6 +4,9 @@ version: 1.0.0
 
 environment:
   sdk: ^3.6.1
+
+resolution: workspace
+
 dev_dependencies:
   altive_lints: ^1.16.0
   eqmonitor_lints:

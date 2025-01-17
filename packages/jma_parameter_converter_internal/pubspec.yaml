@@ -6,10 +6,11 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 environment:
   sdk: ^3.6.1
 
-# Add regular dependencies here.
+resolution: workspace
+
 dependencies:
   collection: ^1.17.1
-  file: ^6.1.4
+  file: ^7.0.1
   freezed_annotation: ^2.2.0
   http: ^1.2.1
   jma_parameter_types:
