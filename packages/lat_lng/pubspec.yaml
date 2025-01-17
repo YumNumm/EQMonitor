@@ -5,6 +5,8 @@ version: 1.0.1
 environment:
   sdk: ^3.6.1
 
+resolution: workspace
+
 dependencies:
   latlong2: ^0.9.0
 

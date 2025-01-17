@@ -4,6 +4,8 @@ environment:
   sdk: ^3.6.1
   flutter: ^3.27.2
 
+resolution: workspace
+
 dependencies:
   altive_lints: ^1.16.0
   custom_lint: ^0.7.0

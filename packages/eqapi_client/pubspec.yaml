@@ -5,6 +5,9 @@ publish_to: "none"
 environment:
   sdk: ^3.6.1
 
+resolution: workspace
+
+
 dependencies:
   dio: ^5.3.4
   eqapi_types:
