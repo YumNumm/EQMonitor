@@ -10,7 +10,7 @@
       "args": [
         "--web-port",
         "62130",
-        "--dart-define-from-file=environments/.env.dev"
+        "--dart-define-from-file=environment/.env.dev"
       ]
     },
     {
@@ -21,7 +21,7 @@
       "cwd": "app",
       "flutterMode": "release",
       "args": [
-        "--dart-define-from-file=environments/.env.dev"
+        "--dart-define-from-file=environment/.env.dev"
       ]
     },
     {
@@ -31,7 +31,7 @@
       "program": "lib/main.dart",
       "cwd": "app",
       "args": [
-        "--dart-define-from-file=environments/.env.prod"
+        "--dart-define-from-file=environment/.env.prod"
       ]
     }
   ]
