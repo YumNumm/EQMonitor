@@ -1,7 +1,7 @@
 name: notification_setting_types
 
 environment:
-  sdk: ^3.6.0
+  sdk: ^3.6.1
 
 dependencies:
   fixnum: ^1.1.1
