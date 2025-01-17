@@ -8,6 +8,8 @@ environment:
   sdk: ^3.6.1
   flutter: ^3.27.2
 
+resolution: workspace
+
 dependencies:
   adaptive_dialog: ^2.3.0
   app_settings: ^5.1.1
