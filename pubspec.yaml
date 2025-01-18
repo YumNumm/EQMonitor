@@ -23,6 +23,7 @@ workspace:
     - packages/notification_setting_types
     - packages/earthquake_replay
     - packages/msgpack_dart
+    - packages/kyoshin_monitor_api
     # <ADD_PACKAGE_HERE>
 
 dependencies:
