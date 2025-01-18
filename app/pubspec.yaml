@@ -60,6 +60,8 @@ dependencies:
   jma_parameter_api_client:
     path: ../packages/jma_parameter_api_client
   json_annotation: ^4.9.0
+  kyoshin_monitor_api:
+    path: ../packages/kyoshin_monitor_api
   kyoshin_observation_point_types:
     path: ../packages/kyoshin_observation_point_types
   lat_lng:
