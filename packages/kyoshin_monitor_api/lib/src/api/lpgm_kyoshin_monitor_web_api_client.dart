@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:dio/dio.dart';
 import 'package:kyoshin_monitor_api/src/model/web_api/eew.dart';
 import 'package:retrofit/retrofit.dart';
@@ -73,5 +71,3 @@ abstract class LpgmKyoshinMonitorWebApiClientApiClient {
     @Path('dateTime') required String dateTime,
   });
 }
-
-
