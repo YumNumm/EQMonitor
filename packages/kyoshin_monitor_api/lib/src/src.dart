@@ -1,5 +1,3 @@
-export 'api/kyoshin_monitor_app_api.dart';
-export 'api/kyoshin_monitor_app_api_client.dart';
 export 'api/kyoshin_monitor_web_api_client.dart';
 export 'api/lpgm_kyoshin_monitor_web_api_client.dart';
 export 'data_source/kyoshin_monitor_web_api_data_source.dart';

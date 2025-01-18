@@ -16,10 +16,10 @@ abstract class KyoshinMonitorWebApiClient {
   ///
   /// [theme] 白(w), グレー(b)
   @GET('/data/map_img/CommonImg/base_map_{theme}.gif')
-  Future<Uint8List> getBaseMapImageData({
+  @DioResponseType(ResponseType.bytes)
+  Future<List<int>> getBaseMapImageData({
     @Path('theme') required String theme,
   });
-
 
   /// スケール
   ///
@@ -27,7 +27,8 @@ abstract class KyoshinMonitorWebApiClient {
   /// [layer] 地上(s), 地下(b)
   /// [theme] 白(w), グレー(b)
   @GET('/data/map_img/ScaleImg/nied_{type}_{layer}_{theme}_scale.gif')
-  Future<Uint8List> getScaleImageData({
+  @DioResponseType(ResponseType.bytes)
+  Future<List<int>> getScaleImageData({
     @Path('type') required String type,
     @Path('layer') required String layer,
     @Path('theme') required String theme,
@@ -46,7 +47,8 @@ abstract class KyoshinMonitorWebApiClient {
   /// [date] 日付(yyyyMMdd)
   /// [dateTime] 日付(yyyyMMddHHmmss)
   @GET('/data/map_img/PSWaveImg/eew/{date}/{dateTime}.gif')
-  Future<Uint8List> getPsWaveImageData({
+  @DioResponseType(ResponseType.bytes)
+  Future<List<int>> getPsWaveImageData({
     @Path('date') required String date,
     @Path('dateTime') required String dateTime,
   });
@@ -58,9 +60,10 @@ abstract class KyoshinMonitorWebApiClient {
   /// [date] 日付(yyyyMMdd)
   /// [dateTime] 日付(yyyyMMddHHmmss)
   @GET(
-    '/data/map_img/RealtimeImg/{type}_{layer}/{date}/{dateTime}.{type}_{layer}.gif',
+    '/data/map_img/RealTimeImg/{type}_{layer}/{date}/{dateTime}.{type}_{layer}.gif',
   )
-  Future<Uint8List> getRealtimeImageData({
+  @DioResponseType(ResponseType.bytes)
+  Future<List<int>> getRealtimeImageData({
     @Path('type') required String type,
     @Path('layer') required String layer,
     @Path('date') required String date,
@@ -72,7 +75,8 @@ abstract class KyoshinMonitorWebApiClient {
   /// [date] 日付(yyyyMMdd)
   /// [dateTime] 日付(yyyyMMddHHmmss)
   @GET('/data/map_img/EstShindoImg/eew/{date}/{dateTime}.eew.gif')
-  Future<Uint8List> getEstShindoImageData({
+  @DioResponseType(ResponseType.bytes)
+  Future<List<int>> getEstShindoImageData({
     @Path('date') required String date,
     @Path('dateTime') required String dateTime,
   });

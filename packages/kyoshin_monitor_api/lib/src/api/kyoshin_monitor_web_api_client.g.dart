@@ -26,6 +26,78 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
   final ParseErrorLogger? errorLogger;
 
   @override
+  Future<List<int>> getBaseMapImageData({required String theme}) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<List<int>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      responseType: ResponseType.bytes,
+    )
+        .compose(
+          _dio.options,
+          '/data/map_img/CommonImg/base_map_${theme}.gif',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<int> _value;
+    try {
+      _value = _result.data!.cast<int>();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<List<int>> getScaleImageData({
+    required String type,
+    required String layer,
+    required String theme,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<List<int>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      responseType: ResponseType.bytes,
+    )
+        .compose(
+          _dio.options,
+          '/data/map_img/ScaleImg/nied_${type}_${layer}_${theme}_scale.gif',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<int> _value;
+    try {
+      _value = _result.data!.cast<int>();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
   Future<Eew> getJsonEew({required String dateTime}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -59,7 +131,7 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
   }
 
   @override
-  Future<Uint8List> getPsWaveImageData({
+  Future<List<int>> getPsWaveImageData({
     required String date,
     required String dateTime,
   }) async {
@@ -67,10 +139,11 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<Uint8List>(Options(
+    final _options = _setStreamType<List<int>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
+      responseType: ResponseType.bytes,
     )
         .compose(
           _dio.options,
@@ -83,10 +156,10 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
           _dio.options.baseUrl,
           baseUrl,
         )));
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late Uint8List _value;
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<int> _value;
     try {
-      _value = Uint8List.fromJson(_result.data!);
+      _value = _result.data!.cast<int>();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -95,7 +168,7 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
   }
 
   @override
-  Future<Uint8List> getRealtimeImageData({
+  Future<List<int>> getRealtimeImageData({
     required String type,
     required String layer,
     required String date,
@@ -105,14 +178,15 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<Uint8List>(Options(
+    final _options = _setStreamType<List<int>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
+      responseType: ResponseType.bytes,
     )
         .compose(
           _dio.options,
-          '/data/map_img/RealtimeImg/${type}_${layer}/${date}/${dateTime}.{type}_{layer}.gif',
+          '/data/map_img/RealTimeImg/${type}_${layer}/${date}/${dateTime}.${type}_${layer}.gif',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -121,10 +195,10 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
           _dio.options.baseUrl,
           baseUrl,
         )));
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late Uint8List _value;
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<int> _value;
     try {
-      _value = Uint8List.fromJson(_result.data!);
+      _value = _result.data!.cast<int>();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -133,7 +207,7 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
   }
 
   @override
-  Future<Uint8List> getEstShindoImageData({
+  Future<List<int>> getEstShindoImageData({
     required String date,
     required String dateTime,
   }) async {
@@ -141,10 +215,11 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<Uint8List>(Options(
+    final _options = _setStreamType<List<int>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
+      responseType: ResponseType.bytes,
     )
         .compose(
           _dio.options,
@@ -157,10 +232,10 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
           _dio.options.baseUrl,
           baseUrl,
         )));
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late Uint8List _value;
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<int> _value;
     try {
-      _value = Uint8List.fromJson(_result.data!);
+      _value = _result.data!.cast<int>();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
