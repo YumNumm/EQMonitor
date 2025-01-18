@@ -36,7 +36,12 @@ dependency_overrides:
   # (jma_code_table_converter_internal の `file` 依存関係が 7.x になっているため)
   # cf. https://github.com/yumemi-inc/flutter-yumemi-lints/issues/138s
   file: ^7.0.1
-
+  # waiting for merge https://github.com/trevorwang/retrofit.dart/pull/736
+  retrofit_generator:
+    git:
+      url: https://github.com/YumNumm/retrofit.dart.git
+      ref: master
+      path: generator
 melos:
   repository: https://github.com/YumNumm/EQMonitor
   sdkPath: .fvm/flutter_sdk/

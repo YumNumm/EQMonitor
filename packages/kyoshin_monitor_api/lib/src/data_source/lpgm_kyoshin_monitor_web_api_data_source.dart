@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:intl/intl.dart';
 import 'package:kyoshin_monitor_api/src/api/lpgm_kyoshin_monitor_web_api_client.dart';
 import 'package:kyoshin_monitor_api/src/data_source/kyoshin_monitor_web_api_data_source.dart';
@@ -12,11 +10,11 @@ class LpgmKyoshinMonitorWebApiDataSource {
   final LpgmKyoshinMonitorWebApiClientApiClient _client;
 
   /// ベース画像
-  Future<Uint8List> getBaseMapImageData(BaseMapTheme theme) async =>
+  Future<List<int>> getBaseMapImageData(BaseMapTheme theme) async =>
       _client.getBaseMapImageData(theme: theme.urlString);
 
   /// スケール
-  Future<Uint8List> getScaleImageData(
+  Future<List<int>> getScaleImageData(
     RealtimeDataType type,
     RealtimeLayer layer,
     BaseMapTheme theme,
@@ -28,14 +26,14 @@ class LpgmKyoshinMonitorWebApiDataSource {
       );
 
   /// PsWaveImg
-  Future<Uint8List> getPsWaveImageData(DateTime dateTime) async =>
+  Future<List<int>> getPsWaveImageData(DateTime dateTime) async =>
       _client.getPsWaveImageData(
         date: dateFormat.format(dateTime),
         dateTime: dateTimeFormat.format(dateTime),
       );
 
   /// RealtimeImg
-  Future<Uint8List> getRealtimeImageData(
+  Future<List<int>> getRealtimeImageData(
     RealtimeDataType type,
     RealtimeLayer layer,
     DateTime dateTime,

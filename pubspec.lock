@@ -1483,13 +1483,14 @@ packages:
     source: hosted
     version: "4.4.2"
   retrofit_generator:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: retrofit_generator
-      sha256: da17daf8cfdf695a402c894e4eebf91d2e815a47368820dd7a0b41a027739a9c
-      url: "https://pub.dev"
-    source: hosted
-    version: "9.1.7"
+      path: generator
+      ref: master
+      resolved-ref: "105dc73aaf1fa3590f66928588684f975a16c49c"
+      url: "https://github.com/YumNumm/retrofit.dart.git"
+    source: git
+    version: "9.1.6"
   riverpod:
     dependency: transitive
     description:
