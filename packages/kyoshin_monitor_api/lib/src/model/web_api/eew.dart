@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kyoshin_monitor_api/src/model/result.dart';
 import 'package:kyoshin_monitor_api/src/model/security.dart';
 import 'package:kyoshin_monitor_api/src/model/web_api/jma_intensity.dart';
+import 'package:kyoshin_monitor_api/src/model/web_api/kyoshin_monitor_web_api_response.dart';
 import 'package:kyoshin_monitor_api/src/util/json_converters.dart';
 
 part 'eew.freezed.dart';
@@ -9,7 +10,7 @@ part 'eew.g.dart';
 
 /// Web版APIでの緊急地震速報の情報
 @freezed
-class Eew with _$Eew {
+class Eew with _$Eew implements KyoshinMonitorWebApiResponse {
   const factory Eew({
     /// リザルト
     Result? result,

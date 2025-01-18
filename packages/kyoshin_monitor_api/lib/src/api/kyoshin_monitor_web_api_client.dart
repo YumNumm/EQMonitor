@@ -1,16 +1,26 @@
-import 'dart:typed_data';
-
 import 'package:dio/dio.dart';
+import 'package:kyoshin_monitor_api/src/model/web_api/data_time.dart';
 import 'package:kyoshin_monitor_api/src/model/web_api/eew.dart';
+import 'package:kyoshin_monitor_api/src/model/web_api/maintenance_message.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'kyoshin_monitor_web_api_client.g.dart';
 
 /// 強震モニタのウェブAPI用クライアント
+///
+/// ベースURL: http://www.kmoni.bosai.go.jp , https://smi.lmoniexp.bosai.go.jp
 @RestApi(baseUrl: 'http://www.kmoni.bosai.go.jp')
 abstract class KyoshinMonitorWebApiClient {
   factory KyoshinMonitorWebApiClient(Dio dio, {String? baseUrl}) =
       _KyoshinMonitorWebApiClient;
+
+  /// データ時間
+  @GET('/webservice/server/pros/latest.json')
+  Future<DataTime> getLatestDataTime();
+
+  /// メンテナンスメッセージ
+  @GET('/webservice/maintenance/message.json')
+  Future<MaintenanceMessage> getMaintenanceMessage();
 
   /// ベース画像
   ///
