@@ -24,6 +24,7 @@ workspace:
     - packages/earthquake_replay
     - packages/msgpack_dart
     - packages/kyoshin_monitor_api
+    - packages/kyoshin_monitor_image_parser
     # <ADD_PACKAGE_HERE>
 
 dependencies:
