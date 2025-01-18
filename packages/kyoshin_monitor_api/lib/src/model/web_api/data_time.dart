@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
-import 'package:kyoshin_monitor_api/src/model/web_api/kyoshin_monitor_web_api_response.dart';
 
 part 'data_time.freezed.dart';
 part 'data_time.g.dart';

@@ -89,7 +89,7 @@ class DownloadCommand extends Command<void> {
             );
       await File(output).writeAsBytes(data);
       print('ダウンロードが完了しました: $output');
-    } catch (e) {
+    } on Exception catch (e) {
       print('エラーが発生しました: $e');
       if (e is DioException) {
         final url = e.requestOptions.uri.toString();

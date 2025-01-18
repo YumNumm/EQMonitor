@@ -1,6 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 import 'package:kyoshin_monitor_api/src/api/kyoshin_monitor_web_api_client.dart';
+import 'package:kyoshin_monitor_api/src/model/web_api/data_time.dart';
+import 'package:kyoshin_monitor_api/src/model/web_api/maintenance_message.dart';
 
 class KyoshinMonitorWebApiDataSource {
   KyoshinMonitorWebApiDataSource({
@@ -8,6 +10,13 @@ class KyoshinMonitorWebApiDataSource {
   }) : _client = client;
 
   final KyoshinMonitorWebApiClient _client;
+
+  /// データ時間
+  Future<DataTime> getLatestDataTime() async => _client.getLatestDataTime();
+
+  /// メンテナンスメッセージ
+  Future<MaintenanceMessage> getMaintenanceMessage() async =>
+      _client.getMaintenanceMessage();
 
   /// ベース画像
   Future<List<int>> getBaseMapImageData(BaseMapTheme theme) async =>
