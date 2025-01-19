@@ -12,7 +12,7 @@ import 'package:eqmonitor/feature/earthquake_history_details/ui/screen/earthquak
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_details_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_screen.dart';
 import 'package:eqmonitor/feature/eew/ui/screen/eew_details_by_event_id_page.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/page/kmoni_settings_page.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/kmoni_settings_page.dart';
 import 'package:eqmonitor/feature/home/view/home_view.dart';
 import 'package:eqmonitor/feature/information_history/page/information_history_page.dart';
 import 'package:eqmonitor/feature/information_history_details/information_history_details_page.dart';

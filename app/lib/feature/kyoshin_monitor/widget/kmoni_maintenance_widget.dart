@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/model/kmoni_maintenance_message_model.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_maintenance_view_model.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/viewmodel/kmoni_maintenance_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';

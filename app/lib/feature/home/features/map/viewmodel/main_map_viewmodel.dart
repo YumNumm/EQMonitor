@@ -14,7 +14,7 @@ import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provide
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/features/eew_settings/eew_settings_notifier.dart';
 import 'package:eqmonitor/feature/home/features/eew_settings/model/eew_setitngs_model.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/provider/kmoni_view_model.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/provider/kmoni_view_model.dart';
 import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/feature/home/features/map/model/main_map_viewmodel_state.dart';
 import 'package:eqmonitor/feature/shake_detection/model/shake_detection_kmoni_merged_event.dart';

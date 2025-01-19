@@ -5,11 +5,11 @@ import 'package:retrofit/retrofit.dart';
 part 'lpgm_kyoshin_monitor_web_api_client.g.dart';
 
 @RestApi(baseUrl: 'https://www.lmoni.bosai.go.jp')
-abstract class LpgmKyoshinMonitorWebApiClientApiClient {
-  factory LpgmKyoshinMonitorWebApiClientApiClient(
+abstract class LpgmKyoshinMonitorWebApiClient {
+  factory LpgmKyoshinMonitorWebApiClient(
     Dio dio, {
     String baseUrl,
-  }) = _LpgmKyoshinMonitorWebApiClientApiClient;
+  }) = _LpgmKyoshinMonitorWebApiClient;
 
   /// ベース画像
   ///

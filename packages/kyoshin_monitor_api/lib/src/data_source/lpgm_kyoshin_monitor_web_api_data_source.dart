@@ -4,10 +4,10 @@ import 'package:kyoshin_monitor_api/src/data_source/kyoshin_monitor_web_api_data
 
 class LpgmKyoshinMonitorWebApiDataSource {
   LpgmKyoshinMonitorWebApiDataSource({
-    required LpgmKyoshinMonitorWebApiClientApiClient client,
+    required LpgmKyoshinMonitorWebApiClient client,
   }) : _client = client;
 
-  final LpgmKyoshinMonitorWebApiClientApiClient _client;
+  final LpgmKyoshinMonitorWebApiClient _client;
 
   /// ベース画像
   Future<List<int>> getBaseMapImageData(BaseMapTheme theme) async =>
