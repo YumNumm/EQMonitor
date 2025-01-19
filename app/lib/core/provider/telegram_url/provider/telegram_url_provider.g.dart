@@ -8,7 +8,7 @@ part of 'telegram_url_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$telegramUrlHash() => r'8f36870d5927a9d53691a17cdd46dc38905ba677';
+String _$telegramUrlHash() => r'05cbe69b52b0f42c8223f0020694fbc29736faef';
 
 /// See also [TelegramUrl].
 @ProviderFor(TelegramUrl)

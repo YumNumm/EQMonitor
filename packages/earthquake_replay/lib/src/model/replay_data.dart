@@ -164,10 +164,14 @@ class KeviJsonReplayData with _$KeviJsonReplayData implements ReplayData {
       _$KeviJsonReplayDataFromJson(json);
 
   factory KeviJsonReplayData.fromMsgPack(List<dynamic> data) {
+    final jsonTypeIndex = data[1] as int;
+    final jsonType = JsonType.values.firstWhere(
+      (e) => e.value == jsonTypeIndex,
+    );
     return KeviJsonReplayData(
       type: ReplayDataType.keviJson,
       time: data[0] as DateTime,
-      jsonType: JsonType.values[data[1] as int],
+      jsonType: jsonType,
       json: data[2] as String,
     );
   }
