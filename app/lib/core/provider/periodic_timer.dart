@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -11,7 +12,7 @@ class PeriodicTimer extends _$PeriodicTimer {
   Stream<void> build(Key key) async* {
     _streamController = StreamController<void>();
 
-    _stopwatch = Stopwatch()..start();
+    _stopwatch = clock.stopwatch()..start();
 
     ref.onDispose(() {
       _streamController.close();
