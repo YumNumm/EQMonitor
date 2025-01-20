@@ -6,6 +6,7 @@ import 'package:image/image.dart';
 import 'package:kyoshin_monitor_image_parser/src/exception/kyoshin_monitor_image_exception.dart';
 import 'package:kyoshin_monitor_image_parser/src/model/kyoshin_monitor_observation_point.dart';
 import 'package:kyoshin_monitor_image_parser/src/util/hsv_color.dart';
+import 'package:meta/meta.dart';
 
 class KyoshinMonitorImageParser {
   Future<KyoshinMonitorImageParseResult> parse({
@@ -72,6 +73,9 @@ class KyoshinMonitorImageParser {
       points: points,
     );
   }
+
+  @visibleForTesting
+  double? hsvToPosition(HsvColor hsv) => _hsvToPosition(hsv);
 
   /// 任意のピクセルのHSV値からカラーバーのPositionを算出(0->1)
   /// ### hsv
