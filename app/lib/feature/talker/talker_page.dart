@@ -8,6 +8,6 @@ class TalkerPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => TalkerScreen(
-        talker: ref.watch(talkerProvider),
+        talker: talker,
       );
 }

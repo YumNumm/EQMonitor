@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/widget/kmoni_caution.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
 import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/setup/pages/kmoni_warn.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -11,7 +13,7 @@ class KmoniSettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(kmoniSettingsProvider);
+    final state = ref.watch(kyoshinMonitorSettingsProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('強震モニタ設定'),
@@ -37,7 +39,7 @@ class KmoniSettingsUseToggle extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(kmoniSettingsProvider);
+    final state = ref.watch(kyoshinMonitorSettingsProvider);
     final theme = Theme.of(context);
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -93,11 +95,19 @@ class KmoniSettingsUseToggle extends ConsumerWidget {
             final isAccepted = result != null && result;
 
             if (isAccepted) {
-              ref.read(kmoniSettingsProvider.notifier).toggleUseKmoni();
+              unawaited(
+                ref.read(kyoshinMonitorSettingsProvider.notifier).save(
+                      state.copyWith(useKmoni: value),
+                    ),
+              );
             }
             return;
           } else {
-            ref.read(kmoniSettingsProvider.notifier).toggleUseKmoni();
+            unawaited(
+              ref.read(kyoshinMonitorSettingsProvider.notifier).save(
+                    state.copyWith(useKmoni: value),
+                  ),
+            );
           }
         },
         title: const Text('強震モニタを表示する'),

@@ -53,7 +53,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  final talker = TalkerFlutter.init(
+  talker = TalkerFlutter.init(
     settings: TalkerSettings(
       // ignore: avoid_redundant_argument_values
       useConsoleLogs: kDebugMode,
@@ -146,7 +146,6 @@ Future<void> main() async {
       overrides: [
         sharedPreferencesProvider.overrideWithValue(results.$1.$1),
         kyoshinObservationPointsProvider.overrideWithValue(results.$1.$2),
-        talkerProvider.overrideWithValue(talker),
         packageInfoProvider.overrideWithValue(results.$1.$3),
         if (results.$1.$4 != null)
           androidDeviceInfoProvider.overrideWithValue(results.$1.$4!),

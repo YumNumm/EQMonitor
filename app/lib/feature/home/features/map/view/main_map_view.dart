@@ -9,8 +9,8 @@ import 'package:eqmonitor/core/provider/ntp/ntp_provider.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:eqmonitor/core/theme/platform_brightness.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:eqmonitor/feature/location/data/location_tracking_mode.dart';
 import 'package:flutter/material.dart';
@@ -99,7 +99,7 @@ class MainMapView extends HookConsumerWidget {
     final mapController = useState<MapLibreMapController?>(null);
 
     if (ref.watch(
-      kmoniSettingsProvider.select((e) => e.showCurrentLocationMarker),
+      kyoshinMonitorSettingsProvider.select((e) => e.showCurrentLocationMarker),
     )) {
       ref.listen(locationStreamProvider, (_, next) async {
         if (next case AsyncData(:final value)) {
@@ -164,7 +164,7 @@ class MainMapView extends HookConsumerWidget {
           await notifier.onMapControllerRegistered();
           await notifier.startUpdateEew();
 
-          if (ref.read(kmoniSettingsProvider).showCurrentLocationMarker) {
+          if (ref.read(kyoshinMonitorSettingsProvider).showCurrentLocationMarker) {
             if (ref.read(locationStreamProvider).valueOrNull
                 case Position(:final latitude, :final longitude)) {
               await notifier.onLocationChanged(latitude, longitude);

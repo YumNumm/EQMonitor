@@ -1,7 +1,7 @@
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_scale.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kmoni_settings_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/provider/kmoni_color_provider.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -11,7 +11,7 @@ class KmoniSettingsModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(kmoniSettingsProvider);
+    final state = ref.watch(kyoshinMonitorSettingsProvider);
     final theme = Theme.of(context);
 
     final barWidget = Container(
@@ -57,7 +57,7 @@ class KmoniSettingsDialogInside extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(kmoniSettingsProvider);
+    final state = ref.watch(kyoshinMonitorSettingsProvider);
     final colorMap = ref.watch(kyoshinColorMapProvider);
     final (min, max) = (colorMap.first, colorMap.last);
     final theme = Theme.of(context);
@@ -92,11 +92,12 @@ class KmoniSettingsDialogInside extends ConsumerWidget {
                     min: min.intensity,
                     max: max.intensity,
                     value: state.minRealtimeShindo ?? min.intensity,
-                    onChanged: (value) => ref
-                        .read(kmoniSettingsProvider.notifier)
-                        .setMinRealtimeShindo(
-                          value: value,
-                        ),
+                    onChanged: (value) async =>
+                        ref.read(kyoshinMonitorSettingsProvider.notifier).save(
+                              ref.read(kyoshinMonitorSettingsProvider).copyWith(
+                                    minRealtimeShindo: value,
+                                  ),
+                            ),
                   ),
                 ],
               ),
@@ -105,21 +106,22 @@ class KmoniSettingsDialogInside extends ConsumerWidget {
         ),
         SwitchListTile.adaptive(
           value: state.showRealtimeShindoScale,
-          onChanged: (value) => ref
-              .read(kmoniSettingsProvider.notifier)
-              .setShowRealtimeShindoScale(
-                value: value,
-              ),
+          onChanged: (value) async =>
+              ref.read(kyoshinMonitorSettingsProvider.notifier).save(
+                    ref.read(kyoshinMonitorSettingsProvider).copyWith(
+                          showRealtimeShindoScale: value,
+                        ),
+                  ),
           title: const Text('リアルタイム震度のスケールを表示'),
         ),
         SwitchListTile.adaptive(
           title: const Text('現在地のマーカーを表示する'),
           value: state.showCurrentLocationMarker,
           onChanged: (value) async {
-            await ref
-                .read(kmoniSettingsProvider.notifier)
-                .setShowCurrentLocationMarker(
-                  value: value,
+            await ref.read(kyoshinMonitorSettingsProvider.notifier).save(
+                  ref.read(kyoshinMonitorSettingsProvider).copyWith(
+                        showCurrentLocationMarker: value,
+                      ),
                 );
             ref.invalidate(locationStreamProvider);
           },
@@ -130,9 +132,11 @@ class KmoniSettingsDialogInside extends ConsumerWidget {
             padding: const EdgeInsets.only(top: 8),
             child: DropdownMenu(
               initialSelection: state.kmoniMarkerType,
-              onSelected: (value) =>
-                  ref.read(kmoniSettingsProvider.notifier).setMarkerType(
-                        type: value!,
+              onSelected: (value) async =>
+                  ref.read(kyoshinMonitorSettingsProvider.notifier).save(
+                        ref.read(kyoshinMonitorSettingsProvider).copyWith(
+                              kmoniMarkerType: value!,
+                            ),
                       ),
               dropdownMenuEntries: [
                 for (final type in KmoniMarkerType.values)

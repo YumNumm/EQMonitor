@@ -70,7 +70,7 @@ class DownloadCommand extends Command<void> {
     final dio = Dio();
     final lpgmKyoshinMonitorWebApiDataSource =
         LpgmKyoshinMonitorWebApiDataSource(
-      client: LpgmKyoshinMonitorWebApiClientApiClient(dio),
+      client: LpgmKyoshinMonitorWebApiClient(dio),
     );
     final kyoshinMonitorWebApiDataSource = KyoshinMonitorWebApiDataSource(
       client: KyoshinMonitorWebApiClient(dio),

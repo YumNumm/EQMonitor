@@ -31,11 +31,10 @@ import 'package:eqmonitor/feature/home/component/render/map_components_renderer.
 import 'package:eqmonitor/feature/home/component/shake-detect/shake_detection_card.dart';
 import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
 import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/provider/kmoni_view_model.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/widget/kmoni_maintenance_widget.dart';
 import 'package:eqmonitor/feature/home/features/map/view/main_map_view.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/widget/kmoni_maintenance_widget.dart';
 import 'package:eqmonitor/feature/location/data/location_tracking_mode.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/fcm_token_change_detector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_authentication_service.dart';
@@ -104,11 +103,11 @@ class _HomeBodyWidget extends HookConsumerWidget {
             (_) async {
               log('Start Initialize');
               await (
-                ref.read(kmoniViewModelProvider.notifier).initialize(),
+                // TODO(YumNumm): 強震モニタ結合
+                // ref.read(kmoniViewModelProvider.notifier).initialize(),
                 ref.read(permissionNotifierProvider.notifier).initialize(),
                 ref.read(ntpProvider.notifier).sync(),
                 () async {
-                  final talker = ref.read(talkerProvider);
                   try {
                     talker.log('Start Initialize');
                     final token =
@@ -142,9 +141,9 @@ class _HomeBodyWidget extends HookConsumerWidget {
                     );
                     // ignore: avoid_catches_without_on_clauses
                   } catch (e) {
-                    ref.read(talkerProvider).log(
-                          'Authentication Error: $e',
-                        );
+                    talker.log(
+                      'Authentication Error: $e',
+                    );
                     await FirebaseCrashlytics.instance.recordError(
                       e,
                       StackTrace.current,
@@ -304,10 +303,10 @@ class _HomeBodyWidget extends HookConsumerWidget {
         log('firebaseMessagingInteractionProvider: $next');
         if (next case AsyncData(:final value)) {
           await WidgetsBinding.instance.endOfFrame.then((_) async {
-            ref.read(talkerProvider).log(
-                  'Handle Firebase Message: '
-                  "${const JsonEncoder.withIndent(' ').convert(value.toMap())}",
-                );
+            talker.log(
+              'Handle Firebase Message: '
+              "${const JsonEncoder.withIndent(' ').convert(value.toMap())}",
+            );
 
             final route = value.data['route'];
             if (route is String) {
@@ -328,9 +327,9 @@ class _HomeBodyWidget extends HookConsumerWidget {
             // Debug mode周り
             final debug = value.data['enableDebugMode'];
             if (debug == 'true') {
-              ref.read(talkerProvider).log(
-                    'Debug Mode: $debug',
-                  );
+              talker.log(
+                'Debug Mode: $debug',
+              );
               await ref
                   .read(debuggerProvider.notifier)
                   .setDebugger(value: true);
@@ -622,7 +621,7 @@ class _KmoniScale extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(kmoniSettingsProvider);
+    final state = ref.watch(kyoshinMonitorSettingsProvider);
     final body = Padding(
       padding: const EdgeInsets.all(4),
       child: Tooltip(

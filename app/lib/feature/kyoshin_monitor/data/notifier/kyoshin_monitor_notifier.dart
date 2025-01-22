@@ -1,3 +1,9 @@
+import 'dart:async';
+
+import 'package:eqmonitor/core/provider/periodic_timer.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_timer_notifier.dart';
+import 'package:flutter/foundation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kyoshin_monitor_notifier.g.dart';
@@ -6,4 +12,52 @@ part 'kyoshin_monitor_notifier.g.dart';
 class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
   @override
   Future<void> build() async {}
+}
+
+@riverpod
+Stream<DateTime> kyoshinMonitorTimerStream(Ref ref) async* {
+  final streamController = StreamController<DateTime>();
+
+  const key = Key('kyoshinMonitorTimerStream');
+
+  ref
+    ..listen(kyoshinMonitorTimerNotifierProvider, (_, next) async {
+      if (next case AsyncData(:final value)) {
+        final delay = value.delayFromDevice;
+        await _waitUntilNextSecond(delay);
+        streamController.add(DateTime.now().subtract(delay));
+      }
+    })
+    ..listen(periodicTimerProvider(key), (_, next) async {
+      if (next case AsyncData()) {
+        final delay = ref
+            .read(kyoshinMonitorTimerNotifierProvider)
+            .valueOrNull
+            ?.delayFromDevice;
+        if (delay != null) {
+          await _waitUntilNextSecond(delay);
+          streamController.add(DateTime.now().subtract(delay));
+        }
+      }
+    });
+
+  final kyoshinMonitorTimerNotifier =
+      ref.read(kyoshinMonitorTimerNotifierProvider);
+  final delay = kyoshinMonitorTimerNotifier.valueOrNull?.delayFromDevice;
+  if (delay != null) {
+    await _waitUntilNextSecond(delay);
+    streamController.add(DateTime.now().subtract(delay));
+  }
+
+  ref.onDispose(streamController.close);
+  yield* streamController.stream;
+}
+
+Future<void> _waitUntilNextSecond(Duration delay) async {
+  final now = DateTime.now();
+  final nextTime = now.subtract(delay);
+  if (nextTime.millisecond != 0) {
+    final waitTime = Duration(milliseconds: 1000 - nextTime.millisecond);
+    await Future<void>.delayed(waitTime);
+  }
 }

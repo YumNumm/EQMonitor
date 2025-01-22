@@ -8,7 +8,7 @@ part of 'periodic_timer.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$periodicTimerHash() => r'5c2d392480bd8cc9f981d6c8da6bc89c4aa588ba';
+String _$periodicTimerHash() => r'6929fe542af418c840159cae16e5eebdea7ca640';
 
 /// Copied from Dart SDK
 class _SystemHash {

@@ -55,7 +55,6 @@ class WebsocketStatus extends _$WebsocketStatus {
   @override
   ConnectionState build() {
     final socket = ref.watch(websocketProvider);
-    final talker = ref.watch(talkerProvider);
     socket.connection.listen((status) {
       state = status;
       talker.log('WebSocket state: $status');
@@ -77,7 +76,7 @@ class WebsocketMessages extends _$WebsocketMessages {
     });
     socket.messages.listen(
       (message) {
-        ref.read(talkerProvider).log('WebSocket message: $message');
+        talker.log('WebSocket message: $message');
         final decoded = jsonDecode(message.toString());
         if (decoded is Map<String, dynamic>) {
           _controller.add(decoded);

@@ -42,9 +42,7 @@ class JmaParameter extends _$JmaParameter {
     final currentEtag = await ref
         .watch(jmaParameterApiClientProvider)
         .getEarthquakeParameterHead();
-    ref
-        .read(talkerProvider)
-        .log('Earthquake cachedEtag: $cachedEtag, currentEtag: $currentEtag');
+    talker.log('Earthquake cachedEtag: $cachedEtag, currentEtag: $currentEtag');
     if (cachedEtag != null && cachedEtag == currentEtag && !kIsWeb) {
       final localResult = await _getEarthquakeFromLocal();
       if (localResult case Success(:final value)) {
@@ -92,9 +90,7 @@ class JmaParameter extends _$JmaParameter {
     final currentEtag = await ref
         .watch(jmaParameterApiClientProvider)
         .getTsunamiParameterHeadEtag();
-    ref
-        .read(talkerProvider)
-        .log('Tsunami cachedEtag: $cachedEtag, currentEtag: $currentEtag');
+    talker.log('Tsunami cachedEtag: $cachedEtag, currentEtag: $currentEtag');
     if (cachedEtag != null && cachedEtag == currentEtag && !kIsWeb) {
       final localResult = await _getTsunamiFromLocal();
       if (localResult case Success(:final value)) {
