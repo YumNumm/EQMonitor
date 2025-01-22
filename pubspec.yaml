@@ -1,42 +1,36 @@
 name: eqmonitor_workspace
 description: The workspace for the EQMonitor project.
-
 environment:
   sdk: ^3.6.1
-
 workspace:
-    - app
-    - packages/_base
-    - packages/eqapi_client
-    - packages/eqapi_types
-    - packages/eqmonitor_lints
-    - packages/extensions
-    - packages/jma_code_table_converter_internal
-    - packages/jma_code_table_types
-    - packages/jma_map
-    - packages/jma_parameter_api_client
-    - packages/jma_parameter_converter_internal
-    - packages/jma_parameter_types
-    - packages/kyoshin_observation_point_converter_internal
-    - packages/kyoshin_observation_point_types
-    - packages/lat_lng
-    - packages/notification_setting_types
-    # <ADD_PACKAGE_HERE>
-
+  - app
+  - packages/_base
+  - packages/eqapi_client
+  - packages/eqapi_types
+  - packages/eqmonitor_lints
+  - packages/extensions
+  - packages/jma_code_table_converter_internal
+  - packages/jma_code_table_types
+  - packages/jma_map
+  - packages/jma_parameter_api_client
+  - packages/jma_parameter_converter_internal
+  - packages/jma_parameter_types
+  - packages/kyoshin_observation_point_converter_internal
+  - packages/kyoshin_observation_point_types
+  - packages/lat_lng
+  - packages/notification_setting_types
+  # <ADD_PACKAGE_HERE>
 dependencies:
   melos: ^7.0.0-dev.2
-
 dependency_overrides:
   # `yumemi_lints` の `file` 依存関係が `file` 6.xになっているため、
   # 強制的に `file` 7.x を依存関係に追加する
   # (jma_code_table_converter_internal の `file` 依存関係が 7.x になっているため)
   # cf. https://github.com/yumemi-inc/flutter-yumemi-lints/issues/138s
   file: ^7.0.1
-
 melos:
   repository: https://github.com/YumNumm/EQMonitor
   sdkPath: .fvm/flutter_sdk/
-
   command:
     version:
       linkToCommits: true
@@ -44,8 +38,7 @@ melos:
       runPubGetInParallel: false
       environment:
         sdk: ^3.6.1
-        flutter: ^3.27.2
-
+        flutter: ^3.27.3
   scripts:
     analyze:
       run: |
@@ -54,25 +47,19 @@ melos:
       description: |
         Run `dart analyze` in all packages.
         - Note: you can also rely on your IDEs Dart Analysis / Issues window.
-
     generate:
       run: melos run generate:dart && melos run generate:flutter
       description: Build all generated files for Dart & Flutter packages in this project.
-
     rebuild:
       run: melos exec -c 1 --depends-on="build_runner" -- "flutter pub run build_runner build --delete-conflicting-outputs"
       description: Build all generated files for Flutter packages in this project.
-
     clean-all:
       run: melos clean &&  melos exec "flutter clean"
-
     upgrade:
       run: melos exec "flutter pub upgrade --major-versions"
-
   packages:
     - app
     - packages/*
-
   ide:
     intellij:
       enabled: false
