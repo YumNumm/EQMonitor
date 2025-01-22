@@ -21,22 +21,22 @@ PODS:
   - Firebase/Messaging (11.6.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 11.6.0)
-  - firebase_analytics (11.4.0):
+  - firebase_analytics (11.4.1):
     - Firebase/Analytics (= 11.6.0)
     - firebase_core
     - Flutter
-  - firebase_app_installations (0.3.2):
+  - firebase_app_installations (0.3.2-1):
     - Firebase/Installations (= 11.6.0)
     - firebase_core
     - Flutter
-  - firebase_core (3.10.0):
+  - firebase_core (3.10.1):
     - Firebase/CoreOnly (= 11.6.0)
     - Flutter
-  - firebase_crashlytics (4.3.0):
+  - firebase_crashlytics (4.3.1):
     - Firebase/Crashlytics (= 11.6.0)
     - firebase_core
     - Flutter
-  - firebase_messaging (15.2.0):
+  - firebase_messaging (15.2.1):
     - Firebase/Messaging (= 11.6.0)
     - firebase_core
     - Flutter
@@ -104,8 +104,9 @@ PODS:
     - Flutter
   - flutter_local_notifications (0.0.1):
     - Flutter
-  - flutter_secure_storage (6.0.0):
+  - flutter_secure_storage_darwin (10.0.0):
     - Flutter
+    - FlutterMacOS
   - geolocator_apple (1.2.0):
     - Flutter
   - GoogleAppMeasurement (11.6.0):
@@ -192,10 +193,10 @@ PODS:
   - PromisesObjC (2.4.0)
   - PromisesSwift (2.4.0):
     - PromisesObjC (= 2.4.0)
-  - purchases_flutter (8.4.1):
+  - purchases_flutter (8.4.2):
     - Flutter
-    - PurchasesHybridCommon (= 13.15.1)
-  - PurchasesHybridCommon (13.15.1):
+    - PurchasesHybridCommon (= 13.15.2)
+  - PurchasesHybridCommon (13.15.2):
     - RevenueCat (= 5.14.5)
   - RevenueCat (5.14.5)
   - share_plus (0.0.1):
@@ -222,7 +223,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_email_sender (from `.symlinks/plugins/flutter_email_sender/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
-  - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - flutter_secure_storage_darwin (from `.symlinks/plugins/flutter_secure_storage_darwin/darwin`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - GoogleUtilities
   - in_app_review (from `.symlinks/plugins/in_app_review/ios`)
@@ -283,8 +284,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_email_sender/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
-  flutter_secure_storage:
-    :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  flutter_secure_storage_darwin:
+    :path: ".symlinks/plugins/flutter_secure_storage_darwin/darwin"
   geolocator_apple:
     :path: ".symlinks/plugins/geolocator_apple/ios"
   in_app_review:
@@ -313,11 +314,11 @@ SPEC CHECKSUMS:
   background_task: cb74890aa75be08c253c56017a2f0f6038d0879a
   device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   Firebase: 374a441a91ead896215703a674d58cdb3e9d772b
-  firebase_analytics: a5c6ef5a435d22870fe3cfdcb424f390f56ff752
-  firebase_app_installations: 35b67a0f469732cbdb269c1872618a3a8ccf0bfc
-  firebase_core: 2337982fb78ee4d8d91e608b0a3d4f44346a93c8
-  firebase_crashlytics: 3b6a9a9cbdc5ab92afaf9b206e52c79c2321a0d4
-  firebase_messaging: f3bddfa28c2cad70b3341bf461e987a24efd28d6
+  firebase_analytics: 8ad276088e4f9ba7dfc8dd6be4ee93a29673dde1
+  firebase_app_installations: 8a78b8906822972d1d8bf3a28c02f700d598e60f
+  firebase_core: d3deb82d05dac4bc13190f9d1770787fd6a1cda4
+  firebase_crashlytics: 4c7c77cf1825b70b031fef62e99441c3a423eaa2
+  firebase_messaging: f27e82019a98ef3ea7e744b5b366fcd6b83e7f86
   FirebaseAnalytics: 7114c698cac995602e3b1b96663473e50d54d6e7
   FirebaseCore: 48b0dd707581cf9c1a1220da68223fb0a562afaa
   FirebaseCoreExtension: 2d77d6430c16cf43ca2b04608302ed02b3598361
@@ -330,7 +331,7 @@ SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_email_sender: 2397f5e84aaacfb61af569637a963e7c687858d8
   flutter_local_notifications: 395056b3175ba4f08480a7c5de30cd36d69827e4
-  flutter_secure_storage: 1ed9476fba7e7a782b22888f956cce43e2c62f13
+  flutter_secure_storage_darwin: ce237a8775b39723566dc72571190a3769d70468
   geolocator_apple: 1560c3c875af2a412242c7a923e15d0d401966ff
   GoogleAppMeasurement: 6a9e6317b6a6d810ad03d4a66564ca6c4c5818a3
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
@@ -344,8 +345,8 @@ SPEC CHECKSUMS:
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
-  purchases_flutter: 61fef5ac7eaefc0263fa5e46b2ed3db49b2c928b
-  PurchasesHybridCommon: 734baecf69d858f811ccd01488a9cf6c1e1c4f6b
+  purchases_flutter: a3f9f057c0f437b8e9b4ed1985b2036d8aa95ec1
+  PurchasesHybridCommon: 8af6bb6d85b794dc47ccef1b536ed0e677c789ea
   RevenueCat: 4c0e809f7c7428cbe8d79cbb9a0dc7551e71e74e
   share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
   shared_preference_app_group: 7422922a188e05cf680a656e18e2786dcb5c58b3

@@ -42,8 +42,8 @@ dependencies:
   flutter_local_notifications: ^18.0.1
   flutter_localizations:
     sdk: flutter
-  flutter_markdown: ^0.7.4
-  flutter_secure_storage: ^9.2.2
+  flutter_markdown: ^0.7.5
+  flutter_secure_storage: ^10.0.0-beta.4
   flutter_test:
     sdk: flutter
   freezed_annotation: ^2.4.4
