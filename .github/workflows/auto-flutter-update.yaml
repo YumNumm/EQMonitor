@@ -5,6 +5,7 @@ on:
     # Every day at 9:00 JST
     - cron: '0 0 * * *'
   workflow_dispatch:
+  push: #DEBUG
 
 jobs:
   check-has-flutter-update:
@@ -70,24 +71,24 @@ jobs:
       - name: Setup Application Runtime
         uses: ./.github/actions/setup-application-runtime
 
-      # Replace Version in melos.yaml
-      - name: Replace Version in melos.yaml
+      # Replace Version in pubspec.yaml
+      - name: Replace Version in pubspec.yaml
         run: |
           # Flutter version
           FLUTTER_STR="^$FLUTTER_VERSION" \
-            yq eval --inplace '.command.bootstrap.environment.flutter = strenv(FLUTTER_STR)' melos.yaml
-          echo "Replaced Flutter version in melos.yaml: $FLUTTER_STR"
+            yq eval --inplace '.melos.command.bootstrap.environment.flutter = strenv(FLUTTER_STR)' pubspec.yaml
+          echo "Replaced Flutter version in pubspec.yaml: $FLUTTER_STR"
 
           # Dart version
           dart --version
           DART_VERSION=$(dart --version | awk '{print $4}')
           DART_STR="^$DART_VERSION" \
-            yq eval --inplace '.command.bootstrap.environment.sdk = strenv(DART_STR)' melos.yaml
-          echo "Replaced Dart version in melos.yaml: $DART_STR"
+            yq eval --inplace '.melos.command.bootstrap.environment.sdk = strenv(DART_STR)' pubspec.yaml
+          echo "Replaced Dart version in pubspec.yaml: $DART_STR"
 
-      - name: Check melos.yaml
+      - name: Check pubspec.yaml
         run: |
-          cat melos.yaml
+          cat pubspec.yaml
 
       # Execute melos bootstrap
       - name: Execute melos bootstrap
