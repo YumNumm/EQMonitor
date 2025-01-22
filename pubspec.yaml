@@ -28,7 +28,7 @@ workspace:
     # <ADD_PACKAGE_HERE>
 
 dependencies:
-  melos: ^7.0.0-dev.2
+  melos: ^7.0.0-dev.4
 
 dependency_overrides:
   # `yumemi_lints` の `file` 依存関係が `file` 6.xになっているため、
@@ -69,14 +69,81 @@ melos:
       description: Build all generated files for Dart & Flutter packages in this project.
 
     rebuild:
-      run: melos exec -c 1 --depends-on="build_runner" -- "flutter pub run build_runner build --delete-conflicting-outputs"
-      description: Build all generated files for Flutter packages in this project.
+      description: build_runner を使用してコードを生成します。
+      run: dart run build_runner build -d
+      exec:
+        orderDependents: true
+      packageFilters:
+        dependsOn: build_runner
+    upgrade:
+      description: dart pub のバージョンアップを実施します。
+      run: dart pub upgrade
+      exec:
+        concurrency: 1
+        orderDependents: true
+    upgrade:major:
+      description: dart pub のメジャーバージョンアップを実施します。
+      run: dart pub upgrade --major-versions
+      exec:
+        concurrency: 1
+        orderDependents: true
 
     clean-all:
       run: melos clean &&  melos exec "flutter clean"
 
-    upgrade:
-      run: melos exec "flutter pub upgrade --major-versions"
+    # dependsOn で or 条件で指定することができないため
+    # スクリプトを Flutter と Dart に分けている
+    test:
+      description: すべてのパッケージのテストを実行します。
+      steps:
+        - test:flutter
+        - test:dart
+    test:flutter:
+      description: Flutter パッケージのテストを実行します。
+      run: flutter test
+      exec:
+        concurrency: 1
+      packageFilters:
+        dependsOn: flutter_test
+        dirExists: test
+    test:dart:
+      description: Dart パッケージのテストを実行します。
+      run: dart test
+      exec:
+        concurrency: 1
+      packageFilters:
+        dependsOn: test
+        dirExists: test
+
+    # dependsOn で or 条件で指定することができないため
+    # スクリプトを Flutter と Dart に分けている
+    report:test:
+      description: すべてのパッケージのテストレポートを生成します。
+      steps:
+        - report:test:flutter
+        - report:test:dart
+    report:test:flutter:
+      description: Flutter パッケージのテストレポートを生成します。
+      run: flutter test --no-pub --machine > test_report.log
+      exec:
+        concurrency: 1
+      packageFilters:
+        dependsOn: flutter_test
+        dirExists: test
+    report:test:dart:
+      description: Dart パッケージのテストレポートを生成します。
+      run: dart test --file-reporter="json:test_report.log"
+      exec:
+        concurrency: 1
+      packageFilters:
+        dependsOn: test
+        dirExists: test
+
+    ci:report:custom_lint:
+      description: CI 環境で custom_lint のレポートを生成します。
+      exec: bash "$MELOS_ROOT_PATH/scripts/report-custom-lint-ci.sh"
+      packageFilters:
+        dependsOn: custom_lint
 
   packages:
     - app
