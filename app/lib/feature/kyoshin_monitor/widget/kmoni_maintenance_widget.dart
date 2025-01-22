@@ -1,26 +1,26 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/model/kmoni_maintenance_message_model.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/viewmodel/kmoni_maintenance_view_model.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_maintenance_provider.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 
 class KmoniMaintenanceWidget extends ConsumerWidget {
   const KmoniMaintenanceWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (!ref.watch(kmoniSettingsProvider.select((v) => v.useKmoni))) {
+    if (!ref.watch(kyoshinMonitorSettingsProvider.select((v) => v.useKmoni))) {
       return const SizedBox.shrink();
     }
-    final state = ref.watch(kmoniMaintenanceViewModelProvider);
+    final state = ref.watch(kyoshinMonitorMaintenanceProvider);
     return state.maybeWhen(
       data: (data) => switch (data.type) {
-        KmoniMaintenanceMessageType.non => const SizedBox.shrink(),
+        MaintenanceMessageType.non => const SizedBox.shrink(),
         _ => BorderedContainer(
-            accentColor: data.type == KmoniMaintenanceMessageType.highLight
+            accentColor: data.type == MaintenanceMessageType.highLight
                 ? Colors.orangeAccent.withValues(alpha: 0.2)
                 : null,
             elevation: 1,

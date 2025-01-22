@@ -31,7 +31,7 @@ Dio kyoshinMonitorDio(Ref ref) => Dio(
             settings: const TalkerDioLoggerSettings(
               printResponseData: false,
             ),
-            talker: ref.watch(talkerProvider),
+            talker: talker,
           ),
         ],
       );

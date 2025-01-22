@@ -24,6 +24,7 @@ class PeriodicTimer extends _$PeriodicTimer {
     yield* _streamController.stream;
   }
 
+  /// 直近のTimerを考慮してタイマーを設定する
   void setInterval(Duration interval) {
     _timer?.cancel();
     _timer = null;
@@ -44,6 +45,16 @@ class PeriodicTimer extends _$PeriodicTimer {
         _timer = Timer.periodic(interval, _onTimer);
       });
     }
+  }
+
+  /// 直近のTimerを考慮しないでタイマーを設定する
+  void setIntervalWithoutCurrentTimer(Duration interval) {
+    _timer?.cancel();
+    _timer = null;
+    _timerForDelayAdjust?.cancel();
+    _timerForDelayAdjust = null;
+
+    _timer = Timer.periodic(interval, _onTimer);
   }
 
   void _onTimer(Timer timer) {

@@ -3,14 +3,9 @@
 import 'dart:async';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
-part 'talker.g.dart';
-
-@Riverpod(keepAlive: true)
-Talker talker(Ref ref) => throw UnimplementedError();
+late final Talker talker;
 
 class TelegramWebSocketLog extends TalkerLog {
   TelegramWebSocketLog(super.message);
@@ -32,11 +27,11 @@ class DioLog extends TalkerLog {
   final pen = AnsiPen()..blue();
 }
 
-class KmoniLog extends TalkerLog {
-  KmoniLog(super.message);
+class KyoshinMonitorLog extends TalkerLog {
+  KyoshinMonitorLog(super.message);
 
   @override
-  String get title => 'Kmoni';
+  String get title => 'KyoshinMonitor';
 
   @override
   final pen = AnsiPen()..yellow();

@@ -4,12 +4,30 @@ part 'kyoshin_monitor_state.freezed.dart';
 part 'kyoshin_monitor_state.g.dart';
 
 @freezed
-class KyoshinMonitorState with _$KyoshinMonitorState {
-  const factory KyoshinMonitorState({
-    // 必要フィールドを定義
-    required String title,
-  }) = _KyoshinMonitorState;
+class KyoshinMonitorTimerState with _$KyoshinMonitorTimerState {
+  const factory KyoshinMonitorTimerState({
+    required Duration delayFromDevice,
+    required DateTime? lastSyncedAt,
+  }) = _KyoshinMonitorTimerState;
 
-  factory KyoshinMonitorState.fromJson(Map<String, dynamic> json) =>
-    _$KyoshinMonitorStateFromJson(json);
+  factory KyoshinMonitorTimerState.fromJson(Map<String, dynamic> json) =>
+      _$KyoshinMonitorTimerStateFromJson(json);
+}
+
+enum KyoshinMonitorStatus {
+  /// リアルタイム
+  realtime,
+
+  /// 遅延
+  delayed,
+
+  /// playback
+  playback,
+
+  /// 停止
+  stopped,
+
+  // 初期化中
+  initializing,
+  ;
 }

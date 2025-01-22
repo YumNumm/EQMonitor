@@ -1,6 +1,8 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/button/action_button.dart';
 import 'package:eqmonitor/core/component/widget/kmoni_caution.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -48,15 +50,23 @@ class KmoniWarnPage extends ConsumerWidget {
                 const Spacer(),
                 UseKmoniButton(
                   onDisabled: () {
-                    ref.read(kmoniSettingsProvider.notifier).setUseKmoni(
-                          value: false,
-                        );
+                    unawaited(
+                      ref.read(kyoshinMonitorSettingsProvider.notifier).save(
+                            ref.read(kyoshinMonitorSettingsProvider).copyWith(
+                                  useKmoni: false,
+                                ),
+                          ),
+                    );
                     onNext();
                   },
                   onEnabled: () {
-                    ref.read(kmoniSettingsProvider.notifier).setUseKmoni(
-                          value: true,
-                        );
+                    unawaited(
+                      ref.read(kyoshinMonitorSettingsProvider.notifier).save(
+                            ref.read(kyoshinMonitorSettingsProvider).copyWith(
+                                  useKmoni: true,
+                                ),
+                          ),
+                    );
                     onNext();
                   },
                 ),

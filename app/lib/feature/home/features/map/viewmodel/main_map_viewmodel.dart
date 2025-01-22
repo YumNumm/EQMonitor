@@ -14,9 +14,9 @@ import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provide
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/features/eew_settings/eew_settings_notifier.dart';
 import 'package:eqmonitor/feature/home/features/eew_settings/model/eew_setitngs_model.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/provider/kmoni_view_model.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/feature/home/features/map/model/main_map_viewmodel_state.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/shake_detection/model/shake_detection_kmoni_merged_event.dart';
 import 'package:eqmonitor/feature/shake_detection/provider/shake_detection_provider.dart';
 import 'package:extensions/extensions.dart';
@@ -39,22 +39,23 @@ class MainMapViewModel extends _$MainMapViewModel {
   @override
   MainMapViewmodelState build() {
     ref
-      ..listen(
-        kmoniViewModelProvider,
-        (_, value) async {
-          final analyzedPoints = value.analyzedPoints;
-          if (analyzedPoints == null) {
-            return;
-          }
-          await _onKmoniStateChanged(analyzedPoints);
-        },
-      )
+      // TODO(YumNumm): 強震モニタ結合
+      // ..listen(
+      //   kmoniViewModelProvider,
+      //   (_, value) async {
+      //     final analyzedPoints = value.analyzedPoints;
+      //     if (analyzedPoints == null) {
+      //       return;
+      //     }
+      //     await _onKmoniStateChanged(analyzedPoints);
+      //   },
+      // )
       ..listen(
         eewAliveTelegramProvider,
         (_, value) async => _onEewStateChanged(value ?? []),
       )
       ..listen(
-        kmoniSettingsProvider,
+        kyoshinMonitorSettingsProvider,
         (_, value) async => _onKmoniSettingsChanged(value: value),
       )
       ..listen(
@@ -95,7 +96,7 @@ class MainMapViewModel extends _$MainMapViewModel {
       ..listen(eewSettingsNotifierProvider, (_, next) async {
         await _onEewSettingsChanged(next);
       });
-    _lastKmoniSettingsState = ref.read(kmoniSettingsProvider);
+    _lastKmoniSettingsState = ref.read(kyoshinMonitorSettingsProvider);
     return MainMapViewmodelState(
       isHomePosition: true,
       homeBoundary: defaultBoundary,
@@ -298,27 +299,28 @@ class MainMapViewModel extends _$MainMapViewModel {
   // *********** Kyoshin Monitor Related ***********
   _KmoniObservationPointService? _kmoniObservationPointService;
   _ShakeDetectionBorderService? _shakeDetectionBorderService;
-  Future<void> _onKmoniStateChanged(
-    List<AnalyzedKmoniObservationPoint> values,
-  ) async {
-    if (_controller == null) {
-      return;
-    }
-    if (!ref.read(kmoniSettingsProvider).useKmoni) {
-      await _kmoniObservationPointService?.update(
-        points: [],
-        isInEew: false,
-        markerType: ref.read(kmoniSettingsProvider).kmoniMarkerType,
-      );
-      return;
-    }
+  // TODO(YumNumm): 強震モニタ結合
+  // Future<void> _onKmoniStateChanged(
+  //   List<AnalyzedKmoniObservationPoint> values,
+  // ) async {
+  //   if (_controller == null) {
+  //     return;
+  //   }
+  //   if (!ref.read(kyoshinMonitorSettingsProvider).useKmoni) {
+  //     await _kmoniObservationPointService?.update(
+  //       points: [],
+  //       isInEew: false,
+  //       markerType: ref.read(kyoshinMonitorSettingsProvider).kmoniMarkerType,
+  //     );
+  //     return;
+  //   }
 
-    await _kmoniObservationPointService?.update(
-      points: values,
-      isInEew: ref.read(eewAliveTelegramProvider)?.isNotEmpty ?? false,
-      markerType: ref.read(kmoniSettingsProvider).kmoniMarkerType,
-    );
-  }
+  //   await _kmoniObservationPointService?.update(
+  //     points: values,
+  //     isInEew: ref.read(eewAliveTelegramProvider)?.isNotEmpty ?? false,
+  //     markerType: ref.read(kyoshinMonitorSettingsProvider).kmoniMarkerType,
+  //   );
+  // }
 
   Future<void> _onShakeDetectionStateChanged(
     List<ShakeDetectionKmoniMergedEvent> values,
@@ -329,10 +331,10 @@ class MainMapViewModel extends _$MainMapViewModel {
     await _shakeDetectionBorderService?.update(values);
   }
 
-  KmoniSettingsState? _lastKmoniSettingsState;
+  KyoshinMonitorSettingsModel? _lastKmoniSettingsState;
 
   Future<void> _onKmoniSettingsChanged({
-    required KmoniSettingsState value,
+    required KyoshinMonitorSettingsModel value,
   }) async {
     if (_lastKmoniSettingsState == value) {
       return;
@@ -349,13 +351,14 @@ class MainMapViewModel extends _$MainMapViewModel {
         _kmoniObservationPointService = null;
       }
     }
-    if (_lastKmoniSettingsState?.kmoniMarkerType != value.kmoniMarkerType) {
-      await _kmoniObservationPointService?.update(
-        points: ref.read(kmoniViewModelProvider).analyzedPoints ?? [],
-        isInEew: ref.read(eewAliveTelegramProvider)?.isNotEmpty ?? false,
-        markerType: value.kmoniMarkerType,
-      );
-    }
+    // TODO(YumNumm): 強震モニタ結合
+    // if (_lastKmoniSettingsState?.kmoniMarkerType != value.kmoniMarkerType) {
+    //   await _kmoniObservationPointService?.update(
+    //     points: ref.read(kmoniViewModelProvider).analyzedPoints ?? [],
+    //     isInEew: ref.read(eewAliveTelegramProvider)?.isNotEmpty ?? false,
+    //     markerType: value.kmoniMarkerType,
+    //   );
+    // }
     if (_lastKmoniSettingsState?.showCurrentLocationMarker !=
         value.showCurrentLocationMarker) {
       if (value.showCurrentLocationMarker) {

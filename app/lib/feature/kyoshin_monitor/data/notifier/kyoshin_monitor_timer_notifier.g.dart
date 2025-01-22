@@ -8,13 +8,33 @@ part of 'kyoshin_monitor_timer_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$kyoshinMonitorDelayAdujustTimingHash() =>
+    r'9596c780015c7ef05f31704d32976671e7500925';
+
+/// See also [_kyoshinMonitorDelayAdujustTiming].
+@ProviderFor(_kyoshinMonitorDelayAdujustTiming)
+final _kyoshinMonitorDelayAdujustTimingProvider =
+    AutoDisposeStreamProvider<void>.internal(
+  _kyoshinMonitorDelayAdujustTiming,
+  name: r'_kyoshinMonitorDelayAdujustTimingProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$kyoshinMonitorDelayAdujustTimingHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef _KyoshinMonitorDelayAdujustTimingRef
+    = AutoDisposeStreamProviderRef<void>;
 String _$kyoshinMonitorTimerNotifierHash() =>
-    r'85b5cdf03c83af24a0f9da76872d94cc3c2b4fb5';
+    r'5014c91965c576a15548a769390c0a96c1606f72';
 
 /// See also [KyoshinMonitorTimerNotifier].
 @ProviderFor(KyoshinMonitorTimerNotifier)
 final kyoshinMonitorTimerNotifierProvider = AutoDisposeStreamNotifierProvider<
-    KyoshinMonitorTimerNotifier, DateTime>.internal(
+    KyoshinMonitorTimerNotifier, KyoshinMonitorTimerState>.internal(
   KyoshinMonitorTimerNotifier.new,
   name: r'kyoshinMonitorTimerNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -24,23 +44,7 @@ final kyoshinMonitorTimerNotifierProvider = AutoDisposeStreamNotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$KyoshinMonitorTimerNotifier = AutoDisposeStreamNotifier<DateTime>;
-String _$kyoshinMonitorTimerRefresherHash() =>
-    r'40e2bac528de62aa467850e445c667051c08def1';
-
-/// See also [KyoshinMonitorTimerRefresher].
-@ProviderFor(KyoshinMonitorTimerRefresher)
-final kyoshinMonitorTimerRefresherProvider = AutoDisposeStreamNotifierProvider<
-    KyoshinMonitorTimerRefresher, void>.internal(
-  KyoshinMonitorTimerRefresher.new,
-  name: r'kyoshinMonitorTimerRefresherProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$kyoshinMonitorTimerRefresherHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$KyoshinMonitorTimerRefresher = AutoDisposeStreamNotifier<void>;
+typedef _$KyoshinMonitorTimerNotifier
+    = AutoDisposeStreamNotifier<KyoshinMonitorTimerState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
