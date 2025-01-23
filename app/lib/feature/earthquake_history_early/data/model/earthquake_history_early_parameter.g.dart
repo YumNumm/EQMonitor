@@ -65,10 +65,10 @@ Map<String, dynamic> _$$EarthquakeHistoryEarlyParameterImplToJson(
     };
 
 const _$EarthquakeEarlySortTypeEnumMap = {
-  EarthquakeEarlySortType.originTime: 'originTime',
+  EarthquakeEarlySortType.origin_time: 'origin_time',
   EarthquakeEarlySortType.magnitude: 'magnitude',
   EarthquakeEarlySortType.depth: 'depth',
-  EarthquakeEarlySortType.maxIntensity: 'maxIntensity',
+  EarthquakeEarlySortType.max_intensity: 'max_intensity',
 };
 
 const _$JmaIntensityEnumMap = {
