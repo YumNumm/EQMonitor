@@ -65,8 +65,8 @@ extension _EarthquakeEarlySortTypeEx on EarthquakeEarlySortType {
   String get label => switch (this) {
         EarthquakeEarlySortType.depth => '深さ',
         EarthquakeEarlySortType.magnitude => 'マグニチュード',
-        EarthquakeEarlySortType.originTime => '発生時刻',
-        EarthquakeEarlySortType.maxIntensity => '最大観測震度',
+        EarthquakeEarlySortType.origin_time => '発生時刻',
+        EarthquakeEarlySortType.max_intensity => '最大観測震度',
       };
 }
 
@@ -131,10 +131,10 @@ class _SortModal extends HookConsumerWidget {
                 (EarthquakeEarlySortType.depth, true) => '震源の浅い順',
                 (EarthquakeEarlySortType.magnitude, false) => 'マグニチュードの大きい順',
                 (EarthquakeEarlySortType.magnitude, true) => 'マグニチュードの小さい順',
-                (EarthquakeEarlySortType.originTime, false) => '地震発生時刻の新しい順',
-                (EarthquakeEarlySortType.originTime, true) => '地震発生時刻の古い順',
-                (EarthquakeEarlySortType.maxIntensity, false) => '最大観測震度の大きい順',
-                (EarthquakeEarlySortType.maxIntensity, true) => '最大観測震度の小さい順',
+                (EarthquakeEarlySortType.origin_time, false) => '地震発生時刻の新しい順',
+                (EarthquakeEarlySortType.origin_time, true) => '地震発生時刻の古い順',
+                (EarthquakeEarlySortType.max_intensity, false) => '最大観測震度の大きい順',
+                (EarthquakeEarlySortType.max_intensity, true) => '最大観測震度の小さい順',
               },
             ),
             value: ascending.value,
