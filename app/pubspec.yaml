@@ -134,13 +134,19 @@ flutter:
   fonts:
     - family: NotoSansJP
       fonts:
-        - asset: assets/fonts/NotoSansJP-Regular.ttf
-          weight: 400
+        # - asset: assets/fonts/NotoSansJP-Regular.ttf
+          # weight: 400
+        - asset: assets/fonts/NotoSansJP-Medium.ttf
+          weight: 500
         - asset: assets/fonts/NotoSansJP-Bold.ttf
           weight: 700
         - asset: assets/fonts/NotoSansJP-Black.ttf
           weight: 900
     - family: JetBrainsMono
       fonts:
+        - asset: assets/fonts/JetBrainsMono-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/JetBrainsMono-Bold.ttf
+          weight: 700
         - asset: assets/fonts/JetBrainsMono-ExtraBold.ttf
           weight: 900
