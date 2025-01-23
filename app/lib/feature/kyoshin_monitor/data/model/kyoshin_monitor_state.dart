@@ -1,17 +1,24 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
+import 'package:kyoshin_monitor_image_parser/kyoshin_monitor_image_parser.dart';
 
 part 'kyoshin_monitor_state.freezed.dart';
 part 'kyoshin_monitor_state.g.dart';
 
 @freezed
-class KyoshinMonitorTimerState with _$KyoshinMonitorTimerState {
-  const factory KyoshinMonitorTimerState({
-    required Duration delayFromDevice,
-    required DateTime? lastSyncedAt,
-  }) = _KyoshinMonitorTimerState;
+class KyoshinMonitorState with _$KyoshinMonitorState {
+  const factory KyoshinMonitorState({
+    RealtimeDataType? currentRealtimeDataType,
+    RealtimeLayer? currentRealtimeLayer,
+    @Default(KyoshinMonitorStatus.initializing) KyoshinMonitorStatus status,
+    DateTime? lastUpdatedAt,
+    DateTime? lastImageFetchTargetTime,
+    Duration? lastImageFetchDuration,
+    List<KyoshinMonitorObservationAnalyzedPoint>? analyzedPoints,
+  }) = _KyoshinMonitorState;
 
-  factory KyoshinMonitorTimerState.fromJson(Map<String, dynamic> json) =>
-      _$KyoshinMonitorTimerStateFromJson(json);
+  factory KyoshinMonitorState.fromJson(Map<String, dynamic> json) =>
+      _$KyoshinMonitorStateFromJson(json);
 }
 
 enum KyoshinMonitorStatus {

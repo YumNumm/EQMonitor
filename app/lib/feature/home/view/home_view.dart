@@ -25,7 +25,6 @@ import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_scale.dart';
-import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
 import 'package:eqmonitor/feature/home/component/parameter/parameter_loader_widget.dart';
 import 'package:eqmonitor/feature/home/component/render/map_components_renderer.dart';
 import 'package:eqmonitor/feature/home/component/shake-detect/shake_detection_card.dart';
@@ -471,16 +470,6 @@ class _Fabs extends ConsumerWidget {
                         ? Icons.location_on
                         : Icons.location_off,
                   ),
-                ),
-                FloatingActionButton.small(
-                  heroTag: 'sheet',
-                  tooltip: '強震モニタの設定',
-                  onPressed: () async => showModalBottomSheet<void>(
-                    context: context,
-                    builder: (context) => const KmoniSettingsModal(),
-                  ),
-                  elevation: 4,
-                  child: const Icon(Icons.settings),
                 ),
                 FloatingActionButton.small(
                   heroTag: 'home',

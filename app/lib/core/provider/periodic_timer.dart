@@ -32,7 +32,7 @@ class PeriodicTimer extends _$PeriodicTimer {
     _timerForDelayAdjust = null;
 
     // 次のタイミングを計算する
-    final nextTime = interval - _stopwatch!.elapsed;
+    final nextTime = interval - (_stopwatch?.elapsed ?? Duration.zero);
     if (nextTime.isNegative) {
       _streamController.add(null);
       _timer = Timer.periodic(interval, _onTimer);

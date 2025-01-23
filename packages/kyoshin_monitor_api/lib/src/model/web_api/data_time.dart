@@ -9,7 +9,9 @@ class DataTime with _$DataTime implements KyoshinMonitorWebApiResponse {
   const factory DataTime({
     required Security? security,
     required Result? result,
+    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
     required DateTime latestTime,
+    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
     required DateTime requestTime,
   }) = _DataTime;
 

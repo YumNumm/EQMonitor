@@ -1,11 +1,8 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
-import 'package:talker_dio_logger/talker_dio_logger_settings.dart';
 
 part 'kyoshin_monitor_dio.g.dart';
 
@@ -25,13 +22,5 @@ Dio kyoshinMonitorDio(Ref ref) => Dio(
               'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
         },
       ),
-    )..interceptors.addAll(
-        [
-          TalkerDioLogger(
-            settings: const TalkerDioLoggerSettings(
-              printResponseData: false,
-            ),
-            talker: talker,
-          ),
-        ],
-      );
+    );
+    

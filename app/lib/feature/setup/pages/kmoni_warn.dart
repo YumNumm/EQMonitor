@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/component/button/action_button.dart';
-import 'package:eqmonitor/core/component/widget/kmoni_caution.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_cautionary_note_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -46,7 +46,7 @@ class KmoniWarnPage extends ConsumerWidget {
                     ),
                   ),
                 ),
-                const KmoniCautionWidget(),
+                const KyoshinMonitorCautionaryNoteList(),
                 const Spacer(),
                 UseKmoniButton(
                   onDisabled: () {
