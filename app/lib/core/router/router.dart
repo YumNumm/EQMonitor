@@ -25,6 +25,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_se
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/websocket_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/debugger_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/display_settings.dart';
@@ -248,6 +249,9 @@ class TalkerRoute extends GoRouteData {
         ),
         TypedGoRoute<DebugKyoshinMonitorRoute>(
           path: 'kyoshin-monitor',
+        ),
+        TypedGoRoute<PlaygroundRoute>(
+          path: 'playground',
         ),
       ],
     ),
