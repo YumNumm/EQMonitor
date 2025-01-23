@@ -99,7 +99,7 @@ abstract class V1 {
     @Query('originTimeLte') DateTime? originTimeLte,
     @Query('originTimeGte') DateTime? originTimeGte,
     @Query('sort')
-    EarthquakeEarlySortType sort = EarthquakeEarlySortType.originTime,
+    EarthquakeEarlySortType sort = EarthquakeEarlySortType.origin_time,
     @Query('ascending') bool ascending = false,
   });
 
@@ -108,8 +108,10 @@ abstract class V1 {
 }
 
 enum EarthquakeEarlySortType {
-  originTime,
+  // ignore: constant_identifier_names
+  origin_time,
   magnitude,
   depth,
-  maxIntensity,
+  // ignore: constant_identifier_names
+  max_intensity,
 }
