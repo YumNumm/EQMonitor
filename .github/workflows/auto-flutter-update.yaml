@@ -66,6 +66,15 @@ jobs:
             > .fvmrc.tmp \
           && mv .fvmrc.tmp .fvmrc
 
+      # Replace version in .vscode/settings.json
+      - name: Replace version in .vscode/settings.json
+        run: |
+          jq  \
+            --arg latest_version "$LATEST_VERSION" \
+            '.dart.flutterSdkPath = ".fvm/versions/$latest_version"' .vscode/settings.json | sed '/^$/d' \
+            > .vscode/settings.json.tmp \
+          && mv .vscode/settings.json.tmp .vscode/settings.json
+
       # Install Flutter
       - name: Setup Application Runtime
         uses: ./.github/actions/setup-application-runtime
