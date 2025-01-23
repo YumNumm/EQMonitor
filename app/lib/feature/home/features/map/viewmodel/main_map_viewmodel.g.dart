@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: type=lint, duplicate_ignore
+// ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
 part of 'main_map_viewmodel.dart';
 
@@ -17,10 +17,11 @@ _$_EewHypocenterPropertiesImpl _$$_EewHypocenterPropertiesImplFromJson(
         final val = _$_EewHypocenterPropertiesImpl(
           depth: $checkedConvert('depth', (v) => (v as num).toInt()),
           magnitude: $checkedConvert('magnitude', (v) => (v as num).toDouble()),
-          isLowPrecise: $checkedConvert('isLowPrecise', (v) => v as bool),
+          isLowPrecise: $checkedConvert('is_low_precise', (v) => v as bool),
         );
         return val;
       },
+      fieldKeyMap: const {'isLowPrecise': 'is_low_precise'},
     );
 
 Map<String, dynamic> _$$_EewHypocenterPropertiesImplToJson(
@@ -28,14 +29,14 @@ Map<String, dynamic> _$$_EewHypocenterPropertiesImplToJson(
     <String, dynamic>{
       'depth': instance.depth,
       'magnitude': instance.magnitude,
-      'isLowPrecise': instance.isLowPrecise,
+      'is_low_precise': instance.isLowPrecise,
     };
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mainMapViewModelHash() => r'19137d24eb985a5eec5c5ad42d393d203b8906f5';
+String _$mainMapViewModelHash() => r'2482955d561fb1806225808587c47a13fdb712ef';
 
 /// See also [MainMapViewModel].
 @ProviderFor(MainMapViewModel)

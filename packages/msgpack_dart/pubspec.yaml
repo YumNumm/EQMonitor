@@ -1,0 +1,12 @@
+name: msgpack_dart
+description: Message Pack implementation for dart
+homepage: https://github.com/knopp/msgpack_dart
+publish_to: none
+
+environment:
+    sdk: ^3.6.1
+
+resolution: workspace
+
+dev_dependencies:
+    test: ^1.3.0

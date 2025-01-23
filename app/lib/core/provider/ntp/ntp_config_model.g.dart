@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: type=lint, duplicate_ignore
+// ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
 part of 'ntp_config_model.dart';
 
@@ -15,7 +15,7 @@ _$NtpConfigModelImpl _$$NtpConfigModelImplFromJson(Map<String, dynamic> json) =>
       ($checkedConvert) {
         final val = _$NtpConfigModelImpl(
           lookUpAddress: $checkedConvert(
-              'lookUpAddress', (v) => v as String? ?? 'ntp.nict.jp'),
+              'look_up_address', (v) => v as String? ?? 'ntp.nict.jp'),
           timeout: $checkedConvert(
               'timeout',
               (v) => v == null
@@ -29,12 +29,13 @@ _$NtpConfigModelImpl _$$NtpConfigModelImplFromJson(Map<String, dynamic> json) =>
         );
         return val;
       },
+      fieldKeyMap: const {'lookUpAddress': 'look_up_address'},
     );
 
 Map<String, dynamic> _$$NtpConfigModelImplToJson(
         _$NtpConfigModelImpl instance) =>
     <String, dynamic>{
-      'lookUpAddress': instance.lookUpAddress,
+      'look_up_address': instance.lookUpAddress,
       'timeout': instance.timeout.inMicroseconds,
       'interval': instance.interval.inMicroseconds,
     };

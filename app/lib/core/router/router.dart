@@ -12,10 +12,11 @@ import 'package:eqmonitor/feature/earthquake_history_details/ui/screen/earthquak
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_details_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_screen.dart';
 import 'package:eqmonitor/feature/eew/ui/screen/eew_details_by_event_id_page.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/page/kmoni_settings_page.dart';
 import 'package:eqmonitor/feature/home/view/home_view.dart';
 import 'package:eqmonitor/feature/information_history/page/information_history_page.dart';
 import 'package:eqmonitor/feature/information_history_details/information_history_details_page.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_cautionary_note_page.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_settings_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/about_this_app.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/license_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_screen.dart';
@@ -23,6 +24,7 @@ import 'package:eqmonitor/feature/settings/children/application_info/term_of_ser
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/http_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/websocket_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/debugger_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/display_settings.dart';
@@ -39,6 +41,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sheet/route.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 part 'router.g.dart';
@@ -56,7 +59,7 @@ GoRouter goRouter(Ref ref) => GoRouter(
               : const SetupRoute().location,
       observers: [
         _NavigatorObserver(
-          ref.watch(talkerProvider),
+          talker,
         ),
         FirebaseAnalyticsObserver(
           analytics: FirebaseAnalytics.instance,
@@ -158,13 +161,19 @@ class InformationHistoryDetailsRoute extends GoRouteData {
     TypedGoRoute<EewDetailsByEventIdRoute>(
       path: 'eew-details-by-event-id/:eventId',
     ),
+    TypedGoRoute<KyoshinMonitorCautionaryNoteModalRoute>(
+      path: 'kyoshin-monitor-cautionary-note-modal',
+    ),
   ],
 )
 class HomeRoute extends GoRouteData {
   const HomeRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => const HomeView();
+  Page<void> buildPage(BuildContext context, GoRouterState state) =>
+      const MaterialExtendedPage<void>(
+        child: HomeView(),
+      );
 }
 
 @TypedGoRoute<TalkerRoute>(path: '/talker')
@@ -173,15 +182,6 @@ class TalkerRoute extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) => const TalkerPage();
-}
-
-@TypedGoRoute<KmoniRoute>(path: '/kmoni_config')
-class KmoniRoute extends GoRouteData {
-  const KmoniRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const KmoniSettingsPage();
 }
 
 @TypedGoRoute<SettingsRoute>(
@@ -229,6 +229,14 @@ class KmoniRoute extends GoRouteData {
         ),
       ],
     ),
+    TypedGoRoute<KyoshinMonitorSettingsRoute>(
+      path: 'kyoshin-monitor-settings',
+      routes: [
+        TypedGoRoute<KyoshinMonitorSettingsModalRoute>(
+          path: 'modal',
+        ),
+      ],
+    ),
     TypedGoRoute<DebuggerRoute>(
       path: 'debugger',
       routes: [
@@ -237,6 +245,9 @@ class KmoniRoute extends GoRouteData {
         ),
         TypedGoRoute<WebsocketEndpointSelectorRoute>(
           path: 'websocket-api-endpoint-selector',
+        ),
+        TypedGoRoute<DebugKyoshinMonitorRoute>(
+          path: 'kyoshin-monitor',
         ),
       ],
     ),

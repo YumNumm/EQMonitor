@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: type=lint, duplicate_ignore
+// ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
 part of 'router.dart';
 
@@ -16,7 +16,6 @@ List<RouteBase> get $appRoutes => [
       $informationHistoryDetailsRoute,
       $homeRoute,
       $talkerRoute,
-      $kmoniRoute,
       $settingsRoute,
     ];
 
@@ -160,6 +159,10 @@ RouteBase get $homeRoute => GoRouteData.$route(
           path: 'eew-details-by-event-id/:eventId',
           factory: $EewDetailsByEventIdRouteExtension._fromState,
         ),
+        GoRouteData.$route(
+          path: 'kyoshin-monitor-cautionary-note-modal',
+          factory: $KyoshinMonitorCautionaryNoteModalRouteExtension._fromState,
+        ),
       ],
     );
 
@@ -239,16 +242,14 @@ extension $EewDetailsByEventIdRouteExtension on EewDetailsByEventIdRoute {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $talkerRoute => GoRouteData.$route(
-      path: '/talker',
-      factory: $TalkerRouteExtension._fromState,
-    );
-
-extension $TalkerRouteExtension on TalkerRoute {
-  static TalkerRoute _fromState(GoRouterState state) => const TalkerRoute();
+extension $KyoshinMonitorCautionaryNoteModalRouteExtension
+    on KyoshinMonitorCautionaryNoteModalRoute {
+  static KyoshinMonitorCautionaryNoteModalRoute _fromState(
+          GoRouterState state) =>
+      const KyoshinMonitorCautionaryNoteModalRoute();
 
   String get location => GoRouteData.$location(
-        '/talker',
+        '/kyoshin-monitor-cautionary-note-modal',
       );
 
   void go(BuildContext context) => context.go(location);
@@ -261,16 +262,16 @@ extension $TalkerRouteExtension on TalkerRoute {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $kmoniRoute => GoRouteData.$route(
-      path: '/kmoni_config',
-      factory: $KmoniRouteExtension._fromState,
+RouteBase get $talkerRoute => GoRouteData.$route(
+      path: '/talker',
+      factory: $TalkerRouteExtension._fromState,
     );
 
-extension $KmoniRouteExtension on KmoniRoute {
-  static KmoniRoute _fromState(GoRouterState state) => const KmoniRoute();
+extension $TalkerRouteExtension on TalkerRoute {
+  static TalkerRoute _fromState(GoRouterState state) => const TalkerRoute();
 
   String get location => GoRouteData.$location(
-        '/kmoni_config',
+        '/talker',
       );
 
   void go(BuildContext context) => context.go(location);
@@ -342,6 +343,16 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           ],
         ),
         GoRouteData.$route(
+          path: 'kyoshin-monitor-settings',
+          factory: $KyoshinMonitorSettingsRouteExtension._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'modal',
+              factory: $KyoshinMonitorSettingsModalRouteExtension._fromState,
+            ),
+          ],
+        ),
+        GoRouteData.$route(
           path: 'debugger',
           factory: $DebuggerRouteExtension._fromState,
           routes: [
@@ -352,6 +363,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
             GoRouteData.$route(
               path: 'websocket-api-endpoint-selector',
               factory: $WebsocketEndpointSelectorRouteExtension._fromState,
+            ),
+            GoRouteData.$route(
+              path: 'kyoshin-monitor',
+              factory: $DebugKyoshinMonitorRouteExtension._fromState,
             ),
           ],
         ),
@@ -615,6 +630,43 @@ extension $DonationExecutedRouteExtension on DonationExecutedRoute {
       context.replace(location, extra: $extra);
 }
 
+extension $KyoshinMonitorSettingsRouteExtension on KyoshinMonitorSettingsRoute {
+  static KyoshinMonitorSettingsRoute _fromState(GoRouterState state) =>
+      const KyoshinMonitorSettingsRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/kyoshin-monitor-settings',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $KyoshinMonitorSettingsModalRouteExtension
+    on KyoshinMonitorSettingsModalRoute {
+  static KyoshinMonitorSettingsModalRoute _fromState(GoRouterState state) =>
+      const KyoshinMonitorSettingsModalRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/kyoshin-monitor-settings/modal',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
 extension $DebuggerRouteExtension on DebuggerRoute {
   static DebuggerRoute _fromState(GoRouterState state) => const DebuggerRoute();
 
@@ -670,6 +722,24 @@ extension $WebsocketEndpointSelectorRouteExtension
   void replace(BuildContext context) => context.replace(location);
 }
 
+extension $DebugKyoshinMonitorRouteExtension on DebugKyoshinMonitorRoute {
+  static DebugKyoshinMonitorRoute _fromState(GoRouterState state) =>
+      const DebugKyoshinMonitorRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/debugger/kyoshin-monitor',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
 T? _$convertMapValue<T>(
   String key,
   Map<String, String> map,
@@ -694,7 +764,7 @@ bool _$boolConverter(String value) {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$goRouterHash() => r'cbbe17fc25f9ec41badc7b58e131c077e09d7df0';
+String _$goRouterHash() => r'1cb9b56b88405a60613af2de63c7bff6c5c19444';
 
 /// See also [goRouter].
 @ProviderFor(goRouter)

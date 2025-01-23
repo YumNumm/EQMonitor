@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: type=lint, duplicate_ignore
+// ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
 part of 'debugger_model.dart';
 
@@ -14,16 +14,21 @@ _$DebuggerModelImpl _$$DebuggerModelImplFromJson(Map<String, dynamic> json) =>
       json,
       ($checkedConvert) {
         final val = _$DebuggerModelImpl(
-          isDebugger: $checkedConvert('isDebugger', (v) => v as bool? ?? false),
+          isDebugger:
+              $checkedConvert('is_debugger', (v) => v as bool? ?? false),
           isDeveloper:
-              $checkedConvert('isDeveloper', (v) => v as bool? ?? false),
+              $checkedConvert('is_developer', (v) => v as bool? ?? false),
         );
         return val;
+      },
+      fieldKeyMap: const {
+        'isDebugger': 'is_debugger',
+        'isDeveloper': 'is_developer'
       },
     );
 
 Map<String, dynamic> _$$DebuggerModelImplToJson(_$DebuggerModelImpl instance) =>
     <String, dynamic>{
-      'isDebugger': instance.isDebugger,
-      'isDeveloper': instance.isDeveloper,
+      'is_debugger': instance.isDebugger,
+      'is_developer': instance.isDeveloper,
     };

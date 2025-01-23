@@ -17,8 +17,8 @@ import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/core/util/license/init_licenses.dart';
 import 'package:eqmonitor/feature/donation/data/donation_notifier.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/data/kyoshin_color_map_data_source.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/provider/kmoni_color_provider.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/kyoshin_color_map_data_source.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/provider/kmoni_color_provider.dart';
 import 'package:eqmonitor/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -53,7 +53,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  final talker = TalkerFlutter.init(
+  talker = TalkerFlutter.init(
     settings: TalkerSettings(
       // ignore: avoid_redundant_argument_values
       useConsoleLogs: kDebugMode,
@@ -98,7 +98,6 @@ Future<void> main() async {
   final results = await (
     (
       SharedPreferences.getInstance(),
-      loadKmoniObservationPoints(),
       PackageInfo.fromPlatform(),
       (!kIsWeb && Platform.isAndroid
           ? deviceInfo.androidInfo
@@ -141,30 +140,34 @@ Future<void> main() async {
       FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode),
     );
   }
+
+  final container = ProviderContainer(
+    overrides: [
+      sharedPreferencesProvider.overrideWithValue(results.$1.$1),
+      packageInfoProvider.overrideWithValue(results.$1.$2),
+      if (results.$1.$3 != null)
+        androidDeviceInfoProvider.overrideWithValue(results.$1.$3!),
+      if (results.$1.$4 != null)
+        iosDeviceInfoProvider.overrideWithValue(results.$1.$4!),
+      applicationDocumentsDirectoryProvider.overrideWithValue(results.$1.$6!),
+      jmaCodeTableProvider.overrideWithValue(results.$1.$7),
+      if (results.$2.$3 != null)
+        kyoshinColorMapProvider.overrideWithValue(results.$2.$3!),
+    ],
+    observers: [
+      if (kDebugMode)
+        CustomProviderObserver(
+          talker,
+        ),
+    ],
+  );
+
+  await container
+      .read(kyoshinMonitorInternalObservationPointsConvertedProvider.future);
+
   runApp(
-    ProviderScope(
-      overrides: [
-        sharedPreferencesProvider.overrideWithValue(results.$1.$1),
-        kyoshinObservationPointsProvider.overrideWithValue(results.$1.$2),
-        talkerProvider.overrideWithValue(talker),
-        packageInfoProvider.overrideWithValue(results.$1.$3),
-        if (results.$1.$4 != null)
-          androidDeviceInfoProvider.overrideWithValue(results.$1.$4!),
-        if (results.$1.$5 != null)
-          iosDeviceInfoProvider.overrideWithValue(results.$1.$5!),
-        if (results.$1.$7 != null)
-          applicationDocumentsDirectoryProvider
-              .overrideWithValue(results.$1.$7!),
-        jmaCodeTableProvider.overrideWithValue(results.$1.$8),
-        if (results.$2.$3 != null)
-          kyoshinColorMapProvider.overrideWithValue(results.$2.$3!),
-      ],
-      observers: [
-        if (kDebugMode)
-          CustomProviderObserver(
-            talker,
-          ),
-      ],
+    UncontrolledProviderScope(
+      container: container,
       child: const App(),
     ),
   );

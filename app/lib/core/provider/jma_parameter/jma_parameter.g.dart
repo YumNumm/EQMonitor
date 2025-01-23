@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: type=lint, duplicate_ignore
+// ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
 part of 'jma_parameter.dart';
 
@@ -8,7 +8,7 @@ part of 'jma_parameter.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$jmaParameterHash() => r'494d462517d6e93a473b3161ecb244af68d0d309';
+String _$jmaParameterHash() => r'7309e2c72e90050ea3cb41f3884dc4e21a0a874c';
 
 /// See also [JmaParameter].
 @ProviderFor(JmaParameter)

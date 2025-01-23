@@ -14,8 +14,6 @@ import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/core/provider/map/map_style.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
-import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -270,19 +268,20 @@ class EarthquakeMapWidget extends HookConsumerWidget {
       await currentLocationService.init(mapController.value!);
     }
 
-    if (ref.watch(kmoniSettingsProvider).showCurrentLocationMarker) {
-      ref.listen(
-        locationStreamProvider,
-        (_, next) async {
-          if (next case AsyncData(:final value)) {
-            await currentLocationService.update(
-              mapController.value!,
-              (value.latitude, value.longitude),
-            );
-          }
-        },
-      );
-    }
+    // TODO(YumNumm): 現在位置を表示する
+    // if (ref.watch(kyoshinMonitorSettingsProvider).showCurrentLocationMarker) {
+    //   ref.listen(
+    //     locationStreamProvider,
+    //     (_, next) async {
+    //       if (next case AsyncData(:final value)) {
+    //         await currentLocationService.update(
+    //           mapController.value!,
+    //           (value.latitude, value.longitude),
+    //         );
+    //       }
+    //     },
+    //   );
+    // }
 
     Future<void> onDisplayModeChanged({
       required map_libre.MapLibreMapController controller,
@@ -391,14 +390,15 @@ class EarthquakeMapWidget extends HookConsumerWidget {
           await controller.moveCamera(cameraUpdate);
           maxZoomLevel.value = 12;
 
-          if (ref.read(kmoniSettingsProvider).showCurrentLocationMarker) {
-            if (ref.read(locationStreamProvider) case AsyncData(:final value)) {
-              await currentLocationService.update(
-                controller,
-                (value.latitude, value.longitude),
-              );
-            }
-          }
+          // TODO(YumNumm): 現在位置を表示する
+          // if (ref.read(kyoshinMonitorSettingsProvider).showCurrentLocationMarker) {
+          //   if (ref.read(locationStreamProvider) case AsyncData(:final value)) {
+          //     await currentLocationService.update(
+          //       controller,
+          //       (value.latitude, value.longitude),
+          //     );
+          //   }
+          // }
         },
         rotateGesturesEnabled: false,
         tiltGesturesEnabled: false,
