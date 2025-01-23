@@ -44,12 +44,12 @@ _$EewSettingsImpl _$$EewSettingsImplFromJson(Map<String, dynamic> json) =>
       ($checkedConvert) {
         final val = _$EewSettingsImpl(
           emergencyIntensity: $checkedConvert(
-              'emergencyIntensity',
+              'emergency_intensity',
               (v) =>
                   $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v) ??
                   null),
           silentIntensity: $checkedConvert(
-              'silentIntensity',
+              'silent_intensity',
               (v) =>
                   $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v) ??
                   null),
@@ -63,13 +63,17 @@ _$EewSettingsImpl _$$EewSettingsImplFromJson(Map<String, dynamic> json) =>
         );
         return val;
       },
+      fieldKeyMap: const {
+        'emergencyIntensity': 'emergency_intensity',
+        'silentIntensity': 'silent_intensity'
+      },
     );
 
 Map<String, dynamic> _$$EewSettingsImplToJson(_$EewSettingsImpl instance) =>
     <String, dynamic>{
-      'emergencyIntensity':
+      'emergency_intensity':
           _$JmaForecastIntensityEnumMap[instance.emergencyIntensity],
-      'silentIntensity':
+      'silent_intensity':
           _$JmaForecastIntensityEnumMap[instance.silentIntensity],
       'regions': instance.regions,
     };
@@ -96,12 +100,12 @@ _$EarthquakeSettingsImpl _$$EarthquakeSettingsImplFromJson(
       ($checkedConvert) {
         final val = _$EarthquakeSettingsImpl(
           emergencyIntensity: $checkedConvert(
-              'emergencyIntensity',
+              'emergency_intensity',
               (v) =>
                   $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v) ??
                   null),
           silentIntensity: $checkedConvert(
-              'silentIntensity',
+              'silent_intensity',
               (v) =>
                   $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v) ??
                   null),
@@ -115,14 +119,18 @@ _$EarthquakeSettingsImpl _$$EarthquakeSettingsImplFromJson(
         );
         return val;
       },
+      fieldKeyMap: const {
+        'emergencyIntensity': 'emergency_intensity',
+        'silentIntensity': 'silent_intensity'
+      },
     );
 
 Map<String, dynamic> _$$EarthquakeSettingsImplToJson(
         _$EarthquakeSettingsImpl instance) =>
     <String, dynamic>{
-      'emergencyIntensity':
+      'emergency_intensity':
           _$JmaForecastIntensityEnumMap[instance.emergencyIntensity],
-      'silentIntensity':
+      'silent_intensity':
           _$JmaForecastIntensityEnumMap[instance.silentIntensity],
       'regions': instance.regions,
     };
@@ -134,13 +142,18 @@ _$RegionImpl _$$RegionImplFromJson(Map<String, dynamic> json) => $checkedCreate(
         final val = _$RegionImpl(
           code: $checkedConvert('code', (v) => v as String),
           name: $checkedConvert('name', (v) => v as String),
-          emergencyIntensity: $checkedConvert('emergencyIntensity',
+          emergencyIntensity: $checkedConvert('emergency_intensity',
               (v) => $enumDecode(_$JmaForecastIntensityEnumMap, v)),
-          silentIntensity: $checkedConvert('silentIntensity',
+          silentIntensity: $checkedConvert('silent_intensity',
               (v) => $enumDecode(_$JmaForecastIntensityEnumMap, v)),
-          isMain: $checkedConvert('isMain', (v) => v as bool),
+          isMain: $checkedConvert('is_main', (v) => v as bool),
         );
         return val;
+      },
+      fieldKeyMap: const {
+        'emergencyIntensity': 'emergency_intensity',
+        'silentIntensity': 'silent_intensity',
+        'isMain': 'is_main'
       },
     );
 
@@ -148,9 +161,9 @@ Map<String, dynamic> _$$RegionImplToJson(_$RegionImpl instance) =>
     <String, dynamic>{
       'code': instance.code,
       'name': instance.name,
-      'emergencyIntensity':
+      'emergency_intensity':
           _$JmaForecastIntensityEnumMap[instance.emergencyIntensity]!,
-      'silentIntensity':
+      'silent_intensity':
           _$JmaForecastIntensityEnumMap[instance.silentIntensity]!,
-      'isMain': instance.isMain,
+      'is_main': instance.isMain,
     };

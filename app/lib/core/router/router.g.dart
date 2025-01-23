@@ -163,10 +163,6 @@ RouteBase get $homeRoute => GoRouteData.$route(
           path: 'kyoshin-monitor-cautionary-note-modal',
           factory: $KyoshinMonitorCautionaryNoteModalRouteExtension._fromState,
         ),
-        GoRouteData.$route(
-          path: 'kyoshin-monitor-settings',
-          factory: $KyoshinMonitorSettingsRouteExtension._fromState,
-        ),
       ],
     );
 
@@ -266,24 +262,6 @@ extension $KyoshinMonitorCautionaryNoteModalRouteExtension
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $KyoshinMonitorSettingsRouteExtension on KyoshinMonitorSettingsRoute {
-  static KyoshinMonitorSettingsRoute _fromState(GoRouterState state) =>
-      const KyoshinMonitorSettingsRoute();
-
-  String get location => GoRouteData.$location(
-        '/kyoshin-monitor-settings',
-      );
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
 RouteBase get $talkerRoute => GoRouteData.$route(
       path: '/talker',
       factory: $TalkerRouteExtension._fromState,
@@ -361,6 +339,16 @@ RouteBase get $settingsRoute => GoRouteData.$route(
             GoRouteData.$route(
               path: 'executed',
               factory: $DonationExecutedRouteExtension._fromState,
+            ),
+          ],
+        ),
+        GoRouteData.$route(
+          path: 'kyoshin-monitor-settings',
+          factory: $KyoshinMonitorSettingsRouteExtension._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'modal',
+              factory: $KyoshinMonitorSettingsModalRouteExtension._fromState,
             ),
           ],
         ),
@@ -640,6 +628,43 @@ extension $DonationExecutedRouteExtension on DonationExecutedRoute {
 
   void replace(BuildContext context) =>
       context.replace(location, extra: $extra);
+}
+
+extension $KyoshinMonitorSettingsRouteExtension on KyoshinMonitorSettingsRoute {
+  static KyoshinMonitorSettingsRoute _fromState(GoRouterState state) =>
+      const KyoshinMonitorSettingsRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/kyoshin-monitor-settings',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $KyoshinMonitorSettingsModalRouteExtension
+    on KyoshinMonitorSettingsModalRoute {
+  static KyoshinMonitorSettingsModalRoute _fromState(GoRouterState state) =>
+      const KyoshinMonitorSettingsModalRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/kyoshin-monitor-settings/modal',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
 }
 
 extension $DebuggerRouteExtension on DebuggerRoute {

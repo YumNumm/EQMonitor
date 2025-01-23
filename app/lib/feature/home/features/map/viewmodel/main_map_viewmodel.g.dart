@@ -17,10 +17,11 @@ _$_EewHypocenterPropertiesImpl _$$_EewHypocenterPropertiesImplFromJson(
         final val = _$_EewHypocenterPropertiesImpl(
           depth: $checkedConvert('depth', (v) => (v as num).toInt()),
           magnitude: $checkedConvert('magnitude', (v) => (v as num).toDouble()),
-          isLowPrecise: $checkedConvert('isLowPrecise', (v) => v as bool),
+          isLowPrecise: $checkedConvert('is_low_precise', (v) => v as bool),
         );
         return val;
       },
+      fieldKeyMap: const {'isLowPrecise': 'is_low_precise'},
     );
 
 Map<String, dynamic> _$$_EewHypocenterPropertiesImplToJson(
@@ -28,14 +29,14 @@ Map<String, dynamic> _$$_EewHypocenterPropertiesImplToJson(
     <String, dynamic>{
       'depth': instance.depth,
       'magnitude': instance.magnitude,
-      'isLowPrecise': instance.isLowPrecise,
+      'is_low_precise': instance.isLowPrecise,
     };
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mainMapViewModelHash() => r'51787a072f8d8fccd6eeea431e4a4b65add48789';
+String _$mainMapViewModelHash() => r'2482955d561fb1806225808587c47a13fdb712ef';
 
 /// See also [MainMapViewModel].
 @ProviderFor(MainMapViewModel)

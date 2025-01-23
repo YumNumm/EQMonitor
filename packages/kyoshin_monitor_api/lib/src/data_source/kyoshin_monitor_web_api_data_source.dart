@@ -42,11 +42,11 @@ class KyoshinMonitorWebApiDataSource {
       );
 
   /// RealtimeImg
-  Future<List<int>> getRealtimeImageData(
-    RealtimeDataType type,
-    RealtimeLayer layer,
-    DateTime dateTime,
-  ) async {
+  Future<List<int>> getRealtimeImageData({
+    required DateTime dateTime,
+    required RealtimeLayer layer,
+    required RealtimeDataType type,
+  }) async {
     assert(
       !type.isLpgm,
       'LPGM系列の場合はLpgmKyoshinMonitorWebApiDataSourceを使用してください',

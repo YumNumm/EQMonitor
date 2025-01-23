@@ -1,3 +1,4 @@
+import 'dart:isolate';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
@@ -9,7 +10,7 @@ import 'package:kyoshin_monitor_image_parser/src/util/hsv_color.dart';
 import 'package:meta/meta.dart';
 
 class KyoshinMonitorImageParser {
-  Future<KyoshinMonitorImageParseResult> parse({
+  Future<List<KyoshinMonitorImageParseObservationResult>> parse({
     required Image image,
     required List<KyoshinMonitorObservationPoint> points,
   }) async {
@@ -18,8 +19,7 @@ class KyoshinMonitorImageParser {
       throw const KyoshinImageParseInvalidImageSizeException();
     }
 
-    final analyzedPoints = <KyoshinMonitorObservationAnalyzedPoint>[];
-    final failurePoints = <KyoshinMonitorObservationPoint>[];
+    final results = <KyoshinMonitorImageParseObservationResult>[];
 
     for (final point in points) {
       assert(point.x >= 0 && point.x < image.width, 'x is out of range');
@@ -36,29 +36,32 @@ class KyoshinMonitorImageParser {
       );
       final position = _hsvToPosition(hsv);
       if (position == null) {
-        failurePoints.add(point);
+        results.add(
+          KyoshinMonitorImageParseObservationFailure(
+            point,
+          ),
+        );
       } else {
-        analyzedPoints.add(
-          KyoshinMonitorObservationAnalyzedPoint(
-            point: point,
-            scale: position,
-            color: ColorInt8.rgb(
-              pixel.r.toInt(),
-              pixel.g.toInt(),
-              pixel.b.toInt(),
+        results.add(
+          KyoshinMonitorImageParseObservationSuccess(
+            KyoshinMonitorObservationAnalyzedPoint(
+              point: point,
+              scale: position,
+              color: ColorInt8.rgb(
+                pixel.r.toInt(),
+                pixel.g.toInt(),
+                pixel.b.toInt(),
+              ),
             ),
           ),
         );
       }
     }
 
-    return KyoshinMonitorImageParseResult(
-      successPoints: analyzedPoints,
-      failurePoints: failurePoints,
-    );
+    return results;
   }
 
-  Future<KyoshinMonitorImageParseResult> parseGif({
+  Future<List<KyoshinMonitorImageParseObservationResult>> parseGif({
     required List<int> gifImage,
     required List<KyoshinMonitorObservationPoint> points,
   }) async {
@@ -73,6 +76,17 @@ class KyoshinMonitorImageParser {
       points: points,
     );
   }
+
+  Future<List<KyoshinMonitorImageParseObservationResult>> parseGifInIsolate(
+    List<int> gifImage,
+    List<KyoshinMonitorObservationPoint> points,
+  ) async =>
+      Isolate.run(
+        () => parseGif(
+          gifImage: gifImage,
+          points: points,
+        ),
+      );
 
   @visibleForTesting
   double? hsvToPosition(HsvColor hsv) => _hsvToPosition(hsv);
@@ -121,12 +135,18 @@ class KyoshinMonitorImageParser {
   }
 }
 
-class KyoshinMonitorImageParseResult {
-  KyoshinMonitorImageParseResult({
-    required this.successPoints,
-    required this.failurePoints,
-  });
+sealed class KyoshinMonitorImageParseObservationResult {}
 
-  final List<KyoshinMonitorObservationAnalyzedPoint> successPoints;
-  final List<KyoshinMonitorObservationPoint> failurePoints;
+class KyoshinMonitorImageParseObservationSuccess
+    implements KyoshinMonitorImageParseObservationResult {
+  KyoshinMonitorImageParseObservationSuccess(this.point);
+
+  final KyoshinMonitorObservationAnalyzedPoint point;
+}
+
+class KyoshinMonitorImageParseObservationFailure
+    implements KyoshinMonitorImageParseObservationResult {
+  KyoshinMonitorImageParseObservationFailure(this.point);
+
+  final KyoshinMonitorObservationPoint point;
 }

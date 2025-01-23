@@ -15,19 +15,24 @@ _$TelegramUrlModelImpl _$$TelegramUrlModelImplFromJson(
       json,
       ($checkedConvert) {
         final val = _$TelegramUrlModelImpl(
-          restApiUrl: $checkedConvert('restApiUrl', (v) => v as String),
-          wsApiUrl: $checkedConvert('wsApiUrl', (v) => v as String),
+          restApiUrl: $checkedConvert('rest_api_url', (v) => v as String),
+          wsApiUrl: $checkedConvert('ws_api_url', (v) => v as String),
           apiAuthorization:
-              $checkedConvert('apiAuthorization', (v) => v as String?),
+              $checkedConvert('api_authorization', (v) => v as String?),
         );
         return val;
+      },
+      fieldKeyMap: const {
+        'restApiUrl': 'rest_api_url',
+        'wsApiUrl': 'ws_api_url',
+        'apiAuthorization': 'api_authorization'
       },
     );
 
 Map<String, dynamic> _$$TelegramUrlModelImplToJson(
         _$TelegramUrlModelImpl instance) =>
     <String, dynamic>{
-      'restApiUrl': instance.restApiUrl,
-      'wsApiUrl': instance.wsApiUrl,
-      'apiAuthorization': instance.apiAuthorization,
+      'rest_api_url': instance.restApiUrl,
+      'ws_api_url': instance.wsApiUrl,
+      'api_authorization': instance.apiAuthorization,
     };

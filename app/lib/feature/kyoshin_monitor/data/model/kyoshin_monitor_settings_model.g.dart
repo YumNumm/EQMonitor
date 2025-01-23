@@ -16,24 +16,24 @@ _$KyoshinMonitorSettingsModelImpl _$$KyoshinMonitorSettingsModelImplFromJson(
       ($checkedConvert) {
         final val = _$KyoshinMonitorSettingsModelImpl(
           minRealtimeShindo: $checkedConvert(
-              'minRealtimeShindo', (v) => (v as num?)?.toDouble() ?? null),
+              'min_realtime_shindo', (v) => (v as num?)?.toDouble() ?? null),
           showRealtimeShindoScale: $checkedConvert(
-              'showRealtimeShindoScale', (v) => v as bool? ?? true),
-          useKmoni: $checkedConvert('useKmoni', (v) => v as bool? ?? false),
+              'show_realtime_shindo_scale', (v) => v as bool? ?? true),
+          useKmoni: $checkedConvert('use_kmoni', (v) => v as bool? ?? false),
           showCurrentLocationMarker: $checkedConvert(
-              'showCurrentLocationMarker', (v) => v as bool? ?? false),
+              'show_current_location_marker', (v) => v as bool? ?? false),
           kmoniMarkerType: $checkedConvert(
-              'kmoniMarkerType',
+              'kmoni_marker_type',
               (v) =>
                   $enumDecodeNullable(_$KmoniMarkerTypeEnumMap, v) ??
                   KmoniMarkerType.onlyEew),
           realtimeDataType: $checkedConvert(
-              'realtimeDataType',
+              'realtime_data_type',
               (v) =>
                   $enumDecodeNullable(_$RealtimeDataTypeEnumMap, v) ??
                   RealtimeDataType.shindo),
           realtimeLayer: $checkedConvert(
-              'realtimeLayer',
+              'realtime_layer',
               (v) =>
                   $enumDecodeNullable(_$RealtimeLayerEnumMap, v) ??
                   RealtimeLayer.surface),
@@ -46,18 +46,28 @@ _$KyoshinMonitorSettingsModelImpl _$$KyoshinMonitorSettingsModelImplFromJson(
         );
         return val;
       },
+      fieldKeyMap: const {
+        'minRealtimeShindo': 'min_realtime_shindo',
+        'showRealtimeShindoScale': 'show_realtime_shindo_scale',
+        'useKmoni': 'use_kmoni',
+        'showCurrentLocationMarker': 'show_current_location_marker',
+        'kmoniMarkerType': 'kmoni_marker_type',
+        'realtimeDataType': 'realtime_data_type',
+        'realtimeLayer': 'realtime_layer'
+      },
     );
 
 Map<String, dynamic> _$$KyoshinMonitorSettingsModelImplToJson(
         _$KyoshinMonitorSettingsModelImpl instance) =>
     <String, dynamic>{
-      'minRealtimeShindo': instance.minRealtimeShindo,
-      'showRealtimeShindoScale': instance.showRealtimeShindoScale,
-      'useKmoni': instance.useKmoni,
-      'showCurrentLocationMarker': instance.showCurrentLocationMarker,
-      'kmoniMarkerType': _$KmoniMarkerTypeEnumMap[instance.kmoniMarkerType]!,
-      'realtimeDataType': _$RealtimeDataTypeEnumMap[instance.realtimeDataType]!,
-      'realtimeLayer': _$RealtimeLayerEnumMap[instance.realtimeLayer]!,
+      'min_realtime_shindo': instance.minRealtimeShindo,
+      'show_realtime_shindo_scale': instance.showRealtimeShindoScale,
+      'use_kmoni': instance.useKmoni,
+      'show_current_location_marker': instance.showCurrentLocationMarker,
+      'kmoni_marker_type': _$KmoniMarkerTypeEnumMap[instance.kmoniMarkerType]!,
+      'realtime_data_type':
+          _$RealtimeDataTypeEnumMap[instance.realtimeDataType]!,
+      'realtime_layer': _$RealtimeLayerEnumMap[instance.realtimeLayer]!,
       'api': instance.api,
     };
 
@@ -107,17 +117,21 @@ _$KyoshinMonitorSettingsApiModelImpl
                           unknownValue: KyoshinMonitorEndpoint.kmoni) ??
                       KyoshinMonitorEndpoint.kmoni),
               imageFetchInterval: $checkedConvert(
-                  'imageFetchInterval',
+                  'image_fetch_interval',
                   (v) => v == null
                       ? const Duration(seconds: 1)
                       : Duration(microseconds: (v as num).toInt())),
               delayAdjustInterval: $checkedConvert(
-                  'delayAdjustInterval',
+                  'delay_adjust_interval',
                   (v) => v == null
                       ? const Duration(minutes: 10)
                       : Duration(microseconds: (v as num).toInt())),
             );
             return val;
+          },
+          fieldKeyMap: const {
+            'imageFetchInterval': 'image_fetch_interval',
+            'delayAdjustInterval': 'delay_adjust_interval'
           },
         );
 
@@ -125,8 +139,8 @@ Map<String, dynamic> _$$KyoshinMonitorSettingsApiModelImplToJson(
         _$KyoshinMonitorSettingsApiModelImpl instance) =>
     <String, dynamic>{
       'endpoint': _$KyoshinMonitorEndpointEnumMap[instance.endpoint]!,
-      'imageFetchInterval': instance.imageFetchInterval.inMicroseconds,
-      'delayAdjustInterval': instance.delayAdjustInterval.inMicroseconds,
+      'image_fetch_interval': instance.imageFetchInterval.inMicroseconds,
+      'delay_adjust_interval': instance.delayAdjustInterval.inMicroseconds,
     };
 
 const _$KyoshinMonitorEndpointEnumMap = {

@@ -14,22 +14,27 @@ _$MapConfigImpl _$$MapConfigImplFromJson(Map<String, dynamic> json) =>
       json,
       ($checkedConvert) {
         final val = _$MapConfigImpl(
-          colorScheme: $checkedConvert('colorScheme',
+          colorScheme: $checkedConvert('color_scheme',
               (v) => MapColorScheme.fromJson(v as Map<String, dynamic>)),
           minScale: $checkedConvert(
-              'minScale', (v) => (v as num?)?.toDouble() ?? 0.8),
-          maxScale:
-              $checkedConvert('maxScale', (v) => (v as num?)?.toDouble() ?? 20),
+              'min_scale', (v) => (v as num?)?.toDouble() ?? 0.8),
+          maxScale: $checkedConvert(
+              'max_scale', (v) => (v as num?)?.toDouble() ?? 20),
         );
         return val;
+      },
+      fieldKeyMap: const {
+        'colorScheme': 'color_scheme',
+        'minScale': 'min_scale',
+        'maxScale': 'max_scale'
       },
     );
 
 Map<String, dynamic> _$$MapConfigImplToJson(_$MapConfigImpl instance) =>
     <String, dynamic>{
-      'colorScheme': instance.colorScheme,
-      'minScale': instance.minScale,
-      'maxScale': instance.maxScale,
+      'color_scheme': instance.colorScheme,
+      'min_scale': instance.minScale,
+      'max_scale': instance.maxScale,
     };
 
 _$MapColorSchemeImpl _$$MapColorSchemeImplFromJson(Map<String, dynamic> json) =>
@@ -39,26 +44,33 @@ _$MapColorSchemeImpl _$$MapColorSchemeImplFromJson(Map<String, dynamic> json) =>
       ($checkedConvert) {
         final val = _$MapColorSchemeImpl(
           backgroundColor: $checkedConvert(
-              'backgroundColor', (v) => colorFromJson(v as String)),
+              'background_color', (v) => colorFromJson(v as String)),
           worldLandColor: $checkedConvert(
-              'worldLandColor', (v) => colorFromJson(v as String)),
+              'world_land_color', (v) => colorFromJson(v as String)),
           worldLineColor: $checkedConvert(
-              'worldLineColor', (v) => colorFromJson(v as String)),
+              'world_line_color', (v) => colorFromJson(v as String)),
           japanLandColor: $checkedConvert(
-              'japanLandColor', (v) => colorFromJson(v as String)),
+              'japan_land_color', (v) => colorFromJson(v as String)),
           japanLineColor: $checkedConvert(
-              'japanLineColor', (v) => colorFromJson(v as String)),
+              'japan_line_color', (v) => colorFromJson(v as String)),
         );
         return val;
+      },
+      fieldKeyMap: const {
+        'backgroundColor': 'background_color',
+        'worldLandColor': 'world_land_color',
+        'worldLineColor': 'world_line_color',
+        'japanLandColor': 'japan_land_color',
+        'japanLineColor': 'japan_line_color'
       },
     );
 
 Map<String, dynamic> _$$MapColorSchemeImplToJson(
         _$MapColorSchemeImpl instance) =>
     <String, dynamic>{
-      'backgroundColor': colorToJson(instance.backgroundColor),
-      'worldLandColor': colorToJson(instance.worldLandColor),
-      'worldLineColor': colorToJson(instance.worldLineColor),
-      'japanLandColor': colorToJson(instance.japanLandColor),
-      'japanLineColor': colorToJson(instance.japanLineColor),
+      'background_color': colorToJson(instance.backgroundColor),
+      'world_land_color': colorToJson(instance.worldLandColor),
+      'world_line_color': colorToJson(instance.worldLineColor),
+      'japan_land_color': colorToJson(instance.japanLandColor),
+      'japan_line_color': colorToJson(instance.japanLineColor),
     };
