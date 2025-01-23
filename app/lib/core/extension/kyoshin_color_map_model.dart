@@ -1,4 +1,4 @@
-import 'package:eqmonitor/feature/kyoshin_monitor/model/kyoshin_color_map_model.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_color_map_model.dart';
 import 'package:flutter/material.dart';
 
 extension KyoshinColorMapModelEx on KyoshinColorMapModel {
