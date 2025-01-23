@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:eqmonitor/feature/home/component/kmoni/kmoni_scale.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_map.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_scale_widget.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_cautionary_note_page.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/provider/kmoni_color_provider.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -137,7 +137,7 @@ class _Body extends ConsumerWidget {
                 children: [
                   SizedBox(
                     height: 30,
-                    child: KmoniScaleWidget(
+                    child: KyoshinMonitorScaleWidget(
                       showText: false,
                       markers: [
                         if (state.minRealtimeShindo != null &&

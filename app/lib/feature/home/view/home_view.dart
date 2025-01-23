@@ -24,7 +24,6 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_screen.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
-import 'package:eqmonitor/feature/home/component/kmoni/kmoni_scale.dart';
 import 'package:eqmonitor/feature/home/component/parameter/parameter_loader_widget.dart';
 import 'package:eqmonitor/feature/home/component/render/map_components_renderer.dart';
 import 'package:eqmonitor/feature/home/component/shake-detect/shake_detection_card.dart';
@@ -32,9 +31,10 @@ import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget
 import 'package:eqmonitor/feature/home/features/map/view/main_map_view.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_maintenance_card.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_scale_widget.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_status_card.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_settings_page.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/widget/kmoni_maintenance_widget.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/widget/kyoshin_monitor_status_card.dart';
 import 'package:eqmonitor/feature/location/data/location_tracking_mode.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/fcm_token_change_detector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_authentication_service.dart';
@@ -515,7 +515,7 @@ class _Sheet extends ConsumerWidget {
         controller: sheetController,
         children: [
           const EewWidgets(),
-          const KmoniMaintenanceWidget(),
+          const KyoshinMonitorMaintenanceCardnceCard(),
           const _ShakeDetectionEvents(),
           const _NotificationPermission(),
           const EarthquakeHistorySheetWidget(),
@@ -628,7 +628,7 @@ class _KmoniScale extends ConsumerWidget {
             borderRadius: BorderRadius.circular(4),
           ),
           child: InkWell(
-            child: KmoniScaleWidget(
+            child: KyoshinMonitorScaleWidget(
               markers: [
                 if (state.minRealtimeShindo != null &&
                     state.minRealtimeShindo != -3.0)

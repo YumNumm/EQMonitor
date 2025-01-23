@@ -5,13 +5,13 @@ import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/extension/double_to_jma_forecast_intensity.dart';
 import 'package:eqmonitor/core/extension/kyoshin_color_map_model.dart';
 import 'package:eqmonitor/core/theme/build_theme.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_map.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/model/kyoshin_color_map_model.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/provider/kmoni_color_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class KmoniScaleWidget extends ConsumerWidget {
-  const KmoniScaleWidget({
+class KyoshinMonitorScaleWidget extends ConsumerWidget {
+  const KyoshinMonitorScaleWidget({
     super.key,
     this.showText = true,
     this.markers = const [],

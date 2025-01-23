@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'kmoni_color_provider.g.dart';
+part 'kyoshin_color_map.g.dart';
 
 @Riverpod(keepAlive: true)
 List<KyoshinColorMapModel> kyoshinColorMap(
