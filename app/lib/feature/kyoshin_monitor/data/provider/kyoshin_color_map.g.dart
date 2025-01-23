@@ -2,7 +2,7 @@
 
 // ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
-part of 'kmoni_color_provider.dart';
+part of 'kyoshin_color_map.dart';
 
 // **************************************************************************
 // RiverpodGenerator
