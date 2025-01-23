@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: type=lint, duplicate_ignore
+// ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
 part of 'kyoshin_monitor_settings_model.dart';
 
@@ -27,6 +27,16 @@ _$KyoshinMonitorSettingsModelImpl _$$KyoshinMonitorSettingsModelImplFromJson(
               (v) =>
                   $enumDecodeNullable(_$KmoniMarkerTypeEnumMap, v) ??
                   KmoniMarkerType.onlyEew),
+          realtimeDataType: $checkedConvert(
+              'realtimeDataType',
+              (v) =>
+                  $enumDecodeNullable(_$RealtimeDataTypeEnumMap, v) ??
+                  RealtimeDataType.shindo),
+          realtimeLayer: $checkedConvert(
+              'realtimeLayer',
+              (v) =>
+                  $enumDecodeNullable(_$RealtimeLayerEnumMap, v) ??
+                  RealtimeLayer.surface),
           api: $checkedConvert(
               'api',
               (v) => v == null
@@ -46,6 +56,8 @@ Map<String, dynamic> _$$KyoshinMonitorSettingsModelImplToJson(
       'useKmoni': instance.useKmoni,
       'showCurrentLocationMarker': instance.showCurrentLocationMarker,
       'kmoniMarkerType': _$KmoniMarkerTypeEnumMap[instance.kmoniMarkerType]!,
+      'realtimeDataType': _$RealtimeDataTypeEnumMap[instance.realtimeDataType]!,
+      'realtimeLayer': _$RealtimeLayerEnumMap[instance.realtimeLayer]!,
       'api': instance.api,
     };
 
@@ -53,6 +65,32 @@ const _$KmoniMarkerTypeEnumMap = {
   KmoniMarkerType.always: 'always',
   KmoniMarkerType.onlyEew: 'onlyEew',
   KmoniMarkerType.never: 'never',
+};
+
+const _$RealtimeDataTypeEnumMap = {
+  RealtimeDataType.shindo: 'jma',
+  RealtimeDataType.pga: 'acmap',
+  RealtimeDataType.pgv: 'vcmap',
+  RealtimeDataType.pgd: 'dcmap',
+  RealtimeDataType.response0125Hz: 'rsp0125',
+  RealtimeDataType.response025Hz: 'rsp0250',
+  RealtimeDataType.response05Hz: 'rsp0500',
+  RealtimeDataType.response1Hz: 'rsp1000',
+  RealtimeDataType.response2Hz: 'rsp2000',
+  RealtimeDataType.response4Hz: 'rsp4000',
+  RealtimeDataType.abrspmx: 'abrspmx',
+  RealtimeDataType.abrsp1s: 'abrsp1s',
+  RealtimeDataType.abrsp2s: 'abrsp2s',
+  RealtimeDataType.abrsp3s: 'abrsp3s',
+  RealtimeDataType.abrsp4s: 'abrsp4s',
+  RealtimeDataType.abrsp5s: 'abrsp5s',
+  RealtimeDataType.abrsp6s: 'abrsp6s',
+  RealtimeDataType.abrsp7s: 'abrsp7s',
+};
+
+const _$RealtimeLayerEnumMap = {
+  RealtimeLayer.surface: 'surface',
+  RealtimeLayer.underground: 'underground',
 };
 
 _$KyoshinMonitorSettingsApiModelImpl

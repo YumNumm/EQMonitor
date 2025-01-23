@@ -24,7 +24,7 @@ _$MaintenanceMessageImpl _$$MaintenanceMessageImplFromJson(
           type: $checkedConvert('type',
               (v) => $enumDecodeNullable(_$MaintenanceMessageTypeEnumMap, v)),
           requestTime: $checkedConvert(
-              'request_time', (v) => DateTime.parse(v as String)),
+              'request_time', (v) => dateTimeFromString(v as String)),
           result: $checkedConvert(
               'result',
               (v) => v == null
@@ -42,7 +42,7 @@ Map<String, dynamic> _$$MaintenanceMessageImplToJson(
       'message': instance.message,
       'security': instance.security,
       'type': _$MaintenanceMessageTypeEnumMap[instance.type],
-      'request_time': instance.requestTime.toIso8601String(),
+      'request_time': dateTimeToString(instance.requestTime),
       'result': instance.result,
     };
 

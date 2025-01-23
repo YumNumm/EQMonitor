@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: type=lint, duplicate_ignore
+// ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
 part of 'dio_provider.dart';
 
@@ -8,7 +8,7 @@ part of 'dio_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dioHash() => r'5d646c54d92a9b59f60f2253149c45b78b6a4e18';
+String _$dioHash() => r'923a78c40d3726e3c20d3e3e0b1afc689f56da7a';
 
 /// See also [dio].
 @ProviderFor(dio)

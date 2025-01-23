@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: type=lint, duplicate_ignore
+// ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
 part of 'eq_api.dart';
 
@@ -8,7 +8,7 @@ part of 'eq_api.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$eqApiHash() => r'e024f84d6ae97012b1ecf706a24e19c5b620a015';
+String _$eqApiHash() => r'e9c1e9be905ca9b7fcd56b1715c1e2426c95b5b0';
 
 /// See also [eqApi].
 @ProviderFor(eqApi)

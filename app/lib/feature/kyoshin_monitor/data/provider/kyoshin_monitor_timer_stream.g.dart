@@ -2,27 +2,30 @@
 
 // ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
-part of 'intensity_color_provider.dart';
+part of 'kyoshin_monitor_timer_stream.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$intensityColorHash() => r'9c5f1148d0001d84e37f1a0bb14d65cdaee14795';
+String _$kyoshinMonitorTimerStreamHash() =>
+    r'654b62569483d515b05041397cdd8cd9fac5127d';
 
-/// See also [IntensityColor].
-@ProviderFor(IntensityColor)
-final intensityColorProvider =
-    NotifierProvider<IntensityColor, IntensityColorModel>.internal(
-  IntensityColor.new,
-  name: r'intensityColorProvider',
+/// See also [kyoshinMonitorTimerStream].
+@ProviderFor(kyoshinMonitorTimerStream)
+final kyoshinMonitorTimerStreamProvider =
+    AutoDisposeStreamProvider<DateTime>.internal(
+  kyoshinMonitorTimerStream,
+  name: r'kyoshinMonitorTimerStreamProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$intensityColorHash,
+      : _$kyoshinMonitorTimerStreamHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$IntensityColor = Notifier<IntensityColorModel>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef KyoshinMonitorTimerStreamRef = AutoDisposeStreamProviderRef<DateTime>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

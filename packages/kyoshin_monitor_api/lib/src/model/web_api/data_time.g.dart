@@ -25,9 +25,9 @@ _$DataTimeImpl _$$DataTimeImplFromJson(Map<String, dynamic> json) =>
                   ? null
                   : Result.fromJson(v as Map<String, dynamic>)),
           latestTime: $checkedConvert(
-              'latest_time', (v) => DateTime.parse(v as String)),
+              'latest_time', (v) => dateTimeFromString(v as String)),
           requestTime: $checkedConvert(
-              'request_time', (v) => DateTime.parse(v as String)),
+              'request_time', (v) => dateTimeFromString(v as String)),
         );
         return val;
       },
@@ -41,6 +41,6 @@ Map<String, dynamic> _$$DataTimeImplToJson(_$DataTimeImpl instance) =>
     <String, dynamic>{
       'security': instance.security,
       'result': instance.result,
-      'latest_time': instance.latestTime.toIso8601String(),
-      'request_time': instance.requestTime.toIso8601String(),
+      'latest_time': dateTimeToString(instance.latestTime),
+      'request_time': dateTimeToString(instance.requestTime),
     };

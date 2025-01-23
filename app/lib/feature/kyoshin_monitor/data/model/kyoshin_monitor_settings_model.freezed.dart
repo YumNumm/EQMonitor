@@ -36,6 +36,12 @@ mixin _$KyoshinMonitorSettingsModel {
   /// 強震モニタ観測点のマーカーの種類
   KmoniMarkerType get kmoniMarkerType => throw _privateConstructorUsedError;
 
+  /// 強震モニタのリアルタイムデータの種類
+  RealtimeDataType get realtimeDataType => throw _privateConstructorUsedError;
+
+  /// 強震モニタのリアルタイムデータのレイヤー
+  RealtimeLayer get realtimeLayer => throw _privateConstructorUsedError;
+
   /// 強震モニタ API関連の設定
   KyoshinMonitorSettingsApiModel get api => throw _privateConstructorUsedError;
 
@@ -63,6 +69,8 @@ abstract class $KyoshinMonitorSettingsModelCopyWith<$Res> {
       bool useKmoni,
       bool showCurrentLocationMarker,
       KmoniMarkerType kmoniMarkerType,
+      RealtimeDataType realtimeDataType,
+      RealtimeLayer realtimeLayer,
       KyoshinMonitorSettingsApiModel api});
 
   $KyoshinMonitorSettingsApiModelCopyWith<$Res> get api;
@@ -89,6 +97,8 @@ class _$KyoshinMonitorSettingsModelCopyWithImpl<$Res,
     Object? useKmoni = null,
     Object? showCurrentLocationMarker = null,
     Object? kmoniMarkerType = null,
+    Object? realtimeDataType = null,
+    Object? realtimeLayer = null,
     Object? api = null,
   }) {
     return _then(_value.copyWith(
@@ -112,6 +122,14 @@ class _$KyoshinMonitorSettingsModelCopyWithImpl<$Res,
           ? _value.kmoniMarkerType
           : kmoniMarkerType // ignore: cast_nullable_to_non_nullable
               as KmoniMarkerType,
+      realtimeDataType: null == realtimeDataType
+          ? _value.realtimeDataType
+          : realtimeDataType // ignore: cast_nullable_to_non_nullable
+              as RealtimeDataType,
+      realtimeLayer: null == realtimeLayer
+          ? _value.realtimeLayer
+          : realtimeLayer // ignore: cast_nullable_to_non_nullable
+              as RealtimeLayer,
       api: null == api
           ? _value.api
           : api // ignore: cast_nullable_to_non_nullable
@@ -145,6 +163,8 @@ abstract class _$$KyoshinMonitorSettingsModelImplCopyWith<$Res>
       bool useKmoni,
       bool showCurrentLocationMarker,
       KmoniMarkerType kmoniMarkerType,
+      RealtimeDataType realtimeDataType,
+      RealtimeLayer realtimeLayer,
       KyoshinMonitorSettingsApiModel api});
 
   @override
@@ -171,6 +191,8 @@ class __$$KyoshinMonitorSettingsModelImplCopyWithImpl<$Res>
     Object? useKmoni = null,
     Object? showCurrentLocationMarker = null,
     Object? kmoniMarkerType = null,
+    Object? realtimeDataType = null,
+    Object? realtimeLayer = null,
     Object? api = null,
   }) {
     return _then(_$KyoshinMonitorSettingsModelImpl(
@@ -194,6 +216,14 @@ class __$$KyoshinMonitorSettingsModelImplCopyWithImpl<$Res>
           ? _value.kmoniMarkerType
           : kmoniMarkerType // ignore: cast_nullable_to_non_nullable
               as KmoniMarkerType,
+      realtimeDataType: null == realtimeDataType
+          ? _value.realtimeDataType
+          : realtimeDataType // ignore: cast_nullable_to_non_nullable
+              as RealtimeDataType,
+      realtimeLayer: null == realtimeLayer
+          ? _value.realtimeLayer
+          : realtimeLayer // ignore: cast_nullable_to_non_nullable
+              as RealtimeLayer,
       api: null == api
           ? _value.api
           : api // ignore: cast_nullable_to_non_nullable
@@ -212,6 +242,8 @@ class _$KyoshinMonitorSettingsModelImpl
       this.useKmoni = false,
       this.showCurrentLocationMarker = false,
       this.kmoniMarkerType = KmoniMarkerType.onlyEew,
+      this.realtimeDataType = RealtimeDataType.shindo,
+      this.realtimeLayer = RealtimeLayer.surface,
       this.api = const KyoshinMonitorSettingsApiModel()});
 
   factory _$KyoshinMonitorSettingsModelImpl.fromJson(
@@ -243,6 +275,16 @@ class _$KyoshinMonitorSettingsModelImpl
   @JsonKey()
   final KmoniMarkerType kmoniMarkerType;
 
+  /// 強震モニタのリアルタイムデータの種類
+  @override
+  @JsonKey()
+  final RealtimeDataType realtimeDataType;
+
+  /// 強震モニタのリアルタイムデータのレイヤー
+  @override
+  @JsonKey()
+  final RealtimeLayer realtimeLayer;
+
   /// 強震モニタ API関連の設定
   @override
   @JsonKey()
@@ -250,7 +292,7 @@ class _$KyoshinMonitorSettingsModelImpl
 
   @override
   String toString() {
-    return 'KyoshinMonitorSettingsModel(minRealtimeShindo: $minRealtimeShindo, showRealtimeShindoScale: $showRealtimeShindoScale, useKmoni: $useKmoni, showCurrentLocationMarker: $showCurrentLocationMarker, kmoniMarkerType: $kmoniMarkerType, api: $api)';
+    return 'KyoshinMonitorSettingsModel(minRealtimeShindo: $minRealtimeShindo, showRealtimeShindoScale: $showRealtimeShindoScale, useKmoni: $useKmoni, showCurrentLocationMarker: $showCurrentLocationMarker, kmoniMarkerType: $kmoniMarkerType, realtimeDataType: $realtimeDataType, realtimeLayer: $realtimeLayer, api: $api)';
   }
 
   @override
@@ -270,6 +312,10 @@ class _$KyoshinMonitorSettingsModelImpl
                 other.showCurrentLocationMarker == showCurrentLocationMarker) &&
             (identical(other.kmoniMarkerType, kmoniMarkerType) ||
                 other.kmoniMarkerType == kmoniMarkerType) &&
+            (identical(other.realtimeDataType, realtimeDataType) ||
+                other.realtimeDataType == realtimeDataType) &&
+            (identical(other.realtimeLayer, realtimeLayer) ||
+                other.realtimeLayer == realtimeLayer) &&
             (identical(other.api, api) || other.api == api));
   }
 
@@ -282,6 +328,8 @@ class _$KyoshinMonitorSettingsModelImpl
       useKmoni,
       showCurrentLocationMarker,
       kmoniMarkerType,
+      realtimeDataType,
+      realtimeLayer,
       api);
 
   /// Create a copy of KyoshinMonitorSettingsModel
@@ -309,6 +357,8 @@ abstract class _KyoshinMonitorSettingsModel
           final bool useKmoni,
           final bool showCurrentLocationMarker,
           final KmoniMarkerType kmoniMarkerType,
+          final RealtimeDataType realtimeDataType,
+          final RealtimeLayer realtimeLayer,
           final KyoshinMonitorSettingsApiModel api}) =
       _$KyoshinMonitorSettingsModelImpl;
 
@@ -334,6 +384,14 @@ abstract class _KyoshinMonitorSettingsModel
   /// 強震モニタ観測点のマーカーの種類
   @override
   KmoniMarkerType get kmoniMarkerType;
+
+  /// 強震モニタのリアルタイムデータの種類
+  @override
+  RealtimeDataType get realtimeDataType;
+
+  /// 強震モニタのリアルタイムデータのレイヤー
+  @override
+  RealtimeLayer get realtimeLayer;
 
   /// 強震モニタ API関連の設定
   @override

@@ -19,7 +19,7 @@ _$EewImpl _$$EewImplFromJson(Map<String, dynamic> json) => $checkedCreate(
                   ? null
                   : Result.fromJson(v as Map<String, dynamic>)),
           reportTime: $checkedConvert(
-              'report_time', (v) => dateTimeFromString(v as String?)),
+              'report_time', (v) => dateTimeOrNullFromString(v as String?)),
           regionCode: $checkedConvert('region_code', (v) => v as String?),
           requestTime: $checkedConvert('request_time', (v) => v as String?),
           regionName: $checkedConvert('region_name', (v) => v as String?),
@@ -69,7 +69,7 @@ _$EewImpl _$$EewImplFromJson(Map<String, dynamic> json) => $checkedCreate(
 
 Map<String, dynamic> _$$EewImplToJson(_$EewImpl instance) => <String, dynamic>{
       'result': instance.result,
-      'report_time': dateTimeToString(instance.reportTime),
+      'report_time': dateTimeOrNullToString(instance.reportTime),
       'region_code': instance.regionCode,
       'request_time': instance.requestTime,
       'region_name': instance.regionName,

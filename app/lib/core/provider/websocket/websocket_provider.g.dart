@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: type=lint, duplicate_ignore
+// ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
 part of 'websocket_provider.dart';
 
@@ -64,7 +64,7 @@ final websocketTableMessagesProvider =
 // ignore: unused_element
 typedef WebsocketTableMessagesRef
     = StreamProviderRef<RealtimePostgresChangesPayloadTable>;
-String _$websocketStatusHash() => r'b02f3b5f4e952453120dd81fd92ee33911fd6bda';
+String _$websocketStatusHash() => r'9c6c47911232f1770b32d1b13f4364abf4900063';
 
 /// See also [WebsocketStatus].
 @ProviderFor(WebsocketStatus)

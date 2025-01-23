@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: type=lint, duplicate_ignore
+// ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
 part of 'kyoshin_monitor_timer_notifier.dart';
 
@@ -29,7 +29,7 @@ final _kyoshinMonitorDelayAdujustTimingProvider =
 typedef _KyoshinMonitorDelayAdujustTimingRef
     = AutoDisposeStreamProviderRef<void>;
 String _$kyoshinMonitorTimerNotifierHash() =>
-    r'5014c91965c576a15548a769390c0a96c1606f72';
+    r'344b38935163fac1cce8de724e781381158eb1db';
 
 /// See also [KyoshinMonitorTimerNotifier].
 @ProviderFor(KyoshinMonitorTimerNotifier)
