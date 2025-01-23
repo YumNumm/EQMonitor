@@ -145,6 +145,20 @@ class KyoshinMonitorCautionaryNoteList extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: FilledButton(
+                    onPressed: () => context.pop(true),
+                    child: const Text('同意して有効化'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
         ],
       ),
     );

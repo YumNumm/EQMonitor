@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 import 'package:sheet/route.dart';
 
 class KyoshinMonitorSettingsRoute extends GoRouteData {
@@ -88,45 +89,16 @@ class KyoshinMonitorSettingsUseToggle extends ConsumerWidget {
               ),
             );
 
-            // final result = await showKyoshinMonitorCautionaryNoteModal(context);
-
             final result = await const KyoshinMonitorCautionaryNoteModalRoute()
-                .push<void>(context);
+                .push<bool>(context);
 
-            // final result = await showModalBottomSheet<bool>(
-            //   context: context,
-            //   isScrollControlled: true,
-            //   builder: (context) => SafeArea(
-            //     child: Column(
-            //       children: [
-            //         barWidget,
-            //         const SingleChildScrollView(
-            //           child: SafeArea(
-            //             child: Column(
-            //               children: [
-            //                 SheetHeader(title: '強震モニタの注意点'),
-            //               ],
-            //             ),
-            //           ),
-            //         ),
-            //         UseKmoniButton(
-            //           onDisabled: () => Navigator.of(context).pop(false),
-            //           onEnabled: () => Navigator.of(context).pop(true),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // );
-            // final isAccepted = result != null && result;
-
-            // if (isAccepted) {
-            //   unawaited(
-            //     ref.read(kyoshinMonitorSettingsProvider.notifier).save(
-            //           state.copyWith(useKmoni: value),
-            //         ),
-            //   );
-            // }
-            return;
+            if (result == true) {
+              unawaited(
+                ref.read(kyoshinMonitorSettingsProvider.notifier).save(
+                      state.copyWith(useKmoni: value),
+                    ),
+              );
+            }
           } else {
             unawaited(
               ref.read(kyoshinMonitorSettingsProvider.notifier).save(
@@ -233,6 +205,72 @@ class _Body extends ConsumerWidget {
                       KmoniMarkerType.always => '常に枠を表示する',
                       KmoniMarkerType.onlyEew => '緊急地震速報発表時のみ',
                       KmoniMarkerType.never => '枠を表示しない',
+                    },
+                  ),
+              ],
+            ),
+          ),
+        ),
+        ListTile(
+          title: const Text('リアルタイムデータの種類'),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: DropdownMenu(
+              initialSelection: state.realtimeDataType,
+              onSelected: (value) async =>
+                  ref.read(kyoshinMonitorSettingsProvider.notifier).save(
+                        ref.read(kyoshinMonitorSettingsProvider).copyWith(
+                              realtimeDataType: value!,
+                            ),
+                      ),
+              dropdownMenuEntries: [
+                for (final type in RealtimeDataType.values)
+                  DropdownMenuEntry(
+                    value: type,
+                    label: switch (type) {
+                      RealtimeDataType.shindo => 'リアルタイム震度',
+                      RealtimeDataType.pga => '最大加速度',
+                      RealtimeDataType.pgv => '最大速度',
+                      RealtimeDataType.pgd => '最大変位',
+                      RealtimeDataType.response0125Hz => '応答速度(0.125Hz)',
+                      RealtimeDataType.response025Hz => '応答速度(0.25Hz)',
+                      RealtimeDataType.response05Hz => '応答速度(0.5Hz)',
+                      RealtimeDataType.response1Hz => '応答速度(1Hz)',
+                      RealtimeDataType.response2Hz => '応答速度(2Hz)',
+                      RealtimeDataType.response4Hz => '応答速度(4Hz)',
+                      RealtimeDataType.abrspmx => '長周期地震動階級',
+                      RealtimeDataType.abrsp1s => '階級データ(周期1秒台)',
+                      RealtimeDataType.abrsp2s => '階級データ(周期2秒台)',
+                      RealtimeDataType.abrsp3s => '階級データ(周期3秒台)',
+                      RealtimeDataType.abrsp4s => '階級データ(周期4秒台)',
+                      RealtimeDataType.abrsp5s => '階級データ(周期5秒台)',
+                      RealtimeDataType.abrsp6s => '階級データ(周期6秒台)',
+                      RealtimeDataType.abrsp7s => '階級データ(周期7秒台)',
+                    },
+                  ),
+              ],
+            ),
+          ),
+        ),
+        ListTile(
+          title: const Text('リアルタイムデータのレイヤー'),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: DropdownMenu(
+              initialSelection: state.realtimeLayer,
+              onSelected: (value) async =>
+                  ref.read(kyoshinMonitorSettingsProvider.notifier).save(
+                        ref.read(kyoshinMonitorSettingsProvider).copyWith(
+                              realtimeLayer: value!,
+                            ),
+                      ),
+              dropdownMenuEntries: [
+                for (final layer in RealtimeLayer.values)
+                  DropdownMenuEntry(
+                    value: layer,
+                    label: switch (layer) {
+                      RealtimeLayer.surface => '地表',
+                      RealtimeLayer.underground => '地中',
                     },
                   ),
               ],
