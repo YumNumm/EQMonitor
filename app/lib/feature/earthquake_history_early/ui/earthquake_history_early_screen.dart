@@ -38,7 +38,7 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final parameter = useState(
       const EarthquakeHistoryEarlyParameter(
-        sort: EarthquakeEarlySortType.maxIntensity,
+        sort: EarthquakeEarlySortType.max_intensity,
         ascending: false,
       ),
     );
@@ -75,7 +75,7 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
             )
             .fetchNextData(),
         shouldShowLatestEarthquakeMessage:
-            parameter.value.sort == EarthquakeEarlySortType.originTime &&
+            parameter.value.sort == EarthquakeEarlySortType.origin_time &&
                 !parameter.value.ascending,
       ),
     );
