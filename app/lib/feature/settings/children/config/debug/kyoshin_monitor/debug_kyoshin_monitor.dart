@@ -1,11 +1,14 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_timer_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_maintenance_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_timer_stream.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_settings_page.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -25,14 +28,28 @@ class DebugKyoshinMonitorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('KyoshinMonitor Debug Page'),
-      ),
-      body: const SingleChildScrollView(
-        primary: true,
-        child: SafeArea(
-          child: _Body(),
+    return DefaultTextStyle.merge(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'KyoshinMonitor',
+            style: TextStyle(
+              fontFamily: FontFamily.jetBrainsMono,
+            ),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () async =>
+                  const KyoshinMonitorSettingsModalRoute().push<void>(context),
+              icon: const Icon(Icons.settings),
+            ),
+          ],
+        ),
+        body: const SingleChildScrollView(
+          primary: true,
+          child: SafeArea(
+            child: _Body(),
+          ),
         ),
       ),
     );
@@ -78,7 +95,7 @@ class _Body extends ConsumerWidget {
                   AsyncData(:final value) =>
                     const JsonEncoder.withIndent('  ').convert({
                       ...value.toJson(),
-                      'delayFromDevice': value.delayFromDevice.toString(),
+                      'delay_from_device': value.delayFromDevice.toString(),
                     }),
                   AsyncError(:final error) => error.toString(),
                   _ => 'Loading...',
@@ -105,38 +122,59 @@ class _Body extends ConsumerWidget {
           ),
         ),
         BorderedContainer(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text('KyoshinMonitorNotifier', style: titleTextStyle),
-                  if (ref.watch(kyoshinMonitorNotifierProvider).isLoading)
-                    const Icon(
-                      Icons.refresh,
-                      size: 16,
+          child: () {
+            final state = ref.watch(kyoshinMonitorNotifierProvider);
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text('KyoshinMonitorNotifier', style: titleTextStyle),
+                    if (state.isLoading)
+                      const Icon(
+                        Icons.refresh,
+                        size: 16,
+                      ),
+                  ],
+                ),
+                Text(
+                  switch (state) {
+                    AsyncData(:final value) =>
+                      const JsonEncoder.withIndent('  ').convert({
+                        ...value.toJson(),
+                        'analyzed_points': value.analyzedPoints?.length,
+                        'last_image_fetch_duration': switch (
+                            value.lastImageFetchDuration?.inMicroseconds) {
+                          final int v => '${v / 1000}ms',
+                          null => 'null',
+                        },
+                        'current_image_raw': value.currentImageRaw?.length,
+                      }),
+                    AsyncError(:final error) => error.toString(),
+                    _ => 'Loading...',
+                  },
+                  style: bodyTextStyle,
+                ),
+                if (state.valueOrNull?.currentImageRaw != null)
+                  ColoredBox(
+                    color: Colors.white,
+                    child: Image.memory(
+                      Uint8List.fromList(state.valueOrNull!.currentImageRaw!),
+                      height: 200,
+                      width: 200,
                     ),
-                ],
-              ),
-              Text(
-                switch (ref.watch(kyoshinMonitorNotifierProvider)) {
-                  AsyncData(:final value) =>
-                    const JsonEncoder.withIndent('  ').convert({
-                      ...value.toJson(),
-                      'analyzedPoints': value.analyzedPoints?.length,
-                      'lastImageFetchDuration': switch (
-                          value.lastImageFetchDuration?.inMicroseconds) {
-                        final int v => '${v / 1000}ms',
-                        null => 'null',
-                      },
-                    }),
-                  AsyncError(:final error) => error.toString(),
-                  _ => 'Loading...',
-                },
-                style: bodyTextStyle,
-              ),
-            ],
-          ),
+                  )
+                else
+                  const ColoredBox(
+                    color: Colors.white,
+                    child: SizedBox(
+                      height: 200,
+                      width: 200,
+                    ),
+                  ),
+              ],
+            );
+          }(),
         ),
         BorderedContainer(
           child: Column(

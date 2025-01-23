@@ -15,18 +15,22 @@ _$KyoshinMonitorTimerStateImpl _$$KyoshinMonitorTimerStateImplFromJson(
       json,
       ($checkedConvert) {
         final val = _$KyoshinMonitorTimerStateImpl(
-          delayFromDevice: $checkedConvert('delayFromDevice',
+          delayFromDevice: $checkedConvert('delay_from_device',
               (v) => Duration(microseconds: (v as num).toInt())),
-          lastSyncedAt: $checkedConvert('lastSyncedAt',
+          lastSyncedAt: $checkedConvert('last_synced_at',
               (v) => v == null ? null : DateTime.parse(v as String)),
         );
         return val;
+      },
+      fieldKeyMap: const {
+        'delayFromDevice': 'delay_from_device',
+        'lastSyncedAt': 'last_synced_at'
       },
     );
 
 Map<String, dynamic> _$$KyoshinMonitorTimerStateImplToJson(
         _$KyoshinMonitorTimerStateImpl instance) =>
     <String, dynamic>{
-      'delayFromDevice': instance.delayFromDevice.inMicroseconds,
-      'lastSyncedAt': instance.lastSyncedAt?.toIso8601String(),
+      'delay_from_device': instance.delayFromDevice.inMicroseconds,
+      'last_synced_at': instance.lastSyncedAt?.toIso8601String(),
     };

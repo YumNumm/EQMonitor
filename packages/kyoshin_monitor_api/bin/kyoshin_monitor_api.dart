@@ -83,9 +83,9 @@ class DownloadCommand extends Command<void> {
               datetime,
             )
           : await kyoshinMonitorWebApiDataSource.getRealtimeImageData(
-              type,
-              layer,
-              datetime,
+              type: type,
+              layer: layer,
+              dateTime: datetime,
             );
       await File(output).writeAsBytes(data);
       print('ダウンロードが完了しました: $output');

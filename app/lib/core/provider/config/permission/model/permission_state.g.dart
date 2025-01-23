@@ -18,12 +18,16 @@ _$PermissionStateModelImpl _$$PermissionStateModelImplFromJson(
           notification:
               $checkedConvert('notification', (v) => v as bool? ?? false),
           criticalAlert:
-              $checkedConvert('criticalAlert', (v) => v as bool? ?? false),
+              $checkedConvert('critical_alert', (v) => v as bool? ?? false),
           location: $checkedConvert('location', (v) => v as bool? ?? false),
-          backgroundLocation:
-              $checkedConvert('backgroundLocation', (v) => v as bool? ?? false),
+          backgroundLocation: $checkedConvert(
+              'background_location', (v) => v as bool? ?? false),
         );
         return val;
+      },
+      fieldKeyMap: const {
+        'criticalAlert': 'critical_alert',
+        'backgroundLocation': 'background_location'
       },
     );
 
@@ -31,7 +35,7 @@ Map<String, dynamic> _$$PermissionStateModelImplToJson(
         _$PermissionStateModelImpl instance) =>
     <String, dynamic>{
       'notification': instance.notification,
-      'criticalAlert': instance.criticalAlert,
+      'critical_alert': instance.criticalAlert,
       'location': instance.location,
-      'backgroundLocation': instance.backgroundLocation,
+      'background_location': instance.backgroundLocation,
     };

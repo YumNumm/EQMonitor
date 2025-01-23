@@ -18,7 +18,18 @@ class KyoshinMonitorSettingsRoute extends GoRouteData {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return const CupertinoExtendedPage<void>(
+    return const MaterialExtendedPage<void>(
+      child: KyoshinMonitorSettingsPage(),
+    );
+  }
+}
+
+class KyoshinMonitorSettingsModalRoute extends GoRouteData {
+  const KyoshinMonitorSettingsModalRoute();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return const CupertinoSheetPage<void>(
       child: KyoshinMonitorSettingsPage(),
     );
   }
@@ -30,30 +41,33 @@ class KyoshinMonitorSettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(kyoshinMonitorSettingsProvider);
+
+    final body = CupertinoPageScaffold(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const KyoshinMonitorSettingsUseToggle(),
+            const SizedBox(height: 8),
+            const Divider(),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: state.useKmoni
+                  ? const KeyedSubtree(
+                      key: ValueKey('use-kmoni'),
+                      child: _Body(),
+                    )
+                  : const SizedBox.shrink(key: ValueKey('not-use-kmoni')),
+            ),
+          ],
+        ),
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('強震モニタ設定'),
       ),
-      body: CupertinoPageScaffold(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const KyoshinMonitorSettingsUseToggle(),
-              const SizedBox(height: 8),
-              const Divider(),
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                child: state.useKmoni
-                    ? const KeyedSubtree(
-                        key: ValueKey('use-kmoni'),
-                        child: _Body(),
-                      )
-                    : const SizedBox.shrink(key: ValueKey('not-use-kmoni')),
-              ),
-            ],
-          ),
-        ),
-      ),
+      body: body,
     );
   }
 }
@@ -75,24 +89,10 @@ class KyoshinMonitorSettingsUseToggle extends ConsumerWidget {
         value: state.useKmoni,
         onChanged: (value) async {
           if (value) {
-            final barWidget = Container(
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              width: 36,
-              height: 4,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: theme.colorScheme.onSurface,
-                boxShadow: const <BoxShadow>[
-                  BoxShadow(color: Colors.black12, blurRadius: 12),
-                ],
-              ),
-            );
-
             final result = await const KyoshinMonitorCautionaryNoteModalRoute()
                 .push<bool>(context);
 
-            if (result == true) {
+            if (result != null && result) {
               unawaited(
                 ref.read(kyoshinMonitorSettingsProvider.notifier).save(
                       state.copyWith(useKmoni: value),
@@ -224,29 +224,11 @@ class _Body extends ConsumerWidget {
                             ),
                       ),
               dropdownMenuEntries: [
-                for (final type in RealtimeDataType.values)
+                for (final type
+                    in RealtimeDataType.values.where((e) => !e.isLpgm))
                   DropdownMenuEntry(
                     value: type,
-                    label: switch (type) {
-                      RealtimeDataType.shindo => 'リアルタイム震度',
-                      RealtimeDataType.pga => '最大加速度',
-                      RealtimeDataType.pgv => '最大速度',
-                      RealtimeDataType.pgd => '最大変位',
-                      RealtimeDataType.response0125Hz => '応答速度(0.125Hz)',
-                      RealtimeDataType.response025Hz => '応答速度(0.25Hz)',
-                      RealtimeDataType.response05Hz => '応答速度(0.5Hz)',
-                      RealtimeDataType.response1Hz => '応答速度(1Hz)',
-                      RealtimeDataType.response2Hz => '応答速度(2Hz)',
-                      RealtimeDataType.response4Hz => '応答速度(4Hz)',
-                      RealtimeDataType.abrspmx => '長周期地震動階級',
-                      RealtimeDataType.abrsp1s => '階級データ(周期1秒台)',
-                      RealtimeDataType.abrsp2s => '階級データ(周期2秒台)',
-                      RealtimeDataType.abrsp3s => '階級データ(周期3秒台)',
-                      RealtimeDataType.abrsp4s => '階級データ(周期4秒台)',
-                      RealtimeDataType.abrsp5s => '階級データ(周期5秒台)',
-                      RealtimeDataType.abrsp6s => '階級データ(周期6秒台)',
-                      RealtimeDataType.abrsp7s => '階級データ(周期7秒台)',
-                    },
+                    label: type.displayName,
                   ),
               ],
             ),

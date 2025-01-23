@@ -84,20 +84,24 @@ _$NotificationRemoteSettingsEewRegionImpl
           json,
           ($checkedConvert) {
             final val = _$NotificationRemoteSettingsEewRegionImpl(
-              regionId: $checkedConvert('regionId', (v) => (v as num).toInt()),
-              minJmaIntensity: $checkedConvert('minJmaIntensity',
+              regionId: $checkedConvert('region_id', (v) => (v as num).toInt()),
+              minJmaIntensity: $checkedConvert('min_jma_intensity',
                   (v) => $enumDecode(_$JmaForecastIntensityEnumMap, v)),
               name: $checkedConvert('name', (v) => v as String),
             );
             return val;
+          },
+          fieldKeyMap: const {
+            'regionId': 'region_id',
+            'minJmaIntensity': 'min_jma_intensity'
           },
         );
 
 Map<String, dynamic> _$$NotificationRemoteSettingsEewRegionImplToJson(
         _$NotificationRemoteSettingsEewRegionImpl instance) =>
     <String, dynamic>{
-      'regionId': instance.regionId,
-      'minJmaIntensity':
+      'region_id': instance.regionId,
+      'min_jma_intensity':
           _$JmaForecastIntensityEnumMap[instance.minJmaIntensity]!,
       'name': instance.name,
     };
@@ -139,20 +143,24 @@ _$NotificationRemoteSettingsEarthquakeRegionImpl
           json,
           ($checkedConvert) {
             final val = _$NotificationRemoteSettingsEarthquakeRegionImpl(
-              regionId: $checkedConvert('regionId', (v) => (v as num).toInt()),
-              minJmaIntensity: $checkedConvert('minJmaIntensity',
+              regionId: $checkedConvert('region_id', (v) => (v as num).toInt()),
+              minJmaIntensity: $checkedConvert('min_jma_intensity',
                   (v) => $enumDecode(_$JmaForecastIntensityEnumMap, v)),
               name: $checkedConvert('name', (v) => v as String),
             );
             return val;
+          },
+          fieldKeyMap: const {
+            'regionId': 'region_id',
+            'minJmaIntensity': 'min_jma_intensity'
           },
         );
 
 Map<String, dynamic> _$$NotificationRemoteSettingsEarthquakeRegionImplToJson(
         _$NotificationRemoteSettingsEarthquakeRegionImpl instance) =>
     <String, dynamic>{
-      'regionId': instance.regionId,
-      'minJmaIntensity':
+      'region_id': instance.regionId,
+      'min_jma_intensity':
           _$JmaForecastIntensityEnumMap[instance.minJmaIntensity]!,
       'name': instance.name,
     };

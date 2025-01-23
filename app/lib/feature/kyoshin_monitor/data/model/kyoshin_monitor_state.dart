@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 import 'package:kyoshin_monitor_image_parser/kyoshin_monitor_image_parser.dart';
+import 'package:kyoshin_observation_point_types/kyoshin_observation_point.pb.dart';
 
 part 'kyoshin_monitor_state.freezed.dart';
 part 'kyoshin_monitor_state.g.dart';
@@ -14,7 +17,8 @@ class KyoshinMonitorState with _$KyoshinMonitorState {
     DateTime? lastUpdatedAt,
     DateTime? lastImageFetchTargetTime,
     Duration? lastImageFetchDuration,
-    List<KyoshinMonitorObservationAnalyzedPoint>? analyzedPoints,
+    List<KyoshinMonitorImageParseObservationPoint>? analyzedPoints,
+    List<int>? currentImageRaw,
   }) = _KyoshinMonitorState;
 
   factory KyoshinMonitorState.fromJson(Map<String, dynamic> json) =>
@@ -38,3 +42,31 @@ enum KyoshinMonitorStatus {
   initializing,
   ;
 }
+
+@freezed
+class KyoshinMonitorImageParseObservationPoint
+    with _$KyoshinMonitorImageParseObservationPoint {
+  const factory KyoshinMonitorImageParseObservationPoint({
+    @JsonKey(
+      fromJson: _kyoshinObservationPointFromJson,
+      toJson: _kyoshinObservationPointToJson,
+    )
+    required KyoshinObservationPoint point,
+    required KyoshinMonitorObservationAnalyzedPoint observation,
+  }) = _KyoshinMonitorImageParseObservationPoint;
+
+  factory KyoshinMonitorImageParseObservationPoint.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$KyoshinMonitorImageParseObservationPointFromJson(json);
+}
+
+Map<String, dynamic> _kyoshinObservationPointToJson(
+  KyoshinObservationPoint point,
+) =>
+    point.writeToJsonMap();
+
+KyoshinObservationPoint _kyoshinObservationPointFromJson(
+  Map<String, dynamic> json,
+) =>
+    KyoshinObservationPoint.fromJson(jsonEncode(json));

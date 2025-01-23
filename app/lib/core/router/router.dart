@@ -41,6 +41,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sheet/route.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 part 'router.g.dart';
@@ -163,16 +164,16 @@ class InformationHistoryDetailsRoute extends GoRouteData {
     TypedGoRoute<KyoshinMonitorCautionaryNoteModalRoute>(
       path: 'kyoshin-monitor-cautionary-note-modal',
     ),
-    TypedGoRoute<KyoshinMonitorSettingsRoute>(
-      path: 'kyoshin-monitor-settings',
-    ),
   ],
 )
 class HomeRoute extends GoRouteData {
   const HomeRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => const HomeView();
+  Page<void> buildPage(BuildContext context, GoRouterState state) =>
+      const MaterialExtendedPage<void>(
+        child: HomeView(),
+      );
 }
 
 @TypedGoRoute<TalkerRoute>(path: '/talker')
@@ -182,7 +183,6 @@ class TalkerRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) => const TalkerPage();
 }
-
 
 @TypedGoRoute<SettingsRoute>(
   path: '/settings',
@@ -226,6 +226,14 @@ class TalkerRoute extends GoRouteData {
       routes: [
         TypedGoRoute<DonationExecutedRoute>(
           path: 'executed',
+        ),
+      ],
+    ),
+    TypedGoRoute<KyoshinMonitorSettingsRoute>(
+      path: 'kyoshin-monitor-settings',
+      routes: [
+        TypedGoRoute<KyoshinMonitorSettingsModalRoute>(
+          path: 'modal',
         ),
       ],
     ),

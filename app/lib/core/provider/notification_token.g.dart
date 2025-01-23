@@ -15,18 +15,19 @@ _$NotificationTokenModelImpl _$$NotificationTokenModelImplFromJson(
       json,
       ($checkedConvert) {
         final val = _$NotificationTokenModelImpl(
-          fcmToken: $checkedConvert('fcmToken', (v) => v as String?),
-          apnsToken: $checkedConvert('apnsToken', (v) => v as String?),
+          fcmToken: $checkedConvert('fcm_token', (v) => v as String?),
+          apnsToken: $checkedConvert('apns_token', (v) => v as String?),
         );
         return val;
       },
+      fieldKeyMap: const {'fcmToken': 'fcm_token', 'apnsToken': 'apns_token'},
     );
 
 Map<String, dynamic> _$$NotificationTokenModelImplToJson(
         _$NotificationTokenModelImpl instance) =>
     <String, dynamic>{
-      'fcmToken': instance.fcmToken,
-      'apnsToken': instance.apnsToken,
+      'fcm_token': instance.fcmToken,
+      'apns_token': instance.apnsToken,
     };
 
 // **************************************************************************

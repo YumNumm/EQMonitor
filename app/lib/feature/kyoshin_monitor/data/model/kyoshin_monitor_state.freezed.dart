@@ -27,8 +27,9 @@ mixin _$KyoshinMonitorState {
   DateTime? get lastUpdatedAt => throw _privateConstructorUsedError;
   DateTime? get lastImageFetchTargetTime => throw _privateConstructorUsedError;
   Duration? get lastImageFetchDuration => throw _privateConstructorUsedError;
-  List<KyoshinMonitorObservationAnalyzedPoint>? get analyzedPoints =>
+  List<KyoshinMonitorImageParseObservationPoint>? get analyzedPoints =>
       throw _privateConstructorUsedError;
+  List<int>? get currentImageRaw => throw _privateConstructorUsedError;
 
   /// Serializes this KyoshinMonitorState to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -53,7 +54,8 @@ abstract class $KyoshinMonitorStateCopyWith<$Res> {
       DateTime? lastUpdatedAt,
       DateTime? lastImageFetchTargetTime,
       Duration? lastImageFetchDuration,
-      List<KyoshinMonitorObservationAnalyzedPoint>? analyzedPoints});
+      List<KyoshinMonitorImageParseObservationPoint>? analyzedPoints,
+      List<int>? currentImageRaw});
 }
 
 /// @nodoc
@@ -78,6 +80,7 @@ class _$KyoshinMonitorStateCopyWithImpl<$Res, $Val extends KyoshinMonitorState>
     Object? lastImageFetchTargetTime = freezed,
     Object? lastImageFetchDuration = freezed,
     Object? analyzedPoints = freezed,
+    Object? currentImageRaw = freezed,
   }) {
     return _then(_value.copyWith(
       currentRealtimeDataType: freezed == currentRealtimeDataType
@@ -107,7 +110,11 @@ class _$KyoshinMonitorStateCopyWithImpl<$Res, $Val extends KyoshinMonitorState>
       analyzedPoints: freezed == analyzedPoints
           ? _value.analyzedPoints
           : analyzedPoints // ignore: cast_nullable_to_non_nullable
-              as List<KyoshinMonitorObservationAnalyzedPoint>?,
+              as List<KyoshinMonitorImageParseObservationPoint>?,
+      currentImageRaw: freezed == currentImageRaw
+          ? _value.currentImageRaw
+          : currentImageRaw // ignore: cast_nullable_to_non_nullable
+              as List<int>?,
     ) as $Val);
   }
 }
@@ -127,7 +134,8 @@ abstract class _$$KyoshinMonitorStateImplCopyWith<$Res>
       DateTime? lastUpdatedAt,
       DateTime? lastImageFetchTargetTime,
       Duration? lastImageFetchDuration,
-      List<KyoshinMonitorObservationAnalyzedPoint>? analyzedPoints});
+      List<KyoshinMonitorImageParseObservationPoint>? analyzedPoints,
+      List<int>? currentImageRaw});
 }
 
 /// @nodoc
@@ -150,6 +158,7 @@ class __$$KyoshinMonitorStateImplCopyWithImpl<$Res>
     Object? lastImageFetchTargetTime = freezed,
     Object? lastImageFetchDuration = freezed,
     Object? analyzedPoints = freezed,
+    Object? currentImageRaw = freezed,
   }) {
     return _then(_$KyoshinMonitorStateImpl(
       currentRealtimeDataType: freezed == currentRealtimeDataType
@@ -179,7 +188,11 @@ class __$$KyoshinMonitorStateImplCopyWithImpl<$Res>
       analyzedPoints: freezed == analyzedPoints
           ? _value._analyzedPoints
           : analyzedPoints // ignore: cast_nullable_to_non_nullable
-              as List<KyoshinMonitorObservationAnalyzedPoint>?,
+              as List<KyoshinMonitorImageParseObservationPoint>?,
+      currentImageRaw: freezed == currentImageRaw
+          ? _value._currentImageRaw
+          : currentImageRaw // ignore: cast_nullable_to_non_nullable
+              as List<int>?,
     ));
   }
 }
@@ -194,8 +207,10 @@ class _$KyoshinMonitorStateImpl implements _KyoshinMonitorState {
       this.lastUpdatedAt,
       this.lastImageFetchTargetTime,
       this.lastImageFetchDuration,
-      final List<KyoshinMonitorObservationAnalyzedPoint>? analyzedPoints})
-      : _analyzedPoints = analyzedPoints;
+      final List<KyoshinMonitorImageParseObservationPoint>? analyzedPoints,
+      final List<int>? currentImageRaw})
+      : _analyzedPoints = analyzedPoints,
+        _currentImageRaw = currentImageRaw;
 
   factory _$KyoshinMonitorStateImpl.fromJson(Map<String, dynamic> json) =>
       _$$KyoshinMonitorStateImplFromJson(json);
@@ -213,9 +228,9 @@ class _$KyoshinMonitorStateImpl implements _KyoshinMonitorState {
   final DateTime? lastImageFetchTargetTime;
   @override
   final Duration? lastImageFetchDuration;
-  final List<KyoshinMonitorObservationAnalyzedPoint>? _analyzedPoints;
+  final List<KyoshinMonitorImageParseObservationPoint>? _analyzedPoints;
   @override
-  List<KyoshinMonitorObservationAnalyzedPoint>? get analyzedPoints {
+  List<KyoshinMonitorImageParseObservationPoint>? get analyzedPoints {
     final value = _analyzedPoints;
     if (value == null) return null;
     if (_analyzedPoints is EqualUnmodifiableListView) return _analyzedPoints;
@@ -223,9 +238,19 @@ class _$KyoshinMonitorStateImpl implements _KyoshinMonitorState {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<int>? _currentImageRaw;
+  @override
+  List<int>? get currentImageRaw {
+    final value = _currentImageRaw;
+    if (value == null) return null;
+    if (_currentImageRaw is EqualUnmodifiableListView) return _currentImageRaw;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   String toString() {
-    return 'KyoshinMonitorState(currentRealtimeDataType: $currentRealtimeDataType, currentRealtimeLayer: $currentRealtimeLayer, status: $status, lastUpdatedAt: $lastUpdatedAt, lastImageFetchTargetTime: $lastImageFetchTargetTime, lastImageFetchDuration: $lastImageFetchDuration, analyzedPoints: $analyzedPoints)';
+    return 'KyoshinMonitorState(currentRealtimeDataType: $currentRealtimeDataType, currentRealtimeLayer: $currentRealtimeLayer, status: $status, lastUpdatedAt: $lastUpdatedAt, lastImageFetchTargetTime: $lastImageFetchTargetTime, lastImageFetchDuration: $lastImageFetchDuration, analyzedPoints: $analyzedPoints, currentImageRaw: $currentImageRaw)';
   }
 
   @override
@@ -247,7 +272,9 @@ class _$KyoshinMonitorStateImpl implements _KyoshinMonitorState {
             (identical(other.lastImageFetchDuration, lastImageFetchDuration) ||
                 other.lastImageFetchDuration == lastImageFetchDuration) &&
             const DeepCollectionEquality()
-                .equals(other._analyzedPoints, _analyzedPoints));
+                .equals(other._analyzedPoints, _analyzedPoints) &&
+            const DeepCollectionEquality()
+                .equals(other._currentImageRaw, _currentImageRaw));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -260,7 +287,8 @@ class _$KyoshinMonitorStateImpl implements _KyoshinMonitorState {
       lastUpdatedAt,
       lastImageFetchTargetTime,
       lastImageFetchDuration,
-      const DeepCollectionEquality().hash(_analyzedPoints));
+      const DeepCollectionEquality().hash(_analyzedPoints),
+      const DeepCollectionEquality().hash(_currentImageRaw));
 
   /// Create a copy of KyoshinMonitorState
   /// with the given fields replaced by the non-null parameter values.
@@ -281,14 +309,14 @@ class _$KyoshinMonitorStateImpl implements _KyoshinMonitorState {
 
 abstract class _KyoshinMonitorState implements KyoshinMonitorState {
   const factory _KyoshinMonitorState(
-          {final RealtimeDataType? currentRealtimeDataType,
-          final RealtimeLayer? currentRealtimeLayer,
-          final KyoshinMonitorStatus status,
-          final DateTime? lastUpdatedAt,
-          final DateTime? lastImageFetchTargetTime,
-          final Duration? lastImageFetchDuration,
-          final List<KyoshinMonitorObservationAnalyzedPoint>? analyzedPoints}) =
-      _$KyoshinMonitorStateImpl;
+      {final RealtimeDataType? currentRealtimeDataType,
+      final RealtimeLayer? currentRealtimeLayer,
+      final KyoshinMonitorStatus status,
+      final DateTime? lastUpdatedAt,
+      final DateTime? lastImageFetchTargetTime,
+      final Duration? lastImageFetchDuration,
+      final List<KyoshinMonitorImageParseObservationPoint>? analyzedPoints,
+      final List<int>? currentImageRaw}) = _$KyoshinMonitorStateImpl;
 
   factory _KyoshinMonitorState.fromJson(Map<String, dynamic> json) =
       _$KyoshinMonitorStateImpl.fromJson;
@@ -306,7 +334,9 @@ abstract class _KyoshinMonitorState implements KyoshinMonitorState {
   @override
   Duration? get lastImageFetchDuration;
   @override
-  List<KyoshinMonitorObservationAnalyzedPoint>? get analyzedPoints;
+  List<KyoshinMonitorImageParseObservationPoint>? get analyzedPoints;
+  @override
+  List<int>? get currentImageRaw;
 
   /// Create a copy of KyoshinMonitorState
   /// with the given fields replaced by the non-null parameter values.
@@ -314,4 +344,235 @@ abstract class _KyoshinMonitorState implements KyoshinMonitorState {
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$KyoshinMonitorStateImplCopyWith<_$KyoshinMonitorStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+KyoshinMonitorImageParseObservationPoint
+    _$KyoshinMonitorImageParseObservationPointFromJson(
+        Map<String, dynamic> json) {
+  return _KyoshinMonitorImageParseObservationPoint.fromJson(json);
+}
+
+/// @nodoc
+mixin _$KyoshinMonitorImageParseObservationPoint {
+  @JsonKey(
+      fromJson: _kyoshinObservationPointFromJson,
+      toJson: _kyoshinObservationPointToJson)
+  KyoshinObservationPoint get point => throw _privateConstructorUsedError;
+  KyoshinMonitorObservationAnalyzedPoint get observation =>
+      throw _privateConstructorUsedError;
+
+  /// Serializes this KyoshinMonitorImageParseObservationPoint to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of KyoshinMonitorImageParseObservationPoint
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $KyoshinMonitorImageParseObservationPointCopyWith<
+          KyoshinMonitorImageParseObservationPoint>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $KyoshinMonitorImageParseObservationPointCopyWith<$Res> {
+  factory $KyoshinMonitorImageParseObservationPointCopyWith(
+          KyoshinMonitorImageParseObservationPoint value,
+          $Res Function(KyoshinMonitorImageParseObservationPoint) then) =
+      _$KyoshinMonitorImageParseObservationPointCopyWithImpl<$Res,
+          KyoshinMonitorImageParseObservationPoint>;
+  @useResult
+  $Res call(
+      {@JsonKey(
+          fromJson: _kyoshinObservationPointFromJson,
+          toJson: _kyoshinObservationPointToJson)
+      KyoshinObservationPoint point,
+      KyoshinMonitorObservationAnalyzedPoint observation});
+
+  $KyoshinMonitorObservationAnalyzedPointCopyWith<$Res> get observation;
+}
+
+/// @nodoc
+class _$KyoshinMonitorImageParseObservationPointCopyWithImpl<$Res,
+        $Val extends KyoshinMonitorImageParseObservationPoint>
+    implements $KyoshinMonitorImageParseObservationPointCopyWith<$Res> {
+  _$KyoshinMonitorImageParseObservationPointCopyWithImpl(
+      this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of KyoshinMonitorImageParseObservationPoint
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? point = null,
+    Object? observation = null,
+  }) {
+    return _then(_value.copyWith(
+      point: null == point
+          ? _value.point
+          : point // ignore: cast_nullable_to_non_nullable
+              as KyoshinObservationPoint,
+      observation: null == observation
+          ? _value.observation
+          : observation // ignore: cast_nullable_to_non_nullable
+              as KyoshinMonitorObservationAnalyzedPoint,
+    ) as $Val);
+  }
+
+  /// Create a copy of KyoshinMonitorImageParseObservationPoint
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $KyoshinMonitorObservationAnalyzedPointCopyWith<$Res> get observation {
+    return $KyoshinMonitorObservationAnalyzedPointCopyWith<$Res>(
+        _value.observation, (value) {
+      return _then(_value.copyWith(observation: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$KyoshinMonitorImageParseObservationPointImplCopyWith<$Res>
+    implements $KyoshinMonitorImageParseObservationPointCopyWith<$Res> {
+  factory _$$KyoshinMonitorImageParseObservationPointImplCopyWith(
+          _$KyoshinMonitorImageParseObservationPointImpl value,
+          $Res Function(_$KyoshinMonitorImageParseObservationPointImpl) then) =
+      __$$KyoshinMonitorImageParseObservationPointImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(
+          fromJson: _kyoshinObservationPointFromJson,
+          toJson: _kyoshinObservationPointToJson)
+      KyoshinObservationPoint point,
+      KyoshinMonitorObservationAnalyzedPoint observation});
+
+  @override
+  $KyoshinMonitorObservationAnalyzedPointCopyWith<$Res> get observation;
+}
+
+/// @nodoc
+class __$$KyoshinMonitorImageParseObservationPointImplCopyWithImpl<$Res>
+    extends _$KyoshinMonitorImageParseObservationPointCopyWithImpl<$Res,
+        _$KyoshinMonitorImageParseObservationPointImpl>
+    implements _$$KyoshinMonitorImageParseObservationPointImplCopyWith<$Res> {
+  __$$KyoshinMonitorImageParseObservationPointImplCopyWithImpl(
+      _$KyoshinMonitorImageParseObservationPointImpl _value,
+      $Res Function(_$KyoshinMonitorImageParseObservationPointImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of KyoshinMonitorImageParseObservationPoint
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? point = null,
+    Object? observation = null,
+  }) {
+    return _then(_$KyoshinMonitorImageParseObservationPointImpl(
+      point: null == point
+          ? _value.point
+          : point // ignore: cast_nullable_to_non_nullable
+              as KyoshinObservationPoint,
+      observation: null == observation
+          ? _value.observation
+          : observation // ignore: cast_nullable_to_non_nullable
+              as KyoshinMonitorObservationAnalyzedPoint,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$KyoshinMonitorImageParseObservationPointImpl
+    implements _KyoshinMonitorImageParseObservationPoint {
+  const _$KyoshinMonitorImageParseObservationPointImpl(
+      {@JsonKey(
+          fromJson: _kyoshinObservationPointFromJson,
+          toJson: _kyoshinObservationPointToJson)
+      required this.point,
+      required this.observation});
+
+  factory _$KyoshinMonitorImageParseObservationPointImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$KyoshinMonitorImageParseObservationPointImplFromJson(json);
+
+  @override
+  @JsonKey(
+      fromJson: _kyoshinObservationPointFromJson,
+      toJson: _kyoshinObservationPointToJson)
+  final KyoshinObservationPoint point;
+  @override
+  final KyoshinMonitorObservationAnalyzedPoint observation;
+
+  @override
+  String toString() {
+    return 'KyoshinMonitorImageParseObservationPoint(point: $point, observation: $observation)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$KyoshinMonitorImageParseObservationPointImpl &&
+            (identical(other.point, point) || other.point == point) &&
+            (identical(other.observation, observation) ||
+                other.observation == observation));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, point, observation);
+
+  /// Create a copy of KyoshinMonitorImageParseObservationPoint
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$KyoshinMonitorImageParseObservationPointImplCopyWith<
+          _$KyoshinMonitorImageParseObservationPointImpl>
+      get copyWith =>
+          __$$KyoshinMonitorImageParseObservationPointImplCopyWithImpl<
+              _$KyoshinMonitorImageParseObservationPointImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$KyoshinMonitorImageParseObservationPointImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _KyoshinMonitorImageParseObservationPoint
+    implements KyoshinMonitorImageParseObservationPoint {
+  const factory _KyoshinMonitorImageParseObservationPoint(
+          {@JsonKey(
+              fromJson: _kyoshinObservationPointFromJson,
+              toJson: _kyoshinObservationPointToJson)
+          required final KyoshinObservationPoint point,
+          required final KyoshinMonitorObservationAnalyzedPoint observation}) =
+      _$KyoshinMonitorImageParseObservationPointImpl;
+
+  factory _KyoshinMonitorImageParseObservationPoint.fromJson(
+          Map<String, dynamic> json) =
+      _$KyoshinMonitorImageParseObservationPointImpl.fromJson;
+
+  @override
+  @JsonKey(
+      fromJson: _kyoshinObservationPointFromJson,
+      toJson: _kyoshinObservationPointToJson)
+  KyoshinObservationPoint get point;
+  @override
+  KyoshinMonitorObservationAnalyzedPoint get observation;
+
+  /// Create a copy of KyoshinMonitorImageParseObservationPoint
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$KyoshinMonitorImageParseObservationPointImplCopyWith<
+          _$KyoshinMonitorImageParseObservationPointImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

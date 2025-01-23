@@ -1,12 +1,13 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/provider/kmoni_observation_points/provider/kyoshin_observation_points_provider.dart';
-import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/data_source/kyoshin_monitor_web_api_data_source.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_image_parser_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_timer_stream.dart';
+import 'package:kyoshin_monitor_image_parser/kyoshin_monitor_image_parser.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'kyoshin_monitor_notifier.g.dart';
@@ -22,7 +23,7 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
       }
     });
 
-    //
+    // 設定変更を監視
     ref.listen(
       kyoshinMonitorSettingsProvider,
       (previous, next) {
@@ -49,48 +50,62 @@ class KyoshinMonitorNotifier extends _$KyoshinMonitorNotifier {
         ref.read(kyoshinMonitorSettingsProvider).api.imageFetchInterval;
     final delay = imageFetchInterval + const Duration(seconds: 5);
     final isDelayed = targetTime.difference(DateTime.now()) > delay;
-    if (isDelayed) {}
 
     if (state.isLoading) {
       return;
     }
-    try {
-      final stopwatch = Stopwatch()..start();
-      state = const AsyncLoading<KyoshinMonitorState>().copyWithPrevious(state);
-      final dataSource = ref.read(kyoshinMonitorWebApiDataSourceProvider);
-      final imageParser = ref.read(kyoshinMonitorImageParserProvider);
-      final points = ref.read(kyoshinMonitorObservationPointsProvider);
+    final stopwatch = Stopwatch()..start();
+    state = const AsyncLoading<KyoshinMonitorState>().copyWithPrevious(state);
+    state = await AsyncValue.guard(
+      () async {
+        final dataSource = ref.read(kyoshinMonitorWebApiDataSourceProvider);
+        final imageParser = ref.read(kyoshinMonitorImageParserProvider);
+        final points = ref.read(kyoshinMonitorObservationPointsProvider);
+        final observationPoints = ref.read(kyoshinObservationPointsProvider);
+        // 画像を取得
+        final realtimeDataType =
+            ref.read(kyoshinMonitorSettingsProvider).realtimeDataType;
+        final realtimeLayer =
+            ref.read(kyoshinMonitorSettingsProvider).realtimeLayer;
+        final image = await dataSource.getRealtimeImageData(
+          type: realtimeDataType,
+          layer: realtimeLayer,
+          dateTime: targetTime,
+        );
 
-      // 画像を取得
-      final realtimeDataType =
-          ref.read(kyoshinMonitorSettingsProvider).realtimeDataType;
-      final realtimeLayer =
-          ref.read(kyoshinMonitorSettingsProvider).realtimeLayer;
-      final shindoImage = await dataSource.getRealtimeImageData(
-        realtimeDataType,
-        realtimeLayer,
-        targetTime,
-      );
+        // 画像を解析
+        final result = await imageParser.parseGif(
+          gifImage: image,
+          points: points,
+        );
 
-      // 画像を解析
-      final result = await imageParser.parseGif(
-        gifImage: shindoImage,
-        points: points,
-      );
-
-      state = AsyncData(
-        KyoshinMonitorState(
+        final results = result
+            .mapIndexed((index, element) {
+              final point = observationPoints.points[index];
+              return switch (element) {
+                KyoshinMonitorImageParseObservationSuccess() =>
+                  KyoshinMonitorImageParseObservationPoint(
+                    point: point,
+                    observation: element.point,
+                  ),
+                KyoshinMonitorImageParseObservationFailure() => null,
+              };
+            })
+            .nonNulls
+            .toList();
+        return KyoshinMonitorState(
           lastUpdatedAt: DateTime.now(),
           lastImageFetchTargetTime: targetTime,
-          status: KyoshinMonitorStatus.realtime,
+          status: isDelayed
+              ? KyoshinMonitorStatus.delayed
+              : KyoshinMonitorStatus.realtime,
           currentRealtimeDataType: realtimeDataType,
           currentRealtimeLayer: realtimeLayer,
-          analyzedPoints: result.successPoints,
+          analyzedPoints: results,
           lastImageFetchDuration: stopwatch.elapsed,
-        ),
-      );
-    } on Exception catch (e) {
-      talker.error(e);
-    }
+          currentImageRaw: image,
+        );
+      },
+    );
   }
 }

@@ -29,11 +29,12 @@ import 'package:eqmonitor/feature/home/component/parameter/parameter_loader_widg
 import 'package:eqmonitor/feature/home/component/render/map_components_renderer.dart';
 import 'package:eqmonitor/feature/home/component/shake-detect/shake_detection_card.dart';
 import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
-import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
 import 'package:eqmonitor/feature/home/features/map/view/main_map_view.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_settings_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/widget/kmoni_maintenance_widget.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/widget/kyoshin_monitor_status_card.dart';
 import 'package:eqmonitor/feature/location/data/location_tracking_mode.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/fcm_token_change_detector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_authentication_service.dart';
@@ -76,6 +77,14 @@ class HomeView extends HookConsumerWidget {
                 ),
                 backgroundColor: Colors.transparent,
                 forceMaterialTransparency: true,
+                actions: [
+                  IconButton(
+                    onPressed: () async =>
+                        const KyoshinMonitorSettingsModalRoute()
+                            .push<void>(context),
+                    icon: const Icon(Icons.settings),
+                  ),
+                ],
               ),
             ),
           ),
@@ -102,8 +111,6 @@ class _HomeBodyWidget extends HookConsumerWidget {
             (_) async {
               log('Start Initialize');
               await (
-                // TODO(YumNumm): 強震モニタ結合
-                // ref.read(kmoniViewModelProvider.notifier).initialize(),
                 ref.read(permissionNotifierProvider.notifier).initialize(),
                 ref.read(ntpProvider.notifier).sync(),
                 () async {
@@ -455,7 +462,7 @@ class _Fabs extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const KmoniStatusWidget(),
+            const KyoshinMonitorStatusCard(),
             Column(
               children: [
                 FloatingActionButton.small(
