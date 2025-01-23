@@ -39,7 +39,7 @@ class KyoshinMonitorObservationAnalyzedPoint
   double get scaleToPga => math.pow(10, 5 * scale - 2).toDouble();
   double get scaleToPgv => math.pow(10, 5 * scale - 3).toDouble();
   double get scaleToPgd => math.pow(10, 5 * scale - 4).toDouble();
-  
+
 }
 
 ColorInt8 _colorFromJson(Map<String, dynamic> json) => ColorInt8.rgb(

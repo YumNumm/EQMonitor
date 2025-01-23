@@ -98,7 +98,6 @@ Future<void> main() async {
   final results = await (
     (
       SharedPreferences.getInstance(),
-      loadKmoniObservationPoints(),
       PackageInfo.fromPlatform(),
       (!kIsWeb && Platform.isAndroid
           ? deviceInfo.androidInfo
@@ -141,29 +140,34 @@ Future<void> main() async {
       FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode),
     );
   }
+
+  final container = ProviderContainer(
+    overrides: [
+      sharedPreferencesProvider.overrideWithValue(results.$1.$1),
+      packageInfoProvider.overrideWithValue(results.$1.$2),
+      if (results.$1.$3 != null)
+        androidDeviceInfoProvider.overrideWithValue(results.$1.$3!),
+      if (results.$1.$4 != null)
+        iosDeviceInfoProvider.overrideWithValue(results.$1.$4!),
+      applicationDocumentsDirectoryProvider.overrideWithValue(results.$1.$6!),
+      jmaCodeTableProvider.overrideWithValue(results.$1.$7),
+      if (results.$2.$3 != null)
+        kyoshinColorMapProvider.overrideWithValue(results.$2.$3!),
+    ],
+    observers: [
+      if (kDebugMode)
+        CustomProviderObserver(
+          talker,
+        ),
+    ],
+  );
+
+  await container
+      .read(kyoshinMonitorInternalObservationPointsConvertedProvider.future);
+
   runApp(
-    ProviderScope(
-      overrides: [
-        sharedPreferencesProvider.overrideWithValue(results.$1.$1),
-        kyoshinObservationPointsProvider.overrideWithValue(results.$1.$2),
-        packageInfoProvider.overrideWithValue(results.$1.$3),
-        if (results.$1.$4 != null)
-          androidDeviceInfoProvider.overrideWithValue(results.$1.$4!),
-        if (results.$1.$5 != null)
-          iosDeviceInfoProvider.overrideWithValue(results.$1.$5!),
-        if (results.$1.$7 != null)
-          applicationDocumentsDirectoryProvider
-              .overrideWithValue(results.$1.$7!),
-        jmaCodeTableProvider.overrideWithValue(results.$1.$8),
-        if (results.$2.$3 != null)
-          kyoshinColorMapProvider.overrideWithValue(results.$2.$3!),
-      ],
-      observers: [
-        if (kDebugMode)
-          CustomProviderObserver(
-            talker,
-          ),
-      ],
+    UncontrolledProviderScope(
+      container: container,
       child: const App(),
     ),
   );

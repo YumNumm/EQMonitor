@@ -1,9 +1,18 @@
+import 'package:intl/intl.dart';
+
 /// 文字列からDateTime型に変換
-DateTime? dateTimeFromString(String? value) =>
-    value != null ? DateTime.tryParse(value) : null;
+DateTime? dateTimeOrNullFromString(String? value) =>
+    value != null ? dateTimeFromString(value) : null;
+
+DateTime dateTimeFromString(String value) =>
+    DateTime.parse(value.replaceAll('/', '-'));
 
 /// DateTime型から文字列に変換
-String? dateTimeToString(DateTime? value) => value?.toIso8601String();
+String? dateTimeOrNullToString(DateTime? value) =>
+    value != null ? dateTimeToString(value) : null;
+
+String dateTimeToString(DateTime value) =>
+    DateFormat('yyyy/MM/dd HH:mm:ss').format(value);
 
 /// 文字列からdouble型に変換
 double? doubleOrNullFromString(String? value) =>
