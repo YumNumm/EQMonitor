@@ -40,7 +40,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     if (parameter == const EarthquakeHistoryParameter()) {
       // 30秒ごとにデータ再取得するタイマー
       final refetchTimer = Timer.periodic(
-        const Duration(seconds: 30),
+        const Duration(minutes: 5),
         (_) => _refreshIfWebsocketNotConnected(),
       );
       ref
@@ -78,12 +78,14 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     return _fetchInitialData(
       param: parameter,
       regions: earthquakeParameter.regions,
+      limit: parameter == const EarthquakeHistoryParameter() ? 5 : 50,
     );
   }
 
   Future<(List<EarthquakeV1Extended>, int totalCount)> _fetchInitialData({
     required EarthquakeHistoryParameter param,
     required List<EarthquakeParameterRegionItem> regions,
+    required int limit,
   }) async {
     ref.invalidate(earthquakeHistoryDetailsNotifierProvider);
 
@@ -96,6 +98,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
           intensityLte: param.intensityLte,
           magnitudeGte: param.magnitudeGte,
           magnitudeLte: param.magnitudeLte,
+          limit: limit,
         );
     return (
       await _v1ToV1Extended(
@@ -123,6 +126,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       return _fetchInitialData(
         param: parameter,
         regions: earthquakeParameter.regions,
+        limit: 50,
       );
     });
   }
