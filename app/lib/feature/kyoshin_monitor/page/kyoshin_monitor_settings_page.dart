@@ -1,59 +1,148 @@
+import 'dart:async';
+
+import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_scale.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/page/kmoni_settings_page.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_cautionary_note_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/provider/kmoni_color_provider.dart';
 import 'package:eqmonitor/feature/location/data/location.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sheet/route.dart';
 
-class KmoniSettingsModal extends HookConsumerWidget {
-  const KmoniSettingsModal({super.key});
+class KyoshinMonitorSettingsRoute extends GoRouteData {
+  const KyoshinMonitorSettingsRoute();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return const CupertinoExtendedPage<void>(
+      child: KyoshinMonitorSettingsPage(),
+    );
+  }
+}
+
+class KyoshinMonitorSettingsPage extends ConsumerWidget {
+  const KyoshinMonitorSettingsPage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(kyoshinMonitorSettingsProvider);
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('強震モニタ設定'),
+      ),
+      body: CupertinoPageScaffold(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const KyoshinMonitorSettingsUseToggle(),
+              const SizedBox(height: 8),
+              const Divider(),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: state.useKmoni
+                    ? const KeyedSubtree(
+                        key: ValueKey('use-kmoni'),
+                        child: _Body(),
+                      )
+                    : const SizedBox.shrink(key: ValueKey('not-use-kmoni')),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class KyoshinMonitorSettingsUseToggle extends ConsumerWidget {
+  const KyoshinMonitorSettingsUseToggle({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(kyoshinMonitorSettingsProvider);
     final theme = Theme.of(context);
-
-    final barWidget = Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      width: 36,
-      height: 4,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: theme.colorScheme.onSurface,
-        boxShadow: const <BoxShadow>[
-          BoxShadow(color: Colors.black12, blurRadius: 12),
-        ],
-      ),
-    );
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        barWidget,
-        Expanded(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const KmoniSettingsUseToggle(),
-                  if (state.useKmoni) const KmoniSettingsDialogInside(),
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      elevation: 0,
+      color: theme.colorScheme.primaryContainer,
+      child: SwitchListTile.adaptive(
+        value: state.useKmoni,
+        onChanged: (value) async {
+          if (value) {
+            final barWidget = Container(
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              width: 36,
+              height: 4,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: theme.colorScheme.onSurface,
+                boxShadow: const <BoxShadow>[
+                  BoxShadow(color: Colors.black12, blurRadius: 12),
                 ],
               ),
-            ),
-          ),
-        ),
-      ],
+            );
+
+            // final result = await showKyoshinMonitorCautionaryNoteModal(context);
+
+            final result = await const KyoshinMonitorCautionaryNoteModalRoute()
+                .push<void>(context);
+
+            // final result = await showModalBottomSheet<bool>(
+            //   context: context,
+            //   isScrollControlled: true,
+            //   builder: (context) => SafeArea(
+            //     child: Column(
+            //       children: [
+            //         barWidget,
+            //         const SingleChildScrollView(
+            //           child: SafeArea(
+            //             child: Column(
+            //               children: [
+            //                 SheetHeader(title: '強震モニタの注意点'),
+            //               ],
+            //             ),
+            //           ),
+            //         ),
+            //         UseKmoniButton(
+            //           onDisabled: () => Navigator.of(context).pop(false),
+            //           onEnabled: () => Navigator.of(context).pop(true),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // );
+            // final isAccepted = result != null && result;
+
+            // if (isAccepted) {
+            //   unawaited(
+            //     ref.read(kyoshinMonitorSettingsProvider.notifier).save(
+            //           state.copyWith(useKmoni: value),
+            //         ),
+            //   );
+            // }
+            return;
+          } else {
+            unawaited(
+              ref.read(kyoshinMonitorSettingsProvider.notifier).save(
+                    state.copyWith(useKmoni: value),
+                  ),
+            );
+          }
+        },
+        title: const Text('強震モニタを表示する'),
+      ),
     );
   }
 }
 
-class KmoniSettingsDialogInside extends ConsumerWidget {
-  const KmoniSettingsDialogInside({
-    super.key,
-  });
+class _Body extends ConsumerWidget {
+  const _Body();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -69,9 +158,7 @@ class KmoniSettingsDialogInside extends ConsumerWidget {
         ListTile(
           title: const Text('リアルタイム震度の表示しきい値'),
           subtitle: SliderTheme(
-            data: theme.sliderTheme.copyWith(
-              trackShape: _CustomTrackShape(),
-            ),
+            data: theme.sliderTheme,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               child: Column(
@@ -115,7 +202,7 @@ class KmoniSettingsDialogInside extends ConsumerWidget {
           title: const Text('リアルタイム震度のスケールを表示'),
         ),
         SwitchListTile.adaptive(
-          title: const Text('現在地のマーカーを表示する'),
+          title: const Text('地図上に現在地のマーカーを表示する'),
           value: state.showCurrentLocationMarker,
           onChanged: (value) async {
             await ref.read(kyoshinMonitorSettingsProvider.notifier).save(
@@ -154,22 +241,5 @@ class KmoniSettingsDialogInside extends ConsumerWidget {
         ),
       ],
     );
-  }
-}
-
-class _CustomTrackShape extends RoundedRectSliderTrackShape {
-  @override
-  Rect getPreferredRect({
-    required RenderBox parentBox,
-    required SliderThemeData sliderTheme,
-    Offset offset = Offset.zero,
-    bool isEnabled = false,
-    bool isDiscrete = false,
-  }) {
-    final trackHeight = sliderTheme.trackHeight;
-    final trackLeft = offset.dx;
-    final trackTop = offset.dy + (parentBox.size.height - trackHeight!) / 2;
-    final trackWidth = parentBox.size.width;
-    return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }
 }

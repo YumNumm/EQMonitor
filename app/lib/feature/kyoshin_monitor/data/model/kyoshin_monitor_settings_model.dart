@@ -1,5 +1,6 @@
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 
 part 'kyoshin_monitor_settings_model.freezed.dart';
 part 'kyoshin_monitor_settings_model.g.dart';
@@ -21,6 +22,12 @@ class KyoshinMonitorSettingsModel with _$KyoshinMonitorSettingsModel {
 
     /// 強震モニタ観測点のマーカーの種類
     @Default(KmoniMarkerType.onlyEew) KmoniMarkerType kmoniMarkerType,
+
+    /// 強震モニタのリアルタイムデータの種類
+    @Default(RealtimeDataType.shindo) RealtimeDataType realtimeDataType,
+
+    /// 強震モニタのリアルタイムデータのレイヤー
+    @Default(RealtimeLayer.surface) RealtimeLayer realtimeLayer,
 
     /// 強震モニタ API関連の設定
     @Default(KyoshinMonitorSettingsApiModel())

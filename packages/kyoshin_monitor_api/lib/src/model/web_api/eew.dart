@@ -16,7 +16,7 @@ class Eew with _$Eew implements KyoshinMonitorWebApiResponse {
     Result? result,
 
     /// 発報時間
-    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+    @JsonKey(fromJson: dateTimeOrNullFromString, toJson: dateTimeOrNullToString)
     DateTime? reportTime,
 
     /// 地域コード

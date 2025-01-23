@@ -12,6 +12,7 @@ class MaintenanceMessage
     required String? message,
     required Security? security,
     required MaintenanceMessageType? type,
+    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
     required DateTime requestTime,
     required Result? result,
   }) = _MaintenanceMessage;

@@ -4,7 +4,7 @@ import 'package:eqmonitor/core/foundation/result.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/periodic_timer.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/data_source/kyoshin_monitor_web_api_data_source.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_timer_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -20,6 +20,7 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
     // 5秒ごとにRetry
     while (true) {
       final result = await _syncDelaySimple();
+      talker.logCustom(KyoshinMonitorLog('result: $result'));
       if (result case Success(:final value)) {
         talker.logCustom(KyoshinMonitorLog('delayFromDevice: $value'));
         yield KyoshinMonitorTimerState(
@@ -28,6 +29,8 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
         );
         break;
       } else {
+        final failure = result as Failure<Duration, Exception>;
+        talker.logCustom(KyoshinMonitorLog('failure: ${failure.exception}'));
         await Future<void>.delayed(const Duration(seconds: 5));
       }
     }
