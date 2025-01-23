@@ -164,11 +164,10 @@ jobs:
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
         with:
           name: EQMonitor-ios.ipa
-          path: app/eqdashboard.ipa
+          path: app/runner.ipa
 
   deploy-ios:
     needs: build-ios
-    name: Deploy iOS
     runs-on: macos-latest
     timeout-minutes: 10
     steps:
@@ -182,7 +181,7 @@ jobs:
       - name: Download ipa
         uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
         with:
-          name: EQDashboard-ios.ipa
+          name: EQMonitor-ios.ipa
           path: build
 
       - name: List files
@@ -202,7 +201,7 @@ jobs:
         run: |
           xcrun altool \
             --upload-app \
-            -f build/eqdashboard.ipa \
+            -f build/EQMonitor-ios.ipa \
             --type ios \
             --apiIssuer ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }} \
             --apiKey ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
@@ -230,9 +229,10 @@ jobs:
 
       - name: Build Android
         working-directory: app
-        run: flutter build appbundle \
-          --release \
-          --dart-define-from-file=../environment/.env.prod
+        run: |
+          flutter build appbundle \
+            --release \
+            --dart-define-from-file=../environment/.env.prod
 
       - name: Upload apk as artifact
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
