@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 void main() {
   group('dateTimeFromString', () {
     test('正常な日時文字列からDateTimeに変換できる', () {
-      final result = dateTimeFromString('2024-03-20T12:34:56Z');
+      final result = dateTimeOrNullFromString('2024-03-20T12:34:56Z');
       expect(result, isA<DateTime>());
       expect(result?.year, 2024);
       expect(result?.month, 3);
@@ -15,11 +15,11 @@ void main() {
     });
 
     test('nullの場合はnullを返す', () {
-      expect(dateTimeFromString(null), isNull);
+      expect(dateTimeOrNullFromString(null), isNull);
     });
 
     test('不正な日時文字列の場合はnullを返す', () {
-      expect(dateTimeFromString('invalid'), isNull);
+      expect(dateTimeOrNullFromString('invalid'), isNull);
     });
   });
 
