@@ -48,8 +48,10 @@ class CustomProviderObserver extends ProviderObserver {
   ) =>
       switch (provider.name) {
         'mapViewModelProvider' ||
-        'kmoniViewModelProvider' ||
-        'timeTickerProvider' =>
+        'kyoshinMonitorTimerStreamProvider' ||
+        'periodicTimerProvider' ||
+        'timeTickerProvider' ||
+        'kyoshinMonitorNotifierProvider' =>
           null,
         _
             when newValue.toString().length + previousValue.toString().length >
