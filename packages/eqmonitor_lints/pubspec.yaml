@@ -2,7 +2,7 @@ name: eqmonitor_lints
 
 environment:
   sdk: ^3.6.1
-  flutter: ^3.27.2
+  flutter: ^3.27.3
 
 resolution: workspace
 

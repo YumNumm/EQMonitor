@@ -1,9 +1,7 @@
 name: eqmonitor_workspace
 description: The workspace for the EQMonitor project.
-
 environment:
   sdk: ^3.6.1
-
 workspace:
     - app
     - packages/_base
@@ -26,10 +24,8 @@ workspace:
     - packages/kyoshin_monitor_api
     - packages/kyoshin_monitor_image_parser
     # <ADD_PACKAGE_HERE>
-
 dependencies:
   melos: ^7.0.0-dev.4
-
 dependency_overrides:
   # `yumemi_lints` の `file` 依存関係が `file` 6.xになっているため、
   # 強制的に `file` 7.x を依存関係に追加する
@@ -45,7 +41,6 @@ dependency_overrides:
 melos:
   repository: https://github.com/YumNumm/EQMonitor
   sdkPath: .fvm/flutter_sdk/
-
   command:
     version:
       linkToCommits: true
@@ -53,8 +48,7 @@ melos:
       runPubGetInParallel: false
       environment:
         sdk: ^3.6.1
-        flutter: ^3.27.2
-
+        flutter: ^3.27.3
   scripts:
     analyze:
       run: |
@@ -63,11 +57,9 @@ melos:
       description: |
         Run `dart analyze` in all packages.
         - Note: you can also rely on your IDEs Dart Analysis / Issues window.
-
     generate:
       run: melos run generate:dart && melos run generate:flutter
       description: Build all generated files for Dart & Flutter packages in this project.
-
     rebuild:
       description: build_runner を使用してコードを生成します。
       run: dart run build_runner build -d
@@ -148,7 +140,6 @@ melos:
   packages:
     - app
     - packages/*
-
   ide:
     intellij:
       enabled: false
