@@ -14,6 +14,7 @@ dependencies:
   adaptive_dialog: ^2.3.0
   app_settings: ^5.1.1
   background_task: ^0.2.0
+  clock: ^1.1.1
   collection: ^1.18.0
   crypto: ^3.0.6
   data_table_2: ^2.5.16
@@ -41,8 +42,8 @@ dependencies:
   flutter_local_notifications: ^18.0.1
   flutter_localizations:
     sdk: flutter
-  flutter_markdown: ^0.7.4
-  flutter_secure_storage: ^9.2.2
+  flutter_markdown: ^0.7.5
+  flutter_secure_storage: ^10.0.0-beta.4
   flutter_test:
     sdk: flutter
   freezed_annotation: ^2.4.4
@@ -60,6 +61,10 @@ dependencies:
   jma_parameter_api_client:
     path: ../packages/jma_parameter_api_client
   json_annotation: ^4.9.0
+  kyoshin_monitor_api:
+    path: ../packages/kyoshin_monitor_api
+  kyoshin_monitor_image_parser:
+    path: ../packages/kyoshin_monitor_image_parser
   kyoshin_observation_point_types:
     path: ../packages/kyoshin_observation_point_types
   lat_lng:
@@ -102,6 +107,7 @@ dev_dependencies:
   dependency_validator: ^4.1.2
   eqmonitor_lints:
     path: ../packages/eqmonitor_lints
+  fake_async: ^1.3.1
   flutter_gen_runner: ^5.8.0
   freezed: ^2.5.7
   go_router_builder: ^2.7.1
@@ -128,13 +134,19 @@ flutter:
   fonts:
     - family: NotoSansJP
       fonts:
-        - asset: assets/fonts/NotoSansJP-Regular.ttf
-          weight: 400
+        # - asset: assets/fonts/NotoSansJP-Regular.ttf
+          # weight: 400
+        - asset: assets/fonts/NotoSansJP-Medium.ttf
+          weight: 500
         - asset: assets/fonts/NotoSansJP-Bold.ttf
           weight: 700
         - asset: assets/fonts/NotoSansJP-Black.ttf
           weight: 900
     - family: JetBrainsMono
       fonts:
+        - asset: assets/fonts/JetBrainsMono-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/JetBrainsMono-Bold.ttf
+          weight: 700
         - asset: assets/fonts/JetBrainsMono-ExtraBold.ttf
           weight: 900

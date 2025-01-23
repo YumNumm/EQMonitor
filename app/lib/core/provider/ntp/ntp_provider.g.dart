@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: type=lint, duplicate_ignore
+// ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
 part of 'ntp_provider.dart';
 
@@ -8,7 +8,7 @@ part of 'ntp_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$ntpHash() => r'0a1145a034623030daec27689364f213540ecf79';
+String _$ntpHash() => r'f1cf77031c9013023256e11988e32e4019102541';
 
 /// See also [Ntp].
 @ProviderFor(Ntp)

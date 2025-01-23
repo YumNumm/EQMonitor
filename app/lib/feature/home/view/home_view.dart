@@ -25,17 +25,16 @@ import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
 import 'package:eqmonitor/feature/home/component/kmoni/kmoni_scale.dart';
-import 'package:eqmonitor/feature/home/component/kmoni/kmoni_settings_dialog.dart';
 import 'package:eqmonitor/feature/home/component/parameter/parameter_loader_widget.dart';
 import 'package:eqmonitor/feature/home/component/render/map_components_renderer.dart';
 import 'package:eqmonitor/feature/home/component/shake-detect/shake_detection_card.dart';
 import 'package:eqmonitor/feature/home/component/sheet/earthquake_history_widget.dart';
-import 'package:eqmonitor/feature/home/component/sheet/status_widget.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/provider/kmoni_view_model.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/widget/kmoni_maintenance_widget.dart';
 import 'package:eqmonitor/feature/home/features/map/view/main_map_view.dart';
 import 'package:eqmonitor/feature/home/features/map/viewmodel/main_map_viewmodel.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_settings_page.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/widget/kmoni_maintenance_widget.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/widget/kyoshin_monitor_status_card.dart';
 import 'package:eqmonitor/feature/location/data/location_tracking_mode.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/fcm_token_change_detector.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/service/notification_remote_authentication_service.dart';
@@ -78,6 +77,14 @@ class HomeView extends HookConsumerWidget {
                 ),
                 backgroundColor: Colors.transparent,
                 forceMaterialTransparency: true,
+                actions: [
+                  IconButton(
+                    onPressed: () async =>
+                        const KyoshinMonitorSettingsModalRoute()
+                            .push<void>(context),
+                    icon: const Icon(Icons.settings),
+                  ),
+                ],
               ),
             ),
           ),
@@ -104,11 +111,9 @@ class _HomeBodyWidget extends HookConsumerWidget {
             (_) async {
               log('Start Initialize');
               await (
-                ref.read(kmoniViewModelProvider.notifier).initialize(),
                 ref.read(permissionNotifierProvider.notifier).initialize(),
                 ref.read(ntpProvider.notifier).sync(),
                 () async {
-                  final talker = ref.read(talkerProvider);
                   try {
                     talker.log('Start Initialize');
                     final token =
@@ -142,9 +147,9 @@ class _HomeBodyWidget extends HookConsumerWidget {
                     );
                     // ignore: avoid_catches_without_on_clauses
                   } catch (e) {
-                    ref.read(talkerProvider).log(
-                          'Authentication Error: $e',
-                        );
+                    talker.log(
+                      'Authentication Error: $e',
+                    );
                     await FirebaseCrashlytics.instance.recordError(
                       e,
                       StackTrace.current,
@@ -304,10 +309,10 @@ class _HomeBodyWidget extends HookConsumerWidget {
         log('firebaseMessagingInteractionProvider: $next');
         if (next case AsyncData(:final value)) {
           await WidgetsBinding.instance.endOfFrame.then((_) async {
-            ref.read(talkerProvider).log(
-                  'Handle Firebase Message: '
-                  "${const JsonEncoder.withIndent(' ').convert(value.toMap())}",
-                );
+            talker.log(
+              'Handle Firebase Message: '
+              "${const JsonEncoder.withIndent(' ').convert(value.toMap())}",
+            );
 
             final route = value.data['route'];
             if (route is String) {
@@ -328,9 +333,9 @@ class _HomeBodyWidget extends HookConsumerWidget {
             // Debug mode周り
             final debug = value.data['enableDebugMode'];
             if (debug == 'true') {
-              ref.read(talkerProvider).log(
-                    'Debug Mode: $debug',
-                  );
+              talker.log(
+                'Debug Mode: $debug',
+              );
               await ref
                   .read(debuggerProvider.notifier)
                   .setDebugger(value: true);
@@ -457,7 +462,7 @@ class _Fabs extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const KmoniStatusWidget(),
+            const KyoshinMonitorStatusCard(),
             Column(
               children: [
                 FloatingActionButton.small(
@@ -472,16 +477,6 @@ class _Fabs extends ConsumerWidget {
                         ? Icons.location_on
                         : Icons.location_off,
                   ),
-                ),
-                FloatingActionButton.small(
-                  heroTag: 'sheet',
-                  tooltip: '強震モニタの設定',
-                  onPressed: () async => showModalBottomSheet<void>(
-                    context: context,
-                    builder: (context) => const KmoniSettingsModal(),
-                  ),
-                  elevation: 4,
-                  child: const Icon(Icons.settings),
                 ),
                 FloatingActionButton.small(
                   heroTag: 'home',
@@ -622,7 +617,7 @@ class _KmoniScale extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(kmoniSettingsProvider);
+    final state = ref.watch(kyoshinMonitorSettingsProvider);
     final body = Padding(
       padding: const EdgeInsets.all(4),
       child: Tooltip(

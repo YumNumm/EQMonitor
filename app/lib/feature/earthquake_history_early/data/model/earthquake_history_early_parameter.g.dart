@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: type=lint, duplicate_ignore
+// ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
 part of 'earthquake_history_early_parameter.dart';
 
@@ -19,23 +19,33 @@ _$EarthquakeHistoryEarlyParameterImpl
                   (v) => $enumDecode(_$EarthquakeEarlySortTypeEnumMap, v)),
               ascending: $checkedConvert('ascending', (v) => v as bool),
               magnitudeLte: $checkedConvert(
-                  'magnitudeLte', (v) => (v as num?)?.toDouble()),
+                  'magnitude_lte', (v) => (v as num?)?.toDouble()),
               magnitudeGte: $checkedConvert(
-                  'magnitudeGte', (v) => (v as num?)?.toDouble()),
+                  'magnitude_gte', (v) => (v as num?)?.toDouble()),
               depthLte:
-                  $checkedConvert('depthLte', (v) => (v as num?)?.toDouble()),
+                  $checkedConvert('depth_lte', (v) => (v as num?)?.toDouble()),
               depthGte:
-                  $checkedConvert('depthGte', (v) => (v as num?)?.toDouble()),
-              intensityLte: $checkedConvert('intensityLte',
+                  $checkedConvert('depth_gte', (v) => (v as num?)?.toDouble()),
+              intensityLte: $checkedConvert('intensity_lte',
                   (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v)),
-              intensityGte: $checkedConvert('intensityGte',
+              intensityGte: $checkedConvert('intensity_gte',
                   (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v)),
-              originTimeLte: $checkedConvert('originTimeLte',
+              originTimeLte: $checkedConvert('origin_time_lte',
                   (v) => v == null ? null : DateTime.parse(v as String)),
-              originTimeGte: $checkedConvert('originTimeGte',
+              originTimeGte: $checkedConvert('origin_time_gte',
                   (v) => v == null ? null : DateTime.parse(v as String)),
             );
             return val;
+          },
+          fieldKeyMap: const {
+            'magnitudeLte': 'magnitude_lte',
+            'magnitudeGte': 'magnitude_gte',
+            'depthLte': 'depth_lte',
+            'depthGte': 'depth_gte',
+            'intensityLte': 'intensity_lte',
+            'intensityGte': 'intensity_gte',
+            'originTimeLte': 'origin_time_lte',
+            'originTimeGte': 'origin_time_gte'
           },
         );
 
@@ -44,14 +54,14 @@ Map<String, dynamic> _$$EarthquakeHistoryEarlyParameterImplToJson(
     <String, dynamic>{
       'sort': _$EarthquakeEarlySortTypeEnumMap[instance.sort]!,
       'ascending': instance.ascending,
-      'magnitudeLte': instance.magnitudeLte,
-      'magnitudeGte': instance.magnitudeGte,
-      'depthLte': instance.depthLte,
-      'depthGte': instance.depthGte,
-      'intensityLte': _$JmaIntensityEnumMap[instance.intensityLte],
-      'intensityGte': _$JmaIntensityEnumMap[instance.intensityGte],
-      'originTimeLte': instance.originTimeLte?.toIso8601String(),
-      'originTimeGte': instance.originTimeGte?.toIso8601String(),
+      'magnitude_lte': instance.magnitudeLte,
+      'magnitude_gte': instance.magnitudeGte,
+      'depth_lte': instance.depthLte,
+      'depth_gte': instance.depthGte,
+      'intensity_lte': _$JmaIntensityEnumMap[instance.intensityLte],
+      'intensity_gte': _$JmaIntensityEnumMap[instance.intensityGte],
+      'origin_time_lte': instance.originTimeLte?.toIso8601String(),
+      'origin_time_gte': instance.originTimeGte?.toIso8601String(),
     };
 
 const _$EarthquakeEarlySortTypeEnumMap = {

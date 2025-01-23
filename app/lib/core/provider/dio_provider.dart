@@ -44,7 +44,7 @@ Dio dio(Ref ref) {
         requestPen: AnsiPen()..yellow(),
         responsePen: AnsiPen()..green(),
       ),
-      talker: ref.watch(talkerProvider),
+      talker: talker,
     ),
   );
   return dio;

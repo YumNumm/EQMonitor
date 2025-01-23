@@ -55,7 +55,7 @@ class Eew extends _$Eew {
     if (ref.read(appLifecycleProvider) != AppLifecycleState.resumed) {
       return;
     }
-    ref.read(talkerProvider).log('Refetch EEW');
+    talker.log('Refetch EEW');
     ref.invalidate(_eewRestProvider);
   }
 

@@ -1,4 +1,5 @@
 // ignore_for_file: provider_dependencies
+import 'dart:async';
 import 'dart:developer';
 import 'dart:typed_data';
 
@@ -8,20 +9,23 @@ import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/estimated_intensity/provider/estimated_intensity_provider.dart';
-import 'package:eqmonitor/core/provider/kmoni_observation_points/model/kmoni_observation_point.dart';
 import 'package:eqmonitor/core/provider/map/map_style.dart';
 import 'package:eqmonitor/core/provider/travel_time/provider/travel_time_provider.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/home/features/eew_settings/eew_settings_notifier.dart';
 import 'package:eqmonitor/feature/home/features/eew_settings/model/eew_setitngs_model.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/provider/kmoni_view_model.dart';
-import 'package:eqmonitor/feature/home/features/kmoni/viewmodel/kmoni_settings.dart';
 import 'package:eqmonitor/feature/home/features/map/model/main_map_viewmodel_state.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/shake_detection/model/shake_detection_kmoni_merged_event.dart';
 import 'package:eqmonitor/feature/shake_detection/provider/shake_detection_provider.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:image/image.dart' as image;
+import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 import 'package:lat_lng/lat_lng.dart' as lat_lng;
 import 'package:latlong2/latlong.dart' as latlong2;
 import 'package:maplibre_gl/maplibre_gl.dart' as maplibre_gl;
@@ -40,13 +44,14 @@ class MainMapViewModel extends _$MainMapViewModel {
   MainMapViewmodelState build() {
     ref
       ..listen(
-        kmoniViewModelProvider,
+        kyoshinMonitorNotifierProvider,
         (_, value) async {
-          final analyzedPoints = value.analyzedPoints;
-          if (analyzedPoints == null) {
-            return;
+          if (value case AsyncData(:final value)) {
+            await _onKmoniStateChanged(
+              value.analyzedPoints ??
+                  <KyoshinMonitorImageParseObservationPoint>[],
+            );
           }
-          await _onKmoniStateChanged(analyzedPoints);
         },
       )
       ..listen(
@@ -54,7 +59,7 @@ class MainMapViewModel extends _$MainMapViewModel {
         (_, value) async => _onEewStateChanged(value ?? []),
       )
       ..listen(
-        kmoniSettingsProvider,
+        kyoshinMonitorSettingsProvider,
         (_, value) async => _onKmoniSettingsChanged(value: value),
       )
       ..listen(
@@ -95,7 +100,7 @@ class MainMapViewModel extends _$MainMapViewModel {
       ..listen(eewSettingsNotifierProvider, (_, next) async {
         await _onEewSettingsChanged(next);
       });
-    _lastKmoniSettingsState = ref.read(kmoniSettingsProvider);
+    _lastKmoniSettingsState = ref.read(kyoshinMonitorSettingsProvider);
     return MainMapViewmodelState(
       isHomePosition: true,
       homeBoundary: defaultBoundary,
@@ -298,26 +303,29 @@ class MainMapViewModel extends _$MainMapViewModel {
   // *********** Kyoshin Monitor Related ***********
   _KmoniObservationPointService? _kmoniObservationPointService;
   _ShakeDetectionBorderService? _shakeDetectionBorderService;
+
   Future<void> _onKmoniStateChanged(
-    List<AnalyzedKmoniObservationPoint> values,
+    List<KyoshinMonitorImageParseObservationPoint> values,
   ) async {
     if (_controller == null) {
       return;
     }
-    if (!ref.read(kmoniSettingsProvider).useKmoni) {
+    if (ref.read(kyoshinMonitorSettingsProvider).useKmoni) {
+      final dataType = ref
+          .read(kyoshinMonitorNotifierProvider)
+          .valueOrNull
+          ?.currentRealtimeDataType;
+      if (dataType == null) {
+        return;
+      }
       await _kmoniObservationPointService?.update(
-        points: [],
+        points: values,
         isInEew: false,
-        markerType: ref.read(kmoniSettingsProvider).kmoniMarkerType,
+        markerType: ref.read(kyoshinMonitorSettingsProvider).kmoniMarkerType,
+        realtimeDataType: dataType,
       );
       return;
     }
-
-    await _kmoniObservationPointService?.update(
-      points: values,
-      isInEew: ref.read(eewAliveTelegramProvider)?.isNotEmpty ?? false,
-      markerType: ref.read(kmoniSettingsProvider).kmoniMarkerType,
-    );
   }
 
   Future<void> _onShakeDetectionStateChanged(
@@ -329,10 +337,10 @@ class MainMapViewModel extends _$MainMapViewModel {
     await _shakeDetectionBorderService?.update(values);
   }
 
-  KmoniSettingsState? _lastKmoniSettingsState;
+  KyoshinMonitorSettingsModel? _lastKmoniSettingsState;
 
   Future<void> _onKmoniSettingsChanged({
-    required KmoniSettingsState value,
+    required KyoshinMonitorSettingsModel value,
   }) async {
     if (_lastKmoniSettingsState == value) {
       return;
@@ -349,13 +357,6 @@ class MainMapViewModel extends _$MainMapViewModel {
         _kmoniObservationPointService = null;
       }
     }
-    if (_lastKmoniSettingsState?.kmoniMarkerType != value.kmoniMarkerType) {
-      await _kmoniObservationPointService?.update(
-        points: ref.read(kmoniViewModelProvider).analyzedPoints ?? [],
-        isInEew: ref.read(eewAliveTelegramProvider)?.isNotEmpty ?? false,
-        markerType: value.kmoniMarkerType,
-      );
-    }
     if (_lastKmoniSettingsState?.showCurrentLocationMarker !=
         value.showCurrentLocationMarker) {
       if (value.showCurrentLocationMarker) {
@@ -365,6 +366,12 @@ class MainMapViewModel extends _$MainMapViewModel {
         await _currentLocationIconService?.dispose();
       }
     }
+    await _kmoniObservationPointService?.update(
+      points: [],
+      isInEew: false,
+      markerType: value.kmoniMarkerType,
+      realtimeDataType: value.realtimeDataType,
+    );
     _lastKmoniSettingsState = value;
   }
 
@@ -600,9 +607,10 @@ class _KmoniObservationPointService {
   }
 
   Future<void> update({
-    required List<AnalyzedKmoniObservationPoint> points,
+    required List<KyoshinMonitorImageParseObservationPoint> points,
     required bool isInEew,
     required KmoniMarkerType markerType,
+    required RealtimeDataType realtimeDataType,
   }) =>
       controller.setGeoJsonSource(
         layerId,
@@ -610,6 +618,7 @@ class _KmoniObservationPointService {
           points: points,
           isInEew: isInEew,
           markerType: markerType,
+          realtimeDataType: realtimeDataType,
         ),
       );
 
@@ -620,41 +629,47 @@ class _KmoniObservationPointService {
 
   static const String layerId = 'kmoni-circle';
 
+  String _toHexStringRgb(image.ColorInt8 color) => Color.fromARGB(
+        color.a.toInt(),
+        color.r.toInt(),
+        color.g.toInt(),
+        color.b.toInt(),
+      ).toHexStringRGB();
+
   Map<String, dynamic> createGeoJson({
-    required List<AnalyzedKmoniObservationPoint> points,
+    required List<KyoshinMonitorImageParseObservationPoint> points,
     required bool isInEew,
     required KmoniMarkerType markerType,
-  }) =>
-      {
-        'type': 'FeatureCollection',
-        'features': points
-            .where((e) => e.intensityValue != null)
-            .map(
-              (e) => {
-                'type': 'Feature',
-                'geometry': {
-                  'type': 'Point',
-                  'coordinates': [
-                    e.point.location.longitude,
-                    e.point.location.latitude,
-                  ],
-                },
-                'properties': {
-                  'color': e.intensityValue != null
-                      ? e.intensityColor?.toHexStringRGB()
-                      : null,
-                  'intensity': e.intensityValue,
-                  'name': e.point.name,
-                  'strokeOpacity': switch (markerType) {
-                    KmoniMarkerType.always => 1.0,
-                    KmoniMarkerType.onlyEew when isInEew => 1.0,
-                    _ => 0.0,
-                  },
+    required RealtimeDataType realtimeDataType,
+  }) {
+    return {
+      'type': 'FeatureCollection',
+      'features': points
+          .map(
+            (e) => {
+              'type': 'Feature',
+              'geometry': {
+                'type': 'Point',
+                'coordinates': [
+                  e.point.location.longitude,
+                  e.point.location.latitude,
+                ],
+              },
+              'properties': {
+                'color': _toHexStringRgb(e.observation.color),
+                'intensity': e.observation.scaleToIntensity,
+                'name': e.point.name,
+                'strokeOpacity': switch (markerType) {
+                  KmoniMarkerType.always => 1.0,
+                  KmoniMarkerType.onlyEew when isInEew => 1.0,
+                  _ => 0.0,
                 },
               },
-            )
-            .toList(),
-      };
+            },
+          )
+          .toList(),
+    };
+  }
 }
 
 class _EewEstimatedIntensityService {

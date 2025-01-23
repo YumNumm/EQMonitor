@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: type=lint, duplicate_ignore
+// ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
 part of 'intensity_color_model.dart';
 
@@ -27,18 +27,24 @@ _$IntensityColorModelImpl _$$IntensityColorModelImplFromJson(
               (v) => TextColorModel.fromJson(v as Map<String, dynamic>)),
           four: $checkedConvert('four',
               (v) => TextColorModel.fromJson(v as Map<String, dynamic>)),
-          fiveLower: $checkedConvert('fiveLower',
+          fiveLower: $checkedConvert('five_lower',
               (v) => TextColorModel.fromJson(v as Map<String, dynamic>)),
-          fiveUpper: $checkedConvert('fiveUpper',
+          fiveUpper: $checkedConvert('five_upper',
               (v) => TextColorModel.fromJson(v as Map<String, dynamic>)),
-          sixLower: $checkedConvert('sixLower',
+          sixLower: $checkedConvert('six_lower',
               (v) => TextColorModel.fromJson(v as Map<String, dynamic>)),
-          sixUpper: $checkedConvert('sixUpper',
+          sixUpper: $checkedConvert('six_upper',
               (v) => TextColorModel.fromJson(v as Map<String, dynamic>)),
           seven: $checkedConvert('seven',
               (v) => TextColorModel.fromJson(v as Map<String, dynamic>)),
         );
         return val;
+      },
+      fieldKeyMap: const {
+        'fiveLower': 'five_lower',
+        'fiveUpper': 'five_upper',
+        'sixLower': 'six_lower',
+        'sixUpper': 'six_upper'
       },
     );
 
@@ -51,10 +57,10 @@ Map<String, dynamic> _$$IntensityColorModelImplToJson(
       'two': instance.two,
       'three': instance.three,
       'four': instance.four,
-      'fiveLower': instance.fiveLower,
-      'fiveUpper': instance.fiveUpper,
-      'sixLower': instance.sixLower,
-      'sixUpper': instance.sixUpper,
+      'five_lower': instance.fiveLower,
+      'five_upper': instance.fiveUpper,
+      'six_lower': instance.sixLower,
+      'six_upper': instance.sixUpper,
       'seven': instance.seven,
     };
 
