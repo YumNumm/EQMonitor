@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:eqmonitor/core/router/router.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_map.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_scale_widget.dart';
@@ -173,18 +174,7 @@ class _Body extends ConsumerWidget {
                   ),
           title: const Text('リアルタイム震度のスケールを表示'),
         ),
-        SwitchListTile.adaptive(
-          title: const Text('地図上に現在地のマーカーを表示する'),
-          value: state.showCurrentLocationMarker,
-          onChanged: (value) async {
-            await ref.read(kyoshinMonitorSettingsProvider.notifier).save(
-                  ref.read(kyoshinMonitorSettingsProvider).copyWith(
-                        showCurrentLocationMarker: value,
-                      ),
-                );
-            ref.invalidate(locationStreamProvider);
-          },
-        ),
+        _LocationSwitchListTile(state: state),
         ListTile(
           title: const Text('観測点の枠表示モード'),
           subtitle: Padding(
@@ -261,5 +251,34 @@ class _Body extends ConsumerWidget {
         ),
       ],
     );
+  }
+}
+
+class _LocationSwitchListTile extends ConsumerWidget {
+  const _LocationSwitchListTile({
+    required this.state,
+    super.key,
+  });
+
+  final KyoshinMonitorSettingsModel state;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final location = ref.watch(locationStreamProvider);
+
+    final switchListTile = SwitchListTile.adaptive(
+      title: const Text('地図上に現在地のマーカーを表示する'),
+      value: state.showCurrentLocationMarker,
+      onChanged: (value) async {
+        await ref.read(kyoshinMonitorSettingsProvider.notifier).save(
+              ref.read(kyoshinMonitorSettingsProvider).copyWith(
+                    showCurrentLocationMarker: value,
+                  ),
+            );
+        ref.invalidate(locationStreamProvider);
+      },
+    );
+
+    return switchListTile;
   }
 }

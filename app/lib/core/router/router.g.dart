@@ -368,6 +368,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
               path: 'kyoshin-monitor',
               factory: $DebugKyoshinMonitorRouteExtension._fromState,
             ),
+            GoRouteData.$route(
+              path: 'playground',
+              factory: $PlaygroundRouteExtension._fromState,
+            ),
           ],
         ),
       ],
@@ -728,6 +732,24 @@ extension $DebugKyoshinMonitorRouteExtension on DebugKyoshinMonitorRoute {
 
   String get location => GoRouteData.$location(
         '/settings/debugger/kyoshin-monitor',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $PlaygroundRouteExtension on PlaygroundRoute {
+  static PlaygroundRoute _fromState(GoRouterState state) =>
+      const PlaygroundRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/debugger/playground',
       );
 
   void go(BuildContext context) => context.go(location);
