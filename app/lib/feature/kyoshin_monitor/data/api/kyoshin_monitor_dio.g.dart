@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: type=lint, duplicate_ignore
+// ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
 part of 'kyoshin_monitor_dio.dart';
 
@@ -8,7 +8,7 @@ part of 'kyoshin_monitor_dio.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$kyoshinMonitorDioHash() => r'f461232f07dca663f969412cda3064d359d1ce23';
+String _$kyoshinMonitorDioHash() => r'ae8ea88e1a74bd51d5a2216c1b22cadd68b07bb9';
 
 /// See also [kyoshinMonitorDio].
 @ProviderFor(kyoshinMonitorDio)

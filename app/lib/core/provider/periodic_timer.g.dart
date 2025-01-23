@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: type=lint, duplicate_ignore
+// ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
 part of 'periodic_timer.dart';
 
@@ -8,7 +8,7 @@ part of 'periodic_timer.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$periodicTimerHash() => r'6929fe542af418c840159cae16e5eebdea7ca640';
+String _$periodicTimerHash() => r'd0ba8e774a2bb19048648aa7512e8b18d5d28ba8';
 
 /// Copied from Dart SDK
 class _SystemHash {

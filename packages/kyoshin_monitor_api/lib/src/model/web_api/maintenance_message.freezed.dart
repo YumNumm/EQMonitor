@@ -23,6 +23,7 @@ mixin _$MaintenanceMessage {
   String? get message => throw _privateConstructorUsedError;
   Security? get security => throw _privateConstructorUsedError;
   MaintenanceMessageType? get type => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
   DateTime get requestTime => throw _privateConstructorUsedError;
   Result? get result => throw _privateConstructorUsedError;
 
@@ -46,6 +47,7 @@ abstract class $MaintenanceMessageCopyWith<$Res> {
       {String? message,
       Security? security,
       MaintenanceMessageType? type,
+      @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
       DateTime requestTime,
       Result? result});
 
@@ -139,6 +141,7 @@ abstract class _$$MaintenanceMessageImplCopyWith<$Res>
       {String? message,
       Security? security,
       MaintenanceMessageType? type,
+      @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
       DateTime requestTime,
       Result? result});
 
@@ -199,6 +202,7 @@ class _$MaintenanceMessageImpl implements _MaintenanceMessage {
       {required this.message,
       required this.security,
       required this.type,
+      @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
       required this.requestTime,
       required this.result});
 
@@ -212,6 +216,7 @@ class _$MaintenanceMessageImpl implements _MaintenanceMessage {
   @override
   final MaintenanceMessageType? type;
   @override
+  @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
   final DateTime requestTime;
   @override
   final Result? result;
@@ -262,6 +267,7 @@ abstract class _MaintenanceMessage implements MaintenanceMessage {
       {required final String? message,
       required final Security? security,
       required final MaintenanceMessageType? type,
+      @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
       required final DateTime requestTime,
       required final Result? result}) = _$MaintenanceMessageImpl;
 
@@ -275,6 +281,7 @@ abstract class _MaintenanceMessage implements MaintenanceMessage {
   @override
   MaintenanceMessageType? get type;
   @override
+  @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
   DateTime get requestTime;
   @override
   Result? get result;

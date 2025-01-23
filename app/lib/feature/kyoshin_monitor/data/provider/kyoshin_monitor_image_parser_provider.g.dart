@@ -2,27 +2,30 @@
 
 // ignore_for_file: type=lint, duplicate_ignore, deprecated_member_use
 
-part of 'intensity_color_provider.dart';
+part of 'kyoshin_monitor_image_parser_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$intensityColorHash() => r'9c5f1148d0001d84e37f1a0bb14d65cdaee14795';
+String _$kyoshinMonitorImageParserHash() =>
+    r'c343437d7d4e5a9ddbae9041f8c356cd6c8132d2';
 
-/// See also [IntensityColor].
-@ProviderFor(IntensityColor)
-final intensityColorProvider =
-    NotifierProvider<IntensityColor, IntensityColorModel>.internal(
-  IntensityColor.new,
-  name: r'intensityColorProvider',
+/// See also [kyoshinMonitorImageParser].
+@ProviderFor(kyoshinMonitorImageParser)
+final kyoshinMonitorImageParserProvider =
+    Provider<KyoshinMonitorImageParser>.internal(
+  kyoshinMonitorImageParser,
+  name: r'kyoshinMonitorImageParserProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$intensityColorHash,
+      : _$kyoshinMonitorImageParserHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$IntensityColor = Notifier<IntensityColorModel>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef KyoshinMonitorImageParserRef = ProviderRef<KyoshinMonitorImageParser>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

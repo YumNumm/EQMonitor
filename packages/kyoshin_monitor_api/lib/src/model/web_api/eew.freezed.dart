@@ -24,7 +24,7 @@ mixin _$Eew {
   Result? get result => throw _privateConstructorUsedError;
 
   /// 発報時間
-  @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+  @JsonKey(fromJson: dateTimeOrNullFromString, toJson: dateTimeOrNullToString)
   DateTime? get reportTime => throw _privateConstructorUsedError;
 
   /// 地域コード
@@ -105,7 +105,8 @@ abstract class $EewCopyWith<$Res> {
   @useResult
   $Res call(
       {Result? result,
-      @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+      @JsonKey(
+          fromJson: dateTimeOrNullFromString, toJson: dateTimeOrNullToString)
       DateTime? reportTime,
       String? regionCode,
       String? requestTime,
@@ -286,7 +287,8 @@ abstract class _$$EewImplCopyWith<$Res> implements $EewCopyWith<$Res> {
   @useResult
   $Res call(
       {Result? result,
-      @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+      @JsonKey(
+          fromJson: dateTimeOrNullFromString, toJson: dateTimeOrNullToString)
       DateTime? reportTime,
       String? regionCode,
       String? requestTime,
@@ -435,7 +437,8 @@ class __$$EewImplCopyWithImpl<$Res> extends _$EewCopyWithImpl<$Res, _$EewImpl>
 class _$EewImpl extends _Eew {
   const _$EewImpl(
       {this.result,
-      @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+      @JsonKey(
+          fromJson: dateTimeOrNullFromString, toJson: dateTimeOrNullToString)
       this.reportTime,
       this.regionCode,
       this.requestTime,
@@ -471,7 +474,7 @@ class _$EewImpl extends _Eew {
 
   /// 発報時間
   @override
-  @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+  @JsonKey(fromJson: dateTimeOrNullFromString, toJson: dateTimeOrNullToString)
   final DateTime? reportTime;
 
   /// 地域コード
@@ -644,7 +647,8 @@ class _$EewImpl extends _Eew {
 abstract class _Eew extends Eew {
   const factory _Eew(
       {final Result? result,
-      @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+      @JsonKey(
+          fromJson: dateTimeOrNullFromString, toJson: dateTimeOrNullToString)
       final DateTime? reportTime,
       final String? regionCode,
       final String? requestTime,
@@ -682,7 +686,7 @@ abstract class _Eew extends Eew {
 
   /// 発報時間
   @override
-  @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+  @JsonKey(fromJson: dateTimeOrNullFromString, toJson: dateTimeOrNullToString)
   DateTime? get reportTime;
 
   /// 地域コード
