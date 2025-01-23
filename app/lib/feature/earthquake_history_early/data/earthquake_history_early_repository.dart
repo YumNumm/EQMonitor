@@ -32,7 +32,7 @@ class EarthquakeHistoryEarlyRepository {
     JmaIntensity? intensityGte,
     DateTime? originTimeLte,
     DateTime? originTimeGte,
-    EarthquakeEarlySortType sort = EarthquakeEarlySortType.originTime,
+    EarthquakeEarlySortType sort = EarthquakeEarlySortType.origin_time,
     bool ascending = false,
   }) async {
     final response = await _api.v1.getEarthquakeEarlies(
