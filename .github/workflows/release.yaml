@@ -212,6 +212,15 @@ jobs:
       - name: Setup application runtime & Resolve dependencies
         uses: ./.github/actions/setup-application-runtime
 
+      - name: Accept Android License
+        run: yes | flutter doctor --android-licenses
+
+      - name: Extract keystore
+        run: |
+          echo '${{ secrets.SIGNING_KEY }}' | base64 -d > app/android/app/key.jks
+          echo '${{ secrets.FIREBASE_ANDROID }}' | base64 -d > app/android/app/google-services.json
+          echo '${{ secrets.KEY_PROPERTIES }}' | base64 -d  > app/android/key.properties
+
       - name: Extract Dotenv
         run: |
           echo "${{ secrets.DOTENV }}" | base64 -d > environment.tar.gz
@@ -219,15 +228,42 @@ jobs:
           rm environment.tar.gz
           ls -l environment/
 
-      - name: Build Android
+      - name: Build Android (AAB)
         working-directory: app
         run: |
           flutter build appbundle \
             --release \
             --dart-define-from-file=../environment/.env.prod
 
+      - name: Build Android (APK)
+        working-directory: app
+        run: |
+          flutter build apk \
+            --release \
+            --dart-define-from-file=../environment/.env.prod
+
       - name: Upload apk as artifact
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
         with:
-          name: EQMonitor-android.apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: EQMonitor-android.aab
+          path: build/app/outputs/bundle/release/app-release.aab
+
+  deploy-android:
+    needs: build-android
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Download artifact aab
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
+        with:
+          name: EQMonitor-android.aab
+          path: build
+
+      - name: Upload to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: net.yumnumm.eqmonitor
+          releaseFiles: build/app-release.aab
+          track: internal
+          status: inProgress
