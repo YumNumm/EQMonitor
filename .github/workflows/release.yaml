@@ -8,7 +8,7 @@ on:
     branches:
       - main
       - develop
-      - "*" # DEBUG
+      - 'feature/kyoshin-monitor-replay'
   workflow_dispatch:
     inputs:
       ios:
