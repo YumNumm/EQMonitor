@@ -152,13 +152,11 @@ jobs:
             -authenticationKeyID ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }} \
             -authenticationKeyPath ${{ github.workspace }}/app/ios/AuthKey.p8 | xcbeautify
 
-          ls -la
-
       - name: Upload ipa as artifact
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
         with:
           name: EQMonitor-ios.ipa
-          path: app/runner.ipa
+          path: app/eqmonitor.ipa
 
   deploy-ios:
     needs: build-ios
@@ -195,7 +193,7 @@ jobs:
         run: |
           xcrun altool \
             --upload-app \
-            -f build/EQMonitor-ios.ipa \
+            -f build/eqmonitor.ipa \
             --type ios \
             --apiIssuer ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }} \
             --apiKey ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
