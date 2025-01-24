@@ -138,7 +138,10 @@ jobs:
 
       - name: Extract App Store Connect API Key
         working-directory: app/ios
-        run: echo "${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}" | base64 -d > AuthKey.p8
+        run: |
+          echo "${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}" | base64 -d \
+            > AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8
+          ls -l AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8
 
       - name: Archive
         working-directory: app
@@ -158,7 +161,7 @@ jobs:
             -allowProvisioningUpdates \
             -authenticationKeyIssuerID ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }} \
             -authenticationKeyID ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }} \
-            -authenticationKeyPath ${{ github.workspace }}/app/ios/AuthKey.p8 | xcbeautify
+            -authenticationKeyPath ${{ github.workspace }}/app/ios/AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8 | xcbeautify
 
       - name: Upload ipa as artifact
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
@@ -250,11 +253,17 @@ jobs:
             --release \
             --dart-define-from-file=../environment/.env.prod
 
-      - name: Upload apk as artifact
+      - name: Upload aab as artifact
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
         with:
           name: EQMonitor-android.aab
-          path: build/app/outputs/bundle/release/app-release.aab
+          path: app/build/app/outputs/bundle/release/app-release.aab
+
+      - name: Upload apk as artifact
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        with:
+          name: EQMonitor-android.apk
+          path: app/build/app/outputs/flutter-apk/app-release.apk
 
   deploy-android:
     needs: build-android
