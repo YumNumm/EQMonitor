@@ -238,7 +238,7 @@ double hsvToScale(double h, double s, double v) {
 
 void main() {
   // pを 0.00..1.00 の範囲で 0.01 刻み
-  const step = 0.01;
+  const step = 1/16;
   final table = <Map<String, dynamic>>[];
 
   for (var p = 0.0; p < 1.0 + 1e-9; p += step) {
@@ -264,6 +264,10 @@ void main() {
       'b': b,
       'p_back': pBack,
       'diff': diff,
+      'intensity': 10 * p - 3,
+      'pga': math.pow(10, 5 * p - 2).toDouble(),
+      'pgv': math.pow(10, 5 * p - 3).toDouble(),
+      'pgd': math.pow(10, 5 * p - 4).toDouble(),
     });
   }
 
