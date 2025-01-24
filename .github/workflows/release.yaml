@@ -24,7 +24,7 @@ on:
 
 jobs:
   define-matrix:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 1
     outputs:
       deploy-ios: ${{ steps.define-environment-matrix.outputs.deploy-ios }}
@@ -211,7 +211,7 @@ jobs:
   build-android:
     needs: define-matrix
     if: ${{ needs.define-matrix.outputs.deploy-android }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - name: Checkout
