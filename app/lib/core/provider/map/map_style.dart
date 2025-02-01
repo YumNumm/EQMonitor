@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:eqmonitor/core/provider/map/map_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -59,7 +59,7 @@ class MapStyle {
           'id': BaseLayer.background.name,
           'type': 'background',
           'paint': {
-            'background-color': colorScheme.backgroundColor.toHexStringRGB(),
+            'background-color': colorScheme.backgroundColor.toHexStringRGB,
           },
         },
         {
@@ -69,7 +69,7 @@ class MapStyle {
           'type': 'fill',
           'layout': {'visibility': 'visible'},
           'paint': {
-            'fill-color': colorScheme.worldLandColor.toHexStringRGB(),
+            'fill-color': colorScheme.worldLandColor.toHexStringRGB,
           },
         },
         {
@@ -79,7 +79,7 @@ class MapStyle {
           'type': 'line',
           'layout': {'visibility': 'visible'},
           'paint': {
-            'line-color': colorScheme.worldLineColor.toHexStringRGB(),
+            'line-color': colorScheme.worldLineColor.toHexStringRGB,
             'line-width': [
               'interpolate',
               ['linear'],
@@ -97,7 +97,7 @@ class MapStyle {
           'source-layer': 'areaForecastLocalE',
           'type': 'fill',
           'paint': {
-            'fill-color': colorScheme.japanLandColor.toHexStringRGB(),
+            'fill-color': colorScheme.japanLandColor.toHexStringRGB,
           },
         },
         // areaForecastLocalEew_line
@@ -108,7 +108,7 @@ class MapStyle {
           'type': 'line',
           'layout': {'line-cap': 'round', 'line-join': 'round'},
           'paint': {
-            'line-color': colorScheme.japanLineColor.toHexStringRGB(),
+            'line-color': colorScheme.japanLineColor.toHexStringRGB,
             'line-width': [
               'interpolate',
               ['linear'],
@@ -127,7 +127,7 @@ class MapStyle {
           'type': 'line',
           'layout': {'line-cap': 'round', 'line-join': 'round'},
           'paint': {
-            'line-color': colorScheme.japanLineColor.toHexStringRGB(),
+            'line-color': colorScheme.japanLineColor.toHexStringRGB,
             'line-opacity': [
               'interpolate',
               ['linear'],
@@ -150,7 +150,7 @@ class MapStyle {
           'type': 'line',
           'layout': {'line-cap': 'round', 'line-join': 'round'},
           'paint': {
-            'line-color': colorScheme.japanLineColor.toHexStringRGB(),
+            'line-color': colorScheme.japanLineColor.toHexStringRGB,
             'line-width': 0.5,
             'line-opacity': [
               'interpolate',
@@ -178,4 +178,21 @@ enum BaseLayer {
   areaForecastLocalELine,
   areaInformationCityQuakeLine,
   ;
+}
+
+extension ColorCode on Color {
+  /// sRGB色空間における Hexカラーコードを取得
+  int get hex {
+    // 色をsRGBに変換
+    final color = withValues(colorSpace: ColorSpace.sRGB);
+    // color.{r,g,b}は0~1までの値なので、255倍にする
+    final r = (color.r * 255).toInt();
+    final g = (color.g * 255).toInt();
+    final b = (color.b * 255).toInt();
+    return (r << 16) + (g << 8) + b;
+  }
+
+  /// sRGB色空間における HexカラーコードをStringで取得
+  String get toHexStringRGB =>
+      hex.toRadixString(16).toUpperCase().padLeft(6, '0');
 }
