@@ -26,6 +26,7 @@
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		EC19D5D2C0A809641FF45BC8 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4E9B9F699DF6780C4FFFB1F /* Pods_Runner.framework */; };
 		F9781420E15D811538A7718D /* Pods_FcmServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72D8E6C959238EC6FCBA7591 /* Pods_FcmServiceExtension.framework */; };
+		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +116,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */,
 				859DF75C2BBE9FFC00B827B1 /* StoreKit.framework in Frameworks */,
 				EC19D5D2C0A809641FF45BC8 /* Pods_Runner.framework in Frameworks */,
 			);
@@ -244,6 +246,9 @@
 			productType = "com.apple.product-type.app-extension";
 		};
 		97C146ED1CF9000F007C117D /* Runner */ = {
+			packageProductDependencies = (
+				78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */,
+			);
 			isa = PBXNativeTarget;
 			buildConfigurationList = 97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */;
 			buildPhases = (
@@ -299,6 +304,7 @@
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
+				781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage" */,
 				85B405182C08E73300EB3835 /* XCRemoteSwiftPackageReference "GzipSwift" */,
 			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
@@ -956,7 +962,17 @@
 			package = 85B405182C08E73300EB3835 /* XCRemoteSwiftPackageReference "GzipSwift" */;
 			productName = Gzip;
 		};
+		78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FlutterGeneratedPluginSwiftPackage;
+		};
 /* End XCSwiftPackageProductDependency section */
+/* Begin XCLocalSwiftPackageReference section */
+		781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage;
+		};
+/* End XCLocalSwiftPackageReference section */
 	};
 	rootObject = 97C146E61CF9000F007C117D /* Project object */;
 }
