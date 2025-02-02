@@ -257,15 +257,12 @@ class _Body extends ConsumerWidget {
 class _LocationSwitchListTile extends ConsumerWidget {
   const _LocationSwitchListTile({
     required this.state,
-    super.key,
   });
 
   final KyoshinMonitorSettingsModel state;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final location = ref.watch(locationStreamProvider);
-
     final switchListTile = SwitchListTile.adaptive(
       title: const Text('地図上に現在地のマーカーを表示する'),
       value: state.showCurrentLocationMarker,
