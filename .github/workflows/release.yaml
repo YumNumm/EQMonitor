@@ -102,21 +102,21 @@ jobs:
       - name: Fetch latest build number
         id: fetch-latest-build-number
         run: |
-          PLATFORM=IOS
-          APP_ID=6447546703
-          BUILD_NUMBER=$(
+          platform=IOS
+          app_id=6447546703
+          build_number=$(
             curl -s https://api.appstoreconnect.apple.com/v1/builds \
             -G \
-            -d "filter[platform]=${PLATFORM}" \
-            -d "filter[id]=${APP_ID}" \
+            -d "filter[platform]=${platform}" \
+            -d "filter[id]=${app_id}" \
             -d "sort=-version" \
             -d "fields[builds]=version" \
             -d "limit=1" | \
             jq -r '.data | if length == 0 then 0 else .[0].attributes.version end'
           )
-          BUILD_NUMBER=$((BUILD_NUMBER + 1))
-          echo "BUILD_NUMBER=${BUILD_NUMBER}" >> $GITHUB_OUTPUT
-          echo "Build Number set to ${BUILD_NUMBER}."
+          build_number=$((build_number + 1))
+          echo "build_number=${build_number}" >> $GITHUB_OUTPUT
+          echo "Build Number set to ${build_number}."
 
       - name: Extract Dotenv
         run: |
@@ -128,7 +128,7 @@ jobs:
       - name: Build iOS
         working-directory: app
         env:
-          BUILD_NUMBER: ${{ steps.fetch-latest-build-number.outputs.BUILD_NUMBER }}
+          BUILD_NUMBER: ${{ steps.fetch-latest-build-number.outputs.build_number }}
         run: |
           echo "BUILD_NUMBER=${BUILD_NUMBER}"
           flutter build ipa \

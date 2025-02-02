@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/error/error_card.dart';
@@ -10,6 +12,7 @@ import 'package:eqmonitor/core/provider/config/earthquake_history/earthquake_his
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/data/earthquake_history_details_notifier.dart';
+import 'package:eqmonitor/feature/earthquake_history_details/ui/component/earthquake_map.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/ui/component/prefecture_intensity.dart';
 import 'package:eqmonitor/feature/earthquake_history_details/ui/component/prefecture_lpgm_intensity.dart';
 import 'package:eqmonitor/feature/eew/ui/screen/eew_details_by_event_id_page.dart';
@@ -83,6 +86,13 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
     return Scaffold(
       body: Stack(
         children: [
+          EarthquakeMapWidget(
+            item: details,
+            showIntensityIcon: true,
+            registerNavigateToHome: (func) =>
+                navigateToHomeFunction.value = func,
+          ),
+
           if (maxIntensity != null)
             IgnorePointer(
               child: SafeArea(
@@ -181,7 +191,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
             SafeArea(
               child: IconButton.filledTonal(
                 style: ButtonStyle(
-                  shape: WidgetStatePropertyAll(
+                  shape: MaterialStatePropertyAll(
                     RoundedRectangleBorder(
                       side: BorderSide(
                         color: colorScheme.primary.withValues(alpha: 0.2),
@@ -216,6 +226,7 @@ class _Sheet extends StatelessWidget {
       bottom: false,
       child: BasicModalSheet(
         hasAppBar: false,
+        controller: sheetController,
         children: [
           EarthquakeHypoInfoWidget(item: item),
           const Divider(),
