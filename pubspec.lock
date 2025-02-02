@@ -2151,10 +2151,10 @@ packages:
     dependency: transitive
     description:
       name: yumemi_lints
-      sha256: "5f88e2e5c052133631471b630bc8ef4cd77e7edef4d94b3a0d01d64470295c89"
+      sha256: "8e60bc1855df642376b6f6caf561a15e5702c711a63e9638dd3bce56f01cafcc"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "3.0.0"
 sdks:
   dart: ">=3.6.1 <4.0.0"
   flutter: ">=3.27.3"

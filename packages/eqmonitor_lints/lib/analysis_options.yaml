@@ -15,6 +15,7 @@ analyzer:
     - custom_lint
   exclude:
     - "**/*.*.dart"
+    - "**/DerivedData/**"
 
 custom_lint:
   rules:
