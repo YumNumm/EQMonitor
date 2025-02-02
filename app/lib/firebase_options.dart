@@ -49,7 +49,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '179553945248',
     projectId: 'eqmonitor-main',
     authDomain: 'eqmonitor-main.firebaseapp.com',
-    storageBucket: 'eqmonitor-main.appspot.com',
+    storageBucket: 'eqmonitor-main.firebasestorage.app',
     measurementId: 'G-GHEHD2C9H0',
   );
 
@@ -58,7 +58,7 @@ class DefaultFirebaseOptions {
     appId: '1:179553945248:android:11ffcfb483c098ad6fabc5',
     messagingSenderId: '179553945248',
     projectId: 'eqmonitor-main',
-    storageBucket: 'eqmonitor-main.appspot.com',
+    storageBucket: 'eqmonitor-main.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -66,24 +66,21 @@ class DefaultFirebaseOptions {
     appId: '1:179553945248:ios:a738f33a18702c7f6fabc5',
     messagingSenderId: '179553945248',
     projectId: 'eqmonitor-main',
-    storageBucket: 'eqmonitor-main.appspot.com',
-    androidClientId:
-        '179553945248-gnhkjhr4feqsv308rf3dlcber84o647i.apps.googleusercontent.com',
-    iosClientId:
-        '179553945248-hog16qgussjvd0ddqqe973c32n64atm1.apps.googleusercontent.com',
+    storageBucket: 'eqmonitor-main.firebasestorage.app',
+    androidClientId: '179553945248-gnhkjhr4feqsv308rf3dlcber84o647i.apps.googleusercontent.com',
+    iosClientId: '179553945248-hog16qgussjvd0ddqqe973c32n64atm1.apps.googleusercontent.com',
     iosBundleId: 'net.yumnumm.eqmonitor',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyARNQCNBeDoGYCzW8iQK_puUgx8IEu33tc',
-    appId: '1:179553945248:ios:d4eb5c7be4dee8196fabc5',
+    appId: '1:179553945248:ios:a738f33a18702c7f6fabc5',
     messagingSenderId: '179553945248',
     projectId: 'eqmonitor-main',
-    storageBucket: 'eqmonitor-main.appspot.com',
-    androidClientId:
-        '179553945248-gnhkjhr4feqsv308rf3dlcber84o647i.apps.googleusercontent.com',
-    iosClientId:
-        '179553945248-3r5sui3ebeomd0i9h2v8ihbs037dkj76.apps.googleusercontent.com',
-    iosBundleId: 'net.yumnumm.eqmonitor.FcmServiceExtension',
+    storageBucket: 'eqmonitor-main.firebasestorage.app',
+    androidClientId: '179553945248-gnhkjhr4feqsv308rf3dlcber84o647i.apps.googleusercontent.com',
+    iosClientId: '179553945248-hog16qgussjvd0ddqqe973c32n64atm1.apps.googleusercontent.com',
+    iosBundleId: 'net.yumnumm.eqmonitor',
   );
+
 }
