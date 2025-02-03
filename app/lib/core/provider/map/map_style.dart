@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:eqmonitor/core/provider/map/map_config.dart';
+import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -34,7 +35,7 @@ class MapStyle {
     required ColorScheme scheme,
   }) async {
     if (kIsWeb) {
-      return 'https://map.eqmonitor.app/tiles/style.json';
+      return 'https://v2.map.eqmonitor.app/style-light.json';
     }
     final colorScheme = isDark
         ? MapColorScheme.dark(colorScheme: scheme)
@@ -42,18 +43,27 @@ class MapStyle {
     final json = {
       'version': 8,
       'name': 'EQMonitor Style',
-      'center': [50, 10],
-      'zoom': 4,
+      'center': [
+        139.767125,
+        35.681236,
+      ],
+      'zoom': 5,
       'sources': {
         'eqmonitor_map': {
           'type': 'vector',
-          'url': 'https://map.eqmonitor.app/tiles/tiles.json',
+          'url': 'pmtiles://https://v2.map.eqmonitor.app/all.pmtiles',
+          'attribution': '© 気象庁, Natural Earth',
+        },
+        'osm': {
+          'type': 'raster',
+          'tiles': ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+          'tileSize': 256,
+          'attribution': '© OpenStreetMap contributors',
+          'maxzoom': 19,
         },
       },
       'sprite': '',
-      'glyphs':
-//          'https://orangemug.github.io/font-glyphs/glyphs/{fontstack}/{range}.pbf',
-          'https://glyphs.geolonia.com/{fontstack}/{range}.pbf',
+      'glyphs': 'https://glyphs.geolonia.com/{fontstack}/{range}.pbf',
       'layers': [
         {
           'id': BaseLayer.background.name,
@@ -62,6 +72,14 @@ class MapStyle {
             'background-color': colorScheme.backgroundColor.toHexStringRGB,
           },
         },
+        // {
+        //   'id': 'osm',
+        //   'type': 'raster',
+        //   'source': 'osm',
+        //   'paint': {
+        //     'raster-opacity': 0.1,
+        //   },
+        // },
         {
           'id': BaseLayer.countriesFill.name,
           'source': 'eqmonitor_map',
@@ -191,8 +209,4 @@ extension ColorCode on Color {
     final b = (color.b * 255).toInt();
     return (r << 16) + (g << 8) + b;
   }
-
-  /// sRGB色空間における HexカラーコードをStringで取得
-  String get toHexStringRGB =>
-      hex.toRadixString(16).toUpperCase().padLeft(6, '0');
 }

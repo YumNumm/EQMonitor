@@ -1,25 +1,24 @@
-import 'package:extensions/extensions.dart';
+import 'package:eqmonitor/core/provider/map/map_style.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'map_config.freezed.dart';
-part 'map_config.g.dart';
+part 'map_configuration.freezed.dart';
+part 'map_configuration.g.dart';
 
 @freezed
-class MapConfig with _$MapConfig {
-  const factory MapConfig({
+class MapConfiguration with _$MapConfiguration {
+  const factory MapConfiguration({
     required MapColorScheme colorScheme,
-    @Default(0.8) double minScale,
-    @Default(20) double maxScale,
-  }) = _MapConfig;
+    @JsonKey(includeToJson: false, includeFromJson: false)
+    required String styleUrl,
+  }) = _MapConfiguration;
 
-  factory MapConfig.fromJson(Map<String, dynamic> json) =>
-      _$MapConfigFromJson(json);
+  factory MapConfiguration.fromJson(Map<String, dynamic> json) =>
+      _$MapConfigurationFromJson(json);
 }
 
-String colorToJson(Color color) => '#${color.sRgbValue.toRadixString(16)}';
-Color colorFromJson(String color) =>
-    Color(int.parse(color.substring(1), radix: 16));
+Color colorFromJson(String json) => Color(int.parse(json));
+String colorToJson(Color color) => color.hex.toRadixString(16);
 
 @freezed
 class MapColorScheme with _$MapColorScheme {
