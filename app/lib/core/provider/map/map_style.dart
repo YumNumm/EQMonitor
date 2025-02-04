@@ -38,8 +38,8 @@ class MapStyle {
       return 'https://v2.map.eqmonitor.app/style-light.json';
     }
     final colorScheme = isDark
-        ? MapColorScheme.dark(colorScheme: scheme)
-        : MapColorScheme.light(colorScheme: scheme);
+        ? MapColorScheme.dark()
+        : MapColorScheme.light();
     final json = {
       'version': 8,
       'name': 'EQMonitor Style',
