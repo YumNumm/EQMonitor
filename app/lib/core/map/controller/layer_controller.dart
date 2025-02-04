@@ -1,4 +1,4 @@
-import 'package:eqmonitor/core/map/layer/base/map_layer.dart';
+import 'package:eqmonitor/core/map/layer/base/i_map_layer.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'layer_controller.g.dart';
@@ -7,12 +7,12 @@ part 'layer_controller.g.dart';
 @riverpod
 class MapLayerController extends _$MapLayerController {
   @override
-  List<MapLayer> build() {
+  List<IMapLayer> build() {
     return [];
   }
 
   /// レイヤーを追加
-  void addLayer(MapLayer layer) {
+  void addLayer(IMapLayer layer) {
     state = [...state, layer];
   }
 
@@ -22,23 +22,8 @@ class MapLayerController extends _$MapLayerController {
   }
 
   /// レイヤーを更新
-  void updateLayer(MapLayer layer) {
+  void updateLayer(IMapLayer layer) {
     state = state.map((l) => l.id == layer.id ? layer : l).toList();
-  }
-
-  /// レイヤーの表示/非表示を切り替え
-  void toggleLayerVisibility(String id) {
-    state = state.map((layer) {
-      if (layer.id != id) {
-        return layer;
-      }
-      return switch (layer) {
-        CircleMapLayer() => layer.copyWith(visible: !layer.visible),
-        SymbolMapLayer() => layer.copyWith(visible: !layer.visible),
-        HeatmapMapLayer() => layer.copyWith(visible: !layer.visible),
-        LineMapLayer() => layer.copyWith(visible: !layer.visible),
-      };
-    }).toList();
   }
 
   /// レイヤーの順序を変更
@@ -48,12 +33,5 @@ class MapLayerController extends _$MapLayerController {
         .where(layerMap.containsKey)
         .map((id) => layerMap[id]!)
         .toList();
-  }
-
-  /// レイヤーのソースデータを取得
-  Map<String, Map<String, dynamic>> getSources() {
-    return {
-      for (final layer in state) layer.sourceId: layer.toSource(),
-    };
   }
 }
