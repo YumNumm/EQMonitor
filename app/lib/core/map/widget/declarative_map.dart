@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:eqmonitor/core/map/controller/style_controller.dart';
-import 'package:eqmonitor/core/map/layer/base/map_layer.dart';
+import 'package:eqmonitor/core/map/layer/base/i_map_layer.dart';
 import 'package:eqmonitor/core/map/model/camera_position.dart';
+import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
@@ -38,7 +38,7 @@ class DeclarativeMap extends ConsumerStatefulWidget {
   final void Function(MapCameraPosition)? onCameraIdle;
 
   /// レイヤーのリスト
-  final List<MapLayer> layers;
+  final List<IMapLayer> layers;
 
   /// 現在位置の表示
   final bool myLocationEnabled;
@@ -64,90 +64,132 @@ class DeclarativeMap extends ConsumerStatefulWidget {
 
 class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
   MapLibreMapController? _controller;
-  final Map<String, MapLayer> _addedLayers = {};
+  final Map<String, CachedIMapLayer> _addedLayers = {};
+  // レイヤー操作のロック
+  bool _isUpdatingLayers = false;
 
   @override
   Widget build(BuildContext context) {
     // スタイルの監視
-    final styleState = ref.watch(mapStyleControllerProvider);
-    log('styleState: $styleState');
-    final styleString = styleState.value?.styleString;
+    final configurationState = ref.watch(mapConfigurationNotifierProvider);
+    final configuration = configurationState.valueOrNull;
 
-    return switch (styleString) {
-      String _ => MapLibreMap(
-          styleString: styleString,
-          initialCameraPosition: widget.initialCameraPosition.toMapLibre(),
-          onMapCreated: _onMapCreated,
-          onStyleLoadedCallback: widget.onStyleLoadedCallback,
-          onCameraIdle: () {
-            final position = _controller?.cameraPosition;
-            if (position != null) {
-              widget.onCameraIdle?.call(
-                MapCameraPosition.fromMapLibre(position),
-              );
-            }
-          },
-          myLocationEnabled: widget.myLocationEnabled,
-          compassEnabled: widget.compassEnabled,
-          rotateGesturesEnabled: widget.rotateGesturesEnabled,
-          scrollGesturesEnabled: widget.scrollGesturesEnabled,
-          zoomGesturesEnabled: widget.zoomGesturesEnabled,
-          doubleClickZoomEnabled: widget.doubleClickZoomEnabled,
-        ),
-      _ => const Center(
-          child: CircularProgressIndicator(),
-        ),
-    };
-  }
+    if (configuration == null) {
+      return const Center(
+        child: CircularProgressIndicator.adaptive(),
+      );
+    }
 
-  Future<void> _onMapCreated(MapLibreMapController controller) async {
-    _controller = controller;
-    widget.onMapCreated?.call(controller);
-    await _updateLayers();
+    final styleString = configuration.styleString;
+    if (styleString == null) {
+      throw ArgumentError('styleString is null');
+    }
+
+    return MapLibreMap(
+      styleString: styleString,
+      initialCameraPosition: widget.initialCameraPosition.toMapLibre(),
+      onMapCreated: (controller) {
+        _controller = controller;
+        widget.onMapCreated?.call(controller);
+      },
+      onStyleLoadedCallback: () {
+        widget.onStyleLoadedCallback?.call();
+        unawaited(
+          _updateLayers(),
+        );
+      },
+      onCameraIdle: () {
+        final position = _controller?.cameraPosition;
+        if (position != null) {
+          widget.onCameraIdle?.call(
+            MapCameraPosition.fromMapLibre(position),
+          );
+        }
+      },
+      myLocationEnabled: widget.myLocationEnabled,
+      compassEnabled: widget.compassEnabled,
+      rotateGesturesEnabled: widget.rotateGesturesEnabled,
+      scrollGesturesEnabled: widget.scrollGesturesEnabled,
+      zoomGesturesEnabled: widget.zoomGesturesEnabled,
+      doubleClickZoomEnabled: widget.doubleClickZoomEnabled,
+    );
   }
 
   Future<void> _updateLayers() async {
     if (_controller == null) {
+      log('controller is null');
       return;
     }
-
-    // 削除されたレイヤーを削除
-    final newLayerIds = widget.layers.map((l) => l.id).toSet();
-    for (final id in _addedLayers.keys.toSet()) {
-      if (!newLayerIds.contains(id)) {
-        await _controller!.removeLayer(id);
-        await _controller!.removeSource(_addedLayers[id]!.sourceId);
-        _addedLayers.remove(id);
-      }
+    // ロックチェック
+    if (_isUpdatingLayers) {
+      return;
     }
+    try {
+      // ロック取得
+      _isUpdatingLayers = true;
 
-    // 新しいレイヤーを追加・更新
-    for (final layer in widget.layers) {
-      if (_addedLayers.containsKey(layer.id)) {
-        // レイヤーの更新
-        if (_addedLayers[layer.id] != layer) {
-          await _controller!.removeLayer(layer.id);
-          await _controller!.removeSource(layer.sourceId);
+      // 削除されたレイヤーを削除
+      final newLayerIds = widget.layers.map((l) => l.id).toSet();
+      for (final id in _addedLayers.keys.toSet()) {
+        if (!newLayerIds.contains(id)) {
+          await _controller!.removeLayer(id);
+          await _controller!.removeSource(_addedLayers[id]!.layer.sourceId);
+          _addedLayers.remove(id);
+        }
+      }
+
+      for (final layer in widget.layers) {
+        if (_addedLayers.containsKey(layer.id)) {
+          final cachedLayer = _addedLayers[layer.id]!;
+          // レイヤーの更新
+          if (cachedLayer.layer != layer) {
+            // キャッシュ済みレイヤーと同じかどうか
+            // style check
+            final cachedLayerProperties = cachedLayer.layerPropertiesHash;
+            final layerProperties = layer.layerPropertiesHash;
+            if (cachedLayerProperties != layerProperties) {
+              log('layer properties changed');
+              await _controller!.removeLayer(layer.id);
+              await _controller!.removeSource(layer.sourceId);
+              await _addLayer(layer);
+              _addedLayers[layer.id] = CachedIMapLayer.fromLayer(layer);
+
+              continue;
+            }
+            // geoJsonSource check
+            final cachedGeoJsonSource = cachedLayer.geoJsonSourceHash;
+            final geoJsonSource = layer.geoJsonSourceHash;
+            if (cachedGeoJsonSource != geoJsonSource) {
+              log('geoJsonSource changed');
+              // update geojson
+              await _controller!.setGeoJsonSource(
+                layer.sourceId,
+                layer.toGeoJsonSource(),
+              );
+            }
+          }
+        } else {
+          // 新規レイヤーの追加
           await _addLayer(layer);
         }
-      } else {
-        // 新規レイヤーの追加
-        await _addLayer(layer);
+        _addedLayers[layer.id] = CachedIMapLayer.fromLayer(layer);
       }
-      _addedLayers[layer.id] = layer;
+    } finally {
+      // ロック解放
+      _isUpdatingLayers = false;
     }
   }
 
-  Future<void> _addLayer(MapLayer layer) async {
+  Future<void> _addLayer(IMapLayer layer) async {
     final controller = _controller!;
     await controller.addGeoJsonSource(
       layer.sourceId,
-      layer.toSource(),
+      layer.toGeoJsonSource(),
     );
     await controller.addLayer(
       layer.id,
       layer.sourceId,
-      layer.toLayer(),
+      layer.toLayerProperties(),
     );
   }
 

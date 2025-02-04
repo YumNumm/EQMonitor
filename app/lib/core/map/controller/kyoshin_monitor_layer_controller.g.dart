@@ -9,14 +9,14 @@ part of 'kyoshin_monitor_layer_controller.dart';
 // **************************************************************************
 
 String _$kyoshinMonitorLayerControllerHash() =>
-    r'2c8c9d8958286f38f1ff3245f3b180de0543f375';
+    r'f9b444647a9c33746f4f5531821d9f41840437a9';
 
 /// 強震モニタの観測点レイヤーを管理するコントローラー
 ///
 /// Copied from [KyoshinMonitorLayerController].
 @ProviderFor(KyoshinMonitorLayerController)
 final kyoshinMonitorLayerControllerProvider = AutoDisposeNotifierProvider<
-    KyoshinMonitorLayerController, MapLayer?>.internal(
+    KyoshinMonitorLayerController, KyoshinMonitorObservationLayer?>.internal(
   KyoshinMonitorLayerController.new,
   name: r'kyoshinMonitorLayerControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -26,6 +26,7 @@ final kyoshinMonitorLayerControllerProvider = AutoDisposeNotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$KyoshinMonitorLayerController = AutoDisposeNotifier<MapLayer?>;
+typedef _$KyoshinMonitorLayerController
+    = AutoDisposeNotifier<KyoshinMonitorObservationLayer?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
