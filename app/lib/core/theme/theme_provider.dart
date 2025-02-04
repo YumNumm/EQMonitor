@@ -1,7 +1,8 @@
+import 'dart:ui' as ui;
+
 import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'theme_provider.g.dart';
@@ -34,23 +35,27 @@ class ThemeModeNotifier extends _$ThemeModeNotifier {
   static const _prefsKey = 'theme_mode';
 }
 
-
 @Riverpod(keepAlive: true)
-class Brightness extends _$Brightness with WidgetsBindingObserver {
+class BrightnessNotifier extends _$BrightnessNotifier with WidgetsBindingObserver {
   @override
-  Brightness build() {
+  ui.Brightness build() {
     // プロバイダ構築時に監視を開始。
     final binding = WidgetsBinding.instance..addObserver(this);
     // プロバイダが破棄された時に監視を解除。
     ref.onDispose(() => binding.removeObserver(this));
-    // 初期値として `resumed` を返している。
-    return Brightness.light;
+
+    return _currentBrightness;
+  }
+
+  ui.Brightness get _currentBrightness {
+    final binding = WidgetsBinding.instance;
+    return binding.platformDispatcher.platformBrightness;
   }
 
   @override
-  void didChangePlatformBrightness(Brightness state) {
+  void didChangePlatformBrightness() {
     // `Brightness` の変更を検知してNotifierが持つ状態を更新。
-    this.state = state;
-    super.didChangeBrightnessState(state);
+    state = _currentBrightness;
+    super.didChangePlatformBrightness();
   }
 }
