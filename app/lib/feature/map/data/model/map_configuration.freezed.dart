@@ -20,9 +20,11 @@ MapConfiguration _$MapConfigurationFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$MapConfiguration {
-  MapColorScheme get colorScheme => throw _privateConstructorUsedError;
+  MapTheme get theme => throw _privateConstructorUsedError;
   @JsonKey(includeToJson: false, includeFromJson: false)
-  String get styleUrl => throw _privateConstructorUsedError;
+  MapColorScheme? get colorScheme => throw _privateConstructorUsedError;
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  String? get styleString => throw _privateConstructorUsedError;
 
   /// Serializes this MapConfiguration to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -41,10 +43,13 @@ abstract class $MapConfigurationCopyWith<$Res> {
       _$MapConfigurationCopyWithImpl<$Res, MapConfiguration>;
   @useResult
   $Res call(
-      {MapColorScheme colorScheme,
-      @JsonKey(includeToJson: false, includeFromJson: false) String styleUrl});
+      {MapTheme theme,
+      @JsonKey(includeToJson: false, includeFromJson: false)
+      MapColorScheme? colorScheme,
+      @JsonKey(includeToJson: false, includeFromJson: false)
+      String? styleString});
 
-  $MapColorSchemeCopyWith<$Res> get colorScheme;
+  $MapColorSchemeCopyWith<$Res>? get colorScheme;
 }
 
 /// @nodoc
@@ -62,18 +67,23 @@ class _$MapConfigurationCopyWithImpl<$Res, $Val extends MapConfiguration>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? colorScheme = null,
-    Object? styleUrl = null,
+    Object? theme = null,
+    Object? colorScheme = freezed,
+    Object? styleString = freezed,
   }) {
     return _then(_value.copyWith(
-      colorScheme: null == colorScheme
+      theme: null == theme
+          ? _value.theme
+          : theme // ignore: cast_nullable_to_non_nullable
+              as MapTheme,
+      colorScheme: freezed == colorScheme
           ? _value.colorScheme
           : colorScheme // ignore: cast_nullable_to_non_nullable
-              as MapColorScheme,
-      styleUrl: null == styleUrl
-          ? _value.styleUrl
-          : styleUrl // ignore: cast_nullable_to_non_nullable
-              as String,
+              as MapColorScheme?,
+      styleString: freezed == styleString
+          ? _value.styleString
+          : styleString // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
@@ -81,8 +91,12 @@ class _$MapConfigurationCopyWithImpl<$Res, $Val extends MapConfiguration>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $MapColorSchemeCopyWith<$Res> get colorScheme {
-    return $MapColorSchemeCopyWith<$Res>(_value.colorScheme, (value) {
+  $MapColorSchemeCopyWith<$Res>? get colorScheme {
+    if (_value.colorScheme == null) {
+      return null;
+    }
+
+    return $MapColorSchemeCopyWith<$Res>(_value.colorScheme!, (value) {
       return _then(_value.copyWith(colorScheme: value) as $Val);
     });
   }
@@ -97,11 +111,14 @@ abstract class _$$MapConfigurationImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {MapColorScheme colorScheme,
-      @JsonKey(includeToJson: false, includeFromJson: false) String styleUrl});
+      {MapTheme theme,
+      @JsonKey(includeToJson: false, includeFromJson: false)
+      MapColorScheme? colorScheme,
+      @JsonKey(includeToJson: false, includeFromJson: false)
+      String? styleString});
 
   @override
-  $MapColorSchemeCopyWith<$Res> get colorScheme;
+  $MapColorSchemeCopyWith<$Res>? get colorScheme;
 }
 
 /// @nodoc
@@ -117,18 +134,23 @@ class __$$MapConfigurationImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? colorScheme = null,
-    Object? styleUrl = null,
+    Object? theme = null,
+    Object? colorScheme = freezed,
+    Object? styleString = freezed,
   }) {
     return _then(_$MapConfigurationImpl(
-      colorScheme: null == colorScheme
+      theme: null == theme
+          ? _value.theme
+          : theme // ignore: cast_nullable_to_non_nullable
+              as MapTheme,
+      colorScheme: freezed == colorScheme
           ? _value.colorScheme
           : colorScheme // ignore: cast_nullable_to_non_nullable
-              as MapColorScheme,
-      styleUrl: null == styleUrl
-          ? _value.styleUrl
-          : styleUrl // ignore: cast_nullable_to_non_nullable
-              as String,
+              as MapColorScheme?,
+      styleString: freezed == styleString
+          ? _value.styleString
+          : styleString // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -137,22 +159,25 @@ class __$$MapConfigurationImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$MapConfigurationImpl implements _MapConfiguration {
   const _$MapConfigurationImpl(
-      {required this.colorScheme,
-      @JsonKey(includeToJson: false, includeFromJson: false)
-      required this.styleUrl});
+      {required this.theme,
+      @JsonKey(includeToJson: false, includeFromJson: false) this.colorScheme,
+      @JsonKey(includeToJson: false, includeFromJson: false) this.styleString});
 
   factory _$MapConfigurationImpl.fromJson(Map<String, dynamic> json) =>
       _$$MapConfigurationImplFromJson(json);
 
   @override
-  final MapColorScheme colorScheme;
+  final MapTheme theme;
   @override
   @JsonKey(includeToJson: false, includeFromJson: false)
-  final String styleUrl;
+  final MapColorScheme? colorScheme;
+  @override
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  final String? styleString;
 
   @override
   String toString() {
-    return 'MapConfiguration(colorScheme: $colorScheme, styleUrl: $styleUrl)';
+    return 'MapConfiguration(theme: $theme, colorScheme: $colorScheme, styleString: $styleString)';
   }
 
   @override
@@ -160,15 +185,16 @@ class _$MapConfigurationImpl implements _MapConfiguration {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MapConfigurationImpl &&
+            (identical(other.theme, theme) || other.theme == theme) &&
             (identical(other.colorScheme, colorScheme) ||
                 other.colorScheme == colorScheme) &&
-            (identical(other.styleUrl, styleUrl) ||
-                other.styleUrl == styleUrl));
+            (identical(other.styleString, styleString) ||
+                other.styleString == styleString));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, colorScheme, styleUrl);
+  int get hashCode => Object.hash(runtimeType, theme, colorScheme, styleString);
 
   /// Create a copy of MapConfiguration
   /// with the given fields replaced by the non-null parameter values.
@@ -189,18 +215,23 @@ class _$MapConfigurationImpl implements _MapConfiguration {
 
 abstract class _MapConfiguration implements MapConfiguration {
   const factory _MapConfiguration(
-      {required final MapColorScheme colorScheme,
+      {required final MapTheme theme,
       @JsonKey(includeToJson: false, includeFromJson: false)
-      required final String styleUrl}) = _$MapConfigurationImpl;
+      final MapColorScheme? colorScheme,
+      @JsonKey(includeToJson: false, includeFromJson: false)
+      final String? styleString}) = _$MapConfigurationImpl;
 
   factory _MapConfiguration.fromJson(Map<String, dynamic> json) =
       _$MapConfigurationImpl.fromJson;
 
   @override
-  MapColorScheme get colorScheme;
+  MapTheme get theme;
   @override
   @JsonKey(includeToJson: false, includeFromJson: false)
-  String get styleUrl;
+  MapColorScheme? get colorScheme;
+  @override
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  String? get styleString;
 
   /// Create a copy of MapConfiguration
   /// with the given fields replaced by the non-null parameter values.
@@ -271,30 +302,30 @@ class _$MapColorSchemeCopyWithImpl<$Res, $Val extends MapColorScheme>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? backgroundColor = freezed,
-    Object? worldLandColor = freezed,
-    Object? worldLineColor = freezed,
-    Object? japanLandColor = freezed,
-    Object? japanLineColor = freezed,
+    Object? backgroundColor = null,
+    Object? worldLandColor = null,
+    Object? worldLineColor = null,
+    Object? japanLandColor = null,
+    Object? japanLineColor = null,
   }) {
     return _then(_value.copyWith(
-      backgroundColor: freezed == backgroundColor
+      backgroundColor: null == backgroundColor
           ? _value.backgroundColor
           : backgroundColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      worldLandColor: freezed == worldLandColor
+      worldLandColor: null == worldLandColor
           ? _value.worldLandColor
           : worldLandColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      worldLineColor: freezed == worldLineColor
+      worldLineColor: null == worldLineColor
           ? _value.worldLineColor
           : worldLineColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      japanLandColor: freezed == japanLandColor
+      japanLandColor: null == japanLandColor
           ? _value.japanLandColor
           : japanLandColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      japanLineColor: freezed == japanLineColor
+      japanLineColor: null == japanLineColor
           ? _value.japanLineColor
           : japanLineColor // ignore: cast_nullable_to_non_nullable
               as Color,
@@ -336,30 +367,30 @@ class __$$MapColorSchemeImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? backgroundColor = freezed,
-    Object? worldLandColor = freezed,
-    Object? worldLineColor = freezed,
-    Object? japanLandColor = freezed,
-    Object? japanLineColor = freezed,
+    Object? backgroundColor = null,
+    Object? worldLandColor = null,
+    Object? worldLineColor = null,
+    Object? japanLandColor = null,
+    Object? japanLineColor = null,
   }) {
     return _then(_$MapColorSchemeImpl(
-      backgroundColor: freezed == backgroundColor
+      backgroundColor: null == backgroundColor
           ? _value.backgroundColor
           : backgroundColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      worldLandColor: freezed == worldLandColor
+      worldLandColor: null == worldLandColor
           ? _value.worldLandColor
           : worldLandColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      worldLineColor: freezed == worldLineColor
+      worldLineColor: null == worldLineColor
           ? _value.worldLineColor
           : worldLineColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      japanLandColor: freezed == japanLandColor
+      japanLandColor: null == japanLandColor
           ? _value.japanLandColor
           : japanLandColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      japanLineColor: freezed == japanLineColor
+      japanLineColor: null == japanLineColor
           ? _value.japanLineColor
           : japanLineColor // ignore: cast_nullable_to_non_nullable
               as Color,
@@ -411,27 +442,22 @@ class _$MapColorSchemeImpl implements _MapColorScheme {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MapColorSchemeImpl &&
-            const DeepCollectionEquality()
-                .equals(other.backgroundColor, backgroundColor) &&
-            const DeepCollectionEquality()
-                .equals(other.worldLandColor, worldLandColor) &&
-            const DeepCollectionEquality()
-                .equals(other.worldLineColor, worldLineColor) &&
-            const DeepCollectionEquality()
-                .equals(other.japanLandColor, japanLandColor) &&
-            const DeepCollectionEquality()
-                .equals(other.japanLineColor, japanLineColor));
+            (identical(other.backgroundColor, backgroundColor) ||
+                other.backgroundColor == backgroundColor) &&
+            (identical(other.worldLandColor, worldLandColor) ||
+                other.worldLandColor == worldLandColor) &&
+            (identical(other.worldLineColor, worldLineColor) ||
+                other.worldLineColor == worldLineColor) &&
+            (identical(other.japanLandColor, japanLandColor) ||
+                other.japanLandColor == japanLandColor) &&
+            (identical(other.japanLineColor, japanLineColor) ||
+                other.japanLineColor == japanLineColor));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(backgroundColor),
-      const DeepCollectionEquality().hash(worldLandColor),
-      const DeepCollectionEquality().hash(worldLineColor),
-      const DeepCollectionEquality().hash(japanLandColor),
-      const DeepCollectionEquality().hash(japanLineColor));
+  int get hashCode => Object.hash(runtimeType, backgroundColor, worldLandColor,
+      worldLineColor, japanLandColor, japanLineColor);
 
   /// Create a copy of MapColorScheme
   /// with the given fields replaced by the non-null parameter values.

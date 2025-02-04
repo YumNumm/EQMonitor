@@ -1,4 +1,4 @@
-import 'package:eqmonitor/core/provider/map/map_style.dart';
+import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -8,13 +8,21 @@ part 'map_configuration.g.dart';
 @freezed
 class MapConfiguration with _$MapConfiguration {
   const factory MapConfiguration({
-    required MapColorScheme colorScheme,
+    required MapTheme theme,
     @JsonKey(includeToJson: false, includeFromJson: false)
-    required String styleUrl,
+    MapColorScheme? colorScheme,
+    @JsonKey(includeToJson: false, includeFromJson: false) String? styleString,
   }) = _MapConfiguration;
 
   factory MapConfiguration.fromJson(Map<String, dynamic> json) =>
       _$MapConfigurationFromJson(json);
+}
+
+enum MapTheme {
+  light,
+  dark,
+  system,
+  ;
 }
 
 Color colorFromJson(String json) => Color(int.parse(json));
@@ -38,25 +46,29 @@ class MapColorScheme with _$MapColorScheme {
   factory MapColorScheme.fromJson(Map<String, dynamic> json) =>
       _$MapColorSchemeFromJson(json);
 
-  factory MapColorScheme.light({required ColorScheme colorScheme}) =>
-      MapColorScheme(
-        backgroundColor: colorScheme.surface,
-        worldLandColor: colorScheme.surfaceContainerLowest,
-        worldLineColor: colorScheme.onSurfaceVariant,
-        japanLandColor: colorScheme.surfaceContainerLowest,
-        japanLineColor: colorScheme.onSurfaceVariant,
-      );
+  factory MapColorScheme.light() {
+    const colorScheme = ColorScheme.light();
+    return MapColorScheme(
+      backgroundColor: colorScheme.surface,
+      worldLandColor: colorScheme.surfaceContainerLowest,
+      worldLineColor: colorScheme.onSurfaceVariant,
+      japanLandColor: colorScheme.surfaceContainerLowest,
+      japanLineColor: colorScheme.onSurfaceVariant,
+    );
+  }
 
-  factory MapColorScheme.dark({required ColorScheme colorScheme}) =>
-      MapColorScheme(
-        backgroundColor: Color.lerp(
-          colorScheme.surfaceContainerLowest,
-          Colors.blue.shade900,
-          0.1,
-        )!,
-        worldLandColor: colorScheme.surfaceContainerHighest,
-        worldLineColor: colorScheme.onSurfaceVariant,
-        japanLandColor: colorScheme.surfaceContainerHighest,
-        japanLineColor: colorScheme.onSurface,
-      );
+  factory MapColorScheme.dark() {
+    const colorScheme = ColorScheme.dark();
+    return MapColorScheme(
+      backgroundColor: Color.lerp(
+        colorScheme.surfaceContainerLowest,
+        Colors.blue.shade900,
+        0.1,
+      )!,
+      worldLandColor: colorScheme.surfaceContainerHighest,
+      worldLineColor: colorScheme.onSurfaceVariant,
+      japanLandColor: colorScheme.surfaceContainerHighest,
+      japanLineColor: colorScheme.onSurface,
+    );
+  }
 }
