@@ -31,67 +31,65 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
       fontFamilyFallback: [FontFamily.notoSansJP],
     );
 
-    return Flexible(
-      child: Card.outlined(
-        color: theme.colorScheme.surfaceContainerLowest,
-        elevation: 0,
-        child: Tooltip(
-          message: '強震モニタ',
-          child: InkWell(
-            borderRadius: BorderRadius.circular(8),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              child: DefaultTextStyle(
-                style: dateTextStyle,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // 現在時刻
-                    ...switch (status) {
-                      KyoshinMonitorStatus.stopped => [
-                          const Icon(
-                            Icons.access_time_rounded,
-                            size: 16,
+    return Card.outlined(
+      color: theme.colorScheme.surfaceContainerHighest,
+      elevation: 0,
+      child: Tooltip(
+        message: '強震モニタ',
+        child: InkWell(
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: DefaultTextStyle(
+              style: dateTextStyle,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // 現在時刻
+                  ...switch (status) {
+                    KyoshinMonitorStatus.stopped => [
+                        const Icon(
+                          Icons.access_time_rounded,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 4),
+                        const Flexible(
+                          child: Text(
+                            '強震モニタ 取得停止中',
                           ),
-                          const SizedBox(width: 4),
-                          const Flexible(
-                            child: Text(
-                              '強震モニタ 取得停止中',
+                        ),
+                      ],
+                    _
+                        when isInitialized &&
+                            latestTime != null &&
+                            status == KyoshinMonitorStatus.delayed =>
+                      [
+                        Flexible(
+                          child: Text(
+                            DateFormat('yyyy/MM/dd HH:mm:ss')
+                                .format(latestTime),
+                            style: const TextStyle(
+                              color: Colors.redAccent,
                             ),
                           ),
-                        ],
-                      _
-                          when isInitialized &&
-                              latestTime != null &&
-                              status == KyoshinMonitorStatus.delayed =>
-                        [
-                          Flexible(
-                            child: Text(
-                              DateFormat('yyyy/MM/dd HH:mm:ss')
-                                  .format(latestTime),
-                              style: const TextStyle(
-                                color: Colors.redAccent,
-                              ),
-                            ),
+                        ),
+                      ],
+                    _ when isInitialized && latestTime != null => [
+                        Flexible(
+                          child: Text(
+                            dateFormat.format(latestTime),
                           ),
-                        ],
-                      _ when isInitialized && latestTime != null => [
-                          Flexible(
-                            child: Text(
-                              dateFormat.format(latestTime),
-                            ),
-                          ),
-                        ],
-                      _ => [
-                          const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator.adaptive(),
-                          ),
-                        ],
-                    },
-                  ],
-                ),
+                        ),
+                      ],
+                    _ => [
+                        const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator.adaptive(),
+                        ),
+                      ],
+                  },
+                ],
               ),
             ),
           ),

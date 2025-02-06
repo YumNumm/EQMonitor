@@ -89,7 +89,7 @@ PODS:
     - GoogleUtilities/Reachability (~> 8.0)
     - GoogleUtilities/UserDefaults (~> 8.0)
     - nanopb (~> 3.30910.0)
-  - FirebaseRemoteConfigInterop (11.7.0)
+  - FirebaseRemoteConfigInterop (11.8.0)
   - FirebaseSessions (11.6.0):
     - FirebaseCore (~> 11.6.0)
     - FirebaseCoreExtension (~> 11.6.0)
@@ -316,7 +316,7 @@ SPEC CHECKSUMS:
   FirebaseCrashlytics: b21c665fb50138766480bce73ebdb1aa30f7f300
   FirebaseInstallations: efc0946fc756e4d22d8113f7c761948120322e8c
   FirebaseMessaging: e1aca1fcc23e8b9eddb0e33f375ff90944623021
-  FirebaseRemoteConfigInterop: ca12abf9da0003efd3a476b2dff4f7a04fd31b4f
+  FirebaseRemoteConfigInterop: 98897a64aa372eac3c5b3fe2816594ccfaac55ef
   FirebaseSessions: 9529d14180868e29a8da164b3a729c036204918b
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_email_sender: 2397f5e84aaacfb61af569637a963e7c687858d8
