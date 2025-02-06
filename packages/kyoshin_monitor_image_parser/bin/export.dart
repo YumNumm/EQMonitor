@@ -264,7 +264,9 @@ Color _interpolateColor(Color a, Color b, double t) {
 /// *** 6) position値から色を計算する ***
 /// ***************************************************************************
 Color _calculateColorForPosition(
-    double position, List<({double value, Color color})> scaleData) {
+  double position,
+  List<({double value, Color color})> scaleData,
+) {
   if (position <= 0) {
     return scaleData.first.color;
   }
@@ -293,7 +295,7 @@ Color _calculateColorForPosition(
 
 void main() {
   // position値の分割数
-  const positionSteps = 20;
+  const positionSteps = 51;
 
   final result = {
     'intensity': <Map<String, dynamic>>[],
@@ -302,67 +304,67 @@ void main() {
     'pgd': <Map<String, dynamic>>[],
   };
 
-  // 震度のリスト (-3 ~ 7)
+  // 震度のリスト (-3 ~ 7の1刻み)
   final intensityList = List.generate(11, (i) => -3.0 + i.toDouble());
 
   // PGAの値のリスト (gal)
   final pgaList = [
-    0.01,
-    0.02,
-    0.05,
-    0.1,
-    0.2,
-    0.5,
-    1.0,
-    2.0,
-    5.0,
-    10.0,
-    20.0,
-    50.0,
-    100.0,
-    200.0,
-    500.0,
     1000.0,
+    500.0,
+    200.0,
+    100.0,
+    50.0,
+    20.0,
+    10.0,
+    5.0,
+    2.0,
+    1.0,
+    0.5,
+    0.2,
+    0.1,
+    0.05,
+    0.02,
+    0.01,
   ];
 
   // PGVの値のリスト (kine)
   final pgvList = [
-    0.001,
-    0.002,
-    0.005,
-    0.01,
-    0.02,
-    0.05,
-    0.1,
-    0.2,
-    0.5,
-    1.0,
-    2.0,
-    5.0,
-    10.0,
-    20.0,
-    50.0,
     100.0,
+    50.0,
+    20.0,
+    10.0,
+    5.0,
+    2.0,
+    1.0,
+    0.5,
+    0.2,
+    0.1,
+    0.05,
+    0.02,
+    0.01,
+    0.005,
+    0.002,
+    0.001,
   ];
 
   // PGDの値のリスト (cm)
   final pgdList = [
-    0.0001,
-    0.0002,
-    0.0005,
-    0.001,
-    0.002,
-    0.005,
-    0.01,
-    0.02,
-    0.05,
-    0.1,
-    0.2,
-    0.5,
-    1.0,
-    2.0,
-    5.0,
     10.0,
+    5.0,
+    2.0,
+    1.0,
+    0.5,
+    0.2,
+    0.1,
+    0.05,
+    0.02,
+    0.01,
+    0.005,
+    0.002,
+    0.001,
+    0.0005,
+    0.0002,
+    0.0001,
   ];
 
   // 震度のカラーマップを作成
@@ -413,13 +415,14 @@ void main() {
   for (var i = 0; i < positionSteps; i++) {
     final p = i / (positionSteps - 1);
     final value = p * 10 - 3; // -3から7の範囲に変換
-    final color = _calculateColorForPosition(p, intensityColorMap);
+    final hsv = scaleToHsv(p);
+    final rgb = hsvToRgb(hsv[0], hsv[1], hsv[2]);
     result['intensity']!.add({
       'position': p,
       'value': value,
-      'r': color.red,
-      'g': color.green,
-      'b': color.blue,
+      'r': rgb[0],
+      'g': rgb[1],
+      'b': rgb[2],
     });
   }
 
@@ -427,13 +430,14 @@ void main() {
   for (var i = 0; i < positionSteps; i++) {
     final p = i / (positionSteps - 1);
     final value = math.pow(10, 5 * p - 2).toDouble();
-    final color = _calculateColorForPosition(p, pgaColorMap);
+    final hsv = scaleToHsv(p);
+    final rgb = hsvToRgb(hsv[0], hsv[1], hsv[2]);
     result['pga']!.add({
       'position': p,
       'value': value,
-      'r': color.red,
-      'g': color.green,
-      'b': color.blue,
+      'r': rgb[0],
+      'g': rgb[1],
+      'b': rgb[2],
     });
   }
 
@@ -441,13 +445,14 @@ void main() {
   for (var i = 0; i < positionSteps; i++) {
     final p = i / (positionSteps - 1);
     final value = math.pow(10, 5 * p - 3).toDouble();
-    final color = _calculateColorForPosition(p, pgvColorMap);
+    final hsv = scaleToHsv(p);
+    final rgb = hsvToRgb(hsv[0], hsv[1], hsv[2]);
     result['pgv']!.add({
       'position': p,
       'value': value,
-      'r': color.red,
-      'g': color.green,
-      'b': color.blue,
+      'r': rgb[0],
+      'g': rgb[1],
+      'b': rgb[2],
     });
   }
 
@@ -455,13 +460,14 @@ void main() {
   for (var i = 0; i < positionSteps; i++) {
     final p = i / (positionSteps - 1);
     final value = math.pow(10, 5 * p - 4).toDouble();
-    final color = _calculateColorForPosition(p, pgdColorMap);
+    final hsv = scaleToHsv(p);
+    final rgb = hsvToRgb(hsv[0], hsv[1], hsv[2]);
     result['pgd']!.add({
       'position': p,
       'value': value,
-      'r': color.red,
-      'g': color.green,
-      'b': color.blue,
+      'r': rgb[0],
+      'g': rgb[1],
+      'b': rgb[2],
     });
   }
 
