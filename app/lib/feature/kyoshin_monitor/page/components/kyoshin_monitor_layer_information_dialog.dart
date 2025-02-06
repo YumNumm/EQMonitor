@@ -25,17 +25,17 @@ class RealtimeDataTypeInfoDialog extends StatelessWidget {
 本来揺れが収まった後に計算されて発表される「震度」にほぼ一致する特徴があります。''',
             ),
             _DataTypeInfo(
-              title: '最大加速度',
+              title: '最大加速度 (PGA)',
               description: '''
-強震計が実際に観測している揺れの加速度の直近2秒間の最大値を表示します。
+強震計が実際に観測している揺れの加速度の直近1秒間の最大値を表示します。
 3方向（北―南、東―西、上―下）をベクトル合成した波形の最大値となります。''',
             ),
             _DataTypeInfo(
-              title: '最大速度',
+              title: '最大速度 (PGV)',
               description: '揺れの加速度を積分して得られる速度の1秒毎の最大値を表示します。',
             ),
             _DataTypeInfo(
-              title: '最大変位',
+              title: '最大変位 (PGD)',
               description: '揺れの加速度を2回積分して得られる変位の1秒毎の最大値を表示します。',
             ),
             _DataTypeInfo(

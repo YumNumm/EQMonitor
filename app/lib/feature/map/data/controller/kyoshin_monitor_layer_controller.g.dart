@@ -9,7 +9,7 @@ part of 'kyoshin_monitor_layer_controller.dart';
 // **************************************************************************
 
 String _$kyoshinMonitorLayerControllerHash() =>
-    r'd712f69bf84850c91e715c1d1eaaddcd39022c4d';
+    r'95c22c35d60af17cd8de9f58691e1f63d696dd59';
 
 /// 強震モニタの観測点レイヤーを管理するコントローラー
 ///

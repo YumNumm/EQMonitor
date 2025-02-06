@@ -15,8 +15,8 @@ import 'package:eqmonitor/feature/eew/ui/screen/eew_details_by_event_id_page.dar
 import 'package:eqmonitor/feature/home/view/home_view.dart';
 import 'package:eqmonitor/feature/information_history/page/information_history_page.dart';
 import 'package:eqmonitor/feature/information_history_details/information_history_details_page.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_cautionary_note_page.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_settings_page.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_observation_network_page.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/about_this_app.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/license_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_screen.dart';
@@ -162,9 +162,6 @@ class InformationHistoryDetailsRoute extends GoRouteData {
     TypedGoRoute<EewDetailsByEventIdRoute>(
       path: 'eew-details-by-event-id/:eventId',
     ),
-    TypedGoRoute<KyoshinMonitorCautionaryNoteModalRoute>(
-      path: 'kyoshin-monitor-cautionary-note-modal',
-    ),
   ],
 )
 class HomeRoute extends GoRouteData {
@@ -207,6 +204,14 @@ class TalkerRoute extends GoRouteData {
         ),
       ],
     ),
+    TypedGoRoute<KyoshinMonitorAboutRoute>(
+      path: 'kyoshin-monitor-about',
+      routes: [
+        TypedGoRoute<KyoshinMonitorAboutObservationNetworkRoute>(
+          path: 'observation-network',
+        ),
+      ],
+    ),
     TypedGoRoute<TermOfServiceRoute>(
       path: 'term-of-service',
     ),
@@ -227,14 +232,6 @@ class TalkerRoute extends GoRouteData {
       routes: [
         TypedGoRoute<DonationExecutedRoute>(
           path: 'executed',
-        ),
-      ],
-    ),
-    TypedGoRoute<KyoshinMonitorSettingsRoute>(
-      path: 'kyoshin-monitor-settings',
-      routes: [
-        TypedGoRoute<KyoshinMonitorSettingsModalRoute>(
-          path: 'modal',
         ),
       ],
     ),
