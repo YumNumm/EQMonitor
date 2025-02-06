@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_settings_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -62,7 +63,7 @@ class HomeMapLayerModal extends HookConsumerWidget {
           SliverToBoxAdapter(
             child: _Card(
               title: '強震モニタ',
-              description: '説明',
+              description: '強震モニタのリアルタイムデータを表示します',
               isEnabled: ref.watch(kyoshinMonitorSettingsProvider).useKmoni,
               onEnabledChanged: (value) async =>
                   ref.read(kyoshinMonitorSettingsProvider.notifier).save(
@@ -70,6 +71,9 @@ class HomeMapLayerModal extends HookConsumerWidget {
                               useKmoni: value,
                             ),
                       ),
+              onTap: ref.watch(kyoshinMonitorSettingsProvider).useKmoni
+                  ? () async => KyoshinMonitorSettingsModal.show(context)
+                  : null,
             ),
           ),
         ],
@@ -84,6 +88,7 @@ class _Card extends StatelessWidget {
     required this.description,
     required this.isEnabled,
     this.onEnabledChanged,
+    this.onTap,
   });
 
   final String title;
@@ -91,6 +96,7 @@ class _Card extends StatelessWidget {
   final bool isEnabled;
   // ignore: avoid_positional_boolean_parameters
   final void Function(bool)? onEnabledChanged;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +112,7 @@ class _Card extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: InkWell(
-        onTap: () => onEnabledChanged?.call(!isEnabled),
+        onTap: onTap ?? () => onEnabledChanged?.call(!isEnabled),
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: Row(
@@ -131,10 +137,12 @@ class _Card extends StatelessWidget {
                   ],
                 ),
               ),
-              Switch.adaptive(
-                value: isEnabled,
-                onChanged: onEnabledChanged,
-              ),
+              if (onEnabledChanged != null)
+                Switch.adaptive(
+                  value: isEnabled,
+                  onChanged: onEnabledChanged,
+                ),
+              if (onTap != null && isEnabled) const Icon(Icons.chevron_right),
             ],
           ),
         ),

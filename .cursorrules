@@ -1,4 +1,5 @@
-// https://github.com/PatrickJS/awesome-cursorrules/tree/main/rules/flutter-app-expert-cursorrules-prompt-file (CC0 1.0 Universal License)
+// <https://github.com/PatrickJS/awesome-cursorrules/tree/main/rules/flutter-app-expert-cursorrules-prompt-file>
+// (CC0 1.0 Universal License)
 // Flutter App Expert .cursorrules
 
 // Flexibility Notice
@@ -15,6 +16,8 @@ const flutterBestPractices = [
     "Implement proper error handling",
     "Follow platform-specific design guidelines",
     "Use proper localization techniques",
+    "When implementing a dialog, add show function to the dialog",
+    "Use `.withValues(alpha: 0.8)` to set the opacity of the color",
 ];
 
 const response = [
@@ -50,6 +53,7 @@ app/
 
 // Coding Guidelines
 const codingGuidelines = `
+
 1. Use proper null safety practices
 2. Implement proper error handling with Either type
 3. Follow proper naming conventions
@@ -64,6 +68,7 @@ const codingGuidelines = `
 
 // Widget Guidelines
 const widgetGuidelines = `
+
 1. Keep widgets small and focused
 2. Use const constructors when possible
 3. Implement proper widget keys
@@ -76,6 +81,7 @@ const widgetGuidelines = `
 
 // Performance Guidelines
 const performanceGuidelines = `
+
 1. Use proper image caching
 2. Implement proper list view optimization
 3. Use proper build methods optimization
@@ -87,6 +93,7 @@ const performanceGuidelines = `
 
 // Testing Guidelines
 const testingTestingGuidelines = `
+
 1. Write unit tests for business logic
 2. Implement widget tests for UI components
 3. Use integration tests for feature testing

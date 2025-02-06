@@ -1,8 +1,10 @@
+import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
-import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:eqmonitor/feature/map/data/layer/base/i_map_layer.dart';
+import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:flutter/material.dart';
+import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 import 'package:kyoshin_monitor_image_parser/kyoshin_monitor_image_parser.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -42,7 +44,7 @@ class KyoshinMonitorLayerController extends _$KyoshinMonitorLayerController {
       points: points,
       isInEew: false,
       markerType: KmoniMarkerType.always,
-      realtimeDataType: RealtimeDataType.intensity,
+      realtimeDataType: RealtimeDataType.shindo,
     );
   }
 }
@@ -148,16 +150,4 @@ class KyoshinMonitorObservationLayer extends IMapLayer {
 
   @override
   String get layerPropertiesHash => '';
-}
-
-enum KmoniMarkerType {
-  always,
-  onlyEew,
-}
-
-enum RealtimeDataType {
-  intensity,
-  pga,
-  pgv,
-  pgd,
 }
