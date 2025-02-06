@@ -1,7 +1,7 @@
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
-import 'package:eqmonitor/feature/map/layer/base/i_map_layer.dart';
+import 'package:eqmonitor/feature/map/data/layer/base/i_map_layer.dart';
 import 'package:flutter/material.dart';
 import 'package:kyoshin_monitor_image_parser/kyoshin_monitor_image_parser.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
