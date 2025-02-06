@@ -13,7 +13,7 @@ class AppSheetRoute<T> extends SheetRoute<T> {
             bottom: false,
             child: ClipRRect(
               borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(12),
+                top: Radius.circular(16),
               ),
               child: child,
             ),

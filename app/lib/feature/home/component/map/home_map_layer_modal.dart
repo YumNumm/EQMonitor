@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:eqmonitor/core/component/sheet/app_sheet_route.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
@@ -28,9 +29,27 @@ class HomeMapLayerModal extends HookConsumerWidget {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            title: const Text('レイヤー設定'),
+            pinned: true,
+            title: BackdropFilter(
+              filter: ImageFilter.compose(
+                outer: ImageFilter.blur(
+                  sigmaX: 8,
+                  sigmaY: 8,
+                  tileMode: TileMode.mirror,
+                ),
+                inner: ColorFilter.mode(
+                  colorScheme.surfaceContainerLow.withValues(alpha: 0.8),
+                  BlendMode.srcATop,
+                ),
+              ),
+              child: const Text(
+                'マップレイヤー',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
             automaticallyImplyLeading: false,
             centerTitle: false,
+            scrolledUnderElevation: 0,
             backgroundColor: Colors.transparent,
             actions: [
               IconButton.filledTonal(
