@@ -5,6 +5,7 @@ import 'package:eqmonitor/feature/map/data/controller/kyoshin_monitor_layer_cont
 import 'package:eqmonitor/feature/map/data/model/camera_position.dart';
 import 'package:eqmonitor/feature/map/ui/components/controller/map_layer_controller_card.dart';
 import 'package:eqmonitor/feature/map/ui/declarative_map.dart';
+import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
@@ -42,15 +43,28 @@ class HomeMapView extends HookConsumerWidget {
                     const KyoshinMonitorStatusCard(),
                     const SizedBox(height: 10),
                     for (final type in KyoshinMonitorScaleType.values)
-                      Row(
-                        children: [
-                          KyoshinMonitorScale(
-                            type: type,
-                            width: 100,
-                            height: 20,
+                      Card(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: Row(
+                            children: [
+                              KyoshinMonitorScale(
+                                type: type,
+                                width: 180,
+                                height: 20,
+                                tickInterval: 1,
+                              ),
+                              Text(
+                                type.name,
+                                style: const TextStyle(
+                                  fontFamily: FontFamily.jetBrainsMono,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(type.name),
-                        ],
+                        ),
                       ),
                   ],
                 ),
