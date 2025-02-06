@@ -1,6 +1,23 @@
 import 'dart:convert';
 import 'dart:math' as math;
 
+/// シンプルなカラークラス
+class Color {
+  const Color(this.red, this.green, this.blue);
+
+  final int red;
+  final int green;
+  final int blue;
+
+  static Color fromRGB(int r, int g, int b) {
+    return Color(
+      r.clamp(0, 255),
+      g.clamp(0, 255),
+      b.clamp(0, 255),
+    );
+  }
+}
+
 /// ***************************************************************************
 /// *** 1) p -> (h, s, v) : 区分多項式を二分法で逆解 ***
 /// ***************************************************************************
@@ -233,54 +250,223 @@ double hsvToScale(double h, double s, double v) {
 }
 
 /// ***************************************************************************
-/// *** メイン: テーブルを作成し JSON出力 (p, r, g, b, pBack, diff) ***
+/// *** 5) 2点間の色を補間する ***
+/// ***************************************************************************
+Color _interpolateColor(Color a, Color b, double t) {
+  return Color(
+    (a.red + (b.red - a.red) * t).round(),
+    (a.green + (b.green - a.green) * t).round(),
+    (a.blue + (b.blue - a.blue) * t).round(),
+  );
+}
+
+/// ***************************************************************************
+/// *** 6) position値から色を計算する ***
+/// ***************************************************************************
+Color _calculateColorForPosition(
+    double position, List<({double value, Color color})> scaleData) {
+  if (position <= 0) {
+    return scaleData.first.color;
+  }
+  if (position >= 1) {
+    return scaleData.last.color;
+  }
+
+  // positionに最も近い2つの色を見つける
+  for (var i = 0; i < scaleData.length - 1; i++) {
+    final currentP = scaleData[i].value;
+    final nextP = scaleData[i + 1].value;
+
+    if (position >= currentP && position <= nextP) {
+      // 2点間の比率を計算
+      final t = (position - currentP) / (nextP - currentP);
+      return _interpolateColor(scaleData[i].color, scaleData[i + 1].color, t);
+    }
+  }
+
+  return scaleData.last.color;
+}
+
+/// ***************************************************************************
+/// *** メイン: テーブルを作成し JSON出力 ***
 /// ***************************************************************************
 
 void main() {
-  // pを 0.00..1.00 の範囲で 0.01 刻み
-  const step = 1/16;
-  final table = <Map<String, dynamic>>[];
+  // position値の分割数
+  const positionSteps = 20;
 
-  for (var p = 0.0; p < 1.0 + 1e-9; p += step) {
-    // 1) p -> (h, s, v)
+  final result = {
+    'intensity': <Map<String, dynamic>>[],
+    'pga': <Map<String, dynamic>>[],
+    'pgv': <Map<String, dynamic>>[],
+    'pgd': <Map<String, dynamic>>[],
+  };
+
+  // 震度のリスト (-3 ~ 7)
+  final intensityList = List.generate(11, (i) => -3.0 + i.toDouble());
+
+  // PGAの値のリスト (gal)
+  final pgaList = [
+    0.01,
+    0.02,
+    0.05,
+    0.1,
+    0.2,
+    0.5,
+    1.0,
+    2.0,
+    5.0,
+    10.0,
+    20.0,
+    50.0,
+    100.0,
+    200.0,
+    500.0,
+    1000.0,
+  ];
+
+  // PGVの値のリスト (kine)
+  final pgvList = [
+    0.001,
+    0.002,
+    0.005,
+    0.01,
+    0.02,
+    0.05,
+    0.1,
+    0.2,
+    0.5,
+    1.0,
+    2.0,
+    5.0,
+    10.0,
+    20.0,
+    50.0,
+    100.0,
+  ];
+
+  // PGDの値のリスト (cm)
+  final pgdList = [
+    0.0001,
+    0.0002,
+    0.0005,
+    0.001,
+    0.002,
+    0.005,
+    0.01,
+    0.02,
+    0.05,
+    0.1,
+    0.2,
+    0.5,
+    1.0,
+    2.0,
+    5.0,
+    10.0,
+  ];
+
+  // 震度のカラーマップを作成
+  final intensityColorMap = intensityList.map((value) {
+    final p = (value + 3) / 10;
     final hsv = scaleToHsv(p);
-    // 2) HSV -> (r, g, b)
     final rgb = hsvToRgb(hsv[0], hsv[1], hsv[2]);
-    final r = rgb[0];
-    final g = rgb[1];
-    final b = rgb[2];
+    return (
+      value: p,
+      color: Color.fromRGB(rgb[0], rgb[1], rgb[2]),
+    );
+  }).toList();
 
-    // 3) 再度 (r, g, b) -> (h2, s2, v2)
-    final hsv2 = rgbToHsv(r, g, b);
-    // 4) (h2, s2, v2) -> pBack
-    final pBack = hsvToScale(hsv2[0], hsv2[1], hsv2[2]);
-    // 5) diff
-    final diff = pBack - p;
+  // PGAのカラーマップを作成
+  final pgaColorMap = pgaList.map((value) {
+    final p = (math.log(value) / math.ln10 + 2) / 5;
+    final hsv = scaleToHsv(p);
+    final rgb = hsvToRgb(hsv[0], hsv[1], hsv[2]);
+    return (
+      value: p,
+      color: Color.fromRGB(rgb[0], rgb[1], rgb[2]),
+    );
+  }).toList();
 
-    table.add({
-      'p': double.parse(p.toStringAsFixed(2)),
-      'r': r,
-      'g': g,
-      'b': b,
-      'p_back': pBack,
-      'diff': diff,
-      'intensity': 10 * p - 3,
-      'pga': math.pow(10, 5 * p - 2).toDouble(),
-      'pgv': math.pow(10, 5 * p - 3).toDouble(),
-      'pgd': math.pow(10, 5 * p - 4).toDouble(),
+  // PGVのカラーマップを作成
+  final pgvColorMap = pgvList.map((value) {
+    final p = (math.log(value) / math.ln10 + 3) / 5;
+    final hsv = scaleToHsv(p);
+    final rgb = hsvToRgb(hsv[0], hsv[1], hsv[2]);
+    return (
+      value: p,
+      color: Color.fromRGB(rgb[0], rgb[1], rgb[2]),
+    );
+  }).toList();
+
+  // PGDのカラーマップを作成
+  final pgdColorMap = pgdList.map((value) {
+    final p = (math.log(value) / math.ln10 + 4) / 5;
+    final hsv = scaleToHsv(p);
+    final rgb = hsvToRgb(hsv[0], hsv[1], hsv[2]);
+    return (
+      value: p,
+      color: Color.fromRGB(rgb[0], rgb[1], rgb[2]),
+    );
+  }).toList();
+
+  // 震度の補間値を計算
+  for (var i = 0; i < positionSteps; i++) {
+    final p = i / (positionSteps - 1);
+    final value = p * 10 - 3; // -3から7の範囲に変換
+    final color = _calculateColorForPosition(p, intensityColorMap);
+    result['intensity']!.add({
+      'position': p,
+      'value': value,
+      'r': color.red,
+      'g': color.green,
+      'b': color.blue,
+    });
+  }
+
+  // PGAの補間値を計算
+  for (var i = 0; i < positionSteps; i++) {
+    final p = i / (positionSteps - 1);
+    final value = math.pow(10, 5 * p - 2).toDouble();
+    final color = _calculateColorForPosition(p, pgaColorMap);
+    result['pga']!.add({
+      'position': p,
+      'value': value,
+      'r': color.red,
+      'g': color.green,
+      'b': color.blue,
+    });
+  }
+
+  // PGVの補間値を計算
+  for (var i = 0; i < positionSteps; i++) {
+    final p = i / (positionSteps - 1);
+    final value = math.pow(10, 5 * p - 3).toDouble();
+    final color = _calculateColorForPosition(p, pgvColorMap);
+    result['pgv']!.add({
+      'position': p,
+      'value': value,
+      'r': color.red,
+      'g': color.green,
+      'b': color.blue,
+    });
+  }
+
+  // PGDの補間値を計算
+  for (var i = 0; i < positionSteps; i++) {
+    final p = i / (positionSteps - 1);
+    final value = math.pow(10, 5 * p - 4).toDouble();
+    final color = _calculateColorForPosition(p, pgdColorMap);
+    result['pgd']!.add({
+      'position': p,
+      'value': value,
+      'r': color.red,
+      'g': color.green,
+      'b': color.blue,
     });
   }
 
   // JSON文字列化して出力
-  final jsonStr = jsonEncode(table);
+  const encoder = JsonEncoder.withIndent('  ');
+  final jsonStr = encoder.convert(result);
   print(jsonStr);
-
-  // 実行例:
-  //   dart run main.dart
-  // 出力（先頭例）:
-  // [
-  //   {"p":0,"r":0,"g":0,"b":255,"p_back":0,"diff":0},
-  //   {"p":0.01,"r":0,"g":4,"b":255,"p_back":0.01,"diff":0},
-  //   ...
-  // ]
 }

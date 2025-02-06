@@ -1,4 +1,5 @@
 import 'package:eqmonitor/feature/home/component/map/home_map_layer_modal.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_scale.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_status_card.dart';
 import 'package:eqmonitor/feature/map/data/controller/kyoshin_monitor_layer_controller.dart';
 import 'package:eqmonitor/feature/map/data/model/camera_position.dart';
@@ -34,7 +35,25 @@ class HomeMapView extends HookConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const KyoshinMonitorStatusCard(),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const KyoshinMonitorStatusCard(),
+                    const SizedBox(height: 10),
+                    for (final type in KyoshinMonitorScaleType.values)
+                      Row(
+                        children: [
+                          KyoshinMonitorScale(
+                            type: type,
+                            width: 100,
+                            height: 20,
+                          ),
+                          Text(type.name),
+                        ],
+                      ),
+                  ],
+                ),
                 const Column(),
                 MapLayerControllerCard(
                   onLayerButtonTap: () async => HomeMapLayerModal.show(context),
