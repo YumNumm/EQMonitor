@@ -1,6 +1,6 @@
 import 'dart:math' show log, min;
 
-import 'package:eqmonitor/core/map/model/camera_position.dart';
+import 'package:eqmonitor/feature/map/model/camera_position.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

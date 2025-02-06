@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:eqmonitor/core/map/layer/base/i_map_layer.dart';
-import 'package:eqmonitor/core/map/model/camera_position.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
+import 'package:eqmonitor/feature/map/layer/base/i_map_layer.dart';
+import 'package:eqmonitor/feature/map/model/camera_position.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
@@ -160,7 +160,6 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
             final cachedGeoJsonSource = cachedLayer.geoJsonSourceHash;
             final geoJsonSource = layer.geoJsonSourceHash;
             if (cachedGeoJsonSource != geoJsonSource) {
-              log('geoJsonSource changed');
               // update geojson
               await _controller!.setGeoJsonSource(
                 layer.sourceId,

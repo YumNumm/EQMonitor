@@ -1,6 +1,7 @@
-import 'package:eqmonitor/core/map/layer/base/i_map_layer.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
+import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
+import 'package:eqmonitor/feature/map/layer/base/i_map_layer.dart';
 import 'package:flutter/material.dart';
 import 'package:kyoshin_monitor_image_parser/kyoshin_monitor_image_parser.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
@@ -123,7 +124,8 @@ class KyoshinMonitorObservationLayer extends IMapLayer {
         'get',
         'color',
       ],
-      circleStrokeColor: Colors.grey.value.toRadixString(16).padLeft(8, '0'),
+      circleStrokeColor:
+          "#${Colors.grey.hex.toRadixString(16).padLeft(6, '0')}",
       circleStrokeOpacity: [
         'get',
         'strokeOpacity',

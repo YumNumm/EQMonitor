@@ -1,4 +1,4 @@
-import 'package:eqmonitor/core/map/layer/base/i_map_layer.dart';
+import 'package:eqmonitor/feature/map/layer/base/i_map_layer.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'layer_controller.g.dart';
