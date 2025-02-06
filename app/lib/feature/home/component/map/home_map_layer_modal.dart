@@ -1,39 +1,21 @@
 import 'dart:async';
 
+import 'package:eqmonitor/core/component/sheet/app_sheet_route.dart';
+import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_settings_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sheet/route.dart';
-import 'package:sheet/sheet.dart';
 
 class HomeMapLayerModal extends HookConsumerWidget {
   const HomeMapLayerModal({super.key});
 
-  static Future<void> show(BuildContext context) {
-    return Navigator.of(context).push(
-      SheetRoute(
-        fit: SheetFit.loose,
-        initialExtent: 0.6,
-        stops: [0.6, 1],
-        decorationBuilder: (context, child) {
-          return SafeArea(
-            bottom: false,
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(12),
-              ),
-              child: child,
-            ),
-          );
-        },
-        animationCurve: Curves.easeOutExpo,
-        duration: const Duration(milliseconds: 250),
-        builder: (context) => const HomeMapLayerModal(),
-      ),
-    );
-  }
+  static Future<void> show(BuildContext context) => Navigator.of(context).push(
+        AppSheetRoute(
+          builder: (context) => const HomeMapLayerModal(),
+        ),
+      );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -65,14 +47,17 @@ class HomeMapLayerModal extends HookConsumerWidget {
               title: '強震モニタ',
               description: '強震モニタのリアルタイムデータを表示します',
               isEnabled: ref.watch(kyoshinMonitorSettingsProvider).useKmoni,
-              onEnabledChanged: (value) async =>
-                  ref.read(kyoshinMonitorSettingsProvider.notifier).save(
-                        ref.read(kyoshinMonitorSettingsProvider).copyWith(
-                              useKmoni: value,
-                            ),
-                      ),
+              onEnabledChanged: (value) async => lightHapticFunction(
+                () => ref.read(kyoshinMonitorSettingsProvider.notifier).save(
+                      ref.read(kyoshinMonitorSettingsProvider).copyWith(
+                            useKmoni: value,
+                          ),
+                    ),
+              ),
               onTap: ref.watch(kyoshinMonitorSettingsProvider).useKmoni
-                  ? () async => KyoshinMonitorSettingsModal.show(context)
+                  ? () async => selectionHapticFunction(
+                        () async => KyoshinMonitorSettingsModal.show(context),
+                      )
                   : null,
             ),
           ),
