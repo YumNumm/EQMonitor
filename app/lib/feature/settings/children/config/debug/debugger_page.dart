@@ -4,7 +4,6 @@ import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provi
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/env.dart';
 import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
-import 'package:eqmonitor/feature/home/features/eew_settings/eew_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -38,8 +37,6 @@ class _DebugWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
-    final eewSettings = ref.watch(eewSettingsNotifierProvider);
-
     return Card(
       margin: const EdgeInsets.all(4),
       elevation: 1,
@@ -61,20 +58,6 @@ class _DebugWidget extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SheetHeader(title: 'デバッグメニュー'),
-            SwitchListTile.adaptive(
-              value: eewSettings.showCalculatedRegionIntensity,
-              onChanged: (value) async => ref
-                  .read(eewSettingsNotifierProvider.notifier)
-                  .setShowCalculatedRegionIntensity(value: value),
-              title: const Text('距離減衰式による予想震度(Region)'),
-            ),
-            SwitchListTile.adaptive(
-              value: eewSettings.showCalculatedCityIntensity,
-              onChanged: (value) async => ref
-                  .read(eewSettingsNotifierProvider.notifier)
-                  .setShowCalculatedCityIntensity(value: value),
-              title: const Text('距離減衰式による予想震度(City)'),
-            ),
             ListTile(
               title: const Text('Flavor'),
               leading: const Icon(Icons.flag),
