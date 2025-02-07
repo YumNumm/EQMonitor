@@ -5,7 +5,8 @@ concurrency:
 
 on:
   push:
-    branches: '*'
+    branches:
+      - '*'
   workflow_dispatch:
     inputs:
       ios:
