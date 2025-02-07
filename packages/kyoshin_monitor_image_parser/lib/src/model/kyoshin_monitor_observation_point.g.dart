@@ -44,8 +44,9 @@ _$KyoshinMonitorObservationAnalyzedPointImpl
                   (v) => KyoshinMonitorObservationPoint.fromJson(
                       v as Map<String, dynamic>)),
               scale: $checkedConvert('scale', (v) => (v as num).toDouble()),
-              color: $checkedConvert(
-                  'color', (v) => _colorFromJson(v as Map<String, dynamic>)),
+              r: $checkedConvert('r', (v) => (v as num).toInt()),
+              g: $checkedConvert('g', (v) => (v as num).toInt()),
+              b: $checkedConvert('b', (v) => (v as num).toInt()),
             );
             return val;
           },
@@ -56,5 +57,7 @@ Map<String, dynamic> _$$KyoshinMonitorObservationAnalyzedPointImplToJson(
     <String, dynamic>{
       'point': instance.point,
       'scale': instance.scale,
-      'color': _colorToJson(instance.color),
+      'r': instance.r,
+      'g': instance.g,
+      'b': instance.b,
     };

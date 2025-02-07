@@ -1,72 +1,104 @@
-あなたは高度な問題解決能力を持つAIアシスタントです。
+// <https://github.com/PatrickJS/awesome-cursorrules/tree/main/rules/flutter-app-expert-cursorrules-prompt-file>
+// (CC0 1.0 Universal License)
+// Flutter App Expert .cursorrules
 
-このアプリケーションは、地震情報を提供するサービスです。
+// Flexibility Notice
+// Note: This is a recommended project structure, but be flexible and adapt to existing project structures.
+// Do not enforce these structural patterns if the project follows a different organization.
+// Focus on maintaining consistency with the existing project architecture while applying Flutter best practices.
 
-以下の指示に従って、効率的かつ正確にタスクを遂行してください。
+// Flutter Best Practices
+const flutterBestPractices = [
+    "Adapt to existing project architecture while maintaining clean code principles",
+    "Use Flutter 3.x features and Material 3 design",
+    "Follow proper state management principles",
+    "Use proper dependency injection",
+    "Implement proper error handling",
+    "Follow platform-specific design guidelines",
+    "Use proper localization techniques",
+    "When implementing a dialog, add show function to the dialog",
+    "Use `.withValues(alpha: 0.8)` to set the opacity of the color",
+];
 
-まず、ユーザーから受け取った指示を確認します：
+const response = [
+  "Always respond in Japanese",
+];
 
-<指示>
-{{instructions}}
-</指示>
+// Project Structure
+// Note: This is a reference structure. Adapt to the project's existing organization
+const projectStructure = `
+app/
+  lib/
+    core/
+      extension/
+      foundation/
+      hook/
+      provider/
+      theme/
+      utils/
+    feature/
+      [feature_name]/
+        data/
+          api/
+          data_source/
+          model/
+          notifier/
+          provider/
+        ui/
+          components/
+          page/
+    main.dart
+    app.dart
+`;
 
-この指示を元に、以下のプロセスに従って作業を進めてください：
+// Coding Guidelines
+const codingGuidelines = `
 
-1. 指示の分析と計画
-<タスク分析>
-- 主要なタスクを簡潔に要約してください。
-- 重要な要件と制約を特定してください。
-- 潜在的な課題をリストアップしてください。
-- タスク実行のための具体的なステップを詳細に列挙してください。
-- それらのステップの最適な実行順序を決定してください。
-- 必要となる可能性のあるツールやリソースを考慮してください。
+1. Use proper null safety practices
+2. Implement proper error handling with Either type
+3. Follow proper naming conventions
+4. Use proper widget composition
+5. Implement proper routing using GoRouter
+6. Use proper form validation
+7. Follow proper state management with BLoC
+8. Implement proper dependency injection using GetIt
+9. Use proper asset management
+10. Follow proper testing practices
+`;
 
-このセクションは、後続のプロセス全体を導くものなので、十分に詳細かつ包括的な分析を行ってください。必要に応じて、長くなっても構いません。
-</タスク分析>
+// Widget Guidelines
+const widgetGuidelines = `
 
-2. タスクの実行
-- 特定したステップを一つずつ実行してください。
-- 各ステップの完了後、簡潔に進捗を報告してください。
-- 実行中に問題や疑問が生じた場合は、即座に報告し、対応策を提案してください。
+1. Keep widgets small and focused
+2. Use const constructors when possible
+3. Implement proper widget keys
+4. Follow proper layout principles
+5. Use proper widget lifecycle methods
+6. Implement proper error boundaries
+7. Use proper performance optimization techniques
+8. Follow proper accessibility guidelines
+`;
 
-3. 品質管理
-- 各タスクの実行結果を迅速に検証してください。
-- エラーや不整合を発見した場合は、直ちに修正アクションを実施してください。
-- コマンドを実行する場合は、必ず標準出力を確認し、結果を報告してください。
+// Performance Guidelines
+const performanceGuidelines = `
 
-4. 最終確認
-- すべてのタスクが完了したら、成果物全体を評価してください。
-- 当初の指示内容との整合性を確認し、必要に応じて調整を行ってください。
+1. Use proper image caching
+2. Implement proper list view optimization
+3. Use proper build methods optimization
+4. Follow proper state management patterns
+5. Implement proper memory management
+6. Use proper platform channels when needed
+7. Follow proper compilation optimization techniques
+`;
 
-5. 結果報告
-以下のフォーマットで最終的な結果を報告してください：
+// Testing Guidelines
+const testingTestingGuidelines = `
 
-```markdown
-# 実行結果報告
-
-## 概要
-[全体の要約を簡潔に記述]
-
-## 実行ステップ
-1. [ステップ1の説明と結果]
-2. [ステップ2の説明と結果]
-...
-
-## 最終成果物
-[成果物の詳細や、該当する場合はリンクなど]
-
-## 注意点・改善提案
-- [気づいた点や改善提案があれば記述]
-```
-
-重要な注意事項：
-- 不明点がある場合は、作業開始前に必ず確認を取ってください。
-- 重要な判断が必要な場合は、その都度報告し、承認を得てください。
-- 予期せぬ問題が発生した場合は、即座に報告し、対応策を提案してください。
-
-- 回答は常に日本語で行ってください。
-- Dart言語でRiverpod Providerを作成する場合は、以下のルールに従うこと
-  - 常にriverpod_generatorを使用してコードを生成すること
-  - XXXProviderに対するrefは Ref です
-
-このプロセスに従って、効率的かつ正確にタスクを遂行してください。
+1. Write unit tests for business logic
+2. Implement widget tests for UI components
+3. Use integration tests for feature testing
+4. Implement proper mocking strategies
+5. Use proper test coverage tools
+6. Follow proper test naming conventions
+7. Implement proper CI/CD testing
+`;

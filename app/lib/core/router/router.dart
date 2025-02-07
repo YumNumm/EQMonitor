@@ -15,8 +15,8 @@ import 'package:eqmonitor/feature/eew/ui/screen/eew_details_by_event_id_page.dar
 import 'package:eqmonitor/feature/home/view/home_view.dart';
 import 'package:eqmonitor/feature/information_history/page/information_history_page.dart';
 import 'package:eqmonitor/feature/information_history_details/information_history_details_page.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_cautionary_note_page.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_settings_page.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_observation_network_page.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/about_this_app.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/license_page.dart';
 import 'package:eqmonitor/feature/settings/children/application_info/privacy_policy_screen.dart';
@@ -25,6 +25,7 @@ import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_se
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/websocket_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/debugger_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/color_scheme/color_scheme_config_page.dart';
 import 'package:eqmonitor/feature/settings/features/display_settings/ui/display_settings.dart';
@@ -161,9 +162,6 @@ class InformationHistoryDetailsRoute extends GoRouteData {
     TypedGoRoute<EewDetailsByEventIdRoute>(
       path: 'eew-details-by-event-id/:eventId',
     ),
-    TypedGoRoute<KyoshinMonitorCautionaryNoteModalRoute>(
-      path: 'kyoshin-monitor-cautionary-note-modal',
-    ),
   ],
 )
 class HomeRoute extends GoRouteData {
@@ -206,6 +204,14 @@ class TalkerRoute extends GoRouteData {
         ),
       ],
     ),
+    TypedGoRoute<KyoshinMonitorAboutRoute>(
+      path: 'kyoshin-monitor-about',
+      routes: [
+        TypedGoRoute<KyoshinMonitorAboutObservationNetworkRoute>(
+          path: 'observation-network',
+        ),
+      ],
+    ),
     TypedGoRoute<TermOfServiceRoute>(
       path: 'term-of-service',
     ),
@@ -229,14 +235,6 @@ class TalkerRoute extends GoRouteData {
         ),
       ],
     ),
-    TypedGoRoute<KyoshinMonitorSettingsRoute>(
-      path: 'kyoshin-monitor-settings',
-      routes: [
-        TypedGoRoute<KyoshinMonitorSettingsModalRoute>(
-          path: 'modal',
-        ),
-      ],
-    ),
     TypedGoRoute<DebuggerRoute>(
       path: 'debugger',
       routes: [
@@ -248,6 +246,9 @@ class TalkerRoute extends GoRouteData {
         ),
         TypedGoRoute<DebugKyoshinMonitorRoute>(
           path: 'kyoshin-monitor',
+        ),
+        TypedGoRoute<PlaygroundRoute>(
+          path: 'playground',
         ),
       ],
     ),
