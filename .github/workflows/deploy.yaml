@@ -281,10 +281,11 @@ jobs:
           path: build
 
       - name: Upload to Google Play
-        uses: r0adkll/upload-google-play@v1
+        uses: r0adkll/upload-google-play@935ef9c68bb393a8e6116b1575626a7f5be3a7fb #v1.1.3
         with:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
           packageName: net.yumnumm.eqmonitor
           releaseFiles: build/app-release.aab
           track: internal
           status: inProgress
+          userFraction: 1.0
