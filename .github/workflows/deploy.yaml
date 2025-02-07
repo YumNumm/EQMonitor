@@ -287,5 +287,4 @@ jobs:
           packageName: net.yumnumm.eqmonitor
           releaseFiles: build/app-release.aab
           track: internal
-          status: inProgress
-          userFraction: 1.0
+          status: completed
