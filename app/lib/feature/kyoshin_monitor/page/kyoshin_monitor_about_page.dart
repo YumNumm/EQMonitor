@@ -19,7 +19,6 @@ class KyoshinMonitorAboutPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
 
     return Scaffold(
@@ -40,7 +39,7 @@ class KyoshinMonitorAboutPage extends HookConsumerWidget {
                   style: textTheme.bodyMedium,
                 ),
                 _SectionTitle(
-                  title: '表示されるデータ',
+                  title: '表示可能なデータ',
                   style: textTheme.titleMedium,
                 ),
                 const _InfoCard(
@@ -62,7 +61,7 @@ class KyoshinMonitorAboutPage extends HookConsumerWidget {
                       description: '揺れの変位の1秒ごとの最大値を示します。',
                     ),
                     _InfoItem(
-                      title: '速度応答(0.125 ~ 4.0Hz)',
+                      title: '速度応答(0.125, 0.25, 0.5, 1, 2, 4Hz)',
                       description: '各周波数成分についての速度応答波形(減衰5%)の1秒毎の最大値を表示します。',
                     ),
                   ],
@@ -175,7 +174,7 @@ class _InfoCard extends StatelessWidget {
                 child: Icon(
                   Icons.warning_rounded,
                   color: colorScheme.onErrorContainer.withValues(alpha: 0.2),
-                  size: 180,
+                  size: 176,
                 ),
               ),
             ),

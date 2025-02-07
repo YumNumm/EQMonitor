@@ -5,10 +5,7 @@ concurrency:
 
 on:
   push:
-    branches:
-      - main
-      - develop
-      - 'feature/kyoshin-monitor-replay'
+    branches: '*'
   workflow_dispatch:
     inputs:
       ios:
