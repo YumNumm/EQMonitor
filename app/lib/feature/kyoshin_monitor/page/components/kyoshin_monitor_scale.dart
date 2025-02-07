@@ -3,6 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 /// 強震モニタのカラースケールを表示するWidget
+///
+/// [type] スケールの種類（震度、PGA、PGV、PGD）
+/// [width] スケールの幅
+/// [height] スケールの高さ
+/// [tickInterval] 目盛りの間隔（震度の場合は1固定）
 class KyoshinMonitorScale extends StatelessWidget {
   const KyoshinMonitorScale({
     required this.type,
@@ -15,41 +20,18 @@ class KyoshinMonitorScale extends StatelessWidget {
   final KyoshinMonitorScaleType type;
   final double width;
   final double height;
-
-  /// 目盛りの刻み数（震度の場合は1固定）
   final int tickInterval;
 
-  /// 対数スケールでの正規化を行う
-  double _mapToRange(double x, double minX, double maxX) {
-    return (log(x) / ln10 - log(minX) / ln10) /
-        (log(maxX) / ln10 - log(minX) / ln10);
-  }
-
+  /// カラーストップの計算
+  ///
+  /// 各値に対応する位置と色を計算します
   List<({double position, double value, Color color})> get colorStops {
-    final values = switch (type) {
-      KyoshinMonitorScaleType.intensity => _intensityValues,
-      KyoshinMonitorScaleType.pga => _pgaValues,
-      KyoshinMonitorScaleType.pgv => _pgvValues,
-      KyoshinMonitorScaleType.pgd => _pgdValues,
-    };
-
-    // 最小値と最大値を取得
-    final (minValue, maxValue) = switch (type) {
-      KyoshinMonitorScaleType.intensity => (-3.0, 7.0),
-      KyoshinMonitorScaleType.pga => (0.01, 1000.0),
-      KyoshinMonitorScaleType.pgv => (0.001, 100.0),
-      KyoshinMonitorScaleType.pgd => (0.0001, 10.0),
-    };
-
+    final values = type.scaleValues;
     return List.generate(
       values.length,
       (i) {
-        final value = values[i].toDouble();
-        // 対数スケールでの正規化
-        final position = type == KyoshinMonitorScaleType.intensity
-            ? (value - minValue) / (maxValue - minValue)
-            : _mapToRange(value, minValue, maxValue);
-        // positionに最も近い色を選択
+        final value = values[i];
+        final position = type.convertToPosition(value);
         final colorIndex = (position * (_colors.length - 1)).round();
         return (
           position: position,
@@ -72,6 +54,10 @@ class KyoshinMonitorScale extends StatelessWidget {
     );
   }
 
+  /// カラーテーブル
+  ///
+  /// 強震モニタの色テーブル
+  /// (position, Color)のタプルのリスト
   static const _colors = [
     (0.0, Color(0xFF0008FF)),
     (0.02, Color(0xFF0014FF)),
@@ -125,93 +111,102 @@ class KyoshinMonitorScale extends StatelessWidget {
     (0.98, Color(0xFFBB0000)),
     (1.0, Color(0xFFAC0000)),
   ];
-
-  // 震度の値 (-3~7)
-  static const _intensityValues = [
-    -3,
-    -2,
-    -1,
-    0,
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-  ];
-
-  // PGAの値
-  static const _pgaValues = [
-    0.01,
-    0.02,
-    0.05,
-    0.1,
-    0.2,
-    0.5,
-    1.0,
-    2.0,
-    5.0,
-    10.0,
-    20.0,
-    50.0,
-    100.0,
-    200.0,
-    500.0,
-    1000.0,
-  ];
-
-  // PGVの値
-  static const _pgvValues = [
-    0.001,
-    0.002,
-    0.005,
-    0.01,
-    0.02,
-    0.05,
-    0.1,
-    0.2,
-    0.5,
-    1.0,
-    2.0,
-    5.0,
-    10.0,
-    20.0,
-    50.0,
-    100.0,
-  ];
-
-  // PGDの値
-  static const _pgdValues = [
-    0.0001,
-    0.0002,
-    0.0005,
-    0.001,
-    0.002,
-    0.005,
-    0.01,
-    0.02,
-    0.05,
-    0.1,
-    0.2,
-    0.5,
-    1.0,
-    2.0,
-    5.0,
-    10.0,
-  ];
 }
 
 /// カラースケールの種類
 enum KyoshinMonitorScaleType {
+  /// 震度
   intensity,
+
+  /// 最大加速度（PGA: Peak Ground Acceleration）
   pga,
+
+  /// 最大速度（PGV: Peak Ground Velocity）
   pgv,
+
+  /// 最大変位（PGD: Peak Ground Displacement）
   pgd,
+  ;
+
+  /// 値を0-1の範囲に正規化する
+  ///
+  /// [value] 正規化する値
+  /// returns 0-1の範囲に正規化された値
+  double convertToPosition(double value) {
+    if (this == KyoshinMonitorScaleType.intensity) {
+      return (value - minValue) / (maxValue - minValue);
+    }
+    return (log(value) / ln10 - log(minValue) / ln10) /
+        (log(maxValue) / ln10 - log(minValue) / ln10);
+  }
+
+  /// 単位を取得
+  String get unit => switch (this) {
+        KyoshinMonitorScaleType.intensity => '',
+        KyoshinMonitorScaleType.pga => 'gal',
+        KyoshinMonitorScaleType.pgv => 'kine',
+        KyoshinMonitorScaleType.pgd => 'cm',
+      };
+
+  /// タイトルを取得
+  String get title => switch (this) {
+        KyoshinMonitorScaleType.intensity => '震度',
+        KyoshinMonitorScaleType.pga => '最大加速度',
+        KyoshinMonitorScaleType.pgv => '最大速度',
+        KyoshinMonitorScaleType.pgd => '最大変位',
+      };
+
+  /// 最小値を取得
+  double get minValue => switch (this) {
+        KyoshinMonitorScaleType.intensity => -3.0,
+        KyoshinMonitorScaleType.pga => 0.01,
+        KyoshinMonitorScaleType.pgv => 0.001,
+        KyoshinMonitorScaleType.pgd => 0.0001,
+      };
+
+  /// 最大値を取得
+  double get maxValue => switch (this) {
+        KyoshinMonitorScaleType.intensity => 7.0,
+        KyoshinMonitorScaleType.pga => 1000.0,
+        KyoshinMonitorScaleType.pgv => 100.0,
+        KyoshinMonitorScaleType.pgd => 10.0,
+      };
+
+  /// スケール値のリストを取得
+  List<double> get scaleValues => switch (this) {
+        KyoshinMonitorScaleType.intensity =>
+          List.generate(11, (i) => i - 3).map((e) => e.toDouble()).toList(),
+        KyoshinMonitorScaleType.pga => _generateLogValues(0.01, 1000),
+        KyoshinMonitorScaleType.pgv => _generateLogValues(0.001, 100),
+        KyoshinMonitorScaleType.pgd => _generateLogValues(0.0001, 10),
+      };
+
+  /// 対数スケールの値を生成
+  List<double> _generateLogValues(double min, double max) {
+    return [
+      min,
+      min * 2,
+      min * 5,
+      min * 10,
+      min * 20,
+      min * 50,
+      min * 100,
+      min * 200,
+      min * 500,
+      min * 1000,
+      min * 2000,
+      min * 5000,
+      min * 10000,
+      min * 20000,
+      min * 50000,
+      max,
+    ];
+  }
 }
 
+/// カラースケールの描画を行うCustomPainter
 class _KyoshinMonitorScalePainter extends CustomPainter {
-  _KyoshinMonitorScalePainter({
+  const _KyoshinMonitorScalePainter({
     required this.type,
     required this.colorStops,
     required this.tickInterval,
@@ -247,7 +242,7 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke;
 
-    // 目盛りを描画する間隔を決定
+    // 目盛りを描画する間隔を決定（震度は1固定）
     final interval =
         type == KyoshinMonitorScaleType.intensity ? 1 : tickInterval;
 
@@ -259,12 +254,7 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
     for (var i = 0; i < colorStops.length; i += interval) {
       final stop = colorStops[i];
       final x = stop.position * size.width;
-      final text = switch (type) {
-        KyoshinMonitorScaleType.intensity => stop.value.toStringAsFixed(0),
-        KyoshinMonitorScaleType.pga => _formatValue(stop.value),
-        KyoshinMonitorScaleType.pgv => _formatValue(stop.value),
-        KyoshinMonitorScaleType.pgd => _formatValue(stop.value),
-      };
+      final text = _formatValue(stop.value);
 
       textPainter
         ..text = TextSpan(
@@ -286,7 +276,7 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
       previousTextRight = textRight;
     }
 
-    // 重なりがある場合は右上に向かって斜めに表示
+    // 目盛りの描画
     for (var i = 0; i < colorStops.length; i += interval) {
       final stop = colorStops[i];
       final x = stop.position * size.width;
@@ -299,12 +289,7 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
       );
 
       // 値のテキストを描画
-      final text = switch (type) {
-        KyoshinMonitorScaleType.intensity => stop.value.toStringAsFixed(0),
-        KyoshinMonitorScaleType.pga => _formatValue(stop.value),
-        KyoshinMonitorScaleType.pgv => _formatValue(stop.value),
-        KyoshinMonitorScaleType.pgd => _formatValue(stop.value),
-      };
+      final text = _formatValue(stop.value);
 
       textPainter
         ..text = TextSpan(
@@ -319,30 +304,30 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
       if (isOverlapping) {
         // 文字が重なる場合は右上に向かって斜めに表示
         canvas.save();
-        // 位置を少し上に調整
         canvas.translate(x - textPainter.width / 2, size.height + 8);
-        canvas.rotate(-0.8); // より大きな角度で回転（約-45度）
-        textPainter.paint(
-          canvas,
-          Offset.zero, // 回転の基準点を変更したので、オフセットは0に
-        );
+        canvas.rotate(-0.8);
+        textPainter.paint(canvas, Offset.zero);
         canvas.restore();
       } else {
         // 重ならない場合は通常通り表示
         textPainter.paint(
           canvas,
-          Offset(
-            x - textPainter.width / 2,
-            size.height + 6,
-          ),
+          Offset(x - textPainter.width / 2, size.height + 6),
         );
       }
     }
   }
 
   /// 値のフォーマット
+  ///
+  /// 値の大きさに応じて小数点以下の桁数を調整します
+  /// - 1以上: 整数
+  /// - 0.1以上: 小数点1桁
+  /// - 0.01以上: 小数点2桁
+  /// - 0.001以上: 小数点3桁
+  /// - それ以下: 小数点4桁
   String _formatValue(double value) {
-    if (value >= 1) {
+    if (value >= 1 || value <= 0) {
       return value.toStringAsFixed(0);
     } else if (value >= 0.1) {
       return value.toStringAsFixed(1);
@@ -356,62 +341,6 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-/// カラースケールを表示するWidget（単位付き）
-class KyoshinMonitorScaleWithUnit extends StatelessWidget {
-  const KyoshinMonitorScaleWithUnit({
-    required this.type,
-    required this.width,
-    required this.height,
-    this.tickInterval = 4,
-    super.key,
-  });
-
-  final KyoshinMonitorScaleType type;
-  final double width;
-  final double height;
-
-  /// 目盛りの刻み数（震度の場合は1固定）
-  final int tickInterval;
-
-  String get _unit => switch (type) {
-        KyoshinMonitorScaleType.intensity => '',
-        KyoshinMonitorScaleType.pga => 'gal',
-        KyoshinMonitorScaleType.pgv => 'kine',
-        KyoshinMonitorScaleType.pgd => 'cm',
-      };
-
-  String get _title => switch (type) {
-        KyoshinMonitorScaleType.intensity => '震度',
-        KyoshinMonitorScaleType.pga => '最大加速度',
-        KyoshinMonitorScaleType.pgv => '最大速度',
-        KyoshinMonitorScaleType.pgd => '最大変位',
-      };
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '$_title${_unit.isNotEmpty ? ' ($_unit)' : ''}',
-          style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 4),
-        KyoshinMonitorScale(
-          type: type,
-          width: width,
-          height: height,
-          tickInterval: tickInterval,
-        ),
-        const SizedBox(height: 16),
-      ],
-    );
-  }
+  bool shouldRepaint(covariant _KyoshinMonitorScalePainter oldDelegate) =>
+      false;
 }
