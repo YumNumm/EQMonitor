@@ -16,9 +16,6 @@ class KyoshinMonitorSettingsModel with _$KyoshinMonitorSettingsModel {
     /// 強震モニタを使用するかどうか
     @Default(true) bool useKmoni,
 
-    /// 現在地のマーカーを表示するかどうか
-    @Default(false) bool showCurrentLocationMarker,
-
     /// 強震モニタ観測点のマーカーの種類
     @Default(KyoshinMonitorMarkerType.onlyEew)
     KyoshinMonitorMarkerType kmoniMarkerType,

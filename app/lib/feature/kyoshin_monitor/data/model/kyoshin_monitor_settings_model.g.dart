@@ -19,8 +19,6 @@ _$KyoshinMonitorSettingsModelImpl _$$KyoshinMonitorSettingsModelImplFromJson(
               'min_realtime_shindo', (v) => (v as num?)?.toDouble() ?? null),
           showScale: $checkedConvert('show_scale', (v) => v as bool? ?? true),
           useKmoni: $checkedConvert('use_kmoni', (v) => v as bool? ?? true),
-          showCurrentLocationMarker: $checkedConvert(
-              'show_current_location_marker', (v) => v as bool? ?? false),
           kmoniMarkerType: $checkedConvert(
               'kmoni_marker_type',
               (v) =>
@@ -49,7 +47,6 @@ _$KyoshinMonitorSettingsModelImpl _$$KyoshinMonitorSettingsModelImplFromJson(
         'minRealtimeShindo': 'min_realtime_shindo',
         'showScale': 'show_scale',
         'useKmoni': 'use_kmoni',
-        'showCurrentLocationMarker': 'show_current_location_marker',
         'kmoniMarkerType': 'kmoni_marker_type',
         'realtimeDataType': 'realtime_data_type',
         'realtimeLayer': 'realtime_layer'
@@ -62,7 +59,6 @@ Map<String, dynamic> _$$KyoshinMonitorSettingsModelImplToJson(
       'min_realtime_shindo': instance.minRealtimeShindo,
       'show_scale': instance.showScale,
       'use_kmoni': instance.useKmoni,
-      'show_current_location_marker': instance.showCurrentLocationMarker,
       'kmoni_marker_type':
           _$KyoshinMonitorMarkerTypeEnumMap[instance.kmoniMarkerType]!,
       'realtime_data_type':

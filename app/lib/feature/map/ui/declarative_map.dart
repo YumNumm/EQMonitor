@@ -19,6 +19,8 @@ class DeclarativeMap extends StatefulHookConsumerWidget {
     this.onCameraIdle,
     this.layers = const [],
     this.myLocationEnabled = false,
+    this.myLocationRenderMode = MyLocationRenderMode.normal,
+    this.myLocationTrackingMode = MyLocationTrackingMode.none,
     this.compassEnabled = true,
     this.rotateGesturesEnabled = true,
     this.scrollGesturesEnabled = true,
@@ -43,6 +45,12 @@ class DeclarativeMap extends StatefulHookConsumerWidget {
 
   /// 現在位置の表示
   final bool myLocationEnabled;
+
+  /// 現在位置の表示モード
+  final MyLocationRenderMode myLocationRenderMode;
+
+  /// 現在位置の追跡モード
+  final MyLocationTrackingMode myLocationTrackingMode;
 
   /// コンパスの表示
   final bool compassEnabled;
@@ -99,6 +107,8 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
       scrollGesturesEnabled: widget.scrollGesturesEnabled,
       zoomGesturesEnabled: widget.zoomGesturesEnabled,
       doubleClickZoomEnabled: widget.doubleClickZoomEnabled,
+      myLocationRenderMode: widget.myLocationRenderMode,
+      myLocationTrackingMode: widget.myLocationTrackingMode,
     );
   }
 
@@ -135,6 +145,7 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
             // style check
             final cachedLayerPropertiesHash = cachedLayer.layerPropertiesHash;
             final layerPropertiesHash = layer.layerPropertiesHash;
+            log('cached $cachedLayerPropertiesHash layer $layerPropertiesHash');
             if (cachedLayerPropertiesHash != layerPropertiesHash) {
               log('layer properties changed');
               await controller.removeLayer(layer.id);
