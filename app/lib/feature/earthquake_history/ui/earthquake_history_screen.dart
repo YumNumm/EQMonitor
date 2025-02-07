@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eqmonitor/core/component/chip/depth_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/intensity_filter_chip.dart';
 import 'package:eqmonitor/core/component/chip/magnitude_filter_chip.dart';
@@ -20,6 +22,28 @@ class EarthquakeHistoryScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final parameter = useState(const EarthquakeHistoryParameter());
     final state = ref.watch(earthquakeHistoryNotifierProvider(parameter.value));
+
+    useEffect(
+      () {
+        unawaited(
+          WidgetsBinding.instance.endOfFrame.then(
+            (_) async {
+              if (parameter.value == const EarthquakeHistoryParameter() &&
+                  state.valueOrNull?.$1.length == 5) {
+                await ref
+                    .read(
+                      earthquakeHistoryNotifierProvider(parameter.value)
+                          .notifier,
+                    )
+                    .fetchNextData();
+              }
+            },
+          ),
+        );
+        return null;
+      },
+      [parameter.value],
+    );
 
     return Scaffold(
       appBar: AppBar(

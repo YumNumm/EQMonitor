@@ -24,11 +24,33 @@ typedef JmaParameterState = ({
 )
 class JmaParameter extends _$JmaParameter {
   @override
-  Future<JmaParameterState> build() async {
-    return (
-      earthquake: await getEarthquake(),
-      tsunami: await getTsunami(),
-    );
+  Stream<JmaParameterState> build() async* {
+    final streamController = StreamController<JmaParameterState>();
+    ref.onDispose(streamController.close);
+
+    final earthquakeStream = getEarthquake();
+    final tsunamiStream = getTsunami();
+
+    EarthquakeParameter? earthquake;
+    TsunamiParameter? tsunami;
+
+    void sendIfNotNull() {
+      if (earthquake != null && tsunami != null) {
+        streamController.add((earthquake: earthquake!, tsunami: tsunami!));
+      }
+    }
+
+    earthquakeStream.listen((value) {
+      earthquake = value;
+      sendIfNotNull();
+    });
+
+    tsunamiStream.listen((value) {
+      tsunami = value;
+      sendIfNotNull();
+    });
+
+    yield* streamController.stream;
   }
 
   static const _tsunamiKey = 'jma_parameter_tsunami';
@@ -36,7 +58,13 @@ class JmaParameter extends _$JmaParameter {
   static const _earthquakeFileName = 'earthquake_param.pb';
   static const _tsunamiFileName = 'tsunami_param.pb';
 
-  Future<EarthquakeParameter> getEarthquake() async {
+  Stream<EarthquakeParameter> getEarthquake() async* {
+    // ローカルにあったらとりあえず先に返す
+    final localResult = await _getEarthquakeFromLocal();
+    if (localResult case Success(:final value)) {
+      yield value;
+    }
+
     final cachedEtag = ref.read(earthquakeParameterEtagProvider);
     // check Etag
     final currentEtag = await ref
@@ -44,11 +72,9 @@ class JmaParameter extends _$JmaParameter {
         .getEarthquakeParameterHead();
     talker.log('Earthquake cachedEtag: $cachedEtag, currentEtag: $currentEtag');
     if (cachedEtag != null && cachedEtag == currentEtag && !kIsWeb) {
-      final localResult = await _getEarthquakeFromLocal();
-      if (localResult case Success(:final value)) {
-        return value;
-      }
+      return;
     }
+    // ETagが一致しない場合はAPIから再取得する
     final result =
         await ref.watch(jmaParameterApiClientProvider).getEarthquakeParameter();
     if (!kIsWeb) {
@@ -58,7 +84,7 @@ class JmaParameter extends _$JmaParameter {
     if (etag != null) {
       await ref.read(earthquakeParameterEtagProvider.notifier).set(etag);
     }
-    return result.parameter;
+    yield result.parameter;
   }
 
   Future<Result<EarthquakeParameter, Exception>>
@@ -83,7 +109,12 @@ class JmaParameter extends _$JmaParameter {
     await file.writeAsBytes(earthquake.writeToBuffer());
   }
 
-  Future<TsunamiParameter> getTsunami() async {
+  Stream<TsunamiParameter> getTsunami() async* {
+    final localResult = await _getTsunamiFromLocal();
+    if (localResult case Success(:final value)) {
+      yield value;
+    }
+
     final prefs = ref.watch(sharedPreferencesProvider);
     final cachedEtag = prefs.getString(_tsunamiKey);
     // check Etag
@@ -92,11 +123,9 @@ class JmaParameter extends _$JmaParameter {
         .getTsunamiParameterHeadEtag();
     talker.log('Tsunami cachedEtag: $cachedEtag, currentEtag: $currentEtag');
     if (cachedEtag != null && cachedEtag == currentEtag && !kIsWeb) {
-      final localResult = await _getTsunamiFromLocal();
-      if (localResult case Success(:final value)) {
-        return value;
-      }
+      return;
     }
+    // ETagが一致しない場合はAPIから再取得する
     final result =
         await ref.watch(jmaParameterApiClientProvider).getTsunamiParameter();
     if (!kIsWeb) {
@@ -106,7 +135,7 @@ class JmaParameter extends _$JmaParameter {
     if (etag != null) {
       await prefs.setString(_tsunamiKey, etag);
     }
-    return result.parameter;
+    yield result.parameter;
   }
 
   Future<Result<TsunamiParameter, Exception>> _getTsunamiFromLocal() async {
