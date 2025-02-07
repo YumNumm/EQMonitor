@@ -24,5 +24,22 @@ final themeModeNotifierProvider =
 );
 
 typedef _$ThemeModeNotifier = Notifier<ThemeMode>;
+String _$brightnessNotifierHash() =>
+    r'88e015eda55ab1620f249131f4b6e002121cb237';
+
+/// See also [BrightnessNotifier].
+@ProviderFor(BrightnessNotifier)
+final brightnessNotifierProvider =
+    NotifierProvider<BrightnessNotifier, ui.Brightness>.internal(
+  BrightnessNotifier.new,
+  name: r'brightnessNotifierProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$brightnessNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$BrightnessNotifier = Notifier<ui.Brightness>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

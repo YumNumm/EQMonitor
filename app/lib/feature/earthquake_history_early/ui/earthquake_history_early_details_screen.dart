@@ -7,7 +7,6 @@ import 'package:eqmonitor/core/component/sheet/basic_modal_sheet.dart';
 import 'package:eqmonitor/core/component/sheet/sheet_floating_action_buttons.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/data/earthquake_history_early_details_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/components/earthquake_early_hypo_info_widget.dart';
-import 'package:eqmonitor/feature/earthquake_history_early/ui/components/earthquake_early_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -57,14 +56,6 @@ class EarthquakeHistoryEarlyDetailsScreen extends HookConsumerWidget {
       AsyncData(:final value) => Scaffold(
           body: Stack(
             children: [
-              EarthquakeEarlyMapWidget(
-                item: value,
-                showIntensityIcon: true,
-                registerNavigateToHome: (func) {
-                  navigateToHomeFunction.value = func;
-                },
-              ),
-
               IgnorePointer(
                 child: SafeArea(
                   child: Align(
@@ -184,7 +175,6 @@ class _Sheet extends StatelessWidget {
       bottom: false,
       child: BasicModalSheet(
         hasAppBar: false,
-        controller: sheetController,
         children: [
           EarthquakeEarlyHypoInfoWidget(item: item),
         ],

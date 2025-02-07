@@ -223,8 +223,9 @@ mixin _$KyoshinMonitorObservationAnalyzedPoint {
   KyoshinMonitorObservationPoint get point =>
       throw _privateConstructorUsedError;
   double get scale => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: _colorFromJson, toJson: _colorToJson)
-  ColorInt8 get color => throw _privateConstructorUsedError;
+  int get r => throw _privateConstructorUsedError;
+  int get g => throw _privateConstructorUsedError;
+  int get b => throw _privateConstructorUsedError;
 
   /// Serializes this KyoshinMonitorObservationAnalyzedPoint to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -248,8 +249,9 @@ abstract class $KyoshinMonitorObservationAnalyzedPointCopyWith<$Res> {
   $Res call(
       {KyoshinMonitorObservationPoint point,
       double scale,
-      @JsonKey(fromJson: _colorFromJson, toJson: _colorToJson)
-      ColorInt8 color});
+      int r,
+      int g,
+      int b});
 
   $KyoshinMonitorObservationPointCopyWith<$Res> get point;
 }
@@ -272,7 +274,9 @@ class _$KyoshinMonitorObservationAnalyzedPointCopyWithImpl<$Res,
   $Res call({
     Object? point = null,
     Object? scale = null,
-    Object? color = null,
+    Object? r = null,
+    Object? g = null,
+    Object? b = null,
   }) {
     return _then(_value.copyWith(
       point: null == point
@@ -283,10 +287,18 @@ class _$KyoshinMonitorObservationAnalyzedPointCopyWithImpl<$Res,
           ? _value.scale
           : scale // ignore: cast_nullable_to_non_nullable
               as double,
-      color: null == color
-          ? _value.color
-          : color // ignore: cast_nullable_to_non_nullable
-              as ColorInt8,
+      r: null == r
+          ? _value.r
+          : r // ignore: cast_nullable_to_non_nullable
+              as int,
+      g: null == g
+          ? _value.g
+          : g // ignore: cast_nullable_to_non_nullable
+              as int,
+      b: null == b
+          ? _value.b
+          : b // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 
@@ -313,8 +325,9 @@ abstract class _$$KyoshinMonitorObservationAnalyzedPointImplCopyWith<$Res>
   $Res call(
       {KyoshinMonitorObservationPoint point,
       double scale,
-      @JsonKey(fromJson: _colorFromJson, toJson: _colorToJson)
-      ColorInt8 color});
+      int r,
+      int g,
+      int b});
 
   @override
   $KyoshinMonitorObservationPointCopyWith<$Res> get point;
@@ -337,7 +350,9 @@ class __$$KyoshinMonitorObservationAnalyzedPointImplCopyWithImpl<$Res>
   $Res call({
     Object? point = null,
     Object? scale = null,
-    Object? color = null,
+    Object? r = null,
+    Object? g = null,
+    Object? b = null,
   }) {
     return _then(_$KyoshinMonitorObservationAnalyzedPointImpl(
       point: null == point
@@ -348,10 +363,18 @@ class __$$KyoshinMonitorObservationAnalyzedPointImplCopyWithImpl<$Res>
           ? _value.scale
           : scale // ignore: cast_nullable_to_non_nullable
               as double,
-      color: null == color
-          ? _value.color
-          : color // ignore: cast_nullable_to_non_nullable
-              as ColorInt8,
+      r: null == r
+          ? _value.r
+          : r // ignore: cast_nullable_to_non_nullable
+              as int,
+      g: null == g
+          ? _value.g
+          : g // ignore: cast_nullable_to_non_nullable
+              as int,
+      b: null == b
+          ? _value.b
+          : b // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -363,8 +386,9 @@ class _$KyoshinMonitorObservationAnalyzedPointImpl
   const _$KyoshinMonitorObservationAnalyzedPointImpl(
       {required this.point,
       required this.scale,
-      @JsonKey(fromJson: _colorFromJson, toJson: _colorToJson)
-      required this.color})
+      required this.r,
+      required this.g,
+      required this.b})
       : super._();
 
   factory _$KyoshinMonitorObservationAnalyzedPointImpl.fromJson(
@@ -376,12 +400,15 @@ class _$KyoshinMonitorObservationAnalyzedPointImpl
   @override
   final double scale;
   @override
-  @JsonKey(fromJson: _colorFromJson, toJson: _colorToJson)
-  final ColorInt8 color;
+  final int r;
+  @override
+  final int g;
+  @override
+  final int b;
 
   @override
   String toString() {
-    return 'KyoshinMonitorObservationAnalyzedPoint(point: $point, scale: $scale, color: $color)';
+    return 'KyoshinMonitorObservationAnalyzedPoint(point: $point, scale: $scale, r: $r, g: $g, b: $b)';
   }
 
   @override
@@ -391,13 +418,14 @@ class _$KyoshinMonitorObservationAnalyzedPointImpl
             other is _$KyoshinMonitorObservationAnalyzedPointImpl &&
             (identical(other.point, point) || other.point == point) &&
             (identical(other.scale, scale) || other.scale == scale) &&
-            const DeepCollectionEquality().equals(other.color, color));
+            (identical(other.r, r) || other.r == r) &&
+            (identical(other.g, g) || other.g == g) &&
+            (identical(other.b, b) || other.b == b));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, point, scale, const DeepCollectionEquality().hash(color));
+  int get hashCode => Object.hash(runtimeType, point, scale, r, g, b);
 
   /// Create a copy of KyoshinMonitorObservationAnalyzedPoint
   /// with the given fields replaced by the non-null parameter values.
@@ -421,11 +449,11 @@ class _$KyoshinMonitorObservationAnalyzedPointImpl
 abstract class _KyoshinMonitorObservationAnalyzedPoint
     extends KyoshinMonitorObservationAnalyzedPoint {
   const factory _KyoshinMonitorObservationAnalyzedPoint(
-          {required final KyoshinMonitorObservationPoint point,
-          required final double scale,
-          @JsonKey(fromJson: _colorFromJson, toJson: _colorToJson)
-          required final ColorInt8 color}) =
-      _$KyoshinMonitorObservationAnalyzedPointImpl;
+      {required final KyoshinMonitorObservationPoint point,
+      required final double scale,
+      required final int r,
+      required final int g,
+      required final int b}) = _$KyoshinMonitorObservationAnalyzedPointImpl;
   const _KyoshinMonitorObservationAnalyzedPoint._() : super._();
 
   factory _KyoshinMonitorObservationAnalyzedPoint.fromJson(
@@ -437,8 +465,11 @@ abstract class _KyoshinMonitorObservationAnalyzedPoint
   @override
   double get scale;
   @override
-  @JsonKey(fromJson: _colorFromJson, toJson: _colorToJson)
-  ColorInt8 get color;
+  int get r;
+  @override
+  int get g;
+  @override
+  int get b;
 
   /// Create a copy of KyoshinMonitorObservationAnalyzedPoint
   /// with the given fields replaced by the non-null parameter values.

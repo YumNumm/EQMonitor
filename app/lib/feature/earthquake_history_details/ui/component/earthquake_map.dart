@@ -12,8 +12,8 @@ import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_c
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
-import 'package:eqmonitor/core/provider/map/map_style.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
+import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -81,19 +81,6 @@ class EarthquakeMapWidget extends HookConsumerWidget {
     final currentLocationIconRender =
         ref.watch(currentLocationIconRenderProvider);
     final jmaMap = ref.watch(jmaMapProvider).valueOrNull;
-    final mapStyle = ref.watch(mapStyleProvider);
-
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    // ignore: discarded_futures
-    final styleJsonFutureing = useMemoized(
-      () async => mapStyle.getStyle(
-        isDark: isDark,
-        scheme: Theme.of(context).colorScheme,
-      ),
-      [isDark],
-    );
-    final styleJsonFuture = useFuture(styleJsonFutureing);
-    final path = styleJsonFuture.data;
 
     if (earthquakeParams == null ||
         !intensityIconData.isAllRendered() ||
@@ -102,8 +89,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         !lpgmIntensityIconFillData.isAllRendered() ||
         currentLocationIconRender == null ||
         jmaMap == null ||
-        hypocenterIconRender == null ||
-        path == null) {
+        hypocenterIconRender == null) {
       // どれが条件を満たしていないのか表示
       return const Scaffold(
         body: Center(
@@ -345,7 +331,6 @@ class EarthquakeMapWidget extends HookConsumerWidget {
           ),
           zoom: 7,
         ),
-        styleString: path,
         minMaxZoomPreference: MinMaxZoomPreference(0, maxZoomLevel.value),
         onMapCreated: (controller) => mapController.value = controller,
         onStyleLoadedCallback: () async {
