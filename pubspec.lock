@@ -1125,10 +1125,11 @@ packages:
   maplibre_gl:
     dependency: transitive
     description:
-      name: maplibre_gl
-      sha256: ea2fa443e7d5dc18db7f37a0f6f5af40642888c56b81a14441aeddea077adaea
-      url: "https://pub.dev"
-    source: hosted
+      path: maplibre_gl
+      ref: f40da2de85b4c30bb1f17ff647e49dfaa3056f1f
+      resolved-ref: f40da2de85b4c30bb1f17ff647e49dfaa3056f1f
+      url: "https://github.com/YumNumm/flutter-maplibre-gl.git"
+    source: git
     version: "0.20.0"
   maplibre_gl_platform_interface:
     dependency: transitive
@@ -1402,6 +1403,38 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  pointer_interceptor:
+    dependency: transitive
+    description:
+      name: pointer_interceptor
+      sha256: "57210410680379aea8b1b7ed6ae0c3ad349bfd56fe845b8ea934a53344b9d523"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.1+2"
+  pointer_interceptor_ios:
+    dependency: transitive
+    description:
+      name: pointer_interceptor_ios
+      sha256: a6906772b3205b42c44614fcea28f818b1e5fdad73a4ca742a7bd49818d9c917
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.1"
+  pointer_interceptor_platform_interface:
+    dependency: transitive
+    description:
+      name: pointer_interceptor_platform_interface
+      sha256: "0597b0560e14354baeb23f8375cd612e8bd4841bf8306ecb71fcd0bb78552506"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.0+1"
+  pointer_interceptor_web:
+    dependency: transitive
+    description:
+      name: pointer_interceptor_web
+      sha256: "7a7087782110f8c1827170660b09f8aa893e0e9a61431dbbe2ac3fc482e8c044"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.2+1"
   pool:
     dependency: transitive
     description:
@@ -2101,10 +2134,10 @@ packages:
     dependency: transitive
     description:
       name: yumemi_lints
-      sha256: "5f88e2e5c052133631471b630bc8ef4cd77e7edef4d94b3a0d01d64470295c89"
+      sha256: "8e60bc1855df642376b6f6caf561a15e5702c711a63e9638dd3bce56f01cafcc"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "3.0.0"
 sdks:
   dart: ">=3.6.1 <4.0.0"
   flutter: ">=3.27.3"

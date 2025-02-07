@@ -6,6 +6,7 @@ import 'package:eqmonitor/core/util/env.dart';
 import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
 import 'package:eqmonitor/feature/home/features/eew_settings/eew_settings_notifier.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -102,6 +103,11 @@ class _DebugWidget extends ConsumerWidget {
               title: const Text('KyoshinMonitor'),
               leading: const Icon(Icons.list),
               onTap: () async => const DebugKyoshinMonitorRoute().push(context),
+            ),
+            ListTile(
+              title: const Text('Playground'),
+              leading: const Icon(Icons.list),
+              onTap: () async => const PlaygroundRoute().push(context),
             ),
             ListTile(
               title: const Text('FCM Token'),

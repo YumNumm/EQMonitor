@@ -70,13 +70,22 @@ dependencies:
   lat_lng:
     path: ../packages/lat_lng
   latlong2: ^0.9.1
-  maplibre_gl: ^0.20.0
+  # maplibre:
+  #   git :
+  #     url: git@github.com:YumNumm/flutter-maplibre.git
+  #     ref: ios
+  maplibre_gl:
+    git:
+      url: https://github.com/YumNumm/flutter-maplibre-gl.git
+      ref: f40da2de85b4c30bb1f17ff647e49dfaa3056f1f
+      path: maplibre_gl
   notification_setting_types:
     path: ../packages/notification_setting_types
   ntp: ^2.0.0
   package_info_plus: ^8.1.2
   path_provider: ^2.1.5
   permission_handler: ^11.3.1
+  pointer_interceptor: ^0.10.1+2
   purchases_flutter: ^8.3.1
   riverpod_annotation: ^2.6.1
   screenshot: 3.0.0

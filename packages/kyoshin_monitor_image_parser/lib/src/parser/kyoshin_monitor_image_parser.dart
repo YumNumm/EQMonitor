@@ -47,11 +47,9 @@ class KyoshinMonitorImageParser {
             KyoshinMonitorObservationAnalyzedPoint(
               point: point,
               scale: position,
-              color: ColorInt8.rgb(
-                pixel.r.toInt(),
-                pixel.g.toInt(),
-                pixel.b.toInt(),
-              ),
+              r: pixel.r.toInt(),
+              g: pixel.g.toInt(),
+              b: pixel.b.toInt(),
             ),
           ),
         );

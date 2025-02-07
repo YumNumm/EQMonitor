@@ -2,13 +2,11 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
-import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_timer_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_maintenance_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_timer_stream.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_settings_page.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -37,12 +35,7 @@ class DebugKyoshinMonitorPage extends StatelessWidget {
               fontFamily: FontFamily.jetBrainsMono,
             ),
           ),
-          actions: [
-            IconButton(
-              onPressed: () async =>
-                  const KyoshinMonitorSettingsModalRoute().push<void>(context),
-              icon: const Icon(Icons.settings),
-            ),
+          actions: const [
           ],
         ),
         body: const SingleChildScrollView(
