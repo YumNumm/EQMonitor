@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:eqmonitor/core/component/sheet/app_sheet_route.dart';
-import 'package:eqmonitor/core/util/haptic.dart';
+import 'package:eqmonitor/core/component/widget/app_list_tile.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_settings_modal.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,12 @@ class HomeMapLayerModal extends HookConsumerWidget {
 
   static Future<void> show(BuildContext context) => Navigator.of(context).push(
         AppSheetRoute(
-          builder: (context) => const HomeMapLayerModal(),
+          builder: (context) => const ClipRRect(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(16),
+            ),
+            child: HomeMapLayerModal(),
+          ),
         ),
       );
 
@@ -38,7 +43,7 @@ class HomeMapLayerModal extends HookConsumerWidget {
                   tileMode: TileMode.mirror,
                 ),
                 inner: ColorFilter.mode(
-                  colorScheme.surfaceContainerLow.withValues(alpha: 0.8),
+                  colorScheme.surfaceContainerLow.withValues(alpha: 0.7),
                   BlendMode.srcATop,
                 ),
               ),
@@ -61,24 +66,8 @@ class HomeMapLayerModal extends HookConsumerWidget {
               ),
             ],
           ),
-          SliverToBoxAdapter(
-            child: _Card(
-              title: '強震モニタ',
-              description: '強震モニタのリアルタイムデータを表示します',
-              isEnabled: ref.watch(kyoshinMonitorSettingsProvider).useKmoni,
-              onEnabledChanged: (value) async => lightHapticFunction(
-                () => ref.read(kyoshinMonitorSettingsProvider.notifier).save(
-                      ref.read(kyoshinMonitorSettingsProvider).copyWith(
-                            useKmoni: value,
-                          ),
-                    ),
-              ),
-              onTap: ref.watch(kyoshinMonitorSettingsProvider).useKmoni
-                  ? () async => selectionHapticFunction(
-                        () async => KyoshinMonitorSettingsModal.show(context),
-                      )
-                  : null,
-            ),
+          const SliverToBoxAdapter(
+            child: _KyoshinMonitorIsEnabledTile(),
           ),
         ],
       ),
@@ -86,70 +75,25 @@ class HomeMapLayerModal extends HookConsumerWidget {
   }
 }
 
-class _Card extends StatelessWidget {
-  const _Card({
-    required this.title,
-    required this.description,
-    required this.isEnabled,
-    this.onEnabledChanged,
-    this.onTap,
-  });
-
-  final String title;
-  final String description;
-  final bool isEnabled;
-  // ignore: avoid_positional_boolean_parameters
-  final void Function(bool)? onEnabledChanged;
-  final VoidCallback? onTap;
+class _KyoshinMonitorIsEnabledTile extends ConsumerWidget {
+  const _KyoshinMonitorIsEnabledTile();
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final setting = ref.watch(kyoshinMonitorSettingsProvider);
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      color: colorScheme.surfaceContainerHighest,
-      elevation: 0,
-      clipBehavior: Clip.hardEdge,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: InkWell(
-        onTap: onTap ?? () => onEnabledChanged?.call(!isEnabled),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: theme.textTheme.titleMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      description,
-                      style: theme.textTheme.bodyMedium!.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              if (onEnabledChanged != null)
-                Switch.adaptive(
-                  value: isEnabled,
-                  onChanged: onEnabledChanged,
-                ),
-              if (onTap != null && isEnabled) const Icon(Icons.chevron_right),
-            ],
-          ),
-        ),
+    final subtitle = setting.useKmoni
+        ? '強震モニタのリアルタイムデータを表示します \n'
+            '(${setting.realtimeDataType.displayName}: ${setting.realtimeLayer.displayName})'
+        : '強震モニタを利用していません';
+
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: AppListTile.listTile(
+        title: '強震モニタ',
+        subtitle: subtitle,
+        trailing: const Icon(Icons.chevron_right),
+        onTap: () async => KyoshinMonitorSettingsModal.show(context),
       ),
     );
   }

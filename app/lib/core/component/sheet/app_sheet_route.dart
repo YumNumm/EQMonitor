@@ -11,9 +11,13 @@ class AppSheetRoute<T> extends SheetRoute<T> {
           stops: [initialExtent, 1],
           decorationBuilder: (context, child) => SafeArea(
             bottom: false,
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
+            child: Material(
+              elevation: 2,
+              clipBehavior: Clip.hardEdge,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(16),
+                ),
               ),
               child: child,
             ),

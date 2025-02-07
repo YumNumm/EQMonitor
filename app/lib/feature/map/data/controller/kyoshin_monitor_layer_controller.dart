@@ -43,7 +43,7 @@ class KyoshinMonitorLayerController extends _$KyoshinMonitorLayerController {
       visible: true,
       points: points,
       isInEew: false,
-      markerType: KmoniMarkerType.always,
+      markerType: KyoshinMonitorMarkerType.always,
       realtimeDataType: RealtimeDataType.shindo,
     );
   }
@@ -73,7 +73,7 @@ class KyoshinMonitorObservationLayer extends IMapLayer {
 
   final List<KyoshinMonitorImageParseObservationPoint> points;
   final bool isInEew;
-  final KmoniMarkerType markerType;
+  final KyoshinMonitorMarkerType markerType;
   final RealtimeDataType realtimeDataType;
 
   @override
@@ -96,8 +96,8 @@ class KyoshinMonitorObservationLayer extends IMapLayer {
                 'intensity': e.observation.scaleToIntensity,
                 'name': e.point.code,
                 'strokeOpacity': switch (markerType) {
-                  KmoniMarkerType.always => 1.0,
-                  KmoniMarkerType.onlyEew when isInEew => 1.0,
+                  KyoshinMonitorMarkerType.always => 1.0,
+                  KyoshinMonitorMarkerType.onlyEew when isInEew => 1.0,
                   _ => 0.0,
                 },
               },
@@ -149,5 +149,5 @@ class KyoshinMonitorObservationLayer extends IMapLayer {
   }
 
   @override
-  String get layerPropertiesHash => '';
+  String get layerPropertiesHash => '${markerType.index}';
 }

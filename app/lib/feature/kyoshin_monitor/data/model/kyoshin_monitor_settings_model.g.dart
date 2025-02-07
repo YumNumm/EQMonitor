@@ -17,16 +17,15 @@ _$KyoshinMonitorSettingsModelImpl _$$KyoshinMonitorSettingsModelImplFromJson(
         final val = _$KyoshinMonitorSettingsModelImpl(
           minRealtimeShindo: $checkedConvert(
               'min_realtime_shindo', (v) => (v as num?)?.toDouble() ?? null),
-          showRealtimeShindoScale: $checkedConvert(
-              'show_realtime_shindo_scale', (v) => v as bool? ?? true),
-          useKmoni: $checkedConvert('use_kmoni', (v) => v as bool? ?? false),
+          showScale: $checkedConvert('show_scale', (v) => v as bool? ?? true),
+          useKmoni: $checkedConvert('use_kmoni', (v) => v as bool? ?? true),
           showCurrentLocationMarker: $checkedConvert(
               'show_current_location_marker', (v) => v as bool? ?? false),
           kmoniMarkerType: $checkedConvert(
               'kmoni_marker_type',
               (v) =>
-                  $enumDecodeNullable(_$KmoniMarkerTypeEnumMap, v) ??
-                  KmoniMarkerType.onlyEew),
+                  $enumDecodeNullable(_$KyoshinMonitorMarkerTypeEnumMap, v) ??
+                  KyoshinMonitorMarkerType.onlyEew),
           realtimeDataType: $checkedConvert(
               'realtime_data_type',
               (v) =>
@@ -48,7 +47,7 @@ _$KyoshinMonitorSettingsModelImpl _$$KyoshinMonitorSettingsModelImplFromJson(
       },
       fieldKeyMap: const {
         'minRealtimeShindo': 'min_realtime_shindo',
-        'showRealtimeShindoScale': 'show_realtime_shindo_scale',
+        'showScale': 'show_scale',
         'useKmoni': 'use_kmoni',
         'showCurrentLocationMarker': 'show_current_location_marker',
         'kmoniMarkerType': 'kmoni_marker_type',
@@ -61,20 +60,21 @@ Map<String, dynamic> _$$KyoshinMonitorSettingsModelImplToJson(
         _$KyoshinMonitorSettingsModelImpl instance) =>
     <String, dynamic>{
       'min_realtime_shindo': instance.minRealtimeShindo,
-      'show_realtime_shindo_scale': instance.showRealtimeShindoScale,
+      'show_scale': instance.showScale,
       'use_kmoni': instance.useKmoni,
       'show_current_location_marker': instance.showCurrentLocationMarker,
-      'kmoni_marker_type': _$KmoniMarkerTypeEnumMap[instance.kmoniMarkerType]!,
+      'kmoni_marker_type':
+          _$KyoshinMonitorMarkerTypeEnumMap[instance.kmoniMarkerType]!,
       'realtime_data_type':
           _$RealtimeDataTypeEnumMap[instance.realtimeDataType]!,
       'realtime_layer': _$RealtimeLayerEnumMap[instance.realtimeLayer]!,
       'api': instance.api,
     };
 
-const _$KmoniMarkerTypeEnumMap = {
-  KmoniMarkerType.always: 'always',
-  KmoniMarkerType.onlyEew: 'onlyEew',
-  KmoniMarkerType.never: 'never',
+const _$KyoshinMonitorMarkerTypeEnumMap = {
+  KyoshinMonitorMarkerType.always: 'always',
+  KyoshinMonitorMarkerType.onlyEew: 'onlyEew',
+  KyoshinMonitorMarkerType.never: 'never',
 };
 
 const _$RealtimeDataTypeEnumMap = {
