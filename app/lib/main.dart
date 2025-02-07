@@ -8,6 +8,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/fcm/channels.dart';
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
+import 'package:eqmonitor/core/provider/config/permission/permission_notifier.dart';
 import 'package:eqmonitor/core/provider/custom_provider_observer.dart';
 import 'package:eqmonitor/core/provider/device_info.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
@@ -162,8 +163,11 @@ Future<void> main() async {
     ],
   );
 
-  await container
-      .read(kyoshinMonitorInternalObservationPointsConvertedProvider.future);
+  await (
+    container
+        .read(kyoshinMonitorInternalObservationPointsConvertedProvider.future),
+    container.read(permissionNotifierProvider.notifier).initialize(),
+  ).wait;
 
   runApp(
     UncontrolledProviderScope(

@@ -1,39 +1,77 @@
+import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/map/data/layer/base/i_map_layer.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 import 'package:kyoshin_monitor_image_parser/kyoshin_monitor_image_parser.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+part 'kyoshin_monitor_layer_controller.freezed.dart';
 part 'kyoshin_monitor_layer_controller.g.dart';
 
 /// 強震モニタの観測点レイヤーを管理するコントローラー
 @riverpod
 class KyoshinMonitorLayerController extends _$KyoshinMonitorLayerController {
   @override
-  KyoshinMonitorObservationLayer? build() {
+  KyoshinMonitorObservationLayer build() {
     // 強震モニタの状態を監視
-    ref.listen(
-      kyoshinMonitorNotifierProvider,
-      (prev, next) {
-        final previousPoints = prev?.valueOrNull?.analyzedPoints;
-        final nextPoints = next.valueOrNull?.analyzedPoints;
-        if (previousPoints != nextPoints) {
-          _updateLayer(nextPoints ?? []);
-        }
-      },
+    ref
+      ..listen(
+        kyoshinMonitorNotifierProvider,
+        (prev, next) {
+          final previousPoints = prev?.valueOrNull?.analyzedPoints;
+          final nextPoints = next.valueOrNull?.analyzedPoints;
+          if (previousPoints != nextPoints) {
+            _updateLayer(nextPoints ?? []);
+          }
+        },
+      )
+      ..listen(
+        kyoshinMonitorSettingsProvider,
+        (prev, next) {
+          if (prev?.realtimeDataType != next.realtimeDataType ||
+              prev?.realtimeLayer != next.realtimeLayer) {
+            state = state.copyWith(
+              points: [],
+              realtimeDataType: next.realtimeDataType,
+              markerType: next.kmoniMarkerType,
+            );
+          }
+        },
+      )
+      ..listen(
+        eewAliveTelegramProvider,
+        (_, next) {
+          final isInEew = next?.isNotEmpty ?? false;
+          state = state.copyWith(
+            isInEew: isInEew,
+          );
+        },
+      );
+    return KyoshinMonitorObservationLayer(
+      id: 'kyoshin-monitor-points',
+      sourceId: 'kyoshin-monitor-points',
+      visible: true,
+      points: [],
+      isInEew: false,
+      markerType: ref.read(kyoshinMonitorSettingsProvider).kmoniMarkerType,
+      realtimeDataType:
+          ref.read(kyoshinMonitorSettingsProvider).realtimeDataType,
     );
-    return null;
   }
 
   /// レイヤーを更新
   void _updateLayer(List<KyoshinMonitorImageParseObservationPoint> points) {
     if (points.isEmpty) {
-      state = null;
+      state = state.copyWith(
+        points: [],
+      );
       return;
     }
 
@@ -58,23 +96,22 @@ extension KyoshinMonitorObservationAnalyzedPointEx
   }
 }
 
-class KyoshinMonitorObservationLayer extends IMapLayer {
-  const KyoshinMonitorObservationLayer({
-    required super.id,
-    required super.sourceId,
-    required super.visible,
-    required this.points,
-    required this.isInEew,
-    required this.markerType,
-    required this.realtimeDataType,
-    super.minZoom,
-    super.maxZoom,
-  });
+@freezed
+class KyoshinMonitorObservationLayer extends IMapLayer
+    with _$KyoshinMonitorObservationLayer {
+  factory KyoshinMonitorObservationLayer({
+    required String id,
+    required String sourceId,
+    required bool visible,
+    required List<KyoshinMonitorImageParseObservationPoint> points,
+    required bool isInEew,
+    required KyoshinMonitorMarkerType markerType,
+    required RealtimeDataType realtimeDataType,
+    double? minZoom,
+    double? maxZoom,
+  }) = _KyoshinMonitorObservationLayer;
 
-  final List<KyoshinMonitorImageParseObservationPoint> points;
-  final bool isInEew;
-  final KyoshinMonitorMarkerType markerType;
-  final RealtimeDataType realtimeDataType;
+  const KyoshinMonitorObservationLayer._();
 
   @override
   Map<String, dynamic> toGeoJsonSource() {

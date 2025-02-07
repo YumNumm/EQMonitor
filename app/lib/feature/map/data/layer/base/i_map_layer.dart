@@ -1,24 +1,18 @@
 import 'package:maplibre_gl/maplibre_gl.dart';
 
 abstract class IMapLayer {
-  const IMapLayer({
-    required this.id,
-    required this.sourceId,
-    required this.visible,
-    this.minZoom,
-    this.maxZoom,
-  });
+  const IMapLayer();
 
   Map<String, dynamic> toGeoJsonSource();
   String get geoJsonSourceHash;
   LayerProperties toLayerProperties();
   String get layerPropertiesHash;
 
-  final String id;
-  final String sourceId;
-  final bool visible;
-  final double? minZoom;
-  final double? maxZoom;
+  String get id;
+  String get sourceId;
+  bool get visible;
+  double? get minZoom;
+  double? get maxZoom;
 }
 
 class CachedIMapLayer {

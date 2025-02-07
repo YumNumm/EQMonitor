@@ -166,23 +166,6 @@ class KyoshinMonitorSettingsModal extends HookConsumerWidget {
                                     .copyWith(showScale: value),
                               ),
                         ),
-                        SwitchListTile.adaptive(
-                          contentPadding: EdgeInsets.zero,
-                          title: const Text('現在地マーカーを表示'),
-                          subtitle: const Text(
-                            '地図上に現在地を示すマーカーを表示します',
-                          ),
-                          value: ref
-                              .watch(kyoshinMonitorSettingsProvider)
-                              .showCurrentLocationMarker,
-                          onChanged: (value) async => ref
-                              .read(kyoshinMonitorSettingsProvider.notifier)
-                              .save(
-                                ref
-                                    .read(kyoshinMonitorSettingsProvider)
-                                    .copyWith(showCurrentLocationMarker: value),
-                              ),
-                        ),
                       ],
                     ),
                   ),
