@@ -12,7 +12,7 @@ import 'package:eqmonitor/feature/earthquake_history_details/ui/screen/earthquak
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_details_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_screen.dart';
 import 'package:eqmonitor/feature/eew/ui/screen/eew_details_by_event_id_page.dart';
-import 'package:eqmonitor/feature/home/view/home_view.dart';
+import 'package:eqmonitor/feature/home/page/home_page.dart';
 import 'package:eqmonitor/feature/information_history/page/information_history_page.dart';
 import 'package:eqmonitor/feature/information_history_details/information_history_details_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_observation_network_page.dart';
@@ -170,7 +170,7 @@ class HomeRoute extends GoRouteData {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) =>
       const MaterialExtendedPage<void>(
-        child: HomeView(),
+        child: HomePage(),
       );
 }
 
