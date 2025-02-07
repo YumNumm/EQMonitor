@@ -1,13 +1,17 @@
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart' hide ConnectionState;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class KyoshinMonitorStatusCard extends ConsumerWidget {
-  const KyoshinMonitorStatusCard({super.key});
+  const KyoshinMonitorStatusCard({
+    this.onTap,
+    super.key,
+  });
+
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -15,13 +19,6 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
     final isInitialized = state.hasValue;
     final latestTime = state.valueOrNull?.lastUpdatedAt?.toLocal();
     final status = state.valueOrNull?.status ?? KyoshinMonitorStatus.stopped;
-    final useKmoni = ref.watch(
-      kyoshinMonitorSettingsProvider.select((value) => value.useKmoni),
-    );
-
-    if (!useKmoni) {
-      return const SizedBox.shrink();
-    }
 
     final theme = Theme.of(context);
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
@@ -37,6 +34,7 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
       child: Tooltip(
         message: '強震モニタ',
         child: InkWell(
+          onTap: onTap,
           borderRadius: BorderRadius.circular(8),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),

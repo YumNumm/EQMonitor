@@ -25,7 +25,7 @@ mixin _$KyoshinMonitorSettingsModel {
   double? get minRealtimeShindo => throw _privateConstructorUsedError;
 
   /// スケールを表示するかどうか
-  bool get showRealtimeShindoScale => throw _privateConstructorUsedError;
+  bool get showScale => throw _privateConstructorUsedError;
 
   /// 強震モニタを使用するかどうか
   bool get useKmoni => throw _privateConstructorUsedError;
@@ -34,7 +34,8 @@ mixin _$KyoshinMonitorSettingsModel {
   bool get showCurrentLocationMarker => throw _privateConstructorUsedError;
 
   /// 強震モニタ観測点のマーカーの種類
-  KmoniMarkerType get kmoniMarkerType => throw _privateConstructorUsedError;
+  KyoshinMonitorMarkerType get kmoniMarkerType =>
+      throw _privateConstructorUsedError;
 
   /// 強震モニタのリアルタイムデータの種類
   RealtimeDataType get realtimeDataType => throw _privateConstructorUsedError;
@@ -65,10 +66,10 @@ abstract class $KyoshinMonitorSettingsModelCopyWith<$Res> {
   @useResult
   $Res call(
       {double? minRealtimeShindo,
-      bool showRealtimeShindoScale,
+      bool showScale,
       bool useKmoni,
       bool showCurrentLocationMarker,
-      KmoniMarkerType kmoniMarkerType,
+      KyoshinMonitorMarkerType kmoniMarkerType,
       RealtimeDataType realtimeDataType,
       RealtimeLayer realtimeLayer,
       KyoshinMonitorSettingsApiModel api});
@@ -93,7 +94,7 @@ class _$KyoshinMonitorSettingsModelCopyWithImpl<$Res,
   @override
   $Res call({
     Object? minRealtimeShindo = freezed,
-    Object? showRealtimeShindoScale = null,
+    Object? showScale = null,
     Object? useKmoni = null,
     Object? showCurrentLocationMarker = null,
     Object? kmoniMarkerType = null,
@@ -106,9 +107,9 @@ class _$KyoshinMonitorSettingsModelCopyWithImpl<$Res,
           ? _value.minRealtimeShindo
           : minRealtimeShindo // ignore: cast_nullable_to_non_nullable
               as double?,
-      showRealtimeShindoScale: null == showRealtimeShindoScale
-          ? _value.showRealtimeShindoScale
-          : showRealtimeShindoScale // ignore: cast_nullable_to_non_nullable
+      showScale: null == showScale
+          ? _value.showScale
+          : showScale // ignore: cast_nullable_to_non_nullable
               as bool,
       useKmoni: null == useKmoni
           ? _value.useKmoni
@@ -121,7 +122,7 @@ class _$KyoshinMonitorSettingsModelCopyWithImpl<$Res,
       kmoniMarkerType: null == kmoniMarkerType
           ? _value.kmoniMarkerType
           : kmoniMarkerType // ignore: cast_nullable_to_non_nullable
-              as KmoniMarkerType,
+              as KyoshinMonitorMarkerType,
       realtimeDataType: null == realtimeDataType
           ? _value.realtimeDataType
           : realtimeDataType // ignore: cast_nullable_to_non_nullable
@@ -159,10 +160,10 @@ abstract class _$$KyoshinMonitorSettingsModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {double? minRealtimeShindo,
-      bool showRealtimeShindoScale,
+      bool showScale,
       bool useKmoni,
       bool showCurrentLocationMarker,
-      KmoniMarkerType kmoniMarkerType,
+      KyoshinMonitorMarkerType kmoniMarkerType,
       RealtimeDataType realtimeDataType,
       RealtimeLayer realtimeLayer,
       KyoshinMonitorSettingsApiModel api});
@@ -187,7 +188,7 @@ class __$$KyoshinMonitorSettingsModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? minRealtimeShindo = freezed,
-    Object? showRealtimeShindoScale = null,
+    Object? showScale = null,
     Object? useKmoni = null,
     Object? showCurrentLocationMarker = null,
     Object? kmoniMarkerType = null,
@@ -200,9 +201,9 @@ class __$$KyoshinMonitorSettingsModelImplCopyWithImpl<$Res>
           ? _value.minRealtimeShindo
           : minRealtimeShindo // ignore: cast_nullable_to_non_nullable
               as double?,
-      showRealtimeShindoScale: null == showRealtimeShindoScale
-          ? _value.showRealtimeShindoScale
-          : showRealtimeShindoScale // ignore: cast_nullable_to_non_nullable
+      showScale: null == showScale
+          ? _value.showScale
+          : showScale // ignore: cast_nullable_to_non_nullable
               as bool,
       useKmoni: null == useKmoni
           ? _value.useKmoni
@@ -215,7 +216,7 @@ class __$$KyoshinMonitorSettingsModelImplCopyWithImpl<$Res>
       kmoniMarkerType: null == kmoniMarkerType
           ? _value.kmoniMarkerType
           : kmoniMarkerType // ignore: cast_nullable_to_non_nullable
-              as KmoniMarkerType,
+              as KyoshinMonitorMarkerType,
       realtimeDataType: null == realtimeDataType
           ? _value.realtimeDataType
           : realtimeDataType // ignore: cast_nullable_to_non_nullable
@@ -238,10 +239,10 @@ class _$KyoshinMonitorSettingsModelImpl
     implements _KyoshinMonitorSettingsModel {
   const _$KyoshinMonitorSettingsModelImpl(
       {this.minRealtimeShindo = null,
-      this.showRealtimeShindoScale = true,
-      this.useKmoni = false,
+      this.showScale = true,
+      this.useKmoni = true,
       this.showCurrentLocationMarker = false,
-      this.kmoniMarkerType = KmoniMarkerType.onlyEew,
+      this.kmoniMarkerType = KyoshinMonitorMarkerType.onlyEew,
       this.realtimeDataType = RealtimeDataType.shindo,
       this.realtimeLayer = RealtimeLayer.surface,
       this.api = const KyoshinMonitorSettingsApiModel()});
@@ -258,7 +259,7 @@ class _$KyoshinMonitorSettingsModelImpl
   /// スケールを表示するかどうか
   @override
   @JsonKey()
-  final bool showRealtimeShindoScale;
+  final bool showScale;
 
   /// 強震モニタを使用するかどうか
   @override
@@ -273,7 +274,7 @@ class _$KyoshinMonitorSettingsModelImpl
   /// 強震モニタ観測点のマーカーの種類
   @override
   @JsonKey()
-  final KmoniMarkerType kmoniMarkerType;
+  final KyoshinMonitorMarkerType kmoniMarkerType;
 
   /// 強震モニタのリアルタイムデータの種類
   @override
@@ -292,7 +293,7 @@ class _$KyoshinMonitorSettingsModelImpl
 
   @override
   String toString() {
-    return 'KyoshinMonitorSettingsModel(minRealtimeShindo: $minRealtimeShindo, showRealtimeShindoScale: $showRealtimeShindoScale, useKmoni: $useKmoni, showCurrentLocationMarker: $showCurrentLocationMarker, kmoniMarkerType: $kmoniMarkerType, realtimeDataType: $realtimeDataType, realtimeLayer: $realtimeLayer, api: $api)';
+    return 'KyoshinMonitorSettingsModel(minRealtimeShindo: $minRealtimeShindo, showScale: $showScale, useKmoni: $useKmoni, showCurrentLocationMarker: $showCurrentLocationMarker, kmoniMarkerType: $kmoniMarkerType, realtimeDataType: $realtimeDataType, realtimeLayer: $realtimeLayer, api: $api)';
   }
 
   @override
@@ -302,9 +303,8 @@ class _$KyoshinMonitorSettingsModelImpl
             other is _$KyoshinMonitorSettingsModelImpl &&
             (identical(other.minRealtimeShindo, minRealtimeShindo) ||
                 other.minRealtimeShindo == minRealtimeShindo) &&
-            (identical(
-                    other.showRealtimeShindoScale, showRealtimeShindoScale) ||
-                other.showRealtimeShindoScale == showRealtimeShindoScale) &&
+            (identical(other.showScale, showScale) ||
+                other.showScale == showScale) &&
             (identical(other.useKmoni, useKmoni) ||
                 other.useKmoni == useKmoni) &&
             (identical(other.showCurrentLocationMarker,
@@ -324,7 +324,7 @@ class _$KyoshinMonitorSettingsModelImpl
   int get hashCode => Object.hash(
       runtimeType,
       minRealtimeShindo,
-      showRealtimeShindoScale,
+      showScale,
       useKmoni,
       showCurrentLocationMarker,
       kmoniMarkerType,
@@ -353,10 +353,10 @@ abstract class _KyoshinMonitorSettingsModel
     implements KyoshinMonitorSettingsModel {
   const factory _KyoshinMonitorSettingsModel(
           {final double? minRealtimeShindo,
-          final bool showRealtimeShindoScale,
+          final bool showScale,
           final bool useKmoni,
           final bool showCurrentLocationMarker,
-          final KmoniMarkerType kmoniMarkerType,
+          final KyoshinMonitorMarkerType kmoniMarkerType,
           final RealtimeDataType realtimeDataType,
           final RealtimeLayer realtimeLayer,
           final KyoshinMonitorSettingsApiModel api}) =
@@ -371,7 +371,7 @@ abstract class _KyoshinMonitorSettingsModel
 
   /// スケールを表示するかどうか
   @override
-  bool get showRealtimeShindoScale;
+  bool get showScale;
 
   /// 強震モニタを使用するかどうか
   @override
@@ -383,7 +383,7 @@ abstract class _KyoshinMonitorSettingsModel
 
   /// 強震モニタ観測点のマーカーの種類
   @override
-  KmoniMarkerType get kmoniMarkerType;
+  KyoshinMonitorMarkerType get kmoniMarkerType;
 
   /// 強震モニタのリアルタイムデータの種類
   @override

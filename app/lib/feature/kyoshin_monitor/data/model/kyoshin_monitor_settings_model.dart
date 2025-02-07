@@ -11,16 +11,17 @@ class KyoshinMonitorSettingsModel with _$KyoshinMonitorSettingsModel {
     @Default(null) double? minRealtimeShindo,
 
     /// スケールを表示するかどうか
-    @Default(true) bool showRealtimeShindoScale,
+    @Default(true) bool showScale,
 
     /// 強震モニタを使用するかどうか
-    @Default(false) bool useKmoni,
+    @Default(true) bool useKmoni,
 
     /// 現在地のマーカーを表示するかどうか
     @Default(false) bool showCurrentLocationMarker,
 
     /// 強震モニタ観測点のマーカーの種類
-    @Default(KmoniMarkerType.onlyEew) KmoniMarkerType kmoniMarkerType,
+    @Default(KyoshinMonitorMarkerType.onlyEew)
+    KyoshinMonitorMarkerType kmoniMarkerType,
 
     /// 強震モニタのリアルタイムデータの種類
     @Default(RealtimeDataType.shindo) RealtimeDataType realtimeDataType,
@@ -74,7 +75,7 @@ enum KyoshinMonitorEndpoint {
   final String url;
 }
 
-enum KmoniMarkerType {
+enum KyoshinMonitorMarkerType {
   /// 常に枠を表示する
   always,
 

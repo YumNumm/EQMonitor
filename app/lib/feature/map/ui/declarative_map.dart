@@ -133,14 +133,15 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
           if (cachedLayer.layer != layer) {
             // キャッシュ済みレイヤーと同じかどうか
             // style check
-            final cachedLayerProperties = cachedLayer.layerPropertiesHash;
-            final layerProperties = layer.layerPropertiesHash;
-            if (cachedLayerProperties != layerProperties) {
+            final cachedLayerPropertiesHash = cachedLayer.layerPropertiesHash;
+            final layerPropertiesHash = layer.layerPropertiesHash;
+            if (cachedLayerPropertiesHash != layerPropertiesHash) {
               log('layer properties changed');
               await controller.removeLayer(layer.id);
               await controller.removeSource(layer.sourceId);
               await _addLayer(layer);
               _addedLayers[layer.id] = CachedIMapLayer.fromLayer(layer);
+              log('layer properties changed: ${layer.toLayerProperties().toJson()}');
 
               continue;
             }
@@ -197,7 +198,7 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
         _updateAllLayers(),
       );
     }
-    if (oldWidget.layers != widget.layers ) {
+    if (oldWidget.layers != widget.layers) {
       unawaited(
         _updateLayers(),
       );

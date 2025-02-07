@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:eqmonitor/core/component/sheet/app_sheet_route.dart';
+import 'package:eqmonitor/core/component/widget/app_list_tile.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
@@ -18,7 +19,12 @@ class KyoshinMonitorSettingsModal extends HookConsumerWidget {
 
   static Future<void> show(BuildContext context) => Navigator.of(context).push(
         AppSheetRoute(
-          builder: (context) => const KyoshinMonitorSettingsModal(),
+          builder: (context) => const ClipRRect(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(16),
+            ),
+            child: KyoshinMonitorSettingsModal(),
+          ),
         ),
       );
 
@@ -46,7 +52,7 @@ class KyoshinMonitorSettingsModal extends HookConsumerWidget {
                   tileMode: TileMode.mirror,
                 ),
                 inner: ColorFilter.mode(
-                  colorScheme.surfaceContainerLow.withValues(alpha: 0.8),
+                  colorScheme.surfaceContainerLow.withValues(alpha: 0.7),
                   BlendMode.srcATop,
                 ),
               ),
@@ -151,13 +157,13 @@ class KyoshinMonitorSettingsModal extends HookConsumerWidget {
                           ),
                           value: ref
                               .watch(kyoshinMonitorSettingsProvider)
-                              .showRealtimeShindoScale,
+                              .showScale,
                           onChanged: (value) async => ref
                               .read(kyoshinMonitorSettingsProvider.notifier)
                               .save(
                                 ref
                                     .read(kyoshinMonitorSettingsProvider)
-                                    .copyWith(showRealtimeShindoScale: value),
+                                    .copyWith(showScale: value),
                               ),
                         ),
                         SwitchListTile.adaptive(
@@ -197,27 +203,14 @@ class _KyoshinMonitorSwitchListTile extends ConsumerWidget {
     final isEnabled =
         ref.watch(kyoshinMonitorSettingsProvider.select((v) => v.useKmoni));
 
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final backgroundColor = colorScheme.secondaryContainer;
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 8,
         vertical: 4,
       ),
-      child: SwitchListTile.adaptive(
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        tileColor: backgroundColor,
-        title: const Text(
-          '強震モニタを利用する',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle: const Text('強震モニタを利用するかどうかを選択します'),
+      child: AppListTile.switchListTile(
+        title: '強震モニタを利用する',
+        subtitle: '強震モニタを利用するかどうかを選択します',
         value: isEnabled,
         onChanged: (value) async => selectionHapticFunction(
           () async => ref.read(kyoshinMonitorSettingsProvider.notifier).save(
@@ -354,26 +347,26 @@ class _MarkerTypeSelector extends StatelessWidget {
     required this.onChanged,
   });
 
-  final KmoniMarkerType value;
-  final void Function(KmoniMarkerType) onChanged;
+  final KyoshinMonitorMarkerType value;
+  final void Function(KyoshinMonitorMarkerType) onChanged;
 
   @override
   Widget build(BuildContext context) {
-    return DropdownMenu<KmoniMarkerType>(
+    return DropdownMenu<KyoshinMonitorMarkerType>(
       initialSelection: value,
       onSelected: (value) {
         if (value != null) {
           onChanged(value);
         }
       },
-      dropdownMenuEntries: KmoniMarkerType.values
+      dropdownMenuEntries: KyoshinMonitorMarkerType.values
           .map(
             (value) => DropdownMenuEntry(
               value: value,
               label: switch (value) {
-                KmoniMarkerType.always => '常に表示',
-                KmoniMarkerType.onlyEew => 'EEW時のみ',
-                KmoniMarkerType.never => '表示しない',
+                KyoshinMonitorMarkerType.always => '常に表示',
+                KyoshinMonitorMarkerType.onlyEew => 'EEW時のみ',
+                KyoshinMonitorMarkerType.never => '表示しない',
               },
             ),
           )
