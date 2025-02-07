@@ -288,3 +288,5 @@ jobs:
           releaseFiles: build/app-release.aab
           track: internal
           status: completed
+          # 既存ユーザーへのアップデートを許可
+          changesNotSentForReview: false
