@@ -1,19 +1,20 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:eqmonitor/feature/map/data/controller/declarative_map_controller.dart';
 import 'package:eqmonitor/feature/map/data/layer/base/i_map_layer.dart';
 import 'package:eqmonitor/feature/map/data/model/camera_position.dart';
-import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
 /// 宣言的なMapLibreMapのラッパー
-class DeclarativeMap extends ConsumerStatefulWidget {
+class DeclarativeMap extends StatefulHookConsumerWidget {
   const DeclarativeMap({
     required this.initialCameraPosition,
+    required this.controller,
+    required this.styleString,
     super.key,
-    this.onMapCreated,
     this.onStyleLoadedCallback,
     this.onCameraIdle,
     this.layers = const [],
@@ -28,8 +29,8 @@ class DeclarativeMap extends ConsumerStatefulWidget {
   /// 初期カメラ位置
   final MapCameraPosition initialCameraPosition;
 
-  /// マップ作成時のコールバック
-  final void Function(MapLibreMapController)? onMapCreated;
+  /// マップコントローラー
+  final DeclarativeMapController controller;
 
   /// スタイル読み込み完了時のコールバック
   final void Function()? onStyleLoadedCallback;
@@ -58,39 +59,25 @@ class DeclarativeMap extends ConsumerStatefulWidget {
   /// ダブルタップズームの有効化
   final bool doubleClickZoomEnabled;
 
+  /// スタイル文字列
+  final String styleString;
+
   @override
   ConsumerState<DeclarativeMap> createState() => _DeclarativeMapState();
 }
 
 class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
-  MapLibreMapController? _controller;
   final Map<String, CachedIMapLayer> _addedLayers = {};
   // レイヤー操作のロック
   bool _isUpdatingLayers = false;
 
   @override
   Widget build(BuildContext context) {
-    // スタイルの監視
-    final configurationState = ref.watch(mapConfigurationNotifierProvider);
-    final configuration = configurationState.valueOrNull;
-
-    if (configuration == null) {
-      return const Center(
-        child: CircularProgressIndicator.adaptive(),
-      );
-    }
-
-    final styleString = configuration.styleString;
-    if (styleString == null) {
-      throw ArgumentError('styleString is null');
-    }
-
     return MapLibreMap(
-      styleString: styleString,
+      styleString: widget.styleString,
       initialCameraPosition: widget.initialCameraPosition.toMapLibre(),
       onMapCreated: (controller) {
-        _controller = controller;
-        widget.onMapCreated?.call(controller);
+        widget.controller.setController(controller);
       },
       onStyleLoadedCallback: () {
         widget.onStyleLoadedCallback?.call();
@@ -99,7 +86,7 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
         );
       },
       onCameraIdle: () {
-        final position = _controller?.cameraPosition;
+        final position = widget.controller.controller?.cameraPosition;
         if (position != null) {
           widget.onCameraIdle?.call(
             MapCameraPosition.fromMapLibre(position),
@@ -116,7 +103,8 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
   }
 
   Future<void> _updateLayers() async {
-    if (_controller == null) {
+    final controller = widget.controller.controller;
+    if (controller == null) {
       log('controller is null');
       return;
     }
@@ -132,8 +120,8 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
       final newLayerIds = widget.layers.map((l) => l.id).toSet();
       for (final id in _addedLayers.keys.toSet()) {
         if (!newLayerIds.contains(id)) {
-          await _controller!.removeLayer(id);
-          await _controller!.removeSource(_addedLayers[id]!.layer.sourceId);
+          await controller.removeLayer(id);
+          await controller.removeSource(_addedLayers[id]!.layer.sourceId);
           _addedLayers.remove(id);
         }
       }
@@ -149,8 +137,8 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
             final layerProperties = layer.layerPropertiesHash;
             if (cachedLayerProperties != layerProperties) {
               log('layer properties changed');
-              await _controller!.removeLayer(layer.id);
-              await _controller!.removeSource(layer.sourceId);
+              await controller.removeLayer(layer.id);
+              await controller.removeSource(layer.sourceId);
               await _addLayer(layer);
               _addedLayers[layer.id] = CachedIMapLayer.fromLayer(layer);
 
@@ -161,7 +149,7 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
             final geoJsonSource = layer.geoJsonSourceHash;
             if (cachedGeoJsonSource != geoJsonSource) {
               // update geojson
-              await _controller!.setGeoJsonSource(
+              await controller.setGeoJsonSource(
                 layer.sourceId,
                 layer.toGeoJsonSource(),
               );
@@ -180,7 +168,7 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
   }
 
   Future<void> _addLayer(IMapLayer layer) async {
-    final controller = _controller!;
+    final controller = widget.controller.controller!;
     await controller.addGeoJsonSource(
       layer.sourceId,
       layer.toGeoJsonSource(),
@@ -192,10 +180,24 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
     );
   }
 
+  Future<void> _updateAllLayers() async {
+    final controller = widget.controller.controller!;
+    for (final layer in widget.layers) {
+      await controller.removeLayer(layer.id);
+      await controller.removeSource(layer.sourceId);
+      await _addLayer(layer);
+    }
+  }
+
   @override
   void didUpdateWidget(DeclarativeMap oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.layers != widget.layers) {
+    if (oldWidget.styleString != widget.styleString) {
+      unawaited(
+        _updateAllLayers(),
+      );
+    }
+    if (oldWidget.layers != widget.layers ) {
       unawaited(
         _updateLayers(),
       );
