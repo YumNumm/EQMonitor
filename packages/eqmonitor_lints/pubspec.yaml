@@ -7,8 +7,8 @@ environment:
 resolution: workspace
 
 dependencies:
-  altive_lints: ^1.16.0
+  altive_lints: ^1.18.0
   custom_lint: ^0.7.0
   flutter:
     sdk: flutter
-  yumemi_lints: ^2.2.0
+  yumemi_lints: ^3.0.0

@@ -6,7 +6,8 @@
   },
   "files.watcherExclude": {
     "**/.fvm": true,
-    "*.geojson": true
+    "*.geojson": true,
+    "**/DerivedData": true
   },
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {

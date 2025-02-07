@@ -43,15 +43,3 @@ class KyoshinMonitorSettings extends _$KyoshinMonitorSettings {
         );
   }
 }
-
-enum KmoniMarkerType {
-  /// 常に枠を表示する
-  always,
-
-  /// EEW時のみ枠を表示する
-  onlyEew,
-
-  /// 常に枠を表示しない
-  never,
-  ;
-}

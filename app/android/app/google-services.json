@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "179553945248",
     "project_id": "eqmonitor-main",
-    "storage_bucket": "eqmonitor-main.appspot.com"
+    "storage_bucket": "eqmonitor-main.firebasestorage.app"
   },
   "client": [
     {

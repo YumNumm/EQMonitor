@@ -159,10 +159,6 @@ RouteBase get $homeRoute => GoRouteData.$route(
           path: 'eew-details-by-event-id/:eventId',
           factory: $EewDetailsByEventIdRouteExtension._fromState,
         ),
-        GoRouteData.$route(
-          path: 'kyoshin-monitor-cautionary-note-modal',
-          factory: $KyoshinMonitorCautionaryNoteModalRouteExtension._fromState,
-        ),
       ],
     );
 
@@ -242,26 +238,6 @@ extension $EewDetailsByEventIdRouteExtension on EewDetailsByEventIdRoute {
   void replace(BuildContext context) => context.replace(location);
 }
 
-extension $KyoshinMonitorCautionaryNoteModalRouteExtension
-    on KyoshinMonitorCautionaryNoteModalRoute {
-  static KyoshinMonitorCautionaryNoteModalRoute _fromState(
-          GoRouterState state) =>
-      const KyoshinMonitorCautionaryNoteModalRoute();
-
-  String get location => GoRouteData.$location(
-        '/kyoshin-monitor-cautionary-note-modal',
-      );
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
 RouteBase get $talkerRoute => GoRouteData.$route(
       path: '/talker',
       factory: $TalkerRouteExtension._fromState,
@@ -313,6 +289,17 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           ],
         ),
         GoRouteData.$route(
+          path: 'kyoshin-monitor-about',
+          factory: $KyoshinMonitorAboutRouteExtension._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'observation-network',
+              factory: $KyoshinMonitorAboutObservationNetworkRouteExtension
+                  ._fromState,
+            ),
+          ],
+        ),
+        GoRouteData.$route(
           path: 'term-of-service',
           factory: $TermOfServiceRouteExtension._fromState,
         ),
@@ -343,16 +330,6 @@ RouteBase get $settingsRoute => GoRouteData.$route(
           ],
         ),
         GoRouteData.$route(
-          path: 'kyoshin-monitor-settings',
-          factory: $KyoshinMonitorSettingsRouteExtension._fromState,
-          routes: [
-            GoRouteData.$route(
-              path: 'modal',
-              factory: $KyoshinMonitorSettingsModalRouteExtension._fromState,
-            ),
-          ],
-        ),
-        GoRouteData.$route(
           path: 'debugger',
           factory: $DebuggerRouteExtension._fromState,
           routes: [
@@ -367,6 +344,10 @@ RouteBase get $settingsRoute => GoRouteData.$route(
             GoRouteData.$route(
               path: 'kyoshin-monitor',
               factory: $DebugKyoshinMonitorRouteExtension._fromState,
+            ),
+            GoRouteData.$route(
+              path: 'playground',
+              factory: $PlaygroundRouteExtension._fromState,
             ),
           ],
         ),
@@ -467,6 +448,44 @@ extension $ColorSchemeConfigRouteExtension on ColorSchemeConfigRoute {
 
   String get location => GoRouteData.$location(
         '/settings/display/color-schema',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $KyoshinMonitorAboutRouteExtension on KyoshinMonitorAboutRoute {
+  static KyoshinMonitorAboutRoute _fromState(GoRouterState state) =>
+      const KyoshinMonitorAboutRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/kyoshin-monitor-about',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $KyoshinMonitorAboutObservationNetworkRouteExtension
+    on KyoshinMonitorAboutObservationNetworkRoute {
+  static KyoshinMonitorAboutObservationNetworkRoute _fromState(
+          GoRouterState state) =>
+      const KyoshinMonitorAboutObservationNetworkRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/kyoshin-monitor-about/observation-network',
       );
 
   void go(BuildContext context) => context.go(location);
@@ -630,43 +649,6 @@ extension $DonationExecutedRouteExtension on DonationExecutedRoute {
       context.replace(location, extra: $extra);
 }
 
-extension $KyoshinMonitorSettingsRouteExtension on KyoshinMonitorSettingsRoute {
-  static KyoshinMonitorSettingsRoute _fromState(GoRouterState state) =>
-      const KyoshinMonitorSettingsRoute();
-
-  String get location => GoRouteData.$location(
-        '/settings/kyoshin-monitor-settings',
-      );
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
-extension $KyoshinMonitorSettingsModalRouteExtension
-    on KyoshinMonitorSettingsModalRoute {
-  static KyoshinMonitorSettingsModalRoute _fromState(GoRouterState state) =>
-      const KyoshinMonitorSettingsModalRoute();
-
-  String get location => GoRouteData.$location(
-        '/settings/kyoshin-monitor-settings/modal',
-      );
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
 extension $DebuggerRouteExtension on DebuggerRoute {
   static DebuggerRoute _fromState(GoRouterState state) => const DebuggerRoute();
 
@@ -728,6 +710,24 @@ extension $DebugKyoshinMonitorRouteExtension on DebugKyoshinMonitorRoute {
 
   String get location => GoRouteData.$location(
         '/settings/debugger/kyoshin-monitor',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $PlaygroundRouteExtension on PlaygroundRoute {
+  static PlaygroundRoute _fromState(GoRouterState state) =>
+      const PlaygroundRoute();
+
+  String get location => GoRouteData.$location(
+        '/settings/debugger/playground',
       );
 
   void go(BuildContext context) => context.go(location);

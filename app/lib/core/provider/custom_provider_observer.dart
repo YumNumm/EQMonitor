@@ -53,6 +53,8 @@ class CustomProviderObserver extends ProviderObserver {
         'timeTickerProvider' ||
         'kyoshinMonitorNotifierProvider' =>
           null,
+        _ when provider.name?.contains('LayerControllerProvider') ?? false =>
+          null,
         _
             when newValue.toString().length + previousValue.toString().length >
                 300 =>

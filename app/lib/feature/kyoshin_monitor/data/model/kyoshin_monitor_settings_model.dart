@@ -1,4 +1,3 @@
-import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 
@@ -73,4 +72,16 @@ enum KyoshinMonitorEndpoint {
   const KyoshinMonitorEndpoint(this.url);
 
   final String url;
+}
+
+enum KmoniMarkerType {
+  /// 常に枠を表示する
+  always,
+
+  /// EEW時のみ枠を表示する
+  onlyEew,
+
+  /// 常に枠を表示しない
+  never,
+  ;
 }

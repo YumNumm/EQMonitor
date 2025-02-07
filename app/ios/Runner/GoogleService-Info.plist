@@ -19,7 +19,7 @@
 	<key>PROJECT_ID</key>
 	<string>eqmonitor-main</string>
 	<key>STORAGE_BUCKET</key>
-	<string>eqmonitor-main.appspot.com</string>
+	<string>eqmonitor-main.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>

@@ -104,6 +104,7 @@ class Assets {
   static const $AssetsImagesGen images = $AssetsImagesGen();
   static const String jmaCodeTable = 'assets/jma_code_table.pb';
   static const String jmaMap = 'assets/jma_map.pb';
+  static const String kyoshinMonitorScale = 'assets/kyoshin_monitor_scale.json';
   static const String kyoshinObservationPoint =
       'assets/kyoshin_observation_point.pb';
   static const String tjma2001 = 'assets/tjma2001.csv';
@@ -115,6 +116,7 @@ class Assets {
         header,
         jmaCodeTable,
         jmaMap,
+        kyoshinMonitorScale,
         kyoshinObservationPoint,
         tjma2001,
         shorebird
