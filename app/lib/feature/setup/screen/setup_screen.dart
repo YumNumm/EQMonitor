@@ -1,12 +1,7 @@
 import 'dart:async';
 
-import 'package:eqmonitor/core/provider/shared_preferences.dart';
-import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/setup/component/background_image.dart';
 import 'package:eqmonitor/feature/setup/pages/introduction_page.dart';
-import 'package:eqmonitor/feature/setup/pages/kmoni_warn.dart';
-import 'package:eqmonitor/feature/setup/pages/notification_setting.dart';
-import 'package:eqmonitor/feature/setup/pages/quick_guide_about_eew.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -25,18 +20,6 @@ class SetupScreen extends HookConsumerWidget {
     final pages = <Widget>[
       IntroductionPage(
         onNext: next,
-      ),
-      QuickGuideAboutEewPage(
-        onNext: next,
-      ),
-      KmoniWarnPage(onNext: next),
-      NotificationSettingIntroPage(
-        onNext: () async {
-          unawaited(
-            ref.read(sharedPreferencesProvider).setBool('isInitialized', true),
-          );
-          const HomeRoute().pushReplacement(context);
-        },
       ),
     ];
     return SetupBackgroundImageWidget(

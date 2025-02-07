@@ -50,7 +50,7 @@ class IntroductionPage extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: ActionButton.text(
             context: context,
-            text: 'クイックガイドを開始',
+            text: 'はじめる',
             onPressed: onNext,
           ),
         ),
@@ -67,7 +67,7 @@ class IntroductionPage extends StatelessWidget {
               TextSpan(
                 children: [
                   const TextSpan(
-                    text: 'クイックガイドを開始することで、 ',
+                    text: 'はじめるをタップすることで、 ',
                   ),
                   TextSpan(
                     text: '利用規約',

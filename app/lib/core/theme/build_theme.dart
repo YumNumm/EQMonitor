@@ -27,6 +27,10 @@ ThemeData buildTheme({
       scaffoldBackgroundColor: colorScheme?.surface,
       barBackgroundColor: colorScheme?.surface,
     ),
+    appBarTheme: const AppBarTheme(
+      surfaceTintColor: Colors.transparent,
+      scrolledUnderElevation: 0,
+    ),
   );
 }
 

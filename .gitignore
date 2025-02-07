@@ -173,3 +173,6 @@ secret/
 
 # DerivedData
 **/DerivedData/
+
+
+/*.sql

@@ -18,7 +18,7 @@ import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/core/util/license/init_licenses.dart';
 import 'package:eqmonitor/feature/donation/data/donation_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/kyoshin_color_map_data_source.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/provider/kmoni_color_provider.dart';
+import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_map.dart';
 import 'package:eqmonitor/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';

@@ -7,7 +7,6 @@ import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_settings_page.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
 import 'package:eqmonitor/feature/settings/features/feedback/data/custom_feedback.dart';
 import 'package:eqmonitor/gen/assets.gen.dart';
@@ -75,12 +74,6 @@ class SettingsScreen extends ConsumerWidget {
             title: const Text('表示設定'),
             leading: const Icon(Icons.color_lens),
             onTap: () async => const DisplayRoute().push<void>(context),
-          ),
-          ListTile(
-            title: const Text('強震モニタ設定'),
-            leading: const Icon(Icons.settings),
-            onTap: () async =>
-                const KyoshinMonitorSettingsRoute().push<void>(context),
           ),
           ListTile(
             title: const Text('地震履歴設定'),

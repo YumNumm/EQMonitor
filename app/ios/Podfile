@@ -35,7 +35,7 @@ end
 
 target 'FcmServiceExtension' do
   use_frameworks!
-  pod 'Firebase/Messaging'
+  # pod 'Firebase/Messaging'
   pod 'SwiftProtobuf'
   #pod 'GzipSwift'
 end
@@ -107,5 +107,3 @@ post_install do |installer|
     # End of the permission_handler configuration
   end
 end
-
-pod 'GoogleUtilities'
