@@ -36,7 +36,8 @@ class ThemeModeNotifier extends _$ThemeModeNotifier {
 }
 
 @Riverpod(keepAlive: true)
-class BrightnessNotifier extends _$BrightnessNotifier with WidgetsBindingObserver {
+class BrightnessNotifier extends _$BrightnessNotifier
+    with WidgetsBindingObserver {
   @override
   ui.Brightness build() {
     // プロバイダ構築時に監視を開始。

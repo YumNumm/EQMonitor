@@ -35,8 +35,7 @@ class DebugKyoshinMonitorPage extends StatelessWidget {
               fontFamily: FontFamily.jetBrainsMono,
             ),
           ),
-          actions: const [
-          ],
+          actions: const [],
         ),
         body: const SingleChildScrollView(
           primary: true,
