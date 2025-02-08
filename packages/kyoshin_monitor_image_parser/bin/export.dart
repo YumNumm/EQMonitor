@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element, unused_local_variable, unreachable_from_main
+
 import 'dart:convert';
 import 'dart:math' as math;
 
@@ -9,6 +11,7 @@ class Color {
   final int green;
   final int blue;
 
+  // ignore: prefer_constructors_over_static_methods
   static Color fromRGB(int r, int g, int b) {
     return Color(
       r.clamp(0, 255),
