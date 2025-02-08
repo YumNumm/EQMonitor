@@ -172,6 +172,7 @@ jobs:
         with:
           name: EQMonitor-ios.ipa
           path: app/eqmonitor.ipa
+          if-no-files-found: error
 
   deploy-ios:
     needs: build-ios
@@ -284,12 +285,14 @@ jobs:
         with:
           name: EQMonitor-android.aab
           path: app/build/app/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
 
       - name: Upload apk as artifact
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
         with:
           name: EQMonitor-android.apk
           path: app/build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
 
   deploy-android:
     needs: build-android
