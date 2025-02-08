@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:eqmonitor/feature/map/data/controller/declarative_map_controller.dart';
-import 'package:eqmonitor/feature/map/data/layer/base/i_map_layer.dart';
+import 'package:eqmonitor/feature/map/data/layer/base/map_layer.dart';
 import 'package:eqmonitor/feature/map/data/model/camera_position.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -41,7 +41,7 @@ class DeclarativeMap extends StatefulHookConsumerWidget {
   final void Function(MapCameraPosition)? onCameraIdle;
 
   /// レイヤーのリスト
-  final List<IMapLayer> layers;
+  final List<MapLayer> layers;
 
   /// 現在位置の表示
   final bool myLocationEnabled;
@@ -179,7 +179,7 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
     }
   }
 
-  Future<void> _addLayer(IMapLayer layer) async {
+  Future<void> _addLayer(MapLayer layer) async {
     final controller = widget.controller.controller!;
     await controller.addGeoJsonSource(
       layer.sourceId,

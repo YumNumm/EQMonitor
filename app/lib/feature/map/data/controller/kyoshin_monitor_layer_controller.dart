@@ -3,7 +3,7 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_set
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
-import 'package:eqmonitor/feature/map/data/layer/base/i_map_layer.dart';
+import 'package:eqmonitor/feature/map/data/layer/base/map_layer.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -36,7 +36,10 @@ class KyoshinMonitorLayerController extends _$KyoshinMonitorLayerController {
         kyoshinMonitorSettingsProvider,
         (prev, next) {
           if (prev?.realtimeDataType != next.realtimeDataType ||
-              prev?.realtimeLayer != next.realtimeLayer) {
+              prev?.realtimeLayer != next.realtimeLayer ||
+              prev?.kmoniMarkerType != next.kmoniMarkerType) {
+            print('prev: ${prev?.kmoniMarkerType}');
+            print('next: ${next.kmoniMarkerType}');
             state = state.copyWith(
               points: [],
               realtimeDataType: next.realtimeDataType,
@@ -97,7 +100,7 @@ extension KyoshinMonitorObservationAnalyzedPointEx
 }
 
 @freezed
-class KyoshinMonitorObservationLayer extends IMapLayer
+class KyoshinMonitorObservationLayer extends MapLayer
     with _$KyoshinMonitorObservationLayer {
   factory KyoshinMonitorObservationLayer({
     required String id,
@@ -186,5 +189,5 @@ class KyoshinMonitorObservationLayer extends IMapLayer
   }
 
   @override
-  String get layerPropertiesHash => '${markerType.index}';
+  String get layerPropertiesHash => markerType.name;
 }

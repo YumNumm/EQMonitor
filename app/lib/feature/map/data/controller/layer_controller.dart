@@ -1,4 +1,4 @@
-import 'package:eqmonitor/feature/map/data/layer/base/i_map_layer.dart';
+import 'package:eqmonitor/feature/map/data/layer/base/map_layer.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'layer_controller.g.dart';
@@ -7,12 +7,12 @@ part 'layer_controller.g.dart';
 @riverpod
 class MapLayerController extends _$MapLayerController {
   @override
-  List<IMapLayer> build() {
+  List<MapLayer> build() {
     return [];
   }
 
   /// レイヤーを追加
-  void addLayer(IMapLayer layer) {
+  void addLayer(MapLayer layer) {
     state = [...state, layer];
   }
 
@@ -22,7 +22,7 @@ class MapLayerController extends _$MapLayerController {
   }
 
   /// レイヤーを更新
-  void updateLayer(IMapLayer layer) {
+  void updateLayer(MapLayer layer) {
     state = state.map((l) => l.id == layer.id ? layer : l).toList();
   }
 

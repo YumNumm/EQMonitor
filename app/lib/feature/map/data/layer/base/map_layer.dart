@@ -1,7 +1,7 @@
 import 'package:maplibre_gl/maplibre_gl.dart';
 
-abstract class IMapLayer {
-  const IMapLayer();
+abstract class MapLayer {
+  const MapLayer();
 
   Map<String, dynamic> toGeoJsonSource();
   String get geoJsonSourceHash;
@@ -22,13 +22,13 @@ class CachedIMapLayer {
     required this.layerPropertiesHash,
   });
 
-  factory CachedIMapLayer.fromLayer(IMapLayer layer) => CachedIMapLayer(
+  factory CachedIMapLayer.fromLayer(MapLayer layer) => CachedIMapLayer(
         layer: layer,
         geoJsonSourceHash: layer.geoJsonSourceHash,
         layerPropertiesHash: layer.layerPropertiesHash,
       );
 
-  final IMapLayer layer;
+  final MapLayer layer;
   final String geoJsonSourceHash;
   final String layerPropertiesHash;
 }
