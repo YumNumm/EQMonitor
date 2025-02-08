@@ -145,7 +145,7 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
             // style check
             final cachedLayerPropertiesHash = cachedLayer.layerPropertiesHash;
             final layerPropertiesHash = layer.layerPropertiesHash;
-            log('cached $cachedLayerPropertiesHash layer $layerPropertiesHash');
+            log('cached $cachedLayerPropertiesHash -> $layerPropertiesHash');
             if (cachedLayerPropertiesHash != layerPropertiesHash) {
               log('layer properties changed');
               await controller.removeLayer(layer.id);

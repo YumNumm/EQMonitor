@@ -13,6 +13,4 @@ enum KyoshinMonitorDelayAdjustType {
   ;
 }
 
-abstract class KyoshinMonitorDelayAdjustService {
-  
-}
+abstract class KyoshinMonitorDelayAdjustService {}
