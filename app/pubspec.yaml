@@ -21,6 +21,8 @@ dependencies:
   device_info_plus: ^11.2.0
   dio: ^5.7.0
   dynamic_color: ^1.7.0
+  earthquake_replay:
+    path: ../packages/earthquake_replay
   eqapi_client:
     path: ../packages/eqapi_client
   eqapi_types:
@@ -28,6 +30,7 @@ dependencies:
   extensions:
     path: ../packages/extensions
   feedback: ^3.1.0
+  file_picker: ^8.3.2
   firebase_analytics: ^11.3.6
   firebase_app_installations: ^0.3.1
   firebase_core: ^3.8.1
