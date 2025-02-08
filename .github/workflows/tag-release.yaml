@@ -71,6 +71,7 @@ jobs:
         with:
           path: app/build/app/outputs/bundle/release/app-release.aab
           name: release-aab
+          if-no-files-found: error
 
   deploy-android:
     runs-on: ubuntu-latest
@@ -213,6 +214,7 @@ jobs:
         with:
           path: app/ios/Runner.ipa
           name: release-ios
+          if-no-files-found: error
 
   deploy-ios:
     runs-on: macos-latest
