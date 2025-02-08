@@ -5,8 +5,8 @@ version: 1.0.0
 publish_to: "none"
 
 environment:
-  sdk: ^3.6.1
-  flutter: ^3.27.3
+  sdk: ^3.6.2
+  flutter: ^3.27.4
 
 resolution: workspace
 
