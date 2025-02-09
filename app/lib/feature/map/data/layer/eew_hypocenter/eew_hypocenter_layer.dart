@@ -23,6 +23,7 @@ class EewHypocenterLayer extends MapLayer with _$EewHypocenterLayer {
     required String iconImage,
     @Default(null) double? minZoom,
     @Default(null) double? maxZoom,
+    dynamic filter,
   }) = _EewHypocenterLayer;
 
   const EewHypocenterLayer._();
