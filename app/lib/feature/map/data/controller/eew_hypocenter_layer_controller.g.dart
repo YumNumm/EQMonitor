@@ -9,7 +9,7 @@ part of 'eew_hypocenter_layer_controller.dart';
 // **************************************************************************
 
 String _$eewHypocenterLayerControllerHash() =>
-    r'fab6bcc3fe7379f77aa02fd13f197361d109358e';
+    r'911e081cb89be6fef12a9c0841e147725aaa38a9';
 
 /// Copied from Dart SDK
 class _SystemHash {

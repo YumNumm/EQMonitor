@@ -48,7 +48,7 @@ final eewAliveCheckerProvider = Provider<EewAliveChecker>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef EewAliveCheckerRef = ProviderRef<EewAliveChecker>;
-String _$eewAliveTelegramHash() => r'0f34793e7fbbc2dcc781d51e6bd49413e495555a';
+String _$eewAliveTelegramHash() => r'0e6433459f8e9d3a6a4b414224e0a0d9abb1e5a2';
 
 /// イベント終了していないEEW
 ///
