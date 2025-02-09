@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/map/data/controller/declarative_map_controller.dart';
 import 'package:eqmonitor/feature/map/data/layer/base/map_layer.dart';
@@ -77,7 +78,7 @@ class DeclarativeMap extends StatefulHookConsumerWidget {
 }
 
 class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
-  final Map<String, CachedIMapLayer> _addedLayers = {};
+  final Map<String, CachedMapLayer> _addedLayers = {};
   // レイヤー操作のロック
   bool _isUpdatingLayers = false;
 
@@ -128,63 +129,87 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
       // ロック取得
       _isUpdatingLayers = true;
 
-      // 削除されたレイヤーを削除
-      final newLayerIds = widget.layers.map((l) => l.id).toSet();
-      for (final id in _addedLayers.keys.toSet()) {
-        if (!newLayerIds.contains(id)) {
-          await controller.removeLayer(id);
-          await controller.removeSource(_addedLayers[id]!.layer.sourceId);
-          _addedLayers.remove(id);
+      // 削除探索
+      for (final layer in _addedLayers.values) {
+        if (!widget.layers.any((e) => e.id == layer.layer.id)) {
+          await controller.removeLayer(layer.layer.id);
+          await controller.removeSource(layer.layer.sourceId);
+          _addedLayers.remove(layer.layer.id);
         }
       }
 
-      for (final layer in widget.layers) {
-        if (_addedLayers.containsKey(layer.id)) {
-          final cachedLayer = _addedLayers[layer.id]!;
-          // レイヤーの更新
-          if (cachedLayer.layer != layer) {
-            // キャッシュ済みレイヤーと同じかどうか
-            // style check
-            final cachedLayerPropertiesHash = cachedLayer.layerPropertiesHash;
-            final layerPropertiesHash = layer.layerPropertiesHash;
-            if (cachedLayerPropertiesHash != layerPropertiesHash) {
-              await controller.setLayerProperties(
-                layer.id,
-                layer.toLayerProperties(),
-              );
-              _addedLayers[layer.id] = _addedLayers[layer.id]!.copyWith(
-                layerPropertiesHash: layerPropertiesHash,
-              );
+      widget.layers.forEachIndexed(
+        (index, layer) async {
+          final belowLayerId = index > 0 ? widget.layers[index - 1].id : null;
+
+          if (_addedLayers.containsKey(layer.id)) {
+            final cachedLayer = _addedLayers[layer.id]!;
+            // レイヤーの更新
+            if (cachedLayer.layer != layer) {
+              final isLayerPropertiesChanged =
+                  cachedLayer.layerPropertiesHash != layer.layerPropertiesHash;
+              final isGeoJsonSourceChanged =
+                  cachedLayer.geoJsonSourceHash != layer.geoJsonSourceHash;
+              final isFilterChanged = cachedLayer.layer.filter != layer.filter;
+
+              // style check
+              if (isLayerPropertiesChanged) {
+                await controller.setLayerProperties(
+                  layer.id,
+                  layer.toLayerProperties(),
+                );
+                _addedLayers[layer.id] = _addedLayers[layer.id]!.copyWith(
+                  layerPropertiesHash: layer.layerPropertiesHash,
+                );
+              }
+              // geoJsonSource check
+              if (isGeoJsonSourceChanged) {
+                await controller.setGeoJsonSource(
+                  layer.sourceId,
+                  layer.toGeoJsonSource(),
+                );
+                _addedLayers[layer.id] = _addedLayers[layer.id]!.copyWith(
+                  geoJsonSourceHash: layer.geoJsonSourceHash,
+                );
+              }
+              // filter check
+              if (isFilterChanged) {
+                await controller.setFilter(
+                  layer.id,
+                  layer.filter,
+                );
+                _addedLayers[layer.id] = _addedLayers[layer.id]!.copyWith(
+                  layer: layer,
+                );
+              }
             }
-            // geoJsonSource check
-            final cachedGeoJsonSource = cachedLayer.geoJsonSourceHash;
-            final geoJsonSource = layer.geoJsonSourceHash;
-            if (cachedGeoJsonSource != geoJsonSource) {
-              // update geojson
-              await controller.setGeoJsonSource(
-                layer.sourceId,
-                layer.toGeoJsonSource(),
-              );
-              _addedLayers[layer.id] = _addedLayers[layer.id]!.copyWith(
-                geoJsonSourceHash: geoJsonSource,
-              );
-            }
+          } else {
+            print('adding new layer: ${layer.id}');
+            // 新規レイヤーの追加
+            await _addLayer(
+              layer: layer,
+              belowLayerId: belowLayerId,
+            );
           }
-        } else {
-          log('adding new layer: ${layer.id}');
-          // 新規レイヤーの追加
-          await _addLayer(layer);
-        }
-        _addedLayers[layer.id] = CachedIMapLayer.fromLayer(layer);
-      }
+          _addedLayers[layer.id] = CachedMapLayer.fromLayer(
+            layer: layer,
+            belowLayerId: belowLayerId,
+          );
+        },
+      );
     } finally {
       // ロック解放
       _isUpdatingLayers = false;
     }
   }
 
-  Future<void> _addLayer(MapLayer layer) async {
+  Future<void> _addLayer({
+    required MapLayer layer,
+    String? belowLayerId,
+  }) async {
     final controller = widget.controller.controller!;
+    await controller.removeSource(layer.sourceId);
+    await controller.removeLayer(layer.id);
     await controller.addGeoJsonSource(
       layer.sourceId,
       layer.toGeoJsonSource(),
@@ -193,6 +218,7 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
       layer.sourceId,
       layer.id,
       layer.toLayerProperties(),
+      belowLayerId: belowLayerId,
     );
   }
 
@@ -201,13 +227,18 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
     for (final layer in widget.layers) {
       await controller.removeLayer(layer.id);
       await controller.removeSource(layer.sourceId);
-      await _addLayer(layer);
+      _addedLayers.remove(layer.id);
     }
+    await _updateLayers();
   }
 
   @override
   void didUpdateWidget(DeclarativeMap oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (_isUpdatingLayers) {
+      talker.error('map layer update is locked');
+      return;
+    }
     if (widget.controller.controller == null) {
       talker.error('controller is null');
       return;
