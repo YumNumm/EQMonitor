@@ -3,27 +3,27 @@ description: The workspace for the EQMonitor project.
 environment:
   sdk: ^3.6.1
 workspace:
-    - app
-    - packages/_base
-    - packages/eqapi_client
-    - packages/eqapi_types
-    - packages/eqmonitor_lints
-    - packages/extensions
-    - packages/jma_code_table_converter_internal
-    - packages/jma_code_table_types
-    - packages/jma_map
-    - packages/jma_parameter_api_client
-    - packages/jma_parameter_converter_internal
-    - packages/jma_parameter_types
-    - packages/kyoshin_observation_point_converter_internal
-    - packages/kyoshin_observation_point_types
-    - packages/lat_lng
-    - packages/notification_setting_types
-    - packages/earthquake_replay
-    - packages/msgpack_dart
-    - packages/kyoshin_monitor_api
-    - packages/kyoshin_monitor_image_parser
-    # <ADD_PACKAGE_HERE>
+  - app
+  - packages/_base
+  - packages/eqapi_client
+  - packages/eqapi_types
+  - packages/eqmonitor_lints
+  - packages/extensions
+  - packages/jma_code_table_converter_internal
+  - packages/jma_code_table_types
+  - packages/jma_map
+  - packages/jma_parameter_api_client
+  - packages/jma_parameter_converter_internal
+  - packages/jma_parameter_types
+  - packages/kyoshin_observation_point_converter_internal
+  - packages/kyoshin_observation_point_types
+  - packages/lat_lng
+  - packages/notification_setting_types
+  - packages/earthquake_replay
+  - packages/msgpack_dart
+  - packages/kyoshin_monitor_api
+  - packages/kyoshin_monitor_image_parser
+  # <ADD_PACKAGE_HERE>
 dependencies:
   melos: ^7.0.0-dev.4
 dependency_overrides:
@@ -47,8 +47,8 @@ melos:
     bootstrap:
       runPubGetInParallel: false
       environment:
-        sdk: ^3.6.1
-        flutter: ^3.27.3
+        sdk: ^3.6.2
+        flutter: ^3.27.4
   scripts:
     analyze:
       run: |
@@ -79,10 +79,8 @@ melos:
       exec:
         concurrency: 1
         orderDependents: true
-
     clean-all:
       run: melos clean &&  melos exec "flutter clean"
-
     # dependsOn で or 条件で指定することができないため
     # スクリプトを Flutter と Dart に分けている
     test:
@@ -106,7 +104,6 @@ melos:
       packageFilters:
         dependsOn: test
         dirExists: test
-
     # dependsOn で or 条件で指定することができないため
     # スクリプトを Flutter と Dart に分けている
     report:test:
@@ -130,13 +127,11 @@ melos:
       packageFilters:
         dependsOn: test
         dirExists: test
-
     ci:report:custom_lint:
       description: CI 環境で custom_lint のレポートを生成します。
       exec: bash "$MELOS_ROOT_PATH/scripts/report-custom-lint-ci.sh"
       packageFilters:
         dependsOn: custom_lint
-
   packages:
     - app
     - packages/*
