@@ -32,6 +32,7 @@ Stream<Position> locationStream(Ref ref) async* {
   }
 }
 
+/// 近隣の強震観測点
 @riverpod
 Stream<(KyoshinObservationPoint, double km)> closestKmoniObservationPointStream(
   Ref ref,

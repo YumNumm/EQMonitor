@@ -7,7 +7,6 @@ import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.d
 import 'package:eqmonitor/feature/map/ui/declarative_map.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:maplibre_gl/maplibre_gl.dart';
 
 class HomeMapContent extends HookConsumerWidget {
   const HomeMapContent({
@@ -45,9 +44,6 @@ class HomeMapContent extends HookConsumerWidget {
 
     return DeclarativeMap(
       myLocationEnabled: homeConfiguration.showLocation,
-      myLocationRenderMode: homeConfiguration.showLocation
-          ? MyLocationRenderMode.compass
-          : MyLocationRenderMode.normal,
       styleString: styleString,
       controller: mapController,
       initialCameraPosition: cameraPosition,

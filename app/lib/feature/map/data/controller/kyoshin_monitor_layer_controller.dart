@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
@@ -35,11 +38,19 @@ class KyoshinMonitorLayerController extends _$KyoshinMonitorLayerController {
       ..listen(
         kyoshinMonitorSettingsProvider,
         (prev, next) {
+          log('prev: ${jsonEncode(prev)}');
+          log('next: ${jsonEncode(next)}');
           if (prev?.realtimeDataType != next.realtimeDataType ||
               prev?.realtimeLayer != next.realtimeLayer ||
               prev?.kmoniMarkerType != next.kmoniMarkerType) {
-            print('prev: ${prev?.kmoniMarkerType}');
-            print('next: ${next.kmoniMarkerType}');
+            log(
+              'prev: ${prev?.kmoniMarkerType}',
+              name: 'kyoshin_monitor_layer_controller',
+            );
+            log(
+              'next: ${next.kmoniMarkerType}',
+              name: 'kyoshin_monitor_layer_controller',
+            );
             state = state.copyWith(
               points: [],
               realtimeDataType: next.realtimeDataType,
@@ -133,13 +144,9 @@ class KyoshinMonitorObservationLayer extends MapLayer
               },
               'properties': {
                 'color': e.observation.colorHex,
-                'intensity': e.observation.scaleToIntensity,
                 'name': e.point.code,
-                'strokeOpacity': switch (markerType) {
-                  KyoshinMonitorMarkerType.always => 1.0,
-                  KyoshinMonitorMarkerType.onlyEew when isInEew => 1.0,
-                  _ => 0.0,
-                },
+                'zIndex': e.observation.scale,
+                'showStroke': markerType == KyoshinMonitorMarkerType.always,
               },
             },
           )
@@ -172,18 +179,20 @@ class KyoshinMonitorObservationLayer extends MapLayer
         'get',
         'strokeOpacity',
       ],
-      circleStrokeWidth: [
-        'interpolate',
-        ['linear'],
-        ['zoom'],
-        3,
-        0.2,
-        10,
-        1,
-      ],
+      circleStrokeWidth: switch (markerType) {
+        KyoshinMonitorMarkerType.always => [
+          'get',
+          'strokeWidth',
+        ],
+        KyoshinMonitorMarkerType.onlyEew when isInEew => [
+          'get',
+          'strokeWidth',
+        ],
+        _ => 0,
+      },
       circleSortKey: [
         'get',
-        'intensity',
+        'zIndex',
       ],
     );
   }

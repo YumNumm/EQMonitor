@@ -145,12 +145,11 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
             // style check
             final cachedLayerPropertiesHash = cachedLayer.layerPropertiesHash;
             final layerPropertiesHash = layer.layerPropertiesHash;
-            log('cached $cachedLayerPropertiesHash -> $layerPropertiesHash');
             if (cachedLayerPropertiesHash != layerPropertiesHash) {
-              log('layer properties changed');
-              await controller.removeLayer(layer.id);
-              await controller.removeSource(layer.sourceId);
-              await _addLayer(layer);
+              await controller.setLayerProperties(
+                layer.id,
+                layer.toLayerProperties(),
+              );
               _addedLayers[layer.id] = CachedIMapLayer.fromLayer(layer);
               log('layer properties changed: ${layer.toLayerProperties().toJson()}');
 
