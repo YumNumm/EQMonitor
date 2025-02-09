@@ -8,11 +8,11 @@ part of 'travel_time_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$travelTimeHash() => r'390c9a0aec373a40dec642325d1da143ea74862a';
+String _$travelTimeHash() => r'64b0091c63436d40dd0f6043fcc05e804ad00964';
 
 /// See also [travelTime].
 @ProviderFor(travelTime)
-final travelTimeProvider = FutureProvider<TravelTimeTables>.internal(
+final travelTimeProvider = Provider<TravelTimeTables>.internal(
   travelTime,
   name: r'travelTimeProvider',
   debugGetCreateSourceHash:
@@ -23,13 +23,31 @@ final travelTimeProvider = FutureProvider<TravelTimeTables>.internal(
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef TravelTimeRef = FutureProviderRef<TravelTimeTables>;
+typedef TravelTimeRef = ProviderRef<TravelTimeTables>;
+String _$travelTimeInternalHash() =>
+    r'e3fd821da9e8d04c0ff59076ebb98b85ac978e3f';
+
+/// See also [travelTimeInternal].
+@ProviderFor(travelTimeInternal)
+final travelTimeInternalProvider = FutureProvider<TravelTimeTables>.internal(
+  travelTimeInternal,
+  name: r'travelTimeInternalProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$travelTimeInternalHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef TravelTimeInternalRef = FutureProviderRef<TravelTimeTables>;
 String _$travelTimeDepthMapHash() =>
-    r'371546dc657fab0f9a010710f05044931d62b973';
+    r'dae2dec61f482a44877c74c71d28b94d4065c643';
 
 /// See also [travelTimeDepthMap].
 @ProviderFor(travelTimeDepthMap)
-final travelTimeDepthMapProvider = FutureProvider<TravelTimeDepthMap>.internal(
+final travelTimeDepthMapProvider = Provider<TravelTimeDepthMap>.internal(
   travelTimeDepthMap,
   name: r'travelTimeDepthMapProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -41,6 +59,6 @@ final travelTimeDepthMapProvider = FutureProvider<TravelTimeDepthMap>.internal(
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef TravelTimeDepthMapRef = FutureProviderRef<TravelTimeDepthMap>;
+typedef TravelTimeDepthMapRef = ProviderRef<TravelTimeDepthMap>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
