@@ -171,6 +171,7 @@ mixin _$EewHypocenterLayer {
   String get iconImage => throw _privateConstructorUsedError;
   double? get minZoom => throw _privateConstructorUsedError;
   double? get maxZoom => throw _privateConstructorUsedError;
+  dynamic get filter => throw _privateConstructorUsedError;
 
   /// Create a copy of EewHypocenterLayer
   /// with the given fields replaced by the non-null parameter values.
@@ -192,7 +193,8 @@ abstract class $EewHypocenterLayerCopyWith<$Res> {
       List<EewHypocenter> hypocenters,
       String iconImage,
       double? minZoom,
-      double? maxZoom});
+      double? maxZoom,
+      dynamic filter});
 }
 
 /// @nodoc
@@ -217,6 +219,7 @@ class _$EewHypocenterLayerCopyWithImpl<$Res, $Val extends EewHypocenterLayer>
     Object? iconImage = null,
     Object? minZoom = freezed,
     Object? maxZoom = freezed,
+    Object? filter = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -247,6 +250,10 @@ class _$EewHypocenterLayerCopyWithImpl<$Res, $Val extends EewHypocenterLayer>
           ? _value.maxZoom
           : maxZoom // ignore: cast_nullable_to_non_nullable
               as double?,
+      filter: freezed == filter
+          ? _value.filter
+          : filter // ignore: cast_nullable_to_non_nullable
+              as dynamic,
     ) as $Val);
   }
 }
@@ -266,7 +273,8 @@ abstract class _$$EewHypocenterLayerImplCopyWith<$Res>
       List<EewHypocenter> hypocenters,
       String iconImage,
       double? minZoom,
-      double? maxZoom});
+      double? maxZoom,
+      dynamic filter});
 }
 
 /// @nodoc
@@ -289,6 +297,7 @@ class __$$EewHypocenterLayerImplCopyWithImpl<$Res>
     Object? iconImage = null,
     Object? minZoom = freezed,
     Object? maxZoom = freezed,
+    Object? filter = freezed,
   }) {
     return _then(_$EewHypocenterLayerImpl(
       id: null == id
@@ -319,6 +328,10 @@ class __$$EewHypocenterLayerImplCopyWithImpl<$Res>
           ? _value.maxZoom
           : maxZoom // ignore: cast_nullable_to_non_nullable
               as double?,
+      filter: freezed == filter
+          ? _value.filter
+          : filter // ignore: cast_nullable_to_non_nullable
+              as dynamic,
     ));
   }
 }
@@ -333,7 +346,8 @@ class _$EewHypocenterLayerImpl extends _EewHypocenterLayer {
       required final List<EewHypocenter> hypocenters,
       required this.iconImage,
       this.minZoom = null,
-      this.maxZoom = null})
+      this.maxZoom = null,
+      this.filter})
       : _hypocenters = hypocenters,
         super._();
 
@@ -359,10 +373,12 @@ class _$EewHypocenterLayerImpl extends _EewHypocenterLayer {
   @override
   @JsonKey()
   final double? maxZoom;
+  @override
+  final dynamic filter;
 
   @override
   String toString() {
-    return 'EewHypocenterLayer(id: $id, sourceId: $sourceId, visible: $visible, hypocenters: $hypocenters, iconImage: $iconImage, minZoom: $minZoom, maxZoom: $maxZoom)';
+    return 'EewHypocenterLayer(id: $id, sourceId: $sourceId, visible: $visible, hypocenters: $hypocenters, iconImage: $iconImage, minZoom: $minZoom, maxZoom: $maxZoom, filter: $filter)';
   }
 
   @override
@@ -379,7 +395,8 @@ class _$EewHypocenterLayerImpl extends _EewHypocenterLayer {
             (identical(other.iconImage, iconImage) ||
                 other.iconImage == iconImage) &&
             (identical(other.minZoom, minZoom) || other.minZoom == minZoom) &&
-            (identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom));
+            (identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom) &&
+            const DeepCollectionEquality().equals(other.filter, filter));
   }
 
   @override
@@ -391,7 +408,8 @@ class _$EewHypocenterLayerImpl extends _EewHypocenterLayer {
       const DeepCollectionEquality().hash(_hypocenters),
       iconImage,
       minZoom,
-      maxZoom);
+      maxZoom,
+      const DeepCollectionEquality().hash(filter));
 
   /// Create a copy of EewHypocenterLayer
   /// with the given fields replaced by the non-null parameter values.
@@ -411,7 +429,8 @@ abstract class _EewHypocenterLayer extends EewHypocenterLayer {
       required final List<EewHypocenter> hypocenters,
       required final String iconImage,
       final double? minZoom,
-      final double? maxZoom}) = _$EewHypocenterLayerImpl;
+      final double? maxZoom,
+      final dynamic filter}) = _$EewHypocenterLayerImpl;
   _EewHypocenterLayer._() : super._();
 
   @override
@@ -428,6 +447,8 @@ abstract class _EewHypocenterLayer extends EewHypocenterLayer {
   double? get minZoom;
   @override
   double? get maxZoom;
+  @override
+  dynamic get filter;
 
   /// Create a copy of EewHypocenterLayer
   /// with the given fields replaced by the non-null parameter values.

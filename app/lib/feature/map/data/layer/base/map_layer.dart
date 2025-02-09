@@ -1,4 +1,7 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
+
+part 'map_layer.freezed.dart';
 
 abstract class MapLayer {
   const MapLayer();
@@ -10,36 +13,31 @@ abstract class MapLayer {
 
   String get id;
   String get sourceId;
-  bool get visible;
+  bool? get visible;
   double? get minZoom;
   double? get maxZoom;
+  dynamic get filter;
 }
 
-class CachedIMapLayer {
-  const CachedIMapLayer({
-    required this.layer,
-    required this.geoJsonSourceHash,
-    required this.layerPropertiesHash,
-  });
+@freezed
+class CachedMapLayer with _$CachedMapLayer {
+  const factory CachedMapLayer({
+    required MapLayer layer,
+    required String geoJsonSourceHash,
+    required String layerPropertiesHash,
+    required String? belowLayerId,
+  }) = _CachedMapLayer;
 
-  factory CachedIMapLayer.fromLayer(MapLayer layer) => CachedIMapLayer(
+  const CachedMapLayer._();
+
+  factory CachedMapLayer.fromLayer({
+    required MapLayer layer,
+    String? belowLayerId,
+  }) =>
+      CachedMapLayer(
         layer: layer,
         geoJsonSourceHash: layer.geoJsonSourceHash,
         layerPropertiesHash: layer.layerPropertiesHash,
-      );
-
-  final MapLayer layer;
-  final String geoJsonSourceHash;
-  final String layerPropertiesHash;
-
-  CachedIMapLayer copyWith({
-    MapLayer? layer,
-    String? geoJsonSourceHash,
-    String? layerPropertiesHash,
-  }) =>
-      CachedIMapLayer(
-        layer: layer ?? this.layer,
-        geoJsonSourceHash: geoJsonSourceHash ?? this.geoJsonSourceHash,
-        layerPropertiesHash: layerPropertiesHash ?? this.layerPropertiesHash,
+        belowLayerId: belowLayerId,
       );
 }
