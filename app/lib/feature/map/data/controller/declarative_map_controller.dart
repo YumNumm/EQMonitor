@@ -1,6 +1,5 @@
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/map/ui/declarative_map.dart';
-import 'package:eqmonitor/gen/assets.gen.dart';
 import 'package:flutter/services.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 

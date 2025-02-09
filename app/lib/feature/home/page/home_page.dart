@@ -78,29 +78,27 @@ class _Sheet extends StatelessWidget {
                   top: Radius.circular(16),
                 ),
               ),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      width: 36,
-                      height: 4,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: theme.colorScheme.onSurface,
-                      ),
+              child: Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    width: 36,
+                    height: 4,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: theme.colorScheme.onSurface,
                     ),
-                    const Padding(
+                  ),
+                  const Expanded(
+                    child: Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: 8,
                       ),
-                      child: Expanded(
-                        child: _SheetBody(),
-                      ),
+                      child: _SheetBody(),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           );
@@ -128,18 +126,21 @@ class _SheetBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          const EewWidgets(),
-          const _ShakeDetectionList(),
-          const HomeEarthquakeHistorySheet(),
-          if (kDebugMode)
-            ListTile(
-              title: const Text('デバッグページ'),
-              leading: const Icon(Icons.bug_report),
-              onTap: () async => const DebuggerRoute().push<void>(context),
-            ),
-        ],
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const EewWidgets(),
+            const _ShakeDetectionList(),
+            const HomeEarthquakeHistorySheet(),
+            if (kDebugMode)
+              ListTile(
+                title: const Text('デバッグページ'),
+                leading: const Icon(Icons.bug_report),
+                onTap: () async => const DebuggerRoute().push<void>(context),
+              ),
+          ],
+        ),
       ),
     );
   }
