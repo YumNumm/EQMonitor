@@ -5,9 +5,11 @@ import 'dart:ui';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/api/eq_api.dart';
 import 'package:eqmonitor/core/provider/app_lifecycle.dart';
+import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/websocket/websocket_provider.dart';
 import 'package:extensions/extensions.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:web_socket_client/web_socket_client.dart';
@@ -76,6 +78,16 @@ class Eew extends _$Eew {
       data.add(item);
     }
     state = AsyncData(data);
+  }
+
+  void upsert(EewV1 eew) {
+    if (kDebugMode || ref.read(debuggerProvider).isDebugger) {
+      _upsert(eew);
+    } else {
+      throw UnimplementedError(
+        'This operation is not permitted in release mode',
+      );
+    }
   }
 }
 

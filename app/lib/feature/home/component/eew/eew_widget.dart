@@ -20,6 +20,7 @@ class EewWidgets extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(eewAliveTelegramProvider) ?? [];
+
     return Column(
       children: state.reversed
           .mapIndexed(
@@ -323,16 +324,19 @@ class EewWidget extends ConsumerWidget {
             ),
           ]
         : null;
-    final card = BorderedContainer(
+    final card = Card(
       elevation: 1,
-      margin: const EdgeInsets.symmetric(
-            horizontal: 12,
-          ) +
-          const EdgeInsets.only(
-            bottom: 8,
-          ),
-      padding: EdgeInsets.zero,
-      accentColor: backgroundColor.withValues(alpha: 0.3),
+      color: backgroundColor.withValues(alpha: 0.3),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(
+          color: Color.lerp(
+            backgroundColor,
+            colorTheme.outline.withValues(alpha: 0.6),
+            0.7,
+          )!,
+        ),
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 8,
