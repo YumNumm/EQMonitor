@@ -28,7 +28,7 @@ final _fetchShakeDetectionEventsProvider =
 // ignore: unused_element
 typedef _FetchShakeDetectionEventsRef
     = FutureProviderRef<List<ShakeDetectionEvent>>;
-String _$shakeDetectionHash() => r'451b7778a93fe735e240aa9a96e6aa940cf6cd17';
+String _$shakeDetectionHash() => r'3cbc2b6a6d3312d20de99ca4512ff627577f3dcd';
 
 /// See also [ShakeDetection].
 @ProviderFor(ShakeDetection)
