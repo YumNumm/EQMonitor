@@ -43,7 +43,7 @@ final eewPsWaveLineLayerControllerProvider = NotifierProvider<
 
 typedef _$EewPsWaveLineLayerController = Notifier<List<EewWaveLineLayer>>;
 String _$eewPsWaveSourceLayerControllerHash() =>
-    r'2250d315dd054e0a774c9dbbb47402e19345af4e';
+    r'37f68660c059a7e755fe5c7c1bdd5e0fc8161ea9';
 
 /// See also [EewPsWaveSourceLayerController].
 @ProviderFor(EewPsWaveSourceLayerController)
