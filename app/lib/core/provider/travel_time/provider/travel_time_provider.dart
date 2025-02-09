@@ -8,16 +8,20 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'travel_time_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<TravelTimeTables> travelTime(Ref ref) async {
+TravelTimeTables travelTime(Ref ref) =>
+    ref.watch(travelTimeInternalProvider).requireValue;
+
+@Riverpod(keepAlive: true)
+Future<TravelTimeTables> travelTimeInternal(Ref ref) async {
   final dataSource = ref.watch(travelTimeDataSourceProvider);
   return TravelTimeTables(table: await dataSource.loadTables());
 }
 
 @Riverpod(keepAlive: true)
-Future<TravelTimeDepthMap> travelTimeDepthMap(
+TravelTimeDepthMap travelTimeDepthMap(
   Ref ref,
-) async {
-  final state = await ref.watch(travelTimeProvider.future);
+)  {
+  final state =  ref.watch(travelTimeProvider);
   return state.table.groupListsBy((e) => e.depth);
 }
 
