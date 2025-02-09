@@ -36,6 +36,13 @@ class EewV1 with _$EewV1 implements V1Database {
   }) = _EewV1;
 
   factory EewV1.fromJson(Map<String, dynamic> json) => _$EewV1FromJson(json);
+
+  const EewV1._();
+
+  bool get isLevelEew =>
+      !(isPlum ?? false) && accuracy?.epicenters[0] == 1 && originTime == null;
+  bool get isIpfOnePoint =>
+      !(isPlum ?? false) && accuracy?.epicenters[0] == 1 && !isLevelEew;
 }
 
 @freezed

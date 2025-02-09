@@ -2,6 +2,7 @@ import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/map/data/controller/declarative_map_controller.dart';
 import 'package:eqmonitor/feature/map/data/controller/eew_hypocenter_layer_controller.dart';
+import 'package:eqmonitor/feature/map/data/controller/eew_ps_wave_controller.dart';
 import 'package:eqmonitor/feature/map/data/controller/kyoshin_monitor_layer_controller.dart';
 import 'package:eqmonitor/feature/map/data/layer/eew_hypocenter/eew_hypocenter_layer.dart';
 import 'package:eqmonitor/feature/map/data/model/camera_position.dart';
@@ -51,7 +52,9 @@ class HomeMapContent extends HookConsumerWidget {
         controller: mapController,
         initialCameraPosition: cameraPosition,
         layers: [
-          if (isKyoshinLayerEnabled) kyoshinLayer,
+          ...ref.watch(
+            eewPsWaveLineLayerControllerProvider,
+          ),
           ref.watch(
             eewHypocenterLayerControllerProvider(EewHypocenterIcon.normal),
           ),
@@ -59,6 +62,13 @@ class HomeMapContent extends HookConsumerWidget {
             eewHypocenterLayerControllerProvider(
               EewHypocenterIcon.lowPrecise,
             ),
+          ),
+          if (isKyoshinLayerEnabled) kyoshinLayer,
+          ...ref.watch(
+            eewPsWaveFillLayerControllerProvider,
+          ),
+          ref.watch(
+            eewPsWaveSourceLayerControllerProvider,
           ),
         ],
       ),
