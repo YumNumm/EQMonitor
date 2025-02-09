@@ -65,7 +65,7 @@ jobs:
         run: melos run rebuild --no-select
 
       - name: format
-        run: melos format --no-select
+        run: melos format
 
       - name: check difference
         run: |
