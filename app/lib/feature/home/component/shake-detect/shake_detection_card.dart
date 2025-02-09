@@ -1,5 +1,4 @@
 import 'package:eqapi_types/eqapi_types.dart';
-import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/model/intensity_color_model.dart';
 import 'package:flutter/material.dart';
@@ -38,47 +37,56 @@ class ShakeDetectionCard extends ConsumerWidget {
       JmaForecastIntensity.unknown => '揺れを検知'
     };
 
-    return BorderedContainer(
-      accentColor: Color.lerp(
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: maxIntensityColor.background.withValues(alpha: 0.2),
+        ),
+      ),
+      color: Color.lerp(
         maxIntensityColor.background,
         theme.colorScheme.surface,
         0.8,
       ),
       elevation: 1,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(),
-          Text(
-            maxIntensityText,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Row(),
+            Text(
+              maxIntensityText,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: '地域: ',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+            const SizedBox(height: 8),
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: '地域: ',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                TextSpan(
-                  text: event.regions.map((region) => region.name).join(', '),
-                ),
-              ],
+                  TextSpan(
+                    text: event.regions.map((region) => region.name).join(', '),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Text(
-            '検知時刻: '
-            // ignore: lines_longer_than_80_chars
-            "${DateFormat('yyyy/MM/dd HH:mm').format(event.createdAt.toLocal())}"
-            '頃',
-            style: theme.textTheme.bodyMedium,
-          ),
-        ],
+            Text(
+              '検知時刻: '
+              // ignore: lines_longer_than_80_chars
+              "${DateFormat('yyyy/MM/dd HH:mm').format(event.createdAt.toLocal())}"
+              '頃',
+              style: theme.textTheme.bodyMedium,
+            ),
+          ],
+        ),
       ),
     );
   }

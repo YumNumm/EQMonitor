@@ -1,6 +1,8 @@
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
 import 'package:eqmonitor/feature/home/component/map/home_map_view.dart';
+import 'package:eqmonitor/feature/home/component/shake-detect/shake_detection_card.dart';
 import 'package:eqmonitor/feature/home/component/sheet/home_earthquake_history_sheet.dart';
+import 'package:eqmonitor/feature/shake_detection/provider/shake_detection_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sheet/sheet.dart';
@@ -103,9 +105,30 @@ class _SheetBody extends ConsumerWidget {
       child: Column(
         children: [
           EewWidgets(),
+          _ShakeDetectionList(),
           HomeEarthquakeHistorySheet(),
         ],
       ),
     );
+  }
+}
+
+class _ShakeDetectionList extends ConsumerWidget {
+  const _ShakeDetectionList();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final shakeDetectionEvents = ref.watch(shakeDetectionProvider);
+
+    return switch (shakeDetectionEvents) {
+      AsyncData(:final value) when value.isNotEmpty => Column(
+          children: [
+            ...value.map(
+              (event) => ShakeDetectionCard(event: event),
+            ),
+          ],
+        ),
+      _ => const SizedBox.shrink(),
+    };
   }
 }
