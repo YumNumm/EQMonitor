@@ -28,7 +28,9 @@ typedef LocationStreamRef = AutoDisposeStreamProviderRef<Position>;
 String _$closestKmoniObservationPointStreamHash() =>
     r'0094c2c47c008397a4f460398410ce01c5f4847a';
 
-/// See also [closestKmoniObservationPointStream].
+/// 近隣の強震観測点
+///
+/// Copied from [closestKmoniObservationPointStream].
 @ProviderFor(closestKmoniObservationPointStream)
 final closestKmoniObservationPointStreamProvider =
     AutoDisposeStreamProvider<(KyoshinObservationPoint, double km)>.internal(

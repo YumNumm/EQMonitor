@@ -1,7 +1,9 @@
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/map/data/controller/declarative_map_controller.dart';
+import 'package:eqmonitor/feature/map/data/controller/eew_hypocenter_layer_controller.dart';
 import 'package:eqmonitor/feature/map/data/controller/kyoshin_monitor_layer_controller.dart';
+import 'package:eqmonitor/feature/map/data/layer/eew_hypocenter/eew_hypocenter_layer.dart';
 import 'package:eqmonitor/feature/map/data/model/camera_position.dart';
 import 'package:eqmonitor/feature/map/data/notifier/map_configuration_notifier.dart';
 import 'package:eqmonitor/feature/map/ui/declarative_map.dart';
@@ -42,14 +44,24 @@ class HomeMapContent extends HookConsumerWidget {
 
     final homeConfiguration = ref.watch(homeConfigurationNotifierProvider);
 
-    return DeclarativeMap(
-      myLocationEnabled: homeConfiguration.showLocation,
-      styleString: styleString,
-      controller: mapController,
-      initialCameraPosition: cameraPosition,
-      layers: [
-        if (isKyoshinLayerEnabled) kyoshinLayer,
-      ],
+    return RepaintBoundary(
+      child: DeclarativeMap(
+        myLocationEnabled: homeConfiguration.showLocation,
+        styleString: styleString,
+        controller: mapController,
+        initialCameraPosition: cameraPosition,
+        layers: [
+          if (isKyoshinLayerEnabled) kyoshinLayer,
+          ref.watch(
+            eewHypocenterLayerControllerProvider(EewHypocenterIcon.normal),
+          ),
+          ref.watch(
+            eewHypocenterLayerControllerProvider(
+              EewHypocenterIcon.lowPrecise,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

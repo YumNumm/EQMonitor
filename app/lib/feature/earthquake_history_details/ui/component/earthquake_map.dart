@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/extension/lat_lng_bounds_list.dart';
-import 'package:eqmonitor/core/provider/capture/intensity_icon_render.dart';
 import 'package:eqmonitor/core/provider/config/earthquake_history/earthquake_history_config_provider.dart';
 import 'package:eqmonitor/core/provider/config/earthquake_history/model/earthquake_history_config_model.dart';
 import 'package:eqmonitor/core/provider/config/theme/intensity_color/intensity_color_provider.dart';
@@ -14,7 +13,6 @@ import 'package:eqmonitor/core/provider/jma_parameter/jma_parameter.dart';
 import 'package:eqmonitor/core/provider/map/jma_map_provider.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_v1_extended.dart';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
-import 'package:extensions/extensions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -71,25 +69,10 @@ class EarthquakeMapWidget extends HookConsumerWidget {
     final colorModel = ref.watch(intensityColorProvider);
     final earthquakeParams =
         ref.watch(jmaParameterProvider).valueOrNull?.earthquake;
-    final intensityIconData = ref.watch(intensityIconRenderProvider);
-    final intensityIconFillData = ref.watch(intensityIconFillRenderProvider);
-    final lpgmIntensityIconData = ref.watch(lpgmIntensityIconRenderProvider);
-    final lpgmIntensityIconFillData =
-        ref.watch(lpgmIntensityIconFillRenderProvider);
 
-    final hypocenterIconRender = ref.watch(hypocenterIconRenderProvider);
-    final currentLocationIconRender =
-        ref.watch(currentLocationIconRenderProvider);
     final jmaMap = ref.watch(jmaMapProvider).valueOrNull;
 
-    if (earthquakeParams == null ||
-        !intensityIconData.isAllRendered() ||
-        !intensityIconFillData.isAllRendered() ||
-        !lpgmIntensityIconData.isAllRendered() ||
-        !lpgmIntensityIconFillData.isAllRendered() ||
-        currentLocationIconRender == null ||
-        jmaMap == null ||
-        hypocenterIconRender == null) {
+    if (earthquakeParams == null || jmaMap == null) {
       // どれが条件を満たしていないのか表示
       return const Scaffold(
         body: Center(
@@ -335,42 +318,6 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         onMapCreated: (controller) => mapController.value = controller,
         onStyleLoadedCallback: () async {
           final controller = mapController.value!;
-          await [
-            addImageFromBuffer(
-              controller,
-              'hypocenter',
-              hypocenterIconRender,
-            ),
-            for (final intensity in JmaIntensity.values) ...[
-              addImageFromBuffer(
-                controller,
-                'intensity-${intensity.type}',
-                intensityIconData.getOrNull(intensity)!,
-              ),
-              addImageFromBuffer(
-                controller,
-                'intensity-${intensity.type}-fill',
-                intensityIconFillData.getOrNull(intensity)!,
-              ),
-            ],
-            for (final intensity in JmaLgIntensity.values) ...[
-              addImageFromBuffer(
-                controller,
-                'lpgm-intensity-${intensity.type}',
-                lpgmIntensityIconData.getOrNull(intensity)!,
-              ),
-              addImageFromBuffer(
-                controller,
-                'lpgm-intensity-${intensity.type}-fill',
-                lpgmIntensityIconFillData.getOrNull(intensity)!,
-              ),
-            ],
-            addImageFromBuffer(
-              controller,
-              'current-location',
-              currentLocationIconRender,
-            ),
-          ].wait;
           await initActions(currentActions.value);
           await controller.moveCamera(cameraUpdate);
           maxZoomLevel.value = 12;

@@ -42,7 +42,7 @@ class ShakeDetection extends _$ShakeDetection {
         },
       )
       ..listen(
-        timeTickerProvider,
+        timeTickerProvider(),
         (_, __) {
           if (state case AsyncData(:final value)) {
             state = AsyncData(_pruneOldEvents(value));
