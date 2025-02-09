@@ -31,4 +31,15 @@ class CachedIMapLayer {
   final MapLayer layer;
   final String geoJsonSourceHash;
   final String layerPropertiesHash;
+
+  CachedIMapLayer copyWith({
+    MapLayer? layer,
+    String? geoJsonSourceHash,
+    String? layerPropertiesHash,
+  }) =>
+      CachedIMapLayer(
+        layer: layer ?? this.layer,
+        geoJsonSourceHash: geoJsonSourceHash ?? this.geoJsonSourceHash,
+        layerPropertiesHash: layerPropertiesHash ?? this.layerPropertiesHash,
+      );
 }

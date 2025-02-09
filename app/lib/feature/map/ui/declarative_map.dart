@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/map/data/controller/declarative_map_controller.dart';
 import 'package:eqmonitor/feature/map/data/layer/base/map_layer.dart';
 import 'package:eqmonitor/feature/map/data/model/camera_position.dart';
+import 'package:eqmonitor/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
@@ -87,11 +89,10 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
       onMapCreated: (controller) {
         widget.controller.setController(controller);
       },
-      onStyleLoadedCallback: () {
+      onStyleLoadedCallback: () async {
         widget.onStyleLoadedCallback?.call();
-        unawaited(
-          _updateLayers(),
-        );
+        await widget.controller.addHypocenterImages();
+        await _updateLayers();
       },
       onCameraIdle: () {
         final position = widget.controller.controller?.cameraPosition;
@@ -120,6 +121,7 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
     }
     // ロックチェック
     if (_isUpdatingLayers) {
+      talker.error('map layer update is locked');
       return;
     }
     try {
@@ -150,7 +152,9 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
                 layer.id,
                 layer.toLayerProperties(),
               );
-              _addedLayers[layer.id] = CachedIMapLayer.fromLayer(layer);
+              _addedLayers[layer.id] = _addedLayers[layer.id]!.copyWith(
+                layerPropertiesHash: layerPropertiesHash,
+              );
             }
             // geoJsonSource check
             final cachedGeoJsonSource = cachedLayer.geoJsonSourceHash;
@@ -161,9 +165,13 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
                 layer.sourceId,
                 layer.toGeoJsonSource(),
               );
+              _addedLayers[layer.id] = _addedLayers[layer.id]!.copyWith(
+                geoJsonSourceHash: geoJsonSource,
+              );
             }
           }
         } else {
+          log('adding new layer: ${layer.id}');
           // 新規レイヤーの追加
           await _addLayer(layer);
         }
@@ -182,8 +190,8 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
       layer.toGeoJsonSource(),
     );
     await controller.addLayer(
-      layer.id,
       layer.sourceId,
+      layer.id,
       layer.toLayerProperties(),
     );
   }
@@ -200,6 +208,10 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
   @override
   void didUpdateWidget(DeclarativeMap oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (widget.controller.controller == null) {
+      talker.error('controller is null');
+      return;
+    }
     if (oldWidget.styleString != widget.styleString) {
       unawaited(
         _updateAllLayers(),
@@ -211,4 +223,15 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
       );
     }
   }
+}
+
+enum DeclarativeAssets {
+  normalHypocenter,
+  lowPreciseHypocenter,
+  ;
+
+  String get path => switch (this) {
+        normalHypocenter => Assets.images.map.normalHypocenter.path,
+        lowPreciseHypocenter => Assets.images.map.lowPreciseHypocenter.path,
+      };
 }
