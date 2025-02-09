@@ -28,6 +28,19 @@ class KyoshinMonitorLayerController extends _$KyoshinMonitorLayerController {
       ..listen(
         kyoshinMonitorNotifierProvider,
         (prev, next) {
+          // 現在の設定と違うLayerが来たらIgnore
+          final nextLayer = (
+            next.valueOrNull?.currentRealtimeDataType,
+            next.valueOrNull?.currentRealtimeLayer
+          );
+          final settingsLayer = (
+            ref.read(kyoshinMonitorSettingsProvider).realtimeDataType,
+            ref.read(kyoshinMonitorSettingsProvider).realtimeLayer,
+          );
+          if (nextLayer != settingsLayer) {
+            _updateLayer([]);
+            return;
+          }
           final previousPoints = prev?.valueOrNull?.analyzedPoints;
           final nextPoints = next.valueOrNull?.analyzedPoints;
           if (previousPoints != nextPoints) {
@@ -43,14 +56,6 @@ class KyoshinMonitorLayerController extends _$KyoshinMonitorLayerController {
           if (prev?.realtimeDataType != next.realtimeDataType ||
               prev?.realtimeLayer != next.realtimeLayer ||
               prev?.kmoniMarkerType != next.kmoniMarkerType) {
-            log(
-              'prev: ${prev?.kmoniMarkerType}',
-              name: 'kyoshin_monitor_layer_controller',
-            );
-            log(
-              'next: ${next.kmoniMarkerType}',
-              name: 'kyoshin_monitor_layer_controller',
-            );
             state = state.copyWith(
               points: [],
               realtimeDataType: next.realtimeDataType,
@@ -73,7 +78,7 @@ class KyoshinMonitorLayerController extends _$KyoshinMonitorLayerController {
       sourceId: 'kyoshin-monitor-points',
       visible: true,
       points: [],
-      isInEew: false,
+      isInEew: ref.read(eewAliveTelegramProvider)?.isNotEmpty ?? false,
       markerType: ref.read(kyoshinMonitorSettingsProvider).kmoniMarkerType,
       realtimeDataType:
           ref.read(kyoshinMonitorSettingsProvider).realtimeDataType,
@@ -89,14 +94,8 @@ class KyoshinMonitorLayerController extends _$KyoshinMonitorLayerController {
       return;
     }
 
-    state = KyoshinMonitorObservationLayer(
-      id: 'kyoshin-monitor-points',
-      sourceId: 'kyoshin-monitor-points',
-      visible: true,
+    state = state.copyWith(
       points: points,
-      isInEew: false,
-      markerType: KyoshinMonitorMarkerType.always,
-      realtimeDataType: RealtimeDataType.shindo,
     );
   }
 }
@@ -202,5 +201,5 @@ class KyoshinMonitorObservationLayer extends MapLayer
   }
 
   @override
-  String get layerPropertiesHash => '${markerType.name}-${isInEew}';
+  String get layerPropertiesHash => '${markerType.name}-$isInEew';
 }
