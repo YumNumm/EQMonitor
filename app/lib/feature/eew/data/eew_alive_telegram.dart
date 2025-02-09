@@ -28,7 +28,7 @@ class EewAliveTelegram extends _$EewAliveTelegram {
   List<EewV1>? build() {
     final state = ref.watch(eewProvider);
     final value = state.valueOrNull;
-    final tickerTime = ref.watch(timeTickerProvider);
+    final tickerTime = ref.watch(timeTickerProvider());
     final checker = ref.watch(eewAliveCheckerProvider);
     if (value == null) {
       return null;
