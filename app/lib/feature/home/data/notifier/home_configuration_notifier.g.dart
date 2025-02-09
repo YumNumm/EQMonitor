@@ -9,7 +9,7 @@ part of 'home_configuration_notifier.dart';
 // **************************************************************************
 
 String _$homeConfigurationNotifierHash() =>
-    r'070781e9982ded06f18104eb8fb052c0a8f6b79a';
+    r'd304e781e1d01913d5f9b3c16c3e8fb27541f88b';
 
 /// See also [HomeConfigurationNotifier].
 @ProviderFor(HomeConfigurationNotifier)

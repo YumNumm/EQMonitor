@@ -4,6 +4,7 @@ import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provi
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/env.dart';
 import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -91,6 +92,15 @@ class _DebugWidget extends ConsumerWidget {
               title: const Text('Playground'),
               leading: const Icon(Icons.list),
               onTap: () async => const PlaygroundRoute().push(context),
+            ),
+            ListTile(
+              title: const Text('震源アイコン生成'),
+              leading: const Icon(Icons.place),
+              onTap: () async => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (context) => const HypocenterIconPage(),
+                ),
+              ),
             ),
             ListTile(
               title: const Text('FCM Token'),

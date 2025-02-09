@@ -72,11 +72,29 @@ class $AssetsImagesGen {
   AssetGenImage get iconForeground =>
       const AssetGenImage('assets/images/icon_foreground.png');
 
+  /// Directory path: assets/images/map
+  $AssetsImagesMapGen get map => const $AssetsImagesMapGen();
+
   /// Directory path: assets/images/theme
   $AssetsImagesThemeGen get theme => const $AssetsImagesThemeGen();
 
   /// List of all assets
   List<AssetGenImage> get values => [icon, iconForeground];
+}
+
+class $AssetsImagesMapGen {
+  const $AssetsImagesMapGen();
+
+  /// File path: assets/images/map/low_precise_hypocenter.png
+  AssetGenImage get lowPreciseHypocenter =>
+      const AssetGenImage('assets/images/map/low_precise_hypocenter.png');
+
+  /// File path: assets/images/map/normal_hypocenter.png
+  AssetGenImage get normalHypocenter =>
+      const AssetGenImage('assets/images/map/normal_hypocenter.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [lowPreciseHypocenter, normalHypocenter];
 }
 
 class $AssetsImagesThemeGen {

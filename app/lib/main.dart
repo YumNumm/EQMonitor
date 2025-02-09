@@ -5,7 +5,6 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/app.dart';
 import 'package:eqmonitor/core/fcm/channels.dart';
 import 'package:eqmonitor/core/provider/application_documents_directory.dart';
@@ -21,7 +20,6 @@ import 'package:eqmonitor/core/util/license/init_licenses.dart';
 import 'package:eqmonitor/feature/donation/data/donation_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/kyoshin_color_map_data_source.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_color_map.dart';
-import 'package:eqmonitor/feature/shake_detection/provider/shake_detection_provider.dart';
 import 'package:eqmonitor/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -156,10 +154,6 @@ Future<void> main() async {
       jmaCodeTableProvider.overrideWithValue(results.$1.$7),
       if (results.$2.$3 != null)
         kyoshinColorMapProvider.overrideWithValue(results.$2.$3!),
-      if (kDebugMode)
-        shakeDetectionProvider.overrideWith(
-          _MockShakeDetection.new,
-        ),
     ],
     observers: [
       if (kDebugMode)
@@ -201,41 +195,4 @@ Future<void> _registerNotificationChannelIfNeeded() async {
 @pragma('vm:entry-point')
 Future<void> onBackgroundMessage(RemoteMessage message) async {
   log('onBackgroundMessage: $message');
-}
-
-class _MockShakeDetection extends ShakeDetection {
-  @override
-  Future<List<ShakeDetectionEvent>> build() async {
-    return [
-      ShakeDetectionEvent(
-        id: 1,
-        eventId: 'debug_event',
-        serialNo: 1,
-        maxIntensity: JmaForecastIntensity.four,
-        regions: [
-          const ShakeDetectionRegion(
-            name: '東京都23区',
-            maxIntensity: JmaForecastIntensity.four,
-            points: [
-              ShakeDetectionPoint(
-                code: '11001',
-                intensity: JmaForecastIntensity.four,
-              ),
-            ],
-          ),
-        ],
-        createdAt: DateTime.now(),
-        insertedAt: DateTime.now(),
-        topLeft: const ShakeDetectionLatLng(
-          latitude: 35.8,
-          longitude: 139.6,
-        ),
-        bottomRight: const ShakeDetectionLatLng(
-          latitude: 35.5,
-          longitude: 139.9,
-        ),
-        pointCount: 1,
-      ),
-    ];
-  }
 }
