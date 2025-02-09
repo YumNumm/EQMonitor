@@ -15,10 +15,16 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(kyoshinMonitorNotifierProvider);
-    final isInitialized = state.hasValue;
-    final latestTime = state.valueOrNull?.lastUpdatedAt?.toLocal();
-    final status = state.valueOrNull?.status ?? KyoshinMonitorStatus.stopped;
+    final latestTime = ref
+        .watch(
+          kyoshinMonitorNotifierProvider
+              .select((v) => v.valueOrNull?.lastUpdatedAt),
+        )
+        ?.toLocal();
+    final status = ref.watch(
+          kyoshinMonitorNotifierProvider.select((v) => v.valueOrNull?.status),
+        ) ??
+        KyoshinMonitorStatus.stopped;
 
     final theme = Theme.of(context);
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
@@ -58,8 +64,7 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
                         ),
                       ],
                     _
-                        when isInitialized &&
-                            latestTime != null &&
+                        when latestTime != null &&
                             status == KyoshinMonitorStatus.delayed =>
                       [
                         Flexible(
@@ -72,7 +77,7 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
                           ),
                         ),
                       ],
-                    _ when isInitialized && latestTime != null => [
+                    _ when latestTime != null => [
                         Flexible(
                           child: Text(
                             dateFormat.format(latestTime),

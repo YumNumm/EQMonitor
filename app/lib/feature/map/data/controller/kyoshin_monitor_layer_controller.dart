@@ -159,6 +159,15 @@ class KyoshinMonitorObservationLayer extends MapLayer
 
   @override
   LayerProperties toLayerProperties() {
+    final defaultStrokeWidthStatement = [
+      'interpolate',
+      ['linear'],
+      ['zoom'],
+      3,
+      0.2,
+      10,
+      1,
+    ];
     return CircleLayerProperties(
       circleRadius: [
         'interpolate',
@@ -180,14 +189,9 @@ class KyoshinMonitorObservationLayer extends MapLayer
         'strokeOpacity',
       ],
       circleStrokeWidth: switch (markerType) {
-        KyoshinMonitorMarkerType.always => [
-          'get',
-          'strokeWidth',
-        ],
-        KyoshinMonitorMarkerType.onlyEew when isInEew => [
-          'get',
-          'strokeWidth',
-        ],
+        KyoshinMonitorMarkerType.always => defaultStrokeWidthStatement,
+        KyoshinMonitorMarkerType.onlyEew when isInEew =>
+          defaultStrokeWidthStatement,
         _ => 0,
       },
       circleSortKey: [
@@ -198,5 +202,5 @@ class KyoshinMonitorObservationLayer extends MapLayer
   }
 
   @override
-  String get layerPropertiesHash => markerType.name;
+  String get layerPropertiesHash => '${markerType.name}-${isInEew}';
 }

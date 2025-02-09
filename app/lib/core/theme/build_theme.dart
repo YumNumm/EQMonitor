@@ -31,6 +31,7 @@ ThemeData buildTheme({
       surfaceTintColor: Colors.transparent,
       scrolledUnderElevation: 0,
     ),
+    splashFactory: NoSplash.splashFactory,
   );
 }
 

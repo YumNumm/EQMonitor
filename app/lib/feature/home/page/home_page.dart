@@ -1,5 +1,6 @@
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
 import 'package:eqmonitor/feature/home/component/map/home_map_view.dart';
+import 'package:eqmonitor/feature/home/component/sheet/home_earthquake_history_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sheet/sheet.dart';
@@ -63,8 +64,13 @@ class _Sheet extends StatelessWidget {
                       color: theme.colorScheme.onSurface,
                     ),
                   ),
-                  const Expanded(
-                    child: _SheetBody(),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8,
+                    ),
+                    child: Expanded(
+                      child: _SheetBody(),
+                    ),
                   ),
                 ],
               ),
@@ -93,10 +99,13 @@ class _SheetBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Column(
-      children: [
-        EewWidgets(),
-      ],
+    return const SingleChildScrollView(
+      child: Column(
+        children: [
+          EewWidgets(),
+          HomeEarthquakeHistorySheet(),
+        ],
+      ),
     );
   }
 }

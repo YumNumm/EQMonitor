@@ -19,12 +19,22 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
     required this.item,
     this.onTap,
     this.showBackgroundColor = true,
+    this.intensityIconSize = 40.0,
+    this.titleTextColor,
+    this.descriptionTextColor,
+    this.magnitudeTextColor,
+    this.visualDensity,
     super.key,
   });
 
   final EarthquakeV1Extended item;
   final void Function()? onTap;
   final bool showBackgroundColor;
+  final double intensityIconSize;
+  final Color? titleTextColor;
+  final Color? descriptionTextColor;
+  final Color? magnitudeTextColor;
+  final VisualDensity? visualDensity;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -126,6 +136,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
         ),
     ];
     return ListTile(
+      visualDensity: visualDensity,
       tileColor:
           showBackgroundColor ? intensityColor?.withValues(alpha: 0.4) : null,
       onTap: onTap,
@@ -133,6 +144,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
         title,
         style: theme.textTheme.titleMedium!.copyWith(
           fontWeight: FontWeight.bold,
+          color: titleTextColor,
         ),
       ),
       subtitle: Wrap(
@@ -143,6 +155,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
             subTitle,
             style: TextStyle(
               fontFamily: GoogleFonts.notoSansJp().fontFamily,
+              color: descriptionTextColor,
             ),
           ),
           ...chips,
@@ -153,17 +166,20 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
               intensity: JmaIntensity.fiveLower,
               type: IntensityIconType.filled,
               customText: isVolcano ? '噴火\n情報' : '遠地\n地震',
+              size: intensityIconSize,
             )
           : maxIntensity != null
               ? JmaIntensityIcon(
                   intensity: maxIntensity,
                   type: IntensityIconType.filled,
+                  size: intensityIconSize,
                 )
               : null,
       trailing: Text(
         trailingText,
         style: theme.textTheme.labelLarge!.copyWith(
           fontWeight: FontWeight.bold,
+          color: magnitudeTextColor,
         ),
       ),
     );
