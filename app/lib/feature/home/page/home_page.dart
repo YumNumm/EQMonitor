@@ -8,7 +8,6 @@ import 'package:eqmonitor/feature/home/component/map/home_map_view.dart';
 import 'package:eqmonitor/feature/home/component/shake-detect/shake_detection_card.dart';
 import 'package:eqmonitor/feature/home/component/sheet/home_earthquake_history_sheet.dart';
 import 'package:eqmonitor/feature/shake_detection/provider/shake_detection_provider.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sheet/sheet.dart';
@@ -23,24 +22,23 @@ class HomePage extends HookConsumerWidget {
         children: [
           const HomeMapView(),
           const _Sheet(),
-          if (kDebugMode)
-            Align(
-              alignment: Alignment.centerRight,
-              child: FloatingActionButton.small(
-                onPressed: () async => Navigator.of(context).push<void>(
-                  ModalBottomSheetRoute(
-                    isScrollControlled: false,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(16),
-                      ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: FloatingActionButton.small(
+              onPressed: () async => Navigator.of(context).push<void>(
+                ModalBottomSheetRoute(
+                  isScrollControlled: false,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(16),
                     ),
-                    builder: (context) => const _DebugModal(),
                   ),
+                  builder: (context) => const _DebugModal(),
                 ),
-                child: const Icon(Icons.bug_report),
               ),
+              child: const Icon(Icons.bug_report),
             ),
+          ),
         ],
       ),
     );
@@ -133,12 +131,11 @@ class _SheetBody extends ConsumerWidget {
             const EewWidgets(),
             const _ShakeDetectionList(),
             const HomeEarthquakeHistorySheet(),
-            if (kDebugMode)
-              ListTile(
-                title: const Text('デバッグページ'),
-                leading: const Icon(Icons.bug_report),
-                onTap: () async => const DebuggerRoute().push<void>(context),
-              ),
+            ListTile(
+              title: const Text('デバッグページ'),
+              leading: const Icon(Icons.bug_report),
+              onTap: () async => const DebuggerRoute().push<void>(context),
+            ),
           ],
         ),
       ),
