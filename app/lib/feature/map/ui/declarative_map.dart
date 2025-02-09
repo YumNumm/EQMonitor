@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:collection/collection.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/map/data/controller/declarative_map_controller.dart';
 import 'package:eqmonitor/feature/map/data/layer/base/map_layer.dart';
@@ -78,9 +77,10 @@ class DeclarativeMap extends StatefulHookConsumerWidget {
 }
 
 class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
-  final Map<String, CachedMapLayer> _addedLayers = {};
+  final Map<String, MapLayer> _addedLayers = {};
+  final Map<String, String> _addedSources = {};
   // レイヤー操作のロック
-  bool _isUpdatingLayers = false;
+  bool _isUpdatingLayers = true;
 
   @override
   Widget build(BuildContext context) {
@@ -91,9 +91,14 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
         widget.controller.setController(controller);
       },
       onStyleLoadedCallback: () async {
-        widget.onStyleLoadedCallback?.call();
-        await widget.controller.addHypocenterImages();
-        await _updateLayers();
+        try {
+          widget.onStyleLoadedCallback?.call();
+          await widget.controller.addHypocenterImages();
+          _isUpdatingLayers = false;
+          await _updateLayers();
+        } finally {
+          _isUpdatingLayers = false;
+        }
       },
       onCameraIdle: () {
         final position = widget.controller.controller?.cameraPosition;
@@ -130,73 +135,88 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
       _isUpdatingLayers = true;
 
       // 削除探索
-      for (final layer in _addedLayers.values) {
-        if (!widget.layers.any((e) => e.id == layer.layer.id)) {
-          await controller.removeLayer(layer.layer.id);
-          await controller.removeSource(layer.layer.sourceId);
-          _addedLayers.remove(layer.layer.id);
-        }
+      final layersToRemove = _addedLayers.entries
+          .where((entry) => !widget.layers.any((e) => e.id == entry.key))
+          .toList();
+
+      for (final entry in layersToRemove) {
+        await controller.removeLayer(entry.key);
+        await controller.removeSource(entry.value.sourceId);
+        _addedLayers.remove(entry.key);
+        _addedSources.remove(entry.value.sourceId);
       }
 
-      widget.layers.forEachIndexed(
-        (index, layer) async {
-          final belowLayerId = index > 0 ? widget.layers[index - 1].id : null;
+      for (var i = 0; i < widget.layers.length; i++) {
+        final layer = widget.layers[i];
+        final belowLayerId = i > 0 ? widget.layers[i - 1].id : null;
 
-          if (_addedLayers.containsKey(layer.id)) {
-            final cachedLayer = _addedLayers[layer.id]!;
-            // レイヤーの更新
-            if (cachedLayer.layer != layer) {
-              final isLayerPropertiesChanged =
-                  cachedLayer.layerPropertiesHash != layer.layerPropertiesHash;
-              final isGeoJsonSourceChanged =
-                  cachedLayer.geoJsonSourceHash != layer.geoJsonSourceHash;
-              final isFilterChanged = cachedLayer.layer.filter != layer.filter;
+        if (_addedLayers.containsKey(layer.id)) {
+          final cachedLayer = _addedLayers[layer.id]!;
+          // レイヤーの更新
+          if (cachedLayer != layer) {
+            final isLayerPropertiesChanged =
+                cachedLayer.layerPropertiesHash != layer.layerPropertiesHash;
+            final isGeoJsonSourceChanged =
+                cachedLayer.geoJsonSourceHash != layer.geoJsonSourceHash;
+            final isFilterChanged = cachedLayer.filter != layer.filter;
 
-              // style check
-              if (isLayerPropertiesChanged) {
+            // style check
+            if (isLayerPropertiesChanged) {
+              final layerProperties = layer.toLayerProperties();
+              if (layerProperties != null) {
                 await controller.setLayerProperties(
                   layer.id,
-                  layer.toLayerProperties(),
+                  layerProperties,
                 );
-                _addedLayers[layer.id] = _addedLayers[layer.id]!.copyWith(
-                  layerPropertiesHash: layer.layerPropertiesHash,
-                );
-              }
-              // geoJsonSource check
-              if (isGeoJsonSourceChanged) {
-                await controller.setGeoJsonSource(
-                  layer.sourceId,
-                  layer.toGeoJsonSource(),
-                );
-                _addedLayers[layer.id] = _addedLayers[layer.id]!.copyWith(
-                  geoJsonSourceHash: layer.geoJsonSourceHash,
-                );
-              }
-              // filter check
-              if (isFilterChanged) {
-                await controller.setFilter(
-                  layer.id,
-                  layer.filter,
-                );
-                _addedLayers[layer.id] = _addedLayers[layer.id]!.copyWith(
-                  layer: layer,
-                );
+                _addedLayers[layer.id] = layer;
               }
             }
-          } else {
-            print('adding new layer: ${layer.id}');
-            // 新規レイヤーの追加
+            // geoJsonSource check
+            if (isGeoJsonSourceChanged) {
+              final geoJsonSource = layer.toGeoJsonSource();
+              if (geoJsonSource != null) {
+                await controller.setGeoJsonSource(
+                  layer.sourceId,
+                  geoJsonSource,
+                );
+                _addedLayers[layer.id] = layer;
+              }
+            }
+            // filter check
+            if (isFilterChanged) {
+              await controller.setFilter(
+                layer.id,
+                layer.filter,
+              );
+              _addedLayers[layer.id] = layer;
+            }
+          }
+        } else {
+          // 新規レイヤーの追加
+          if (!_addedSources.containsKey(layer.sourceId)) {
             await _addLayer(
               layer: layer,
               belowLayerId: belowLayerId,
             );
+            _addedSources[layer.sourceId] = layer.id;
+          } else {
+            // ソースは既に存在するので、レイヤーのみを追加
+            final layerProperties = layer.toLayerProperties();
+            if (layerProperties != null) {
+              print(
+                '[ADD] layer only: ${layer.id} (source: ${layer.sourceId})',
+              );
+              await controller.addLayer(
+                layer.sourceId,
+                layer.id,
+                layerProperties,
+                belowLayerId: belowLayerId,
+              );
+            }
           }
-          _addedLayers[layer.id] = CachedMapLayer.fromLayer(
-            layer: layer,
-            belowLayerId: belowLayerId,
-          );
-        },
-      );
+          _addedLayers[layer.id] = layer;
+        }
+      }
     } finally {
       // ロック解放
       _isUpdatingLayers = false;
@@ -208,18 +228,31 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
     String? belowLayerId,
   }) async {
     final controller = widget.controller.controller!;
-    await controller.removeSource(layer.sourceId);
     await controller.removeLayer(layer.id);
-    await controller.addGeoJsonSource(
-      layer.sourceId,
-      layer.toGeoJsonSource(),
-    );
-    await controller.addLayer(
-      layer.sourceId,
-      layer.id,
-      layer.toLayerProperties(),
-      belowLayerId: belowLayerId,
-    );
+    await controller.removeSource(layer.sourceId);
+    final geoJsonSource = layer.toGeoJsonSource();
+    if (geoJsonSource != null) {
+      print('[ADD] geoJsonSource: ${layer.sourceId} (layer: ${layer.id})');
+      await controller.addGeoJsonSource(
+        layer.sourceId,
+        geoJsonSource,
+      );
+    } else {
+      print('no geoJsonSource: ${layer.sourceId}');
+    }
+    final layerProperties = layer.toLayerProperties();
+    if (layerProperties != null) {
+      print('[ADD] layer: ${layer.id} (source: ${layer.sourceId})');
+      await controller.removeLayer(layer.id);
+      await controller.addLayer(
+        layer.sourceId,
+        layer.id,
+        layerProperties,
+        belowLayerId: belowLayerId,
+      );
+    } else {
+      print('no layerProperties: ${layer.id}');
+    }
   }
 
   Future<void> _updateAllLayers() async {

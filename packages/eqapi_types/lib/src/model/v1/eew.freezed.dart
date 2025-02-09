@@ -451,7 +451,7 @@ class __$$EewV1ImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$EewV1Impl implements _EewV1 {
+class _$EewV1Impl extends _EewV1 {
   const _$EewV1Impl(
       {required this.id,
       required this.eventId,
@@ -479,7 +479,8 @@ class _$EewV1Impl implements _EewV1 {
       this.forecastMaxLpgmIntensity,
       this.forecastMaxLpgmIntensityIsOver,
       final List<EstimatedIntensityRegion>? regions})
-      : _regions = regions;
+      : _regions = regions,
+        super._();
 
   factory _$EewV1Impl.fromJson(Map<String, dynamic> json) =>
       _$$EewV1ImplFromJson(json);
@@ -654,7 +655,7 @@ class _$EewV1Impl implements _EewV1 {
   }
 }
 
-abstract class _EewV1 implements EewV1 {
+abstract class _EewV1 extends EewV1 {
   const factory _EewV1(
       {required final int id,
       required final int eventId,
@@ -682,6 +683,7 @@ abstract class _EewV1 implements EewV1 {
       final JmaForecastLgIntensity? forecastMaxLpgmIntensity,
       final bool? forecastMaxLpgmIntensityIsOver,
       final List<EstimatedIntensityRegion>? regions}) = _$EewV1Impl;
+  const _EewV1._() : super._();
 
   factory _EewV1.fromJson(Map<String, dynamic> json) = _$EewV1Impl.fromJson;
 

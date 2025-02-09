@@ -33,6 +33,8 @@ class CustomProviderObserver extends ProviderObserver {
   ) =>
       switch (provider.name) {
         'timeTickerProvider' || 'eewAliveTelegramProvider' => null,
+        _ when provider.name?.contains('LayerControllerProvider') ?? false =>
+          null,
         _ => log(
             '${provider.name}',
             name: 'didDisposeProvider',
