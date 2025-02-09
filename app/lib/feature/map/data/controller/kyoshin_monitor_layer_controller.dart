@@ -122,6 +122,7 @@ class KyoshinMonitorObservationLayer extends MapLayer
     required RealtimeDataType realtimeDataType,
     double? minZoom,
     double? maxZoom,
+    dynamic filter,
   }) = _KyoshinMonitorObservationLayer;
 
   const KyoshinMonitorObservationLayer._();

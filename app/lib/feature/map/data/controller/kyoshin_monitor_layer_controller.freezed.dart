@@ -26,6 +26,7 @@ mixin _$KyoshinMonitorObservationLayer {
   RealtimeDataType get realtimeDataType => throw _privateConstructorUsedError;
   double? get minZoom => throw _privateConstructorUsedError;
   double? get maxZoom => throw _privateConstructorUsedError;
+  dynamic get filter => throw _privateConstructorUsedError;
 
   /// Create a copy of KyoshinMonitorObservationLayer
   /// with the given fields replaced by the non-null parameter values.
@@ -51,7 +52,8 @@ abstract class $KyoshinMonitorObservationLayerCopyWith<$Res> {
       KyoshinMonitorMarkerType markerType,
       RealtimeDataType realtimeDataType,
       double? minZoom,
-      double? maxZoom});
+      double? maxZoom,
+      dynamic filter});
 }
 
 /// @nodoc
@@ -79,6 +81,7 @@ class _$KyoshinMonitorObservationLayerCopyWithImpl<$Res,
     Object? realtimeDataType = null,
     Object? minZoom = freezed,
     Object? maxZoom = freezed,
+    Object? filter = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -117,6 +120,10 @@ class _$KyoshinMonitorObservationLayerCopyWithImpl<$Res,
           ? _value.maxZoom
           : maxZoom // ignore: cast_nullable_to_non_nullable
               as double?,
+      filter: freezed == filter
+          ? _value.filter
+          : filter // ignore: cast_nullable_to_non_nullable
+              as dynamic,
     ) as $Val);
   }
 }
@@ -139,7 +146,8 @@ abstract class _$$KyoshinMonitorObservationLayerImplCopyWith<$Res>
       KyoshinMonitorMarkerType markerType,
       RealtimeDataType realtimeDataType,
       double? minZoom,
-      double? maxZoom});
+      double? maxZoom,
+      dynamic filter});
 }
 
 /// @nodoc
@@ -166,6 +174,7 @@ class __$$KyoshinMonitorObservationLayerImplCopyWithImpl<$Res>
     Object? realtimeDataType = null,
     Object? minZoom = freezed,
     Object? maxZoom = freezed,
+    Object? filter = freezed,
   }) {
     return _then(_$KyoshinMonitorObservationLayerImpl(
       id: null == id
@@ -204,6 +213,10 @@ class __$$KyoshinMonitorObservationLayerImplCopyWithImpl<$Res>
           ? _value.maxZoom
           : maxZoom // ignore: cast_nullable_to_non_nullable
               as double?,
+      filter: freezed == filter
+          ? _value.filter
+          : filter // ignore: cast_nullable_to_non_nullable
+              as dynamic,
     ));
   }
 }
@@ -221,7 +234,8 @@ class _$KyoshinMonitorObservationLayerImpl
       required this.markerType,
       required this.realtimeDataType,
       this.minZoom,
-      this.maxZoom})
+      this.maxZoom,
+      this.filter})
       : _points = points,
         super._();
 
@@ -249,10 +263,12 @@ class _$KyoshinMonitorObservationLayerImpl
   final double? minZoom;
   @override
   final double? maxZoom;
+  @override
+  final dynamic filter;
 
   @override
   String toString() {
-    return 'KyoshinMonitorObservationLayer(id: $id, sourceId: $sourceId, visible: $visible, points: $points, isInEew: $isInEew, markerType: $markerType, realtimeDataType: $realtimeDataType, minZoom: $minZoom, maxZoom: $maxZoom)';
+    return 'KyoshinMonitorObservationLayer(id: $id, sourceId: $sourceId, visible: $visible, points: $points, isInEew: $isInEew, markerType: $markerType, realtimeDataType: $realtimeDataType, minZoom: $minZoom, maxZoom: $maxZoom, filter: $filter)';
   }
 
   @override
@@ -271,7 +287,8 @@ class _$KyoshinMonitorObservationLayerImpl
             (identical(other.realtimeDataType, realtimeDataType) ||
                 other.realtimeDataType == realtimeDataType) &&
             (identical(other.minZoom, minZoom) || other.minZoom == minZoom) &&
-            (identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom));
+            (identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom) &&
+            const DeepCollectionEquality().equals(other.filter, filter));
   }
 
   @override
@@ -285,7 +302,8 @@ class _$KyoshinMonitorObservationLayerImpl
       markerType,
       realtimeDataType,
       minZoom,
-      maxZoom);
+      maxZoom,
+      const DeepCollectionEquality().hash(filter));
 
   /// Create a copy of KyoshinMonitorObservationLayer
   /// with the given fields replaced by the non-null parameter values.
@@ -309,7 +327,8 @@ abstract class _KyoshinMonitorObservationLayer
       required final KyoshinMonitorMarkerType markerType,
       required final RealtimeDataType realtimeDataType,
       final double? minZoom,
-      final double? maxZoom}) = _$KyoshinMonitorObservationLayerImpl;
+      final double? maxZoom,
+      final dynamic filter}) = _$KyoshinMonitorObservationLayerImpl;
   _KyoshinMonitorObservationLayer._() : super._();
 
   @override
@@ -330,6 +349,8 @@ abstract class _KyoshinMonitorObservationLayer
   double? get minZoom;
   @override
   double? get maxZoom;
+  @override
+  dynamic get filter;
 
   /// Create a copy of KyoshinMonitorObservationLayer
   /// with the given fields replaced by the non-null parameter values.
