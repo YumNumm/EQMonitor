@@ -151,9 +151,6 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
                 layer.toLayerProperties(),
               );
               _addedLayers[layer.id] = CachedIMapLayer.fromLayer(layer);
-              log('layer properties changed: ${layer.toLayerProperties().toJson()}');
-
-              continue;
             }
             // geoJsonSource check
             final cachedGeoJsonSource = cachedLayer.geoJsonSourceHash;
