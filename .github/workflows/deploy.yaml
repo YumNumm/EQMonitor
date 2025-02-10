@@ -92,6 +92,7 @@ jobs:
         uses: ./.github/actions/setup-macos-environment
 
       - name: Create App Store Connect API Token
+        id: create-app-store-connect-api-token
         uses: ./.github/actions/generate-app-store-connect-jwt
         with:
           app_store_connect_api_key_id: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
@@ -99,19 +100,22 @@ jobs:
 
       - name: Fetch latest build number
         id: fetch-latest-build-number
+        env:
+          JWT: ${{ steps.create-app-store-connect-api-token.outputs.jwt }}
         run: |
           PLATFORM=IOS
           APP_ID=6447546703
-          BUILD_NUMBER=$(
-            curl -s https://api.appstoreconnect.apple.com/v1/builds \
-            -G \
+          curl -s https://api.appstoreconnect.apple.com/v1/builds \
+            -H "Authorization: Bearer $JWT" \
+            -H "Content-Type: application/json" \
             -d "filter[platform]=${PLATFORM}" \
             -d "filter[id]=${APP_ID}" \
             -d "sort=-version" \
             -d "fields[builds]=version" \
-            -d "limit=1" | \
-            jq -r '.data | if length == 0 then 0 else .[0].attributes.version end'
-          )
+            -d "limit=1"
+          > build_number.json
+          cat build_number.json | jq -r '.data.[0].attributes'
+          BUILD_NUMBER=$(jq -r '.data | if length == 0 then 0 else .[0].attributes.version end' build_number.json)
           BUILD_NUMBER=$((BUILD_NUMBER + 1))
           echo "BUILD_NUMBER=${BUILD_NUMBER}" >> $GITHUB_OUTPUT
           echo "Build Number set to ${BUILD_NUMBER}."
