@@ -110,7 +110,7 @@ jobs:
             -d "filter[app]=${APP_ID}" \
             -d "sort=-version" \
             -d "fields[builds]=version" \
-            -d "limit=1"
+            -d "limit=1" \
           > build_number.json
           cat build_number.json | jq -r '.'
           BUILD_NUMBER=$(jq -r '.data | if length == 0 then 0 else .[0].attributes.version end' build_number.json)
@@ -161,7 +161,8 @@ jobs:
             -allowProvisioningUpdates \
             -authenticationKeyIssuerID ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }} \
             -authenticationKeyID ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }} \
-            -authenticationKeyPath ${{ github.workspace }}/app/ios/AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8 | xcbeautify
+            -authenticationKeyPath ${{ github.workspace }}/app/ios/AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8 \
+          | xcbeautify
 
       - name: List files
         run: |
