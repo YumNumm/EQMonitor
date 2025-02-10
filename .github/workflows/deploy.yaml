@@ -103,7 +103,6 @@ jobs:
         run: |
           flutter build ipa \
             --no-codesign \
-            --build-number=${BUILD_NUMBER} \
             --dart-define-from-file=../environment/.env.prod
 
       - name: Extract App Store Connect API Key
