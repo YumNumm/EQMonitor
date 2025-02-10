@@ -19,7 +19,7 @@ const jwt = sign(
   {
     header,
     algorithm: "ES256",
-    expiresIn: "2m",
+    expiresIn: "1m",
   }
 );
 

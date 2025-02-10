@@ -103,18 +103,17 @@ jobs:
         env:
           JWT: ${{ steps.create-app-store-connect-api-token.outputs.jwt }}
         run: |
-          PLATFORM=IOS
           APP_ID=6447546703
           curl -s https://api.appstoreconnect.apple.com/v1/builds \
+            -G \
             -H "Authorization: Bearer $JWT" \
             -H "Content-Type: application/json" \
-            -d "filter[platform]=${PLATFORM}" \
-            -d "filter[id]=${APP_ID}" \
+            -d "filter[app]=${APP_ID}" \
             -d "sort=-version" \
             -d "fields[builds]=version" \
             -d "limit=1"
           > build_number.json
-          cat build_number.json | jq -r '.data.[0].attributes'
+          cat build_number.json | jq -r '.'
           BUILD_NUMBER=$(jq -r '.data | if length == 0 then 0 else .[0].attributes.version end' build_number.json)
           BUILD_NUMBER=$((BUILD_NUMBER + 1))
           echo "BUILD_NUMBER=${BUILD_NUMBER}" >> $GITHUB_OUTPUT
