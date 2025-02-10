@@ -81,13 +81,7 @@ class Eew extends _$Eew {
   }
 
   void upsert(EewV1 eew) {
-    if (kDebugMode || ref.read(debuggerProvider).isDebugger) {
       _upsert(eew);
-    } else {
-      throw UnimplementedError(
-        'This operation is not permitted in release mode',
-      );
-    }
   }
 }
 

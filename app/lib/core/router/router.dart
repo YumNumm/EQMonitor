@@ -66,16 +66,7 @@ GoRouter goRouter(Ref ref) => GoRouter(
           analytics: FirebaseAnalytics.instance,
         ),
       ],
-      debugLogDiagnostics: true,
-      redirect: (context, state) {
-        final isDebugger = ref.read(debuggerProvider).isDebugger || kDebugMode;
-        if ((state.fullPath?.contains('debug') ?? false) && !isDebugger) {
-          throw GoRouterRedirectException(
-            'Debugger is not enabled in production mode.',
-          );
-        }
-        return null;
-      },
+      debugLogDiagnostics: kDebugMode,
     );
 
 class GoRouterRedirectException implements Exception {
