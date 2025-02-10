@@ -81,7 +81,7 @@ class Eew extends _$Eew {
   }
 
   void upsert(EewV1 eew) {
-      _upsert(eew);
+    _upsert(eew);
   }
 }
 
