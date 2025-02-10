@@ -27,3 +27,8 @@ runs:
       run: |
         jwt=$(bun run scripts/app-store-connect-api-key.ts)
         echo "jwt=$jwt" >> $GITHUB_OUTPUT
+
+    - name: Remove App Store Connect API Key
+      shell: bash
+      run: |
+        rm AuthKey.p8
