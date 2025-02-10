@@ -95,7 +95,6 @@ jobs:
         id: create-app-store-connect-api-token
         uses: ./.github/actions/generate-app-store-connect-jwt
         with:
-          app_store_connect_api_key_id: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
           app_store_connect_api_key_base64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
 
       - name: Fetch latest build number
