@@ -91,33 +91,6 @@ jobs:
       - name: Setup macOS Environment
         uses: ./.github/actions/setup-macos-environment
 
-      - name: Create App Store Connect API Token
-        id: create-app-store-connect-api-token
-        uses: ./.github/actions/generate-app-store-connect-jwt
-        with:
-          app_store_connect_api_key_base64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
-
-      - name: Fetch latest build number
-        id: fetch-latest-build-number
-        env:
-          JWT: ${{ steps.create-app-store-connect-api-token.outputs.jwt }}
-        run: |
-          APP_ID=6447546703
-          curl -s https://api.appstoreconnect.apple.com/v1/builds \
-            -G \
-            -H "Authorization: Bearer $JWT" \
-            -H "Content-Type: application/json" \
-            -d "filter[app]=${APP_ID}" \
-            -d "sort=-version" \
-            -d "fields[builds]=version" \
-            -d "limit=1" \
-          > build_number.json
-          cat build_number.json | jq -r '.'
-          BUILD_NUMBER=$(jq -r '.data | if length == 0 then 0 else .[0].attributes.version end' build_number.json)
-          BUILD_NUMBER=$((BUILD_NUMBER + 1))
-          echo "BUILD_NUMBER=${BUILD_NUMBER}" >> $GITHUB_OUTPUT
-          echo "Build Number set to ${BUILD_NUMBER}."
-
       - name: Extract Dotenv
         run: |
           echo "${{ secrets.DOTENV }}" | base64 -d > environment.tar.gz
@@ -127,10 +100,7 @@ jobs:
 
       - name: Build iOS
         working-directory: app
-        env:
-          BUILD_NUMBER: ${{ steps.fetch-latest-build-number.outputs.BUILD_NUMBER }}
         run: |
-          echo "BUILD_NUMBER=${BUILD_NUMBER}"
           flutter build ipa \
             --no-codesign \
             --build-number=${BUILD_NUMBER} \
