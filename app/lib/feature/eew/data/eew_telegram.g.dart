@@ -24,7 +24,7 @@ final _eewRestProvider = FutureProvider<List<EewV1>>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef _EewRestRef = FutureProviderRef<List<EewV1>>;
-String _$eewHash() => r'fcf2455d2039c8233f88a5accd9fbf0faeba841d';
+String _$eewHash() => r'93658ea88458788029f4a06ba8ee090cad543865';
 
 /// See also [Eew].
 @ProviderFor(Eew)
