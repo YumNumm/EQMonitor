@@ -20,8 +20,8 @@ Future<TravelTimeTables> travelTimeInternal(Ref ref) async {
 @Riverpod(keepAlive: true)
 TravelTimeDepthMap travelTimeDepthMap(
   Ref ref,
-)  {
-  final state =  ref.watch(travelTimeProvider);
+) {
+  final state = ref.watch(travelTimeProvider);
   return state.table.groupListsBy((e) => e.depth);
 }
 
