@@ -58,6 +58,8 @@
 	<string>現在地の地震情報を通知・表示するために、位置情報を利用します</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>現在地に即した地震情報を表示するために、位置情報を利用します</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>アプリ内で画像を保存するために写真ライブラリへのアクセスが必要です</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
