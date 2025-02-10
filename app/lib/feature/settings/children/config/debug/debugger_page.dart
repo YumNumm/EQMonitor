@@ -1,4 +1,5 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
+import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
 import 'package:eqmonitor/core/provider/notification_token.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -37,6 +38,7 @@ class _DebugWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final debugger = ref.watch(debuggerProvider);
 
     return Card(
       margin: const EdgeInsets.all(4),
@@ -59,6 +61,13 @@ class _DebugWidget extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SheetHeader(title: 'デバッグメニュー'),
+            SwitchListTile(
+              title: const Text('デバッグモード'),
+              subtitle: Text(debugger.isDebugger ? 'ON' : 'OFF'),
+              value: debugger.isDebugger,
+              onChanged: (value) =>
+                  ref.read(debuggerProvider.notifier).setDebugger(value: value),
+            ),
             ListTile(
               title: const Text('Flavor'),
               leading: const Icon(Icons.flag),
