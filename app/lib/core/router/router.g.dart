@@ -630,7 +630,7 @@ extension $DonationRouteExtension on DonationRoute {
 extension $DonationExecutedRouteExtension on DonationExecutedRoute {
   static DonationExecutedRoute _fromState(GoRouterState state) =>
       DonationExecutedRoute(
-        $extra: state.extra as (InvalidType, InvalidType),
+        $extra: state.extra as (StoreProduct, CustomerInfo),
       );
 
   String get location => GoRouteData.$location(
