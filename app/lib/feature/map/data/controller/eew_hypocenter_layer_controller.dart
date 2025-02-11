@@ -1,4 +1,3 @@
-import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/provider/time_ticker.dart';
 import 'package:eqmonitor/feature/eew/data/eew_alive_telegram.dart';
 import 'package:eqmonitor/feature/map/data/layer/eew_hypocenter/eew_hypocenter_layer.dart';

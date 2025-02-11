@@ -4,10 +4,10 @@ import 'dart:io';
 
 import 'package:eqmonitor/core/api/api_authentication_notifier.dart';
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
-import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
 import 'package:eqmonitor/core/provider/package_info.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/settings/component/settings_section_header.dart';
+import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:eqmonitor/feature/settings/features/feedback/data/custom_feedback.dart';
 import 'package:eqmonitor/gen/assets.gen.dart';
 import 'package:feedback/feedback.dart';
@@ -24,7 +24,7 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isDebugger = ref.watch(debuggerProvider).isDebugger;
+    final isDebugEnabled = ref.watch(debugProvider);
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
 
@@ -112,7 +112,7 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
           ),
-          if (isDebugger) ...[
+          if (isDebugEnabled) ...[
             Center(
               child: Text(
                 'Debug Mode',

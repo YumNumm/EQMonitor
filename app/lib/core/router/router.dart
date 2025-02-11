@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/app.dart';
-import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
 import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/core/provider/shared_preferences.dart';
 import 'package:eqmonitor/feature/donation/ui/donation_executed_screen.dart';
@@ -23,7 +22,7 @@ import 'package:eqmonitor/feature/settings/children/application_info/privacy_pol
 import 'package:eqmonitor/feature/settings/children/application_info/term_of_service_screen.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/http_api_endpoint_selector_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/api_endpoint_selector/websocket_api_endpoint_selector_page.dart';
-import 'package:eqmonitor/feature/settings/children/config/debug/debugger_page.dart';
+import 'package:eqmonitor/feature/settings/children/config/debug/debug_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/earthquake_history/earthquake_history_config_page.dart';
@@ -289,8 +288,7 @@ class DebuggerRoute extends GoRouteData {
   const DebuggerRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      const DebuggerPage();
+  Widget build(BuildContext context, GoRouterState state) => const DebugPage();
 }
 
 class HttpApiEndpointSelectorRoute extends GoRouteData {
