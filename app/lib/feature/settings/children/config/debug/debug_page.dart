@@ -1,5 +1,4 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
-import 'package:eqmonitor/core/provider/debugger/debugger_provider.dart';
 import 'package:eqmonitor/core/provider/notification_token.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
@@ -8,20 +7,21 @@ import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';
+import 'package:eqmonitor/feature/settings/features/debug/debug_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class DebuggerPage extends ConsumerWidget {
-  const DebuggerPage({super.key});
+class DebugPage extends ConsumerWidget {
+  const DebugPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Debugger'),
+        title: const Text('Debug Page'),
       ),
       body: ListView(
         children: const [
@@ -38,7 +38,7 @@ class _DebugWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final debugger = ref.watch(debuggerProvider);
+    final isDebugEnabled = ref.watch(debugProvider);
 
     return Card(
       margin: const EdgeInsets.all(4),
@@ -63,10 +63,10 @@ class _DebugWidget extends ConsumerWidget {
             const SheetHeader(title: 'デバッグメニュー'),
             SwitchListTile(
               title: const Text('デバッグモード'),
-              subtitle: Text(debugger.isDebugger ? 'ON' : 'OFF'),
-              value: debugger.isDebugger,
-              onChanged: (value) =>
-                  ref.read(debuggerProvider.notifier).setDebugger(value: value),
+              subtitle: Text(isDebugEnabled ? 'ON' : 'OFF'),
+              value: isDebugEnabled,
+              onChanged: (value) async =>
+                  ref.read(debugProvider.notifier).save(isEnabled: value),
             ),
             ListTile(
               title: const Text('Flavor'),
