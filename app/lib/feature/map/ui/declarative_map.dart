@@ -5,8 +5,10 @@ import 'package:eqmonitor/core/provider/log/talker.dart';
 import 'package:eqmonitor/feature/map/data/controller/declarative_map_controller.dart';
 import 'package:eqmonitor/feature/map/data/layer/base/map_layer.dart';
 import 'package:eqmonitor/feature/map/data/model/camera_position.dart';
+import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:eqmonitor/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
@@ -151,7 +153,9 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
 
       for (var i = 0; i < widget.layers.length; i++) {
         final layer = widget.layers[i];
-        final belowLayerId = i > 0 ? widget.layers[i - 1].id : null;
+        final belowLayerId = i > 0
+            ? widget.layers[i - 1].id
+            : BaseLayer.areaForecastLocalELine.name;
 
         if (_addedLayers.containsKey(layer.id)) {
           final cachedLayer = _addedLayers[layer.id]!;
@@ -170,11 +174,25 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
             if (isLayerPropertiesChanged) {
               final layerProperties = layer.toLayerProperties();
               if (layerProperties != null) {
-                await controller.setLayerProperties(
-                  layer.id,
-                  layerProperties,
-                );
-                _addedLayers[layer.id] = layer;
+                try {
+                  await controller.setLayerProperties(
+                    layer.id,
+                    layerProperties,
+                  );
+                  _addedLayers[layer.id] = layer;
+                } catch (e) {
+                  if (e is PlatformException &&
+                      e.code == 'LAYER_NOT_FOUND_ERROR') {
+                    // レイヤーが見つからない場合は、レイヤーを再追加する
+                    await controller.removeLayer(layer.id);
+                    await _addLayer(
+                      layer: layer,
+                      belowLayerId: belowLayerId,
+                    );
+                  } else {
+                    rethrow;
+                  }
+                }
               }
             }
             // geoJsonSource check
@@ -198,8 +216,10 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
             }
           }
         } else {
+          print('add layer: ${layer.id}');
           // 新規レイヤーの追加
           if (!_addedSources.containsKey(layer.sourceId)) {
+            print('add source: ${layer.sourceId}');
             final sourceId = layer.sourceId;
             if (sourceId != null) {
               await _addLayer(

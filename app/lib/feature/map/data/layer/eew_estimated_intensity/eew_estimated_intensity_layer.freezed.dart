@@ -20,7 +20,7 @@ mixin _$EewEstimatedIntensityLayer {
   Color get color => throw _privateConstructorUsedError;
   dynamic get filter => throw _privateConstructorUsedError;
   bool get visible => throw _privateConstructorUsedError;
-  String get sourceId => throw _privateConstructorUsedError;
+  String? get sourceId => throw _privateConstructorUsedError;
   double? get minZoom => throw _privateConstructorUsedError;
   double? get maxZoom => throw _privateConstructorUsedError;
 
@@ -43,7 +43,7 @@ abstract class $EewEstimatedIntensityLayerCopyWith<$Res> {
       Color color,
       dynamic filter,
       bool visible,
-      String sourceId,
+      String? sourceId,
       double? minZoom,
       double? maxZoom});
 }
@@ -68,7 +68,7 @@ class _$EewEstimatedIntensityLayerCopyWithImpl<$Res,
     Object? color = null,
     Object? filter = freezed,
     Object? visible = null,
-    Object? sourceId = null,
+    Object? sourceId = freezed,
     Object? minZoom = freezed,
     Object? maxZoom = freezed,
   }) {
@@ -89,10 +89,10 @@ class _$EewEstimatedIntensityLayerCopyWithImpl<$Res,
           ? _value.visible
           : visible // ignore: cast_nullable_to_non_nullable
               as bool,
-      sourceId: null == sourceId
+      sourceId: freezed == sourceId
           ? _value.sourceId
           : sourceId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       minZoom: freezed == minZoom
           ? _value.minZoom
           : minZoom // ignore: cast_nullable_to_non_nullable
@@ -119,7 +119,7 @@ abstract class _$$EewEstimatedIntensityLayerImplCopyWith<$Res>
       Color color,
       dynamic filter,
       bool visible,
-      String sourceId,
+      String? sourceId,
       double? minZoom,
       double? maxZoom});
 }
@@ -143,7 +143,7 @@ class __$$EewEstimatedIntensityLayerImplCopyWithImpl<$Res>
     Object? color = null,
     Object? filter = freezed,
     Object? visible = null,
-    Object? sourceId = null,
+    Object? sourceId = freezed,
     Object? minZoom = freezed,
     Object? maxZoom = freezed,
   }) {
@@ -164,10 +164,10 @@ class __$$EewEstimatedIntensityLayerImplCopyWithImpl<$Res>
           ? _value.visible
           : visible // ignore: cast_nullable_to_non_nullable
               as bool,
-      sourceId: null == sourceId
+      sourceId: freezed == sourceId
           ? _value.sourceId
           : sourceId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       minZoom: freezed == minZoom
           ? _value.minZoom
           : minZoom // ignore: cast_nullable_to_non_nullable
@@ -188,7 +188,7 @@ class _$EewEstimatedIntensityLayerImpl extends _EewEstimatedIntensityLayer {
       required this.color,
       required this.filter,
       this.visible = true,
-      this.sourceId = 'areaForecastLocalE',
+      this.sourceId = null,
       this.minZoom = null,
       this.maxZoom = null})
       : super._();
@@ -204,7 +204,7 @@ class _$EewEstimatedIntensityLayerImpl extends _EewEstimatedIntensityLayer {
   final bool visible;
   @override
   @JsonKey()
-  final String sourceId;
+  final String? sourceId;
   @override
   @JsonKey()
   final double? minZoom;
@@ -259,7 +259,7 @@ abstract class _EewEstimatedIntensityLayer extends EewEstimatedIntensityLayer {
       required final Color color,
       required final dynamic filter,
       final bool visible,
-      final String sourceId,
+      final String? sourceId,
       final double? minZoom,
       final double? maxZoom}) = _$EewEstimatedIntensityLayerImpl;
   const _EewEstimatedIntensityLayer._() : super._();
@@ -273,7 +273,7 @@ abstract class _EewEstimatedIntensityLayer extends EewEstimatedIntensityLayer {
   @override
   bool get visible;
   @override
-  String get sourceId;
+  String? get sourceId;
   @override
   double? get minZoom;
   @override

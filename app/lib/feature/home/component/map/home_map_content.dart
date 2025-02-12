@@ -1,6 +1,8 @@
+import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/feature/home/data/notifier/home_configuration_notifier.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/map/data/controller/declarative_map_controller.dart';
+import 'package:eqmonitor/feature/map/data/controller/eew_estimated_intensity_controller.dart';
 import 'package:eqmonitor/feature/map/data/controller/eew_hypocenter_layer_controller.dart';
 import 'package:eqmonitor/feature/map/data/controller/eew_ps_wave_controller.dart';
 import 'package:eqmonitor/feature/map/data/controller/kyoshin_monitor_layer_controller.dart';
@@ -52,6 +54,8 @@ class HomeMapContent extends HookConsumerWidget {
         controller: mapController,
         initialCameraPosition: cameraPosition,
         layers: [
+          for (final intensity in JmaForecastIntensity.values)
+            ref.watch(eewEstimatedIntensityLayerControllerProvider(intensity)),
           ...ref.watch(
             eewPsWaveLineLayerControllerProvider,
           ),
