@@ -95,6 +95,10 @@ enum JmaForecastIntensity {
     return index >= other.index;
   }
 
+  int compareTo(JmaForecastIntensity other) {
+    return index.compareTo(other.index);
+  }
+
   static JmaForecastIntensity? fromRealtimeIntensity(double intensity) =>
       switch (intensity) {
         < -0.5 => null,
