@@ -9,7 +9,7 @@ abstract class MapLayer {
   String get layerPropertiesHash;
 
   String get id;
-  String get sourceId;
+  String? get sourceId;
   bool? get visible;
   double? get minZoom;
   double? get maxZoom;
