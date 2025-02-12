@@ -15,7 +15,7 @@ class EewEstimatedIntensityLayer extends MapLayer
     required Color color,
     required dynamic filter,
     @Default(true) bool visible,
-    @Default('areaForecastLocalE') String sourceId,
+    @Default(null) String? sourceId,
     @Default(null) double? minZoom,
     @Default(null) double? maxZoom,
   }) = _EewEstimatedIntensityLayer;
@@ -30,7 +30,6 @@ class EewEstimatedIntensityLayer extends MapLayer
       EewEstimatedIntensityLayer(
         id: 'eew_estimated_intensity_layer_${intensity.name}',
         color: color,
-        sourceId: BaseLayer.areaForecastLocalEFill.name,
         filter: [
           'in',
           ['get', 'code'],
@@ -51,5 +50,5 @@ class EewEstimatedIntensityLayer extends MapLayer
   String get geoJsonSourceHash => '';
 
   @override
-  String get layerPropertiesHash => '${color.hex}';
+  String get layerPropertiesHash => '${color.hex}$filter';
 }

@@ -9,7 +9,7 @@ part of 'eew_estimated_intensity_controller.dart';
 // **************************************************************************
 
 String _$eewEstimatedIntensityLayerControllerHash() =>
-    r'e53998fcbaa10fbffd38792b335f694ddc3efb27';
+    r'e7d1b6f1913930349b3a31fb5d84a4ff0e7cd30b';
 
 /// Copied from Dart SDK
 class _SystemHash {

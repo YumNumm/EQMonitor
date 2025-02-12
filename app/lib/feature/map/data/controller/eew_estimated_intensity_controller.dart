@@ -27,15 +27,10 @@ class EewEstimatedIntensityLayerController
         )
         .map((eew) => eew.code)
         .toList();
-    return EewEstimatedIntensityLayer(
-      id: 'eew_estimated_intensity_layer_${intensity.name}',
+    return EewEstimatedIntensityLayer.fromJmaForecastIntensity(
       color: backgroundColor,
-      filter: [
-        'in',
-        ['get', 'maxIntensity'],
-        'literal',
-        regionCodes,
-      ],
+      intensity: intensity,
+      regionCodes: regionCodes,
     );
   }
 }

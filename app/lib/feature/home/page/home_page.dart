@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:eqapi_types/eqapi_types.dart';
+import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
 import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
@@ -205,7 +206,39 @@ class _DebugModal extends ConsumerWidget {
                 originTime: DateTime.now(),
                 forecastMaxIntensity: JmaForecastIntensity.values[
                     Random().nextInt(JmaForecastIntensity.values.length)],
+                regions: [
+                  for (final region in ref
+                      .read(jmaCodeTableProvider)
+                      .areaForecastLocalEew
+                      .items)
+                    () {
+                      if (Random().nextDouble() > 0.8) {
+                        return EstimatedIntensityRegion(
+                          code: region.code,
+                          name: region.name,
+                          arrivalTime: null,
+                          isPlum: false,
+                          isWarning: false,
+                          forecastMaxInt: ForecastMaxInt(
+                            from: JmaForecastIntensity.one,
+                            to: JmaForecastIntensityOver
+                                .values[Random().nextInt(
+                              JmaForecastIntensityOver.values.length,
+                            )],
+                          ),
+                          forecastMaxLgInt: ForecastMaxLgInt(
+                            from: JmaForecastLgIntensity.one,
+                            to: JmaForecastLgIntensityOver
+                                .values[Random().nextInt(
+                              JmaForecastLgIntensityOver.values.length,
+                            )],
+                          ),
+                        );
+                      }
+                    }(),
+                ].nonNulls.toList(),
               );
+              print(eew.regions);
               ref.read(eewProvider.notifier).upsert(eew);
             },
           ),

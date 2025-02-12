@@ -207,7 +207,8 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     }
     // フォアグラウンドじゃない時は何もしない
     if (ref.read(appLifecycleProvider) != AppLifecycleState.resumed) {
-      
+      log('app is not resumed');
+      return;
     }
     log('refreshIfWebsocketNotConnected');
 

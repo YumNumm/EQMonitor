@@ -52,7 +52,8 @@ class EewHypocenterLayer extends MapLayer with _$EewHypocenterLayer {
   }
 
   @override
-  String get geoJsonSourceHash => hypocenters.hashCode.toString();
+  String get geoJsonSourceHash =>
+      hypocenters.map((e) => '${e.latitude},${e.longitude}').join(',');
 
   @override
   LayerProperties toLayerProperties() {
