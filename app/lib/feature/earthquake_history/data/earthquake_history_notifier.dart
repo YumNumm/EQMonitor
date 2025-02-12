@@ -38,7 +38,6 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
 
     // 検索条件を指定していないNotifierでのみ、30秒ごとにデータ再取得するタイマーを設定
     if (parameter == const EarthquakeHistoryParameter()) {
-      // 30秒ごとにデータ再取得するタイマー
       final refetchTimer = Timer.periodic(
         const Duration(minutes: 5),
         (_) => _refreshIfWebsocketNotConnected(),
@@ -205,6 +204,10 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     if (parameter != const EarthquakeHistoryParameter()) {
       log('parameter is not default');
       return;
+    }
+    // フォアグラウンドじゃない時は何もしない
+    if (ref.read(appLifecycleProvider) != AppLifecycleState.resumed) {
+      
     }
     log('refreshIfWebsocketNotConnected');
 
