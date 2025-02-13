@@ -1680,7 +1680,7 @@ packages:
     dependency: transitive
     description:
       path: sheet
-      ref: HEAD
+      ref: main
       resolved-ref: f5be540e399a82ee94b0b4195a3d33095b5821db
       url: "https://github.com/YumNumm/modal_bottom_sheet.git"
     source: git
