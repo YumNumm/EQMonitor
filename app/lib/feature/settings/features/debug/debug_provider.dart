@@ -22,9 +22,7 @@ class Debug extends _$Debug {
     return prefs.getBool(_key);
   }
 
-  Future<void> save({
-    required bool isEnabled,
-  }) async {
+  Future<void> save({required bool isEnabled}) async {
     state = isEnabled;
 
     final prefs = ref.read(sharedPreferencesProvider);

@@ -72,27 +72,23 @@ class CrashlyticsTalkerObserver implements TalkerObserver {
 
   @override
   void onError(TalkerError err) => unawaited(
-        FirebaseCrashlytics.instance.log(
-          'Error: ${err.message}, ${err.exception}, ${err.stackTrace}',
-        ),
-      );
+    FirebaseCrashlytics.instance.log(
+      'Error: ${err.message}, ${err.exception}, ${err.stackTrace}',
+    ),
+  );
 
   @override
   void onException(TalkerException err) => unawaited(
-        FirebaseCrashlytics.instance.log(
-          'Exception: ${err.message}, ${err.exception}, ${err.stackTrace}',
-        ),
-      );
+    FirebaseCrashlytics.instance.log(
+      'Exception: ${err.message}, ${err.exception}, ${err.stackTrace}',
+    ),
+  );
 
   @override
   void onLog(TalkerData log) {
     if (log.title == TelegramWebSocketLog('').title) {
       return;
     }
-    unawaited(
-      FirebaseCrashlytics.instance.log(
-        log.message.toString(),
-      ),
-    );
+    unawaited(FirebaseCrashlytics.instance.log(log.message.toString()));
   }
 }

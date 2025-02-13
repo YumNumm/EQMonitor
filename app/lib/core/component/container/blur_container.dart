@@ -28,22 +28,14 @@ class BlurContainer extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-        border: Border.all(
-          color: borderColor,
-          width: borderWidth,
-        ),
+        border: Border.all(color: borderColor, width: borderWidth),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
         child: BackdropFilter(
-          filter: ImageFilter.blur(
-            sigmaX: blurRadius,
-            sigmaY: blurRadius,
-          ),
+          filter: ImageFilter.blur(sigmaX: blurRadius, sigmaY: blurRadius),
           child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: blurColor,
-            ),
+            decoration: BoxDecoration(color: blurColor),
             child: child,
           ),
         ),

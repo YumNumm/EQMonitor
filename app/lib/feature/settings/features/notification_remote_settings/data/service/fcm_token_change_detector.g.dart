@@ -15,14 +15,15 @@ String _$fcmTokenChangeDetectorHash() =>
 @ProviderFor(FcmTokenChangeDetector)
 final fcmTokenChangeDetectorProvider =
     AsyncNotifierProvider<FcmTokenChangeDetector, bool>.internal(
-  FcmTokenChangeDetector.new,
-  name: r'fcmTokenChangeDetectorProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$fcmTokenChangeDetectorHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      FcmTokenChangeDetector.new,
+      name: r'fcmTokenChangeDetectorProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$fcmTokenChangeDetectorHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$FcmTokenChangeDetector = AsyncNotifier<bool>;
 // ignore_for_file: type=lint

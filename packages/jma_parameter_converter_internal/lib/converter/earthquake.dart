@@ -11,10 +11,7 @@ Future<EarthquakeParameter> fromDmdataEarthquakeParameter(
   dmdata.EarthquakeParameter parameter,
 ) async {
   final itemsFuture = parameter.items.map((e) async {
-    final arv = await getArv(
-      latitude: e.latitude,
-      longitude: e.longitude,
-    );
+    final arv = await getArv(latitude: e.latitude, longitude: e.longitude);
     return (
       e,
       EarthquakeParameterStationItem(
@@ -23,7 +20,7 @@ Future<EarthquakeParameter> fromDmdataEarthquakeParameter(
         latitude: e.latitude,
         longitude: e.longitude,
         arv400: arv,
-      )
+      ),
     );
   });
   // 直列実行
@@ -33,16 +30,9 @@ Future<EarthquakeParameter> fromDmdataEarthquakeParameter(
     items.add(await item);
   }
 
-  final itemsGroupByRegion = items.groupListsBy(
-    (e) => e.$1.region,
-  );
+  final itemsGroupByRegion = items.groupListsBy((e) => e.$1.region);
   final itemsGroupByRegionAndCity = itemsGroupByRegion.map(
-    (key, value) => MapEntry(
-      key,
-      value.groupListsBy(
-        (e) => e.$1.city,
-      ),
-    ),
+    (key, value) => MapEntry(key, value.groupListsBy((e) => e.$1.city)),
   );
   print('itemsGroupByRegionAndCity: ${itemsGroupByRegionAndCity.length}');
   final regions = itemsGroupByRegionAndCity.entries.map(
@@ -53,17 +43,13 @@ Future<EarthquakeParameter> fromDmdataEarthquakeParameter(
         (e) => EarthquakeParameterCityItem(
           code: e.key.code,
           name: e.key.name,
-          stations: e.value.map(
-            (e) => e.$2,
-          ),
+          stations: e.value.map((e) => e.$2),
         ),
       ),
     ),
   );
   print('regions: ${regions.length}');
-  return EarthquakeParameter(
-    regions: regions,
-  );
+  return EarthquakeParameter(regions: regions);
 }
 
 Future<double?> getArv({
@@ -76,28 +62,31 @@ Future<double?> getArv({
     print('Cache hit!: $cacheFile');
     final json =
         jsonDecode(await cacheFile.readAsString()) as Map<String, dynamic>;
-    final arvStr = (((json['features'] as List<dynamic>?)?.first
-            as Map<String, dynamic>?)?['properties']
-        as Map<String, dynamic>?)?['ARV'] as String?;
+    final arvStr =
+        (((json['features'] as List<dynamic>?)?.first
+                    as Map<String, dynamic>?)?['properties']
+                as Map<String, dynamic>?)?['ARV']
+            as String?;
     final arv = double.tryParse(arvStr.toString());
     return arv;
   }
   print('Cache miss!: $cacheFile');
   final response = await http.get(
     Uri.parse(
-        'https://www.j-shis.bosai.go.jp/map/api/sstrct/V2/meshinfo.geojson'
-        '?position=$longitude,$latitude'
-        '&epsg=4326'),
+      'https://www.j-shis.bosai.go.jp/map/api/sstrct/V2/meshinfo.geojson'
+      '?position=$longitude,$latitude'
+      '&epsg=4326',
+    ),
   );
   final json = jsonDecode(response.body) as Map<String, dynamic>;
   print(json);
-  final arvStr = (((json['features'] as List<dynamic>?)?.first
-          as Map<String, dynamic>?)?['properties']
-      as Map<String, dynamic>?)?['ARV'] as String?;
+  final arvStr =
+      (((json['features'] as List<dynamic>?)?.first
+                  as Map<String, dynamic>?)?['properties']
+              as Map<String, dynamic>?)?['ARV']
+          as String?;
   final arv = double.tryParse(arvStr.toString());
-  cacheFile.writeAsStringSync(
-    jsonEncode(json),
-  );
+  cacheFile.writeAsStringSync(jsonEncode(json));
   print('ARV: $arv');
   return null;
 }

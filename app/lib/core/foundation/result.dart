@@ -38,10 +38,7 @@ final class Success<S, E extends Exception> extends Result<S, E> {
 
 /// Resultクラスに準拠したFailureクラス
 final class Failure<S, E extends Exception> extends Result<S, E> {
-  const Failure(
-    this.exception, [
-    this.stackTrace,
-  ]);
+  const Failure(this.exception, [this.stackTrace]);
 
   final E exception;
   final StackTrace? stackTrace;

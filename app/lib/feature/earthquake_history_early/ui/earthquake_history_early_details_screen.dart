@@ -14,25 +14,18 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sheet/sheet.dart';
 
 class EarthquakeHistoryEarlyDetailsRoute extends GoRouteData {
-  const EarthquakeHistoryEarlyDetailsRoute({
-    required this.id,
-  });
+  const EarthquakeHistoryEarlyDetailsRoute({required this.id});
 
   final String id;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return EarthquakeHistoryEarlyDetailsScreen(
-      id: id,
-    );
+    return EarthquakeHistoryEarlyDetailsScreen(id: id);
   }
 }
 
 class EarthquakeHistoryEarlyDetailsScreen extends HookConsumerWidget {
-  const EarthquakeHistoryEarlyDetailsScreen({
-    required this.id,
-    super.key,
-  });
+  const EarthquakeHistoryEarlyDetailsScreen({required this.id, super.key});
 
   final String id;
 
@@ -46,125 +39,117 @@ class EarthquakeHistoryEarlyDetailsScreen extends HookConsumerWidget {
     final state = ref.watch(earthquakeHistoryEarlyEventProvider(id));
     return switch (state) {
       AsyncError(:final error) => Scaffold(
-          appBar: AppBar(),
-          body: ErrorCard(
-            error: error,
-            onReload: () async =>
-                ref.refresh(earthquakeHistoryEarlyEventProvider(id)),
-          ),
+        appBar: AppBar(),
+        body: ErrorCard(
+          error: error,
+          onReload:
+              () async => ref.refresh(earthquakeHistoryEarlyEventProvider(id)),
         ),
+      ),
       AsyncData(:final value) => Scaffold(
-          body: Stack(
-            children: [
-              IgnorePointer(
-                child: SafeArea(
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 250),
-                        child: BorderedContainer(
-                          margin: const EdgeInsets.all(4),
-                          padding: const EdgeInsets.all(4),
-                          borderRadius: BorderRadius.circular((25 / 5) + 5),
-                          child: Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: [
-                              for (final intensity in [
-                                ...JmaForecastIntensity.values,
-                              ].where(
-                                (e) => e <= value.maxIntensity!,
-                              ))
-                                JmaForecastIntensityIcon(
-                                  type: IntensityIconType.filled,
-                                  intensity: intensity,
-                                  size: 25,
-                                ),
-                            ],
-                          ),
+        body: Stack(
+          children: [
+            IgnorePointer(
+              child: SafeArea(
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 250),
+                      child: BorderedContainer(
+                        margin: const EdgeInsets.all(4),
+                        padding: const EdgeInsets.all(4),
+                        borderRadius: BorderRadius.circular((25 / 5) + 5),
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            for (final intensity in [
+                              ...JmaForecastIntensity.values,
+                            ].where((e) => e <= value.maxIntensity!))
+                              JmaForecastIntensityIcon(
+                                type: IntensityIconType.filled,
+                                intensity: intensity,
+                                size: 25,
+                              ),
+                          ],
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-              SheetFloatingActionButtons(
-                hasAppBar: false,
-                controller: sheetController,
-                fab: [
-                  Column(
-                    children: [
-                      FloatingActionButton.small(
-                        heroTag: 'earthquake_history_details_fab',
-                        tooltip: '表示領域を地図に合わせる',
-                        onPressed: () {
-                          if (navigateToHomeFunction.value != null) {
-                            navigateToHomeFunction.value!.call();
-                          }
-                        },
-                        elevation: 4,
-                        child: const Icon(Icons.home),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              // Sheet
-              _Sheet(
-                sheetController: sheetController,
-                item: value,
-              ),
-              if (Navigator.canPop(context))
-                // 戻るボタン
-                SafeArea(
-                  child: IconButton.filledTonal(
-                    style: ButtonStyle(
-                      shape: WidgetStatePropertyAll(
-                        RoundedRectangleBorder(
-                          side: BorderSide(
-                            color: colorScheme.primary.withValues(alpha: 0.2),
-                          ),
-                          borderRadius: BorderRadius.circular(128),
-                        ),
-                      ),
+            ),
+            SheetFloatingActionButtons(
+              hasAppBar: false,
+              controller: sheetController,
+              fab: [
+                Column(
+                  children: [
+                    FloatingActionButton.small(
+                      heroTag: 'earthquake_history_details_fab',
+                      tooltip: '表示領域を地図に合わせる',
+                      onPressed: () {
+                        if (navigateToHomeFunction.value != null) {
+                          navigateToHomeFunction.value!.call();
+                        }
+                      },
+                      elevation: 4,
+                      child: const Icon(Icons.home),
                     ),
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () => context.pop(),
-                    color: colorScheme.primary,
-                  ),
-                ),
-            ],
-          ),
-        ),
-      _ => Scaffold(
-          appBar: AppBar(),
-          body: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const CircularProgressIndicator.adaptive(),
-                const SizedBox(height: 8),
-                Text(
-                  '各地の震度データを取得中...',
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  ],
                 ),
               ],
             ),
+            // Sheet
+            _Sheet(sheetController: sheetController, item: value),
+            if (Navigator.canPop(context))
+              // 戻るボタン
+              SafeArea(
+                child: IconButton.filledTonal(
+                  style: ButtonStyle(
+                    shape: WidgetStatePropertyAll(
+                      RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: colorScheme.primary.withValues(alpha: 0.2),
+                        ),
+                        borderRadius: BorderRadius.circular(128),
+                      ),
+                    ),
+                  ),
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => context.pop(),
+                  color: colorScheme.primary,
+                ),
+              ),
+          ],
+        ),
+      ),
+      _ => Scaffold(
+        appBar: AppBar(),
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator.adaptive(),
+              const SizedBox(height: 8),
+              Text(
+                '各地の震度データを取得中...',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
         ),
+      ),
     };
   }
 }
 
 class _Sheet extends StatelessWidget {
-  const _Sheet({
-    required this.sheetController,
-    required this.item,
-  });
+  const _Sheet({required this.sheetController, required this.item});
 
   final SheetController sheetController;
   final EarthquakeEarlyEvent item;
@@ -175,9 +160,7 @@ class _Sheet extends StatelessWidget {
       bottom: false,
       child: BasicModalSheet(
         hasAppBar: false,
-        children: [
-          EarthquakeEarlyHypoInfoWidget(item: item),
-        ],
+        children: [EarthquakeEarlyHypoInfoWidget(item: item)],
       ),
     );
   }

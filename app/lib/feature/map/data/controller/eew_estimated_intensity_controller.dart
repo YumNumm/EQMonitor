@@ -13,20 +13,22 @@ class EewEstimatedIntensityLayerController
     extends _$EewEstimatedIntensityLayerController {
   @override
   EewEstimatedIntensityLayer build(JmaForecastIntensity intensity) {
-    final intensityColorMap =
-        ref.watch(intensityColorProvider).fromJmaForecastIntensity(intensity);
+    final intensityColorMap = ref
+        .watch(intensityColorProvider)
+        .fromJmaForecastIntensity(intensity);
     final backgroundColor = intensityColorMap.background;
 
     final aliveEews = ref.watch(eewAliveTelegramProvider);
-    final regionCodes = (aliveEews ?? [])
-        .map((eew) => eew.regions)
-        .nonNulls
-        .flattened
-        .where(
-          (eew) => eew.forecastMaxInt.toDisplayMaxInt().maxInt == intensity,
-        )
-        .map((eew) => eew.code)
-        .toList();
+    final regionCodes =
+        (aliveEews ?? [])
+            .map((eew) => eew.regions)
+            .nonNulls
+            .flattened
+            .where(
+              (eew) => eew.forecastMaxInt.toDisplayMaxInt().maxInt == intensity,
+            )
+            .map((eew) => eew.code)
+            .toList();
     return EewEstimatedIntensityLayer.fromJmaForecastIntensity(
       color: backgroundColor,
       intensity: intensity,

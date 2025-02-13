@@ -12,9 +12,7 @@ class EewsByEventId extends _$EewsByEventId {
   @override
   Future<List<EewV1>> build(String eventId) async {
     final client = ref.watch(eqApiProvider);
-    final response = await client.v1.getEewByEventId(
-      eventId: eventId,
-    );
+    final response = await client.v1.getEewByEventId(eventId: eventId);
 
     // Start Listening Eew
     // to update the list

@@ -26,25 +26,23 @@ class EewEstimatedIntensityLayer extends MapLayer
     required JmaForecastIntensity intensity,
     required Color color,
     required List<String> regionCodes,
-  }) =>
-      EewEstimatedIntensityLayer(
-        id: 'eew_estimated_intensity_layer_${intensity.name}',
-        color: color,
-        filter: [
-          'in',
-          ['get', 'code'],
-          'literal',
-          regionCodes,
-        ],
-      );
+  }) => EewEstimatedIntensityLayer(
+    id: 'eew_estimated_intensity_layer_${intensity.name}',
+    color: color,
+    filter: [
+      'in',
+      ['get', 'code'],
+      'literal',
+      regionCodes,
+    ],
+  );
 
   @override
   Map<String, dynamic>? toGeoJsonSource() => null;
 
   @override
-  LayerProperties toLayerProperties() => FillLayerProperties(
-        fillColor: color.toHexStringRGB(),
-      );
+  LayerProperties toLayerProperties() =>
+      FillLayerProperties(fillColor: color.toHexStringRGB());
 
   @override
   String get geoJsonSourceHash => '';

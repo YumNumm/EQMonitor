@@ -12,10 +12,12 @@ part of 'earthquake_history_early_parameter.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 EarthquakeHistoryEarlyParameter _$EarthquakeHistoryEarlyParameterFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _EarthquakeHistoryEarlyParameter.fromJson(json);
 }
 
@@ -39,33 +41,39 @@ mixin _$EarthquakeHistoryEarlyParameter {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   $EarthquakeHistoryEarlyParameterCopyWith<EarthquakeHistoryEarlyParameter>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $EarthquakeHistoryEarlyParameterCopyWith<$Res> {
   factory $EarthquakeHistoryEarlyParameterCopyWith(
-          EarthquakeHistoryEarlyParameter value,
-          $Res Function(EarthquakeHistoryEarlyParameter) then) =
-      _$EarthquakeHistoryEarlyParameterCopyWithImpl<$Res,
-          EarthquakeHistoryEarlyParameter>;
+    EarthquakeHistoryEarlyParameter value,
+    $Res Function(EarthquakeHistoryEarlyParameter) then,
+  ) =
+      _$EarthquakeHistoryEarlyParameterCopyWithImpl<
+        $Res,
+        EarthquakeHistoryEarlyParameter
+      >;
   @useResult
-  $Res call(
-      {EarthquakeEarlySortType sort,
-      bool ascending,
-      double? magnitudeLte,
-      double? magnitudeGte,
-      double? depthLte,
-      double? depthGte,
-      JmaIntensity? intensityLte,
-      JmaIntensity? intensityGte,
-      DateTime? originTimeLte,
-      DateTime? originTimeGte});
+  $Res call({
+    EarthquakeEarlySortType sort,
+    bool ascending,
+    double? magnitudeLte,
+    double? magnitudeGte,
+    double? depthLte,
+    double? depthGte,
+    JmaIntensity? intensityLte,
+    JmaIntensity? intensityGte,
+    DateTime? originTimeLte,
+    DateTime? originTimeGte,
+  });
 }
 
 /// @nodoc
-class _$EarthquakeHistoryEarlyParameterCopyWithImpl<$Res,
-        $Val extends EarthquakeHistoryEarlyParameter>
+class _$EarthquakeHistoryEarlyParameterCopyWithImpl<
+  $Res,
+  $Val extends EarthquakeHistoryEarlyParameter
+>
     implements $EarthquakeHistoryEarlyParameterCopyWith<$Res> {
   _$EarthquakeHistoryEarlyParameterCopyWithImpl(this._value, this._then);
 
@@ -90,48 +98,61 @@ class _$EarthquakeHistoryEarlyParameterCopyWithImpl<$Res,
     Object? originTimeLte = freezed,
     Object? originTimeGte = freezed,
   }) {
-    return _then(_value.copyWith(
-      sort: null == sort
-          ? _value.sort
-          : sort // ignore: cast_nullable_to_non_nullable
-              as EarthquakeEarlySortType,
-      ascending: null == ascending
-          ? _value.ascending
-          : ascending // ignore: cast_nullable_to_non_nullable
-              as bool,
-      magnitudeLte: freezed == magnitudeLte
-          ? _value.magnitudeLte
-          : magnitudeLte // ignore: cast_nullable_to_non_nullable
-              as double?,
-      magnitudeGte: freezed == magnitudeGte
-          ? _value.magnitudeGte
-          : magnitudeGte // ignore: cast_nullable_to_non_nullable
-              as double?,
-      depthLte: freezed == depthLte
-          ? _value.depthLte
-          : depthLte // ignore: cast_nullable_to_non_nullable
-              as double?,
-      depthGte: freezed == depthGte
-          ? _value.depthGte
-          : depthGte // ignore: cast_nullable_to_non_nullable
-              as double?,
-      intensityLte: freezed == intensityLte
-          ? _value.intensityLte
-          : intensityLte // ignore: cast_nullable_to_non_nullable
-              as JmaIntensity?,
-      intensityGte: freezed == intensityGte
-          ? _value.intensityGte
-          : intensityGte // ignore: cast_nullable_to_non_nullable
-              as JmaIntensity?,
-      originTimeLte: freezed == originTimeLte
-          ? _value.originTimeLte
-          : originTimeLte // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      originTimeGte: freezed == originTimeGte
-          ? _value.originTimeGte
-          : originTimeGte // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            sort:
+                null == sort
+                    ? _value.sort
+                    : sort // ignore: cast_nullable_to_non_nullable
+                        as EarthquakeEarlySortType,
+            ascending:
+                null == ascending
+                    ? _value.ascending
+                    : ascending // ignore: cast_nullable_to_non_nullable
+                        as bool,
+            magnitudeLte:
+                freezed == magnitudeLte
+                    ? _value.magnitudeLte
+                    : magnitudeLte // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            magnitudeGte:
+                freezed == magnitudeGte
+                    ? _value.magnitudeGte
+                    : magnitudeGte // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            depthLte:
+                freezed == depthLte
+                    ? _value.depthLte
+                    : depthLte // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            depthGte:
+                freezed == depthGte
+                    ? _value.depthGte
+                    : depthGte // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            intensityLte:
+                freezed == intensityLte
+                    ? _value.intensityLte
+                    : intensityLte // ignore: cast_nullable_to_non_nullable
+                        as JmaIntensity?,
+            intensityGte:
+                freezed == intensityGte
+                    ? _value.intensityGte
+                    : intensityGte // ignore: cast_nullable_to_non_nullable
+                        as JmaIntensity?,
+            originTimeLte:
+                freezed == originTimeLte
+                    ? _value.originTimeLte
+                    : originTimeLte // ignore: cast_nullable_to_non_nullable
+                        as DateTime?,
+            originTimeGte:
+                freezed == originTimeGte
+                    ? _value.originTimeGte
+                    : originTimeGte // ignore: cast_nullable_to_non_nullable
+                        as DateTime?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -139,33 +160,37 @@ class _$EarthquakeHistoryEarlyParameterCopyWithImpl<$Res,
 abstract class _$$EarthquakeHistoryEarlyParameterImplCopyWith<$Res>
     implements $EarthquakeHistoryEarlyParameterCopyWith<$Res> {
   factory _$$EarthquakeHistoryEarlyParameterImplCopyWith(
-          _$EarthquakeHistoryEarlyParameterImpl value,
-          $Res Function(_$EarthquakeHistoryEarlyParameterImpl) then) =
-      __$$EarthquakeHistoryEarlyParameterImplCopyWithImpl<$Res>;
+    _$EarthquakeHistoryEarlyParameterImpl value,
+    $Res Function(_$EarthquakeHistoryEarlyParameterImpl) then,
+  ) = __$$EarthquakeHistoryEarlyParameterImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {EarthquakeEarlySortType sort,
-      bool ascending,
-      double? magnitudeLte,
-      double? magnitudeGte,
-      double? depthLte,
-      double? depthGte,
-      JmaIntensity? intensityLte,
-      JmaIntensity? intensityGte,
-      DateTime? originTimeLte,
-      DateTime? originTimeGte});
+  $Res call({
+    EarthquakeEarlySortType sort,
+    bool ascending,
+    double? magnitudeLte,
+    double? magnitudeGte,
+    double? depthLte,
+    double? depthGte,
+    JmaIntensity? intensityLte,
+    JmaIntensity? intensityGte,
+    DateTime? originTimeLte,
+    DateTime? originTimeGte,
+  });
 }
 
 /// @nodoc
 class __$$EarthquakeHistoryEarlyParameterImplCopyWithImpl<$Res>
-    extends _$EarthquakeHistoryEarlyParameterCopyWithImpl<$Res,
-        _$EarthquakeHistoryEarlyParameterImpl>
+    extends
+        _$EarthquakeHistoryEarlyParameterCopyWithImpl<
+          $Res,
+          _$EarthquakeHistoryEarlyParameterImpl
+        >
     implements _$$EarthquakeHistoryEarlyParameterImplCopyWith<$Res> {
   __$$EarthquakeHistoryEarlyParameterImplCopyWithImpl(
-      _$EarthquakeHistoryEarlyParameterImpl _value,
-      $Res Function(_$EarthquakeHistoryEarlyParameterImpl) _then)
-      : super(_value, _then);
+    _$EarthquakeHistoryEarlyParameterImpl _value,
+    $Res Function(_$EarthquakeHistoryEarlyParameterImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of EarthquakeHistoryEarlyParameter
   /// with the given fields replaced by the non-null parameter values.
@@ -183,48 +208,60 @@ class __$$EarthquakeHistoryEarlyParameterImplCopyWithImpl<$Res>
     Object? originTimeLte = freezed,
     Object? originTimeGte = freezed,
   }) {
-    return _then(_$EarthquakeHistoryEarlyParameterImpl(
-      sort: null == sort
-          ? _value.sort
-          : sort // ignore: cast_nullable_to_non_nullable
-              as EarthquakeEarlySortType,
-      ascending: null == ascending
-          ? _value.ascending
-          : ascending // ignore: cast_nullable_to_non_nullable
-              as bool,
-      magnitudeLte: freezed == magnitudeLte
-          ? _value.magnitudeLte
-          : magnitudeLte // ignore: cast_nullable_to_non_nullable
-              as double?,
-      magnitudeGte: freezed == magnitudeGte
-          ? _value.magnitudeGte
-          : magnitudeGte // ignore: cast_nullable_to_non_nullable
-              as double?,
-      depthLte: freezed == depthLte
-          ? _value.depthLte
-          : depthLte // ignore: cast_nullable_to_non_nullable
-              as double?,
-      depthGte: freezed == depthGte
-          ? _value.depthGte
-          : depthGte // ignore: cast_nullable_to_non_nullable
-              as double?,
-      intensityLte: freezed == intensityLte
-          ? _value.intensityLte
-          : intensityLte // ignore: cast_nullable_to_non_nullable
-              as JmaIntensity?,
-      intensityGte: freezed == intensityGte
-          ? _value.intensityGte
-          : intensityGte // ignore: cast_nullable_to_non_nullable
-              as JmaIntensity?,
-      originTimeLte: freezed == originTimeLte
-          ? _value.originTimeLte
-          : originTimeLte // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      originTimeGte: freezed == originTimeGte
-          ? _value.originTimeGte
-          : originTimeGte // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
+    return _then(
+      _$EarthquakeHistoryEarlyParameterImpl(
+        sort:
+            null == sort
+                ? _value.sort
+                : sort // ignore: cast_nullable_to_non_nullable
+                    as EarthquakeEarlySortType,
+        ascending:
+            null == ascending
+                ? _value.ascending
+                : ascending // ignore: cast_nullable_to_non_nullable
+                    as bool,
+        magnitudeLte:
+            freezed == magnitudeLte
+                ? _value.magnitudeLte
+                : magnitudeLte // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        magnitudeGte:
+            freezed == magnitudeGte
+                ? _value.magnitudeGte
+                : magnitudeGte // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        depthLte:
+            freezed == depthLte
+                ? _value.depthLte
+                : depthLte // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        depthGte:
+            freezed == depthGte
+                ? _value.depthGte
+                : depthGte // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        intensityLte:
+            freezed == intensityLte
+                ? _value.intensityLte
+                : intensityLte // ignore: cast_nullable_to_non_nullable
+                    as JmaIntensity?,
+        intensityGte:
+            freezed == intensityGte
+                ? _value.intensityGte
+                : intensityGte // ignore: cast_nullable_to_non_nullable
+                    as JmaIntensity?,
+        originTimeLte:
+            freezed == originTimeLte
+                ? _value.originTimeLte
+                : originTimeLte // ignore: cast_nullable_to_non_nullable
+                    as DateTime?,
+        originTimeGte:
+            freezed == originTimeGte
+                ? _value.originTimeGte
+                : originTimeGte // ignore: cast_nullable_to_non_nullable
+                    as DateTime?,
+      ),
+    );
   }
 }
 
@@ -232,21 +269,22 @@ class __$$EarthquakeHistoryEarlyParameterImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$EarthquakeHistoryEarlyParameterImpl
     implements _EarthquakeHistoryEarlyParameter {
-  const _$EarthquakeHistoryEarlyParameterImpl(
-      {required this.sort,
-      required this.ascending,
-      this.magnitudeLte,
-      this.magnitudeGte,
-      this.depthLte,
-      this.depthGte,
-      this.intensityLte,
-      this.intensityGte,
-      this.originTimeLte,
-      this.originTimeGte});
+  const _$EarthquakeHistoryEarlyParameterImpl({
+    required this.sort,
+    required this.ascending,
+    this.magnitudeLte,
+    this.magnitudeGte,
+    this.depthLte,
+    this.depthGte,
+    this.intensityLte,
+    this.intensityGte,
+    this.originTimeLte,
+    this.originTimeGte,
+  });
 
   factory _$EarthquakeHistoryEarlyParameterImpl.fromJson(
-          Map<String, dynamic> json) =>
-      _$$EarthquakeHistoryEarlyParameterImplFromJson(json);
+    Map<String, dynamic> json,
+  ) => _$$EarthquakeHistoryEarlyParameterImplFromJson(json);
 
   @override
   final EarthquakeEarlySortType sort;
@@ -303,17 +341,18 @@ class _$EarthquakeHistoryEarlyParameterImpl
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      sort,
-      ascending,
-      magnitudeLte,
-      magnitudeGte,
-      depthLte,
-      depthGte,
-      intensityLte,
-      intensityGte,
-      originTimeLte,
-      originTimeGte);
+    runtimeType,
+    sort,
+    ascending,
+    magnitudeLte,
+    magnitudeGte,
+    depthLte,
+    depthGte,
+    intensityLte,
+    intensityGte,
+    originTimeLte,
+    originTimeGte,
+  );
 
   /// Create a copy of EarthquakeHistoryEarlyParameter
   /// with the given fields replaced by the non-null parameter values.
@@ -321,31 +360,32 @@ class _$EarthquakeHistoryEarlyParameterImpl
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeHistoryEarlyParameterImplCopyWith<
-          _$EarthquakeHistoryEarlyParameterImpl>
-      get copyWith => __$$EarthquakeHistoryEarlyParameterImplCopyWithImpl<
-          _$EarthquakeHistoryEarlyParameterImpl>(this, _$identity);
+    _$EarthquakeHistoryEarlyParameterImpl
+  >
+  get copyWith => __$$EarthquakeHistoryEarlyParameterImplCopyWithImpl<
+    _$EarthquakeHistoryEarlyParameterImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EarthquakeHistoryEarlyParameterImplToJson(
-      this,
-    );
+    return _$$EarthquakeHistoryEarlyParameterImplToJson(this);
   }
 }
 
 abstract class _EarthquakeHistoryEarlyParameter
     implements EarthquakeHistoryEarlyParameter {
-  const factory _EarthquakeHistoryEarlyParameter(
-      {required final EarthquakeEarlySortType sort,
-      required final bool ascending,
-      final double? magnitudeLte,
-      final double? magnitudeGte,
-      final double? depthLte,
-      final double? depthGte,
-      final JmaIntensity? intensityLte,
-      final JmaIntensity? intensityGte,
-      final DateTime? originTimeLte,
-      final DateTime? originTimeGte}) = _$EarthquakeHistoryEarlyParameterImpl;
+  const factory _EarthquakeHistoryEarlyParameter({
+    required final EarthquakeEarlySortType sort,
+    required final bool ascending,
+    final double? magnitudeLte,
+    final double? magnitudeGte,
+    final double? depthLte,
+    final double? depthGte,
+    final JmaIntensity? intensityLte,
+    final JmaIntensity? intensityGte,
+    final DateTime? originTimeLte,
+    final DateTime? originTimeGte,
+  }) = _$EarthquakeHistoryEarlyParameterImpl;
 
   factory _EarthquakeHistoryEarlyParameter.fromJson(Map<String, dynamic> json) =
       _$EarthquakeHistoryEarlyParameterImpl.fromJson;
@@ -376,6 +416,7 @@ abstract class _EarthquakeHistoryEarlyParameter
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeHistoryEarlyParameterImplCopyWith<
-          _$EarthquakeHistoryEarlyParameterImpl>
-      get copyWith => throw _privateConstructorUsedError;
+    _$EarthquakeHistoryEarlyParameterImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }

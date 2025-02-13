@@ -29,9 +29,7 @@ class SettingsScreen extends ConsumerWidget {
     final textTheme = theme.textTheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('設定'),
-      ),
+      appBar: AppBar(title: const Text('設定')),
       body: ListView(
         children: [
           Center(
@@ -44,9 +42,7 @@ class SettingsScreen extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(16),
                   clipBehavior: Clip.antiAlias,
                   elevation: 4,
-                  child: Assets.images.icon.image(
-                    fit: BoxFit.contain,
-                  ),
+                  child: Assets.images.icon.image(fit: BoxFit.contain),
                 ),
               ),
             ),
@@ -57,9 +53,7 @@ class SettingsScreen extends ConsumerWidget {
             padding: EdgeInsets.zero,
             child: ListTile(
               title: const Text('EQMonitorを応援する'),
-              subtitle: const Text(
-                '開発者に寄付することで、アプリの開発を支援できます',
-              ),
+              subtitle: const Text('開発者に寄付することで、アプリの開発を支援できます'),
               leading: const Icon(Icons.lightbulb),
               onTap: () async => const DonationRoute().push<void>(context),
             ),
@@ -78,9 +72,9 @@ class SettingsScreen extends ConsumerWidget {
           ListTile(
             title: const Text('地震履歴設定'),
             leading: const Icon(Icons.history),
-            onTap: () async => context.push(
-              const EarthquakeHistoryConfigRoute().location,
-            ),
+            onTap:
+                () async =>
+                    context.push(const EarthquakeHistoryConfigRoute().location),
           ),
           const SettingsSectionHeader(text: 'アプリの情報と問い合わせ'),
           ListTile(
@@ -99,10 +93,11 @@ class SettingsScreen extends ConsumerWidget {
             title: const Text('サーバの稼働状況'),
             subtitle: const Text('外部Webサイトへ遷移します'),
             leading: const Icon(Icons.network_ping),
-            onTap: () async => launchUrlString(
-              'https://status.eqmonitor.app/',
-              mode: LaunchMode.externalApplication,
-            ),
+            onTap:
+                () async => launchUrlString(
+                  'https://status.eqmonitor.app/',
+                  mode: LaunchMode.externalApplication,
+                ),
           ),
           Center(
             child: Text(
@@ -143,58 +138,52 @@ class _AppVersionInformation extends HookConsumerWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
 
-    final text = 'EQMonitor v${packageInfo.version} '
+    final text =
+        'EQMonitor v${packageInfo.version} '
         '(${packageInfo.buildNumber})';
 
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(bottom: 16),
-        child: Text(
-          text,
-          style: textTheme.bodyMedium,
-        ),
+        child: Text(text, style: textTheme.bodyMedium),
       ),
     );
   }
 }
 
 Future<void> _onInquiryTap(BuildContext context, WidgetRef ref) async {
-  BetterFeedback.of(context).show(
-    (feedback) async {
-      final packageInfo = ref.read(packageInfoProvider);
-      final payload = await ref
-          .read(apiAuthenticationNotifierProvider.notifier)
-          .extractPayload();
+  BetterFeedback.of(context).show((feedback) async {
+    final packageInfo = ref.read(packageInfoProvider);
+    final payload =
+        await ref
+            .read(apiAuthenticationNotifierProvider.notifier)
+            .extractPayload();
 
-      final base = '--------------------------\n'
-          'EQMonitor v${packageInfo.version}+${packageInfo.buildNumber}\n'
-          'Payload: $payload\n'
-          '--------------------------';
-      // draft an email and send to developer
-      final screenshotFilePath = await writeImageToStorage(feedback.screenshot);
-      final extra = CustomFeedback.fromJson(feedback.extra!);
+    final base =
+        '--------------------------\n'
+        'EQMonitor v${packageInfo.version}+${packageInfo.buildNumber}\n'
+        'Payload: $payload\n'
+        '--------------------------';
+    // draft an email and send to developer
+    final screenshotFilePath = await writeImageToStorage(feedback.screenshot);
+    final extra = CustomFeedback.fromJson(feedback.extra!);
 
-      final email = Email(
-        body: '${feedback.text}\n\n$base\n\n${jsonEncode(extra.toJson())}',
-        subject: 'EQMonitor Feedback',
-        recipients: ['feedback@eqmonitor.app'],
-        attachmentPaths: [
-          if (extra.isScreenshotAttached) screenshotFilePath,
-        ],
-      );
-      try {
-        await FlutterEmailSender.send(email);
-      } on PlatformException catch (e) {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('エラーが発生しました: ${e.message}'),
-            ),
-          );
-        }
+    final email = Email(
+      body: '${feedback.text}\n\n$base\n\n${jsonEncode(extra.toJson())}',
+      subject: 'EQMonitor Feedback',
+      recipients: ['feedback@eqmonitor.app'],
+      attachmentPaths: [if (extra.isScreenshotAttached) screenshotFilePath],
+    );
+    try {
+      await FlutterEmailSender.send(email);
+    } on PlatformException catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('エラーが発生しました: ${e.message}')));
       }
-    },
-  );
+    }
+  });
 }
 
 Future<String> writeImageToStorage(Uint8List feedbackScreenshot) async {

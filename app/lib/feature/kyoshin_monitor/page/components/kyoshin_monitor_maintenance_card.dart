@@ -17,34 +17,27 @@ class KyoshinMonitorMaintenanceCardnceCard extends ConsumerWidget {
     }
     final state = ref.watch(kyoshinMonitorMaintenanceProvider);
     return state.maybeWhen(
-      data: (data) => switch (data.type) {
-        MaintenanceMessageType.non => const SizedBox.shrink(),
-        _ => BorderedContainer(
-            accentColor: data.type == MaintenanceMessageType.highLight
-                ? Colors.orangeAccent.withValues(alpha: 0.2)
-                : null,
-            elevation: 1,
-            margin: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                ) +
-                const EdgeInsets.only(
-                  bottom: 8,
-                ),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 8,
-              vertical: 4,
+      data:
+          (data) => switch (data.type) {
+            MaintenanceMessageType.non => const SizedBox.shrink(),
+            _ => BorderedContainer(
+              accentColor:
+                  data.type == MaintenanceMessageType.highLight
+                      ? Colors.orangeAccent.withValues(alpha: 0.2)
+                      : null,
+              elevation: 1,
+              margin:
+                  const EdgeInsets.symmetric(horizontal: 12) +
+                  const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: Column(
+                children: [
+                  const SheetHeader(title: '強震モニタからのお知らせ'),
+                  Html(shrinkWrap: true, data: data.message),
+                ],
+              ),
             ),
-            child: Column(
-              children: [
-                const SheetHeader(title: '強震モニタからのお知らせ'),
-                Html(
-                  shrinkWrap: true,
-                  data: data.message,
-                ),
-              ],
-            ),
-          ),
-      },
+          },
       orElse: SizedBox.shrink,
     );
   }

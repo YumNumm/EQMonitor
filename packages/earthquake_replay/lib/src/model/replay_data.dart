@@ -4,19 +4,18 @@ part 'replay_data.freezed.dart';
 part 'replay_data.g.dart';
 
 sealed class ReplayData {
-  const ReplayData({
-    required this.type,
-    required this.time,
-  });
+  const ReplayData({required this.type, required this.time});
 
   factory ReplayData.fromMsgPack(List<dynamic> data) {
     final type = data[0] as int;
     final body = data[1] as List<dynamic>;
-    final replayDataType =
-        ReplayDataType.values.firstWhere((e) => e.value == type);
+    final replayDataType = ReplayDataType.values.firstWhere(
+      (e) => e.value == type,
+    );
     return switch (replayDataType) {
-      ReplayDataType.jmaXmlTelegram =>
-        JmaXmlTelegramReplayData.fromMsgPack(body),
+      ReplayDataType.jmaXmlTelegram => JmaXmlTelegramReplayData.fromMsgPack(
+        body,
+      ),
       ReplayDataType.jmaBinaryTelegram =>
         JmaBinaryTelegramReplayData.fromMsgPack(body),
       ReplayDataType.kyoshinMonitorImage =>
@@ -119,7 +118,8 @@ class KyoshinMonitorImageReplayData
       );
 
   @override
-  String toString() => 'KyoshinMonitorImageReplayData(time: $time, '
+  String toString() =>
+      'KyoshinMonitorImageReplayData(time: $time, '
       'images: ${images.entries.map((e) => '${e.key}: ${e.value.length} bytes').join(', ')})';
 }
 
@@ -239,8 +239,7 @@ enum ReplayDataType {
   kyoshinMonitorEewJson(101),
   keviJson(1000),
   snpLogEntry(1001),
-  axisJson(1002),
-  ;
+  axisJson(1002);
 
   const ReplayDataType(this.value);
   final int value;
@@ -251,8 +250,7 @@ enum ImageType {
   pga(1),
   pgv(2),
   psWave(3),
-  estShindo(4),
-  ;
+  estShindo(4);
 
   const ImageType(this.value);
   final int value;
@@ -260,8 +258,7 @@ enum ImageType {
 
 enum JsonType {
   eew(0),
-  eewWarning(1),
-  ;
+  eewWarning(1);
 
   const JsonType(this.value);
   final int value;

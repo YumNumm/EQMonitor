@@ -29,9 +29,10 @@ class MapLayerController extends _$MapLayerController {
   /// レイヤーの順序を変更
   void reorderLayers(List<String> orderedIds) {
     final layerMap = {for (final l in state) l.id: l};
-    state = orderedIds
-        .where(layerMap.containsKey)
-        .map((id) => layerMap[id]!)
-        .toList();
+    state =
+        orderedIds
+            .where(layerMap.containsKey)
+            .map((id) => layerMap[id]!)
+            .toList();
   }
 }

@@ -22,15 +22,12 @@ class Eew extends _$Eew {
 
     // WebSocketのListen開始
     ref
-      ..listen(
-        websocketTableMessagesProvider,
-        (_, next) {
-          final valueOrNull = next.valueOrNull;
-          if (valueOrNull is RealtimePostgresInsertPayload<EewV1>) {
-            _upsert(valueOrNull.newData);
-          }
-        },
-      )
+      ..listen(websocketTableMessagesProvider, (_, next) {
+        final valueOrNull = next.valueOrNull;
+        if (valueOrNull is RealtimePostgresInsertPayload<EewV1>) {
+          _upsert(valueOrNull.newData);
+        }
+      })
       ..listen(appLifecycleProvider, (_, next) {
         if (next == AppLifecycleState.resumed) {
           log('AppLifecycleState.resumed: Refetch EEW');

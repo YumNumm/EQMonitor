@@ -33,8 +33,8 @@ Dio dio(Ref ref) {
   if (ref.watch(isDioProxyEnabledProvider)) {
     HttpOverrides.global = _HttpOverrides();
     dio.httpClientAdapter = IOHttpClientAdapter(
-      createHttpClient: () =>
-          HttpClient()..findProxy = (url) => 'PROXY 192.168.151.154:9090',
+      createHttpClient:
+          () => HttpClient()..findProxy = (url) => 'PROXY 192.168.151.154:9090',
     );
   }
   dio.interceptors.add(

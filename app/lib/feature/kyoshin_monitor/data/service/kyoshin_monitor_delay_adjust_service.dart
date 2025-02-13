@@ -10,7 +10,6 @@ enum KyoshinMonitorDelayAdjustType {
 
   /// 画像取得APIで404が返ってきたら、内部の遅延カウンタを増やす (NTPサーバーを基準にしている)
   imageFetch404Ntp,
-  ;
 }
 
 abstract class KyoshinMonitorDelayAdjustService {}

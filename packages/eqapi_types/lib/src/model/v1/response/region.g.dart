@@ -18,11 +18,17 @@ _$RegionItemImpl _$$RegionItemImplFromJson(Map<String, dynamic> json) =>
           eventId: $checkedConvert('event_id', (v) => (v as num).toInt()),
           areaCode: $checkedConvert('area_code', (v) => v as String),
           maxIntensity: $checkedConvert(
-              'max_intensity', (v) => $enumDecode(_$JmaIntensityEnumMap, v)),
-          maxLpgmIntensity: $checkedConvert('max_lpgm_intensity',
-              (v) => $enumDecodeNullable(_$JmaLgIntensityEnumMap, v)),
-          earthquake: $checkedConvert('earthquake',
-              (v) => EarthquakeV1Base.fromJson(v as Map<String, dynamic>)),
+            'max_intensity',
+            (v) => $enumDecode(_$JmaIntensityEnumMap, v),
+          ),
+          maxLpgmIntensity: $checkedConvert(
+            'max_lpgm_intensity',
+            (v) => $enumDecodeNullable(_$JmaLgIntensityEnumMap, v),
+          ),
+          earthquake: $checkedConvert(
+            'earthquake',
+            (v) => EarthquakeV1Base.fromJson(v as Map<String, dynamic>),
+          ),
         );
         return val;
       },
@@ -30,7 +36,7 @@ _$RegionItemImpl _$$RegionItemImplFromJson(Map<String, dynamic> json) =>
         'eventId': 'event_id',
         'areaCode': 'area_code',
         'maxIntensity': 'max_intensity',
-        'maxLpgmIntensity': 'max_lpgm_intensity'
+        'maxLpgmIntensity': 'max_lpgm_intensity',
       },
     );
 

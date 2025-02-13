@@ -22,12 +22,7 @@ class MapCameraController extends _$MapCameraController {
   }
 
   /// カメラを指定位置に移動
-  void moveTo({
-    LatLng? target,
-    double? zoom,
-    double? tilt,
-    double? bearing,
-  }) {
+  void moveTo({LatLng? target, double? zoom, double? tilt, double? bearing}) {
     state = MapCameraPosition(
       target: target ?? state.target,
       zoom: zoom ?? state.zoom,
@@ -37,10 +32,7 @@ class MapCameraController extends _$MapCameraController {
   }
 
   /// カメラを指定の境界に合わせて移動
-  void moveToLatLngBounds(
-    LatLngBounds bounds, {
-    double padding = 50,
-  }) {
+  void moveToLatLngBounds(LatLngBounds bounds, {double padding = 50}) {
     // 境界の中心を計算
     final center = LatLng(
       (bounds.northeast.latitude + bounds.southwest.latitude) / 2,
@@ -57,10 +49,7 @@ class MapCameraController extends _$MapCameraController {
       padding,
     );
 
-    moveTo(
-      target: center,
-      zoom: min(latZoom, lngZoom),
-    );
+    moveTo(target: center, zoom: min(latZoom, lngZoom));
   }
 
   /// 距離からズームレベルを計算

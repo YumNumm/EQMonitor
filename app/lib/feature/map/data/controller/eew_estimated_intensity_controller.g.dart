@@ -36,9 +36,7 @@ abstract class _$EewEstimatedIntensityLayerController
     extends BuildlessNotifier<EewEstimatedIntensityLayer> {
   late final JmaForecastIntensity intensity;
 
-  EewEstimatedIntensityLayer build(
-    JmaForecastIntensity intensity,
-  );
+  EewEstimatedIntensityLayer build(JmaForecastIntensity intensity);
 }
 
 /// See also [EewEstimatedIntensityLayerController].
@@ -56,18 +54,14 @@ class EewEstimatedIntensityLayerControllerFamily
   EewEstimatedIntensityLayerControllerProvider call(
     JmaForecastIntensity intensity,
   ) {
-    return EewEstimatedIntensityLayerControllerProvider(
-      intensity,
-    );
+    return EewEstimatedIntensityLayerControllerProvider(intensity);
   }
 
   @override
   EewEstimatedIntensityLayerControllerProvider getProviderOverride(
     covariant EewEstimatedIntensityLayerControllerProvider provider,
   ) {
-    return call(
-      provider.intensity,
-    );
+    return call(provider.intensity);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -86,25 +80,28 @@ class EewEstimatedIntensityLayerControllerFamily
 }
 
 /// See also [EewEstimatedIntensityLayerController].
-class EewEstimatedIntensityLayerControllerProvider extends NotifierProviderImpl<
-    EewEstimatedIntensityLayerController, EewEstimatedIntensityLayer> {
+class EewEstimatedIntensityLayerControllerProvider
+    extends
+        NotifierProviderImpl<
+          EewEstimatedIntensityLayerController,
+          EewEstimatedIntensityLayer
+        > {
   /// See also [EewEstimatedIntensityLayerController].
-  EewEstimatedIntensityLayerControllerProvider(
-    JmaForecastIntensity intensity,
-  ) : this._internal(
-          () => EewEstimatedIntensityLayerController()..intensity = intensity,
-          from: eewEstimatedIntensityLayerControllerProvider,
-          name: r'eewEstimatedIntensityLayerControllerProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$eewEstimatedIntensityLayerControllerHash,
-          dependencies:
-              EewEstimatedIntensityLayerControllerFamily._dependencies,
-          allTransitiveDependencies: EewEstimatedIntensityLayerControllerFamily
-              ._allTransitiveDependencies,
-          intensity: intensity,
-        );
+  EewEstimatedIntensityLayerControllerProvider(JmaForecastIntensity intensity)
+    : this._internal(
+        () => EewEstimatedIntensityLayerController()..intensity = intensity,
+        from: eewEstimatedIntensityLayerControllerProvider,
+        name: r'eewEstimatedIntensityLayerControllerProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$eewEstimatedIntensityLayerControllerHash,
+        dependencies: EewEstimatedIntensityLayerControllerFamily._dependencies,
+        allTransitiveDependencies:
+            EewEstimatedIntensityLayerControllerFamily
+                ._allTransitiveDependencies,
+        intensity: intensity,
+      );
 
   EewEstimatedIntensityLayerControllerProvider._internal(
     super._createNotifier, {
@@ -122,14 +119,13 @@ class EewEstimatedIntensityLayerControllerProvider extends NotifierProviderImpl<
   EewEstimatedIntensityLayer runNotifierBuild(
     covariant EewEstimatedIntensityLayerController notifier,
   ) {
-    return notifier.build(
-      intensity,
-    );
+    return notifier.build(intensity);
   }
 
   @override
   Override overrideWith(
-      EewEstimatedIntensityLayerController Function() create) {
+    EewEstimatedIntensityLayerController Function() create,
+  ) {
     return ProviderOverride(
       origin: this,
       override: EewEstimatedIntensityLayerControllerProvider._internal(
@@ -145,8 +141,11 @@ class EewEstimatedIntensityLayerControllerProvider extends NotifierProviderImpl<
   }
 
   @override
-  NotifierProviderElement<EewEstimatedIntensityLayerController,
-      EewEstimatedIntensityLayer> createElement() {
+  NotifierProviderElement<
+    EewEstimatedIntensityLayerController,
+    EewEstimatedIntensityLayer
+  >
+  createElement() {
     return _EewEstimatedIntensityLayerControllerProviderElement(this);
   }
 
@@ -174,8 +173,11 @@ mixin EewEstimatedIntensityLayerControllerRef
 }
 
 class _EewEstimatedIntensityLayerControllerProviderElement
-    extends NotifierProviderElement<EewEstimatedIntensityLayerController,
-        EewEstimatedIntensityLayer>
+    extends
+        NotifierProviderElement<
+          EewEstimatedIntensityLayerController,
+          EewEstimatedIntensityLayer
+        >
     with EewEstimatedIntensityLayerControllerRef {
   _EewEstimatedIntensityLayerControllerProviderElement(super.provider);
 
@@ -183,5 +185,6 @@ class _EewEstimatedIntensityLayerControllerProviderElement
   JmaForecastIntensity get intensity =>
       (origin as EewEstimatedIntensityLayerControllerProvider).intensity;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

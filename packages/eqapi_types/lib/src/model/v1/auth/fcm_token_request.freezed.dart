@@ -12,7 +12,8 @@ part of 'fcm_token_request.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 FcmTokenRequest _$FcmTokenRequestFromJson(Map<String, dynamic> json) {
   return _FcmTokenRequest.fromJson(json);
@@ -35,8 +36,9 @@ mixin _$FcmTokenRequest {
 /// @nodoc
 abstract class $FcmTokenRequestCopyWith<$Res> {
   factory $FcmTokenRequestCopyWith(
-          FcmTokenRequest value, $Res Function(FcmTokenRequest) then) =
-      _$FcmTokenRequestCopyWithImpl<$Res, FcmTokenRequest>;
+    FcmTokenRequest value,
+    $Res Function(FcmTokenRequest) then,
+  ) = _$FcmTokenRequestCopyWithImpl<$Res, FcmTokenRequest>;
   @useResult
   $Res call({String fcmToken});
 }
@@ -55,24 +57,27 @@ class _$FcmTokenRequestCopyWithImpl<$Res, $Val extends FcmTokenRequest>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? fcmToken = null,
-  }) {
-    return _then(_value.copyWith(
-      fcmToken: null == fcmToken
-          ? _value.fcmToken
-          : fcmToken // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  $Res call({Object? fcmToken = null}) {
+    return _then(
+      _value.copyWith(
+            fcmToken:
+                null == fcmToken
+                    ? _value.fcmToken
+                    : fcmToken // ignore: cast_nullable_to_non_nullable
+                        as String,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$FcmTokenRequestImplCopyWith<$Res>
     implements $FcmTokenRequestCopyWith<$Res> {
-  factory _$$FcmTokenRequestImplCopyWith(_$FcmTokenRequestImpl value,
-          $Res Function(_$FcmTokenRequestImpl) then) =
-      __$$FcmTokenRequestImplCopyWithImpl<$Res>;
+  factory _$$FcmTokenRequestImplCopyWith(
+    _$FcmTokenRequestImpl value,
+    $Res Function(_$FcmTokenRequestImpl) then,
+  ) = __$$FcmTokenRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String fcmToken});
@@ -83,22 +88,24 @@ class __$$FcmTokenRequestImplCopyWithImpl<$Res>
     extends _$FcmTokenRequestCopyWithImpl<$Res, _$FcmTokenRequestImpl>
     implements _$$FcmTokenRequestImplCopyWith<$Res> {
   __$$FcmTokenRequestImplCopyWithImpl(
-      _$FcmTokenRequestImpl _value, $Res Function(_$FcmTokenRequestImpl) _then)
-      : super(_value, _then);
+    _$FcmTokenRequestImpl _value,
+    $Res Function(_$FcmTokenRequestImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of FcmTokenRequest
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? fcmToken = null,
-  }) {
-    return _then(_$FcmTokenRequestImpl(
-      fcmToken: null == fcmToken
-          ? _value.fcmToken
-          : fcmToken // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? fcmToken = null}) {
+    return _then(
+      _$FcmTokenRequestImpl(
+        fcmToken:
+            null == fcmToken
+                ? _value.fcmToken
+                : fcmToken // ignore: cast_nullable_to_non_nullable
+                    as String,
+      ),
+    );
   }
 }
 
@@ -138,13 +145,13 @@ class _$FcmTokenRequestImpl implements _FcmTokenRequest {
   @pragma('vm:prefer-inline')
   _$$FcmTokenRequestImplCopyWith<_$FcmTokenRequestImpl> get copyWith =>
       __$$FcmTokenRequestImplCopyWithImpl<_$FcmTokenRequestImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$FcmTokenRequestImplToJson(
-      this,
-    );
+    return _$$FcmTokenRequestImplToJson(this);
   }
 }
 

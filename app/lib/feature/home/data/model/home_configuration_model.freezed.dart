@@ -12,10 +12,12 @@ part of 'home_configuration_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 HomeConfigurationModel _$HomeConfigurationModelFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _HomeConfigurationModel.fromJson(json);
 }
 
@@ -36,16 +38,19 @@ mixin _$HomeConfigurationModel {
 
 /// @nodoc
 abstract class $HomeConfigurationModelCopyWith<$Res> {
-  factory $HomeConfigurationModelCopyWith(HomeConfigurationModel value,
-          $Res Function(HomeConfigurationModel) then) =
-      _$HomeConfigurationModelCopyWithImpl<$Res, HomeConfigurationModel>;
+  factory $HomeConfigurationModelCopyWith(
+    HomeConfigurationModel value,
+    $Res Function(HomeConfigurationModel) then,
+  ) = _$HomeConfigurationModelCopyWithImpl<$Res, HomeConfigurationModel>;
   @useResult
   $Res call({bool showLocation});
 }
 
 /// @nodoc
-class _$HomeConfigurationModelCopyWithImpl<$Res,
-        $Val extends HomeConfigurationModel>
+class _$HomeConfigurationModelCopyWithImpl<
+  $Res,
+  $Val extends HomeConfigurationModel
+>
     implements $HomeConfigurationModelCopyWith<$Res> {
   _$HomeConfigurationModelCopyWithImpl(this._value, this._then);
 
@@ -58,15 +63,17 @@ class _$HomeConfigurationModelCopyWithImpl<$Res,
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? showLocation = null,
-  }) {
-    return _then(_value.copyWith(
-      showLocation: null == showLocation
-          ? _value.showLocation
-          : showLocation // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
+  $Res call({Object? showLocation = null}) {
+    return _then(
+      _value.copyWith(
+            showLocation:
+                null == showLocation
+                    ? _value.showLocation
+                    : showLocation // ignore: cast_nullable_to_non_nullable
+                        as bool,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -74,9 +81,9 @@ class _$HomeConfigurationModelCopyWithImpl<$Res,
 abstract class _$$HomeConfigurationModelImplCopyWith<$Res>
     implements $HomeConfigurationModelCopyWith<$Res> {
   factory _$$HomeConfigurationModelImplCopyWith(
-          _$HomeConfigurationModelImpl value,
-          $Res Function(_$HomeConfigurationModelImpl) then) =
-      __$$HomeConfigurationModelImplCopyWithImpl<$Res>;
+    _$HomeConfigurationModelImpl value,
+    $Res Function(_$HomeConfigurationModelImpl) then,
+  ) = __$$HomeConfigurationModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool showLocation});
@@ -84,27 +91,28 @@ abstract class _$$HomeConfigurationModelImplCopyWith<$Res>
 
 /// @nodoc
 class __$$HomeConfigurationModelImplCopyWithImpl<$Res>
-    extends _$HomeConfigurationModelCopyWithImpl<$Res,
-        _$HomeConfigurationModelImpl>
+    extends
+        _$HomeConfigurationModelCopyWithImpl<$Res, _$HomeConfigurationModelImpl>
     implements _$$HomeConfigurationModelImplCopyWith<$Res> {
   __$$HomeConfigurationModelImplCopyWithImpl(
-      _$HomeConfigurationModelImpl _value,
-      $Res Function(_$HomeConfigurationModelImpl) _then)
-      : super(_value, _then);
+    _$HomeConfigurationModelImpl _value,
+    $Res Function(_$HomeConfigurationModelImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of HomeConfigurationModel
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? showLocation = null,
-  }) {
-    return _then(_$HomeConfigurationModelImpl(
-      showLocation: null == showLocation
-          ? _value.showLocation
-          : showLocation // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
+  $Res call({Object? showLocation = null}) {
+    return _then(
+      _$HomeConfigurationModelImpl(
+        showLocation:
+            null == showLocation
+                ? _value.showLocation
+                : showLocation // ignore: cast_nullable_to_non_nullable
+                    as bool,
+      ),
+    );
   }
 }
 
@@ -145,14 +153,15 @@ class _$HomeConfigurationModelImpl implements _HomeConfigurationModel {
   @override
   @pragma('vm:prefer-inline')
   _$$HomeConfigurationModelImplCopyWith<_$HomeConfigurationModelImpl>
-      get copyWith => __$$HomeConfigurationModelImplCopyWithImpl<
-          _$HomeConfigurationModelImpl>(this, _$identity);
+  get copyWith =>
+      __$$HomeConfigurationModelImplCopyWithImpl<_$HomeConfigurationModelImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$HomeConfigurationModelImplToJson(
-      this,
-    );
+    return _$$HomeConfigurationModelImplToJson(this);
   }
 }
 
@@ -172,5 +181,5 @@ abstract class _HomeConfigurationModel implements HomeConfigurationModel {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$HomeConfigurationModelImplCopyWith<_$HomeConfigurationModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

@@ -40,7 +40,6 @@ enum KyoshinMonitorStatus {
 
   // 初期化中
   initializing,
-  ;
 }
 
 @freezed
@@ -57,16 +56,13 @@ class KyoshinMonitorImageParseObservationPoint
 
   factory KyoshinMonitorImageParseObservationPoint.fromJson(
     Map<String, dynamic> json,
-  ) =>
-      _$KyoshinMonitorImageParseObservationPointFromJson(json);
+  ) => _$KyoshinMonitorImageParseObservationPointFromJson(json);
 }
 
 Map<String, dynamic> _kyoshinObservationPointToJson(
   KyoshinObservationPoint point,
-) =>
-    point.writeToJsonMap();
+) => point.writeToJsonMap();
 
 KyoshinObservationPoint _kyoshinObservationPointFromJson(
   Map<String, dynamic> json,
-) =>
-    KyoshinObservationPoint.fromJson(jsonEncode(json));
+) => KyoshinObservationPoint.fromJson(jsonEncode(json));

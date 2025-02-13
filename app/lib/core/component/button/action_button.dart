@@ -28,11 +28,7 @@ class ActionButton extends StatelessWidget {
     required void Function() onPressed,
     required Widget child,
   }) {
-    return ActionButton(
-      onPressed: onPressed,
-      isEnabled: false,
-      child: child,
-    );
+    return ActionButton(onPressed: onPressed, isEnabled: false, child: child);
   }
 
   factory ActionButton.text({
@@ -40,52 +36,46 @@ class ActionButton extends StatelessWidget {
     required String text,
     required BuildContext context,
     Color? accentColor,
-  }) =>
-      ActionButton(
-        onPressed: onPressed,
-        accentColor: accentColor,
-        isEnabled: true,
-        padding: const EdgeInsets.symmetric(
-          vertical: 4,
-        ),
-        child: Flexible(
-          child: Center(
-            child: Text(
-              text,
-              style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: 1.1,
-                  ),
-            ),
+  }) => ActionButton(
+    onPressed: onPressed,
+    accentColor: accentColor,
+    isEnabled: true,
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Flexible(
+      child: Center(
+        child: Text(
+          text,
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            letterSpacing: 1.1,
           ),
         ),
-      );
+      ),
+    ),
+  );
 
   factory ActionButton.textOutline({
     required void Function() onPressed,
     required String text,
     required BuildContext context,
     Color? textColor,
-  }) =>
-      ActionButton(
-        onPressed: onPressed,
-        accentColor: Colors.transparent,
-        isEnabled: true,
-        padding: const EdgeInsets.symmetric(
-          vertical: 4,
+  }) => ActionButton(
+    onPressed: onPressed,
+    accentColor: Colors.transparent,
+    isEnabled: true,
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Center(
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.titleMedium!.copyWith(
+          fontWeight: FontWeight.bold,
+          color: textColor,
+          letterSpacing: 1.1,
         ),
-        child: Center(
-          child: Text(
-            text,
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: textColor,
-                  letterSpacing: 1.1,
-                ),
-          ),
-        ),
-      );
+      ),
+    ),
+  );
 
   final void Function() onPressed;
   final bool isEnabled;
@@ -99,27 +89,18 @@ class ActionButton extends StatelessWidget {
     final enabledWidget = BorderedContainer(
       accentColor: accentColor ?? Colors.blue[800]!,
       onPressed: onPressed,
-      child: Padding(
-        padding: padding,
-        child: child,
-      ),
+      child: Padding(padding: padding, child: child),
     );
     final disabledWidget = DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(16)),
         color: Colors.white.withValues(alpha: 0.75),
-        border: const Border.fromBorderSide(
-          BorderSide(
-            color: Colors.grey,
-          ),
-        ),
+        border: const Border.fromBorderSide(BorderSide(color: Colors.grey)),
       ),
       child: child,
     );
     return AnimatedSwitcher(
-      duration: const Duration(
-        milliseconds: 150,
-      ),
+      duration: const Duration(milliseconds: 150),
       child: isEnabled ? enabledWidget : disabledWidget,
     );
   }

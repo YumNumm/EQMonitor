@@ -8,25 +8,18 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class EewDetailsByEventIdRoute extends GoRouteData {
-  const EewDetailsByEventIdRoute({
-    required this.eventId,
-  });
+  const EewDetailsByEventIdRoute({required this.eventId});
 
   final String eventId;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return EewDetailsByEventIdPage(
-      eventId: eventId,
-    );
+    return EewDetailsByEventIdPage(eventId: eventId);
   }
 }
 
 class EewDetailsByEventIdPage extends HookConsumerWidget {
-  const EewDetailsByEventIdPage({
-    required this.eventId,
-    super.key,
-  });
+  const EewDetailsByEventIdPage({required this.eventId, super.key});
 
   final String eventId;
 
@@ -35,15 +28,11 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
     final eewsAsyncValue = ref.watch(eewsByEventIdProvider(eventId));
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('緊急地震速報の履歴'),
-      ),
+      appBar: AppBar(title: const Text('緊急地震速報の履歴')),
       body: eewsAsyncValue.when(
         data: (eews) {
           if (eews.isEmpty) {
-            return const Center(
-              child: Text('データがありません'),
-            );
+            return const Center(child: Text('データがありません'));
           }
           // serial_no の昇順でソート
           final sortedEews = useMemoized(
@@ -55,10 +44,11 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
           return EewTable(eews: sortedEews);
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => ErrorCard(
-          error: error,
-          onReload: () async => ref.refresh(eewsByEventIdProvider(eventId)),
-        ),
+        error:
+            (error, stack) => ErrorCard(
+              error: error,
+              onReload: () async => ref.refresh(eewsByEventIdProvider(eventId)),
+            ),
       ),
     );
   }

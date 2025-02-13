@@ -7,10 +7,7 @@ import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 
 /// 強震モニタの設定状況を考慮したスケールカード
 class KyoshinMonitorScaleCard extends ConsumerWidget {
-  const KyoshinMonitorScaleCard({
-    this.onTap,
-    super.key,
-  });
+  const KyoshinMonitorScaleCard({this.onTap, super.key});
 
   final void Function()? onTap;
 
@@ -28,12 +25,9 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
       RealtimeDataType.response05Hz ||
       RealtimeDataType.response1Hz ||
       RealtimeDataType.response2Hz ||
-      RealtimeDataType.response4Hz =>
-        KyoshinMonitorScaleType.pgv,
+      RealtimeDataType.response4Hz => KyoshinMonitorScaleType.pgv,
       RealtimeDataType.pgd => KyoshinMonitorScaleType.pgd,
-      _ => throw ArgumentError(
-          'Invalid realtimeDataType: $realtimeDataType)',
-        ),
+      _ => throw ArgumentError('Invalid realtimeDataType: $realtimeDataType)'),
     };
     final theme = Theme.of(context);
     return GestureDetector(

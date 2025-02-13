@@ -7,12 +7,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'earthquake_history_repository.g.dart';
 
 @Riverpod(keepAlive: true)
-EarthquakeHistoryRepository earthquakeHistoryRepository(
-  Ref ref,
-) =>
-    EarthquakeHistoryRepository(
-      api: ref.watch(eqApiProvider),
-    );
+EarthquakeHistoryRepository earthquakeHistoryRepository(Ref ref) =>
+    EarthquakeHistoryRepository(api: ref.watch(eqApiProvider));
 
 class EarthquakeHistoryRepository {
   EarthquakeHistoryRepository({required EqApi api}) : _api = api;
@@ -39,9 +35,6 @@ class EarthquakeHistoryRepository {
       intensityLte: intensityLte?.type,
       intensityGte: intensityGte?.type,
     );
-    return (
-      count: result.response.count,
-      items: result.data,
-    );
+    return (count: result.response.count, items: result.data);
   }
 }

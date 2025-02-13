@@ -23,12 +23,4 @@ class EarthquakeEarly with _$EarthquakeEarly {
       _$EarthquakeEarlyFromJson(json);
 }
 
-enum OriginTimePrecision {
-  month,
-  day,
-  hour,
-  minute,
-  second,
-  millisecond,
-  ;
-}
+enum OriginTimePrecision { month, day, hour, minute, second, millisecond }

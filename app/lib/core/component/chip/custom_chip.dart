@@ -26,10 +26,7 @@ class CustomChip extends StatelessWidget {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 4,
-            horizontal: 8,
-          ),
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
           child: child,
         ),
       ),

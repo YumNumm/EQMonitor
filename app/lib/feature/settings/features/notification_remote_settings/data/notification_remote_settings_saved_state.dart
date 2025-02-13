@@ -12,9 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'notification_remote_settings_saved_state.g.dart';
 
 @riverpod
-bool notificationRemoteSettingsHasChangedFromSavedState(
-  Ref ref,
-) =>
+bool notificationRemoteSettingsHasChangedFromSavedState(Ref ref) =>
     ref.watch(notificationRemoteSettingsSavedStateNotifierProvider) !=
     ref.watch(notificationRemoteSettingsNotifierProvider);
 
@@ -28,9 +26,7 @@ class NotificationRemoteSettingsSavedStateNotifier
     try {
       token = await ref.read(apiAuthenticationNotifierProvider.future);
     } on Exception catch (e) {
-      throw UnauthorizedException(
-        innerException: e,
-      );
+      throw UnauthorizedException(innerException: e);
     }
     final response = await api.auth.getNotificationSettings(
       authorization: 'Bearer $token',
@@ -61,23 +57,20 @@ class NotificationRemoteSettingsSavedStateNotifier
         value.copyWith(
           earthquake: NotificationRemoteSettingsEarthquake(
             global: request.global?.minJmaIntensity,
-            regions: request.regions
-                    ?.map(
-                      (r) {
-                        final prefectureName =
-                            areaInformationPrefectureEarthquake.nameFindByCode(
-                          r.code,
-                        );
-                        if (prefectureName == null) {
-                          return null;
-                        }
-                        return NotificationRemoteSettingsEarthquakeRegion(
-                          minJmaIntensity: r.minIntensity,
-                          regionId: r.code,
-                          name: prefectureName,
-                        );
-                      },
-                    )
+            regions:
+                request.regions
+                    ?.map((r) {
+                      final prefectureName = areaInformationPrefectureEarthquake
+                          .nameFindByCode(r.code);
+                      if (prefectureName == null) {
+                        return null;
+                      }
+                      return NotificationRemoteSettingsEarthquakeRegion(
+                        minJmaIntensity: r.minIntensity,
+                        regionId: r.code,
+                        name: prefectureName,
+                      );
+                    })
                     .nonNulls
                     .toList() ??
                 [],
@@ -87,9 +80,7 @@ class NotificationRemoteSettingsSavedStateNotifier
     }
   }
 
-  Future<void> updateEew({
-    required NotificationSettingsRequest request,
-  }) async {
+  Future<void> updateEew({required NotificationSettingsRequest request}) async {
     final token = await ref.read(apiAuthenticationNotifierProvider.future);
     if (token == null) {
       throw UnauthorizedException();
@@ -109,22 +100,21 @@ class NotificationRemoteSettingsSavedStateNotifier
         value.copyWith(
           eew: NotificationRemoteSettingsEew(
             global: request.global?.minJmaIntensity,
-            regions: request.regions
-                    ?.map(
-                      (r) {
-                        final regionName = areaForecastLocalEew.nameFindByCode(
-                          r.code,
-                        );
-                        if (regionName == null) {
-                          return null;
-                        }
-                        return NotificationRemoteSettingsEewRegion(
-                          minJmaIntensity: r.minIntensity,
-                          regionId: r.code,
-                          name: regionName,
-                        );
-                      },
-                    )
+            regions:
+                request.regions
+                    ?.map((r) {
+                      final regionName = areaForecastLocalEew.nameFindByCode(
+                        r.code,
+                      );
+                      if (regionName == null) {
+                        return null;
+                      }
+                      return NotificationRemoteSettingsEewRegion(
+                        minJmaIntensity: r.minIntensity,
+                        regionId: r.code,
+                        name: regionName,
+                      );
+                    })
                     .nonNulls
                     .toList() ??
                 [],
@@ -144,59 +134,59 @@ class NotificationRemoteSettingsSavedStateNotifier
 
     return NotificationRemoteSettingsState(
       earthquake: NotificationRemoteSettingsEarthquake(
-        global: response.earthquake
-            .firstWhereOrNull((r) => r.regionId == 0)
-            ?.minJmaIntensity,
-        regions: response.earthquake
-            .where((r) => r.regionId != 0)
-            .map(
-              (r) {
-                final prefecture = areaInformationPrefectureEarthquake
-                    .nameFindByCode(r.regionId);
-                if (prefecture == null) {
-                  return null;
-                }
-                return NotificationRemoteSettingsEarthquakeRegion(
-                  regionId: r.regionId,
-                  minJmaIntensity: r.minJmaIntensity,
-                  name: prefecture,
-                );
-              },
-            )
-            .nonNulls
-            .toList(),
+        global:
+            response.earthquake
+                .firstWhereOrNull((r) => r.regionId == 0)
+                ?.minJmaIntensity,
+        regions:
+            response.earthquake
+                .where((r) => r.regionId != 0)
+                .map((r) {
+                  final prefecture = areaInformationPrefectureEarthquake
+                      .nameFindByCode(r.regionId);
+                  if (prefecture == null) {
+                    return null;
+                  }
+                  return NotificationRemoteSettingsEarthquakeRegion(
+                    regionId: r.regionId,
+                    minJmaIntensity: r.minJmaIntensity,
+                    name: prefecture,
+                  );
+                })
+                .nonNulls
+                .toList(),
       ),
       eew: NotificationRemoteSettingsEew(
-        global: response.eew
-            .firstWhereOrNull((r) => r.regionId == 0)
-            ?.minJmaIntensity,
-        regions: response.eew
-            .where((r) => r.regionId != 0)
-            .map(
-              (r) {
-                final region = areaForecastLocalEew.nameFindByCode(r.regionId);
-                if (region == null) {
-                  return null;
-                }
+        global:
+            response.eew
+                .firstWhereOrNull((r) => r.regionId == 0)
+                ?.minJmaIntensity,
+        regions:
+            response.eew
+                .where((r) => r.regionId != 0)
+                .map((r) {
+                  final region = areaForecastLocalEew.nameFindByCode(
+                    r.regionId,
+                  );
+                  if (region == null) {
+                    return null;
+                  }
 
-                return NotificationRemoteSettingsEewRegion(
-                  regionId: r.regionId,
-                  minJmaIntensity: r.minJmaIntensity,
-                  name: region,
-                );
-              },
-            )
-            .nonNulls
-            .toList(),
+                  return NotificationRemoteSettingsEewRegion(
+                    regionId: r.regionId,
+                    minJmaIntensity: r.minJmaIntensity,
+                    name: region,
+                  );
+                })
+                .nonNulls
+                .toList(),
       ),
     );
   }
 }
 
 class UnauthorizedException implements Exception {
-  UnauthorizedException({
-    this.innerException,
-  });
+  UnauthorizedException({this.innerException});
 
   final Exception? innerException;
 }

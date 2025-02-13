@@ -5,10 +5,7 @@ class BorderedContainer extends StatelessWidget {
     required this.child,
     this.accentColor,
     this.padding = const EdgeInsets.all(12),
-    this.margin = const EdgeInsets.symmetric(
-      vertical: 4,
-      horizontal: 8,
-    ),
+    this.margin = const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
     this.elevation = 0,
     this.borderRadius = const BorderRadius.all(Radius.circular(16)),
     this.onPressed,
@@ -41,16 +38,11 @@ class BorderedContainer extends StatelessWidget {
       margin: margin,
       child: InkWell(
         onTap: onPressed,
-        child: Padding(
-          padding: padding,
-          child: child,
-        ),
+        child: Padding(padding: padding, child: child),
       ),
     );
     if (onPressed != null) {
-      return Ink(
-        child: card,
-      );
+      return Ink(child: card);
     }
     return card;
   }

@@ -29,10 +29,9 @@ class FcmTopicManager extends _$FcmTopicManager {
       state = [...state]..remove(topic.topic);
       return Result.success(null);
     } on Exception catch (error, stackTrace) {
-      await ref.read(firebaseCrashlyticsProvider).recordError(
-            error,
-            stackTrace,
-          );
+      await ref
+          .read(firebaseCrashlyticsProvider)
+          .recordError(error, stackTrace);
       return Result.failure(error);
     }
   }
@@ -72,7 +71,7 @@ class FcmEarthquakeTopic implements FcmTopic {
   String get topic {
     final suffix =
         intensity?.type.replaceAll('-', 'lower').replaceAll('+', 'upper') ??
-            'all';
+        'all';
     return 'earthquake_$suffix';
   }
 }
@@ -80,8 +79,7 @@ class FcmEarthquakeTopic implements FcmTopic {
 enum FcmTopics {
   all('all'),
   notice('notice'),
-  vzse40('vzse40'),
-  ;
+  vzse40('vzse40');
 
   const FcmTopics(this.topic);
   final String topic;

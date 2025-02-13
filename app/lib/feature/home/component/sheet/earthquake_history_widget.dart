@@ -15,9 +15,7 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final defaultEarthquakeHistoryNotifierProvider =
         earthquakeHistoryNotifierProvider(const EarthquakeHistoryParameter());
-    final state = ref.watch(
-      defaultEarthquakeHistoryNotifierProvider,
-    );
+    final state = ref.watch(defaultEarthquakeHistoryNotifierProvider);
     const loading = Center(
       child: Padding(
         padding: EdgeInsets.all(24),
@@ -27,55 +25,54 @@ class EarthquakeHistorySheetWidget extends HookConsumerWidget {
 
     return BorderedContainer(
       elevation: 1,
-      margin: const EdgeInsets.symmetric(
-            horizontal: 12,
-          ) +
-          const EdgeInsets.only(
-            bottom: 8,
-          ),
-      padding: const EdgeInsets.symmetric(
-        horizontal: 8,
-        vertical: 4,
-      ),
+      margin:
+          const EdgeInsets.symmetric(horizontal: 12) +
+          const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Column(
         children: [
-          const SheetHeader(
-            title: '地震履歴',
-          ),
+          const SheetHeader(title: '地震履歴'),
           switch (state) {
             AsyncData(:final value) => () {
-                final data = value.$1.take(3).toList();
-                if (data.isEmpty) {
-                  return const SizedBox.shrink();
-                }
-                return Column(
-                  children: data
-                      .map(
-                        (e) => EarthquakeHistoryListTile(
-                          item: e,
-                          onTap: () async => EarthquakeHistoryDetailsRoute(
-                            eventId: e.eventId,
-                          ).push<void>(context),
-                          showBackgroundColor: false,
-                        ),
-                      )
-                      .toList(),
-                );
-              }(),
+              final data = value.$1.take(3).toList();
+              if (data.isEmpty) {
+                return const SizedBox.shrink();
+              }
+              return Column(
+                children:
+                    data
+                        .map(
+                          (e) => EarthquakeHistoryListTile(
+                            item: e,
+                            onTap:
+                                () async => EarthquakeHistoryDetailsRoute(
+                                  eventId: e.eventId,
+                                ).push<void>(context),
+                            showBackgroundColor: false,
+                          ),
+                        )
+                        .toList(),
+              );
+            }(),
             AsyncError(:final error) => ErrorCard(
-                error: error,
-                onReload: () async => ref
-                    .read(defaultEarthquakeHistoryNotifierProvider.notifier)
-                    .refresh(),
-              ),
+              error: error,
+              onReload:
+                  () async =>
+                      ref
+                          .read(
+                            defaultEarthquakeHistoryNotifierProvider.notifier,
+                          )
+                          .refresh(),
+            ),
             _ => loading,
           },
           Row(
             children: [
               const Spacer(),
               TextButton(
-                onPressed: () async =>
-                    const EarthquakeHistoryRoute().push<void>(context),
+                onPressed:
+                    () async =>
+                        const EarthquakeHistoryRoute().push<void>(context),
                 child: const Text('さらに表示'),
               ),
             ],

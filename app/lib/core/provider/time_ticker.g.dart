@@ -41,21 +41,15 @@ class TimeTickerFamily extends Family<AsyncValue<DateTime>> {
   const TimeTickerFamily();
 
   /// See also [timeTicker].
-  TimeTickerProvider call([
-    Duration duration = const Duration(seconds: 1),
-  ]) {
-    return TimeTickerProvider(
-      duration,
-    );
+  TimeTickerProvider call([Duration duration = const Duration(seconds: 1)]) {
+    return TimeTickerProvider(duration);
   }
 
   @override
   TimeTickerProvider getProviderOverride(
     covariant TimeTickerProvider provider,
   ) {
-    return call(
-      provider.duration,
-    );
+    return call(provider.duration);
   }
 
   static final Iterable<ProviderOrFamily> _dependencies =
@@ -78,24 +72,19 @@ class TimeTickerFamily extends Family<AsyncValue<DateTime>> {
 /// See also [timeTicker].
 class TimeTickerProvider extends StreamProvider<DateTime> {
   /// See also [timeTicker].
-  TimeTickerProvider([
-    Duration duration = const Duration(seconds: 1),
-  ]) : this._internal(
-          (ref) => timeTicker(
-            ref as TimeTickerRef,
-            duration,
-          ),
-          from: timeTickerProvider,
-          name: r'timeTickerProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$timeTickerHash,
-          dependencies: TimeTickerFamily._dependencies,
-          allTransitiveDependencies:
-              TimeTickerFamily._allTransitiveDependencies,
-          duration: duration,
-        );
+  TimeTickerProvider([Duration duration = const Duration(seconds: 1)])
+    : this._internal(
+        (ref) => timeTicker(ref as TimeTickerRef, duration),
+        from: timeTickerProvider,
+        name: r'timeTickerProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$timeTickerHash,
+        dependencies: TimeTickerFamily._dependencies,
+        allTransitiveDependencies: TimeTickerFamily._allTransitiveDependencies,
+        duration: duration,
+      );
 
   TimeTickerProvider._internal(
     super._createNotifier, {
@@ -160,5 +149,6 @@ class _TimeTickerProviderElement extends StreamProviderElement<DateTime>
   @override
   Duration get duration => (origin as TimeTickerProvider).duration;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

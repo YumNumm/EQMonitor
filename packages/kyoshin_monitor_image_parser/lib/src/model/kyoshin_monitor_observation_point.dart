@@ -32,8 +32,7 @@ class KyoshinMonitorObservationAnalyzedPoint
 
   factory KyoshinMonitorObservationAnalyzedPoint.fromJson(
     Map<String, dynamic> json,
-  ) =>
-      _$KyoshinMonitorObservationAnalyzedPointFromJson(json);
+  ) => _$KyoshinMonitorObservationAnalyzedPointFromJson(json);
 
   double get scaleToIntensity => scale * 10 - 3;
   double get scaleToPga => math.pow(10, 5 * scale - 2).toDouble();

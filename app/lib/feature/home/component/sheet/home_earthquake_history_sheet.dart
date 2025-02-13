@@ -19,25 +19,19 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
     return Card.outlined(
       color: Theme.of(context).colorScheme.surfaceContainerHigh,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8,
-          vertical: 4,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const _Header(),
             switch (state) {
-              AsyncData(:final value) => value.$1.isEmpty
-                  ? const EarthquakeHistoryNotFound()
-                  : _EarthquakeList(earthquakes: value.$1),
-              AsyncError(:final error) => Center(
-                  child: Text(error.toString()),
-                ),
-              _ => const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                ),
+              AsyncData(:final value) =>
+                value.$1.isEmpty
+                    ? const EarthquakeHistoryNotFound()
+                    : _EarthquakeList(earthquakes: value.$1),
+              AsyncError(:final error) => Center(child: Text(error.toString())),
+              _ => const Center(child: CircularProgressIndicator.adaptive()),
             },
           ],
         ),
@@ -71,8 +65,8 @@ class _Header extends StatelessWidget {
             backgroundColor: colorScheme.secondaryContainer,
             foregroundColor: colorScheme.onSecondaryContainer,
           ),
-          onPressed: () async =>
-              const EarthquakeHistoryRoute().push<void>(context),
+          onPressed:
+              () async => const EarthquakeHistoryRoute().push<void>(context),
           icon: const Icon(Icons.arrow_forward),
           label: const Text('さらに表示'),
         ),
@@ -82,9 +76,7 @@ class _Header extends StatelessWidget {
 }
 
 class _EarthquakeList extends StatelessWidget {
-  const _EarthquakeList({
-    required this.earthquakes,
-  });
+  const _EarthquakeList({required this.earthquakes});
 
   final List<EarthquakeV1Extended> earthquakes;
 
@@ -93,26 +85,28 @@ class _EarthquakeList extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Column(
-      children: earthquakes
-          .take(3)
-          .map(
-            (item) => InkWell(
-              borderRadius: BorderRadius.circular(12),
-              onTap: () async => EarthquakeHistoryDetailsRoute(
-                eventId: item.eventId,
-              ).push<void>(context),
-              child: EarthquakeHistoryListTile(
-                visualDensity: VisualDensity.compact,
-                item: item,
-                showBackgroundColor: false,
-                intensityIconSize: 32,
-                titleTextColor: colorScheme.onSurfaceVariant,
-                descriptionTextColor: colorScheme.onSurfaceVariant,
-                magnitudeTextColor: colorScheme.onPrimaryContainer,
-              ),
-            ),
-          )
-          .toList(),
+      children:
+          earthquakes
+              .take(3)
+              .map(
+                (item) => InkWell(
+                  borderRadius: BorderRadius.circular(12),
+                  onTap:
+                      () async => EarthquakeHistoryDetailsRoute(
+                        eventId: item.eventId,
+                      ).push<void>(context),
+                  child: EarthquakeHistoryListTile(
+                    visualDensity: VisualDensity.compact,
+                    item: item,
+                    showBackgroundColor: false,
+                    intensityIconSize: 32,
+                    titleTextColor: colorScheme.onSurfaceVariant,
+                    descriptionTextColor: colorScheme.onSurfaceVariant,
+                    magnitudeTextColor: colorScheme.onPrimaryContainer,
+                  ),
+                ),
+              )
+              .toList(),
     );
   }
 }

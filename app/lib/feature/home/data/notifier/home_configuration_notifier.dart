@@ -36,9 +36,8 @@ class HomeConfigurationNotifier extends _$HomeConfigurationNotifier {
 
   Future<void> save(HomeConfigurationModel configuration) async {
     state = configuration;
-    await ref.read(sharedPreferencesProvider).setString(
-          _key,
-          jsonEncode(configuration.toJson()),
-        );
+    await ref
+        .read(sharedPreferencesProvider)
+        .setString(_key, jsonEncode(configuration.toJson()));
   }
 }

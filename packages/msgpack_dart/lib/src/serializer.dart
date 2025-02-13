@@ -21,11 +21,9 @@ class Serializer {
   final DataWriter _writer;
   final ExtEncoder? _extEncoder;
 
-  Serializer({
-    DataWriter? dataWriter,
-    ExtEncoder? extEncoder,
-  })  : _writer = dataWriter ?? DataWriter(),
-        _extEncoder = extEncoder;
+  Serializer({DataWriter? dataWriter, ExtEncoder? extEncoder})
+    : _writer = dataWriter ?? DataWriter(),
+      _extEncoder = extEncoder;
 
   void encode(dynamic d) {
     if (d == null) return _writer.writeUint8(0xc0);
@@ -38,7 +36,8 @@ class Serializer {
     if (d is Iterable) return _writeIterable(d);
     if (d is ByteData)
       return _writeBinary(
-          d.buffer.asUint8List(d.offsetInBytes, d.lengthInBytes));
+        d.buffer.asUint8List(d.offsetInBytes, d.lengthInBytes),
+      );
     if (d is Map) return _writeMap(d);
     if (_extEncoder != null && _writeExt(d)) {
       return;

@@ -26,9 +26,7 @@ class DeclarativeMapController {
 
   /// カメラの位置を設定
   Future<void> moveCameraToPosition(CameraPosition position) async {
-    await moveCamera(
-      CameraUpdate.newCameraPosition(position),
-    );
+    await moveCamera(CameraUpdate.newCameraPosition(position));
   }
 
   Future<void> addHypocenterImages() async {

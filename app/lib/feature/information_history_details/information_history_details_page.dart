@@ -6,10 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class InformationHistoryDetailsPage extends HookConsumerWidget {
-  const InformationHistoryDetailsPage({
-    required this.data,
-    super.key,
-  });
+  const InformationHistoryDetailsPage({required this.data, super.key});
 
   final InformationV3 data;
 
@@ -18,9 +15,7 @@ class InformationHistoryDetailsPage extends HookConsumerWidget {
     final theme = Theme.of(context);
     final onSecondaryContainer = theme.colorScheme.onSecondaryContainer;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(data.title),
-      ),
+      appBar: AppBar(title: Text(data.title)),
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
@@ -35,14 +30,12 @@ class InformationHistoryDetailsPage extends HookConsumerWidget {
                   children: [
                     Row(
                       children: [
-                        Icon(
-                          Icons.info,
-                          color: onSecondaryContainer,
-                        ),
+                        Icon(Icons.info, color: onSecondaryContainer),
                         const SizedBox(width: 8),
                         Text(
-                          DateFormat('発表時刻: yyyy/MM/dd HH:mm頃')
-                              .format(data.createdAt.toLocal()),
+                          DateFormat(
+                            '発表時刻: yyyy/MM/dd HH:mm頃',
+                          ).format(data.createdAt.toLocal()),
                           style: theme.textTheme.bodyMedium!.copyWith(
                             color: onSecondaryContainer,
                           ),
@@ -52,10 +45,7 @@ class InformationHistoryDetailsPage extends HookConsumerWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(
-                          Icons.edit,
-                          color: onSecondaryContainer,
-                        ),
+                        Icon(Icons.edit, color: onSecondaryContainer),
                         const SizedBox(width: 8),
                         Text(
                           '発表機関: ${data.author.name}',

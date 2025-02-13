@@ -12,7 +12,8 @@ part of 'earthquake_history_parameter.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$EarthquakeHistoryParameter {
@@ -27,28 +28,35 @@ mixin _$EarthquakeHistoryParameter {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   $EarthquakeHistoryParameterCopyWith<EarthquakeHistoryParameter>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $EarthquakeHistoryParameterCopyWith<$Res> {
-  factory $EarthquakeHistoryParameterCopyWith(EarthquakeHistoryParameter value,
-          $Res Function(EarthquakeHistoryParameter) then) =
-      _$EarthquakeHistoryParameterCopyWithImpl<$Res,
-          EarthquakeHistoryParameter>;
+  factory $EarthquakeHistoryParameterCopyWith(
+    EarthquakeHistoryParameter value,
+    $Res Function(EarthquakeHistoryParameter) then,
+  ) =
+      _$EarthquakeHistoryParameterCopyWithImpl<
+        $Res,
+        EarthquakeHistoryParameter
+      >;
   @useResult
-  $Res call(
-      {double? magnitudeLte,
-      double? magnitudeGte,
-      double? depthLte,
-      double? depthGte,
-      JmaIntensity? intensityLte,
-      JmaIntensity? intensityGte});
+  $Res call({
+    double? magnitudeLte,
+    double? magnitudeGte,
+    double? depthLte,
+    double? depthGte,
+    JmaIntensity? intensityLte,
+    JmaIntensity? intensityGte,
+  });
 }
 
 /// @nodoc
-class _$EarthquakeHistoryParameterCopyWithImpl<$Res,
-        $Val extends EarthquakeHistoryParameter>
+class _$EarthquakeHistoryParameterCopyWithImpl<
+  $Res,
+  $Val extends EarthquakeHistoryParameter
+>
     implements $EarthquakeHistoryParameterCopyWith<$Res> {
   _$EarthquakeHistoryParameterCopyWithImpl(this._value, this._then);
 
@@ -69,32 +77,41 @@ class _$EarthquakeHistoryParameterCopyWithImpl<$Res,
     Object? intensityLte = freezed,
     Object? intensityGte = freezed,
   }) {
-    return _then(_value.copyWith(
-      magnitudeLte: freezed == magnitudeLte
-          ? _value.magnitudeLte
-          : magnitudeLte // ignore: cast_nullable_to_non_nullable
-              as double?,
-      magnitudeGte: freezed == magnitudeGte
-          ? _value.magnitudeGte
-          : magnitudeGte // ignore: cast_nullable_to_non_nullable
-              as double?,
-      depthLte: freezed == depthLte
-          ? _value.depthLte
-          : depthLte // ignore: cast_nullable_to_non_nullable
-              as double?,
-      depthGte: freezed == depthGte
-          ? _value.depthGte
-          : depthGte // ignore: cast_nullable_to_non_nullable
-              as double?,
-      intensityLte: freezed == intensityLte
-          ? _value.intensityLte
-          : intensityLte // ignore: cast_nullable_to_non_nullable
-              as JmaIntensity?,
-      intensityGte: freezed == intensityGte
-          ? _value.intensityGte
-          : intensityGte // ignore: cast_nullable_to_non_nullable
-              as JmaIntensity?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            magnitudeLte:
+                freezed == magnitudeLte
+                    ? _value.magnitudeLte
+                    : magnitudeLte // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            magnitudeGte:
+                freezed == magnitudeGte
+                    ? _value.magnitudeGte
+                    : magnitudeGte // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            depthLte:
+                freezed == depthLte
+                    ? _value.depthLte
+                    : depthLte // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            depthGte:
+                freezed == depthGte
+                    ? _value.depthGte
+                    : depthGte // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            intensityLte:
+                freezed == intensityLte
+                    ? _value.intensityLte
+                    : intensityLte // ignore: cast_nullable_to_non_nullable
+                        as JmaIntensity?,
+            intensityGte:
+                freezed == intensityGte
+                    ? _value.intensityGte
+                    : intensityGte // ignore: cast_nullable_to_non_nullable
+                        as JmaIntensity?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -102,29 +119,33 @@ class _$EarthquakeHistoryParameterCopyWithImpl<$Res,
 abstract class _$$EarthquakeHistoryParameterImplCopyWith<$Res>
     implements $EarthquakeHistoryParameterCopyWith<$Res> {
   factory _$$EarthquakeHistoryParameterImplCopyWith(
-          _$EarthquakeHistoryParameterImpl value,
-          $Res Function(_$EarthquakeHistoryParameterImpl) then) =
-      __$$EarthquakeHistoryParameterImplCopyWithImpl<$Res>;
+    _$EarthquakeHistoryParameterImpl value,
+    $Res Function(_$EarthquakeHistoryParameterImpl) then,
+  ) = __$$EarthquakeHistoryParameterImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {double? magnitudeLte,
-      double? magnitudeGte,
-      double? depthLte,
-      double? depthGte,
-      JmaIntensity? intensityLte,
-      JmaIntensity? intensityGte});
+  $Res call({
+    double? magnitudeLte,
+    double? magnitudeGte,
+    double? depthLte,
+    double? depthGte,
+    JmaIntensity? intensityLte,
+    JmaIntensity? intensityGte,
+  });
 }
 
 /// @nodoc
 class __$$EarthquakeHistoryParameterImplCopyWithImpl<$Res>
-    extends _$EarthquakeHistoryParameterCopyWithImpl<$Res,
-        _$EarthquakeHistoryParameterImpl>
+    extends
+        _$EarthquakeHistoryParameterCopyWithImpl<
+          $Res,
+          _$EarthquakeHistoryParameterImpl
+        >
     implements _$$EarthquakeHistoryParameterImplCopyWith<$Res> {
   __$$EarthquakeHistoryParameterImplCopyWithImpl(
-      _$EarthquakeHistoryParameterImpl _value,
-      $Res Function(_$EarthquakeHistoryParameterImpl) _then)
-      : super(_value, _then);
+    _$EarthquakeHistoryParameterImpl _value,
+    $Res Function(_$EarthquakeHistoryParameterImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of EarthquakeHistoryParameter
   /// with the given fields replaced by the non-null parameter values.
@@ -138,45 +159,54 @@ class __$$EarthquakeHistoryParameterImplCopyWithImpl<$Res>
     Object? intensityLte = freezed,
     Object? intensityGte = freezed,
   }) {
-    return _then(_$EarthquakeHistoryParameterImpl(
-      magnitudeLte: freezed == magnitudeLte
-          ? _value.magnitudeLte
-          : magnitudeLte // ignore: cast_nullable_to_non_nullable
-              as double?,
-      magnitudeGte: freezed == magnitudeGte
-          ? _value.magnitudeGte
-          : magnitudeGte // ignore: cast_nullable_to_non_nullable
-              as double?,
-      depthLte: freezed == depthLte
-          ? _value.depthLte
-          : depthLte // ignore: cast_nullable_to_non_nullable
-              as double?,
-      depthGte: freezed == depthGte
-          ? _value.depthGte
-          : depthGte // ignore: cast_nullable_to_non_nullable
-              as double?,
-      intensityLte: freezed == intensityLte
-          ? _value.intensityLte
-          : intensityLte // ignore: cast_nullable_to_non_nullable
-              as JmaIntensity?,
-      intensityGte: freezed == intensityGte
-          ? _value.intensityGte
-          : intensityGte // ignore: cast_nullable_to_non_nullable
-              as JmaIntensity?,
-    ));
+    return _then(
+      _$EarthquakeHistoryParameterImpl(
+        magnitudeLte:
+            freezed == magnitudeLte
+                ? _value.magnitudeLte
+                : magnitudeLte // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        magnitudeGte:
+            freezed == magnitudeGte
+                ? _value.magnitudeGte
+                : magnitudeGte // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        depthLte:
+            freezed == depthLte
+                ? _value.depthLte
+                : depthLte // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        depthGte:
+            freezed == depthGte
+                ? _value.depthGte
+                : depthGte // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        intensityLte:
+            freezed == intensityLte
+                ? _value.intensityLte
+                : intensityLte // ignore: cast_nullable_to_non_nullable
+                    as JmaIntensity?,
+        intensityGte:
+            freezed == intensityGte
+                ? _value.intensityGte
+                : intensityGte // ignore: cast_nullable_to_non_nullable
+                    as JmaIntensity?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$EarthquakeHistoryParameterImpl implements _EarthquakeHistoryParameter {
-  const _$EarthquakeHistoryParameterImpl(
-      {this.magnitudeLte,
-      this.magnitudeGte,
-      this.depthLte,
-      this.depthGte,
-      this.intensityLte,
-      this.intensityGte});
+  const _$EarthquakeHistoryParameterImpl({
+    this.magnitudeLte,
+    this.magnitudeGte,
+    this.depthLte,
+    this.depthGte,
+    this.intensityLte,
+    this.intensityGte,
+  });
 
   @override
   final double? magnitudeLte;
@@ -216,8 +246,15 @@ class _$EarthquakeHistoryParameterImpl implements _EarthquakeHistoryParameter {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, magnitudeLte, magnitudeGte,
-      depthLte, depthGte, intensityLte, intensityGte);
+  int get hashCode => Object.hash(
+    runtimeType,
+    magnitudeLte,
+    magnitudeGte,
+    depthLte,
+    depthGte,
+    intensityLte,
+    intensityGte,
+  );
 
   /// Create a copy of EarthquakeHistoryParameter
   /// with the given fields replaced by the non-null parameter values.
@@ -225,19 +262,21 @@ class _$EarthquakeHistoryParameterImpl implements _EarthquakeHistoryParameter {
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeHistoryParameterImplCopyWith<_$EarthquakeHistoryParameterImpl>
-      get copyWith => __$$EarthquakeHistoryParameterImplCopyWithImpl<
-          _$EarthquakeHistoryParameterImpl>(this, _$identity);
+  get copyWith => __$$EarthquakeHistoryParameterImplCopyWithImpl<
+    _$EarthquakeHistoryParameterImpl
+  >(this, _$identity);
 }
 
 abstract class _EarthquakeHistoryParameter
     implements EarthquakeHistoryParameter {
-  const factory _EarthquakeHistoryParameter(
-      {final double? magnitudeLte,
-      final double? magnitudeGte,
-      final double? depthLte,
-      final double? depthGte,
-      final JmaIntensity? intensityLte,
-      final JmaIntensity? intensityGte}) = _$EarthquakeHistoryParameterImpl;
+  const factory _EarthquakeHistoryParameter({
+    final double? magnitudeLte,
+    final double? magnitudeGte,
+    final double? depthLte,
+    final double? depthGte,
+    final JmaIntensity? intensityLte,
+    final JmaIntensity? intensityGte,
+  }) = _$EarthquakeHistoryParameterImpl;
 
   @override
   double? get magnitudeLte;
@@ -257,5 +296,5 @@ abstract class _EarthquakeHistoryParameter
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeHistoryParameterImplCopyWith<_$EarthquakeHistoryParameterImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

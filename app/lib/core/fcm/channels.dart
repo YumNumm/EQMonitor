@@ -145,10 +145,7 @@ final List<AndroidNotificationChannel> notificationChannels = [
 ];
 
 final List<AndroidNotificationChannelGroup> notificationChannelGroups = [
-  const AndroidNotificationChannelGroup(
-    'eew',
-    '緊急地震速報',
-  ),
+  const AndroidNotificationChannelGroup('eew', '緊急地震速報'),
   const AndroidNotificationChannelGroup(
     'earthquake',
     '地震通知',

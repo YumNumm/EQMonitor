@@ -15,14 +15,15 @@ String _$mapConfigurationNotifierHash() =>
 @ProviderFor(MapConfigurationNotifier)
 final mapConfigurationNotifierProvider =
     AsyncNotifierProvider<MapConfigurationNotifier, MapConfiguration>.internal(
-  MapConfigurationNotifier.new,
-  name: r'mapConfigurationNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$mapConfigurationNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      MapConfigurationNotifier.new,
+      name: r'mapConfigurationNotifierProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$mapConfigurationNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$MapConfigurationNotifier = AsyncNotifier<MapConfiguration>;
 // ignore_for_file: type=lint

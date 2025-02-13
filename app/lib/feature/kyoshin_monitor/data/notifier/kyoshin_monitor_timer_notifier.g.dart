@@ -15,36 +15,40 @@ String _$kyoshinMonitorDelayAdujustTimingHash() =>
 @ProviderFor(_kyoshinMonitorDelayAdujustTiming)
 final _kyoshinMonitorDelayAdujustTimingProvider =
     AutoDisposeStreamProvider<void>.internal(
-  _kyoshinMonitorDelayAdujustTiming,
-  name: r'_kyoshinMonitorDelayAdujustTimingProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$kyoshinMonitorDelayAdujustTimingHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      _kyoshinMonitorDelayAdujustTiming,
+      name: r'_kyoshinMonitorDelayAdujustTimingProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$kyoshinMonitorDelayAdujustTimingHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef _KyoshinMonitorDelayAdujustTimingRef
-    = AutoDisposeStreamProviderRef<void>;
+typedef _KyoshinMonitorDelayAdujustTimingRef =
+    AutoDisposeStreamProviderRef<void>;
 String _$kyoshinMonitorTimerNotifierHash() =>
     r'344b38935163fac1cce8de724e781381158eb1db';
 
 /// See also [KyoshinMonitorTimerNotifier].
 @ProviderFor(KyoshinMonitorTimerNotifier)
 final kyoshinMonitorTimerNotifierProvider = AutoDisposeStreamNotifierProvider<
-    KyoshinMonitorTimerNotifier, KyoshinMonitorTimerState>.internal(
+  KyoshinMonitorTimerNotifier,
+  KyoshinMonitorTimerState
+>.internal(
   KyoshinMonitorTimerNotifier.new,
   name: r'kyoshinMonitorTimerNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$kyoshinMonitorTimerNotifierHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$kyoshinMonitorTimerNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$KyoshinMonitorTimerNotifier
-    = AutoDisposeStreamNotifier<KyoshinMonitorTimerState>;
+typedef _$KyoshinMonitorTimerNotifier =
+    AutoDisposeStreamNotifier<KyoshinMonitorTimerState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

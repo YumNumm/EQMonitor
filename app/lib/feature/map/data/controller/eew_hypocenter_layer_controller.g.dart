@@ -36,9 +36,7 @@ abstract class _$EewHypocenterLayerController
     extends BuildlessAutoDisposeNotifier<EewHypocenterLayer> {
   late final EewHypocenterIcon icon;
 
-  EewHypocenterLayer build(
-    EewHypocenterIcon icon,
-  );
+  EewHypocenterLayer build(EewHypocenterIcon icon);
 }
 
 /// See also [EewHypocenterLayerController].
@@ -52,21 +50,15 @@ class EewHypocenterLayerControllerFamily extends Family<EewHypocenterLayer> {
   const EewHypocenterLayerControllerFamily();
 
   /// See also [EewHypocenterLayerController].
-  EewHypocenterLayerControllerProvider call(
-    EewHypocenterIcon icon,
-  ) {
-    return EewHypocenterLayerControllerProvider(
-      icon,
-    );
+  EewHypocenterLayerControllerProvider call(EewHypocenterIcon icon) {
+    return EewHypocenterLayerControllerProvider(icon);
   }
 
   @override
   EewHypocenterLayerControllerProvider getProviderOverride(
     covariant EewHypocenterLayerControllerProvider provider,
   ) {
-    return call(
-      provider.icon,
-    );
+    return call(provider.icon);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -86,24 +78,26 @@ class EewHypocenterLayerControllerFamily extends Family<EewHypocenterLayer> {
 
 /// See also [EewHypocenterLayerController].
 class EewHypocenterLayerControllerProvider
-    extends AutoDisposeNotifierProviderImpl<EewHypocenterLayerController,
-        EewHypocenterLayer> {
+    extends
+        AutoDisposeNotifierProviderImpl<
+          EewHypocenterLayerController,
+          EewHypocenterLayer
+        > {
   /// See also [EewHypocenterLayerController].
-  EewHypocenterLayerControllerProvider(
-    EewHypocenterIcon icon,
-  ) : this._internal(
-          () => EewHypocenterLayerController()..icon = icon,
-          from: eewHypocenterLayerControllerProvider,
-          name: r'eewHypocenterLayerControllerProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$eewHypocenterLayerControllerHash,
-          dependencies: EewHypocenterLayerControllerFamily._dependencies,
-          allTransitiveDependencies:
-              EewHypocenterLayerControllerFamily._allTransitiveDependencies,
-          icon: icon,
-        );
+  EewHypocenterLayerControllerProvider(EewHypocenterIcon icon)
+    : this._internal(
+        () => EewHypocenterLayerController()..icon = icon,
+        from: eewHypocenterLayerControllerProvider,
+        name: r'eewHypocenterLayerControllerProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$eewHypocenterLayerControllerHash,
+        dependencies: EewHypocenterLayerControllerFamily._dependencies,
+        allTransitiveDependencies:
+            EewHypocenterLayerControllerFamily._allTransitiveDependencies,
+        icon: icon,
+      );
 
   EewHypocenterLayerControllerProvider._internal(
     super._createNotifier, {
@@ -121,9 +115,7 @@ class EewHypocenterLayerControllerProvider
   EewHypocenterLayer runNotifierBuild(
     covariant EewHypocenterLayerController notifier,
   ) {
-    return notifier.build(
-      icon,
-    );
+    return notifier.build(icon);
   }
 
   @override
@@ -143,8 +135,11 @@ class EewHypocenterLayerControllerProvider
   }
 
   @override
-  AutoDisposeNotifierProviderElement<EewHypocenterLayerController,
-      EewHypocenterLayer> createElement() {
+  AutoDisposeNotifierProviderElement<
+    EewHypocenterLayerController,
+    EewHypocenterLayer
+  >
+  createElement() {
     return _EewHypocenterLayerControllerProviderElement(this);
   }
 
@@ -171,13 +166,18 @@ mixin EewHypocenterLayerControllerRef
 }
 
 class _EewHypocenterLayerControllerProviderElement
-    extends AutoDisposeNotifierProviderElement<EewHypocenterLayerController,
-        EewHypocenterLayer> with EewHypocenterLayerControllerRef {
+    extends
+        AutoDisposeNotifierProviderElement<
+          EewHypocenterLayerController,
+          EewHypocenterLayer
+        >
+    with EewHypocenterLayerControllerRef {
   _EewHypocenterLayerControllerProviderElement(super.provider);
 
   @override
   EewHypocenterIcon get icon =>
       (origin as EewHypocenterLayerControllerProvider).icon;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

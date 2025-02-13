@@ -37,9 +37,8 @@ class KyoshinMonitorSettings extends _$KyoshinMonitorSettings {
 
   Future<void> save(KyoshinMonitorSettingsModel model) async {
     state = model;
-    await ref.read(sharedPreferencesProvider).setString(
-          _prefsKey,
-          jsonEncode(state.toJson()),
-        );
+    await ref
+        .read(sharedPreferencesProvider)
+        .setString(_prefsKey, jsonEncode(state.toJson()));
   }
 }

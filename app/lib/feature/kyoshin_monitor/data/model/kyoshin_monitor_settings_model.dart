@@ -40,9 +40,7 @@ class KyoshinMonitorSettingsApiModel with _$KyoshinMonitorSettingsApiModel {
   const factory KyoshinMonitorSettingsApiModel({
     /// 強震モニタ APIのベースURL
     @Default(KyoshinMonitorEndpoint.kmoni)
-    @JsonKey(
-      unknownEnumValue: KyoshinMonitorEndpoint.kmoni,
-    )
+    @JsonKey(unknownEnumValue: KyoshinMonitorEndpoint.kmoni)
     KyoshinMonitorEndpoint endpoint,
 
     /// 画像取得頻度
@@ -64,8 +62,7 @@ class KyoshinMonitorSettingsApiModel with _$KyoshinMonitorSettingsApiModel {
 @JsonEnum(valueField: 'url')
 enum KyoshinMonitorEndpoint {
   kmoni('http://www.kmoni.bosai.go.jp'),
-  lmoniexp('https://smi.lmoniexp.bosai.go.jp'),
-  ;
+  lmoniexp('https://smi.lmoniexp.bosai.go.jp');
 
   const KyoshinMonitorEndpoint(this.url);
 
@@ -81,5 +78,4 @@ enum KyoshinMonitorMarkerType {
 
   /// 常に枠を表示しない
   never,
-  ;
 }

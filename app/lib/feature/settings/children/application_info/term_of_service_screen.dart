@@ -18,9 +18,7 @@ class TermOfServiceScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('利用規約'),
-      ),
+      appBar: AppBar(title: const Text('利用規約')),
       body: const _TermOfServiceScreenBody(),
     );
   }
@@ -33,16 +31,12 @@ class _TermOfServiceScreenBody extends HookWidget {
   Widget build(BuildContext context) {
     final markdownBody = useFuture(
       // ignore: discarded_futures
-      useMemoized(
-        () async => rootBundle.loadString(Assets.docs.termOfService),
-      ),
+      useMemoized(() async => rootBundle.loadString(Assets.docs.termOfService)),
       initialData: '',
     );
     final data = markdownBody.data;
     if (data == null) {
-      return const Center(
-        child: CircularProgressIndicator.adaptive(),
-      );
+      return const Center(child: CircularProgressIndicator.adaptive());
     }
     return Markdown(
       data: data,
@@ -52,9 +46,7 @@ class _TermOfServiceScreenBody extends HookWidget {
         if (uri == null) {
           return;
         }
-        await launchUrl(
-          uri,
-        );
+        await launchUrl(uri);
       },
     );
   }

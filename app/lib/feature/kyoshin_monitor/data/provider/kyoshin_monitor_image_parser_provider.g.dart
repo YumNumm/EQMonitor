@@ -15,14 +15,15 @@ String _$kyoshinMonitorImageParserHash() =>
 @ProviderFor(kyoshinMonitorImageParser)
 final kyoshinMonitorImageParserProvider =
     Provider<KyoshinMonitorImageParser>.internal(
-  kyoshinMonitorImageParser,
-  name: r'kyoshinMonitorImageParserProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$kyoshinMonitorImageParserHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      kyoshinMonitorImageParser,
+      name: r'kyoshinMonitorImageParserProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$kyoshinMonitorImageParserHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element

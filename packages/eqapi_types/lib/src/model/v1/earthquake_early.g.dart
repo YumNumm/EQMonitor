@@ -9,54 +9,60 @@ part of 'earthquake_early.dart';
 // **************************************************************************
 
 _$EarthquakeEarlyImpl _$$EarthquakeEarlyImplFromJson(
-        Map<String, dynamic> json) =>
-    $checkedCreate(
-      r'_$EarthquakeEarlyImpl',
-      json,
-      ($checkedConvert) {
-        final val = _$EarthquakeEarlyImpl(
-          id: $checkedConvert('id', (v) => v as String),
-          depth: $checkedConvert('depth', (v) => (v as num?)?.toInt()),
-          latitude: $checkedConvert('latitude', (v) => (v as num?)?.toDouble()),
-          longitude:
-              $checkedConvert('longitude', (v) => (v as num?)?.toDouble()),
-          magnitude:
-              $checkedConvert('magnitude', (v) => (v as num?)?.toDouble()),
-          maxIntensity: $checkedConvert('max_intensity',
-              (v) => $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v)),
-          maxIntensityIsEarly:
-              $checkedConvert('max_intensity_is_early', (v) => v as bool),
-          name: $checkedConvert('name', (v) => v as String),
-          originTime: $checkedConvert(
-              'origin_time', (v) => DateTime.parse(v as String)),
-          originTimePrecision: $checkedConvert('origin_time_precision',
-              (v) => $enumDecode(_$OriginTimePrecisionEnumMap, v)),
-        );
-        return val;
-      },
-      fieldKeyMap: const {
-        'maxIntensity': 'max_intensity',
-        'maxIntensityIsEarly': 'max_intensity_is_early',
-        'originTime': 'origin_time',
-        'originTimePrecision': 'origin_time_precision'
-      },
+  Map<String, dynamic> json,
+) => $checkedCreate(
+  r'_$EarthquakeEarlyImpl',
+  json,
+  ($checkedConvert) {
+    final val = _$EarthquakeEarlyImpl(
+      id: $checkedConvert('id', (v) => v as String),
+      depth: $checkedConvert('depth', (v) => (v as num?)?.toInt()),
+      latitude: $checkedConvert('latitude', (v) => (v as num?)?.toDouble()),
+      longitude: $checkedConvert('longitude', (v) => (v as num?)?.toDouble()),
+      magnitude: $checkedConvert('magnitude', (v) => (v as num?)?.toDouble()),
+      maxIntensity: $checkedConvert(
+        'max_intensity',
+        (v) => $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v),
+      ),
+      maxIntensityIsEarly: $checkedConvert(
+        'max_intensity_is_early',
+        (v) => v as bool,
+      ),
+      name: $checkedConvert('name', (v) => v as String),
+      originTime: $checkedConvert(
+        'origin_time',
+        (v) => DateTime.parse(v as String),
+      ),
+      originTimePrecision: $checkedConvert(
+        'origin_time_precision',
+        (v) => $enumDecode(_$OriginTimePrecisionEnumMap, v),
+      ),
     );
+    return val;
+  },
+  fieldKeyMap: const {
+    'maxIntensity': 'max_intensity',
+    'maxIntensityIsEarly': 'max_intensity_is_early',
+    'originTime': 'origin_time',
+    'originTimePrecision': 'origin_time_precision',
+  },
+);
 
 Map<String, dynamic> _$$EarthquakeEarlyImplToJson(
-        _$EarthquakeEarlyImpl instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'depth': instance.depth,
-      'latitude': instance.latitude,
-      'longitude': instance.longitude,
-      'magnitude': instance.magnitude,
-      'max_intensity': _$JmaForecastIntensityEnumMap[instance.maxIntensity],
-      'max_intensity_is_early': instance.maxIntensityIsEarly,
-      'name': instance.name,
-      'origin_time': instance.originTime.toIso8601String(),
-      'origin_time_precision':
-          _$OriginTimePrecisionEnumMap[instance.originTimePrecision]!,
-    };
+  _$EarthquakeEarlyImpl instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'depth': instance.depth,
+  'latitude': instance.latitude,
+  'longitude': instance.longitude,
+  'magnitude': instance.magnitude,
+  'max_intensity': _$JmaForecastIntensityEnumMap[instance.maxIntensity],
+  'max_intensity_is_early': instance.maxIntensityIsEarly,
+  'name': instance.name,
+  'origin_time': instance.originTime.toIso8601String(),
+  'origin_time_precision':
+      _$OriginTimePrecisionEnumMap[instance.originTimePrecision]!,
+};
 
 const _$JmaForecastIntensityEnumMap = {
   JmaForecastIntensity.zero: '0',

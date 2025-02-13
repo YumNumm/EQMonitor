@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class MagnitudeFilterChip extends StatelessWidget {
-  const MagnitudeFilterChip({
-    this.min,
-    this.max,
-    this.onChanged,
-    super.key,
-  });
+  const MagnitudeFilterChip({this.min, this.max, this.onChanged, super.key});
 
   /// マグニチュードの範囲が変更された時に呼ばれる
   /// `min` と `max` にはそれぞれ下限値と上限値が渡される
@@ -29,24 +24,25 @@ class MagnitudeFilterChip extends StatelessWidget {
         final result = await showModalBottomSheet<(double?, double?)?>(
           clipBehavior: Clip.antiAlias,
           context: context,
-          builder: (context) => _MagnitudeFilterModal(
-            currentMin: min,
-            currentMax: max,
-          ),
+          builder:
+              (context) =>
+                  _MagnitudeFilterModal(currentMin: min, currentMax: max),
         );
         if (result != null) {
           onChanged?.call(result.min, result.max);
         }
       },
-      label: (range.isAllSelected)
-          ? const Text('マグニチュード')
-          : Text(
-              range.toRangeString,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-      onDeleted: range.isAllSelected
-          ? null
-          : () => onChanged?.call(initialMin, initialMax),
+      label:
+          (range.isAllSelected)
+              ? const Text('マグニチュード')
+              : Text(
+                range.toRangeString,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+      onDeleted:
+          range.isAllSelected
+              ? null
+              : () => onChanged?.call(initialMin, initialMax),
       selected: !range.isAllSelected,
       selectedColor: Theme.of(context).colorScheme.secondaryContainer,
     );
@@ -99,21 +95,16 @@ class _MagnitudeFilterModal extends HookWidget {
           ),
           const SizedBox(height: 24),
           RangeSlider(
-            values: RangeValues(
-              min.value,
-              max.value,
-            ),
+            values: RangeValues(min.value, max.value),
             max: 9,
             onChanged: (state) {
               // 小数第1位以下切り捨て
               min.value = (state.start * 10).floorToDouble() / 10;
               max.value = (state.end * 10).floorToDouble() / 10;
             },
-            labels: RangeLabels(
-              'M${min.value}',
-              'M${max.value}',
-            ),
-            divisions: (MagnitudeFilterChip.initialMax -
+            labels: RangeLabels('M${min.value}', 'M${max.value}'),
+            divisions:
+                (MagnitudeFilterChip.initialMax -
                         MagnitudeFilterChip.initialMin)
                     .toInt() *
                 10,
@@ -136,8 +127,8 @@ class _MagnitudeFilterModal extends HookWidget {
                 child: const Text('キャンセル'),
               ),
               TextButton(
-                onPressed: () =>
-                    Navigator.of(context).pop((min.value, max.value)),
+                onPressed:
+                    () => Navigator.of(context).pop((min.value, max.value)),
                 child: const Text('完了'),
               ),
             ],

@@ -19,7 +19,8 @@ class EarthquakeHistoryEarlySortChip extends StatelessWidget {
     EarthquakeEarlySortType type,
     // ignore: avoid_positional_boolean_parameters
     bool ascending,
-  )? onChanged;
+  )?
+  onChanged;
 
   final EarthquakeEarlySortType type;
   final bool ascending;
@@ -46,13 +47,14 @@ class EarthquakeHistoryEarlySortChip extends StatelessWidget {
       onPressed: () async {
         final result =
             await showModalBottomSheet<(EarthquakeEarlySortType, bool)?>(
-          clipBehavior: Clip.antiAlias,
-          context: context,
-          builder: (context) => _SortModal(
-            currentSortType: type,
-            currentAscending: ascending,
-          ),
-        );
+              clipBehavior: Clip.antiAlias,
+              context: context,
+              builder:
+                  (context) => _SortModal(
+                    currentSortType: type,
+                    currentAscending: ascending,
+                  ),
+            );
         if (result != null) {
           onChanged?.call(result.$1, result.$2);
         }
@@ -63,11 +65,11 @@ class EarthquakeHistoryEarlySortChip extends StatelessWidget {
 
 extension _EarthquakeEarlySortTypeEx on EarthquakeEarlySortType {
   String get label => switch (this) {
-        EarthquakeEarlySortType.depth => '深さ',
-        EarthquakeEarlySortType.magnitude => 'マグニチュード',
-        EarthquakeEarlySortType.origin_time => '発生時刻',
-        EarthquakeEarlySortType.max_intensity => '最大観測震度',
-      };
+    EarthquakeEarlySortType.depth => '深さ',
+    EarthquakeEarlySortType.magnitude => 'マグニチュード',
+    EarthquakeEarlySortType.origin_time => '発生時刻',
+    EarthquakeEarlySortType.max_intensity => '最大観測震度',
+  };
 }
 
 class _SortModal extends HookConsumerWidget {
@@ -125,18 +127,16 @@ class _SortModal extends HookConsumerWidget {
           ),
           SwitchListTile.adaptive(
             title: const Text('昇順・降順'),
-            subtitle: Text(
-              switch ((type.value, ascending.value)) {
-                (EarthquakeEarlySortType.depth, false) => '震源の深い順',
-                (EarthquakeEarlySortType.depth, true) => '震源の浅い順',
-                (EarthquakeEarlySortType.magnitude, false) => 'マグニチュードの大きい順',
-                (EarthquakeEarlySortType.magnitude, true) => 'マグニチュードの小さい順',
-                (EarthquakeEarlySortType.origin_time, false) => '地震発生時刻の新しい順',
-                (EarthquakeEarlySortType.origin_time, true) => '地震発生時刻の古い順',
-                (EarthquakeEarlySortType.max_intensity, false) => '最大観測震度の大きい順',
-                (EarthquakeEarlySortType.max_intensity, true) => '最大観測震度の小さい順',
-              },
-            ),
+            subtitle: Text(switch ((type.value, ascending.value)) {
+              (EarthquakeEarlySortType.depth, false) => '震源の深い順',
+              (EarthquakeEarlySortType.depth, true) => '震源の浅い順',
+              (EarthquakeEarlySortType.magnitude, false) => 'マグニチュードの大きい順',
+              (EarthquakeEarlySortType.magnitude, true) => 'マグニチュードの小さい順',
+              (EarthquakeEarlySortType.origin_time, false) => '地震発生時刻の新しい順',
+              (EarthquakeEarlySortType.origin_time, true) => '地震発生時刻の古い順',
+              (EarthquakeEarlySortType.max_intensity, false) => '最大観測震度の大きい順',
+              (EarthquakeEarlySortType.max_intensity, true) => '最大観測震度の小さい順',
+            }),
             value: ascending.value,
             onChanged: (v) => ascending.value = v,
           ),
@@ -149,9 +149,10 @@ class _SortModal extends HookConsumerWidget {
                 child: const Text('キャンセル'),
               ),
               TextButton(
-                onPressed: () => Navigator.of(context).pop(
-                  (type.value, ascending.value),
-                ),
+                onPressed:
+                    () => Navigator.of(
+                      context,
+                    ).pop((type.value, ascending.value)),
                 child: const Text('完了'),
               ),
             ],
@@ -164,10 +165,7 @@ class _SortModal extends HookConsumerWidget {
 }
 
 class _SegmentedControl extends StatelessWidget {
-  const _SegmentedControl({
-    required this.type,
-    this.onChanged,
-  });
+  const _SegmentedControl({required this.type, this.onChanged});
 
   final EarthquakeEarlySortType type;
   final void Function(EarthquakeEarlySortType)? onChanged;
@@ -180,9 +178,7 @@ class _SegmentedControl extends StatelessWidget {
           for (final e in EarthquakeEarlySortType.values)
             e: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 2),
-              child: FittedBox(
-                child: Text(e.label),
-              ),
+              child: FittedBox(child: Text(e.label)),
             ),
         },
         groupValue: type,
@@ -198,10 +194,7 @@ class _SegmentedControl extends StatelessWidget {
       onSelectionChanged: (v) => onChanged?.call(v.first),
       segments: [
         for (final e in EarthquakeEarlySortType.values)
-          ButtonSegment(
-            value: e,
-            label: Text(e.label),
-          ),
+          ButtonSegment(value: e, label: Text(e.label)),
       ],
     );
   }

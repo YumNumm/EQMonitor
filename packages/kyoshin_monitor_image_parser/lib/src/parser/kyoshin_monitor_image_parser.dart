@@ -24,23 +24,11 @@ class KyoshinMonitorImageParser {
     for (final point in points) {
       assert(point.x >= 0 && point.x < image.width, 'x is out of range');
       assert(point.y >= 0 && point.y < image.height, 'y is out of range');
-      final pixel = image.getPixel(
-        point.x,
-        point.y,
-      );
-      final hsv = HsvColor.fromRgb(
-        pixel.r,
-        pixel.g,
-        pixel.b,
-        pixel.a,
-      );
+      final pixel = image.getPixel(point.x, point.y);
+      final hsv = HsvColor.fromRgb(pixel.r, pixel.g, pixel.b, pixel.a);
       final position = _hsvToPosition(hsv);
       if (position == null) {
-        results.add(
-          KyoshinMonitorImageParseObservationFailure(
-            point,
-          ),
-        );
+        results.add(KyoshinMonitorImageParseObservationFailure(point));
       } else {
         results.add(
           KyoshinMonitorImageParseObservationSuccess(
@@ -63,28 +51,17 @@ class KyoshinMonitorImageParser {
     required List<int> gifImage,
     required List<KyoshinMonitorObservationPoint> points,
   }) async {
-    final image = img.decodeGif(
-      Uint8List.fromList(gifImage),
-    );
+    final image = img.decodeGif(Uint8List.fromList(gifImage));
     if (image == null) {
       throw const KyoshinImageParseInvalidGifException();
     }
-    return parse(
-      image: image,
-      points: points,
-    );
+    return parse(image: image, points: points);
   }
 
   Future<List<KyoshinMonitorImageParseObservationResult>> parseGifInIsolate(
     List<int> gifImage,
     List<KyoshinMonitorObservationPoint> points,
-  ) async =>
-      Isolate.run(
-        () => parseGif(
-          gifImage: gifImage,
-          points: points,
-        ),
-      );
+  ) async => Isolate.run(() => parseGif(gifImage: gifImage, points: points));
 
   @visibleForTesting
   double? hsvToPosition(HsvColor hsv) => _hsvToPosition(hsv);
@@ -107,7 +84,8 @@ class KyoshinMonitorImageParser {
     var p = 0.0;
     if (v > 0.1 && s > 0.75) {
       if (h > 0.1476) {
-        p = 280.31 * math.pow(h, 6) -
+        p =
+            280.31 * math.pow(h, 6) -
             916.05 * math.pow(h, 5) +
             1142.6 * math.pow(h, 4) -
             709.95 * math.pow(h, 3) +
@@ -116,7 +94,8 @@ class KyoshinMonitorImageParser {
             3.2217;
       }
       if (h <= 0.1476 && h > 0.001) {
-        p = 151.4 * math.pow(h, 4) -
+        p =
+            151.4 * math.pow(h, 4) -
             49.32 * math.pow(h, 3) +
             6.753 * math.pow(h, 2) -
             2.481 * h +

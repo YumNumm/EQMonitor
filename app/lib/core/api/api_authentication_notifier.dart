@@ -17,20 +17,14 @@ class ApiAuthenticationNotifier extends _$ApiAuthenticationNotifier {
 
   static const _secureStorageKey = 'api_token';
 
-  Future<void> save({
-    required String token,
-  }) async {
+  Future<void> save({required String token}) async {
     final secureStorage = ref.watch(secureStorageProvider);
     await secureStorage.write(key: _secureStorageKey, value: token);
 
     state = AsyncData(token);
   }
 
-  Future<
-      ({
-        String id,
-        String role,
-      })> extractPayload() async {
+  Future<({String id, String role})> extractPayload() async {
     final token = state.valueOrNull;
     if (token == null) {
       throw UnauthorizedException();
@@ -40,10 +34,7 @@ class ApiAuthenticationNotifier extends _$ApiAuthenticationNotifier {
 
     final id = map['id'] as String;
     final role = map['role'] as String;
-    return (
-      id: id,
-      role: role,
-    );
+    return (id: id, role: role);
   }
 
   static Map<String, dynamic> parseJwt(String token) {
