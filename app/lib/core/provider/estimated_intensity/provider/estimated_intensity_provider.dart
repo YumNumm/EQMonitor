@@ -15,12 +15,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'estimated_intensity_provider.freezed.dart';
 part 'estimated_intensity_provider.g.dart';
 
-typedef _CachedPoint =
-    ({
-      String regionCode,
-      String cityCode,
-      EarthquakeParameterStationItem station,
-    });
+typedef _CachedPoint = ({
+  String regionCode,
+  String cityCode,
+  EarthquakeParameterStationItem station,
+});
 
 @Riverpod(keepAlive: true)
 class EstimatedIntensity extends _$EstimatedIntensity {
@@ -62,15 +61,12 @@ class EstimatedIntensity extends _$EstimatedIntensity {
     }
 
     for (final eew in targetEews) {
-      final result =
-          calculator
-              .getEstimatedIntensity(
-                points: _calculationPoints!.toList(),
-                jmaMagnitude: eew.magnitude!,
-                depth: eew.depth!,
-                hypocenter: (lat: eew.latitude!, lon: eew.longitude!),
-              )
-              .toList();
+      final result = calculator.getEstimatedIntensity(
+        points: _calculationPoints!.toList(),
+        jmaMagnitude: eew.magnitude!,
+        depth: eew.depth!,
+        hypocenter: (lat: eew.latitude!, lon: eew.longitude!),
+      ).toList();
       results.add(result);
     }
 
@@ -101,19 +97,21 @@ class EstimatedIntensity extends _$EstimatedIntensity {
     List<EewV1> eews,
     EarthquakeParameter parameter,
   ) async =>
-  // TODO(YumNumm): 並列計算
-  calc(eews, parameter);
+      // TODO(YumNumm): 並列計算
+      calc(eews, parameter);
 
   List<_CachedPoint> _generateCachedPoints(EarthquakeParameter earthquake) {
     final result = <_CachedPoint>[];
     for (final region in earthquake.regions) {
       for (final city in region.cities) {
         for (final station in city.stations) {
-          result.add((
-            regionCode: region.code,
-            cityCode: city.code,
-            station: station,
-          ));
+          result.add(
+            (
+              regionCode: region.code,
+              cityCode: city.code,
+              station: station,
+            ),
+          );
         }
       }
     }
@@ -125,11 +123,13 @@ class EstimatedIntensity extends _$EstimatedIntensity {
   ) {
     final result = <CalculationPoint>[];
     for (final point in points) {
-      result.add((
-        lat: point.station.latitude,
-        lon: point.station.longitude,
-        arv400: point.station.arv400,
-      ));
+      result.add(
+        (
+          lat: point.station.latitude,
+          lon: point.station.longitude,
+          arv400: point.station.arv400,
+        ),
+      );
     }
     return result;
   }
