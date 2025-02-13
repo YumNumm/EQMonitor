@@ -47,8 +47,8 @@ melos:
     bootstrap:
       runPubGetInParallel: false
       environment:
-        sdk: ^3.6.2
-        flutter: ^3.27.4
+        sdk: ^3.7.0
+        flutter: ^3.29.0
   scripts:
     analyze:
       run: |
