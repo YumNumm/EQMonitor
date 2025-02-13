@@ -25,54 +25,43 @@ class KyoshinMonitorLayerController extends _$KyoshinMonitorLayerController {
   KyoshinMonitorObservationLayer build() {
     // 強震モニタの状態を監視
     ref
-      ..listen(
-        kyoshinMonitorNotifierProvider,
-        (prev, next) {
-          // 現在の設定と違うLayerが来たらIgnore
-          final nextLayer = (
-            next.valueOrNull?.currentRealtimeDataType,
-            next.valueOrNull?.currentRealtimeLayer
-          );
-          final settingsLayer = (
-            ref.read(kyoshinMonitorSettingsProvider).realtimeDataType,
-            ref.read(kyoshinMonitorSettingsProvider).realtimeLayer,
-          );
-          if (nextLayer != settingsLayer) {
-            _updateLayer([]);
-            return;
-          }
-          final previousPoints = prev?.valueOrNull?.analyzedPoints;
-          final nextPoints = next.valueOrNull?.analyzedPoints;
-          if (previousPoints != nextPoints) {
-            _updateLayer(nextPoints ?? []);
-          }
-        },
-      )
-      ..listen(
-        kyoshinMonitorSettingsProvider,
-        (prev, next) {
-          log('prev: ${jsonEncode(prev)}');
-          log('next: ${jsonEncode(next)}');
-          if (prev?.realtimeDataType != next.realtimeDataType ||
-              prev?.realtimeLayer != next.realtimeLayer ||
-              prev?.kmoniMarkerType != next.kmoniMarkerType) {
-            state = state.copyWith(
-              points: [],
-              realtimeDataType: next.realtimeDataType,
-              markerType: next.kmoniMarkerType,
-            );
-          }
-        },
-      )
-      ..listen(
-        eewAliveTelegramProvider,
-        (_, next) {
-          final isInEew = next?.isNotEmpty ?? false;
+      ..listen(kyoshinMonitorNotifierProvider, (prev, next) {
+        // 現在の設定と違うLayerが来たらIgnore
+        final nextLayer = (
+          next.valueOrNull?.currentRealtimeDataType,
+          next.valueOrNull?.currentRealtimeLayer,
+        );
+        final settingsLayer = (
+          ref.read(kyoshinMonitorSettingsProvider).realtimeDataType,
+          ref.read(kyoshinMonitorSettingsProvider).realtimeLayer,
+        );
+        if (nextLayer != settingsLayer) {
+          _updateLayer([]);
+          return;
+        }
+        final previousPoints = prev?.valueOrNull?.analyzedPoints;
+        final nextPoints = next.valueOrNull?.analyzedPoints;
+        if (previousPoints != nextPoints) {
+          _updateLayer(nextPoints ?? []);
+        }
+      })
+      ..listen(kyoshinMonitorSettingsProvider, (prev, next) {
+        log('prev: ${jsonEncode(prev)}');
+        log('next: ${jsonEncode(next)}');
+        if (prev?.realtimeDataType != next.realtimeDataType ||
+            prev?.realtimeLayer != next.realtimeLayer ||
+            prev?.kmoniMarkerType != next.kmoniMarkerType) {
           state = state.copyWith(
-            isInEew: isInEew,
+            points: [],
+            realtimeDataType: next.realtimeDataType,
+            markerType: next.kmoniMarkerType,
           );
-        },
-      );
+        }
+      })
+      ..listen(eewAliveTelegramProvider, (_, next) {
+        final isInEew = next?.isNotEmpty ?? false;
+        state = state.copyWith(isInEew: isInEew);
+      });
     return KyoshinMonitorObservationLayer(
       id: 'kyoshin-monitor-points',
       sourceId: 'kyoshin-monitor-points',
@@ -88,15 +77,11 @@ class KyoshinMonitorLayerController extends _$KyoshinMonitorLayerController {
   /// レイヤーを更新
   void _updateLayer(List<KyoshinMonitorImageParseObservationPoint> points) {
     if (points.isEmpty) {
-      state = state.copyWith(
-        points: [],
-      );
+      state = state.copyWith(points: []);
       return;
     }
 
-    state = state.copyWith(
-      points: points,
-    );
+    state = state.copyWith(points: points);
   }
 }
 
@@ -131,26 +116,27 @@ class KyoshinMonitorObservationLayer extends MapLayer
   Map<String, dynamic> toGeoJsonSource() {
     return {
       'type': 'FeatureCollection',
-      'features': points
-          .map(
-            (e) => {
-              'type': 'Feature',
-              'geometry': {
-                'type': 'Point',
-                'coordinates': [
-                  e.point.location.longitude,
-                  e.point.location.latitude,
-                ],
-              },
-              'properties': {
-                'color': e.observation.colorHex,
-                'name': e.point.code,
-                'zIndex': e.observation.scale,
-                'showStroke': markerType == KyoshinMonitorMarkerType.always,
-              },
-            },
-          )
-          .toList(),
+      'features':
+          points
+              .map(
+                (e) => {
+                  'type': 'Feature',
+                  'geometry': {
+                    'type': 'Point',
+                    'coordinates': [
+                      e.point.location.longitude,
+                      e.point.location.latitude,
+                    ],
+                  },
+                  'properties': {
+                    'color': e.observation.colorHex,
+                    'name': e.point.code,
+                    'zIndex': e.observation.scale,
+                    'showStroke': markerType == KyoshinMonitorMarkerType.always,
+                  },
+                },
+              )
+              .toList(),
     };
   }
 
@@ -178,26 +164,17 @@ class KyoshinMonitorObservationLayer extends MapLayer
         10,
         10,
       ],
-      circleColor: [
-        'get',
-        'color',
-      ],
+      circleColor: ['get', 'color'],
       circleStrokeColor:
           "#${Colors.grey.hex.toRadixString(16).padLeft(6, '0')}",
-      circleStrokeOpacity: [
-        'get',
-        'strokeOpacity',
-      ],
+      circleStrokeOpacity: ['get', 'strokeOpacity'],
       circleStrokeWidth: switch (markerType) {
         KyoshinMonitorMarkerType.always => defaultStrokeWidthStatement,
         KyoshinMonitorMarkerType.onlyEew when isInEew =>
           defaultStrokeWidthStatement,
         _ => 0,
       },
-      circleSortKey: [
-        'get',
-        'zIndex',
-      ],
+      circleSortKey: ['get', 'zIndex'],
     );
   }
 

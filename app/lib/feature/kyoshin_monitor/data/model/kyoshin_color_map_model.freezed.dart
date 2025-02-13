@@ -12,7 +12,8 @@ part of 'kyoshin_color_map_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 KyoshinColorMapModel _$KyoshinColorMapModelFromJson(Map<String, dynamic> json) {
   return _KyoshinColorMapModel.fromJson(json);
@@ -37,16 +38,19 @@ mixin _$KyoshinColorMapModel {
 
 /// @nodoc
 abstract class $KyoshinColorMapModelCopyWith<$Res> {
-  factory $KyoshinColorMapModelCopyWith(KyoshinColorMapModel value,
-          $Res Function(KyoshinColorMapModel) then) =
-      _$KyoshinColorMapModelCopyWithImpl<$Res, KyoshinColorMapModel>;
+  factory $KyoshinColorMapModelCopyWith(
+    KyoshinColorMapModel value,
+    $Res Function(KyoshinColorMapModel) then,
+  ) = _$KyoshinColorMapModelCopyWithImpl<$Res, KyoshinColorMapModel>;
   @useResult
   $Res call({double intensity, int r, int g, int b});
 }
 
 /// @nodoc
-class _$KyoshinColorMapModelCopyWithImpl<$Res,
-        $Val extends KyoshinColorMapModel>
+class _$KyoshinColorMapModelCopyWithImpl<
+  $Res,
+  $Val extends KyoshinColorMapModel
+>
     implements $KyoshinColorMapModelCopyWith<$Res> {
   _$KyoshinColorMapModelCopyWithImpl(this._value, this._then);
 
@@ -65,33 +69,41 @@ class _$KyoshinColorMapModelCopyWithImpl<$Res,
     Object? g = null,
     Object? b = null,
   }) {
-    return _then(_value.copyWith(
-      intensity: null == intensity
-          ? _value.intensity
-          : intensity // ignore: cast_nullable_to_non_nullable
-              as double,
-      r: null == r
-          ? _value.r
-          : r // ignore: cast_nullable_to_non_nullable
-              as int,
-      g: null == g
-          ? _value.g
-          : g // ignore: cast_nullable_to_non_nullable
-              as int,
-      b: null == b
-          ? _value.b
-          : b // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            intensity:
+                null == intensity
+                    ? _value.intensity
+                    : intensity // ignore: cast_nullable_to_non_nullable
+                        as double,
+            r:
+                null == r
+                    ? _value.r
+                    : r // ignore: cast_nullable_to_non_nullable
+                        as int,
+            g:
+                null == g
+                    ? _value.g
+                    : g // ignore: cast_nullable_to_non_nullable
+                        as int,
+            b:
+                null == b
+                    ? _value.b
+                    : b // ignore: cast_nullable_to_non_nullable
+                        as int,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$KyoshinColorMapModelImplCopyWith<$Res>
     implements $KyoshinColorMapModelCopyWith<$Res> {
-  factory _$$KyoshinColorMapModelImplCopyWith(_$KyoshinColorMapModelImpl value,
-          $Res Function(_$KyoshinColorMapModelImpl) then) =
-      __$$KyoshinColorMapModelImplCopyWithImpl<$Res>;
+  factory _$$KyoshinColorMapModelImplCopyWith(
+    _$KyoshinColorMapModelImpl value,
+    $Res Function(_$KyoshinColorMapModelImpl) then,
+  ) = __$$KyoshinColorMapModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({double intensity, int r, int g, int b});
@@ -101,9 +113,10 @@ abstract class _$$KyoshinColorMapModelImplCopyWith<$Res>
 class __$$KyoshinColorMapModelImplCopyWithImpl<$Res>
     extends _$KyoshinColorMapModelCopyWithImpl<$Res, _$KyoshinColorMapModelImpl>
     implements _$$KyoshinColorMapModelImplCopyWith<$Res> {
-  __$$KyoshinColorMapModelImplCopyWithImpl(_$KyoshinColorMapModelImpl _value,
-      $Res Function(_$KyoshinColorMapModelImpl) _then)
-      : super(_value, _then);
+  __$$KyoshinColorMapModelImplCopyWithImpl(
+    _$KyoshinColorMapModelImpl _value,
+    $Res Function(_$KyoshinColorMapModelImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of KyoshinColorMapModel
   /// with the given fields replaced by the non-null parameter values.
@@ -115,35 +128,42 @@ class __$$KyoshinColorMapModelImplCopyWithImpl<$Res>
     Object? g = null,
     Object? b = null,
   }) {
-    return _then(_$KyoshinColorMapModelImpl(
-      intensity: null == intensity
-          ? _value.intensity
-          : intensity // ignore: cast_nullable_to_non_nullable
-              as double,
-      r: null == r
-          ? _value.r
-          : r // ignore: cast_nullable_to_non_nullable
-              as int,
-      g: null == g
-          ? _value.g
-          : g // ignore: cast_nullable_to_non_nullable
-              as int,
-      b: null == b
-          ? _value.b
-          : b // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$KyoshinColorMapModelImpl(
+        intensity:
+            null == intensity
+                ? _value.intensity
+                : intensity // ignore: cast_nullable_to_non_nullable
+                    as double,
+        r:
+            null == r
+                ? _value.r
+                : r // ignore: cast_nullable_to_non_nullable
+                    as int,
+        g:
+            null == g
+                ? _value.g
+                : g // ignore: cast_nullable_to_non_nullable
+                    as int,
+        b:
+            null == b
+                ? _value.b
+                : b // ignore: cast_nullable_to_non_nullable
+                    as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$KyoshinColorMapModelImpl implements _KyoshinColorMapModel {
-  const _$KyoshinColorMapModelImpl(
-      {required this.intensity,
-      required this.r,
-      required this.g,
-      required this.b});
+  const _$KyoshinColorMapModelImpl({
+    required this.intensity,
+    required this.r,
+    required this.g,
+    required this.b,
+  });
 
   factory _$KyoshinColorMapModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$KyoshinColorMapModelImplFromJson(json);
@@ -184,24 +204,25 @@ class _$KyoshinColorMapModelImpl implements _KyoshinColorMapModel {
   @override
   @pragma('vm:prefer-inline')
   _$$KyoshinColorMapModelImplCopyWith<_$KyoshinColorMapModelImpl>
-      get copyWith =>
-          __$$KyoshinColorMapModelImplCopyWithImpl<_$KyoshinColorMapModelImpl>(
-              this, _$identity);
+  get copyWith =>
+      __$$KyoshinColorMapModelImplCopyWithImpl<_$KyoshinColorMapModelImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$KyoshinColorMapModelImplToJson(
-      this,
-    );
+    return _$$KyoshinColorMapModelImplToJson(this);
   }
 }
 
 abstract class _KyoshinColorMapModel implements KyoshinColorMapModel {
-  const factory _KyoshinColorMapModel(
-      {required final double intensity,
-      required final int r,
-      required final int g,
-      required final int b}) = _$KyoshinColorMapModelImpl;
+  const factory _KyoshinColorMapModel({
+    required final double intensity,
+    required final int r,
+    required final int g,
+    required final int b,
+  }) = _$KyoshinColorMapModelImpl;
 
   factory _KyoshinColorMapModel.fromJson(Map<String, dynamic> json) =
       _$KyoshinColorMapModelImpl.fromJson;
@@ -220,5 +241,5 @@ abstract class _KyoshinColorMapModel implements KyoshinColorMapModel {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$KyoshinColorMapModelImplCopyWith<_$KyoshinColorMapModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

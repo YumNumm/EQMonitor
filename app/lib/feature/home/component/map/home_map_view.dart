@@ -53,10 +53,7 @@ class HomeMapView extends HookConsumerWidget {
 }
 
 class _MapHeader extends ConsumerWidget {
-  const _MapHeader({
-    required this.mapController,
-    required this.size,
-  });
+  const _MapHeader({required this.mapController, required this.size});
 
   final DeclarativeMapController mapController;
   final Size size;
@@ -76,31 +73,32 @@ class _MapHeader extends ConsumerWidget {
       children: [
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 200),
-          child: useKmoni
-              ? Column(
-                  key: const ValueKey('kyoshin_monitor_status_card'),
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 4,
-                  children: [
-                    KyoshinMonitorStatusCard(
-                      onTap: () async =>
-                          KyoshinMonitorSettingsModal.show(context),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
+          child:
+              useKmoni
+                  ? Column(
+                    key: const ValueKey('kyoshin_monitor_status_card'),
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 4,
+                    children: [
+                      KyoshinMonitorStatusCard(
+                        onTap:
+                            () async =>
+                                KyoshinMonitorSettingsModal.show(context),
                       ),
-                      child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 200),
-                        child: showScaleCard
-                            ? const KyoshinMonitorScaleCard()
-                            : const SizedBox.shrink(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 200),
+                          child:
+                              showScaleCard
+                                  ? const KyoshinMonitorScaleCard()
+                                  : const SizedBox.shrink(),
+                        ),
                       ),
-                    ),
-                  ],
-                )
-              : const SizedBox.shrink(),
+                    ],
+                  )
+                  : const SizedBox.shrink(),
         ),
         const Column(),
         MapLayerControllerCard(

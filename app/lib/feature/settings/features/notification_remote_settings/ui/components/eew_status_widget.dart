@@ -6,11 +6,7 @@ import 'package:eqmonitor/feature/settings/features/notification_remote_settings
 import 'package:flutter/material.dart';
 
 class EewStatusWidget extends StatelessWidget {
-  const EewStatusWidget({
-    required this.eew,
-    required this.action,
-    super.key,
-  });
+  const EewStatusWidget({required this.eew, required this.action, super.key});
 
   final NotificationRemoteSettingsEew eew;
   final void Function() action;
@@ -52,10 +48,7 @@ class EewStatusWidget extends StatelessWidget {
 }
 
 class EewNotificationStatusWidget extends StatelessWidget {
-  const EewNotificationStatusWidget({
-    required this.eew,
-    super.key,
-  });
+  const EewNotificationStatusWidget({required this.eew, super.key});
 
   final NotificationRemoteSettingsEew eew;
 
@@ -70,58 +63,48 @@ class EewNotificationStatusWidget extends StatelessWidget {
     }
     return Text.rich(
       TextSpan(
-        children: (eew.global == JmaForecastIntensity.zero)
-            ? [
-                const TextSpan(
-                  text: 'すべての緊急地震速報を通知します',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ]
-            : [
-                const TextSpan(
-                  text: '以下の条件のいずれかを満たした時に通知します\n',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                if (eew.global != null) ...[
+        children:
+            (eew.global == JmaForecastIntensity.zero)
+                ? [
                   const TextSpan(
-                    text: '・任意の地域で',
+                    text: 'すべての緊急地震速報を通知します',
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  TextSpan(
-                    text: '震度'
-                        '${eew.global!.type.fromPlusMinus}'
-                        '${eew.global != JmaForecastIntensity.seven ? "以上" : ""}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+                ]
+                : [
+                  const TextSpan(
+                    text: '以下の条件のいずれかを満たした時に通知します\n',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  if (eew.global != null) ...[
+                    const TextSpan(text: '・任意の地域で'),
+                    TextSpan(
+                      text:
+                          '震度'
+                          '${eew.global!.type.fromPlusMinus}'
+                          '${eew.global != JmaForecastIntensity.seven ? "以上" : ""}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  const TextSpan(
-                    text: 'が予想',
-                  ),
-                ],
-                if (enabledRegions.isNotEmpty)
-                  ...enabledRegions
-                      .mapIndexed(
-                        (index, region) => [
-                          TextSpan(
-                            text: '\n・${region.name}で',
-                          ),
-                          TextSpan(
-                            text:
-                                '震度${region.minJmaIntensity.type.fromPlusMinus}'
-                                '${region.minJmaIntensity != JmaForecastIntensity.seven ? "以上" : ""}',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
+                    const TextSpan(text: 'が予想'),
+                  ],
+                  if (enabledRegions.isNotEmpty)
+                    ...enabledRegions
+                        .mapIndexed(
+                          (index, region) => [
+                            TextSpan(text: '\n・${region.name}で'),
+                            TextSpan(
+                              text:
+                                  '震度${region.minJmaIntensity.type.fromPlusMinus}'
+                                  '${region.minJmaIntensity != JmaForecastIntensity.seven ? "以上" : ""}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          const TextSpan(
-                            text: 'が予想',
-                          ),
-                        ],
-                      )
-                      .flattened,
-              ],
+                            const TextSpan(text: 'が予想'),
+                          ],
+                        )
+                        .flattened,
+                ],
       ),
     );
   }

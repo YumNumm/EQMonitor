@@ -31,17 +31,13 @@ class DebugKyoshinMonitorPage extends StatelessWidget {
         appBar: AppBar(
           title: const Text(
             'KyoshinMonitor',
-            style: TextStyle(
-              fontFamily: FontFamily.jetBrainsMono,
-            ),
+            style: TextStyle(fontFamily: FontFamily.jetBrainsMono),
           ),
           actions: const [],
         ),
         body: const SingleChildScrollView(
           primary: true,
-          child: SafeArea(
-            child: _Body(),
-          ),
+          child: SafeArea(child: _Body()),
         ),
       ),
     );
@@ -67,8 +63,9 @@ class _Body extends ConsumerWidget {
       fontFamilyFallback: [FontFamily.notoSansJP],
     );
 
-    final kyoshinMonitorTimerState =
-        ref.watch(kyoshinMonitorTimerNotifierProvider);
+    final kyoshinMonitorTimerState = ref.watch(
+      kyoshinMonitorTimerNotifierProvider,
+    );
 
     return Column(
       spacing: 8,
@@ -78,22 +75,17 @@ class _Body extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'KyoshinMonitorTimerNotifier',
-                style: titleTextStyle,
-              ),
-              Text(
-                switch (kyoshinMonitorTimerState) {
-                  AsyncData(:final value) =>
-                    const JsonEncoder.withIndent('  ').convert({
-                      ...value.toJson(),
-                      'delay_from_device': value.delayFromDevice.toString(),
-                    }),
-                  AsyncError(:final error) => error.toString(),
-                  _ => 'Loading...',
-                },
-                style: bodyTextStyle,
-              ),
+              Text('KyoshinMonitorTimerNotifier', style: titleTextStyle),
+              Text(switch (kyoshinMonitorTimerState) {
+                AsyncData(:final value) => const JsonEncoder.withIndent(
+                  '  ',
+                ).convert({
+                  ...value.toJson(),
+                  'delay_from_device': value.delayFromDevice.toString(),
+                }),
+                AsyncError(:final error) => error.toString(),
+                _ => 'Loading...',
+              }, style: bodyTextStyle),
             ],
           ),
         ),
@@ -102,14 +94,11 @@ class _Body extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('KyoshinMonitorTimerStream', style: titleTextStyle),
-              Text(
-                switch (ref.watch(kyoshinMonitorTimerStreamProvider)) {
-                  AsyncData(:final value) => value.toString(),
-                  AsyncError(:final error) => error.toString(),
-                  _ => 'Loading...',
-                },
-                style: bodyTextStyle,
-              ),
+              Text(switch (ref.watch(kyoshinMonitorTimerStreamProvider)) {
+                AsyncData(:final value) => value.toString(),
+                AsyncError(:final error) => error.toString(),
+                _ => 'Loading...',
+              }, style: bodyTextStyle),
             ],
           ),
         ),
@@ -122,31 +111,26 @@ class _Body extends ConsumerWidget {
                 Row(
                   children: [
                     Text('KyoshinMonitorNotifier', style: titleTextStyle),
-                    if (state.isLoading)
-                      const Icon(
-                        Icons.refresh,
-                        size: 16,
-                      ),
+                    if (state.isLoading) const Icon(Icons.refresh, size: 16),
                   ],
                 ),
-                Text(
-                  switch (state) {
-                    AsyncData(:final value) =>
-                      const JsonEncoder.withIndent('  ').convert({
-                        ...value.toJson(),
-                        'analyzed_points': value.analyzedPoints?.length,
-                        'last_image_fetch_duration': switch (
-                            value.lastImageFetchDuration?.inMicroseconds) {
-                          final int v => '${v / 1000}ms',
-                          null => 'null',
-                        },
-                        'current_image_raw': value.currentImageRaw?.length,
-                      }),
-                    AsyncError(:final error) => error.toString(),
-                    _ => 'Loading...',
-                  },
-                  style: bodyTextStyle,
-                ),
+                Text(switch (state) {
+                  AsyncData(:final value) => const JsonEncoder.withIndent(
+                    '  ',
+                  ).convert({
+                    ...value.toJson(),
+                    'analyzed_points': value.analyzedPoints?.length,
+                    'last_image_fetch_duration': switch (value
+                        .lastImageFetchDuration
+                        ?.inMicroseconds) {
+                      final int v => '${v / 1000}ms',
+                      null => 'null',
+                    },
+                    'current_image_raw': value.currentImageRaw?.length,
+                  }),
+                  AsyncError(:final error) => error.toString(),
+                  _ => 'Loading...',
+                }, style: bodyTextStyle),
                 if (state.valueOrNull?.currentImageRaw != null)
                   ColoredBox(
                     color: Colors.white,
@@ -159,10 +143,7 @@ class _Body extends ConsumerWidget {
                 else
                   const ColoredBox(
                     color: Colors.white,
-                    child: SizedBox(
-                      height: 200,
-                      width: 200,
-                    ),
+                    child: SizedBox(height: 200, width: 200),
                   ),
               ],
             );
@@ -173,15 +154,13 @@ class _Body extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('KyoshinMonitorMaintenance', style: titleTextStyle),
-              Text(
-                switch (ref.watch(kyoshinMonitorMaintenanceProvider)) {
-                  AsyncData(:final value) =>
-                    const JsonEncoder.withIndent('  ').convert(value.toJson()),
-                  AsyncError(:final error) => error.toString(),
-                  _ => 'Loading...',
-                },
-                style: bodyTextStyle,
-              ),
+              Text(switch (ref.watch(kyoshinMonitorMaintenanceProvider)) {
+                AsyncData(:final value) => const JsonEncoder.withIndent(
+                  '  ',
+                ).convert(value.toJson()),
+                AsyncError(:final error) => error.toString(),
+                _ => 'Loading...',
+              }, style: bodyTextStyle),
             ],
           ),
         ),
@@ -191,9 +170,9 @@ class _Body extends ConsumerWidget {
             children: [
               Text('KyoshinMonitorSettings', style: titleTextStyle),
               Text(
-                const JsonEncoder.withIndent('  ').convert(
-                  ref.watch(kyoshinMonitorSettingsProvider).toJson(),
-                ),
+                const JsonEncoder.withIndent(
+                  '  ',
+                ).convert(ref.watch(kyoshinMonitorSettingsProvider).toJson()),
                 style: bodyTextStyle,
               ),
             ],

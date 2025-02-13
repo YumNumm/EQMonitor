@@ -14,13 +14,15 @@ String _$jmaParameterHash() => r'3df30979a78f46a75386dec2811d41ead379cb5b';
 @ProviderFor(JmaParameter)
 final jmaParameterProvider =
     StreamNotifierProvider<JmaParameter, JmaParameterState>.internal(
-  JmaParameter.new,
-  name: r'jmaParameterProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$jmaParameterHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      JmaParameter.new,
+      name: r'jmaParameterProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$jmaParameterHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$JmaParameter = StreamNotifier<JmaParameterState>;
 String _$earthquakeParameterEtagHash() =>
@@ -30,14 +32,15 @@ String _$earthquakeParameterEtagHash() =>
 @ProviderFor(EarthquakeParameterEtag)
 final earthquakeParameterEtagProvider =
     NotifierProvider<EarthquakeParameterEtag, String?>.internal(
-  EarthquakeParameterEtag.new,
-  name: r'earthquakeParameterEtagProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$earthquakeParameterEtagHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      EarthquakeParameterEtag.new,
+      name: r'earthquakeParameterEtagProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$earthquakeParameterEtagHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$EarthquakeParameterEtag = Notifier<String?>;
 // ignore_for_file: type=lint

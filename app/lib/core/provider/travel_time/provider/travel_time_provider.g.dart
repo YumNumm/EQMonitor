@@ -32,9 +32,10 @@ String _$travelTimeInternalHash() =>
 final travelTimeInternalProvider = FutureProvider<TravelTimeTables>.internal(
   travelTimeInternal,
   name: r'travelTimeInternalProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$travelTimeInternalHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$travelTimeInternalHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -50,9 +51,10 @@ String _$travelTimeDepthMapHash() =>
 final travelTimeDepthMapProvider = Provider<TravelTimeDepthMap>.internal(
   travelTimeDepthMap,
   name: r'travelTimeDepthMapProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$travelTimeDepthMapHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$travelTimeDepthMapHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

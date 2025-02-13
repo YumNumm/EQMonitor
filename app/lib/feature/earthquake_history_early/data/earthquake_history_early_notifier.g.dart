@@ -33,8 +33,8 @@ class _SystemHash {
 }
 
 abstract class _$EarthquakeHistoryEarlyNotifier
-    extends BuildlessAutoDisposeAsyncNotifier<
-        EarthquakeHistoryEarlyNotifierState> {
+    extends
+        BuildlessAutoDisposeAsyncNotifier<EarthquakeHistoryEarlyNotifierState> {
   late final EarthquakeHistoryEarlyParameter parameter;
 
   FutureOr<EarthquakeHistoryEarlyNotifierState> build(
@@ -57,18 +57,14 @@ class EarthquakeHistoryEarlyNotifierFamily
   EarthquakeHistoryEarlyNotifierProvider call(
     EarthquakeHistoryEarlyParameter parameter,
   ) {
-    return EarthquakeHistoryEarlyNotifierProvider(
-      parameter,
-    );
+    return EarthquakeHistoryEarlyNotifierProvider(parameter);
   }
 
   @override
   EarthquakeHistoryEarlyNotifierProvider getProviderOverride(
     covariant EarthquakeHistoryEarlyNotifierProvider provider,
   ) {
-    return call(
-      provider.parameter,
-    );
+    return call(provider.parameter);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -88,24 +84,27 @@ class EarthquakeHistoryEarlyNotifierFamily
 
 /// See also [EarthquakeHistoryEarlyNotifier].
 class EarthquakeHistoryEarlyNotifierProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<EarthquakeHistoryEarlyNotifier,
-        EarthquakeHistoryEarlyNotifierState> {
+    extends
+        AutoDisposeAsyncNotifierProviderImpl<
+          EarthquakeHistoryEarlyNotifier,
+          EarthquakeHistoryEarlyNotifierState
+        > {
   /// See also [EarthquakeHistoryEarlyNotifier].
   EarthquakeHistoryEarlyNotifierProvider(
     EarthquakeHistoryEarlyParameter parameter,
   ) : this._internal(
-          () => EarthquakeHistoryEarlyNotifier()..parameter = parameter,
-          from: earthquakeHistoryEarlyNotifierProvider,
-          name: r'earthquakeHistoryEarlyNotifierProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$earthquakeHistoryEarlyNotifierHash,
-          dependencies: EarthquakeHistoryEarlyNotifierFamily._dependencies,
-          allTransitiveDependencies:
-              EarthquakeHistoryEarlyNotifierFamily._allTransitiveDependencies,
-          parameter: parameter,
-        );
+        () => EarthquakeHistoryEarlyNotifier()..parameter = parameter,
+        from: earthquakeHistoryEarlyNotifierProvider,
+        name: r'earthquakeHistoryEarlyNotifierProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$earthquakeHistoryEarlyNotifierHash,
+        dependencies: EarthquakeHistoryEarlyNotifierFamily._dependencies,
+        allTransitiveDependencies:
+            EarthquakeHistoryEarlyNotifierFamily._allTransitiveDependencies,
+        parameter: parameter,
+      );
 
   EarthquakeHistoryEarlyNotifierProvider._internal(
     super._createNotifier, {
@@ -123,9 +122,7 @@ class EarthquakeHistoryEarlyNotifierProvider
   FutureOr<EarthquakeHistoryEarlyNotifierState> runNotifierBuild(
     covariant EarthquakeHistoryEarlyNotifier notifier,
   ) {
-    return notifier.build(
-      parameter,
-    );
+    return notifier.build(parameter);
   }
 
   @override
@@ -145,8 +142,11 @@ class EarthquakeHistoryEarlyNotifierProvider
   }
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<EarthquakeHistoryEarlyNotifier,
-      EarthquakeHistoryEarlyNotifierState> createElement() {
+  AutoDisposeAsyncNotifierProviderElement<
+    EarthquakeHistoryEarlyNotifier,
+    EarthquakeHistoryEarlyNotifierState
+  >
+  createElement() {
     return _EarthquakeHistoryEarlyNotifierProviderElement(this);
   }
 
@@ -167,15 +167,21 @@ class EarthquakeHistoryEarlyNotifierProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin EarthquakeHistoryEarlyNotifierRef on AutoDisposeAsyncNotifierProviderRef<
-    EarthquakeHistoryEarlyNotifierState> {
+mixin EarthquakeHistoryEarlyNotifierRef
+    on
+        AutoDisposeAsyncNotifierProviderRef<
+          EarthquakeHistoryEarlyNotifierState
+        > {
   /// The parameter `parameter` of this provider.
   EarthquakeHistoryEarlyParameter get parameter;
 }
 
 class _EarthquakeHistoryEarlyNotifierProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<
-        EarthquakeHistoryEarlyNotifier, EarthquakeHistoryEarlyNotifierState>
+    extends
+        AutoDisposeAsyncNotifierProviderElement<
+          EarthquakeHistoryEarlyNotifier,
+          EarthquakeHistoryEarlyNotifierState
+        >
     with EarthquakeHistoryEarlyNotifierRef {
   _EarthquakeHistoryEarlyNotifierProviderElement(super.provider);
 
@@ -183,5 +189,6 @@ class _EarthquakeHistoryEarlyNotifierProviderElement
   EarthquakeHistoryEarlyParameter get parameter =>
       (origin as EarthquakeHistoryEarlyNotifierProvider).parameter;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -14,7 +14,6 @@ KyoshinMonitorWebApiDataSource kyoshinMonitorWebApiDataSource(Ref ref) =>
 @Riverpod(keepAlive: true)
 LpgmKyoshinMonitorWebApiDataSource lpgmKyoshinMonitorWebApiDataSource(
   Ref ref,
-) =>
-    LpgmKyoshinMonitorWebApiDataSource(
-      client: ref.watch(lpgmKyoshinMonitorWebApiClientProvider),
-    );
+) => LpgmKyoshinMonitorWebApiDataSource(
+  client: ref.watch(lpgmKyoshinMonitorWebApiClientProvider),
+);

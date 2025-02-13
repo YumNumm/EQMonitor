@@ -3,50 +3,47 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('realtimePostgresChangesPayloadTableMessageProvider<T>', () {
-    test(
-      '上流からEewV1-Insertが流れてきた時に、正しくパースすること',
-      () {
-        // arrange
-        final demoPayload = <String, dynamic>{
-          'commit_timestamp': '2024-04-01T12:10:32.747Z',
-          'eventType': 'INSERT',
-          'new': {
-            'id': -1,
-            'event_id': 20240401210952,
-            'info_type': '発表',
-            'schema_type': 'eew-information',
-            'status': '通常',
-            'type': '緊急地震速報（地震動予報）',
-            'headline': null,
-            'serial_no': 1,
-            'is_canceled': false,
-            'is_last_info': false,
-            'arrival_time': '2024-04-01T21:09:52+09:00',
-            'depth': 40,
-            'forecast_max_intensity': '1',
-            'forecast_max_intensity_is_over': false,
-            'forecast_max_lpgm_intensity': '0',
-            'forecast_max_lpgm_intensity_is_over': false,
-            'hypo_name': '石垣島北西沖',
-            'is_warning': false,
-            'latitude': 25.2,
-            'longitude': 123.6,
-            'magnitude': 3.6,
-            'origin_time': '2024-04-01T21:09:37+09:00',
-            'regions': <void>[],
-            'report_time': '2024-04-01T21:09:37+09:00',
-          },
-          'old': <void, void>{},
-          'schema': 'public',
-          'table': 'eew',
-          'errors': null,
-        };
-        // act
-        final result = RealtimePostgresChangesPayloadBase.fromJson(demoPayload);
-        // assert
-        expect(result, isA<RealtimePostgresInsertPayload<EewV1>>());
-      },
-    );
+    test('上流からEewV1-Insertが流れてきた時に、正しくパースすること', () {
+      // arrange
+      final demoPayload = <String, dynamic>{
+        'commit_timestamp': '2024-04-01T12:10:32.747Z',
+        'eventType': 'INSERT',
+        'new': {
+          'id': -1,
+          'event_id': 20240401210952,
+          'info_type': '発表',
+          'schema_type': 'eew-information',
+          'status': '通常',
+          'type': '緊急地震速報（地震動予報）',
+          'headline': null,
+          'serial_no': 1,
+          'is_canceled': false,
+          'is_last_info': false,
+          'arrival_time': '2024-04-01T21:09:52+09:00',
+          'depth': 40,
+          'forecast_max_intensity': '1',
+          'forecast_max_intensity_is_over': false,
+          'forecast_max_lpgm_intensity': '0',
+          'forecast_max_lpgm_intensity_is_over': false,
+          'hypo_name': '石垣島北西沖',
+          'is_warning': false,
+          'latitude': 25.2,
+          'longitude': 123.6,
+          'magnitude': 3.6,
+          'origin_time': '2024-04-01T21:09:37+09:00',
+          'regions': <void>[],
+          'report_time': '2024-04-01T21:09:37+09:00',
+        },
+        'old': <void, void>{},
+        'schema': 'public',
+        'table': 'eew',
+        'errors': null,
+      };
+      // act
+      final result = RealtimePostgresChangesPayloadBase.fromJson(demoPayload);
+      // assert
+      expect(result, isA<RealtimePostgresInsertPayload<EewV1>>());
+    });
     test('上流からEarthquakeV1-Insertが流れてきた時に、正しくパースすること`', () {
       // arrange
       final demoData = <String, dynamic>{

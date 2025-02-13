@@ -9,27 +9,25 @@ part of 'router.dart';
 // **************************************************************************
 
 List<RouteBase> get $appRoutes => [
-      $setupRoute,
-      $earthquakeHistoryRoute,
-      $earthquakeHistoryDetailsRoute,
-      $informationHistoryRoute,
-      $informationHistoryDetailsRoute,
-      $homeRoute,
-      $talkerRoute,
-      $settingsRoute,
-    ];
+  $setupRoute,
+  $earthquakeHistoryRoute,
+  $earthquakeHistoryDetailsRoute,
+  $informationHistoryRoute,
+  $informationHistoryDetailsRoute,
+  $homeRoute,
+  $talkerRoute,
+  $settingsRoute,
+];
 
 RouteBase get $setupRoute => GoRouteData.$route(
-      path: '/setup',
-      factory: $SetupRouteExtension._fromState,
-    );
+  path: '/setup',
+  factory: $SetupRouteExtension._fromState,
+);
 
 extension $SetupRouteExtension on SetupRoute {
   static SetupRoute _fromState(GoRouterState state) => const SetupRoute();
 
-  String get location => GoRouteData.$location(
-        '/setup',
-      );
+  String get location => GoRouteData.$location('/setup');
 
   void go(BuildContext context) => context.go(location);
 
@@ -42,17 +40,15 @@ extension $SetupRouteExtension on SetupRoute {
 }
 
 RouteBase get $earthquakeHistoryRoute => GoRouteData.$route(
-      path: '/earthquake-history',
-      factory: $EarthquakeHistoryRouteExtension._fromState,
-    );
+  path: '/earthquake-history',
+  factory: $EarthquakeHistoryRouteExtension._fromState,
+);
 
 extension $EarthquakeHistoryRouteExtension on EarthquakeHistoryRoute {
   static EarthquakeHistoryRoute _fromState(GoRouterState state) =>
       const EarthquakeHistoryRoute();
 
-  String get location => GoRouteData.$location(
-        '/earthquake-history',
-      );
+  String get location => GoRouteData.$location('/earthquake-history');
 
   void go(BuildContext context) => context.go(location);
 
@@ -65,9 +61,9 @@ extension $EarthquakeHistoryRouteExtension on EarthquakeHistoryRoute {
 }
 
 RouteBase get $earthquakeHistoryDetailsRoute => GoRouteData.$route(
-      path: '/earthquake-history-details/:eventId',
-      factory: $EarthquakeHistoryDetailsRouteExtension._fromState,
-    );
+  path: '/earthquake-history-details/:eventId',
+  factory: $EarthquakeHistoryDetailsRouteExtension._fromState,
+);
 
 extension $EarthquakeHistoryDetailsRouteExtension
     on EarthquakeHistoryDetailsRoute {
@@ -77,8 +73,8 @@ extension $EarthquakeHistoryDetailsRouteExtension
       );
 
   String get location => GoRouteData.$location(
-        '/earthquake-history-details/${Uri.encodeComponent(eventId.toString())}',
-      );
+    '/earthquake-history-details/${Uri.encodeComponent(eventId.toString())}',
+  );
 
   void go(BuildContext context) => context.go(location);
 
@@ -91,17 +87,15 @@ extension $EarthquakeHistoryDetailsRouteExtension
 }
 
 RouteBase get $informationHistoryRoute => GoRouteData.$route(
-      path: '/information-history',
-      factory: $InformationHistoryRouteExtension._fromState,
-    );
+  path: '/information-history',
+  factory: $InformationHistoryRouteExtension._fromState,
+);
 
 extension $InformationHistoryRouteExtension on InformationHistoryRoute {
   static InformationHistoryRoute _fromState(GoRouterState state) =>
       const InformationHistoryRoute();
 
-  String get location => GoRouteData.$location(
-        '/information-history',
-      );
+  String get location => GoRouteData.$location('/information-history');
 
   void go(BuildContext context) => context.go(location);
 
@@ -114,20 +108,16 @@ extension $InformationHistoryRouteExtension on InformationHistoryRoute {
 }
 
 RouteBase get $informationHistoryDetailsRoute => GoRouteData.$route(
-      path: '/information-history-details',
-      factory: $InformationHistoryDetailsRouteExtension._fromState,
-    );
+  path: '/information-history-details',
+  factory: $InformationHistoryDetailsRouteExtension._fromState,
+);
 
 extension $InformationHistoryDetailsRouteExtension
     on InformationHistoryDetailsRoute {
   static InformationHistoryDetailsRoute _fromState(GoRouterState state) =>
-      InformationHistoryDetailsRoute(
-        $extra: state.extra as InformationV3,
-      );
+      InformationHistoryDetailsRoute($extra: state.extra as InformationV3);
 
-  String get location => GoRouteData.$location(
-        '/information-history-details',
-      );
+  String get location => GoRouteData.$location('/information-history-details');
 
   void go(BuildContext context) => context.go(location, extra: $extra);
 
@@ -142,32 +132,30 @@ extension $InformationHistoryDetailsRouteExtension
 }
 
 RouteBase get $homeRoute => GoRouteData.$route(
-      path: '/',
-      factory: $HomeRouteExtension._fromState,
+  path: '/',
+  factory: $HomeRouteExtension._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: 'earthquake-history-early',
+      factory: $EarthquakeHistoryEarlyRouteExtension._fromState,
       routes: [
         GoRouteData.$route(
-          path: 'earthquake-history-early',
-          factory: $EarthquakeHistoryEarlyRouteExtension._fromState,
-          routes: [
-            GoRouteData.$route(
-              path: 'details/:id',
-              factory: $EarthquakeHistoryEarlyDetailsRouteExtension._fromState,
-            ),
-          ],
-        ),
-        GoRouteData.$route(
-          path: 'eew-details-by-event-id/:eventId',
-          factory: $EewDetailsByEventIdRouteExtension._fromState,
+          path: 'details/:id',
+          factory: $EarthquakeHistoryEarlyDetailsRouteExtension._fromState,
         ),
       ],
-    );
+    ),
+    GoRouteData.$route(
+      path: 'eew-details-by-event-id/:eventId',
+      factory: $EewDetailsByEventIdRouteExtension._fromState,
+    ),
+  ],
+);
 
 extension $HomeRouteExtension on HomeRoute {
   static HomeRoute _fromState(GoRouterState state) => const HomeRoute();
 
-  String get location => GoRouteData.$location(
-        '/',
-      );
+  String get location => GoRouteData.$location('/');
 
   void go(BuildContext context) => context.go(location);
 
@@ -183,9 +171,7 @@ extension $EarthquakeHistoryEarlyRouteExtension on EarthquakeHistoryEarlyRoute {
   static EarthquakeHistoryEarlyRoute _fromState(GoRouterState state) =>
       const EarthquakeHistoryEarlyRoute();
 
-  String get location => GoRouteData.$location(
-        '/earthquake-history-early',
-      );
+  String get location => GoRouteData.$location('/earthquake-history-early');
 
   void go(BuildContext context) => context.go(location);
 
@@ -200,13 +186,11 @@ extension $EarthquakeHistoryEarlyRouteExtension on EarthquakeHistoryEarlyRoute {
 extension $EarthquakeHistoryEarlyDetailsRouteExtension
     on EarthquakeHistoryEarlyDetailsRoute {
   static EarthquakeHistoryEarlyDetailsRoute _fromState(GoRouterState state) =>
-      EarthquakeHistoryEarlyDetailsRoute(
-        id: state.pathParameters['id']!,
-      );
+      EarthquakeHistoryEarlyDetailsRoute(id: state.pathParameters['id']!);
 
   String get location => GoRouteData.$location(
-        '/earthquake-history-early/details/${Uri.encodeComponent(id)}',
-      );
+    '/earthquake-history-early/details/${Uri.encodeComponent(id)}',
+  );
 
   void go(BuildContext context) => context.go(location);
 
@@ -220,13 +204,11 @@ extension $EarthquakeHistoryEarlyDetailsRouteExtension
 
 extension $EewDetailsByEventIdRouteExtension on EewDetailsByEventIdRoute {
   static EewDetailsByEventIdRoute _fromState(GoRouterState state) =>
-      EewDetailsByEventIdRoute(
-        eventId: state.pathParameters['eventId']!,
-      );
+      EewDetailsByEventIdRoute(eventId: state.pathParameters['eventId']!);
 
   String get location => GoRouteData.$location(
-        '/eew-details-by-event-id/${Uri.encodeComponent(eventId)}',
-      );
+    '/eew-details-by-event-id/${Uri.encodeComponent(eventId)}',
+  );
 
   void go(BuildContext context) => context.go(location);
 
@@ -239,16 +221,14 @@ extension $EewDetailsByEventIdRouteExtension on EewDetailsByEventIdRoute {
 }
 
 RouteBase get $talkerRoute => GoRouteData.$route(
-      path: '/talker',
-      factory: $TalkerRouteExtension._fromState,
-    );
+  path: '/talker',
+  factory: $TalkerRouteExtension._fromState,
+);
 
 extension $TalkerRouteExtension on TalkerRoute {
   static TalkerRoute _fromState(GoRouterState state) => const TalkerRoute();
 
-  String get location => GoRouteData.$location(
-        '/talker',
-      );
+  String get location => GoRouteData.$location('/talker');
 
   void go(BuildContext context) => context.go(location);
 
@@ -261,105 +241,103 @@ extension $TalkerRouteExtension on TalkerRoute {
 }
 
 RouteBase get $settingsRoute => GoRouteData.$route(
-      path: '/settings',
-      factory: $SettingsRouteExtension._fromState,
+  path: '/settings',
+  factory: $SettingsRouteExtension._fromState,
+  routes: [
+    GoRouteData.$route(
+      path: 'notification',
+      factory: $NotificationRouteExtension._fromState,
       routes: [
         GoRouteData.$route(
-          path: 'notification',
-          factory: $NotificationRouteExtension._fromState,
-          routes: [
-            GoRouteData.$route(
-              path: 'earthquake',
-              factory: $NotificationEarthquakeRouteExtension._fromState,
-            ),
-            GoRouteData.$route(
-              path: 'eew',
-              factory: $NotificationEewRouteExtension._fromState,
-            ),
-          ],
+          path: 'earthquake',
+          factory: $NotificationEarthquakeRouteExtension._fromState,
         ),
         GoRouteData.$route(
-          path: 'display',
-          factory: $DisplayRouteExtension._fromState,
-          routes: [
-            GoRouteData.$route(
-              path: 'color-schema',
-              factory: $ColorSchemeConfigRouteExtension._fromState,
-            ),
-          ],
-        ),
-        GoRouteData.$route(
-          path: 'kyoshin-monitor-about',
-          factory: $KyoshinMonitorAboutRouteExtension._fromState,
-          routes: [
-            GoRouteData.$route(
-              path: 'observation-network',
-              factory: $KyoshinMonitorAboutObservationNetworkRouteExtension
-                  ._fromState,
-            ),
-          ],
-        ),
-        GoRouteData.$route(
-          path: 'term-of-service',
-          factory: $TermOfServiceRouteExtension._fromState,
-        ),
-        GoRouteData.$route(
-          path: 'privacy-policy',
-          factory: $PrivacyPolicyRouteExtension._fromState,
-        ),
-        GoRouteData.$route(
-          path: 'license',
-          factory: $LicenseRouteExtension._fromState,
-        ),
-        GoRouteData.$route(
-          path: 'earthquake-history',
-          factory: $EarthquakeHistoryConfigRouteExtension._fromState,
-        ),
-        GoRouteData.$route(
-          path: 'about-this-app',
-          factory: $AboutThisAppRouteExtension._fromState,
-        ),
-        GoRouteData.$route(
-          path: 'donation',
-          factory: $DonationRouteExtension._fromState,
-          routes: [
-            GoRouteData.$route(
-              path: 'executed',
-              factory: $DonationExecutedRouteExtension._fromState,
-            ),
-          ],
-        ),
-        GoRouteData.$route(
-          path: 'debugger',
-          factory: $DebuggerRouteExtension._fromState,
-          routes: [
-            GoRouteData.$route(
-              path: 'api-endpoint-selector',
-              factory: $HttpApiEndpointSelectorRouteExtension._fromState,
-            ),
-            GoRouteData.$route(
-              path: 'websocket-api-endpoint-selector',
-              factory: $WebsocketEndpointSelectorRouteExtension._fromState,
-            ),
-            GoRouteData.$route(
-              path: 'kyoshin-monitor',
-              factory: $DebugKyoshinMonitorRouteExtension._fromState,
-            ),
-            GoRouteData.$route(
-              path: 'playground',
-              factory: $PlaygroundRouteExtension._fromState,
-            ),
-          ],
+          path: 'eew',
+          factory: $NotificationEewRouteExtension._fromState,
         ),
       ],
-    );
+    ),
+    GoRouteData.$route(
+      path: 'display',
+      factory: $DisplayRouteExtension._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'color-schema',
+          factory: $ColorSchemeConfigRouteExtension._fromState,
+        ),
+      ],
+    ),
+    GoRouteData.$route(
+      path: 'kyoshin-monitor-about',
+      factory: $KyoshinMonitorAboutRouteExtension._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'observation-network',
+          factory:
+              $KyoshinMonitorAboutObservationNetworkRouteExtension._fromState,
+        ),
+      ],
+    ),
+    GoRouteData.$route(
+      path: 'term-of-service',
+      factory: $TermOfServiceRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'privacy-policy',
+      factory: $PrivacyPolicyRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'license',
+      factory: $LicenseRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'earthquake-history',
+      factory: $EarthquakeHistoryConfigRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'about-this-app',
+      factory: $AboutThisAppRouteExtension._fromState,
+    ),
+    GoRouteData.$route(
+      path: 'donation',
+      factory: $DonationRouteExtension._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'executed',
+          factory: $DonationExecutedRouteExtension._fromState,
+        ),
+      ],
+    ),
+    GoRouteData.$route(
+      path: 'debugger',
+      factory: $DebuggerRouteExtension._fromState,
+      routes: [
+        GoRouteData.$route(
+          path: 'api-endpoint-selector',
+          factory: $HttpApiEndpointSelectorRouteExtension._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'websocket-api-endpoint-selector',
+          factory: $WebsocketEndpointSelectorRouteExtension._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'kyoshin-monitor',
+          factory: $DebugKyoshinMonitorRouteExtension._fromState,
+        ),
+        GoRouteData.$route(
+          path: 'playground',
+          factory: $PlaygroundRouteExtension._fromState,
+        ),
+      ],
+    ),
+  ],
+);
 
 extension $SettingsRouteExtension on SettingsRoute {
   static SettingsRoute _fromState(GoRouterState state) => const SettingsRoute();
 
-  String get location => GoRouteData.$location(
-        '/settings',
-      );
+  String get location => GoRouteData.$location('/settings');
 
   void go(BuildContext context) => context.go(location);
 
@@ -375,9 +353,7 @@ extension $NotificationRouteExtension on NotificationRoute {
   static NotificationRoute _fromState(GoRouterState state) =>
       const NotificationRoute();
 
-  String get location => GoRouteData.$location(
-        '/settings/notification',
-      );
+  String get location => GoRouteData.$location('/settings/notification');
 
   void go(BuildContext context) => context.go(location);
 
@@ -393,9 +369,8 @@ extension $NotificationEarthquakeRouteExtension on NotificationEarthquakeRoute {
   static NotificationEarthquakeRoute _fromState(GoRouterState state) =>
       const NotificationEarthquakeRoute();
 
-  String get location => GoRouteData.$location(
-        '/settings/notification/earthquake',
-      );
+  String get location =>
+      GoRouteData.$location('/settings/notification/earthquake');
 
   void go(BuildContext context) => context.go(location);
 
@@ -411,9 +386,7 @@ extension $NotificationEewRouteExtension on NotificationEewRoute {
   static NotificationEewRoute _fromState(GoRouterState state) =>
       const NotificationEewRoute();
 
-  String get location => GoRouteData.$location(
-        '/settings/notification/eew',
-      );
+  String get location => GoRouteData.$location('/settings/notification/eew');
 
   void go(BuildContext context) => context.go(location);
 
@@ -428,9 +401,7 @@ extension $NotificationEewRouteExtension on NotificationEewRoute {
 extension $DisplayRouteExtension on DisplayRoute {
   static DisplayRoute _fromState(GoRouterState state) => const DisplayRoute();
 
-  String get location => GoRouteData.$location(
-        '/settings/display',
-      );
+  String get location => GoRouteData.$location('/settings/display');
 
   void go(BuildContext context) => context.go(location);
 
@@ -446,9 +417,8 @@ extension $ColorSchemeConfigRouteExtension on ColorSchemeConfigRoute {
   static ColorSchemeConfigRoute _fromState(GoRouterState state) =>
       const ColorSchemeConfigRoute();
 
-  String get location => GoRouteData.$location(
-        '/settings/display/color-schema',
-      );
+  String get location =>
+      GoRouteData.$location('/settings/display/color-schema');
 
   void go(BuildContext context) => context.go(location);
 
@@ -464,9 +434,8 @@ extension $KyoshinMonitorAboutRouteExtension on KyoshinMonitorAboutRoute {
   static KyoshinMonitorAboutRoute _fromState(GoRouterState state) =>
       const KyoshinMonitorAboutRoute();
 
-  String get location => GoRouteData.$location(
-        '/settings/kyoshin-monitor-about',
-      );
+  String get location =>
+      GoRouteData.$location('/settings/kyoshin-monitor-about');
 
   void go(BuildContext context) => context.go(location);
 
@@ -481,12 +450,12 @@ extension $KyoshinMonitorAboutRouteExtension on KyoshinMonitorAboutRoute {
 extension $KyoshinMonitorAboutObservationNetworkRouteExtension
     on KyoshinMonitorAboutObservationNetworkRoute {
   static KyoshinMonitorAboutObservationNetworkRoute _fromState(
-          GoRouterState state) =>
-      const KyoshinMonitorAboutObservationNetworkRoute();
+    GoRouterState state,
+  ) => const KyoshinMonitorAboutObservationNetworkRoute();
 
   String get location => GoRouteData.$location(
-        '/settings/kyoshin-monitor-about/observation-network',
-      );
+    '/settings/kyoshin-monitor-about/observation-network',
+  );
 
   void go(BuildContext context) => context.go(location);
 
@@ -501,19 +470,23 @@ extension $KyoshinMonitorAboutObservationNetworkRouteExtension
 extension $TermOfServiceRouteExtension on TermOfServiceRoute {
   static TermOfServiceRoute _fromState(GoRouterState state) =>
       TermOfServiceRoute(
-        showAcceptButton: _$convertMapValue('show-accept-button',
-                state.uri.queryParameters, _$boolConverter) ??
+        showAcceptButton:
+            _$convertMapValue(
+              'show-accept-button',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
             false,
         $extra: state.extra as void Function({bool isAccepted})?,
       );
 
   String get location => GoRouteData.$location(
-        '/settings/term-of-service',
-        queryParams: {
-          if (showAcceptButton != false)
-            'show-accept-button': showAcceptButton.toString(),
-        },
-      );
+    '/settings/term-of-service',
+    queryParams: {
+      if (showAcceptButton != false)
+        'show-accept-button': showAcceptButton.toString(),
+    },
+  );
 
   void go(BuildContext context) => context.go(location, extra: $extra);
 
@@ -530,19 +503,23 @@ extension $TermOfServiceRouteExtension on TermOfServiceRoute {
 extension $PrivacyPolicyRouteExtension on PrivacyPolicyRoute {
   static PrivacyPolicyRoute _fromState(GoRouterState state) =>
       PrivacyPolicyRoute(
-        showAcceptButton: _$convertMapValue('show-accept-button',
-                state.uri.queryParameters, _$boolConverter) ??
+        showAcceptButton:
+            _$convertMapValue(
+              'show-accept-button',
+              state.uri.queryParameters,
+              _$boolConverter,
+            ) ??
             false,
         $extra: state.extra as void Function({bool isAccepted})?,
       );
 
   String get location => GoRouteData.$location(
-        '/settings/privacy-policy',
-        queryParams: {
-          if (showAcceptButton != false)
-            'show-accept-button': showAcceptButton.toString(),
-        },
-      );
+    '/settings/privacy-policy',
+    queryParams: {
+      if (showAcceptButton != false)
+        'show-accept-button': showAcceptButton.toString(),
+    },
+  );
 
   void go(BuildContext context) => context.go(location, extra: $extra);
 
@@ -559,9 +536,7 @@ extension $PrivacyPolicyRouteExtension on PrivacyPolicyRoute {
 extension $LicenseRouteExtension on LicenseRoute {
   static LicenseRoute _fromState(GoRouterState state) => const LicenseRoute();
 
-  String get location => GoRouteData.$location(
-        '/settings/license',
-      );
+  String get location => GoRouteData.$location('/settings/license');
 
   void go(BuildContext context) => context.go(location);
 
@@ -578,9 +553,7 @@ extension $EarthquakeHistoryConfigRouteExtension
   static EarthquakeHistoryConfigRoute _fromState(GoRouterState state) =>
       const EarthquakeHistoryConfigRoute();
 
-  String get location => GoRouteData.$location(
-        '/settings/earthquake-history',
-      );
+  String get location => GoRouteData.$location('/settings/earthquake-history');
 
   void go(BuildContext context) => context.go(location);
 
@@ -596,9 +569,7 @@ extension $AboutThisAppRouteExtension on AboutThisAppRoute {
   static AboutThisAppRoute _fromState(GoRouterState state) =>
       const AboutThisAppRoute();
 
-  String get location => GoRouteData.$location(
-        '/settings/about-this-app',
-      );
+  String get location => GoRouteData.$location('/settings/about-this-app');
 
   void go(BuildContext context) => context.go(location);
 
@@ -613,9 +584,7 @@ extension $AboutThisAppRouteExtension on AboutThisAppRoute {
 extension $DonationRouteExtension on DonationRoute {
   static DonationRoute _fromState(GoRouterState state) => const DonationRoute();
 
-  String get location => GoRouteData.$location(
-        '/settings/donation',
-      );
+  String get location => GoRouteData.$location('/settings/donation');
 
   void go(BuildContext context) => context.go(location);
 
@@ -633,9 +602,7 @@ extension $DonationExecutedRouteExtension on DonationExecutedRoute {
         $extra: state.extra as (StoreProduct, CustomerInfo),
       );
 
-  String get location => GoRouteData.$location(
-        '/settings/donation/executed',
-      );
+  String get location => GoRouteData.$location('/settings/donation/executed');
 
   void go(BuildContext context) => context.go(location, extra: $extra);
 
@@ -652,9 +619,7 @@ extension $DonationExecutedRouteExtension on DonationExecutedRoute {
 extension $DebuggerRouteExtension on DebuggerRoute {
   static DebuggerRoute _fromState(GoRouterState state) => const DebuggerRoute();
 
-  String get location => GoRouteData.$location(
-        '/settings/debugger',
-      );
+  String get location => GoRouteData.$location('/settings/debugger');
 
   void go(BuildContext context) => context.go(location);
 
@@ -671,9 +636,8 @@ extension $HttpApiEndpointSelectorRouteExtension
   static HttpApiEndpointSelectorRoute _fromState(GoRouterState state) =>
       const HttpApiEndpointSelectorRoute();
 
-  String get location => GoRouteData.$location(
-        '/settings/debugger/api-endpoint-selector',
-      );
+  String get location =>
+      GoRouteData.$location('/settings/debugger/api-endpoint-selector');
 
   void go(BuildContext context) => context.go(location);
 
@@ -691,8 +655,8 @@ extension $WebsocketEndpointSelectorRouteExtension
       const WebsocketEndpointSelectorRoute();
 
   String get location => GoRouteData.$location(
-        '/settings/debugger/websocket-api-endpoint-selector',
-      );
+    '/settings/debugger/websocket-api-endpoint-selector',
+  );
 
   void go(BuildContext context) => context.go(location);
 
@@ -708,9 +672,8 @@ extension $DebugKyoshinMonitorRouteExtension on DebugKyoshinMonitorRoute {
   static DebugKyoshinMonitorRoute _fromState(GoRouterState state) =>
       const DebugKyoshinMonitorRoute();
 
-  String get location => GoRouteData.$location(
-        '/settings/debugger/kyoshin-monitor',
-      );
+  String get location =>
+      GoRouteData.$location('/settings/debugger/kyoshin-monitor');
 
   void go(BuildContext context) => context.go(location);
 
@@ -726,9 +689,7 @@ extension $PlaygroundRouteExtension on PlaygroundRoute {
   static PlaygroundRoute _fromState(GoRouterState state) =>
       const PlaygroundRoute();
 
-  String get location => GoRouteData.$location(
-        '/settings/debugger/playground',
-      );
+  String get location => GoRouteData.$location('/settings/debugger/playground');
 
   void go(BuildContext context) => context.go(location);
 

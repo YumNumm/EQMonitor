@@ -24,23 +24,27 @@ Stream<DateTime> kyoshinMonitorTimerStream(Ref ref) async* {
     })
     ..listen(periodicTimerProvider(key), (_, next) async {
       if (next case AsyncData()) {
-        final delay = ref
-            .read(kyoshinMonitorTimerNotifierProvider)
-            .valueOrNull
-            ?.delayFromDevice;
+        final delay =
+            ref
+                .read(kyoshinMonitorTimerNotifierProvider)
+                .valueOrNull
+                ?.delayFromDevice;
         if (delay != null) {
           streamController.add(DateTime.now().subtract(delay));
         }
       }
     });
 
-  final kyoshinMonitorTimerNotifier =
-      ref.read(kyoshinMonitorTimerNotifierProvider);
+  final kyoshinMonitorTimerNotifier = ref.read(
+    kyoshinMonitorTimerNotifierProvider,
+  );
   final delay = kyoshinMonitorTimerNotifier.valueOrNull?.delayFromDevice;
   if (delay != null) {
     streamController.add(DateTime.now().subtract(delay));
   }
-  ref.read(periodicTimerProvider(key).notifier).setInterval(
+  ref
+      .read(periodicTimerProvider(key).notifier)
+      .setInterval(
         ref.read(kyoshinMonitorSettingsProvider).api.imageFetchInterval,
       );
 

@@ -12,7 +12,8 @@ part of 'security.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 Security _$SecurityFromJson(Map<String, dynamic> json) {
   return _Security.fromJson(json);
@@ -55,20 +56,22 @@ class _$SecurityCopyWithImpl<$Res, $Val extends Security>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? realm = freezed,
-    Object? hash = freezed,
-  }) {
-    return _then(_value.copyWith(
-      realm: freezed == realm
-          ? _value.realm
-          : realm // ignore: cast_nullable_to_non_nullable
-              as String?,
-      hash: freezed == hash
-          ? _value.hash
-          : hash // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+  $Res call({Object? realm = freezed, Object? hash = freezed}) {
+    return _then(
+      _value.copyWith(
+            realm:
+                freezed == realm
+                    ? _value.realm
+                    : realm // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            hash:
+                freezed == hash
+                    ? _value.hash
+                    : hash // ignore: cast_nullable_to_non_nullable
+                        as String?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -76,8 +79,9 @@ class _$SecurityCopyWithImpl<$Res, $Val extends Security>
 abstract class _$$SecurityImplCopyWith<$Res>
     implements $SecurityCopyWith<$Res> {
   factory _$$SecurityImplCopyWith(
-          _$SecurityImpl value, $Res Function(_$SecurityImpl) then) =
-      __$$SecurityImplCopyWithImpl<$Res>;
+    _$SecurityImpl value,
+    $Res Function(_$SecurityImpl) then,
+  ) = __$$SecurityImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String? realm, String? hash});
@@ -88,27 +92,29 @@ class __$$SecurityImplCopyWithImpl<$Res>
     extends _$SecurityCopyWithImpl<$Res, _$SecurityImpl>
     implements _$$SecurityImplCopyWith<$Res> {
   __$$SecurityImplCopyWithImpl(
-      _$SecurityImpl _value, $Res Function(_$SecurityImpl) _then)
-      : super(_value, _then);
+    _$SecurityImpl _value,
+    $Res Function(_$SecurityImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of Security
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? realm = freezed,
-    Object? hash = freezed,
-  }) {
-    return _then(_$SecurityImpl(
-      realm: freezed == realm
-          ? _value.realm
-          : realm // ignore: cast_nullable_to_non_nullable
-              as String?,
-      hash: freezed == hash
-          ? _value.hash
-          : hash // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+  $Res call({Object? realm = freezed, Object? hash = freezed}) {
+    return _then(
+      _$SecurityImpl(
+        realm:
+            freezed == realm
+                ? _value.realm
+                : realm // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        hash:
+            freezed == hash
+                ? _value.hash
+                : hash // ignore: cast_nullable_to_non_nullable
+                    as String?,
+      ),
+    );
   }
 }
 
@@ -153,16 +159,15 @@ class _$SecurityImpl implements _Security {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$SecurityImplToJson(
-      this,
-    );
+    return _$$SecurityImplToJson(this);
   }
 }
 
 abstract class _Security implements Security {
-  const factory _Security(
-      {required final String? realm,
-      required final String? hash}) = _$SecurityImpl;
+  const factory _Security({
+    required final String? realm,
+    required final String? hash,
+  }) = _$SecurityImpl;
 
   factory _Security.fromJson(Map<String, dynamic> json) =
       _$SecurityImpl.fromJson;

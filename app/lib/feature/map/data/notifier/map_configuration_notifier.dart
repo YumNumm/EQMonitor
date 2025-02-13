@@ -23,7 +23,8 @@ class MapConfigurationNotifier extends _$MapConfigurationNotifier {
 
     final util = ref.watch(mapStyleUtilProvider);
     final styleString = await util.getStyle(
-      colorScheme: savedState.colorScheme ??
+      colorScheme:
+          savedState.colorScheme ??
           switch (savedState.theme) {
             MapTheme.light => MapColorScheme.light(),
             MapTheme.dark => MapColorScheme.dark(),

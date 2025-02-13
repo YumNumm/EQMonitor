@@ -69,19 +69,12 @@ class KyoshinMonitorScale extends StatelessWidget {
   /// 各値に対応する位置と色を計算します
   List<({double position, double value, Color color})> get colorStops {
     final values = type.scaleValues;
-    return List.generate(
-      values.length,
-      (i) {
-        final value = values[i];
-        final position = type.convertToPosition(value);
-        final colorIndex = (position * (_colors.length - 1)).round();
-        return (
-          position: position,
-          value: value,
-          color: _colors[colorIndex].$2,
-        );
-      },
-    );
+    return List.generate(values.length, (i) {
+      final value = values[i];
+      final position = type.convertToPosition(value);
+      final colorIndex = (position * (_colors.length - 1)).round();
+      return (position: position, value: value, color: _colors[colorIndex].$2);
+    });
   }
 
   @override
@@ -95,10 +88,7 @@ class KyoshinMonitorScale extends StatelessWidget {
         orientation: orientation,
         textPosition: textPosition,
         textColor: textColor,
-        textStyle: textStyle ??
-            const TextStyle(
-              fontSize: 10,
-            ),
+        textStyle: textStyle ?? const TextStyle(fontSize: 10),
         gradientDirection: gradientDirection,
       ),
     );
@@ -175,8 +165,7 @@ enum KyoshinMonitorScaleType {
   pgv,
 
   /// 最大変位（PGD: Peak Ground Displacement）
-  pgd,
-  ;
+  pgd;
 
   /// 値を0-1の範囲に正規化する
   ///
@@ -192,44 +181,44 @@ enum KyoshinMonitorScaleType {
 
   /// 単位を取得
   String get unit => switch (this) {
-        KyoshinMonitorScaleType.intensity => '',
-        KyoshinMonitorScaleType.pga => 'gal',
-        KyoshinMonitorScaleType.pgv => 'cm/s',
-        KyoshinMonitorScaleType.pgd => 'cm',
-      };
+    KyoshinMonitorScaleType.intensity => '',
+    KyoshinMonitorScaleType.pga => 'gal',
+    KyoshinMonitorScaleType.pgv => 'cm/s',
+    KyoshinMonitorScaleType.pgd => 'cm',
+  };
 
   /// タイトルを取得
   String get title => switch (this) {
-        KyoshinMonitorScaleType.intensity => '震度',
-        KyoshinMonitorScaleType.pga => 'PGA',
-        KyoshinMonitorScaleType.pgv => 'PGV',
-        KyoshinMonitorScaleType.pgd => 'PGD',
-      };
+    KyoshinMonitorScaleType.intensity => '震度',
+    KyoshinMonitorScaleType.pga => 'PGA',
+    KyoshinMonitorScaleType.pgv => 'PGV',
+    KyoshinMonitorScaleType.pgd => 'PGD',
+  };
 
   /// 最小値を取得
   double get minValue => switch (this) {
-        KyoshinMonitorScaleType.intensity => -3.0,
-        KyoshinMonitorScaleType.pga => 0.01,
-        KyoshinMonitorScaleType.pgv => 0.001,
-        KyoshinMonitorScaleType.pgd => 0.0001,
-      };
+    KyoshinMonitorScaleType.intensity => -3.0,
+    KyoshinMonitorScaleType.pga => 0.01,
+    KyoshinMonitorScaleType.pgv => 0.001,
+    KyoshinMonitorScaleType.pgd => 0.0001,
+  };
 
   /// 最大値を取得
   double get maxValue => switch (this) {
-        KyoshinMonitorScaleType.intensity => 7.0,
-        KyoshinMonitorScaleType.pga => 1000.0,
-        KyoshinMonitorScaleType.pgv => 100.0,
-        KyoshinMonitorScaleType.pgd => 10.0,
-      };
+    KyoshinMonitorScaleType.intensity => 7.0,
+    KyoshinMonitorScaleType.pga => 1000.0,
+    KyoshinMonitorScaleType.pgv => 100.0,
+    KyoshinMonitorScaleType.pgd => 10.0,
+  };
 
   /// スケール値のリストを取得
   List<double> get scaleValues => switch (this) {
-        KyoshinMonitorScaleType.intensity =>
-          List.generate(11, (i) => i - 3).map((e) => e.toDouble()).toList(),
-        KyoshinMonitorScaleType.pga => _generateLogValues(0.01, 1000),
-        KyoshinMonitorScaleType.pgv => _generateLogValues(0.001, 100),
-        KyoshinMonitorScaleType.pgd => _generateLogValues(0.0001, 10),
-      };
+    KyoshinMonitorScaleType.intensity =>
+      List.generate(11, (i) => i - 3).map((e) => e.toDouble()).toList(),
+    KyoshinMonitorScaleType.pga => _generateLogValues(0.01, 1000),
+    KyoshinMonitorScaleType.pgv => _generateLogValues(0.001, 100),
+    KyoshinMonitorScaleType.pgd => _generateLogValues(0.0001, 10),
+  };
 
   /// 対数スケールの値を生成
   List<double> _generateLogValues(double min, double max) {
@@ -295,51 +284,52 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
       begin: switch ((orientation, gradientDirection)) {
         (
           KyoshinMonitorScaleOrientation.horizontal,
-          KyoshinMonitorScaleGradientDirection.forward
+          KyoshinMonitorScaleGradientDirection.forward,
         ) =>
           Alignment.centerLeft,
         (
           KyoshinMonitorScaleOrientation.horizontal,
-          KyoshinMonitorScaleGradientDirection.reverse
+          KyoshinMonitorScaleGradientDirection.reverse,
         ) =>
           Alignment.centerRight,
         (
           KyoshinMonitorScaleOrientation.vertical,
-          KyoshinMonitorScaleGradientDirection.forward
+          KyoshinMonitorScaleGradientDirection.forward,
         ) =>
           Alignment.topCenter,
         (
           KyoshinMonitorScaleOrientation.vertical,
-          KyoshinMonitorScaleGradientDirection.reverse
+          KyoshinMonitorScaleGradientDirection.reverse,
         ) =>
           Alignment.bottomCenter,
       },
       end: switch ((orientation, gradientDirection)) {
         (
           KyoshinMonitorScaleOrientation.horizontal,
-          KyoshinMonitorScaleGradientDirection.forward
+          KyoshinMonitorScaleGradientDirection.forward,
         ) =>
           Alignment.centerRight,
         (
           KyoshinMonitorScaleOrientation.horizontal,
-          KyoshinMonitorScaleGradientDirection.reverse
+          KyoshinMonitorScaleGradientDirection.reverse,
         ) =>
           Alignment.centerLeft,
         (
           KyoshinMonitorScaleOrientation.vertical,
-          KyoshinMonitorScaleGradientDirection.forward
+          KyoshinMonitorScaleGradientDirection.forward,
         ) =>
           Alignment.bottomCenter,
         (
           KyoshinMonitorScaleOrientation.vertical,
-          KyoshinMonitorScaleGradientDirection.reverse
+          KyoshinMonitorScaleGradientDirection.reverse,
         ) =>
           Alignment.topCenter,
       },
     );
-    final paint = Paint()
-      ..shader = gradient.createShader(rect)
-      ..style = PaintingStyle.fill;
+    final paint =
+        Paint()
+          ..shader = gradient.createShader(rect)
+          ..style = PaintingStyle.fill;
 
     canvas.drawRect(rect, paint);
 
@@ -350,10 +340,11 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
     );
 
     // 目盛り線の描画用のペイント
-    final tickPaint = Paint()
-      ..color = textColor
-      ..strokeWidth = 1.0
-      ..style = PaintingStyle.stroke;
+    final tickPaint =
+        Paint()
+          ..color = textColor
+          ..strokeWidth = 1.0
+          ..style = PaintingStyle.stroke;
 
     // 目盛りを描画する間隔を決定（震度は1固定）
     final interval =
@@ -378,7 +369,8 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
           gradientDirection == KyoshinMonitorScaleGradientDirection.reverse
               ? 1 - stop.position
               : stop.position;
-      final position = basePosition *
+      final position =
+          basePosition *
           (orientation == KyoshinMonitorScaleOrientation.horizontal
               ? size.width
               : size.height);
@@ -415,9 +407,7 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
       textPainter
         ..text = TextSpan(
           text: text,
-          style: textStyle.copyWith(
-            color: textColor,
-          ),
+          style: textStyle.copyWith(color: textColor),
         )
         ..layout();
 
@@ -430,9 +420,10 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
           );
         case KyoshinMonitorScaleOrientation.vertical:
           // 重ならない場合は通常通り表示
-          final x = textPosition == KyoshinMonitorScaleTextPosition.start
-              ? -textPainter.width - 6
-              : size.width + 6;
+          final x =
+              textPosition == KyoshinMonitorScaleTextPosition.start
+                  ? -textPainter.width - 6
+                  : size.width + 6;
           textPainter.paint(
             canvas,
             Offset(x, position - textPainter.height / 2),

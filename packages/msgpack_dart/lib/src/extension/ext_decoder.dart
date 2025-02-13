@@ -11,12 +11,16 @@ class ExtTimeStampDecoder implements ExtDecoder {
       }
       if (list.lengthInBytes == 8) {
         // 30bit unsigned int: nano seconds
-        final data =
-            ByteData.view(list.buffer, list.offsetInBytes).getUint64(0);
+        final data = ByteData.view(
+          list.buffer,
+          list.offsetInBytes,
+        ).getUint64(0);
         final nanoSec = data >> 34;
         final sec = data & 0x3fffffff;
-        return DateTime.fromMicrosecondsSinceEpoch(sec * 1000 + nanoSec,
-            isUtc: true);
+        return DateTime.fromMicrosecondsSinceEpoch(
+          sec * 1000 + nanoSec,
+          isUtc: true,
+        );
       }
     }
     if (extType == 0x12) {

@@ -10,17 +10,17 @@ class EewHypocenterLayerController extends _$EewHypocenterLayerController {
   @override
   EewHypocenterLayer build(EewHypocenterIcon icon) {
     ref
-      ..listen(
-        eewAliveTelegramProvider,
-        (_, next) {
-          final hypocenters = (next ?? [])
-              .where(
-                (eew) {
-                  final isLowPrecise = eew.isLevelEew ||
+      ..listen(eewAliveTelegramProvider, (_, next) {
+        final hypocenters =
+            (next ?? [])
+                .where((eew) {
+                  final isLowPrecise =
+                      eew.isLevelEew ||
                       (eew.isPlum ?? false) ||
                       (eew.isIpfOnePoint);
 
-                  final base = eew.latitude != null &&
+                  final base =
+                      eew.latitude != null &&
                       eew.longitude != null &&
                       !eew.isCanceled;
 
@@ -28,29 +28,20 @@ class EewHypocenterLayerController extends _$EewHypocenterLayerController {
                     EewHypocenterIcon.normal => base && !isLowPrecise,
                     EewHypocenterIcon.lowPrecise => base && isLowPrecise,
                   };
-                },
-              )
-              .map(
-                (eew) => EewHypocenter(
-                  latitude: eew.latitude!,
-                  longitude: eew.longitude!,
-                ),
-              )
-              .toList();
+                })
+                .map(
+                  (eew) => EewHypocenter(
+                    latitude: eew.latitude!,
+                    longitude: eew.longitude!,
+                  ),
+                )
+                .toList();
 
-          state = state.copyWith(
-            hypocenters: hypocenters,
-          );
-        },
-      )
-      ..listen(
-        timeTickerProvider(const Duration(milliseconds: 500)),
-        (_, __) {
-          state = state.copyWith(
-            visible: !state.visible,
-          );
-        },
-      );
+        state = state.copyWith(hypocenters: hypocenters);
+      })
+      ..listen(timeTickerProvider(const Duration(milliseconds: 500)), (_, __) {
+        state = state.copyWith(visible: !state.visible);
+      });
 
     return EewHypocenterLayer(
       id: 'eew-hypocenter-${icon.name}',

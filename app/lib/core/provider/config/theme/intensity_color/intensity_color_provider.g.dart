@@ -14,14 +14,15 @@ String _$intensityColorHash() => r'9c5f1148d0001d84e37f1a0bb14d65cdaee14795';
 @ProviderFor(IntensityColor)
 final intensityColorProvider =
     NotifierProvider<IntensityColor, IntensityColorModel>.internal(
-  IntensityColor.new,
-  name: r'intensityColorProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$intensityColorHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      IntensityColor.new,
+      name: r'intensityColorProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$intensityColorHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$IntensityColor = Notifier<IntensityColorModel>;
 // ignore_for_file: type=lint

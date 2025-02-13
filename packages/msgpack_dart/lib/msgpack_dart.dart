@@ -9,10 +9,7 @@ part 'src/deserializer.dart';
 part 'src/extension/ext_decoder.dart';
 part 'src/serializer.dart';
 
-Uint8List serialize(
-  dynamic value, {
-  ExtEncoder? extEncoder,
-}) {
+Uint8List serialize(dynamic value, {ExtEncoder? extEncoder}) {
   final s = Serializer(extEncoder: extEncoder);
   s.encode(value);
   return s.takeBytes();

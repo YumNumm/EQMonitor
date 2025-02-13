@@ -16,10 +16,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class EarthquakeHypoInfoWidget extends HookConsumerWidget {
-  const EarthquakeHypoInfoWidget({
-    required this.item,
-    super.key,
-  });
+  const EarthquakeHypoInfoWidget({required this.item, super.key});
 
   final EarthquakeV1Extended item;
 
@@ -32,8 +29,9 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
     final isVolcano = item.isVolcano;
     final maxIntensity = item.maxIntensity;
     final colorScheme = switch (maxIntensity) {
-      final JmaIntensity intensity =>
-        intensityColorScheme.fromJmaIntensity(intensity),
+      final JmaIntensity intensity => intensityColorScheme.fromJmaIntensity(
+        intensity,
+      ),
       _ when isVolcano => intensityColorScheme.sixUpper,
       _ => null,
     };
@@ -52,73 +50,79 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
       [item.epicenterDetailCode],
     );
 
-    final maxIntensityWidget = maxIntensity != null
-        ? Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('最大震度', style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 4),
-              JmaIntensityIcon(
-                type: IntensityIconType.filled,
-                size: 60,
-                intensity: maxIntensity,
-              ),
-            ],
-          )
-        : null;
+    final maxIntensityWidget =
+        maxIntensity != null
+            ? Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  '最大震度',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 4),
+                JmaIntensityIcon(
+                  type: IntensityIconType.filled,
+                  size: 60,
+                  intensity: maxIntensity,
+                ),
+              ],
+            )
+            : null;
     // 「分頃(日本時間)」の後から「火山で大規模な噴火が発生しました」 の間の文字列
     final volcanoName = item.volcanoName;
-    final volcanoWidget = isVolcano
-        ? Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  Flexible(
-                    child: Text(
-                      '火山の大規模な噴火',
-                      style: textTheme.titleMedium!.copyWith(
-                        color: textTheme.titleMedium!.color!
-                            .withValues(alpha: 0.8),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  Flexible(
-                    child: Text(
-                      volcanoName ?? '不明',
-                      style: textTheme.headlineMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Flexible(
-                child: Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: hypoName?.name ?? '不明',
-                        style: textTheme.titleMedium,
-                      ),
-                      if (hypoDetailName != null) ...[
-                        const TextSpan(text: ' '),
-                        TextSpan(
-                          text: '(${hypoDetailName.name})',
-                          style: textTheme.titleSmall,
+    final volcanoWidget =
+        isVolcano
+            ? Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        '火山の大規模な噴火',
+                        style: textTheme.titleMedium!.copyWith(
+                          color: textTheme.titleMedium!.color!.withValues(
+                            alpha: 0.8,
+                          ),
                         ),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        volcanoName ?? '不明',
+                        style: textTheme.headlineMedium!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Flexible(
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: hypoName?.name ?? '不明',
+                          style: textTheme.titleMedium,
+                        ),
+                        if (hypoDetailName != null) ...[
+                          const TextSpan(text: ' '),
+                          TextSpan(
+                            text: '(${hypoDetailName.name})',
+                            style: textTheme.titleSmall,
+                          ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          )
-        : null;
+              ],
+            )
+            : null;
     // 「MaxInt, 震源地, 規模」
     final hypoWidget = Row(
       textBaseline: TextBaseline.ideographic,
@@ -162,35 +166,23 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
     final creationDateFromEventId = EventId(item.eventId).toCreationDate();
 
     // 地震発生時刻
-    final timeText =
-        switch ((item.originTime, item.arrivalTime, creationDateFromEventId)) {
+    final timeText = switch ((
+      item.originTime,
+      item.arrivalTime,
+      creationDateFromEventId,
+    )) {
       (final DateTime originTime, _, _) when isVolcano =>
-        "噴火時刻: ${DateFormat('yyyy/MM/dd HH:mm頃').format(
-          originTime.toLocal(),
-        )}",
+        "噴火時刻: ${DateFormat('yyyy/MM/dd HH:mm頃').format(originTime.toLocal())}",
       (final DateTime originTime, _, _) =>
-        "発生時刻: ${DateFormat('yyyy/MM/dd HH:mm頃').format(
-          originTime.toLocal(),
-        )}",
+        "発生時刻: ${DateFormat('yyyy/MM/dd HH:mm頃').format(originTime.toLocal())}",
       (_, final DateTime arrivalTime, _) =>
-        "検知時刻: ${DateFormat('yyyy/MM/dd HH:mm頃').format(
-          arrivalTime.toLocal(),
-        )}",
+        "検知時刻: ${DateFormat('yyyy/MM/dd HH:mm頃').format(arrivalTime.toLocal())}",
       (_, _, final DateTime creationDateFromEventId) =>
-        "時刻: ${DateFormat('yyyy/MM/dd HH:mm頃').format(
-          creationDateFromEventId,
-        )}",
+        "時刻: ${DateFormat('yyyy/MM/dd HH:mm頃').format(creationDateFromEventId)}",
       _ => null,
     };
-    final timeWidget = timeText != null
-        ? Wrap(
-            children: [
-              Text(
-                timeText,
-              ),
-            ],
-          )
-        : null;
+    final timeWidget =
+        timeText != null ? Wrap(children: [Text(timeText)]) : null;
 
     // 「M 8.0 / 深さ100km」
     final magnitudeWidget = Row(
@@ -207,10 +199,7 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
           ),
         Flexible(
           child: Text(
-            switch ((
-              item.magnitudeCondition,
-              item.magnitude,
-            )) {
+            switch ((item.magnitudeCondition, item.magnitude)) {
               (final String cond, _) => cond.toHalfWidth,
               (_, final double value) => value.toStringAsFixed(1),
               // vxse53がある場合
@@ -221,9 +210,9 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
                     ? textTheme.headlineLarge
                     : textTheme.displaySmall)!
                 .copyWith(
-              fontWeight: FontWeight.bold,
-              fontFamily: FontFamily.notoSansJP,
-            ),
+                  fontWeight: FontWeight.bold,
+                  fontFamily: FontFamily.notoSansJP,
+                ),
           ),
         ),
       ],
@@ -272,8 +261,8 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
     // M・深さ ともに不明の場合
     final isMagnitudeAndDepthUnknown =
         (item.magnitudeCondition?.toHalfWidth == 'M不明' ||
-                item.magnitude == null) &&
-            item.depth == null;
+            item.magnitude == null) &&
+        item.depth == null;
     final magnitudeDepthUnknownWidget = Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -351,9 +340,7 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
     final card = Card(
       margin: const EdgeInsets.symmetric(
         horizontal: 8,
-      ).add(
-        const EdgeInsets.only(bottom: 4),
-      ),
+      ).add(const EdgeInsets.only(bottom: 4)),
       elevation: 0,
 
       shadowColor: Colors.transparent,
@@ -365,13 +352,11 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
           width: 0,
         ),
       ),
-      color: (colorScheme?.background ?? Colors.transparent)
-          .withValues(alpha: 0.3),
+      color: (colorScheme?.background ?? Colors.transparent).withValues(
+        alpha: 0.3,
+      ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8,
-          vertical: 4,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Column(
           children: [
             Row(

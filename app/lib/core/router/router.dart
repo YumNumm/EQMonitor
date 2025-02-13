@@ -50,23 +50,18 @@ final isInitializedStateProvider = StateProvider<bool>((ref) => false);
 
 @Riverpod(keepAlive: true)
 GoRouter goRouter(Ref ref) => GoRouter(
-      routes: $appRoutes,
-      navigatorKey: App.navigatorKey,
-      initialLocation:
-          (ref.read(sharedPreferencesProvider).getBool('isInitialized') ??
-                  false)
-              ? const HomeRoute().location
-              : const SetupRoute().location,
-      observers: [
-        _NavigatorObserver(
-          talker,
-        ),
-        FirebaseAnalyticsObserver(
-          analytics: FirebaseAnalytics.instance,
-        ),
-      ],
-      debugLogDiagnostics: kDebugMode,
-    );
+  routes: $appRoutes,
+  navigatorKey: App.navigatorKey,
+  initialLocation:
+      (ref.read(sharedPreferencesProvider).getBool('isInitialized') ?? false)
+          ? const HomeRoute().location
+          : const SetupRoute().location,
+  observers: [
+    _NavigatorObserver(talker),
+    FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
+  ],
+  debugLogDiagnostics: kDebugMode,
+);
 
 class GoRouterRedirectException implements Exception {
   GoRouterRedirectException(this.message);
@@ -74,9 +69,7 @@ class GoRouterRedirectException implements Exception {
   final String message;
 }
 
-@TypedGoRoute<SetupRoute>(
-  path: '/setup',
-)
+@TypedGoRoute<SetupRoute>(path: '/setup')
 class SetupRoute extends GoRouteData {
   const SetupRoute();
 
@@ -98,17 +91,13 @@ class EarthquakeHistoryRoute extends GoRouteData {
   path: '/earthquake-history-details/:eventId',
 )
 class EarthquakeHistoryDetailsRoute extends GoRouteData {
-  const EarthquakeHistoryDetailsRoute({
-    required this.eventId,
-  });
+  const EarthquakeHistoryDetailsRoute({required this.eventId});
 
   final int eventId;
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return EarthquakeHistoryDetailsPage(
-      eventId: eventId,
-    );
+    return EarthquakeHistoryDetailsPage(eventId: eventId);
   }
 }
 
@@ -125,17 +114,13 @@ class InformationHistoryRoute extends GoRouteData {
   path: '/information-history-details',
 )
 class InformationHistoryDetailsRoute extends GoRouteData {
-  const InformationHistoryDetailsRoute({
-    required this.$extra,
-  });
+  const InformationHistoryDetailsRoute({required this.$extra});
 
   final InformationV3 $extra;
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      InformationHistoryDetailsPage(
-        data: $extra,
-      );
+      InformationHistoryDetailsPage(data: $extra);
 }
 
 @TypedGoRoute<HomeRoute>(
@@ -144,9 +129,7 @@ class InformationHistoryDetailsRoute extends GoRouteData {
     TypedGoRoute<EarthquakeHistoryEarlyRoute>(
       path: 'earthquake-history-early',
       routes: [
-        TypedGoRoute<EarthquakeHistoryEarlyDetailsRoute>(
-          path: 'details/:id',
-        ),
+        TypedGoRoute<EarthquakeHistoryEarlyDetailsRoute>(path: 'details/:id'),
       ],
     ),
     TypedGoRoute<EewDetailsByEventIdRoute>(
@@ -159,9 +142,7 @@ class HomeRoute extends GoRouteData {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) =>
-      const MaterialExtendedPage<void>(
-        child: HomePage(),
-      );
+      const MaterialExtendedPage<void>(child: HomePage());
 }
 
 @TypedGoRoute<TalkerRoute>(path: '/talker')
@@ -178,21 +159,13 @@ class TalkerRoute extends GoRouteData {
     TypedGoRoute<NotificationRoute>(
       path: 'notification',
       routes: [
-        TypedGoRoute<NotificationEarthquakeRoute>(
-          path: 'earthquake',
-        ),
-        TypedGoRoute<NotificationEewRoute>(
-          path: 'eew',
-        ),
+        TypedGoRoute<NotificationEarthquakeRoute>(path: 'earthquake'),
+        TypedGoRoute<NotificationEewRoute>(path: 'eew'),
       ],
     ),
     TypedGoRoute<DisplayRoute>(
       path: 'display',
-      routes: [
-        TypedGoRoute<ColorSchemeConfigRoute>(
-          path: 'color-schema',
-        ),
-      ],
+      routes: [TypedGoRoute<ColorSchemeConfigRoute>(path: 'color-schema')],
     ),
     TypedGoRoute<KyoshinMonitorAboutRoute>(
       path: 'kyoshin-monitor-about',
@@ -202,28 +175,14 @@ class TalkerRoute extends GoRouteData {
         ),
       ],
     ),
-    TypedGoRoute<TermOfServiceRoute>(
-      path: 'term-of-service',
-    ),
-    TypedGoRoute<PrivacyPolicyRoute>(
-      path: 'privacy-policy',
-    ),
-    TypedGoRoute<LicenseRoute>(
-      path: 'license',
-    ),
-    TypedGoRoute<EarthquakeHistoryConfigRoute>(
-      path: 'earthquake-history',
-    ),
-    TypedGoRoute<AboutThisAppRoute>(
-      path: 'about-this-app',
-    ),
+    TypedGoRoute<TermOfServiceRoute>(path: 'term-of-service'),
+    TypedGoRoute<PrivacyPolicyRoute>(path: 'privacy-policy'),
+    TypedGoRoute<LicenseRoute>(path: 'license'),
+    TypedGoRoute<EarthquakeHistoryConfigRoute>(path: 'earthquake-history'),
+    TypedGoRoute<AboutThisAppRoute>(path: 'about-this-app'),
     TypedGoRoute<DonationRoute>(
       path: 'donation',
-      routes: [
-        TypedGoRoute<DonationExecutedRoute>(
-          path: 'executed',
-        ),
-      ],
+      routes: [TypedGoRoute<DonationExecutedRoute>(path: 'executed')],
     ),
     TypedGoRoute<DebuggerRoute>(
       path: 'debugger',
@@ -234,12 +193,8 @@ class TalkerRoute extends GoRouteData {
         TypedGoRoute<WebsocketEndpointSelectorRoute>(
           path: 'websocket-api-endpoint-selector',
         ),
-        TypedGoRoute<DebugKyoshinMonitorRoute>(
-          path: 'kyoshin-monitor',
-        ),
-        TypedGoRoute<PlaygroundRoute>(
-          path: 'playground',
-        ),
+        TypedGoRoute<DebugKyoshinMonitorRoute>(path: 'kyoshin-monitor'),
+        TypedGoRoute<PlaygroundRoute>(path: 'playground'),
       ],
     ),
   ],
@@ -321,17 +276,12 @@ class TermOfServiceRoute extends GoRouteData {
     this.showAcceptButton = false,
   });
 
-  final void Function({
-    bool isAccepted,
-  })? $extra;
+  final void Function({bool isAccepted})? $extra;
   final bool showAcceptButton;
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      TermOfServiceScreen(
-        onResult: $extra,
-        showAcceptButton: showAcceptButton,
-      );
+      TermOfServiceScreen(onResult: $extra, showAcceptButton: showAcceptButton);
 }
 
 class ColorSchemeConfigRoute extends GoRouteData {
@@ -348,17 +298,12 @@ class PrivacyPolicyRoute extends GoRouteData {
     this.showAcceptButton = false,
   });
 
-  final void Function({
-    bool isAccepted,
-  })? $extra;
+  final void Function({bool isAccepted})? $extra;
   final bool showAcceptButton;
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      PrivacyPolicyScreen(
-        onResult: $extra,
-        showAcceptButton: showAcceptButton,
-      );
+      PrivacyPolicyScreen(onResult: $extra, showAcceptButton: showAcceptButton);
 }
 
 class LicenseRoute extends GoRouteData {
@@ -384,23 +329,16 @@ class DonationRoute extends GoRouteData {
   Page<void> buildPage(BuildContext context, GoRouterState state) =>
       CustomTransitionPage(
         child: const DonationScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-            FadeTransition(
-          opacity: animation,
-          child: child,
-        ),
+        transitionsBuilder:
+            (context, animation, secondaryAnimation, child) =>
+                FadeTransition(opacity: animation, child: child),
       );
 }
 
-typedef DonationExecutedRouteExtra = (
-  StoreProduct,
-  CustomerInfo,
-);
+typedef DonationExecutedRouteExtra = (StoreProduct, CustomerInfo);
 
 class DonationExecutedRoute extends GoRouteData {
-  const DonationExecutedRoute({
-    required this.$extra,
-  });
+  const DonationExecutedRoute({required this.$extra});
 
   final DonationExecutedRouteExtra $extra;
 
@@ -421,11 +359,7 @@ class _NavigatorObserver extends NavigatorObserver {
       if (kIsWeb) {
         return;
       }
-      unawaited(
-        FirebaseAnalytics.instance.logScreenView(
-          screenName: page,
-        ),
-      );
+      unawaited(FirebaseAnalytics.instance.logScreenView(screenName: page));
     }
   }
 }

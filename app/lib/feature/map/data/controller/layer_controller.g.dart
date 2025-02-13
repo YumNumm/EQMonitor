@@ -17,14 +17,15 @@ String _$mapLayerControllerHash() =>
 @ProviderFor(MapLayerController)
 final mapLayerControllerProvider =
     AutoDisposeNotifierProvider<MapLayerController, List<MapLayer>>.internal(
-  MapLayerController.new,
-  name: r'mapLayerControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$mapLayerControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      MapLayerController.new,
+      name: r'mapLayerControllerProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$mapLayerControllerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$MapLayerController = AutoDisposeNotifier<List<MapLayer>>;
 // ignore_for_file: type=lint

@@ -12,10 +12,12 @@ part of 'notification_settings_response.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 NotificationSettingsResponse _$NotificationSettingsResponseFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _NotificationSettingsResponse.fromJson(json);
 }
 
@@ -32,25 +34,31 @@ mixin _$NotificationSettingsResponse {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   $NotificationSettingsResponseCopyWith<NotificationSettingsResponse>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $NotificationSettingsResponseCopyWith<$Res> {
   factory $NotificationSettingsResponseCopyWith(
-          NotificationSettingsResponse value,
-          $Res Function(NotificationSettingsResponse) then) =
-      _$NotificationSettingsResponseCopyWithImpl<$Res,
-          NotificationSettingsResponse>;
+    NotificationSettingsResponse value,
+    $Res Function(NotificationSettingsResponse) then,
+  ) =
+      _$NotificationSettingsResponseCopyWithImpl<
+        $Res,
+        NotificationSettingsResponse
+      >;
   @useResult
-  $Res call(
-      {List<DevicesEarthquakeSettings> earthquake,
-      List<DevicesEewSettings> eew});
+  $Res call({
+    List<DevicesEarthquakeSettings> earthquake,
+    List<DevicesEewSettings> eew,
+  });
 }
 
 /// @nodoc
-class _$NotificationSettingsResponseCopyWithImpl<$Res,
-        $Val extends NotificationSettingsResponse>
+class _$NotificationSettingsResponseCopyWithImpl<
+  $Res,
+  $Val extends NotificationSettingsResponse
+>
     implements $NotificationSettingsResponseCopyWith<$Res> {
   _$NotificationSettingsResponseCopyWithImpl(this._value, this._then);
 
@@ -63,20 +71,22 @@ class _$NotificationSettingsResponseCopyWithImpl<$Res,
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? earthquake = null,
-    Object? eew = null,
-  }) {
-    return _then(_value.copyWith(
-      earthquake: null == earthquake
-          ? _value.earthquake
-          : earthquake // ignore: cast_nullable_to_non_nullable
-              as List<DevicesEarthquakeSettings>,
-      eew: null == eew
-          ? _value.eew
-          : eew // ignore: cast_nullable_to_non_nullable
-              as List<DevicesEewSettings>,
-    ) as $Val);
+  $Res call({Object? earthquake = null, Object? eew = null}) {
+    return _then(
+      _value.copyWith(
+            earthquake:
+                null == earthquake
+                    ? _value.earthquake
+                    : earthquake // ignore: cast_nullable_to_non_nullable
+                        as List<DevicesEarthquakeSettings>,
+            eew:
+                null == eew
+                    ? _value.eew
+                    : eew // ignore: cast_nullable_to_non_nullable
+                        as List<DevicesEewSettings>,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -84,44 +94,49 @@ class _$NotificationSettingsResponseCopyWithImpl<$Res,
 abstract class _$$NotificationSettingsResponseImplCopyWith<$Res>
     implements $NotificationSettingsResponseCopyWith<$Res> {
   factory _$$NotificationSettingsResponseImplCopyWith(
-          _$NotificationSettingsResponseImpl value,
-          $Res Function(_$NotificationSettingsResponseImpl) then) =
-      __$$NotificationSettingsResponseImplCopyWithImpl<$Res>;
+    _$NotificationSettingsResponseImpl value,
+    $Res Function(_$NotificationSettingsResponseImpl) then,
+  ) = __$$NotificationSettingsResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {List<DevicesEarthquakeSettings> earthquake,
-      List<DevicesEewSettings> eew});
+  $Res call({
+    List<DevicesEarthquakeSettings> earthquake,
+    List<DevicesEewSettings> eew,
+  });
 }
 
 /// @nodoc
 class __$$NotificationSettingsResponseImplCopyWithImpl<$Res>
-    extends _$NotificationSettingsResponseCopyWithImpl<$Res,
-        _$NotificationSettingsResponseImpl>
+    extends
+        _$NotificationSettingsResponseCopyWithImpl<
+          $Res,
+          _$NotificationSettingsResponseImpl
+        >
     implements _$$NotificationSettingsResponseImplCopyWith<$Res> {
   __$$NotificationSettingsResponseImplCopyWithImpl(
-      _$NotificationSettingsResponseImpl _value,
-      $Res Function(_$NotificationSettingsResponseImpl) _then)
-      : super(_value, _then);
+    _$NotificationSettingsResponseImpl _value,
+    $Res Function(_$NotificationSettingsResponseImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of NotificationSettingsResponse
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? earthquake = null,
-    Object? eew = null,
-  }) {
-    return _then(_$NotificationSettingsResponseImpl(
-      earthquake: null == earthquake
-          ? _value._earthquake
-          : earthquake // ignore: cast_nullable_to_non_nullable
-              as List<DevicesEarthquakeSettings>,
-      eew: null == eew
-          ? _value._eew
-          : eew // ignore: cast_nullable_to_non_nullable
-              as List<DevicesEewSettings>,
-    ));
+  $Res call({Object? earthquake = null, Object? eew = null}) {
+    return _then(
+      _$NotificationSettingsResponseImpl(
+        earthquake:
+            null == earthquake
+                ? _value._earthquake
+                : earthquake // ignore: cast_nullable_to_non_nullable
+                    as List<DevicesEarthquakeSettings>,
+        eew:
+            null == eew
+                ? _value._eew
+                : eew // ignore: cast_nullable_to_non_nullable
+                    as List<DevicesEewSettings>,
+      ),
+    );
   }
 }
 
@@ -129,15 +144,15 @@ class __$$NotificationSettingsResponseImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$NotificationSettingsResponseImpl
     implements _NotificationSettingsResponse {
-  const _$NotificationSettingsResponseImpl(
-      {required final List<DevicesEarthquakeSettings> earthquake,
-      required final List<DevicesEewSettings> eew})
-      : _earthquake = earthquake,
-        _eew = eew;
+  const _$NotificationSettingsResponseImpl({
+    required final List<DevicesEarthquakeSettings> earthquake,
+    required final List<DevicesEewSettings> eew,
+  }) : _earthquake = earthquake,
+       _eew = eew;
 
   factory _$NotificationSettingsResponseImpl.fromJson(
-          Map<String, dynamic> json) =>
-      _$$NotificationSettingsResponseImplFromJson(json);
+    Map<String, dynamic> json,
+  ) => _$$NotificationSettingsResponseImplFromJson(json);
 
   final List<DevicesEarthquakeSettings> _earthquake;
   @override
@@ -165,17 +180,20 @@ class _$NotificationSettingsResponseImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$NotificationSettingsResponseImpl &&
-            const DeepCollectionEquality()
-                .equals(other._earthquake, _earthquake) &&
+            const DeepCollectionEquality().equals(
+              other._earthquake,
+              _earthquake,
+            ) &&
             const DeepCollectionEquality().equals(other._eew, _eew));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_earthquake),
-      const DeepCollectionEquality().hash(_eew));
+    runtimeType,
+    const DeepCollectionEquality().hash(_earthquake),
+    const DeepCollectionEquality().hash(_eew),
+  );
 
   /// Create a copy of NotificationSettingsResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -183,24 +201,24 @@ class _$NotificationSettingsResponseImpl
   @override
   @pragma('vm:prefer-inline')
   _$$NotificationSettingsResponseImplCopyWith<
-          _$NotificationSettingsResponseImpl>
-      get copyWith => __$$NotificationSettingsResponseImplCopyWithImpl<
-          _$NotificationSettingsResponseImpl>(this, _$identity);
+    _$NotificationSettingsResponseImpl
+  >
+  get copyWith => __$$NotificationSettingsResponseImplCopyWithImpl<
+    _$NotificationSettingsResponseImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$NotificationSettingsResponseImplToJson(
-      this,
-    );
+    return _$$NotificationSettingsResponseImplToJson(this);
   }
 }
 
 abstract class _NotificationSettingsResponse
     implements NotificationSettingsResponse {
-  const factory _NotificationSettingsResponse(
-          {required final List<DevicesEarthquakeSettings> earthquake,
-          required final List<DevicesEewSettings> eew}) =
-      _$NotificationSettingsResponseImpl;
+  const factory _NotificationSettingsResponse({
+    required final List<DevicesEarthquakeSettings> earthquake,
+    required final List<DevicesEewSettings> eew,
+  }) = _$NotificationSettingsResponseImpl;
 
   factory _NotificationSettingsResponse.fromJson(Map<String, dynamic> json) =
       _$NotificationSettingsResponseImpl.fromJson;
@@ -215,6 +233,7 @@ abstract class _NotificationSettingsResponse
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotificationSettingsResponseImplCopyWith<
-          _$NotificationSettingsResponseImpl>
-      get copyWith => throw _privateConstructorUsedError;
+    _$NotificationSettingsResponseImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }

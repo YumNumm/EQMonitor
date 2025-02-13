@@ -14,14 +14,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'jma_parameter.g.dart';
 
-typedef JmaParameterState = ({
-  EarthquakeParameter earthquake,
-  TsunamiParameter tsunami,
-});
+typedef JmaParameterState =
+    ({EarthquakeParameter earthquake, TsunamiParameter tsunami});
 
-@Riverpod(
-  keepAlive: true,
-)
+@Riverpod(keepAlive: true)
 class JmaParameter extends _$JmaParameter {
   @override
   Stream<JmaParameterState> build() async* {
@@ -67,9 +63,10 @@ class JmaParameter extends _$JmaParameter {
 
     final cachedEtag = ref.read(earthquakeParameterEtagProvider);
     // check Etag
-    final currentEtag = await ref
-        .watch(jmaParameterApiClientProvider)
-        .getEarthquakeParameterHead();
+    final currentEtag =
+        await ref
+            .watch(jmaParameterApiClientProvider)
+            .getEarthquakeParameterHead();
     talker.log('Earthquake cachedEtag: $cachedEtag, currentEtag: $currentEtag');
     if (cachedEtag != null && cachedEtag == currentEtag && !kIsWeb) {
       return;
@@ -88,7 +85,7 @@ class JmaParameter extends _$JmaParameter {
   }
 
   Future<Result<EarthquakeParameter, Exception>>
-      _getEarthquakeFromLocal() async {
+  _getEarthquakeFromLocal() async {
     final dir = ref.read(applicationDocumentsDirectoryProvider);
     final file = File('${dir.path}/$_earthquakeFileName');
     if (file.existsSync()) {
@@ -118,9 +115,10 @@ class JmaParameter extends _$JmaParameter {
     final prefs = ref.watch(sharedPreferencesProvider);
     final cachedEtag = prefs.getString(_tsunamiKey);
     // check Etag
-    final currentEtag = await ref
-        .watch(jmaParameterApiClientProvider)
-        .getTsunamiParameterHeadEtag();
+    final currentEtag =
+        await ref
+            .watch(jmaParameterApiClientProvider)
+            .getTsunamiParameterHeadEtag();
     talker.log('Tsunami cachedEtag: $cachedEtag, currentEtag: $currentEtag');
     if (cachedEtag != null && cachedEtag == currentEtag && !kIsWeb) {
       return;

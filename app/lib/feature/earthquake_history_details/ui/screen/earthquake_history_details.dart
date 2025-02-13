@@ -24,10 +24,7 @@ import 'package:sheet/sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
-  const EarthquakeHistoryDetailsPage({
-    required this.eventId,
-    super.key,
-  });
+  const EarthquakeHistoryDetailsPage({required this.eventId, super.key});
 
   final int eventId;
 
@@ -43,37 +40,37 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
         appBar: AppBar(),
         body: switch (detailsState) {
           AsyncError(:final error) when !detailsState.isLoading => ErrorCard(
-              error: error,
-              onReload: () async => ref.refresh(
-                earthquakeHistoryDetailsNotifierProvider(eventId),
-              ),
-            ),
+            error: error,
+            onReload:
+                () async => ref.refresh(
+                  earthquakeHistoryDetailsNotifierProvider(eventId),
+                ),
+          ),
           AsyncLoading() || _ when detailsState.isLoading => Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const CircularProgressIndicator.adaptive(),
-                  const SizedBox(height: 8),
-                  Text(
-                    '各地の震度データを取得中...',
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ],
-              ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CircularProgressIndicator.adaptive(),
+                const SizedBox(height: 8),
+                Text(
+                  '各地の震度データを取得中...',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
-          _ => const Center(
-              child: CircularProgressIndicator.adaptive(),
-            ),
+          ),
+          _ => const Center(child: CircularProgressIndicator.adaptive()),
         },
       );
     }
     final maxIntensity = details.maxIntensity;
     final maxLgIntensity = details.maxLpgmIntensity;
 
-    final config = ref
-        .watch(earthquakeHistoryConfigProvider.select((value) => value.detail));
+    final config = ref.watch(
+      earthquakeHistoryConfigProvider.select((value) => value.detail),
+    );
 
     final sheetController = SheetController();
     final navigateToHomeFunction = useState<VoidCallback?>(null);
@@ -93,9 +90,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                     child: AnimatedSwitcher(
                       duration: const Duration(milliseconds: 250),
                       child: BorderedContainer(
-                        key: ValueKey(
-                          (config, maxIntensity, maxLgIntensity),
-                        ),
+                        key: ValueKey((config, maxIntensity, maxLgIntensity)),
                         margin: const EdgeInsets.all(4),
                         padding: const EdgeInsets.all(4),
                         borderRadius: BorderRadius.circular((25 / 5) + 5),
@@ -120,9 +115,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                             else
                               for (final intensity in [
                                 ...JmaIntensity.values,
-                              ].where(
-                                (e) => e <= maxIntensity,
-                              ))
+                              ].where((e) => e <= maxIntensity))
                                 JmaIntensityIcon(
                                   type: IntensityIconType.filled,
                                   intensity: intensity,
@@ -147,12 +140,12 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
                     FloatingActionButton.small(
                       heroTag: 'earthquake_history_details_layer_fab',
                       tooltip: '地図の表示レイヤーを切り替える',
-                      onPressed: () async =>
-                          showEarthquakeHistoryDetailConfigDialog(
-                        context,
-                        showCitySelector: details.intensityCities != null,
-                        hasLpgmIntensity: details.maxLpgmIntensity != null,
-                      ),
+                      onPressed:
+                          () async => showEarthquakeHistoryDetailConfigDialog(
+                            context,
+                            showCitySelector: details.intensityCities != null,
+                            hasLpgmIntensity: details.maxLpgmIntensity != null,
+                          ),
                       elevation: 4,
                       child: const Icon(Icons.layers),
                     ),
@@ -172,10 +165,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
             ],
           ),
           // Sheet
-          _Sheet(
-            sheetController: sheetController,
-            item: details,
-          ),
+          _Sheet(sheetController: sheetController, item: details),
           if (Navigator.canPop(context))
             // 戻るボタン
             SafeArea(
@@ -202,10 +192,7 @@ class EarthquakeHistoryDetailsPage extends HookConsumerWidget {
 }
 
 class _Sheet extends StatelessWidget {
-  const _Sheet({
-    required this.sheetController,
-    required this.item,
-  });
+  const _Sheet({required this.sheetController, required this.item});
 
   final SheetController sheetController;
   final EarthquakeV1Extended item;
@@ -221,9 +208,7 @@ class _Sheet extends StatelessWidget {
           const Divider(),
           PrefectureIntensityWidget(item: item.v1),
           if (item.lpgmIntensityPrefectures != null)
-            PrefectureLpgmIntensityWidget(
-              item: item,
-            ),
+            PrefectureLpgmIntensityWidget(item: item),
           _EarthquakeCommentWidget(item: item),
         ],
       ),
@@ -260,9 +245,7 @@ class _EarthquakeCommentWidget extends StatelessWidget {
             if (uri == null) {
               return;
             }
-            await launchUrl(
-              uri,
-            );
+            await launchUrl(uri);
           },
         ),
       );
@@ -272,10 +255,7 @@ class _EarthquakeCommentWidget extends StatelessWidget {
 }
 
 class EarthquakeHypoInfoWidget extends StatelessWidget {
-  const EarthquakeHypoInfoWidget({
-    required this.item,
-    super.key,
-  });
+  const EarthquakeHypoInfoWidget({required this.item, super.key});
 
   final EarthquakeV1Extended item;
 
@@ -290,9 +270,10 @@ class EarthquakeHypoInfoWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(top: 8),
         child: FilledButton.icon(
-          onPressed: () async => EewDetailsByEventIdRoute(
-            eventId: item.v1.eventId.toString(),
-          ).push<void>(context),
+          onPressed:
+              () async => EewDetailsByEventIdRoute(
+                eventId: item.v1.eventId.toString(),
+              ).push<void>(context),
           icon: const Icon(Icons.notifications_active),
           label: const Text('緊急地震速報の履歴を表示'),
           style: FilledButton.styleFrom(

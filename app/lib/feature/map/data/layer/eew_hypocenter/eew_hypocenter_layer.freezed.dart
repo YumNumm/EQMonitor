@@ -12,7 +12,8 @@ part of 'eew_hypocenter_layer.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$EewHypocenter {
@@ -29,8 +30,9 @@ mixin _$EewHypocenter {
 /// @nodoc
 abstract class $EewHypocenterCopyWith<$Res> {
   factory $EewHypocenterCopyWith(
-          EewHypocenter value, $Res Function(EewHypocenter) then) =
-      _$EewHypocenterCopyWithImpl<$Res, EewHypocenter>;
+    EewHypocenter value,
+    $Res Function(EewHypocenter) then,
+  ) = _$EewHypocenterCopyWithImpl<$Res, EewHypocenter>;
   @useResult
   $Res call({double latitude, double longitude});
 }
@@ -49,20 +51,22 @@ class _$EewHypocenterCopyWithImpl<$Res, $Val extends EewHypocenter>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? latitude = null,
-    Object? longitude = null,
-  }) {
-    return _then(_value.copyWith(
-      latitude: null == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double,
-      longitude: null == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double,
-    ) as $Val);
+  $Res call({Object? latitude = null, Object? longitude = null}) {
+    return _then(
+      _value.copyWith(
+            latitude:
+                null == latitude
+                    ? _value.latitude
+                    : latitude // ignore: cast_nullable_to_non_nullable
+                        as double,
+            longitude:
+                null == longitude
+                    ? _value.longitude
+                    : longitude // ignore: cast_nullable_to_non_nullable
+                        as double,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -70,8 +74,9 @@ class _$EewHypocenterCopyWithImpl<$Res, $Val extends EewHypocenter>
 abstract class _$$EewHypocenterImplCopyWith<$Res>
     implements $EewHypocenterCopyWith<$Res> {
   factory _$$EewHypocenterImplCopyWith(
-          _$EewHypocenterImpl value, $Res Function(_$EewHypocenterImpl) then) =
-      __$$EewHypocenterImplCopyWithImpl<$Res>;
+    _$EewHypocenterImpl value,
+    $Res Function(_$EewHypocenterImpl) then,
+  ) = __$$EewHypocenterImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({double latitude, double longitude});
@@ -82,27 +87,29 @@ class __$$EewHypocenterImplCopyWithImpl<$Res>
     extends _$EewHypocenterCopyWithImpl<$Res, _$EewHypocenterImpl>
     implements _$$EewHypocenterImplCopyWith<$Res> {
   __$$EewHypocenterImplCopyWithImpl(
-      _$EewHypocenterImpl _value, $Res Function(_$EewHypocenterImpl) _then)
-      : super(_value, _then);
+    _$EewHypocenterImpl _value,
+    $Res Function(_$EewHypocenterImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of EewHypocenter
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? latitude = null,
-    Object? longitude = null,
-  }) {
-    return _then(_$EewHypocenterImpl(
-      latitude: null == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double,
-      longitude: null == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double,
-    ));
+  $Res call({Object? latitude = null, Object? longitude = null}) {
+    return _then(
+      _$EewHypocenterImpl(
+        latitude:
+            null == latitude
+                ? _value.latitude
+                : latitude // ignore: cast_nullable_to_non_nullable
+                    as double,
+        longitude:
+            null == longitude
+                ? _value.longitude
+                : longitude // ignore: cast_nullable_to_non_nullable
+                    as double,
+      ),
+    );
   }
 }
 
@@ -145,9 +152,10 @@ class _$EewHypocenterImpl implements _EewHypocenter {
 }
 
 abstract class _EewHypocenter implements EewHypocenter {
-  const factory _EewHypocenter(
-      {required final double latitude,
-      required final double longitude}) = _$EewHypocenterImpl;
+  const factory _EewHypocenter({
+    required final double latitude,
+    required final double longitude,
+  }) = _$EewHypocenterImpl;
 
   @override
   double get latitude;
@@ -183,18 +191,20 @@ mixin _$EewHypocenterLayer {
 /// @nodoc
 abstract class $EewHypocenterLayerCopyWith<$Res> {
   factory $EewHypocenterLayerCopyWith(
-          EewHypocenterLayer value, $Res Function(EewHypocenterLayer) then) =
-      _$EewHypocenterLayerCopyWithImpl<$Res, EewHypocenterLayer>;
+    EewHypocenterLayer value,
+    $Res Function(EewHypocenterLayer) then,
+  ) = _$EewHypocenterLayerCopyWithImpl<$Res, EewHypocenterLayer>;
   @useResult
-  $Res call(
-      {String id,
-      String sourceId,
-      bool visible,
-      List<EewHypocenter> hypocenters,
-      String iconImage,
-      double? minZoom,
-      double? maxZoom,
-      dynamic filter});
+  $Res call({
+    String id,
+    String sourceId,
+    bool visible,
+    List<EewHypocenter> hypocenters,
+    String iconImage,
+    double? minZoom,
+    double? maxZoom,
+    dynamic filter,
+  });
 }
 
 /// @nodoc
@@ -221,69 +231,83 @@ class _$EewHypocenterLayerCopyWithImpl<$Res, $Val extends EewHypocenterLayer>
     Object? maxZoom = freezed,
     Object? filter = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      sourceId: null == sourceId
-          ? _value.sourceId
-          : sourceId // ignore: cast_nullable_to_non_nullable
-              as String,
-      visible: null == visible
-          ? _value.visible
-          : visible // ignore: cast_nullable_to_non_nullable
-              as bool,
-      hypocenters: null == hypocenters
-          ? _value.hypocenters
-          : hypocenters // ignore: cast_nullable_to_non_nullable
-              as List<EewHypocenter>,
-      iconImage: null == iconImage
-          ? _value.iconImage
-          : iconImage // ignore: cast_nullable_to_non_nullable
-              as String,
-      minZoom: freezed == minZoom
-          ? _value.minZoom
-          : minZoom // ignore: cast_nullable_to_non_nullable
-              as double?,
-      maxZoom: freezed == maxZoom
-          ? _value.maxZoom
-          : maxZoom // ignore: cast_nullable_to_non_nullable
-              as double?,
-      filter: freezed == filter
-          ? _value.filter
-          : filter // ignore: cast_nullable_to_non_nullable
-              as dynamic,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id:
+                null == id
+                    ? _value.id
+                    : id // ignore: cast_nullable_to_non_nullable
+                        as String,
+            sourceId:
+                null == sourceId
+                    ? _value.sourceId
+                    : sourceId // ignore: cast_nullable_to_non_nullable
+                        as String,
+            visible:
+                null == visible
+                    ? _value.visible
+                    : visible // ignore: cast_nullable_to_non_nullable
+                        as bool,
+            hypocenters:
+                null == hypocenters
+                    ? _value.hypocenters
+                    : hypocenters // ignore: cast_nullable_to_non_nullable
+                        as List<EewHypocenter>,
+            iconImage:
+                null == iconImage
+                    ? _value.iconImage
+                    : iconImage // ignore: cast_nullable_to_non_nullable
+                        as String,
+            minZoom:
+                freezed == minZoom
+                    ? _value.minZoom
+                    : minZoom // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            maxZoom:
+                freezed == maxZoom
+                    ? _value.maxZoom
+                    : maxZoom // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            filter:
+                freezed == filter
+                    ? _value.filter
+                    : filter // ignore: cast_nullable_to_non_nullable
+                        as dynamic,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$EewHypocenterLayerImplCopyWith<$Res>
     implements $EewHypocenterLayerCopyWith<$Res> {
-  factory _$$EewHypocenterLayerImplCopyWith(_$EewHypocenterLayerImpl value,
-          $Res Function(_$EewHypocenterLayerImpl) then) =
-      __$$EewHypocenterLayerImplCopyWithImpl<$Res>;
+  factory _$$EewHypocenterLayerImplCopyWith(
+    _$EewHypocenterLayerImpl value,
+    $Res Function(_$EewHypocenterLayerImpl) then,
+  ) = __$$EewHypocenterLayerImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String sourceId,
-      bool visible,
-      List<EewHypocenter> hypocenters,
-      String iconImage,
-      double? minZoom,
-      double? maxZoom,
-      dynamic filter});
+  $Res call({
+    String id,
+    String sourceId,
+    bool visible,
+    List<EewHypocenter> hypocenters,
+    String iconImage,
+    double? minZoom,
+    double? maxZoom,
+    dynamic filter,
+  });
 }
 
 /// @nodoc
 class __$$EewHypocenterLayerImplCopyWithImpl<$Res>
     extends _$EewHypocenterLayerCopyWithImpl<$Res, _$EewHypocenterLayerImpl>
     implements _$$EewHypocenterLayerImplCopyWith<$Res> {
-  __$$EewHypocenterLayerImplCopyWithImpl(_$EewHypocenterLayerImpl _value,
-      $Res Function(_$EewHypocenterLayerImpl) _then)
-      : super(_value, _then);
+  __$$EewHypocenterLayerImplCopyWithImpl(
+    _$EewHypocenterLayerImpl _value,
+    $Res Function(_$EewHypocenterLayerImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of EewHypocenterLayer
   /// with the given fields replaced by the non-null parameter values.
@@ -299,57 +323,67 @@ class __$$EewHypocenterLayerImplCopyWithImpl<$Res>
     Object? maxZoom = freezed,
     Object? filter = freezed,
   }) {
-    return _then(_$EewHypocenterLayerImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      sourceId: null == sourceId
-          ? _value.sourceId
-          : sourceId // ignore: cast_nullable_to_non_nullable
-              as String,
-      visible: null == visible
-          ? _value.visible
-          : visible // ignore: cast_nullable_to_non_nullable
-              as bool,
-      hypocenters: null == hypocenters
-          ? _value._hypocenters
-          : hypocenters // ignore: cast_nullable_to_non_nullable
-              as List<EewHypocenter>,
-      iconImage: null == iconImage
-          ? _value.iconImage
-          : iconImage // ignore: cast_nullable_to_non_nullable
-              as String,
-      minZoom: freezed == minZoom
-          ? _value.minZoom
-          : minZoom // ignore: cast_nullable_to_non_nullable
-              as double?,
-      maxZoom: freezed == maxZoom
-          ? _value.maxZoom
-          : maxZoom // ignore: cast_nullable_to_non_nullable
-              as double?,
-      filter: freezed == filter
-          ? _value.filter
-          : filter // ignore: cast_nullable_to_non_nullable
-              as dynamic,
-    ));
+    return _then(
+      _$EewHypocenterLayerImpl(
+        id:
+            null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                    as String,
+        sourceId:
+            null == sourceId
+                ? _value.sourceId
+                : sourceId // ignore: cast_nullable_to_non_nullable
+                    as String,
+        visible:
+            null == visible
+                ? _value.visible
+                : visible // ignore: cast_nullable_to_non_nullable
+                    as bool,
+        hypocenters:
+            null == hypocenters
+                ? _value._hypocenters
+                : hypocenters // ignore: cast_nullable_to_non_nullable
+                    as List<EewHypocenter>,
+        iconImage:
+            null == iconImage
+                ? _value.iconImage
+                : iconImage // ignore: cast_nullable_to_non_nullable
+                    as String,
+        minZoom:
+            freezed == minZoom
+                ? _value.minZoom
+                : minZoom // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        maxZoom:
+            freezed == maxZoom
+                ? _value.maxZoom
+                : maxZoom // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        filter:
+            freezed == filter
+                ? _value.filter
+                : filter // ignore: cast_nullable_to_non_nullable
+                    as dynamic,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$EewHypocenterLayerImpl extends _EewHypocenterLayer {
-  _$EewHypocenterLayerImpl(
-      {required this.id,
-      required this.sourceId,
-      required this.visible,
-      required final List<EewHypocenter> hypocenters,
-      required this.iconImage,
-      this.minZoom = null,
-      this.maxZoom = null,
-      this.filter})
-      : _hypocenters = hypocenters,
-        super._();
+  _$EewHypocenterLayerImpl({
+    required this.id,
+    required this.sourceId,
+    required this.visible,
+    required final List<EewHypocenter> hypocenters,
+    required this.iconImage,
+    this.minZoom = null,
+    this.maxZoom = null,
+    this.filter,
+  }) : _hypocenters = hypocenters,
+       super._();
 
   @override
   final String id;
@@ -390,8 +424,10 @@ class _$EewHypocenterLayerImpl extends _EewHypocenterLayer {
             (identical(other.sourceId, sourceId) ||
                 other.sourceId == sourceId) &&
             (identical(other.visible, visible) || other.visible == visible) &&
-            const DeepCollectionEquality()
-                .equals(other._hypocenters, _hypocenters) &&
+            const DeepCollectionEquality().equals(
+              other._hypocenters,
+              _hypocenters,
+            ) &&
             (identical(other.iconImage, iconImage) ||
                 other.iconImage == iconImage) &&
             (identical(other.minZoom, minZoom) || other.minZoom == minZoom) &&
@@ -401,15 +437,16 @@ class _$EewHypocenterLayerImpl extends _EewHypocenterLayer {
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      sourceId,
-      visible,
-      const DeepCollectionEquality().hash(_hypocenters),
-      iconImage,
-      minZoom,
-      maxZoom,
-      const DeepCollectionEquality().hash(filter));
+    runtimeType,
+    id,
+    sourceId,
+    visible,
+    const DeepCollectionEquality().hash(_hypocenters),
+    iconImage,
+    minZoom,
+    maxZoom,
+    const DeepCollectionEquality().hash(filter),
+  );
 
   /// Create a copy of EewHypocenterLayer
   /// with the given fields replaced by the non-null parameter values.
@@ -418,19 +455,22 @@ class _$EewHypocenterLayerImpl extends _EewHypocenterLayer {
   @pragma('vm:prefer-inline')
   _$$EewHypocenterLayerImplCopyWith<_$EewHypocenterLayerImpl> get copyWith =>
       __$$EewHypocenterLayerImplCopyWithImpl<_$EewHypocenterLayerImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _EewHypocenterLayer extends EewHypocenterLayer {
-  factory _EewHypocenterLayer(
-      {required final String id,
-      required final String sourceId,
-      required final bool visible,
-      required final List<EewHypocenter> hypocenters,
-      required final String iconImage,
-      final double? minZoom,
-      final double? maxZoom,
-      final dynamic filter}) = _$EewHypocenterLayerImpl;
+  factory _EewHypocenterLayer({
+    required final String id,
+    required final String sourceId,
+    required final bool visible,
+    required final List<EewHypocenter> hypocenters,
+    required final String iconImage,
+    final double? minZoom,
+    final double? maxZoom,
+    final dynamic filter,
+  }) = _$EewHypocenterLayerImpl;
   _EewHypocenterLayer._() : super._();
 
   @override

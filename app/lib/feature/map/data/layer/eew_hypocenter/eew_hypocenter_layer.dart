@@ -32,22 +32,23 @@ class EewHypocenterLayer extends MapLayer with _$EewHypocenterLayer {
   Map<String, dynamic> toGeoJsonSource() {
     return {
       'type': 'FeatureCollection',
-      'features': hypocenters
-          .map(
-            (e) => {
-              'type': 'Feature',
-              'geometry': {
-                'type': 'Point',
-                'coordinates': [e.longitude, e.latitude],
-              },
-              'properties': {
-                'iconImage': iconImage,
-                'latitude': e.latitude,
-                'longitude': e.longitude,
-              },
-            },
-          )
-          .toList(),
+      'features':
+          hypocenters
+              .map(
+                (e) => {
+                  'type': 'Feature',
+                  'geometry': {
+                    'type': 'Point',
+                    'coordinates': [e.longitude, e.latitude],
+                  },
+                  'properties': {
+                    'iconImage': iconImage,
+                    'latitude': e.latitude,
+                    'longitude': e.longitude,
+                  },
+                },
+              )
+              .toList(),
     };
   }
 
@@ -81,11 +82,10 @@ class EewHypocenterLayer extends MapLayer with _$EewHypocenterLayer {
 
 enum EewHypocenterIcon {
   normal,
-  lowPrecise,
-  ;
+  lowPrecise;
 
   DeclarativeAssets get asset => switch (this) {
-        normal => DeclarativeAssets.normalHypocenter,
-        lowPrecise => DeclarativeAssets.lowPreciseHypocenter,
-      };
+    normal => DeclarativeAssets.normalHypocenter,
+    lowPrecise => DeclarativeAssets.lowPreciseHypocenter,
+  };
 }

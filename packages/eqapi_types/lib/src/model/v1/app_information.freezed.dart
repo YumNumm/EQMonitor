@@ -12,7 +12,8 @@ part of 'app_information.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 AppInformation _$AppInformationFromJson(Map<String, dynamic> json) {
   return _AppInformation.fromJson(json);
@@ -36,8 +37,9 @@ mixin _$AppInformation {
 /// @nodoc
 abstract class $AppInformationCopyWith<$Res> {
   factory $AppInformationCopyWith(
-          AppInformation value, $Res Function(AppInformation) then) =
-      _$AppInformationCopyWithImpl<$Res, AppInformation>;
+    AppInformation value,
+    $Res Function(AppInformation) then,
+  ) = _$AppInformationCopyWithImpl<$Res, AppInformation>;
   @useResult
   $Res call({PlatformAppInformation ios, PlatformAppInformation android});
 
@@ -59,20 +61,22 @@ class _$AppInformationCopyWithImpl<$Res, $Val extends AppInformation>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? ios = null,
-    Object? android = null,
-  }) {
-    return _then(_value.copyWith(
-      ios: null == ios
-          ? _value.ios
-          : ios // ignore: cast_nullable_to_non_nullable
-              as PlatformAppInformation,
-      android: null == android
-          ? _value.android
-          : android // ignore: cast_nullable_to_non_nullable
-              as PlatformAppInformation,
-    ) as $Val);
+  $Res call({Object? ios = null, Object? android = null}) {
+    return _then(
+      _value.copyWith(
+            ios:
+                null == ios
+                    ? _value.ios
+                    : ios // ignore: cast_nullable_to_non_nullable
+                        as PlatformAppInformation,
+            android:
+                null == android
+                    ? _value.android
+                    : android // ignore: cast_nullable_to_non_nullable
+                        as PlatformAppInformation,
+          )
+          as $Val,
+    );
   }
 
   /// Create a copy of AppInformation
@@ -99,9 +103,10 @@ class _$AppInformationCopyWithImpl<$Res, $Val extends AppInformation>
 /// @nodoc
 abstract class _$$AppInformationImplCopyWith<$Res>
     implements $AppInformationCopyWith<$Res> {
-  factory _$$AppInformationImplCopyWith(_$AppInformationImpl value,
-          $Res Function(_$AppInformationImpl) then) =
-      __$$AppInformationImplCopyWithImpl<$Res>;
+  factory _$$AppInformationImplCopyWith(
+    _$AppInformationImpl value,
+    $Res Function(_$AppInformationImpl) then,
+  ) = __$$AppInformationImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({PlatformAppInformation ios, PlatformAppInformation android});
@@ -117,27 +122,29 @@ class __$$AppInformationImplCopyWithImpl<$Res>
     extends _$AppInformationCopyWithImpl<$Res, _$AppInformationImpl>
     implements _$$AppInformationImplCopyWith<$Res> {
   __$$AppInformationImplCopyWithImpl(
-      _$AppInformationImpl _value, $Res Function(_$AppInformationImpl) _then)
-      : super(_value, _then);
+    _$AppInformationImpl _value,
+    $Res Function(_$AppInformationImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of AppInformation
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? ios = null,
-    Object? android = null,
-  }) {
-    return _then(_$AppInformationImpl(
-      ios: null == ios
-          ? _value.ios
-          : ios // ignore: cast_nullable_to_non_nullable
-              as PlatformAppInformation,
-      android: null == android
-          ? _value.android
-          : android // ignore: cast_nullable_to_non_nullable
-              as PlatformAppInformation,
-    ));
+  $Res call({Object? ios = null, Object? android = null}) {
+    return _then(
+      _$AppInformationImpl(
+        ios:
+            null == ios
+                ? _value.ios
+                : ios // ignore: cast_nullable_to_non_nullable
+                    as PlatformAppInformation,
+        android:
+            null == android
+                ? _value.android
+                : android // ignore: cast_nullable_to_non_nullable
+                    as PlatformAppInformation,
+      ),
+    );
   }
 }
 
@@ -179,20 +186,21 @@ class _$AppInformationImpl implements _AppInformation {
   @pragma('vm:prefer-inline')
   _$$AppInformationImplCopyWith<_$AppInformationImpl> get copyWith =>
       __$$AppInformationImplCopyWithImpl<_$AppInformationImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$AppInformationImplToJson(
-      this,
-    );
+    return _$$AppInformationImplToJson(this);
   }
 }
 
 abstract class _AppInformation implements AppInformation {
-  const factory _AppInformation(
-      {required final PlatformAppInformation ios,
-      required final PlatformAppInformation android}) = _$AppInformationImpl;
+  const factory _AppInformation({
+    required final PlatformAppInformation ios,
+    required final PlatformAppInformation android,
+  }) = _$AppInformationImpl;
 
   factory _AppInformation.fromJson(Map<String, dynamic> json) =
       _$AppInformationImpl.fromJson;
@@ -211,7 +219,8 @@ abstract class _AppInformation implements AppInformation {
 }
 
 PlatformAppInformation _$PlatformAppInformationFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _PlatformAppInformation.fromJson(json);
 }
 
@@ -233,9 +242,10 @@ mixin _$PlatformAppInformation {
 
 /// @nodoc
 abstract class $PlatformAppInformationCopyWith<$Res> {
-  factory $PlatformAppInformationCopyWith(PlatformAppInformation value,
-          $Res Function(PlatformAppInformation) then) =
-      _$PlatformAppInformationCopyWithImpl<$Res, PlatformAppInformation>;
+  factory $PlatformAppInformationCopyWith(
+    PlatformAppInformation value,
+    $Res Function(PlatformAppInformation) then,
+  ) = _$PlatformAppInformationCopyWithImpl<$Res, PlatformAppInformation>;
   @useResult
   $Res call({AppVersion? latest, AppVersion? minimum, String? downloadUrl});
 
@@ -244,8 +254,10 @@ abstract class $PlatformAppInformationCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$PlatformAppInformationCopyWithImpl<$Res,
-        $Val extends PlatformAppInformation>
+class _$PlatformAppInformationCopyWithImpl<
+  $Res,
+  $Val extends PlatformAppInformation
+>
     implements $PlatformAppInformationCopyWith<$Res> {
   _$PlatformAppInformationCopyWithImpl(this._value, this._then);
 
@@ -263,20 +275,26 @@ class _$PlatformAppInformationCopyWithImpl<$Res,
     Object? minimum = freezed,
     Object? downloadUrl = freezed,
   }) {
-    return _then(_value.copyWith(
-      latest: freezed == latest
-          ? _value.latest
-          : latest // ignore: cast_nullable_to_non_nullable
-              as AppVersion?,
-      minimum: freezed == minimum
-          ? _value.minimum
-          : minimum // ignore: cast_nullable_to_non_nullable
-              as AppVersion?,
-      downloadUrl: freezed == downloadUrl
-          ? _value.downloadUrl
-          : downloadUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            latest:
+                freezed == latest
+                    ? _value.latest
+                    : latest // ignore: cast_nullable_to_non_nullable
+                        as AppVersion?,
+            minimum:
+                freezed == minimum
+                    ? _value.minimum
+                    : minimum // ignore: cast_nullable_to_non_nullable
+                        as AppVersion?,
+            downloadUrl:
+                freezed == downloadUrl
+                    ? _value.downloadUrl
+                    : downloadUrl // ignore: cast_nullable_to_non_nullable
+                        as String?,
+          )
+          as $Val,
+    );
   }
 
   /// Create a copy of PlatformAppInformation
@@ -312,9 +330,9 @@ class _$PlatformAppInformationCopyWithImpl<$Res,
 abstract class _$$PlatformAppInformationImplCopyWith<$Res>
     implements $PlatformAppInformationCopyWith<$Res> {
   factory _$$PlatformAppInformationImplCopyWith(
-          _$PlatformAppInformationImpl value,
-          $Res Function(_$PlatformAppInformationImpl) then) =
-      __$$PlatformAppInformationImplCopyWithImpl<$Res>;
+    _$PlatformAppInformationImpl value,
+    $Res Function(_$PlatformAppInformationImpl) then,
+  ) = __$$PlatformAppInformationImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({AppVersion? latest, AppVersion? minimum, String? downloadUrl});
@@ -327,13 +345,13 @@ abstract class _$$PlatformAppInformationImplCopyWith<$Res>
 
 /// @nodoc
 class __$$PlatformAppInformationImplCopyWithImpl<$Res>
-    extends _$PlatformAppInformationCopyWithImpl<$Res,
-        _$PlatformAppInformationImpl>
+    extends
+        _$PlatformAppInformationCopyWithImpl<$Res, _$PlatformAppInformationImpl>
     implements _$$PlatformAppInformationImplCopyWith<$Res> {
   __$$PlatformAppInformationImplCopyWithImpl(
-      _$PlatformAppInformationImpl _value,
-      $Res Function(_$PlatformAppInformationImpl) _then)
-      : super(_value, _then);
+    _$PlatformAppInformationImpl _value,
+    $Res Function(_$PlatformAppInformationImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of PlatformAppInformation
   /// with the given fields replaced by the non-null parameter values.
@@ -344,28 +362,36 @@ class __$$PlatformAppInformationImplCopyWithImpl<$Res>
     Object? minimum = freezed,
     Object? downloadUrl = freezed,
   }) {
-    return _then(_$PlatformAppInformationImpl(
-      latest: freezed == latest
-          ? _value.latest
-          : latest // ignore: cast_nullable_to_non_nullable
-              as AppVersion?,
-      minimum: freezed == minimum
-          ? _value.minimum
-          : minimum // ignore: cast_nullable_to_non_nullable
-              as AppVersion?,
-      downloadUrl: freezed == downloadUrl
-          ? _value.downloadUrl
-          : downloadUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$PlatformAppInformationImpl(
+        latest:
+            freezed == latest
+                ? _value.latest
+                : latest // ignore: cast_nullable_to_non_nullable
+                    as AppVersion?,
+        minimum:
+            freezed == minimum
+                ? _value.minimum
+                : minimum // ignore: cast_nullable_to_non_nullable
+                    as AppVersion?,
+        downloadUrl:
+            freezed == downloadUrl
+                ? _value.downloadUrl
+                : downloadUrl // ignore: cast_nullable_to_non_nullable
+                    as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$PlatformAppInformationImpl implements _PlatformAppInformation {
-  const _$PlatformAppInformationImpl(
-      {required this.latest, required this.minimum, required this.downloadUrl});
+  const _$PlatformAppInformationImpl({
+    required this.latest,
+    required this.minimum,
+    required this.downloadUrl,
+  });
 
   factory _$PlatformAppInformationImpl.fromJson(Map<String, dynamic> json) =>
       _$$PlatformAppInformationImplFromJson(json);
@@ -403,22 +429,24 @@ class _$PlatformAppInformationImpl implements _PlatformAppInformation {
   @override
   @pragma('vm:prefer-inline')
   _$$PlatformAppInformationImplCopyWith<_$PlatformAppInformationImpl>
-      get copyWith => __$$PlatformAppInformationImplCopyWithImpl<
-          _$PlatformAppInformationImpl>(this, _$identity);
+  get copyWith =>
+      __$$PlatformAppInformationImplCopyWithImpl<_$PlatformAppInformationImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PlatformAppInformationImplToJson(
-      this,
-    );
+    return _$$PlatformAppInformationImplToJson(this);
   }
 }
 
 abstract class _PlatformAppInformation implements PlatformAppInformation {
-  const factory _PlatformAppInformation(
-      {required final AppVersion? latest,
-      required final AppVersion? minimum,
-      required final String? downloadUrl}) = _$PlatformAppInformationImpl;
+  const factory _PlatformAppInformation({
+    required final AppVersion? latest,
+    required final AppVersion? minimum,
+    required final String? downloadUrl,
+  }) = _$PlatformAppInformationImpl;
 
   factory _PlatformAppInformation.fromJson(Map<String, dynamic> json) =
       _$PlatformAppInformationImpl.fromJson;
@@ -435,7 +463,7 @@ abstract class _PlatformAppInformation implements PlatformAppInformation {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PlatformAppInformationImplCopyWith<_$PlatformAppInformationImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 AppVersion _$AppVersionFromJson(Map<String, dynamic> json) {
@@ -460,8 +488,9 @@ mixin _$AppVersion {
 /// @nodoc
 abstract class $AppVersionCopyWith<$Res> {
   factory $AppVersionCopyWith(
-          AppVersion value, $Res Function(AppVersion) then) =
-      _$AppVersionCopyWithImpl<$Res, AppVersion>;
+    AppVersion value,
+    $Res Function(AppVersion) then,
+  ) = _$AppVersionCopyWithImpl<$Res, AppVersion>;
   @useResult
   $Res call({String version, String? message});
 }
@@ -480,20 +509,22 @@ class _$AppVersionCopyWithImpl<$Res, $Val extends AppVersion>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? version = null,
-    Object? message = freezed,
-  }) {
-    return _then(_value.copyWith(
-      version: null == version
-          ? _value.version
-          : version // ignore: cast_nullable_to_non_nullable
-              as String,
-      message: freezed == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+  $Res call({Object? version = null, Object? message = freezed}) {
+    return _then(
+      _value.copyWith(
+            version:
+                null == version
+                    ? _value.version
+                    : version // ignore: cast_nullable_to_non_nullable
+                        as String,
+            message:
+                freezed == message
+                    ? _value.message
+                    : message // ignore: cast_nullable_to_non_nullable
+                        as String?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -501,8 +532,9 @@ class _$AppVersionCopyWithImpl<$Res, $Val extends AppVersion>
 abstract class _$$AppVersionImplCopyWith<$Res>
     implements $AppVersionCopyWith<$Res> {
   factory _$$AppVersionImplCopyWith(
-          _$AppVersionImpl value, $Res Function(_$AppVersionImpl) then) =
-      __$$AppVersionImplCopyWithImpl<$Res>;
+    _$AppVersionImpl value,
+    $Res Function(_$AppVersionImpl) then,
+  ) = __$$AppVersionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String version, String? message});
@@ -513,27 +545,29 @@ class __$$AppVersionImplCopyWithImpl<$Res>
     extends _$AppVersionCopyWithImpl<$Res, _$AppVersionImpl>
     implements _$$AppVersionImplCopyWith<$Res> {
   __$$AppVersionImplCopyWithImpl(
-      _$AppVersionImpl _value, $Res Function(_$AppVersionImpl) _then)
-      : super(_value, _then);
+    _$AppVersionImpl _value,
+    $Res Function(_$AppVersionImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of AppVersion
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? version = null,
-    Object? message = freezed,
-  }) {
-    return _then(_$AppVersionImpl(
-      version: null == version
-          ? _value.version
-          : version // ignore: cast_nullable_to_non_nullable
-              as String,
-      message: freezed == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+  $Res call({Object? version = null, Object? message = freezed}) {
+    return _then(
+      _$AppVersionImpl(
+        version:
+            null == version
+                ? _value.version
+                : version // ignore: cast_nullable_to_non_nullable
+                    as String,
+        message:
+            freezed == message
+                ? _value.message
+                : message // ignore: cast_nullable_to_non_nullable
+                    as String?,
+      ),
+    );
   }
 }
 
@@ -578,16 +612,15 @@ class _$AppVersionImpl implements _AppVersion {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$AppVersionImplToJson(
-      this,
-    );
+    return _$$AppVersionImplToJson(this);
   }
 }
 
 abstract class _AppVersion implements AppVersion {
-  const factory _AppVersion(
-      {required final String version,
-      required final String? message}) = _$AppVersionImpl;
+  const factory _AppVersion({
+    required final String version,
+    required final String? message,
+  }) = _$AppVersionImpl;
 
   factory _AppVersion.fromJson(Map<String, dynamic> json) =
       _$AppVersionImpl.fromJson;

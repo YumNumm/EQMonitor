@@ -15,14 +15,15 @@ String _$platformBrightnessHash() =>
 @ProviderFor(PlatformBrightness)
 final platformBrightnessProvider =
     AutoDisposeNotifierProvider<PlatformBrightness, Brightness>.internal(
-  PlatformBrightness.new,
-  name: r'platformBrightnessProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$platformBrightnessHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      PlatformBrightness.new,
+      name: r'platformBrightnessProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$platformBrightnessHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$PlatformBrightness = AutoDisposeNotifier<Brightness>;
 // ignore_for_file: type=lint

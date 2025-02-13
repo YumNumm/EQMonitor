@@ -12,7 +12,8 @@ part of 'eew_estimated_intensity_layer.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$EewEstimatedIntensityLayer {
@@ -28,29 +29,36 @@ mixin _$EewEstimatedIntensityLayer {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   $EewEstimatedIntensityLayerCopyWith<EewEstimatedIntensityLayer>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $EewEstimatedIntensityLayerCopyWith<$Res> {
-  factory $EewEstimatedIntensityLayerCopyWith(EewEstimatedIntensityLayer value,
-          $Res Function(EewEstimatedIntensityLayer) then) =
-      _$EewEstimatedIntensityLayerCopyWithImpl<$Res,
-          EewEstimatedIntensityLayer>;
+  factory $EewEstimatedIntensityLayerCopyWith(
+    EewEstimatedIntensityLayer value,
+    $Res Function(EewEstimatedIntensityLayer) then,
+  ) =
+      _$EewEstimatedIntensityLayerCopyWithImpl<
+        $Res,
+        EewEstimatedIntensityLayer
+      >;
   @useResult
-  $Res call(
-      {String id,
-      Color color,
-      dynamic filter,
-      bool visible,
-      String? sourceId,
-      double? minZoom,
-      double? maxZoom});
+  $Res call({
+    String id,
+    Color color,
+    dynamic filter,
+    bool visible,
+    String? sourceId,
+    double? minZoom,
+    double? maxZoom,
+  });
 }
 
 /// @nodoc
-class _$EewEstimatedIntensityLayerCopyWithImpl<$Res,
-        $Val extends EewEstimatedIntensityLayer>
+class _$EewEstimatedIntensityLayerCopyWithImpl<
+  $Res,
+  $Val extends EewEstimatedIntensityLayer
+>
     implements $EewEstimatedIntensityLayerCopyWith<$Res> {
   _$EewEstimatedIntensityLayerCopyWithImpl(this._value, this._then);
 
@@ -72,36 +80,46 @@ class _$EewEstimatedIntensityLayerCopyWithImpl<$Res,
     Object? minZoom = freezed,
     Object? maxZoom = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      color: null == color
-          ? _value.color
-          : color // ignore: cast_nullable_to_non_nullable
-              as Color,
-      filter: freezed == filter
-          ? _value.filter
-          : filter // ignore: cast_nullable_to_non_nullable
-              as dynamic,
-      visible: null == visible
-          ? _value.visible
-          : visible // ignore: cast_nullable_to_non_nullable
-              as bool,
-      sourceId: freezed == sourceId
-          ? _value.sourceId
-          : sourceId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      minZoom: freezed == minZoom
-          ? _value.minZoom
-          : minZoom // ignore: cast_nullable_to_non_nullable
-              as double?,
-      maxZoom: freezed == maxZoom
-          ? _value.maxZoom
-          : maxZoom // ignore: cast_nullable_to_non_nullable
-              as double?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id:
+                null == id
+                    ? _value.id
+                    : id // ignore: cast_nullable_to_non_nullable
+                        as String,
+            color:
+                null == color
+                    ? _value.color
+                    : color // ignore: cast_nullable_to_non_nullable
+                        as Color,
+            filter:
+                freezed == filter
+                    ? _value.filter
+                    : filter // ignore: cast_nullable_to_non_nullable
+                        as dynamic,
+            visible:
+                null == visible
+                    ? _value.visible
+                    : visible // ignore: cast_nullable_to_non_nullable
+                        as bool,
+            sourceId:
+                freezed == sourceId
+                    ? _value.sourceId
+                    : sourceId // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            minZoom:
+                freezed == minZoom
+                    ? _value.minZoom
+                    : minZoom // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            maxZoom:
+                freezed == maxZoom
+                    ? _value.maxZoom
+                    : maxZoom // ignore: cast_nullable_to_non_nullable
+                        as double?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -109,30 +127,34 @@ class _$EewEstimatedIntensityLayerCopyWithImpl<$Res,
 abstract class _$$EewEstimatedIntensityLayerImplCopyWith<$Res>
     implements $EewEstimatedIntensityLayerCopyWith<$Res> {
   factory _$$EewEstimatedIntensityLayerImplCopyWith(
-          _$EewEstimatedIntensityLayerImpl value,
-          $Res Function(_$EewEstimatedIntensityLayerImpl) then) =
-      __$$EewEstimatedIntensityLayerImplCopyWithImpl<$Res>;
+    _$EewEstimatedIntensityLayerImpl value,
+    $Res Function(_$EewEstimatedIntensityLayerImpl) then,
+  ) = __$$EewEstimatedIntensityLayerImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      Color color,
-      dynamic filter,
-      bool visible,
-      String? sourceId,
-      double? minZoom,
-      double? maxZoom});
+  $Res call({
+    String id,
+    Color color,
+    dynamic filter,
+    bool visible,
+    String? sourceId,
+    double? minZoom,
+    double? maxZoom,
+  });
 }
 
 /// @nodoc
 class __$$EewEstimatedIntensityLayerImplCopyWithImpl<$Res>
-    extends _$EewEstimatedIntensityLayerCopyWithImpl<$Res,
-        _$EewEstimatedIntensityLayerImpl>
+    extends
+        _$EewEstimatedIntensityLayerCopyWithImpl<
+          $Res,
+          _$EewEstimatedIntensityLayerImpl
+        >
     implements _$$EewEstimatedIntensityLayerImplCopyWith<$Res> {
   __$$EewEstimatedIntensityLayerImplCopyWithImpl(
-      _$EewEstimatedIntensityLayerImpl _value,
-      $Res Function(_$EewEstimatedIntensityLayerImpl) _then)
-      : super(_value, _then);
+    _$EewEstimatedIntensityLayerImpl _value,
+    $Res Function(_$EewEstimatedIntensityLayerImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of EewEstimatedIntensityLayer
   /// with the given fields replaced by the non-null parameter values.
@@ -147,51 +169,60 @@ class __$$EewEstimatedIntensityLayerImplCopyWithImpl<$Res>
     Object? minZoom = freezed,
     Object? maxZoom = freezed,
   }) {
-    return _then(_$EewEstimatedIntensityLayerImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      color: null == color
-          ? _value.color
-          : color // ignore: cast_nullable_to_non_nullable
-              as Color,
-      filter: freezed == filter
-          ? _value.filter
-          : filter // ignore: cast_nullable_to_non_nullable
-              as dynamic,
-      visible: null == visible
-          ? _value.visible
-          : visible // ignore: cast_nullable_to_non_nullable
-              as bool,
-      sourceId: freezed == sourceId
-          ? _value.sourceId
-          : sourceId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      minZoom: freezed == minZoom
-          ? _value.minZoom
-          : minZoom // ignore: cast_nullable_to_non_nullable
-              as double?,
-      maxZoom: freezed == maxZoom
-          ? _value.maxZoom
-          : maxZoom // ignore: cast_nullable_to_non_nullable
-              as double?,
-    ));
+    return _then(
+      _$EewEstimatedIntensityLayerImpl(
+        id:
+            null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                    as String,
+        color:
+            null == color
+                ? _value.color
+                : color // ignore: cast_nullable_to_non_nullable
+                    as Color,
+        filter:
+            freezed == filter
+                ? _value.filter
+                : filter // ignore: cast_nullable_to_non_nullable
+                    as dynamic,
+        visible:
+            null == visible
+                ? _value.visible
+                : visible // ignore: cast_nullable_to_non_nullable
+                    as bool,
+        sourceId:
+            freezed == sourceId
+                ? _value.sourceId
+                : sourceId // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        minZoom:
+            freezed == minZoom
+                ? _value.minZoom
+                : minZoom // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        maxZoom:
+            freezed == maxZoom
+                ? _value.maxZoom
+                : maxZoom // ignore: cast_nullable_to_non_nullable
+                    as double?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$EewEstimatedIntensityLayerImpl extends _EewEstimatedIntensityLayer {
-  const _$EewEstimatedIntensityLayerImpl(
-      {required this.id,
-      required this.color,
-      required this.filter,
-      this.visible = true,
-      this.sourceId = null,
-      this.minZoom = null,
-      this.maxZoom = null})
-      : super._();
+  const _$EewEstimatedIntensityLayerImpl({
+    required this.id,
+    required this.color,
+    required this.filter,
+    this.visible = true,
+    this.sourceId = null,
+    this.minZoom = null,
+    this.maxZoom = null,
+  }) : super._();
 
   @override
   final String id;
@@ -234,14 +265,15 @@ class _$EewEstimatedIntensityLayerImpl extends _EewEstimatedIntensityLayer {
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      color,
-      const DeepCollectionEquality().hash(filter),
-      visible,
-      sourceId,
-      minZoom,
-      maxZoom);
+    runtimeType,
+    id,
+    color,
+    const DeepCollectionEquality().hash(filter),
+    visible,
+    sourceId,
+    minZoom,
+    maxZoom,
+  );
 
   /// Create a copy of EewEstimatedIntensityLayer
   /// with the given fields replaced by the non-null parameter values.
@@ -249,19 +281,21 @@ class _$EewEstimatedIntensityLayerImpl extends _EewEstimatedIntensityLayer {
   @override
   @pragma('vm:prefer-inline')
   _$$EewEstimatedIntensityLayerImplCopyWith<_$EewEstimatedIntensityLayerImpl>
-      get copyWith => __$$EewEstimatedIntensityLayerImplCopyWithImpl<
-          _$EewEstimatedIntensityLayerImpl>(this, _$identity);
+  get copyWith => __$$EewEstimatedIntensityLayerImplCopyWithImpl<
+    _$EewEstimatedIntensityLayerImpl
+  >(this, _$identity);
 }
 
 abstract class _EewEstimatedIntensityLayer extends EewEstimatedIntensityLayer {
-  const factory _EewEstimatedIntensityLayer(
-      {required final String id,
-      required final Color color,
-      required final dynamic filter,
-      final bool visible,
-      final String? sourceId,
-      final double? minZoom,
-      final double? maxZoom}) = _$EewEstimatedIntensityLayerImpl;
+  const factory _EewEstimatedIntensityLayer({
+    required final String id,
+    required final Color color,
+    required final dynamic filter,
+    final bool visible,
+    final String? sourceId,
+    final double? minZoom,
+    final double? maxZoom,
+  }) = _$EewEstimatedIntensityLayerImpl;
   const _EewEstimatedIntensityLayer._() : super._();
 
   @override
@@ -284,5 +318,5 @@ abstract class _EewEstimatedIntensityLayer extends EewEstimatedIntensityLayer {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EewEstimatedIntensityLayerImplCopyWith<_$EewEstimatedIntensityLayerImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

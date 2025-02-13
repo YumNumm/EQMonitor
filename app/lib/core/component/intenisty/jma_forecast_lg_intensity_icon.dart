@@ -26,16 +26,19 @@ class JmaForecastLgIntensityWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final intensityColorModel =
         (colorModel ?? ref.watch(intensityColorProvider))!;
-    final colorScheme =
-        intensityColorModel.fromJmaForecastLgIntensity(intensity);
+    final colorScheme = intensityColorModel.fromJmaForecastLgIntensity(
+      intensity,
+    );
     final (fg, bg) = (colorScheme.foreground, colorScheme.background);
     // 震度の整数部分
-    final intensityMainText =
-        intensity.type.replaceAll('-', '').replaceAll('+', '');
+    final intensityMainText = intensity.type
+        .replaceAll('-', '')
+        .replaceAll('+', '');
     // 震度の弱・強の表記
-    final intensitySubText = intensity.type.contains('-')
-        ? '弱'
-        : intensity.type.contains('+')
+    final intensitySubText =
+        intensity.type.contains('-')
+            ? '弱'
+            : intensity.type.contains('+')
             ? '強'
             : '';
 

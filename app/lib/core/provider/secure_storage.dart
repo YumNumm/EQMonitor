@@ -6,10 +6,6 @@ part 'secure_storage.g.dart';
 
 @Riverpod(keepAlive: true)
 FlutterSecureStorage secureStorage(Ref ref) => const FlutterSecureStorage(
-      aOptions: AndroidOptions(
-        resetOnError: true,
-      ),
-      iOptions: IOSOptions(
-        groupId: 'group.net.yumnumm.eqmonitor',
-      ),
-    );
+  aOptions: AndroidOptions(resetOnError: true),
+  iOptions: IOSOptions(groupId: 'group.net.yumnumm.eqmonitor'),
+);

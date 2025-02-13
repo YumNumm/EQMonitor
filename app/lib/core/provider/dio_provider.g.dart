@@ -30,14 +30,15 @@ String _$isDioProxyEnabledHash() => r'716d5c817b377684285a697bf988ce19f0645c81';
 @ProviderFor(IsDioProxyEnabled)
 final isDioProxyEnabledProvider =
     NotifierProvider<IsDioProxyEnabled, bool>.internal(
-  IsDioProxyEnabled.new,
-  name: r'isDioProxyEnabledProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$isDioProxyEnabledHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      IsDioProxyEnabled.new,
+      name: r'isDioProxyEnabledProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$isDioProxyEnabledHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$IsDioProxyEnabled = Notifier<bool>;
 // ignore_for_file: type=lint

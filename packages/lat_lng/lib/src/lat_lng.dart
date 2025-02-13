@@ -19,10 +19,7 @@ class LatLng extends Point<double> {
     return 'LatLng(lat: $lat, lon: $lon)';
   }
 
-  Map<String, dynamic> toJson() => {
-        'lat': lat,
-        'lon': lon,
-      };
+  Map<String, dynamic> toJson() => {'lat': lat, 'lon': lon};
 }
 
 extension LatLngEx on LatLng {

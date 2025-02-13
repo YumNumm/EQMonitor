@@ -20,8 +20,9 @@ class NotificationRemoteSettingsInitialSetupNotifier
     // 既にmigrate済みかどうかを確認
     final isMigrated = _getIsMigrated();
     // Tokenを持っているかどうか確認
-    final authorization =
-        await ref.read(apiAuthenticationNotifierProvider.future);
+    final authorization = await ref.read(
+      apiAuthenticationNotifierProvider.future,
+    );
     if (isMigrated && authorization != null) {
       yield NotificationRemoteSettingsSetupState.completed;
       log(
@@ -41,8 +42,9 @@ class NotificationRemoteSettingsInitialSetupNotifier
       );
     }
     yield NotificationRemoteSettingsSetupState.registering;
-    final authenticateService =
-        ref.watch(notificationRemoteAuthenticateServiceProvider);
+    final authenticateService = ref.watch(
+      notificationRemoteAuthenticateServiceProvider,
+    );
     await authenticateService.authenticate(fcmToken: fcmToken);
 
     yield NotificationRemoteSettingsSetupState.migrating;
@@ -94,7 +96,6 @@ enum NotificationRemoteSettingsSetupState {
   unsubscribingOldTopics,
   completing,
   completed,
-  ;
 }
 
 class NotificationRemoteSettingsSetupException implements Exception {

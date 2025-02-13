@@ -12,7 +12,8 @@ part of 'region.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 RegionItem _$RegionItemFromJson(Map<String, dynamic> json) {
   return _RegionItem.fromJson(json);
@@ -40,16 +41,18 @@ mixin _$RegionItem {
 /// @nodoc
 abstract class $RegionItemCopyWith<$Res> {
   factory $RegionItemCopyWith(
-          RegionItem value, $Res Function(RegionItem) then) =
-      _$RegionItemCopyWithImpl<$Res, RegionItem>;
+    RegionItem value,
+    $Res Function(RegionItem) then,
+  ) = _$RegionItemCopyWithImpl<$Res, RegionItem>;
   @useResult
-  $Res call(
-      {int id,
-      int eventId,
-      String areaCode,
-      JmaIntensity maxIntensity,
-      JmaLgIntensity? maxLpgmIntensity,
-      EarthquakeV1Base earthquake});
+  $Res call({
+    int id,
+    int eventId,
+    String areaCode,
+    JmaIntensity maxIntensity,
+    JmaLgIntensity? maxLpgmIntensity,
+    EarthquakeV1Base earthquake,
+  });
 
   $EarthquakeV1BaseCopyWith<$Res> get earthquake;
 }
@@ -76,32 +79,41 @@ class _$RegionItemCopyWithImpl<$Res, $Val extends RegionItem>
     Object? maxLpgmIntensity = freezed,
     Object? earthquake = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      eventId: null == eventId
-          ? _value.eventId
-          : eventId // ignore: cast_nullable_to_non_nullable
-              as int,
-      areaCode: null == areaCode
-          ? _value.areaCode
-          : areaCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      maxIntensity: null == maxIntensity
-          ? _value.maxIntensity
-          : maxIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaIntensity,
-      maxLpgmIntensity: freezed == maxLpgmIntensity
-          ? _value.maxLpgmIntensity
-          : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaLgIntensity?,
-      earthquake: null == earthquake
-          ? _value.earthquake
-          : earthquake // ignore: cast_nullable_to_non_nullable
-              as EarthquakeV1Base,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id:
+                null == id
+                    ? _value.id
+                    : id // ignore: cast_nullable_to_non_nullable
+                        as int,
+            eventId:
+                null == eventId
+                    ? _value.eventId
+                    : eventId // ignore: cast_nullable_to_non_nullable
+                        as int,
+            areaCode:
+                null == areaCode
+                    ? _value.areaCode
+                    : areaCode // ignore: cast_nullable_to_non_nullable
+                        as String,
+            maxIntensity:
+                null == maxIntensity
+                    ? _value.maxIntensity
+                    : maxIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaIntensity,
+            maxLpgmIntensity:
+                freezed == maxLpgmIntensity
+                    ? _value.maxLpgmIntensity
+                    : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaLgIntensity?,
+            earthquake:
+                null == earthquake
+                    ? _value.earthquake
+                    : earthquake // ignore: cast_nullable_to_non_nullable
+                        as EarthquakeV1Base,
+          )
+          as $Val,
+    );
   }
 
   /// Create a copy of RegionItem
@@ -119,17 +131,19 @@ class _$RegionItemCopyWithImpl<$Res, $Val extends RegionItem>
 abstract class _$$RegionItemImplCopyWith<$Res>
     implements $RegionItemCopyWith<$Res> {
   factory _$$RegionItemImplCopyWith(
-          _$RegionItemImpl value, $Res Function(_$RegionItemImpl) then) =
-      __$$RegionItemImplCopyWithImpl<$Res>;
+    _$RegionItemImpl value,
+    $Res Function(_$RegionItemImpl) then,
+  ) = __$$RegionItemImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      int eventId,
-      String areaCode,
-      JmaIntensity maxIntensity,
-      JmaLgIntensity? maxLpgmIntensity,
-      EarthquakeV1Base earthquake});
+  $Res call({
+    int id,
+    int eventId,
+    String areaCode,
+    JmaIntensity maxIntensity,
+    JmaLgIntensity? maxLpgmIntensity,
+    EarthquakeV1Base earthquake,
+  });
 
   @override
   $EarthquakeV1BaseCopyWith<$Res> get earthquake;
@@ -140,8 +154,9 @@ class __$$RegionItemImplCopyWithImpl<$Res>
     extends _$RegionItemCopyWithImpl<$Res, _$RegionItemImpl>
     implements _$$RegionItemImplCopyWith<$Res> {
   __$$RegionItemImplCopyWithImpl(
-      _$RegionItemImpl _value, $Res Function(_$RegionItemImpl) _then)
-      : super(_value, _then);
+    _$RegionItemImpl _value,
+    $Res Function(_$RegionItemImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of RegionItem
   /// with the given fields replaced by the non-null parameter values.
@@ -155,45 +170,54 @@ class __$$RegionItemImplCopyWithImpl<$Res>
     Object? maxLpgmIntensity = freezed,
     Object? earthquake = null,
   }) {
-    return _then(_$RegionItemImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      eventId: null == eventId
-          ? _value.eventId
-          : eventId // ignore: cast_nullable_to_non_nullable
-              as int,
-      areaCode: null == areaCode
-          ? _value.areaCode
-          : areaCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      maxIntensity: null == maxIntensity
-          ? _value.maxIntensity
-          : maxIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaIntensity,
-      maxLpgmIntensity: freezed == maxLpgmIntensity
-          ? _value.maxLpgmIntensity
-          : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaLgIntensity?,
-      earthquake: null == earthquake
-          ? _value.earthquake
-          : earthquake // ignore: cast_nullable_to_non_nullable
-              as EarthquakeV1Base,
-    ));
+    return _then(
+      _$RegionItemImpl(
+        id:
+            null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                    as int,
+        eventId:
+            null == eventId
+                ? _value.eventId
+                : eventId // ignore: cast_nullable_to_non_nullable
+                    as int,
+        areaCode:
+            null == areaCode
+                ? _value.areaCode
+                : areaCode // ignore: cast_nullable_to_non_nullable
+                    as String,
+        maxIntensity:
+            null == maxIntensity
+                ? _value.maxIntensity
+                : maxIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaIntensity,
+        maxLpgmIntensity:
+            freezed == maxLpgmIntensity
+                ? _value.maxLpgmIntensity
+                : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaLgIntensity?,
+        earthquake:
+            null == earthquake
+                ? _value.earthquake
+                : earthquake // ignore: cast_nullable_to_non_nullable
+                    as EarthquakeV1Base,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$RegionItemImpl implements _RegionItem {
-  const _$RegionItemImpl(
-      {required this.id,
-      required this.eventId,
-      required this.areaCode,
-      required this.maxIntensity,
-      required this.maxLpgmIntensity,
-      required this.earthquake});
+  const _$RegionItemImpl({
+    required this.id,
+    required this.eventId,
+    required this.areaCode,
+    required this.maxIntensity,
+    required this.maxLpgmIntensity,
+    required this.earthquake,
+  });
 
   factory _$RegionItemImpl.fromJson(Map<String, dynamic> json) =>
       _$$RegionItemImplFromJson(json);
@@ -235,8 +259,15 @@ class _$RegionItemImpl implements _RegionItem {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, eventId, areaCode,
-      maxIntensity, maxLpgmIntensity, earthquake);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    eventId,
+    areaCode,
+    maxIntensity,
+    maxLpgmIntensity,
+    earthquake,
+  );
 
   /// Create a copy of RegionItem
   /// with the given fields replaced by the non-null parameter values.
@@ -248,20 +279,19 @@ class _$RegionItemImpl implements _RegionItem {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$RegionItemImplToJson(
-      this,
-    );
+    return _$$RegionItemImplToJson(this);
   }
 }
 
 abstract class _RegionItem implements RegionItem {
-  const factory _RegionItem(
-      {required final int id,
-      required final int eventId,
-      required final String areaCode,
-      required final JmaIntensity maxIntensity,
-      required final JmaLgIntensity? maxLpgmIntensity,
-      required final EarthquakeV1Base earthquake}) = _$RegionItemImpl;
+  const factory _RegionItem({
+    required final int id,
+    required final int eventId,
+    required final String areaCode,
+    required final JmaIntensity maxIntensity,
+    required final JmaLgIntensity? maxLpgmIntensity,
+    required final EarthquakeV1Base earthquake,
+  }) = _$RegionItemImpl;
 
   factory _RegionItem.fromJson(Map<String, dynamic> json) =
       _$RegionItemImpl.fromJson;

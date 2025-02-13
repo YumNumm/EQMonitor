@@ -16,12 +16,15 @@ String _$mapCameraControllerHash() =>
 /// Copied from [MapCameraController].
 @ProviderFor(MapCameraController)
 final mapCameraControllerProvider = AutoDisposeNotifierProvider<
-    MapCameraController, MapCameraPosition>.internal(
+  MapCameraController,
+  MapCameraPosition
+>.internal(
   MapCameraController.new,
   name: r'mapCameraControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$mapCameraControllerHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$mapCameraControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

@@ -12,7 +12,8 @@ part of 'replay_file_header.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ReplayFileHeader _$ReplayFileHeaderFromJson(Map<String, dynamic> json) {
   return _ReplayFileHeader.fromJson(json);
@@ -40,15 +41,17 @@ mixin _$ReplayFileHeader {
 /// @nodoc
 abstract class $ReplayFileHeaderCopyWith<$Res> {
   factory $ReplayFileHeaderCopyWith(
-          ReplayFileHeader value, $Res Function(ReplayFileHeader) then) =
-      _$ReplayFileHeaderCopyWithImpl<$Res, ReplayFileHeader>;
+    ReplayFileHeader value,
+    $Res Function(ReplayFileHeader) then,
+  ) = _$ReplayFileHeaderCopyWithImpl<$Res, ReplayFileHeader>;
   @useResult
-  $Res call(
-      {int version,
-      String softwareName,
-      DateTime startTime,
-      DateTime endTime,
-      ReplayFileCompressionMode compressionMode});
+  $Res call({
+    int version,
+    String softwareName,
+    DateTime startTime,
+    DateTime endTime,
+    ReplayFileCompressionMode compressionMode,
+  });
 }
 
 /// @nodoc
@@ -72,54 +75,65 @@ class _$ReplayFileHeaderCopyWithImpl<$Res, $Val extends ReplayFileHeader>
     Object? endTime = null,
     Object? compressionMode = null,
   }) {
-    return _then(_value.copyWith(
-      version: null == version
-          ? _value.version
-          : version // ignore: cast_nullable_to_non_nullable
-              as int,
-      softwareName: null == softwareName
-          ? _value.softwareName
-          : softwareName // ignore: cast_nullable_to_non_nullable
-              as String,
-      startTime: null == startTime
-          ? _value.startTime
-          : startTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      endTime: null == endTime
-          ? _value.endTime
-          : endTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      compressionMode: null == compressionMode
-          ? _value.compressionMode
-          : compressionMode // ignore: cast_nullable_to_non_nullable
-              as ReplayFileCompressionMode,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            version:
+                null == version
+                    ? _value.version
+                    : version // ignore: cast_nullable_to_non_nullable
+                        as int,
+            softwareName:
+                null == softwareName
+                    ? _value.softwareName
+                    : softwareName // ignore: cast_nullable_to_non_nullable
+                        as String,
+            startTime:
+                null == startTime
+                    ? _value.startTime
+                    : startTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime,
+            endTime:
+                null == endTime
+                    ? _value.endTime
+                    : endTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime,
+            compressionMode:
+                null == compressionMode
+                    ? _value.compressionMode
+                    : compressionMode // ignore: cast_nullable_to_non_nullable
+                        as ReplayFileCompressionMode,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ReplayFileHeaderImplCopyWith<$Res>
     implements $ReplayFileHeaderCopyWith<$Res> {
-  factory _$$ReplayFileHeaderImplCopyWith(_$ReplayFileHeaderImpl value,
-          $Res Function(_$ReplayFileHeaderImpl) then) =
-      __$$ReplayFileHeaderImplCopyWithImpl<$Res>;
+  factory _$$ReplayFileHeaderImplCopyWith(
+    _$ReplayFileHeaderImpl value,
+    $Res Function(_$ReplayFileHeaderImpl) then,
+  ) = __$$ReplayFileHeaderImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int version,
-      String softwareName,
-      DateTime startTime,
-      DateTime endTime,
-      ReplayFileCompressionMode compressionMode});
+  $Res call({
+    int version,
+    String softwareName,
+    DateTime startTime,
+    DateTime endTime,
+    ReplayFileCompressionMode compressionMode,
+  });
 }
 
 /// @nodoc
 class __$$ReplayFileHeaderImplCopyWithImpl<$Res>
     extends _$ReplayFileHeaderCopyWithImpl<$Res, _$ReplayFileHeaderImpl>
     implements _$$ReplayFileHeaderImplCopyWith<$Res> {
-  __$$ReplayFileHeaderImplCopyWithImpl(_$ReplayFileHeaderImpl _value,
-      $Res Function(_$ReplayFileHeaderImpl) _then)
-      : super(_value, _then);
+  __$$ReplayFileHeaderImplCopyWithImpl(
+    _$ReplayFileHeaderImpl _value,
+    $Res Function(_$ReplayFileHeaderImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of ReplayFileHeader
   /// with the given fields replaced by the non-null parameter values.
@@ -132,40 +146,48 @@ class __$$ReplayFileHeaderImplCopyWithImpl<$Res>
     Object? endTime = null,
     Object? compressionMode = null,
   }) {
-    return _then(_$ReplayFileHeaderImpl(
-      version: null == version
-          ? _value.version
-          : version // ignore: cast_nullable_to_non_nullable
-              as int,
-      softwareName: null == softwareName
-          ? _value.softwareName
-          : softwareName // ignore: cast_nullable_to_non_nullable
-              as String,
-      startTime: null == startTime
-          ? _value.startTime
-          : startTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      endTime: null == endTime
-          ? _value.endTime
-          : endTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      compressionMode: null == compressionMode
-          ? _value.compressionMode
-          : compressionMode // ignore: cast_nullable_to_non_nullable
-              as ReplayFileCompressionMode,
-    ));
+    return _then(
+      _$ReplayFileHeaderImpl(
+        version:
+            null == version
+                ? _value.version
+                : version // ignore: cast_nullable_to_non_nullable
+                    as int,
+        softwareName:
+            null == softwareName
+                ? _value.softwareName
+                : softwareName // ignore: cast_nullable_to_non_nullable
+                    as String,
+        startTime:
+            null == startTime
+                ? _value.startTime
+                : startTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime,
+        endTime:
+            null == endTime
+                ? _value.endTime
+                : endTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime,
+        compressionMode:
+            null == compressionMode
+                ? _value.compressionMode
+                : compressionMode // ignore: cast_nullable_to_non_nullable
+                    as ReplayFileCompressionMode,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ReplayFileHeaderImpl implements _ReplayFileHeader {
-  const _$ReplayFileHeaderImpl(
-      {required this.version,
-      required this.softwareName,
-      required this.startTime,
-      required this.endTime,
-      required this.compressionMode});
+  const _$ReplayFileHeaderImpl({
+    required this.version,
+    required this.softwareName,
+    required this.startTime,
+    required this.endTime,
+    required this.compressionMode,
+  });
 
   factory _$ReplayFileHeaderImpl.fromJson(Map<String, dynamic> json) =>
       _$$ReplayFileHeaderImplFromJson(json);
@@ -204,7 +226,13 @@ class _$ReplayFileHeaderImpl implements _ReplayFileHeader {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, version, softwareName, startTime, endTime, compressionMode);
+    runtimeType,
+    version,
+    softwareName,
+    startTime,
+    endTime,
+    compressionMode,
+  );
 
   /// Create a copy of ReplayFileHeader
   /// with the given fields replaced by the non-null parameter values.
@@ -213,24 +241,24 @@ class _$ReplayFileHeaderImpl implements _ReplayFileHeader {
   @pragma('vm:prefer-inline')
   _$$ReplayFileHeaderImplCopyWith<_$ReplayFileHeaderImpl> get copyWith =>
       __$$ReplayFileHeaderImplCopyWithImpl<_$ReplayFileHeaderImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ReplayFileHeaderImplToJson(
-      this,
-    );
+    return _$$ReplayFileHeaderImplToJson(this);
   }
 }
 
 abstract class _ReplayFileHeader implements ReplayFileHeader {
-  const factory _ReplayFileHeader(
-          {required final int version,
-          required final String softwareName,
-          required final DateTime startTime,
-          required final DateTime endTime,
-          required final ReplayFileCompressionMode compressionMode}) =
-      _$ReplayFileHeaderImpl;
+  const factory _ReplayFileHeader({
+    required final int version,
+    required final String softwareName,
+    required final DateTime startTime,
+    required final DateTime endTime,
+    required final ReplayFileCompressionMode compressionMode,
+  }) = _$ReplayFileHeaderImpl;
 
   factory _ReplayFileHeader.fromJson(Map<String, dynamic> json) =
       _$ReplayFileHeaderImpl.fromJson;

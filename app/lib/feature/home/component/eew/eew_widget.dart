@@ -22,24 +22,21 @@ class EewWidgets extends ConsumerWidget {
     final state = ref.watch(eewAliveTelegramProvider) ?? [];
 
     return Column(
-      children: state.reversed
-          .mapIndexed(
-            (index, element) => EewWidget(
-              eew: element,
-              index: (state.length > 1) ? '${index + 1}' : null,
-            ),
-          )
-          .toList(),
+      children:
+          state.reversed
+              .mapIndexed(
+                (index, element) => EewWidget(
+                  eew: element,
+                  index: (state.length > 1) ? '${index + 1}' : null,
+                ),
+              )
+              .toList(),
     );
   }
 }
 
 class EewWidget extends ConsumerWidget {
-  const EewWidget({
-    required this.eew,
-    required this.index,
-    super.key,
-  });
+  const EewWidget({required this.eew, required this.index, super.key});
 
   final EewV1 eew;
   final String? index;
@@ -53,16 +50,10 @@ class EewWidget extends ConsumerWidget {
     if (eew.isCanceled) {
       return BorderedContainer(
         elevation: 1,
-        margin: const EdgeInsets.symmetric(
-              horizontal: 12,
-            ) +
-            const EdgeInsets.only(
-              bottom: 8,
-            ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8,
-          vertical: 4,
-        ),
+        margin:
+            const EdgeInsets.symmetric(horizontal: 12) +
+            const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(8),
@@ -73,10 +64,13 @@ class EewWidget extends ConsumerWidget {
     }
     final maxIntensity =
         eew.forecastMaxIntensity ?? JmaForecastIntensity.unknown;
-    final intensityScheme =
-        intensityColorScheme.fromJmaForecastIntensity(maxIntensity);
-    final (_, backgroundColor) =
-        (intensityScheme.foreground, intensityScheme.background);
+    final intensityScheme = intensityColorScheme.fromJmaForecastIntensity(
+      maxIntensity,
+    );
+    final (_, backgroundColor) = (
+      intensityScheme.foreground,
+      intensityScheme.background,
+    );
     // 「緊急地震速報 警報 [SPACE] #5(最終)」
     final isWarning = eew.isWarning ?? eew.headline?.contains('強い揺れ') ?? false;
     final header = Wrap(
@@ -100,9 +94,7 @@ class EewWidget extends ConsumerWidget {
                 backgroundColor: Colors.transparent,
                 child: Text(
                   'レベル法',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w900,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.w900),
                 ),
               ),
             if (eew.isIpfOnePoint)
@@ -111,9 +103,7 @@ class EewWidget extends ConsumerWidget {
                 backgroundColor: Colors.transparent,
                 child: Text(
                   '1点観測点による検知',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w900,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.w900),
                 ),
               ),
             if (eew.isPlum ?? false)
@@ -122,9 +112,7 @@ class EewWidget extends ConsumerWidget {
                 backgroundColor: Colors.transparent,
                 child: Text(
                   'PLUM法',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w900,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.w900),
                 ),
               ),
           ],
@@ -143,10 +131,7 @@ class EewWidget extends ConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         const Text('最大震度'),
-        JmaForecastIntensityWidget(
-          size: 60,
-          intensity: maxIntensity,
-        ),
+        JmaForecastIntensityWidget(size: 60, intensity: maxIntensity),
       ],
     );
     // 「[MaxInt, 震源地, 規模」
@@ -180,9 +165,7 @@ class EewWidget extends ConsumerWidget {
       return const SizedBox.shrink();
     }
     final timeWidget = Text(
-      '${DateFormat('yyyy/MM/dd HH:mm:ss').format(
-        happenedTime.toLocal(),
-      )}'
+      '${DateFormat('yyyy/MM/dd HH:mm:ss').format(happenedTime.toLocal())}'
       ' '
       '${eew.originTime == null ? "検知" : "発生"}',
       style: textTheme.bodyMedium,
@@ -311,37 +294,34 @@ class EewWidget extends ConsumerWidget {
       ],
     );
     final headline = eew.headline?.toString().toHalfWidth;
-    final warningMessageWidget = (headline != null)
-        ? [
-            Text(
-              headline.split('で地震 ').getOrNull(1) ?? headline,
-              style: textTheme.titleMedium!.copyWith(
-                fontWeight: FontWeight.bold,
+    final warningMessageWidget =
+        (headline != null)
+            ? [
+              Text(
+                headline.split('で地震 ').getOrNull(1) ?? headline,
+                style: textTheme.titleMedium!.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            Divider(
-              color: colorTheme.onSurface.withValues(alpha: 0.6),
-            ),
-          ]
-        : null;
+              Divider(color: colorTheme.onSurface.withValues(alpha: 0.6)),
+            ]
+            : null;
     final card = Card(
       elevation: 1,
       color: backgroundColor.withValues(alpha: 0.3),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
-          color: Color.lerp(
-            backgroundColor,
-            colorTheme.outline.withValues(alpha: 0.6),
-            0.7,
-          )!,
+          color:
+              Color.lerp(
+                backgroundColor,
+                colorTheme.outline.withValues(alpha: 0.6),
+                0.7,
+              )!,
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8,
-          vertical: 4,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -426,79 +406,73 @@ class EewWidget extends ConsumerWidget {
   }
 }
 
-List<Widget> preview() => [
-      //  EEW 警報
-      EewWidget(
-        eew: EewV1(
-          id: -1,
-          eventId: 20220101000000,
-          isPlum: false,
-          type: 'eew',
-          schemaType: 'eew-information',
-          status: TelegramStatus.normal.type,
-          infoType: TelegramInfoType.issue.type,
-          reportTime: DateTime.now(),
-          isCanceled: false,
-          isLastInfo: true,
-          isWarning: true,
-          accuracy: null,
-          hypoName: 'XX沖',
-          arrivalTime: DateTime.now(),
-          depth: 50,
-          headline: 'XX沖で地震 XX地方では強い揺れに警戒',
-          magnitude: 6.7,
-          originTime: DateTime.now(),
-          serialNo: 12,
-          forecastMaxIntensity: JmaForecastIntensity.sixLower,
-        ),
-        index: null,
-      ),
-      // EEW 予報
-      EewWidget(
-        eew: EewV1(
-          id: -1,
-          eventId: 20220101000000,
-          isPlum: false,
-          type: 'eew',
-          schemaType: 'eew-information',
-          status: TelegramStatus.normal.type,
-          infoType: TelegramInfoType.issue.type,
-          reportTime: DateTime.now(),
-          isCanceled: false,
-          isLastInfo: false,
-          accuracy: null,
-          hypoName: 'XX沖',
-          arrivalTime: DateTime.now(),
-          depth: 40,
-          magnitude: 4.7,
-          forecastMaxIntensity: JmaForecastIntensity.fiveLower,
-        ),
-        index: null,
-      ),
-      // EEW キャンセル報
-      EewWidget(
-        eew: EewV1(
-          id: -1,
-          eventId: 20220101000000,
-          isPlum: false,
-          type: 'eew',
-          schemaType: 'eew-information',
-          status: TelegramStatus.normal.type,
-          infoType: TelegramInfoType.issue.type,
-          reportTime: DateTime.now(),
-          isCanceled: true,
-          isLastInfo: true,
-          accuracy: null,
-        ),
-        index: null,
-      ),
-    ]
-        .map(
-          (e) => Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              e,
-            ],
+List<Widget> preview() =>
+    [
+          //  EEW 警報
+          EewWidget(
+            eew: EewV1(
+              id: -1,
+              eventId: 20220101000000,
+              isPlum: false,
+              type: 'eew',
+              schemaType: 'eew-information',
+              status: TelegramStatus.normal.type,
+              infoType: TelegramInfoType.issue.type,
+              reportTime: DateTime.now(),
+              isCanceled: false,
+              isLastInfo: true,
+              isWarning: true,
+              accuracy: null,
+              hypoName: 'XX沖',
+              arrivalTime: DateTime.now(),
+              depth: 50,
+              headline: 'XX沖で地震 XX地方では強い揺れに警戒',
+              magnitude: 6.7,
+              originTime: DateTime.now(),
+              serialNo: 12,
+              forecastMaxIntensity: JmaForecastIntensity.sixLower,
+            ),
+            index: null,
           ),
-        )
+          // EEW 予報
+          EewWidget(
+            eew: EewV1(
+              id: -1,
+              eventId: 20220101000000,
+              isPlum: false,
+              type: 'eew',
+              schemaType: 'eew-information',
+              status: TelegramStatus.normal.type,
+              infoType: TelegramInfoType.issue.type,
+              reportTime: DateTime.now(),
+              isCanceled: false,
+              isLastInfo: false,
+              accuracy: null,
+              hypoName: 'XX沖',
+              arrivalTime: DateTime.now(),
+              depth: 40,
+              magnitude: 4.7,
+              forecastMaxIntensity: JmaForecastIntensity.fiveLower,
+            ),
+            index: null,
+          ),
+          // EEW キャンセル報
+          EewWidget(
+            eew: EewV1(
+              id: -1,
+              eventId: 20220101000000,
+              isPlum: false,
+              type: 'eew',
+              schemaType: 'eew-information',
+              status: TelegramStatus.normal.type,
+              infoType: TelegramInfoType.issue.type,
+              reportTime: DateTime.now(),
+              isCanceled: true,
+              isLastInfo: true,
+              accuracy: null,
+            ),
+            index: null,
+          ),
+        ]
+        .map((e) => Column(mainAxisSize: MainAxisSize.min, children: [e]))
         .toList();

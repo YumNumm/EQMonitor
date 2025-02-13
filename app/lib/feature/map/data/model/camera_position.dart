@@ -36,10 +36,6 @@ class MapCameraPosition with _$MapCameraPosition {
 
   /// MapLibreのCameraPositionに変換
   const MapCameraPosition._();
-  CameraPosition toMapLibre() => CameraPosition(
-        target: target,
-        zoom: zoom,
-        tilt: tilt,
-        bearing: bearing,
-      );
+  CameraPosition toMapLibre() =>
+      CameraPosition(target: target, zoom: zoom, tilt: tilt, bearing: bearing);
 }

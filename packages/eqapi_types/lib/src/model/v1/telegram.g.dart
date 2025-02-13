@@ -20,13 +20,19 @@ _$TelegramV1Impl _$$TelegramV1ImplFromJson(Map<String, dynamic> json) =>
           schemaType: $checkedConvert('schema_type', (v) => v as String),
           status: $checkedConvert('status', (v) => v as String),
           infoType: $checkedConvert('info_type', (v) => v as String),
-          pressTime:
-              $checkedConvert('press_time', (v) => DateTime.parse(v as String)),
+          pressTime: $checkedConvert(
+            'press_time',
+            (v) => DateTime.parse(v as String),
+          ),
           reportTime: $checkedConvert(
-              'report_time', (v) => DateTime.parse(v as String)),
+            'report_time',
+            (v) => DateTime.parse(v as String),
+          ),
           body: $checkedConvert('body', (v) => v as Map<String, dynamic>),
-          validTime: $checkedConvert('valid_time',
-              (v) => v == null ? null : DateTime.parse(v as String)),
+          validTime: $checkedConvert(
+            'valid_time',
+            (v) => v == null ? null : DateTime.parse(v as String),
+          ),
           serialNo: $checkedConvert('serial_no', (v) => (v as num?)?.toInt()),
           headline: $checkedConvert('headline', (v) => v as String?),
         );
@@ -39,7 +45,7 @@ _$TelegramV1Impl _$$TelegramV1ImplFromJson(Map<String, dynamic> json) =>
         'pressTime': 'press_time',
         'reportTime': 'report_time',
         'validTime': 'valid_time',
-        'serialNo': 'serial_no'
+        'serialNo': 'serial_no',
       },
     );
 

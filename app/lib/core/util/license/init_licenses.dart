@@ -1,11 +1,10 @@
 import 'package:flutter/foundation.dart';
 
 Future<void> initLicenses() async {
-  LicenseRegistry.addLicense(
-    () async* {
-      yield const LicenseEntryWithLineBreaks(
-        ['KyoshinEewViewerIngen'],
-        '''
+  LicenseRegistry.addLicense(() async* {
+    yield const LicenseEntryWithLineBreaks(
+      ['KyoshinEewViewerIngen'],
+      '''
 MIT License
 
 Copyright (c) 2019 ingen084
@@ -28,10 +27,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ''',
-      );
-      yield const LicenseEntryWithLineBreaks(
-        ['KyoshinMonitorLib'],
-        '''
+    );
+    yield const LicenseEntryWithLineBreaks(
+      ['KyoshinMonitorLib'],
+      '''
 MIT License
 
 Copyright (c) 2020 ingen084
@@ -53,16 +52,15 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.''',
-      );
-      yield const LicenseEntryWithLineBreaks(
-        ['「国土数値情報（行政区域データ）」（国土交通省）（当該ページのURL）を加工して作成'],
-        '''
+    );
+    yield const LicenseEntryWithLineBreaks(
+      ['「国土数値情報（行政区域データ）」（国土交通省）（当該ページのURL）を加工して作成'],
+      '''
 https://nlftp.mlit.go.jp/ksj/other/agreement.html に従います''',
-      );
-      yield const LicenseEntryWithLineBreaks(
-        ['Natural Earth(世界地図)'],
-        '© 2009 - 2024. Natural Earth. All rights reserved.\nhttps://www.naturalearthdata.com/',
-      );
-    },
-  );
+    );
+    yield const LicenseEntryWithLineBreaks(
+      ['Natural Earth(世界地図)'],
+      '© 2009 - 2024. Natural Earth. All rights reserved.\nhttps://www.naturalearthdata.com/',
+    );
+  });
 }

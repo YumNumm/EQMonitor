@@ -5,9 +5,8 @@ import 'package:kyoshin_monitor_api/src/model/web_api/data_time.dart';
 import 'package:kyoshin_monitor_api/src/model/web_api/maintenance_message.dart';
 
 class KyoshinMonitorWebApiDataSource {
-  KyoshinMonitorWebApiDataSource({
-    required KyoshinMonitorWebApiClient client,
-  }) : _client = client;
+  KyoshinMonitorWebApiDataSource({required KyoshinMonitorWebApiClient client})
+    : _client = client;
 
   final KyoshinMonitorWebApiClient _client;
 
@@ -27,12 +26,11 @@ class KyoshinMonitorWebApiDataSource {
     RealtimeDataType type,
     RealtimeLayer layer,
     BaseMapTheme theme,
-  ) async =>
-      _client.getScaleImageData(
-        type: type.urlString,
-        layer: layer.urlString,
-        theme: theme.urlString,
-      );
+  ) async => _client.getScaleImageData(
+    type: type.urlString,
+    layer: layer.urlString,
+    theme: theme.urlString,
+  );
 
   /// PsWaveImg
   Future<List<int>> getPsWaveImageData(DateTime dateTime) async =>
@@ -133,8 +131,7 @@ enum RealtimeDataType {
 
   /// 階級データ(周期7秒台)
   /// Lpgm系列でのみ利用可
-  abrsp7s('階級データ(周期7秒台)', 'abrsp7s', true),
-  ;
+  abrsp7s('階級データ(周期7秒台)', 'abrsp7s', true);
 
   // ignore: avoid_positional_boolean_parameters
   const RealtimeDataType(this.displayName, this.urlString, this.isLpgm);
@@ -156,10 +153,7 @@ enum RealtimeLayer {
   /// 地下
   underground('地下', 'b');
 
-  const RealtimeLayer(
-    this.displayName,
-    this.urlString,
-  );
+  const RealtimeLayer(this.displayName, this.urlString);
 
   /// 表示名
   final String displayName;

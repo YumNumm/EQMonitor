@@ -12,7 +12,8 @@ part of 'result.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 Result _$ResultFromJson(Map<String, dynamic> json) {
   return _Result.fromJson(json);
@@ -54,28 +55,31 @@ class _$ResultCopyWithImpl<$Res, $Val extends Result>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? status = freezed,
-    Object? message = freezed,
-  }) {
-    return _then(_value.copyWith(
-      status: freezed == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String?,
-      message: freezed == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+  $Res call({Object? status = freezed, Object? message = freezed}) {
+    return _then(
+      _value.copyWith(
+            status:
+                freezed == status
+                    ? _value.status
+                    : status // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            message:
+                freezed == message
+                    ? _value.message
+                    : message // ignore: cast_nullable_to_non_nullable
+                        as String?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ResultImplCopyWith<$Res> implements $ResultCopyWith<$Res> {
   factory _$$ResultImplCopyWith(
-          _$ResultImpl value, $Res Function(_$ResultImpl) then) =
-      __$$ResultImplCopyWithImpl<$Res>;
+    _$ResultImpl value,
+    $Res Function(_$ResultImpl) then,
+  ) = __$$ResultImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String? status, String? message});
@@ -86,27 +90,29 @@ class __$$ResultImplCopyWithImpl<$Res>
     extends _$ResultCopyWithImpl<$Res, _$ResultImpl>
     implements _$$ResultImplCopyWith<$Res> {
   __$$ResultImplCopyWithImpl(
-      _$ResultImpl _value, $Res Function(_$ResultImpl) _then)
-      : super(_value, _then);
+    _$ResultImpl _value,
+    $Res Function(_$ResultImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of Result
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? status = freezed,
-    Object? message = freezed,
-  }) {
-    return _then(_$ResultImpl(
-      status: freezed == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String?,
-      message: freezed == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+  $Res call({Object? status = freezed, Object? message = freezed}) {
+    return _then(
+      _$ResultImpl(
+        status:
+            freezed == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        message:
+            freezed == message
+                ? _value.message
+                : message // ignore: cast_nullable_to_non_nullable
+                    as String?,
+      ),
+    );
   }
 }
 
@@ -151,16 +157,15 @@ class _$ResultImpl implements _Result {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ResultImplToJson(
-      this,
-    );
+    return _$$ResultImplToJson(this);
   }
 }
 
 abstract class _Result implements Result {
-  const factory _Result(
-      {required final String? status,
-      required final String? message}) = _$ResultImpl;
+  const factory _Result({
+    required final String? status,
+    required final String? message,
+  }) = _$ResultImpl;
 
   factory _Result.fromJson(Map<String, dynamic> json) = _$ResultImpl.fromJson;
 

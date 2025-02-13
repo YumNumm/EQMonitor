@@ -15,9 +15,10 @@ String _$kyoshinColorMapHash() => r'74b3acf2ebc484ef656b4184e435dc4861052c0f';
 final kyoshinColorMapProvider = Provider<List<KyoshinColorMapModel>>.internal(
   kyoshinColorMap,
   name: r'kyoshinColorMapProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$kyoshinColorMapHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$kyoshinColorMapHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

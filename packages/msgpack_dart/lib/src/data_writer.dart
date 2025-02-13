@@ -84,7 +84,10 @@ class DataWriter {
       // be 0
       if (bytes is Uint8List) {
         _scratchBuffer?.setRange(
-            _scratchOffset, _scratchOffset + length, bytes);
+          _scratchOffset,
+          _scratchOffset + length,
+          bytes,
+        );
       } else {
         for (int i = 0; i < length; i++) {
           _scratchBuffer?[_scratchOffset + i] = bytes[i];
@@ -116,8 +119,10 @@ class DataWriter {
     if (_scratchBuffer == null) {
       // start with small scratch buffer, expand to regular later if needed
       _scratchBuffer = Uint8List(_kScratchSizeInitial);
-      _scratchData =
-          ByteData.view(_scratchBuffer!.buffer, _scratchBuffer!.offsetInBytes);
+      _scratchData = ByteData.view(
+        _scratchBuffer!.buffer,
+        _scratchBuffer!.offsetInBytes,
+      );
     }
     final remaining = _scratchBuffer!.length - _scratchOffset;
     if (remaining < size) {
@@ -130,14 +135,18 @@ class DataWriter {
       if (_builder.isEmpty) {
         // We're still on small scratch buffer, move it to _builder
         // and create regular one
-        _builder.add(Uint8List.view(
-          _scratchBuffer!.buffer,
-          _scratchBuffer!.offsetInBytes,
-          _scratchOffset,
-        ));
+        _builder.add(
+          Uint8List.view(
+            _scratchBuffer!.buffer,
+            _scratchBuffer!.offsetInBytes,
+            _scratchOffset,
+          ),
+        );
         _scratchBuffer = Uint8List(_kScratchSizeRegular);
         _scratchData = ByteData.view(
-            _scratchBuffer!.buffer, _scratchBuffer!.offsetInBytes);
+          _scratchBuffer!.buffer,
+          _scratchBuffer!.offsetInBytes,
+        );
       } else {
         _builder.add(
           Uint8List.fromList(
