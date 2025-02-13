@@ -12,7 +12,8 @@ part of 'information.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 InformationV1 _$InformationV1FromJson(Map<String, dynamic> json) {
   return _InformationV1.fromJson(json);
@@ -21,16 +22,18 @@ InformationV1 _$InformationV1FromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$InformationV1 {
   @JsonKey(
-      unknownEnumValue: InformationAuthor.unknown,
-      defaultValue: InformationAuthor.unknown)
+    unknownEnumValue: InformationAuthor.unknown,
+    defaultValue: InformationAuthor.unknown,
+  )
   InformationAuthor get author => throw _privateConstructorUsedError;
   Map<String, dynamic> get body => throw _privateConstructorUsedError;
   @JsonKey(name: 'created_at')
   DateTime get createdAt => throw _privateConstructorUsedError;
   int get id => throw _privateConstructorUsedError;
   @JsonKey(
-      unknownEnumValue: InformationLevel.info,
-      defaultValue: InformationLevel.info)
+    unknownEnumValue: InformationLevel.info,
+    defaultValue: InformationLevel.info,
+  )
   InformationLevel get level => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
@@ -48,23 +51,27 @@ mixin _$InformationV1 {
 /// @nodoc
 abstract class $InformationV1CopyWith<$Res> {
   factory $InformationV1CopyWith(
-          InformationV1 value, $Res Function(InformationV1) then) =
-      _$InformationV1CopyWithImpl<$Res, InformationV1>;
+    InformationV1 value,
+    $Res Function(InformationV1) then,
+  ) = _$InformationV1CopyWithImpl<$Res, InformationV1>;
   @useResult
-  $Res call(
-      {@JsonKey(
-          unknownEnumValue: InformationAuthor.unknown,
-          defaultValue: InformationAuthor.unknown)
-      InformationAuthor author,
-      Map<String, dynamic> body,
-      @JsonKey(name: 'created_at') DateTime createdAt,
-      int id,
-      @JsonKey(
-          unknownEnumValue: InformationLevel.info,
-          defaultValue: InformationLevel.info)
-      InformationLevel level,
-      String title,
-      String type});
+  $Res call({
+    @JsonKey(
+      unknownEnumValue: InformationAuthor.unknown,
+      defaultValue: InformationAuthor.unknown,
+    )
+    InformationAuthor author,
+    Map<String, dynamic> body,
+    @JsonKey(name: 'created_at') DateTime createdAt,
+    int id,
+    @JsonKey(
+      unknownEnumValue: InformationLevel.info,
+      defaultValue: InformationLevel.info,
+    )
+    InformationLevel level,
+    String title,
+    String type,
+  });
 }
 
 /// @nodoc
@@ -90,36 +97,46 @@ class _$InformationV1CopyWithImpl<$Res, $Val extends InformationV1>
     Object? title = null,
     Object? type = null,
   }) {
-    return _then(_value.copyWith(
-      author: null == author
-          ? _value.author
-          : author // ignore: cast_nullable_to_non_nullable
-              as InformationAuthor,
-      body: null == body
-          ? _value.body
-          : body // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      level: null == level
-          ? _value.level
-          : level // ignore: cast_nullable_to_non_nullable
-              as InformationLevel,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            author:
+                null == author
+                    ? _value.author
+                    : author // ignore: cast_nullable_to_non_nullable
+                        as InformationAuthor,
+            body:
+                null == body
+                    ? _value.body
+                    : body // ignore: cast_nullable_to_non_nullable
+                        as Map<String, dynamic>,
+            createdAt:
+                null == createdAt
+                    ? _value.createdAt
+                    : createdAt // ignore: cast_nullable_to_non_nullable
+                        as DateTime,
+            id:
+                null == id
+                    ? _value.id
+                    : id // ignore: cast_nullable_to_non_nullable
+                        as int,
+            level:
+                null == level
+                    ? _value.level
+                    : level // ignore: cast_nullable_to_non_nullable
+                        as InformationLevel,
+            title:
+                null == title
+                    ? _value.title
+                    : title // ignore: cast_nullable_to_non_nullable
+                        as String,
+            type:
+                null == type
+                    ? _value.type
+                    : type // ignore: cast_nullable_to_non_nullable
+                        as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -127,24 +144,28 @@ class _$InformationV1CopyWithImpl<$Res, $Val extends InformationV1>
 abstract class _$$InformationV1ImplCopyWith<$Res>
     implements $InformationV1CopyWith<$Res> {
   factory _$$InformationV1ImplCopyWith(
-          _$InformationV1Impl value, $Res Function(_$InformationV1Impl) then) =
-      __$$InformationV1ImplCopyWithImpl<$Res>;
+    _$InformationV1Impl value,
+    $Res Function(_$InformationV1Impl) then,
+  ) = __$$InformationV1ImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {@JsonKey(
-          unknownEnumValue: InformationAuthor.unknown,
-          defaultValue: InformationAuthor.unknown)
-      InformationAuthor author,
-      Map<String, dynamic> body,
-      @JsonKey(name: 'created_at') DateTime createdAt,
-      int id,
-      @JsonKey(
-          unknownEnumValue: InformationLevel.info,
-          defaultValue: InformationLevel.info)
-      InformationLevel level,
-      String title,
-      String type});
+  $Res call({
+    @JsonKey(
+      unknownEnumValue: InformationAuthor.unknown,
+      defaultValue: InformationAuthor.unknown,
+    )
+    InformationAuthor author,
+    Map<String, dynamic> body,
+    @JsonKey(name: 'created_at') DateTime createdAt,
+    int id,
+    @JsonKey(
+      unknownEnumValue: InformationLevel.info,
+      defaultValue: InformationLevel.info,
+    )
+    InformationLevel level,
+    String title,
+    String type,
+  });
 }
 
 /// @nodoc
@@ -152,8 +173,9 @@ class __$$InformationV1ImplCopyWithImpl<$Res>
     extends _$InformationV1CopyWithImpl<$Res, _$InformationV1Impl>
     implements _$$InformationV1ImplCopyWith<$Res> {
   __$$InformationV1ImplCopyWithImpl(
-      _$InformationV1Impl _value, $Res Function(_$InformationV1Impl) _then)
-      : super(_value, _then);
+    _$InformationV1Impl _value,
+    $Res Function(_$InformationV1Impl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of InformationV1
   /// with the given fields replaced by the non-null parameter values.
@@ -168,65 +190,77 @@ class __$$InformationV1ImplCopyWithImpl<$Res>
     Object? title = null,
     Object? type = null,
   }) {
-    return _then(_$InformationV1Impl(
-      author: null == author
-          ? _value.author
-          : author // ignore: cast_nullable_to_non_nullable
-              as InformationAuthor,
-      body: null == body
-          ? _value._body
-          : body // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      level: null == level
-          ? _value.level
-          : level // ignore: cast_nullable_to_non_nullable
-              as InformationLevel,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+    return _then(
+      _$InformationV1Impl(
+        author:
+            null == author
+                ? _value.author
+                : author // ignore: cast_nullable_to_non_nullable
+                    as InformationAuthor,
+        body:
+            null == body
+                ? _value._body
+                : body // ignore: cast_nullable_to_non_nullable
+                    as Map<String, dynamic>,
+        createdAt:
+            null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                    as DateTime,
+        id:
+            null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                    as int,
+        level:
+            null == level
+                ? _value.level
+                : level // ignore: cast_nullable_to_non_nullable
+                    as InformationLevel,
+        title:
+            null == title
+                ? _value.title
+                : title // ignore: cast_nullable_to_non_nullable
+                    as String,
+        type:
+            null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                    as String,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$InformationV1Impl implements _InformationV1 {
-  const _$InformationV1Impl(
-      {@JsonKey(
-          unknownEnumValue: InformationAuthor.unknown,
-          defaultValue: InformationAuthor.unknown)
-      required this.author,
-      required final Map<String, dynamic> body,
-      @JsonKey(name: 'created_at') required this.createdAt,
-      required this.id,
-      @JsonKey(
-          unknownEnumValue: InformationLevel.info,
-          defaultValue: InformationLevel.info)
-      required this.level,
-      required this.title,
-      required this.type})
-      : _body = body;
+  const _$InformationV1Impl({
+    @JsonKey(
+      unknownEnumValue: InformationAuthor.unknown,
+      defaultValue: InformationAuthor.unknown,
+    )
+    required this.author,
+    required final Map<String, dynamic> body,
+    @JsonKey(name: 'created_at') required this.createdAt,
+    required this.id,
+    @JsonKey(
+      unknownEnumValue: InformationLevel.info,
+      defaultValue: InformationLevel.info,
+    )
+    required this.level,
+    required this.title,
+    required this.type,
+  }) : _body = body;
 
   factory _$InformationV1Impl.fromJson(Map<String, dynamic> json) =>
       _$$InformationV1ImplFromJson(json);
 
   @override
   @JsonKey(
-      unknownEnumValue: InformationAuthor.unknown,
-      defaultValue: InformationAuthor.unknown)
+    unknownEnumValue: InformationAuthor.unknown,
+    defaultValue: InformationAuthor.unknown,
+  )
   final InformationAuthor author;
   final Map<String, dynamic> _body;
   @override
@@ -243,8 +277,9 @@ class _$InformationV1Impl implements _InformationV1 {
   final int id;
   @override
   @JsonKey(
-      unknownEnumValue: InformationLevel.info,
-      defaultValue: InformationLevel.info)
+    unknownEnumValue: InformationLevel.info,
+    defaultValue: InformationLevel.info,
+  )
   final InformationLevel level;
   @override
   final String title;
@@ -274,14 +309,15 @@ class _$InformationV1Impl implements _InformationV1 {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      author,
-      const DeepCollectionEquality().hash(_body),
-      createdAt,
-      id,
-      level,
-      title,
-      type);
+    runtimeType,
+    author,
+    const DeepCollectionEquality().hash(_body),
+    createdAt,
+    id,
+    level,
+    title,
+    type,
+  );
 
   /// Create a copy of InformationV1
   /// with the given fields replaced by the non-null parameter values.
@@ -293,35 +329,37 @@ class _$InformationV1Impl implements _InformationV1 {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$InformationV1ImplToJson(
-      this,
-    );
+    return _$$InformationV1ImplToJson(this);
   }
 }
 
 abstract class _InformationV1 implements InformationV1 {
-  const factory _InformationV1(
-      {@JsonKey(
-          unknownEnumValue: InformationAuthor.unknown,
-          defaultValue: InformationAuthor.unknown)
-      required final InformationAuthor author,
-      required final Map<String, dynamic> body,
-      @JsonKey(name: 'created_at') required final DateTime createdAt,
-      required final int id,
-      @JsonKey(
-          unknownEnumValue: InformationLevel.info,
-          defaultValue: InformationLevel.info)
-      required final InformationLevel level,
-      required final String title,
-      required final String type}) = _$InformationV1Impl;
+  const factory _InformationV1({
+    @JsonKey(
+      unknownEnumValue: InformationAuthor.unknown,
+      defaultValue: InformationAuthor.unknown,
+    )
+    required final InformationAuthor author,
+    required final Map<String, dynamic> body,
+    @JsonKey(name: 'created_at') required final DateTime createdAt,
+    required final int id,
+    @JsonKey(
+      unknownEnumValue: InformationLevel.info,
+      defaultValue: InformationLevel.info,
+    )
+    required final InformationLevel level,
+    required final String title,
+    required final String type,
+  }) = _$InformationV1Impl;
 
   factory _InformationV1.fromJson(Map<String, dynamic> json) =
       _$InformationV1Impl.fromJson;
 
   @override
   @JsonKey(
-      unknownEnumValue: InformationAuthor.unknown,
-      defaultValue: InformationAuthor.unknown)
+    unknownEnumValue: InformationAuthor.unknown,
+    defaultValue: InformationAuthor.unknown,
+  )
   InformationAuthor get author;
   @override
   Map<String, dynamic> get body;
@@ -332,8 +370,9 @@ abstract class _InformationV1 implements InformationV1 {
   int get id;
   @override
   @JsonKey(
-      unknownEnumValue: InformationLevel.info,
-      defaultValue: InformationLevel.info)
+    unknownEnumValue: InformationLevel.info,
+    defaultValue: InformationLevel.info,
+  )
   InformationLevel get level;
   @override
   String get title;

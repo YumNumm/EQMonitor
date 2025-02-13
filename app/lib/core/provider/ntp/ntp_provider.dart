@@ -17,12 +17,9 @@ class Ntp extends _$Ntp {
     final config = ref.watch(ntpConfigProvider);
     final interval = config.interval;
 
-    final timer = Timer.periodic(
-      interval,
-      (_) async {
-        await sync();
-      },
-    );
+    final timer = Timer.periodic(interval, (_) async {
+      await sync();
+    });
     ref.onDispose(timer.cancel);
 
     return const NtpStateModel();
@@ -46,10 +43,7 @@ class Ntp extends _$Ntp {
       );
     }
 
-    state = state.copyWith(
-      offset: offset,
-      updatedAt: DateTime.now(),
-    );
+    state = state.copyWith(offset: offset, updatedAt: DateTime.now());
 
     talker.logCustom(NtpLog('NTP Time Sync: offset ${offset}ms'));
   }

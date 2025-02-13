@@ -13,13 +13,16 @@ String _$kyoshinMonitorSettingsHash() =>
 
 /// See also [KyoshinMonitorSettings].
 @ProviderFor(KyoshinMonitorSettings)
-final kyoshinMonitorSettingsProvider = NotifierProvider<KyoshinMonitorSettings,
-    KyoshinMonitorSettingsModel>.internal(
+final kyoshinMonitorSettingsProvider = NotifierProvider<
+  KyoshinMonitorSettings,
+  KyoshinMonitorSettingsModel
+>.internal(
   KyoshinMonitorSettings.new,
   name: r'kyoshinMonitorSettingsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$kyoshinMonitorSettingsHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$kyoshinMonitorSettingsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

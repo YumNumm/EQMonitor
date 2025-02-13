@@ -42,14 +42,10 @@ class EarthquakeHistoryDetailConfig with _$EarthquakeHistoryDetailConfig {
   }) = _EarthquakeHistoryDetailConfig;
 
   factory EarthquakeHistoryDetailConfig.fromJson(Map<String, dynamic> json) =>
-      _$EarthquakeHistoryDetailConfigFromJson(json).copyWith(
-        showingLpgmIntensity: false,
-      );
+      _$EarthquakeHistoryDetailConfigFromJson(
+        json,
+      ).copyWith(showingLpgmIntensity: false);
 }
 
 /// 地震履歴詳細画面における震度の表示方法
-enum IntensityFillMode {
-  fillCity,
-  fillRegion,
-  none;
-}
+enum IntensityFillMode { fillCity, fillRegion, none }

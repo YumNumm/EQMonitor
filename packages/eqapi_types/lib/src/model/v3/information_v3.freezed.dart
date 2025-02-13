@@ -12,7 +12,8 @@ part of 'information_v3.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 InformationV3Result _$InformationV3ResultFromJson(Map<String, dynamic> json) {
   return _InformationV3Result.fromJson(json);
@@ -35,8 +36,9 @@ mixin _$InformationV3Result {
 /// @nodoc
 abstract class $InformationV3ResultCopyWith<$Res> {
   factory $InformationV3ResultCopyWith(
-          InformationV3Result value, $Res Function(InformationV3Result) then) =
-      _$InformationV3ResultCopyWithImpl<$Res, InformationV3Result>;
+    InformationV3Result value,
+    $Res Function(InformationV3Result) then,
+  ) = _$InformationV3ResultCopyWithImpl<$Res, InformationV3Result>;
   @useResult
   $Res call({List<InformationV3> items});
 }
@@ -55,24 +57,27 @@ class _$InformationV3ResultCopyWithImpl<$Res, $Val extends InformationV3Result>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? items = null,
-  }) {
-    return _then(_value.copyWith(
-      items: null == items
-          ? _value.items
-          : items // ignore: cast_nullable_to_non_nullable
-              as List<InformationV3>,
-    ) as $Val);
+  $Res call({Object? items = null}) {
+    return _then(
+      _value.copyWith(
+            items:
+                null == items
+                    ? _value.items
+                    : items // ignore: cast_nullable_to_non_nullable
+                        as List<InformationV3>,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$InformationV3ResultImplCopyWith<$Res>
     implements $InformationV3ResultCopyWith<$Res> {
-  factory _$$InformationV3ResultImplCopyWith(_$InformationV3ResultImpl value,
-          $Res Function(_$InformationV3ResultImpl) then) =
-      __$$InformationV3ResultImplCopyWithImpl<$Res>;
+  factory _$$InformationV3ResultImplCopyWith(
+    _$InformationV3ResultImpl value,
+    $Res Function(_$InformationV3ResultImpl) then,
+  ) = __$$InformationV3ResultImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<InformationV3> items});
@@ -82,23 +87,25 @@ abstract class _$$InformationV3ResultImplCopyWith<$Res>
 class __$$InformationV3ResultImplCopyWithImpl<$Res>
     extends _$InformationV3ResultCopyWithImpl<$Res, _$InformationV3ResultImpl>
     implements _$$InformationV3ResultImplCopyWith<$Res> {
-  __$$InformationV3ResultImplCopyWithImpl(_$InformationV3ResultImpl _value,
-      $Res Function(_$InformationV3ResultImpl) _then)
-      : super(_value, _then);
+  __$$InformationV3ResultImplCopyWithImpl(
+    _$InformationV3ResultImpl _value,
+    $Res Function(_$InformationV3ResultImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of InformationV3Result
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? items = null,
-  }) {
-    return _then(_$InformationV3ResultImpl(
-      items: null == items
-          ? _value._items
-          : items // ignore: cast_nullable_to_non_nullable
-              as List<InformationV3>,
-    ));
+  $Res call({Object? items = null}) {
+    return _then(
+      _$InformationV3ResultImpl(
+        items:
+            null == items
+                ? _value._items
+                : items // ignore: cast_nullable_to_non_nullable
+                    as List<InformationV3>,
+      ),
+    );
   }
 }
 
@@ -106,7 +113,7 @@ class __$$InformationV3ResultImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$InformationV3ResultImpl implements _InformationV3Result {
   const _$InformationV3ResultImpl({required final List<InformationV3> items})
-      : _items = items;
+    : _items = items;
 
   factory _$InformationV3ResultImpl.fromJson(Map<String, dynamic> json) =>
       _$$InformationV3ResultImplFromJson(json);
@@ -144,19 +151,20 @@ class _$InformationV3ResultImpl implements _InformationV3Result {
   @pragma('vm:prefer-inline')
   _$$InformationV3ResultImplCopyWith<_$InformationV3ResultImpl> get copyWith =>
       __$$InformationV3ResultImplCopyWithImpl<_$InformationV3ResultImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$InformationV3ResultImplToJson(
-      this,
-    );
+    return _$$InformationV3ResultImplToJson(this);
   }
 }
 
 abstract class _InformationV3Result implements InformationV3Result {
-  const factory _InformationV3Result(
-      {required final List<InformationV3> items}) = _$InformationV3ResultImpl;
+  const factory _InformationV3Result({
+    required final List<InformationV3> items,
+  }) = _$InformationV3ResultImpl;
 
   factory _InformationV3Result.fromJson(Map<String, dynamic> json) =
       _$InformationV3ResultImpl.fromJson;
@@ -202,17 +210,19 @@ mixin _$InformationV3 {
 /// @nodoc
 abstract class $InformationV3CopyWith<$Res> {
   factory $InformationV3CopyWith(
-          InformationV3 value, $Res Function(InformationV3) then) =
-      _$InformationV3CopyWithImpl<$Res, InformationV3>;
+    InformationV3 value,
+    $Res Function(InformationV3) then,
+  ) = _$InformationV3CopyWithImpl<$Res, InformationV3>;
   @useResult
-  $Res call(
-      {int id,
-      String title,
-      String body,
-      @JsonKey(unknownEnumValue: Author.unknown) Author author,
-      @JsonKey(name: 'createdAt') DateTime createdAt,
-      @JsonKey(unknownEnumValue: Level.info) Level level,
-      int? eventId});
+  $Res call({
+    int id,
+    String title,
+    String body,
+    @JsonKey(unknownEnumValue: Author.unknown) Author author,
+    @JsonKey(name: 'createdAt') DateTime createdAt,
+    @JsonKey(unknownEnumValue: Level.info) Level level,
+    int? eventId,
+  });
 }
 
 /// @nodoc
@@ -238,36 +248,46 @@ class _$InformationV3CopyWithImpl<$Res, $Val extends InformationV3>
     Object? level = null,
     Object? eventId = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
-      body: null == body
-          ? _value.body
-          : body // ignore: cast_nullable_to_non_nullable
-              as String,
-      author: null == author
-          ? _value.author
-          : author // ignore: cast_nullable_to_non_nullable
-              as Author,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      level: null == level
-          ? _value.level
-          : level // ignore: cast_nullable_to_non_nullable
-              as Level,
-      eventId: freezed == eventId
-          ? _value.eventId
-          : eventId // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id:
+                null == id
+                    ? _value.id
+                    : id // ignore: cast_nullable_to_non_nullable
+                        as int,
+            title:
+                null == title
+                    ? _value.title
+                    : title // ignore: cast_nullable_to_non_nullable
+                        as String,
+            body:
+                null == body
+                    ? _value.body
+                    : body // ignore: cast_nullable_to_non_nullable
+                        as String,
+            author:
+                null == author
+                    ? _value.author
+                    : author // ignore: cast_nullable_to_non_nullable
+                        as Author,
+            createdAt:
+                null == createdAt
+                    ? _value.createdAt
+                    : createdAt // ignore: cast_nullable_to_non_nullable
+                        as DateTime,
+            level:
+                null == level
+                    ? _value.level
+                    : level // ignore: cast_nullable_to_non_nullable
+                        as Level,
+            eventId:
+                freezed == eventId
+                    ? _value.eventId
+                    : eventId // ignore: cast_nullable_to_non_nullable
+                        as int?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -275,18 +295,20 @@ class _$InformationV3CopyWithImpl<$Res, $Val extends InformationV3>
 abstract class _$$InformationV3ImplCopyWith<$Res>
     implements $InformationV3CopyWith<$Res> {
   factory _$$InformationV3ImplCopyWith(
-          _$InformationV3Impl value, $Res Function(_$InformationV3Impl) then) =
-      __$$InformationV3ImplCopyWithImpl<$Res>;
+    _$InformationV3Impl value,
+    $Res Function(_$InformationV3Impl) then,
+  ) = __$$InformationV3ImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      String title,
-      String body,
-      @JsonKey(unknownEnumValue: Author.unknown) Author author,
-      @JsonKey(name: 'createdAt') DateTime createdAt,
-      @JsonKey(unknownEnumValue: Level.info) Level level,
-      int? eventId});
+  $Res call({
+    int id,
+    String title,
+    String body,
+    @JsonKey(unknownEnumValue: Author.unknown) Author author,
+    @JsonKey(name: 'createdAt') DateTime createdAt,
+    @JsonKey(unknownEnumValue: Level.info) Level level,
+    int? eventId,
+  });
 }
 
 /// @nodoc
@@ -294,8 +316,9 @@ class __$$InformationV3ImplCopyWithImpl<$Res>
     extends _$InformationV3CopyWithImpl<$Res, _$InformationV3Impl>
     implements _$$InformationV3ImplCopyWith<$Res> {
   __$$InformationV3ImplCopyWithImpl(
-      _$InformationV3Impl _value, $Res Function(_$InformationV3Impl) _then)
-      : super(_value, _then);
+    _$InformationV3Impl _value,
+    $Res Function(_$InformationV3Impl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of InformationV3
   /// with the given fields replaced by the non-null parameter values.
@@ -310,50 +333,60 @@ class __$$InformationV3ImplCopyWithImpl<$Res>
     Object? level = null,
     Object? eventId = freezed,
   }) {
-    return _then(_$InformationV3Impl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
-      body: null == body
-          ? _value.body
-          : body // ignore: cast_nullable_to_non_nullable
-              as String,
-      author: null == author
-          ? _value.author
-          : author // ignore: cast_nullable_to_non_nullable
-              as Author,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      level: null == level
-          ? _value.level
-          : level // ignore: cast_nullable_to_non_nullable
-              as Level,
-      eventId: freezed == eventId
-          ? _value.eventId
-          : eventId // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ));
+    return _then(
+      _$InformationV3Impl(
+        id:
+            null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                    as int,
+        title:
+            null == title
+                ? _value.title
+                : title // ignore: cast_nullable_to_non_nullable
+                    as String,
+        body:
+            null == body
+                ? _value.body
+                : body // ignore: cast_nullable_to_non_nullable
+                    as String,
+        author:
+            null == author
+                ? _value.author
+                : author // ignore: cast_nullable_to_non_nullable
+                    as Author,
+        createdAt:
+            null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                    as DateTime,
+        level:
+            null == level
+                ? _value.level
+                : level // ignore: cast_nullable_to_non_nullable
+                    as Level,
+        eventId:
+            freezed == eventId
+                ? _value.eventId
+                : eventId // ignore: cast_nullable_to_non_nullable
+                    as int?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$InformationV3Impl implements _InformationV3 {
-  const _$InformationV3Impl(
-      {required this.id,
-      required this.title,
-      required this.body,
-      @JsonKey(unknownEnumValue: Author.unknown) required this.author,
-      @JsonKey(name: 'createdAt') required this.createdAt,
-      @JsonKey(unknownEnumValue: Level.info) required this.level,
-      required this.eventId});
+  const _$InformationV3Impl({
+    required this.id,
+    required this.title,
+    required this.body,
+    @JsonKey(unknownEnumValue: Author.unknown) required this.author,
+    @JsonKey(name: 'createdAt') required this.createdAt,
+    @JsonKey(unknownEnumValue: Level.info) required this.level,
+    required this.eventId,
+  });
 
   factory _$InformationV3Impl.fromJson(Map<String, dynamic> json) =>
       _$$InformationV3ImplFromJson(json);
@@ -399,7 +432,15 @@ class _$InformationV3Impl implements _InformationV3 {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, id, title, body, author, createdAt, level, eventId);
+    runtimeType,
+    id,
+    title,
+    body,
+    author,
+    createdAt,
+    level,
+    eventId,
+  );
 
   /// Create a copy of InformationV3
   /// with the given fields replaced by the non-null parameter values.
@@ -411,21 +452,20 @@ class _$InformationV3Impl implements _InformationV3 {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$InformationV3ImplToJson(
-      this,
-    );
+    return _$$InformationV3ImplToJson(this);
   }
 }
 
 abstract class _InformationV3 implements InformationV3 {
-  const factory _InformationV3(
-      {required final int id,
-      required final String title,
-      required final String body,
-      @JsonKey(unknownEnumValue: Author.unknown) required final Author author,
-      @JsonKey(name: 'createdAt') required final DateTime createdAt,
-      @JsonKey(unknownEnumValue: Level.info) required final Level level,
-      required final int? eventId}) = _$InformationV3Impl;
+  const factory _InformationV3({
+    required final int id,
+    required final String title,
+    required final String body,
+    @JsonKey(unknownEnumValue: Author.unknown) required final Author author,
+    @JsonKey(name: 'createdAt') required final DateTime createdAt,
+    @JsonKey(unknownEnumValue: Level.info) required final Level level,
+    required final int? eventId,
+  }) = _$InformationV3Impl;
 
   factory _InformationV3.fromJson(Map<String, dynamic> json) =
       _$InformationV3Impl.fromJson;

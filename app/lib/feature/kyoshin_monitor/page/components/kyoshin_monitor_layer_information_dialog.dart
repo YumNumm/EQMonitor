@@ -5,9 +5,9 @@ class RealtimeDataTypeInfoDialog extends StatelessWidget {
   const RealtimeDataTypeInfoDialog({super.key});
 
   static Future<void> show(BuildContext context) async => showDialog<void>(
-        context: context,
-        builder: (context) => const RealtimeDataTypeInfoDialog(),
-      );
+    context: context,
+    builder: (context) => const RealtimeDataTypeInfoDialog(),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -76,19 +76,16 @@ class _KyoshinMonitorSource extends StatelessWidget {
           const TextSpan(text: '上記説明は、'),
           WidgetSpan(
             child: InkWell(
-              onTap: () async => launchUrl(
-                Uri.parse(
-                  'https://www.kyoshin.bosai.go.jp/kyoshin/docs/new_kyoshinmonitor.shtml',
-                ),
-              ),
+              onTap:
+                  () async => launchUrl(
+                    Uri.parse(
+                      'https://www.kyoshin.bosai.go.jp/kyoshin/docs/new_kyoshinmonitor.shtml',
+                    ),
+                  ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    Icons.open_in_new,
-                    size: 12,
-                    color: hyperLinkColor,
-                  ),
+                  Icon(Icons.open_in_new, size: 12, color: hyperLinkColor),
                   Text(
                     '強震モニタについて - 防災科研',
                     style: textTheme.bodyMedium!.copyWith(
@@ -107,10 +104,7 @@ class _KyoshinMonitorSource extends StatelessWidget {
 }
 
 class _DataTypeInfo extends StatelessWidget {
-  const _DataTypeInfo({
-    required this.title,
-    required this.description,
-  });
+  const _DataTypeInfo({required this.title, required this.description});
 
   final String title;
   final String description;
@@ -128,9 +122,7 @@ class _DataTypeInfo extends StatelessWidget {
         children: [
           Text(
             title,
-            style: textTheme.titleSmall!.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: textTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 4),
           Text(

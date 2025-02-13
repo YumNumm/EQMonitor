@@ -6,10 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ShakeDetectionCard extends ConsumerWidget {
-  const ShakeDetectionCard({
-    required this.event,
-    super.key,
-  });
+  const ShakeDetectionCard({required this.event, super.key});
 
   final ShakeDetectionEvent event;
 
@@ -28,22 +25,20 @@ class ShakeDetectionCard extends ConsumerWidget {
     final now = ref.watch(timeTickerProvider()).value ?? DateTime.now();
 
     final intensityColorSchema = ref.watch(intensityColorProvider);
-    final maxIntensityColor =
-        intensityColorSchema.fromJmaForecastIntensity(maxIntensity);
+    final maxIntensityColor = intensityColorSchema.fromJmaForecastIntensity(
+      maxIntensity,
+    );
 
     final maxIntensityText = switch (maxIntensity) {
       JmaForecastIntensity.zero => '微弱な反応を検知しました',
       JmaForecastIntensity.one => '弱い揺れを検知しました',
       JmaForecastIntensity.two => '揺れを検知しました',
       JmaForecastIntensity.three ||
-      JmaForecastIntensity.four =>
-        'やや強い揺れを検知しました',
+      JmaForecastIntensity.four => 'やや強い揺れを検知しました',
       JmaForecastIntensity.fiveLower ||
-      JmaForecastIntensity.fiveUpper =>
-        '強い揺れを検知しました',
+      JmaForecastIntensity.fiveUpper => '強い揺れを検知しました',
       JmaForecastIntensity.sixLower ||
-      JmaForecastIntensity.sixUpper =>
-        '非常に強い揺れを検知しました',
+      JmaForecastIntensity.sixUpper => '非常に強い揺れを検知しました',
       JmaForecastIntensity.seven => '非常に強い揺れを検知しました',
       JmaForecastIntensity.unknown => '揺れを検知しました',
     };

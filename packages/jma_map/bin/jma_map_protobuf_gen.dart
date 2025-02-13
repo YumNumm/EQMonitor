@@ -19,20 +19,11 @@ Future<void> main() async {
 
     final jmaMapData = await _parseGeoJsonToJmaMap(json);
     print(jmaMapData.length);
-    jmaMapDataList.add(
-      JmaMap_JmaMapData(
-        mapType: target,
-        data: jmaMapData,
-      ),
-    );
+    jmaMapDataList.add(JmaMap_JmaMapData(mapType: target, data: jmaMapData));
   }
   // dump to file
   final file = File('out.pb');
-  await file.writeAsBytes(
-    JmaMap(
-      data: jmaMapDataList,
-    ).writeToBuffer(),
-  );
+  await file.writeAsBytes(JmaMap(data: jmaMapDataList).writeToBuffer());
 }
 
 Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
@@ -42,14 +33,13 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
   final features = geojson['features'] as List<dynamic>;
   for (final feature in features) {
     final json = feature as Map<String, dynamic>;
-    if (json
-        case {
-          'geometry': {
-            'type': final String geometryType,
-            'coordinates': final List<dynamic> coordinates,
-          },
-          'properties': final Map<String, dynamic> properties,
-        }) {
+    if (json case {
+      'geometry': {
+        'type': final String geometryType,
+        'coordinates': final List<dynamic> coordinates,
+      },
+      'properties': final Map<String, dynamic> properties,
+    }) {
       final latLngs = <LatLng>[];
       if (geometryType == 'Polygon') {
         for (final lists in coordinates) {
@@ -57,12 +47,7 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
             final ld = list as List<dynamic>;
             final lat = ld[1] as double;
             final lng = ld[0] as double;
-            latLngs.add(
-              LatLng(
-                lat: lat,
-                lng: lng,
-              ),
-            );
+            latLngs.add(LatLng(lat: lat, lng: lng));
           }
         }
       } else if (geometryType == 'MultiPolygon') {
@@ -72,12 +57,7 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
               final ld = l as List<dynamic>;
               final lat = ld[1] as double;
               final lng = ld[0] as double;
-              latLngs.add(
-                LatLng(
-                  lat: lat,
-                  lng: lng,
-                ),
-              );
+              latLngs.add(LatLng(lat: lat, lng: lng));
             }
           }
         }
@@ -87,12 +67,7 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
             final ld = list as List<dynamic>;
             final lat = ld[1] as double;
             final lng = ld[0] as double;
-            latLngs.add(
-              LatLng(
-                lat: lat,
-                lng: lng,
-              ),
-            );
+            latLngs.add(LatLng(lat: lat, lng: lng));
           }
         }
       } else if (geometryType == 'LineString') {
@@ -100,12 +75,7 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
           final ld = list as List<dynamic>;
           final lat = ld[1] as double;
           final lng = ld[0] as double;
-          latLngs.add(
-            LatLng(
-              lat: lat,
-              lng: lng,
-            ),
-          );
+          latLngs.add(LatLng(lat: lat, lng: lng));
         }
       } else {
         throw Exception('Unknown geometry type: $geometryType');
@@ -113,15 +83,18 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
       final bbox = latLngs.toLatLngBounds;
       var skipFlag = false;
       final property = JmaMap_JmaMapData_JmaMapDataItem_Property(
-        code: properties['code'] as String? ??
+        code:
+            properties['code'] as String? ??
             properties['regioncode'] as String? ??
             (() {
               skipFlag = true;
               print('Unknown code: $properties');
             }()),
-        name: properties['name'] as String? ??
+        name:
+            properties['name'] as String? ??
             (throw Exception('Unknown name: $properties')),
-        nameKana: properties['namekana'] as String? ??
+        nameKana:
+            properties['namekana'] as String? ??
             (() {
               skipFlag = true;
               print('Unknown nameKana: $properties');
@@ -131,10 +104,7 @@ Future<List<JmaMap_JmaMapData_JmaMapDataItem>> _parseGeoJsonToJmaMap(
         continue;
       }
       results.add(
-        JmaMap_JmaMapData_JmaMapDataItem(
-          bounds: bbox,
-          property: property,
-        ),
+        JmaMap_JmaMapData_JmaMapDataItem(bounds: bbox, property: property),
       );
     } else {
       throw Exception('Unknown feature: $json');
@@ -160,14 +130,8 @@ extension LatLngListEx on List<LatLng> {
       southWestLng = min(southWestLng, latLng.lng);
     }
     final latLngBounds = LatLngBounds(
-      northEast: LatLng(
-        lat: northEastLat,
-        lng: northEastLng,
-      ),
-      southWest: LatLng(
-        lat: southWestLat,
-        lng: southWestLng,
-      ),
+      northEast: LatLng(lat: northEastLat, lng: northEastLng),
+      southWest: LatLng(lat: southWestLat, lng: southWestLng),
     );
     return latLngBounds;
   }
@@ -175,13 +139,12 @@ extension LatLngListEx on List<LatLng> {
 
 extension JmaMapTypeConverter on JmaMap_JmaMapData_JmaMapType {
   String get toFileName => switch (this) {
-        JmaMap_JmaMapData_JmaMapType.AREA_FORECAST_LOCAL_E =>
-          'areaForecastLocalE',
-        JmaMap_JmaMapData_JmaMapType.AREA_FORECAST_LOCAL_EEW =>
-          'areaForecastLocalEew',
-        JmaMap_JmaMapData_JmaMapType.AREA_INFORMATION_CITY =>
-          'areaInformationCityQuake',
-        JmaMap_JmaMapData_JmaMapType.AREA_TSUNAMI => 'areaTsunami',
-        _ => throw UnimplementedError(),
-      };
+    JmaMap_JmaMapData_JmaMapType.AREA_FORECAST_LOCAL_E => 'areaForecastLocalE',
+    JmaMap_JmaMapData_JmaMapType.AREA_FORECAST_LOCAL_EEW =>
+      'areaForecastLocalEew',
+    JmaMap_JmaMapData_JmaMapType.AREA_INFORMATION_CITY =>
+      'areaInformationCityQuake',
+    JmaMap_JmaMapData_JmaMapType.AREA_TSUNAMI => 'areaTsunami',
+    _ => throw UnimplementedError(),
+  };
 }

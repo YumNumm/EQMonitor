@@ -23,20 +23,19 @@ class LicensePage extends ConsumerWidget {
             padding: const EdgeInsets.all(8),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(24),
-              child: Assets.images.icon.image(
-                height: 80,
-              ),
+              child: Assets.images.icon.image(height: 80),
             ),
           ),
           TextButton(
             child: const Text('https://github.com/YumNumm/EQMonitor'),
-            onPressed: () async =>
-                launchUrlString('https://github.com/YumNumm/EQMonitor'),
+            onPressed:
+                () async =>
+                    launchUrlString('https://github.com/YumNumm/EQMonitor'),
           ),
           TextButton(
             child: const Text('https://license.eqmonitor.app'),
-            onPressed: () async =>
-                launchUrlString('https://license.eqmonitor.app'),
+            onPressed:
+                () async => launchUrlString('https://license.eqmonitor.app'),
           ),
         ],
       ),

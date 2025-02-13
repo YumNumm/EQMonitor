@@ -8,29 +8,27 @@ class AppListTile extends StatelessWidget {
     // ignore: avoid_positional_boolean_parameters
     required void Function(bool) onChanged,
     Widget? trailing,
-  }) =>
-      AppListTile._(
-        title: title,
-        subtitle: subtitle,
-        value: value,
-        onChanged: onChanged,
-        trailing: trailing,
-        type: _AppListTileType.switchListTile,
-      );
+  }) => AppListTile._(
+    title: title,
+    subtitle: subtitle,
+    value: value,
+    onChanged: onChanged,
+    trailing: trailing,
+    type: _AppListTileType.switchListTile,
+  );
 
   factory AppListTile.listTile({
     required String title,
     required String subtitle,
     Widget? trailing,
     void Function()? onTap,
-  }) =>
-      AppListTile._(
-        title: title,
-        subtitle: subtitle,
-        trailing: trailing,
-        onTap: onTap,
-        type: _AppListTileType.listTile,
-      );
+  }) => AppListTile._(
+    title: title,
+    subtitle: subtitle,
+    trailing: trailing,
+    onTap: onTap,
+    type: _AppListTileType.listTile,
+  );
 
   const AppListTile._({
     required this.title,
@@ -65,39 +63,26 @@ class AppListTile extends StatelessWidget {
 
     return switch (type) {
       _AppListTileType.switchListTile => SwitchListTile.adaptive(
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-          ),
-          shape: shape,
-          tileColor: backgroundColor,
-          title: Text(
-            title,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          subtitle: Text(subtitle),
-          value: value!,
-          onChanged: onChanged,
-        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+        shape: shape,
+        tileColor: backgroundColor,
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(subtitle),
+        value: value!,
+        onChanged: onChanged,
+      ),
       _AppListTileType.listTile => ListTile(
-          onTap: onTap,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-          ),
-          shape: shape,
-          tileColor: backgroundColor,
-          textColor: textColor,
-          title: Text(
-            title,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          subtitle: Text(subtitle),
-          trailing: trailing,
-        ),
+        onTap: onTap,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+        shape: shape,
+        tileColor: backgroundColor,
+        textColor: textColor,
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(subtitle),
+        trailing: trailing,
+      ),
     };
   }
 }
 
-enum _AppListTileType {
-  switchListTile,
-  listTile,
-}
+enum _AppListTileType { switchListTile, listTile }

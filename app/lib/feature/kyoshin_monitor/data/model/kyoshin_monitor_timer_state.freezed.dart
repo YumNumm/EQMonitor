@@ -12,10 +12,12 @@ part of 'kyoshin_monitor_timer_state.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 KyoshinMonitorTimerState _$KyoshinMonitorTimerStateFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _KyoshinMonitorTimerState.fromJson(json);
 }
 
@@ -36,16 +38,19 @@ mixin _$KyoshinMonitorTimerState {
 
 /// @nodoc
 abstract class $KyoshinMonitorTimerStateCopyWith<$Res> {
-  factory $KyoshinMonitorTimerStateCopyWith(KyoshinMonitorTimerState value,
-          $Res Function(KyoshinMonitorTimerState) then) =
-      _$KyoshinMonitorTimerStateCopyWithImpl<$Res, KyoshinMonitorTimerState>;
+  factory $KyoshinMonitorTimerStateCopyWith(
+    KyoshinMonitorTimerState value,
+    $Res Function(KyoshinMonitorTimerState) then,
+  ) = _$KyoshinMonitorTimerStateCopyWithImpl<$Res, KyoshinMonitorTimerState>;
   @useResult
   $Res call({Duration delayFromDevice, DateTime? lastSyncedAt});
 }
 
 /// @nodoc
-class _$KyoshinMonitorTimerStateCopyWithImpl<$Res,
-        $Val extends KyoshinMonitorTimerState>
+class _$KyoshinMonitorTimerStateCopyWithImpl<
+  $Res,
+  $Val extends KyoshinMonitorTimerState
+>
     implements $KyoshinMonitorTimerStateCopyWith<$Res> {
   _$KyoshinMonitorTimerStateCopyWithImpl(this._value, this._then);
 
@@ -58,20 +63,22 @@ class _$KyoshinMonitorTimerStateCopyWithImpl<$Res,
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? delayFromDevice = null,
-    Object? lastSyncedAt = freezed,
-  }) {
-    return _then(_value.copyWith(
-      delayFromDevice: null == delayFromDevice
-          ? _value.delayFromDevice
-          : delayFromDevice // ignore: cast_nullable_to_non_nullable
-              as Duration,
-      lastSyncedAt: freezed == lastSyncedAt
-          ? _value.lastSyncedAt
-          : lastSyncedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
+  $Res call({Object? delayFromDevice = null, Object? lastSyncedAt = freezed}) {
+    return _then(
+      _value.copyWith(
+            delayFromDevice:
+                null == delayFromDevice
+                    ? _value.delayFromDevice
+                    : delayFromDevice // ignore: cast_nullable_to_non_nullable
+                        as Duration,
+            lastSyncedAt:
+                freezed == lastSyncedAt
+                    ? _value.lastSyncedAt
+                    : lastSyncedAt // ignore: cast_nullable_to_non_nullable
+                        as DateTime?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -79,9 +86,9 @@ class _$KyoshinMonitorTimerStateCopyWithImpl<$Res,
 abstract class _$$KyoshinMonitorTimerStateImplCopyWith<$Res>
     implements $KyoshinMonitorTimerStateCopyWith<$Res> {
   factory _$$KyoshinMonitorTimerStateImplCopyWith(
-          _$KyoshinMonitorTimerStateImpl value,
-          $Res Function(_$KyoshinMonitorTimerStateImpl) then) =
-      __$$KyoshinMonitorTimerStateImplCopyWithImpl<$Res>;
+    _$KyoshinMonitorTimerStateImpl value,
+    $Res Function(_$KyoshinMonitorTimerStateImpl) then,
+  ) = __$$KyoshinMonitorTimerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({Duration delayFromDevice, DateTime? lastSyncedAt});
@@ -89,40 +96,46 @@ abstract class _$$KyoshinMonitorTimerStateImplCopyWith<$Res>
 
 /// @nodoc
 class __$$KyoshinMonitorTimerStateImplCopyWithImpl<$Res>
-    extends _$KyoshinMonitorTimerStateCopyWithImpl<$Res,
-        _$KyoshinMonitorTimerStateImpl>
+    extends
+        _$KyoshinMonitorTimerStateCopyWithImpl<
+          $Res,
+          _$KyoshinMonitorTimerStateImpl
+        >
     implements _$$KyoshinMonitorTimerStateImplCopyWith<$Res> {
   __$$KyoshinMonitorTimerStateImplCopyWithImpl(
-      _$KyoshinMonitorTimerStateImpl _value,
-      $Res Function(_$KyoshinMonitorTimerStateImpl) _then)
-      : super(_value, _then);
+    _$KyoshinMonitorTimerStateImpl _value,
+    $Res Function(_$KyoshinMonitorTimerStateImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of KyoshinMonitorTimerState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? delayFromDevice = null,
-    Object? lastSyncedAt = freezed,
-  }) {
-    return _then(_$KyoshinMonitorTimerStateImpl(
-      delayFromDevice: null == delayFromDevice
-          ? _value.delayFromDevice
-          : delayFromDevice // ignore: cast_nullable_to_non_nullable
-              as Duration,
-      lastSyncedAt: freezed == lastSyncedAt
-          ? _value.lastSyncedAt
-          : lastSyncedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
+  $Res call({Object? delayFromDevice = null, Object? lastSyncedAt = freezed}) {
+    return _then(
+      _$KyoshinMonitorTimerStateImpl(
+        delayFromDevice:
+            null == delayFromDevice
+                ? _value.delayFromDevice
+                : delayFromDevice // ignore: cast_nullable_to_non_nullable
+                    as Duration,
+        lastSyncedAt:
+            freezed == lastSyncedAt
+                ? _value.lastSyncedAt
+                : lastSyncedAt // ignore: cast_nullable_to_non_nullable
+                    as DateTime?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$KyoshinMonitorTimerStateImpl implements _KyoshinMonitorTimerState {
-  const _$KyoshinMonitorTimerStateImpl(
-      {required this.delayFromDevice, required this.lastSyncedAt});
+  const _$KyoshinMonitorTimerStateImpl({
+    required this.delayFromDevice,
+    required this.lastSyncedAt,
+  });
 
   factory _$KyoshinMonitorTimerStateImpl.fromJson(Map<String, dynamic> json) =>
       _$$KyoshinMonitorTimerStateImplFromJson(json);
@@ -158,21 +171,21 @@ class _$KyoshinMonitorTimerStateImpl implements _KyoshinMonitorTimerState {
   @override
   @pragma('vm:prefer-inline')
   _$$KyoshinMonitorTimerStateImplCopyWith<_$KyoshinMonitorTimerStateImpl>
-      get copyWith => __$$KyoshinMonitorTimerStateImplCopyWithImpl<
-          _$KyoshinMonitorTimerStateImpl>(this, _$identity);
+  get copyWith => __$$KyoshinMonitorTimerStateImplCopyWithImpl<
+    _$KyoshinMonitorTimerStateImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$KyoshinMonitorTimerStateImplToJson(
-      this,
-    );
+    return _$$KyoshinMonitorTimerStateImplToJson(this);
   }
 }
 
 abstract class _KyoshinMonitorTimerState implements KyoshinMonitorTimerState {
-  const factory _KyoshinMonitorTimerState(
-      {required final Duration delayFromDevice,
-      required final DateTime? lastSyncedAt}) = _$KyoshinMonitorTimerStateImpl;
+  const factory _KyoshinMonitorTimerState({
+    required final Duration delayFromDevice,
+    required final DateTime? lastSyncedAt,
+  }) = _$KyoshinMonitorTimerStateImpl;
 
   factory _KyoshinMonitorTimerState.fromJson(Map<String, dynamic> json) =
       _$KyoshinMonitorTimerStateImpl.fromJson;
@@ -187,5 +200,5 @@ abstract class _KyoshinMonitorTimerState implements KyoshinMonitorTimerState {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$KyoshinMonitorTimerStateImplCopyWith<_$KyoshinMonitorTimerStateImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

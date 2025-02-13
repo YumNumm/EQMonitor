@@ -14,14 +14,15 @@ String _$fcmTopicManagerHash() => r'967211da3f9d8def37c763112c042f64e6fa3c91';
 @ProviderFor(FcmTopicManager)
 final fcmTopicManagerProvider =
     NotifierProvider<FcmTopicManager, List<String>>.internal(
-  FcmTopicManager.new,
-  name: r'fcmTopicManagerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$fcmTopicManagerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      FcmTopicManager.new,
+      name: r'fcmTopicManagerProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$fcmTopicManagerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$FcmTopicManager = Notifier<List<String>>;
 // ignore_for_file: type=lint

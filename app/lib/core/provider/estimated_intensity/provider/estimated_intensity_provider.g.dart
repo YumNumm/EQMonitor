@@ -15,14 +15,15 @@ String _$estimatedIntensityCityHash() =>
 @ProviderFor(estimatedIntensityCity)
 final estimatedIntensityCityProvider =
     StreamProvider<Map<String, double>>.internal(
-  estimatedIntensityCity,
-  name: r'estimatedIntensityCityProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$estimatedIntensityCityHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      estimatedIntensityCity,
+      name: r'estimatedIntensityCityProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$estimatedIntensityCityHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
@@ -34,14 +35,15 @@ String _$estimatedIntensityRegionHash() =>
 @ProviderFor(estimatedIntensityRegion)
 final estimatedIntensityRegionProvider =
     StreamProvider<Map<String, double>>.internal(
-  estimatedIntensityRegion,
-  name: r'estimatedIntensityRegionProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$estimatedIntensityRegionHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      estimatedIntensityRegion,
+      name: r'estimatedIntensityRegionProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$estimatedIntensityRegionHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
@@ -51,13 +53,16 @@ String _$estimatedIntensityHash() =>
 
 /// See also [EstimatedIntensity].
 @ProviderFor(EstimatedIntensity)
-final estimatedIntensityProvider = AsyncNotifierProvider<EstimatedIntensity,
-    List<EstimatedIntensityPoint>>.internal(
+final estimatedIntensityProvider = AsyncNotifierProvider<
+  EstimatedIntensity,
+  List<EstimatedIntensityPoint>
+>.internal(
   EstimatedIntensity.new,
   name: r'estimatedIntensityProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$estimatedIntensityHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$estimatedIntensityHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

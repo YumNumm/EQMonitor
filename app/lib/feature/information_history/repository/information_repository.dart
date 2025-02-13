@@ -19,11 +19,7 @@ class InformationRepository {
   Future<Result<InformationV3Result, Exception>> fetchInformation({
     required int limit,
     required int offset,
-  }) async =>
-      Result.capture(
-        () => _api.v3.getInformation(
-          limit: limit,
-          offset: offset,
-        ),
-      );
+  }) async => Result.capture(
+    () => _api.v3.getInformation(limit: limit, offset: offset),
+  );
 }

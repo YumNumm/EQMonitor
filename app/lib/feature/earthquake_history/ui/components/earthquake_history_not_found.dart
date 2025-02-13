@@ -3,9 +3,7 @@ import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history
 import 'package:flutter/material.dart';
 
 class EarthquakeHistoryNotFound extends StatelessWidget {
-  const EarthquakeHistoryNotFound({
-    super.key,
-  });
+  const EarthquakeHistoryNotFound({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +13,7 @@ class EarthquakeHistoryNotFound extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.search_off,
-              size: 48,
-            ),
+            const Icon(Icons.search_off, size: 48),
             const Text(
               '条件を満たす地震情報は見つかりませんでした',
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -31,8 +26,9 @@ class EarthquakeHistoryNotFound extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             FilledButton(
-              onPressed: () async =>
-                  const EarthquakeHistoryEarlyRoute().push<void>(context),
+              onPressed:
+                  () async =>
+                      const EarthquakeHistoryEarlyRoute().push<void>(context),
               child: const Text('震度データベース'),
             ),
           ],
@@ -54,10 +50,7 @@ class EarthquakeHistoryAllFetched extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.search,
-                size: 48,
-              ),
+              const Icon(Icons.search, size: 48),
               const Text(
                 '全件取得済みです',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -70,8 +63,9 @@ class EarthquakeHistoryAllFetched extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               FilledButton(
-                onPressed: () async =>
-                    const EarthquakeHistoryEarlyRoute().push<void>(context),
+                onPressed:
+                    () async =>
+                        const EarthquakeHistoryEarlyRoute().push<void>(context),
                 child: const Text('震度データベース'),
               ),
             ],

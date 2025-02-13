@@ -12,7 +12,8 @@ part of 'common.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ParameterRegion _$ParameterRegionFromJson(Map<String, dynamic> json) {
   return _ParameterRegion.fromJson(json);
@@ -37,8 +38,9 @@ mixin _$ParameterRegion {
 /// @nodoc
 abstract class $ParameterRegionCopyWith<$Res> {
   factory $ParameterRegionCopyWith(
-          ParameterRegion value, $Res Function(ParameterRegion) then) =
-      _$ParameterRegionCopyWithImpl<$Res, ParameterRegion>;
+    ParameterRegion value,
+    $Res Function(ParameterRegion) then,
+  ) = _$ParameterRegionCopyWithImpl<$Res, ParameterRegion>;
   @useResult
   $Res call({String code, String name, String kana});
 }
@@ -57,34 +59,37 @@ class _$ParameterRegionCopyWithImpl<$Res, $Val extends ParameterRegion>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? code = null,
-    Object? name = null,
-    Object? kana = null,
-  }) {
-    return _then(_value.copyWith(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      kana: null == kana
-          ? _value.kana
-          : kana // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  $Res call({Object? code = null, Object? name = null, Object? kana = null}) {
+    return _then(
+      _value.copyWith(
+            code:
+                null == code
+                    ? _value.code
+                    : code // ignore: cast_nullable_to_non_nullable
+                        as String,
+            name:
+                null == name
+                    ? _value.name
+                    : name // ignore: cast_nullable_to_non_nullable
+                        as String,
+            kana:
+                null == kana
+                    ? _value.kana
+                    : kana // ignore: cast_nullable_to_non_nullable
+                        as String,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ParameterRegionImplCopyWith<$Res>
     implements $ParameterRegionCopyWith<$Res> {
-  factory _$$ParameterRegionImplCopyWith(_$ParameterRegionImpl value,
-          $Res Function(_$ParameterRegionImpl) then) =
-      __$$ParameterRegionImplCopyWithImpl<$Res>;
+  factory _$$ParameterRegionImplCopyWith(
+    _$ParameterRegionImpl value,
+    $Res Function(_$ParameterRegionImpl) then,
+  ) = __$$ParameterRegionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String code, String name, String kana});
@@ -95,40 +100,45 @@ class __$$ParameterRegionImplCopyWithImpl<$Res>
     extends _$ParameterRegionCopyWithImpl<$Res, _$ParameterRegionImpl>
     implements _$$ParameterRegionImplCopyWith<$Res> {
   __$$ParameterRegionImplCopyWithImpl(
-      _$ParameterRegionImpl _value, $Res Function(_$ParameterRegionImpl) _then)
-      : super(_value, _then);
+    _$ParameterRegionImpl _value,
+    $Res Function(_$ParameterRegionImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of ParameterRegion
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? code = null,
-    Object? name = null,
-    Object? kana = null,
-  }) {
-    return _then(_$ParameterRegionImpl(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      kana: null == kana
-          ? _value.kana
-          : kana // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? code = null, Object? name = null, Object? kana = null}) {
+    return _then(
+      _$ParameterRegionImpl(
+        code:
+            null == code
+                ? _value.code
+                : code // ignore: cast_nullable_to_non_nullable
+                    as String,
+        name:
+            null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                    as String,
+        kana:
+            null == kana
+                ? _value.kana
+                : kana // ignore: cast_nullable_to_non_nullable
+                    as String,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ParameterRegionImpl implements _ParameterRegion {
-  const _$ParameterRegionImpl(
-      {required this.code, required this.name, required this.kana});
+  const _$ParameterRegionImpl({
+    required this.code,
+    required this.name,
+    required this.kana,
+  });
 
   factory _$ParameterRegionImpl.fromJson(Map<String, dynamic> json) =>
       _$$ParameterRegionImplFromJson(json);
@@ -166,21 +176,22 @@ class _$ParameterRegionImpl implements _ParameterRegion {
   @pragma('vm:prefer-inline')
   _$$ParameterRegionImplCopyWith<_$ParameterRegionImpl> get copyWith =>
       __$$ParameterRegionImplCopyWithImpl<_$ParameterRegionImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ParameterRegionImplToJson(
-      this,
-    );
+    return _$$ParameterRegionImplToJson(this);
   }
 }
 
 abstract class _ParameterRegion implements ParameterRegion {
-  const factory _ParameterRegion(
-      {required final String code,
-      required final String name,
-      required final String kana}) = _$ParameterRegionImpl;
+  const factory _ParameterRegion({
+    required final String code,
+    required final String name,
+    required final String kana,
+  }) = _$ParameterRegionImpl;
 
   factory _ParameterRegion.fromJson(Map<String, dynamic> json) =
       _$ParameterRegionImpl.fromJson;
@@ -223,8 +234,9 @@ mixin _$ParameterCity {
 /// @nodoc
 abstract class $ParameterCityCopyWith<$Res> {
   factory $ParameterCityCopyWith(
-          ParameterCity value, $Res Function(ParameterCity) then) =
-      _$ParameterCityCopyWithImpl<$Res, ParameterCity>;
+    ParameterCity value,
+    $Res Function(ParameterCity) then,
+  ) = _$ParameterCityCopyWithImpl<$Res, ParameterCity>;
   @useResult
   $Res call({String code, String name, String kana});
 }
@@ -243,25 +255,27 @@ class _$ParameterCityCopyWithImpl<$Res, $Val extends ParameterCity>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? code = null,
-    Object? name = null,
-    Object? kana = null,
-  }) {
-    return _then(_value.copyWith(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      kana: null == kana
-          ? _value.kana
-          : kana // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  $Res call({Object? code = null, Object? name = null, Object? kana = null}) {
+    return _then(
+      _value.copyWith(
+            code:
+                null == code
+                    ? _value.code
+                    : code // ignore: cast_nullable_to_non_nullable
+                        as String,
+            name:
+                null == name
+                    ? _value.name
+                    : name // ignore: cast_nullable_to_non_nullable
+                        as String,
+            kana:
+                null == kana
+                    ? _value.kana
+                    : kana // ignore: cast_nullable_to_non_nullable
+                        as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -269,8 +283,9 @@ class _$ParameterCityCopyWithImpl<$Res, $Val extends ParameterCity>
 abstract class _$$ParameterCityImplCopyWith<$Res>
     implements $ParameterCityCopyWith<$Res> {
   factory _$$ParameterCityImplCopyWith(
-          _$ParameterCityImpl value, $Res Function(_$ParameterCityImpl) then) =
-      __$$ParameterCityImplCopyWithImpl<$Res>;
+    _$ParameterCityImpl value,
+    $Res Function(_$ParameterCityImpl) then,
+  ) = __$$ParameterCityImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String code, String name, String kana});
@@ -281,40 +296,45 @@ class __$$ParameterCityImplCopyWithImpl<$Res>
     extends _$ParameterCityCopyWithImpl<$Res, _$ParameterCityImpl>
     implements _$$ParameterCityImplCopyWith<$Res> {
   __$$ParameterCityImplCopyWithImpl(
-      _$ParameterCityImpl _value, $Res Function(_$ParameterCityImpl) _then)
-      : super(_value, _then);
+    _$ParameterCityImpl _value,
+    $Res Function(_$ParameterCityImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of ParameterCity
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? code = null,
-    Object? name = null,
-    Object? kana = null,
-  }) {
-    return _then(_$ParameterCityImpl(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      kana: null == kana
-          ? _value.kana
-          : kana // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? code = null, Object? name = null, Object? kana = null}) {
+    return _then(
+      _$ParameterCityImpl(
+        code:
+            null == code
+                ? _value.code
+                : code // ignore: cast_nullable_to_non_nullable
+                    as String,
+        name:
+            null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                    as String,
+        kana:
+            null == kana
+                ? _value.kana
+                : kana // ignore: cast_nullable_to_non_nullable
+                    as String,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ParameterCityImpl implements _ParameterCity {
-  const _$ParameterCityImpl(
-      {required this.code, required this.name, required this.kana});
+  const _$ParameterCityImpl({
+    required this.code,
+    required this.name,
+    required this.kana,
+  });
 
   factory _$ParameterCityImpl.fromJson(Map<String, dynamic> json) =>
       _$$ParameterCityImplFromJson(json);
@@ -355,17 +375,16 @@ class _$ParameterCityImpl implements _ParameterCity {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ParameterCityImplToJson(
-      this,
-    );
+    return _$$ParameterCityImplToJson(this);
   }
 }
 
 abstract class _ParameterCity implements ParameterCity {
-  const factory _ParameterCity(
-      {required final String code,
-      required final String name,
-      required final String kana}) = _$ParameterCityImpl;
+  const factory _ParameterCity({
+    required final String code,
+    required final String name,
+    required final String kana,
+  }) = _$ParameterCityImpl;
 
   factory _ParameterCity.fromJson(Map<String, dynamic> json) =
       _$ParameterCityImpl.fromJson;

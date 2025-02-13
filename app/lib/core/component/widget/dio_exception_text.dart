@@ -2,10 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class DioExceptionText extends StatelessWidget {
-  const DioExceptionText({
-    required this.exception,
-    super.key,
-  });
+  const DioExceptionText({required this.exception, super.key});
 
   final DioException exception;
 
@@ -14,8 +11,7 @@ class DioExceptionText extends StatelessWidget {
     final text = switch (exception.type) {
       DioExceptionType.connectionTimeout ||
       DioExceptionType.sendTimeout ||
-      DioExceptionType.receiveTimeout =>
-        '接続がタイムアウトしました',
+      DioExceptionType.receiveTimeout => '接続がタイムアウトしました',
       DioExceptionType.badResponse => '不正なレスポンスが返されました',
       DioExceptionType.cancel => 'リクエストがキャンセルされました',
       DioExceptionType.badCertificate => '証明書のエラーが発生しました',
@@ -26,9 +22,7 @@ class DioExceptionText extends StatelessWidget {
     final errorCodeText = ' (エラーコード: $errorCode)';
     return Text(
       text + errorCodeText,
-      style: const TextStyle(
-        fontWeight: FontWeight.bold,
-      ),
+      style: const TextStyle(fontWeight: FontWeight.bold),
     );
   }
 }

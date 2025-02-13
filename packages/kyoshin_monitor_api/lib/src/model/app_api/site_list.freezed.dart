@@ -12,7 +12,8 @@ part of 'site_list.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 SiteList _$SiteListFromJson(Map<String, dynamic> json) {
   return _SiteList.fromJson(json);
@@ -51,12 +52,13 @@ abstract class $SiteListCopyWith<$Res> {
   factory $SiteListCopyWith(SiteList value, $Res Function(SiteList) then) =
       _$SiteListCopyWithImpl<$Res, SiteList>;
   @useResult
-  $Res call(
-      {@JsonKey(name: 'items') List<Site>? sites,
-      Security? security,
-      String? dataTime,
-      Result? result,
-      String? serialNo});
+  $Res call({
+    @JsonKey(name: 'items') List<Site>? sites,
+    Security? security,
+    String? dataTime,
+    Result? result,
+    String? serialNo,
+  });
 
   $SecurityCopyWith<$Res>? get security;
   $ResultCopyWith<$Res>? get result;
@@ -83,28 +85,36 @@ class _$SiteListCopyWithImpl<$Res, $Val extends SiteList>
     Object? result = freezed,
     Object? serialNo = freezed,
   }) {
-    return _then(_value.copyWith(
-      sites: freezed == sites
-          ? _value.sites
-          : sites // ignore: cast_nullable_to_non_nullable
-              as List<Site>?,
-      security: freezed == security
-          ? _value.security
-          : security // ignore: cast_nullable_to_non_nullable
-              as Security?,
-      dataTime: freezed == dataTime
-          ? _value.dataTime
-          : dataTime // ignore: cast_nullable_to_non_nullable
-              as String?,
-      result: freezed == result
-          ? _value.result
-          : result // ignore: cast_nullable_to_non_nullable
-              as Result?,
-      serialNo: freezed == serialNo
-          ? _value.serialNo
-          : serialNo // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            sites:
+                freezed == sites
+                    ? _value.sites
+                    : sites // ignore: cast_nullable_to_non_nullable
+                        as List<Site>?,
+            security:
+                freezed == security
+                    ? _value.security
+                    : security // ignore: cast_nullable_to_non_nullable
+                        as Security?,
+            dataTime:
+                freezed == dataTime
+                    ? _value.dataTime
+                    : dataTime // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            result:
+                freezed == result
+                    ? _value.result
+                    : result // ignore: cast_nullable_to_non_nullable
+                        as Result?,
+            serialNo:
+                freezed == serialNo
+                    ? _value.serialNo
+                    : serialNo // ignore: cast_nullable_to_non_nullable
+                        as String?,
+          )
+          as $Val,
+    );
   }
 
   /// Create a copy of SiteList
@@ -140,16 +150,18 @@ class _$SiteListCopyWithImpl<$Res, $Val extends SiteList>
 abstract class _$$SiteListImplCopyWith<$Res>
     implements $SiteListCopyWith<$Res> {
   factory _$$SiteListImplCopyWith(
-          _$SiteListImpl value, $Res Function(_$SiteListImpl) then) =
-      __$$SiteListImplCopyWithImpl<$Res>;
+    _$SiteListImpl value,
+    $Res Function(_$SiteListImpl) then,
+  ) = __$$SiteListImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {@JsonKey(name: 'items') List<Site>? sites,
-      Security? security,
-      String? dataTime,
-      Result? result,
-      String? serialNo});
+  $Res call({
+    @JsonKey(name: 'items') List<Site>? sites,
+    Security? security,
+    String? dataTime,
+    Result? result,
+    String? serialNo,
+  });
 
   @override
   $SecurityCopyWith<$Res>? get security;
@@ -162,8 +174,9 @@ class __$$SiteListImplCopyWithImpl<$Res>
     extends _$SiteListCopyWithImpl<$Res, _$SiteListImpl>
     implements _$$SiteListImplCopyWith<$Res> {
   __$$SiteListImplCopyWithImpl(
-      _$SiteListImpl _value, $Res Function(_$SiteListImpl) _then)
-      : super(_value, _then);
+    _$SiteListImpl _value,
+    $Res Function(_$SiteListImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of SiteList
   /// with the given fields replaced by the non-null parameter values.
@@ -176,41 +189,48 @@ class __$$SiteListImplCopyWithImpl<$Res>
     Object? result = freezed,
     Object? serialNo = freezed,
   }) {
-    return _then(_$SiteListImpl(
-      sites: freezed == sites
-          ? _value._sites
-          : sites // ignore: cast_nullable_to_non_nullable
-              as List<Site>?,
-      security: freezed == security
-          ? _value.security
-          : security // ignore: cast_nullable_to_non_nullable
-              as Security?,
-      dataTime: freezed == dataTime
-          ? _value.dataTime
-          : dataTime // ignore: cast_nullable_to_non_nullable
-              as String?,
-      result: freezed == result
-          ? _value.result
-          : result // ignore: cast_nullable_to_non_nullable
-              as Result?,
-      serialNo: freezed == serialNo
-          ? _value.serialNo
-          : serialNo // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$SiteListImpl(
+        sites:
+            freezed == sites
+                ? _value._sites
+                : sites // ignore: cast_nullable_to_non_nullable
+                    as List<Site>?,
+        security:
+            freezed == security
+                ? _value.security
+                : security // ignore: cast_nullable_to_non_nullable
+                    as Security?,
+        dataTime:
+            freezed == dataTime
+                ? _value.dataTime
+                : dataTime // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        result:
+            freezed == result
+                ? _value.result
+                : result // ignore: cast_nullable_to_non_nullable
+                    as Result?,
+        serialNo:
+            freezed == serialNo
+                ? _value.serialNo
+                : serialNo // ignore: cast_nullable_to_non_nullable
+                    as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$SiteListImpl implements _SiteList {
-  const _$SiteListImpl(
-      {@JsonKey(name: 'items') final List<Site>? sites,
-      this.security,
-      this.dataTime,
-      this.result,
-      this.serialNo})
-      : _sites = sites;
+  const _$SiteListImpl({
+    @JsonKey(name: 'items') final List<Site>? sites,
+    this.security,
+    this.dataTime,
+    this.result,
+    this.serialNo,
+  }) : _sites = sites;
 
   factory _$SiteListImpl.fromJson(Map<String, dynamic> json) =>
       _$$SiteListImplFromJson(json);
@@ -268,12 +288,13 @@ class _$SiteListImpl implements _SiteList {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_sites),
-      security,
-      dataTime,
-      result,
-      serialNo);
+    runtimeType,
+    const DeepCollectionEquality().hash(_sites),
+    security,
+    dataTime,
+    result,
+    serialNo,
+  );
 
   /// Create a copy of SiteList
   /// with the given fields replaced by the non-null parameter values.
@@ -285,19 +306,18 @@ class _$SiteListImpl implements _SiteList {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$SiteListImplToJson(
-      this,
-    );
+    return _$$SiteListImplToJson(this);
   }
 }
 
 abstract class _SiteList implements SiteList {
-  const factory _SiteList(
-      {@JsonKey(name: 'items') final List<Site>? sites,
-      final Security? security,
-      final String? dataTime,
-      final Result? result,
-      final String? serialNo}) = _$SiteListImpl;
+  const factory _SiteList({
+    @JsonKey(name: 'items') final List<Site>? sites,
+    final Security? security,
+    final String? dataTime,
+    final Result? result,
+    final String? serialNo,
+  }) = _$SiteListImpl;
 
   factory _SiteList.fromJson(Map<String, dynamic> json) =
       _$SiteListImpl.fromJson;
@@ -371,13 +391,14 @@ abstract class $SiteCopyWith<$Res> {
   factory $SiteCopyWith(Site value, $Res Function(Site) then) =
       _$SiteCopyWithImpl<$Res, Site>;
   @useResult
-  $Res call(
-      {int? muni,
-      int? siteidx,
-      @JsonKey(name: 'pref') int? prefectureId,
-      @JsonKey(name: 'siteid') String? siteId,
-      double? lat,
-      double? lng});
+  $Res call({
+    int? muni,
+    int? siteidx,
+    @JsonKey(name: 'pref') int? prefectureId,
+    @JsonKey(name: 'siteid') String? siteId,
+    double? lat,
+    double? lng,
+  });
 }
 
 /// @nodoc
@@ -402,49 +423,60 @@ class _$SiteCopyWithImpl<$Res, $Val extends Site>
     Object? lat = freezed,
     Object? lng = freezed,
   }) {
-    return _then(_value.copyWith(
-      muni: freezed == muni
-          ? _value.muni
-          : muni // ignore: cast_nullable_to_non_nullable
-              as int?,
-      siteidx: freezed == siteidx
-          ? _value.siteidx
-          : siteidx // ignore: cast_nullable_to_non_nullable
-              as int?,
-      prefectureId: freezed == prefectureId
-          ? _value.prefectureId
-          : prefectureId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      siteId: freezed == siteId
-          ? _value.siteId
-          : siteId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      lat: freezed == lat
-          ? _value.lat
-          : lat // ignore: cast_nullable_to_non_nullable
-              as double?,
-      lng: freezed == lng
-          ? _value.lng
-          : lng // ignore: cast_nullable_to_non_nullable
-              as double?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            muni:
+                freezed == muni
+                    ? _value.muni
+                    : muni // ignore: cast_nullable_to_non_nullable
+                        as int?,
+            siteidx:
+                freezed == siteidx
+                    ? _value.siteidx
+                    : siteidx // ignore: cast_nullable_to_non_nullable
+                        as int?,
+            prefectureId:
+                freezed == prefectureId
+                    ? _value.prefectureId
+                    : prefectureId // ignore: cast_nullable_to_non_nullable
+                        as int?,
+            siteId:
+                freezed == siteId
+                    ? _value.siteId
+                    : siteId // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            lat:
+                freezed == lat
+                    ? _value.lat
+                    : lat // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            lng:
+                freezed == lng
+                    ? _value.lng
+                    : lng // ignore: cast_nullable_to_non_nullable
+                        as double?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$SiteImplCopyWith<$Res> implements $SiteCopyWith<$Res> {
   factory _$$SiteImplCopyWith(
-          _$SiteImpl value, $Res Function(_$SiteImpl) then) =
-      __$$SiteImplCopyWithImpl<$Res>;
+    _$SiteImpl value,
+    $Res Function(_$SiteImpl) then,
+  ) = __$$SiteImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int? muni,
-      int? siteidx,
-      @JsonKey(name: 'pref') int? prefectureId,
-      @JsonKey(name: 'siteid') String? siteId,
-      double? lat,
-      double? lng});
+  $Res call({
+    int? muni,
+    int? siteidx,
+    @JsonKey(name: 'pref') int? prefectureId,
+    @JsonKey(name: 'siteid') String? siteId,
+    double? lat,
+    double? lng,
+  });
 }
 
 /// @nodoc
@@ -452,7 +484,7 @@ class __$$SiteImplCopyWithImpl<$Res>
     extends _$SiteCopyWithImpl<$Res, _$SiteImpl>
     implements _$$SiteImplCopyWith<$Res> {
   __$$SiteImplCopyWithImpl(_$SiteImpl _value, $Res Function(_$SiteImpl) _then)
-      : super(_value, _then);
+    : super(_value, _then);
 
   /// Create a copy of Site
   /// with the given fields replaced by the non-null parameter values.
@@ -466,46 +498,54 @@ class __$$SiteImplCopyWithImpl<$Res>
     Object? lat = freezed,
     Object? lng = freezed,
   }) {
-    return _then(_$SiteImpl(
-      muni: freezed == muni
-          ? _value.muni
-          : muni // ignore: cast_nullable_to_non_nullable
-              as int?,
-      siteidx: freezed == siteidx
-          ? _value.siteidx
-          : siteidx // ignore: cast_nullable_to_non_nullable
-              as int?,
-      prefectureId: freezed == prefectureId
-          ? _value.prefectureId
-          : prefectureId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      siteId: freezed == siteId
-          ? _value.siteId
-          : siteId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      lat: freezed == lat
-          ? _value.lat
-          : lat // ignore: cast_nullable_to_non_nullable
-              as double?,
-      lng: freezed == lng
-          ? _value.lng
-          : lng // ignore: cast_nullable_to_non_nullable
-              as double?,
-    ));
+    return _then(
+      _$SiteImpl(
+        muni:
+            freezed == muni
+                ? _value.muni
+                : muni // ignore: cast_nullable_to_non_nullable
+                    as int?,
+        siteidx:
+            freezed == siteidx
+                ? _value.siteidx
+                : siteidx // ignore: cast_nullable_to_non_nullable
+                    as int?,
+        prefectureId:
+            freezed == prefectureId
+                ? _value.prefectureId
+                : prefectureId // ignore: cast_nullable_to_non_nullable
+                    as int?,
+        siteId:
+            freezed == siteId
+                ? _value.siteId
+                : siteId // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        lat:
+            freezed == lat
+                ? _value.lat
+                : lat // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        lng:
+            freezed == lng
+                ? _value.lng
+                : lng // ignore: cast_nullable_to_non_nullable
+                    as double?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$SiteImpl extends _Site {
-  const _$SiteImpl(
-      {this.muni,
-      this.siteidx,
-      @JsonKey(name: 'pref') this.prefectureId,
-      @JsonKey(name: 'siteid') this.siteId,
-      this.lat,
-      this.lng})
-      : super._();
+  const _$SiteImpl({
+    this.muni,
+    this.siteidx,
+    @JsonKey(name: 'pref') this.prefectureId,
+    @JsonKey(name: 'siteid') this.siteId,
+    this.lat,
+    this.lng,
+  }) : super._();
 
   factory _$SiteImpl.fromJson(Map<String, dynamic> json) =>
       _$$SiteImplFromJson(json);
@@ -570,20 +610,19 @@ class _$SiteImpl extends _Site {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$SiteImplToJson(
-      this,
-    );
+    return _$$SiteImplToJson(this);
   }
 }
 
 abstract class _Site extends Site {
-  const factory _Site(
-      {final int? muni,
-      final int? siteidx,
-      @JsonKey(name: 'pref') final int? prefectureId,
-      @JsonKey(name: 'siteid') final String? siteId,
-      final double? lat,
-      final double? lng}) = _$SiteImpl;
+  const factory _Site({
+    final int? muni,
+    final int? siteidx,
+    @JsonKey(name: 'pref') final int? prefectureId,
+    @JsonKey(name: 'siteid') final String? siteId,
+    final double? lat,
+    final double? lng,
+  }) = _$SiteImpl;
   const _Site._() : super._();
 
   factory _Site.fromJson(Map<String, dynamic> json) = _$SiteImpl.fromJson;

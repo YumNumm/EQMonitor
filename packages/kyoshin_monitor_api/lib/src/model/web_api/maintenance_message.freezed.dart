@@ -12,7 +12,8 @@ part of 'maintenance_message.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 MaintenanceMessage _$MaintenanceMessageFromJson(Map<String, dynamic> json) {
   return _MaintenanceMessage.fromJson(json);
@@ -40,16 +41,18 @@ mixin _$MaintenanceMessage {
 /// @nodoc
 abstract class $MaintenanceMessageCopyWith<$Res> {
   factory $MaintenanceMessageCopyWith(
-          MaintenanceMessage value, $Res Function(MaintenanceMessage) then) =
-      _$MaintenanceMessageCopyWithImpl<$Res, MaintenanceMessage>;
+    MaintenanceMessage value,
+    $Res Function(MaintenanceMessage) then,
+  ) = _$MaintenanceMessageCopyWithImpl<$Res, MaintenanceMessage>;
   @useResult
-  $Res call(
-      {String? message,
-      Security? security,
-      MaintenanceMessageType? type,
-      @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
-      DateTime requestTime,
-      Result? result});
+  $Res call({
+    String? message,
+    Security? security,
+    MaintenanceMessageType? type,
+    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+    DateTime requestTime,
+    Result? result,
+  });
 
   $SecurityCopyWith<$Res>? get security;
   $ResultCopyWith<$Res>? get result;
@@ -76,28 +79,36 @@ class _$MaintenanceMessageCopyWithImpl<$Res, $Val extends MaintenanceMessage>
     Object? requestTime = null,
     Object? result = freezed,
   }) {
-    return _then(_value.copyWith(
-      message: freezed == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String?,
-      security: freezed == security
-          ? _value.security
-          : security // ignore: cast_nullable_to_non_nullable
-              as Security?,
-      type: freezed == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as MaintenanceMessageType?,
-      requestTime: null == requestTime
-          ? _value.requestTime
-          : requestTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      result: freezed == result
-          ? _value.result
-          : result // ignore: cast_nullable_to_non_nullable
-              as Result?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            message:
+                freezed == message
+                    ? _value.message
+                    : message // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            security:
+                freezed == security
+                    ? _value.security
+                    : security // ignore: cast_nullable_to_non_nullable
+                        as Security?,
+            type:
+                freezed == type
+                    ? _value.type
+                    : type // ignore: cast_nullable_to_non_nullable
+                        as MaintenanceMessageType?,
+            requestTime:
+                null == requestTime
+                    ? _value.requestTime
+                    : requestTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime,
+            result:
+                freezed == result
+                    ? _value.result
+                    : result // ignore: cast_nullable_to_non_nullable
+                        as Result?,
+          )
+          as $Val,
+    );
   }
 
   /// Create a copy of MaintenanceMessage
@@ -132,18 +143,20 @@ class _$MaintenanceMessageCopyWithImpl<$Res, $Val extends MaintenanceMessage>
 /// @nodoc
 abstract class _$$MaintenanceMessageImplCopyWith<$Res>
     implements $MaintenanceMessageCopyWith<$Res> {
-  factory _$$MaintenanceMessageImplCopyWith(_$MaintenanceMessageImpl value,
-          $Res Function(_$MaintenanceMessageImpl) then) =
-      __$$MaintenanceMessageImplCopyWithImpl<$Res>;
+  factory _$$MaintenanceMessageImplCopyWith(
+    _$MaintenanceMessageImpl value,
+    $Res Function(_$MaintenanceMessageImpl) then,
+  ) = __$$MaintenanceMessageImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String? message,
-      Security? security,
-      MaintenanceMessageType? type,
-      @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
-      DateTime requestTime,
-      Result? result});
+  $Res call({
+    String? message,
+    Security? security,
+    MaintenanceMessageType? type,
+    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+    DateTime requestTime,
+    Result? result,
+  });
 
   @override
   $SecurityCopyWith<$Res>? get security;
@@ -155,9 +168,10 @@ abstract class _$$MaintenanceMessageImplCopyWith<$Res>
 class __$$MaintenanceMessageImplCopyWithImpl<$Res>
     extends _$MaintenanceMessageCopyWithImpl<$Res, _$MaintenanceMessageImpl>
     implements _$$MaintenanceMessageImplCopyWith<$Res> {
-  __$$MaintenanceMessageImplCopyWithImpl(_$MaintenanceMessageImpl _value,
-      $Res Function(_$MaintenanceMessageImpl) _then)
-      : super(_value, _then);
+  __$$MaintenanceMessageImplCopyWithImpl(
+    _$MaintenanceMessageImpl _value,
+    $Res Function(_$MaintenanceMessageImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of MaintenanceMessage
   /// with the given fields replaced by the non-null parameter values.
@@ -170,41 +184,49 @@ class __$$MaintenanceMessageImplCopyWithImpl<$Res>
     Object? requestTime = null,
     Object? result = freezed,
   }) {
-    return _then(_$MaintenanceMessageImpl(
-      message: freezed == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String?,
-      security: freezed == security
-          ? _value.security
-          : security // ignore: cast_nullable_to_non_nullable
-              as Security?,
-      type: freezed == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as MaintenanceMessageType?,
-      requestTime: null == requestTime
-          ? _value.requestTime
-          : requestTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      result: freezed == result
-          ? _value.result
-          : result // ignore: cast_nullable_to_non_nullable
-              as Result?,
-    ));
+    return _then(
+      _$MaintenanceMessageImpl(
+        message:
+            freezed == message
+                ? _value.message
+                : message // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        security:
+            freezed == security
+                ? _value.security
+                : security // ignore: cast_nullable_to_non_nullable
+                    as Security?,
+        type:
+            freezed == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                    as MaintenanceMessageType?,
+        requestTime:
+            null == requestTime
+                ? _value.requestTime
+                : requestTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime,
+        result:
+            freezed == result
+                ? _value.result
+                : result // ignore: cast_nullable_to_non_nullable
+                    as Result?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$MaintenanceMessageImpl implements _MaintenanceMessage {
-  const _$MaintenanceMessageImpl(
-      {required this.message,
-      required this.security,
-      required this.type,
-      @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
-      required this.requestTime,
-      required this.result});
+  const _$MaintenanceMessageImpl({
+    required this.message,
+    required this.security,
+    required this.type,
+    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+    required this.requestTime,
+    required this.result,
+  });
 
   factory _$MaintenanceMessageImpl.fromJson(Map<String, dynamic> json) =>
       _$$MaintenanceMessageImplFromJson(json);
@@ -252,24 +274,25 @@ class _$MaintenanceMessageImpl implements _MaintenanceMessage {
   @pragma('vm:prefer-inline')
   _$$MaintenanceMessageImplCopyWith<_$MaintenanceMessageImpl> get copyWith =>
       __$$MaintenanceMessageImplCopyWithImpl<_$MaintenanceMessageImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MaintenanceMessageImplToJson(
-      this,
-    );
+    return _$$MaintenanceMessageImplToJson(this);
   }
 }
 
 abstract class _MaintenanceMessage implements MaintenanceMessage {
-  const factory _MaintenanceMessage(
-      {required final String? message,
-      required final Security? security,
-      required final MaintenanceMessageType? type,
-      @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
-      required final DateTime requestTime,
-      required final Result? result}) = _$MaintenanceMessageImpl;
+  const factory _MaintenanceMessage({
+    required final String? message,
+    required final Security? security,
+    required final MaintenanceMessageType? type,
+    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+    required final DateTime requestTime,
+    required final Result? result,
+  }) = _$MaintenanceMessageImpl;
 
   factory _MaintenanceMessage.fromJson(Map<String, dynamic> json) =
       _$MaintenanceMessageImpl.fromJson;

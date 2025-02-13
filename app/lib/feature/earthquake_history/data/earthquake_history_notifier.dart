@@ -20,10 +20,8 @@ import 'package:web_socket_client/web_socket_client.dart';
 
 part 'earthquake_history_notifier.g.dart';
 
-typedef EarthquakeHistoryNotifierState = (
-  List<EarthquakeV1Extended>,
-  int totalCount
-);
+typedef EarthquakeHistoryNotifierState =
+    (List<EarthquakeV1Extended>, int totalCount);
 
 @riverpod
 class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
@@ -44,34 +42,27 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       );
       ref
         ..onDispose(refetchTimer.cancel)
-
         // アプリがバックグラウンドからフォアグラウンドに戻った際にデータを再取得する
-        ..listen(
-          appLifecycleProvider,
-          (_, next) async {
-            if (next == AppLifecycleState.resumed) {
-              await _onResumed();
-            }
-          },
-        )
+        ..listen(appLifecycleProvider, (_, next) async {
+          if (next == AppLifecycleState.resumed) {
+            await _onResumed();
+          }
+        })
         // WebSocketからのデータを適用する
-        ..listen(
-          websocketTableMessagesProvider,
-          (_, next) {
-            if (next case AsyncData(value: final value)) {
-              if (value is! RealtimePostgresChangesPayloadTable<EarthquakeV1>) {
-                return;
-              }
-              final _ = switch (value) {
-                RealtimePostgresInsertPayload<EarthquakeV1>(:final newData) =>
-                  _upsertEarthquakeV1s([newData]),
-                RealtimePostgresUpdatePayload<EarthquakeV1>(:final newData) =>
-                  _upsertEarthquakeV1s([newData]),
-                RealtimePostgresDeletePayload<EarthquakeV1>() => null,
-              };
+        ..listen(websocketTableMessagesProvider, (_, next) {
+          if (next case AsyncData(value: final value)) {
+            if (value is! RealtimePostgresChangesPayloadTable<EarthquakeV1>) {
+              return;
             }
-          },
-        );
+            final _ = switch (value) {
+              RealtimePostgresInsertPayload<EarthquakeV1>(:final newData) =>
+                _upsertEarthquakeV1s([newData]),
+              RealtimePostgresUpdatePayload<EarthquakeV1>(:final newData) =>
+                _upsertEarthquakeV1s([newData]),
+              RealtimePostgresDeletePayload<EarthquakeV1>() => null,
+            };
+          }
+        });
     }
 
     return _fetchInitialData(
@@ -100,10 +91,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
           limit: limit,
         );
     return (
-      await _v1ToV1Extended(
-        data: result.items,
-        regions: regions,
-      ),
+      await _v1ToV1Extended(data: result.items, regions: regions),
       result.count,
     );
   }
@@ -113,21 +101,22 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     state = const AsyncLoading();
     state =
         await AsyncValue.guard<(List<EarthquakeV1Extended>, int totalCount)>(
-            () async {
-      // ensure earthquakeParameter has been initialized.
-      if (ref.read(jmaParameterProvider).hasError) {
-        ref.invalidate(jmaParameterProvider);
-      }
-      await ref.read(jmaParameterProvider.future);
-      final earthquakeParameter =
-          ref.watch(jmaParameterProvider).valueOrNull!.earthquake;
+          () async {
+            // ensure earthquakeParameter has been initialized.
+            if (ref.read(jmaParameterProvider).hasError) {
+              ref.invalidate(jmaParameterProvider);
+            }
+            await ref.read(jmaParameterProvider.future);
+            final earthquakeParameter =
+                ref.watch(jmaParameterProvider).valueOrNull!.earthquake;
 
-      return _fetchInitialData(
-        param: parameter,
-        regions: earthquakeParameter.regions,
-        limit: 50,
-      );
-    });
+            return _fetchInitialData(
+              param: parameter,
+              regions: earthquakeParameter.regions,
+              limit: 50,
+            );
+          },
+        );
   }
 
   Future<void> fetchNextData() async {
@@ -147,35 +136,31 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
 
     state = const AsyncLoading<(List<EarthquakeV1Extended>, int totalCount)>()
         .copyWithPrevious(state);
-    state = await state.guardPlus(
-      () async {
-        final repository = ref.read(earthquakeHistoryRepositoryProvider);
-        final currentData = state.valueOrNull;
-        final result = await repository.fetchEarthquakeLists(
-          depthGte: parameter.depthGte,
-          depthLte: parameter.depthLte,
-          intensityGte: parameter.intensityGte,
-          intensityLte: parameter.intensityLte,
-          magnitudeGte: parameter.magnitudeGte,
-          magnitudeLte: parameter.magnitudeLte,
-          offset: currentData?.$1.length ?? 0,
-          limit: 50,
-        );
-        final extendedResult = await _v1ToV1Extended(
-          data: result.items,
-          regions: jmaEarthquakeParameter.regions,
-        );
-        return (
-          <EarthquakeV1Extended>[
-            ...currentData?.$1 ?? [],
-            ...extendedResult,
-          ].sorted(
-            (a, b) => b.eventId.compareTo(a.eventId),
-          ),
-          result.count
-        );
-      },
-    );
+    state = await state.guardPlus(() async {
+      final repository = ref.read(earthquakeHistoryRepositoryProvider);
+      final currentData = state.valueOrNull;
+      final result = await repository.fetchEarthquakeLists(
+        depthGte: parameter.depthGte,
+        depthLte: parameter.depthLte,
+        intensityGte: parameter.intensityGte,
+        intensityLte: parameter.intensityLte,
+        magnitudeGte: parameter.magnitudeGte,
+        magnitudeLte: parameter.magnitudeLte,
+        offset: currentData?.$1.length ?? 0,
+        limit: 50,
+      );
+      final extendedResult = await _v1ToV1Extended(
+        data: result.items,
+        regions: jmaEarthquakeParameter.regions,
+      );
+      return (
+        <EarthquakeV1Extended>[
+          ...currentData?.$1 ?? [],
+          ...extendedResult,
+        ].sorted((a, b) => b.eventId.compareTo(a.eventId)),
+        result.count,
+      );
+    });
   }
 
   Future<void> _onResumed() async {
@@ -245,9 +230,7 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
     }
     // event_idで降順ソート
     histories.sort((a, b) => b.eventId.compareTo(a.eventId));
-    state = AsyncData(
-      (histories, currentData.$2),
-    );
+    state = AsyncData((histories, currentData.$2));
   }
 
   Future<List<EarthquakeV1Extended>> _v1ToV1Extended({
@@ -258,16 +241,19 @@ class EarthquakeHistoryNotifier extends _$EarthquakeHistoryNotifier {
       for (final e in data)
         EarthquakeV1Extended(
           earthquake: e,
-          maxIntensityRegionNames: e.maxIntensityRegionIds
-              ?.map(
-                (region) => regions
-                    .firstWhereOrNull(
-                      (paramRegion) => int.parse(paramRegion.code) == region,
-                    )
-                    ?.name,
-              )
-              .nonNulls
-              .toList(),
+          maxIntensityRegionNames:
+              e.maxIntensityRegionIds
+                  ?.map(
+                    (region) =>
+                        regions
+                            .firstWhereOrNull(
+                              (paramRegion) =>
+                                  int.parse(paramRegion.code) == region,
+                            )
+                            ?.name,
+                  )
+                  .nonNulls
+                  .toList(),
         ),
     ];
     /* 別Isolateで処理させるならコッチ
@@ -337,25 +323,25 @@ Future<EarthquakeV1Extended> earthquakeV1Extended(
 
   return EarthquakeV1Extended(
     earthquake: data,
-    maxIntensityRegionNames: data.maxIntensityRegionIds
-        ?.map(
-          (region) => regions
-              .firstWhereOrNull(
-                (paramRegion) => int.parse(paramRegion.code) == region,
-              )
-              ?.name,
-        )
-        .nonNulls
-        .toList(),
+    maxIntensityRegionNames:
+        data.maxIntensityRegionIds
+            ?.map(
+              (region) =>
+                  regions
+                      .firstWhereOrNull(
+                        (paramRegion) => int.parse(paramRegion.code) == region,
+                      )
+                      ?.name,
+            )
+            .nonNulls
+            .toList(),
   );
 }
 
 class EarthquakeParameterHasNotInitializedException implements Exception {}
 
-extension EarthquakeHistoryState on (
-  List<EarthquakeV1Extended>,
-  int totalCount
-) {
+extension EarthquakeHistoryState
+    on (List<EarthquakeV1Extended>, int totalCount) {
   bool get hasNext => $1.length < $2;
 }
 
@@ -364,10 +350,12 @@ extension EarthquakeHistoryParameterMatch on EarthquakeHistoryParameter {
     RealtimePostgresChangesPayloadTable<EarthquakeV1> payload,
   ) {
     return switch (payload) {
-      RealtimePostgresInsertPayload<EarthquakeV1>() =>
-        isEarthquakeV1Match(payload.newData),
-      RealtimePostgresUpdatePayload<EarthquakeV1>() =>
-        isEarthquakeV1Match(payload.newData),
+      RealtimePostgresInsertPayload<EarthquakeV1>() => isEarthquakeV1Match(
+        payload.newData,
+      ),
+      RealtimePostgresUpdatePayload<EarthquakeV1>() => isEarthquakeV1Match(
+        payload.newData,
+      ),
       RealtimePostgresDeletePayload<EarthquakeV1>() => false,
     };
   }

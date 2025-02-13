@@ -105,9 +105,7 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
       onCameraIdle: () {
         final position = widget.controller.controller?.cameraPosition;
         if (position != null) {
-          widget.onCameraIdle?.call(
-            MapCameraPosition.fromMapLibre(position),
-          );
+          widget.onCameraIdle?.call(MapCameraPosition.fromMapLibre(position));
         }
       },
       myLocationEnabled: widget.myLocationEnabled,
@@ -137,9 +135,10 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
       _isUpdatingLayers = true;
 
       // 削除探索
-      final layersToRemove = _addedLayers.entries
-          .where((entry) => !widget.layers.any((e) => e.id == entry.key))
-          .toList();
+      final layersToRemove =
+          _addedLayers.entries
+              .where((entry) => !widget.layers.any((e) => e.id == entry.key))
+              .toList();
 
       for (final entry in layersToRemove) {
         await controller.removeLayer(entry.key);
@@ -153,9 +152,10 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
 
       for (var i = 0; i < widget.layers.length; i++) {
         final layer = widget.layers[i];
-        final belowLayerId = i > 0
-            ? widget.layers[i - 1].id
-            : BaseLayer.areaForecastLocalELine.name;
+        final belowLayerId =
+            i > 0
+                ? widget.layers[i - 1].id
+                : BaseLayer.areaForecastLocalELine.name;
 
         if (_addedLayers.containsKey(layer.id)) {
           final cachedLayer = _addedLayers[layer.id]!;
@@ -167,7 +167,7 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
                 cachedLayer.layerPropertiesHash != layer.layerPropertiesHash;
             final isGeoJsonSourceChanged =
                 cachedLayer.geoJsonSourceHash != layer.geoJsonSourceHash &&
-                    sourceId != null;
+                sourceId != null;
             final isFilterChanged = cachedLayer.filter != layer.filter;
 
             // style check
@@ -185,10 +185,7 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
                       e.code == 'LAYER_NOT_FOUND_ERROR') {
                     // レイヤーが見つからない場合は、レイヤーを再追加する
                     await controller.removeLayer(layer.id);
-                    await _addLayer(
-                      layer: layer,
-                      belowLayerId: belowLayerId,
-                    );
+                    await _addLayer(layer: layer, belowLayerId: belowLayerId);
                   } else {
                     rethrow;
                   }
@@ -199,19 +196,13 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
             if (isGeoJsonSourceChanged) {
               final geoJsonSource = layer.toGeoJsonSource();
               if (geoJsonSource != null) {
-                await controller.setGeoJsonSource(
-                  sourceId,
-                  geoJsonSource,
-                );
+                await controller.setGeoJsonSource(sourceId, geoJsonSource);
                 _addedLayers[layer.id] = layer;
               }
             }
             // filter check
             if (isFilterChanged) {
-              await controller.setFilter(
-                layer.id,
-                layer.filter,
-              );
+              await controller.setFilter(layer.id, layer.filter);
               _addedLayers[layer.id] = layer;
             }
           }
@@ -222,10 +213,7 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
             print('add source: ${layer.sourceId}');
             final sourceId = layer.sourceId;
             if (sourceId != null) {
-              await _addLayer(
-                layer: layer,
-                belowLayerId: belowLayerId,
-              );
+              await _addLayer(layer: layer, belowLayerId: belowLayerId);
               _addedSources[sourceId] = layer.id;
             }
           } else {
@@ -233,9 +221,7 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
             final layerProperties = layer.toLayerProperties();
             final sourceId = layer.sourceId;
             if (layerProperties != null && sourceId != null) {
-              print(
-                '[ADD] layer only: ${layer.id} (source: $sourceId)',
-              );
+              print('[ADD] layer only: ${layer.id} (source: $sourceId)');
               await controller.addLayer(
                 sourceId,
                 layer.id,
@@ -267,10 +253,7 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
     final geoJsonSource = layer.toGeoJsonSource();
     if (geoJsonSource != null) {
       print('[ADD] geoJsonSource: $sourceId (layer: ${layer.id})');
-      await controller.addGeoJsonSource(
-        sourceId,
-        geoJsonSource,
-      );
+      await controller.addGeoJsonSource(sourceId, geoJsonSource);
     } else {
       print('no geoJsonSource: $sourceId');
     }
@@ -314,25 +297,20 @@ class _DeclarativeMapState extends ConsumerState<DeclarativeMap> {
       return;
     }
     if (oldWidget.styleString != widget.styleString) {
-      unawaited(
-        _updateAllLayers(),
-      );
+      unawaited(_updateAllLayers());
     }
     if (oldWidget.layers != widget.layers) {
-      unawaited(
-        _updateLayers(),
-      );
+      unawaited(_updateLayers());
     }
   }
 }
 
 enum DeclarativeAssets {
   normalHypocenter,
-  lowPreciseHypocenter,
-  ;
+  lowPreciseHypocenter;
 
   String get path => switch (this) {
-        normalHypocenter => Assets.images.map.normalHypocenter.path,
-        lowPreciseHypocenter => Assets.images.map.lowPreciseHypocenter.path,
-      };
+    normalHypocenter => Assets.images.map.normalHypocenter.path,
+    lowPreciseHypocenter => Assets.images.map.lowPreciseHypocenter.path,
+  };
 }

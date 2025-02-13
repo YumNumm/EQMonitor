@@ -52,14 +52,14 @@ class $AssetsFontsGen {
 
   /// List of all assets
   List<String> get values => [
-        jetBrainsMonoBold,
-        jetBrainsMonoExtraBold,
-        jetBrainsMonoMedium,
-        notoSansJPBlack,
-        notoSansJPBold,
-        notoSansJPMedium,
-        notoSansJPRegular
-      ];
+    jetBrainsMonoBold,
+    jetBrainsMonoExtraBold,
+    jetBrainsMonoMedium,
+    notoSansJPBlack,
+    notoSansJPBold,
+    notoSansJPMedium,
+    notoSansJPRegular,
+  ];
 }
 
 class $AssetsImagesGen {
@@ -130,23 +130,19 @@ class Assets {
 
   /// List of all assets
   static List<dynamic> get values => [
-        kyoshinShindoColorMap,
-        header,
-        jmaCodeTable,
-        jmaMap,
-        kyoshinMonitorScale,
-        kyoshinObservationPoint,
-        tjma2001,
-        shorebird
-      ];
+    kyoshinShindoColorMap,
+    header,
+    jmaCodeTable,
+    jmaMap,
+    kyoshinMonitorScale,
+    kyoshinObservationPoint,
+    tjma2001,
+    shorebird,
+  ];
 }
 
 class AssetGenImage {
-  const AssetGenImage(
-    this._assetName, {
-    this.size,
-    this.flavors = const {},
-  });
+  const AssetGenImage(this._assetName, {this.size, this.flavors = const {}});
 
   final String _assetName;
 
@@ -206,15 +202,8 @@ class AssetGenImage {
     );
   }
 
-  ImageProvider provider({
-    AssetBundle? bundle,
-    String? package,
-  }) {
-    return AssetImage(
-      _assetName,
-      bundle: bundle,
-      package: package,
-    );
+  ImageProvider provider({AssetBundle? bundle, String? package}) {
+    return AssetImage(_assetName, bundle: bundle, package: package);
   }
 
   String get path => _assetName;

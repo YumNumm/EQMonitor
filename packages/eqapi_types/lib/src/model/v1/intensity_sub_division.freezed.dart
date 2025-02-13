@@ -12,7 +12,8 @@ part of 'intensity_sub_division.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 IntensitySubDivision _$IntensitySubDivisionFromJson(Map<String, dynamic> json) {
   return _IntensitySubDivision.fromJson(json);
@@ -38,21 +39,25 @@ mixin _$IntensitySubDivision {
 
 /// @nodoc
 abstract class $IntensitySubDivisionCopyWith<$Res> {
-  factory $IntensitySubDivisionCopyWith(IntensitySubDivision value,
-          $Res Function(IntensitySubDivision) then) =
-      _$IntensitySubDivisionCopyWithImpl<$Res, IntensitySubDivision>;
+  factory $IntensitySubDivisionCopyWith(
+    IntensitySubDivision value,
+    $Res Function(IntensitySubDivision) then,
+  ) = _$IntensitySubDivisionCopyWithImpl<$Res, IntensitySubDivision>;
   @useResult
-  $Res call(
-      {int id,
-      int eventId,
-      String areaCode,
-      JmaIntensity maxIntensity,
-      JmaLgIntensity? maxLpgmIntensity});
+  $Res call({
+    int id,
+    int eventId,
+    String areaCode,
+    JmaIntensity maxIntensity,
+    JmaLgIntensity? maxLpgmIntensity,
+  });
 }
 
 /// @nodoc
-class _$IntensitySubDivisionCopyWithImpl<$Res,
-        $Val extends IntensitySubDivision>
+class _$IntensitySubDivisionCopyWithImpl<
+  $Res,
+  $Val extends IntensitySubDivision
+>
     implements $IntensitySubDivisionCopyWith<$Res> {
   _$IntensitySubDivisionCopyWithImpl(this._value, this._then);
 
@@ -72,54 +77,65 @@ class _$IntensitySubDivisionCopyWithImpl<$Res,
     Object? maxIntensity = null,
     Object? maxLpgmIntensity = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      eventId: null == eventId
-          ? _value.eventId
-          : eventId // ignore: cast_nullable_to_non_nullable
-              as int,
-      areaCode: null == areaCode
-          ? _value.areaCode
-          : areaCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      maxIntensity: null == maxIntensity
-          ? _value.maxIntensity
-          : maxIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaIntensity,
-      maxLpgmIntensity: freezed == maxLpgmIntensity
-          ? _value.maxLpgmIntensity
-          : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaLgIntensity?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id:
+                null == id
+                    ? _value.id
+                    : id // ignore: cast_nullable_to_non_nullable
+                        as int,
+            eventId:
+                null == eventId
+                    ? _value.eventId
+                    : eventId // ignore: cast_nullable_to_non_nullable
+                        as int,
+            areaCode:
+                null == areaCode
+                    ? _value.areaCode
+                    : areaCode // ignore: cast_nullable_to_non_nullable
+                        as String,
+            maxIntensity:
+                null == maxIntensity
+                    ? _value.maxIntensity
+                    : maxIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaIntensity,
+            maxLpgmIntensity:
+                freezed == maxLpgmIntensity
+                    ? _value.maxLpgmIntensity
+                    : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaLgIntensity?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$IntensitySubDivisionImplCopyWith<$Res>
     implements $IntensitySubDivisionCopyWith<$Res> {
-  factory _$$IntensitySubDivisionImplCopyWith(_$IntensitySubDivisionImpl value,
-          $Res Function(_$IntensitySubDivisionImpl) then) =
-      __$$IntensitySubDivisionImplCopyWithImpl<$Res>;
+  factory _$$IntensitySubDivisionImplCopyWith(
+    _$IntensitySubDivisionImpl value,
+    $Res Function(_$IntensitySubDivisionImpl) then,
+  ) = __$$IntensitySubDivisionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      int eventId,
-      String areaCode,
-      JmaIntensity maxIntensity,
-      JmaLgIntensity? maxLpgmIntensity});
+  $Res call({
+    int id,
+    int eventId,
+    String areaCode,
+    JmaIntensity maxIntensity,
+    JmaLgIntensity? maxLpgmIntensity,
+  });
 }
 
 /// @nodoc
 class __$$IntensitySubDivisionImplCopyWithImpl<$Res>
     extends _$IntensitySubDivisionCopyWithImpl<$Res, _$IntensitySubDivisionImpl>
     implements _$$IntensitySubDivisionImplCopyWith<$Res> {
-  __$$IntensitySubDivisionImplCopyWithImpl(_$IntensitySubDivisionImpl _value,
-      $Res Function(_$IntensitySubDivisionImpl) _then)
-      : super(_value, _then);
+  __$$IntensitySubDivisionImplCopyWithImpl(
+    _$IntensitySubDivisionImpl _value,
+    $Res Function(_$IntensitySubDivisionImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of IntensitySubDivision
   /// with the given fields replaced by the non-null parameter values.
@@ -132,40 +148,48 @@ class __$$IntensitySubDivisionImplCopyWithImpl<$Res>
     Object? maxIntensity = null,
     Object? maxLpgmIntensity = freezed,
   }) {
-    return _then(_$IntensitySubDivisionImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      eventId: null == eventId
-          ? _value.eventId
-          : eventId // ignore: cast_nullable_to_non_nullable
-              as int,
-      areaCode: null == areaCode
-          ? _value.areaCode
-          : areaCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      maxIntensity: null == maxIntensity
-          ? _value.maxIntensity
-          : maxIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaIntensity,
-      maxLpgmIntensity: freezed == maxLpgmIntensity
-          ? _value.maxLpgmIntensity
-          : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaLgIntensity?,
-    ));
+    return _then(
+      _$IntensitySubDivisionImpl(
+        id:
+            null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                    as int,
+        eventId:
+            null == eventId
+                ? _value.eventId
+                : eventId // ignore: cast_nullable_to_non_nullable
+                    as int,
+        areaCode:
+            null == areaCode
+                ? _value.areaCode
+                : areaCode // ignore: cast_nullable_to_non_nullable
+                    as String,
+        maxIntensity:
+            null == maxIntensity
+                ? _value.maxIntensity
+                : maxIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaIntensity,
+        maxLpgmIntensity:
+            freezed == maxLpgmIntensity
+                ? _value.maxLpgmIntensity
+                : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaLgIntensity?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$IntensitySubDivisionImpl implements _IntensitySubDivision {
-  const _$IntensitySubDivisionImpl(
-      {required this.id,
-      required this.eventId,
-      required this.areaCode,
-      required this.maxIntensity,
-      required this.maxLpgmIntensity});
+  const _$IntensitySubDivisionImpl({
+    required this.id,
+    required this.eventId,
+    required this.areaCode,
+    required this.maxIntensity,
+    required this.maxLpgmIntensity,
+  });
 
   factory _$IntensitySubDivisionImpl.fromJson(Map<String, dynamic> json) =>
       _$$IntensitySubDivisionImplFromJson(json);
@@ -204,7 +228,13 @@ class _$IntensitySubDivisionImpl implements _IntensitySubDivision {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, id, eventId, areaCode, maxIntensity, maxLpgmIntensity);
+    runtimeType,
+    id,
+    eventId,
+    areaCode,
+    maxIntensity,
+    maxLpgmIntensity,
+  );
 
   /// Create a copy of IntensitySubDivision
   /// with the given fields replaced by the non-null parameter values.
@@ -212,26 +242,26 @@ class _$IntensitySubDivisionImpl implements _IntensitySubDivision {
   @override
   @pragma('vm:prefer-inline')
   _$$IntensitySubDivisionImplCopyWith<_$IntensitySubDivisionImpl>
-      get copyWith =>
-          __$$IntensitySubDivisionImplCopyWithImpl<_$IntensitySubDivisionImpl>(
-              this, _$identity);
+  get copyWith =>
+      __$$IntensitySubDivisionImplCopyWithImpl<_$IntensitySubDivisionImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$IntensitySubDivisionImplToJson(
-      this,
-    );
+    return _$$IntensitySubDivisionImplToJson(this);
   }
 }
 
 abstract class _IntensitySubDivision implements IntensitySubDivision {
-  const factory _IntensitySubDivision(
-          {required final int id,
-          required final int eventId,
-          required final String areaCode,
-          required final JmaIntensity maxIntensity,
-          required final JmaLgIntensity? maxLpgmIntensity}) =
-      _$IntensitySubDivisionImpl;
+  const factory _IntensitySubDivision({
+    required final int id,
+    required final int eventId,
+    required final String areaCode,
+    required final JmaIntensity maxIntensity,
+    required final JmaLgIntensity? maxLpgmIntensity,
+  }) = _$IntensitySubDivisionImpl;
 
   factory _IntensitySubDivision.fromJson(Map<String, dynamic> json) =
       _$IntensitySubDivisionImpl.fromJson;
@@ -252,5 +282,5 @@ abstract class _IntensitySubDivision implements IntensitySubDivision {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$IntensitySubDivisionImplCopyWith<_$IntensitySubDivisionImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

@@ -12,8 +12,9 @@ class NotificationRemoteSettingsNotifier
     extends _$NotificationRemoteSettingsNotifier {
   @override
   Future<NotificationRemoteSettingsState> build() async {
-    final savedState =
-        ref.watch(notificationRemoteSettingsSavedStateNotifierProvider.future);
+    final savedState = ref.watch(
+      notificationRemoteSettingsSavedStateNotifierProvider.future,
+    );
     return savedState;
   }
 
@@ -80,9 +81,10 @@ class NotificationRemoteSettingsNotifier
   }
 
   Future<void> save() async {
-    final savedState = ref
-        .read(notificationRemoteSettingsSavedStateNotifierProvider)
-        .valueOrNull;
+    final savedState =
+        ref
+            .read(notificationRemoteSettingsSavedStateNotifierProvider)
+            .valueOrNull;
     if (savedState == null) {
       throw Exception('Saved state is null');
     }
@@ -94,22 +96,22 @@ class NotificationRemoteSettingsNotifier
             .read(notificationRemoteSettingsSavedStateNotifierProvider.notifier)
             .updateEarthquake(
               request: NotificationSettingsRequest(
-                global: global != null
-                    ? NotificationSettingsGlobal(
-                        minJmaIntensity: global,
-                      )
-                    : null,
-                regions: value.earthquake.regions
-                    .where(
-                      (r) => global == null || r.minJmaIntensity < global,
-                    )
-                    .map(
-                      (r) => NotificationSettingsRegion(
-                        code: r.regionId,
-                        minIntensity: r.minJmaIntensity,
-                      ),
-                    )
-                    .toList(),
+                global:
+                    global != null
+                        ? NotificationSettingsGlobal(minJmaIntensity: global)
+                        : null,
+                regions:
+                    value.earthquake.regions
+                        .where(
+                          (r) => global == null || r.minJmaIntensity < global,
+                        )
+                        .map(
+                          (r) => NotificationSettingsRegion(
+                            code: r.regionId,
+                            minIntensity: r.minJmaIntensity,
+                          ),
+                        )
+                        .toList(),
               ),
             );
       } else {
@@ -125,19 +127,19 @@ class NotificationRemoteSettingsNotifier
             .read(notificationRemoteSettingsSavedStateNotifierProvider.notifier)
             .updateEew(
               request: NotificationSettingsRequest(
-                global: global != null
-                    ? NotificationSettingsGlobal(
-                        minJmaIntensity: global,
-                      )
-                    : null,
-                regions: value.eew.regions
-                    .map(
-                      (r) => NotificationSettingsRegion(
-                        code: r.regionId,
-                        minIntensity: r.minJmaIntensity,
-                      ),
-                    )
-                    .toList(),
+                global:
+                    global != null
+                        ? NotificationSettingsGlobal(minJmaIntensity: global)
+                        : null,
+                regions:
+                    value.eew.regions
+                        .map(
+                          (r) => NotificationSettingsRegion(
+                            code: r.regionId,
+                            minIntensity: r.minJmaIntensity,
+                          ),
+                        )
+                        .toList(),
               ),
             );
       } else {

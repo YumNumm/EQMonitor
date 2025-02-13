@@ -21,9 +21,7 @@ class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: const Text('MOWLASについて'),
-      ),
+      appBar: AppBar(title: const Text('MOWLASについて')),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
@@ -162,9 +160,7 @@ class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                const Text(
-                  '※上記内容は2025年2月現在の情報です。最新の情報は各公式サイトをご確認ください。',
-                ),
+                const Text('※上記内容は2025年2月現在の情報です。最新の情報は各公式サイトをご確認ください。'),
               ],
             ),
           ),
@@ -212,11 +208,7 @@ class _ObservationNetworkSection extends StatelessWidget {
                 ),
               ),
               if (url != null)
-                Icon(
-                  Icons.open_in_new,
-                  size: 16,
-                  color: colorScheme.primary,
-                ),
+                Icon(Icons.open_in_new, size: 16, color: colorScheme.primary),
             ],
           ),
         ),
@@ -224,7 +216,8 @@ class _ObservationNetworkSection extends StatelessWidget {
         Text(
           description.map((e) => '・$e').join('\n'),
           style: textTheme.bodyMedium?.copyWith(
-            color: descriptionColor ??
+            color:
+                descriptionColor ??
                 colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
             height: 1.5,
           ),
@@ -235,10 +228,7 @@ class _ObservationNetworkSection extends StatelessWidget {
 }
 
 class _LinkItem extends StatelessWidget {
-  const _LinkItem({
-    required this.title,
-    required this.url,
-  });
+  const _LinkItem({required this.title, required this.url});
 
   final String title;
   final String url;
@@ -253,18 +243,9 @@ class _LinkItem extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              title,
-              style: TextStyle(
-                color: colorScheme.primary,
-              ),
-            ),
+            child: Text(title, style: TextStyle(color: colorScheme.primary)),
           ),
-          Icon(
-            Icons.open_in_new,
-            size: 16,
-            color: colorScheme.primary,
-          ),
+          Icon(Icons.open_in_new, size: 16, color: colorScheme.primary),
         ],
       ),
     );

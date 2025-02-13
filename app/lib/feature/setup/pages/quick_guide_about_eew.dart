@@ -3,10 +3,7 @@ import 'package:eqmonitor/feature/setup/component/earthquake_restriction.dart';
 import 'package:flutter/material.dart';
 
 class QuickGuideAboutEewPage extends StatelessWidget {
-  const QuickGuideAboutEewPage({
-    required this.onNext,
-    super.key,
-  });
+  const QuickGuideAboutEewPage({required this.onNext, super.key});
 
   final void Function() onNext;
 

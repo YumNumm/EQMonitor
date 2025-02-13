@@ -22,10 +22,8 @@ class EarthquakeHistoryConfig extends _$EarthquakeHistoryConfig {
 
   static const _key = 'earthquake_history_config';
 
-  Future<void> _save() async => ref.read(sharedPreferencesProvider).setString(
-        _key,
-        jsonEncode(state),
-      );
+  Future<void> _save() async =>
+      ref.read(sharedPreferencesProvider).setString(_key, jsonEncode(state));
 
   EarthquakeHistoryConfigModel? _load() {
     final jsonString = ref.read(sharedPreferencesProvider).getString(_key);

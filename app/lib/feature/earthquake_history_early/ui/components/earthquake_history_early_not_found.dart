@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 class EarthquakeHistoryEarlyNotFound extends StatelessWidget {
-  const EarthquakeHistoryEarlyNotFound({
-    super.key,
-  });
+  const EarthquakeHistoryEarlyNotFound({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,10 +11,7 @@ class EarthquakeHistoryEarlyNotFound extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.search_off,
-              size: 48,
-            ),
+            Icon(Icons.search_off, size: 48),
             Text(
               '条件を満たす地震情報は見つかりませんでした。',
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -41,10 +36,7 @@ class EarthquakeHistoryEarlyAllFetched extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.search,
-                size: 48,
-              ),
+              Icon(Icons.search, size: 48),
               Text(
                 '全件取得済みです',
                 style: TextStyle(fontWeight: FontWeight.bold),

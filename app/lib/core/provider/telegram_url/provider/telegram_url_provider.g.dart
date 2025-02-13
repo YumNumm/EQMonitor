@@ -14,13 +14,15 @@ String _$telegramUrlHash() => r'05cbe69b52b0f42c8223f0020694fbc29736faef';
 @ProviderFor(TelegramUrl)
 final telegramUrlProvider =
     NotifierProvider<TelegramUrl, TelegramUrlModel>.internal(
-  TelegramUrl.new,
-  name: r'telegramUrlProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$telegramUrlHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      TelegramUrl.new,
+      name: r'telegramUrlProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$telegramUrlHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$TelegramUrl = Notifier<TelegramUrlModel>;
 // ignore_for_file: type=lint

@@ -6,22 +6,22 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class KyoshinMonitorStatusCard extends ConsumerWidget {
-  const KyoshinMonitorStatusCard({
-    this.onTap,
-    super.key,
-  });
+  const KyoshinMonitorStatusCard({this.onTap, super.key});
 
   final void Function()? onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final latestTime = ref
-        .watch(
-          kyoshinMonitorNotifierProvider
-              .select((v) => v.valueOrNull?.lastUpdatedAt),
-        )
-        ?.toLocal();
-    final status = ref.watch(
+    final latestTime =
+        ref
+            .watch(
+              kyoshinMonitorNotifierProvider.select(
+                (v) => v.valueOrNull?.lastUpdatedAt,
+              ),
+            )
+            ?.toLocal();
+    final status =
+        ref.watch(
           kyoshinMonitorNotifierProvider.select((v) => v.valueOrNull?.status),
         ) ??
         KyoshinMonitorStatus.stopped;
@@ -52,45 +52,33 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
                   // 現在時刻
                   ...switch (status) {
                     KyoshinMonitorStatus.stopped => [
-                        const Icon(
-                          Icons.access_time_rounded,
-                          size: 16,
-                        ),
-                        const SizedBox(width: 4),
-                        const Flexible(
-                          child: Text(
-                            '強震モニタ 取得停止中',
-                          ),
-                        ),
-                      ],
+                      const Icon(Icons.access_time_rounded, size: 16),
+                      const SizedBox(width: 4),
+                      const Flexible(child: Text('強震モニタ 取得停止中')),
+                    ],
                     _
                         when latestTime != null &&
                             status == KyoshinMonitorStatus.delayed =>
                       [
                         Flexible(
                           child: Text(
-                            DateFormat('yyyy/MM/dd HH:mm:ss')
-                                .format(latestTime),
-                            style: const TextStyle(
-                              color: Colors.redAccent,
-                            ),
+                            DateFormat(
+                              'yyyy/MM/dd HH:mm:ss',
+                            ).format(latestTime),
+                            style: const TextStyle(color: Colors.redAccent),
                           ),
                         ),
                       ],
                     _ when latestTime != null => [
-                        Flexible(
-                          child: Text(
-                            dateFormat.format(latestTime),
-                          ),
-                        ),
-                      ],
+                      Flexible(child: Text(dateFormat.format(latestTime))),
+                    ],
                     _ => [
-                        const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator.adaptive(),
-                        ),
-                      ],
+                      const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator.adaptive(),
+                      ),
+                    ],
                   },
                 ],
               ),

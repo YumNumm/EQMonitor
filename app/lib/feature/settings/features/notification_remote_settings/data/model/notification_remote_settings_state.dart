@@ -22,9 +22,7 @@ class NotificationRemoteSettingsEew with _$NotificationRemoteSettingsEew {
     required List<NotificationRemoteSettingsEewRegion> regions,
   }) = _NotificationRemoteSettingsEew;
 
-  factory NotificationRemoteSettingsEew.fromJson(
-    Map<String, dynamic> json,
-  ) =>
+  factory NotificationRemoteSettingsEew.fromJson(Map<String, dynamic> json) =>
       _$NotificationRemoteSettingsEewFromJson(json);
 }
 
@@ -39,8 +37,7 @@ class NotificationRemoteSettingsEewRegion
 
   factory NotificationRemoteSettingsEewRegion.fromJson(
     Map<String, dynamic> json,
-  ) =>
-      _$NotificationRemoteSettingsEewRegionFromJson(json);
+  ) => _$NotificationRemoteSettingsEewRegionFromJson(json);
 }
 
 @freezed
@@ -53,8 +50,7 @@ class NotificationRemoteSettingsEarthquake
 
   factory NotificationRemoteSettingsEarthquake.fromJson(
     Map<String, dynamic> json,
-  ) =>
-      _$NotificationRemoteSettingsEarthquakeFromJson(json);
+  ) => _$NotificationRemoteSettingsEarthquakeFromJson(json);
 }
 
 @freezed
@@ -68,6 +64,5 @@ class NotificationRemoteSettingsEarthquakeRegion
 
   factory NotificationRemoteSettingsEarthquakeRegion.fromJson(
     Map<String, dynamic> json,
-  ) =>
-      _$NotificationRemoteSettingsEarthquakeRegionFromJson(json);
+  ) => _$NotificationRemoteSettingsEarthquakeRegionFromJson(json);
 }

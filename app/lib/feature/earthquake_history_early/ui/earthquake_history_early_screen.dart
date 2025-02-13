@@ -58,35 +58,38 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.info),
-            onPressed: () async =>
-                _EarthquakeHistoryEarlyInformationModal.show(context),
+            onPressed:
+                () async =>
+                    _EarthquakeHistoryEarlyInformationModal.show(context),
           ),
         ],
       ),
       body: _SliverListBody(
         parameter: parameter.value,
         state: state,
-        onRefresh: () async => ref.refresh(
-          earthquakeHistoryEarlyNotifierProvider(parameter.value).notifier,
-        ),
-        onScrollEnd: () async => ref
-            .read(
+        onRefresh:
+            () async => ref.refresh(
               earthquakeHistoryEarlyNotifierProvider(parameter.value).notifier,
-            )
-            .fetchNextData(),
+            ),
+        onScrollEnd:
+            () async =>
+                ref
+                    .read(
+                      earthquakeHistoryEarlyNotifierProvider(
+                        parameter.value,
+                      ).notifier,
+                    )
+                    .fetchNextData(),
         shouldShowLatestEarthquakeMessage:
             parameter.value.sort == EarthquakeEarlySortType.origin_time &&
-                !parameter.value.ascending,
+            !parameter.value.ascending,
       ),
     );
   }
 }
 
 class _SearchParameter extends StatelessWidget {
-  const _SearchParameter({
-    required this.parameter,
-    required this.onChanged,
-  });
+  const _SearchParameter({required this.parameter, required this.onChanged});
 
   final EarthquakeHistoryEarlyParameter parameter;
   final void Function(EarthquakeHistoryEarlyParameter) onChanged;
@@ -99,57 +102,60 @@ class _SearchParameter extends StatelessWidget {
         padding: const EdgeInsets.all(4),
         child: IntrinsicHeight(
           child: Row(
-            children: [
-              EarthquakeHistoryEarlySortChip(
-                type: parameter.sort,
-                ascending: parameter.ascending,
-                onChanged: (type, ascending) => onChanged(
-                  parameter.updateSort(
-                    type: type,
-                    ascending: ascending,
-                  ),
-                ),
-              ),
-              const VerticalDivider(),
-              IntensityFilterChip(
-                min: parameter.intensityGte,
-                max: parameter.intensityLte,
-                onChanged: (min, max) => onChanged(
-                  parameter.updateIntensity(min, max),
-                ),
-              ),
-              MagnitudeFilterChip(
-                min: parameter.magnitudeGte,
-                max: parameter.magnitudeLte,
-                onChanged: (min, max) => onChanged(
-                  parameter.updateMagnitude(min, max),
-                ),
-              ),
-              DepthFilterChip(
-                min: parameter.depthGte?.toInt(),
-                max: parameter.depthLte?.toInt(),
-                onChanged: (min, max) => onChanged(
-                  parameter.updateDepth(
-                    min?.toDouble(),
-                    max?.toDouble(),
-                  ),
-                ),
-              ),
-              DateRangeFilterChip(
-                min: parameter.originTimeGte,
-                max: parameter.originTimeLte,
-                onChanged: (min, max) => onChanged(
-                  parameter.updateOriginTime(min, max),
-                ),
-              ),
-            ]
-                .map(
-                  (e) => Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: e,
-                  ),
-                )
-                .toList(),
+            children:
+                [
+                      EarthquakeHistoryEarlySortChip(
+                        type: parameter.sort,
+                        ascending: parameter.ascending,
+                        onChanged:
+                            (type, ascending) => onChanged(
+                              parameter.updateSort(
+                                type: type,
+                                ascending: ascending,
+                              ),
+                            ),
+                      ),
+                      const VerticalDivider(),
+                      IntensityFilterChip(
+                        min: parameter.intensityGte,
+                        max: parameter.intensityLte,
+                        onChanged:
+                            (min, max) =>
+                                onChanged(parameter.updateIntensity(min, max)),
+                      ),
+                      MagnitudeFilterChip(
+                        min: parameter.magnitudeGte,
+                        max: parameter.magnitudeLte,
+                        onChanged:
+                            (min, max) =>
+                                onChanged(parameter.updateMagnitude(min, max)),
+                      ),
+                      DepthFilterChip(
+                        min: parameter.depthGte?.toInt(),
+                        max: parameter.depthLte?.toInt(),
+                        onChanged:
+                            (min, max) => onChanged(
+                              parameter.updateDepth(
+                                min?.toDouble(),
+                                max?.toDouble(),
+                              ),
+                            ),
+                      ),
+                      DateRangeFilterChip(
+                        min: parameter.originTimeGte,
+                        max: parameter.originTimeLte,
+                        onChanged:
+                            (min, max) =>
+                                onChanged(parameter.updateOriginTime(min, max)),
+                      ),
+                    ]
+                    .map(
+                      (e) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: e,
+                      ),
+                    )
+                    .toList(),
           ),
         ),
       ),
@@ -177,21 +183,18 @@ class _SliverListBody extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = useMemoized(() => PrimaryScrollController.of(context));
-    useEffect(
-      () {
-        controller.addListener(() {
-          if (state.hasError || state.isRefreshing || !state.hasValue) {
-            return;
-          }
-          if (controller.position.pixels >=
-              controller.position.maxScrollExtent - 100) {
-            onScrollEnd?.call();
-          }
-        });
-        return null;
-      },
-      [controller, state, onScrollEnd, onRefresh],
-    );
+    useEffect(() {
+      controller.addListener(() {
+        if (state.hasError || state.isRefreshing || !state.hasValue) {
+          return;
+        }
+        if (controller.position.pixels >=
+            controller.position.maxScrollExtent - 100) {
+          onScrollEnd?.call();
+        }
+      });
+      return null;
+    }, [controller, state, onScrollEnd, onRefresh]);
     final theme = Theme.of(context);
     final colorSchema = theme.colorScheme;
 
@@ -199,9 +202,7 @@ class _SliverListBody extends HookConsumerWidget {
       required (List<EarthquakeEarly>, int) data,
       Widget loading = const Padding(
         padding: EdgeInsets.all(48),
-        child: Center(
-          child: CircularProgressIndicator.adaptive(),
-        ),
+        child: Center(child: CircularProgressIndicator.adaptive()),
       ),
     }) {
       if (data.$1.isEmpty) {
@@ -220,10 +221,7 @@ class _SliverListBody extends HookConsumerWidget {
                 }
                 if (state.hasError) {
                   final error = state.error!;
-                  return ErrorCard(
-                    error: error,
-                    onReload: onRefresh,
-                  );
+                  return ErrorCard(error: error, onReload: onRefresh);
                 }
                 final hasNext = state.valueOrNull?.hasNext ?? false;
                 if (hasNext) {
@@ -235,9 +233,10 @@ class _SliverListBody extends HookConsumerWidget {
               final item = data.$1[index];
               return EarthquakeHistoryEarlyListTile(
                 item: item,
-                onTap: () async => EarthquakeHistoryEarlyDetailsRoute(
-                  id: item.id,
-                ).push<void>(context),
+                onTap:
+                    () async => EarthquakeHistoryEarlyDetailsRoute(
+                      id: item.id,
+                    ).push<void>(context),
               );
             },
           ),
@@ -249,70 +248,65 @@ class _SliverListBody extends HookConsumerWidget {
       onRefresh: () async => onRefresh?.call(),
       child: switch (state) {
         AsyncError(:final error) => () {
-            final valueOrNull = state.valueOrNull;
-            if (valueOrNull != null) {
-              return listView(data: valueOrNull);
-            }
-            return ErrorCard(
-              error: error,
-              onReload: () async => ref.refresh(
-                earthquakeHistoryEarlyNotifierProvider(parameter),
-              ),
-            );
-          }(),
+          final valueOrNull = state.valueOrNull;
+          if (valueOrNull != null) {
+            return listView(data: valueOrNull);
+          }
+          return ErrorCard(
+            error: error,
+            onReload:
+                () async => ref.refresh(
+                  earthquakeHistoryEarlyNotifierProvider(parameter),
+                ),
+          );
+        }(),
         AsyncData(:final value) => Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              if (shouldShowLatestEarthquakeMessage)
-                Card(
-                  color: colorSchema.secondaryContainer,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
-                          const TextSpan(text: '最新の地震情報を見るためには'),
-                          TextSpan(
-                            text: '地震履歴',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () async =>
-                                  const EarthquakeHistoryRoute().push<void>(
-                                    context,
-                                  ),
-                          ),
-                          const TextSpan(text: 'を使ってください'),
-                        ],
-                      ),
-                      style: TextStyle(
-                        color: colorSchema.onSecondaryContainer,
-                      ),
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            if (shouldShowLatestEarthquakeMessage)
+              Card(
+                color: colorSchema.secondaryContainer,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        const TextSpan(text: '最新の地震情報を見るためには'),
+                        TextSpan(
+                          text: '地震履歴',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          recognizer:
+                              TapGestureRecognizer()
+                                ..onTap =
+                                    () async => const EarthquakeHistoryRoute()
+                                        .push<void>(context),
+                        ),
+                        const TextSpan(text: 'を使ってください'),
+                      ],
                     ),
-                  ),
-                ),
-              Padding(
-                padding: const EdgeInsets.all(4),
-                child: Text.rich(
-                  TextSpan(
-                    children: [
-                      const TextSpan(text: '全'),
-                      TextSpan(
-                        text: NumberFormat('#,###').format(value.$2),
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const TextSpan(text: '件の地震情報が見つかりました'),
-                    ],
+                    style: TextStyle(color: colorSchema.onSecondaryContainer),
                   ),
                 ),
               ),
-              Expanded(
-                child: listView(data: value),
+            Padding(
+              padding: const EdgeInsets.all(4),
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    const TextSpan(text: '全'),
+                    TextSpan(
+                      text: NumberFormat('#,###').format(value.$2),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const TextSpan(text: '件の地震情報が見つかりました'),
+                  ],
+                ),
               ),
-            ],
-          ),
-        _ => const Center(
-            child: CircularProgressIndicator.adaptive(),
-          ),
+            ),
+            Expanded(child: listView(data: value)),
+          ],
+        ),
+        _ => const Center(child: CircularProgressIndicator.adaptive()),
       },
     );
   }
@@ -322,9 +316,9 @@ class _EarthquakeHistoryEarlyInformationModal extends StatelessWidget {
   const _EarthquakeHistoryEarlyInformationModal();
 
   static Future<void> show(BuildContext context) async => showModalBottomSheet(
-        context: context,
-        builder: (_) => const _EarthquakeHistoryEarlyInformationModal(),
-      );
+    context: context,
+    builder: (_) => const _EarthquakeHistoryEarlyInformationModal(),
+  );
 
   @override
   Widget build(BuildContext context) {

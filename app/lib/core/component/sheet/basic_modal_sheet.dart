@@ -31,9 +31,7 @@ class BasicModalSheet extends HookWidget {
         Sheet(
           backgroundColor: Colors.transparent,
           initialExtent: size.height * 0.2,
-          physics: const SnapSheetPhysics(
-            stops: <double>[0.2, 0.5, 1],
-          ),
+          physics: const SnapSheetPhysics(stops: <double>[0.2, 0.5, 1]),
           child: DecoratedBox(
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.vertical(
@@ -47,11 +45,7 @@ class BasicModalSheet extends HookWidget {
             child: SafeArea(
               top: hasAppBar,
               bottom: false,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: children,
-                ),
-              ),
+              child: SingleChildScrollView(child: Column(children: children)),
             ),
           ),
         ),
@@ -67,10 +61,7 @@ class BasicModalSheet extends HookWidget {
         bottom: false,
         child: Padding(
           padding: const EdgeInsets.only(right: 8),
-          child: SizedBox(
-            width: sheetWidth,
-            child: sheet,
-          ),
+          child: SizedBox(width: sheetWidth, child: sheet),
         ),
       ),
     );

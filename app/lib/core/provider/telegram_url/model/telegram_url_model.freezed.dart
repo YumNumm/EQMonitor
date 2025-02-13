@@ -12,7 +12,8 @@ part of 'telegram_url_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 TelegramUrlModel _$TelegramUrlModelFromJson(Map<String, dynamic> json) {
   return _TelegramUrlModel.fromJson(json);
@@ -37,8 +38,9 @@ mixin _$TelegramUrlModel {
 /// @nodoc
 abstract class $TelegramUrlModelCopyWith<$Res> {
   factory $TelegramUrlModelCopyWith(
-          TelegramUrlModel value, $Res Function(TelegramUrlModel) then) =
-      _$TelegramUrlModelCopyWithImpl<$Res, TelegramUrlModel>;
+    TelegramUrlModel value,
+    $Res Function(TelegramUrlModel) then,
+  ) = _$TelegramUrlModelCopyWithImpl<$Res, TelegramUrlModel>;
   @useResult
   $Res call({String restApiUrl, String wsApiUrl, String? apiAuthorization});
 }
@@ -62,29 +64,36 @@ class _$TelegramUrlModelCopyWithImpl<$Res, $Val extends TelegramUrlModel>
     Object? wsApiUrl = null,
     Object? apiAuthorization = freezed,
   }) {
-    return _then(_value.copyWith(
-      restApiUrl: null == restApiUrl
-          ? _value.restApiUrl
-          : restApiUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-      wsApiUrl: null == wsApiUrl
-          ? _value.wsApiUrl
-          : wsApiUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-      apiAuthorization: freezed == apiAuthorization
-          ? _value.apiAuthorization
-          : apiAuthorization // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            restApiUrl:
+                null == restApiUrl
+                    ? _value.restApiUrl
+                    : restApiUrl // ignore: cast_nullable_to_non_nullable
+                        as String,
+            wsApiUrl:
+                null == wsApiUrl
+                    ? _value.wsApiUrl
+                    : wsApiUrl // ignore: cast_nullable_to_non_nullable
+                        as String,
+            apiAuthorization:
+                freezed == apiAuthorization
+                    ? _value.apiAuthorization
+                    : apiAuthorization // ignore: cast_nullable_to_non_nullable
+                        as String?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$TelegramUrlModelImplCopyWith<$Res>
     implements $TelegramUrlModelCopyWith<$Res> {
-  factory _$$TelegramUrlModelImplCopyWith(_$TelegramUrlModelImpl value,
-          $Res Function(_$TelegramUrlModelImpl) then) =
-      __$$TelegramUrlModelImplCopyWithImpl<$Res>;
+  factory _$$TelegramUrlModelImplCopyWith(
+    _$TelegramUrlModelImpl value,
+    $Res Function(_$TelegramUrlModelImpl) then,
+  ) = __$$TelegramUrlModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String restApiUrl, String wsApiUrl, String? apiAuthorization});
@@ -94,9 +103,10 @@ abstract class _$$TelegramUrlModelImplCopyWith<$Res>
 class __$$TelegramUrlModelImplCopyWithImpl<$Res>
     extends _$TelegramUrlModelCopyWithImpl<$Res, _$TelegramUrlModelImpl>
     implements _$$TelegramUrlModelImplCopyWith<$Res> {
-  __$$TelegramUrlModelImplCopyWithImpl(_$TelegramUrlModelImpl _value,
-      $Res Function(_$TelegramUrlModelImpl) _then)
-      : super(_value, _then);
+  __$$TelegramUrlModelImplCopyWithImpl(
+    _$TelegramUrlModelImpl _value,
+    $Res Function(_$TelegramUrlModelImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of TelegramUrlModel
   /// with the given fields replaced by the non-null parameter values.
@@ -107,30 +117,36 @@ class __$$TelegramUrlModelImplCopyWithImpl<$Res>
     Object? wsApiUrl = null,
     Object? apiAuthorization = freezed,
   }) {
-    return _then(_$TelegramUrlModelImpl(
-      restApiUrl: null == restApiUrl
-          ? _value.restApiUrl
-          : restApiUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-      wsApiUrl: null == wsApiUrl
-          ? _value.wsApiUrl
-          : wsApiUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-      apiAuthorization: freezed == apiAuthorization
-          ? _value.apiAuthorization
-          : apiAuthorization // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$TelegramUrlModelImpl(
+        restApiUrl:
+            null == restApiUrl
+                ? _value.restApiUrl
+                : restApiUrl // ignore: cast_nullable_to_non_nullable
+                    as String,
+        wsApiUrl:
+            null == wsApiUrl
+                ? _value.wsApiUrl
+                : wsApiUrl // ignore: cast_nullable_to_non_nullable
+                    as String,
+        apiAuthorization:
+            freezed == apiAuthorization
+                ? _value.apiAuthorization
+                : apiAuthorization // ignore: cast_nullable_to_non_nullable
+                    as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$TelegramUrlModelImpl implements _TelegramUrlModel {
-  const _$TelegramUrlModelImpl(
-      {required this.restApiUrl,
-      required this.wsApiUrl,
-      required this.apiAuthorization});
+  const _$TelegramUrlModelImpl({
+    required this.restApiUrl,
+    required this.wsApiUrl,
+    required this.apiAuthorization,
+  });
 
   factory _$TelegramUrlModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$TelegramUrlModelImplFromJson(json);
@@ -172,21 +188,22 @@ class _$TelegramUrlModelImpl implements _TelegramUrlModel {
   @pragma('vm:prefer-inline')
   _$$TelegramUrlModelImplCopyWith<_$TelegramUrlModelImpl> get copyWith =>
       __$$TelegramUrlModelImplCopyWithImpl<_$TelegramUrlModelImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TelegramUrlModelImplToJson(
-      this,
-    );
+    return _$$TelegramUrlModelImplToJson(this);
   }
 }
 
 abstract class _TelegramUrlModel implements TelegramUrlModel {
-  const factory _TelegramUrlModel(
-      {required final String restApiUrl,
-      required final String wsApiUrl,
-      required final String? apiAuthorization}) = _$TelegramUrlModelImpl;
+  const factory _TelegramUrlModel({
+    required final String restApiUrl,
+    required final String wsApiUrl,
+    required final String? apiAuthorization,
+  }) = _$TelegramUrlModelImpl;
 
   factory _TelegramUrlModel.fromJson(Map<String, dynamic> json) =
       _$TelegramUrlModelImpl.fromJson;

@@ -15,14 +15,15 @@ String _$locationTrackingModeHash() =>
 @ProviderFor(LocationTrackingMode)
 final locationTrackingModeProvider =
     AutoDisposeNotifierProvider<LocationTrackingMode, bool>.internal(
-  LocationTrackingMode.new,
-  name: r'locationTrackingModeProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$locationTrackingModeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      LocationTrackingMode.new,
+      name: r'locationTrackingModeProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$locationTrackingModeHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$LocationTrackingMode = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint

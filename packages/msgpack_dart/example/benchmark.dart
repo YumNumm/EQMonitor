@@ -19,7 +19,9 @@ class Fraction {
   }
 
   Fraction cross(Fraction other) => new Fraction(
-      other.denominator * numerator, other.numerator * denominator);
+    other.denominator * numerator,
+    other.numerator * denominator,
+  );
 
   @override
   String toString() => "${numerator}/${denominator}";
@@ -57,7 +59,7 @@ main(List<String> args) async {
       "String": "Hello World",
       "Integer": 1,
       "Double": 2.0154,
-      "Array": const [1, 2, 3, "Hello"]
+      "Array": const [1, 2, 3, "Hello"],
     },
     "Medium Data": {
       "/downstream/wemo/CoffeeMaker-1_0-221421S0000731/Brew_Age": [
@@ -95,9 +97,9 @@ main(List<String> args) async {
         [1440366133032, -123913],
         [1440366134045, -123914],
         [1440366135050, -123915],
-        [1440366136049, -123916]
-      ]
-    }
+        [1440366136049, -123916],
+      ],
+    },
   };
 
   bool markdown = false;
@@ -171,9 +173,11 @@ testObjectDecode(String desc, input, bool markdown) {
     print("    Total Time: $totalTime microseconds (${totalTime / 1000}ms)");
     print("    Average Time: $avgTime microseconds (${avgTime / 1000}ms)");
     print(
-        "    Longest Time: ${times.last} microseconds (${times.last / 1000}ms)");
+      "    Longest Time: ${times.last} microseconds (${times.last / 1000}ms)",
+    );
     print(
-        "    Shortest Time: ${times.first} microseconds (${times.first / 1000}ms)");
+      "    Shortest Time: ${times.first} microseconds (${times.first / 1000}ms)",
+    );
   }
   var jTotal = totalTime;
   var jAvg = avgTime;
@@ -198,9 +202,11 @@ testObjectDecode(String desc, input, bool markdown) {
     print("    Total Time: ${totalTime} microseconds (${totalTime / 1000}ms)");
     print("    Average Time: ${avgTime} microseconds (${avgTime / 1000}ms)");
     print(
-        "    Longest Time: ${times.last} microseconds (${times.last / 1000}ms)");
+      "    Longest Time: ${times.last} microseconds (${times.last / 1000}ms)",
+    );
     print(
-        "    Shortest Time: ${times.first} microseconds (${times.first / 1000}ms)");
+      "    Shortest Time: ${times.first} microseconds (${times.first / 1000}ms)",
+    );
   }
   var nTotal = totalTime;
   var nAvg = avgTime;
@@ -225,9 +231,11 @@ testObjectDecode(String desc, input, bool markdown) {
     print("    Total Time: ${totalTime} microseconds (${totalTime / 1000}ms)");
     print("    Average Time: ${avgTime} microseconds (${avgTime / 1000}ms)");
     print(
-        "    Longest Time: ${times.last} microseconds (${times.last / 1000}ms)");
+      "    Longest Time: ${times.last} microseconds (${times.last / 1000}ms)",
+    );
     print(
-        "    Shortest Time: ${times.first} microseconds (${times.first / 1000}ms)");
+      "    Shortest Time: ${times.first} microseconds (${times.first / 1000}ms)",
+    );
   }
   var n2Total = totalTime;
   var n2Avg = avgTime;
@@ -237,18 +245,26 @@ testObjectDecode(String desc, input, bool markdown) {
   if (markdown) {
     print("Time | JSON | MsgPack2 | msgpack_dart |");
     print("-----|------|----------|--------------|");
-    print("Total | $jTotal μs (${jTotal / 1000}ms) | " +
-        "$nTotal μs (${nTotal / 1000}ms) |" +
-        "$n2Total μs (${n2Total / 1000}ms)");
-    print("Average | $jAvg μs (${jAvg / 1000}ms) | " +
-        "$nAvg μs (${nAvg / 1000}ms) |" +
-        "$n2Avg μs (${n2Avg / 1000}ms)");
-    print("Longest | $jLong μs (${jLong / 1000}ms) | " +
-        "$nLong μs (${nLong / 1000}ms) |" +
-        "$n2Long μs (${n2Long / 1000}ms)");
-    print("Shortest | $jShort μs (${jShort / 1000}ms) | " +
-        "$nShort μs (${nShort / 1000}ms) |" +
-        "$n2Short μs (${n2Short / 1000}ms)");
+    print(
+      "Total | $jTotal μs (${jTotal / 1000}ms) | " +
+          "$nTotal μs (${nTotal / 1000}ms) |" +
+          "$n2Total μs (${n2Total / 1000}ms)",
+    );
+    print(
+      "Average | $jAvg μs (${jAvg / 1000}ms) | " +
+          "$nAvg μs (${nAvg / 1000}ms) |" +
+          "$n2Avg μs (${n2Avg / 1000}ms)",
+    );
+    print(
+      "Longest | $jLong μs (${jLong / 1000}ms) | " +
+          "$nLong μs (${nLong / 1000}ms) |" +
+          "$n2Long μs (${n2Long / 1000}ms)",
+    );
+    print(
+      "Shortest | $jShort μs (${jShort / 1000}ms) | " +
+          "$nShort μs (${nShort / 1000}ms) |" +
+          "$n2Short μs (${n2Short / 1000}ms)",
+    );
   }
 
   var bestAvg = n2Avg;
@@ -297,9 +313,11 @@ testObjectEncode(String desc, input, bool markdown) {
     print("    Total Time: $totalTime microseconds (${totalTime / 1000}ms)");
     print("    Average Time: $avgTime microseconds (${avgTime / 1000}ms)");
     print(
-        "    Longest Time: ${times.last} microseconds (${times.last / 1000}ms)");
+      "    Longest Time: ${times.last} microseconds (${times.last / 1000}ms)",
+    );
     print(
-        "    Shortest Time: ${times.first} microseconds (${times.first / 1000}ms)");
+      "    Shortest Time: ${times.first} microseconds (${times.first / 1000}ms)",
+    );
     print("    Size: ${size} bytes");
   }
   var jTotal = totalTime;
@@ -326,9 +344,11 @@ testObjectEncode(String desc, input, bool markdown) {
     print("    Total Time: ${totalTime} microseconds (${totalTime / 1000}ms)");
     print("    Average Time: ${avgTime} microseconds (${avgTime / 1000}ms)");
     print(
-        "    Longest Time: ${times.last} microseconds (${times.last / 1000}ms)");
+      "    Longest Time: ${times.last} microseconds (${times.last / 1000}ms)",
+    );
     print(
-        "    Shortest Time: ${times.first} microseconds (${times.first / 1000}ms)");
+      "    Shortest Time: ${times.first} microseconds (${times.first / 1000}ms)",
+    );
     print("    Size: ${size} bytes");
   }
   var nTotal = totalTime;
@@ -357,9 +377,11 @@ testObjectEncode(String desc, input, bool markdown) {
     print("    Total Time: ${totalTime} microseconds (${totalTime / 1000}ms)");
     print("    Average Time: ${avgTime} microseconds (${avgTime / 1000}ms)");
     print(
-        "    Longest Time: ${times.last} microseconds (${times.last / 1000}ms)");
+      "    Longest Time: ${times.last} microseconds (${times.last / 1000}ms)",
+    );
     print(
-        "    Shortest Time: ${times.first} microseconds (${times.first / 1000}ms)");
+      "    Shortest Time: ${times.first} microseconds (${times.first / 1000}ms)",
+    );
     print("    Size: ${size} bytes");
   }
   var n2Total = totalTime;
@@ -371,18 +393,26 @@ testObjectEncode(String desc, input, bool markdown) {
   if (markdown) {
     print("Time | JSON | MsgPack2 | msgpack_dart |");
     print("-----|------|---------|--------------|");
-    print("Total | $jTotal μs (${jTotal / 1000}ms) | " +
-        "$nTotal μs (${nTotal / 1000}ms) | " +
-        "$n2Total μs (${n2Total / 1000}ms)");
-    print("Average | $jAvg μs (${jAvg / 1000}ms) | " +
-        "$nAvg μs (${nAvg / 1000}ms) | " +
-        "$n2Avg μs (${n2Avg / 1000}ms)");
-    print("Longest | $jLong μs (${jLong / 1000}ms) | " +
-        "$nLong μs (${nLong / 1000}ms) | " +
-        "$n2Long μs (${n2Long / 1000}ms)");
-    print("Shortest | $jShort μs (${jShort / 1000}ms) | " +
-        "$nShort μs (${nShort / 1000}ms) | " +
-        "$n2Short μs (${n2Short / 1000}ms)");
+    print(
+      "Total | $jTotal μs (${jTotal / 1000}ms) | " +
+          "$nTotal μs (${nTotal / 1000}ms) | " +
+          "$n2Total μs (${n2Total / 1000}ms)",
+    );
+    print(
+      "Average | $jAvg μs (${jAvg / 1000}ms) | " +
+          "$nAvg μs (${nAvg / 1000}ms) | " +
+          "$n2Avg μs (${n2Avg / 1000}ms)",
+    );
+    print(
+      "Longest | $jLong μs (${jLong / 1000}ms) | " +
+          "$nLong μs (${nLong / 1000}ms) | " +
+          "$n2Long μs (${n2Long / 1000}ms)",
+    );
+    print(
+      "Shortest | $jShort μs (${jShort / 1000}ms) | " +
+          "$nShort μs (${nShort / 1000}ms) | " +
+          "$n2Short μs (${n2Short / 1000}ms)",
+    );
     print("Size | $jSize bytes | $nSize bytes | $n2Size bytes");
   }
 

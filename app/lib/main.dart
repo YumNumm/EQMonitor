@@ -51,9 +51,7 @@ Future<void> main() async {
     ),
   );
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   talker = TalkerFlutter.init(
     settings: TalkerSettings(
@@ -62,9 +60,7 @@ Future<void> main() async {
     ),
   );
   if (!kIsWeb) {
-    talker.configure(
-      observer: CrashlyticsTalkerObserver(),
-    );
+    talker.configure(observer: CrashlyticsTalkerObserver());
   }
 
   FlutterError.onError = (error) {
@@ -97,44 +93,51 @@ Future<void> main() async {
 
   final deviceInfo = DeviceInfoPlugin();
 
-  final results = await (
-    (
-      SharedPreferences.getInstance(),
-      PackageInfo.fromPlatform(),
-      (!kIsWeb && Platform.isAndroid
-          ? deviceInfo.androidInfo
-          : Future<Null>.value()),
-      (!kIsWeb && Platform.isIOS ? deviceInfo.iosInfo : Future<Null>.value()),
-      kIsWeb ? Future<Null>.value() : _registerNotificationChannelIfNeeded(),
-      kIsWeb ? Future<Null>.value() : getApplicationDocumentsDirectory(),
-      loadJmaCodeTable(),
-      kIsWeb
-          ? Future<Null>.value()
-          : FlutterLocalNotificationsPlugin().initialize(
-              const InitializationSettings(
-                iOS: DarwinInitializationSettings(
-                  requestAlertPermission: false,
-                  requestSoundPermission: false,
-                  requestBadgePermission: false,
-                ),
-                android: AndroidInitializationSettings('mipmap/ic_launcher'),
-                macOS: DarwinInitializationSettings(
-                  requestAlertPermission: false,
-                  requestSoundPermission: false,
-                  requestBadgePermission: false,
+  final results =
+      await (
+        (
+          SharedPreferences.getInstance(),
+          PackageInfo.fromPlatform(),
+          (!kIsWeb && Platform.isAndroid
+              ? deviceInfo.androidInfo
+              : Future<Null>.value()),
+          (!kIsWeb && Platform.isIOS
+              ? deviceInfo.iosInfo
+              : Future<Null>.value()),
+          kIsWeb
+              ? Future<Null>.value()
+              : _registerNotificationChannelIfNeeded(),
+          kIsWeb ? Future<Null>.value() : getApplicationDocumentsDirectory(),
+          loadJmaCodeTable(),
+          kIsWeb
+              ? Future<Null>.value()
+              : FlutterLocalNotificationsPlugin().initialize(
+                const InitializationSettings(
+                  iOS: DarwinInitializationSettings(
+                    requestAlertPermission: false,
+                    requestSoundPermission: false,
+                    requestBadgePermission: false,
+                  ),
+                  android: AndroidInitializationSettings('mipmap/ic_launcher'),
+                  macOS: DarwinInitializationSettings(
+                    requestAlertPermission: false,
+                    requestSoundPermission: false,
+                    requestBadgePermission: false,
+                  ),
                 ),
               ),
-            ),
-    ).wait,
-    (
-      initInAppPurchase(),
-      initLicenses(),
-      kIsWeb ? Future<Null>.value() : getKyoshinColorMap(),
-      !kIsWeb && Platform.isIOS
-          ? SharedPreferenceAppGroup.setAppGroup('group.net.yumnumm.eqmonitor')
-          : Future<void>.value(),
-    ).wait,
-  ).wait;
+        ).wait,
+        (
+          initInAppPurchase(),
+          initLicenses(),
+          kIsWeb ? Future<Null>.value() : getKyoshinColorMap(),
+          !kIsWeb && Platform.isIOS
+              ? SharedPreferenceAppGroup.setAppGroup(
+                'group.net.yumnumm.eqmonitor',
+              )
+              : Future<void>.value(),
+        ).wait,
+      ).wait;
 
   FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
   if (!kIsWeb) {
@@ -156,33 +159,26 @@ Future<void> main() async {
       if (results.$2.$3 != null)
         kyoshinColorMapProvider.overrideWithValue(results.$2.$3!),
     ],
-    observers: [
-      if (kDebugMode)
-        CustomProviderObserver(
-          talker,
-        ),
-    ],
+    observers: [if (kDebugMode) CustomProviderObserver(talker)],
   );
 
   await (
-    container
-        .read(kyoshinMonitorInternalObservationPointsConvertedProvider.future),
+    container.read(
+      kyoshinMonitorInternalObservationPointsConvertedProvider.future,
+    ),
     container.read(travelTimeInternalProvider.future),
     container.read(permissionNotifierProvider.notifier).initialize(),
   ).wait;
 
-  runApp(
-    UncontrolledProviderScope(
-      container: container,
-      child: const App(),
-    ),
-  );
+  runApp(UncontrolledProviderScope(container: container, child: const App()));
 }
 
 Future<void> _registerNotificationChannelIfNeeded() async {
-  final androidNotificationPlugin = FlutterLocalNotificationsPlugin()
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>();
+  final androidNotificationPlugin =
+      FlutterLocalNotificationsPlugin()
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >();
   if (androidNotificationPlugin == null) {
     return;
   }

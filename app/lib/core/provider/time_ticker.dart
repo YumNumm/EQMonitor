@@ -7,5 +7,4 @@ part 'time_ticker.g.dart';
 Stream<DateTime> timeTicker(
   Ref ref, [
   Duration duration = const Duration(seconds: 1),
-]) =>
-    Stream.periodic(duration, (_) => DateTime.now());
+]) => Stream.periodic(duration, (_) => DateTime.now());

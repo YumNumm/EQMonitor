@@ -31,19 +31,20 @@ String _$websocketParsedMessagesHash() =>
 @ProviderFor(websocketParsedMessages)
 final websocketParsedMessagesProvider =
     StreamProvider<RealtimePostgresChangesPayloadBase>.internal(
-  websocketParsedMessages,
-  name: r'websocketParsedMessagesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$websocketParsedMessagesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      websocketParsedMessages,
+      name: r'websocketParsedMessagesProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$websocketParsedMessagesHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef WebsocketParsedMessagesRef
-    = StreamProviderRef<RealtimePostgresChangesPayloadBase>;
+typedef WebsocketParsedMessagesRef =
+    StreamProviderRef<RealtimePostgresChangesPayloadBase>;
 String _$websocketTableMessagesHash() =>
     r'53916279b0c281a63156b8900900605a867bea1c';
 
@@ -51,33 +52,35 @@ String _$websocketTableMessagesHash() =>
 @ProviderFor(websocketTableMessages)
 final websocketTableMessagesProvider =
     StreamProvider<RealtimePostgresChangesPayloadTable>.internal(
-  websocketTableMessages,
-  name: r'websocketTableMessagesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$websocketTableMessagesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      websocketTableMessages,
+      name: r'websocketTableMessagesProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$websocketTableMessagesHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef WebsocketTableMessagesRef
-    = StreamProviderRef<RealtimePostgresChangesPayloadTable>;
+typedef WebsocketTableMessagesRef =
+    StreamProviderRef<RealtimePostgresChangesPayloadTable>;
 String _$websocketStatusHash() => r'9c6c47911232f1770b32d1b13f4364abf4900063';
 
 /// See also [WebsocketStatus].
 @ProviderFor(WebsocketStatus)
 final websocketStatusProvider =
     NotifierProvider<WebsocketStatus, ConnectionState>.internal(
-  WebsocketStatus.new,
-  name: r'websocketStatusProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$websocketStatusHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      WebsocketStatus.new,
+      name: r'websocketStatusProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$websocketStatusHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$WebsocketStatus = Notifier<ConnectionState>;
 String _$websocketMessagesHash() => r'209382a0f1a8fb3231e709d278d154cf462aa4d6';
@@ -86,14 +89,15 @@ String _$websocketMessagesHash() => r'209382a0f1a8fb3231e709d278d154cf462aa4d6';
 @ProviderFor(WebsocketMessages)
 final websocketMessagesProvider =
     StreamNotifierProvider<WebsocketMessages, Map<String, dynamic>>.internal(
-  WebsocketMessages.new,
-  name: r'websocketMessagesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$websocketMessagesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      WebsocketMessages.new,
+      name: r'websocketMessagesProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$websocketMessagesHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$WebsocketMessages = StreamNotifier<Map<String, dynamic>>;
 // ignore_for_file: type=lint

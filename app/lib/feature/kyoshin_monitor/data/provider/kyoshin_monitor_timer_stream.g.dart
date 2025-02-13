@@ -15,14 +15,15 @@ String _$kyoshinMonitorTimerStreamHash() =>
 @ProviderFor(kyoshinMonitorTimerStream)
 final kyoshinMonitorTimerStreamProvider =
     AutoDisposeStreamProvider<DateTime>.internal(
-  kyoshinMonitorTimerStream,
-  name: r'kyoshinMonitorTimerStreamProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$kyoshinMonitorTimerStreamHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      kyoshinMonitorTimerStream,
+      name: r'kyoshinMonitorTimerStreamProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$kyoshinMonitorTimerStreamHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element

@@ -9,28 +9,25 @@ part of 'camera_position.dart';
 // **************************************************************************
 
 _$MapCameraPositionImpl _$$MapCameraPositionImplFromJson(
-        Map<String, dynamic> json) =>
-    $checkedCreate(
-      r'_$MapCameraPositionImpl',
-      json,
-      ($checkedConvert) {
-        final val = _$MapCameraPositionImpl(
-          target: $checkedConvert('target',
-              (v) => const LatLngConverter().fromJson(v as List<double>)),
-          zoom: $checkedConvert('zoom', (v) => (v as num?)?.toDouble() ?? 5.0),
-          tilt: $checkedConvert('tilt', (v) => (v as num?)?.toDouble() ?? 0.0),
-          bearing:
-              $checkedConvert('bearing', (v) => (v as num?)?.toDouble() ?? 0.0),
-        );
-        return val;
-      },
-    );
+  Map<String, dynamic> json,
+) => $checkedCreate(r'_$MapCameraPositionImpl', json, ($checkedConvert) {
+  final val = _$MapCameraPositionImpl(
+    target: $checkedConvert(
+      'target',
+      (v) => const LatLngConverter().fromJson(v as List<double>),
+    ),
+    zoom: $checkedConvert('zoom', (v) => (v as num?)?.toDouble() ?? 5.0),
+    tilt: $checkedConvert('tilt', (v) => (v as num?)?.toDouble() ?? 0.0),
+    bearing: $checkedConvert('bearing', (v) => (v as num?)?.toDouble() ?? 0.0),
+  );
+  return val;
+});
 
 Map<String, dynamic> _$$MapCameraPositionImplToJson(
-        _$MapCameraPositionImpl instance) =>
-    <String, dynamic>{
-      'target': const LatLngConverter().toJson(instance.target),
-      'zoom': instance.zoom,
-      'tilt': instance.tilt,
-      'bearing': instance.bearing,
-    };
+  _$MapCameraPositionImpl instance,
+) => <String, dynamic>{
+  'target': const LatLngConverter().toJson(instance.target),
+  'zoom': instance.zoom,
+  'tilt': instance.tilt,
+  'bearing': instance.bearing,
+};

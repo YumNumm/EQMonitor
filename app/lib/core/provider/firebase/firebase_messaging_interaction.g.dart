@@ -15,14 +15,15 @@ String _$firebaseMessagingInteractionHash() =>
 @ProviderFor(firebaseMessagingInteraction)
 final firebaseMessagingInteractionProvider =
     StreamProvider<RemoteMessage>.internal(
-  firebaseMessagingInteraction,
-  name: r'firebaseMessagingInteractionProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$firebaseMessagingInteractionHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      firebaseMessagingInteraction,
+      name: r'firebaseMessagingInteractionProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$firebaseMessagingInteractionHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element

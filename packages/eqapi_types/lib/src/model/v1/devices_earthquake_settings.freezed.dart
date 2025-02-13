@@ -12,10 +12,12 @@ part of 'devices_earthquake_settings.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 DevicesEarthquakeSettings _$DevicesEarthquakeSettingsFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _DevicesEarthquakeSettings.fromJson(json);
 }
 
@@ -40,21 +42,25 @@ mixin _$DevicesEarthquakeSettings {
 
 /// @nodoc
 abstract class $DevicesEarthquakeSettingsCopyWith<$Res> {
-  factory $DevicesEarthquakeSettingsCopyWith(DevicesEarthquakeSettings value,
-          $Res Function(DevicesEarthquakeSettings) then) =
-      _$DevicesEarthquakeSettingsCopyWithImpl<$Res, DevicesEarthquakeSettings>;
+  factory $DevicesEarthquakeSettingsCopyWith(
+    DevicesEarthquakeSettings value,
+    $Res Function(DevicesEarthquakeSettings) then,
+  ) = _$DevicesEarthquakeSettingsCopyWithImpl<$Res, DevicesEarthquakeSettings>;
   @useResult
-  $Res call(
-      {String id,
-      JmaForecastIntensity minJmaIntensity,
-      int regionId,
-      DateTime createdAt,
-      DateTime updatedAt});
+  $Res call({
+    String id,
+    JmaForecastIntensity minJmaIntensity,
+    int regionId,
+    DateTime createdAt,
+    DateTime updatedAt,
+  });
 }
 
 /// @nodoc
-class _$DevicesEarthquakeSettingsCopyWithImpl<$Res,
-        $Val extends DevicesEarthquakeSettings>
+class _$DevicesEarthquakeSettingsCopyWithImpl<
+  $Res,
+  $Val extends DevicesEarthquakeSettings
+>
     implements $DevicesEarthquakeSettingsCopyWith<$Res> {
   _$DevicesEarthquakeSettingsCopyWithImpl(this._value, this._then);
 
@@ -74,28 +80,36 @@ class _$DevicesEarthquakeSettingsCopyWithImpl<$Res,
     Object? createdAt = null,
     Object? updatedAt = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      minJmaIntensity: null == minJmaIntensity
-          ? _value.minJmaIntensity
-          : minJmaIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity,
-      regionId: null == regionId
-          ? _value.regionId
-          : regionId // ignore: cast_nullable_to_non_nullable
-              as int,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id:
+                null == id
+                    ? _value.id
+                    : id // ignore: cast_nullable_to_non_nullable
+                        as String,
+            minJmaIntensity:
+                null == minJmaIntensity
+                    ? _value.minJmaIntensity
+                    : minJmaIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaForecastIntensity,
+            regionId:
+                null == regionId
+                    ? _value.regionId
+                    : regionId // ignore: cast_nullable_to_non_nullable
+                        as int,
+            createdAt:
+                null == createdAt
+                    ? _value.createdAt
+                    : createdAt // ignore: cast_nullable_to_non_nullable
+                        as DateTime,
+            updatedAt:
+                null == updatedAt
+                    ? _value.updatedAt
+                    : updatedAt // ignore: cast_nullable_to_non_nullable
+                        as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -103,28 +117,32 @@ class _$DevicesEarthquakeSettingsCopyWithImpl<$Res,
 abstract class _$$DevicesEarthquakeSettingsImplCopyWith<$Res>
     implements $DevicesEarthquakeSettingsCopyWith<$Res> {
   factory _$$DevicesEarthquakeSettingsImplCopyWith(
-          _$DevicesEarthquakeSettingsImpl value,
-          $Res Function(_$DevicesEarthquakeSettingsImpl) then) =
-      __$$DevicesEarthquakeSettingsImplCopyWithImpl<$Res>;
+    _$DevicesEarthquakeSettingsImpl value,
+    $Res Function(_$DevicesEarthquakeSettingsImpl) then,
+  ) = __$$DevicesEarthquakeSettingsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      JmaForecastIntensity minJmaIntensity,
-      int regionId,
-      DateTime createdAt,
-      DateTime updatedAt});
+  $Res call({
+    String id,
+    JmaForecastIntensity minJmaIntensity,
+    int regionId,
+    DateTime createdAt,
+    DateTime updatedAt,
+  });
 }
 
 /// @nodoc
 class __$$DevicesEarthquakeSettingsImplCopyWithImpl<$Res>
-    extends _$DevicesEarthquakeSettingsCopyWithImpl<$Res,
-        _$DevicesEarthquakeSettingsImpl>
+    extends
+        _$DevicesEarthquakeSettingsCopyWithImpl<
+          $Res,
+          _$DevicesEarthquakeSettingsImpl
+        >
     implements _$$DevicesEarthquakeSettingsImplCopyWith<$Res> {
   __$$DevicesEarthquakeSettingsImplCopyWithImpl(
-      _$DevicesEarthquakeSettingsImpl _value,
-      $Res Function(_$DevicesEarthquakeSettingsImpl) _then)
-      : super(_value, _then);
+    _$DevicesEarthquakeSettingsImpl _value,
+    $Res Function(_$DevicesEarthquakeSettingsImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of DevicesEarthquakeSettings
   /// with the given fields replaced by the non-null parameter values.
@@ -137,40 +155,48 @@ class __$$DevicesEarthquakeSettingsImplCopyWithImpl<$Res>
     Object? createdAt = null,
     Object? updatedAt = null,
   }) {
-    return _then(_$DevicesEarthquakeSettingsImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      minJmaIntensity: null == minJmaIntensity
-          ? _value.minJmaIntensity
-          : minJmaIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity,
-      regionId: null == regionId
-          ? _value.regionId
-          : regionId // ignore: cast_nullable_to_non_nullable
-              as int,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+    return _then(
+      _$DevicesEarthquakeSettingsImpl(
+        id:
+            null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                    as String,
+        minJmaIntensity:
+            null == minJmaIntensity
+                ? _value.minJmaIntensity
+                : minJmaIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaForecastIntensity,
+        regionId:
+            null == regionId
+                ? _value.regionId
+                : regionId // ignore: cast_nullable_to_non_nullable
+                    as int,
+        createdAt:
+            null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                    as DateTime,
+        updatedAt:
+            null == updatedAt
+                ? _value.updatedAt
+                : updatedAt // ignore: cast_nullable_to_non_nullable
+                    as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$DevicesEarthquakeSettingsImpl implements _DevicesEarthquakeSettings {
-  const _$DevicesEarthquakeSettingsImpl(
-      {required this.id,
-      required this.minJmaIntensity,
-      required this.regionId,
-      required this.createdAt,
-      required this.updatedAt});
+  const _$DevicesEarthquakeSettingsImpl({
+    required this.id,
+    required this.minJmaIntensity,
+    required this.regionId,
+    required this.createdAt,
+    required this.updatedAt,
+  });
 
   factory _$DevicesEarthquakeSettingsImpl.fromJson(Map<String, dynamic> json) =>
       _$$DevicesEarthquakeSettingsImplFromJson(json);
@@ -210,7 +236,13 @@ class _$DevicesEarthquakeSettingsImpl implements _DevicesEarthquakeSettings {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, id, minJmaIntensity, regionId, createdAt, updatedAt);
+    runtimeType,
+    id,
+    minJmaIntensity,
+    regionId,
+    createdAt,
+    updatedAt,
+  );
 
   /// Create a copy of DevicesEarthquakeSettings
   /// with the given fields replaced by the non-null parameter values.
@@ -218,24 +250,24 @@ class _$DevicesEarthquakeSettingsImpl implements _DevicesEarthquakeSettings {
   @override
   @pragma('vm:prefer-inline')
   _$$DevicesEarthquakeSettingsImplCopyWith<_$DevicesEarthquakeSettingsImpl>
-      get copyWith => __$$DevicesEarthquakeSettingsImplCopyWithImpl<
-          _$DevicesEarthquakeSettingsImpl>(this, _$identity);
+  get copyWith => __$$DevicesEarthquakeSettingsImplCopyWithImpl<
+    _$DevicesEarthquakeSettingsImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$DevicesEarthquakeSettingsImplToJson(
-      this,
-    );
+    return _$$DevicesEarthquakeSettingsImplToJson(this);
   }
 }
 
 abstract class _DevicesEarthquakeSettings implements DevicesEarthquakeSettings {
-  const factory _DevicesEarthquakeSettings(
-      {required final String id,
-      required final JmaForecastIntensity minJmaIntensity,
-      required final int regionId,
-      required final DateTime createdAt,
-      required final DateTime updatedAt}) = _$DevicesEarthquakeSettingsImpl;
+  const factory _DevicesEarthquakeSettings({
+    required final String id,
+    required final JmaForecastIntensity minJmaIntensity,
+    required final int regionId,
+    required final DateTime createdAt,
+    required final DateTime updatedAt,
+  }) = _$DevicesEarthquakeSettingsImpl;
 
   factory _DevicesEarthquakeSettings.fromJson(Map<String, dynamic> json) =
       _$DevicesEarthquakeSettingsImpl.fromJson;
@@ -256,5 +288,5 @@ abstract class _DevicesEarthquakeSettings implements DevicesEarthquakeSettings {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$DevicesEarthquakeSettingsImplCopyWith<_$DevicesEarthquakeSettingsImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

@@ -14,18 +14,21 @@ String _$earthquakeNotificationSettingsViewModelHash() =>
 /// See also [EarthquakeNotificationSettingsViewModel].
 @ProviderFor(EarthquakeNotificationSettingsViewModel)
 final earthquakeNotificationSettingsViewModelProvider =
-    AutoDisposeNotifierProvider<EarthquakeNotificationSettingsViewModel,
-        FcmEarthquakeTopic?>.internal(
-  EarthquakeNotificationSettingsViewModel.new,
-  name: r'earthquakeNotificationSettingsViewModelProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$earthquakeNotificationSettingsViewModelHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+    AutoDisposeNotifierProvider<
+      EarthquakeNotificationSettingsViewModel,
+      FcmEarthquakeTopic?
+    >.internal(
+      EarthquakeNotificationSettingsViewModel.new,
+      name: r'earthquakeNotificationSettingsViewModelProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$earthquakeNotificationSettingsViewModelHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
-typedef _$EarthquakeNotificationSettingsViewModel
-    = AutoDisposeNotifier<FcmEarthquakeTopic?>;
+typedef _$EarthquakeNotificationSettingsViewModel =
+    AutoDisposeNotifier<FcmEarthquakeTopic?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

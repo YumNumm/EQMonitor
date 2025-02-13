@@ -16,9 +16,10 @@ String _$applicationDocumentsDirectoryHash() =>
 final applicationDocumentsDirectoryProvider = Provider<Directory>.internal(
   applicationDocumentsDirectory,
   name: r'applicationDocumentsDirectoryProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$applicationDocumentsDirectoryHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$applicationDocumentsDirectoryHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

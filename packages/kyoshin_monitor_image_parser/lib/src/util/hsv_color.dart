@@ -29,14 +29,14 @@ class HsvColor {
   }
 
   const HsvColor._fromAHSV(this.alpha, this.hue, this.saturation, this.value)
-      : assert(alpha >= 0.0, 'alpha must be between 0.0 and 1.0'),
-        assert(alpha <= 1.0, 'alpha must be between 0.0 and 1.0'),
-        assert(hue >= 0.0, 'hue must be between 0.0 and 360.0'),
-        assert(hue <= 360.0, 'hue must be between 0.0 and 360.0'),
-        assert(saturation >= 0.0, 'saturation must be between 0.0 and 1.0'),
-        assert(saturation <= 1.0, 'saturation must be between 0.0 and 1.0'),
-        assert(value >= 0.0, 'value must be between 0.0 and 1.0'),
-        assert(value <= 1.0, 'value must be between 0.0 and 1.0');
+    : assert(alpha >= 0.0, 'alpha must be between 0.0 and 1.0'),
+      assert(alpha <= 1.0, 'alpha must be between 0.0 and 1.0'),
+      assert(hue >= 0.0, 'hue must be between 0.0 and 360.0'),
+      assert(hue <= 360.0, 'hue must be between 0.0 and 360.0'),
+      assert(saturation >= 0.0, 'saturation must be between 0.0 and 1.0'),
+      assert(saturation <= 1.0, 'saturation must be between 0.0 and 1.0'),
+      assert(value >= 0.0, 'value must be between 0.0 and 1.0'),
+      assert(value <= 1.0, 'value must be between 0.0 and 1.0');
 
   final double alpha;
   final double hue;
