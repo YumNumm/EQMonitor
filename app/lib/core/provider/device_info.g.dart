@@ -15,9 +15,10 @@ String _$androidDeviceInfoHash() => r'02f1a66ec8a7e96d418eb9cb0a981fd40d5d2523';
 final androidDeviceInfoProvider = Provider<AndroidDeviceInfo>.internal(
   androidDeviceInfo,
   name: r'androidDeviceInfoProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$androidDeviceInfoHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$androidDeviceInfoHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -32,9 +33,10 @@ String _$iosDeviceInfoHash() => r'5c95b3efca6425549ed7e884f54f041a61267149';
 final iosDeviceInfoProvider = Provider<IosDeviceInfo>.internal(
   iosDeviceInfo,
   name: r'iosDeviceInfoProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$iosDeviceInfoHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$iosDeviceInfoHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

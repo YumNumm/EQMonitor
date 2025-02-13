@@ -13,9 +13,7 @@ class WebSocketApiEndpointSelectorPage extends ConsumerWidget {
     final developUrl = defaultUrl.replaceAll('api.', 'dev.api.');
     final state = ref.watch(telegramUrlProvider.select((v) => v.wsApiUrl));
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('WebSocket Endpoint Selector'),
-      ),
+      appBar: AppBar(title: const Text('WebSocket Endpoint Selector')),
       body: Column(
         children: [
           BorderedContainer(
@@ -26,18 +24,20 @@ class WebSocketApiEndpointSelectorPage extends ConsumerWidget {
                   subtitle: const Text(defaultUrl),
                   value: defaultUrl,
                   groupValue: state,
-                  onChanged: (value) async => ref
-                      .read(telegramUrlProvider.notifier)
-                      .updateWebSocketUrl(value!),
+                  onChanged:
+                      (value) async => ref
+                          .read(telegramUrlProvider.notifier)
+                          .updateWebSocketUrl(value!),
                 ),
                 RadioListTile.adaptive(
                   title: const Text('[WebSocket API] Development Endpoint'),
                   value: developUrl,
                   subtitle: Text(developUrl),
                   groupValue: state,
-                  onChanged: (value) async => ref
-                      .read(telegramUrlProvider.notifier)
-                      .updateWebSocketUrl(value!),
+                  onChanged:
+                      (value) async => ref
+                          .read(telegramUrlProvider.notifier)
+                          .updateWebSocketUrl(value!),
                 ),
               ],
             ),

@@ -23,10 +23,9 @@ class IntensityColor extends _$IntensityColor {
 
   Future<void> update(IntensityColorModel model) async {
     state = model;
-    await ref.read(sharedPreferencesProvider).setString(
-          _key,
-          jsonEncode(model.toJson()),
-        );
+    await ref
+        .read(sharedPreferencesProvider)
+        .setString(_key, jsonEncode(model.toJson()));
   }
 
   IntensityColorModel? load() {

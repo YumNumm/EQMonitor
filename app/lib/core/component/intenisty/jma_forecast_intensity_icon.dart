@@ -29,12 +29,14 @@ class JmaForecastIntensityWidget extends ConsumerWidget {
     final colorScheme = intensityColorModel.fromJmaForecastIntensity(intensity);
     final (fg, bg) = (colorScheme.foreground, colorScheme.background);
     // 震度の整数部分
-    final intensityMainText =
-        intensity.type.replaceAll('-', '').replaceAll('+', '');
+    final intensityMainText = intensity.type
+        .replaceAll('-', '')
+        .replaceAll('+', '');
     // 震度の弱・強の表記
-    final intensitySubText = intensity.type.contains('-')
-        ? '弱'
-        : intensity.type.contains('+')
+    final intensitySubText =
+        intensity.type.contains('-')
+            ? '弱'
+            : intensity.type.contains('+')
             ? '強'
             : '';
 
@@ -128,43 +130,102 @@ class JmaForecastIntensityIcon extends ConsumerWidget {
     final colorScheme = intensityColorModel.fromJmaForecastIntensity(intensity);
     final (fg, bg) = (colorScheme.foreground, colorScheme.background);
     // 震度の整数部分
-    final intensityMainText =
-        intensity.type.replaceAll('-', '').replaceAll('+', '');
+    final intensityMainText = intensity.type
+        .replaceAll('-', '')
+        .replaceAll('+', '');
     // 震度の弱・強の表記
-    final suffix = intensity.type.contains('-')
-        ? '-'
-        : intensity.type.contains('+')
+    final suffix =
+        intensity.type.contains('-')
+            ? '-'
+            : intensity.type.contains('+')
             ? '+'
             : '';
-    final intensitySubText = intensity.type.contains('-')
-        ? '弱'
-        : intensity.type.contains('+')
+    final intensitySubText =
+        intensity.type.contains('-')
+            ? '弱'
+            : intensity.type.contains('+')
             ? '強'
             : '';
-    final borderColor = Color.lerp(
-      bg,
-      fg,
-      0.3,
-    )!;
+    final borderColor = Color.lerp(bg, fg, 0.3)!;
     return switch (type) {
       IntensityIconType.small => SizedBox(
-          height: size,
-          width: size,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: bg,
-              border: Border.all(
-                color: borderColor,
-                width: 5,
+        height: size,
+        width: size,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: bg,
+            border: Border.all(color: borderColor, width: 5),
+          ),
+          child: Center(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    intensityMainText,
+                    style: TextStyle(
+                      color: fg,
+                      fontSize: 100,
+                      fontWeight: FontWeight.w900,
+                      fontFamily: FontFamily.jetBrainsMono,
+                    ),
+                  ),
+                  Text(
+                    suffix,
+                    style: TextStyle(
+                      color: fg,
+                      fontSize: 80,
+                      fontWeight: FontWeight.w900,
+                      fontFamily: FontFamily.jetBrainsMono,
+                      fontFamilyFallback: const [FontFamily.notoSansJP],
+                    ),
+                  ),
+                ],
               ),
             ),
-            child: Center(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+          ),
+        ),
+      ),
+      IntensityIconType.smallWithoutText => SizedBox(
+        height: size,
+        width: size,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: bg,
+            border: Border.all(color: borderColor, width: 5),
+          ),
+        ),
+      ),
+      IntensityIconType.filled => SizedBox(
+        height: size,
+        width: size,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: bg,
+            // 角丸にする
+            borderRadius: BorderRadius.circular(size / 5),
+          ),
+          child: Center(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  if (customText != null)
+                    Text(
+                      customText!,
+                      style: TextStyle(
+                        color: fg,
+                        fontSize: 100,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: FontFamily.jetBrainsMono,
+                      ),
+                    )
+                  else ...[
                     Text(
                       intensityMainText,
                       style: TextStyle(
@@ -174,90 +235,24 @@ class JmaForecastIntensityIcon extends ConsumerWidget {
                         fontFamily: FontFamily.jetBrainsMono,
                       ),
                     ),
-                    Text(
-                      suffix,
-                      style: TextStyle(
-                        color: fg,
-                        fontSize: 80,
-                        fontWeight: FontWeight.w900,
-                        fontFamily: FontFamily.jetBrainsMono,
-                        fontFamilyFallback: const [FontFamily.notoSansJP],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      IntensityIconType.smallWithoutText => SizedBox(
-          height: size,
-          width: size,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: bg,
-              border: Border.all(
-                color: borderColor,
-                width: 5,
-              ),
-            ),
-          ),
-        ),
-      IntensityIconType.filled => SizedBox(
-          height: size,
-          width: size,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: bg,
-              // 角丸にする
-              borderRadius: BorderRadius.circular(size / 5),
-            ),
-            child: Center(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    if (customText != null)
+                    if (showSuffix)
                       Text(
-                        customText!,
+                        intensitySubText,
                         style: TextStyle(
                           color: fg,
-                          fontSize: 100,
+                          fontSize: 50,
                           fontWeight: FontWeight.w900,
                           fontFamily: FontFamily.jetBrainsMono,
-                        ),
-                      )
-                    else ...[
-                      Text(
-                        intensityMainText,
-                        style: TextStyle(
-                          color: fg,
-                          fontSize: 100,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: FontFamily.jetBrainsMono,
+                          fontFamilyFallback: const [FontFamily.notoSansJP],
                         ),
                       ),
-                      if (showSuffix)
-                        Text(
-                          intensitySubText,
-                          style: TextStyle(
-                            color: fg,
-                            fontSize: 50,
-                            fontWeight: FontWeight.w900,
-                            fontFamily: FontFamily.jetBrainsMono,
-                            fontFamilyFallback: const [FontFamily.notoSansJP],
-                          ),
-                        ),
-                    ],
                   ],
-                ),
+                ],
               ),
             ),
           ),
         ),
+      ),
     };
   }
 }

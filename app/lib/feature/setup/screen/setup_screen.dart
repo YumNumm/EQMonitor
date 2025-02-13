@@ -13,15 +13,11 @@ class SetupScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pageController = usePageController();
     Future<void> next() async => pageController.nextPage(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-        );
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
+    );
 
-    final pages = <Widget>[
-      IntroductionPage(
-        onNext: next,
-      ),
-    ];
+    final pages = <Widget>[IntroductionPage(onNext: next)];
     return SetupBackgroundImageWidget(
       child: Scaffold(
         backgroundColor: Colors.transparent,

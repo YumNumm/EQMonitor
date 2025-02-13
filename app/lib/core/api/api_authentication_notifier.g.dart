@@ -15,14 +15,15 @@ String _$apiAuthenticationNotifierHash() =>
 @ProviderFor(ApiAuthenticationNotifier)
 final apiAuthenticationNotifierProvider =
     AsyncNotifierProvider<ApiAuthenticationNotifier, String?>.internal(
-  ApiAuthenticationNotifier.new,
-  name: r'apiAuthenticationNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$apiAuthenticationNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ApiAuthenticationNotifier.new,
+      name: r'apiAuthenticationNotifierProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$apiAuthenticationNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ApiAuthenticationNotifier = AsyncNotifier<String?>;
 // ignore_for_file: type=lint

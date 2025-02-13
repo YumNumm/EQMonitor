@@ -12,7 +12,8 @@ part of 'tsunami.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 _TsunamiV1Base _$TsunamiV1BaseFromJson(Map<String, dynamic> json) {
   return __TsunamiV1Base.fromJson(json);
@@ -44,20 +45,22 @@ mixin _$TsunamiV1Base {
 /// @nodoc
 abstract class _$TsunamiV1BaseCopyWith<$Res> {
   factory _$TsunamiV1BaseCopyWith(
-          _TsunamiV1Base value, $Res Function(_TsunamiV1Base) then) =
-      __$TsunamiV1BaseCopyWithImpl<$Res, _TsunamiV1Base>;
+    _TsunamiV1Base value,
+    $Res Function(_TsunamiV1Base) then,
+  ) = __$TsunamiV1BaseCopyWithImpl<$Res, _TsunamiV1Base>;
   @useResult
-  $Res call(
-      {int eventId,
-      String? headline,
-      int id,
-      String infoType,
-      DateTime pressAt,
-      DateTime reportAt,
-      int? serialNo,
-      String status,
-      String type,
-      DateTime? validAt});
+  $Res call({
+    int eventId,
+    String? headline,
+    int id,
+    String infoType,
+    DateTime pressAt,
+    DateTime reportAt,
+    int? serialNo,
+    String status,
+    String type,
+    DateTime? validAt,
+  });
 }
 
 /// @nodoc
@@ -86,70 +89,85 @@ class __$TsunamiV1BaseCopyWithImpl<$Res, $Val extends _TsunamiV1Base>
     Object? type = null,
     Object? validAt = freezed,
   }) {
-    return _then(_value.copyWith(
-      eventId: null == eventId
-          ? _value.eventId
-          : eventId // ignore: cast_nullable_to_non_nullable
-              as int,
-      headline: freezed == headline
-          ? _value.headline
-          : headline // ignore: cast_nullable_to_non_nullable
-              as String?,
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      infoType: null == infoType
-          ? _value.infoType
-          : infoType // ignore: cast_nullable_to_non_nullable
-              as String,
-      pressAt: null == pressAt
-          ? _value.pressAt
-          : pressAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      reportAt: null == reportAt
-          ? _value.reportAt
-          : reportAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      serialNo: freezed == serialNo
-          ? _value.serialNo
-          : serialNo // ignore: cast_nullable_to_non_nullable
-              as int?,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      validAt: freezed == validAt
-          ? _value.validAt
-          : validAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            eventId:
+                null == eventId
+                    ? _value.eventId
+                    : eventId // ignore: cast_nullable_to_non_nullable
+                        as int,
+            headline:
+                freezed == headline
+                    ? _value.headline
+                    : headline // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            id:
+                null == id
+                    ? _value.id
+                    : id // ignore: cast_nullable_to_non_nullable
+                        as int,
+            infoType:
+                null == infoType
+                    ? _value.infoType
+                    : infoType // ignore: cast_nullable_to_non_nullable
+                        as String,
+            pressAt:
+                null == pressAt
+                    ? _value.pressAt
+                    : pressAt // ignore: cast_nullable_to_non_nullable
+                        as DateTime,
+            reportAt:
+                null == reportAt
+                    ? _value.reportAt
+                    : reportAt // ignore: cast_nullable_to_non_nullable
+                        as DateTime,
+            serialNo:
+                freezed == serialNo
+                    ? _value.serialNo
+                    : serialNo // ignore: cast_nullable_to_non_nullable
+                        as int?,
+            status:
+                null == status
+                    ? _value.status
+                    : status // ignore: cast_nullable_to_non_nullable
+                        as String,
+            type:
+                null == type
+                    ? _value.type
+                    : type // ignore: cast_nullable_to_non_nullable
+                        as String,
+            validAt:
+                freezed == validAt
+                    ? _value.validAt
+                    : validAt // ignore: cast_nullable_to_non_nullable
+                        as DateTime?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$_TsunamiV1BaseImplCopyWith<$Res>
     implements _$TsunamiV1BaseCopyWith<$Res> {
-  factory _$$_TsunamiV1BaseImplCopyWith(_$_TsunamiV1BaseImpl value,
-          $Res Function(_$_TsunamiV1BaseImpl) then) =
-      __$$_TsunamiV1BaseImplCopyWithImpl<$Res>;
+  factory _$$_TsunamiV1BaseImplCopyWith(
+    _$_TsunamiV1BaseImpl value,
+    $Res Function(_$_TsunamiV1BaseImpl) then,
+  ) = __$$_TsunamiV1BaseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int eventId,
-      String? headline,
-      int id,
-      String infoType,
-      DateTime pressAt,
-      DateTime reportAt,
-      int? serialNo,
-      String status,
-      String type,
-      DateTime? validAt});
+  $Res call({
+    int eventId,
+    String? headline,
+    int id,
+    String infoType,
+    DateTime pressAt,
+    DateTime reportAt,
+    int? serialNo,
+    String status,
+    String type,
+    DateTime? validAt,
+  });
 }
 
 /// @nodoc
@@ -157,8 +175,9 @@ class __$$_TsunamiV1BaseImplCopyWithImpl<$Res>
     extends __$TsunamiV1BaseCopyWithImpl<$Res, _$_TsunamiV1BaseImpl>
     implements _$$_TsunamiV1BaseImplCopyWith<$Res> {
   __$$_TsunamiV1BaseImplCopyWithImpl(
-      _$_TsunamiV1BaseImpl _value, $Res Function(_$_TsunamiV1BaseImpl) _then)
-      : super(_value, _then);
+    _$_TsunamiV1BaseImpl _value,
+    $Res Function(_$_TsunamiV1BaseImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of _TsunamiV1Base
   /// with the given fields replaced by the non-null parameter values.
@@ -176,65 +195,78 @@ class __$$_TsunamiV1BaseImplCopyWithImpl<$Res>
     Object? type = null,
     Object? validAt = freezed,
   }) {
-    return _then(_$_TsunamiV1BaseImpl(
-      eventId: null == eventId
-          ? _value.eventId
-          : eventId // ignore: cast_nullable_to_non_nullable
-              as int,
-      headline: freezed == headline
-          ? _value.headline
-          : headline // ignore: cast_nullable_to_non_nullable
-              as String?,
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      infoType: null == infoType
-          ? _value.infoType
-          : infoType // ignore: cast_nullable_to_non_nullable
-              as String,
-      pressAt: null == pressAt
-          ? _value.pressAt
-          : pressAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      reportAt: null == reportAt
-          ? _value.reportAt
-          : reportAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      serialNo: freezed == serialNo
-          ? _value.serialNo
-          : serialNo // ignore: cast_nullable_to_non_nullable
-              as int?,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      validAt: freezed == validAt
-          ? _value.validAt
-          : validAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
+    return _then(
+      _$_TsunamiV1BaseImpl(
+        eventId:
+            null == eventId
+                ? _value.eventId
+                : eventId // ignore: cast_nullable_to_non_nullable
+                    as int,
+        headline:
+            freezed == headline
+                ? _value.headline
+                : headline // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        id:
+            null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                    as int,
+        infoType:
+            null == infoType
+                ? _value.infoType
+                : infoType // ignore: cast_nullable_to_non_nullable
+                    as String,
+        pressAt:
+            null == pressAt
+                ? _value.pressAt
+                : pressAt // ignore: cast_nullable_to_non_nullable
+                    as DateTime,
+        reportAt:
+            null == reportAt
+                ? _value.reportAt
+                : reportAt // ignore: cast_nullable_to_non_nullable
+                    as DateTime,
+        serialNo:
+            freezed == serialNo
+                ? _value.serialNo
+                : serialNo // ignore: cast_nullable_to_non_nullable
+                    as int?,
+        status:
+            null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                    as String,
+        type:
+            null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                    as String,
+        validAt:
+            freezed == validAt
+                ? _value.validAt
+                : validAt // ignore: cast_nullable_to_non_nullable
+                    as DateTime?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$_TsunamiV1BaseImpl implements __TsunamiV1Base {
-  const _$_TsunamiV1BaseImpl(
-      {required this.eventId,
-      required this.headline,
-      required this.id,
-      required this.infoType,
-      required this.pressAt,
-      required this.reportAt,
-      required this.serialNo,
-      required this.status,
-      required this.type,
-      required this.validAt});
+  const _$_TsunamiV1BaseImpl({
+    required this.eventId,
+    required this.headline,
+    required this.id,
+    required this.infoType,
+    required this.pressAt,
+    required this.reportAt,
+    required this.serialNo,
+    required this.status,
+    required this.type,
+    required this.validAt,
+  });
 
   factory _$_TsunamiV1BaseImpl.fromJson(Map<String, dynamic> json) =>
       _$$_TsunamiV1BaseImplFromJson(json);
@@ -288,8 +320,19 @@ class _$_TsunamiV1BaseImpl implements __TsunamiV1Base {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, eventId, headline, id, infoType,
-      pressAt, reportAt, serialNo, status, type, validAt);
+  int get hashCode => Object.hash(
+    runtimeType,
+    eventId,
+    headline,
+    id,
+    infoType,
+    pressAt,
+    reportAt,
+    serialNo,
+    status,
+    type,
+    validAt,
+  );
 
   /// Create a copy of _TsunamiV1Base
   /// with the given fields replaced by the non-null parameter values.
@@ -298,28 +341,29 @@ class _$_TsunamiV1BaseImpl implements __TsunamiV1Base {
   @pragma('vm:prefer-inline')
   _$$_TsunamiV1BaseImplCopyWith<_$_TsunamiV1BaseImpl> get copyWith =>
       __$$_TsunamiV1BaseImplCopyWithImpl<_$_TsunamiV1BaseImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TsunamiV1BaseImplToJson(
-      this,
-    );
+    return _$$_TsunamiV1BaseImplToJson(this);
   }
 }
 
 abstract class __TsunamiV1Base implements _TsunamiV1Base {
-  const factory __TsunamiV1Base(
-      {required final int eventId,
-      required final String? headline,
-      required final int id,
-      required final String infoType,
-      required final DateTime pressAt,
-      required final DateTime reportAt,
-      required final int? serialNo,
-      required final String status,
-      required final String type,
-      required final DateTime? validAt}) = _$_TsunamiV1BaseImpl;
+  const factory __TsunamiV1Base({
+    required final int eventId,
+    required final String? headline,
+    required final int id,
+    required final String infoType,
+    required final DateTime pressAt,
+    required final DateTime reportAt,
+    required final int? serialNo,
+    required final String status,
+    required final String type,
+    required final DateTime? validAt,
+  }) = _$_TsunamiV1BaseImpl;
 
   factory __TsunamiV1Base.fromJson(Map<String, dynamic> json) =
       _$_TsunamiV1BaseImpl.fromJson;
@@ -395,20 +439,22 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? free = freezed,
-    Object? warning = freezed,
-  }) {
-    return _then(_value.copyWith(
-      free: freezed == free
-          ? _value.free
-          : free // ignore: cast_nullable_to_non_nullable
-              as String?,
-      warning: freezed == warning
-          ? _value.warning
-          : warning // ignore: cast_nullable_to_non_nullable
-              as CommentWarning?,
-    ) as $Val);
+  $Res call({Object? free = freezed, Object? warning = freezed}) {
+    return _then(
+      _value.copyWith(
+            free:
+                freezed == free
+                    ? _value.free
+                    : free // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            warning:
+                freezed == warning
+                    ? _value.warning
+                    : warning // ignore: cast_nullable_to_non_nullable
+                        as CommentWarning?,
+          )
+          as $Val,
+    );
   }
 
   /// Create a copy of Comment
@@ -429,8 +475,9 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
 /// @nodoc
 abstract class _$$CommentImplCopyWith<$Res> implements $CommentCopyWith<$Res> {
   factory _$$CommentImplCopyWith(
-          _$CommentImpl value, $Res Function(_$CommentImpl) then) =
-      __$$CommentImplCopyWithImpl<$Res>;
+    _$CommentImpl value,
+    $Res Function(_$CommentImpl) then,
+  ) = __$$CommentImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String? free, CommentWarning? warning});
@@ -444,27 +491,29 @@ class __$$CommentImplCopyWithImpl<$Res>
     extends _$CommentCopyWithImpl<$Res, _$CommentImpl>
     implements _$$CommentImplCopyWith<$Res> {
   __$$CommentImplCopyWithImpl(
-      _$CommentImpl _value, $Res Function(_$CommentImpl) _then)
-      : super(_value, _then);
+    _$CommentImpl _value,
+    $Res Function(_$CommentImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of Comment
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? free = freezed,
-    Object? warning = freezed,
-  }) {
-    return _then(_$CommentImpl(
-      free: freezed == free
-          ? _value.free
-          : free // ignore: cast_nullable_to_non_nullable
-              as String?,
-      warning: freezed == warning
-          ? _value.warning
-          : warning // ignore: cast_nullable_to_non_nullable
-              as CommentWarning?,
-    ));
+  $Res call({Object? free = freezed, Object? warning = freezed}) {
+    return _then(
+      _$CommentImpl(
+        free:
+            freezed == free
+                ? _value.free
+                : free // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        warning:
+            freezed == warning
+                ? _value.warning
+                : warning // ignore: cast_nullable_to_non_nullable
+                    as CommentWarning?,
+      ),
+    );
   }
 }
 
@@ -509,16 +558,15 @@ class _$CommentImpl implements _Comment {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$CommentImplToJson(
-      this,
-    );
+    return _$$CommentImplToJson(this);
   }
 }
 
 abstract class _Comment implements Comment {
-  const factory _Comment(
-      {required final String? free,
-      required final CommentWarning? warning}) = _$CommentImpl;
+  const factory _Comment({
+    required final String? free,
+    required final CommentWarning? warning,
+  }) = _$CommentImpl;
 
   factory _Comment.fromJson(Map<String, dynamic> json) = _$CommentImpl.fromJson;
 
@@ -557,8 +605,9 @@ mixin _$CommentWarning {
 /// @nodoc
 abstract class $CommentWarningCopyWith<$Res> {
   factory $CommentWarningCopyWith(
-          CommentWarning value, $Res Function(CommentWarning) then) =
-      _$CommentWarningCopyWithImpl<$Res, CommentWarning>;
+    CommentWarning value,
+    $Res Function(CommentWarning) then,
+  ) = _$CommentWarningCopyWithImpl<$Res, CommentWarning>;
   @useResult
   $Res call({String text, List<String> codes});
 }
@@ -577,29 +626,32 @@ class _$CommentWarningCopyWithImpl<$Res, $Val extends CommentWarning>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? text = null,
-    Object? codes = null,
-  }) {
-    return _then(_value.copyWith(
-      text: null == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String,
-      codes: null == codes
-          ? _value.codes
-          : codes // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-    ) as $Val);
+  $Res call({Object? text = null, Object? codes = null}) {
+    return _then(
+      _value.copyWith(
+            text:
+                null == text
+                    ? _value.text
+                    : text // ignore: cast_nullable_to_non_nullable
+                        as String,
+            codes:
+                null == codes
+                    ? _value.codes
+                    : codes // ignore: cast_nullable_to_non_nullable
+                        as List<String>,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$CommentWarningImplCopyWith<$Res>
     implements $CommentWarningCopyWith<$Res> {
-  factory _$$CommentWarningImplCopyWith(_$CommentWarningImpl value,
-          $Res Function(_$CommentWarningImpl) then) =
-      __$$CommentWarningImplCopyWithImpl<$Res>;
+  factory _$$CommentWarningImplCopyWith(
+    _$CommentWarningImpl value,
+    $Res Function(_$CommentWarningImpl) then,
+  ) = __$$CommentWarningImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String text, List<String> codes});
@@ -610,36 +662,39 @@ class __$$CommentWarningImplCopyWithImpl<$Res>
     extends _$CommentWarningCopyWithImpl<$Res, _$CommentWarningImpl>
     implements _$$CommentWarningImplCopyWith<$Res> {
   __$$CommentWarningImplCopyWithImpl(
-      _$CommentWarningImpl _value, $Res Function(_$CommentWarningImpl) _then)
-      : super(_value, _then);
+    _$CommentWarningImpl _value,
+    $Res Function(_$CommentWarningImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of CommentWarning
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? text = null,
-    Object? codes = null,
-  }) {
-    return _then(_$CommentWarningImpl(
-      text: null == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String,
-      codes: null == codes
-          ? _value._codes
-          : codes // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-    ));
+  $Res call({Object? text = null, Object? codes = null}) {
+    return _then(
+      _$CommentWarningImpl(
+        text:
+            null == text
+                ? _value.text
+                : text // ignore: cast_nullable_to_non_nullable
+                    as String,
+        codes:
+            null == codes
+                ? _value._codes
+                : codes // ignore: cast_nullable_to_non_nullable
+                    as List<String>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$CommentWarningImpl implements _CommentWarning {
-  const _$CommentWarningImpl(
-      {required this.text, required final List<String> codes})
-      : _codes = codes;
+  const _$CommentWarningImpl({
+    required this.text,
+    required final List<String> codes,
+  }) : _codes = codes;
 
   factory _$CommentWarningImpl.fromJson(Map<String, dynamic> json) =>
       _$$CommentWarningImplFromJson(json);
@@ -671,7 +726,10 @@ class _$CommentWarningImpl implements _CommentWarning {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, text, const DeepCollectionEquality().hash(_codes));
+    runtimeType,
+    text,
+    const DeepCollectionEquality().hash(_codes),
+  );
 
   /// Create a copy of CommentWarning
   /// with the given fields replaced by the non-null parameter values.
@@ -680,20 +738,21 @@ class _$CommentWarningImpl implements _CommentWarning {
   @pragma('vm:prefer-inline')
   _$$CommentWarningImplCopyWith<_$CommentWarningImpl> get copyWith =>
       __$$CommentWarningImplCopyWithImpl<_$CommentWarningImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$CommentWarningImplToJson(
-      this,
-    );
+    return _$$CommentWarningImplToJson(this);
   }
 }
 
 abstract class _CommentWarning implements CommentWarning {
-  const factory _CommentWarning(
-      {required final String text,
-      required final List<String> codes}) = _$CommentWarningImpl;
+  const factory _CommentWarning({
+    required final String text,
+    required final List<String> codes,
+  }) = _$CommentWarningImpl;
 
   factory _CommentWarning.fromJson(Map<String, dynamic> json) =
       _$CommentWarningImpl.fromJson;
@@ -732,8 +791,9 @@ mixin _$CancelBody {
 /// @nodoc
 abstract class $CancelBodyCopyWith<$Res> {
   factory $CancelBodyCopyWith(
-          CancelBody value, $Res Function(CancelBody) then) =
-      _$CancelBodyCopyWithImpl<$Res, CancelBody>;
+    CancelBody value,
+    $Res Function(CancelBody) then,
+  ) = _$CancelBodyCopyWithImpl<$Res, CancelBody>;
   @useResult
   $Res call({String text});
 }
@@ -752,15 +812,17 @@ class _$CancelBodyCopyWithImpl<$Res, $Val extends CancelBody>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? text = null,
-  }) {
-    return _then(_value.copyWith(
-      text: null == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  $Res call({Object? text = null}) {
+    return _then(
+      _value.copyWith(
+            text:
+                null == text
+                    ? _value.text
+                    : text // ignore: cast_nullable_to_non_nullable
+                        as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -768,8 +830,9 @@ class _$CancelBodyCopyWithImpl<$Res, $Val extends CancelBody>
 abstract class _$$CancelBodyImplCopyWith<$Res>
     implements $CancelBodyCopyWith<$Res> {
   factory _$$CancelBodyImplCopyWith(
-          _$CancelBodyImpl value, $Res Function(_$CancelBodyImpl) then) =
-      __$$CancelBodyImplCopyWithImpl<$Res>;
+    _$CancelBodyImpl value,
+    $Res Function(_$CancelBodyImpl) then,
+  ) = __$$CancelBodyImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String text});
@@ -780,22 +843,24 @@ class __$$CancelBodyImplCopyWithImpl<$Res>
     extends _$CancelBodyCopyWithImpl<$Res, _$CancelBodyImpl>
     implements _$$CancelBodyImplCopyWith<$Res> {
   __$$CancelBodyImplCopyWithImpl(
-      _$CancelBodyImpl _value, $Res Function(_$CancelBodyImpl) _then)
-      : super(_value, _then);
+    _$CancelBodyImpl _value,
+    $Res Function(_$CancelBodyImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of CancelBody
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? text = null,
-  }) {
-    return _then(_$CancelBodyImpl(
-      text: null == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? text = null}) {
+    return _then(
+      _$CancelBodyImpl(
+        text:
+            null == text
+                ? _value.text
+                : text // ignore: cast_nullable_to_non_nullable
+                    as String,
+      ),
+    );
   }
 }
 
@@ -837,9 +902,7 @@ class _$CancelBodyImpl implements _CancelBody {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$CancelBodyImplToJson(
-      this,
-    );
+    return _$$CancelBodyImplToJson(this);
   }
 }
 
@@ -861,7 +924,8 @@ abstract class _CancelBody implements CancelBody {
 }
 
 PublicBodyVTSE41Tsunami _$PublicBodyVTSE41TsunamiFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _PublicBodyVTSE41Tsunami.fromJson(json);
 }
 
@@ -881,16 +945,19 @@ mixin _$PublicBodyVTSE41Tsunami {
 
 /// @nodoc
 abstract class $PublicBodyVTSE41TsunamiCopyWith<$Res> {
-  factory $PublicBodyVTSE41TsunamiCopyWith(PublicBodyVTSE41Tsunami value,
-          $Res Function(PublicBodyVTSE41Tsunami) then) =
-      _$PublicBodyVTSE41TsunamiCopyWithImpl<$Res, PublicBodyVTSE41Tsunami>;
+  factory $PublicBodyVTSE41TsunamiCopyWith(
+    PublicBodyVTSE41Tsunami value,
+    $Res Function(PublicBodyVTSE41Tsunami) then,
+  ) = _$PublicBodyVTSE41TsunamiCopyWithImpl<$Res, PublicBodyVTSE41Tsunami>;
   @useResult
   $Res call({List<TsunamiForecast> forecasts});
 }
 
 /// @nodoc
-class _$PublicBodyVTSE41TsunamiCopyWithImpl<$Res,
-        $Val extends PublicBodyVTSE41Tsunami>
+class _$PublicBodyVTSE41TsunamiCopyWithImpl<
+  $Res,
+  $Val extends PublicBodyVTSE41Tsunami
+>
     implements $PublicBodyVTSE41TsunamiCopyWith<$Res> {
   _$PublicBodyVTSE41TsunamiCopyWithImpl(this._value, this._then);
 
@@ -903,15 +970,17 @@ class _$PublicBodyVTSE41TsunamiCopyWithImpl<$Res,
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? forecasts = null,
-  }) {
-    return _then(_value.copyWith(
-      forecasts: null == forecasts
-          ? _value.forecasts
-          : forecasts // ignore: cast_nullable_to_non_nullable
-              as List<TsunamiForecast>,
-    ) as $Val);
+  $Res call({Object? forecasts = null}) {
+    return _then(
+      _value.copyWith(
+            forecasts:
+                null == forecasts
+                    ? _value.forecasts
+                    : forecasts // ignore: cast_nullable_to_non_nullable
+                        as List<TsunamiForecast>,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -919,9 +988,9 @@ class _$PublicBodyVTSE41TsunamiCopyWithImpl<$Res,
 abstract class _$$PublicBodyVTSE41TsunamiImplCopyWith<$Res>
     implements $PublicBodyVTSE41TsunamiCopyWith<$Res> {
   factory _$$PublicBodyVTSE41TsunamiImplCopyWith(
-          _$PublicBodyVTSE41TsunamiImpl value,
-          $Res Function(_$PublicBodyVTSE41TsunamiImpl) then) =
-      __$$PublicBodyVTSE41TsunamiImplCopyWithImpl<$Res>;
+    _$PublicBodyVTSE41TsunamiImpl value,
+    $Res Function(_$PublicBodyVTSE41TsunamiImpl) then,
+  ) = __$$PublicBodyVTSE41TsunamiImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<TsunamiForecast> forecasts});
@@ -929,36 +998,40 @@ abstract class _$$PublicBodyVTSE41TsunamiImplCopyWith<$Res>
 
 /// @nodoc
 class __$$PublicBodyVTSE41TsunamiImplCopyWithImpl<$Res>
-    extends _$PublicBodyVTSE41TsunamiCopyWithImpl<$Res,
-        _$PublicBodyVTSE41TsunamiImpl>
+    extends
+        _$PublicBodyVTSE41TsunamiCopyWithImpl<
+          $Res,
+          _$PublicBodyVTSE41TsunamiImpl
+        >
     implements _$$PublicBodyVTSE41TsunamiImplCopyWith<$Res> {
   __$$PublicBodyVTSE41TsunamiImplCopyWithImpl(
-      _$PublicBodyVTSE41TsunamiImpl _value,
-      $Res Function(_$PublicBodyVTSE41TsunamiImpl) _then)
-      : super(_value, _then);
+    _$PublicBodyVTSE41TsunamiImpl _value,
+    $Res Function(_$PublicBodyVTSE41TsunamiImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of PublicBodyVTSE41Tsunami
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? forecasts = null,
-  }) {
-    return _then(_$PublicBodyVTSE41TsunamiImpl(
-      forecasts: null == forecasts
-          ? _value._forecasts
-          : forecasts // ignore: cast_nullable_to_non_nullable
-              as List<TsunamiForecast>,
-    ));
+  $Res call({Object? forecasts = null}) {
+    return _then(
+      _$PublicBodyVTSE41TsunamiImpl(
+        forecasts:
+            null == forecasts
+                ? _value._forecasts
+                : forecasts // ignore: cast_nullable_to_non_nullable
+                    as List<TsunamiForecast>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$PublicBodyVTSE41TsunamiImpl implements _PublicBodyVTSE41Tsunami {
-  const _$PublicBodyVTSE41TsunamiImpl(
-      {required final List<TsunamiForecast> forecasts})
-      : _forecasts = forecasts;
+  const _$PublicBodyVTSE41TsunamiImpl({
+    required final List<TsunamiForecast> forecasts,
+  }) : _forecasts = forecasts;
 
   factory _$PublicBodyVTSE41TsunamiImpl.fromJson(Map<String, dynamic> json) =>
       _$$PublicBodyVTSE41TsunamiImplFromJson(json);
@@ -981,8 +1054,10 @@ class _$PublicBodyVTSE41TsunamiImpl implements _PublicBodyVTSE41Tsunami {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PublicBodyVTSE41TsunamiImpl &&
-            const DeepCollectionEquality()
-                .equals(other._forecasts, _forecasts));
+            const DeepCollectionEquality().equals(
+              other._forecasts,
+              _forecasts,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -996,21 +1071,20 @@ class _$PublicBodyVTSE41TsunamiImpl implements _PublicBodyVTSE41Tsunami {
   @override
   @pragma('vm:prefer-inline')
   _$$PublicBodyVTSE41TsunamiImplCopyWith<_$PublicBodyVTSE41TsunamiImpl>
-      get copyWith => __$$PublicBodyVTSE41TsunamiImplCopyWithImpl<
-          _$PublicBodyVTSE41TsunamiImpl>(this, _$identity);
+  get copyWith => __$$PublicBodyVTSE41TsunamiImplCopyWithImpl<
+    _$PublicBodyVTSE41TsunamiImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PublicBodyVTSE41TsunamiImplToJson(
-      this,
-    );
+    return _$$PublicBodyVTSE41TsunamiImplToJson(this);
   }
 }
 
 abstract class _PublicBodyVTSE41Tsunami implements PublicBodyVTSE41Tsunami {
-  const factory _PublicBodyVTSE41Tsunami(
-          {required final List<TsunamiForecast> forecasts}) =
-      _$PublicBodyVTSE41TsunamiImpl;
+  const factory _PublicBodyVTSE41Tsunami({
+    required final List<TsunamiForecast> forecasts,
+  }) = _$PublicBodyVTSE41TsunamiImpl;
 
   factory _PublicBodyVTSE41Tsunami.fromJson(Map<String, dynamic> json) =
       _$PublicBodyVTSE41TsunamiImpl.fromJson;
@@ -1023,11 +1097,12 @@ abstract class _PublicBodyVTSE41Tsunami implements PublicBodyVTSE41Tsunami {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PublicBodyVTSE41TsunamiImplCopyWith<_$PublicBodyVTSE41TsunamiImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 PublicBodyVTSE51Tsunami _$PublicBodyVTSE51TsunamiFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _PublicBodyVTSE51Tsunami.fromJson(json);
 }
 
@@ -1049,18 +1124,22 @@ mixin _$PublicBodyVTSE51Tsunami {
 
 /// @nodoc
 abstract class $PublicBodyVTSE51TsunamiCopyWith<$Res> {
-  factory $PublicBodyVTSE51TsunamiCopyWith(PublicBodyVTSE51Tsunami value,
-          $Res Function(PublicBodyVTSE51Tsunami) then) =
-      _$PublicBodyVTSE51TsunamiCopyWithImpl<$Res, PublicBodyVTSE51Tsunami>;
+  factory $PublicBodyVTSE51TsunamiCopyWith(
+    PublicBodyVTSE51Tsunami value,
+    $Res Function(PublicBodyVTSE51Tsunami) then,
+  ) = _$PublicBodyVTSE51TsunamiCopyWithImpl<$Res, PublicBodyVTSE51Tsunami>;
   @useResult
-  $Res call(
-      {List<TsunamiForecast> forecasts,
-      List<TsunamiObservation>? observations});
+  $Res call({
+    List<TsunamiForecast> forecasts,
+    List<TsunamiObservation>? observations,
+  });
 }
 
 /// @nodoc
-class _$PublicBodyVTSE51TsunamiCopyWithImpl<$Res,
-        $Val extends PublicBodyVTSE51Tsunami>
+class _$PublicBodyVTSE51TsunamiCopyWithImpl<
+  $Res,
+  $Val extends PublicBodyVTSE51Tsunami
+>
     implements $PublicBodyVTSE51TsunamiCopyWith<$Res> {
   _$PublicBodyVTSE51TsunamiCopyWithImpl(this._value, this._then);
 
@@ -1073,20 +1152,22 @@ class _$PublicBodyVTSE51TsunamiCopyWithImpl<$Res,
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? forecasts = null,
-    Object? observations = freezed,
-  }) {
-    return _then(_value.copyWith(
-      forecasts: null == forecasts
-          ? _value.forecasts
-          : forecasts // ignore: cast_nullable_to_non_nullable
-              as List<TsunamiForecast>,
-      observations: freezed == observations
-          ? _value.observations
-          : observations // ignore: cast_nullable_to_non_nullable
-              as List<TsunamiObservation>?,
-    ) as $Val);
+  $Res call({Object? forecasts = null, Object? observations = freezed}) {
+    return _then(
+      _value.copyWith(
+            forecasts:
+                null == forecasts
+                    ? _value.forecasts
+                    : forecasts // ignore: cast_nullable_to_non_nullable
+                        as List<TsunamiForecast>,
+            observations:
+                freezed == observations
+                    ? _value.observations
+                    : observations // ignore: cast_nullable_to_non_nullable
+                        as List<TsunamiObservation>?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -1094,55 +1175,60 @@ class _$PublicBodyVTSE51TsunamiCopyWithImpl<$Res,
 abstract class _$$PublicBodyVTSE51TsunamiImplCopyWith<$Res>
     implements $PublicBodyVTSE51TsunamiCopyWith<$Res> {
   factory _$$PublicBodyVTSE51TsunamiImplCopyWith(
-          _$PublicBodyVTSE51TsunamiImpl value,
-          $Res Function(_$PublicBodyVTSE51TsunamiImpl) then) =
-      __$$PublicBodyVTSE51TsunamiImplCopyWithImpl<$Res>;
+    _$PublicBodyVTSE51TsunamiImpl value,
+    $Res Function(_$PublicBodyVTSE51TsunamiImpl) then,
+  ) = __$$PublicBodyVTSE51TsunamiImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {List<TsunamiForecast> forecasts,
-      List<TsunamiObservation>? observations});
+  $Res call({
+    List<TsunamiForecast> forecasts,
+    List<TsunamiObservation>? observations,
+  });
 }
 
 /// @nodoc
 class __$$PublicBodyVTSE51TsunamiImplCopyWithImpl<$Res>
-    extends _$PublicBodyVTSE51TsunamiCopyWithImpl<$Res,
-        _$PublicBodyVTSE51TsunamiImpl>
+    extends
+        _$PublicBodyVTSE51TsunamiCopyWithImpl<
+          $Res,
+          _$PublicBodyVTSE51TsunamiImpl
+        >
     implements _$$PublicBodyVTSE51TsunamiImplCopyWith<$Res> {
   __$$PublicBodyVTSE51TsunamiImplCopyWithImpl(
-      _$PublicBodyVTSE51TsunamiImpl _value,
-      $Res Function(_$PublicBodyVTSE51TsunamiImpl) _then)
-      : super(_value, _then);
+    _$PublicBodyVTSE51TsunamiImpl _value,
+    $Res Function(_$PublicBodyVTSE51TsunamiImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of PublicBodyVTSE51Tsunami
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? forecasts = null,
-    Object? observations = freezed,
-  }) {
-    return _then(_$PublicBodyVTSE51TsunamiImpl(
-      forecasts: null == forecasts
-          ? _value._forecasts
-          : forecasts // ignore: cast_nullable_to_non_nullable
-              as List<TsunamiForecast>,
-      observations: freezed == observations
-          ? _value._observations
-          : observations // ignore: cast_nullable_to_non_nullable
-              as List<TsunamiObservation>?,
-    ));
+  $Res call({Object? forecasts = null, Object? observations = freezed}) {
+    return _then(
+      _$PublicBodyVTSE51TsunamiImpl(
+        forecasts:
+            null == forecasts
+                ? _value._forecasts
+                : forecasts // ignore: cast_nullable_to_non_nullable
+                    as List<TsunamiForecast>,
+        observations:
+            freezed == observations
+                ? _value._observations
+                : observations // ignore: cast_nullable_to_non_nullable
+                    as List<TsunamiObservation>?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$PublicBodyVTSE51TsunamiImpl implements _PublicBodyVTSE51Tsunami {
-  const _$PublicBodyVTSE51TsunamiImpl(
-      {required final List<TsunamiForecast> forecasts,
-      required final List<TsunamiObservation>? observations})
-      : _forecasts = forecasts,
-        _observations = observations;
+  const _$PublicBodyVTSE51TsunamiImpl({
+    required final List<TsunamiForecast> forecasts,
+    required final List<TsunamiObservation>? observations,
+  }) : _forecasts = forecasts,
+       _observations = observations;
 
   factory _$PublicBodyVTSE51TsunamiImpl.fromJson(Map<String, dynamic> json) =>
       _$$PublicBodyVTSE51TsunamiImplFromJson(json);
@@ -1175,18 +1261,23 @@ class _$PublicBodyVTSE51TsunamiImpl implements _PublicBodyVTSE51Tsunami {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PublicBodyVTSE51TsunamiImpl &&
-            const DeepCollectionEquality()
-                .equals(other._forecasts, _forecasts) &&
-            const DeepCollectionEquality()
-                .equals(other._observations, _observations));
+            const DeepCollectionEquality().equals(
+              other._forecasts,
+              _forecasts,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._observations,
+              _observations,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_forecasts),
-      const DeepCollectionEquality().hash(_observations));
+    runtimeType,
+    const DeepCollectionEquality().hash(_forecasts),
+    const DeepCollectionEquality().hash(_observations),
+  );
 
   /// Create a copy of PublicBodyVTSE51Tsunami
   /// with the given fields replaced by the non-null parameter values.
@@ -1194,22 +1285,21 @@ class _$PublicBodyVTSE51TsunamiImpl implements _PublicBodyVTSE51Tsunami {
   @override
   @pragma('vm:prefer-inline')
   _$$PublicBodyVTSE51TsunamiImplCopyWith<_$PublicBodyVTSE51TsunamiImpl>
-      get copyWith => __$$PublicBodyVTSE51TsunamiImplCopyWithImpl<
-          _$PublicBodyVTSE51TsunamiImpl>(this, _$identity);
+  get copyWith => __$$PublicBodyVTSE51TsunamiImplCopyWithImpl<
+    _$PublicBodyVTSE51TsunamiImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PublicBodyVTSE51TsunamiImplToJson(
-      this,
-    );
+    return _$$PublicBodyVTSE51TsunamiImplToJson(this);
   }
 }
 
 abstract class _PublicBodyVTSE51Tsunami implements PublicBodyVTSE51Tsunami {
-  const factory _PublicBodyVTSE51Tsunami(
-          {required final List<TsunamiForecast> forecasts,
-          required final List<TsunamiObservation>? observations}) =
-      _$PublicBodyVTSE51TsunamiImpl;
+  const factory _PublicBodyVTSE51Tsunami({
+    required final List<TsunamiForecast> forecasts,
+    required final List<TsunamiObservation>? observations,
+  }) = _$PublicBodyVTSE51TsunamiImpl;
 
   factory _PublicBodyVTSE51Tsunami.fromJson(Map<String, dynamic> json) =
       _$PublicBodyVTSE51TsunamiImpl.fromJson;
@@ -1224,11 +1314,12 @@ abstract class _PublicBodyVTSE51Tsunami implements PublicBodyVTSE51Tsunami {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PublicBodyVTSE51TsunamiImplCopyWith<_$PublicBodyVTSE51TsunamiImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 PublicBodyVTSE52Tsunami _$PublicBodyVTSE52TsunamiFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _PublicBodyVTSE52Tsunami.fromJson(json);
 }
 
@@ -1250,18 +1341,22 @@ mixin _$PublicBodyVTSE52Tsunami {
 
 /// @nodoc
 abstract class $PublicBodyVTSE52TsunamiCopyWith<$Res> {
-  factory $PublicBodyVTSE52TsunamiCopyWith(PublicBodyVTSE52Tsunami value,
-          $Res Function(PublicBodyVTSE52Tsunami) then) =
-      _$PublicBodyVTSE52TsunamiCopyWithImpl<$Res, PublicBodyVTSE52Tsunami>;
+  factory $PublicBodyVTSE52TsunamiCopyWith(
+    PublicBodyVTSE52Tsunami value,
+    $Res Function(PublicBodyVTSE52Tsunami) then,
+  ) = _$PublicBodyVTSE52TsunamiCopyWithImpl<$Res, PublicBodyVTSE52Tsunami>;
   @useResult
-  $Res call(
-      {List<TsunamiObservation>? observations,
-      List<TsunamiEstimation> estimations});
+  $Res call({
+    List<TsunamiObservation>? observations,
+    List<TsunamiEstimation> estimations,
+  });
 }
 
 /// @nodoc
-class _$PublicBodyVTSE52TsunamiCopyWithImpl<$Res,
-        $Val extends PublicBodyVTSE52Tsunami>
+class _$PublicBodyVTSE52TsunamiCopyWithImpl<
+  $Res,
+  $Val extends PublicBodyVTSE52Tsunami
+>
     implements $PublicBodyVTSE52TsunamiCopyWith<$Res> {
   _$PublicBodyVTSE52TsunamiCopyWithImpl(this._value, this._then);
 
@@ -1274,20 +1369,22 @@ class _$PublicBodyVTSE52TsunamiCopyWithImpl<$Res,
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? observations = freezed,
-    Object? estimations = null,
-  }) {
-    return _then(_value.copyWith(
-      observations: freezed == observations
-          ? _value.observations
-          : observations // ignore: cast_nullable_to_non_nullable
-              as List<TsunamiObservation>?,
-      estimations: null == estimations
-          ? _value.estimations
-          : estimations // ignore: cast_nullable_to_non_nullable
-              as List<TsunamiEstimation>,
-    ) as $Val);
+  $Res call({Object? observations = freezed, Object? estimations = null}) {
+    return _then(
+      _value.copyWith(
+            observations:
+                freezed == observations
+                    ? _value.observations
+                    : observations // ignore: cast_nullable_to_non_nullable
+                        as List<TsunamiObservation>?,
+            estimations:
+                null == estimations
+                    ? _value.estimations
+                    : estimations // ignore: cast_nullable_to_non_nullable
+                        as List<TsunamiEstimation>,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -1295,55 +1392,60 @@ class _$PublicBodyVTSE52TsunamiCopyWithImpl<$Res,
 abstract class _$$PublicBodyVTSE52TsunamiImplCopyWith<$Res>
     implements $PublicBodyVTSE52TsunamiCopyWith<$Res> {
   factory _$$PublicBodyVTSE52TsunamiImplCopyWith(
-          _$PublicBodyVTSE52TsunamiImpl value,
-          $Res Function(_$PublicBodyVTSE52TsunamiImpl) then) =
-      __$$PublicBodyVTSE52TsunamiImplCopyWithImpl<$Res>;
+    _$PublicBodyVTSE52TsunamiImpl value,
+    $Res Function(_$PublicBodyVTSE52TsunamiImpl) then,
+  ) = __$$PublicBodyVTSE52TsunamiImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {List<TsunamiObservation>? observations,
-      List<TsunamiEstimation> estimations});
+  $Res call({
+    List<TsunamiObservation>? observations,
+    List<TsunamiEstimation> estimations,
+  });
 }
 
 /// @nodoc
 class __$$PublicBodyVTSE52TsunamiImplCopyWithImpl<$Res>
-    extends _$PublicBodyVTSE52TsunamiCopyWithImpl<$Res,
-        _$PublicBodyVTSE52TsunamiImpl>
+    extends
+        _$PublicBodyVTSE52TsunamiCopyWithImpl<
+          $Res,
+          _$PublicBodyVTSE52TsunamiImpl
+        >
     implements _$$PublicBodyVTSE52TsunamiImplCopyWith<$Res> {
   __$$PublicBodyVTSE52TsunamiImplCopyWithImpl(
-      _$PublicBodyVTSE52TsunamiImpl _value,
-      $Res Function(_$PublicBodyVTSE52TsunamiImpl) _then)
-      : super(_value, _then);
+    _$PublicBodyVTSE52TsunamiImpl _value,
+    $Res Function(_$PublicBodyVTSE52TsunamiImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of PublicBodyVTSE52Tsunami
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? observations = freezed,
-    Object? estimations = null,
-  }) {
-    return _then(_$PublicBodyVTSE52TsunamiImpl(
-      observations: freezed == observations
-          ? _value._observations
-          : observations // ignore: cast_nullable_to_non_nullable
-              as List<TsunamiObservation>?,
-      estimations: null == estimations
-          ? _value._estimations
-          : estimations // ignore: cast_nullable_to_non_nullable
-              as List<TsunamiEstimation>,
-    ));
+  $Res call({Object? observations = freezed, Object? estimations = null}) {
+    return _then(
+      _$PublicBodyVTSE52TsunamiImpl(
+        observations:
+            freezed == observations
+                ? _value._observations
+                : observations // ignore: cast_nullable_to_non_nullable
+                    as List<TsunamiObservation>?,
+        estimations:
+            null == estimations
+                ? _value._estimations
+                : estimations // ignore: cast_nullable_to_non_nullable
+                    as List<TsunamiEstimation>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$PublicBodyVTSE52TsunamiImpl implements _PublicBodyVTSE52Tsunami {
-  const _$PublicBodyVTSE52TsunamiImpl(
-      {required final List<TsunamiObservation>? observations,
-      required final List<TsunamiEstimation> estimations})
-      : _observations = observations,
-        _estimations = estimations;
+  const _$PublicBodyVTSE52TsunamiImpl({
+    required final List<TsunamiObservation>? observations,
+    required final List<TsunamiEstimation> estimations,
+  }) : _observations = observations,
+       _estimations = estimations;
 
   factory _$PublicBodyVTSE52TsunamiImpl.fromJson(Map<String, dynamic> json) =>
       _$$PublicBodyVTSE52TsunamiImplFromJson(json);
@@ -1376,18 +1478,23 @@ class _$PublicBodyVTSE52TsunamiImpl implements _PublicBodyVTSE52Tsunami {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PublicBodyVTSE52TsunamiImpl &&
-            const DeepCollectionEquality()
-                .equals(other._observations, _observations) &&
-            const DeepCollectionEquality()
-                .equals(other._estimations, _estimations));
+            const DeepCollectionEquality().equals(
+              other._observations,
+              _observations,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._estimations,
+              _estimations,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_observations),
-      const DeepCollectionEquality().hash(_estimations));
+    runtimeType,
+    const DeepCollectionEquality().hash(_observations),
+    const DeepCollectionEquality().hash(_estimations),
+  );
 
   /// Create a copy of PublicBodyVTSE52Tsunami
   /// with the given fields replaced by the non-null parameter values.
@@ -1395,22 +1502,21 @@ class _$PublicBodyVTSE52TsunamiImpl implements _PublicBodyVTSE52Tsunami {
   @override
   @pragma('vm:prefer-inline')
   _$$PublicBodyVTSE52TsunamiImplCopyWith<_$PublicBodyVTSE52TsunamiImpl>
-      get copyWith => __$$PublicBodyVTSE52TsunamiImplCopyWithImpl<
-          _$PublicBodyVTSE52TsunamiImpl>(this, _$identity);
+  get copyWith => __$$PublicBodyVTSE52TsunamiImplCopyWithImpl<
+    _$PublicBodyVTSE52TsunamiImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PublicBodyVTSE52TsunamiImplToJson(
-      this,
-    );
+    return _$$PublicBodyVTSE52TsunamiImplToJson(this);
   }
 }
 
 abstract class _PublicBodyVTSE52Tsunami implements PublicBodyVTSE52Tsunami {
-  const factory _PublicBodyVTSE52Tsunami(
-          {required final List<TsunamiObservation>? observations,
-          required final List<TsunamiEstimation> estimations}) =
-      _$PublicBodyVTSE52TsunamiImpl;
+  const factory _PublicBodyVTSE52Tsunami({
+    required final List<TsunamiObservation>? observations,
+    required final List<TsunamiEstimation> estimations,
+  }) = _$PublicBodyVTSE52TsunamiImpl;
 
   factory _PublicBodyVTSE52Tsunami.fromJson(Map<String, dynamic> json) =
       _$PublicBodyVTSE52TsunamiImpl.fromJson;
@@ -1425,7 +1531,7 @@ abstract class _PublicBodyVTSE52Tsunami implements PublicBodyVTSE52Tsunami {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PublicBodyVTSE52TsunamiImplCopyWith<_$PublicBodyVTSE52TsunamiImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 TsunamiForecast _$TsunamiForecastFromJson(Map<String, dynamic> json) {
@@ -1457,17 +1563,19 @@ mixin _$TsunamiForecast {
 /// @nodoc
 abstract class $TsunamiForecastCopyWith<$Res> {
   factory $TsunamiForecastCopyWith(
-          TsunamiForecast value, $Res Function(TsunamiForecast) then) =
-      _$TsunamiForecastCopyWithImpl<$Res, TsunamiForecast>;
+    TsunamiForecast value,
+    $Res Function(TsunamiForecast) then,
+  ) = _$TsunamiForecastCopyWithImpl<$Res, TsunamiForecast>;
   @useResult
-  $Res call(
-      {String code,
-      String name,
-      String kind,
-      String lastKind,
-      TsunamiForecastFirstHeight? firstHeight,
-      TsunamiForecastMaxHeight? maxHeight,
-      List<TsunamiForecastStation>? stations});
+  $Res call({
+    String code,
+    String name,
+    String kind,
+    String lastKind,
+    TsunamiForecastFirstHeight? firstHeight,
+    TsunamiForecastMaxHeight? maxHeight,
+    List<TsunamiForecastStation>? stations,
+  });
 
   $TsunamiForecastFirstHeightCopyWith<$Res>? get firstHeight;
   $TsunamiForecastMaxHeightCopyWith<$Res>? get maxHeight;
@@ -1496,36 +1604,46 @@ class _$TsunamiForecastCopyWithImpl<$Res, $Val extends TsunamiForecast>
     Object? maxHeight = freezed,
     Object? stations = freezed,
   }) {
-    return _then(_value.copyWith(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      kind: null == kind
-          ? _value.kind
-          : kind // ignore: cast_nullable_to_non_nullable
-              as String,
-      lastKind: null == lastKind
-          ? _value.lastKind
-          : lastKind // ignore: cast_nullable_to_non_nullable
-              as String,
-      firstHeight: freezed == firstHeight
-          ? _value.firstHeight
-          : firstHeight // ignore: cast_nullable_to_non_nullable
-              as TsunamiForecastFirstHeight?,
-      maxHeight: freezed == maxHeight
-          ? _value.maxHeight
-          : maxHeight // ignore: cast_nullable_to_non_nullable
-              as TsunamiForecastMaxHeight?,
-      stations: freezed == stations
-          ? _value.stations
-          : stations // ignore: cast_nullable_to_non_nullable
-              as List<TsunamiForecastStation>?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            code:
+                null == code
+                    ? _value.code
+                    : code // ignore: cast_nullable_to_non_nullable
+                        as String,
+            name:
+                null == name
+                    ? _value.name
+                    : name // ignore: cast_nullable_to_non_nullable
+                        as String,
+            kind:
+                null == kind
+                    ? _value.kind
+                    : kind // ignore: cast_nullable_to_non_nullable
+                        as String,
+            lastKind:
+                null == lastKind
+                    ? _value.lastKind
+                    : lastKind // ignore: cast_nullable_to_non_nullable
+                        as String,
+            firstHeight:
+                freezed == firstHeight
+                    ? _value.firstHeight
+                    : firstHeight // ignore: cast_nullable_to_non_nullable
+                        as TsunamiForecastFirstHeight?,
+            maxHeight:
+                freezed == maxHeight
+                    ? _value.maxHeight
+                    : maxHeight // ignore: cast_nullable_to_non_nullable
+                        as TsunamiForecastMaxHeight?,
+            stations:
+                freezed == stations
+                    ? _value.stations
+                    : stations // ignore: cast_nullable_to_non_nullable
+                        as List<TsunamiForecastStation>?,
+          )
+          as $Val,
+    );
   }
 
   /// Create a copy of TsunamiForecast
@@ -1537,8 +1655,9 @@ class _$TsunamiForecastCopyWithImpl<$Res, $Val extends TsunamiForecast>
       return null;
     }
 
-    return $TsunamiForecastFirstHeightCopyWith<$Res>(_value.firstHeight!,
-        (value) {
+    return $TsunamiForecastFirstHeightCopyWith<$Res>(_value.firstHeight!, (
+      value,
+    ) {
       return _then(_value.copyWith(firstHeight: value) as $Val);
     });
   }
@@ -1561,19 +1680,21 @@ class _$TsunamiForecastCopyWithImpl<$Res, $Val extends TsunamiForecast>
 /// @nodoc
 abstract class _$$TsunamiForecastImplCopyWith<$Res>
     implements $TsunamiForecastCopyWith<$Res> {
-  factory _$$TsunamiForecastImplCopyWith(_$TsunamiForecastImpl value,
-          $Res Function(_$TsunamiForecastImpl) then) =
-      __$$TsunamiForecastImplCopyWithImpl<$Res>;
+  factory _$$TsunamiForecastImplCopyWith(
+    _$TsunamiForecastImpl value,
+    $Res Function(_$TsunamiForecastImpl) then,
+  ) = __$$TsunamiForecastImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String code,
-      String name,
-      String kind,
-      String lastKind,
-      TsunamiForecastFirstHeight? firstHeight,
-      TsunamiForecastMaxHeight? maxHeight,
-      List<TsunamiForecastStation>? stations});
+  $Res call({
+    String code,
+    String name,
+    String kind,
+    String lastKind,
+    TsunamiForecastFirstHeight? firstHeight,
+    TsunamiForecastMaxHeight? maxHeight,
+    List<TsunamiForecastStation>? stations,
+  });
 
   @override
   $TsunamiForecastFirstHeightCopyWith<$Res>? get firstHeight;
@@ -1586,8 +1707,9 @@ class __$$TsunamiForecastImplCopyWithImpl<$Res>
     extends _$TsunamiForecastCopyWithImpl<$Res, _$TsunamiForecastImpl>
     implements _$$TsunamiForecastImplCopyWith<$Res> {
   __$$TsunamiForecastImplCopyWithImpl(
-      _$TsunamiForecastImpl _value, $Res Function(_$TsunamiForecastImpl) _then)
-      : super(_value, _then);
+    _$TsunamiForecastImpl _value,
+    $Res Function(_$TsunamiForecastImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of TsunamiForecast
   /// with the given fields replaced by the non-null parameter values.
@@ -1602,36 +1724,45 @@ class __$$TsunamiForecastImplCopyWithImpl<$Res>
     Object? maxHeight = freezed,
     Object? stations = freezed,
   }) {
-    return _then(_$TsunamiForecastImpl(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      kind: null == kind
-          ? _value.kind
-          : kind // ignore: cast_nullable_to_non_nullable
-              as String,
-      lastKind: null == lastKind
-          ? _value.lastKind
-          : lastKind // ignore: cast_nullable_to_non_nullable
-              as String,
-      firstHeight: freezed == firstHeight
-          ? _value.firstHeight
-          : firstHeight // ignore: cast_nullable_to_non_nullable
-              as TsunamiForecastFirstHeight?,
-      maxHeight: freezed == maxHeight
-          ? _value.maxHeight
-          : maxHeight // ignore: cast_nullable_to_non_nullable
-              as TsunamiForecastMaxHeight?,
-      stations: freezed == stations
-          ? _value._stations
-          : stations // ignore: cast_nullable_to_non_nullable
-              as List<TsunamiForecastStation>?,
-    ));
+    return _then(
+      _$TsunamiForecastImpl(
+        code:
+            null == code
+                ? _value.code
+                : code // ignore: cast_nullable_to_non_nullable
+                    as String,
+        name:
+            null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                    as String,
+        kind:
+            null == kind
+                ? _value.kind
+                : kind // ignore: cast_nullable_to_non_nullable
+                    as String,
+        lastKind:
+            null == lastKind
+                ? _value.lastKind
+                : lastKind // ignore: cast_nullable_to_non_nullable
+                    as String,
+        firstHeight:
+            freezed == firstHeight
+                ? _value.firstHeight
+                : firstHeight // ignore: cast_nullable_to_non_nullable
+                    as TsunamiForecastFirstHeight?,
+        maxHeight:
+            freezed == maxHeight
+                ? _value.maxHeight
+                : maxHeight // ignore: cast_nullable_to_non_nullable
+                    as TsunamiForecastMaxHeight?,
+        stations:
+            freezed == stations
+                ? _value._stations
+                : stations // ignore: cast_nullable_to_non_nullable
+                    as List<TsunamiForecastStation>?,
+      ),
+    );
   }
 }
 
@@ -1639,15 +1770,15 @@ class __$$TsunamiForecastImplCopyWithImpl<$Res>
 
 @JsonSerializable(fieldRename: FieldRename.none)
 class _$TsunamiForecastImpl implements _TsunamiForecast {
-  const _$TsunamiForecastImpl(
-      {required this.code,
-      required this.name,
-      required this.kind,
-      required this.lastKind,
-      required this.firstHeight,
-      required this.maxHeight,
-      required final List<TsunamiForecastStation>? stations})
-      : _stations = stations;
+  const _$TsunamiForecastImpl({
+    required this.code,
+    required this.name,
+    required this.kind,
+    required this.lastKind,
+    required this.firstHeight,
+    required this.maxHeight,
+    required final List<TsunamiForecastStation>? stations,
+  }) : _stations = stations;
 
   factory _$TsunamiForecastImpl.fromJson(Map<String, dynamic> json) =>
       _$$TsunamiForecastImplFromJson(json);
@@ -1698,8 +1829,16 @@ class _$TsunamiForecastImpl implements _TsunamiForecast {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, code, name, kind, lastKind,
-      firstHeight, maxHeight, const DeepCollectionEquality().hash(_stations));
+  int get hashCode => Object.hash(
+    runtimeType,
+    code,
+    name,
+    kind,
+    lastKind,
+    firstHeight,
+    maxHeight,
+    const DeepCollectionEquality().hash(_stations),
+  );
 
   /// Create a copy of TsunamiForecast
   /// with the given fields replaced by the non-null parameter values.
@@ -1708,26 +1847,26 @@ class _$TsunamiForecastImpl implements _TsunamiForecast {
   @pragma('vm:prefer-inline')
   _$$TsunamiForecastImplCopyWith<_$TsunamiForecastImpl> get copyWith =>
       __$$TsunamiForecastImplCopyWithImpl<_$TsunamiForecastImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TsunamiForecastImplToJson(
-      this,
-    );
+    return _$$TsunamiForecastImplToJson(this);
   }
 }
 
 abstract class _TsunamiForecast implements TsunamiForecast {
-  const factory _TsunamiForecast(
-          {required final String code,
-          required final String name,
-          required final String kind,
-          required final String lastKind,
-          required final TsunamiForecastFirstHeight? firstHeight,
-          required final TsunamiForecastMaxHeight? maxHeight,
-          required final List<TsunamiForecastStation>? stations}) =
-      _$TsunamiForecastImpl;
+  const factory _TsunamiForecast({
+    required final String code,
+    required final String name,
+    required final String kind,
+    required final String lastKind,
+    required final TsunamiForecastFirstHeight? firstHeight,
+    required final TsunamiForecastMaxHeight? maxHeight,
+    required final List<TsunamiForecastStation>? stations,
+  }) = _$TsunamiForecastImpl;
 
   factory _TsunamiForecast.fromJson(Map<String, dynamic> json) =
       _$TsunamiForecastImpl.fromJson;
@@ -1756,7 +1895,8 @@ abstract class _TsunamiForecast implements TsunamiForecast {
 }
 
 TsunamiForecastFirstHeight _$TsunamiForecastFirstHeightFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _TsunamiForecastFirstHeight.fromJson(json);
 }
 
@@ -1773,23 +1913,31 @@ mixin _$TsunamiForecastFirstHeight {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   $TsunamiForecastFirstHeightCopyWith<TsunamiForecastFirstHeight>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $TsunamiForecastFirstHeightCopyWith<$Res> {
-  factory $TsunamiForecastFirstHeightCopyWith(TsunamiForecastFirstHeight value,
-          $Res Function(TsunamiForecastFirstHeight) then) =
-      _$TsunamiForecastFirstHeightCopyWithImpl<$Res,
-          TsunamiForecastFirstHeight>;
+  factory $TsunamiForecastFirstHeightCopyWith(
+    TsunamiForecastFirstHeight value,
+    $Res Function(TsunamiForecastFirstHeight) then,
+  ) =
+      _$TsunamiForecastFirstHeightCopyWithImpl<
+        $Res,
+        TsunamiForecastFirstHeight
+      >;
   @useResult
-  $Res call(
-      {DateTime? arrivalTime, TsunamiForecastFirstHeightCondition? condition});
+  $Res call({
+    DateTime? arrivalTime,
+    TsunamiForecastFirstHeightCondition? condition,
+  });
 }
 
 /// @nodoc
-class _$TsunamiForecastFirstHeightCopyWithImpl<$Res,
-        $Val extends TsunamiForecastFirstHeight>
+class _$TsunamiForecastFirstHeightCopyWithImpl<
+  $Res,
+  $Val extends TsunamiForecastFirstHeight
+>
     implements $TsunamiForecastFirstHeightCopyWith<$Res> {
   _$TsunamiForecastFirstHeightCopyWithImpl(this._value, this._then);
 
@@ -1802,20 +1950,22 @@ class _$TsunamiForecastFirstHeightCopyWithImpl<$Res,
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? arrivalTime = freezed,
-    Object? condition = freezed,
-  }) {
-    return _then(_value.copyWith(
-      arrivalTime: freezed == arrivalTime
-          ? _value.arrivalTime
-          : arrivalTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      condition: freezed == condition
-          ? _value.condition
-          : condition // ignore: cast_nullable_to_non_nullable
-              as TsunamiForecastFirstHeightCondition?,
-    ) as $Val);
+  $Res call({Object? arrivalTime = freezed, Object? condition = freezed}) {
+    return _then(
+      _value.copyWith(
+            arrivalTime:
+                freezed == arrivalTime
+                    ? _value.arrivalTime
+                    : arrivalTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime?,
+            condition:
+                freezed == condition
+                    ? _value.condition
+                    : condition // ignore: cast_nullable_to_non_nullable
+                        as TsunamiForecastFirstHeightCondition?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -1823,43 +1973,49 @@ class _$TsunamiForecastFirstHeightCopyWithImpl<$Res,
 abstract class _$$TsunamiForecastFirstHeightImplCopyWith<$Res>
     implements $TsunamiForecastFirstHeightCopyWith<$Res> {
   factory _$$TsunamiForecastFirstHeightImplCopyWith(
-          _$TsunamiForecastFirstHeightImpl value,
-          $Res Function(_$TsunamiForecastFirstHeightImpl) then) =
-      __$$TsunamiForecastFirstHeightImplCopyWithImpl<$Res>;
+    _$TsunamiForecastFirstHeightImpl value,
+    $Res Function(_$TsunamiForecastFirstHeightImpl) then,
+  ) = __$$TsunamiForecastFirstHeightImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {DateTime? arrivalTime, TsunamiForecastFirstHeightCondition? condition});
+  $Res call({
+    DateTime? arrivalTime,
+    TsunamiForecastFirstHeightCondition? condition,
+  });
 }
 
 /// @nodoc
 class __$$TsunamiForecastFirstHeightImplCopyWithImpl<$Res>
-    extends _$TsunamiForecastFirstHeightCopyWithImpl<$Res,
-        _$TsunamiForecastFirstHeightImpl>
+    extends
+        _$TsunamiForecastFirstHeightCopyWithImpl<
+          $Res,
+          _$TsunamiForecastFirstHeightImpl
+        >
     implements _$$TsunamiForecastFirstHeightImplCopyWith<$Res> {
   __$$TsunamiForecastFirstHeightImplCopyWithImpl(
-      _$TsunamiForecastFirstHeightImpl _value,
-      $Res Function(_$TsunamiForecastFirstHeightImpl) _then)
-      : super(_value, _then);
+    _$TsunamiForecastFirstHeightImpl _value,
+    $Res Function(_$TsunamiForecastFirstHeightImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of TsunamiForecastFirstHeight
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? arrivalTime = freezed,
-    Object? condition = freezed,
-  }) {
-    return _then(_$TsunamiForecastFirstHeightImpl(
-      arrivalTime: freezed == arrivalTime
-          ? _value.arrivalTime
-          : arrivalTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      condition: freezed == condition
-          ? _value.condition
-          : condition // ignore: cast_nullable_to_non_nullable
-              as TsunamiForecastFirstHeightCondition?,
-    ));
+  $Res call({Object? arrivalTime = freezed, Object? condition = freezed}) {
+    return _then(
+      _$TsunamiForecastFirstHeightImpl(
+        arrivalTime:
+            freezed == arrivalTime
+                ? _value.arrivalTime
+                : arrivalTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime?,
+        condition:
+            freezed == condition
+                ? _value.condition
+                : condition // ignore: cast_nullable_to_non_nullable
+                    as TsunamiForecastFirstHeightCondition?,
+      ),
+    );
   }
 }
 
@@ -1867,12 +2023,14 @@ class __$$TsunamiForecastFirstHeightImplCopyWithImpl<$Res>
 
 @JsonSerializable(fieldRename: FieldRename.none)
 class _$TsunamiForecastFirstHeightImpl implements _TsunamiForecastFirstHeight {
-  const _$TsunamiForecastFirstHeightImpl(
-      {required this.arrivalTime, required this.condition});
+  const _$TsunamiForecastFirstHeightImpl({
+    required this.arrivalTime,
+    required this.condition,
+  });
 
   factory _$TsunamiForecastFirstHeightImpl.fromJson(
-          Map<String, dynamic> json) =>
-      _$$TsunamiForecastFirstHeightImplFromJson(json);
+    Map<String, dynamic> json,
+  ) => _$$TsunamiForecastFirstHeightImplFromJson(json);
 
   @override
   final DateTime? arrivalTime;
@@ -1905,23 +2063,22 @@ class _$TsunamiForecastFirstHeightImpl implements _TsunamiForecastFirstHeight {
   @override
   @pragma('vm:prefer-inline')
   _$$TsunamiForecastFirstHeightImplCopyWith<_$TsunamiForecastFirstHeightImpl>
-      get copyWith => __$$TsunamiForecastFirstHeightImplCopyWithImpl<
-          _$TsunamiForecastFirstHeightImpl>(this, _$identity);
+  get copyWith => __$$TsunamiForecastFirstHeightImplCopyWithImpl<
+    _$TsunamiForecastFirstHeightImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TsunamiForecastFirstHeightImplToJson(
-      this,
-    );
+    return _$$TsunamiForecastFirstHeightImplToJson(this);
   }
 }
 
 abstract class _TsunamiForecastFirstHeight
     implements TsunamiForecastFirstHeight {
-  const factory _TsunamiForecastFirstHeight(
-          {required final DateTime? arrivalTime,
-          required final TsunamiForecastFirstHeightCondition? condition}) =
-      _$TsunamiForecastFirstHeightImpl;
+  const factory _TsunamiForecastFirstHeight({
+    required final DateTime? arrivalTime,
+    required final TsunamiForecastFirstHeightCondition? condition,
+  }) = _$TsunamiForecastFirstHeightImpl;
 
   factory _TsunamiForecastFirstHeight.fromJson(Map<String, dynamic> json) =
       _$TsunamiForecastFirstHeightImpl.fromJson;
@@ -1936,11 +2093,12 @@ abstract class _TsunamiForecastFirstHeight
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TsunamiForecastFirstHeightImplCopyWith<_$TsunamiForecastFirstHeightImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 TsunamiForecastMaxHeight _$TsunamiForecastMaxHeightFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _TsunamiForecastMaxHeight.fromJson(json);
 }
 
@@ -1966,17 +2124,23 @@ mixin _$TsunamiForecastMaxHeight {
 
 /// @nodoc
 abstract class $TsunamiForecastMaxHeightCopyWith<$Res> {
-  factory $TsunamiForecastMaxHeightCopyWith(TsunamiForecastMaxHeight value,
-          $Res Function(TsunamiForecastMaxHeight) then) =
-      _$TsunamiForecastMaxHeightCopyWithImpl<$Res, TsunamiForecastMaxHeight>;
+  factory $TsunamiForecastMaxHeightCopyWith(
+    TsunamiForecastMaxHeight value,
+    $Res Function(TsunamiForecastMaxHeight) then,
+  ) = _$TsunamiForecastMaxHeightCopyWithImpl<$Res, TsunamiForecastMaxHeight>;
   @useResult
-  $Res call(
-      {double? value, bool? isOver, TsunamiMaxHeightCondition? condition});
+  $Res call({
+    double? value,
+    bool? isOver,
+    TsunamiMaxHeightCondition? condition,
+  });
 }
 
 /// @nodoc
-class _$TsunamiForecastMaxHeightCopyWithImpl<$Res,
-        $Val extends TsunamiForecastMaxHeight>
+class _$TsunamiForecastMaxHeightCopyWithImpl<
+  $Res,
+  $Val extends TsunamiForecastMaxHeight
+>
     implements $TsunamiForecastMaxHeightCopyWith<$Res> {
   _$TsunamiForecastMaxHeightCopyWithImpl(this._value, this._then);
 
@@ -1994,20 +2158,26 @@ class _$TsunamiForecastMaxHeightCopyWithImpl<$Res,
     Object? isOver = freezed,
     Object? condition = freezed,
   }) {
-    return _then(_value.copyWith(
-      value: freezed == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as double?,
-      isOver: freezed == isOver
-          ? _value.isOver
-          : isOver // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      condition: freezed == condition
-          ? _value.condition
-          : condition // ignore: cast_nullable_to_non_nullable
-              as TsunamiMaxHeightCondition?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            value:
+                freezed == value
+                    ? _value.value
+                    : value // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            isOver:
+                freezed == isOver
+                    ? _value.isOver
+                    : isOver // ignore: cast_nullable_to_non_nullable
+                        as bool?,
+            condition:
+                freezed == condition
+                    ? _value.condition
+                    : condition // ignore: cast_nullable_to_non_nullable
+                        as TsunamiMaxHeightCondition?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -2015,24 +2185,30 @@ class _$TsunamiForecastMaxHeightCopyWithImpl<$Res,
 abstract class _$$TsunamiForecastMaxHeightImplCopyWith<$Res>
     implements $TsunamiForecastMaxHeightCopyWith<$Res> {
   factory _$$TsunamiForecastMaxHeightImplCopyWith(
-          _$TsunamiForecastMaxHeightImpl value,
-          $Res Function(_$TsunamiForecastMaxHeightImpl) then) =
-      __$$TsunamiForecastMaxHeightImplCopyWithImpl<$Res>;
+    _$TsunamiForecastMaxHeightImpl value,
+    $Res Function(_$TsunamiForecastMaxHeightImpl) then,
+  ) = __$$TsunamiForecastMaxHeightImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {double? value, bool? isOver, TsunamiMaxHeightCondition? condition});
+  $Res call({
+    double? value,
+    bool? isOver,
+    TsunamiMaxHeightCondition? condition,
+  });
 }
 
 /// @nodoc
 class __$$TsunamiForecastMaxHeightImplCopyWithImpl<$Res>
-    extends _$TsunamiForecastMaxHeightCopyWithImpl<$Res,
-        _$TsunamiForecastMaxHeightImpl>
+    extends
+        _$TsunamiForecastMaxHeightCopyWithImpl<
+          $Res,
+          _$TsunamiForecastMaxHeightImpl
+        >
     implements _$$TsunamiForecastMaxHeightImplCopyWith<$Res> {
   __$$TsunamiForecastMaxHeightImplCopyWithImpl(
-      _$TsunamiForecastMaxHeightImpl _value,
-      $Res Function(_$TsunamiForecastMaxHeightImpl) _then)
-      : super(_value, _then);
+    _$TsunamiForecastMaxHeightImpl _value,
+    $Res Function(_$TsunamiForecastMaxHeightImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of TsunamiForecastMaxHeight
   /// with the given fields replaced by the non-null parameter values.
@@ -2043,20 +2219,25 @@ class __$$TsunamiForecastMaxHeightImplCopyWithImpl<$Res>
     Object? isOver = freezed,
     Object? condition = freezed,
   }) {
-    return _then(_$TsunamiForecastMaxHeightImpl(
-      value: freezed == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as double?,
-      isOver: freezed == isOver
-          ? _value.isOver
-          : isOver // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      condition: freezed == condition
-          ? _value.condition
-          : condition // ignore: cast_nullable_to_non_nullable
-              as TsunamiMaxHeightCondition?,
-    ));
+    return _then(
+      _$TsunamiForecastMaxHeightImpl(
+        value:
+            freezed == value
+                ? _value.value
+                : value // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        isOver:
+            freezed == isOver
+                ? _value.isOver
+                : isOver // ignore: cast_nullable_to_non_nullable
+                    as bool?,
+        condition:
+            freezed == condition
+                ? _value.condition
+                : condition // ignore: cast_nullable_to_non_nullable
+                    as TsunamiMaxHeightCondition?,
+      ),
+    );
   }
 }
 
@@ -2064,8 +2245,11 @@ class __$$TsunamiForecastMaxHeightImplCopyWithImpl<$Res>
 
 @JsonSerializable(fieldRename: FieldRename.none)
 class _$TsunamiForecastMaxHeightImpl implements _TsunamiForecastMaxHeight {
-  const _$TsunamiForecastMaxHeightImpl(
-      {required this.value, required this.isOver, required this.condition});
+  const _$TsunamiForecastMaxHeightImpl({
+    required this.value,
+    required this.isOver,
+    required this.condition,
+  });
 
   factory _$TsunamiForecastMaxHeightImpl.fromJson(Map<String, dynamic> json) =>
       _$$TsunamiForecastMaxHeightImplFromJson(json);
@@ -2106,23 +2290,22 @@ class _$TsunamiForecastMaxHeightImpl implements _TsunamiForecastMaxHeight {
   @override
   @pragma('vm:prefer-inline')
   _$$TsunamiForecastMaxHeightImplCopyWith<_$TsunamiForecastMaxHeightImpl>
-      get copyWith => __$$TsunamiForecastMaxHeightImplCopyWithImpl<
-          _$TsunamiForecastMaxHeightImpl>(this, _$identity);
+  get copyWith => __$$TsunamiForecastMaxHeightImplCopyWithImpl<
+    _$TsunamiForecastMaxHeightImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TsunamiForecastMaxHeightImplToJson(
-      this,
-    );
+    return _$$TsunamiForecastMaxHeightImplToJson(this);
   }
 }
 
 abstract class _TsunamiForecastMaxHeight implements TsunamiForecastMaxHeight {
-  const factory _TsunamiForecastMaxHeight(
-          {required final double? value,
-          required final bool? isOver,
-          required final TsunamiMaxHeightCondition? condition}) =
-      _$TsunamiForecastMaxHeightImpl;
+  const factory _TsunamiForecastMaxHeight({
+    required final double? value,
+    required final bool? isOver,
+    required final TsunamiMaxHeightCondition? condition,
+  }) = _$TsunamiForecastMaxHeightImpl;
 
   factory _TsunamiForecastMaxHeight.fromJson(Map<String, dynamic> json) =
       _$TsunamiForecastMaxHeightImpl.fromJson;
@@ -2142,11 +2325,12 @@ abstract class _TsunamiForecastMaxHeight implements TsunamiForecastMaxHeight {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TsunamiForecastMaxHeightImplCopyWith<_$TsunamiForecastMaxHeightImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 TsunamiForecastStation _$TsunamiForecastStationFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _TsunamiForecastStation.fromJson(json);
 }
 
@@ -2171,21 +2355,25 @@ mixin _$TsunamiForecastStation {
 
 /// @nodoc
 abstract class $TsunamiForecastStationCopyWith<$Res> {
-  factory $TsunamiForecastStationCopyWith(TsunamiForecastStation value,
-          $Res Function(TsunamiForecastStation) then) =
-      _$TsunamiForecastStationCopyWithImpl<$Res, TsunamiForecastStation>;
+  factory $TsunamiForecastStationCopyWith(
+    TsunamiForecastStation value,
+    $Res Function(TsunamiForecastStation) then,
+  ) = _$TsunamiForecastStationCopyWithImpl<$Res, TsunamiForecastStation>;
   @useResult
-  $Res call(
-      {String code,
-      String name,
-      DateTime highTideTime,
-      DateTime? firstHeightTime,
-      TsunamiForecastFirstHeightCondition? condition});
+  $Res call({
+    String code,
+    String name,
+    DateTime highTideTime,
+    DateTime? firstHeightTime,
+    TsunamiForecastFirstHeightCondition? condition,
+  });
 }
 
 /// @nodoc
-class _$TsunamiForecastStationCopyWithImpl<$Res,
-        $Val extends TsunamiForecastStation>
+class _$TsunamiForecastStationCopyWithImpl<
+  $Res,
+  $Val extends TsunamiForecastStation
+>
     implements $TsunamiForecastStationCopyWith<$Res> {
   _$TsunamiForecastStationCopyWithImpl(this._value, this._then);
 
@@ -2205,28 +2393,36 @@ class _$TsunamiForecastStationCopyWithImpl<$Res,
     Object? firstHeightTime = freezed,
     Object? condition = freezed,
   }) {
-    return _then(_value.copyWith(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      highTideTime: null == highTideTime
-          ? _value.highTideTime
-          : highTideTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      firstHeightTime: freezed == firstHeightTime
-          ? _value.firstHeightTime
-          : firstHeightTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      condition: freezed == condition
-          ? _value.condition
-          : condition // ignore: cast_nullable_to_non_nullable
-              as TsunamiForecastFirstHeightCondition?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            code:
+                null == code
+                    ? _value.code
+                    : code // ignore: cast_nullable_to_non_nullable
+                        as String,
+            name:
+                null == name
+                    ? _value.name
+                    : name // ignore: cast_nullable_to_non_nullable
+                        as String,
+            highTideTime:
+                null == highTideTime
+                    ? _value.highTideTime
+                    : highTideTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime,
+            firstHeightTime:
+                freezed == firstHeightTime
+                    ? _value.firstHeightTime
+                    : firstHeightTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime?,
+            condition:
+                freezed == condition
+                    ? _value.condition
+                    : condition // ignore: cast_nullable_to_non_nullable
+                        as TsunamiForecastFirstHeightCondition?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -2234,28 +2430,29 @@ class _$TsunamiForecastStationCopyWithImpl<$Res,
 abstract class _$$TsunamiForecastStationImplCopyWith<$Res>
     implements $TsunamiForecastStationCopyWith<$Res> {
   factory _$$TsunamiForecastStationImplCopyWith(
-          _$TsunamiForecastStationImpl value,
-          $Res Function(_$TsunamiForecastStationImpl) then) =
-      __$$TsunamiForecastStationImplCopyWithImpl<$Res>;
+    _$TsunamiForecastStationImpl value,
+    $Res Function(_$TsunamiForecastStationImpl) then,
+  ) = __$$TsunamiForecastStationImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String code,
-      String name,
-      DateTime highTideTime,
-      DateTime? firstHeightTime,
-      TsunamiForecastFirstHeightCondition? condition});
+  $Res call({
+    String code,
+    String name,
+    DateTime highTideTime,
+    DateTime? firstHeightTime,
+    TsunamiForecastFirstHeightCondition? condition,
+  });
 }
 
 /// @nodoc
 class __$$TsunamiForecastStationImplCopyWithImpl<$Res>
-    extends _$TsunamiForecastStationCopyWithImpl<$Res,
-        _$TsunamiForecastStationImpl>
+    extends
+        _$TsunamiForecastStationCopyWithImpl<$Res, _$TsunamiForecastStationImpl>
     implements _$$TsunamiForecastStationImplCopyWith<$Res> {
   __$$TsunamiForecastStationImplCopyWithImpl(
-      _$TsunamiForecastStationImpl _value,
-      $Res Function(_$TsunamiForecastStationImpl) _then)
-      : super(_value, _then);
+    _$TsunamiForecastStationImpl _value,
+    $Res Function(_$TsunamiForecastStationImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of TsunamiForecastStation
   /// with the given fields replaced by the non-null parameter values.
@@ -2268,28 +2465,35 @@ class __$$TsunamiForecastStationImplCopyWithImpl<$Res>
     Object? firstHeightTime = freezed,
     Object? condition = freezed,
   }) {
-    return _then(_$TsunamiForecastStationImpl(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      highTideTime: null == highTideTime
-          ? _value.highTideTime
-          : highTideTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      firstHeightTime: freezed == firstHeightTime
-          ? _value.firstHeightTime
-          : firstHeightTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      condition: freezed == condition
-          ? _value.condition
-          : condition // ignore: cast_nullable_to_non_nullable
-              as TsunamiForecastFirstHeightCondition?,
-    ));
+    return _then(
+      _$TsunamiForecastStationImpl(
+        code:
+            null == code
+                ? _value.code
+                : code // ignore: cast_nullable_to_non_nullable
+                    as String,
+        name:
+            null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                    as String,
+        highTideTime:
+            null == highTideTime
+                ? _value.highTideTime
+                : highTideTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime,
+        firstHeightTime:
+            freezed == firstHeightTime
+                ? _value.firstHeightTime
+                : firstHeightTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime?,
+        condition:
+            freezed == condition
+                ? _value.condition
+                : condition // ignore: cast_nullable_to_non_nullable
+                    as TsunamiForecastFirstHeightCondition?,
+      ),
+    );
   }
 }
 
@@ -2297,12 +2501,13 @@ class __$$TsunamiForecastStationImplCopyWithImpl<$Res>
 
 @JsonSerializable(fieldRename: FieldRename.none)
 class _$TsunamiForecastStationImpl implements _TsunamiForecastStation {
-  const _$TsunamiForecastStationImpl(
-      {required this.code,
-      required this.name,
-      required this.highTideTime,
-      required this.firstHeightTime,
-      required this.condition});
+  const _$TsunamiForecastStationImpl({
+    required this.code,
+    required this.name,
+    required this.highTideTime,
+    required this.firstHeightTime,
+    required this.condition,
+  });
 
   factory _$TsunamiForecastStationImpl.fromJson(Map<String, dynamic> json) =>
       _$$TsunamiForecastStationImplFromJson(json);
@@ -2341,7 +2546,13 @@ class _$TsunamiForecastStationImpl implements _TsunamiForecastStation {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, code, name, highTideTime, firstHeightTime, condition);
+    runtimeType,
+    code,
+    name,
+    highTideTime,
+    firstHeightTime,
+    condition,
+  );
 
   /// Create a copy of TsunamiForecastStation
   /// with the given fields replaced by the non-null parameter values.
@@ -2349,25 +2560,26 @@ class _$TsunamiForecastStationImpl implements _TsunamiForecastStation {
   @override
   @pragma('vm:prefer-inline')
   _$$TsunamiForecastStationImplCopyWith<_$TsunamiForecastStationImpl>
-      get copyWith => __$$TsunamiForecastStationImplCopyWithImpl<
-          _$TsunamiForecastStationImpl>(this, _$identity);
+  get copyWith =>
+      __$$TsunamiForecastStationImplCopyWithImpl<_$TsunamiForecastStationImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TsunamiForecastStationImplToJson(
-      this,
-    );
+    return _$$TsunamiForecastStationImplToJson(this);
   }
 }
 
 abstract class _TsunamiForecastStation implements TsunamiForecastStation {
-  const factory _TsunamiForecastStation(
-          {required final String code,
-          required final String name,
-          required final DateTime highTideTime,
-          required final DateTime? firstHeightTime,
-          required final TsunamiForecastFirstHeightCondition? condition}) =
-      _$TsunamiForecastStationImpl;
+  const factory _TsunamiForecastStation({
+    required final String code,
+    required final String name,
+    required final DateTime highTideTime,
+    required final DateTime? firstHeightTime,
+    required final TsunamiForecastFirstHeightCondition? condition,
+  }) = _$TsunamiForecastStationImpl;
 
   factory _TsunamiForecastStation.fromJson(Map<String, dynamic> json) =
       _$TsunamiForecastStationImpl.fromJson;
@@ -2388,7 +2600,7 @@ abstract class _TsunamiForecastStation implements TsunamiForecastStation {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TsunamiForecastStationImplCopyWith<_$TsunamiForecastStationImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 TsunamiObservation _$TsunamiObservationFromJson(Map<String, dynamic> json) {
@@ -2415,11 +2627,15 @@ mixin _$TsunamiObservation {
 /// @nodoc
 abstract class $TsunamiObservationCopyWith<$Res> {
   factory $TsunamiObservationCopyWith(
-          TsunamiObservation value, $Res Function(TsunamiObservation) then) =
-      _$TsunamiObservationCopyWithImpl<$Res, TsunamiObservation>;
+    TsunamiObservation value,
+    $Res Function(TsunamiObservation) then,
+  ) = _$TsunamiObservationCopyWithImpl<$Res, TsunamiObservation>;
   @useResult
-  $Res call(
-      {String? code, String? name, List<TsunamiObservationStation> stations});
+  $Res call({
+    String? code,
+    String? name,
+    List<TsunamiObservationStation> stations,
+  });
 }
 
 /// @nodoc
@@ -2441,42 +2657,53 @@ class _$TsunamiObservationCopyWithImpl<$Res, $Val extends TsunamiObservation>
     Object? name = freezed,
     Object? stations = null,
   }) {
-    return _then(_value.copyWith(
-      code: freezed == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String?,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-      stations: null == stations
-          ? _value.stations
-          : stations // ignore: cast_nullable_to_non_nullable
-              as List<TsunamiObservationStation>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            code:
+                freezed == code
+                    ? _value.code
+                    : code // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            name:
+                freezed == name
+                    ? _value.name
+                    : name // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            stations:
+                null == stations
+                    ? _value.stations
+                    : stations // ignore: cast_nullable_to_non_nullable
+                        as List<TsunamiObservationStation>,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$TsunamiObservationImplCopyWith<$Res>
     implements $TsunamiObservationCopyWith<$Res> {
-  factory _$$TsunamiObservationImplCopyWith(_$TsunamiObservationImpl value,
-          $Res Function(_$TsunamiObservationImpl) then) =
-      __$$TsunamiObservationImplCopyWithImpl<$Res>;
+  factory _$$TsunamiObservationImplCopyWith(
+    _$TsunamiObservationImpl value,
+    $Res Function(_$TsunamiObservationImpl) then,
+  ) = __$$TsunamiObservationImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String? code, String? name, List<TsunamiObservationStation> stations});
+  $Res call({
+    String? code,
+    String? name,
+    List<TsunamiObservationStation> stations,
+  });
 }
 
 /// @nodoc
 class __$$TsunamiObservationImplCopyWithImpl<$Res>
     extends _$TsunamiObservationCopyWithImpl<$Res, _$TsunamiObservationImpl>
     implements _$$TsunamiObservationImplCopyWith<$Res> {
-  __$$TsunamiObservationImplCopyWithImpl(_$TsunamiObservationImpl _value,
-      $Res Function(_$TsunamiObservationImpl) _then)
-      : super(_value, _then);
+  __$$TsunamiObservationImplCopyWithImpl(
+    _$TsunamiObservationImpl _value,
+    $Res Function(_$TsunamiObservationImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of TsunamiObservation
   /// with the given fields replaced by the non-null parameter values.
@@ -2487,20 +2714,25 @@ class __$$TsunamiObservationImplCopyWithImpl<$Res>
     Object? name = freezed,
     Object? stations = null,
   }) {
-    return _then(_$TsunamiObservationImpl(
-      code: freezed == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String?,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-      stations: null == stations
-          ? _value._stations
-          : stations // ignore: cast_nullable_to_non_nullable
-              as List<TsunamiObservationStation>,
-    ));
+    return _then(
+      _$TsunamiObservationImpl(
+        code:
+            freezed == code
+                ? _value.code
+                : code // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        name:
+            freezed == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        stations:
+            null == stations
+                ? _value._stations
+                : stations // ignore: cast_nullable_to_non_nullable
+                    as List<TsunamiObservationStation>,
+      ),
+    );
   }
 }
 
@@ -2508,11 +2740,11 @@ class __$$TsunamiObservationImplCopyWithImpl<$Res>
 
 @JsonSerializable(fieldRename: FieldRename.none)
 class _$TsunamiObservationImpl implements _TsunamiObservation {
-  const _$TsunamiObservationImpl(
-      {required this.code,
-      required this.name,
-      required final List<TsunamiObservationStation> stations})
-      : _stations = stations;
+  const _$TsunamiObservationImpl({
+    required this.code,
+    required this.name,
+    required final List<TsunamiObservationStation> stations,
+  }) : _stations = stations;
 
   factory _$TsunamiObservationImpl.fromJson(Map<String, dynamic> json) =>
       _$$TsunamiObservationImplFromJson(json);
@@ -2547,7 +2779,11 @@ class _$TsunamiObservationImpl implements _TsunamiObservation {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, code, name, const DeepCollectionEquality().hash(_stations));
+    runtimeType,
+    code,
+    name,
+    const DeepCollectionEquality().hash(_stations),
+  );
 
   /// Create a copy of TsunamiObservation
   /// with the given fields replaced by the non-null parameter values.
@@ -2556,22 +2792,22 @@ class _$TsunamiObservationImpl implements _TsunamiObservation {
   @pragma('vm:prefer-inline')
   _$$TsunamiObservationImplCopyWith<_$TsunamiObservationImpl> get copyWith =>
       __$$TsunamiObservationImplCopyWithImpl<_$TsunamiObservationImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TsunamiObservationImplToJson(
-      this,
-    );
+    return _$$TsunamiObservationImplToJson(this);
   }
 }
 
 abstract class _TsunamiObservation implements TsunamiObservation {
-  const factory _TsunamiObservation(
-          {required final String? code,
-          required final String? name,
-          required final List<TsunamiObservationStation> stations}) =
-      _$TsunamiObservationImpl;
+  const factory _TsunamiObservation({
+    required final String? code,
+    required final String? name,
+    required final List<TsunamiObservationStation> stations,
+  }) = _$TsunamiObservationImpl;
 
   factory _TsunamiObservation.fromJson(Map<String, dynamic> json) =
       _$TsunamiObservationImpl.fromJson;
@@ -2592,7 +2828,8 @@ abstract class _TsunamiObservation implements TsunamiObservation {
 }
 
 TsunamiObservationStation _$TsunamiObservationStationFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _TsunamiObservationStation.fromJson(json);
 }
 
@@ -2626,25 +2863,29 @@ mixin _$TsunamiObservationStation {
 
 /// @nodoc
 abstract class $TsunamiObservationStationCopyWith<$Res> {
-  factory $TsunamiObservationStationCopyWith(TsunamiObservationStation value,
-          $Res Function(TsunamiObservationStation) then) =
-      _$TsunamiObservationStationCopyWithImpl<$Res, TsunamiObservationStation>;
+  factory $TsunamiObservationStationCopyWith(
+    TsunamiObservationStation value,
+    $Res Function(TsunamiObservationStation) then,
+  ) = _$TsunamiObservationStationCopyWithImpl<$Res, TsunamiObservationStation>;
   @useResult
-  $Res call(
-      {String code,
-      String name,
-      DateTime? firstHeightArrivalTime,
-      TsunamiObservationStationFirstHeightIntial? firstHeightInitial,
-      DateTime? maxHeightTime,
-      double? maxHeightValue,
-      bool? maxHeightIsOver,
-      bool? maxHeightIsRising,
-      TsunamiObservationStationCondition? condition});
+  $Res call({
+    String code,
+    String name,
+    DateTime? firstHeightArrivalTime,
+    TsunamiObservationStationFirstHeightIntial? firstHeightInitial,
+    DateTime? maxHeightTime,
+    double? maxHeightValue,
+    bool? maxHeightIsOver,
+    bool? maxHeightIsRising,
+    TsunamiObservationStationCondition? condition,
+  });
 }
 
 /// @nodoc
-class _$TsunamiObservationStationCopyWithImpl<$Res,
-        $Val extends TsunamiObservationStation>
+class _$TsunamiObservationStationCopyWithImpl<
+  $Res,
+  $Val extends TsunamiObservationStation
+>
     implements $TsunamiObservationStationCopyWith<$Res> {
   _$TsunamiObservationStationCopyWithImpl(this._value, this._then);
 
@@ -2668,44 +2909,56 @@ class _$TsunamiObservationStationCopyWithImpl<$Res,
     Object? maxHeightIsRising = freezed,
     Object? condition = freezed,
   }) {
-    return _then(_value.copyWith(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      firstHeightArrivalTime: freezed == firstHeightArrivalTime
-          ? _value.firstHeightArrivalTime
-          : firstHeightArrivalTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      firstHeightInitial: freezed == firstHeightInitial
-          ? _value.firstHeightInitial
-          : firstHeightInitial // ignore: cast_nullable_to_non_nullable
-              as TsunamiObservationStationFirstHeightIntial?,
-      maxHeightTime: freezed == maxHeightTime
-          ? _value.maxHeightTime
-          : maxHeightTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      maxHeightValue: freezed == maxHeightValue
-          ? _value.maxHeightValue
-          : maxHeightValue // ignore: cast_nullable_to_non_nullable
-              as double?,
-      maxHeightIsOver: freezed == maxHeightIsOver
-          ? _value.maxHeightIsOver
-          : maxHeightIsOver // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      maxHeightIsRising: freezed == maxHeightIsRising
-          ? _value.maxHeightIsRising
-          : maxHeightIsRising // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      condition: freezed == condition
-          ? _value.condition
-          : condition // ignore: cast_nullable_to_non_nullable
-              as TsunamiObservationStationCondition?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            code:
+                null == code
+                    ? _value.code
+                    : code // ignore: cast_nullable_to_non_nullable
+                        as String,
+            name:
+                null == name
+                    ? _value.name
+                    : name // ignore: cast_nullable_to_non_nullable
+                        as String,
+            firstHeightArrivalTime:
+                freezed == firstHeightArrivalTime
+                    ? _value.firstHeightArrivalTime
+                    : firstHeightArrivalTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime?,
+            firstHeightInitial:
+                freezed == firstHeightInitial
+                    ? _value.firstHeightInitial
+                    : firstHeightInitial // ignore: cast_nullable_to_non_nullable
+                        as TsunamiObservationStationFirstHeightIntial?,
+            maxHeightTime:
+                freezed == maxHeightTime
+                    ? _value.maxHeightTime
+                    : maxHeightTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime?,
+            maxHeightValue:
+                freezed == maxHeightValue
+                    ? _value.maxHeightValue
+                    : maxHeightValue // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            maxHeightIsOver:
+                freezed == maxHeightIsOver
+                    ? _value.maxHeightIsOver
+                    : maxHeightIsOver // ignore: cast_nullable_to_non_nullable
+                        as bool?,
+            maxHeightIsRising:
+                freezed == maxHeightIsRising
+                    ? _value.maxHeightIsRising
+                    : maxHeightIsRising // ignore: cast_nullable_to_non_nullable
+                        as bool?,
+            condition:
+                freezed == condition
+                    ? _value.condition
+                    : condition // ignore: cast_nullable_to_non_nullable
+                        as TsunamiObservationStationCondition?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -2713,32 +2966,36 @@ class _$TsunamiObservationStationCopyWithImpl<$Res,
 abstract class _$$TsunamiObservationStationImplCopyWith<$Res>
     implements $TsunamiObservationStationCopyWith<$Res> {
   factory _$$TsunamiObservationStationImplCopyWith(
-          _$TsunamiObservationStationImpl value,
-          $Res Function(_$TsunamiObservationStationImpl) then) =
-      __$$TsunamiObservationStationImplCopyWithImpl<$Res>;
+    _$TsunamiObservationStationImpl value,
+    $Res Function(_$TsunamiObservationStationImpl) then,
+  ) = __$$TsunamiObservationStationImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String code,
-      String name,
-      DateTime? firstHeightArrivalTime,
-      TsunamiObservationStationFirstHeightIntial? firstHeightInitial,
-      DateTime? maxHeightTime,
-      double? maxHeightValue,
-      bool? maxHeightIsOver,
-      bool? maxHeightIsRising,
-      TsunamiObservationStationCondition? condition});
+  $Res call({
+    String code,
+    String name,
+    DateTime? firstHeightArrivalTime,
+    TsunamiObservationStationFirstHeightIntial? firstHeightInitial,
+    DateTime? maxHeightTime,
+    double? maxHeightValue,
+    bool? maxHeightIsOver,
+    bool? maxHeightIsRising,
+    TsunamiObservationStationCondition? condition,
+  });
 }
 
 /// @nodoc
 class __$$TsunamiObservationStationImplCopyWithImpl<$Res>
-    extends _$TsunamiObservationStationCopyWithImpl<$Res,
-        _$TsunamiObservationStationImpl>
+    extends
+        _$TsunamiObservationStationCopyWithImpl<
+          $Res,
+          _$TsunamiObservationStationImpl
+        >
     implements _$$TsunamiObservationStationImplCopyWith<$Res> {
   __$$TsunamiObservationStationImplCopyWithImpl(
-      _$TsunamiObservationStationImpl _value,
-      $Res Function(_$TsunamiObservationStationImpl) _then)
-      : super(_value, _then);
+    _$TsunamiObservationStationImpl _value,
+    $Res Function(_$TsunamiObservationStationImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of TsunamiObservationStation
   /// with the given fields replaced by the non-null parameter values.
@@ -2755,44 +3012,55 @@ class __$$TsunamiObservationStationImplCopyWithImpl<$Res>
     Object? maxHeightIsRising = freezed,
     Object? condition = freezed,
   }) {
-    return _then(_$TsunamiObservationStationImpl(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      firstHeightArrivalTime: freezed == firstHeightArrivalTime
-          ? _value.firstHeightArrivalTime
-          : firstHeightArrivalTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      firstHeightInitial: freezed == firstHeightInitial
-          ? _value.firstHeightInitial
-          : firstHeightInitial // ignore: cast_nullable_to_non_nullable
-              as TsunamiObservationStationFirstHeightIntial?,
-      maxHeightTime: freezed == maxHeightTime
-          ? _value.maxHeightTime
-          : maxHeightTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      maxHeightValue: freezed == maxHeightValue
-          ? _value.maxHeightValue
-          : maxHeightValue // ignore: cast_nullable_to_non_nullable
-              as double?,
-      maxHeightIsOver: freezed == maxHeightIsOver
-          ? _value.maxHeightIsOver
-          : maxHeightIsOver // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      maxHeightIsRising: freezed == maxHeightIsRising
-          ? _value.maxHeightIsRising
-          : maxHeightIsRising // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      condition: freezed == condition
-          ? _value.condition
-          : condition // ignore: cast_nullable_to_non_nullable
-              as TsunamiObservationStationCondition?,
-    ));
+    return _then(
+      _$TsunamiObservationStationImpl(
+        code:
+            null == code
+                ? _value.code
+                : code // ignore: cast_nullable_to_non_nullable
+                    as String,
+        name:
+            null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                    as String,
+        firstHeightArrivalTime:
+            freezed == firstHeightArrivalTime
+                ? _value.firstHeightArrivalTime
+                : firstHeightArrivalTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime?,
+        firstHeightInitial:
+            freezed == firstHeightInitial
+                ? _value.firstHeightInitial
+                : firstHeightInitial // ignore: cast_nullable_to_non_nullable
+                    as TsunamiObservationStationFirstHeightIntial?,
+        maxHeightTime:
+            freezed == maxHeightTime
+                ? _value.maxHeightTime
+                : maxHeightTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime?,
+        maxHeightValue:
+            freezed == maxHeightValue
+                ? _value.maxHeightValue
+                : maxHeightValue // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        maxHeightIsOver:
+            freezed == maxHeightIsOver
+                ? _value.maxHeightIsOver
+                : maxHeightIsOver // ignore: cast_nullable_to_non_nullable
+                    as bool?,
+        maxHeightIsRising:
+            freezed == maxHeightIsRising
+                ? _value.maxHeightIsRising
+                : maxHeightIsRising // ignore: cast_nullable_to_non_nullable
+                    as bool?,
+        condition:
+            freezed == condition
+                ? _value.condition
+                : condition // ignore: cast_nullable_to_non_nullable
+                    as TsunamiObservationStationCondition?,
+      ),
+    );
   }
 }
 
@@ -2800,16 +3068,17 @@ class __$$TsunamiObservationStationImplCopyWithImpl<$Res>
 
 @JsonSerializable(fieldRename: FieldRename.none)
 class _$TsunamiObservationStationImpl implements _TsunamiObservationStation {
-  const _$TsunamiObservationStationImpl(
-      {required this.code,
-      required this.name,
-      required this.firstHeightArrivalTime,
-      required this.firstHeightInitial,
-      required this.maxHeightTime,
-      required this.maxHeightValue,
-      required this.maxHeightIsOver,
-      required this.maxHeightIsRising,
-      required this.condition});
+  const _$TsunamiObservationStationImpl({
+    required this.code,
+    required this.name,
+    required this.firstHeightArrivalTime,
+    required this.firstHeightInitial,
+    required this.maxHeightTime,
+    required this.maxHeightValue,
+    required this.maxHeightIsOver,
+    required this.maxHeightIsRising,
+    required this.condition,
+  });
 
   factory _$TsunamiObservationStationImpl.fromJson(Map<String, dynamic> json) =>
       _$$TsunamiObservationStationImplFromJson(json);
@@ -2868,16 +3137,17 @@ class _$TsunamiObservationStationImpl implements _TsunamiObservationStation {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      code,
-      name,
-      firstHeightArrivalTime,
-      firstHeightInitial,
-      maxHeightTime,
-      maxHeightValue,
-      maxHeightIsOver,
-      maxHeightIsRising,
-      condition);
+    runtimeType,
+    code,
+    name,
+    firstHeightArrivalTime,
+    firstHeightInitial,
+    maxHeightTime,
+    maxHeightValue,
+    maxHeightIsOver,
+    maxHeightIsRising,
+    condition,
+  );
 
   /// Create a copy of TsunamiObservationStation
   /// with the given fields replaced by the non-null parameter values.
@@ -2885,30 +3155,29 @@ class _$TsunamiObservationStationImpl implements _TsunamiObservationStation {
   @override
   @pragma('vm:prefer-inline')
   _$$TsunamiObservationStationImplCopyWith<_$TsunamiObservationStationImpl>
-      get copyWith => __$$TsunamiObservationStationImplCopyWithImpl<
-          _$TsunamiObservationStationImpl>(this, _$identity);
+  get copyWith => __$$TsunamiObservationStationImplCopyWithImpl<
+    _$TsunamiObservationStationImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TsunamiObservationStationImplToJson(
-      this,
-    );
+    return _$$TsunamiObservationStationImplToJson(this);
   }
 }
 
 abstract class _TsunamiObservationStation implements TsunamiObservationStation {
-  const factory _TsunamiObservationStation(
-          {required final String code,
-          required final String name,
-          required final DateTime? firstHeightArrivalTime,
-          required final TsunamiObservationStationFirstHeightIntial?
-              firstHeightInitial,
-          required final DateTime? maxHeightTime,
-          required final double? maxHeightValue,
-          required final bool? maxHeightIsOver,
-          required final bool? maxHeightIsRising,
-          required final TsunamiObservationStationCondition? condition}) =
-      _$TsunamiObservationStationImpl;
+  const factory _TsunamiObservationStation({
+    required final String code,
+    required final String name,
+    required final DateTime? firstHeightArrivalTime,
+    required final TsunamiObservationStationFirstHeightIntial?
+    firstHeightInitial,
+    required final DateTime? maxHeightTime,
+    required final double? maxHeightValue,
+    required final bool? maxHeightIsOver,
+    required final bool? maxHeightIsRising,
+    required final TsunamiObservationStationCondition? condition,
+  }) = _$TsunamiObservationStationImpl;
 
   factory _TsunamiObservationStation.fromJson(Map<String, dynamic> json) =
       _$TsunamiObservationStationImpl.fromJson;
@@ -2941,7 +3210,7 @@ abstract class _TsunamiObservationStation implements TsunamiObservationStation {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TsunamiObservationStationImplCopyWith<_$TsunamiObservationStationImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 TsunamiEstimation _$TsunamiEstimationFromJson(Map<String, dynamic> json) {
@@ -2960,7 +3229,7 @@ mixin _$TsunamiEstimation {
   bool? get maxHeightIsOver => throw _privateConstructorUsedError;
   TsunamiMaxHeightCondition? get maxHeightCondition =>
       throw _privateConstructorUsedError; // 津波警報以上でまだ津波の観測値が小さい場合に出現する
-// *津波観測中*
+  // *津波観測中*
   bool? get isObserving => throw _privateConstructorUsedError;
 
   /// Serializes this TsunamiEstimation to a JSON map.
@@ -2976,19 +3245,21 @@ mixin _$TsunamiEstimation {
 /// @nodoc
 abstract class $TsunamiEstimationCopyWith<$Res> {
   factory $TsunamiEstimationCopyWith(
-          TsunamiEstimation value, $Res Function(TsunamiEstimation) then) =
-      _$TsunamiEstimationCopyWithImpl<$Res, TsunamiEstimation>;
+    TsunamiEstimation value,
+    $Res Function(TsunamiEstimation) then,
+  ) = _$TsunamiEstimationCopyWithImpl<$Res, TsunamiEstimation>;
   @useResult
-  $Res call(
-      {String code,
-      String name,
-      DateTime? firstHeightTime,
-      TsunamiEstimationFirstHeightCondition? firstHeightCondition,
-      DateTime? maxHeightTime,
-      double? maxHeightValue,
-      bool? maxHeightIsOver,
-      TsunamiMaxHeightCondition? maxHeightCondition,
-      bool? isObserving});
+  $Res call({
+    String code,
+    String name,
+    DateTime? firstHeightTime,
+    TsunamiEstimationFirstHeightCondition? firstHeightCondition,
+    DateTime? maxHeightTime,
+    double? maxHeightValue,
+    bool? maxHeightIsOver,
+    TsunamiMaxHeightCondition? maxHeightCondition,
+    bool? isObserving,
+  });
 }
 
 /// @nodoc
@@ -3016,74 +3287,89 @@ class _$TsunamiEstimationCopyWithImpl<$Res, $Val extends TsunamiEstimation>
     Object? maxHeightCondition = freezed,
     Object? isObserving = freezed,
   }) {
-    return _then(_value.copyWith(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      firstHeightTime: freezed == firstHeightTime
-          ? _value.firstHeightTime
-          : firstHeightTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      firstHeightCondition: freezed == firstHeightCondition
-          ? _value.firstHeightCondition
-          : firstHeightCondition // ignore: cast_nullable_to_non_nullable
-              as TsunamiEstimationFirstHeightCondition?,
-      maxHeightTime: freezed == maxHeightTime
-          ? _value.maxHeightTime
-          : maxHeightTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      maxHeightValue: freezed == maxHeightValue
-          ? _value.maxHeightValue
-          : maxHeightValue // ignore: cast_nullable_to_non_nullable
-              as double?,
-      maxHeightIsOver: freezed == maxHeightIsOver
-          ? _value.maxHeightIsOver
-          : maxHeightIsOver // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      maxHeightCondition: freezed == maxHeightCondition
-          ? _value.maxHeightCondition
-          : maxHeightCondition // ignore: cast_nullable_to_non_nullable
-              as TsunamiMaxHeightCondition?,
-      isObserving: freezed == isObserving
-          ? _value.isObserving
-          : isObserving // ignore: cast_nullable_to_non_nullable
-              as bool?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            code:
+                null == code
+                    ? _value.code
+                    : code // ignore: cast_nullable_to_non_nullable
+                        as String,
+            name:
+                null == name
+                    ? _value.name
+                    : name // ignore: cast_nullable_to_non_nullable
+                        as String,
+            firstHeightTime:
+                freezed == firstHeightTime
+                    ? _value.firstHeightTime
+                    : firstHeightTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime?,
+            firstHeightCondition:
+                freezed == firstHeightCondition
+                    ? _value.firstHeightCondition
+                    : firstHeightCondition // ignore: cast_nullable_to_non_nullable
+                        as TsunamiEstimationFirstHeightCondition?,
+            maxHeightTime:
+                freezed == maxHeightTime
+                    ? _value.maxHeightTime
+                    : maxHeightTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime?,
+            maxHeightValue:
+                freezed == maxHeightValue
+                    ? _value.maxHeightValue
+                    : maxHeightValue // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            maxHeightIsOver:
+                freezed == maxHeightIsOver
+                    ? _value.maxHeightIsOver
+                    : maxHeightIsOver // ignore: cast_nullable_to_non_nullable
+                        as bool?,
+            maxHeightCondition:
+                freezed == maxHeightCondition
+                    ? _value.maxHeightCondition
+                    : maxHeightCondition // ignore: cast_nullable_to_non_nullable
+                        as TsunamiMaxHeightCondition?,
+            isObserving:
+                freezed == isObserving
+                    ? _value.isObserving
+                    : isObserving // ignore: cast_nullable_to_non_nullable
+                        as bool?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$TsunamiEstimationImplCopyWith<$Res>
     implements $TsunamiEstimationCopyWith<$Res> {
-  factory _$$TsunamiEstimationImplCopyWith(_$TsunamiEstimationImpl value,
-          $Res Function(_$TsunamiEstimationImpl) then) =
-      __$$TsunamiEstimationImplCopyWithImpl<$Res>;
+  factory _$$TsunamiEstimationImplCopyWith(
+    _$TsunamiEstimationImpl value,
+    $Res Function(_$TsunamiEstimationImpl) then,
+  ) = __$$TsunamiEstimationImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String code,
-      String name,
-      DateTime? firstHeightTime,
-      TsunamiEstimationFirstHeightCondition? firstHeightCondition,
-      DateTime? maxHeightTime,
-      double? maxHeightValue,
-      bool? maxHeightIsOver,
-      TsunamiMaxHeightCondition? maxHeightCondition,
-      bool? isObserving});
+  $Res call({
+    String code,
+    String name,
+    DateTime? firstHeightTime,
+    TsunamiEstimationFirstHeightCondition? firstHeightCondition,
+    DateTime? maxHeightTime,
+    double? maxHeightValue,
+    bool? maxHeightIsOver,
+    TsunamiMaxHeightCondition? maxHeightCondition,
+    bool? isObserving,
+  });
 }
 
 /// @nodoc
 class __$$TsunamiEstimationImplCopyWithImpl<$Res>
     extends _$TsunamiEstimationCopyWithImpl<$Res, _$TsunamiEstimationImpl>
     implements _$$TsunamiEstimationImplCopyWith<$Res> {
-  __$$TsunamiEstimationImplCopyWithImpl(_$TsunamiEstimationImpl _value,
-      $Res Function(_$TsunamiEstimationImpl) _then)
-      : super(_value, _then);
+  __$$TsunamiEstimationImplCopyWithImpl(
+    _$TsunamiEstimationImpl _value,
+    $Res Function(_$TsunamiEstimationImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of TsunamiEstimation
   /// with the given fields replaced by the non-null parameter values.
@@ -3100,44 +3386,55 @@ class __$$TsunamiEstimationImplCopyWithImpl<$Res>
     Object? maxHeightCondition = freezed,
     Object? isObserving = freezed,
   }) {
-    return _then(_$TsunamiEstimationImpl(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      firstHeightTime: freezed == firstHeightTime
-          ? _value.firstHeightTime
-          : firstHeightTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      firstHeightCondition: freezed == firstHeightCondition
-          ? _value.firstHeightCondition
-          : firstHeightCondition // ignore: cast_nullable_to_non_nullable
-              as TsunamiEstimationFirstHeightCondition?,
-      maxHeightTime: freezed == maxHeightTime
-          ? _value.maxHeightTime
-          : maxHeightTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      maxHeightValue: freezed == maxHeightValue
-          ? _value.maxHeightValue
-          : maxHeightValue // ignore: cast_nullable_to_non_nullable
-              as double?,
-      maxHeightIsOver: freezed == maxHeightIsOver
-          ? _value.maxHeightIsOver
-          : maxHeightIsOver // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      maxHeightCondition: freezed == maxHeightCondition
-          ? _value.maxHeightCondition
-          : maxHeightCondition // ignore: cast_nullable_to_non_nullable
-              as TsunamiMaxHeightCondition?,
-      isObserving: freezed == isObserving
-          ? _value.isObserving
-          : isObserving // ignore: cast_nullable_to_non_nullable
-              as bool?,
-    ));
+    return _then(
+      _$TsunamiEstimationImpl(
+        code:
+            null == code
+                ? _value.code
+                : code // ignore: cast_nullable_to_non_nullable
+                    as String,
+        name:
+            null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                    as String,
+        firstHeightTime:
+            freezed == firstHeightTime
+                ? _value.firstHeightTime
+                : firstHeightTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime?,
+        firstHeightCondition:
+            freezed == firstHeightCondition
+                ? _value.firstHeightCondition
+                : firstHeightCondition // ignore: cast_nullable_to_non_nullable
+                    as TsunamiEstimationFirstHeightCondition?,
+        maxHeightTime:
+            freezed == maxHeightTime
+                ? _value.maxHeightTime
+                : maxHeightTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime?,
+        maxHeightValue:
+            freezed == maxHeightValue
+                ? _value.maxHeightValue
+                : maxHeightValue // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        maxHeightIsOver:
+            freezed == maxHeightIsOver
+                ? _value.maxHeightIsOver
+                : maxHeightIsOver // ignore: cast_nullable_to_non_nullable
+                    as bool?,
+        maxHeightCondition:
+            freezed == maxHeightCondition
+                ? _value.maxHeightCondition
+                : maxHeightCondition // ignore: cast_nullable_to_non_nullable
+                    as TsunamiMaxHeightCondition?,
+        isObserving:
+            freezed == isObserving
+                ? _value.isObserving
+                : isObserving // ignore: cast_nullable_to_non_nullable
+                    as bool?,
+      ),
+    );
   }
 }
 
@@ -3145,16 +3442,17 @@ class __$$TsunamiEstimationImplCopyWithImpl<$Res>
 
 @JsonSerializable(fieldRename: FieldRename.none)
 class _$TsunamiEstimationImpl implements _TsunamiEstimation {
-  const _$TsunamiEstimationImpl(
-      {required this.code,
-      required this.name,
-      required this.firstHeightTime,
-      required this.firstHeightCondition,
-      required this.maxHeightTime,
-      required this.maxHeightValue,
-      required this.maxHeightIsOver,
-      required this.maxHeightCondition,
-      required this.isObserving});
+  const _$TsunamiEstimationImpl({
+    required this.code,
+    required this.name,
+    required this.firstHeightTime,
+    required this.firstHeightCondition,
+    required this.maxHeightTime,
+    required this.maxHeightValue,
+    required this.maxHeightIsOver,
+    required this.maxHeightCondition,
+    required this.isObserving,
+  });
 
   factory _$TsunamiEstimationImpl.fromJson(Map<String, dynamic> json) =>
       _$$TsunamiEstimationImplFromJson(json);
@@ -3175,8 +3473,8 @@ class _$TsunamiEstimationImpl implements _TsunamiEstimation {
   final bool? maxHeightIsOver;
   @override
   final TsunamiMaxHeightCondition? maxHeightCondition;
-// 津波警報以上でまだ津波の観測値が小さい場合に出現する
-// *津波観測中*
+  // 津波警報以上でまだ津波の観測値が小さい場合に出現する
+  // *津波観測中*
   @override
   final bool? isObserving;
 
@@ -3211,16 +3509,17 @@ class _$TsunamiEstimationImpl implements _TsunamiEstimation {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      code,
-      name,
-      firstHeightTime,
-      firstHeightCondition,
-      maxHeightTime,
-      maxHeightValue,
-      maxHeightIsOver,
-      maxHeightCondition,
-      isObserving);
+    runtimeType,
+    code,
+    name,
+    firstHeightTime,
+    firstHeightCondition,
+    maxHeightTime,
+    maxHeightValue,
+    maxHeightIsOver,
+    maxHeightCondition,
+    isObserving,
+  );
 
   /// Create a copy of TsunamiEstimation
   /// with the given fields replaced by the non-null parameter values.
@@ -3229,28 +3528,28 @@ class _$TsunamiEstimationImpl implements _TsunamiEstimation {
   @pragma('vm:prefer-inline')
   _$$TsunamiEstimationImplCopyWith<_$TsunamiEstimationImpl> get copyWith =>
       __$$TsunamiEstimationImplCopyWithImpl<_$TsunamiEstimationImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TsunamiEstimationImplToJson(
-      this,
-    );
+    return _$$TsunamiEstimationImplToJson(this);
   }
 }
 
 abstract class _TsunamiEstimation implements TsunamiEstimation {
-  const factory _TsunamiEstimation(
-      {required final String code,
-      required final String name,
-      required final DateTime? firstHeightTime,
-      required final TsunamiEstimationFirstHeightCondition?
-          firstHeightCondition,
-      required final DateTime? maxHeightTime,
-      required final double? maxHeightValue,
-      required final bool? maxHeightIsOver,
-      required final TsunamiMaxHeightCondition? maxHeightCondition,
-      required final bool? isObserving}) = _$TsunamiEstimationImpl;
+  const factory _TsunamiEstimation({
+    required final String code,
+    required final String name,
+    required final DateTime? firstHeightTime,
+    required final TsunamiEstimationFirstHeightCondition? firstHeightCondition,
+    required final DateTime? maxHeightTime,
+    required final double? maxHeightValue,
+    required final bool? maxHeightIsOver,
+    required final TsunamiMaxHeightCondition? maxHeightCondition,
+    required final bool? isObserving,
+  }) = _$TsunamiEstimationImpl;
 
   factory _TsunamiEstimation.fromJson(Map<String, dynamic> json) =
       _$TsunamiEstimationImpl.fromJson;
@@ -3270,9 +3569,8 @@ abstract class _TsunamiEstimation implements TsunamiEstimation {
   @override
   bool? get maxHeightIsOver;
   @override
-  TsunamiMaxHeightCondition?
-      get maxHeightCondition; // 津波警報以上でまだ津波の観測値が小さい場合に出現する
-// *津波観測中*
+  TsunamiMaxHeightCondition? get maxHeightCondition; // 津波警報以上でまだ津波の観測値が小さい場合に出現する
+  // *津波観測中*
   @override
   bool? get isObserving;
 
@@ -3308,14 +3606,16 @@ mixin _$PublicBodyVTSE41 {
 /// @nodoc
 abstract class $PublicBodyVTSE41CopyWith<$Res> {
   factory $PublicBodyVTSE41CopyWith(
-          PublicBodyVTSE41 value, $Res Function(PublicBodyVTSE41) then) =
-      _$PublicBodyVTSE41CopyWithImpl<$Res, PublicBodyVTSE41>;
+    PublicBodyVTSE41 value,
+    $Res Function(PublicBodyVTSE41) then,
+  ) = _$PublicBodyVTSE41CopyWithImpl<$Res, PublicBodyVTSE41>;
   @useResult
-  $Res call(
-      {PublicBodyVTSE41Tsunami tsunami,
-      List<Earthquake> earthquakes,
-      String? text,
-      Comment? comment});
+  $Res call({
+    PublicBodyVTSE41Tsunami tsunami,
+    List<Earthquake> earthquakes,
+    String? text,
+    Comment? comment,
+  });
 
   $PublicBodyVTSE41TsunamiCopyWith<$Res> get tsunami;
   $CommentCopyWith<$Res>? get comment;
@@ -3341,24 +3641,31 @@ class _$PublicBodyVTSE41CopyWithImpl<$Res, $Val extends PublicBodyVTSE41>
     Object? text = freezed,
     Object? comment = freezed,
   }) {
-    return _then(_value.copyWith(
-      tsunami: null == tsunami
-          ? _value.tsunami
-          : tsunami // ignore: cast_nullable_to_non_nullable
-              as PublicBodyVTSE41Tsunami,
-      earthquakes: null == earthquakes
-          ? _value.earthquakes
-          : earthquakes // ignore: cast_nullable_to_non_nullable
-              as List<Earthquake>,
-      text: freezed == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String?,
-      comment: freezed == comment
-          ? _value.comment
-          : comment // ignore: cast_nullable_to_non_nullable
-              as Comment?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            tsunami:
+                null == tsunami
+                    ? _value.tsunami
+                    : tsunami // ignore: cast_nullable_to_non_nullable
+                        as PublicBodyVTSE41Tsunami,
+            earthquakes:
+                null == earthquakes
+                    ? _value.earthquakes
+                    : earthquakes // ignore: cast_nullable_to_non_nullable
+                        as List<Earthquake>,
+            text:
+                freezed == text
+                    ? _value.text
+                    : text // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            comment:
+                freezed == comment
+                    ? _value.comment
+                    : comment // ignore: cast_nullable_to_non_nullable
+                        as Comment?,
+          )
+          as $Val,
+    );
   }
 
   /// Create a copy of PublicBodyVTSE41
@@ -3389,16 +3696,18 @@ class _$PublicBodyVTSE41CopyWithImpl<$Res, $Val extends PublicBodyVTSE41>
 /// @nodoc
 abstract class _$$PublicBodyVTSE41ImplCopyWith<$Res>
     implements $PublicBodyVTSE41CopyWith<$Res> {
-  factory _$$PublicBodyVTSE41ImplCopyWith(_$PublicBodyVTSE41Impl value,
-          $Res Function(_$PublicBodyVTSE41Impl) then) =
-      __$$PublicBodyVTSE41ImplCopyWithImpl<$Res>;
+  factory _$$PublicBodyVTSE41ImplCopyWith(
+    _$PublicBodyVTSE41Impl value,
+    $Res Function(_$PublicBodyVTSE41Impl) then,
+  ) = __$$PublicBodyVTSE41ImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {PublicBodyVTSE41Tsunami tsunami,
-      List<Earthquake> earthquakes,
-      String? text,
-      Comment? comment});
+  $Res call({
+    PublicBodyVTSE41Tsunami tsunami,
+    List<Earthquake> earthquakes,
+    String? text,
+    Comment? comment,
+  });
 
   @override
   $PublicBodyVTSE41TsunamiCopyWith<$Res> get tsunami;
@@ -3410,9 +3719,10 @@ abstract class _$$PublicBodyVTSE41ImplCopyWith<$Res>
 class __$$PublicBodyVTSE41ImplCopyWithImpl<$Res>
     extends _$PublicBodyVTSE41CopyWithImpl<$Res, _$PublicBodyVTSE41Impl>
     implements _$$PublicBodyVTSE41ImplCopyWith<$Res> {
-  __$$PublicBodyVTSE41ImplCopyWithImpl(_$PublicBodyVTSE41Impl _value,
-      $Res Function(_$PublicBodyVTSE41Impl) _then)
-      : super(_value, _then);
+  __$$PublicBodyVTSE41ImplCopyWithImpl(
+    _$PublicBodyVTSE41Impl _value,
+    $Res Function(_$PublicBodyVTSE41Impl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of PublicBodyVTSE41
   /// with the given fields replaced by the non-null parameter values.
@@ -3424,36 +3734,42 @@ class __$$PublicBodyVTSE41ImplCopyWithImpl<$Res>
     Object? text = freezed,
     Object? comment = freezed,
   }) {
-    return _then(_$PublicBodyVTSE41Impl(
-      tsunami: null == tsunami
-          ? _value.tsunami
-          : tsunami // ignore: cast_nullable_to_non_nullable
-              as PublicBodyVTSE41Tsunami,
-      earthquakes: null == earthquakes
-          ? _value._earthquakes
-          : earthquakes // ignore: cast_nullable_to_non_nullable
-              as List<Earthquake>,
-      text: freezed == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String?,
-      comment: freezed == comment
-          ? _value.comment
-          : comment // ignore: cast_nullable_to_non_nullable
-              as Comment?,
-    ));
+    return _then(
+      _$PublicBodyVTSE41Impl(
+        tsunami:
+            null == tsunami
+                ? _value.tsunami
+                : tsunami // ignore: cast_nullable_to_non_nullable
+                    as PublicBodyVTSE41Tsunami,
+        earthquakes:
+            null == earthquakes
+                ? _value._earthquakes
+                : earthquakes // ignore: cast_nullable_to_non_nullable
+                    as List<Earthquake>,
+        text:
+            freezed == text
+                ? _value.text
+                : text // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        comment:
+            freezed == comment
+                ? _value.comment
+                : comment // ignore: cast_nullable_to_non_nullable
+                    as Comment?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$PublicBodyVTSE41Impl implements _PublicBodyVTSE41 {
-  const _$PublicBodyVTSE41Impl(
-      {required this.tsunami,
-      required final List<Earthquake> earthquakes,
-      required this.text,
-      required this.comment})
-      : _earthquakes = earthquakes;
+  const _$PublicBodyVTSE41Impl({
+    required this.tsunami,
+    required final List<Earthquake> earthquakes,
+    required this.text,
+    required this.comment,
+  }) : _earthquakes = earthquakes;
 
   factory _$PublicBodyVTSE41Impl.fromJson(Map<String, dynamic> json) =>
       _$$PublicBodyVTSE41ImplFromJson(json);
@@ -3484,16 +3800,23 @@ class _$PublicBodyVTSE41Impl implements _PublicBodyVTSE41 {
         (other.runtimeType == runtimeType &&
             other is _$PublicBodyVTSE41Impl &&
             (identical(other.tsunami, tsunami) || other.tsunami == tsunami) &&
-            const DeepCollectionEquality()
-                .equals(other._earthquakes, _earthquakes) &&
+            const DeepCollectionEquality().equals(
+              other._earthquakes,
+              _earthquakes,
+            ) &&
             (identical(other.text, text) || other.text == text) &&
             (identical(other.comment, comment) || other.comment == comment));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, tsunami,
-      const DeepCollectionEquality().hash(_earthquakes), text, comment);
+  int get hashCode => Object.hash(
+    runtimeType,
+    tsunami,
+    const DeepCollectionEquality().hash(_earthquakes),
+    text,
+    comment,
+  );
 
   /// Create a copy of PublicBodyVTSE41
   /// with the given fields replaced by the non-null parameter values.
@@ -3502,22 +3825,23 @@ class _$PublicBodyVTSE41Impl implements _PublicBodyVTSE41 {
   @pragma('vm:prefer-inline')
   _$$PublicBodyVTSE41ImplCopyWith<_$PublicBodyVTSE41Impl> get copyWith =>
       __$$PublicBodyVTSE41ImplCopyWithImpl<_$PublicBodyVTSE41Impl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PublicBodyVTSE41ImplToJson(
-      this,
-    );
+    return _$$PublicBodyVTSE41ImplToJson(this);
   }
 }
 
 abstract class _PublicBodyVTSE41 implements PublicBodyVTSE41 {
-  const factory _PublicBodyVTSE41(
-      {required final PublicBodyVTSE41Tsunami tsunami,
-      required final List<Earthquake> earthquakes,
-      required final String? text,
-      required final Comment? comment}) = _$PublicBodyVTSE41Impl;
+  const factory _PublicBodyVTSE41({
+    required final PublicBodyVTSE41Tsunami tsunami,
+    required final List<Earthquake> earthquakes,
+    required final String? text,
+    required final Comment? comment,
+  }) = _$PublicBodyVTSE41Impl;
 
   factory _PublicBodyVTSE41.fromJson(Map<String, dynamic> json) =
       _$PublicBodyVTSE41Impl.fromJson;
@@ -3563,14 +3887,16 @@ mixin _$PublicBodyVTSE51 {
 /// @nodoc
 abstract class $PublicBodyVTSE51CopyWith<$Res> {
   factory $PublicBodyVTSE51CopyWith(
-          PublicBodyVTSE51 value, $Res Function(PublicBodyVTSE51) then) =
-      _$PublicBodyVTSE51CopyWithImpl<$Res, PublicBodyVTSE51>;
+    PublicBodyVTSE51 value,
+    $Res Function(PublicBodyVTSE51) then,
+  ) = _$PublicBodyVTSE51CopyWithImpl<$Res, PublicBodyVTSE51>;
   @useResult
-  $Res call(
-      {PublicBodyVTSE51Tsunami tsunami,
-      List<Earthquake> earthquakes,
-      String? text,
-      Comment? comment});
+  $Res call({
+    PublicBodyVTSE51Tsunami tsunami,
+    List<Earthquake> earthquakes,
+    String? text,
+    Comment? comment,
+  });
 
   $PublicBodyVTSE51TsunamiCopyWith<$Res> get tsunami;
   $CommentCopyWith<$Res>? get comment;
@@ -3596,24 +3922,31 @@ class _$PublicBodyVTSE51CopyWithImpl<$Res, $Val extends PublicBodyVTSE51>
     Object? text = freezed,
     Object? comment = freezed,
   }) {
-    return _then(_value.copyWith(
-      tsunami: null == tsunami
-          ? _value.tsunami
-          : tsunami // ignore: cast_nullable_to_non_nullable
-              as PublicBodyVTSE51Tsunami,
-      earthquakes: null == earthquakes
-          ? _value.earthquakes
-          : earthquakes // ignore: cast_nullable_to_non_nullable
-              as List<Earthquake>,
-      text: freezed == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String?,
-      comment: freezed == comment
-          ? _value.comment
-          : comment // ignore: cast_nullable_to_non_nullable
-              as Comment?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            tsunami:
+                null == tsunami
+                    ? _value.tsunami
+                    : tsunami // ignore: cast_nullable_to_non_nullable
+                        as PublicBodyVTSE51Tsunami,
+            earthquakes:
+                null == earthquakes
+                    ? _value.earthquakes
+                    : earthquakes // ignore: cast_nullable_to_non_nullable
+                        as List<Earthquake>,
+            text:
+                freezed == text
+                    ? _value.text
+                    : text // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            comment:
+                freezed == comment
+                    ? _value.comment
+                    : comment // ignore: cast_nullable_to_non_nullable
+                        as Comment?,
+          )
+          as $Val,
+    );
   }
 
   /// Create a copy of PublicBodyVTSE51
@@ -3644,16 +3977,18 @@ class _$PublicBodyVTSE51CopyWithImpl<$Res, $Val extends PublicBodyVTSE51>
 /// @nodoc
 abstract class _$$PublicBodyVTSE51ImplCopyWith<$Res>
     implements $PublicBodyVTSE51CopyWith<$Res> {
-  factory _$$PublicBodyVTSE51ImplCopyWith(_$PublicBodyVTSE51Impl value,
-          $Res Function(_$PublicBodyVTSE51Impl) then) =
-      __$$PublicBodyVTSE51ImplCopyWithImpl<$Res>;
+  factory _$$PublicBodyVTSE51ImplCopyWith(
+    _$PublicBodyVTSE51Impl value,
+    $Res Function(_$PublicBodyVTSE51Impl) then,
+  ) = __$$PublicBodyVTSE51ImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {PublicBodyVTSE51Tsunami tsunami,
-      List<Earthquake> earthquakes,
-      String? text,
-      Comment? comment});
+  $Res call({
+    PublicBodyVTSE51Tsunami tsunami,
+    List<Earthquake> earthquakes,
+    String? text,
+    Comment? comment,
+  });
 
   @override
   $PublicBodyVTSE51TsunamiCopyWith<$Res> get tsunami;
@@ -3665,9 +4000,10 @@ abstract class _$$PublicBodyVTSE51ImplCopyWith<$Res>
 class __$$PublicBodyVTSE51ImplCopyWithImpl<$Res>
     extends _$PublicBodyVTSE51CopyWithImpl<$Res, _$PublicBodyVTSE51Impl>
     implements _$$PublicBodyVTSE51ImplCopyWith<$Res> {
-  __$$PublicBodyVTSE51ImplCopyWithImpl(_$PublicBodyVTSE51Impl _value,
-      $Res Function(_$PublicBodyVTSE51Impl) _then)
-      : super(_value, _then);
+  __$$PublicBodyVTSE51ImplCopyWithImpl(
+    _$PublicBodyVTSE51Impl _value,
+    $Res Function(_$PublicBodyVTSE51Impl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of PublicBodyVTSE51
   /// with the given fields replaced by the non-null parameter values.
@@ -3679,36 +4015,42 @@ class __$$PublicBodyVTSE51ImplCopyWithImpl<$Res>
     Object? text = freezed,
     Object? comment = freezed,
   }) {
-    return _then(_$PublicBodyVTSE51Impl(
-      tsunami: null == tsunami
-          ? _value.tsunami
-          : tsunami // ignore: cast_nullable_to_non_nullable
-              as PublicBodyVTSE51Tsunami,
-      earthquakes: null == earthquakes
-          ? _value._earthquakes
-          : earthquakes // ignore: cast_nullable_to_non_nullable
-              as List<Earthquake>,
-      text: freezed == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String?,
-      comment: freezed == comment
-          ? _value.comment
-          : comment // ignore: cast_nullable_to_non_nullable
-              as Comment?,
-    ));
+    return _then(
+      _$PublicBodyVTSE51Impl(
+        tsunami:
+            null == tsunami
+                ? _value.tsunami
+                : tsunami // ignore: cast_nullable_to_non_nullable
+                    as PublicBodyVTSE51Tsunami,
+        earthquakes:
+            null == earthquakes
+                ? _value._earthquakes
+                : earthquakes // ignore: cast_nullable_to_non_nullable
+                    as List<Earthquake>,
+        text:
+            freezed == text
+                ? _value.text
+                : text // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        comment:
+            freezed == comment
+                ? _value.comment
+                : comment // ignore: cast_nullable_to_non_nullable
+                    as Comment?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$PublicBodyVTSE51Impl implements _PublicBodyVTSE51 {
-  const _$PublicBodyVTSE51Impl(
-      {required this.tsunami,
-      required final List<Earthquake> earthquakes,
-      required this.text,
-      required this.comment})
-      : _earthquakes = earthquakes;
+  const _$PublicBodyVTSE51Impl({
+    required this.tsunami,
+    required final List<Earthquake> earthquakes,
+    required this.text,
+    required this.comment,
+  }) : _earthquakes = earthquakes;
 
   factory _$PublicBodyVTSE51Impl.fromJson(Map<String, dynamic> json) =>
       _$$PublicBodyVTSE51ImplFromJson(json);
@@ -3739,16 +4081,23 @@ class _$PublicBodyVTSE51Impl implements _PublicBodyVTSE51 {
         (other.runtimeType == runtimeType &&
             other is _$PublicBodyVTSE51Impl &&
             (identical(other.tsunami, tsunami) || other.tsunami == tsunami) &&
-            const DeepCollectionEquality()
-                .equals(other._earthquakes, _earthquakes) &&
+            const DeepCollectionEquality().equals(
+              other._earthquakes,
+              _earthquakes,
+            ) &&
             (identical(other.text, text) || other.text == text) &&
             (identical(other.comment, comment) || other.comment == comment));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, tsunami,
-      const DeepCollectionEquality().hash(_earthquakes), text, comment);
+  int get hashCode => Object.hash(
+    runtimeType,
+    tsunami,
+    const DeepCollectionEquality().hash(_earthquakes),
+    text,
+    comment,
+  );
 
   /// Create a copy of PublicBodyVTSE51
   /// with the given fields replaced by the non-null parameter values.
@@ -3757,22 +4106,23 @@ class _$PublicBodyVTSE51Impl implements _PublicBodyVTSE51 {
   @pragma('vm:prefer-inline')
   _$$PublicBodyVTSE51ImplCopyWith<_$PublicBodyVTSE51Impl> get copyWith =>
       __$$PublicBodyVTSE51ImplCopyWithImpl<_$PublicBodyVTSE51Impl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PublicBodyVTSE51ImplToJson(
-      this,
-    );
+    return _$$PublicBodyVTSE51ImplToJson(this);
   }
 }
 
 abstract class _PublicBodyVTSE51 implements PublicBodyVTSE51 {
-  const factory _PublicBodyVTSE51(
-      {required final PublicBodyVTSE51Tsunami tsunami,
-      required final List<Earthquake> earthquakes,
-      required final String? text,
-      required final Comment? comment}) = _$PublicBodyVTSE51Impl;
+  const factory _PublicBodyVTSE51({
+    required final PublicBodyVTSE51Tsunami tsunami,
+    required final List<Earthquake> earthquakes,
+    required final String? text,
+    required final Comment? comment,
+  }) = _$PublicBodyVTSE51Impl;
 
   factory _PublicBodyVTSE51.fromJson(Map<String, dynamic> json) =
       _$PublicBodyVTSE51Impl.fromJson;
@@ -3818,14 +4168,16 @@ mixin _$PublicBodyVTSE52 {
 /// @nodoc
 abstract class $PublicBodyVTSE52CopyWith<$Res> {
   factory $PublicBodyVTSE52CopyWith(
-          PublicBodyVTSE52 value, $Res Function(PublicBodyVTSE52) then) =
-      _$PublicBodyVTSE52CopyWithImpl<$Res, PublicBodyVTSE52>;
+    PublicBodyVTSE52 value,
+    $Res Function(PublicBodyVTSE52) then,
+  ) = _$PublicBodyVTSE52CopyWithImpl<$Res, PublicBodyVTSE52>;
   @useResult
-  $Res call(
-      {PublicBodyVTSE52Tsunami tsunami,
-      List<Earthquake> earthquakes,
-      String? text,
-      Comment? comment});
+  $Res call({
+    PublicBodyVTSE52Tsunami tsunami,
+    List<Earthquake> earthquakes,
+    String? text,
+    Comment? comment,
+  });
 
   $PublicBodyVTSE52TsunamiCopyWith<$Res> get tsunami;
   $CommentCopyWith<$Res>? get comment;
@@ -3851,24 +4203,31 @@ class _$PublicBodyVTSE52CopyWithImpl<$Res, $Val extends PublicBodyVTSE52>
     Object? text = freezed,
     Object? comment = freezed,
   }) {
-    return _then(_value.copyWith(
-      tsunami: null == tsunami
-          ? _value.tsunami
-          : tsunami // ignore: cast_nullable_to_non_nullable
-              as PublicBodyVTSE52Tsunami,
-      earthquakes: null == earthquakes
-          ? _value.earthquakes
-          : earthquakes // ignore: cast_nullable_to_non_nullable
-              as List<Earthquake>,
-      text: freezed == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String?,
-      comment: freezed == comment
-          ? _value.comment
-          : comment // ignore: cast_nullable_to_non_nullable
-              as Comment?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            tsunami:
+                null == tsunami
+                    ? _value.tsunami
+                    : tsunami // ignore: cast_nullable_to_non_nullable
+                        as PublicBodyVTSE52Tsunami,
+            earthquakes:
+                null == earthquakes
+                    ? _value.earthquakes
+                    : earthquakes // ignore: cast_nullable_to_non_nullable
+                        as List<Earthquake>,
+            text:
+                freezed == text
+                    ? _value.text
+                    : text // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            comment:
+                freezed == comment
+                    ? _value.comment
+                    : comment // ignore: cast_nullable_to_non_nullable
+                        as Comment?,
+          )
+          as $Val,
+    );
   }
 
   /// Create a copy of PublicBodyVTSE52
@@ -3899,16 +4258,18 @@ class _$PublicBodyVTSE52CopyWithImpl<$Res, $Val extends PublicBodyVTSE52>
 /// @nodoc
 abstract class _$$PublicBodyVTSE52ImplCopyWith<$Res>
     implements $PublicBodyVTSE52CopyWith<$Res> {
-  factory _$$PublicBodyVTSE52ImplCopyWith(_$PublicBodyVTSE52Impl value,
-          $Res Function(_$PublicBodyVTSE52Impl) then) =
-      __$$PublicBodyVTSE52ImplCopyWithImpl<$Res>;
+  factory _$$PublicBodyVTSE52ImplCopyWith(
+    _$PublicBodyVTSE52Impl value,
+    $Res Function(_$PublicBodyVTSE52Impl) then,
+  ) = __$$PublicBodyVTSE52ImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {PublicBodyVTSE52Tsunami tsunami,
-      List<Earthquake> earthquakes,
-      String? text,
-      Comment? comment});
+  $Res call({
+    PublicBodyVTSE52Tsunami tsunami,
+    List<Earthquake> earthquakes,
+    String? text,
+    Comment? comment,
+  });
 
   @override
   $PublicBodyVTSE52TsunamiCopyWith<$Res> get tsunami;
@@ -3920,9 +4281,10 @@ abstract class _$$PublicBodyVTSE52ImplCopyWith<$Res>
 class __$$PublicBodyVTSE52ImplCopyWithImpl<$Res>
     extends _$PublicBodyVTSE52CopyWithImpl<$Res, _$PublicBodyVTSE52Impl>
     implements _$$PublicBodyVTSE52ImplCopyWith<$Res> {
-  __$$PublicBodyVTSE52ImplCopyWithImpl(_$PublicBodyVTSE52Impl _value,
-      $Res Function(_$PublicBodyVTSE52Impl) _then)
-      : super(_value, _then);
+  __$$PublicBodyVTSE52ImplCopyWithImpl(
+    _$PublicBodyVTSE52Impl _value,
+    $Res Function(_$PublicBodyVTSE52Impl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of PublicBodyVTSE52
   /// with the given fields replaced by the non-null parameter values.
@@ -3934,36 +4296,42 @@ class __$$PublicBodyVTSE52ImplCopyWithImpl<$Res>
     Object? text = freezed,
     Object? comment = freezed,
   }) {
-    return _then(_$PublicBodyVTSE52Impl(
-      tsunami: null == tsunami
-          ? _value.tsunami
-          : tsunami // ignore: cast_nullable_to_non_nullable
-              as PublicBodyVTSE52Tsunami,
-      earthquakes: null == earthquakes
-          ? _value._earthquakes
-          : earthquakes // ignore: cast_nullable_to_non_nullable
-              as List<Earthquake>,
-      text: freezed == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String?,
-      comment: freezed == comment
-          ? _value.comment
-          : comment // ignore: cast_nullable_to_non_nullable
-              as Comment?,
-    ));
+    return _then(
+      _$PublicBodyVTSE52Impl(
+        tsunami:
+            null == tsunami
+                ? _value.tsunami
+                : tsunami // ignore: cast_nullable_to_non_nullable
+                    as PublicBodyVTSE52Tsunami,
+        earthquakes:
+            null == earthquakes
+                ? _value._earthquakes
+                : earthquakes // ignore: cast_nullable_to_non_nullable
+                    as List<Earthquake>,
+        text:
+            freezed == text
+                ? _value.text
+                : text // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        comment:
+            freezed == comment
+                ? _value.comment
+                : comment // ignore: cast_nullable_to_non_nullable
+                    as Comment?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$PublicBodyVTSE52Impl implements _PublicBodyVTSE52 {
-  const _$PublicBodyVTSE52Impl(
-      {required this.tsunami,
-      required final List<Earthquake> earthquakes,
-      required this.text,
-      required this.comment})
-      : _earthquakes = earthquakes;
+  const _$PublicBodyVTSE52Impl({
+    required this.tsunami,
+    required final List<Earthquake> earthquakes,
+    required this.text,
+    required this.comment,
+  }) : _earthquakes = earthquakes;
 
   factory _$PublicBodyVTSE52Impl.fromJson(Map<String, dynamic> json) =>
       _$$PublicBodyVTSE52ImplFromJson(json);
@@ -3994,16 +4362,23 @@ class _$PublicBodyVTSE52Impl implements _PublicBodyVTSE52 {
         (other.runtimeType == runtimeType &&
             other is _$PublicBodyVTSE52Impl &&
             (identical(other.tsunami, tsunami) || other.tsunami == tsunami) &&
-            const DeepCollectionEquality()
-                .equals(other._earthquakes, _earthquakes) &&
+            const DeepCollectionEquality().equals(
+              other._earthquakes,
+              _earthquakes,
+            ) &&
             (identical(other.text, text) || other.text == text) &&
             (identical(other.comment, comment) || other.comment == comment));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, tsunami,
-      const DeepCollectionEquality().hash(_earthquakes), text, comment);
+  int get hashCode => Object.hash(
+    runtimeType,
+    tsunami,
+    const DeepCollectionEquality().hash(_earthquakes),
+    text,
+    comment,
+  );
 
   /// Create a copy of PublicBodyVTSE52
   /// with the given fields replaced by the non-null parameter values.
@@ -4012,22 +4387,23 @@ class _$PublicBodyVTSE52Impl implements _PublicBodyVTSE52 {
   @pragma('vm:prefer-inline')
   _$$PublicBodyVTSE52ImplCopyWith<_$PublicBodyVTSE52Impl> get copyWith =>
       __$$PublicBodyVTSE52ImplCopyWithImpl<_$PublicBodyVTSE52Impl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PublicBodyVTSE52ImplToJson(
-      this,
-    );
+    return _$$PublicBodyVTSE52ImplToJson(this);
   }
 }
 
 abstract class _PublicBodyVTSE52 implements PublicBodyVTSE52 {
-  const factory _PublicBodyVTSE52(
-      {required final PublicBodyVTSE52Tsunami tsunami,
-      required final List<Earthquake> earthquakes,
-      required final String? text,
-      required final Comment? comment}) = _$PublicBodyVTSE52Impl;
+  const factory _PublicBodyVTSE52({
+    required final PublicBodyVTSE52Tsunami tsunami,
+    required final List<Earthquake> earthquakes,
+    required final String? text,
+    required final Comment? comment,
+  }) = _$PublicBodyVTSE52Impl;
 
   factory _PublicBodyVTSE52.fromJson(Map<String, dynamic> json) =
       _$PublicBodyVTSE52Impl.fromJson;
@@ -4073,14 +4449,16 @@ mixin _$Earthquake {
 /// @nodoc
 abstract class $EarthquakeCopyWith<$Res> {
   factory $EarthquakeCopyWith(
-          Earthquake value, $Res Function(Earthquake) then) =
-      _$EarthquakeCopyWithImpl<$Res, Earthquake>;
+    Earthquake value,
+    $Res Function(Earthquake) then,
+  ) = _$EarthquakeCopyWithImpl<$Res, Earthquake>;
   @useResult
-  $Res call(
-      {DateTime originTime,
-      DateTime arrivalTime,
-      EarthquakeHypocenter hypocenter,
-      EarthquakeMagnitude magnitude});
+  $Res call({
+    DateTime originTime,
+    DateTime arrivalTime,
+    EarthquakeHypocenter hypocenter,
+    EarthquakeMagnitude magnitude,
+  });
 
   $EarthquakeHypocenterCopyWith<$Res> get hypocenter;
   $EarthquakeMagnitudeCopyWith<$Res> get magnitude;
@@ -4106,24 +4484,31 @@ class _$EarthquakeCopyWithImpl<$Res, $Val extends Earthquake>
     Object? hypocenter = null,
     Object? magnitude = null,
   }) {
-    return _then(_value.copyWith(
-      originTime: null == originTime
-          ? _value.originTime
-          : originTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      arrivalTime: null == arrivalTime
-          ? _value.arrivalTime
-          : arrivalTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      hypocenter: null == hypocenter
-          ? _value.hypocenter
-          : hypocenter // ignore: cast_nullable_to_non_nullable
-              as EarthquakeHypocenter,
-      magnitude: null == magnitude
-          ? _value.magnitude
-          : magnitude // ignore: cast_nullable_to_non_nullable
-              as EarthquakeMagnitude,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            originTime:
+                null == originTime
+                    ? _value.originTime
+                    : originTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime,
+            arrivalTime:
+                null == arrivalTime
+                    ? _value.arrivalTime
+                    : arrivalTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime,
+            hypocenter:
+                null == hypocenter
+                    ? _value.hypocenter
+                    : hypocenter // ignore: cast_nullable_to_non_nullable
+                        as EarthquakeHypocenter,
+            magnitude:
+                null == magnitude
+                    ? _value.magnitude
+                    : magnitude // ignore: cast_nullable_to_non_nullable
+                        as EarthquakeMagnitude,
+          )
+          as $Val,
+    );
   }
 
   /// Create a copy of Earthquake
@@ -4151,15 +4536,17 @@ class _$EarthquakeCopyWithImpl<$Res, $Val extends Earthquake>
 abstract class _$$EarthquakeImplCopyWith<$Res>
     implements $EarthquakeCopyWith<$Res> {
   factory _$$EarthquakeImplCopyWith(
-          _$EarthquakeImpl value, $Res Function(_$EarthquakeImpl) then) =
-      __$$EarthquakeImplCopyWithImpl<$Res>;
+    _$EarthquakeImpl value,
+    $Res Function(_$EarthquakeImpl) then,
+  ) = __$$EarthquakeImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {DateTime originTime,
-      DateTime arrivalTime,
-      EarthquakeHypocenter hypocenter,
-      EarthquakeMagnitude magnitude});
+  $Res call({
+    DateTime originTime,
+    DateTime arrivalTime,
+    EarthquakeHypocenter hypocenter,
+    EarthquakeMagnitude magnitude,
+  });
 
   @override
   $EarthquakeHypocenterCopyWith<$Res> get hypocenter;
@@ -4172,8 +4559,9 @@ class __$$EarthquakeImplCopyWithImpl<$Res>
     extends _$EarthquakeCopyWithImpl<$Res, _$EarthquakeImpl>
     implements _$$EarthquakeImplCopyWith<$Res> {
   __$$EarthquakeImplCopyWithImpl(
-      _$EarthquakeImpl _value, $Res Function(_$EarthquakeImpl) _then)
-      : super(_value, _then);
+    _$EarthquakeImpl _value,
+    $Res Function(_$EarthquakeImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of Earthquake
   /// with the given fields replaced by the non-null parameter values.
@@ -4185,35 +4573,42 @@ class __$$EarthquakeImplCopyWithImpl<$Res>
     Object? hypocenter = null,
     Object? magnitude = null,
   }) {
-    return _then(_$EarthquakeImpl(
-      originTime: null == originTime
-          ? _value.originTime
-          : originTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      arrivalTime: null == arrivalTime
-          ? _value.arrivalTime
-          : arrivalTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      hypocenter: null == hypocenter
-          ? _value.hypocenter
-          : hypocenter // ignore: cast_nullable_to_non_nullable
-              as EarthquakeHypocenter,
-      magnitude: null == magnitude
-          ? _value.magnitude
-          : magnitude // ignore: cast_nullable_to_non_nullable
-              as EarthquakeMagnitude,
-    ));
+    return _then(
+      _$EarthquakeImpl(
+        originTime:
+            null == originTime
+                ? _value.originTime
+                : originTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime,
+        arrivalTime:
+            null == arrivalTime
+                ? _value.arrivalTime
+                : arrivalTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime,
+        hypocenter:
+            null == hypocenter
+                ? _value.hypocenter
+                : hypocenter // ignore: cast_nullable_to_non_nullable
+                    as EarthquakeHypocenter,
+        magnitude:
+            null == magnitude
+                ? _value.magnitude
+                : magnitude // ignore: cast_nullable_to_non_nullable
+                    as EarthquakeMagnitude,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$EarthquakeImpl implements _Earthquake {
-  const _$EarthquakeImpl(
-      {required this.originTime,
-      required this.arrivalTime,
-      required this.hypocenter,
-      required this.magnitude});
+  const _$EarthquakeImpl({
+    required this.originTime,
+    required this.arrivalTime,
+    required this.hypocenter,
+    required this.magnitude,
+  });
 
   factory _$EarthquakeImpl.fromJson(Map<String, dynamic> json) =>
       _$$EarthquakeImplFromJson(json);
@@ -4262,18 +4657,17 @@ class _$EarthquakeImpl implements _Earthquake {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EarthquakeImplToJson(
-      this,
-    );
+    return _$$EarthquakeImplToJson(this);
   }
 }
 
 abstract class _Earthquake implements Earthquake {
-  const factory _Earthquake(
-      {required final DateTime originTime,
-      required final DateTime arrivalTime,
-      required final EarthquakeHypocenter hypocenter,
-      required final EarthquakeMagnitude magnitude}) = _$EarthquakeImpl;
+  const factory _Earthquake({
+    required final DateTime originTime,
+    required final DateTime arrivalTime,
+    required final EarthquakeHypocenter hypocenter,
+    required final EarthquakeMagnitude magnitude,
+  }) = _$EarthquakeImpl;
 
   factory _Earthquake.fromJson(Map<String, dynamic> json) =
       _$EarthquakeImpl.fromJson;
@@ -4321,24 +4715,28 @@ mixin _$EarthquakeHypocenter {
 
 /// @nodoc
 abstract class $EarthquakeHypocenterCopyWith<$Res> {
-  factory $EarthquakeHypocenterCopyWith(EarthquakeHypocenter value,
-          $Res Function(EarthquakeHypocenter) then) =
-      _$EarthquakeHypocenterCopyWithImpl<$Res, EarthquakeHypocenter>;
+  factory $EarthquakeHypocenterCopyWith(
+    EarthquakeHypocenter value,
+    $Res Function(EarthquakeHypocenter) then,
+  ) = _$EarthquakeHypocenterCopyWithImpl<$Res, EarthquakeHypocenter>;
   @useResult
-  $Res call(
-      {String name,
-      String code,
-      int? depth,
-      EarthquakeHypocenterDetailed? detailed,
-      EarthquakeHypocenterCoordinate? coordinate});
+  $Res call({
+    String name,
+    String code,
+    int? depth,
+    EarthquakeHypocenterDetailed? detailed,
+    EarthquakeHypocenterCoordinate? coordinate,
+  });
 
   $EarthquakeHypocenterDetailedCopyWith<$Res>? get detailed;
   $EarthquakeHypocenterCoordinateCopyWith<$Res>? get coordinate;
 }
 
 /// @nodoc
-class _$EarthquakeHypocenterCopyWithImpl<$Res,
-        $Val extends EarthquakeHypocenter>
+class _$EarthquakeHypocenterCopyWithImpl<
+  $Res,
+  $Val extends EarthquakeHypocenter
+>
     implements $EarthquakeHypocenterCopyWith<$Res> {
   _$EarthquakeHypocenterCopyWithImpl(this._value, this._then);
 
@@ -4358,28 +4756,36 @@ class _$EarthquakeHypocenterCopyWithImpl<$Res,
     Object? detailed = freezed,
     Object? coordinate = freezed,
   }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      depth: freezed == depth
-          ? _value.depth
-          : depth // ignore: cast_nullable_to_non_nullable
-              as int?,
-      detailed: freezed == detailed
-          ? _value.detailed
-          : detailed // ignore: cast_nullable_to_non_nullable
-              as EarthquakeHypocenterDetailed?,
-      coordinate: freezed == coordinate
-          ? _value.coordinate
-          : coordinate // ignore: cast_nullable_to_non_nullable
-              as EarthquakeHypocenterCoordinate?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            name:
+                null == name
+                    ? _value.name
+                    : name // ignore: cast_nullable_to_non_nullable
+                        as String,
+            code:
+                null == code
+                    ? _value.code
+                    : code // ignore: cast_nullable_to_non_nullable
+                        as String,
+            depth:
+                freezed == depth
+                    ? _value.depth
+                    : depth // ignore: cast_nullable_to_non_nullable
+                        as int?,
+            detailed:
+                freezed == detailed
+                    ? _value.detailed
+                    : detailed // ignore: cast_nullable_to_non_nullable
+                        as EarthquakeHypocenterDetailed?,
+            coordinate:
+                freezed == coordinate
+                    ? _value.coordinate
+                    : coordinate // ignore: cast_nullable_to_non_nullable
+                        as EarthquakeHypocenterCoordinate?,
+          )
+          as $Val,
+    );
   }
 
   /// Create a copy of EarthquakeHypocenter
@@ -4391,8 +4797,9 @@ class _$EarthquakeHypocenterCopyWithImpl<$Res,
       return null;
     }
 
-    return $EarthquakeHypocenterDetailedCopyWith<$Res>(_value.detailed!,
-        (value) {
+    return $EarthquakeHypocenterDetailedCopyWith<$Res>(_value.detailed!, (
+      value,
+    ) {
       return _then(_value.copyWith(detailed: value) as $Val);
     });
   }
@@ -4406,8 +4813,9 @@ class _$EarthquakeHypocenterCopyWithImpl<$Res,
       return null;
     }
 
-    return $EarthquakeHypocenterCoordinateCopyWith<$Res>(_value.coordinate!,
-        (value) {
+    return $EarthquakeHypocenterCoordinateCopyWith<$Res>(_value.coordinate!, (
+      value,
+    ) {
       return _then(_value.copyWith(coordinate: value) as $Val);
     });
   }
@@ -4416,17 +4824,19 @@ class _$EarthquakeHypocenterCopyWithImpl<$Res,
 /// @nodoc
 abstract class _$$EarthquakeHypocenterImplCopyWith<$Res>
     implements $EarthquakeHypocenterCopyWith<$Res> {
-  factory _$$EarthquakeHypocenterImplCopyWith(_$EarthquakeHypocenterImpl value,
-          $Res Function(_$EarthquakeHypocenterImpl) then) =
-      __$$EarthquakeHypocenterImplCopyWithImpl<$Res>;
+  factory _$$EarthquakeHypocenterImplCopyWith(
+    _$EarthquakeHypocenterImpl value,
+    $Res Function(_$EarthquakeHypocenterImpl) then,
+  ) = __$$EarthquakeHypocenterImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String name,
-      String code,
-      int? depth,
-      EarthquakeHypocenterDetailed? detailed,
-      EarthquakeHypocenterCoordinate? coordinate});
+  $Res call({
+    String name,
+    String code,
+    int? depth,
+    EarthquakeHypocenterDetailed? detailed,
+    EarthquakeHypocenterCoordinate? coordinate,
+  });
 
   @override
   $EarthquakeHypocenterDetailedCopyWith<$Res>? get detailed;
@@ -4438,9 +4848,10 @@ abstract class _$$EarthquakeHypocenterImplCopyWith<$Res>
 class __$$EarthquakeHypocenterImplCopyWithImpl<$Res>
     extends _$EarthquakeHypocenterCopyWithImpl<$Res, _$EarthquakeHypocenterImpl>
     implements _$$EarthquakeHypocenterImplCopyWith<$Res> {
-  __$$EarthquakeHypocenterImplCopyWithImpl(_$EarthquakeHypocenterImpl _value,
-      $Res Function(_$EarthquakeHypocenterImpl) _then)
-      : super(_value, _then);
+  __$$EarthquakeHypocenterImplCopyWithImpl(
+    _$EarthquakeHypocenterImpl _value,
+    $Res Function(_$EarthquakeHypocenterImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of EarthquakeHypocenter
   /// with the given fields replaced by the non-null parameter values.
@@ -4453,40 +4864,48 @@ class __$$EarthquakeHypocenterImplCopyWithImpl<$Res>
     Object? detailed = freezed,
     Object? coordinate = freezed,
   }) {
-    return _then(_$EarthquakeHypocenterImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      depth: freezed == depth
-          ? _value.depth
-          : depth // ignore: cast_nullable_to_non_nullable
-              as int?,
-      detailed: freezed == detailed
-          ? _value.detailed
-          : detailed // ignore: cast_nullable_to_non_nullable
-              as EarthquakeHypocenterDetailed?,
-      coordinate: freezed == coordinate
-          ? _value.coordinate
-          : coordinate // ignore: cast_nullable_to_non_nullable
-              as EarthquakeHypocenterCoordinate?,
-    ));
+    return _then(
+      _$EarthquakeHypocenterImpl(
+        name:
+            null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                    as String,
+        code:
+            null == code
+                ? _value.code
+                : code // ignore: cast_nullable_to_non_nullable
+                    as String,
+        depth:
+            freezed == depth
+                ? _value.depth
+                : depth // ignore: cast_nullable_to_non_nullable
+                    as int?,
+        detailed:
+            freezed == detailed
+                ? _value.detailed
+                : detailed // ignore: cast_nullable_to_non_nullable
+                    as EarthquakeHypocenterDetailed?,
+        coordinate:
+            freezed == coordinate
+                ? _value.coordinate
+                : coordinate // ignore: cast_nullable_to_non_nullable
+                    as EarthquakeHypocenterCoordinate?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$EarthquakeHypocenterImpl implements _EarthquakeHypocenter {
-  const _$EarthquakeHypocenterImpl(
-      {required this.name,
-      required this.code,
-      required this.depth,
-      required this.detailed,
-      required this.coordinate});
+  const _$EarthquakeHypocenterImpl({
+    required this.name,
+    required this.code,
+    required this.depth,
+    required this.detailed,
+    required this.coordinate,
+  });
 
   factory _$EarthquakeHypocenterImpl.fromJson(Map<String, dynamic> json) =>
       _$$EarthquakeHypocenterImplFromJson(json);
@@ -4532,26 +4951,26 @@ class _$EarthquakeHypocenterImpl implements _EarthquakeHypocenter {
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeHypocenterImplCopyWith<_$EarthquakeHypocenterImpl>
-      get copyWith =>
-          __$$EarthquakeHypocenterImplCopyWithImpl<_$EarthquakeHypocenterImpl>(
-              this, _$identity);
+  get copyWith =>
+      __$$EarthquakeHypocenterImplCopyWithImpl<_$EarthquakeHypocenterImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EarthquakeHypocenterImplToJson(
-      this,
-    );
+    return _$$EarthquakeHypocenterImplToJson(this);
   }
 }
 
 abstract class _EarthquakeHypocenter implements EarthquakeHypocenter {
-  const factory _EarthquakeHypocenter(
-          {required final String name,
-          required final String code,
-          required final int? depth,
-          required final EarthquakeHypocenterDetailed? detailed,
-          required final EarthquakeHypocenterCoordinate? coordinate}) =
-      _$EarthquakeHypocenterImpl;
+  const factory _EarthquakeHypocenter({
+    required final String name,
+    required final String code,
+    required final int? depth,
+    required final EarthquakeHypocenterDetailed? detailed,
+    required final EarthquakeHypocenterCoordinate? coordinate,
+  }) = _$EarthquakeHypocenterImpl;
 
   factory _EarthquakeHypocenter.fromJson(Map<String, dynamic> json) =
       _$EarthquakeHypocenterImpl.fromJson;
@@ -4572,11 +4991,12 @@ abstract class _EarthquakeHypocenter implements EarthquakeHypocenter {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeHypocenterImplCopyWith<_$EarthquakeHypocenterImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 EarthquakeHypocenterDetailed _$EarthquakeHypocenterDetailedFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _EarthquakeHypocenterDetailed.fromJson(json);
 }
 
@@ -4592,23 +5012,28 @@ mixin _$EarthquakeHypocenterDetailed {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   $EarthquakeHypocenterDetailedCopyWith<EarthquakeHypocenterDetailed>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $EarthquakeHypocenterDetailedCopyWith<$Res> {
   factory $EarthquakeHypocenterDetailedCopyWith(
-          EarthquakeHypocenterDetailed value,
-          $Res Function(EarthquakeHypocenterDetailed) then) =
-      _$EarthquakeHypocenterDetailedCopyWithImpl<$Res,
-          EarthquakeHypocenterDetailed>;
+    EarthquakeHypocenterDetailed value,
+    $Res Function(EarthquakeHypocenterDetailed) then,
+  ) =
+      _$EarthquakeHypocenterDetailedCopyWithImpl<
+        $Res,
+        EarthquakeHypocenterDetailed
+      >;
   @useResult
   $Res call({String code, String name});
 }
 
 /// @nodoc
-class _$EarthquakeHypocenterDetailedCopyWithImpl<$Res,
-        $Val extends EarthquakeHypocenterDetailed>
+class _$EarthquakeHypocenterDetailedCopyWithImpl<
+  $Res,
+  $Val extends EarthquakeHypocenterDetailed
+>
     implements $EarthquakeHypocenterDetailedCopyWith<$Res> {
   _$EarthquakeHypocenterDetailedCopyWithImpl(this._value, this._then);
 
@@ -4621,20 +5046,22 @@ class _$EarthquakeHypocenterDetailedCopyWithImpl<$Res,
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? code = null,
-    Object? name = null,
-  }) {
-    return _then(_value.copyWith(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  $Res call({Object? code = null, Object? name = null}) {
+    return _then(
+      _value.copyWith(
+            code:
+                null == code
+                    ? _value.code
+                    : code // ignore: cast_nullable_to_non_nullable
+                        as String,
+            name:
+                null == name
+                    ? _value.name
+                    : name // ignore: cast_nullable_to_non_nullable
+                        as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -4642,9 +5069,9 @@ class _$EarthquakeHypocenterDetailedCopyWithImpl<$Res,
 abstract class _$$EarthquakeHypocenterDetailedImplCopyWith<$Res>
     implements $EarthquakeHypocenterDetailedCopyWith<$Res> {
   factory _$$EarthquakeHypocenterDetailedImplCopyWith(
-          _$EarthquakeHypocenterDetailedImpl value,
-          $Res Function(_$EarthquakeHypocenterDetailedImpl) then) =
-      __$$EarthquakeHypocenterDetailedImplCopyWithImpl<$Res>;
+    _$EarthquakeHypocenterDetailedImpl value,
+    $Res Function(_$EarthquakeHypocenterDetailedImpl) then,
+  ) = __$$EarthquakeHypocenterDetailedImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String code, String name});
@@ -4652,32 +5079,36 @@ abstract class _$$EarthquakeHypocenterDetailedImplCopyWith<$Res>
 
 /// @nodoc
 class __$$EarthquakeHypocenterDetailedImplCopyWithImpl<$Res>
-    extends _$EarthquakeHypocenterDetailedCopyWithImpl<$Res,
-        _$EarthquakeHypocenterDetailedImpl>
+    extends
+        _$EarthquakeHypocenterDetailedCopyWithImpl<
+          $Res,
+          _$EarthquakeHypocenterDetailedImpl
+        >
     implements _$$EarthquakeHypocenterDetailedImplCopyWith<$Res> {
   __$$EarthquakeHypocenterDetailedImplCopyWithImpl(
-      _$EarthquakeHypocenterDetailedImpl _value,
-      $Res Function(_$EarthquakeHypocenterDetailedImpl) _then)
-      : super(_value, _then);
+    _$EarthquakeHypocenterDetailedImpl _value,
+    $Res Function(_$EarthquakeHypocenterDetailedImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of EarthquakeHypocenterDetailed
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? code = null,
-    Object? name = null,
-  }) {
-    return _then(_$EarthquakeHypocenterDetailedImpl(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? code = null, Object? name = null}) {
+    return _then(
+      _$EarthquakeHypocenterDetailedImpl(
+        code:
+            null == code
+                ? _value.code
+                : code // ignore: cast_nullable_to_non_nullable
+                    as String,
+        name:
+            null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                    as String,
+      ),
+    );
   }
 }
 
@@ -4685,12 +5116,14 @@ class __$$EarthquakeHypocenterDetailedImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$EarthquakeHypocenterDetailedImpl
     implements _EarthquakeHypocenterDetailed {
-  const _$EarthquakeHypocenterDetailedImpl(
-      {required this.code, required this.name});
+  const _$EarthquakeHypocenterDetailedImpl({
+    required this.code,
+    required this.name,
+  });
 
   factory _$EarthquakeHypocenterDetailedImpl.fromJson(
-          Map<String, dynamic> json) =>
-      _$$EarthquakeHypocenterDetailedImplFromJson(json);
+    Map<String, dynamic> json,
+  ) => _$$EarthquakeHypocenterDetailedImplFromJson(json);
 
   @override
   final String code;
@@ -4721,23 +5154,24 @@ class _$EarthquakeHypocenterDetailedImpl
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeHypocenterDetailedImplCopyWith<
-          _$EarthquakeHypocenterDetailedImpl>
-      get copyWith => __$$EarthquakeHypocenterDetailedImplCopyWithImpl<
-          _$EarthquakeHypocenterDetailedImpl>(this, _$identity);
+    _$EarthquakeHypocenterDetailedImpl
+  >
+  get copyWith => __$$EarthquakeHypocenterDetailedImplCopyWithImpl<
+    _$EarthquakeHypocenterDetailedImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EarthquakeHypocenterDetailedImplToJson(
-      this,
-    );
+    return _$$EarthquakeHypocenterDetailedImplToJson(this);
   }
 }
 
 abstract class _EarthquakeHypocenterDetailed
     implements EarthquakeHypocenterDetailed {
-  const factory _EarthquakeHypocenterDetailed(
-      {required final String code,
-      required final String name}) = _$EarthquakeHypocenterDetailedImpl;
+  const factory _EarthquakeHypocenterDetailed({
+    required final String code,
+    required final String name,
+  }) = _$EarthquakeHypocenterDetailedImpl;
 
   factory _EarthquakeHypocenterDetailed.fromJson(Map<String, dynamic> json) =
       _$EarthquakeHypocenterDetailedImpl.fromJson;
@@ -4752,12 +5186,14 @@ abstract class _EarthquakeHypocenterDetailed
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeHypocenterDetailedImplCopyWith<
-          _$EarthquakeHypocenterDetailedImpl>
-      get copyWith => throw _privateConstructorUsedError;
+    _$EarthquakeHypocenterDetailedImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 EarthquakeHypocenterCoordinate _$EarthquakeHypocenterCoordinateFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _EarthquakeHypocenterCoordinate.fromJson(json);
 }
 
@@ -4773,23 +5209,28 @@ mixin _$EarthquakeHypocenterCoordinate {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   $EarthquakeHypocenterCoordinateCopyWith<EarthquakeHypocenterCoordinate>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $EarthquakeHypocenterCoordinateCopyWith<$Res> {
   factory $EarthquakeHypocenterCoordinateCopyWith(
-          EarthquakeHypocenterCoordinate value,
-          $Res Function(EarthquakeHypocenterCoordinate) then) =
-      _$EarthquakeHypocenterCoordinateCopyWithImpl<$Res,
-          EarthquakeHypocenterCoordinate>;
+    EarthquakeHypocenterCoordinate value,
+    $Res Function(EarthquakeHypocenterCoordinate) then,
+  ) =
+      _$EarthquakeHypocenterCoordinateCopyWithImpl<
+        $Res,
+        EarthquakeHypocenterCoordinate
+      >;
   @useResult
   $Res call({double lat, double lon});
 }
 
 /// @nodoc
-class _$EarthquakeHypocenterCoordinateCopyWithImpl<$Res,
-        $Val extends EarthquakeHypocenterCoordinate>
+class _$EarthquakeHypocenterCoordinateCopyWithImpl<
+  $Res,
+  $Val extends EarthquakeHypocenterCoordinate
+>
     implements $EarthquakeHypocenterCoordinateCopyWith<$Res> {
   _$EarthquakeHypocenterCoordinateCopyWithImpl(this._value, this._then);
 
@@ -4802,20 +5243,22 @@ class _$EarthquakeHypocenterCoordinateCopyWithImpl<$Res,
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? lat = null,
-    Object? lon = null,
-  }) {
-    return _then(_value.copyWith(
-      lat: null == lat
-          ? _value.lat
-          : lat // ignore: cast_nullable_to_non_nullable
-              as double,
-      lon: null == lon
-          ? _value.lon
-          : lon // ignore: cast_nullable_to_non_nullable
-              as double,
-    ) as $Val);
+  $Res call({Object? lat = null, Object? lon = null}) {
+    return _then(
+      _value.copyWith(
+            lat:
+                null == lat
+                    ? _value.lat
+                    : lat // ignore: cast_nullable_to_non_nullable
+                        as double,
+            lon:
+                null == lon
+                    ? _value.lon
+                    : lon // ignore: cast_nullable_to_non_nullable
+                        as double,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -4823,9 +5266,9 @@ class _$EarthquakeHypocenterCoordinateCopyWithImpl<$Res,
 abstract class _$$EarthquakeHypocenterCoordinateImplCopyWith<$Res>
     implements $EarthquakeHypocenterCoordinateCopyWith<$Res> {
   factory _$$EarthquakeHypocenterCoordinateImplCopyWith(
-          _$EarthquakeHypocenterCoordinateImpl value,
-          $Res Function(_$EarthquakeHypocenterCoordinateImpl) then) =
-      __$$EarthquakeHypocenterCoordinateImplCopyWithImpl<$Res>;
+    _$EarthquakeHypocenterCoordinateImpl value,
+    $Res Function(_$EarthquakeHypocenterCoordinateImpl) then,
+  ) = __$$EarthquakeHypocenterCoordinateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({double lat, double lon});
@@ -4833,32 +5276,36 @@ abstract class _$$EarthquakeHypocenterCoordinateImplCopyWith<$Res>
 
 /// @nodoc
 class __$$EarthquakeHypocenterCoordinateImplCopyWithImpl<$Res>
-    extends _$EarthquakeHypocenterCoordinateCopyWithImpl<$Res,
-        _$EarthquakeHypocenterCoordinateImpl>
+    extends
+        _$EarthquakeHypocenterCoordinateCopyWithImpl<
+          $Res,
+          _$EarthquakeHypocenterCoordinateImpl
+        >
     implements _$$EarthquakeHypocenterCoordinateImplCopyWith<$Res> {
   __$$EarthquakeHypocenterCoordinateImplCopyWithImpl(
-      _$EarthquakeHypocenterCoordinateImpl _value,
-      $Res Function(_$EarthquakeHypocenterCoordinateImpl) _then)
-      : super(_value, _then);
+    _$EarthquakeHypocenterCoordinateImpl _value,
+    $Res Function(_$EarthquakeHypocenterCoordinateImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of EarthquakeHypocenterCoordinate
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? lat = null,
-    Object? lon = null,
-  }) {
-    return _then(_$EarthquakeHypocenterCoordinateImpl(
-      lat: null == lat
-          ? _value.lat
-          : lat // ignore: cast_nullable_to_non_nullable
-              as double,
-      lon: null == lon
-          ? _value.lon
-          : lon // ignore: cast_nullable_to_non_nullable
-              as double,
-    ));
+  $Res call({Object? lat = null, Object? lon = null}) {
+    return _then(
+      _$EarthquakeHypocenterCoordinateImpl(
+        lat:
+            null == lat
+                ? _value.lat
+                : lat // ignore: cast_nullable_to_non_nullable
+                    as double,
+        lon:
+            null == lon
+                ? _value.lon
+                : lon // ignore: cast_nullable_to_non_nullable
+                    as double,
+      ),
+    );
   }
 }
 
@@ -4866,12 +5313,14 @@ class __$$EarthquakeHypocenterCoordinateImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$EarthquakeHypocenterCoordinateImpl
     implements _EarthquakeHypocenterCoordinate {
-  const _$EarthquakeHypocenterCoordinateImpl(
-      {required this.lat, required this.lon});
+  const _$EarthquakeHypocenterCoordinateImpl({
+    required this.lat,
+    required this.lon,
+  });
 
   factory _$EarthquakeHypocenterCoordinateImpl.fromJson(
-          Map<String, dynamic> json) =>
-      _$$EarthquakeHypocenterCoordinateImplFromJson(json);
+    Map<String, dynamic> json,
+  ) => _$$EarthquakeHypocenterCoordinateImplFromJson(json);
 
   @override
   final double lat;
@@ -4902,23 +5351,24 @@ class _$EarthquakeHypocenterCoordinateImpl
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeHypocenterCoordinateImplCopyWith<
-          _$EarthquakeHypocenterCoordinateImpl>
-      get copyWith => __$$EarthquakeHypocenterCoordinateImplCopyWithImpl<
-          _$EarthquakeHypocenterCoordinateImpl>(this, _$identity);
+    _$EarthquakeHypocenterCoordinateImpl
+  >
+  get copyWith => __$$EarthquakeHypocenterCoordinateImplCopyWithImpl<
+    _$EarthquakeHypocenterCoordinateImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EarthquakeHypocenterCoordinateImplToJson(
-      this,
-    );
+    return _$$EarthquakeHypocenterCoordinateImplToJson(this);
   }
 }
 
 abstract class _EarthquakeHypocenterCoordinate
     implements EarthquakeHypocenterCoordinate {
-  const factory _EarthquakeHypocenterCoordinate(
-      {required final double lat,
-      required final double lon}) = _$EarthquakeHypocenterCoordinateImpl;
+  const factory _EarthquakeHypocenterCoordinate({
+    required final double lat,
+    required final double lon,
+  }) = _$EarthquakeHypocenterCoordinateImpl;
 
   factory _EarthquakeHypocenterCoordinate.fromJson(Map<String, dynamic> json) =
       _$EarthquakeHypocenterCoordinateImpl.fromJson;
@@ -4933,8 +5383,9 @@ abstract class _EarthquakeHypocenterCoordinate
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeHypocenterCoordinateImplCopyWith<
-          _$EarthquakeHypocenterCoordinateImpl>
-      get copyWith => throw _privateConstructorUsedError;
+    _$EarthquakeHypocenterCoordinateImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 EarthquakeMagnitude _$EarthquakeMagnitudeFromJson(Map<String, dynamic> json) {
@@ -4960,8 +5411,9 @@ mixin _$EarthquakeMagnitude {
 /// @nodoc
 abstract class $EarthquakeMagnitudeCopyWith<$Res> {
   factory $EarthquakeMagnitudeCopyWith(
-          EarthquakeMagnitude value, $Res Function(EarthquakeMagnitude) then) =
-      _$EarthquakeMagnitudeCopyWithImpl<$Res, EarthquakeMagnitude>;
+    EarthquakeMagnitude value,
+    $Res Function(EarthquakeMagnitude) then,
+  ) = _$EarthquakeMagnitudeCopyWithImpl<$Res, EarthquakeMagnitude>;
   @useResult
   $Res call({double? value, EarthquakeMagnitudeCondition? condition});
 }
@@ -4980,29 +5432,32 @@ class _$EarthquakeMagnitudeCopyWithImpl<$Res, $Val extends EarthquakeMagnitude>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? value = freezed,
-    Object? condition = freezed,
-  }) {
-    return _then(_value.copyWith(
-      value: freezed == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as double?,
-      condition: freezed == condition
-          ? _value.condition
-          : condition // ignore: cast_nullable_to_non_nullable
-              as EarthquakeMagnitudeCondition?,
-    ) as $Val);
+  $Res call({Object? value = freezed, Object? condition = freezed}) {
+    return _then(
+      _value.copyWith(
+            value:
+                freezed == value
+                    ? _value.value
+                    : value // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            condition:
+                freezed == condition
+                    ? _value.condition
+                    : condition // ignore: cast_nullable_to_non_nullable
+                        as EarthquakeMagnitudeCondition?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$EarthquakeMagnitudeImplCopyWith<$Res>
     implements $EarthquakeMagnitudeCopyWith<$Res> {
-  factory _$$EarthquakeMagnitudeImplCopyWith(_$EarthquakeMagnitudeImpl value,
-          $Res Function(_$EarthquakeMagnitudeImpl) then) =
-      __$$EarthquakeMagnitudeImplCopyWithImpl<$Res>;
+  factory _$$EarthquakeMagnitudeImplCopyWith(
+    _$EarthquakeMagnitudeImpl value,
+    $Res Function(_$EarthquakeMagnitudeImpl) then,
+  ) = __$$EarthquakeMagnitudeImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({double? value, EarthquakeMagnitudeCondition? condition});
@@ -5012,36 +5467,40 @@ abstract class _$$EarthquakeMagnitudeImplCopyWith<$Res>
 class __$$EarthquakeMagnitudeImplCopyWithImpl<$Res>
     extends _$EarthquakeMagnitudeCopyWithImpl<$Res, _$EarthquakeMagnitudeImpl>
     implements _$$EarthquakeMagnitudeImplCopyWith<$Res> {
-  __$$EarthquakeMagnitudeImplCopyWithImpl(_$EarthquakeMagnitudeImpl _value,
-      $Res Function(_$EarthquakeMagnitudeImpl) _then)
-      : super(_value, _then);
+  __$$EarthquakeMagnitudeImplCopyWithImpl(
+    _$EarthquakeMagnitudeImpl _value,
+    $Res Function(_$EarthquakeMagnitudeImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of EarthquakeMagnitude
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? value = freezed,
-    Object? condition = freezed,
-  }) {
-    return _then(_$EarthquakeMagnitudeImpl(
-      value: freezed == value
-          ? _value.value
-          : value // ignore: cast_nullable_to_non_nullable
-              as double?,
-      condition: freezed == condition
-          ? _value.condition
-          : condition // ignore: cast_nullable_to_non_nullable
-              as EarthquakeMagnitudeCondition?,
-    ));
+  $Res call({Object? value = freezed, Object? condition = freezed}) {
+    return _then(
+      _$EarthquakeMagnitudeImpl(
+        value:
+            freezed == value
+                ? _value.value
+                : value // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        condition:
+            freezed == condition
+                ? _value.condition
+                : condition // ignore: cast_nullable_to_non_nullable
+                    as EarthquakeMagnitudeCondition?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$EarthquakeMagnitudeImpl implements _EarthquakeMagnitude {
-  const _$EarthquakeMagnitudeImpl(
-      {required this.value, required this.condition});
+  const _$EarthquakeMagnitudeImpl({
+    required this.value,
+    required this.condition,
+  });
 
   factory _$EarthquakeMagnitudeImpl.fromJson(Map<String, dynamic> json) =>
       _$$EarthquakeMagnitudeImplFromJson(json);
@@ -5077,21 +5536,21 @@ class _$EarthquakeMagnitudeImpl implements _EarthquakeMagnitude {
   @pragma('vm:prefer-inline')
   _$$EarthquakeMagnitudeImplCopyWith<_$EarthquakeMagnitudeImpl> get copyWith =>
       __$$EarthquakeMagnitudeImplCopyWithImpl<_$EarthquakeMagnitudeImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EarthquakeMagnitudeImplToJson(
-      this,
-    );
+    return _$$EarthquakeMagnitudeImplToJson(this);
   }
 }
 
 abstract class _EarthquakeMagnitude implements EarthquakeMagnitude {
-  const factory _EarthquakeMagnitude(
-          {required final double? value,
-          required final EarthquakeMagnitudeCondition? condition}) =
-      _$EarthquakeMagnitudeImpl;
+  const factory _EarthquakeMagnitude({
+    required final double? value,
+    required final EarthquakeMagnitudeCondition? condition,
+  }) = _$EarthquakeMagnitudeImpl;
 
   factory _EarthquakeMagnitude.fromJson(Map<String, dynamic> json) =
       _$EarthquakeMagnitudeImpl.fromJson;

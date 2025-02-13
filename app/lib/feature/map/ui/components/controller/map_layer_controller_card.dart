@@ -21,9 +21,7 @@ class MapLayerControllerCard extends StatelessWidget {
 
     const divider = Padding(
       padding: EdgeInsets.symmetric(horizontal: 4),
-      child: Divider(
-        height: 0,
-      ),
+      child: Divider(height: 0),
     );
 
     void hapticFeedback() => unawaited(HapticFeedback.lightImpact());
@@ -32,42 +30,36 @@ class MapLayerControllerCard extends StatelessWidget {
       color: colorScheme.surfaceContainerHighest,
       clipBehavior: Clip.hardEdge,
       elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: IntrinsicWidth(
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [
-            InkWell(
-              child: const Padding(
-                padding: EdgeInsets.all(8),
-                child: Icon(Icons.layers_rounded),
-              ),
-              onTap: () async {
-                hapticFeedback();
-                onLayerButtonTap?.call();
-              },
-            ),
-            InkWell(
-              child: const Padding(
-                padding: EdgeInsets.all(8),
-                child: Icon(Icons.location_on),
-              ),
-              onTap: () {
-                hapticFeedback();
-                onLocationButtonTap?.call();
-              },
-            ),
-          ]
-              .mapIndexed(
-                (index, child) => [
-                  if (index > 0) divider,
-                  child,
-                ],
-              )
-              .flattened
-              .toList(),
+          children:
+              [
+                    InkWell(
+                      child: const Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Icon(Icons.layers_rounded),
+                      ),
+                      onTap: () async {
+                        hapticFeedback();
+                        onLayerButtonTap?.call();
+                      },
+                    ),
+                    InkWell(
+                      child: const Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Icon(Icons.location_on),
+                      ),
+                      onTap: () {
+                        hapticFeedback();
+                        onLocationButtonTap?.call();
+                      },
+                    ),
+                  ]
+                  .mapIndexed((index, child) => [if (index > 0) divider, child])
+                  .flattened
+                  .toList(),
         ),
       ),
     );

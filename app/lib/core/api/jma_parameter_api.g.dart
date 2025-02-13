@@ -16,9 +16,10 @@ String _$jmaParameterApiClientHash() =>
 final jmaParameterApiClientProvider = Provider<JmaParameterApiClient>.internal(
   jmaParameterApiClient,
   name: r'jmaParameterApiClientProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$jmaParameterApiClientHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$jmaParameterApiClientHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

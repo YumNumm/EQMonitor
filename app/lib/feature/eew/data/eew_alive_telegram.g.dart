@@ -18,13 +18,14 @@ String _$eewAliveNormalTelegramHash() =>
 final eewAliveNormalTelegramProvider = Provider<List<EewV1>>.internal(
   eewAliveNormalTelegram,
   name: r'eewAliveNormalTelegramProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$eewAliveNormalTelegramHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$eewAliveNormalTelegramHash,
   dependencies: <ProviderOrFamily>[eewAliveTelegramProvider],
   allTransitiveDependencies: <ProviderOrFamily>{
     eewAliveTelegramProvider,
-    ...?eewAliveTelegramProvider.allTransitiveDependencies
+    ...?eewAliveTelegramProvider.allTransitiveDependencies,
   },
 );
 
@@ -38,9 +39,10 @@ String _$eewAliveCheckerHash() => r'21c8182cab2a3bb009efd938202257d2580030c9';
 final eewAliveCheckerProvider = Provider<EewAliveChecker>.internal(
   eewAliveChecker,
   name: r'eewAliveCheckerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$eewAliveCheckerHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$eewAliveCheckerHash,
   dependencies: const <ProviderOrFamily>[],
   allTransitiveDependencies: const <ProviderOrFamily>{},
 );
@@ -56,19 +58,23 @@ String _$eewAliveTelegramHash() => r'0e6433459f8e9d3a6a4b414224e0a0d9abb1e5a2';
 @ProviderFor(EewAliveTelegram)
 final eewAliveTelegramProvider =
     NotifierProvider<EewAliveTelegram, List<EewV1>?>.internal(
-  EewAliveTelegram.new,
-  name: r'eewAliveTelegramProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$eewAliveTelegramHash,
-  dependencies: <ProviderOrFamily>[timeTickerProvider, eewAliveCheckerProvider],
-  allTransitiveDependencies: <ProviderOrFamily>{
-    timeTickerProvider,
-    ...?timeTickerProvider.allTransitiveDependencies,
-    eewAliveCheckerProvider,
-    ...?eewAliveCheckerProvider.allTransitiveDependencies
-  },
-);
+      EewAliveTelegram.new,
+      name: r'eewAliveTelegramProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$eewAliveTelegramHash,
+      dependencies: <ProviderOrFamily>[
+        timeTickerProvider,
+        eewAliveCheckerProvider,
+      ],
+      allTransitiveDependencies: <ProviderOrFamily>{
+        timeTickerProvider,
+        ...?timeTickerProvider.allTransitiveDependencies,
+        eewAliveCheckerProvider,
+        ...?eewAliveCheckerProvider.allTransitiveDependencies,
+      },
+    );
 
 typedef _$EewAliveTelegram = Notifier<List<EewV1>?>;
 // ignore_for_file: type=lint

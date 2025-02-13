@@ -1,6 +1,1 @@
-enum IntensityIconType {
-  filled,
-  small,
-  smallWithoutText,
-  ;
-}
+enum IntensityIconType { filled, small, smallWithoutText }

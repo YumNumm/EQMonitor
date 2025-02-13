@@ -30,10 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final router = GoRouter(
       routes: [
-        GoRoute(
-          path: '/',
-          builder: (context, state) => const PlaygroundPage(),
-        ),
+        GoRoute(path: '/', builder: (context, state) => const PlaygroundPage()),
       ],
     );
     return MaterialApp.router(
@@ -58,20 +55,23 @@ class PlaygroundPage extends StatelessWidget {
         children: [
           ListTile(
             title: const Text('ScaleCheckList'),
-            onTap: () async => showDialog(
-              context: context,
-              builder: (context) => Scaffold(
-                appBar: AppBar(title: const Text('ScaleCheckList')),
-                body: const ScaleCheckList(),
-              ),
-            ),
+            onTap:
+                () async => showDialog(
+                  context: context,
+                  builder:
+                      (context) => Scaffold(
+                        appBar: AppBar(title: const Text('ScaleCheckList')),
+                        body: const ScaleCheckList(),
+                      ),
+                ),
           ),
           ListTile(
             title: const Text('KyoshinMonitorScaleColorPage'),
-            onTap: () async => showDialog(
-              context: context,
-              builder: (context) => const KyoshinMonitorScaleColorPage(),
-            ),
+            onTap:
+                () async => showDialog(
+                  context: context,
+                  builder: (context) => const KyoshinMonitorScaleColorPage(),
+                ),
           ),
         ],
       ),
@@ -83,12 +83,7 @@ class PlaygroundPage extends StatelessWidget {
 /// ************* 多機能ユーティリティ: パラメータ<->p<->Color ***************
 /// ***************************************************************************
 
-enum ParamType {
-  shindo,
-  pga,
-  pgv,
-  pgd,
-}
+enum ParamType { shindo, pga, pgv, pgd }
 
 class KyoshinMonitorScaleUtil {
   //==== (1) パラメータ (震度/PGA/PGV/PGD) -> p の変換 ====//
@@ -253,16 +248,15 @@ class ScaleCheckList extends StatelessWidget {
         final diff = p2 - p;
 
         final absDiff = diff.abs();
-        final textColor = (absDiff < 0.002)
-            ? Colors.green
-            : (absDiff < 0.01 ? Colors.orange : Colors.red);
+        final textColor =
+            (absDiff < 0.002)
+                ? Colors.green
+                : (absDiff < 0.01 ? Colors.orange : Colors.red);
 
         return Container(
           margin: const EdgeInsets.symmetric(vertical: 2),
           padding: const EdgeInsets.symmetric(horizontal: 8),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.black12),
-          ),
+          decoration: BoxDecoration(border: Border.all(color: Colors.black12)),
           child: Row(
             children: [
               Text('p=${p.toStringAsFixed(2)}  '),
@@ -316,8 +310,10 @@ class KyoshinMonitorScaleColorPage extends HookWidget {
       }
 
       // 1) param->p
-      var pTmp =
-          KyoshinMonitorScaleUtil.paramToScalePosition(selectedType.value, val);
+      var pTmp = KyoshinMonitorScaleUtil.paramToScalePosition(
+        selectedType.value,
+        val,
+      );
       pTmp = pTmp.clamp(0.0, 1.0);
 
       // 2) p->color
@@ -330,8 +326,10 @@ class KyoshinMonitorScaleColorPage extends HookWidget {
       final d = pTmp2 - pTmp;
 
       // 5) p' -> param'
-      final val2 =
-          KyoshinMonitorScaleUtil.scaleToParam(selectedType.value, pTmp2);
+      final val2 = KyoshinMonitorScaleUtil.scaleToParam(
+        selectedType.value,
+        pTmp2,
+      );
 
       // 値を更新 (useState の value にセット)
       valueParam.value = val;
@@ -345,9 +343,7 @@ class KyoshinMonitorScaleColorPage extends HookWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('強震モニタ値→スケール色 変換'),
-      ),
+      appBar: AppBar(title: const Text('強震モニタ値→スケール色 変換')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -359,12 +355,13 @@ class KyoshinMonitorScaleColorPage extends HookWidget {
                 const SizedBox(width: 8),
                 DropdownButton<ParamType>(
                   value: selectedType.value,
-                  items: ParamType.values.map((type) {
-                    return DropdownMenuItem(
-                      value: type,
-                      child: Text(type.name),
-                    );
-                  }).toList(),
+                  items:
+                      ParamType.values.map((type) {
+                        return DropdownMenuItem(
+                          value: type,
+                          child: Text(type.name),
+                        );
+                      }).toList(),
                   onChanged: (val) {
                     if (val != null) {
                       selectedType.value = val;
@@ -389,10 +386,7 @@ class KyoshinMonitorScaleColorPage extends HookWidget {
             const SizedBox(height: 16),
 
             //=== 3) ボタン ===
-            ElevatedButton(
-              onPressed: onConvert,
-              child: const Text('変換して表示'),
-            ),
+            ElevatedButton(onPressed: onConvert, child: const Text('変換して表示')),
             const SizedBox(height: 24),
 
             //=== 4) 結果表示 ===
@@ -400,11 +394,7 @@ class KyoshinMonitorScaleColorPage extends HookWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 色プレビュー
-                Container(
-                  width: 80,
-                  height: 80,
-                  color: color.value,
-                ),
+                Container(width: 80, height: 80, color: color.value),
                 const SizedBox(width: 16),
                 // テキスト情報
                 Expanded(

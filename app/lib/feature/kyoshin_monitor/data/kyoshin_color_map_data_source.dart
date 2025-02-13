@@ -8,8 +8,6 @@ Future<List<KyoshinColorMapModel>> getKyoshinColorMap() async {
   final str = await rootBundle.loadString(Assets.kyoshinShindoColorMap);
   final json = jsonDecode(str) as List<dynamic>;
   return json
-      .map(
-        (e) => KyoshinColorMapModel.fromJson(e as Map<String, dynamic>),
-      )
+      .map((e) => KyoshinColorMapModel.fromJson(e as Map<String, dynamic>))
       .toList();
 }

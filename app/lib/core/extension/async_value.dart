@@ -52,13 +52,9 @@ extension AsyncValueX<T> on AsyncValue<T> {
     String defaultMessage = 'エラーが発生しました',
   }) {
     if (!isLoading && hasError) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            error!.toString(),
-          ),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error!.toString())));
     }
   }
 }

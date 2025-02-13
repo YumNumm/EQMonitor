@@ -23,10 +23,9 @@ class App extends HookConsumerWidget {
     final routerConfig = ref.watch(goRouterProvider);
 
     final app = BetterFeedback(
-      feedbackBuilder: (p0, p1, p2) => CustomFeedbackForm(
-        onSubmit: p1,
-        scrollController: p2,
-      ),
+      feedbackBuilder:
+          (p0, p1, p2) =>
+              CustomFeedbackForm(onSubmit: p1, scrollController: p2),
       child: DynamicColorBuilder(
         builder: (lightDynamic, darkDynamic) {
           // Fictitious brand color.
@@ -56,9 +55,7 @@ class App extends HookConsumerWidget {
             darkCustomColors = darkCustomColors.harmonized(darkColorScheme);
           } else {
             // Otherwise, use fallback schemes.
-            lightColorScheme = ColorScheme.fromSeed(
-              seedColor: brandBlue,
-            );
+            lightColorScheme = ColorScheme.fromSeed(seedColor: brandBlue);
             darkColorScheme = ColorScheme.fromSeed(
               seedColor: brandBlue,
               brightness: Brightness.dark,
@@ -81,9 +78,7 @@ class App extends HookConsumerWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            supportedLocales: const [
-              Locale('ja', 'JP'),
-            ],
+            supportedLocales: const [Locale('ja', 'JP')],
             builder: (context, child) {
               return UpgradeAlert(
                 navigatorKey: routerConfig.routerDelegate.navigatorKey,

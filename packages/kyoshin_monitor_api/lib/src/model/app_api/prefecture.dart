@@ -147,10 +147,7 @@ enum Prefecture {
   /// 不明
   unknown(shortName: '不明', longName: '不明');
 
-  const Prefecture({
-    required this.shortName,
-    required this.longName,
-  });
+  const Prefecture({required this.shortName, required this.longName});
 
   /// 短縮名
   final String shortName;

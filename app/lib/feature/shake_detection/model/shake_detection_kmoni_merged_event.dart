@@ -42,10 +42,7 @@ class ShakeDetectionKmoniMergedPoint with _$ShakeDetectionKmoniMergedPoint {
     )
     required JmaForecastIntensity intensity,
     required String code,
-    @JsonKey(
-      fromJson: KyoshinObservationPoint.fromJson,
-      toJson: _pointToJson,
-    )
+    @JsonKey(fromJson: KyoshinObservationPoint.fromJson, toJson: _pointToJson)
     required KyoshinObservationPoint point,
   }) = _ShakeDetectionKmoniMergedPoint;
 

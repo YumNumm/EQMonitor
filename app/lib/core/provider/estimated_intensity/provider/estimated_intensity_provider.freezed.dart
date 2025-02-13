@@ -12,7 +12,8 @@ part of 'estimated_intensity_provider.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$EstimatedIntensityPoint {
@@ -31,20 +32,24 @@ mixin _$EstimatedIntensityPoint {
 
 /// @nodoc
 abstract class $EstimatedIntensityPointCopyWith<$Res> {
-  factory $EstimatedIntensityPointCopyWith(EstimatedIntensityPoint value,
-          $Res Function(EstimatedIntensityPoint) then) =
-      _$EstimatedIntensityPointCopyWithImpl<$Res, EstimatedIntensityPoint>;
+  factory $EstimatedIntensityPointCopyWith(
+    EstimatedIntensityPoint value,
+    $Res Function(EstimatedIntensityPoint) then,
+  ) = _$EstimatedIntensityPointCopyWithImpl<$Res, EstimatedIntensityPoint>;
   @useResult
-  $Res call(
-      {String regionCode,
-      String cityCode,
-      EarthquakeParameterStationItem station,
-      double intensity});
+  $Res call({
+    String regionCode,
+    String cityCode,
+    EarthquakeParameterStationItem station,
+    double intensity,
+  });
 }
 
 /// @nodoc
-class _$EstimatedIntensityPointCopyWithImpl<$Res,
-        $Val extends EstimatedIntensityPoint>
+class _$EstimatedIntensityPointCopyWithImpl<
+  $Res,
+  $Val extends EstimatedIntensityPoint
+>
     implements $EstimatedIntensityPointCopyWith<$Res> {
   _$EstimatedIntensityPointCopyWithImpl(this._value, this._then);
 
@@ -63,24 +68,31 @@ class _$EstimatedIntensityPointCopyWithImpl<$Res,
     Object? station = null,
     Object? intensity = null,
   }) {
-    return _then(_value.copyWith(
-      regionCode: null == regionCode
-          ? _value.regionCode
-          : regionCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      cityCode: null == cityCode
-          ? _value.cityCode
-          : cityCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      station: null == station
-          ? _value.station
-          : station // ignore: cast_nullable_to_non_nullable
-              as EarthquakeParameterStationItem,
-      intensity: null == intensity
-          ? _value.intensity
-          : intensity // ignore: cast_nullable_to_non_nullable
-              as double,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            regionCode:
+                null == regionCode
+                    ? _value.regionCode
+                    : regionCode // ignore: cast_nullable_to_non_nullable
+                        as String,
+            cityCode:
+                null == cityCode
+                    ? _value.cityCode
+                    : cityCode // ignore: cast_nullable_to_non_nullable
+                        as String,
+            station:
+                null == station
+                    ? _value.station
+                    : station // ignore: cast_nullable_to_non_nullable
+                        as EarthquakeParameterStationItem,
+            intensity:
+                null == intensity
+                    ? _value.intensity
+                    : intensity // ignore: cast_nullable_to_non_nullable
+                        as double,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -88,27 +100,31 @@ class _$EstimatedIntensityPointCopyWithImpl<$Res,
 abstract class _$$EstimatedIntensityPointImplCopyWith<$Res>
     implements $EstimatedIntensityPointCopyWith<$Res> {
   factory _$$EstimatedIntensityPointImplCopyWith(
-          _$EstimatedIntensityPointImpl value,
-          $Res Function(_$EstimatedIntensityPointImpl) then) =
-      __$$EstimatedIntensityPointImplCopyWithImpl<$Res>;
+    _$EstimatedIntensityPointImpl value,
+    $Res Function(_$EstimatedIntensityPointImpl) then,
+  ) = __$$EstimatedIntensityPointImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String regionCode,
-      String cityCode,
-      EarthquakeParameterStationItem station,
-      double intensity});
+  $Res call({
+    String regionCode,
+    String cityCode,
+    EarthquakeParameterStationItem station,
+    double intensity,
+  });
 }
 
 /// @nodoc
 class __$$EstimatedIntensityPointImplCopyWithImpl<$Res>
-    extends _$EstimatedIntensityPointCopyWithImpl<$Res,
-        _$EstimatedIntensityPointImpl>
+    extends
+        _$EstimatedIntensityPointCopyWithImpl<
+          $Res,
+          _$EstimatedIntensityPointImpl
+        >
     implements _$$EstimatedIntensityPointImplCopyWith<$Res> {
   __$$EstimatedIntensityPointImplCopyWithImpl(
-      _$EstimatedIntensityPointImpl _value,
-      $Res Function(_$EstimatedIntensityPointImpl) _then)
-      : super(_value, _then);
+    _$EstimatedIntensityPointImpl _value,
+    $Res Function(_$EstimatedIntensityPointImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of EstimatedIntensityPoint
   /// with the given fields replaced by the non-null parameter values.
@@ -120,24 +136,30 @@ class __$$EstimatedIntensityPointImplCopyWithImpl<$Res>
     Object? station = null,
     Object? intensity = null,
   }) {
-    return _then(_$EstimatedIntensityPointImpl(
-      regionCode: null == regionCode
-          ? _value.regionCode
-          : regionCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      cityCode: null == cityCode
-          ? _value.cityCode
-          : cityCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      station: null == station
-          ? _value.station
-          : station // ignore: cast_nullable_to_non_nullable
-              as EarthquakeParameterStationItem,
-      intensity: null == intensity
-          ? _value.intensity
-          : intensity // ignore: cast_nullable_to_non_nullable
-              as double,
-    ));
+    return _then(
+      _$EstimatedIntensityPointImpl(
+        regionCode:
+            null == regionCode
+                ? _value.regionCode
+                : regionCode // ignore: cast_nullable_to_non_nullable
+                    as String,
+        cityCode:
+            null == cityCode
+                ? _value.cityCode
+                : cityCode // ignore: cast_nullable_to_non_nullable
+                    as String,
+        station:
+            null == station
+                ? _value.station
+                : station // ignore: cast_nullable_to_non_nullable
+                    as EarthquakeParameterStationItem,
+        intensity:
+            null == intensity
+                ? _value.intensity
+                : intensity // ignore: cast_nullable_to_non_nullable
+                    as double,
+      ),
+    );
   }
 }
 
@@ -146,11 +168,12 @@ class __$$EstimatedIntensityPointImplCopyWithImpl<$Res>
 class _$EstimatedIntensityPointImpl
     with DiagnosticableTreeMixin
     implements _EstimatedIntensityPoint {
-  const _$EstimatedIntensityPointImpl(
-      {required this.regionCode,
-      required this.cityCode,
-      required this.station,
-      required this.intensity});
+  const _$EstimatedIntensityPointImpl({
+    required this.regionCode,
+    required this.cityCode,
+    required this.station,
+    required this.intensity,
+  });
 
   @override
   final String regionCode;
@@ -201,16 +224,18 @@ class _$EstimatedIntensityPointImpl
   @override
   @pragma('vm:prefer-inline')
   _$$EstimatedIntensityPointImplCopyWith<_$EstimatedIntensityPointImpl>
-      get copyWith => __$$EstimatedIntensityPointImplCopyWithImpl<
-          _$EstimatedIntensityPointImpl>(this, _$identity);
+  get copyWith => __$$EstimatedIntensityPointImplCopyWithImpl<
+    _$EstimatedIntensityPointImpl
+  >(this, _$identity);
 }
 
 abstract class _EstimatedIntensityPoint implements EstimatedIntensityPoint {
-  const factory _EstimatedIntensityPoint(
-      {required final String regionCode,
-      required final String cityCode,
-      required final EarthquakeParameterStationItem station,
-      required final double intensity}) = _$EstimatedIntensityPointImpl;
+  const factory _EstimatedIntensityPoint({
+    required final String regionCode,
+    required final String cityCode,
+    required final EarthquakeParameterStationItem station,
+    required final double intensity,
+  }) = _$EstimatedIntensityPointImpl;
 
   @override
   String get regionCode;
@@ -226,5 +251,5 @@ abstract class _EstimatedIntensityPoint implements EstimatedIntensityPoint {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EstimatedIntensityPointImplCopyWith<_$EstimatedIntensityPointImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

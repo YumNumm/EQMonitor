@@ -22,9 +22,7 @@ class KyoshinMonitorAboutPage extends HookConsumerWidget {
     final textTheme = theme.textTheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('強震モニタとは?'),
-      ),
+      appBar: AppBar(title: const Text('強震モニタとは?')),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
@@ -38,10 +36,7 @@ class KyoshinMonitorAboutPage extends HookConsumerWidget {
                   '日本全国の観測点の揺れの状況を青から赤までの色で表示します。',
                   style: textTheme.bodyMedium,
                 ),
-                _SectionTitle(
-                  title: '表示可能なデータ',
-                  style: textTheme.titleMedium,
-                ),
+                _SectionTitle(title: '表示可能なデータ', style: textTheme.titleMedium),
                 const _InfoCard(
                   items: [
                     _InfoItem(
@@ -66,10 +61,7 @@ class KyoshinMonitorAboutPage extends HookConsumerWidget {
                     ),
                   ],
                 ),
-                _SectionTitle(
-                  title: '観測点について',
-                  style: textTheme.titleMedium,
-                ),
+                _SectionTitle(title: '観測点について', style: textTheme.titleMedium),
                 _InfoCard(
                   items: const [
                     _InfoItem(
@@ -82,15 +74,13 @@ class KyoshinMonitorAboutPage extends HookConsumerWidget {
                           '全国約700ヶ所に設置された地中の強震計による観測網です。地表と地中の両方で観測を行います。',
                     ),
                   ],
-                  onTapMore: () async =>
-                      const KyoshinMonitorAboutObservationNetworkRoute()
-                          .push<void>(context),
+                  onTapMore:
+                      () async =>
+                          const KyoshinMonitorAboutObservationNetworkRoute()
+                              .push<void>(context),
                   tapMoreText: '日本を取り巻く観測網について',
                 ),
-                _SectionTitle(
-                  title: '利用上の注意',
-                  style: textTheme.titleMedium,
-                ),
+                _SectionTitle(title: '利用上の注意', style: textTheme.titleMedium),
                 const _InfoCard(
                   isWarning: true,
                   items: [
@@ -122,10 +112,7 @@ class KyoshinMonitorAboutPage extends HookConsumerWidget {
 }
 
 class _SectionTitle extends StatelessWidget {
-  const _SectionTitle({
-    required this.title,
-    required this.style,
-  });
+  const _SectionTitle({required this.title, required this.style});
 
   final String title;
   final TextStyle? style;
@@ -134,12 +121,7 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Text(
-        title,
-        style: style?.copyWith(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+      child: Text(title, style: style?.copyWith(fontWeight: FontWeight.bold)),
     );
   }
 }
@@ -210,20 +192,14 @@ class _InfoCard extends StatelessWidget {
 }
 
 class _InfoItem {
-  const _InfoItem({
-    required this.title,
-    required this.description,
-  });
+  const _InfoItem({required this.title, required this.description});
 
   final String title;
   final String description;
 }
 
 class _InfoItemWidget extends StatelessWidget {
-  const _InfoItemWidget({
-    required this.item,
-    this.textColor,
-  });
+  const _InfoItemWidget({required this.item, this.textColor});
 
   final _InfoItem item;
   final Color? textColor;
@@ -239,15 +215,14 @@ class _InfoItemWidget extends StatelessWidget {
       children: [
         Text(
           '• ${item.title}',
-          style: textTheme.bodyLarge?.copyWith(
-            color: textColor,
-          ),
+          style: textTheme.bodyLarge?.copyWith(color: textColor),
         ),
         Text(
           item.description,
           style: textTheme.bodyMedium?.copyWith(
-            color: (textColor ?? colorScheme.onSurfaceVariant)
-                .withValues(alpha: 0.8),
+            color: (textColor ?? colorScheme.onSurfaceVariant).withValues(
+              alpha: 0.8,
+            ),
           ),
         ),
       ],

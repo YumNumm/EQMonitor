@@ -12,7 +12,8 @@ part of 'earthquake_early_event.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 EarthquakeEarlyEvent _$EarthquakeEarlyEventFromJson(Map<String, dynamic> json) {
   return _EarthquakeEarlyEvent.fromJson(json);
@@ -46,28 +47,32 @@ mixin _$EarthquakeEarlyEvent {
 
 /// @nodoc
 abstract class $EarthquakeEarlyEventCopyWith<$Res> {
-  factory $EarthquakeEarlyEventCopyWith(EarthquakeEarlyEvent value,
-          $Res Function(EarthquakeEarlyEvent) then) =
-      _$EarthquakeEarlyEventCopyWithImpl<$Res, EarthquakeEarlyEvent>;
+  factory $EarthquakeEarlyEventCopyWith(
+    EarthquakeEarlyEvent value,
+    $Res Function(EarthquakeEarlyEvent) then,
+  ) = _$EarthquakeEarlyEventCopyWithImpl<$Res, EarthquakeEarlyEvent>;
   @useResult
-  $Res call(
-      {String id,
-      String name,
-      double? lat,
-      double? lon,
-      double? depth,
-      double? magnitude,
-      DateTime originTime,
-      OriginTimePrecision originTimePrecision,
-      JmaForecastIntensity? maxIntensity,
-      bool maxIntensityIsEarly,
-      List<EarthquakeEarlyRegion> regions,
-      List<EarthquakeEarlyCity> cities});
+  $Res call({
+    String id,
+    String name,
+    double? lat,
+    double? lon,
+    double? depth,
+    double? magnitude,
+    DateTime originTime,
+    OriginTimePrecision originTimePrecision,
+    JmaForecastIntensity? maxIntensity,
+    bool maxIntensityIsEarly,
+    List<EarthquakeEarlyRegion> regions,
+    List<EarthquakeEarlyCity> cities,
+  });
 }
 
 /// @nodoc
-class _$EarthquakeEarlyEventCopyWithImpl<$Res,
-        $Val extends EarthquakeEarlyEvent>
+class _$EarthquakeEarlyEventCopyWithImpl<
+  $Res,
+  $Val extends EarthquakeEarlyEvent
+>
     implements $EarthquakeEarlyEventCopyWith<$Res> {
   _$EarthquakeEarlyEventCopyWithImpl(this._value, this._then);
 
@@ -94,89 +99,107 @@ class _$EarthquakeEarlyEventCopyWithImpl<$Res,
     Object? regions = null,
     Object? cities = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      lat: freezed == lat
-          ? _value.lat
-          : lat // ignore: cast_nullable_to_non_nullable
-              as double?,
-      lon: freezed == lon
-          ? _value.lon
-          : lon // ignore: cast_nullable_to_non_nullable
-              as double?,
-      depth: freezed == depth
-          ? _value.depth
-          : depth // ignore: cast_nullable_to_non_nullable
-              as double?,
-      magnitude: freezed == magnitude
-          ? _value.magnitude
-          : magnitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      originTime: null == originTime
-          ? _value.originTime
-          : originTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      originTimePrecision: null == originTimePrecision
-          ? _value.originTimePrecision
-          : originTimePrecision // ignore: cast_nullable_to_non_nullable
-              as OriginTimePrecision,
-      maxIntensity: freezed == maxIntensity
-          ? _value.maxIntensity
-          : maxIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity?,
-      maxIntensityIsEarly: null == maxIntensityIsEarly
-          ? _value.maxIntensityIsEarly
-          : maxIntensityIsEarly // ignore: cast_nullable_to_non_nullable
-              as bool,
-      regions: null == regions
-          ? _value.regions
-          : regions // ignore: cast_nullable_to_non_nullable
-              as List<EarthquakeEarlyRegion>,
-      cities: null == cities
-          ? _value.cities
-          : cities // ignore: cast_nullable_to_non_nullable
-              as List<EarthquakeEarlyCity>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id:
+                null == id
+                    ? _value.id
+                    : id // ignore: cast_nullable_to_non_nullable
+                        as String,
+            name:
+                null == name
+                    ? _value.name
+                    : name // ignore: cast_nullable_to_non_nullable
+                        as String,
+            lat:
+                freezed == lat
+                    ? _value.lat
+                    : lat // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            lon:
+                freezed == lon
+                    ? _value.lon
+                    : lon // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            depth:
+                freezed == depth
+                    ? _value.depth
+                    : depth // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            magnitude:
+                freezed == magnitude
+                    ? _value.magnitude
+                    : magnitude // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            originTime:
+                null == originTime
+                    ? _value.originTime
+                    : originTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime,
+            originTimePrecision:
+                null == originTimePrecision
+                    ? _value.originTimePrecision
+                    : originTimePrecision // ignore: cast_nullable_to_non_nullable
+                        as OriginTimePrecision,
+            maxIntensity:
+                freezed == maxIntensity
+                    ? _value.maxIntensity
+                    : maxIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaForecastIntensity?,
+            maxIntensityIsEarly:
+                null == maxIntensityIsEarly
+                    ? _value.maxIntensityIsEarly
+                    : maxIntensityIsEarly // ignore: cast_nullable_to_non_nullable
+                        as bool,
+            regions:
+                null == regions
+                    ? _value.regions
+                    : regions // ignore: cast_nullable_to_non_nullable
+                        as List<EarthquakeEarlyRegion>,
+            cities:
+                null == cities
+                    ? _value.cities
+                    : cities // ignore: cast_nullable_to_non_nullable
+                        as List<EarthquakeEarlyCity>,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$EarthquakeEarlyEventImplCopyWith<$Res>
     implements $EarthquakeEarlyEventCopyWith<$Res> {
-  factory _$$EarthquakeEarlyEventImplCopyWith(_$EarthquakeEarlyEventImpl value,
-          $Res Function(_$EarthquakeEarlyEventImpl) then) =
-      __$$EarthquakeEarlyEventImplCopyWithImpl<$Res>;
+  factory _$$EarthquakeEarlyEventImplCopyWith(
+    _$EarthquakeEarlyEventImpl value,
+    $Res Function(_$EarthquakeEarlyEventImpl) then,
+  ) = __$$EarthquakeEarlyEventImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String name,
-      double? lat,
-      double? lon,
-      double? depth,
-      double? magnitude,
-      DateTime originTime,
-      OriginTimePrecision originTimePrecision,
-      JmaForecastIntensity? maxIntensity,
-      bool maxIntensityIsEarly,
-      List<EarthquakeEarlyRegion> regions,
-      List<EarthquakeEarlyCity> cities});
+  $Res call({
+    String id,
+    String name,
+    double? lat,
+    double? lon,
+    double? depth,
+    double? magnitude,
+    DateTime originTime,
+    OriginTimePrecision originTimePrecision,
+    JmaForecastIntensity? maxIntensity,
+    bool maxIntensityIsEarly,
+    List<EarthquakeEarlyRegion> regions,
+    List<EarthquakeEarlyCity> cities,
+  });
 }
 
 /// @nodoc
 class __$$EarthquakeEarlyEventImplCopyWithImpl<$Res>
     extends _$EarthquakeEarlyEventCopyWithImpl<$Res, _$EarthquakeEarlyEventImpl>
     implements _$$EarthquakeEarlyEventImplCopyWith<$Res> {
-  __$$EarthquakeEarlyEventImplCopyWithImpl(_$EarthquakeEarlyEventImpl _value,
-      $Res Function(_$EarthquakeEarlyEventImpl) _then)
-      : super(_value, _then);
+  __$$EarthquakeEarlyEventImplCopyWithImpl(
+    _$EarthquakeEarlyEventImpl _value,
+    $Res Function(_$EarthquakeEarlyEventImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of EarthquakeEarlyEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -196,77 +219,91 @@ class __$$EarthquakeEarlyEventImplCopyWithImpl<$Res>
     Object? regions = null,
     Object? cities = null,
   }) {
-    return _then(_$EarthquakeEarlyEventImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      lat: freezed == lat
-          ? _value.lat
-          : lat // ignore: cast_nullable_to_non_nullable
-              as double?,
-      lon: freezed == lon
-          ? _value.lon
-          : lon // ignore: cast_nullable_to_non_nullable
-              as double?,
-      depth: freezed == depth
-          ? _value.depth
-          : depth // ignore: cast_nullable_to_non_nullable
-              as double?,
-      magnitude: freezed == magnitude
-          ? _value.magnitude
-          : magnitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      originTime: null == originTime
-          ? _value.originTime
-          : originTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      originTimePrecision: null == originTimePrecision
-          ? _value.originTimePrecision
-          : originTimePrecision // ignore: cast_nullable_to_non_nullable
-              as OriginTimePrecision,
-      maxIntensity: freezed == maxIntensity
-          ? _value.maxIntensity
-          : maxIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity?,
-      maxIntensityIsEarly: null == maxIntensityIsEarly
-          ? _value.maxIntensityIsEarly
-          : maxIntensityIsEarly // ignore: cast_nullable_to_non_nullable
-              as bool,
-      regions: null == regions
-          ? _value._regions
-          : regions // ignore: cast_nullable_to_non_nullable
-              as List<EarthquakeEarlyRegion>,
-      cities: null == cities
-          ? _value._cities
-          : cities // ignore: cast_nullable_to_non_nullable
-              as List<EarthquakeEarlyCity>,
-    ));
+    return _then(
+      _$EarthquakeEarlyEventImpl(
+        id:
+            null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                    as String,
+        name:
+            null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                    as String,
+        lat:
+            freezed == lat
+                ? _value.lat
+                : lat // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        lon:
+            freezed == lon
+                ? _value.lon
+                : lon // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        depth:
+            freezed == depth
+                ? _value.depth
+                : depth // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        magnitude:
+            freezed == magnitude
+                ? _value.magnitude
+                : magnitude // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        originTime:
+            null == originTime
+                ? _value.originTime
+                : originTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime,
+        originTimePrecision:
+            null == originTimePrecision
+                ? _value.originTimePrecision
+                : originTimePrecision // ignore: cast_nullable_to_non_nullable
+                    as OriginTimePrecision,
+        maxIntensity:
+            freezed == maxIntensity
+                ? _value.maxIntensity
+                : maxIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaForecastIntensity?,
+        maxIntensityIsEarly:
+            null == maxIntensityIsEarly
+                ? _value.maxIntensityIsEarly
+                : maxIntensityIsEarly // ignore: cast_nullable_to_non_nullable
+                    as bool,
+        regions:
+            null == regions
+                ? _value._regions
+                : regions // ignore: cast_nullable_to_non_nullable
+                    as List<EarthquakeEarlyRegion>,
+        cities:
+            null == cities
+                ? _value._cities
+                : cities // ignore: cast_nullable_to_non_nullable
+                    as List<EarthquakeEarlyCity>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$EarthquakeEarlyEventImpl implements _EarthquakeEarlyEvent {
-  const _$EarthquakeEarlyEventImpl(
-      {required this.id,
-      required this.name,
-      required this.lat,
-      required this.lon,
-      required this.depth,
-      required this.magnitude,
-      required this.originTime,
-      required this.originTimePrecision,
-      required this.maxIntensity,
-      required this.maxIntensityIsEarly,
-      required final List<EarthquakeEarlyRegion> regions,
-      required final List<EarthquakeEarlyCity> cities})
-      : _regions = regions,
-        _cities = cities;
+  const _$EarthquakeEarlyEventImpl({
+    required this.id,
+    required this.name,
+    required this.lat,
+    required this.lon,
+    required this.depth,
+    required this.magnitude,
+    required this.originTime,
+    required this.originTimePrecision,
+    required this.maxIntensity,
+    required this.maxIntensityIsEarly,
+    required final List<EarthquakeEarlyRegion> regions,
+    required final List<EarthquakeEarlyCity> cities,
+  }) : _regions = regions,
+       _cities = cities;
 
   factory _$EarthquakeEarlyEventImpl.fromJson(Map<String, dynamic> json) =>
       _$$EarthquakeEarlyEventImplFromJson(json);
@@ -339,19 +376,20 @@ class _$EarthquakeEarlyEventImpl implements _EarthquakeEarlyEvent {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      name,
-      lat,
-      lon,
-      depth,
-      magnitude,
-      originTime,
-      originTimePrecision,
-      maxIntensity,
-      maxIntensityIsEarly,
-      const DeepCollectionEquality().hash(_regions),
-      const DeepCollectionEquality().hash(_cities));
+    runtimeType,
+    id,
+    name,
+    lat,
+    lon,
+    depth,
+    magnitude,
+    originTime,
+    originTimePrecision,
+    maxIntensity,
+    maxIntensityIsEarly,
+    const DeepCollectionEquality().hash(_regions),
+    const DeepCollectionEquality().hash(_cities),
+  );
 
   /// Create a copy of EarthquakeEarlyEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -359,33 +397,33 @@ class _$EarthquakeEarlyEventImpl implements _EarthquakeEarlyEvent {
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeEarlyEventImplCopyWith<_$EarthquakeEarlyEventImpl>
-      get copyWith =>
-          __$$EarthquakeEarlyEventImplCopyWithImpl<_$EarthquakeEarlyEventImpl>(
-              this, _$identity);
+  get copyWith =>
+      __$$EarthquakeEarlyEventImplCopyWithImpl<_$EarthquakeEarlyEventImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EarthquakeEarlyEventImplToJson(
-      this,
-    );
+    return _$$EarthquakeEarlyEventImplToJson(this);
   }
 }
 
 abstract class _EarthquakeEarlyEvent implements EarthquakeEarlyEvent {
-  const factory _EarthquakeEarlyEvent(
-          {required final String id,
-          required final String name,
-          required final double? lat,
-          required final double? lon,
-          required final double? depth,
-          required final double? magnitude,
-          required final DateTime originTime,
-          required final OriginTimePrecision originTimePrecision,
-          required final JmaForecastIntensity? maxIntensity,
-          required final bool maxIntensityIsEarly,
-          required final List<EarthquakeEarlyRegion> regions,
-          required final List<EarthquakeEarlyCity> cities}) =
-      _$EarthquakeEarlyEventImpl;
+  const factory _EarthquakeEarlyEvent({
+    required final String id,
+    required final String name,
+    required final double? lat,
+    required final double? lon,
+    required final double? depth,
+    required final double? magnitude,
+    required final DateTime originTime,
+    required final OriginTimePrecision originTimePrecision,
+    required final JmaForecastIntensity? maxIntensity,
+    required final bool maxIntensityIsEarly,
+    required final List<EarthquakeEarlyRegion> regions,
+    required final List<EarthquakeEarlyCity> cities,
+  }) = _$EarthquakeEarlyEventImpl;
 
   factory _EarthquakeEarlyEvent.fromJson(Map<String, dynamic> json) =
       _$EarthquakeEarlyEventImpl.fromJson;
@@ -420,11 +458,12 @@ abstract class _EarthquakeEarlyEvent implements EarthquakeEarlyEvent {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeEarlyEventImplCopyWith<_$EarthquakeEarlyEventImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 EarthquakeEarlyRegion _$EarthquakeEarlyRegionFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _EarthquakeEarlyRegion.fromJson(json);
 }
 
@@ -446,16 +485,19 @@ mixin _$EarthquakeEarlyRegion {
 
 /// @nodoc
 abstract class $EarthquakeEarlyRegionCopyWith<$Res> {
-  factory $EarthquakeEarlyRegionCopyWith(EarthquakeEarlyRegion value,
-          $Res Function(EarthquakeEarlyRegion) then) =
-      _$EarthquakeEarlyRegionCopyWithImpl<$Res, EarthquakeEarlyRegion>;
+  factory $EarthquakeEarlyRegionCopyWith(
+    EarthquakeEarlyRegion value,
+    $Res Function(EarthquakeEarlyRegion) then,
+  ) = _$EarthquakeEarlyRegionCopyWithImpl<$Res, EarthquakeEarlyRegion>;
   @useResult
   $Res call({String name, String code, JmaForecastIntensity maxIntensity});
 }
 
 /// @nodoc
-class _$EarthquakeEarlyRegionCopyWithImpl<$Res,
-        $Val extends EarthquakeEarlyRegion>
+class _$EarthquakeEarlyRegionCopyWithImpl<
+  $Res,
+  $Val extends EarthquakeEarlyRegion
+>
     implements $EarthquakeEarlyRegionCopyWith<$Res> {
   _$EarthquakeEarlyRegionCopyWithImpl(this._value, this._then);
 
@@ -473,20 +515,26 @@ class _$EarthquakeEarlyRegionCopyWithImpl<$Res,
     Object? code = null,
     Object? maxIntensity = null,
   }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      maxIntensity: null == maxIntensity
-          ? _value.maxIntensity
-          : maxIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            name:
+                null == name
+                    ? _value.name
+                    : name // ignore: cast_nullable_to_non_nullable
+                        as String,
+            code:
+                null == code
+                    ? _value.code
+                    : code // ignore: cast_nullable_to_non_nullable
+                        as String,
+            maxIntensity:
+                null == maxIntensity
+                    ? _value.maxIntensity
+                    : maxIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaForecastIntensity,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -494,9 +542,9 @@ class _$EarthquakeEarlyRegionCopyWithImpl<$Res,
 abstract class _$$EarthquakeEarlyRegionImplCopyWith<$Res>
     implements $EarthquakeEarlyRegionCopyWith<$Res> {
   factory _$$EarthquakeEarlyRegionImplCopyWith(
-          _$EarthquakeEarlyRegionImpl value,
-          $Res Function(_$EarthquakeEarlyRegionImpl) then) =
-      __$$EarthquakeEarlyRegionImplCopyWithImpl<$Res>;
+    _$EarthquakeEarlyRegionImpl value,
+    $Res Function(_$EarthquakeEarlyRegionImpl) then,
+  ) = __$$EarthquakeEarlyRegionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String name, String code, JmaForecastIntensity maxIntensity});
@@ -504,12 +552,13 @@ abstract class _$$EarthquakeEarlyRegionImplCopyWith<$Res>
 
 /// @nodoc
 class __$$EarthquakeEarlyRegionImplCopyWithImpl<$Res>
-    extends _$EarthquakeEarlyRegionCopyWithImpl<$Res,
-        _$EarthquakeEarlyRegionImpl>
+    extends
+        _$EarthquakeEarlyRegionCopyWithImpl<$Res, _$EarthquakeEarlyRegionImpl>
     implements _$$EarthquakeEarlyRegionImplCopyWith<$Res> {
-  __$$EarthquakeEarlyRegionImplCopyWithImpl(_$EarthquakeEarlyRegionImpl _value,
-      $Res Function(_$EarthquakeEarlyRegionImpl) _then)
-      : super(_value, _then);
+  __$$EarthquakeEarlyRegionImplCopyWithImpl(
+    _$EarthquakeEarlyRegionImpl _value,
+    $Res Function(_$EarthquakeEarlyRegionImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of EarthquakeEarlyRegion
   /// with the given fields replaced by the non-null parameter values.
@@ -520,28 +569,36 @@ class __$$EarthquakeEarlyRegionImplCopyWithImpl<$Res>
     Object? code = null,
     Object? maxIntensity = null,
   }) {
-    return _then(_$EarthquakeEarlyRegionImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      maxIntensity: null == maxIntensity
-          ? _value.maxIntensity
-          : maxIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity,
-    ));
+    return _then(
+      _$EarthquakeEarlyRegionImpl(
+        name:
+            null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                    as String,
+        code:
+            null == code
+                ? _value.code
+                : code // ignore: cast_nullable_to_non_nullable
+                    as String,
+        maxIntensity:
+            null == maxIntensity
+                ? _value.maxIntensity
+                : maxIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaForecastIntensity,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$EarthquakeEarlyRegionImpl implements _EarthquakeEarlyRegion {
-  const _$EarthquakeEarlyRegionImpl(
-      {required this.name, required this.code, required this.maxIntensity});
+  const _$EarthquakeEarlyRegionImpl({
+    required this.name,
+    required this.code,
+    required this.maxIntensity,
+  });
 
   factory _$EarthquakeEarlyRegionImpl.fromJson(Map<String, dynamic> json) =>
       _$$EarthquakeEarlyRegionImplFromJson(json);
@@ -579,23 +636,24 @@ class _$EarthquakeEarlyRegionImpl implements _EarthquakeEarlyRegion {
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeEarlyRegionImplCopyWith<_$EarthquakeEarlyRegionImpl>
-      get copyWith => __$$EarthquakeEarlyRegionImplCopyWithImpl<
-          _$EarthquakeEarlyRegionImpl>(this, _$identity);
+  get copyWith =>
+      __$$EarthquakeEarlyRegionImplCopyWithImpl<_$EarthquakeEarlyRegionImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EarthquakeEarlyRegionImplToJson(
-      this,
-    );
+    return _$$EarthquakeEarlyRegionImplToJson(this);
   }
 }
 
 abstract class _EarthquakeEarlyRegion implements EarthquakeEarlyRegion {
-  const factory _EarthquakeEarlyRegion(
-          {required final String name,
-          required final String code,
-          required final JmaForecastIntensity maxIntensity}) =
-      _$EarthquakeEarlyRegionImpl;
+  const factory _EarthquakeEarlyRegion({
+    required final String name,
+    required final String code,
+    required final JmaForecastIntensity maxIntensity,
+  }) = _$EarthquakeEarlyRegionImpl;
 
   factory _EarthquakeEarlyRegion.fromJson(Map<String, dynamic> json) =
       _$EarthquakeEarlyRegionImpl.fromJson;
@@ -612,7 +670,7 @@ abstract class _EarthquakeEarlyRegion implements EarthquakeEarlyRegion {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeEarlyRegionImplCopyWith<_$EarthquakeEarlyRegionImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 EarthquakeEarlyCity _$EarthquakeEarlyCityFromJson(Map<String, dynamic> json) {
@@ -640,14 +698,16 @@ mixin _$EarthquakeEarlyCity {
 /// @nodoc
 abstract class $EarthquakeEarlyCityCopyWith<$Res> {
   factory $EarthquakeEarlyCityCopyWith(
-          EarthquakeEarlyCity value, $Res Function(EarthquakeEarlyCity) then) =
-      _$EarthquakeEarlyCityCopyWithImpl<$Res, EarthquakeEarlyCity>;
+    EarthquakeEarlyCity value,
+    $Res Function(EarthquakeEarlyCity) then,
+  ) = _$EarthquakeEarlyCityCopyWithImpl<$Res, EarthquakeEarlyCity>;
   @useResult
-  $Res call(
-      {String name,
-      String? code,
-      JmaForecastIntensity maxIntensity,
-      List<EarthquakeEarlyObservationPoint> observationPoints});
+  $Res call({
+    String name,
+    String? code,
+    JmaForecastIntensity maxIntensity,
+    List<EarthquakeEarlyObservationPoint> observationPoints,
+  });
 }
 
 /// @nodoc
@@ -670,49 +730,59 @@ class _$EarthquakeEarlyCityCopyWithImpl<$Res, $Val extends EarthquakeEarlyCity>
     Object? maxIntensity = null,
     Object? observationPoints = null,
   }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: freezed == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String?,
-      maxIntensity: null == maxIntensity
-          ? _value.maxIntensity
-          : maxIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity,
-      observationPoints: null == observationPoints
-          ? _value.observationPoints
-          : observationPoints // ignore: cast_nullable_to_non_nullable
-              as List<EarthquakeEarlyObservationPoint>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            name:
+                null == name
+                    ? _value.name
+                    : name // ignore: cast_nullable_to_non_nullable
+                        as String,
+            code:
+                freezed == code
+                    ? _value.code
+                    : code // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            maxIntensity:
+                null == maxIntensity
+                    ? _value.maxIntensity
+                    : maxIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaForecastIntensity,
+            observationPoints:
+                null == observationPoints
+                    ? _value.observationPoints
+                    : observationPoints // ignore: cast_nullable_to_non_nullable
+                        as List<EarthquakeEarlyObservationPoint>,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$EarthquakeEarlyCityImplCopyWith<$Res>
     implements $EarthquakeEarlyCityCopyWith<$Res> {
-  factory _$$EarthquakeEarlyCityImplCopyWith(_$EarthquakeEarlyCityImpl value,
-          $Res Function(_$EarthquakeEarlyCityImpl) then) =
-      __$$EarthquakeEarlyCityImplCopyWithImpl<$Res>;
+  factory _$$EarthquakeEarlyCityImplCopyWith(
+    _$EarthquakeEarlyCityImpl value,
+    $Res Function(_$EarthquakeEarlyCityImpl) then,
+  ) = __$$EarthquakeEarlyCityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String name,
-      String? code,
-      JmaForecastIntensity maxIntensity,
-      List<EarthquakeEarlyObservationPoint> observationPoints});
+  $Res call({
+    String name,
+    String? code,
+    JmaForecastIntensity maxIntensity,
+    List<EarthquakeEarlyObservationPoint> observationPoints,
+  });
 }
 
 /// @nodoc
 class __$$EarthquakeEarlyCityImplCopyWithImpl<$Res>
     extends _$EarthquakeEarlyCityCopyWithImpl<$Res, _$EarthquakeEarlyCityImpl>
     implements _$$EarthquakeEarlyCityImplCopyWith<$Res> {
-  __$$EarthquakeEarlyCityImplCopyWithImpl(_$EarthquakeEarlyCityImpl _value,
-      $Res Function(_$EarthquakeEarlyCityImpl) _then)
-      : super(_value, _then);
+  __$$EarthquakeEarlyCityImplCopyWithImpl(
+    _$EarthquakeEarlyCityImpl _value,
+    $Res Function(_$EarthquakeEarlyCityImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of EarthquakeEarlyCity
   /// with the given fields replaced by the non-null parameter values.
@@ -724,36 +794,42 @@ class __$$EarthquakeEarlyCityImplCopyWithImpl<$Res>
     Object? maxIntensity = null,
     Object? observationPoints = null,
   }) {
-    return _then(_$EarthquakeEarlyCityImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: freezed == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String?,
-      maxIntensity: null == maxIntensity
-          ? _value.maxIntensity
-          : maxIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity,
-      observationPoints: null == observationPoints
-          ? _value._observationPoints
-          : observationPoints // ignore: cast_nullable_to_non_nullable
-              as List<EarthquakeEarlyObservationPoint>,
-    ));
+    return _then(
+      _$EarthquakeEarlyCityImpl(
+        name:
+            null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                    as String,
+        code:
+            freezed == code
+                ? _value.code
+                : code // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        maxIntensity:
+            null == maxIntensity
+                ? _value.maxIntensity
+                : maxIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaForecastIntensity,
+        observationPoints:
+            null == observationPoints
+                ? _value._observationPoints
+                : observationPoints // ignore: cast_nullable_to_non_nullable
+                    as List<EarthquakeEarlyObservationPoint>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$EarthquakeEarlyCityImpl implements _EarthquakeEarlyCity {
-  const _$EarthquakeEarlyCityImpl(
-      {required this.name,
-      required this.code,
-      required this.maxIntensity,
-      required final List<EarthquakeEarlyObservationPoint> observationPoints})
-      : _observationPoints = observationPoints;
+  const _$EarthquakeEarlyCityImpl({
+    required this.name,
+    required this.code,
+    required this.maxIntensity,
+    required final List<EarthquakeEarlyObservationPoint> observationPoints,
+  }) : _observationPoints = observationPoints;
 
   factory _$EarthquakeEarlyCityImpl.fromJson(Map<String, dynamic> json) =>
       _$$EarthquakeEarlyCityImplFromJson(json);
@@ -787,14 +863,21 @@ class _$EarthquakeEarlyCityImpl implements _EarthquakeEarlyCity {
             (identical(other.code, code) || other.code == code) &&
             (identical(other.maxIntensity, maxIntensity) ||
                 other.maxIntensity == maxIntensity) &&
-            const DeepCollectionEquality()
-                .equals(other._observationPoints, _observationPoints));
+            const DeepCollectionEquality().equals(
+              other._observationPoints,
+              _observationPoints,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, name, code, maxIntensity,
-      const DeepCollectionEquality().hash(_observationPoints));
+  int get hashCode => Object.hash(
+    runtimeType,
+    name,
+    code,
+    maxIntensity,
+    const DeepCollectionEquality().hash(_observationPoints),
+  );
 
   /// Create a copy of EarthquakeEarlyCity
   /// with the given fields replaced by the non-null parameter values.
@@ -803,23 +886,23 @@ class _$EarthquakeEarlyCityImpl implements _EarthquakeEarlyCity {
   @pragma('vm:prefer-inline')
   _$$EarthquakeEarlyCityImplCopyWith<_$EarthquakeEarlyCityImpl> get copyWith =>
       __$$EarthquakeEarlyCityImplCopyWithImpl<_$EarthquakeEarlyCityImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EarthquakeEarlyCityImplToJson(
-      this,
-    );
+    return _$$EarthquakeEarlyCityImplToJson(this);
   }
 }
 
 abstract class _EarthquakeEarlyCity implements EarthquakeEarlyCity {
-  const factory _EarthquakeEarlyCity(
-      {required final String name,
-      required final String? code,
-      required final JmaForecastIntensity maxIntensity,
-      required final List<EarthquakeEarlyObservationPoint>
-          observationPoints}) = _$EarthquakeEarlyCityImpl;
+  const factory _EarthquakeEarlyCity({
+    required final String name,
+    required final String? code,
+    required final JmaForecastIntensity maxIntensity,
+    required final List<EarthquakeEarlyObservationPoint> observationPoints,
+  }) = _$EarthquakeEarlyCityImpl;
 
   factory _EarthquakeEarlyCity.fromJson(Map<String, dynamic> json) =
       _$EarthquakeEarlyCityImpl.fromJson;
@@ -842,7 +925,8 @@ abstract class _EarthquakeEarlyCity implements EarthquakeEarlyCity {
 }
 
 EarthquakeEarlyObservationPoint _$EarthquakeEarlyObservationPointFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _EarthquakeEarlyObservationPoint.fromJson(json);
 }
 
@@ -860,24 +944,33 @@ mixin _$EarthquakeEarlyObservationPoint {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   $EarthquakeEarlyObservationPointCopyWith<EarthquakeEarlyObservationPoint>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $EarthquakeEarlyObservationPointCopyWith<$Res> {
   factory $EarthquakeEarlyObservationPointCopyWith(
-          EarthquakeEarlyObservationPoint value,
-          $Res Function(EarthquakeEarlyObservationPoint) then) =
-      _$EarthquakeEarlyObservationPointCopyWithImpl<$Res,
-          EarthquakeEarlyObservationPoint>;
+    EarthquakeEarlyObservationPoint value,
+    $Res Function(EarthquakeEarlyObservationPoint) then,
+  ) =
+      _$EarthquakeEarlyObservationPointCopyWithImpl<
+        $Res,
+        EarthquakeEarlyObservationPoint
+      >;
   @useResult
-  $Res call(
-      {String name, double lat, double lon, JmaForecastIntensity intensity});
+  $Res call({
+    String name,
+    double lat,
+    double lon,
+    JmaForecastIntensity intensity,
+  });
 }
 
 /// @nodoc
-class _$EarthquakeEarlyObservationPointCopyWithImpl<$Res,
-        $Val extends EarthquakeEarlyObservationPoint>
+class _$EarthquakeEarlyObservationPointCopyWithImpl<
+  $Res,
+  $Val extends EarthquakeEarlyObservationPoint
+>
     implements $EarthquakeEarlyObservationPointCopyWith<$Res> {
   _$EarthquakeEarlyObservationPointCopyWithImpl(this._value, this._then);
 
@@ -896,24 +989,31 @@ class _$EarthquakeEarlyObservationPointCopyWithImpl<$Res,
     Object? lon = null,
     Object? intensity = null,
   }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      lat: null == lat
-          ? _value.lat
-          : lat // ignore: cast_nullable_to_non_nullable
-              as double,
-      lon: null == lon
-          ? _value.lon
-          : lon // ignore: cast_nullable_to_non_nullable
-              as double,
-      intensity: null == intensity
-          ? _value.intensity
-          : intensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            name:
+                null == name
+                    ? _value.name
+                    : name // ignore: cast_nullable_to_non_nullable
+                        as String,
+            lat:
+                null == lat
+                    ? _value.lat
+                    : lat // ignore: cast_nullable_to_non_nullable
+                        as double,
+            lon:
+                null == lon
+                    ? _value.lon
+                    : lon // ignore: cast_nullable_to_non_nullable
+                        as double,
+            intensity:
+                null == intensity
+                    ? _value.intensity
+                    : intensity // ignore: cast_nullable_to_non_nullable
+                        as JmaForecastIntensity,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -921,24 +1021,31 @@ class _$EarthquakeEarlyObservationPointCopyWithImpl<$Res,
 abstract class _$$EarthquakeEarlyObservationPointImplCopyWith<$Res>
     implements $EarthquakeEarlyObservationPointCopyWith<$Res> {
   factory _$$EarthquakeEarlyObservationPointImplCopyWith(
-          _$EarthquakeEarlyObservationPointImpl value,
-          $Res Function(_$EarthquakeEarlyObservationPointImpl) then) =
-      __$$EarthquakeEarlyObservationPointImplCopyWithImpl<$Res>;
+    _$EarthquakeEarlyObservationPointImpl value,
+    $Res Function(_$EarthquakeEarlyObservationPointImpl) then,
+  ) = __$$EarthquakeEarlyObservationPointImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String name, double lat, double lon, JmaForecastIntensity intensity});
+  $Res call({
+    String name,
+    double lat,
+    double lon,
+    JmaForecastIntensity intensity,
+  });
 }
 
 /// @nodoc
 class __$$EarthquakeEarlyObservationPointImplCopyWithImpl<$Res>
-    extends _$EarthquakeEarlyObservationPointCopyWithImpl<$Res,
-        _$EarthquakeEarlyObservationPointImpl>
+    extends
+        _$EarthquakeEarlyObservationPointCopyWithImpl<
+          $Res,
+          _$EarthquakeEarlyObservationPointImpl
+        >
     implements _$$EarthquakeEarlyObservationPointImplCopyWith<$Res> {
   __$$EarthquakeEarlyObservationPointImplCopyWithImpl(
-      _$EarthquakeEarlyObservationPointImpl _value,
-      $Res Function(_$EarthquakeEarlyObservationPointImpl) _then)
-      : super(_value, _then);
+    _$EarthquakeEarlyObservationPointImpl _value,
+    $Res Function(_$EarthquakeEarlyObservationPointImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of EarthquakeEarlyObservationPoint
   /// with the given fields replaced by the non-null parameter values.
@@ -950,24 +1057,30 @@ class __$$EarthquakeEarlyObservationPointImplCopyWithImpl<$Res>
     Object? lon = null,
     Object? intensity = null,
   }) {
-    return _then(_$EarthquakeEarlyObservationPointImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      lat: null == lat
-          ? _value.lat
-          : lat // ignore: cast_nullable_to_non_nullable
-              as double,
-      lon: null == lon
-          ? _value.lon
-          : lon // ignore: cast_nullable_to_non_nullable
-              as double,
-      intensity: null == intensity
-          ? _value.intensity
-          : intensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity,
-    ));
+    return _then(
+      _$EarthquakeEarlyObservationPointImpl(
+        name:
+            null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                    as String,
+        lat:
+            null == lat
+                ? _value.lat
+                : lat // ignore: cast_nullable_to_non_nullable
+                    as double,
+        lon:
+            null == lon
+                ? _value.lon
+                : lon // ignore: cast_nullable_to_non_nullable
+                    as double,
+        intensity:
+            null == intensity
+                ? _value.intensity
+                : intensity // ignore: cast_nullable_to_non_nullable
+                    as JmaForecastIntensity,
+      ),
+    );
   }
 }
 
@@ -975,15 +1088,16 @@ class __$$EarthquakeEarlyObservationPointImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$EarthquakeEarlyObservationPointImpl
     implements _EarthquakeEarlyObservationPoint {
-  const _$EarthquakeEarlyObservationPointImpl(
-      {required this.name,
-      required this.lat,
-      required this.lon,
-      required this.intensity});
+  const _$EarthquakeEarlyObservationPointImpl({
+    required this.name,
+    required this.lat,
+    required this.lon,
+    required this.intensity,
+  });
 
   factory _$EarthquakeEarlyObservationPointImpl.fromJson(
-          Map<String, dynamic> json) =>
-      _$$EarthquakeEarlyObservationPointImplFromJson(json);
+    Map<String, dynamic> json,
+  ) => _$$EarthquakeEarlyObservationPointImplFromJson(json);
 
   @override
   final String name;
@@ -1021,26 +1135,26 @@ class _$EarthquakeEarlyObservationPointImpl
   @override
   @pragma('vm:prefer-inline')
   _$$EarthquakeEarlyObservationPointImplCopyWith<
-          _$EarthquakeEarlyObservationPointImpl>
-      get copyWith => __$$EarthquakeEarlyObservationPointImplCopyWithImpl<
-          _$EarthquakeEarlyObservationPointImpl>(this, _$identity);
+    _$EarthquakeEarlyObservationPointImpl
+  >
+  get copyWith => __$$EarthquakeEarlyObservationPointImplCopyWithImpl<
+    _$EarthquakeEarlyObservationPointImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EarthquakeEarlyObservationPointImplToJson(
-      this,
-    );
+    return _$$EarthquakeEarlyObservationPointImplToJson(this);
   }
 }
 
 abstract class _EarthquakeEarlyObservationPoint
     implements EarthquakeEarlyObservationPoint {
-  const factory _EarthquakeEarlyObservationPoint(
-          {required final String name,
-          required final double lat,
-          required final double lon,
-          required final JmaForecastIntensity intensity}) =
-      _$EarthquakeEarlyObservationPointImpl;
+  const factory _EarthquakeEarlyObservationPoint({
+    required final String name,
+    required final double lat,
+    required final double lon,
+    required final JmaForecastIntensity intensity,
+  }) = _$EarthquakeEarlyObservationPointImpl;
 
   factory _EarthquakeEarlyObservationPoint.fromJson(Map<String, dynamic> json) =
       _$EarthquakeEarlyObservationPointImpl.fromJson;
@@ -1059,6 +1173,7 @@ abstract class _EarthquakeEarlyObservationPoint
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EarthquakeEarlyObservationPointImplCopyWith<
-          _$EarthquakeEarlyObservationPointImpl>
-      get copyWith => throw _privateConstructorUsedError;
+    _$EarthquakeEarlyObservationPointImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }

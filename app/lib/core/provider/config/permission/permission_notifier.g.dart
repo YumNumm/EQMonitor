@@ -15,14 +15,15 @@ String _$permissionNotifierHash() =>
 @ProviderFor(PermissionNotifier)
 final permissionNotifierProvider =
     NotifierProvider<PermissionNotifier, PermissionStateModel>.internal(
-  PermissionNotifier.new,
-  name: r'permissionNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$permissionNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      PermissionNotifier.new,
+      name: r'permissionNotifierProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$permissionNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$PermissionNotifier = Notifier<PermissionStateModel>;
 // ignore_for_file: type=lint

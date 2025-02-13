@@ -36,8 +36,9 @@ class _SystemHash {
 const _calculatorProvider = _CalculatorFamily();
 
 /// See also [_calculator].
-class _CalculatorFamily extends Family<
-    AsyncValue<Map<JmaIntensity, List<_MergedRegionIntensity>>>> {
+class _CalculatorFamily
+    extends
+        Family<AsyncValue<Map<JmaIntensity, List<_MergedRegionIntensity>>>> {
   /// See also [_calculator].
   const _CalculatorFamily();
 
@@ -46,21 +47,18 @@ class _CalculatorFamily extends Family<
     ({
       List<ObservedRegionIntensity>? cities,
       List<ObservedRegionIntensity> prefectures,
-      List<ObservedRegionIntensity>? stations
-    }) arg,
+      List<ObservedRegionIntensity>? stations,
+    })
+    arg,
   ) {
-    return _CalculatorProvider(
-      arg,
-    );
+    return _CalculatorProvider(arg);
   }
 
   @override
   _CalculatorProvider getProviderOverride(
     covariant _CalculatorProvider provider,
   ) {
-    return call(
-      provider.arg,
-    );
+    return call(provider.arg);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -79,31 +77,31 @@ class _CalculatorFamily extends Family<
 }
 
 /// See also [_calculator].
-class _CalculatorProvider extends AutoDisposeFutureProvider<
-    Map<JmaIntensity, List<_MergedRegionIntensity>>> {
+class _CalculatorProvider
+    extends
+        AutoDisposeFutureProvider<
+          Map<JmaIntensity, List<_MergedRegionIntensity>>
+        > {
   /// See also [_calculator].
   _CalculatorProvider(
     ({
       List<ObservedRegionIntensity>? cities,
       List<ObservedRegionIntensity> prefectures,
-      List<ObservedRegionIntensity>? stations
-    }) arg,
+      List<ObservedRegionIntensity>? stations,
+    })
+    arg,
   ) : this._internal(
-          (ref) => _calculator(
-            ref as _CalculatorRef,
-            arg,
-          ),
-          from: _calculatorProvider,
-          name: r'_calculatorProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$calculatorHash,
-          dependencies: _CalculatorFamily._dependencies,
-          allTransitiveDependencies:
-              _CalculatorFamily._allTransitiveDependencies,
-          arg: arg,
-        );
+        (ref) => _calculator(ref as _CalculatorRef, arg),
+        from: _calculatorProvider,
+        name: r'_calculatorProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$calculatorHash,
+        dependencies: _CalculatorFamily._dependencies,
+        allTransitiveDependencies: _CalculatorFamily._allTransitiveDependencies,
+        arg: arg,
+      );
 
   _CalculatorProvider._internal(
     super._createNotifier, {
@@ -118,14 +116,16 @@ class _CalculatorProvider extends AutoDisposeFutureProvider<
   final ({
     List<ObservedRegionIntensity>? cities,
     List<ObservedRegionIntensity> prefectures,
-    List<ObservedRegionIntensity>? stations
-  }) arg;
+    List<ObservedRegionIntensity>? stations,
+  })
+  arg;
 
   @override
   Override overrideWith(
     FutureOr<Map<JmaIntensity, List<_MergedRegionIntensity>>> Function(
-            _CalculatorRef provider)
-        create,
+      _CalculatorRef provider,
+    )
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -143,7 +143,9 @@ class _CalculatorProvider extends AutoDisposeFutureProvider<
 
   @override
   AutoDisposeFutureProviderElement<
-      Map<JmaIntensity, List<_MergedRegionIntensity>>> createElement() {
+    Map<JmaIntensity, List<_MergedRegionIntensity>>
+  >
+  createElement() {
     return _CalculatorProviderElement(this);
   }
 
@@ -163,26 +165,36 @@ class _CalculatorProvider extends AutoDisposeFutureProvider<
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin _CalculatorRef on AutoDisposeFutureProviderRef<
-    Map<JmaIntensity, List<_MergedRegionIntensity>>> {
+mixin _CalculatorRef
+    on
+        AutoDisposeFutureProviderRef<
+          Map<JmaIntensity, List<_MergedRegionIntensity>>
+        > {
   /// The parameter `arg` of this provider.
   ({
     List<ObservedRegionIntensity>? cities,
     List<ObservedRegionIntensity> prefectures,
-    List<ObservedRegionIntensity>? stations
-  }) get arg;
+    List<ObservedRegionIntensity>? stations,
+  })
+  get arg;
 }
 
-class _CalculatorProviderElement extends AutoDisposeFutureProviderElement<
-    Map<JmaIntensity, List<_MergedRegionIntensity>>> with _CalculatorRef {
+class _CalculatorProviderElement
+    extends
+        AutoDisposeFutureProviderElement<
+          Map<JmaIntensity, List<_MergedRegionIntensity>>
+        >
+    with _CalculatorRef {
   _CalculatorProviderElement(super.provider);
 
   @override
   ({
     List<ObservedRegionIntensity>? cities,
     List<ObservedRegionIntensity> prefectures,
-    List<ObservedRegionIntensity>? stations
-  }) get arg => (origin as _CalculatorProvider).arg;
+    List<ObservedRegionIntensity>? stations,
+  })
+  get arg => (origin as _CalculatorProvider).arg;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -9,66 +9,73 @@ part of 'shake_detection_kmoni_merged_event.dart';
 // **************************************************************************
 
 _$ShakeDetectionKmoniMergedEventImpl
-    _$$ShakeDetectionKmoniMergedEventImplFromJson(Map<String, dynamic> json) =>
-        $checkedCreate(
-          r'_$ShakeDetectionKmoniMergedEventImpl',
-          json,
-          ($checkedConvert) {
-            final val = _$ShakeDetectionKmoniMergedEventImpl(
-              event: $checkedConvert(
-                  'event',
-                  (v) =>
-                      ShakeDetectionEvent.fromJson(v as Map<String, dynamic>)),
-              regions: $checkedConvert(
-                  'regions',
-                  (v) => (v as List<dynamic>)
-                      .map((e) => ShakeDetectionKmoniMergedRegion.fromJson(
-                          e as Map<String, dynamic>))
-                      .toList()),
-            );
-            return val;
-          },
-        );
+_$$ShakeDetectionKmoniMergedEventImplFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(r'_$ShakeDetectionKmoniMergedEventImpl', json, (
+      $checkedConvert,
+    ) {
+      final val = _$ShakeDetectionKmoniMergedEventImpl(
+        event: $checkedConvert(
+          'event',
+          (v) => ShakeDetectionEvent.fromJson(v as Map<String, dynamic>),
+        ),
+        regions: $checkedConvert(
+          'regions',
+          (v) =>
+              (v as List<dynamic>)
+                  .map(
+                    (e) => ShakeDetectionKmoniMergedRegion.fromJson(
+                      e as Map<String, dynamic>,
+                    ),
+                  )
+                  .toList(),
+        ),
+      );
+      return val;
+    });
 
 Map<String, dynamic> _$$ShakeDetectionKmoniMergedEventImplToJson(
-        _$ShakeDetectionKmoniMergedEventImpl instance) =>
-    <String, dynamic>{
-      'event': instance.event,
-      'regions': instance.regions,
-    };
+  _$ShakeDetectionKmoniMergedEventImpl instance,
+) => <String, dynamic>{'event': instance.event, 'regions': instance.regions};
 
 _$ShakeDetectionKmoniMergedRegionImpl
-    _$$ShakeDetectionKmoniMergedRegionImplFromJson(Map<String, dynamic> json) =>
-        $checkedCreate(
-          r'_$ShakeDetectionKmoniMergedRegionImpl',
-          json,
-          ($checkedConvert) {
-            final val = _$ShakeDetectionKmoniMergedRegionImpl(
-              name: $checkedConvert('name', (v) => v as String),
-              maxIntensity: $checkedConvert(
-                  'maxIntensity',
-                  (v) =>
-                      $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v,
-                          unknownValue: JmaForecastIntensity.unknown) ??
-                      JmaForecastIntensity.unknown),
-              points: $checkedConvert(
-                  'points',
-                  (v) => (v as List<dynamic>)
-                      .map((e) => ShakeDetectionKmoniMergedPoint.fromJson(
-                          e as Map<String, dynamic>))
-                      .toList()),
-            );
-            return val;
-          },
-        );
+_$$ShakeDetectionKmoniMergedRegionImplFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(r'_$ShakeDetectionKmoniMergedRegionImpl', json, (
+      $checkedConvert,
+    ) {
+      final val = _$ShakeDetectionKmoniMergedRegionImpl(
+        name: $checkedConvert('name', (v) => v as String),
+        maxIntensity: $checkedConvert(
+          'maxIntensity',
+          (v) =>
+              $enumDecodeNullable(
+                _$JmaForecastIntensityEnumMap,
+                v,
+                unknownValue: JmaForecastIntensity.unknown,
+              ) ??
+              JmaForecastIntensity.unknown,
+        ),
+        points: $checkedConvert(
+          'points',
+          (v) =>
+              (v as List<dynamic>)
+                  .map(
+                    (e) => ShakeDetectionKmoniMergedPoint.fromJson(
+                      e as Map<String, dynamic>,
+                    ),
+                  )
+                  .toList(),
+        ),
+      );
+      return val;
+    });
 
 Map<String, dynamic> _$$ShakeDetectionKmoniMergedRegionImplToJson(
-        _$ShakeDetectionKmoniMergedRegionImpl instance) =>
-    <String, dynamic>{
-      'name': instance.name,
-      'maxIntensity': _$JmaForecastIntensityEnumMap[instance.maxIntensity]!,
-      'points': instance.points,
-    };
+  _$ShakeDetectionKmoniMergedRegionImpl instance,
+) => <String, dynamic>{
+  'name': instance.name,
+  'maxIntensity': _$JmaForecastIntensityEnumMap[instance.maxIntensity]!,
+  'points': instance.points,
+};
 
 const _$JmaForecastIntensityEnumMap = {
   JmaForecastIntensity.zero: '0',
@@ -85,30 +92,34 @@ const _$JmaForecastIntensityEnumMap = {
 };
 
 _$ShakeDetectionKmoniMergedPointImpl
-    _$$ShakeDetectionKmoniMergedPointImplFromJson(Map<String, dynamic> json) =>
-        $checkedCreate(
-          r'_$ShakeDetectionKmoniMergedPointImpl',
-          json,
-          ($checkedConvert) {
-            final val = _$ShakeDetectionKmoniMergedPointImpl(
-              intensity: $checkedConvert(
-                  'intensity',
-                  (v) =>
-                      $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v,
-                          unknownValue: JmaForecastIntensity.unknown) ??
-                      JmaForecastIntensity.unknown),
-              code: $checkedConvert('code', (v) => v as String),
-              point: $checkedConvert('point',
-                  (v) => KyoshinObservationPoint.fromJson(v as String)),
-            );
-            return val;
-          },
-        );
+_$$ShakeDetectionKmoniMergedPointImplFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(r'_$ShakeDetectionKmoniMergedPointImpl', json, (
+      $checkedConvert,
+    ) {
+      final val = _$ShakeDetectionKmoniMergedPointImpl(
+        intensity: $checkedConvert(
+          'intensity',
+          (v) =>
+              $enumDecodeNullable(
+                _$JmaForecastIntensityEnumMap,
+                v,
+                unknownValue: JmaForecastIntensity.unknown,
+              ) ??
+              JmaForecastIntensity.unknown,
+        ),
+        code: $checkedConvert('code', (v) => v as String),
+        point: $checkedConvert(
+          'point',
+          (v) => KyoshinObservationPoint.fromJson(v as String),
+        ),
+      );
+      return val;
+    });
 
 Map<String, dynamic> _$$ShakeDetectionKmoniMergedPointImplToJson(
-        _$ShakeDetectionKmoniMergedPointImpl instance) =>
-    <String, dynamic>{
-      'intensity': _$JmaForecastIntensityEnumMap[instance.intensity]!,
-      'code': instance.code,
-      'point': _pointToJson(instance.point),
-    };
+  _$ShakeDetectionKmoniMergedPointImpl instance,
+) => <String, dynamic>{
+  'intensity': _$JmaForecastIntensityEnumMap[instance.intensity]!,
+  'code': instance.code,
+  'point': _pointToJson(instance.point),
+};

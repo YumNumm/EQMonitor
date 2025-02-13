@@ -20,14 +20,8 @@ class DebugPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Debug Page'),
-      ),
-      body: ListView(
-        children: const [
-          _DebugWidget(),
-        ],
-      ),
+      appBar: AppBar(title: const Text('Debug Page')),
+      body: ListView(children: const [_DebugWidget()]),
     );
   }
 }
@@ -53,10 +47,7 @@ class _DebugWidget extends ConsumerWidget {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8,
-          vertical: 4,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -65,8 +56,9 @@ class _DebugWidget extends ConsumerWidget {
               title: const Text('デバッグモード'),
               subtitle: Text(isDebugEnabled ? 'ON' : 'OFF'),
               value: isDebugEnabled,
-              onChanged: (value) async =>
-                  ref.read(debugProvider.notifier).save(isEnabled: value),
+              onChanged:
+                  (value) async =>
+                      ref.read(debugProvider.notifier).save(isEnabled: value),
             ),
             ListTile(
               title: const Text('Flavor'),
@@ -82,15 +74,18 @@ class _DebugWidget extends ConsumerWidget {
               title: const Text('REST APIエンドポイント'),
               leading: const Icon(Icons.http),
               subtitle: Text(ref.watch(telegramUrlProvider).restApiUrl),
-              onTap: () async =>
-                  const HttpApiEndpointSelectorRoute().push<void>(context),
+              onTap:
+                  () async =>
+                      const HttpApiEndpointSelectorRoute().push<void>(context),
             ),
             ListTile(
               title: const Text('WebSocketエンドポイント'),
               leading: const Icon(Icons.http),
               subtitle: Text(ref.watch(telegramUrlProvider).wsApiUrl),
-              onTap: () async =>
-                  const WebsocketEndpointSelectorRoute().push<void>(context),
+              onTap:
+                  () async => const WebsocketEndpointSelectorRoute().push<void>(
+                    context,
+                  ),
             ),
             ListTile(
               title: const Text('KyoshinMonitor'),
@@ -105,11 +100,12 @@ class _DebugWidget extends ConsumerWidget {
             ListTile(
               title: const Text('震源アイコン生成'),
               leading: const Icon(Icons.place),
-              onTap: () async => Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (context) => const HypocenterIconPage(),
-                ),
-              ),
+              onTap:
+                  () async => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (context) => const HypocenterIconPage(),
+                    ),
+                  ),
             ),
             ListTile(
               title: const Text('FCM Token'),
@@ -130,11 +126,9 @@ class _DebugWidget extends ConsumerWidget {
               child: Column(
                 children:
                     ref.watch(goRouterProvider).configuration.routes.map((e) {
-                  final route = e as GoRoute;
-                  return _Route(
-                    routes: [route],
-                  );
-                }).toList(),
+                      final route = e as GoRoute;
+                      return _Route(routes: [route]);
+                    }).toList(),
               ),
             ),
           ],
@@ -145,10 +139,7 @@ class _DebugWidget extends ConsumerWidget {
 }
 
 class _Route extends StatelessWidget {
-  const _Route({
-    required this.routes,
-    this.parent = const [],
-  });
+  const _Route({required this.routes, this.parent = const []});
 
   final List<GoRoute> routes;
   final List<GoRoute> parent;
@@ -156,27 +147,24 @@ class _Route extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: routes.map(
-        (route) {
-          final currentPath = [...parent, route];
-          if (route.routes.isEmpty) {
-            final path = [...parent, route].map((e) => e.path).join('/');
+      children:
+          routes.map((route) {
+            final currentPath = [...parent, route];
+            if (route.routes.isEmpty) {
+              final path = [...parent, route].map((e) => e.path).join('/');
 
-            return ListTile(
-              title: Text(path),
-              onTap: () async => context.push(
-                path,
-              ),
-              visualDensity: VisualDensity.compact,
+              return ListTile(
+                title: Text(path),
+                onTap: () async => context.push(path),
+                visualDensity: VisualDensity.compact,
+              );
+            }
+
+            return _Route(
+              routes: route.routes.whereType<GoRoute>().toList(),
+              parent: currentPath,
             );
-          }
-
-          return _Route(
-            routes: route.routes.whereType<GoRoute>().toList(),
-            parent: currentPath,
-          );
-        },
-      ).toList(),
+          }).toList(),
     );
   }
 }

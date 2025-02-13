@@ -16,18 +16,13 @@ class HypocenterIconPage extends ConsumerWidget {
     final lowPreciseController = ScreenshotController();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('震源アイコン生成'),
-      ),
+      appBar: AppBar(title: const Text('震源アイコン生成')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           const Text(
             '通常の震源アイコン',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Column(
@@ -41,21 +36,17 @@ class HypocenterIconPage extends ConsumerWidget {
                   height: 100,
                   width: 100,
                   child: const CustomPaint(
-                    painter: _HypocenterPainter(
-                      type: HypocenterType.normal,
-                    ),
+                    painter: _HypocenterPainter(type: HypocenterType.normal),
                   ),
                 ),
               ),
-              Assets.images.map.normalHypocenter.image(
-                width: 100,
-                height: 100,
-              ),
+              Assets.images.map.normalHypocenter.image(width: 100, height: 100),
               FilledButton.icon(
-                onPressed: () async => _captureAndShare(
-                  controller: normalController,
-                  fileName: 'normal_hypocenter.png',
-                ),
+                onPressed:
+                    () async => _captureAndShare(
+                      controller: normalController,
+                      fileName: 'normal_hypocenter.png',
+                    ),
                 icon: const Icon(Icons.share),
                 label: const Text('共有'),
               ),
@@ -64,10 +55,7 @@ class HypocenterIconPage extends ConsumerWidget {
           const SizedBox(height: 16),
           const Text(
             '精度の低い震源アイコン',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Column(
@@ -94,10 +82,11 @@ class HypocenterIconPage extends ConsumerWidget {
                     height: 100,
                   ),
                   FilledButton.icon(
-                    onPressed: () async => _captureAndShare(
-                      controller: lowPreciseController,
-                      fileName: 'low_precise_hypocenter.png',
-                    ),
+                    onPressed:
+                        () async => _captureAndShare(
+                          controller: lowPreciseController,
+                          fileName: 'low_precise_hypocenter.png',
+                        ),
                     icon: const Icon(Icons.share),
                     label: const Text('共有'),
                   ),
@@ -123,16 +112,12 @@ class HypocenterIconPage extends ConsumerWidget {
     final file = await File('${tempDir.path}/$fileName').create();
     await file.writeAsBytes(image);
 
-    await Share.shareXFiles(
-      [XFile(file.path)],
-    );
+    await Share.shareXFiles([XFile(file.path)]);
   }
 }
 
 class _HypocenterPainter extends CustomPainter {
-  const _HypocenterPainter({
-    required this.type,
-  });
+  const _HypocenterPainter({required this.type});
   final HypocenterType type;
 
   @override
@@ -238,8 +223,4 @@ class _HypocenterPainter extends CustomPainter {
   bool shouldRepaint(covariant _) => false;
 }
 
-enum HypocenterType {
-  normal,
-  lowPrecise,
-  ;
-}
+enum HypocenterType { normal, lowPrecise }

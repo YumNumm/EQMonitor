@@ -12,10 +12,12 @@ part of 'kyoshin_monitor_observation_point.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 KyoshinMonitorObservationPoint _$KyoshinMonitorObservationPointFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _KyoshinMonitorObservationPoint.fromJson(json);
 }
 
@@ -32,23 +34,28 @@ mixin _$KyoshinMonitorObservationPoint {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   $KyoshinMonitorObservationPointCopyWith<KyoshinMonitorObservationPoint>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $KyoshinMonitorObservationPointCopyWith<$Res> {
   factory $KyoshinMonitorObservationPointCopyWith(
-          KyoshinMonitorObservationPoint value,
-          $Res Function(KyoshinMonitorObservationPoint) then) =
-      _$KyoshinMonitorObservationPointCopyWithImpl<$Res,
-          KyoshinMonitorObservationPoint>;
+    KyoshinMonitorObservationPoint value,
+    $Res Function(KyoshinMonitorObservationPoint) then,
+  ) =
+      _$KyoshinMonitorObservationPointCopyWithImpl<
+        $Res,
+        KyoshinMonitorObservationPoint
+      >;
   @useResult
   $Res call({String code, int x, int y});
 }
 
 /// @nodoc
-class _$KyoshinMonitorObservationPointCopyWithImpl<$Res,
-        $Val extends KyoshinMonitorObservationPoint>
+class _$KyoshinMonitorObservationPointCopyWithImpl<
+  $Res,
+  $Val extends KyoshinMonitorObservationPoint
+>
     implements $KyoshinMonitorObservationPointCopyWith<$Res> {
   _$KyoshinMonitorObservationPointCopyWithImpl(this._value, this._then);
 
@@ -61,25 +68,27 @@ class _$KyoshinMonitorObservationPointCopyWithImpl<$Res,
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? code = null,
-    Object? x = null,
-    Object? y = null,
-  }) {
-    return _then(_value.copyWith(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      x: null == x
-          ? _value.x
-          : x // ignore: cast_nullable_to_non_nullable
-              as int,
-      y: null == y
-          ? _value.y
-          : y // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+  $Res call({Object? code = null, Object? x = null, Object? y = null}) {
+    return _then(
+      _value.copyWith(
+            code:
+                null == code
+                    ? _value.code
+                    : code // ignore: cast_nullable_to_non_nullable
+                        as String,
+            x:
+                null == x
+                    ? _value.x
+                    : x // ignore: cast_nullable_to_non_nullable
+                        as int,
+            y:
+                null == y
+                    ? _value.y
+                    : y // ignore: cast_nullable_to_non_nullable
+                        as int,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -87,9 +96,9 @@ class _$KyoshinMonitorObservationPointCopyWithImpl<$Res,
 abstract class _$$KyoshinMonitorObservationPointImplCopyWith<$Res>
     implements $KyoshinMonitorObservationPointCopyWith<$Res> {
   factory _$$KyoshinMonitorObservationPointImplCopyWith(
-          _$KyoshinMonitorObservationPointImpl value,
-          $Res Function(_$KyoshinMonitorObservationPointImpl) then) =
-      __$$KyoshinMonitorObservationPointImplCopyWithImpl<$Res>;
+    _$KyoshinMonitorObservationPointImpl value,
+    $Res Function(_$KyoshinMonitorObservationPointImpl) then,
+  ) = __$$KyoshinMonitorObservationPointImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String code, int x, int y});
@@ -97,37 +106,41 @@ abstract class _$$KyoshinMonitorObservationPointImplCopyWith<$Res>
 
 /// @nodoc
 class __$$KyoshinMonitorObservationPointImplCopyWithImpl<$Res>
-    extends _$KyoshinMonitorObservationPointCopyWithImpl<$Res,
-        _$KyoshinMonitorObservationPointImpl>
+    extends
+        _$KyoshinMonitorObservationPointCopyWithImpl<
+          $Res,
+          _$KyoshinMonitorObservationPointImpl
+        >
     implements _$$KyoshinMonitorObservationPointImplCopyWith<$Res> {
   __$$KyoshinMonitorObservationPointImplCopyWithImpl(
-      _$KyoshinMonitorObservationPointImpl _value,
-      $Res Function(_$KyoshinMonitorObservationPointImpl) _then)
-      : super(_value, _then);
+    _$KyoshinMonitorObservationPointImpl _value,
+    $Res Function(_$KyoshinMonitorObservationPointImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of KyoshinMonitorObservationPoint
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? code = null,
-    Object? x = null,
-    Object? y = null,
-  }) {
-    return _then(_$KyoshinMonitorObservationPointImpl(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      x: null == x
-          ? _value.x
-          : x // ignore: cast_nullable_to_non_nullable
-              as int,
-      y: null == y
-          ? _value.y
-          : y // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+  $Res call({Object? code = null, Object? x = null, Object? y = null}) {
+    return _then(
+      _$KyoshinMonitorObservationPointImpl(
+        code:
+            null == code
+                ? _value.code
+                : code // ignore: cast_nullable_to_non_nullable
+                    as String,
+        x:
+            null == x
+                ? _value.x
+                : x // ignore: cast_nullable_to_non_nullable
+                    as int,
+        y:
+            null == y
+                ? _value.y
+                : y // ignore: cast_nullable_to_non_nullable
+                    as int,
+      ),
+    );
   }
 }
 
@@ -135,12 +148,15 @@ class __$$KyoshinMonitorObservationPointImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$KyoshinMonitorObservationPointImpl
     implements _KyoshinMonitorObservationPoint {
-  const _$KyoshinMonitorObservationPointImpl(
-      {required this.code, required this.x, required this.y});
+  const _$KyoshinMonitorObservationPointImpl({
+    required this.code,
+    required this.x,
+    required this.y,
+  });
 
   factory _$KyoshinMonitorObservationPointImpl.fromJson(
-          Map<String, dynamic> json) =>
-      _$$KyoshinMonitorObservationPointImplFromJson(json);
+    Map<String, dynamic> json,
+  ) => _$$KyoshinMonitorObservationPointImplFromJson(json);
 
   @override
   final String code;
@@ -174,24 +190,25 @@ class _$KyoshinMonitorObservationPointImpl
   @override
   @pragma('vm:prefer-inline')
   _$$KyoshinMonitorObservationPointImplCopyWith<
-          _$KyoshinMonitorObservationPointImpl>
-      get copyWith => __$$KyoshinMonitorObservationPointImplCopyWithImpl<
-          _$KyoshinMonitorObservationPointImpl>(this, _$identity);
+    _$KyoshinMonitorObservationPointImpl
+  >
+  get copyWith => __$$KyoshinMonitorObservationPointImplCopyWithImpl<
+    _$KyoshinMonitorObservationPointImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$KyoshinMonitorObservationPointImplToJson(
-      this,
-    );
+    return _$$KyoshinMonitorObservationPointImplToJson(this);
   }
 }
 
 abstract class _KyoshinMonitorObservationPoint
     implements KyoshinMonitorObservationPoint {
-  const factory _KyoshinMonitorObservationPoint(
-      {required final String code,
-      required final int x,
-      required final int y}) = _$KyoshinMonitorObservationPointImpl;
+  const factory _KyoshinMonitorObservationPoint({
+    required final String code,
+    required final int x,
+    required final int y,
+  }) = _$KyoshinMonitorObservationPointImpl;
 
   factory _KyoshinMonitorObservationPoint.fromJson(Map<String, dynamic> json) =
       _$KyoshinMonitorObservationPointImpl.fromJson;
@@ -208,13 +225,13 @@ abstract class _KyoshinMonitorObservationPoint
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$KyoshinMonitorObservationPointImplCopyWith<
-          _$KyoshinMonitorObservationPointImpl>
-      get copyWith => throw _privateConstructorUsedError;
+    _$KyoshinMonitorObservationPointImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 KyoshinMonitorObservationAnalyzedPoint
-    _$KyoshinMonitorObservationAnalyzedPointFromJson(
-        Map<String, dynamic> json) {
+_$KyoshinMonitorObservationAnalyzedPointFromJson(Map<String, dynamic> json) {
   return _KyoshinMonitorObservationAnalyzedPoint.fromJson(json);
 }
 
@@ -234,31 +251,38 @@ mixin _$KyoshinMonitorObservationAnalyzedPoint {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   $KyoshinMonitorObservationAnalyzedPointCopyWith<
-          KyoshinMonitorObservationAnalyzedPoint>
-      get copyWith => throw _privateConstructorUsedError;
+    KyoshinMonitorObservationAnalyzedPoint
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $KyoshinMonitorObservationAnalyzedPointCopyWith<$Res> {
   factory $KyoshinMonitorObservationAnalyzedPointCopyWith(
-          KyoshinMonitorObservationAnalyzedPoint value,
-          $Res Function(KyoshinMonitorObservationAnalyzedPoint) then) =
-      _$KyoshinMonitorObservationAnalyzedPointCopyWithImpl<$Res,
-          KyoshinMonitorObservationAnalyzedPoint>;
+    KyoshinMonitorObservationAnalyzedPoint value,
+    $Res Function(KyoshinMonitorObservationAnalyzedPoint) then,
+  ) =
+      _$KyoshinMonitorObservationAnalyzedPointCopyWithImpl<
+        $Res,
+        KyoshinMonitorObservationAnalyzedPoint
+      >;
   @useResult
-  $Res call(
-      {KyoshinMonitorObservationPoint point,
-      double scale,
-      int r,
-      int g,
-      int b});
+  $Res call({
+    KyoshinMonitorObservationPoint point,
+    double scale,
+    int r,
+    int g,
+    int b,
+  });
 
   $KyoshinMonitorObservationPointCopyWith<$Res> get point;
 }
 
 /// @nodoc
-class _$KyoshinMonitorObservationAnalyzedPointCopyWithImpl<$Res,
-        $Val extends KyoshinMonitorObservationAnalyzedPoint>
+class _$KyoshinMonitorObservationAnalyzedPointCopyWithImpl<
+  $Res,
+  $Val extends KyoshinMonitorObservationAnalyzedPoint
+>
     implements $KyoshinMonitorObservationAnalyzedPointCopyWith<$Res> {
   _$KyoshinMonitorObservationAnalyzedPointCopyWithImpl(this._value, this._then);
 
@@ -278,28 +302,36 @@ class _$KyoshinMonitorObservationAnalyzedPointCopyWithImpl<$Res,
     Object? g = null,
     Object? b = null,
   }) {
-    return _then(_value.copyWith(
-      point: null == point
-          ? _value.point
-          : point // ignore: cast_nullable_to_non_nullable
-              as KyoshinMonitorObservationPoint,
-      scale: null == scale
-          ? _value.scale
-          : scale // ignore: cast_nullable_to_non_nullable
-              as double,
-      r: null == r
-          ? _value.r
-          : r // ignore: cast_nullable_to_non_nullable
-              as int,
-      g: null == g
-          ? _value.g
-          : g // ignore: cast_nullable_to_non_nullable
-              as int,
-      b: null == b
-          ? _value.b
-          : b // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            point:
+                null == point
+                    ? _value.point
+                    : point // ignore: cast_nullable_to_non_nullable
+                        as KyoshinMonitorObservationPoint,
+            scale:
+                null == scale
+                    ? _value.scale
+                    : scale // ignore: cast_nullable_to_non_nullable
+                        as double,
+            r:
+                null == r
+                    ? _value.r
+                    : r // ignore: cast_nullable_to_non_nullable
+                        as int,
+            g:
+                null == g
+                    ? _value.g
+                    : g // ignore: cast_nullable_to_non_nullable
+                        as int,
+            b:
+                null == b
+                    ? _value.b
+                    : b // ignore: cast_nullable_to_non_nullable
+                        as int,
+          )
+          as $Val,
+    );
   }
 
   /// Create a copy of KyoshinMonitorObservationAnalyzedPoint
@@ -317,17 +349,18 @@ class _$KyoshinMonitorObservationAnalyzedPointCopyWithImpl<$Res,
 abstract class _$$KyoshinMonitorObservationAnalyzedPointImplCopyWith<$Res>
     implements $KyoshinMonitorObservationAnalyzedPointCopyWith<$Res> {
   factory _$$KyoshinMonitorObservationAnalyzedPointImplCopyWith(
-          _$KyoshinMonitorObservationAnalyzedPointImpl value,
-          $Res Function(_$KyoshinMonitorObservationAnalyzedPointImpl) then) =
-      __$$KyoshinMonitorObservationAnalyzedPointImplCopyWithImpl<$Res>;
+    _$KyoshinMonitorObservationAnalyzedPointImpl value,
+    $Res Function(_$KyoshinMonitorObservationAnalyzedPointImpl) then,
+  ) = __$$KyoshinMonitorObservationAnalyzedPointImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {KyoshinMonitorObservationPoint point,
-      double scale,
-      int r,
-      int g,
-      int b});
+  $Res call({
+    KyoshinMonitorObservationPoint point,
+    double scale,
+    int r,
+    int g,
+    int b,
+  });
 
   @override
   $KyoshinMonitorObservationPointCopyWith<$Res> get point;
@@ -335,13 +368,16 @@ abstract class _$$KyoshinMonitorObservationAnalyzedPointImplCopyWith<$Res>
 
 /// @nodoc
 class __$$KyoshinMonitorObservationAnalyzedPointImplCopyWithImpl<$Res>
-    extends _$KyoshinMonitorObservationAnalyzedPointCopyWithImpl<$Res,
-        _$KyoshinMonitorObservationAnalyzedPointImpl>
+    extends
+        _$KyoshinMonitorObservationAnalyzedPointCopyWithImpl<
+          $Res,
+          _$KyoshinMonitorObservationAnalyzedPointImpl
+        >
     implements _$$KyoshinMonitorObservationAnalyzedPointImplCopyWith<$Res> {
   __$$KyoshinMonitorObservationAnalyzedPointImplCopyWithImpl(
-      _$KyoshinMonitorObservationAnalyzedPointImpl _value,
-      $Res Function(_$KyoshinMonitorObservationAnalyzedPointImpl) _then)
-      : super(_value, _then);
+    _$KyoshinMonitorObservationAnalyzedPointImpl _value,
+    $Res Function(_$KyoshinMonitorObservationAnalyzedPointImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of KyoshinMonitorObservationAnalyzedPoint
   /// with the given fields replaced by the non-null parameter values.
@@ -354,28 +390,35 @@ class __$$KyoshinMonitorObservationAnalyzedPointImplCopyWithImpl<$Res>
     Object? g = null,
     Object? b = null,
   }) {
-    return _then(_$KyoshinMonitorObservationAnalyzedPointImpl(
-      point: null == point
-          ? _value.point
-          : point // ignore: cast_nullable_to_non_nullable
-              as KyoshinMonitorObservationPoint,
-      scale: null == scale
-          ? _value.scale
-          : scale // ignore: cast_nullable_to_non_nullable
-              as double,
-      r: null == r
-          ? _value.r
-          : r // ignore: cast_nullable_to_non_nullable
-              as int,
-      g: null == g
-          ? _value.g
-          : g // ignore: cast_nullable_to_non_nullable
-              as int,
-      b: null == b
-          ? _value.b
-          : b // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$KyoshinMonitorObservationAnalyzedPointImpl(
+        point:
+            null == point
+                ? _value.point
+                : point // ignore: cast_nullable_to_non_nullable
+                    as KyoshinMonitorObservationPoint,
+        scale:
+            null == scale
+                ? _value.scale
+                : scale // ignore: cast_nullable_to_non_nullable
+                    as double,
+        r:
+            null == r
+                ? _value.r
+                : r // ignore: cast_nullable_to_non_nullable
+                    as int,
+        g:
+            null == g
+                ? _value.g
+                : g // ignore: cast_nullable_to_non_nullable
+                    as int,
+        b:
+            null == b
+                ? _value.b
+                : b // ignore: cast_nullable_to_non_nullable
+                    as int,
+      ),
+    );
   }
 }
 
@@ -383,17 +426,17 @@ class __$$KyoshinMonitorObservationAnalyzedPointImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$KyoshinMonitorObservationAnalyzedPointImpl
     extends _KyoshinMonitorObservationAnalyzedPoint {
-  const _$KyoshinMonitorObservationAnalyzedPointImpl(
-      {required this.point,
-      required this.scale,
-      required this.r,
-      required this.g,
-      required this.b})
-      : super._();
+  const _$KyoshinMonitorObservationAnalyzedPointImpl({
+    required this.point,
+    required this.scale,
+    required this.r,
+    required this.g,
+    required this.b,
+  }) : super._();
 
   factory _$KyoshinMonitorObservationAnalyzedPointImpl.fromJson(
-          Map<String, dynamic> json) =>
-      _$$KyoshinMonitorObservationAnalyzedPointImplFromJson(json);
+    Map<String, dynamic> json,
+  ) => _$$KyoshinMonitorObservationAnalyzedPointImplFromJson(json);
 
   @override
   final KyoshinMonitorObservationPoint point;
@@ -433,32 +476,32 @@ class _$KyoshinMonitorObservationAnalyzedPointImpl
   @override
   @pragma('vm:prefer-inline')
   _$$KyoshinMonitorObservationAnalyzedPointImplCopyWith<
-          _$KyoshinMonitorObservationAnalyzedPointImpl>
-      get copyWith =>
-          __$$KyoshinMonitorObservationAnalyzedPointImplCopyWithImpl<
-              _$KyoshinMonitorObservationAnalyzedPointImpl>(this, _$identity);
+    _$KyoshinMonitorObservationAnalyzedPointImpl
+  >
+  get copyWith => __$$KyoshinMonitorObservationAnalyzedPointImplCopyWithImpl<
+    _$KyoshinMonitorObservationAnalyzedPointImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$KyoshinMonitorObservationAnalyzedPointImplToJson(
-      this,
-    );
+    return _$$KyoshinMonitorObservationAnalyzedPointImplToJson(this);
   }
 }
 
 abstract class _KyoshinMonitorObservationAnalyzedPoint
     extends KyoshinMonitorObservationAnalyzedPoint {
-  const factory _KyoshinMonitorObservationAnalyzedPoint(
-      {required final KyoshinMonitorObservationPoint point,
-      required final double scale,
-      required final int r,
-      required final int g,
-      required final int b}) = _$KyoshinMonitorObservationAnalyzedPointImpl;
+  const factory _KyoshinMonitorObservationAnalyzedPoint({
+    required final KyoshinMonitorObservationPoint point,
+    required final double scale,
+    required final int r,
+    required final int g,
+    required final int b,
+  }) = _$KyoshinMonitorObservationAnalyzedPointImpl;
   const _KyoshinMonitorObservationAnalyzedPoint._() : super._();
 
   factory _KyoshinMonitorObservationAnalyzedPoint.fromJson(
-          Map<String, dynamic> json) =
-      _$KyoshinMonitorObservationAnalyzedPointImpl.fromJson;
+    Map<String, dynamic> json,
+  ) = _$KyoshinMonitorObservationAnalyzedPointImpl.fromJson;
 
   @override
   KyoshinMonitorObservationPoint get point;
@@ -476,6 +519,7 @@ abstract class _KyoshinMonitorObservationAnalyzedPoint
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$KyoshinMonitorObservationAnalyzedPointImplCopyWith<
-          _$KyoshinMonitorObservationAnalyzedPointImpl>
-      get copyWith => throw _privateConstructorUsedError;
+    _$KyoshinMonitorObservationAnalyzedPointImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }

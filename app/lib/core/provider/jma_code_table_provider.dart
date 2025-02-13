@@ -10,5 +10,5 @@ part 'jma_code_table_provider.g.dart';
 JmaCodeTable jmaCodeTable(Ref ref) => throw UnimplementedError();
 
 Future<JmaCodeTable> loadJmaCodeTable() async => JmaCodeTable.fromBuffer(
-      (await rootBundle.load(Assets.jmaCodeTable)).buffer.asUint8List(),
-    );
+  (await rootBundle.load(Assets.jmaCodeTable)).buffer.asUint8List(),
+);

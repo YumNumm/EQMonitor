@@ -7,9 +7,7 @@ class NotificationLocalSettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('通知音・表示設定'),
-      ),
+      appBar: AppBar(title: const Text('通知音・表示設定')),
       body: const _Body(),
     );
   }

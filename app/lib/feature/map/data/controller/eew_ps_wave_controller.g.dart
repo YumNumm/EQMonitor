@@ -14,12 +14,15 @@ String _$eewPsWaveFillLayerControllerHash() =>
 /// See also [EewPsWaveFillLayerController].
 @ProviderFor(EewPsWaveFillLayerController)
 final eewPsWaveFillLayerControllerProvider = NotifierProvider<
-    EewPsWaveFillLayerController, List<EewWaveFillLayer>>.internal(
+  EewPsWaveFillLayerController,
+  List<EewWaveFillLayer>
+>.internal(
   EewPsWaveFillLayerController.new,
   name: r'eewPsWaveFillLayerControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$eewPsWaveFillLayerControllerHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$eewPsWaveFillLayerControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -31,12 +34,15 @@ String _$eewPsWaveLineLayerControllerHash() =>
 /// See also [EewPsWaveLineLayerController].
 @ProviderFor(EewPsWaveLineLayerController)
 final eewPsWaveLineLayerControllerProvider = NotifierProvider<
-    EewPsWaveLineLayerController, List<EewWaveLineLayer>>.internal(
+  EewPsWaveLineLayerController,
+  List<EewWaveLineLayer>
+>.internal(
   EewPsWaveLineLayerController.new,
   name: r'eewPsWaveLineLayerControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$eewPsWaveLineLayerControllerHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$eewPsWaveLineLayerControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -48,12 +54,15 @@ String _$eewPsWaveSourceLayerControllerHash() =>
 /// See also [EewPsWaveSourceLayerController].
 @ProviderFor(EewPsWaveSourceLayerController)
 final eewPsWaveSourceLayerControllerProvider = NotifierProvider<
-    EewPsWaveSourceLayerController, EewPsWaveSourceLayer>.internal(
+  EewPsWaveSourceLayerController,
+  EewPsWaveSourceLayer
+>.internal(
   EewPsWaveSourceLayerController.new,
   name: r'eewPsWaveSourceLayerControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$eewPsWaveSourceLayerControllerHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$eewPsWaveSourceLayerControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

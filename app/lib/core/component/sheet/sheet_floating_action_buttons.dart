@@ -27,7 +27,8 @@ class SheetFloatingActionButtons extends HookWidget {
     final size = MediaQuery.sizeOf(context);
     final padding = MediaQuery.paddingOf(context);
     // safearea取得
-    final height = size.height -
+    final height =
+        size.height -
         (padding.top +
             // SafeAreaのtop部分, AppBarの高さ
             (hasAppBar ? AppBar().preferredSize.height : 0));

@@ -7,10 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class NotificationSettingIntroPage extends HookConsumerWidget {
-  const NotificationSettingIntroPage({
-    required this.onNext,
-    super.key,
-  });
+  const NotificationSettingIntroPage({required this.onNext, super.key});
 
   final void Function() onNext;
 
@@ -80,12 +77,7 @@ class NotificationSettingIntroPage extends HookConsumerWidget {
           const SizedBox(height: 16),
           TextButton(
             onPressed: onNext,
-            child: const Text(
-              '拒否する',
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
+            child: const Text('拒否する', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),

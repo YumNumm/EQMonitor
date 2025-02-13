@@ -35,9 +35,7 @@ class HomeMapContent extends HookConsumerWidget {
     final configuration = configurationState.valueOrNull;
 
     if (configuration == null) {
-      return const Center(
-        child: CircularProgressIndicator.adaptive(),
-      );
+      return const Center(child: CircularProgressIndicator.adaptive());
     }
 
     final styleString = configuration.styleString;
@@ -56,24 +54,16 @@ class HomeMapContent extends HookConsumerWidget {
         layers: [
           for (final intensity in JmaForecastIntensity.values)
             ref.watch(eewEstimatedIntensityLayerControllerProvider(intensity)),
-          ...ref.watch(
-            eewPsWaveLineLayerControllerProvider,
-          ),
+          ...ref.watch(eewPsWaveLineLayerControllerProvider),
           ref.watch(
             eewHypocenterLayerControllerProvider(EewHypocenterIcon.normal),
           ),
           ref.watch(
-            eewHypocenterLayerControllerProvider(
-              EewHypocenterIcon.lowPrecise,
-            ),
+            eewHypocenterLayerControllerProvider(EewHypocenterIcon.lowPrecise),
           ),
           if (isKyoshinLayerEnabled) kyoshinLayer,
-          ...ref.watch(
-            eewPsWaveFillLayerControllerProvider,
-          ),
-          ref.watch(
-            eewPsWaveSourceLayerControllerProvider,
-          ),
+          ...ref.watch(eewPsWaveFillLayerControllerProvider),
+          ref.watch(eewPsWaveSourceLayerControllerProvider),
         ],
       ),
     );

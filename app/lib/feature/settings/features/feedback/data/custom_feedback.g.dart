@@ -14,29 +14,35 @@ _$CustomFeedbackImpl _$$CustomFeedbackImplFromJson(Map<String, dynamic> json) =>
       json,
       ($checkedConvert) {
         final val = _$CustomFeedbackImpl(
-          feedbackType: $checkedConvert('feedback_type',
-              (v) => $enumDecodeNullable(_$FeedbackTypeEnumMap, v)),
-          isReplyRequested:
-              $checkedConvert('is_reply_requested', (v) => v as bool?),
+          feedbackType: $checkedConvert(
+            'feedback_type',
+            (v) => $enumDecodeNullable(_$FeedbackTypeEnumMap, v),
+          ),
+          isReplyRequested: $checkedConvert(
+            'is_reply_requested',
+            (v) => v as bool?,
+          ),
           isScreenshotAttached: $checkedConvert(
-              'is_screenshot_attached', (v) => v as bool? ?? true),
+            'is_screenshot_attached',
+            (v) => v as bool? ?? true,
+          ),
         );
         return val;
       },
       fieldKeyMap: const {
         'feedbackType': 'feedback_type',
         'isReplyRequested': 'is_reply_requested',
-        'isScreenshotAttached': 'is_screenshot_attached'
+        'isScreenshotAttached': 'is_screenshot_attached',
       },
     );
 
 Map<String, dynamic> _$$CustomFeedbackImplToJson(
-        _$CustomFeedbackImpl instance) =>
-    <String, dynamic>{
-      'feedback_type': _$FeedbackTypeEnumMap[instance.feedbackType],
-      'is_reply_requested': instance.isReplyRequested,
-      'is_screenshot_attached': instance.isScreenshotAttached,
-    };
+  _$CustomFeedbackImpl instance,
+) => <String, dynamic>{
+  'feedback_type': _$FeedbackTypeEnumMap[instance.feedbackType],
+  'is_reply_requested': instance.isReplyRequested,
+  'is_screenshot_attached': instance.isScreenshotAttached,
+};
 
 const _$FeedbackTypeEnumMap = {
   FeedbackType.bugReport: 'bugReport',

@@ -66,8 +66,10 @@ class EewPsWaveLayerItem with _$EewPsWaveLayerItem {
             'type': 'Polygon',
             'coordinates': [
               [
-                for (final bearing
-                    in List<int>.generate(91, (index) => index * 4))
+                for (final bearing in List<int>.generate(
+                  91,
+                  (index) => index * 4,
+                ))
                   () {
                     final latLng = distance.offset(
                       lat_long.LatLng(latitude, longitude),
@@ -79,10 +81,7 @@ class EewPsWaveLayerItem with _$EewPsWaveLayerItem {
               ],
             ],
           },
-          'properties': {
-            'type': 's',
-            'is_warning': isWarning,
-          },
+          'properties': {'type': 's', 'is_warning': isWarning},
         },
       if (pTravel != null)
         {
@@ -91,8 +90,10 @@ class EewPsWaveLayerItem with _$EewPsWaveLayerItem {
             'type': 'Polygon',
             'coordinates': [
               [
-                for (final bearing
-                    in List<int>.generate(91, (index) => index * 4))
+                for (final bearing in List<int>.generate(
+                  91,
+                  (index) => index * 4,
+                ))
                   () {
                     final latLng = distance.offset(
                       lat_long.LatLng(latitude, longitude),
@@ -104,10 +105,7 @@ class EewPsWaveLayerItem with _$EewPsWaveLayerItem {
               ],
             ],
           },
-          'properties': {
-            'type': 'p',
-            'is_warning': isWarning,
-          },
+          'properties': {'type': 'p', 'is_warning': isWarning},
         },
     ];
   }
@@ -127,22 +125,13 @@ class EewWaveFillLayer extends MapLayer with _$EewWaveFillLayer {
 
   const EewWaveFillLayer._();
 
-  factory EewWaveFillLayer.pWave({
-    required Color color,
-  }) =>
-      EewWaveFillLayer(
-        id: 'eew_wave_fill_p',
-        color: color,
-        filter: [
-          '==',
-          'type',
-          'p',
-        ],
-      );
+  factory EewWaveFillLayer.pWave({required Color color}) => EewWaveFillLayer(
+    id: 'eew_wave_fill_p',
+    color: color,
+    filter: ['==', 'type', 'p'],
+  );
 
-  factory EewWaveFillLayer.sWaveWarning({
-    required Color color,
-  }) =>
+  factory EewWaveFillLayer.sWaveWarning({required Color color}) =>
       EewWaveFillLayer(
         id: 'eew_wave_fill_s_warning',
         color: color,
@@ -153,9 +142,7 @@ class EewWaveFillLayer extends MapLayer with _$EewWaveFillLayer {
         ],
       );
 
-  factory EewWaveFillLayer.sWaveNotWarning({
-    required Color color,
-  }) =>
+  factory EewWaveFillLayer.sWaveNotWarning({required Color color}) =>
       EewWaveFillLayer(
         id: 'eew_wave_fill_s_not_warning',
         color: color,
@@ -170,9 +157,8 @@ class EewWaveFillLayer extends MapLayer with _$EewWaveFillLayer {
   Map<String, dynamic>? toGeoJsonSource() => null;
 
   @override
-  LayerProperties toLayerProperties() => FillLayerProperties(
-        fillColor: color.toHexStringRGB(),
-      );
+  LayerProperties toLayerProperties() =>
+      FillLayerProperties(fillColor: color.toHexStringRGB());
 
   @override
   String get geoJsonSourceHash => '';
@@ -195,22 +181,13 @@ class EewWaveLineLayer extends MapLayer with _$EewWaveLineLayer {
 
   const EewWaveLineLayer._();
 
-  factory EewWaveLineLayer.pWave({
-    required Color color,
-  }) =>
-      EewWaveLineLayer(
-        id: 'eew_wave_line_p',
-        color: color,
-        filter: [
-          '==',
-          'type',
-          'p',
-        ],
-      );
+  factory EewWaveLineLayer.pWave({required Color color}) => EewWaveLineLayer(
+    id: 'eew_wave_line_p',
+    color: color,
+    filter: ['==', 'type', 'p'],
+  );
 
-  factory EewWaveLineLayer.sWaveWarning({
-    required Color color,
-  }) =>
+  factory EewWaveLineLayer.sWaveWarning({required Color color}) =>
       EewWaveLineLayer(
         id: 'eew_wave_line_s',
         color: color,
@@ -221,9 +198,7 @@ class EewWaveLineLayer extends MapLayer with _$EewWaveLineLayer {
         ],
       );
 
-  factory EewWaveLineLayer.sWaveNotWarning({
-    required Color color,
-  }) =>
+  factory EewWaveLineLayer.sWaveNotWarning({required Color color}) =>
       EewWaveLineLayer(
         id: 'eew_wave_line_s_not_warning',
         color: color,
@@ -238,10 +213,8 @@ class EewWaveLineLayer extends MapLayer with _$EewWaveLineLayer {
   Map<String, dynamic>? toGeoJsonSource() => null;
 
   @override
-  LayerProperties toLayerProperties() => LineLayerProperties(
-        lineColor: color.toHexStringRGB(),
-        lineCap: 'round',
-      );
+  LayerProperties toLayerProperties() =>
+      LineLayerProperties(lineColor: color.toHexStringRGB(), lineCap: 'round');
 
   @override
   String get geoJsonSourceHash => '';

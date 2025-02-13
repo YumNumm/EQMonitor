@@ -57,21 +57,13 @@ class PurchaseFamily extends Family<AsyncValue<CustomerInfo>> {
   const PurchaseFamily();
 
   /// See also [purchase].
-  PurchaseProvider call(
-    StoreProduct product,
-  ) {
-    return PurchaseProvider(
-      product,
-    );
+  PurchaseProvider call(StoreProduct product) {
+    return PurchaseProvider(product);
   }
 
   @override
-  PurchaseProvider getProviderOverride(
-    covariant PurchaseProvider provider,
-  ) {
-    return call(
-      provider.product,
-    );
+  PurchaseProvider getProviderOverride(covariant PurchaseProvider provider) {
+    return call(provider.product);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -92,23 +84,19 @@ class PurchaseFamily extends Family<AsyncValue<CustomerInfo>> {
 /// See also [purchase].
 class PurchaseProvider extends AutoDisposeFutureProvider<CustomerInfo> {
   /// See also [purchase].
-  PurchaseProvider(
-    StoreProduct product,
-  ) : this._internal(
-          (ref) => purchase(
-            ref as PurchaseRef,
-            product,
-          ),
-          from: purchaseProvider,
-          name: r'purchaseProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$purchaseHash,
-          dependencies: PurchaseFamily._dependencies,
-          allTransitiveDependencies: PurchaseFamily._allTransitiveDependencies,
-          product: product,
-        );
+  PurchaseProvider(StoreProduct product)
+    : this._internal(
+        (ref) => purchase(ref as PurchaseRef, product),
+        from: purchaseProvider,
+        name: r'purchaseProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$purchaseHash,
+        dependencies: PurchaseFamily._dependencies,
+        allTransitiveDependencies: PurchaseFamily._allTransitiveDependencies,
+        product: product,
+      );
 
   PurchaseProvider._internal(
     super._createNotifier, {
@@ -167,11 +155,13 @@ mixin PurchaseRef on AutoDisposeFutureProviderRef<CustomerInfo> {
 }
 
 class _PurchaseProviderElement
-    extends AutoDisposeFutureProviderElement<CustomerInfo> with PurchaseRef {
+    extends AutoDisposeFutureProviderElement<CustomerInfo>
+    with PurchaseRef {
   _PurchaseProviderElement(super.provider);
 
   @override
   StoreProduct get product => (origin as PurchaseProvider).product;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

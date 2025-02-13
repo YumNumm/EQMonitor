@@ -12,18 +12,17 @@ class ColorSchemeConfigPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(intensityColorProvider);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('震度配色設定'),
-      ),
+      appBar: AppBar(title: const Text('震度配色設定')),
       body: SingleChildScrollView(
         child: Column(
           children: [
             RadioListTile.adaptive(
               value: IntensityColorModel.eqmonitor(),
               groupValue: state,
-              onChanged: (value) async => ref
-                  .read(intensityColorProvider.notifier)
-                  .update(IntensityColorModel.eqmonitor()),
+              onChanged:
+                  (value) async => ref
+                      .read(intensityColorProvider.notifier)
+                      .update(IntensityColorModel.eqmonitor()),
               title: const Text('EQMonitor'),
               subtitle: Padding(
                 padding: const EdgeInsets.all(4),
@@ -35,9 +34,10 @@ class ColorSchemeConfigPage extends ConsumerWidget {
             RadioListTile.adaptive(
               value: IntensityColorModel.jma(),
               groupValue: state,
-              onChanged: (value) async => ref
-                  .read(intensityColorProvider.notifier)
-                  .update(IntensityColorModel.jma()),
+              onChanged:
+                  (value) async => ref
+                      .read(intensityColorProvider.notifier)
+                      .update(IntensityColorModel.jma()),
               title: const Text('気象庁配色'),
               subtitle: Padding(
                 padding: const EdgeInsets.all(4),
@@ -47,10 +47,10 @@ class ColorSchemeConfigPage extends ConsumerWidget {
             RadioListTile.adaptive(
               value: IntensityColorModel.earthQuickly(),
               groupValue: state,
-              onChanged: (value) async =>
-                  ref.read(intensityColorProvider.notifier).update(
-                        IntensityColorModel.earthQuickly(),
-                      ),
+              onChanged:
+                  (value) async => ref
+                      .read(intensityColorProvider.notifier)
+                      .update(IntensityColorModel.earthQuickly()),
               title: const Text('EarthQuickly'),
               subtitle: Padding(
                 padding: const EdgeInsets.all(4),
@@ -59,9 +59,7 @@ class ColorSchemeConfigPage extends ConsumerWidget {
                 ),
               ),
             ),
-            const SizedBox(
-              height: kFloatingActionButtonMargin * 4,
-            ),
+            const SizedBox(height: kFloatingActionButtonMargin * 4),
           ],
         ),
       ),
@@ -70,9 +68,7 @@ class ColorSchemeConfigPage extends ConsumerWidget {
 }
 
 class _IntensityWidgets extends StatelessWidget {
-  const _IntensityWidgets({
-    required this.colorModel,
-  });
+  const _IntensityWidgets({required this.colorModel});
 
   final IntensityColorModel colorModel;
 

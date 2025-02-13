@@ -17,9 +17,9 @@ class Deserializer {
     Uint8List list, {
     ExtDecoder? extDecoder,
     this.copyBinaryData = false,
-  })  : _list = list,
-        _data = ByteData.view(list.buffer, list.offsetInBytes),
-        _extDecoder = extDecoder;
+  }) : _list = list,
+       _data = ByteData.view(list.buffer, list.offsetInBytes),
+       _extDecoder = extDecoder;
 
   /// If false, decoded binary data buffers will reference underlying input
   /// buffer and thus may change when the content of input buffer changes.
@@ -167,8 +167,11 @@ class Deserializer {
   }
 
   Uint8List _readBuffer(int length) {
-    final res =
-        Uint8List.view(_list.buffer, _list.offsetInBytes + _offset, length);
+    final res = Uint8List.view(
+      _list.buffer,
+      _list.offsetInBytes + _offset,
+      length,
+    );
     _offset += length;
     return copyBinaryData ? Uint8List.fromList(res) : res;
   }

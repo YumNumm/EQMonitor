@@ -25,9 +25,7 @@ WebSocket websocket(Ref ref) {
   );
   final socket = WebSocket(
     uri,
-    headers: {
-      HttpHeaders.authorizationHeader: Env.apiAuthorization,
-    },
+    headers: {HttpHeaders.authorizationHeader: Env.apiAuthorization},
     pingInterval: const Duration(seconds: 5),
     backoff: backoff,
   );
@@ -74,15 +72,13 @@ class WebsocketMessages extends _$WebsocketMessages {
     ref.onDispose(() {
       _controller.close();
     });
-    socket.messages.listen(
-      (message) {
-        talker.log('WebSocket message: $message');
-        final decoded = jsonDecode(message.toString());
-        if (decoded is Map<String, dynamic>) {
-          _controller.add(decoded);
-        }
-      },
-    );
+    socket.messages.listen((message) {
+      talker.log('WebSocket message: $message');
+      final decoded = jsonDecode(message.toString());
+      if (decoded is Map<String, dynamic>) {
+        _controller.add(decoded);
+      }
+    });
 
     yield* _controller.stream;
   }
@@ -91,17 +87,13 @@ class WebsocketMessages extends _$WebsocketMessages {
 }
 
 @Riverpod(keepAlive: true)
-Stream<RealtimePostgresChangesPayloadBase> websocketParsedMessages(
-  Ref ref,
-) {
+Stream<RealtimePostgresChangesPayloadBase> websocketParsedMessages(Ref ref) {
   final controller = StreamController<RealtimePostgresChangesPayloadBase>();
   ref
     ..listen(websocketMessagesProvider, (previous, next) {
       final value = next.value;
       if (value != null) {
-        controller.add(
-          RealtimePostgresChangesPayloadBase.fromJson(value),
-        );
+        controller.add(RealtimePostgresChangesPayloadBase.fromJson(value));
       }
     })
     ..onDispose(controller.close);
@@ -109,9 +101,7 @@ Stream<RealtimePostgresChangesPayloadBase> websocketParsedMessages(
 }
 
 @Riverpod(keepAlive: true)
-Stream<RealtimePostgresChangesPayloadTable> websocketTableMessages(
-  Ref ref,
-) {
+Stream<RealtimePostgresChangesPayloadTable> websocketTableMessages(Ref ref) {
   final controller = StreamController<RealtimePostgresChangesPayloadTable>();
   ref
     ..listen(websocketParsedMessagesProvider, (previous, next) {

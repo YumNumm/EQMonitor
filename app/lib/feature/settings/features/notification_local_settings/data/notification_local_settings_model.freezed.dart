@@ -12,10 +12,12 @@ part of 'notification_local_settings_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 NotificationLocalSettingsModel _$NotificationLocalSettingsModelFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _NotificationLocalSettingsModel.fromJson(json);
 }
 
@@ -31,16 +33,19 @@ mixin _$NotificationLocalSettingsModel {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   $NotificationLocalSettingsModelCopyWith<NotificationLocalSettingsModel>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $NotificationLocalSettingsModelCopyWith<$Res> {
   factory $NotificationLocalSettingsModelCopyWith(
-          NotificationLocalSettingsModel value,
-          $Res Function(NotificationLocalSettingsModel) then) =
-      _$NotificationLocalSettingsModelCopyWithImpl<$Res,
-          NotificationLocalSettingsModel>;
+    NotificationLocalSettingsModel value,
+    $Res Function(NotificationLocalSettingsModel) then,
+  ) =
+      _$NotificationLocalSettingsModelCopyWithImpl<
+        $Res,
+        NotificationLocalSettingsModel
+      >;
   @useResult
   $Res call({EewSettings eew, EarthquakeSettings earthquake});
 
@@ -49,8 +54,10 @@ abstract class $NotificationLocalSettingsModelCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$NotificationLocalSettingsModelCopyWithImpl<$Res,
-        $Val extends NotificationLocalSettingsModel>
+class _$NotificationLocalSettingsModelCopyWithImpl<
+  $Res,
+  $Val extends NotificationLocalSettingsModel
+>
     implements $NotificationLocalSettingsModelCopyWith<$Res> {
   _$NotificationLocalSettingsModelCopyWithImpl(this._value, this._then);
 
@@ -63,20 +70,22 @@ class _$NotificationLocalSettingsModelCopyWithImpl<$Res,
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? eew = null,
-    Object? earthquake = null,
-  }) {
-    return _then(_value.copyWith(
-      eew: null == eew
-          ? _value.eew
-          : eew // ignore: cast_nullable_to_non_nullable
-              as EewSettings,
-      earthquake: null == earthquake
-          ? _value.earthquake
-          : earthquake // ignore: cast_nullable_to_non_nullable
-              as EarthquakeSettings,
-    ) as $Val);
+  $Res call({Object? eew = null, Object? earthquake = null}) {
+    return _then(
+      _value.copyWith(
+            eew:
+                null == eew
+                    ? _value.eew
+                    : eew // ignore: cast_nullable_to_non_nullable
+                        as EewSettings,
+            earthquake:
+                null == earthquake
+                    ? _value.earthquake
+                    : earthquake // ignore: cast_nullable_to_non_nullable
+                        as EarthquakeSettings,
+          )
+          as $Val,
+    );
   }
 
   /// Create a copy of NotificationLocalSettingsModel
@@ -104,9 +113,9 @@ class _$NotificationLocalSettingsModelCopyWithImpl<$Res,
 abstract class _$$NotificationLocalSettingsModelImplCopyWith<$Res>
     implements $NotificationLocalSettingsModelCopyWith<$Res> {
   factory _$$NotificationLocalSettingsModelImplCopyWith(
-          _$NotificationLocalSettingsModelImpl value,
-          $Res Function(_$NotificationLocalSettingsModelImpl) then) =
-      __$$NotificationLocalSettingsModelImplCopyWithImpl<$Res>;
+    _$NotificationLocalSettingsModelImpl value,
+    $Res Function(_$NotificationLocalSettingsModelImpl) then,
+  ) = __$$NotificationLocalSettingsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({EewSettings eew, EarthquakeSettings earthquake});
@@ -119,32 +128,36 @@ abstract class _$$NotificationLocalSettingsModelImplCopyWith<$Res>
 
 /// @nodoc
 class __$$NotificationLocalSettingsModelImplCopyWithImpl<$Res>
-    extends _$NotificationLocalSettingsModelCopyWithImpl<$Res,
-        _$NotificationLocalSettingsModelImpl>
+    extends
+        _$NotificationLocalSettingsModelCopyWithImpl<
+          $Res,
+          _$NotificationLocalSettingsModelImpl
+        >
     implements _$$NotificationLocalSettingsModelImplCopyWith<$Res> {
   __$$NotificationLocalSettingsModelImplCopyWithImpl(
-      _$NotificationLocalSettingsModelImpl _value,
-      $Res Function(_$NotificationLocalSettingsModelImpl) _then)
-      : super(_value, _then);
+    _$NotificationLocalSettingsModelImpl _value,
+    $Res Function(_$NotificationLocalSettingsModelImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of NotificationLocalSettingsModel
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? eew = null,
-    Object? earthquake = null,
-  }) {
-    return _then(_$NotificationLocalSettingsModelImpl(
-      eew: null == eew
-          ? _value.eew
-          : eew // ignore: cast_nullable_to_non_nullable
-              as EewSettings,
-      earthquake: null == earthquake
-          ? _value.earthquake
-          : earthquake // ignore: cast_nullable_to_non_nullable
-              as EarthquakeSettings,
-    ));
+  $Res call({Object? eew = null, Object? earthquake = null}) {
+    return _then(
+      _$NotificationLocalSettingsModelImpl(
+        eew:
+            null == eew
+                ? _value.eew
+                : eew // ignore: cast_nullable_to_non_nullable
+                    as EewSettings,
+        earthquake:
+            null == earthquake
+                ? _value.earthquake
+                : earthquake // ignore: cast_nullable_to_non_nullable
+                    as EarthquakeSettings,
+      ),
+    );
   }
 }
 
@@ -152,13 +165,14 @@ class __$$NotificationLocalSettingsModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$NotificationLocalSettingsModelImpl
     implements _NotificationLocalSettingsModel {
-  const _$NotificationLocalSettingsModelImpl(
-      {this.eew = const EewSettings(),
-      this.earthquake = const EarthquakeSettings()});
+  const _$NotificationLocalSettingsModelImpl({
+    this.eew = const EewSettings(),
+    this.earthquake = const EarthquakeSettings(),
+  });
 
   factory _$NotificationLocalSettingsModelImpl.fromJson(
-          Map<String, dynamic> json) =>
-      _$$NotificationLocalSettingsModelImplFromJson(json);
+    Map<String, dynamic> json,
+  ) => _$$NotificationLocalSettingsModelImplFromJson(json);
 
   @override
   @JsonKey()
@@ -192,23 +206,24 @@ class _$NotificationLocalSettingsModelImpl
   @override
   @pragma('vm:prefer-inline')
   _$$NotificationLocalSettingsModelImplCopyWith<
-          _$NotificationLocalSettingsModelImpl>
-      get copyWith => __$$NotificationLocalSettingsModelImplCopyWithImpl<
-          _$NotificationLocalSettingsModelImpl>(this, _$identity);
+    _$NotificationLocalSettingsModelImpl
+  >
+  get copyWith => __$$NotificationLocalSettingsModelImplCopyWithImpl<
+    _$NotificationLocalSettingsModelImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$NotificationLocalSettingsModelImplToJson(
-      this,
-    );
+    return _$$NotificationLocalSettingsModelImplToJson(this);
   }
 }
 
 abstract class _NotificationLocalSettingsModel
     implements NotificationLocalSettingsModel {
-  const factory _NotificationLocalSettingsModel(
-          {final EewSettings eew, final EarthquakeSettings earthquake}) =
-      _$NotificationLocalSettingsModelImpl;
+  const factory _NotificationLocalSettingsModel({
+    final EewSettings eew,
+    final EarthquakeSettings earthquake,
+  }) = _$NotificationLocalSettingsModelImpl;
 
   factory _NotificationLocalSettingsModel.fromJson(Map<String, dynamic> json) =
       _$NotificationLocalSettingsModelImpl.fromJson;
@@ -223,8 +238,9 @@ abstract class _NotificationLocalSettingsModel
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$NotificationLocalSettingsModelImplCopyWith<
-          _$NotificationLocalSettingsModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
+    _$NotificationLocalSettingsModelImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 EewSettings _$EewSettingsFromJson(Map<String, dynamic> json) {
@@ -252,13 +268,15 @@ mixin _$EewSettings {
 /// @nodoc
 abstract class $EewSettingsCopyWith<$Res> {
   factory $EewSettingsCopyWith(
-          EewSettings value, $Res Function(EewSettings) then) =
-      _$EewSettingsCopyWithImpl<$Res, EewSettings>;
+    EewSettings value,
+    $Res Function(EewSettings) then,
+  ) = _$EewSettingsCopyWithImpl<$Res, EewSettings>;
   @useResult
-  $Res call(
-      {JmaForecastIntensity? emergencyIntensity,
-      JmaForecastIntensity? silentIntensity,
-      List<Region> regions});
+  $Res call({
+    JmaForecastIntensity? emergencyIntensity,
+    JmaForecastIntensity? silentIntensity,
+    List<Region> regions,
+  });
 }
 
 /// @nodoc
@@ -280,20 +298,26 @@ class _$EewSettingsCopyWithImpl<$Res, $Val extends EewSettings>
     Object? silentIntensity = freezed,
     Object? regions = null,
   }) {
-    return _then(_value.copyWith(
-      emergencyIntensity: freezed == emergencyIntensity
-          ? _value.emergencyIntensity
-          : emergencyIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity?,
-      silentIntensity: freezed == silentIntensity
-          ? _value.silentIntensity
-          : silentIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity?,
-      regions: null == regions
-          ? _value.regions
-          : regions // ignore: cast_nullable_to_non_nullable
-              as List<Region>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            emergencyIntensity:
+                freezed == emergencyIntensity
+                    ? _value.emergencyIntensity
+                    : emergencyIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaForecastIntensity?,
+            silentIntensity:
+                freezed == silentIntensity
+                    ? _value.silentIntensity
+                    : silentIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaForecastIntensity?,
+            regions:
+                null == regions
+                    ? _value.regions
+                    : regions // ignore: cast_nullable_to_non_nullable
+                        as List<Region>,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -301,14 +325,16 @@ class _$EewSettingsCopyWithImpl<$Res, $Val extends EewSettings>
 abstract class _$$EewSettingsImplCopyWith<$Res>
     implements $EewSettingsCopyWith<$Res> {
   factory _$$EewSettingsImplCopyWith(
-          _$EewSettingsImpl value, $Res Function(_$EewSettingsImpl) then) =
-      __$$EewSettingsImplCopyWithImpl<$Res>;
+    _$EewSettingsImpl value,
+    $Res Function(_$EewSettingsImpl) then,
+  ) = __$$EewSettingsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {JmaForecastIntensity? emergencyIntensity,
-      JmaForecastIntensity? silentIntensity,
-      List<Region> regions});
+  $Res call({
+    JmaForecastIntensity? emergencyIntensity,
+    JmaForecastIntensity? silentIntensity,
+    List<Region> regions,
+  });
 }
 
 /// @nodoc
@@ -316,8 +342,9 @@ class __$$EewSettingsImplCopyWithImpl<$Res>
     extends _$EewSettingsCopyWithImpl<$Res, _$EewSettingsImpl>
     implements _$$EewSettingsImplCopyWith<$Res> {
   __$$EewSettingsImplCopyWithImpl(
-      _$EewSettingsImpl _value, $Res Function(_$EewSettingsImpl) _then)
-      : super(_value, _then);
+    _$EewSettingsImpl _value,
+    $Res Function(_$EewSettingsImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of EewSettings
   /// with the given fields replaced by the non-null parameter values.
@@ -328,31 +355,36 @@ class __$$EewSettingsImplCopyWithImpl<$Res>
     Object? silentIntensity = freezed,
     Object? regions = null,
   }) {
-    return _then(_$EewSettingsImpl(
-      emergencyIntensity: freezed == emergencyIntensity
-          ? _value.emergencyIntensity
-          : emergencyIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity?,
-      silentIntensity: freezed == silentIntensity
-          ? _value.silentIntensity
-          : silentIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity?,
-      regions: null == regions
-          ? _value._regions
-          : regions // ignore: cast_nullable_to_non_nullable
-              as List<Region>,
-    ));
+    return _then(
+      _$EewSettingsImpl(
+        emergencyIntensity:
+            freezed == emergencyIntensity
+                ? _value.emergencyIntensity
+                : emergencyIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaForecastIntensity?,
+        silentIntensity:
+            freezed == silentIntensity
+                ? _value.silentIntensity
+                : silentIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaForecastIntensity?,
+        regions:
+            null == regions
+                ? _value._regions
+                : regions // ignore: cast_nullable_to_non_nullable
+                    as List<Region>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$EewSettingsImpl implements _EewSettings {
-  const _$EewSettingsImpl(
-      {this.emergencyIntensity = null,
-      this.silentIntensity = null,
-      final List<Region> regions = const []})
-      : _regions = regions;
+  const _$EewSettingsImpl({
+    this.emergencyIntensity = null,
+    this.silentIntensity = null,
+    final List<Region> regions = const [],
+  }) : _regions = regions;
 
   factory _$EewSettingsImpl.fromJson(Map<String, dynamic> json) =>
       _$$EewSettingsImplFromJson(json);
@@ -391,8 +423,12 @@ class _$EewSettingsImpl implements _EewSettings {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, emergencyIntensity,
-      silentIntensity, const DeepCollectionEquality().hash(_regions));
+  int get hashCode => Object.hash(
+    runtimeType,
+    emergencyIntensity,
+    silentIntensity,
+    const DeepCollectionEquality().hash(_regions),
+  );
 
   /// Create a copy of EewSettings
   /// with the given fields replaced by the non-null parameter values.
@@ -404,17 +440,16 @@ class _$EewSettingsImpl implements _EewSettings {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EewSettingsImplToJson(
-      this,
-    );
+    return _$$EewSettingsImplToJson(this);
   }
 }
 
 abstract class _EewSettings implements EewSettings {
-  const factory _EewSettings(
-      {final JmaForecastIntensity? emergencyIntensity,
-      final JmaForecastIntensity? silentIntensity,
-      final List<Region> regions}) = _$EewSettingsImpl;
+  const factory _EewSettings({
+    final JmaForecastIntensity? emergencyIntensity,
+    final JmaForecastIntensity? silentIntensity,
+    final List<Region> regions,
+  }) = _$EewSettingsImpl;
 
   factory _EewSettings.fromJson(Map<String, dynamic> json) =
       _$EewSettingsImpl.fromJson;
@@ -459,13 +494,15 @@ mixin _$EarthquakeSettings {
 /// @nodoc
 abstract class $EarthquakeSettingsCopyWith<$Res> {
   factory $EarthquakeSettingsCopyWith(
-          EarthquakeSettings value, $Res Function(EarthquakeSettings) then) =
-      _$EarthquakeSettingsCopyWithImpl<$Res, EarthquakeSettings>;
+    EarthquakeSettings value,
+    $Res Function(EarthquakeSettings) then,
+  ) = _$EarthquakeSettingsCopyWithImpl<$Res, EarthquakeSettings>;
   @useResult
-  $Res call(
-      {JmaForecastIntensity? emergencyIntensity,
-      JmaForecastIntensity? silentIntensity,
-      List<Region> regions});
+  $Res call({
+    JmaForecastIntensity? emergencyIntensity,
+    JmaForecastIntensity? silentIntensity,
+    List<Region> regions,
+  });
 }
 
 /// @nodoc
@@ -487,44 +524,53 @@ class _$EarthquakeSettingsCopyWithImpl<$Res, $Val extends EarthquakeSettings>
     Object? silentIntensity = freezed,
     Object? regions = null,
   }) {
-    return _then(_value.copyWith(
-      emergencyIntensity: freezed == emergencyIntensity
-          ? _value.emergencyIntensity
-          : emergencyIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity?,
-      silentIntensity: freezed == silentIntensity
-          ? _value.silentIntensity
-          : silentIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity?,
-      regions: null == regions
-          ? _value.regions
-          : regions // ignore: cast_nullable_to_non_nullable
-              as List<Region>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            emergencyIntensity:
+                freezed == emergencyIntensity
+                    ? _value.emergencyIntensity
+                    : emergencyIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaForecastIntensity?,
+            silentIntensity:
+                freezed == silentIntensity
+                    ? _value.silentIntensity
+                    : silentIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaForecastIntensity?,
+            regions:
+                null == regions
+                    ? _value.regions
+                    : regions // ignore: cast_nullable_to_non_nullable
+                        as List<Region>,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$EarthquakeSettingsImplCopyWith<$Res>
     implements $EarthquakeSettingsCopyWith<$Res> {
-  factory _$$EarthquakeSettingsImplCopyWith(_$EarthquakeSettingsImpl value,
-          $Res Function(_$EarthquakeSettingsImpl) then) =
-      __$$EarthquakeSettingsImplCopyWithImpl<$Res>;
+  factory _$$EarthquakeSettingsImplCopyWith(
+    _$EarthquakeSettingsImpl value,
+    $Res Function(_$EarthquakeSettingsImpl) then,
+  ) = __$$EarthquakeSettingsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {JmaForecastIntensity? emergencyIntensity,
-      JmaForecastIntensity? silentIntensity,
-      List<Region> regions});
+  $Res call({
+    JmaForecastIntensity? emergencyIntensity,
+    JmaForecastIntensity? silentIntensity,
+    List<Region> regions,
+  });
 }
 
 /// @nodoc
 class __$$EarthquakeSettingsImplCopyWithImpl<$Res>
     extends _$EarthquakeSettingsCopyWithImpl<$Res, _$EarthquakeSettingsImpl>
     implements _$$EarthquakeSettingsImplCopyWith<$Res> {
-  __$$EarthquakeSettingsImplCopyWithImpl(_$EarthquakeSettingsImpl _value,
-      $Res Function(_$EarthquakeSettingsImpl) _then)
-      : super(_value, _then);
+  __$$EarthquakeSettingsImplCopyWithImpl(
+    _$EarthquakeSettingsImpl _value,
+    $Res Function(_$EarthquakeSettingsImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of EarthquakeSettings
   /// with the given fields replaced by the non-null parameter values.
@@ -535,31 +581,36 @@ class __$$EarthquakeSettingsImplCopyWithImpl<$Res>
     Object? silentIntensity = freezed,
     Object? regions = null,
   }) {
-    return _then(_$EarthquakeSettingsImpl(
-      emergencyIntensity: freezed == emergencyIntensity
-          ? _value.emergencyIntensity
-          : emergencyIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity?,
-      silentIntensity: freezed == silentIntensity
-          ? _value.silentIntensity
-          : silentIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity?,
-      regions: null == regions
-          ? _value._regions
-          : regions // ignore: cast_nullable_to_non_nullable
-              as List<Region>,
-    ));
+    return _then(
+      _$EarthquakeSettingsImpl(
+        emergencyIntensity:
+            freezed == emergencyIntensity
+                ? _value.emergencyIntensity
+                : emergencyIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaForecastIntensity?,
+        silentIntensity:
+            freezed == silentIntensity
+                ? _value.silentIntensity
+                : silentIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaForecastIntensity?,
+        regions:
+            null == regions
+                ? _value._regions
+                : regions // ignore: cast_nullable_to_non_nullable
+                    as List<Region>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$EarthquakeSettingsImpl implements _EarthquakeSettings {
-  const _$EarthquakeSettingsImpl(
-      {this.emergencyIntensity = null,
-      this.silentIntensity = null,
-      final List<Region> regions = const []})
-      : _regions = regions;
+  const _$EarthquakeSettingsImpl({
+    this.emergencyIntensity = null,
+    this.silentIntensity = null,
+    final List<Region> regions = const [],
+  }) : _regions = regions;
 
   factory _$EarthquakeSettingsImpl.fromJson(Map<String, dynamic> json) =>
       _$$EarthquakeSettingsImplFromJson(json);
@@ -598,8 +649,12 @@ class _$EarthquakeSettingsImpl implements _EarthquakeSettings {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, emergencyIntensity,
-      silentIntensity, const DeepCollectionEquality().hash(_regions));
+  int get hashCode => Object.hash(
+    runtimeType,
+    emergencyIntensity,
+    silentIntensity,
+    const DeepCollectionEquality().hash(_regions),
+  );
 
   /// Create a copy of EarthquakeSettings
   /// with the given fields replaced by the non-null parameter values.
@@ -608,21 +663,22 @@ class _$EarthquakeSettingsImpl implements _EarthquakeSettings {
   @pragma('vm:prefer-inline')
   _$$EarthquakeSettingsImplCopyWith<_$EarthquakeSettingsImpl> get copyWith =>
       __$$EarthquakeSettingsImplCopyWithImpl<_$EarthquakeSettingsImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EarthquakeSettingsImplToJson(
-      this,
-    );
+    return _$$EarthquakeSettingsImplToJson(this);
   }
 }
 
 abstract class _EarthquakeSettings implements EarthquakeSettings {
-  const factory _EarthquakeSettings(
-      {final JmaForecastIntensity? emergencyIntensity,
-      final JmaForecastIntensity? silentIntensity,
-      final List<Region> regions}) = _$EarthquakeSettingsImpl;
+  const factory _EarthquakeSettings({
+    final JmaForecastIntensity? emergencyIntensity,
+    final JmaForecastIntensity? silentIntensity,
+    final List<Region> regions,
+  }) = _$EarthquakeSettingsImpl;
 
   factory _EarthquakeSettings.fromJson(Map<String, dynamic> json) =
       _$EarthquakeSettingsImpl.fromJson;
@@ -670,12 +726,13 @@ abstract class $RegionCopyWith<$Res> {
   factory $RegionCopyWith(Region value, $Res Function(Region) then) =
       _$RegionCopyWithImpl<$Res, Region>;
   @useResult
-  $Res call(
-      {String code,
-      String name,
-      JmaForecastIntensity emergencyIntensity,
-      JmaForecastIntensity silentIntensity,
-      bool isMain});
+  $Res call({
+    String code,
+    String name,
+    JmaForecastIntensity emergencyIntensity,
+    JmaForecastIntensity silentIntensity,
+    bool isMain,
+  });
 }
 
 /// @nodoc
@@ -699,44 +756,54 @@ class _$RegionCopyWithImpl<$Res, $Val extends Region>
     Object? silentIntensity = null,
     Object? isMain = null,
   }) {
-    return _then(_value.copyWith(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      emergencyIntensity: null == emergencyIntensity
-          ? _value.emergencyIntensity
-          : emergencyIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity,
-      silentIntensity: null == silentIntensity
-          ? _value.silentIntensity
-          : silentIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity,
-      isMain: null == isMain
-          ? _value.isMain
-          : isMain // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            code:
+                null == code
+                    ? _value.code
+                    : code // ignore: cast_nullable_to_non_nullable
+                        as String,
+            name:
+                null == name
+                    ? _value.name
+                    : name // ignore: cast_nullable_to_non_nullable
+                        as String,
+            emergencyIntensity:
+                null == emergencyIntensity
+                    ? _value.emergencyIntensity
+                    : emergencyIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaForecastIntensity,
+            silentIntensity:
+                null == silentIntensity
+                    ? _value.silentIntensity
+                    : silentIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaForecastIntensity,
+            isMain:
+                null == isMain
+                    ? _value.isMain
+                    : isMain // ignore: cast_nullable_to_non_nullable
+                        as bool,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$RegionImplCopyWith<$Res> implements $RegionCopyWith<$Res> {
   factory _$$RegionImplCopyWith(
-          _$RegionImpl value, $Res Function(_$RegionImpl) then) =
-      __$$RegionImplCopyWithImpl<$Res>;
+    _$RegionImpl value,
+    $Res Function(_$RegionImpl) then,
+  ) = __$$RegionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String code,
-      String name,
-      JmaForecastIntensity emergencyIntensity,
-      JmaForecastIntensity silentIntensity,
-      bool isMain});
+  $Res call({
+    String code,
+    String name,
+    JmaForecastIntensity emergencyIntensity,
+    JmaForecastIntensity silentIntensity,
+    bool isMain,
+  });
 }
 
 /// @nodoc
@@ -744,8 +811,9 @@ class __$$RegionImplCopyWithImpl<$Res>
     extends _$RegionCopyWithImpl<$Res, _$RegionImpl>
     implements _$$RegionImplCopyWith<$Res> {
   __$$RegionImplCopyWithImpl(
-      _$RegionImpl _value, $Res Function(_$RegionImpl) _then)
-      : super(_value, _then);
+    _$RegionImpl _value,
+    $Res Function(_$RegionImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of Region
   /// with the given fields replaced by the non-null parameter values.
@@ -758,40 +826,48 @@ class __$$RegionImplCopyWithImpl<$Res>
     Object? silentIntensity = null,
     Object? isMain = null,
   }) {
-    return _then(_$RegionImpl(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      emergencyIntensity: null == emergencyIntensity
-          ? _value.emergencyIntensity
-          : emergencyIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity,
-      silentIntensity: null == silentIntensity
-          ? _value.silentIntensity
-          : silentIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity,
-      isMain: null == isMain
-          ? _value.isMain
-          : isMain // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
+    return _then(
+      _$RegionImpl(
+        code:
+            null == code
+                ? _value.code
+                : code // ignore: cast_nullable_to_non_nullable
+                    as String,
+        name:
+            null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                    as String,
+        emergencyIntensity:
+            null == emergencyIntensity
+                ? _value.emergencyIntensity
+                : emergencyIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaForecastIntensity,
+        silentIntensity:
+            null == silentIntensity
+                ? _value.silentIntensity
+                : silentIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaForecastIntensity,
+        isMain:
+            null == isMain
+                ? _value.isMain
+                : isMain // ignore: cast_nullable_to_non_nullable
+                    as bool,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$RegionImpl implements _Region {
-  const _$RegionImpl(
-      {required this.code,
-      required this.name,
-      required this.emergencyIntensity,
-      required this.silentIntensity,
-      required this.isMain});
+  const _$RegionImpl({
+    required this.code,
+    required this.name,
+    required this.emergencyIntensity,
+    required this.silentIntensity,
+    required this.isMain,
+  });
 
   factory _$RegionImpl.fromJson(Map<String, dynamic> json) =>
       _$$RegionImplFromJson(json);
@@ -829,7 +905,13 @@ class _$RegionImpl implements _Region {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, code, name, emergencyIntensity, silentIntensity, isMain);
+    runtimeType,
+    code,
+    name,
+    emergencyIntensity,
+    silentIntensity,
+    isMain,
+  );
 
   /// Create a copy of Region
   /// with the given fields replaced by the non-null parameter values.
@@ -841,19 +923,18 @@ class _$RegionImpl implements _Region {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$RegionImplToJson(
-      this,
-    );
+    return _$$RegionImplToJson(this);
   }
 }
 
 abstract class _Region implements Region {
-  const factory _Region(
-      {required final String code,
-      required final String name,
-      required final JmaForecastIntensity emergencyIntensity,
-      required final JmaForecastIntensity silentIntensity,
-      required final bool isMain}) = _$RegionImpl;
+  const factory _Region({
+    required final String code,
+    required final String name,
+    required final JmaForecastIntensity emergencyIntensity,
+    required final JmaForecastIntensity silentIntensity,
+    required final bool isMain,
+  }) = _$RegionImpl;
 
   factory _Region.fromJson(Map<String, dynamic> json) = _$RegionImpl.fromJson;
 

@@ -12,7 +12,8 @@ part of 'earthquake_early.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 EarthquakeEarly _$EarthquakeEarlyFromJson(Map<String, dynamic> json) {
   return _EarthquakeEarly.fromJson(json);
@@ -45,20 +46,22 @@ mixin _$EarthquakeEarly {
 /// @nodoc
 abstract class $EarthquakeEarlyCopyWith<$Res> {
   factory $EarthquakeEarlyCopyWith(
-          EarthquakeEarly value, $Res Function(EarthquakeEarly) then) =
-      _$EarthquakeEarlyCopyWithImpl<$Res, EarthquakeEarly>;
+    EarthquakeEarly value,
+    $Res Function(EarthquakeEarly) then,
+  ) = _$EarthquakeEarlyCopyWithImpl<$Res, EarthquakeEarly>;
   @useResult
-  $Res call(
-      {String id,
-      int? depth,
-      double? latitude,
-      double? longitude,
-      double? magnitude,
-      JmaForecastIntensity? maxIntensity,
-      bool maxIntensityIsEarly,
-      String name,
-      DateTime originTime,
-      OriginTimePrecision originTimePrecision});
+  $Res call({
+    String id,
+    int? depth,
+    double? latitude,
+    double? longitude,
+    double? magnitude,
+    JmaForecastIntensity? maxIntensity,
+    bool maxIntensityIsEarly,
+    String name,
+    DateTime originTime,
+    OriginTimePrecision originTimePrecision,
+  });
 }
 
 /// @nodoc
@@ -87,70 +90,85 @@ class _$EarthquakeEarlyCopyWithImpl<$Res, $Val extends EarthquakeEarly>
     Object? originTime = null,
     Object? originTimePrecision = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      depth: freezed == depth
-          ? _value.depth
-          : depth // ignore: cast_nullable_to_non_nullable
-              as int?,
-      latitude: freezed == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      longitude: freezed == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      magnitude: freezed == magnitude
-          ? _value.magnitude
-          : magnitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      maxIntensity: freezed == maxIntensity
-          ? _value.maxIntensity
-          : maxIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity?,
-      maxIntensityIsEarly: null == maxIntensityIsEarly
-          ? _value.maxIntensityIsEarly
-          : maxIntensityIsEarly // ignore: cast_nullable_to_non_nullable
-              as bool,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      originTime: null == originTime
-          ? _value.originTime
-          : originTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      originTimePrecision: null == originTimePrecision
-          ? _value.originTimePrecision
-          : originTimePrecision // ignore: cast_nullable_to_non_nullable
-              as OriginTimePrecision,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id:
+                null == id
+                    ? _value.id
+                    : id // ignore: cast_nullable_to_non_nullable
+                        as String,
+            depth:
+                freezed == depth
+                    ? _value.depth
+                    : depth // ignore: cast_nullable_to_non_nullable
+                        as int?,
+            latitude:
+                freezed == latitude
+                    ? _value.latitude
+                    : latitude // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            longitude:
+                freezed == longitude
+                    ? _value.longitude
+                    : longitude // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            magnitude:
+                freezed == magnitude
+                    ? _value.magnitude
+                    : magnitude // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            maxIntensity:
+                freezed == maxIntensity
+                    ? _value.maxIntensity
+                    : maxIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaForecastIntensity?,
+            maxIntensityIsEarly:
+                null == maxIntensityIsEarly
+                    ? _value.maxIntensityIsEarly
+                    : maxIntensityIsEarly // ignore: cast_nullable_to_non_nullable
+                        as bool,
+            name:
+                null == name
+                    ? _value.name
+                    : name // ignore: cast_nullable_to_non_nullable
+                        as String,
+            originTime:
+                null == originTime
+                    ? _value.originTime
+                    : originTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime,
+            originTimePrecision:
+                null == originTimePrecision
+                    ? _value.originTimePrecision
+                    : originTimePrecision // ignore: cast_nullable_to_non_nullable
+                        as OriginTimePrecision,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$EarthquakeEarlyImplCopyWith<$Res>
     implements $EarthquakeEarlyCopyWith<$Res> {
-  factory _$$EarthquakeEarlyImplCopyWith(_$EarthquakeEarlyImpl value,
-          $Res Function(_$EarthquakeEarlyImpl) then) =
-      __$$EarthquakeEarlyImplCopyWithImpl<$Res>;
+  factory _$$EarthquakeEarlyImplCopyWith(
+    _$EarthquakeEarlyImpl value,
+    $Res Function(_$EarthquakeEarlyImpl) then,
+  ) = __$$EarthquakeEarlyImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      int? depth,
-      double? latitude,
-      double? longitude,
-      double? magnitude,
-      JmaForecastIntensity? maxIntensity,
-      bool maxIntensityIsEarly,
-      String name,
-      DateTime originTime,
-      OriginTimePrecision originTimePrecision});
+  $Res call({
+    String id,
+    int? depth,
+    double? latitude,
+    double? longitude,
+    double? magnitude,
+    JmaForecastIntensity? maxIntensity,
+    bool maxIntensityIsEarly,
+    String name,
+    DateTime originTime,
+    OriginTimePrecision originTimePrecision,
+  });
 }
 
 /// @nodoc
@@ -158,8 +176,9 @@ class __$$EarthquakeEarlyImplCopyWithImpl<$Res>
     extends _$EarthquakeEarlyCopyWithImpl<$Res, _$EarthquakeEarlyImpl>
     implements _$$EarthquakeEarlyImplCopyWith<$Res> {
   __$$EarthquakeEarlyImplCopyWithImpl(
-      _$EarthquakeEarlyImpl _value, $Res Function(_$EarthquakeEarlyImpl) _then)
-      : super(_value, _then);
+    _$EarthquakeEarlyImpl _value,
+    $Res Function(_$EarthquakeEarlyImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of EarthquakeEarly
   /// with the given fields replaced by the non-null parameter values.
@@ -177,65 +196,78 @@ class __$$EarthquakeEarlyImplCopyWithImpl<$Res>
     Object? originTime = null,
     Object? originTimePrecision = null,
   }) {
-    return _then(_$EarthquakeEarlyImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      depth: freezed == depth
-          ? _value.depth
-          : depth // ignore: cast_nullable_to_non_nullable
-              as int?,
-      latitude: freezed == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      longitude: freezed == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      magnitude: freezed == magnitude
-          ? _value.magnitude
-          : magnitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      maxIntensity: freezed == maxIntensity
-          ? _value.maxIntensity
-          : maxIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity?,
-      maxIntensityIsEarly: null == maxIntensityIsEarly
-          ? _value.maxIntensityIsEarly
-          : maxIntensityIsEarly // ignore: cast_nullable_to_non_nullable
-              as bool,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      originTime: null == originTime
-          ? _value.originTime
-          : originTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      originTimePrecision: null == originTimePrecision
-          ? _value.originTimePrecision
-          : originTimePrecision // ignore: cast_nullable_to_non_nullable
-              as OriginTimePrecision,
-    ));
+    return _then(
+      _$EarthquakeEarlyImpl(
+        id:
+            null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                    as String,
+        depth:
+            freezed == depth
+                ? _value.depth
+                : depth // ignore: cast_nullable_to_non_nullable
+                    as int?,
+        latitude:
+            freezed == latitude
+                ? _value.latitude
+                : latitude // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        longitude:
+            freezed == longitude
+                ? _value.longitude
+                : longitude // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        magnitude:
+            freezed == magnitude
+                ? _value.magnitude
+                : magnitude // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        maxIntensity:
+            freezed == maxIntensity
+                ? _value.maxIntensity
+                : maxIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaForecastIntensity?,
+        maxIntensityIsEarly:
+            null == maxIntensityIsEarly
+                ? _value.maxIntensityIsEarly
+                : maxIntensityIsEarly // ignore: cast_nullable_to_non_nullable
+                    as bool,
+        name:
+            null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                    as String,
+        originTime:
+            null == originTime
+                ? _value.originTime
+                : originTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime,
+        originTimePrecision:
+            null == originTimePrecision
+                ? _value.originTimePrecision
+                : originTimePrecision // ignore: cast_nullable_to_non_nullable
+                    as OriginTimePrecision,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$EarthquakeEarlyImpl implements _EarthquakeEarly {
-  const _$EarthquakeEarlyImpl(
-      {required this.id,
-      required this.depth,
-      required this.latitude,
-      required this.longitude,
-      required this.magnitude,
-      required this.maxIntensity,
-      required this.maxIntensityIsEarly,
-      required this.name,
-      required this.originTime,
-      required this.originTimePrecision});
+  const _$EarthquakeEarlyImpl({
+    required this.id,
+    required this.depth,
+    required this.latitude,
+    required this.longitude,
+    required this.magnitude,
+    required this.maxIntensity,
+    required this.maxIntensityIsEarly,
+    required this.name,
+    required this.originTime,
+    required this.originTimePrecision,
+  });
 
   factory _$EarthquakeEarlyImpl.fromJson(Map<String, dynamic> json) =>
       _$$EarthquakeEarlyImplFromJson(json);
@@ -293,17 +325,18 @@ class _$EarthquakeEarlyImpl implements _EarthquakeEarly {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      depth,
-      latitude,
-      longitude,
-      magnitude,
-      maxIntensity,
-      maxIntensityIsEarly,
-      name,
-      originTime,
-      originTimePrecision);
+    runtimeType,
+    id,
+    depth,
+    latitude,
+    longitude,
+    magnitude,
+    maxIntensity,
+    maxIntensityIsEarly,
+    name,
+    originTime,
+    originTimePrecision,
+  );
 
   /// Create a copy of EarthquakeEarly
   /// with the given fields replaced by the non-null parameter values.
@@ -312,29 +345,29 @@ class _$EarthquakeEarlyImpl implements _EarthquakeEarly {
   @pragma('vm:prefer-inline')
   _$$EarthquakeEarlyImplCopyWith<_$EarthquakeEarlyImpl> get copyWith =>
       __$$EarthquakeEarlyImplCopyWithImpl<_$EarthquakeEarlyImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EarthquakeEarlyImplToJson(
-      this,
-    );
+    return _$$EarthquakeEarlyImplToJson(this);
   }
 }
 
 abstract class _EarthquakeEarly implements EarthquakeEarly {
-  const factory _EarthquakeEarly(
-          {required final String id,
-          required final int? depth,
-          required final double? latitude,
-          required final double? longitude,
-          required final double? magnitude,
-          required final JmaForecastIntensity? maxIntensity,
-          required final bool maxIntensityIsEarly,
-          required final String name,
-          required final DateTime originTime,
-          required final OriginTimePrecision originTimePrecision}) =
-      _$EarthquakeEarlyImpl;
+  const factory _EarthquakeEarly({
+    required final String id,
+    required final int? depth,
+    required final double? latitude,
+    required final double? longitude,
+    required final double? magnitude,
+    required final JmaForecastIntensity? maxIntensity,
+    required final bool maxIntensityIsEarly,
+    required final String name,
+    required final DateTime originTime,
+    required final OriginTimePrecision originTimePrecision,
+  }) = _$EarthquakeEarlyImpl;
 
   factory _EarthquakeEarly.fromJson(Map<String, dynamic> json) =
       _$EarthquakeEarlyImpl.fromJson;
