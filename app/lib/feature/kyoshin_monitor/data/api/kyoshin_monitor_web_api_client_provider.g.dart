@@ -15,14 +15,15 @@ String _$kyoshinMonitorWebApiClientHash() =>
 @ProviderFor(kyoshinMonitorWebApiClient)
 final kyoshinMonitorWebApiClientProvider =
     Provider<KyoshinMonitorWebApiClient>.internal(
-  kyoshinMonitorWebApiClient,
-  name: r'kyoshinMonitorWebApiClientProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$kyoshinMonitorWebApiClientHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      kyoshinMonitorWebApiClient,
+      name: r'kyoshinMonitorWebApiClientProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$kyoshinMonitorWebApiClientHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
@@ -34,18 +35,19 @@ String _$lpgmKyoshinMonitorWebApiClientHash() =>
 @ProviderFor(lpgmKyoshinMonitorWebApiClient)
 final lpgmKyoshinMonitorWebApiClientProvider =
     Provider<LpgmKyoshinMonitorWebApiClient>.internal(
-  lpgmKyoshinMonitorWebApiClient,
-  name: r'lpgmKyoshinMonitorWebApiClientProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$lpgmKyoshinMonitorWebApiClientHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      lpgmKyoshinMonitorWebApiClient,
+      name: r'lpgmKyoshinMonitorWebApiClientProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$lpgmKyoshinMonitorWebApiClientHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef LpgmKyoshinMonitorWebApiClientRef
-    = ProviderRef<LpgmKyoshinMonitorWebApiClient>;
+typedef LpgmKyoshinMonitorWebApiClientRef =
+    ProviderRef<LpgmKyoshinMonitorWebApiClient>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

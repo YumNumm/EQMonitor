@@ -7,17 +7,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'earthquake_history_early_repository.g.dart';
 
 @Riverpod(keepAlive: true)
-EarthquakeHistoryEarlyRepository earthquakeHistoryEarlyRepository(
-  Ref ref,
-) =>
-    EarthquakeHistoryEarlyRepository(
-      api: ref.watch(eqApiProvider),
-    );
+EarthquakeHistoryEarlyRepository earthquakeHistoryEarlyRepository(Ref ref) =>
+    EarthquakeHistoryEarlyRepository(api: ref.watch(eqApiProvider));
 
 class EarthquakeHistoryEarlyRepository {
-  EarthquakeHistoryEarlyRepository({
-    required EqApi api,
-  }) : _api = api;
+  EarthquakeHistoryEarlyRepository({required EqApi api}) : _api = api;
 
   final EqApi _api;
 
@@ -50,10 +44,7 @@ class EarthquakeHistoryEarlyRepository {
       ascending: ascending,
     );
 
-    return (
-      count: response.response.count,
-      items: response.data,
-    );
+    return (count: response.response.count, items: response.data);
   }
 
   Future<EarthquakeEarlyEvent> fetchEarthquakeEarlyEvent({

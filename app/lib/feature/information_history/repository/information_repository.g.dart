@@ -16,9 +16,10 @@ String _$informationRepositoryHash() =>
 final informationRepositoryProvider = Provider<InformationRepository>.internal(
   informationRepository,
   name: r'informationRepositoryProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$informationRepositoryHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$informationRepositoryHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

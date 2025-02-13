@@ -12,7 +12,8 @@ part of 'permission_state.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 PermissionStateModel _$PermissionStateModelFromJson(Map<String, dynamic> json) {
   return _PermissionStateModel.fromJson(json);
@@ -37,20 +38,24 @@ mixin _$PermissionStateModel {
 
 /// @nodoc
 abstract class $PermissionStateModelCopyWith<$Res> {
-  factory $PermissionStateModelCopyWith(PermissionStateModel value,
-          $Res Function(PermissionStateModel) then) =
-      _$PermissionStateModelCopyWithImpl<$Res, PermissionStateModel>;
+  factory $PermissionStateModelCopyWith(
+    PermissionStateModel value,
+    $Res Function(PermissionStateModel) then,
+  ) = _$PermissionStateModelCopyWithImpl<$Res, PermissionStateModel>;
   @useResult
-  $Res call(
-      {bool notification,
-      bool criticalAlert,
-      bool location,
-      bool backgroundLocation});
+  $Res call({
+    bool notification,
+    bool criticalAlert,
+    bool location,
+    bool backgroundLocation,
+  });
 }
 
 /// @nodoc
-class _$PermissionStateModelCopyWithImpl<$Res,
-        $Val extends PermissionStateModel>
+class _$PermissionStateModelCopyWithImpl<
+  $Res,
+  $Val extends PermissionStateModel
+>
     implements $PermissionStateModelCopyWith<$Res> {
   _$PermissionStateModelCopyWithImpl(this._value, this._then);
 
@@ -69,49 +74,59 @@ class _$PermissionStateModelCopyWithImpl<$Res,
     Object? location = null,
     Object? backgroundLocation = null,
   }) {
-    return _then(_value.copyWith(
-      notification: null == notification
-          ? _value.notification
-          : notification // ignore: cast_nullable_to_non_nullable
-              as bool,
-      criticalAlert: null == criticalAlert
-          ? _value.criticalAlert
-          : criticalAlert // ignore: cast_nullable_to_non_nullable
-              as bool,
-      location: null == location
-          ? _value.location
-          : location // ignore: cast_nullable_to_non_nullable
-              as bool,
-      backgroundLocation: null == backgroundLocation
-          ? _value.backgroundLocation
-          : backgroundLocation // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            notification:
+                null == notification
+                    ? _value.notification
+                    : notification // ignore: cast_nullable_to_non_nullable
+                        as bool,
+            criticalAlert:
+                null == criticalAlert
+                    ? _value.criticalAlert
+                    : criticalAlert // ignore: cast_nullable_to_non_nullable
+                        as bool,
+            location:
+                null == location
+                    ? _value.location
+                    : location // ignore: cast_nullable_to_non_nullable
+                        as bool,
+            backgroundLocation:
+                null == backgroundLocation
+                    ? _value.backgroundLocation
+                    : backgroundLocation // ignore: cast_nullable_to_non_nullable
+                        as bool,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$PermissionStateModelImplCopyWith<$Res>
     implements $PermissionStateModelCopyWith<$Res> {
-  factory _$$PermissionStateModelImplCopyWith(_$PermissionStateModelImpl value,
-          $Res Function(_$PermissionStateModelImpl) then) =
-      __$$PermissionStateModelImplCopyWithImpl<$Res>;
+  factory _$$PermissionStateModelImplCopyWith(
+    _$PermissionStateModelImpl value,
+    $Res Function(_$PermissionStateModelImpl) then,
+  ) = __$$PermissionStateModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {bool notification,
-      bool criticalAlert,
-      bool location,
-      bool backgroundLocation});
+  $Res call({
+    bool notification,
+    bool criticalAlert,
+    bool location,
+    bool backgroundLocation,
+  });
 }
 
 /// @nodoc
 class __$$PermissionStateModelImplCopyWithImpl<$Res>
     extends _$PermissionStateModelCopyWithImpl<$Res, _$PermissionStateModelImpl>
     implements _$$PermissionStateModelImplCopyWith<$Res> {
-  __$$PermissionStateModelImplCopyWithImpl(_$PermissionStateModelImpl _value,
-      $Res Function(_$PermissionStateModelImpl) _then)
-      : super(_value, _then);
+  __$$PermissionStateModelImplCopyWithImpl(
+    _$PermissionStateModelImpl _value,
+    $Res Function(_$PermissionStateModelImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of PermissionStateModel
   /// with the given fields replaced by the non-null parameter values.
@@ -123,35 +138,42 @@ class __$$PermissionStateModelImplCopyWithImpl<$Res>
     Object? location = null,
     Object? backgroundLocation = null,
   }) {
-    return _then(_$PermissionStateModelImpl(
-      notification: null == notification
-          ? _value.notification
-          : notification // ignore: cast_nullable_to_non_nullable
-              as bool,
-      criticalAlert: null == criticalAlert
-          ? _value.criticalAlert
-          : criticalAlert // ignore: cast_nullable_to_non_nullable
-              as bool,
-      location: null == location
-          ? _value.location
-          : location // ignore: cast_nullable_to_non_nullable
-              as bool,
-      backgroundLocation: null == backgroundLocation
-          ? _value.backgroundLocation
-          : backgroundLocation // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
+    return _then(
+      _$PermissionStateModelImpl(
+        notification:
+            null == notification
+                ? _value.notification
+                : notification // ignore: cast_nullable_to_non_nullable
+                    as bool,
+        criticalAlert:
+            null == criticalAlert
+                ? _value.criticalAlert
+                : criticalAlert // ignore: cast_nullable_to_non_nullable
+                    as bool,
+        location:
+            null == location
+                ? _value.location
+                : location // ignore: cast_nullable_to_non_nullable
+                    as bool,
+        backgroundLocation:
+            null == backgroundLocation
+                ? _value.backgroundLocation
+                : backgroundLocation // ignore: cast_nullable_to_non_nullable
+                    as bool,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$PermissionStateModelImpl implements _PermissionStateModel {
-  const _$PermissionStateModelImpl(
-      {this.notification = false,
-      this.criticalAlert = false,
-      this.location = false,
-      this.backgroundLocation = false});
+  const _$PermissionStateModelImpl({
+    this.notification = false,
+    this.criticalAlert = false,
+    this.location = false,
+    this.backgroundLocation = false,
+  });
 
   factory _$PermissionStateModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$PermissionStateModelImplFromJson(json);
@@ -192,7 +214,12 @@ class _$PermissionStateModelImpl implements _PermissionStateModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, notification, criticalAlert, location, backgroundLocation);
+    runtimeType,
+    notification,
+    criticalAlert,
+    location,
+    backgroundLocation,
+  );
 
   /// Create a copy of PermissionStateModel
   /// with the given fields replaced by the non-null parameter values.
@@ -200,24 +227,25 @@ class _$PermissionStateModelImpl implements _PermissionStateModel {
   @override
   @pragma('vm:prefer-inline')
   _$$PermissionStateModelImplCopyWith<_$PermissionStateModelImpl>
-      get copyWith =>
-          __$$PermissionStateModelImplCopyWithImpl<_$PermissionStateModelImpl>(
-              this, _$identity);
+  get copyWith =>
+      __$$PermissionStateModelImplCopyWithImpl<_$PermissionStateModelImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PermissionStateModelImplToJson(
-      this,
-    );
+    return _$$PermissionStateModelImplToJson(this);
   }
 }
 
 abstract class _PermissionStateModel implements PermissionStateModel {
-  const factory _PermissionStateModel(
-      {final bool notification,
-      final bool criticalAlert,
-      final bool location,
-      final bool backgroundLocation}) = _$PermissionStateModelImpl;
+  const factory _PermissionStateModel({
+    final bool notification,
+    final bool criticalAlert,
+    final bool location,
+    final bool backgroundLocation,
+  }) = _$PermissionStateModelImpl;
 
   factory _PermissionStateModel.fromJson(Map<String, dynamic> json) =
       _$PermissionStateModelImpl.fromJson;
@@ -236,5 +264,5 @@ abstract class _PermissionStateModel implements PermissionStateModel {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PermissionStateModelImplCopyWith<_$PermissionStateModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

@@ -12,7 +12,8 @@ part of 'telegram.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 TelegramV1 _$TelegramV1FromJson(Map<String, dynamic> json) {
   return _TelegramV1.fromJson(json);
@@ -46,22 +47,24 @@ mixin _$TelegramV1 {
 /// @nodoc
 abstract class $TelegramV1CopyWith<$Res> {
   factory $TelegramV1CopyWith(
-          TelegramV1 value, $Res Function(TelegramV1) then) =
-      _$TelegramV1CopyWithImpl<$Res, TelegramV1>;
+    TelegramV1 value,
+    $Res Function(TelegramV1) then,
+  ) = _$TelegramV1CopyWithImpl<$Res, TelegramV1>;
   @useResult
-  $Res call(
-      {int id,
-      int eventId,
-      String type,
-      String schemaType,
-      String status,
-      String infoType,
-      DateTime pressTime,
-      DateTime reportTime,
-      Map<String, dynamic> body,
-      DateTime? validTime,
-      int? serialNo,
-      String? headline});
+  $Res call({
+    int id,
+    int eventId,
+    String type,
+    String schemaType,
+    String status,
+    String infoType,
+    DateTime pressTime,
+    DateTime reportTime,
+    Map<String, dynamic> body,
+    DateTime? validTime,
+    int? serialNo,
+    String? headline,
+  });
 }
 
 /// @nodoc
@@ -92,56 +95,71 @@ class _$TelegramV1CopyWithImpl<$Res, $Val extends TelegramV1>
     Object? serialNo = freezed,
     Object? headline = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      eventId: null == eventId
-          ? _value.eventId
-          : eventId // ignore: cast_nullable_to_non_nullable
-              as int,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      schemaType: null == schemaType
-          ? _value.schemaType
-          : schemaType // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      infoType: null == infoType
-          ? _value.infoType
-          : infoType // ignore: cast_nullable_to_non_nullable
-              as String,
-      pressTime: null == pressTime
-          ? _value.pressTime
-          : pressTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      reportTime: null == reportTime
-          ? _value.reportTime
-          : reportTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      body: null == body
-          ? _value.body
-          : body // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
-      validTime: freezed == validTime
-          ? _value.validTime
-          : validTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      serialNo: freezed == serialNo
-          ? _value.serialNo
-          : serialNo // ignore: cast_nullable_to_non_nullable
-              as int?,
-      headline: freezed == headline
-          ? _value.headline
-          : headline // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id:
+                null == id
+                    ? _value.id
+                    : id // ignore: cast_nullable_to_non_nullable
+                        as int,
+            eventId:
+                null == eventId
+                    ? _value.eventId
+                    : eventId // ignore: cast_nullable_to_non_nullable
+                        as int,
+            type:
+                null == type
+                    ? _value.type
+                    : type // ignore: cast_nullable_to_non_nullable
+                        as String,
+            schemaType:
+                null == schemaType
+                    ? _value.schemaType
+                    : schemaType // ignore: cast_nullable_to_non_nullable
+                        as String,
+            status:
+                null == status
+                    ? _value.status
+                    : status // ignore: cast_nullable_to_non_nullable
+                        as String,
+            infoType:
+                null == infoType
+                    ? _value.infoType
+                    : infoType // ignore: cast_nullable_to_non_nullable
+                        as String,
+            pressTime:
+                null == pressTime
+                    ? _value.pressTime
+                    : pressTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime,
+            reportTime:
+                null == reportTime
+                    ? _value.reportTime
+                    : reportTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime,
+            body:
+                null == body
+                    ? _value.body
+                    : body // ignore: cast_nullable_to_non_nullable
+                        as Map<String, dynamic>,
+            validTime:
+                freezed == validTime
+                    ? _value.validTime
+                    : validTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime?,
+            serialNo:
+                freezed == serialNo
+                    ? _value.serialNo
+                    : serialNo // ignore: cast_nullable_to_non_nullable
+                        as int?,
+            headline:
+                freezed == headline
+                    ? _value.headline
+                    : headline // ignore: cast_nullable_to_non_nullable
+                        as String?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -149,23 +167,25 @@ class _$TelegramV1CopyWithImpl<$Res, $Val extends TelegramV1>
 abstract class _$$TelegramV1ImplCopyWith<$Res>
     implements $TelegramV1CopyWith<$Res> {
   factory _$$TelegramV1ImplCopyWith(
-          _$TelegramV1Impl value, $Res Function(_$TelegramV1Impl) then) =
-      __$$TelegramV1ImplCopyWithImpl<$Res>;
+    _$TelegramV1Impl value,
+    $Res Function(_$TelegramV1Impl) then,
+  ) = __$$TelegramV1ImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      int eventId,
-      String type,
-      String schemaType,
-      String status,
-      String infoType,
-      DateTime pressTime,
-      DateTime reportTime,
-      Map<String, dynamic> body,
-      DateTime? validTime,
-      int? serialNo,
-      String? headline});
+  $Res call({
+    int id,
+    int eventId,
+    String type,
+    String schemaType,
+    String status,
+    String infoType,
+    DateTime pressTime,
+    DateTime reportTime,
+    Map<String, dynamic> body,
+    DateTime? validTime,
+    int? serialNo,
+    String? headline,
+  });
 }
 
 /// @nodoc
@@ -173,8 +193,9 @@ class __$$TelegramV1ImplCopyWithImpl<$Res>
     extends _$TelegramV1CopyWithImpl<$Res, _$TelegramV1Impl>
     implements _$$TelegramV1ImplCopyWith<$Res> {
   __$$TelegramV1ImplCopyWithImpl(
-      _$TelegramV1Impl _value, $Res Function(_$TelegramV1Impl) _then)
-      : super(_value, _then);
+    _$TelegramV1Impl _value,
+    $Res Function(_$TelegramV1Impl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of TelegramV1
   /// with the given fields replaced by the non-null parameter values.
@@ -194,76 +215,90 @@ class __$$TelegramV1ImplCopyWithImpl<$Res>
     Object? serialNo = freezed,
     Object? headline = freezed,
   }) {
-    return _then(_$TelegramV1Impl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      eventId: null == eventId
-          ? _value.eventId
-          : eventId // ignore: cast_nullable_to_non_nullable
-              as int,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      schemaType: null == schemaType
-          ? _value.schemaType
-          : schemaType // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      infoType: null == infoType
-          ? _value.infoType
-          : infoType // ignore: cast_nullable_to_non_nullable
-              as String,
-      pressTime: null == pressTime
-          ? _value.pressTime
-          : pressTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      reportTime: null == reportTime
-          ? _value.reportTime
-          : reportTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      body: null == body
-          ? _value._body
-          : body // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
-      validTime: freezed == validTime
-          ? _value.validTime
-          : validTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      serialNo: freezed == serialNo
-          ? _value.serialNo
-          : serialNo // ignore: cast_nullable_to_non_nullable
-              as int?,
-      headline: freezed == headline
-          ? _value.headline
-          : headline // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$TelegramV1Impl(
+        id:
+            null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                    as int,
+        eventId:
+            null == eventId
+                ? _value.eventId
+                : eventId // ignore: cast_nullable_to_non_nullable
+                    as int,
+        type:
+            null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                    as String,
+        schemaType:
+            null == schemaType
+                ? _value.schemaType
+                : schemaType // ignore: cast_nullable_to_non_nullable
+                    as String,
+        status:
+            null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                    as String,
+        infoType:
+            null == infoType
+                ? _value.infoType
+                : infoType // ignore: cast_nullable_to_non_nullable
+                    as String,
+        pressTime:
+            null == pressTime
+                ? _value.pressTime
+                : pressTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime,
+        reportTime:
+            null == reportTime
+                ? _value.reportTime
+                : reportTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime,
+        body:
+            null == body
+                ? _value._body
+                : body // ignore: cast_nullable_to_non_nullable
+                    as Map<String, dynamic>,
+        validTime:
+            freezed == validTime
+                ? _value.validTime
+                : validTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime?,
+        serialNo:
+            freezed == serialNo
+                ? _value.serialNo
+                : serialNo // ignore: cast_nullable_to_non_nullable
+                    as int?,
+        headline:
+            freezed == headline
+                ? _value.headline
+                : headline // ignore: cast_nullable_to_non_nullable
+                    as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$TelegramV1Impl implements _TelegramV1 {
-  const _$TelegramV1Impl(
-      {required this.id,
-      required this.eventId,
-      required this.type,
-      required this.schemaType,
-      required this.status,
-      required this.infoType,
-      required this.pressTime,
-      required this.reportTime,
-      required final Map<String, dynamic> body,
-      this.validTime,
-      this.serialNo,
-      this.headline})
-      : _body = body;
+  const _$TelegramV1Impl({
+    required this.id,
+    required this.eventId,
+    required this.type,
+    required this.schemaType,
+    required this.status,
+    required this.infoType,
+    required this.pressTime,
+    required this.reportTime,
+    required final Map<String, dynamic> body,
+    this.validTime,
+    this.serialNo,
+    this.headline,
+  }) : _body = body;
 
   factory _$TelegramV1Impl.fromJson(Map<String, dynamic> json) =>
       _$$TelegramV1ImplFromJson(json);
@@ -333,19 +368,20 @@ class _$TelegramV1Impl implements _TelegramV1 {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      eventId,
-      type,
-      schemaType,
-      status,
-      infoType,
-      pressTime,
-      reportTime,
-      const DeepCollectionEquality().hash(_body),
-      validTime,
-      serialNo,
-      headline);
+    runtimeType,
+    id,
+    eventId,
+    type,
+    schemaType,
+    status,
+    infoType,
+    pressTime,
+    reportTime,
+    const DeepCollectionEquality().hash(_body),
+    validTime,
+    serialNo,
+    headline,
+  );
 
   /// Create a copy of TelegramV1
   /// with the given fields replaced by the non-null parameter values.
@@ -357,26 +393,25 @@ class _$TelegramV1Impl implements _TelegramV1 {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TelegramV1ImplToJson(
-      this,
-    );
+    return _$$TelegramV1ImplToJson(this);
   }
 }
 
 abstract class _TelegramV1 implements TelegramV1 {
-  const factory _TelegramV1(
-      {required final int id,
-      required final int eventId,
-      required final String type,
-      required final String schemaType,
-      required final String status,
-      required final String infoType,
-      required final DateTime pressTime,
-      required final DateTime reportTime,
-      required final Map<String, dynamic> body,
-      final DateTime? validTime,
-      final int? serialNo,
-      final String? headline}) = _$TelegramV1Impl;
+  const factory _TelegramV1({
+    required final int id,
+    required final int eventId,
+    required final String type,
+    required final String schemaType,
+    required final String status,
+    required final String infoType,
+    required final DateTime pressTime,
+    required final DateTime reportTime,
+    required final Map<String, dynamic> body,
+    final DateTime? validTime,
+    final int? serialNo,
+    final String? headline,
+  }) = _$TelegramV1Impl;
 
   factory _TelegramV1.fromJson(Map<String, dynamic> json) =
       _$TelegramV1Impl.fromJson;

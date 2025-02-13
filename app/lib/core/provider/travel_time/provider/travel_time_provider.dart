@@ -8,16 +8,18 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'travel_time_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<TravelTimeTables> travelTime(Ref ref) async {
+TravelTimeTables travelTime(Ref ref) =>
+    ref.watch(travelTimeInternalProvider).requireValue;
+
+@Riverpod(keepAlive: true)
+Future<TravelTimeTables> travelTimeInternal(Ref ref) async {
   final dataSource = ref.watch(travelTimeDataSourceProvider);
   return TravelTimeTables(table: await dataSource.loadTables());
 }
 
 @Riverpod(keepAlive: true)
-Future<TravelTimeDepthMap> travelTimeDepthMap(
-  Ref ref,
-) async {
-  final state = await ref.watch(travelTimeProvider.future);
+TravelTimeDepthMap travelTimeDepthMap(Ref ref) {
+  final state = ref.watch(travelTimeProvider);
   return state.table.groupListsBy((e) => e.depth);
 }
 
@@ -40,7 +42,7 @@ extension TravelTimeDepthMapCalc on TravelTimeDepthMap {
       }
       final p =
           (duration - p1.p) / (p2.p - p1.p) * (p2.distance - p1.distance) +
-              p1.distance;
+          p1.distance;
       return p;
     }();
     final s = () {
@@ -51,7 +53,7 @@ extension TravelTimeDepthMapCalc on TravelTimeDepthMap {
       }
       final s =
           (duration - s1.s) / (s2.s - s1.s) * (s2.distance - s1.distance) +
-              s1.distance;
+          s1.distance;
       return s;
     }();
     return TravelTimeResult(s, p);
@@ -76,14 +78,16 @@ extension TravelTimeTablesCalc on TravelTimeTables {
     if (p1 == null || p2 == null) {
       return TravelTimeResult(null, null);
     }
-    final p = (time - p1.p) / (p2.p - p1.p) * (p2.distance - p1.distance) +
+    final p =
+        (time - p1.p) / (p2.p - p1.p) * (p2.distance - p1.distance) +
         p1.distance;
     final s1 = lists.firstWhereOrNull((e) => e.s <= time);
     final s2 = lists.lastWhereOrNull((e) => e.s >= time);
     if (s1 == null || s2 == null) {
       return TravelTimeResult(null, p);
     }
-    final s = (time - s1.s) / (s2.s - s1.s) * (s2.distance - s1.distance) +
+    final s =
+        (time - s1.s) / (s2.s - s1.s) * (s2.distance - s1.distance) +
         s1.distance;
     return TravelTimeResult(s, p);
   }

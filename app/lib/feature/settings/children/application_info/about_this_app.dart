@@ -18,9 +18,7 @@ class AboutThisAppScreen extends HookWidget {
     );
     final markdown = useFuture(markdownFuture);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('このアプリについて'),
-      ),
+      appBar: AppBar(title: const Text('このアプリについて')),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Column(
@@ -28,19 +26,24 @@ class AboutThisAppScreen extends HookWidget {
               ListTile(
                 title: const Text('利用規約'),
                 leading: const Icon(Icons.description),
-                onTap: () async =>
-                    const TermOfServiceRoute($extra: null).push<void>(context),
+                onTap:
+                    () async => const TermOfServiceRoute(
+                      $extra: null,
+                    ).push<void>(context),
               ),
               ListTile(
                 title: const Text('プライバシーポリシー'),
                 leading: const Icon(Icons.info),
-                onTap: () async =>
-                    const PrivacyPolicyRoute($extra: null).push<void>(context),
+                onTap:
+                    () async => const PrivacyPolicyRoute(
+                      $extra: null,
+                    ).push<void>(context),
               ),
               ListTile(
                 title: const Text('ライセンス情報'),
-                subtitle:
-                    Text('MIT License ${DateTime.now().year} Ryotaro Onoue'),
+                subtitle: Text(
+                  'MIT License ${DateTime.now().year} Ryotaro Onoue',
+                ),
                 leading: const Icon(Icons.settings),
                 onTap: () async => const LicenseRoute().push<void>(context),
               ),

@@ -18,12 +18,11 @@ class LpgmKyoshinMonitorWebApiDataSource {
     RealtimeDataType type,
     RealtimeLayer layer,
     BaseMapTheme theme,
-  ) async =>
-      _client.getScaleImageData(
-        type: type.urlString,
-        layer: layer.urlString,
-        theme: theme.urlString,
-      );
+  ) async => _client.getScaleImageData(
+    type: type.urlString,
+    layer: layer.urlString,
+    theme: theme.urlString,
+  );
 
   /// PsWaveImg
   Future<List<int>> getPsWaveImageData(DateTime dateTime) async =>
@@ -37,13 +36,12 @@ class LpgmKyoshinMonitorWebApiDataSource {
     RealtimeDataType type,
     RealtimeLayer layer,
     DateTime dateTime,
-  ) async =>
-      _client.getRealtimeImageData(
-        type: type.urlString,
-        layer: layer.urlString,
-        date: dateFormat.format(dateTime),
-        dateTime: dateTimeFormat.format(dateTime),
-      );
+  ) async => _client.getRealtimeImageData(
+    type: type.urlString,
+    layer: layer.urlString,
+    date: dateFormat.format(dateTime),
+    dateTime: dateTimeFormat.format(dateTime),
+  );
 
   static DateFormat get dateFormat => DateFormat('yyyyMMdd');
   static DateFormat get dateTimeFormat => DateFormat('yyyyMMddHHmmss');

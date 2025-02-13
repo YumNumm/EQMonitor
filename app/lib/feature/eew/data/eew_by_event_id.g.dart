@@ -35,9 +35,7 @@ abstract class _$EewsByEventId
     extends BuildlessAutoDisposeAsyncNotifier<List<EewV1>> {
   late final String eventId;
 
-  FutureOr<List<EewV1>> build(
-    String eventId,
-  );
+  FutureOr<List<EewV1>> build(String eventId);
 }
 
 /// See also [EewsByEventId].
@@ -50,21 +48,15 @@ class EewsByEventIdFamily extends Family<AsyncValue<List<EewV1>>> {
   const EewsByEventIdFamily();
 
   /// See also [EewsByEventId].
-  EewsByEventIdProvider call(
-    String eventId,
-  ) {
-    return EewsByEventIdProvider(
-      eventId,
-    );
+  EewsByEventIdProvider call(String eventId) {
+    return EewsByEventIdProvider(eventId);
   }
 
   @override
   EewsByEventIdProvider getProviderOverride(
     covariant EewsByEventIdProvider provider,
   ) {
-    return call(
-      provider.eventId,
-    );
+    return call(provider.eventId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -86,21 +78,20 @@ class EewsByEventIdFamily extends Family<AsyncValue<List<EewV1>>> {
 class EewsByEventIdProvider
     extends AutoDisposeAsyncNotifierProviderImpl<EewsByEventId, List<EewV1>> {
   /// See also [EewsByEventId].
-  EewsByEventIdProvider(
-    String eventId,
-  ) : this._internal(
-          () => EewsByEventId()..eventId = eventId,
-          from: eewsByEventIdProvider,
-          name: r'eewsByEventIdProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$eewsByEventIdHash,
-          dependencies: EewsByEventIdFamily._dependencies,
-          allTransitiveDependencies:
-              EewsByEventIdFamily._allTransitiveDependencies,
-          eventId: eventId,
-        );
+  EewsByEventIdProvider(String eventId)
+    : this._internal(
+        () => EewsByEventId()..eventId = eventId,
+        from: eewsByEventIdProvider,
+        name: r'eewsByEventIdProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$eewsByEventIdHash,
+        dependencies: EewsByEventIdFamily._dependencies,
+        allTransitiveDependencies:
+            EewsByEventIdFamily._allTransitiveDependencies,
+        eventId: eventId,
+      );
 
   EewsByEventIdProvider._internal(
     super._createNotifier, {
@@ -115,12 +106,8 @@ class EewsByEventIdProvider
   final String eventId;
 
   @override
-  FutureOr<List<EewV1>> runNotifierBuild(
-    covariant EewsByEventId notifier,
-  ) {
-    return notifier.build(
-      eventId,
-    );
+  FutureOr<List<EewV1>> runNotifierBuild(covariant EewsByEventId notifier) {
+    return notifier.build(eventId);
   }
 
   @override
@@ -141,7 +128,7 @@ class EewsByEventIdProvider
 
   @override
   AutoDisposeAsyncNotifierProviderElement<EewsByEventId, List<EewV1>>
-      createElement() {
+  createElement() {
     return _EewsByEventIdProviderElement(this);
   }
 
@@ -174,5 +161,6 @@ class _EewsByEventIdProviderElement
   @override
   String get eventId => (origin as EewsByEventIdProvider).eventId;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

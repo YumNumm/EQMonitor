@@ -204,8 +204,10 @@ void packFloat32() {
 
 void packDouble() {
   List<int> encoded = serialize(3.14);
-  expect(encoded,
-      orderedEquals([0xcb, 0x40, 0x09, 0x1e, 0xb8, 0x51, 0xeb, 0x85, 0x1f]));
+  expect(
+    encoded,
+    orderedEquals([0xcb, 0x40, 0x09, 0x1e, 0xb8, 0x51, 0xeb, 0x85, 0x1f]),
+  );
 }
 
 void packString5() {
@@ -216,37 +218,39 @@ void packString5() {
 void packString22() {
   List<int> encoded = serialize("hello there, everyone!");
   expect(
-      encoded,
-      orderedEquals([
-        182,
-        104,
-        101,
-        108,
-        108,
-        111,
-        32,
-        116,
-        104,
-        101,
-        114,
-        101,
-        44,
-        32,
-        101,
-        118,
-        101,
-        114,
-        121,
-        111,
-        110,
-        101,
-        33
-      ]));
+    encoded,
+    orderedEquals([
+      182,
+      104,
+      101,
+      108,
+      108,
+      111,
+      32,
+      116,
+      104,
+      101,
+      114,
+      101,
+      44,
+      32,
+      101,
+      118,
+      101,
+      114,
+      121,
+      111,
+      110,
+      101,
+      33,
+    ]),
+  );
 }
 
 void packString256() {
   List<int> encoded = serialize(
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  );
   expect(encoded, hasLength(259));
   expect(encoded.sublist(0, 3), orderedEquals([218, 1, 0]));
   expect(encoded.sublist(3, 259), everyElement(65));
@@ -281,37 +285,42 @@ void packByteData() {
   List<int> encoded = serialize(data);
   expect(encoded.length, equals(34));
   expect(encoded.getRange(0, 2), orderedEquals([0xc4, 32]));
-  expect(encoded.getRange(2, encoded.length),
-      orderedEquals(data.buffer.asUint8List()));
+  expect(
+    encoded.getRange(2, encoded.length),
+    orderedEquals(data.buffer.asUint8List()),
+  );
 }
 
 void packStringArray() {
   List<int> encoded = serialize(["one", "two", "three"]);
   expect(
-      encoded,
-      orderedEquals([
-        147,
-        163,
-        111,
-        110,
-        101,
-        163,
-        116,
-        119,
-        111,
-        165,
-        116,
-        104,
-        114,
-        101,
-        101
-      ]));
+    encoded,
+    orderedEquals([
+      147,
+      163,
+      111,
+      110,
+      101,
+      163,
+      116,
+      119,
+      111,
+      165,
+      116,
+      104,
+      114,
+      101,
+      101,
+    ]),
+  );
 }
 
 void packIntToStringMap() {
   List<int> encoded = serialize({1: "one", 2: "two"});
-  expect(encoded,
-      orderedEquals([130, 1, 163, 111, 110, 101, 2, 163, 116, 119, 111]));
+  expect(
+    encoded,
+    orderedEquals([130, 1, 163, 111, 110, 101, 2, 163, 116, 119, 111]),
+  );
 }
 
 // Test unpacking
@@ -364,7 +373,7 @@ void unpackString22() {
     111,
     110,
     101,
-    33
+    33,
   ]);
   var value = deserialize(data);
   expect(value, isString);
@@ -408,8 +417,17 @@ void unpackUint32() {
 
 void unpackUint64() {
   // Dart 2 doesn't support true Uint64 without using BigInt
-  Uint8List data =
-      Uint8List.fromList([207, 127, 255, 255, 255, 255, 255, 255, 255]);
+  Uint8List data = Uint8List.fromList([
+    207,
+    127,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255,
+  ]);
   var value = deserialize(data);
   expect(value, isInt);
   expect(value, equals(9223372036854775807));
@@ -452,21 +470,33 @@ void unpackFloat32() {
 }
 
 void unpackDouble() {
-  Uint8List data = Uint8List.fromList(
-      [0xcb, 0x40, 0x09, 0x1e, 0xb8, 0x51, 0xeb, 0x85, 0x1f]);
+  Uint8List data = Uint8List.fromList([
+    0xcb,
+    0x40,
+    0x09,
+    0x1e,
+    0xb8,
+    0x51,
+    0xeb,
+    0x85,
+    0x1f,
+  ]);
   var value = deserialize(data);
   expect(value, equals(3.14));
 }
 
 void unpackString256() {
-  Uint8List data =
-      new Uint8List.fromList([218, 1, 0]..addAll(new List.filled(256, 65)));
+  Uint8List data = new Uint8List.fromList(
+    [218, 1, 0]..addAll(new List.filled(256, 65)),
+  );
   var value = deserialize(data);
   expect(value, isString);
   expect(
-      value,
-      equals(
-          "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+    value,
+    equals(
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    ),
+  );
 }
 
 void unpackStringArray() {
@@ -485,7 +515,7 @@ void unpackStringArray() {
     104,
     114,
     101,
-    101
+    101,
   ]);
   var value = deserialize(data);
   expect(value, isList);
@@ -493,8 +523,19 @@ void unpackStringArray() {
 }
 
 void unpackIntToStringMap() {
-  Uint8List data = new Uint8List.fromList(
-      [130, 1, 163, 111, 110, 101, 2, 163, 116, 119, 111]);
+  Uint8List data = new Uint8List.fromList([
+    130,
+    1,
+    163,
+    111,
+    110,
+    101,
+    2,
+    163,
+    116,
+    119,
+    111,
+  ]);
   var value = deserialize(data);
   expect(value, isMap);
   expect(value[1], equals("one"));
@@ -507,8 +548,10 @@ void unpackSmallDateTime() {
   expect(value, equals(DateTime.fromMillisecondsSinceEpoch(0)));
   data = <int>[0xd7, 0xff, 47, 175, 8, 0, 91, 124, 180, 16];
   value = deserialize(Uint8List.fromList(data));
-  expect((value as DateTime).toUtc(),
-      equals(DateTime.utc(2018, 8, 22, 0, 56, 56, 200)));
+  expect(
+    (value as DateTime).toUtc(),
+    equals(DateTime.utc(2018, 8, 22, 0, 56, 56, 200)),
+  );
 }
 
 void unpackPastDate() {
@@ -527,7 +570,7 @@ void unpackPastDate() {
     184,
     204,
     121,
-    158
+    158,
   ];
 
   var value = deserialize(Uint8List.fromList(data)) as DateTime;
@@ -548,7 +591,7 @@ void unpackPastDate() {
     255,
     255,
     248,
-    248
+    248,
   ];
   value = deserialize(Uint8List.fromList(data));
   expect(value.toUtc(), equals(DateTime.utc(1969, 12, 31, 23, 30)));

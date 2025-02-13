@@ -14,12 +14,15 @@ String _$eewNotificationsSettingsViewModelHash() =>
 /// See also [EewNotificationsSettingsViewModel].
 @ProviderFor(EewNotificationsSettingsViewModel)
 final eewNotificationsSettingsViewModelProvider = AutoDisposeNotifierProvider<
-    EewNotificationsSettingsViewModel, FcmEewTopic?>.internal(
+  EewNotificationsSettingsViewModel,
+  FcmEewTopic?
+>.internal(
   EewNotificationsSettingsViewModel.new,
   name: r'eewNotificationsSettingsViewModelProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$eewNotificationsSettingsViewModelHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$eewNotificationsSettingsViewModelHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

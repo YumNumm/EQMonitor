@@ -12,15 +12,12 @@ part 'jma_parameter_api_client.g.dart';
 
 class JmaParameterApiClient {
   JmaParameterApiClient({required Dio client})
-      : _client = _JmaParameterApiClient(client);
+    : _client = _JmaParameterApiClient(client);
 
   final _JmaParameterApiClient _client;
 
-  Future<
-      ({
-        EarthquakeParameter parameter,
-        String? etag,
-      })> getEarthquakeParameter() async {
+  Future<({EarthquakeParameter parameter, String? etag})>
+  getEarthquakeParameter() async {
     final res = await _client.getEarthquakeParameter();
     return (
       parameter: EarthquakeParameter.fromBuffer(res.data),
@@ -33,11 +30,8 @@ class JmaParameterApiClient {
     return response.response.headers.value('etag');
   }
 
-  Future<
-      ({
-        TsunamiParameter parameter,
-        String? etag,
-      })> getTsunamiParameter() async {
+  Future<({TsunamiParameter parameter, String? etag})>
+  getTsunamiParameter() async {
     final response = await _client.getTsunamiParameter();
     return (
       parameter: TsunamiParameter.fromBuffer(response.data),

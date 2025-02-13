@@ -10,9 +10,7 @@ part 'location.g.dart';
 @riverpod
 Stream<Position> locationStream(Ref ref) async* {
   final stream = Geolocator.getPositionStream(
-    locationSettings: const LocationSettings(
-      accuracy: LocationAccuracy.low,
-    ),
+    locationSettings: const LocationSettings(accuracy: LocationAccuracy.low),
   );
 
   final lastKnownPosition = await Geolocator.getLastKnownPosition();
@@ -21,9 +19,7 @@ Stream<Position> locationStream(Ref ref) async* {
   }
 
   final currentPosition = await Geolocator.getCurrentPosition(
-    locationSettings: const LocationSettings(
-      accuracy: LocationAccuracy.low,
-    ),
+    locationSettings: const LocationSettings(accuracy: LocationAccuracy.low),
   );
   yield currentPosition;
 
@@ -32,6 +28,7 @@ Stream<Position> locationStream(Ref ref) async* {
   }
 }
 
+/// 近隣の強震観測点
 @riverpod
 Stream<(KyoshinObservationPoint, double km)> closestKmoniObservationPointStream(
   Ref ref,
@@ -49,7 +46,7 @@ Stream<(KyoshinObservationPoint, double km)> closestKmoniObservationPointStream(
               LengthUnit.Kilometer,
               LatLng(e.location.latitude, e.location.longitude),
               currentPosition,
-            )
+            ),
           ),
         )
         .reduce((a, b) => a.$2 < b.$2 ? a : b);

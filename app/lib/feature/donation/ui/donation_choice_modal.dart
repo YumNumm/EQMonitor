@@ -6,31 +6,29 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 class DonationChoiceModal extends HookConsumerWidget {
-  const DonationChoiceModal._({
-    required this.choices,
-  });
+  const DonationChoiceModal._({required this.choices});
 
   final List<StoreProduct> choices;
 
   static Future<StoreProduct?> show(
     BuildContext context,
     List<StoreProduct> products,
-  ) =>
-      showModalBottomSheet<StoreProduct>(
-        clipBehavior: Clip.antiAlias,
-        context: context,
-        builder: (context) => DonationChoiceModal._(choices: products),
-      );
+  ) => showModalBottomSheet<StoreProduct>(
+    clipBehavior: Clip.antiAlias,
+    context: context,
+    builder: (context) => DonationChoiceModal._(choices: products),
+  );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sortedChoices = useMemoized(
-      () => choices.sorted((a, b) => a.price.compareTo(b.price)).map((choice) {
-        final matchedProduct = Products.values.firstWhereOrNull(
-          (product) => product.id == choice.identifier,
-        );
-        return (choice, matchedProduct);
-      }).whereType<(StoreProduct, Products)>(),
+      () =>
+          choices.sorted((a, b) => a.price.compareTo(b.price)).map((choice) {
+            final matchedProduct = Products.values.firstWhereOrNull(
+              (product) => product.id == choice.identifier,
+            );
+            return (choice, matchedProduct);
+          }).whereType<(StoreProduct, Products)>(),
       [choices],
     );
     final theme = Theme.of(context);
@@ -69,10 +67,7 @@ class DonationChoiceModal extends HookConsumerWidget {
                   choice.priceString,
                   style: theme.textTheme.titleSmall,
                 ),
-                leading: Text(
-                  emoji,
-                  style: const TextStyle(fontSize: 24),
-                ),
+                leading: Text(emoji, style: const TextStyle(fontSize: 24)),
                 onTap: () => Navigator.of(context).pop(choice),
               );
             }(),
@@ -109,9 +104,9 @@ extension ProductEx on Products {
   }
 
   String get productName => switch (this) {
-        Products.coffee => 'コーヒー',
-        Products.enegyDrink => 'エナジードリンクセット',
-        Products.meat => '美味しい牛肉',
-        Products.eel => 'うな重'
-      };
+    Products.coffee => 'コーヒー',
+    Products.enegyDrink => 'エナジードリンクセット',
+    Products.meat => '美味しい牛肉',
+    Products.eel => 'うな重',
+  };
 }

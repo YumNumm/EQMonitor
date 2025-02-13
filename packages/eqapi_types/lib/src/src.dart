@@ -1,7 +1,6 @@
 export 'enum/area_forecast_local_eew.dart';
 export 'enum/area_information_prefecture_earthquake.dart';
 export 'enum/enum.dart';
-export 'extension/eew_v1.dart';
 export 'extension/int_to_string.dart';
 export 'model/core.dart';
 export 'model/v1/app_information.dart';

@@ -7,7 +7,6 @@ class TalkerPage extends ConsumerWidget {
   const TalkerPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => TalkerScreen(
-        talker: talker,
-      );
+  Widget build(BuildContext context, WidgetRef ref) =>
+      TalkerScreen(talker: talker);
 }

@@ -18,12 +18,7 @@ class MapConfiguration with _$MapConfiguration {
       _$MapConfigurationFromJson(json);
 }
 
-enum MapTheme {
-  light,
-  dark,
-  system,
-  ;
-}
+enum MapTheme { light, dark, system }
 
 Color colorFromJson(String json) => Color(int.parse(json));
 String colorToJson(Color color) => color.hex.toRadixString(16);
@@ -60,11 +55,12 @@ class MapColorScheme with _$MapColorScheme {
   factory MapColorScheme.dark() {
     const colorScheme = ColorScheme.dark();
     return MapColorScheme(
-      backgroundColor: Color.lerp(
-        colorScheme.surfaceContainerLowest,
-        Colors.blue.shade900,
-        0.1,
-      )!,
+      backgroundColor:
+          Color.lerp(
+            colorScheme.surfaceContainerLowest,
+            Colors.blue.shade900,
+            0.1,
+          )!,
       worldLandColor: colorScheme.surfaceContainerHighest,
       worldLineColor: colorScheme.onSurfaceVariant,
       japanLandColor: colorScheme.surfaceContainerHighest,

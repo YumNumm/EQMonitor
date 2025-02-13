@@ -3,17 +3,13 @@ import 'package:flutter/material.dart';
 
 @immutable
 class CustomColors extends ThemeExtension<CustomColors> {
-  const CustomColors({
-    required this.danger,
-  });
+  const CustomColors({required this.danger});
 
   final Color? danger;
 
   @override
   CustomColors copyWith({Color? danger}) {
-    return CustomColors(
-      danger: danger ?? this.danger,
-    );
+    return CustomColors(danger: danger ?? this.danger);
   }
 
   @override
@@ -21,9 +17,7 @@ class CustomColors extends ThemeExtension<CustomColors> {
     if (other is! CustomColors) {
       return this;
     }
-    return CustomColors(
-      danger: Color.lerp(danger, other.danger, t),
-    );
+    return CustomColors(danger: Color.lerp(danger, other.danger, t));
   }
 
   CustomColors harmonized(ColorScheme dynamic) {

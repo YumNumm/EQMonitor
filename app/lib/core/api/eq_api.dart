@@ -21,11 +21,8 @@ EqApi eqApi(Ref ref) {
 
   return EqApi(
     dio: dio,
-    objectsDio: Dio(
-      BaseOptions(
-        baseUrl: 'https://object.eqmonitor.app',
-      ),
-    )..interceptors.add(
+    objectsDio: Dio(BaseOptions(baseUrl: 'https://object.eqmonitor.app'))
+      ..interceptors.add(
         TalkerDioLogger(
           settings: TalkerDioLoggerSettings(
             errorPen: AnsiPen()..red(),
@@ -39,10 +36,7 @@ EqApi eqApi(Ref ref) {
 }
 
 /// Repositoryで利用
-typedef EqApiV1Response<T> = ({
-  int count,
-  List<T> items,
-});
+typedef EqApiV1Response<T> = ({int count, List<T> items});
 
 /// HttpResponse のheaderから`count`の値を取得するために利用
 extension ResponseEx<T> on Response<T> {

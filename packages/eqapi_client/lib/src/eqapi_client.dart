@@ -10,10 +10,7 @@ export 'children/v1.dart';
 part 'eqapi_client.g.dart';
 
 class EqApi {
-  EqApi({
-    required this.dio,
-    required this.objectsDio,
-  });
+  EqApi({required this.dio, required this.objectsDio});
 
   final Dio dio;
   final Dio objectsDio;

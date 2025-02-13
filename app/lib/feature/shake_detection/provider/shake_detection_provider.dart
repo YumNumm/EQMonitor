@@ -18,40 +18,35 @@ part 'shake_detection_provider.g.dart';
 class ShakeDetection extends _$ShakeDetection {
   @override
   Future<List<ShakeDetectionEvent>> build() async {
-    final apiResult =
-        await ref.watch(_fetchShakeDetectionEventsProvider.future);
+    final apiResult = await ref.watch(
+      _fetchShakeDetectionEventsProvider.future,
+    );
     ref
-      ..listen(
-        websocketTableMessagesProvider,
-        (_, next) {
-          if (next case AsyncData(value: final value)) {
-            if (value
-                case RealtimePostgresInsertPayload<
-                    ShakeDetectionWebSocketTelegram>()) {
-              for (final event in value.newData.events) {
-                _upsertShakeDetectionEvents([event]);
-              }
-            } else if (value
-                case RealtimePostgresDeletePayload<
-                    ShakeDetectionWebSocketTelegram>()) {
-              state = const AsyncData([]);
-            } else {
-              log('unknown value: $value');
+      ..listen(websocketTableMessagesProvider, (_, next) {
+        if (next case AsyncData(value: final value)) {
+          if (value
+              case RealtimePostgresInsertPayload<
+                    ShakeDetectionWebSocketTelegram
+                  >()) {
+            for (final event in value.newData.events) {
+              _upsertShakeDetectionEvents([event]);
             }
+          } else if (value
+              case RealtimePostgresDeletePayload<
+                    ShakeDetectionWebSocketTelegram
+                  >()) {
+            state = const AsyncData([]);
+          } else {
+            log('unknown value: $value');
           }
-        },
-      )
-      ..listen(
-        timeTickerProvider,
-        (_, __) {
-          if (state case AsyncData(:final value)) {
-            state = AsyncData(_pruneOldEvents(value));
-          }
-        },
-      );
-    return _pruneOldEvents([
-      ...apiResult,
-    ]);
+        }
+      })
+      ..listen(timeTickerProvider(), (_, __) {
+        if (state case AsyncData(:final value)) {
+          state = AsyncData(_pruneOldEvents(value));
+        }
+      });
+    return _pruneOldEvents([...apiResult]);
   }
 
   /// 古くなったイベントを破棄
@@ -59,16 +54,13 @@ class ShakeDetection extends _$ShakeDetection {
     const duration = Duration(seconds: 30);
     return events
         .where(
-          (event) => event.insertedAt.isAfter(
-            DateTime.now().subtract(duration),
-          ),
+          (event) =>
+              event.insertedAt.isAfter(DateTime.now().subtract(duration)),
         )
         .toList();
   }
 
-  void _upsertShakeDetectionEvents(
-    List<ShakeDetectionEvent> events,
-  ) {
+  void _upsertShakeDetectionEvents(List<ShakeDetectionEvent> events) {
     final currentEvents = state.valueOrNull ?? [];
     final data = [...currentEvents];
     for (final event in events) {
@@ -112,31 +104,27 @@ class ShakeDetectionKmoniPointsMerged
         (e) => ShakeDetectionKmoniMergedRegion(
           name: e.name,
           maxIntensity: e.maxIntensity,
-          points: e.points
-              .map(
-                (p) {
-                  final point = points.points.firstWhereOrNull(
-                    (e) => e.code == p.code,
-                  );
-                  if (point == null) {
-                    return null;
-                  }
-                  return ShakeDetectionKmoniMergedPoint(
-                    intensity: p.intensity,
-                    code: p.code,
-                    point: point,
-                  );
-                },
-              )
-              .nonNulls
-              .toList(),
+          points:
+              e.points
+                  .map((p) {
+                    final point = points.points.firstWhereOrNull(
+                      (e) => e.code == p.code,
+                    );
+                    if (point == null) {
+                      return null;
+                    }
+                    return ShakeDetectionKmoniMergedPoint(
+                      intensity: p.intensity,
+                      code: p.code,
+                      point: point,
+                    );
+                  })
+                  .nonNulls
+                  .toList(),
         ),
       );
       merged.add(
-        ShakeDetectionKmoniMergedEvent(
-          event: event,
-          regions: regions.toList(),
-        ),
+        ShakeDetectionKmoniMergedEvent(event: event, regions: regions.toList()),
       );
     }
     return merged;
@@ -144,41 +132,34 @@ class ShakeDetectionKmoniPointsMerged
 }
 
 @Riverpod(keepAlive: true)
-Future<List<ShakeDetectionEvent>> _fetchShakeDetectionEvents(
-  Ref ref,
-) async =>
+Future<List<ShakeDetectionEvent>> _fetchShakeDetectionEvents(Ref ref) async =>
     ref.watch(eqApiProvider).v1.getLatestShakeDetectionEvents();
 
 enum ShakeDetectionLevel {
   low(Colors.green),
   middle(Colors.yellow),
   high(Colors.red),
-  highest(Colors.purple),
-  ;
+  highest(Colors.purple);
 
   const ShakeDetectionLevel(this.color);
   final Color color;
 
   static ShakeDetectionLevel fromJmaForecastIntensity(
     JmaForecastIntensity intensity,
-  ) =>
-      switch (intensity) {
-        JmaForecastIntensity.zero => ShakeDetectionLevel.low,
-        JmaForecastIntensity.one ||
-        JmaForecastIntensity.two ||
-        JmaForecastIntensity.three =>
-          ShakeDetectionLevel.middle,
-        JmaForecastIntensity.four ||
-        JmaForecastIntensity.fiveLower ||
-        JmaForecastIntensity.fiveUpper =>
-          ShakeDetectionLevel.high,
-        JmaForecastIntensity.sixLower ||
-        JmaForecastIntensity.sixUpper ||
-        JmaForecastIntensity.seven =>
-          ShakeDetectionLevel.highest,
-        JmaForecastIntensity.unknown =>
-          throw ArgumentError('unsupported JmaForecastIntensity: $intensity'),
-      };
+  ) => switch (intensity) {
+    JmaForecastIntensity.zero => ShakeDetectionLevel.low,
+    JmaForecastIntensity.one ||
+    JmaForecastIntensity.two ||
+    JmaForecastIntensity.three => ShakeDetectionLevel.middle,
+    JmaForecastIntensity.four ||
+    JmaForecastIntensity.fiveLower ||
+    JmaForecastIntensity.fiveUpper => ShakeDetectionLevel.high,
+    JmaForecastIntensity.sixLower ||
+    JmaForecastIntensity.sixUpper ||
+    JmaForecastIntensity.seven => ShakeDetectionLevel.highest,
+    JmaForecastIntensity.unknown =>
+      throw ArgumentError('unsupported JmaForecastIntensity: $intensity'),
+  };
 
   bool operator <(ShakeDetectionLevel other) => index < other.index;
 }

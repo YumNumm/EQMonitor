@@ -11,9 +11,7 @@ Future<Map<JmaMapType, List<JmaMap_JmaMapData_JmaMapDataItem>>> jmaMap(
   Ref ref,
 ) async {
   final bytes = await rootBundle.load(Assets.jmaMap);
-  final jmaMap = JmaMap.fromBuffer(
-    bytes.buffer.asUint8List(),
-  );
+  final jmaMap = JmaMap.fromBuffer(bytes.buffer.asUint8List());
   return {
     for (final element in jmaMap.data) element.mapType.mapType: element.data,
   };
@@ -24,18 +22,17 @@ enum JmaMapType {
   areaForecastLocalE,
   areaInformationCity,
   areaTsunami,
-  ;
 }
 
 extension JmaMapEx on JmaMap_JmaMapData_JmaMapType {
   JmaMapType get mapType => switch (this) {
-        JmaMap_JmaMapData_JmaMapType.AREA_FORECAST_LOCAL_E =>
-          JmaMapType.areaForecastLocalE,
-        JmaMap_JmaMapData_JmaMapType.AREA_FORECAST_LOCAL_EEW =>
-          JmaMapType.areaForecastLocalEew,
-        JmaMap_JmaMapData_JmaMapType.AREA_INFORMATION_CITY =>
-          JmaMapType.areaInformationCity,
-        JmaMap_JmaMapData_JmaMapType.AREA_TSUNAMI => JmaMapType.areaTsunami,
-        _ => throw UnimplementedError(),
-      };
+    JmaMap_JmaMapData_JmaMapType.AREA_FORECAST_LOCAL_E =>
+      JmaMapType.areaForecastLocalE,
+    JmaMap_JmaMapData_JmaMapType.AREA_FORECAST_LOCAL_EEW =>
+      JmaMapType.areaForecastLocalEew,
+    JmaMap_JmaMapData_JmaMapType.AREA_INFORMATION_CITY =>
+      JmaMapType.areaInformationCity,
+    JmaMap_JmaMapData_JmaMapType.AREA_TSUNAMI => JmaMapType.areaTsunami,
+    _ => throw UnimplementedError(),
+  };
 }

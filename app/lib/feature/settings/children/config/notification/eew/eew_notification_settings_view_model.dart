@@ -24,8 +24,7 @@ class EewNotificationsSettingsViewModel
 
   static List<FcmEewTopic> choices = [
     const FcmEewAllTopic(),
-    ...([...JmaIntensity.values]..remove(JmaIntensity.fiveUpperNoInput)).map(
-      FcmEewIntensityTopic.new,
-    ),
+    ...([...JmaIntensity.values]
+      ..remove(JmaIntensity.fiveUpperNoInput)).map(FcmEewIntensityTopic.new),
   ];
 }

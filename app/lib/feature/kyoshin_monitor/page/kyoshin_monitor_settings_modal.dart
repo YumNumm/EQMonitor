@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:eqmonitor/core/component/sheet/app_sheet_route.dart';
+import 'package:eqmonitor/core/component/widget/app_list_tile.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/haptic.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_settings_model.dart';
@@ -17,10 +18,14 @@ class KyoshinMonitorSettingsModal extends HookConsumerWidget {
   const KyoshinMonitorSettingsModal({super.key});
 
   static Future<void> show(BuildContext context) => Navigator.of(context).push(
-        AppSheetRoute(
-          builder: (context) => const KyoshinMonitorSettingsModal(),
-        ),
-      );
+    AppSheetRoute(
+      builder:
+          (context) => const ClipRRect(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            child: KyoshinMonitorSettingsModal(),
+          ),
+    ),
+  );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,8 +33,9 @@ class KyoshinMonitorSettingsModal extends HookConsumerWidget {
     final colorScheme = theme.colorScheme;
     final backgroundColor = colorScheme.surfaceContainerLow;
 
-    final isEnabled =
-        ref.watch(kyoshinMonitorSettingsProvider.select((v) => v.useKmoni));
+    final isEnabled = ref.watch(
+      kyoshinMonitorSettingsProvider.select((v) => v.useKmoni),
+    );
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -46,7 +52,7 @@ class KyoshinMonitorSettingsModal extends HookConsumerWidget {
                   tileMode: TileMode.mirror,
                 ),
                 inner: ColorFilter.mode(
-                  colorScheme.surfaceContainerLow.withValues(alpha: 0.8),
+                  colorScheme.surfaceContainerLow.withValues(alpha: 0.7),
                   BlendMode.srcATop,
                 ),
               ),
@@ -69,9 +75,7 @@ class KyoshinMonitorSettingsModal extends HookConsumerWidget {
               ),
             ],
           ),
-          const SliverToBoxAdapter(
-            child: _KyoshinMonitorSwitchListTile(),
-          ),
+          const SliverToBoxAdapter(child: _KyoshinMonitorSwitchListTile()),
           if (isEnabled)
             SliverSafeArea(
               top: false,
@@ -80,8 +84,9 @@ class KyoshinMonitorSettingsModal extends HookConsumerWidget {
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton.icon(
-                      onPressed: () async =>
-                          const KyoshinMonitorAboutRoute().push<void>(context),
+                      onPressed:
+                          () async => const KyoshinMonitorAboutRoute()
+                              .push<void>(context),
                       icon: const Icon(Icons.info_outline_rounded),
                       label: const Text('強震モニタとは?'),
                     ),
@@ -90,35 +95,39 @@ class KyoshinMonitorSettingsModal extends HookConsumerWidget {
                     title: 'リアルタイムデータの種類',
                     trailing: IconButton(
                       icon: const Icon(Icons.info_outline),
-                      onPressed: () async =>
-                          RealtimeDataTypeInfoDialog.show(context),
+                      onPressed:
+                          () async => RealtimeDataTypeInfoDialog.show(context),
                     ),
                     child: _RealtimeDataTypeSelector(
-                      value: ref
-                          .watch(kyoshinMonitorSettingsProvider)
-                          .realtimeDataType,
-                      onChanged: (value) async => ref
-                          .read(kyoshinMonitorSettingsProvider.notifier)
-                          .save(
-                            ref
-                                .read(kyoshinMonitorSettingsProvider)
-                                .copyWith(realtimeDataType: value),
-                          ),
+                      value:
+                          ref
+                              .watch(kyoshinMonitorSettingsProvider)
+                              .realtimeDataType,
+                      onChanged:
+                          (value) async => ref
+                              .read(kyoshinMonitorSettingsProvider.notifier)
+                              .save(
+                                ref
+                                    .read(kyoshinMonitorSettingsProvider)
+                                    .copyWith(realtimeDataType: value),
+                              ),
                     ),
                   ),
                   _SettingSection(
                     title: 'リアルタイムデータのレイヤー',
                     child: _RealtimeLayerSelector(
-                      value: ref
-                          .watch(kyoshinMonitorSettingsProvider)
-                          .realtimeLayer,
-                      onChanged: (value) async => ref
-                          .read(kyoshinMonitorSettingsProvider.notifier)
-                          .save(
-                            ref
-                                .read(kyoshinMonitorSettingsProvider)
-                                .copyWith(realtimeLayer: value),
-                          ),
+                      value:
+                          ref
+                              .watch(kyoshinMonitorSettingsProvider)
+                              .realtimeLayer,
+                      onChanged:
+                          (value) async => ref
+                              .read(kyoshinMonitorSettingsProvider.notifier)
+                              .save(
+                                ref
+                                    .read(kyoshinMonitorSettingsProvider)
+                                    .copyWith(realtimeLayer: value),
+                              ),
                     ),
                   ),
                   _SettingSection(
@@ -126,16 +135,18 @@ class KyoshinMonitorSettingsModal extends HookConsumerWidget {
                     description:
                         '観測点の円の周りに灰色の枠を表示します。\n地図の背景や他の観測点とのコントラストを高めることができます。',
                     child: _MarkerTypeSelector(
-                      value: ref
-                          .watch(kyoshinMonitorSettingsProvider)
-                          .kmoniMarkerType,
-                      onChanged: (value) async => ref
-                          .read(kyoshinMonitorSettingsProvider.notifier)
-                          .save(
-                            ref
-                                .read(kyoshinMonitorSettingsProvider)
-                                .copyWith(kmoniMarkerType: value),
-                          ),
+                      value:
+                          ref
+                              .watch(kyoshinMonitorSettingsProvider)
+                              .kmoniMarkerType,
+                      onChanged:
+                          (value) async => ref
+                              .read(kyoshinMonitorSettingsProvider.notifier)
+                              .save(
+                                ref
+                                    .read(kyoshinMonitorSettingsProvider)
+                                    .copyWith(kmoniMarkerType: value),
+                              ),
                     ),
                   ),
                   _SettingSection(
@@ -149,33 +160,18 @@ class KyoshinMonitorSettingsModal extends HookConsumerWidget {
                             'リアルタイムデータの点の色が、どの値を示すかのスケールを表示します\n'
                             '地図画面左上の時刻表示をタップすることで、切り替えることもできます',
                           ),
-                          value: ref
-                              .watch(kyoshinMonitorSettingsProvider)
-                              .showRealtimeShindoScale,
-                          onChanged: (value) async => ref
-                              .read(kyoshinMonitorSettingsProvider.notifier)
-                              .save(
-                                ref
-                                    .read(kyoshinMonitorSettingsProvider)
-                                    .copyWith(showRealtimeShindoScale: value),
-                              ),
-                        ),
-                        SwitchListTile.adaptive(
-                          contentPadding: EdgeInsets.zero,
-                          title: const Text('現在地マーカーを表示'),
-                          subtitle: const Text(
-                            '地図上に現在地を示すマーカーを表示します',
-                          ),
-                          value: ref
-                              .watch(kyoshinMonitorSettingsProvider)
-                              .showCurrentLocationMarker,
-                          onChanged: (value) async => ref
-                              .read(kyoshinMonitorSettingsProvider.notifier)
-                              .save(
-                                ref
-                                    .read(kyoshinMonitorSettingsProvider)
-                                    .copyWith(showCurrentLocationMarker: value),
-                              ),
+                          value:
+                              ref
+                                  .watch(kyoshinMonitorSettingsProvider)
+                                  .showScale,
+                          onChanged:
+                              (value) async => ref
+                                  .read(kyoshinMonitorSettingsProvider.notifier)
+                                  .save(
+                                    ref
+                                        .read(kyoshinMonitorSettingsProvider)
+                                        .copyWith(showScale: value),
+                                  ),
                         ),
                       ],
                     ),
@@ -194,38 +190,26 @@ class _KyoshinMonitorSwitchListTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isEnabled =
-        ref.watch(kyoshinMonitorSettingsProvider.select((v) => v.useKmoni));
+    final isEnabled = ref.watch(
+      kyoshinMonitorSettingsProvider.select((v) => v.useKmoni),
+    );
 
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final backgroundColor = colorScheme.secondaryContainer;
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 8,
-        vertical: 4,
-      ),
-      child: SwitchListTile.adaptive(
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        tileColor: backgroundColor,
-        title: const Text(
-          '強震モニタを利用する',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle: const Text('強震モニタを利用するかどうかを選択します'),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: AppListTile.switchListTile(
+        title: '強震モニタを利用する',
+        subtitle: '強震モニタを利用するかどうかを選択します',
         value: isEnabled,
-        onChanged: (value) async => selectionHapticFunction(
-          () async => ref.read(kyoshinMonitorSettingsProvider.notifier).save(
-                ref
-                    .read(kyoshinMonitorSettingsProvider)
-                    .copyWith(useKmoni: value),
-              ),
-        ),
+        onChanged:
+            (value) async => selectionHapticFunction(
+              () async => ref
+                  .read(kyoshinMonitorSettingsProvider.notifier)
+                  .save(
+                    ref
+                        .read(kyoshinMonitorSettingsProvider)
+                        .copyWith(useKmoni: value),
+                  ),
+            ),
       ),
     );
   }
@@ -250,10 +234,7 @@ class _SettingSection extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 8,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -303,24 +284,17 @@ class _RealtimeDataTypeSelector extends StatelessWidget {
           onChanged(value);
         }
       },
-      dropdownMenuEntries: RealtimeDataType.values
-          .where((e) => !e.isLpgm)
-          .map(
-            (e) => DropdownMenuEntry(
-              value: e,
-              label: e.displayName,
-            ),
-          )
-          .toList(),
+      dropdownMenuEntries:
+          RealtimeDataType.values
+              .where((e) => !e.isLpgm)
+              .map((e) => DropdownMenuEntry(value: e, label: e.displayName))
+              .toList(),
     );
   }
 }
 
 class _RealtimeLayerSelector extends StatelessWidget {
-  const _RealtimeLayerSelector({
-    required this.value,
-    required this.onChanged,
-  });
+  const _RealtimeLayerSelector({required this.value, required this.onChanged});
 
   final RealtimeLayer value;
   final void Function(RealtimeLayer) onChanged;
@@ -335,49 +309,41 @@ class _RealtimeLayerSelector extends StatelessWidget {
         }
       },
       dropdownMenuEntries: const [
-        DropdownMenuEntry(
-          value: RealtimeLayer.surface,
-          label: '地表',
-        ),
-        DropdownMenuEntry(
-          value: RealtimeLayer.underground,
-          label: '地中',
-        ),
+        DropdownMenuEntry(value: RealtimeLayer.surface, label: '地表'),
+        DropdownMenuEntry(value: RealtimeLayer.underground, label: '地中'),
       ],
     );
   }
 }
 
 class _MarkerTypeSelector extends StatelessWidget {
-  const _MarkerTypeSelector({
-    required this.value,
-    required this.onChanged,
-  });
+  const _MarkerTypeSelector({required this.value, required this.onChanged});
 
-  final KmoniMarkerType value;
-  final void Function(KmoniMarkerType) onChanged;
+  final KyoshinMonitorMarkerType value;
+  final void Function(KyoshinMonitorMarkerType) onChanged;
 
   @override
   Widget build(BuildContext context) {
-    return DropdownMenu<KmoniMarkerType>(
+    return DropdownMenu<KyoshinMonitorMarkerType>(
       initialSelection: value,
       onSelected: (value) {
         if (value != null) {
           onChanged(value);
         }
       },
-      dropdownMenuEntries: KmoniMarkerType.values
-          .map(
-            (value) => DropdownMenuEntry(
-              value: value,
-              label: switch (value) {
-                KmoniMarkerType.always => '常に表示',
-                KmoniMarkerType.onlyEew => 'EEW時のみ',
-                KmoniMarkerType.never => '表示しない',
-              },
-            ),
-          )
-          .toList(),
+      dropdownMenuEntries:
+          KyoshinMonitorMarkerType.values
+              .map(
+                (value) => DropdownMenuEntry(
+                  value: value,
+                  label: switch (value) {
+                    KyoshinMonitorMarkerType.always => '常に表示',
+                    KyoshinMonitorMarkerType.onlyEew => 'EEW時のみ',
+                    KyoshinMonitorMarkerType.never => '表示しない',
+                  },
+                ),
+              )
+              .toList(),
     );
   }
 }

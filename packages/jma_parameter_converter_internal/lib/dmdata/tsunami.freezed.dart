@@ -12,7 +12,8 @@ part of 'tsunami.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 TsunamiParameter _$TsunamiParameterFromJson(Map<String, dynamic> json) {
   return _TsunamiParameter.fromJson(json);
@@ -40,16 +41,18 @@ mixin _$TsunamiParameter {
 /// @nodoc
 abstract class $TsunamiParameterCopyWith<$Res> {
   factory $TsunamiParameterCopyWith(
-          TsunamiParameter value, $Res Function(TsunamiParameter) then) =
-      _$TsunamiParameterCopyWithImpl<$Res, TsunamiParameter>;
+    TsunamiParameter value,
+    $Res Function(TsunamiParameter) then,
+  ) = _$TsunamiParameterCopyWithImpl<$Res, TsunamiParameter>;
   @useResult
-  $Res call(
-      {String responseId,
-      DateTime responseTime,
-      String status,
-      DateTime changeTime,
-      String version,
-      List<TsunamiParameterItem> items});
+  $Res call({
+    String responseId,
+    DateTime responseTime,
+    String status,
+    DateTime changeTime,
+    String version,
+    List<TsunamiParameterItem> items,
+  });
 }
 
 /// @nodoc
@@ -74,59 +77,71 @@ class _$TsunamiParameterCopyWithImpl<$Res, $Val extends TsunamiParameter>
     Object? version = null,
     Object? items = null,
   }) {
-    return _then(_value.copyWith(
-      responseId: null == responseId
-          ? _value.responseId
-          : responseId // ignore: cast_nullable_to_non_nullable
-              as String,
-      responseTime: null == responseTime
-          ? _value.responseTime
-          : responseTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      changeTime: null == changeTime
-          ? _value.changeTime
-          : changeTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      version: null == version
-          ? _value.version
-          : version // ignore: cast_nullable_to_non_nullable
-              as String,
-      items: null == items
-          ? _value.items
-          : items // ignore: cast_nullable_to_non_nullable
-              as List<TsunamiParameterItem>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            responseId:
+                null == responseId
+                    ? _value.responseId
+                    : responseId // ignore: cast_nullable_to_non_nullable
+                        as String,
+            responseTime:
+                null == responseTime
+                    ? _value.responseTime
+                    : responseTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime,
+            status:
+                null == status
+                    ? _value.status
+                    : status // ignore: cast_nullable_to_non_nullable
+                        as String,
+            changeTime:
+                null == changeTime
+                    ? _value.changeTime
+                    : changeTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime,
+            version:
+                null == version
+                    ? _value.version
+                    : version // ignore: cast_nullable_to_non_nullable
+                        as String,
+            items:
+                null == items
+                    ? _value.items
+                    : items // ignore: cast_nullable_to_non_nullable
+                        as List<TsunamiParameterItem>,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$TsunamiParameterImplCopyWith<$Res>
     implements $TsunamiParameterCopyWith<$Res> {
-  factory _$$TsunamiParameterImplCopyWith(_$TsunamiParameterImpl value,
-          $Res Function(_$TsunamiParameterImpl) then) =
-      __$$TsunamiParameterImplCopyWithImpl<$Res>;
+  factory _$$TsunamiParameterImplCopyWith(
+    _$TsunamiParameterImpl value,
+    $Res Function(_$TsunamiParameterImpl) then,
+  ) = __$$TsunamiParameterImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String responseId,
-      DateTime responseTime,
-      String status,
-      DateTime changeTime,
-      String version,
-      List<TsunamiParameterItem> items});
+  $Res call({
+    String responseId,
+    DateTime responseTime,
+    String status,
+    DateTime changeTime,
+    String version,
+    List<TsunamiParameterItem> items,
+  });
 }
 
 /// @nodoc
 class __$$TsunamiParameterImplCopyWithImpl<$Res>
     extends _$TsunamiParameterCopyWithImpl<$Res, _$TsunamiParameterImpl>
     implements _$$TsunamiParameterImplCopyWith<$Res> {
-  __$$TsunamiParameterImplCopyWithImpl(_$TsunamiParameterImpl _value,
-      $Res Function(_$TsunamiParameterImpl) _then)
-      : super(_value, _then);
+  __$$TsunamiParameterImplCopyWithImpl(
+    _$TsunamiParameterImpl _value,
+    $Res Function(_$TsunamiParameterImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of TsunamiParameter
   /// with the given fields replaced by the non-null parameter values.
@@ -140,46 +155,54 @@ class __$$TsunamiParameterImplCopyWithImpl<$Res>
     Object? version = null,
     Object? items = null,
   }) {
-    return _then(_$TsunamiParameterImpl(
-      responseId: null == responseId
-          ? _value.responseId
-          : responseId // ignore: cast_nullable_to_non_nullable
-              as String,
-      responseTime: null == responseTime
-          ? _value.responseTime
-          : responseTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      changeTime: null == changeTime
-          ? _value.changeTime
-          : changeTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      version: null == version
-          ? _value.version
-          : version // ignore: cast_nullable_to_non_nullable
-              as String,
-      items: null == items
-          ? _value._items
-          : items // ignore: cast_nullable_to_non_nullable
-              as List<TsunamiParameterItem>,
-    ));
+    return _then(
+      _$TsunamiParameterImpl(
+        responseId:
+            null == responseId
+                ? _value.responseId
+                : responseId // ignore: cast_nullable_to_non_nullable
+                    as String,
+        responseTime:
+            null == responseTime
+                ? _value.responseTime
+                : responseTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime,
+        status:
+            null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                    as String,
+        changeTime:
+            null == changeTime
+                ? _value.changeTime
+                : changeTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime,
+        version:
+            null == version
+                ? _value.version
+                : version // ignore: cast_nullable_to_non_nullable
+                    as String,
+        items:
+            null == items
+                ? _value._items
+                : items // ignore: cast_nullable_to_non_nullable
+                    as List<TsunamiParameterItem>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$TsunamiParameterImpl implements _TsunamiParameter {
-  const _$TsunamiParameterImpl(
-      {required this.responseId,
-      required this.responseTime,
-      required this.status,
-      required this.changeTime,
-      required this.version,
-      required final List<TsunamiParameterItem> items})
-      : _items = items;
+  const _$TsunamiParameterImpl({
+    required this.responseId,
+    required this.responseTime,
+    required this.status,
+    required this.changeTime,
+    required this.version,
+    required final List<TsunamiParameterItem> items,
+  }) : _items = items;
 
   factory _$TsunamiParameterImpl.fromJson(Map<String, dynamic> json) =>
       _$$TsunamiParameterImplFromJson(json);
@@ -225,8 +248,15 @@ class _$TsunamiParameterImpl implements _TsunamiParameter {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, responseId, responseTime, status,
-      changeTime, version, const DeepCollectionEquality().hash(_items));
+  int get hashCode => Object.hash(
+    runtimeType,
+    responseId,
+    responseTime,
+    status,
+    changeTime,
+    version,
+    const DeepCollectionEquality().hash(_items),
+  );
 
   /// Create a copy of TsunamiParameter
   /// with the given fields replaced by the non-null parameter values.
@@ -235,25 +265,25 @@ class _$TsunamiParameterImpl implements _TsunamiParameter {
   @pragma('vm:prefer-inline')
   _$$TsunamiParameterImplCopyWith<_$TsunamiParameterImpl> get copyWith =>
       __$$TsunamiParameterImplCopyWithImpl<_$TsunamiParameterImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TsunamiParameterImplToJson(
-      this,
-    );
+    return _$$TsunamiParameterImplToJson(this);
   }
 }
 
 abstract class _TsunamiParameter implements TsunamiParameter {
-  const factory _TsunamiParameter(
-          {required final String responseId,
-          required final DateTime responseTime,
-          required final String status,
-          required final DateTime changeTime,
-          required final String version,
-          required final List<TsunamiParameterItem> items}) =
-      _$TsunamiParameterImpl;
+  const factory _TsunamiParameter({
+    required final String responseId,
+    required final DateTime responseTime,
+    required final String status,
+    required final DateTime changeTime,
+    required final String version,
+    required final List<TsunamiParameterItem> items,
+  }) = _$TsunamiParameterImpl;
 
   factory _TsunamiParameter.fromJson(Map<String, dynamic> json) =
       _$TsunamiParameterImpl.fromJson;
@@ -308,26 +338,30 @@ mixin _$TsunamiParameterItem {
 
 /// @nodoc
 abstract class $TsunamiParameterItemCopyWith<$Res> {
-  factory $TsunamiParameterItemCopyWith(TsunamiParameterItem value,
-          $Res Function(TsunamiParameterItem) then) =
-      _$TsunamiParameterItemCopyWithImpl<$Res, TsunamiParameterItem>;
+  factory $TsunamiParameterItemCopyWith(
+    TsunamiParameterItem value,
+    $Res Function(TsunamiParameterItem) then,
+  ) = _$TsunamiParameterItemCopyWithImpl<$Res, TsunamiParameterItem>;
   @useResult
-  $Res call(
-      {String? area,
-      String prefecture,
-      String code,
-      String name,
-      String kana,
-      String owner,
-      @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-      double latitude,
-      @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-      double longitude});
+  $Res call({
+    String? area,
+    String prefecture,
+    String code,
+    String name,
+    String kana,
+    String owner,
+    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
+    double latitude,
+    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
+    double longitude,
+  });
 }
 
 /// @nodoc
-class _$TsunamiParameterItemCopyWithImpl<$Res,
-        $Val extends TsunamiParameterItem>
+class _$TsunamiParameterItemCopyWithImpl<
+  $Res,
+  $Val extends TsunamiParameterItem
+>
     implements $TsunamiParameterItemCopyWith<$Res> {
   _$TsunamiParameterItemCopyWithImpl(this._value, this._then);
 
@@ -350,71 +384,85 @@ class _$TsunamiParameterItemCopyWithImpl<$Res,
     Object? latitude = null,
     Object? longitude = null,
   }) {
-    return _then(_value.copyWith(
-      area: freezed == area
-          ? _value.area
-          : area // ignore: cast_nullable_to_non_nullable
-              as String?,
-      prefecture: null == prefecture
-          ? _value.prefecture
-          : prefecture // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      kana: null == kana
-          ? _value.kana
-          : kana // ignore: cast_nullable_to_non_nullable
-              as String,
-      owner: null == owner
-          ? _value.owner
-          : owner // ignore: cast_nullable_to_non_nullable
-              as String,
-      latitude: null == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double,
-      longitude: null == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            area:
+                freezed == area
+                    ? _value.area
+                    : area // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            prefecture:
+                null == prefecture
+                    ? _value.prefecture
+                    : prefecture // ignore: cast_nullable_to_non_nullable
+                        as String,
+            code:
+                null == code
+                    ? _value.code
+                    : code // ignore: cast_nullable_to_non_nullable
+                        as String,
+            name:
+                null == name
+                    ? _value.name
+                    : name // ignore: cast_nullable_to_non_nullable
+                        as String,
+            kana:
+                null == kana
+                    ? _value.kana
+                    : kana // ignore: cast_nullable_to_non_nullable
+                        as String,
+            owner:
+                null == owner
+                    ? _value.owner
+                    : owner // ignore: cast_nullable_to_non_nullable
+                        as String,
+            latitude:
+                null == latitude
+                    ? _value.latitude
+                    : latitude // ignore: cast_nullable_to_non_nullable
+                        as double,
+            longitude:
+                null == longitude
+                    ? _value.longitude
+                    : longitude // ignore: cast_nullable_to_non_nullable
+                        as double,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$TsunamiParameterItemImplCopyWith<$Res>
     implements $TsunamiParameterItemCopyWith<$Res> {
-  factory _$$TsunamiParameterItemImplCopyWith(_$TsunamiParameterItemImpl value,
-          $Res Function(_$TsunamiParameterItemImpl) then) =
-      __$$TsunamiParameterItemImplCopyWithImpl<$Res>;
+  factory _$$TsunamiParameterItemImplCopyWith(
+    _$TsunamiParameterItemImpl value,
+    $Res Function(_$TsunamiParameterItemImpl) then,
+  ) = __$$TsunamiParameterItemImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String? area,
-      String prefecture,
-      String code,
-      String name,
-      String kana,
-      String owner,
-      @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-      double latitude,
-      @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-      double longitude});
+  $Res call({
+    String? area,
+    String prefecture,
+    String code,
+    String name,
+    String kana,
+    String owner,
+    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
+    double latitude,
+    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
+    double longitude,
+  });
 }
 
 /// @nodoc
 class __$$TsunamiParameterItemImplCopyWithImpl<$Res>
     extends _$TsunamiParameterItemCopyWithImpl<$Res, _$TsunamiParameterItemImpl>
     implements _$$TsunamiParameterItemImplCopyWith<$Res> {
-  __$$TsunamiParameterItemImplCopyWithImpl(_$TsunamiParameterItemImpl _value,
-      $Res Function(_$TsunamiParameterItemImpl) _then)
-      : super(_value, _then);
+  __$$TsunamiParameterItemImplCopyWithImpl(
+    _$TsunamiParameterItemImpl _value,
+    $Res Function(_$TsunamiParameterItemImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of TsunamiParameterItem
   /// with the given fields replaced by the non-null parameter values.
@@ -430,57 +478,68 @@ class __$$TsunamiParameterItemImplCopyWithImpl<$Res>
     Object? latitude = null,
     Object? longitude = null,
   }) {
-    return _then(_$TsunamiParameterItemImpl(
-      area: freezed == area
-          ? _value.area
-          : area // ignore: cast_nullable_to_non_nullable
-              as String?,
-      prefecture: null == prefecture
-          ? _value.prefecture
-          : prefecture // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      kana: null == kana
-          ? _value.kana
-          : kana // ignore: cast_nullable_to_non_nullable
-              as String,
-      owner: null == owner
-          ? _value.owner
-          : owner // ignore: cast_nullable_to_non_nullable
-              as String,
-      latitude: null == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double,
-      longitude: null == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double,
-    ));
+    return _then(
+      _$TsunamiParameterItemImpl(
+        area:
+            freezed == area
+                ? _value.area
+                : area // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        prefecture:
+            null == prefecture
+                ? _value.prefecture
+                : prefecture // ignore: cast_nullable_to_non_nullable
+                    as String,
+        code:
+            null == code
+                ? _value.code
+                : code // ignore: cast_nullable_to_non_nullable
+                    as String,
+        name:
+            null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                    as String,
+        kana:
+            null == kana
+                ? _value.kana
+                : kana // ignore: cast_nullable_to_non_nullable
+                    as String,
+        owner:
+            null == owner
+                ? _value.owner
+                : owner // ignore: cast_nullable_to_non_nullable
+                    as String,
+        latitude:
+            null == latitude
+                ? _value.latitude
+                : latitude // ignore: cast_nullable_to_non_nullable
+                    as double,
+        longitude:
+            null == longitude
+                ? _value.longitude
+                : longitude // ignore: cast_nullable_to_non_nullable
+                    as double,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$TsunamiParameterItemImpl implements _TsunamiParameterItem {
-  const _$TsunamiParameterItemImpl(
-      {required this.area,
-      required this.prefecture,
-      required this.code,
-      required this.name,
-      required this.kana,
-      required this.owner,
-      @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-      required this.latitude,
-      @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-      required this.longitude});
+  const _$TsunamiParameterItemImpl({
+    required this.area,
+    required this.prefecture,
+    required this.code,
+    required this.name,
+    required this.kana,
+    required this.owner,
+    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
+    required this.latitude,
+    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
+    required this.longitude,
+  });
 
   factory _$TsunamiParameterItemImpl.fromJson(Map<String, dynamic> json) =>
       _$$TsunamiParameterItemImplFromJson(json);
@@ -529,8 +588,17 @@ class _$TsunamiParameterItemImpl implements _TsunamiParameterItem {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, area, prefecture, code, name,
-      kana, owner, latitude, longitude);
+  int get hashCode => Object.hash(
+    runtimeType,
+    area,
+    prefecture,
+    code,
+    name,
+    kana,
+    owner,
+    latitude,
+    longitude,
+  );
 
   /// Create a copy of TsunamiParameterItem
   /// with the given fields replaced by the non-null parameter values.
@@ -538,30 +606,31 @@ class _$TsunamiParameterItemImpl implements _TsunamiParameterItem {
   @override
   @pragma('vm:prefer-inline')
   _$$TsunamiParameterItemImplCopyWith<_$TsunamiParameterItemImpl>
-      get copyWith =>
-          __$$TsunamiParameterItemImplCopyWithImpl<_$TsunamiParameterItemImpl>(
-              this, _$identity);
+  get copyWith =>
+      __$$TsunamiParameterItemImplCopyWithImpl<_$TsunamiParameterItemImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TsunamiParameterItemImplToJson(
-      this,
-    );
+    return _$$TsunamiParameterItemImplToJson(this);
   }
 }
 
 abstract class _TsunamiParameterItem implements TsunamiParameterItem {
-  const factory _TsunamiParameterItem(
-      {required final String? area,
-      required final String prefecture,
-      required final String code,
-      required final String name,
-      required final String kana,
-      required final String owner,
-      @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-      required final double latitude,
-      @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
-      required final double longitude}) = _$TsunamiParameterItemImpl;
+  const factory _TsunamiParameterItem({
+    required final String? area,
+    required final String prefecture,
+    required final String code,
+    required final String name,
+    required final String kana,
+    required final String owner,
+    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
+    required final double latitude,
+    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
+    required final double longitude,
+  }) = _$TsunamiParameterItemImpl;
 
   factory _TsunamiParameterItem.fromJson(Map<String, dynamic> json) =
       _$TsunamiParameterItemImpl.fromJson;
@@ -590,5 +659,5 @@ abstract class _TsunamiParameterItem implements TsunamiParameterItem {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TsunamiParameterItemImplCopyWith<_$TsunamiParameterItemImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

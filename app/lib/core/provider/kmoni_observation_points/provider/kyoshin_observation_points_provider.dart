@@ -15,18 +15,20 @@ List<KyoshinMonitorObservationPoint> kyoshinMonitorObservationPoints(Ref ref) =>
 
 @Riverpod(keepAlive: true)
 Future<List<KyoshinMonitorObservationPoint>>
-    kyoshinMonitorInternalObservationPointsConverted(Ref ref) async {
-  final result =
-      await ref.watch(kyoshinMonitorInternalObservationPointsProvider.future);
-  final points = result.points
-      .map(
-        (e) => KyoshinMonitorObservationPoint(
-          code: e.code,
-          x: e.point.x,
-          y: e.point.y,
-        ),
-      )
-      .toList();
+kyoshinMonitorInternalObservationPointsConverted(Ref ref) async {
+  final result = await ref.watch(
+    kyoshinMonitorInternalObservationPointsProvider.future,
+  );
+  final points =
+      result.points
+          .map(
+            (e) => KyoshinMonitorObservationPoint(
+              code: e.code,
+              x: e.point.x,
+              y: e.point.y,
+            ),
+          )
+          .toList();
 
   return points;
 }
@@ -40,7 +42,5 @@ Future<KyoshinObservationPoints> kyoshinMonitorInternalObservationPoints(
   Ref ref,
 ) async {
   final binary = await rootBundle.load(Assets.kyoshinObservationPoint);
-  return KyoshinObservationPoints.fromBuffer(
-    binary.buffer.asUint8List(),
-  );
+  return KyoshinObservationPoints.fromBuffer(binary.buffer.asUint8List());
 }

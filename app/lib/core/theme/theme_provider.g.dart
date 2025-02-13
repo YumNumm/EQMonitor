@@ -14,14 +14,15 @@ String _$themeModeNotifierHash() => r'fc896b63bda7ea9e58659851b10234f4074bab94';
 @ProviderFor(ThemeModeNotifier)
 final themeModeNotifierProvider =
     NotifierProvider<ThemeModeNotifier, ThemeMode>.internal(
-  ThemeModeNotifier.new,
-  name: r'themeModeNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$themeModeNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ThemeModeNotifier.new,
+      name: r'themeModeNotifierProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$themeModeNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ThemeModeNotifier = Notifier<ThemeMode>;
 String _$brightnessNotifierHash() =>
@@ -31,14 +32,15 @@ String _$brightnessNotifierHash() =>
 @ProviderFor(BrightnessNotifier)
 final brightnessNotifierProvider =
     NotifierProvider<BrightnessNotifier, ui.Brightness>.internal(
-  BrightnessNotifier.new,
-  name: r'brightnessNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$brightnessNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      BrightnessNotifier.new,
+      name: r'brightnessNotifierProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$brightnessNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$BrightnessNotifier = Notifier<ui.Brightness>;
 // ignore_for_file: type=lint

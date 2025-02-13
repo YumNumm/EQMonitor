@@ -12,7 +12,8 @@ part of 'camera_position.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 MapCameraPosition _$MapCameraPositionFromJson(Map<String, dynamic> json) {
   return _MapCameraPosition.fromJson(json);
@@ -46,14 +47,16 @@ mixin _$MapCameraPosition {
 /// @nodoc
 abstract class $MapCameraPositionCopyWith<$Res> {
   factory $MapCameraPositionCopyWith(
-          MapCameraPosition value, $Res Function(MapCameraPosition) then) =
-      _$MapCameraPositionCopyWithImpl<$Res, MapCameraPosition>;
+    MapCameraPosition value,
+    $Res Function(MapCameraPosition) then,
+  ) = _$MapCameraPositionCopyWithImpl<$Res, MapCameraPosition>;
   @useResult
-  $Res call(
-      {@LatLngConverter() LatLng target,
-      double zoom,
-      double tilt,
-      double bearing});
+  $Res call({
+    @LatLngConverter() LatLng target,
+    double zoom,
+    double tilt,
+    double bearing,
+  });
 }
 
 /// @nodoc
@@ -76,49 +79,59 @@ class _$MapCameraPositionCopyWithImpl<$Res, $Val extends MapCameraPosition>
     Object? tilt = null,
     Object? bearing = null,
   }) {
-    return _then(_value.copyWith(
-      target: null == target
-          ? _value.target
-          : target // ignore: cast_nullable_to_non_nullable
-              as LatLng,
-      zoom: null == zoom
-          ? _value.zoom
-          : zoom // ignore: cast_nullable_to_non_nullable
-              as double,
-      tilt: null == tilt
-          ? _value.tilt
-          : tilt // ignore: cast_nullable_to_non_nullable
-              as double,
-      bearing: null == bearing
-          ? _value.bearing
-          : bearing // ignore: cast_nullable_to_non_nullable
-              as double,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            target:
+                null == target
+                    ? _value.target
+                    : target // ignore: cast_nullable_to_non_nullable
+                        as LatLng,
+            zoom:
+                null == zoom
+                    ? _value.zoom
+                    : zoom // ignore: cast_nullable_to_non_nullable
+                        as double,
+            tilt:
+                null == tilt
+                    ? _value.tilt
+                    : tilt // ignore: cast_nullable_to_non_nullable
+                        as double,
+            bearing:
+                null == bearing
+                    ? _value.bearing
+                    : bearing // ignore: cast_nullable_to_non_nullable
+                        as double,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$MapCameraPositionImplCopyWith<$Res>
     implements $MapCameraPositionCopyWith<$Res> {
-  factory _$$MapCameraPositionImplCopyWith(_$MapCameraPositionImpl value,
-          $Res Function(_$MapCameraPositionImpl) then) =
-      __$$MapCameraPositionImplCopyWithImpl<$Res>;
+  factory _$$MapCameraPositionImplCopyWith(
+    _$MapCameraPositionImpl value,
+    $Res Function(_$MapCameraPositionImpl) then,
+  ) = __$$MapCameraPositionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {@LatLngConverter() LatLng target,
-      double zoom,
-      double tilt,
-      double bearing});
+  $Res call({
+    @LatLngConverter() LatLng target,
+    double zoom,
+    double tilt,
+    double bearing,
+  });
 }
 
 /// @nodoc
 class __$$MapCameraPositionImplCopyWithImpl<$Res>
     extends _$MapCameraPositionCopyWithImpl<$Res, _$MapCameraPositionImpl>
     implements _$$MapCameraPositionImplCopyWith<$Res> {
-  __$$MapCameraPositionImplCopyWithImpl(_$MapCameraPositionImpl _value,
-      $Res Function(_$MapCameraPositionImpl) _then)
-      : super(_value, _then);
+  __$$MapCameraPositionImplCopyWithImpl(
+    _$MapCameraPositionImpl _value,
+    $Res Function(_$MapCameraPositionImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of MapCameraPosition
   /// with the given fields replaced by the non-null parameter values.
@@ -130,36 +143,42 @@ class __$$MapCameraPositionImplCopyWithImpl<$Res>
     Object? tilt = null,
     Object? bearing = null,
   }) {
-    return _then(_$MapCameraPositionImpl(
-      target: null == target
-          ? _value.target
-          : target // ignore: cast_nullable_to_non_nullable
-              as LatLng,
-      zoom: null == zoom
-          ? _value.zoom
-          : zoom // ignore: cast_nullable_to_non_nullable
-              as double,
-      tilt: null == tilt
-          ? _value.tilt
-          : tilt // ignore: cast_nullable_to_non_nullable
-              as double,
-      bearing: null == bearing
-          ? _value.bearing
-          : bearing // ignore: cast_nullable_to_non_nullable
-              as double,
-    ));
+    return _then(
+      _$MapCameraPositionImpl(
+        target:
+            null == target
+                ? _value.target
+                : target // ignore: cast_nullable_to_non_nullable
+                    as LatLng,
+        zoom:
+            null == zoom
+                ? _value.zoom
+                : zoom // ignore: cast_nullable_to_non_nullable
+                    as double,
+        tilt:
+            null == tilt
+                ? _value.tilt
+                : tilt // ignore: cast_nullable_to_non_nullable
+                    as double,
+        bearing:
+            null == bearing
+                ? _value.bearing
+                : bearing // ignore: cast_nullable_to_non_nullable
+                    as double,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$MapCameraPositionImpl extends _MapCameraPosition {
-  const _$MapCameraPositionImpl(
-      {@LatLngConverter() required this.target,
-      this.zoom = 5.0,
-      this.tilt = 0.0,
-      this.bearing = 0.0})
-      : super._();
+  const _$MapCameraPositionImpl({
+    @LatLngConverter() required this.target,
+    this.zoom = 5.0,
+    this.tilt = 0.0,
+    this.bearing = 0.0,
+  }) : super._();
 
   factory _$MapCameraPositionImpl.fromJson(Map<String, dynamic> json) =>
       _$$MapCameraPositionImplFromJson(json);
@@ -211,22 +230,23 @@ class _$MapCameraPositionImpl extends _MapCameraPosition {
   @pragma('vm:prefer-inline')
   _$$MapCameraPositionImplCopyWith<_$MapCameraPositionImpl> get copyWith =>
       __$$MapCameraPositionImplCopyWithImpl<_$MapCameraPositionImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MapCameraPositionImplToJson(
-      this,
-    );
+    return _$$MapCameraPositionImplToJson(this);
   }
 }
 
 abstract class _MapCameraPosition extends MapCameraPosition {
-  const factory _MapCameraPosition(
-      {@LatLngConverter() required final LatLng target,
-      final double zoom,
-      final double tilt,
-      final double bearing}) = _$MapCameraPositionImpl;
+  const factory _MapCameraPosition({
+    @LatLngConverter() required final LatLng target,
+    final double zoom,
+    final double tilt,
+    final double bearing,
+  }) = _$MapCameraPositionImpl;
   const _MapCameraPosition._() : super._();
 
   factory _MapCameraPosition.fromJson(Map<String, dynamic> json) =

@@ -1,27 +1,30 @@
 import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_monitor_state.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/notifier/kyoshin_monitor_notifier.dart';
-import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/gen/fonts.gen.dart';
 import 'package:flutter/material.dart' hide ConnectionState;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class KyoshinMonitorStatusCard extends ConsumerWidget {
-  const KyoshinMonitorStatusCard({super.key});
+  const KyoshinMonitorStatusCard({this.onTap, super.key});
+
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(kyoshinMonitorNotifierProvider);
-    final isInitialized = state.hasValue;
-    final latestTime = state.valueOrNull?.lastUpdatedAt?.toLocal();
-    final status = state.valueOrNull?.status ?? KyoshinMonitorStatus.stopped;
-    final useKmoni = ref.watch(
-      kyoshinMonitorSettingsProvider.select((value) => value.useKmoni),
-    );
-
-    if (!useKmoni) {
-      return const SizedBox.shrink();
-    }
+    final latestTime =
+        ref
+            .watch(
+              kyoshinMonitorNotifierProvider.select(
+                (v) => v.valueOrNull?.lastUpdatedAt,
+              ),
+            )
+            ?.toLocal();
+    final status =
+        ref.watch(
+          kyoshinMonitorNotifierProvider.select((v) => v.valueOrNull?.status),
+        ) ??
+        KyoshinMonitorStatus.stopped;
 
     final theme = Theme.of(context);
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
@@ -37,6 +40,7 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
       child: Tooltip(
         message: '強震モニタ',
         child: InkWell(
+          onTap: onTap,
           borderRadius: BorderRadius.circular(8),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -48,46 +52,33 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
                   // 現在時刻
                   ...switch (status) {
                     KyoshinMonitorStatus.stopped => [
-                        const Icon(
-                          Icons.access_time_rounded,
-                          size: 16,
-                        ),
-                        const SizedBox(width: 4),
-                        const Flexible(
-                          child: Text(
-                            '強震モニタ 取得停止中',
-                          ),
-                        ),
-                      ],
+                      const Icon(Icons.access_time_rounded, size: 16),
+                      const SizedBox(width: 4),
+                      const Flexible(child: Text('強震モニタ 取得停止中')),
+                    ],
                     _
-                        when isInitialized &&
-                            latestTime != null &&
+                        when latestTime != null &&
                             status == KyoshinMonitorStatus.delayed =>
                       [
                         Flexible(
                           child: Text(
-                            DateFormat('yyyy/MM/dd HH:mm:ss')
-                                .format(latestTime),
-                            style: const TextStyle(
-                              color: Colors.redAccent,
-                            ),
+                            DateFormat(
+                              'yyyy/MM/dd HH:mm:ss',
+                            ).format(latestTime),
+                            style: const TextStyle(color: Colors.redAccent),
                           ),
                         ),
                       ],
-                    _ when isInitialized && latestTime != null => [
-                        Flexible(
-                          child: Text(
-                            dateFormat.format(latestTime),
-                          ),
-                        ),
-                      ],
+                    _ when latestTime != null => [
+                      Flexible(child: Text(dateFormat.format(latestTime))),
+                    ],
                     _ => [
-                        const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator.adaptive(),
-                        ),
-                      ],
+                      const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator.adaptive(),
+                      ),
+                    ],
                   },
                 ],
               ),

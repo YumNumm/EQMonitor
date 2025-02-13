@@ -15,17 +15,23 @@ _$NtpConfigModelImpl _$$NtpConfigModelImplFromJson(Map<String, dynamic> json) =>
       ($checkedConvert) {
         final val = _$NtpConfigModelImpl(
           lookUpAddress: $checkedConvert(
-              'look_up_address', (v) => v as String? ?? 'ntp.nict.jp'),
+            'look_up_address',
+            (v) => v as String? ?? 'ntp.nict.jp',
+          ),
           timeout: $checkedConvert(
-              'timeout',
-              (v) => v == null
-                  ? const Duration(seconds: 10)
-                  : Duration(microseconds: (v as num).toInt())),
+            'timeout',
+            (v) =>
+                v == null
+                    ? const Duration(seconds: 10)
+                    : Duration(microseconds: (v as num).toInt()),
+          ),
           interval: $checkedConvert(
-              'interval',
-              (v) => v == null
-                  ? const Duration(minutes: 30)
-                  : Duration(microseconds: (v as num).toInt())),
+            'interval',
+            (v) =>
+                v == null
+                    ? const Duration(minutes: 30)
+                    : Duration(microseconds: (v as num).toInt()),
+          ),
         );
         return val;
       },
@@ -33,9 +39,9 @@ _$NtpConfigModelImpl _$$NtpConfigModelImplFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$$NtpConfigModelImplToJson(
-        _$NtpConfigModelImpl instance) =>
-    <String, dynamic>{
-      'look_up_address': instance.lookUpAddress,
-      'timeout': instance.timeout.inMicroseconds,
-      'interval': instance.interval.inMicroseconds,
-    };
+  _$NtpConfigModelImpl instance,
+) => <String, dynamic>{
+  'look_up_address': instance.lookUpAddress,
+  'timeout': instance.timeout.inMicroseconds,
+  'interval': instance.interval.inMicroseconds,
+};

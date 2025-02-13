@@ -9,9 +9,7 @@ part 'eew_alive_telegram.g.dart';
 
 /// イベント終了していないEEWのうち、精度が低いものを除外したもの
 @Riverpod(keepAlive: true, dependencies: [EewAliveTelegram])
-List<EewV1> eewAliveNormalTelegram(
-  Ref ref,
-) {
+List<EewV1> eewAliveNormalTelegram(Ref ref) {
   final state = ref.watch(eewAliveTelegramProvider) ?? [];
   return state.where((e) {
     if (e.isPlum ?? false || e.isLevelEew || e.isIpfOnePoint) {
@@ -28,7 +26,7 @@ class EewAliveTelegram extends _$EewAliveTelegram {
   List<EewV1>? build() {
     final state = ref.watch(eewProvider);
     final value = state.valueOrNull;
-    final tickerTime = ref.watch(timeTickerProvider);
+    final tickerTime = ref.watch(timeTickerProvider());
     final checker = ref.watch(eewAliveCheckerProvider);
     if (value == null) {
       return null;
@@ -41,10 +39,7 @@ class EewAliveTelegram extends _$EewAliveTelegram {
   }
 
   @override
-  bool updateShouldNotify(
-    List<EewV1>? previous,
-    List<EewV1>? next,
-  ) {
+  bool updateShouldNotify(List<EewV1>? previous, List<EewV1>? next) {
     return !const ListEquality<EewV1>().equals(previous, next);
   }
 }
@@ -54,10 +49,7 @@ EewAliveChecker eewAliveChecker(Ref ref) => EewAliveChecker();
 
 class EewAliveChecker {
   /// イベント終了の判定
-  bool checkMarkAsEventEnded({
-    required EewV1 eew,
-    required DateTime now,
-  }) {
+  bool checkMarkAsEventEnded({required EewV1 eew, required DateTime now}) {
     // 発生時刻から1時間以上経過している場合、イベント終了と判定する(早期return)
     final reportTime = eew.reportTime.toUtc();
     if (now.toUtc().difference(reportTime).inHours > 1) {
