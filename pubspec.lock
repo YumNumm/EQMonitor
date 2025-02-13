@@ -1199,10 +1199,10 @@ packages:
     dependency: "direct main"
     description:
       name: melos
-      sha256: "282486e17f60879225c3d8d3d4ce6169e64e346802337178d8a50ab6553ebec3"
+      sha256: "63e9852a28a44c811503b31c607606f9ce8d891e22879e1e97fc7417c22ed6bc"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.0-dev.4"
+    version: "7.0.0-dev.7"
   meta:
     dependency: transitive
     description:
@@ -1870,10 +1870,10 @@ packages:
     dependency: transitive
     description:
       name: test
-      sha256: "301b213cd241ca982e9ba50266bd3f5bd1ea33f1455554c5abb85d1be0e2d87e"
+      sha256: "8391fbe68d520daf2314121764d38e37f934c02fd7301ad18307bd93bd6b725d"
       url: "https://pub.dev"
     source: hosted
-    version: "1.25.15"
+    version: "1.25.14"
   test_api:
     dependency: transitive
     description:
