@@ -52,10 +52,7 @@ class EarthquakeStatusWidget extends StatelessWidget {
 }
 
 class EarthquakeNotificationStatusText extends StatelessWidget {
-  const EarthquakeNotificationStatusText({
-    required this.earthquake,
-    super.key,
-  });
+  const EarthquakeNotificationStatusText({required this.earthquake, super.key});
 
   final NotificationRemoteSettingsEarthquake earthquake;
 
@@ -71,58 +68,48 @@ class EarthquakeNotificationStatusText extends StatelessWidget {
     }
     return Text.rich(
       TextSpan(
-        children: (earthquake.global == JmaForecastIntensity.zero)
-            ? [
-                const TextSpan(
-                  text: 'すべての地震情報を通知します',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ]
-            : [
-                const TextSpan(
-                  text: '以下の条件のいずれかを満たした時に通知します\n',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                if (earthquake.global != null) ...[
+        children:
+            (earthquake.global == JmaForecastIntensity.zero)
+                ? [
                   const TextSpan(
-                    text: '・任意の地域で',
+                    text: 'すべての地震情報を通知します',
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  TextSpan(
-                    text: '震度'
-                        '${earthquake.global!.type.fromPlusMinus}'
-                        '${earthquake.global != JmaForecastIntensity.seven ? "以上" : ""}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+                ]
+                : [
+                  const TextSpan(
+                    text: '以下の条件のいずれかを満たした時に通知します\n',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  if (earthquake.global != null) ...[
+                    const TextSpan(text: '・任意の地域で'),
+                    TextSpan(
+                      text:
+                          '震度'
+                          '${earthquake.global!.type.fromPlusMinus}'
+                          '${earthquake.global != JmaForecastIntensity.seven ? "以上" : ""}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  const TextSpan(
-                    text: 'を観測',
-                  ),
-                ],
-                if (enabledRegions.isNotEmpty)
-                  ...enabledRegions
-                      .mapIndexed(
-                        (index, region) => [
-                          TextSpan(
-                            text: '\n・${region.name}で',
-                          ),
-                          TextSpan(
-                            text:
-                                '震度${region.minJmaIntensity.type.fromPlusMinus}'
-                                '${region.minJmaIntensity != JmaForecastIntensity.seven ? "以上" : ""}',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
+                    const TextSpan(text: 'を観測'),
+                  ],
+                  if (enabledRegions.isNotEmpty)
+                    ...enabledRegions
+                        .mapIndexed(
+                          (index, region) => [
+                            TextSpan(text: '\n・${region.name}で'),
+                            TextSpan(
+                              text:
+                                  '震度${region.minJmaIntensity.type.fromPlusMinus}'
+                                  '${region.minJmaIntensity != JmaForecastIntensity.seven ? "以上" : ""}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          const TextSpan(
-                            text: 'を観測',
-                          ),
-                        ],
-                      )
-                      .flattened,
-              ],
+                            const TextSpan(text: 'を観測'),
+                          ],
+                        )
+                        .flattened,
+                ],
       ),
     );
   }

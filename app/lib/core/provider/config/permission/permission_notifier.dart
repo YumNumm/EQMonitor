@@ -28,18 +28,15 @@ class PermissionNotifier extends _$PermissionNotifier {
         await ref.read(firebaseMessagingProvider).getNotificationSettings();
     await ref
         .read(firebaseMessagingProvider)
-        .setForegroundNotificationPresentationOptions(
-          alert: true,
-          badge: true,
-        );
+        .setForegroundNotificationPresentationOptions(alert: true, badge: true);
     state = PermissionStateModel(
       notification: switch (notificationPermission.authorizationStatus) {
         AuthorizationStatus.authorized ||
-        AuthorizationStatus.provisional =>
-          true,
+        AuthorizationStatus.provisional => true,
         _ => false,
       },
-      criticalAlert: notificationPermission.criticalAlert ==
+      criticalAlert:
+          notificationPermission.criticalAlert ==
           AppleNotificationSetting.enabled,
       backgroundLocation:
           await Permission.locationAlways.status == PermissionStatus.granted,
@@ -54,7 +51,9 @@ class PermissionNotifier extends _$PermissionNotifier {
   }
 
   Future<void> requestNotificationPermission() async {
-    final result = await ref.read(firebaseMessagingProvider).requestPermission(
+    final result = await ref
+        .read(firebaseMessagingProvider)
+        .requestPermission(
           announcement: true,
           criticalAlert: true,
           carPlay: true,

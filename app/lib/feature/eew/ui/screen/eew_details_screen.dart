@@ -5,10 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class EewDetailsByEventIdPage extends HookConsumerWidget {
-  const EewDetailsByEventIdPage({
-    required this.eventId,
-    super.key,
-  });
+  const EewDetailsByEventIdPage({required this.eventId, super.key});
 
   final String eventId;
 
@@ -17,24 +14,18 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
     final eewsAsyncValue = ref.watch(eewsByEventIdProvider(eventId));
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('緊急地震速報 詳細 ($eventId)'),
-      ),
+      appBar: AppBar(title: Text('緊急地震速報 詳細 ($eventId)')),
       body: eewsAsyncValue.when(
         data: _buildEewList,
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Text('エラーが発生しました: $error'),
-        ),
+        error: (error, stack) => Center(child: Text('エラーが発生しました: $error')),
       ),
     );
   }
 
   Widget _buildEewList(List<EewV1> eews) {
     if (eews.isEmpty) {
-      return const Center(
-        child: Text('データがありません'),
-      );
+      return const Center(child: Text('データがありません'));
     }
 
     return ListView.builder(
@@ -48,9 +39,7 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
 }
 
 class _EewCard extends StatelessWidget {
-  const _EewCard({
-    required this.eew,
-  });
+  const _EewCard({required this.eew});
 
   final EewV1 eew;
 

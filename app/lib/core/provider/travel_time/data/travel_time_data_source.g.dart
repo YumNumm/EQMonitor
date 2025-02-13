@@ -16,9 +16,10 @@ String _$travelTimeDataSourceHash() =>
 final travelTimeDataSourceProvider = Provider<TravelTimeDataSource>.internal(
   travelTimeDataSource,
   name: r'travelTimeDataSourceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$travelTimeDataSourceHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$travelTimeDataSourceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

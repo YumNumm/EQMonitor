@@ -12,7 +12,8 @@ part of 'intensity_color_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 IntensityColorModel _$IntensityColorModelFromJson(Map<String, dynamic> json) {
   return _IntensityColorModel.fromJson(json);
@@ -45,21 +46,23 @@ mixin _$IntensityColorModel {
 /// @nodoc
 abstract class $IntensityColorModelCopyWith<$Res> {
   factory $IntensityColorModelCopyWith(
-          IntensityColorModel value, $Res Function(IntensityColorModel) then) =
-      _$IntensityColorModelCopyWithImpl<$Res, IntensityColorModel>;
+    IntensityColorModel value,
+    $Res Function(IntensityColorModel) then,
+  ) = _$IntensityColorModelCopyWithImpl<$Res, IntensityColorModel>;
   @useResult
-  $Res call(
-      {TextColorModel unknown,
-      TextColorModel zero,
-      TextColorModel one,
-      TextColorModel two,
-      TextColorModel three,
-      TextColorModel four,
-      TextColorModel fiveLower,
-      TextColorModel fiveUpper,
-      TextColorModel sixLower,
-      TextColorModel sixUpper,
-      TextColorModel seven});
+  $Res call({
+    TextColorModel unknown,
+    TextColorModel zero,
+    TextColorModel one,
+    TextColorModel two,
+    TextColorModel three,
+    TextColorModel four,
+    TextColorModel fiveLower,
+    TextColorModel fiveUpper,
+    TextColorModel sixLower,
+    TextColorModel sixUpper,
+    TextColorModel seven,
+  });
 
   $TextColorModelCopyWith<$Res> get unknown;
   $TextColorModelCopyWith<$Res> get zero;
@@ -101,52 +104,66 @@ class _$IntensityColorModelCopyWithImpl<$Res, $Val extends IntensityColorModel>
     Object? sixUpper = null,
     Object? seven = null,
   }) {
-    return _then(_value.copyWith(
-      unknown: null == unknown
-          ? _value.unknown
-          : unknown // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-      zero: null == zero
-          ? _value.zero
-          : zero // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-      one: null == one
-          ? _value.one
-          : one // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-      two: null == two
-          ? _value.two
-          : two // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-      three: null == three
-          ? _value.three
-          : three // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-      four: null == four
-          ? _value.four
-          : four // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-      fiveLower: null == fiveLower
-          ? _value.fiveLower
-          : fiveLower // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-      fiveUpper: null == fiveUpper
-          ? _value.fiveUpper
-          : fiveUpper // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-      sixLower: null == sixLower
-          ? _value.sixLower
-          : sixLower // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-      sixUpper: null == sixUpper
-          ? _value.sixUpper
-          : sixUpper // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-      seven: null == seven
-          ? _value.seven
-          : seven // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            unknown:
+                null == unknown
+                    ? _value.unknown
+                    : unknown // ignore: cast_nullable_to_non_nullable
+                        as TextColorModel,
+            zero:
+                null == zero
+                    ? _value.zero
+                    : zero // ignore: cast_nullable_to_non_nullable
+                        as TextColorModel,
+            one:
+                null == one
+                    ? _value.one
+                    : one // ignore: cast_nullable_to_non_nullable
+                        as TextColorModel,
+            two:
+                null == two
+                    ? _value.two
+                    : two // ignore: cast_nullable_to_non_nullable
+                        as TextColorModel,
+            three:
+                null == three
+                    ? _value.three
+                    : three // ignore: cast_nullable_to_non_nullable
+                        as TextColorModel,
+            four:
+                null == four
+                    ? _value.four
+                    : four // ignore: cast_nullable_to_non_nullable
+                        as TextColorModel,
+            fiveLower:
+                null == fiveLower
+                    ? _value.fiveLower
+                    : fiveLower // ignore: cast_nullable_to_non_nullable
+                        as TextColorModel,
+            fiveUpper:
+                null == fiveUpper
+                    ? _value.fiveUpper
+                    : fiveUpper // ignore: cast_nullable_to_non_nullable
+                        as TextColorModel,
+            sixLower:
+                null == sixLower
+                    ? _value.sixLower
+                    : sixLower // ignore: cast_nullable_to_non_nullable
+                        as TextColorModel,
+            sixUpper:
+                null == sixUpper
+                    ? _value.sixUpper
+                    : sixUpper // ignore: cast_nullable_to_non_nullable
+                        as TextColorModel,
+            seven:
+                null == seven
+                    ? _value.seven
+                    : seven // ignore: cast_nullable_to_non_nullable
+                        as TextColorModel,
+          )
+          as $Val,
+    );
   }
 
   /// Create a copy of IntensityColorModel
@@ -263,23 +280,25 @@ class _$IntensityColorModelCopyWithImpl<$Res, $Val extends IntensityColorModel>
 /// @nodoc
 abstract class _$$IntensityColorModelImplCopyWith<$Res>
     implements $IntensityColorModelCopyWith<$Res> {
-  factory _$$IntensityColorModelImplCopyWith(_$IntensityColorModelImpl value,
-          $Res Function(_$IntensityColorModelImpl) then) =
-      __$$IntensityColorModelImplCopyWithImpl<$Res>;
+  factory _$$IntensityColorModelImplCopyWith(
+    _$IntensityColorModelImpl value,
+    $Res Function(_$IntensityColorModelImpl) then,
+  ) = __$$IntensityColorModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {TextColorModel unknown,
-      TextColorModel zero,
-      TextColorModel one,
-      TextColorModel two,
-      TextColorModel three,
-      TextColorModel four,
-      TextColorModel fiveLower,
-      TextColorModel fiveUpper,
-      TextColorModel sixLower,
-      TextColorModel sixUpper,
-      TextColorModel seven});
+  $Res call({
+    TextColorModel unknown,
+    TextColorModel zero,
+    TextColorModel one,
+    TextColorModel two,
+    TextColorModel three,
+    TextColorModel four,
+    TextColorModel fiveLower,
+    TextColorModel fiveUpper,
+    TextColorModel sixLower,
+    TextColorModel sixUpper,
+    TextColorModel seven,
+  });
 
   @override
   $TextColorModelCopyWith<$Res> get unknown;
@@ -309,9 +328,10 @@ abstract class _$$IntensityColorModelImplCopyWith<$Res>
 class __$$IntensityColorModelImplCopyWithImpl<$Res>
     extends _$IntensityColorModelCopyWithImpl<$Res, _$IntensityColorModelImpl>
     implements _$$IntensityColorModelImplCopyWith<$Res> {
-  __$$IntensityColorModelImplCopyWithImpl(_$IntensityColorModelImpl _value,
-      $Res Function(_$IntensityColorModelImpl) _then)
-      : super(_value, _then);
+  __$$IntensityColorModelImplCopyWithImpl(
+    _$IntensityColorModelImpl _value,
+    $Res Function(_$IntensityColorModelImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of IntensityColorModel
   /// with the given fields replaced by the non-null parameter values.
@@ -330,70 +350,84 @@ class __$$IntensityColorModelImplCopyWithImpl<$Res>
     Object? sixUpper = null,
     Object? seven = null,
   }) {
-    return _then(_$IntensityColorModelImpl(
-      unknown: null == unknown
-          ? _value.unknown
-          : unknown // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-      zero: null == zero
-          ? _value.zero
-          : zero // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-      one: null == one
-          ? _value.one
-          : one // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-      two: null == two
-          ? _value.two
-          : two // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-      three: null == three
-          ? _value.three
-          : three // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-      four: null == four
-          ? _value.four
-          : four // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-      fiveLower: null == fiveLower
-          ? _value.fiveLower
-          : fiveLower // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-      fiveUpper: null == fiveUpper
-          ? _value.fiveUpper
-          : fiveUpper // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-      sixLower: null == sixLower
-          ? _value.sixLower
-          : sixLower // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-      sixUpper: null == sixUpper
-          ? _value.sixUpper
-          : sixUpper // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-      seven: null == seven
-          ? _value.seven
-          : seven // ignore: cast_nullable_to_non_nullable
-              as TextColorModel,
-    ));
+    return _then(
+      _$IntensityColorModelImpl(
+        unknown:
+            null == unknown
+                ? _value.unknown
+                : unknown // ignore: cast_nullable_to_non_nullable
+                    as TextColorModel,
+        zero:
+            null == zero
+                ? _value.zero
+                : zero // ignore: cast_nullable_to_non_nullable
+                    as TextColorModel,
+        one:
+            null == one
+                ? _value.one
+                : one // ignore: cast_nullable_to_non_nullable
+                    as TextColorModel,
+        two:
+            null == two
+                ? _value.two
+                : two // ignore: cast_nullable_to_non_nullable
+                    as TextColorModel,
+        three:
+            null == three
+                ? _value.three
+                : three // ignore: cast_nullable_to_non_nullable
+                    as TextColorModel,
+        four:
+            null == four
+                ? _value.four
+                : four // ignore: cast_nullable_to_non_nullable
+                    as TextColorModel,
+        fiveLower:
+            null == fiveLower
+                ? _value.fiveLower
+                : fiveLower // ignore: cast_nullable_to_non_nullable
+                    as TextColorModel,
+        fiveUpper:
+            null == fiveUpper
+                ? _value.fiveUpper
+                : fiveUpper // ignore: cast_nullable_to_non_nullable
+                    as TextColorModel,
+        sixLower:
+            null == sixLower
+                ? _value.sixLower
+                : sixLower // ignore: cast_nullable_to_non_nullable
+                    as TextColorModel,
+        sixUpper:
+            null == sixUpper
+                ? _value.sixUpper
+                : sixUpper // ignore: cast_nullable_to_non_nullable
+                    as TextColorModel,
+        seven:
+            null == seven
+                ? _value.seven
+                : seven // ignore: cast_nullable_to_non_nullable
+                    as TextColorModel,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$IntensityColorModelImpl implements _IntensityColorModel {
-  const _$IntensityColorModelImpl(
-      {required this.unknown,
-      required this.zero,
-      required this.one,
-      required this.two,
-      required this.three,
-      required this.four,
-      required this.fiveLower,
-      required this.fiveUpper,
-      required this.sixLower,
-      required this.sixUpper,
-      required this.seven});
+  const _$IntensityColorModelImpl({
+    required this.unknown,
+    required this.zero,
+    required this.one,
+    required this.two,
+    required this.three,
+    required this.four,
+    required this.fiveLower,
+    required this.fiveUpper,
+    required this.sixLower,
+    required this.sixUpper,
+    required this.seven,
+  });
 
   factory _$IntensityColorModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$IntensityColorModelImplFromJson(json);
@@ -450,8 +484,20 @@ class _$IntensityColorModelImpl implements _IntensityColorModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, unknown, zero, one, two, three,
-      four, fiveLower, fiveUpper, sixLower, sixUpper, seven);
+  int get hashCode => Object.hash(
+    runtimeType,
+    unknown,
+    zero,
+    one,
+    two,
+    three,
+    four,
+    fiveLower,
+    fiveUpper,
+    sixLower,
+    sixUpper,
+    seven,
+  );
 
   /// Create a copy of IntensityColorModel
   /// with the given fields replaced by the non-null parameter values.
@@ -460,29 +506,30 @@ class _$IntensityColorModelImpl implements _IntensityColorModel {
   @pragma('vm:prefer-inline')
   _$$IntensityColorModelImplCopyWith<_$IntensityColorModelImpl> get copyWith =>
       __$$IntensityColorModelImplCopyWithImpl<_$IntensityColorModelImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$IntensityColorModelImplToJson(
-      this,
-    );
+    return _$$IntensityColorModelImplToJson(this);
   }
 }
 
 abstract class _IntensityColorModel implements IntensityColorModel {
-  const factory _IntensityColorModel(
-      {required final TextColorModel unknown,
-      required final TextColorModel zero,
-      required final TextColorModel one,
-      required final TextColorModel two,
-      required final TextColorModel three,
-      required final TextColorModel four,
-      required final TextColorModel fiveLower,
-      required final TextColorModel fiveUpper,
-      required final TextColorModel sixLower,
-      required final TextColorModel sixUpper,
-      required final TextColorModel seven}) = _$IntensityColorModelImpl;
+  const factory _IntensityColorModel({
+    required final TextColorModel unknown,
+    required final TextColorModel zero,
+    required final TextColorModel one,
+    required final TextColorModel two,
+    required final TextColorModel three,
+    required final TextColorModel four,
+    required final TextColorModel fiveLower,
+    required final TextColorModel fiveUpper,
+    required final TextColorModel sixLower,
+    required final TextColorModel sixUpper,
+    required final TextColorModel seven,
+  }) = _$IntensityColorModelImpl;
 
   factory _IntensityColorModel.fromJson(Map<String, dynamic> json) =
       _$IntensityColorModelImpl.fromJson;
@@ -542,12 +589,14 @@ mixin _$TextColorModel {
 /// @nodoc
 abstract class $TextColorModelCopyWith<$Res> {
   factory $TextColorModelCopyWith(
-          TextColorModel value, $Res Function(TextColorModel) then) =
-      _$TextColorModelCopyWithImpl<$Res, TextColorModel>;
+    TextColorModel value,
+    $Res Function(TextColorModel) then,
+  ) = _$TextColorModelCopyWithImpl<$Res, TextColorModel>;
   @useResult
-  $Res call(
-      {@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color foreground,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color background});
+  $Res call({
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color foreground,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color background,
+  });
 }
 
 /// @nodoc
@@ -564,34 +613,38 @@ class _$TextColorModelCopyWithImpl<$Res, $Val extends TextColorModel>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? foreground = null,
-    Object? background = null,
-  }) {
-    return _then(_value.copyWith(
-      foreground: null == foreground
-          ? _value.foreground
-          : foreground // ignore: cast_nullable_to_non_nullable
-              as Color,
-      background: null == background
-          ? _value.background
-          : background // ignore: cast_nullable_to_non_nullable
-              as Color,
-    ) as $Val);
+  $Res call({Object? foreground = null, Object? background = null}) {
+    return _then(
+      _value.copyWith(
+            foreground:
+                null == foreground
+                    ? _value.foreground
+                    : foreground // ignore: cast_nullable_to_non_nullable
+                        as Color,
+            background:
+                null == background
+                    ? _value.background
+                    : background // ignore: cast_nullable_to_non_nullable
+                        as Color,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$TextColorModelImplCopyWith<$Res>
     implements $TextColorModelCopyWith<$Res> {
-  factory _$$TextColorModelImplCopyWith(_$TextColorModelImpl value,
-          $Res Function(_$TextColorModelImpl) then) =
-      __$$TextColorModelImplCopyWithImpl<$Res>;
+  factory _$$TextColorModelImplCopyWith(
+    _$TextColorModelImpl value,
+    $Res Function(_$TextColorModelImpl) then,
+  ) = __$$TextColorModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color foreground,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color background});
+  $Res call({
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color foreground,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color background,
+  });
 }
 
 /// @nodoc
@@ -599,38 +652,41 @@ class __$$TextColorModelImplCopyWithImpl<$Res>
     extends _$TextColorModelCopyWithImpl<$Res, _$TextColorModelImpl>
     implements _$$TextColorModelImplCopyWith<$Res> {
   __$$TextColorModelImplCopyWithImpl(
-      _$TextColorModelImpl _value, $Res Function(_$TextColorModelImpl) _then)
-      : super(_value, _then);
+    _$TextColorModelImpl _value,
+    $Res Function(_$TextColorModelImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of TextColorModel
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? foreground = null,
-    Object? background = null,
-  }) {
-    return _then(_$TextColorModelImpl(
-      foreground: null == foreground
-          ? _value.foreground
-          : foreground // ignore: cast_nullable_to_non_nullable
-              as Color,
-      background: null == background
-          ? _value.background
-          : background // ignore: cast_nullable_to_non_nullable
-              as Color,
-    ));
+  $Res call({Object? foreground = null, Object? background = null}) {
+    return _then(
+      _$TextColorModelImpl(
+        foreground:
+            null == foreground
+                ? _value.foreground
+                : foreground // ignore: cast_nullable_to_non_nullable
+                    as Color,
+        background:
+            null == background
+                ? _value.background
+                : background // ignore: cast_nullable_to_non_nullable
+                    as Color,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$TextColorModelImpl implements _TextColorModel {
-  const _$TextColorModelImpl(
-      {@JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.foreground,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.background});
+  const _$TextColorModelImpl({
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+    required this.foreground,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+    required this.background,
+  });
 
   factory _$TextColorModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$TextColorModelImplFromJson(json);
@@ -669,22 +725,23 @@ class _$TextColorModelImpl implements _TextColorModel {
   @pragma('vm:prefer-inline')
   _$$TextColorModelImplCopyWith<_$TextColorModelImpl> get copyWith =>
       __$$TextColorModelImplCopyWithImpl<_$TextColorModelImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TextColorModelImplToJson(
-      this,
-    );
+    return _$$TextColorModelImplToJson(this);
   }
 }
 
 abstract class _TextColorModel implements TextColorModel {
-  const factory _TextColorModel(
-      {@JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color foreground,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color background}) = _$TextColorModelImpl;
+  const factory _TextColorModel({
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+    required final Color foreground,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+    required final Color background,
+  }) = _$TextColorModelImpl;
 
   factory _TextColorModel.fromJson(Map<String, dynamic> json) =
       _$TextColorModelImpl.fromJson;

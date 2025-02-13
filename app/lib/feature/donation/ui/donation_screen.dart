@@ -24,10 +24,7 @@ class DonationScreen extends StatelessWidget {
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             leading: IconButton(
-              icon: const Icon(
-                Icons.close,
-                color: Colors.white,
-              ),
+              icon: const Icon(Icons.close, color: Colors.white),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ),
@@ -45,23 +42,18 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const messageTextSpan = TextSpan(
-      style: TextStyle(
-        fontSize: 16,
-        color: Colors.white,
-      ),
+      style: TextStyle(fontSize: 16, color: Colors.white),
       children: [
+        TextSpan(text: 'このアプリケーションは、広告・有料プランなどの収益化を行っていません。\n'),
         TextSpan(
-          text: 'このアプリケーションは、広告・有料プランなどの収益化を行っていません。\n',
-        ),
-        TextSpan(
-          text: '開発者は、このアプリケーションを開発・運用するために、'
+          text:
+              '開発者は、このアプリケーションを開発・運用するために、'
               '各種地震情報の入手に関わる費用や情報を配信するためのサーバ費などの費用を支払っています。\n',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         TextSpan(
-          text: 'もし、このアプリケーションを気に入っていただけた場合、'
+          text:
+              'もし、このアプリケーションを気に入っていただけた場合、'
               '開発者へのチップをご検討いただけると幸いです。\n\n'
               'チップは、開発者のモチベーション向上に繋がり、'
               'アプリケーションの品質向上に繋がります。',
@@ -82,9 +74,7 @@ class _Body extends StatelessWidget {
                 height: 100,
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(800)),
-                  child: Image(
-                    image: AssetImage('assets/images/icon.png'),
-                  ),
+                  child: Image(image: AssetImage('assets/images/icon.png')),
                 ),
               ),
             ),
@@ -111,9 +101,7 @@ class _Body extends StatelessWidget {
                           // 画面中部のメッセージ
                           Padding(
                             padding: EdgeInsets.all(16),
-                            child: Text.rich(
-                              messageTextSpan,
-                            ),
+                            child: Text.rich(messageTextSpan),
                           ),
                           Spacer(),
                         ],
@@ -156,85 +144,80 @@ class _ShowDonationButton extends HookConsumerWidget {
           Expanded(
             child: switch (state) {
               AsyncError() => ActionButton.text(
-                  context: context,
-                  text: '読み込みに失敗しました',
-                  onPressed: () {},
-                ),
+                context: context,
+                text: '読み込みに失敗しました',
+                onPressed: () {},
+              ),
               AsyncData(:final value) => () {
-                  final cheapest =
-                      value.reduce((a, b) => a.price < b.price ? a : b);
-                  return Column(
-                    children: [
-                      ActionButton.text(
-                        context: context,
-                        text: 'チップを贈る',
-                        onPressed: () async {
-                          final item = await DonationChoiceModal.show(
-                            context,
-                            value,
-                          );
-                          if (item != null && context.mounted) {
-                            unawaited(
-                              showDialog<void>(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (context) => const Center(
-                                  child: CircularProgressIndicator.adaptive(),
-                                ),
-                              ),
-                            );
-                            try {
-                              log('購入処理を開始します: ${item.identifier}');
-                              final purchaseResult =
-                                  await ref.read(purchaseProvider(item).future);
-                              log('購入処理が完了しました: ${item.identifier}');
-
-                              if (context.mounted) {
-                                Navigator.of(context).pop();
-                                // 完了画面へ遷移
-                                await DonationExecutedRoute(
-                                  $extra: (item, purchaseResult),
-                                ).push<void>(context);
-                              }
-                            } on PlatformException catch (e) {
-                              final code = PurchasesErrorHelper.getErrorCode(e);
-                              final message = switch (code) {
-                                PurchasesErrorCode.purchaseCancelledError =>
-                                  null,
-                                _ => code.name,
-                              };
-                              if (context.mounted && message != null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'エラーが発生しました: $code',
-                                    ),
+                final cheapest = value.reduce(
+                  (a, b) => a.price < b.price ? a : b,
+                );
+                return Column(
+                  children: [
+                    ActionButton.text(
+                      context: context,
+                      text: 'チップを贈る',
+                      onPressed: () async {
+                        final item = await DonationChoiceModal.show(
+                          context,
+                          value,
+                        );
+                        if (item != null && context.mounted) {
+                          unawaited(
+                            showDialog<void>(
+                              context: context,
+                              barrierDismissible: false,
+                              builder:
+                                  (context) => const Center(
+                                    child: CircularProgressIndicator.adaptive(),
                                   ),
-                                );
-                              }
-                            } finally {
-                              if (context.mounted) {
-                                Navigator.of(context).pop();
-                              }
+                            ),
+                          );
+                          try {
+                            log('購入処理を開始します: ${item.identifier}');
+                            final purchaseResult = await ref.read(
+                              purchaseProvider(item).future,
+                            );
+                            log('購入処理が完了しました: ${item.identifier}');
+
+                            if (context.mounted) {
+                              Navigator.of(context).pop();
+                              // 完了画面へ遷移
+                              await DonationExecutedRoute(
+                                $extra: (item, purchaseResult),
+                              ).push<void>(context);
+                            }
+                          } on PlatformException catch (e) {
+                            final code = PurchasesErrorHelper.getErrorCode(e);
+                            final message = switch (code) {
+                              PurchasesErrorCode.purchaseCancelledError => null,
+                              _ => code.name,
+                            };
+                            if (context.mounted && message != null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('エラーが発生しました: $code')),
+                              );
+                            }
+                          } finally {
+                            if (context.mounted) {
+                              Navigator.of(context).pop();
                             }
                           }
-                        },
-                      ),
-                      Text(
-                        'ワンタイム ${cheapest.priceString}~',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  );
-                }(),
+                        }
+                      },
+                    ),
+                    Text(
+                      'ワンタイム ${cheapest.priceString}~',
+                      style: const TextStyle(color: Colors.white, fontSize: 12),
+                    ),
+                  ],
+                );
+              }(),
               _ => ActionButton.text(
-                  context: context,
-                  text: '読み込み中...',
-                  onPressed: () {},
-                )
+                context: context,
+                text: '読み込み中...',
+                onPressed: () {},
+              ),
             },
           ),
         ],

@@ -15,9 +15,10 @@ String _$kyoshinMonitorDioHash() => r'ae8ea88e1a74bd51d5a2216c1b22cadd68b07bb9';
 final kyoshinMonitorDioProvider = Provider<Dio>.internal(
   kyoshinMonitorDio,
   name: r'kyoshinMonitorDioProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$kyoshinMonitorDioHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$kyoshinMonitorDioHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

@@ -13,31 +13,24 @@ class CustomProviderObserver extends ProviderObserver {
     ProviderBase<Object?> provider,
     Object? value,
     ProviderContainer container,
-  ) =>
-      switch (provider.name) {
-        _ when value.toString().length > 1000 => log(
-            '${provider.name} (${provider.runtimeType}) '
-            '${value?.toString().length} ',
-            name: 'didAddProvider',
-          ),
-        _ => log(
-            '${provider.name} ($provider)',
-            name: 'didAddProvider',
-          ),
-      };
+  ) => switch (provider.name) {
+    _ when value.toString().length > 1000 => log(
+      '${provider.name} (${provider.runtimeType}) '
+      '${value?.toString().length} ',
+      name: 'didAddProvider',
+    ),
+    _ => log('${provider.name} ($provider)', name: 'didAddProvider'),
+  };
 
   @override
   void didDisposeProvider(
     ProviderBase<Object?> provider,
     ProviderContainer container,
-  ) =>
-      switch (provider.name) {
-        'timeTickerProvider' || 'eewAliveTelegramProvider' => null,
-        _ => log(
-            '${provider.name}',
-            name: 'didDisposeProvider',
-          ),
-      };
+  ) => switch (provider.name) {
+    'timeTickerProvider' || 'eewAliveTelegramProvider' => null,
+    _ when provider.name?.contains('LayerControllerProvider') ?? false => null,
+    _ => log('${provider.name}', name: 'didDisposeProvider'),
+  };
 
   @override
   void didUpdateProvider(
@@ -45,29 +38,24 @@ class CustomProviderObserver extends ProviderObserver {
     Object? previousValue,
     Object? newValue,
     ProviderContainer container,
-  ) =>
-      switch (provider.name) {
-        'mapViewModelProvider' ||
-        'kyoshinMonitorTimerStreamProvider' ||
-        'periodicTimerProvider' ||
-        'timeTickerProvider' ||
-        'kyoshinMonitorNotifierProvider' =>
-          null,
-        _ when provider.name?.contains('LayerControllerProvider') ?? false =>
-          null,
-        _
-            when newValue.toString().length + previousValue.toString().length >
-                300 =>
-          log(
-            '${provider.name} (${previousValue.runtimeType} '
-            '-> ${newValue.runtimeType})',
-            name: 'didUpdateProvider',
-          ),
-        _ => log(
-            '${provider.name} ($previousValue -> $newValue)',
-            name: 'didUpdateProvider',
-          ),
-      };
+  ) => switch (provider.name) {
+    'mapViewModelProvider' ||
+    'kyoshinMonitorTimerStreamProvider' ||
+    'periodicTimerProvider' ||
+    'timeTickerProvider' ||
+    'kyoshinMonitorNotifierProvider' => null,
+    _ when provider.name?.contains('LayerControllerProvider') ?? false => null,
+    _ when newValue.toString().length + previousValue.toString().length > 300 =>
+      log(
+        '${provider.name} (${previousValue.runtimeType} '
+        '-> ${newValue.runtimeType})',
+        name: 'didUpdateProvider',
+      ),
+    _ => log(
+      '${provider.name} ($previousValue -> $newValue)',
+      name: 'didUpdateProvider',
+    ),
+  };
 
   @override
   void providerDidFail(
@@ -77,10 +65,6 @@ class CustomProviderObserver extends ProviderObserver {
     ProviderContainer container,
   ) {
     talker.handle(error, stackTrace, 'providerDidFail: ${provider.name}');
-    log(
-      '${provider.name} $error',
-      name: 'providerDidFail',
-      error: error,
-    );
+    log('${provider.name} $error', name: 'providerDidFail', error: error);
   }
 }

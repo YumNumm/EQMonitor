@@ -55,18 +55,19 @@ class CustomFeedbackForm extends HookConsumerWidget {
                     Padding(
                       padding: const EdgeInsets.all(8),
                       child: DropdownMenu<FeedbackType>(
-                        dropdownMenuEntries: FeedbackType.values
-                            .map(
-                              (type) => DropdownMenuEntry(
-                                value: type,
-                                label: type.label,
-                              ),
-                            )
-                            .toList(),
-                        onSelected: (type) => customFeedback.value =
-                            customFeedback.value.copyWith(
-                          feedbackType: type,
-                        ),
+                        dropdownMenuEntries:
+                            FeedbackType.values
+                                .map(
+                                  (type) => DropdownMenuEntry(
+                                    value: type,
+                                    label: type.label,
+                                  ),
+                                )
+                                .toList(),
+                        onSelected:
+                            (type) =>
+                                customFeedback.value = customFeedback.value
+                                    .copyWith(feedbackType: type),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -82,10 +83,10 @@ class CustomFeedbackForm extends HookConsumerWidget {
                     const SizedBox(height: 16),
                     CheckboxListTile(
                       value: customFeedback.value.isReplyRequested ?? false,
-                      onChanged: (value) =>
-                          customFeedback.value = customFeedback.value.copyWith(
-                        isReplyRequested: value,
-                      ),
+                      onChanged:
+                          (value) =>
+                              customFeedback.value = customFeedback.value
+                                  .copyWith(isReplyRequested: value),
                       title: const Text('返信を希望する'),
                       visualDensity: VisualDensity.compact,
                     ),
@@ -110,12 +111,13 @@ class CustomFeedbackForm extends HookConsumerWidget {
           ),
           FilledButton.tonalIcon(
             // disable this button until the user has specified a feedback type
-            onPressed: customFeedback.value.feedbackType != null
-                ? () async => onSubmit(
+            onPressed:
+                customFeedback.value.feedbackType != null
+                    ? () async => onSubmit(
                       feedbackText.value,
                       extras: customFeedback.value.toJson(),
                     )
-                : null,
+                    : null,
             label: const Text('メール送信画面を開く'),
             icon: Icon(
               (customFeedback.value.isScreenshotAttached)
@@ -124,9 +126,7 @@ class CustomFeedbackForm extends HookConsumerWidget {
             ),
           ),
           const SizedBox(height: 8),
-          SizedBox(
-            height: MediaQuery.paddingOf(context).bottom,
-          ),
+          SizedBox(height: MediaQuery.paddingOf(context).bottom),
         ],
       ),
     );

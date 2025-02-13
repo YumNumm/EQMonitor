@@ -9,74 +9,73 @@ part of 'notification_local_settings_model.dart';
 // **************************************************************************
 
 _$NotificationLocalSettingsModelImpl
-    _$$NotificationLocalSettingsModelImplFromJson(Map<String, dynamic> json) =>
-        $checkedCreate(
-          r'_$NotificationLocalSettingsModelImpl',
-          json,
-          ($checkedConvert) {
-            final val = _$NotificationLocalSettingsModelImpl(
-              eew: $checkedConvert(
-                  'eew',
-                  (v) => v == null
-                      ? const EewSettings()
-                      : EewSettings.fromJson(v as Map<String, dynamic>)),
-              earthquake: $checkedConvert(
-                  'earthquake',
-                  (v) => v == null
-                      ? const EarthquakeSettings()
-                      : EarthquakeSettings.fromJson(v as Map<String, dynamic>)),
-            );
-            return val;
-          },
-        );
+_$$NotificationLocalSettingsModelImplFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(r'_$NotificationLocalSettingsModelImpl', json, (
+      $checkedConvert,
+    ) {
+      final val = _$NotificationLocalSettingsModelImpl(
+        eew: $checkedConvert(
+          'eew',
+          (v) =>
+              v == null
+                  ? const EewSettings()
+                  : EewSettings.fromJson(v as Map<String, dynamic>),
+        ),
+        earthquake: $checkedConvert(
+          'earthquake',
+          (v) =>
+              v == null
+                  ? const EarthquakeSettings()
+                  : EarthquakeSettings.fromJson(v as Map<String, dynamic>),
+        ),
+      );
+      return val;
+    });
 
 Map<String, dynamic> _$$NotificationLocalSettingsModelImplToJson(
-        _$NotificationLocalSettingsModelImpl instance) =>
-    <String, dynamic>{
-      'eew': instance.eew,
-      'earthquake': instance.earthquake,
-    };
+  _$NotificationLocalSettingsModelImpl instance,
+) => <String, dynamic>{'eew': instance.eew, 'earthquake': instance.earthquake};
 
-_$EewSettingsImpl _$$EewSettingsImplFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(
-      r'_$EewSettingsImpl',
-      json,
-      ($checkedConvert) {
-        final val = _$EewSettingsImpl(
-          emergencyIntensity: $checkedConvert(
-              'emergency_intensity',
-              (v) =>
-                  $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v) ??
-                  null),
-          silentIntensity: $checkedConvert(
-              'silent_intensity',
-              (v) =>
-                  $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v) ??
-                  null),
-          regions: $checkedConvert(
-              'regions',
-              (v) =>
-                  (v as List<dynamic>?)
-                      ?.map((e) => Region.fromJson(e as Map<String, dynamic>))
-                      .toList() ??
-                  const []),
-        );
-        return val;
-      },
-      fieldKeyMap: const {
-        'emergencyIntensity': 'emergency_intensity',
-        'silentIntensity': 'silent_intensity'
-      },
+_$EewSettingsImpl _$$EewSettingsImplFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate(
+  r'_$EewSettingsImpl',
+  json,
+  ($checkedConvert) {
+    final val = _$EewSettingsImpl(
+      emergencyIntensity: $checkedConvert(
+        'emergency_intensity',
+        (v) => $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v) ?? null,
+      ),
+      silentIntensity: $checkedConvert(
+        'silent_intensity',
+        (v) => $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v) ?? null,
+      ),
+      regions: $checkedConvert(
+        'regions',
+        (v) =>
+            (v as List<dynamic>?)
+                ?.map((e) => Region.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            const [],
+      ),
     );
+    return val;
+  },
+  fieldKeyMap: const {
+    'emergencyIntensity': 'emergency_intensity',
+    'silentIntensity': 'silent_intensity',
+  },
+);
 
-Map<String, dynamic> _$$EewSettingsImplToJson(_$EewSettingsImpl instance) =>
-    <String, dynamic>{
-      'emergency_intensity':
-          _$JmaForecastIntensityEnumMap[instance.emergencyIntensity],
-      'silent_intensity':
-          _$JmaForecastIntensityEnumMap[instance.silentIntensity],
-      'regions': instance.regions,
-    };
+Map<String, dynamic> _$$EewSettingsImplToJson(
+  _$EewSettingsImpl instance,
+) => <String, dynamic>{
+  'emergency_intensity':
+      _$JmaForecastIntensityEnumMap[instance.emergencyIntensity],
+  'silent_intensity': _$JmaForecastIntensityEnumMap[instance.silentIntensity],
+  'regions': instance.regions,
+};
 
 const _$JmaForecastIntensityEnumMap = {
   JmaForecastIntensity.zero: '0',
@@ -93,77 +92,79 @@ const _$JmaForecastIntensityEnumMap = {
 };
 
 _$EarthquakeSettingsImpl _$$EarthquakeSettingsImplFromJson(
-        Map<String, dynamic> json) =>
-    $checkedCreate(
-      r'_$EarthquakeSettingsImpl',
-      json,
-      ($checkedConvert) {
-        final val = _$EarthquakeSettingsImpl(
-          emergencyIntensity: $checkedConvert(
-              'emergency_intensity',
-              (v) =>
-                  $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v) ??
-                  null),
-          silentIntensity: $checkedConvert(
-              'silent_intensity',
-              (v) =>
-                  $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v) ??
-                  null),
-          regions: $checkedConvert(
-              'regions',
-              (v) =>
-                  (v as List<dynamic>?)
-                      ?.map((e) => Region.fromJson(e as Map<String, dynamic>))
-                      .toList() ??
-                  const []),
-        );
-        return val;
-      },
-      fieldKeyMap: const {
-        'emergencyIntensity': 'emergency_intensity',
-        'silentIntensity': 'silent_intensity'
-      },
+  Map<String, dynamic> json,
+) => $checkedCreate(
+  r'_$EarthquakeSettingsImpl',
+  json,
+  ($checkedConvert) {
+    final val = _$EarthquakeSettingsImpl(
+      emergencyIntensity: $checkedConvert(
+        'emergency_intensity',
+        (v) => $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v) ?? null,
+      ),
+      silentIntensity: $checkedConvert(
+        'silent_intensity',
+        (v) => $enumDecodeNullable(_$JmaForecastIntensityEnumMap, v) ?? null,
+      ),
+      regions: $checkedConvert(
+        'regions',
+        (v) =>
+            (v as List<dynamic>?)
+                ?.map((e) => Region.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            const [],
+      ),
     );
+    return val;
+  },
+  fieldKeyMap: const {
+    'emergencyIntensity': 'emergency_intensity',
+    'silentIntensity': 'silent_intensity',
+  },
+);
 
 Map<String, dynamic> _$$EarthquakeSettingsImplToJson(
-        _$EarthquakeSettingsImpl instance) =>
-    <String, dynamic>{
-      'emergency_intensity':
-          _$JmaForecastIntensityEnumMap[instance.emergencyIntensity],
-      'silent_intensity':
-          _$JmaForecastIntensityEnumMap[instance.silentIntensity],
-      'regions': instance.regions,
-    };
+  _$EarthquakeSettingsImpl instance,
+) => <String, dynamic>{
+  'emergency_intensity':
+      _$JmaForecastIntensityEnumMap[instance.emergencyIntensity],
+  'silent_intensity': _$JmaForecastIntensityEnumMap[instance.silentIntensity],
+  'regions': instance.regions,
+};
 
 _$RegionImpl _$$RegionImplFromJson(Map<String, dynamic> json) => $checkedCreate(
-      r'_$RegionImpl',
-      json,
-      ($checkedConvert) {
-        final val = _$RegionImpl(
-          code: $checkedConvert('code', (v) => v as String),
-          name: $checkedConvert('name', (v) => v as String),
-          emergencyIntensity: $checkedConvert('emergency_intensity',
-              (v) => $enumDecode(_$JmaForecastIntensityEnumMap, v)),
-          silentIntensity: $checkedConvert('silent_intensity',
-              (v) => $enumDecode(_$JmaForecastIntensityEnumMap, v)),
-          isMain: $checkedConvert('is_main', (v) => v as bool),
-        );
-        return val;
-      },
-      fieldKeyMap: const {
-        'emergencyIntensity': 'emergency_intensity',
-        'silentIntensity': 'silent_intensity',
-        'isMain': 'is_main'
-      },
+  r'_$RegionImpl',
+  json,
+  ($checkedConvert) {
+    final val = _$RegionImpl(
+      code: $checkedConvert('code', (v) => v as String),
+      name: $checkedConvert('name', (v) => v as String),
+      emergencyIntensity: $checkedConvert(
+        'emergency_intensity',
+        (v) => $enumDecode(_$JmaForecastIntensityEnumMap, v),
+      ),
+      silentIntensity: $checkedConvert(
+        'silent_intensity',
+        (v) => $enumDecode(_$JmaForecastIntensityEnumMap, v),
+      ),
+      isMain: $checkedConvert('is_main', (v) => v as bool),
     );
+    return val;
+  },
+  fieldKeyMap: const {
+    'emergencyIntensity': 'emergency_intensity',
+    'silentIntensity': 'silent_intensity',
+    'isMain': 'is_main',
+  },
+);
 
-Map<String, dynamic> _$$RegionImplToJson(_$RegionImpl instance) =>
-    <String, dynamic>{
-      'code': instance.code,
-      'name': instance.name,
-      'emergency_intensity':
-          _$JmaForecastIntensityEnumMap[instance.emergencyIntensity]!,
-      'silent_intensity':
-          _$JmaForecastIntensityEnumMap[instance.silentIntensity]!,
-      'is_main': instance.isMain,
-    };
+Map<String, dynamic> _$$RegionImplToJson(
+  _$RegionImpl instance,
+) => <String, dynamic>{
+  'code': instance.code,
+  'name': instance.name,
+  'emergency_intensity':
+      _$JmaForecastIntensityEnumMap[instance.emergencyIntensity]!,
+  'silent_intensity': _$JmaForecastIntensityEnumMap[instance.silentIntensity]!,
+  'is_main': instance.isMain,
+};

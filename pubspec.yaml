@@ -1,7 +1,7 @@
 name: eqmonitor_workspace
 description: The workspace for the EQMonitor project.
 environment:
-  sdk: ^3.6.1
+  sdk: ^3.7.0
 workspace:
   - app
   - packages/_base
@@ -25,7 +25,7 @@ workspace:
   - packages/kyoshin_monitor_image_parser
   # <ADD_PACKAGE_HERE>
 dependencies:
-  melos: ^7.0.0-dev.4
+  melos: ^7.0.0-dev.7
 dependency_overrides:
   # `yumemi_lints` の `file` 依存関係が `file` 6.xになっているため、
   # 強制的に `file` 7.x を依存関係に追加する

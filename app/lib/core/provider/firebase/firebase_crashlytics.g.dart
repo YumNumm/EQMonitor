@@ -16,9 +16,10 @@ String _$firebaseCrashlyticsHash() =>
 final firebaseCrashlyticsProvider = Provider<FirebaseCrashlytics>.internal(
   firebaseCrashlytics,
   name: r'firebaseCrashlyticsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$firebaseCrashlyticsHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$firebaseCrashlyticsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

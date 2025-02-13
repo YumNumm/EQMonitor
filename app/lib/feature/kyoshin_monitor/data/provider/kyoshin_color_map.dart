@@ -7,9 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'kyoshin_color_map.g.dart';
 
 @Riverpod(keepAlive: true)
-List<KyoshinColorMapModel> kyoshinColorMap(
-  Ref ref,
-) =>
+List<KyoshinColorMapModel> kyoshinColorMap(Ref ref) =>
     throw UnimplementedError();
 
 extension IntensityToKyoshinColor on List<KyoshinColorMapModel> {

@@ -26,4 +26,11 @@ runs:
       shell: bash
       run: |
         jwt=$(bun run scripts/app-store-connect-api-key.ts)
+        // 最初の10文字だけ stdoutに出力
+        echo $jwt | head -c 10
         echo "jwt=$jwt" >> $GITHUB_OUTPUT
+
+    - name: Remove App Store Connect API Key
+      shell: bash
+      run: |
+        rm AuthKey.p8

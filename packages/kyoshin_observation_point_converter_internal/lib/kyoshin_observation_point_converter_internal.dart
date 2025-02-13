@@ -10,16 +10,17 @@ class KyoshinObservationPointConverter {
     final file = File(path);
     final body = await file.readAsString();
     final json = jsonDecode(body) as List<dynamic>;
-    final result = json
-        .map((e) {
-          try {
-            return ObservationModel.fromJson(e as Map<String, dynamic>);
-          } on Exception catch (_) {
-            return null;
-          }
-        })
-        .whereType<ObservationModel>()
-        .toList();
+    final result =
+        json
+            .map((e) {
+              try {
+                return ObservationModel.fromJson(e as Map<String, dynamic>);
+              } on Exception catch (_) {
+                return null;
+              }
+            })
+            .whereType<ObservationModel>()
+            .toList();
     return result;
   }
 
@@ -46,10 +47,7 @@ class KyoshinObservationPointConverter {
             longitude: point.longitude,
           ),
           name: point.name,
-          point: KyoshinObservationPoint_Point(
-            x: point.x,
-            y: point.y,
-          ),
+          point: KyoshinObservationPoint_Point(x: point.x, y: point.y),
           region: point.region,
           arv400: await _getArv(
             latitude: point.latitude,
@@ -58,9 +56,7 @@ class KyoshinObservationPointConverter {
         ),
       );
     }
-    return KyoshinObservationPoints(
-      points: result,
-    );
+    return KyoshinObservationPoints(points: result);
   }
 
   Future<double?> _getArv({
@@ -72,28 +68,31 @@ class KyoshinObservationPointConverter {
     if (cacheFile.existsSync()) {
       final json =
           jsonDecode(await cacheFile.readAsString()) as Map<String, dynamic>;
-      final arvStr = (((json['features'] as List<dynamic>?)?.first
-              as Map<String, dynamic>?)?['properties']
-          as Map<String, dynamic>?)?['ARV'] as String?;
+      final arvStr =
+          (((json['features'] as List<dynamic>?)?.first
+                      as Map<String, dynamic>?)?['properties']
+                  as Map<String, dynamic>?)?['ARV']
+              as String?;
       final arv = double.tryParse(arvStr.toString());
       return arv;
     }
 
     final response = await http.get(
       Uri.parse(
-          'https://www.j-shis.bosai.go.jp/map/api/sstrct/V2/meshinfo.geojson'
-          '?position=$longitude,$latitude'
-          '&epsg=4326'),
+        'https://www.j-shis.bosai.go.jp/map/api/sstrct/V2/meshinfo.geojson'
+        '?position=$longitude,$latitude'
+        '&epsg=4326',
+      ),
     );
     final json = jsonDecode(response.body) as Map<String, dynamic>;
     print(json);
-    final arvStr = (((json['features'] as List<dynamic>?)?.first
-            as Map<String, dynamic>?)?['properties']
-        as Map<String, dynamic>?)?['ARV'] as String?;
+    final arvStr =
+        (((json['features'] as List<dynamic>?)?.first
+                    as Map<String, dynamic>?)?['properties']
+                as Map<String, dynamic>?)?['ARV']
+            as String?;
     final arv = double.tryParse(arvStr.toString());
-    cacheFile.writeAsStringSync(
-      jsonEncode(json),
-    );
+    cacheFile.writeAsStringSync(jsonEncode(json));
     print('ARV: $arv');
     return null;
   }

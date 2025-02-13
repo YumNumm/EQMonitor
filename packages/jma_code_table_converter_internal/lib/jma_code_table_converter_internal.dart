@@ -69,10 +69,7 @@ class JmaCodeTableConverter {
     return AreaEpicenter(
       items: [
         for (final e in data)
-          AreaEpicenter_AreaEpicenterItem(
-            code: e[0],
-            name: e[1],
-          ),
+          AreaEpicenter_AreaEpicenterItem(code: e[0], name: e[1]),
       ],
     );
   }
@@ -103,10 +100,7 @@ class JmaCodeTableConverter {
     return AreaEpicenterDetail(
       items: [
         for (final e in data)
-          AreaEpicenterDetail_AreaEpicenterDetailItem(
-            code: e[0],
-            name: e[1],
-          ),
+          AreaEpicenterDetail_AreaEpicenterDetailItem(code: e[0], name: e[1]),
       ],
     );
   }

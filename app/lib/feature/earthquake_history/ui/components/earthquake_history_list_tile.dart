@@ -19,12 +19,22 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
     required this.item,
     this.onTap,
     this.showBackgroundColor = true,
+    this.intensityIconSize = 40.0,
+    this.titleTextColor,
+    this.descriptionTextColor,
+    this.magnitudeTextColor,
+    this.visualDensity,
     super.key,
   });
 
   final EarthquakeV1Extended item;
   final void Function()? onTap;
   final bool showBackgroundColor;
+  final double intensityIconSize;
+  final Color? titleTextColor;
+  final Color? descriptionTextColor;
+  final Color? magnitudeTextColor;
+  final VisualDensity? visualDensity;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,20 +48,15 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
     /// 噴火かどうか
     final isVolcano = item.isVolcano;
 
-    final hypoName = useMemoized(
-      () {
-        final volcanoName = item.volcanoName;
-        if (volcanoName != null) {
-          return volcanoName;
-        }
-        return codeTable.areaEpicenter.items
-            .firstWhereOrNull(
-              (e) => int.tryParse(e.code) == item.epicenterCode,
-            )
-            ?.name;
-      },
-      [item],
-    );
+    final hypoName = useMemoized(() {
+      final volcanoName = item.volcanoName;
+      if (volcanoName != null) {
+        return volcanoName;
+      }
+      return codeTable.areaEpicenter.items
+          .firstWhereOrNull((e) => int.tryParse(e.code) == item.epicenterCode)
+          ?.name;
+    }, [item]);
     final hypoDetailName = useMemoized(
       () => codeTable.areaEpicenterDetail.items.firstWhereOrNull(
         (e) => int.tryParse(e.code) == item.epicenterDetailCode,
@@ -65,22 +70,16 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
       hypoName,
       hypoDetailName,
       maxIntensity,
-      maxIntensityRegionNames
+      maxIntensityRegionNames,
     )) {
       (
         final String hypoName,
         final AreaEpicenterDetail_AreaEpicenterDetailItem hypoDetailName,
         _,
-        _
+        _,
       ) =>
         '$hypoName(${hypoDetailName.name})',
-      (
-        final String hypoName,
-        _,
-        _,
-        _,
-      ) =>
-        hypoName,
+      (final String hypoName, _, _, _) => hypoName,
       (_, _, final JmaIntensity intensity, final List<String> regionNames)
           when regionNames.isNotEmpty && regionNames.length >= 2 =>
         '最大震度$intensityを${regionNames.first}などで観測',
@@ -88,10 +87,11 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
           when regionNames.isNotEmpty =>
         '最大震度$intensityを${regionNames.first}で観測',
       (_, _, final JmaIntensity intensity, _) => '最大震度${intensity.type}を観測',
-      _ => ''
+      _ => '',
     };
     final dateFormatter = DateFormat('yyyy/MM/dd HH:mm');
-    final subTitle = switch ((item.originTime, item.arrivalTime)) {
+    final subTitle =
+        switch ((item.originTime, item.arrivalTime)) {
           (final DateTime originTime, _) =>
             '${dateFormatter.format(originTime.toLocal())}頃発生 ',
           (_, final DateTime arrivalTime) =>
@@ -105,9 +105,10 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
           _ => '',
         };
     final intensityColorState = ref.watch(intensityColorProvider);
-    final intensityColor = maxIntensity != null
-        ? intensityColorState.fromJmaIntensity(maxIntensity).background
-        : null;
+    final intensityColor =
+        maxIntensity != null
+            ? intensityColorState.fromJmaIntensity(maxIntensity).background
+            : null;
     final maxLpgmIntensity = item.maxLpgmIntensity;
     // 5 -> 5.0, 5.123 -> 5.1
     final magnitude = item.magnitude?.toStringAsFixed(1);
@@ -126,6 +127,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
         ),
     ];
     return ListTile(
+      visualDensity: visualDensity,
       tileColor:
           showBackgroundColor ? intensityColor?.withValues(alpha: 0.4) : null,
       onTap: onTap,
@@ -133,6 +135,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
         title,
         style: theme.textTheme.titleMedium!.copyWith(
           fontWeight: FontWeight.bold,
+          color: titleTextColor,
         ),
       ),
       subtitle: Wrap(
@@ -143,27 +146,32 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
             subTitle,
             style: TextStyle(
               fontFamily: GoogleFonts.notoSansJp().fontFamily,
+              color: descriptionTextColor,
             ),
           ),
           ...chips,
         ],
       ),
-      leading: isFarEarthquake
-          ? JmaIntensityIcon(
-              intensity: JmaIntensity.fiveLower,
-              type: IntensityIconType.filled,
-              customText: isVolcano ? '噴火\n情報' : '遠地\n地震',
-            )
-          : maxIntensity != null
+      leading:
+          isFarEarthquake
               ? JmaIntensityIcon(
-                  intensity: maxIntensity,
-                  type: IntensityIconType.filled,
-                )
+                intensity: JmaIntensity.fiveLower,
+                type: IntensityIconType.filled,
+                customText: isVolcano ? '噴火\n情報' : '遠地\n地震',
+                size: intensityIconSize,
+              )
+              : maxIntensity != null
+              ? JmaIntensityIcon(
+                intensity: maxIntensity,
+                type: IntensityIconType.filled,
+                size: intensityIconSize,
+              )
               : null,
       trailing: Text(
         trailingText,
         style: theme.textTheme.labelLarge!.copyWith(
           fontWeight: FontWeight.bold,
+          color: magnitudeTextColor,
         ),
       ),
     );

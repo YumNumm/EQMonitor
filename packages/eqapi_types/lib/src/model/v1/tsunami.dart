@@ -40,18 +40,18 @@ class TsunamiV1 implements V1Database {
 
   @override
   Map<String, dynamic> toJson() => {
-        'eventId': eventId,
-        'headline': headline,
-        'id': id,
-        'infoType': infoType,
-        'pressAt': pressAt.toIso8601String(),
-        'reportAt': reportAt.toIso8601String(),
-        'serialNo': serialNo,
-        'status': status,
-        'type': type,
-        'validAt': validAt?.toIso8601String(),
-        'body': body.toJson(),
-      };
+    'eventId': eventId,
+    'headline': headline,
+    'id': id,
+    'infoType': infoType,
+    'pressAt': pressAt.toIso8601String(),
+    'reportAt': reportAt.toIso8601String(),
+    'serialNo': serialNo,
+    'status': status,
+    'type': type,
+    'validAt': validAt?.toIso8601String(),
+    'body': body.toJson(),
+  };
 
   final int eventId;
   final String? headline;
@@ -92,16 +92,17 @@ sealed class TsunamiBody {
   ) {
     final infoTypeStr = parent['infoType'].toString();
     final typeStr = parent['type'].toString();
-    final type =
-        TsunamiBodyType.values.firstWhereOrNull((e) => e.value == typeStr);
+    final type = TsunamiBodyType.values.firstWhereOrNull(
+      (e) => e.value == typeStr,
+    );
     return switch (infoTypeStr) {
       '取消' => CancelBody.fromJson(json),
       '発表' || '訂正' => switch (type) {
-          TsunamiBodyType.vtse41 => PublicBodyVTSE41.fromJson(json),
-          TsunamiBodyType.vtse51 => PublicBodyVTSE51.fromJson(json),
-          TsunamiBodyType.vtse52 => PublicBodyVTSE52.fromJson(json),
-          null => throw ArgumentError('Unknown type: $typeStr'),
-        },
+        TsunamiBodyType.vtse41 => PublicBodyVTSE41.fromJson(json),
+        TsunamiBodyType.vtse51 => PublicBodyVTSE51.fromJson(json),
+        TsunamiBodyType.vtse52 => PublicBodyVTSE52.fromJson(json),
+        null => throw ArgumentError('Unknown type: $typeStr'),
+      },
       _ => throw ArgumentError('Unknown infoType: $infoTypeStr'),
     };
   }
@@ -111,8 +112,7 @@ sealed class TsunamiBody {
 enum TsunamiBodyType {
   vtse41('津波警報・注意報・予報a'),
   vtse51('津波情報a'),
-  vtse52('沖合の津波観測に関する情報'),
-  ;
+  vtse52('沖合の津波観測に関する情報');
 
   const TsunamiBodyType(this.value);
   final String value;
@@ -142,9 +142,7 @@ class CommentWarning with _$CommentWarning {
 
 @freezed
 class CancelBody with _$CancelBody implements TsunamiBody {
-  const factory CancelBody({
-    required String text,
-  }) = _CancelBody;
+  const factory CancelBody({required String text}) = _CancelBody;
 
   factory CancelBody.fromJson(Map<String, dynamic> json) =>
       _$CancelBodyFromJson(json);
@@ -208,8 +206,7 @@ enum TsunamiForecastFirstHeightCondition {
   firstTideDetected('第１波の到達を確認'),
 
   /// "ただちに津波来襲と予測"
-  immediately('ただちに津波来襲と予測'),
-  ;
+  immediately('ただちに津波来襲と予測');
 
   const TsunamiForecastFirstHeightCondition(this.value);
   final String value;
@@ -233,8 +230,7 @@ enum TsunamiMaxHeightCondition {
   high('高い'),
 
   /// 巨大
-  huge('巨大'),
-  ;
+  huge('巨大');
 
   const TsunamiMaxHeightCondition(this.value);
   final String value;
@@ -310,8 +306,7 @@ class TsunamiObservationStation with _$TsunamiObservationStation {
 @JsonEnum(valueField: 'value')
 enum TsunamiObservationStationFirstHeightIntial {
   push('押し'),
-  pull('引き'),
-  ;
+  pull('引き');
 
   const TsunamiObservationStationFirstHeightIntial(this.value);
   final String value;
@@ -326,8 +321,7 @@ enum TsunamiObservationStationCondition {
   observing('観測中'),
 
   /// 重要
-  important('重要'),
-  ;
+  important('重要');
 
   const TsunamiObservationStationCondition(this.value);
   final String value;
@@ -358,8 +352,7 @@ class TsunamiEstimation with _$TsunamiEstimation {
 @JsonEnum(valueField: 'value')
 enum TsunamiEstimationFirstHeightCondition {
   /// 早いところでは既に津波到達と推定
-  alreadyArrived('早いところでは既に津波到達と推定'),
-  ;
+  alreadyArrived('早いところでは既に津波到達と推定');
 
   const TsunamiEstimationFirstHeightCondition(this.value);
   final String value;
@@ -471,8 +464,7 @@ enum EarthquakeMagnitudeCondition {
   unknown('Ｍ不明'),
 
   /// Ｍ８を超える巨大地震
-  huge('Ｍ８を超える巨大地震'),
-  ;
+  huge('Ｍ８を超える巨大地震');
 
   const EarthquakeMagnitudeCondition(this.value);
   final String value;

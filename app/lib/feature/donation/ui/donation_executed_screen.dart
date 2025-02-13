@@ -15,10 +15,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class DonationExecutedScreen extends HookConsumerWidget {
-  const DonationExecutedScreen({
-    required this.result,
-    super.key,
-  });
+  const DonationExecutedScreen({required this.result, super.key});
 
   final (StoreProduct, CustomerInfo) result;
 
@@ -31,9 +28,7 @@ class DonationExecutedScreen extends HookConsumerWidget {
     final productEnum = Products.values.firstWhere(
       (e) => e.id == product.identifier,
     );
-    final controller = useMemoized(
-      ScreenshotController.new,
-    );
+    final controller = useMemoized(ScreenshotController.new);
     final body = Stack(
       children: [
         SingleChildScrollView(
@@ -63,10 +58,7 @@ class DonationExecutedScreen extends HookConsumerWidget {
             appBar: AppBar(
               backgroundColor: Colors.transparent,
               leading: IconButton(
-                icon: const Icon(
-                  Icons.close,
-                  color: Colors.white,
-                ),
+                icon: const Icon(Icons.close, color: Colors.white),
                 onPressed: Navigator.of(context).pop,
               ),
             ),
@@ -85,10 +77,10 @@ class DonationExecutedScreen extends HookConsumerWidget {
                   ActionButton.text(
                     context: context,
                     text: 'アプリストアでレビューを書く',
-                    onPressed: () async =>
-                        InAppReview.instance.openStoreListing(
-                      appStoreId: '6447546703',
-                    ),
+                    onPressed:
+                        () async => InAppReview.instance.openStoreListing(
+                          appStoreId: '6447546703',
+                        ),
                   ),
                   Row(
                     children: [
@@ -99,10 +91,7 @@ class DonationExecutedScreen extends HookConsumerWidget {
                           onPressed: () async {
                             final image = await controller.capture();
                             await Share.shareXFiles([
-                              XFile.fromData(
-                                image!,
-                                mimeType: 'image/png',
-                              ),
+                              XFile.fromData(image!, mimeType: 'image/png'),
                             ]);
                           },
                           accentColor: Colors.grey.shade900,
@@ -166,21 +155,18 @@ class _ScrollView extends StatelessWidget {
                           children: [
                             const TextSpan(
                               text: 'ご支援頂きありがとうございます!\n',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             const TextSpan(
                               text: 'あなたのご支援のお陰で、より良いアプリを作ることができます。\n\n',
                             ),
                             const TextSpan(
                               text: '皆様の声が励みになります!\n',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             const TextSpan(
-                              text: 'Twitter(X)やメールで私へ連絡いただけると嬉しいです!'
+                              text:
+                                  'Twitter(X)やメールで私へ連絡いただけると嬉しいです!'
                                   'もしくは、アプリストアへのレビューもお待ちしております\n\n'
                                   'ご意見やご要望があれば、お気軽にお知らせください!\n\n'
                                   '- Ryotaro Onoue (Twitter: ',
@@ -188,13 +174,13 @@ class _ScrollView extends StatelessWidget {
                             for (final account in ['YumNumm', 'EQMonitorApp'])
                               TextSpan(
                                 text: '@$account',
-                                style: TextStyle(
-                                  color: Colors.blue.shade400,
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () async => launchUrlString(
-                                        'https://twitter.com/$account',
-                                      ),
+                                style: TextStyle(color: Colors.blue.shade400),
+                                recognizer:
+                                    TapGestureRecognizer()
+                                      ..onTap =
+                                          () async => launchUrlString(
+                                            'https://twitter.com/$account',
+                                          ),
                               ),
                           ],
                         ),
@@ -260,19 +246,11 @@ class _Detail extends StatelessWidget {
               ),
               Text(
                 product.priceString,
-                style: textTheme.titleMedium?.copyWith(
-                  color: Colors.white,
-                ),
+                style: textTheme.titleMedium?.copyWith(color: Colors.white),
               ),
               Text(
-                "Tipped at ${DateFormat('yyyy/MM/dd HH:mm').format(
-                  DateTime.parse(
-                    customer.requestDate,
-                  ).toLocal(),
-                )}",
-                style: textTheme.labelLarge?.copyWith(
-                  color: Colors.white,
-                ),
+                "Tipped at ${DateFormat('yyyy/MM/dd HH:mm').format(DateTime.parse(customer.requestDate).toLocal())}",
+                style: textTheme.labelLarge?.copyWith(color: Colors.white),
               ),
             ],
           ),

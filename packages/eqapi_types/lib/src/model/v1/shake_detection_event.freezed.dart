@@ -12,10 +12,12 @@ part of 'shake_detection_event.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ShakeDetectionWebSocketTelegram _$ShakeDetectionWebSocketTelegramFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _ShakeDetectionWebSocketTelegram.fromJson(json);
 }
 
@@ -30,23 +32,28 @@ mixin _$ShakeDetectionWebSocketTelegram {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   $ShakeDetectionWebSocketTelegramCopyWith<ShakeDetectionWebSocketTelegram>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ShakeDetectionWebSocketTelegramCopyWith<$Res> {
   factory $ShakeDetectionWebSocketTelegramCopyWith(
-          ShakeDetectionWebSocketTelegram value,
-          $Res Function(ShakeDetectionWebSocketTelegram) then) =
-      _$ShakeDetectionWebSocketTelegramCopyWithImpl<$Res,
-          ShakeDetectionWebSocketTelegram>;
+    ShakeDetectionWebSocketTelegram value,
+    $Res Function(ShakeDetectionWebSocketTelegram) then,
+  ) =
+      _$ShakeDetectionWebSocketTelegramCopyWithImpl<
+        $Res,
+        ShakeDetectionWebSocketTelegram
+      >;
   @useResult
   $Res call({List<ShakeDetectionEvent> events});
 }
 
 /// @nodoc
-class _$ShakeDetectionWebSocketTelegramCopyWithImpl<$Res,
-        $Val extends ShakeDetectionWebSocketTelegram>
+class _$ShakeDetectionWebSocketTelegramCopyWithImpl<
+  $Res,
+  $Val extends ShakeDetectionWebSocketTelegram
+>
     implements $ShakeDetectionWebSocketTelegramCopyWith<$Res> {
   _$ShakeDetectionWebSocketTelegramCopyWithImpl(this._value, this._then);
 
@@ -59,15 +66,17 @@ class _$ShakeDetectionWebSocketTelegramCopyWithImpl<$Res,
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? events = null,
-  }) {
-    return _then(_value.copyWith(
-      events: null == events
-          ? _value.events
-          : events // ignore: cast_nullable_to_non_nullable
-              as List<ShakeDetectionEvent>,
-    ) as $Val);
+  $Res call({Object? events = null}) {
+    return _then(
+      _value.copyWith(
+            events:
+                null == events
+                    ? _value.events
+                    : events // ignore: cast_nullable_to_non_nullable
+                        as List<ShakeDetectionEvent>,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -75,9 +84,9 @@ class _$ShakeDetectionWebSocketTelegramCopyWithImpl<$Res,
 abstract class _$$ShakeDetectionWebSocketTelegramImplCopyWith<$Res>
     implements $ShakeDetectionWebSocketTelegramCopyWith<$Res> {
   factory _$$ShakeDetectionWebSocketTelegramImplCopyWith(
-          _$ShakeDetectionWebSocketTelegramImpl value,
-          $Res Function(_$ShakeDetectionWebSocketTelegramImpl) then) =
-      __$$ShakeDetectionWebSocketTelegramImplCopyWithImpl<$Res>;
+    _$ShakeDetectionWebSocketTelegramImpl value,
+    $Res Function(_$ShakeDetectionWebSocketTelegramImpl) then,
+  ) = __$$ShakeDetectionWebSocketTelegramImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<ShakeDetectionEvent> events});
@@ -85,27 +94,31 @@ abstract class _$$ShakeDetectionWebSocketTelegramImplCopyWith<$Res>
 
 /// @nodoc
 class __$$ShakeDetectionWebSocketTelegramImplCopyWithImpl<$Res>
-    extends _$ShakeDetectionWebSocketTelegramCopyWithImpl<$Res,
-        _$ShakeDetectionWebSocketTelegramImpl>
+    extends
+        _$ShakeDetectionWebSocketTelegramCopyWithImpl<
+          $Res,
+          _$ShakeDetectionWebSocketTelegramImpl
+        >
     implements _$$ShakeDetectionWebSocketTelegramImplCopyWith<$Res> {
   __$$ShakeDetectionWebSocketTelegramImplCopyWithImpl(
-      _$ShakeDetectionWebSocketTelegramImpl _value,
-      $Res Function(_$ShakeDetectionWebSocketTelegramImpl) _then)
-      : super(_value, _then);
+    _$ShakeDetectionWebSocketTelegramImpl _value,
+    $Res Function(_$ShakeDetectionWebSocketTelegramImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of ShakeDetectionWebSocketTelegram
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? events = null,
-  }) {
-    return _then(_$ShakeDetectionWebSocketTelegramImpl(
-      events: null == events
-          ? _value._events
-          : events // ignore: cast_nullable_to_non_nullable
-              as List<ShakeDetectionEvent>,
-    ));
+  $Res call({Object? events = null}) {
+    return _then(
+      _$ShakeDetectionWebSocketTelegramImpl(
+        events:
+            null == events
+                ? _value._events
+                : events // ignore: cast_nullable_to_non_nullable
+                    as List<ShakeDetectionEvent>,
+      ),
+    );
   }
 }
 
@@ -113,13 +126,13 @@ class __$$ShakeDetectionWebSocketTelegramImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ShakeDetectionWebSocketTelegramImpl
     implements _ShakeDetectionWebSocketTelegram {
-  const _$ShakeDetectionWebSocketTelegramImpl(
-      {required final List<ShakeDetectionEvent> events})
-      : _events = events;
+  const _$ShakeDetectionWebSocketTelegramImpl({
+    required final List<ShakeDetectionEvent> events,
+  }) : _events = events;
 
   factory _$ShakeDetectionWebSocketTelegramImpl.fromJson(
-          Map<String, dynamic> json) =>
-      _$$ShakeDetectionWebSocketTelegramImplFromJson(json);
+    Map<String, dynamic> json,
+  ) => _$$ShakeDetectionWebSocketTelegramImplFromJson(json);
 
   final List<ShakeDetectionEvent> _events;
   @override
@@ -153,23 +166,23 @@ class _$ShakeDetectionWebSocketTelegramImpl
   @override
   @pragma('vm:prefer-inline')
   _$$ShakeDetectionWebSocketTelegramImplCopyWith<
-          _$ShakeDetectionWebSocketTelegramImpl>
-      get copyWith => __$$ShakeDetectionWebSocketTelegramImplCopyWithImpl<
-          _$ShakeDetectionWebSocketTelegramImpl>(this, _$identity);
+    _$ShakeDetectionWebSocketTelegramImpl
+  >
+  get copyWith => __$$ShakeDetectionWebSocketTelegramImplCopyWithImpl<
+    _$ShakeDetectionWebSocketTelegramImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ShakeDetectionWebSocketTelegramImplToJson(
-      this,
-    );
+    return _$$ShakeDetectionWebSocketTelegramImplToJson(this);
   }
 }
 
 abstract class _ShakeDetectionWebSocketTelegram
     implements ShakeDetectionWebSocketTelegram {
-  const factory _ShakeDetectionWebSocketTelegram(
-          {required final List<ShakeDetectionEvent> events}) =
-      _$ShakeDetectionWebSocketTelegramImpl;
+  const factory _ShakeDetectionWebSocketTelegram({
+    required final List<ShakeDetectionEvent> events,
+  }) = _$ShakeDetectionWebSocketTelegramImpl;
 
   factory _ShakeDetectionWebSocketTelegram.fromJson(Map<String, dynamic> json) =
       _$ShakeDetectionWebSocketTelegramImpl.fromJson;
@@ -182,8 +195,9 @@ abstract class _ShakeDetectionWebSocketTelegram
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ShakeDetectionWebSocketTelegramImplCopyWith<
-          _$ShakeDetectionWebSocketTelegramImpl>
-      get copyWith => throw _privateConstructorUsedError;
+    _$ShakeDetectionWebSocketTelegramImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 ShakeDetectionEvent _$ShakeDetectionEventFromJson(Map<String, dynamic> json) {
@@ -202,8 +216,9 @@ mixin _$ShakeDetectionEvent {
 
   /// `Unknown`もしくは`Error`の場合、Nullにフォールバックされます
   @JsonKey(
-      unknownEnumValue: JmaForecastIntensity.unknown,
-      defaultValue: JmaForecastIntensity.unknown)
+    unknownEnumValue: JmaForecastIntensity.unknown,
+    defaultValue: JmaForecastIntensity.unknown,
+  )
   JmaForecastIntensity get maxIntensity => throw _privateConstructorUsedError;
   List<ShakeDetectionRegion> get regions => throw _privateConstructorUsedError;
   ShakeDetectionLatLng get topLeft => throw _privateConstructorUsedError;
@@ -223,23 +238,26 @@ mixin _$ShakeDetectionEvent {
 /// @nodoc
 abstract class $ShakeDetectionEventCopyWith<$Res> {
   factory $ShakeDetectionEventCopyWith(
-          ShakeDetectionEvent value, $Res Function(ShakeDetectionEvent) then) =
-      _$ShakeDetectionEventCopyWithImpl<$Res, ShakeDetectionEvent>;
+    ShakeDetectionEvent value,
+    $Res Function(ShakeDetectionEvent) then,
+  ) = _$ShakeDetectionEventCopyWithImpl<$Res, ShakeDetectionEvent>;
   @useResult
-  $Res call(
-      {@JsonKey(defaultValue: -1) int? id,
-      String eventId,
-      @JsonKey(defaultValue: -1) int serialNo,
-      DateTime createdAt,
-      DateTime insertedAt,
-      @JsonKey(
-          unknownEnumValue: JmaForecastIntensity.unknown,
-          defaultValue: JmaForecastIntensity.unknown)
-      JmaForecastIntensity maxIntensity,
-      List<ShakeDetectionRegion> regions,
-      ShakeDetectionLatLng topLeft,
-      ShakeDetectionLatLng bottomRight,
-      int pointCount});
+  $Res call({
+    @JsonKey(defaultValue: -1) int? id,
+    String eventId,
+    @JsonKey(defaultValue: -1) int serialNo,
+    DateTime createdAt,
+    DateTime insertedAt,
+    @JsonKey(
+      unknownEnumValue: JmaForecastIntensity.unknown,
+      defaultValue: JmaForecastIntensity.unknown,
+    )
+    JmaForecastIntensity maxIntensity,
+    List<ShakeDetectionRegion> regions,
+    ShakeDetectionLatLng topLeft,
+    ShakeDetectionLatLng bottomRight,
+    int pointCount,
+  });
 
   $ShakeDetectionLatLngCopyWith<$Res> get topLeft;
   $ShakeDetectionLatLngCopyWith<$Res> get bottomRight;
@@ -271,48 +289,61 @@ class _$ShakeDetectionEventCopyWithImpl<$Res, $Val extends ShakeDetectionEvent>
     Object? bottomRight = null,
     Object? pointCount = null,
   }) {
-    return _then(_value.copyWith(
-      id: freezed == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int?,
-      eventId: null == eventId
-          ? _value.eventId
-          : eventId // ignore: cast_nullable_to_non_nullable
-              as String,
-      serialNo: null == serialNo
-          ? _value.serialNo
-          : serialNo // ignore: cast_nullable_to_non_nullable
-              as int,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      insertedAt: null == insertedAt
-          ? _value.insertedAt
-          : insertedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      maxIntensity: null == maxIntensity
-          ? _value.maxIntensity
-          : maxIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity,
-      regions: null == regions
-          ? _value.regions
-          : regions // ignore: cast_nullable_to_non_nullable
-              as List<ShakeDetectionRegion>,
-      topLeft: null == topLeft
-          ? _value.topLeft
-          : topLeft // ignore: cast_nullable_to_non_nullable
-              as ShakeDetectionLatLng,
-      bottomRight: null == bottomRight
-          ? _value.bottomRight
-          : bottomRight // ignore: cast_nullable_to_non_nullable
-              as ShakeDetectionLatLng,
-      pointCount: null == pointCount
-          ? _value.pointCount
-          : pointCount // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id:
+                freezed == id
+                    ? _value.id
+                    : id // ignore: cast_nullable_to_non_nullable
+                        as int?,
+            eventId:
+                null == eventId
+                    ? _value.eventId
+                    : eventId // ignore: cast_nullable_to_non_nullable
+                        as String,
+            serialNo:
+                null == serialNo
+                    ? _value.serialNo
+                    : serialNo // ignore: cast_nullable_to_non_nullable
+                        as int,
+            createdAt:
+                null == createdAt
+                    ? _value.createdAt
+                    : createdAt // ignore: cast_nullable_to_non_nullable
+                        as DateTime,
+            insertedAt:
+                null == insertedAt
+                    ? _value.insertedAt
+                    : insertedAt // ignore: cast_nullable_to_non_nullable
+                        as DateTime,
+            maxIntensity:
+                null == maxIntensity
+                    ? _value.maxIntensity
+                    : maxIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaForecastIntensity,
+            regions:
+                null == regions
+                    ? _value.regions
+                    : regions // ignore: cast_nullable_to_non_nullable
+                        as List<ShakeDetectionRegion>,
+            topLeft:
+                null == topLeft
+                    ? _value.topLeft
+                    : topLeft // ignore: cast_nullable_to_non_nullable
+                        as ShakeDetectionLatLng,
+            bottomRight:
+                null == bottomRight
+                    ? _value.bottomRight
+                    : bottomRight // ignore: cast_nullable_to_non_nullable
+                        as ShakeDetectionLatLng,
+            pointCount:
+                null == pointCount
+                    ? _value.pointCount
+                    : pointCount // ignore: cast_nullable_to_non_nullable
+                        as int,
+          )
+          as $Val,
+    );
   }
 
   /// Create a copy of ShakeDetectionEvent
@@ -339,25 +370,28 @@ class _$ShakeDetectionEventCopyWithImpl<$Res, $Val extends ShakeDetectionEvent>
 /// @nodoc
 abstract class _$$ShakeDetectionEventImplCopyWith<$Res>
     implements $ShakeDetectionEventCopyWith<$Res> {
-  factory _$$ShakeDetectionEventImplCopyWith(_$ShakeDetectionEventImpl value,
-          $Res Function(_$ShakeDetectionEventImpl) then) =
-      __$$ShakeDetectionEventImplCopyWithImpl<$Res>;
+  factory _$$ShakeDetectionEventImplCopyWith(
+    _$ShakeDetectionEventImpl value,
+    $Res Function(_$ShakeDetectionEventImpl) then,
+  ) = __$$ShakeDetectionEventImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {@JsonKey(defaultValue: -1) int? id,
-      String eventId,
-      @JsonKey(defaultValue: -1) int serialNo,
-      DateTime createdAt,
-      DateTime insertedAt,
-      @JsonKey(
-          unknownEnumValue: JmaForecastIntensity.unknown,
-          defaultValue: JmaForecastIntensity.unknown)
-      JmaForecastIntensity maxIntensity,
-      List<ShakeDetectionRegion> regions,
-      ShakeDetectionLatLng topLeft,
-      ShakeDetectionLatLng bottomRight,
-      int pointCount});
+  $Res call({
+    @JsonKey(defaultValue: -1) int? id,
+    String eventId,
+    @JsonKey(defaultValue: -1) int serialNo,
+    DateTime createdAt,
+    DateTime insertedAt,
+    @JsonKey(
+      unknownEnumValue: JmaForecastIntensity.unknown,
+      defaultValue: JmaForecastIntensity.unknown,
+    )
+    JmaForecastIntensity maxIntensity,
+    List<ShakeDetectionRegion> regions,
+    ShakeDetectionLatLng topLeft,
+    ShakeDetectionLatLng bottomRight,
+    int pointCount,
+  });
 
   @override
   $ShakeDetectionLatLngCopyWith<$Res> get topLeft;
@@ -369,9 +403,10 @@ abstract class _$$ShakeDetectionEventImplCopyWith<$Res>
 class __$$ShakeDetectionEventImplCopyWithImpl<$Res>
     extends _$ShakeDetectionEventCopyWithImpl<$Res, _$ShakeDetectionEventImpl>
     implements _$$ShakeDetectionEventImplCopyWith<$Res> {
-  __$$ShakeDetectionEventImplCopyWithImpl(_$ShakeDetectionEventImpl _value,
-      $Res Function(_$ShakeDetectionEventImpl) _then)
-      : super(_value, _then);
+  __$$ShakeDetectionEventImplCopyWithImpl(
+    _$ShakeDetectionEventImpl _value,
+    $Res Function(_$ShakeDetectionEventImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of ShakeDetectionEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -389,69 +424,82 @@ class __$$ShakeDetectionEventImplCopyWithImpl<$Res>
     Object? bottomRight = null,
     Object? pointCount = null,
   }) {
-    return _then(_$ShakeDetectionEventImpl(
-      id: freezed == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int?,
-      eventId: null == eventId
-          ? _value.eventId
-          : eventId // ignore: cast_nullable_to_non_nullable
-              as String,
-      serialNo: null == serialNo
-          ? _value.serialNo
-          : serialNo // ignore: cast_nullable_to_non_nullable
-              as int,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      insertedAt: null == insertedAt
-          ? _value.insertedAt
-          : insertedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      maxIntensity: null == maxIntensity
-          ? _value.maxIntensity
-          : maxIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity,
-      regions: null == regions
-          ? _value._regions
-          : regions // ignore: cast_nullable_to_non_nullable
-              as List<ShakeDetectionRegion>,
-      topLeft: null == topLeft
-          ? _value.topLeft
-          : topLeft // ignore: cast_nullable_to_non_nullable
-              as ShakeDetectionLatLng,
-      bottomRight: null == bottomRight
-          ? _value.bottomRight
-          : bottomRight // ignore: cast_nullable_to_non_nullable
-              as ShakeDetectionLatLng,
-      pointCount: null == pointCount
-          ? _value.pointCount
-          : pointCount // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$ShakeDetectionEventImpl(
+        id:
+            freezed == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                    as int?,
+        eventId:
+            null == eventId
+                ? _value.eventId
+                : eventId // ignore: cast_nullable_to_non_nullable
+                    as String,
+        serialNo:
+            null == serialNo
+                ? _value.serialNo
+                : serialNo // ignore: cast_nullable_to_non_nullable
+                    as int,
+        createdAt:
+            null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                    as DateTime,
+        insertedAt:
+            null == insertedAt
+                ? _value.insertedAt
+                : insertedAt // ignore: cast_nullable_to_non_nullable
+                    as DateTime,
+        maxIntensity:
+            null == maxIntensity
+                ? _value.maxIntensity
+                : maxIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaForecastIntensity,
+        regions:
+            null == regions
+                ? _value._regions
+                : regions // ignore: cast_nullable_to_non_nullable
+                    as List<ShakeDetectionRegion>,
+        topLeft:
+            null == topLeft
+                ? _value.topLeft
+                : topLeft // ignore: cast_nullable_to_non_nullable
+                    as ShakeDetectionLatLng,
+        bottomRight:
+            null == bottomRight
+                ? _value.bottomRight
+                : bottomRight // ignore: cast_nullable_to_non_nullable
+                    as ShakeDetectionLatLng,
+        pointCount:
+            null == pointCount
+                ? _value.pointCount
+                : pointCount // ignore: cast_nullable_to_non_nullable
+                    as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ShakeDetectionEventImpl implements _ShakeDetectionEvent {
-  const _$ShakeDetectionEventImpl(
-      {@JsonKey(defaultValue: -1) required this.id,
-      required this.eventId,
-      @JsonKey(defaultValue: -1) required this.serialNo,
-      required this.createdAt,
-      required this.insertedAt,
-      @JsonKey(
-          unknownEnumValue: JmaForecastIntensity.unknown,
-          defaultValue: JmaForecastIntensity.unknown)
-      required this.maxIntensity,
-      required final List<ShakeDetectionRegion> regions,
-      required this.topLeft,
-      required this.bottomRight,
-      required this.pointCount})
-      : _regions = regions;
+  const _$ShakeDetectionEventImpl({
+    @JsonKey(defaultValue: -1) required this.id,
+    required this.eventId,
+    @JsonKey(defaultValue: -1) required this.serialNo,
+    required this.createdAt,
+    required this.insertedAt,
+    @JsonKey(
+      unknownEnumValue: JmaForecastIntensity.unknown,
+      defaultValue: JmaForecastIntensity.unknown,
+    )
+    required this.maxIntensity,
+    required final List<ShakeDetectionRegion> regions,
+    required this.topLeft,
+    required this.bottomRight,
+    required this.pointCount,
+  }) : _regions = regions;
 
   factory _$ShakeDetectionEventImpl.fromJson(Map<String, dynamic> json) =>
       _$$ShakeDetectionEventImplFromJson(json);
@@ -472,8 +520,9 @@ class _$ShakeDetectionEventImpl implements _ShakeDetectionEvent {
   /// `Unknown`もしくは`Error`の場合、Nullにフォールバックされます
   @override
   @JsonKey(
-      unknownEnumValue: JmaForecastIntensity.unknown,
-      defaultValue: JmaForecastIntensity.unknown)
+    unknownEnumValue: JmaForecastIntensity.unknown,
+    defaultValue: JmaForecastIntensity.unknown,
+  )
   final JmaForecastIntensity maxIntensity;
   final List<ShakeDetectionRegion> _regions;
   @override
@@ -521,17 +570,18 @@ class _$ShakeDetectionEventImpl implements _ShakeDetectionEvent {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      eventId,
-      serialNo,
-      createdAt,
-      insertedAt,
-      maxIntensity,
-      const DeepCollectionEquality().hash(_regions),
-      topLeft,
-      bottomRight,
-      pointCount);
+    runtimeType,
+    id,
+    eventId,
+    serialNo,
+    createdAt,
+    insertedAt,
+    maxIntensity,
+    const DeepCollectionEquality().hash(_regions),
+    topLeft,
+    bottomRight,
+    pointCount,
+  );
 
   /// Create a copy of ShakeDetectionEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -540,31 +590,33 @@ class _$ShakeDetectionEventImpl implements _ShakeDetectionEvent {
   @pragma('vm:prefer-inline')
   _$$ShakeDetectionEventImplCopyWith<_$ShakeDetectionEventImpl> get copyWith =>
       __$$ShakeDetectionEventImplCopyWithImpl<_$ShakeDetectionEventImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ShakeDetectionEventImplToJson(
-      this,
-    );
+    return _$$ShakeDetectionEventImplToJson(this);
   }
 }
 
 abstract class _ShakeDetectionEvent implements ShakeDetectionEvent {
-  const factory _ShakeDetectionEvent(
-      {@JsonKey(defaultValue: -1) required final int? id,
-      required final String eventId,
-      @JsonKey(defaultValue: -1) required final int serialNo,
-      required final DateTime createdAt,
-      required final DateTime insertedAt,
-      @JsonKey(
-          unknownEnumValue: JmaForecastIntensity.unknown,
-          defaultValue: JmaForecastIntensity.unknown)
-      required final JmaForecastIntensity maxIntensity,
-      required final List<ShakeDetectionRegion> regions,
-      required final ShakeDetectionLatLng topLeft,
-      required final ShakeDetectionLatLng bottomRight,
-      required final int pointCount}) = _$ShakeDetectionEventImpl;
+  const factory _ShakeDetectionEvent({
+    @JsonKey(defaultValue: -1) required final int? id,
+    required final String eventId,
+    @JsonKey(defaultValue: -1) required final int serialNo,
+    required final DateTime createdAt,
+    required final DateTime insertedAt,
+    @JsonKey(
+      unknownEnumValue: JmaForecastIntensity.unknown,
+      defaultValue: JmaForecastIntensity.unknown,
+    )
+    required final JmaForecastIntensity maxIntensity,
+    required final List<ShakeDetectionRegion> regions,
+    required final ShakeDetectionLatLng topLeft,
+    required final ShakeDetectionLatLng bottomRight,
+    required final int pointCount,
+  }) = _$ShakeDetectionEventImpl;
 
   factory _ShakeDetectionEvent.fromJson(Map<String, dynamic> json) =
       _$ShakeDetectionEventImpl.fromJson;
@@ -585,8 +637,9 @@ abstract class _ShakeDetectionEvent implements ShakeDetectionEvent {
   /// `Unknown`もしくは`Error`の場合、Nullにフォールバックされます
   @override
   @JsonKey(
-      unknownEnumValue: JmaForecastIntensity.unknown,
-      defaultValue: JmaForecastIntensity.unknown)
+    unknownEnumValue: JmaForecastIntensity.unknown,
+    defaultValue: JmaForecastIntensity.unknown,
+  )
   JmaForecastIntensity get maxIntensity;
   @override
   List<ShakeDetectionRegion> get regions;
@@ -613,9 +666,10 @@ ShakeDetectionRegion _$ShakeDetectionRegionFromJson(Map<String, dynamic> json) {
 mixin _$ShakeDetectionRegion {
   String get name => throw _privateConstructorUsedError;
   @JsonKey(
-      name: 'maxIntensity',
-      unknownEnumValue: JmaForecastIntensity.unknown,
-      defaultValue: JmaForecastIntensity.unknown)
+    name: 'maxIntensity',
+    unknownEnumValue: JmaForecastIntensity.unknown,
+    defaultValue: JmaForecastIntensity.unknown,
+  )
   JmaForecastIntensity get maxIntensity => throw _privateConstructorUsedError;
   List<ShakeDetectionPoint> get points => throw _privateConstructorUsedError;
 
@@ -631,23 +685,28 @@ mixin _$ShakeDetectionRegion {
 
 /// @nodoc
 abstract class $ShakeDetectionRegionCopyWith<$Res> {
-  factory $ShakeDetectionRegionCopyWith(ShakeDetectionRegion value,
-          $Res Function(ShakeDetectionRegion) then) =
-      _$ShakeDetectionRegionCopyWithImpl<$Res, ShakeDetectionRegion>;
+  factory $ShakeDetectionRegionCopyWith(
+    ShakeDetectionRegion value,
+    $Res Function(ShakeDetectionRegion) then,
+  ) = _$ShakeDetectionRegionCopyWithImpl<$Res, ShakeDetectionRegion>;
   @useResult
-  $Res call(
-      {String name,
-      @JsonKey(
-          name: 'maxIntensity',
-          unknownEnumValue: JmaForecastIntensity.unknown,
-          defaultValue: JmaForecastIntensity.unknown)
-      JmaForecastIntensity maxIntensity,
-      List<ShakeDetectionPoint> points});
+  $Res call({
+    String name,
+    @JsonKey(
+      name: 'maxIntensity',
+      unknownEnumValue: JmaForecastIntensity.unknown,
+      defaultValue: JmaForecastIntensity.unknown,
+    )
+    JmaForecastIntensity maxIntensity,
+    List<ShakeDetectionPoint> points,
+  });
 }
 
 /// @nodoc
-class _$ShakeDetectionRegionCopyWithImpl<$Res,
-        $Val extends ShakeDetectionRegion>
+class _$ShakeDetectionRegionCopyWithImpl<
+  $Res,
+  $Val extends ShakeDetectionRegion
+>
     implements $ShakeDetectionRegionCopyWith<$Res> {
   _$ShakeDetectionRegionCopyWithImpl(this._value, this._then);
 
@@ -665,48 +724,58 @@ class _$ShakeDetectionRegionCopyWithImpl<$Res,
     Object? maxIntensity = null,
     Object? points = null,
   }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      maxIntensity: null == maxIntensity
-          ? _value.maxIntensity
-          : maxIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity,
-      points: null == points
-          ? _value.points
-          : points // ignore: cast_nullable_to_non_nullable
-              as List<ShakeDetectionPoint>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            name:
+                null == name
+                    ? _value.name
+                    : name // ignore: cast_nullable_to_non_nullable
+                        as String,
+            maxIntensity:
+                null == maxIntensity
+                    ? _value.maxIntensity
+                    : maxIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaForecastIntensity,
+            points:
+                null == points
+                    ? _value.points
+                    : points // ignore: cast_nullable_to_non_nullable
+                        as List<ShakeDetectionPoint>,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ShakeDetectionRegionImplCopyWith<$Res>
     implements $ShakeDetectionRegionCopyWith<$Res> {
-  factory _$$ShakeDetectionRegionImplCopyWith(_$ShakeDetectionRegionImpl value,
-          $Res Function(_$ShakeDetectionRegionImpl) then) =
-      __$$ShakeDetectionRegionImplCopyWithImpl<$Res>;
+  factory _$$ShakeDetectionRegionImplCopyWith(
+    _$ShakeDetectionRegionImpl value,
+    $Res Function(_$ShakeDetectionRegionImpl) then,
+  ) = __$$ShakeDetectionRegionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String name,
-      @JsonKey(
-          name: 'maxIntensity',
-          unknownEnumValue: JmaForecastIntensity.unknown,
-          defaultValue: JmaForecastIntensity.unknown)
-      JmaForecastIntensity maxIntensity,
-      List<ShakeDetectionPoint> points});
+  $Res call({
+    String name,
+    @JsonKey(
+      name: 'maxIntensity',
+      unknownEnumValue: JmaForecastIntensity.unknown,
+      defaultValue: JmaForecastIntensity.unknown,
+    )
+    JmaForecastIntensity maxIntensity,
+    List<ShakeDetectionPoint> points,
+  });
 }
 
 /// @nodoc
 class __$$ShakeDetectionRegionImplCopyWithImpl<$Res>
     extends _$ShakeDetectionRegionCopyWithImpl<$Res, _$ShakeDetectionRegionImpl>
     implements _$$ShakeDetectionRegionImplCopyWith<$Res> {
-  __$$ShakeDetectionRegionImplCopyWithImpl(_$ShakeDetectionRegionImpl _value,
-      $Res Function(_$ShakeDetectionRegionImpl) _then)
-      : super(_value, _then);
+  __$$ShakeDetectionRegionImplCopyWithImpl(
+    _$ShakeDetectionRegionImpl _value,
+    $Res Function(_$ShakeDetectionRegionImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of ShakeDetectionRegion
   /// with the given fields replaced by the non-null parameter values.
@@ -717,35 +786,41 @@ class __$$ShakeDetectionRegionImplCopyWithImpl<$Res>
     Object? maxIntensity = null,
     Object? points = null,
   }) {
-    return _then(_$ShakeDetectionRegionImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      maxIntensity: null == maxIntensity
-          ? _value.maxIntensity
-          : maxIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity,
-      points: null == points
-          ? _value._points
-          : points // ignore: cast_nullable_to_non_nullable
-              as List<ShakeDetectionPoint>,
-    ));
+    return _then(
+      _$ShakeDetectionRegionImpl(
+        name:
+            null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                    as String,
+        maxIntensity:
+            null == maxIntensity
+                ? _value.maxIntensity
+                : maxIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaForecastIntensity,
+        points:
+            null == points
+                ? _value._points
+                : points // ignore: cast_nullable_to_non_nullable
+                    as List<ShakeDetectionPoint>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ShakeDetectionRegionImpl implements _ShakeDetectionRegion {
-  const _$ShakeDetectionRegionImpl(
-      {required this.name,
-      @JsonKey(
-          name: 'maxIntensity',
-          unknownEnumValue: JmaForecastIntensity.unknown,
-          defaultValue: JmaForecastIntensity.unknown)
-      required this.maxIntensity,
-      required final List<ShakeDetectionPoint> points})
-      : _points = points;
+  const _$ShakeDetectionRegionImpl({
+    required this.name,
+    @JsonKey(
+      name: 'maxIntensity',
+      unknownEnumValue: JmaForecastIntensity.unknown,
+      defaultValue: JmaForecastIntensity.unknown,
+    )
+    required this.maxIntensity,
+    required final List<ShakeDetectionPoint> points,
+  }) : _points = points;
 
   factory _$ShakeDetectionRegionImpl.fromJson(Map<String, dynamic> json) =>
       _$$ShakeDetectionRegionImplFromJson(json);
@@ -754,9 +829,10 @@ class _$ShakeDetectionRegionImpl implements _ShakeDetectionRegion {
   final String name;
   @override
   @JsonKey(
-      name: 'maxIntensity',
-      unknownEnumValue: JmaForecastIntensity.unknown,
-      defaultValue: JmaForecastIntensity.unknown)
+    name: 'maxIntensity',
+    unknownEnumValue: JmaForecastIntensity.unknown,
+    defaultValue: JmaForecastIntensity.unknown,
+  )
   final JmaForecastIntensity maxIntensity;
   final List<ShakeDetectionPoint> _points;
   @override
@@ -784,8 +860,12 @@ class _$ShakeDetectionRegionImpl implements _ShakeDetectionRegion {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, name, maxIntensity,
-      const DeepCollectionEquality().hash(_points));
+  int get hashCode => Object.hash(
+    runtimeType,
+    name,
+    maxIntensity,
+    const DeepCollectionEquality().hash(_points),
+  );
 
   /// Create a copy of ShakeDetectionRegion
   /// with the given fields replaced by the non-null parameter values.
@@ -793,28 +873,29 @@ class _$ShakeDetectionRegionImpl implements _ShakeDetectionRegion {
   @override
   @pragma('vm:prefer-inline')
   _$$ShakeDetectionRegionImplCopyWith<_$ShakeDetectionRegionImpl>
-      get copyWith =>
-          __$$ShakeDetectionRegionImplCopyWithImpl<_$ShakeDetectionRegionImpl>(
-              this, _$identity);
+  get copyWith =>
+      __$$ShakeDetectionRegionImplCopyWithImpl<_$ShakeDetectionRegionImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ShakeDetectionRegionImplToJson(
-      this,
-    );
+    return _$$ShakeDetectionRegionImplToJson(this);
   }
 }
 
 abstract class _ShakeDetectionRegion implements ShakeDetectionRegion {
-  const factory _ShakeDetectionRegion(
-          {required final String name,
-          @JsonKey(
-              name: 'maxIntensity',
-              unknownEnumValue: JmaForecastIntensity.unknown,
-              defaultValue: JmaForecastIntensity.unknown)
-          required final JmaForecastIntensity maxIntensity,
-          required final List<ShakeDetectionPoint> points}) =
-      _$ShakeDetectionRegionImpl;
+  const factory _ShakeDetectionRegion({
+    required final String name,
+    @JsonKey(
+      name: 'maxIntensity',
+      unknownEnumValue: JmaForecastIntensity.unknown,
+      defaultValue: JmaForecastIntensity.unknown,
+    )
+    required final JmaForecastIntensity maxIntensity,
+    required final List<ShakeDetectionPoint> points,
+  }) = _$ShakeDetectionRegionImpl;
 
   factory _ShakeDetectionRegion.fromJson(Map<String, dynamic> json) =
       _$ShakeDetectionRegionImpl.fromJson;
@@ -823,9 +904,10 @@ abstract class _ShakeDetectionRegion implements ShakeDetectionRegion {
   String get name;
   @override
   @JsonKey(
-      name: 'maxIntensity',
-      unknownEnumValue: JmaForecastIntensity.unknown,
-      defaultValue: JmaForecastIntensity.unknown)
+    name: 'maxIntensity',
+    unknownEnumValue: JmaForecastIntensity.unknown,
+    defaultValue: JmaForecastIntensity.unknown,
+  )
   JmaForecastIntensity get maxIntensity;
   @override
   List<ShakeDetectionPoint> get points;
@@ -835,7 +917,7 @@ abstract class _ShakeDetectionRegion implements ShakeDetectionRegion {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ShakeDetectionRegionImplCopyWith<_$ShakeDetectionRegionImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 ShakeDetectionPoint _$ShakeDetectionPointFromJson(Map<String, dynamic> json) {
@@ -845,8 +927,9 @@ ShakeDetectionPoint _$ShakeDetectionPointFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ShakeDetectionPoint {
   @JsonKey(
-      unknownEnumValue: JmaForecastIntensity.unknown,
-      defaultValue: JmaForecastIntensity.unknown)
+    unknownEnumValue: JmaForecastIntensity.unknown,
+    defaultValue: JmaForecastIntensity.unknown,
+  )
   JmaForecastIntensity get intensity => throw _privateConstructorUsedError;
   String get code => throw _privateConstructorUsedError;
 
@@ -863,15 +946,18 @@ mixin _$ShakeDetectionPoint {
 /// @nodoc
 abstract class $ShakeDetectionPointCopyWith<$Res> {
   factory $ShakeDetectionPointCopyWith(
-          ShakeDetectionPoint value, $Res Function(ShakeDetectionPoint) then) =
-      _$ShakeDetectionPointCopyWithImpl<$Res, ShakeDetectionPoint>;
+    ShakeDetectionPoint value,
+    $Res Function(ShakeDetectionPoint) then,
+  ) = _$ShakeDetectionPointCopyWithImpl<$Res, ShakeDetectionPoint>;
   @useResult
-  $Res call(
-      {@JsonKey(
-          unknownEnumValue: JmaForecastIntensity.unknown,
-          defaultValue: JmaForecastIntensity.unknown)
-      JmaForecastIntensity intensity,
-      String code});
+  $Res call({
+    @JsonKey(
+      unknownEnumValue: JmaForecastIntensity.unknown,
+      defaultValue: JmaForecastIntensity.unknown,
+    )
+    JmaForecastIntensity intensity,
+    String code,
+  });
 }
 
 /// @nodoc
@@ -888,85 +974,95 @@ class _$ShakeDetectionPointCopyWithImpl<$Res, $Val extends ShakeDetectionPoint>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? intensity = null,
-    Object? code = null,
-  }) {
-    return _then(_value.copyWith(
-      intensity: null == intensity
-          ? _value.intensity
-          : intensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  $Res call({Object? intensity = null, Object? code = null}) {
+    return _then(
+      _value.copyWith(
+            intensity:
+                null == intensity
+                    ? _value.intensity
+                    : intensity // ignore: cast_nullable_to_non_nullable
+                        as JmaForecastIntensity,
+            code:
+                null == code
+                    ? _value.code
+                    : code // ignore: cast_nullable_to_non_nullable
+                        as String,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ShakeDetectionPointImplCopyWith<$Res>
     implements $ShakeDetectionPointCopyWith<$Res> {
-  factory _$$ShakeDetectionPointImplCopyWith(_$ShakeDetectionPointImpl value,
-          $Res Function(_$ShakeDetectionPointImpl) then) =
-      __$$ShakeDetectionPointImplCopyWithImpl<$Res>;
+  factory _$$ShakeDetectionPointImplCopyWith(
+    _$ShakeDetectionPointImpl value,
+    $Res Function(_$ShakeDetectionPointImpl) then,
+  ) = __$$ShakeDetectionPointImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {@JsonKey(
-          unknownEnumValue: JmaForecastIntensity.unknown,
-          defaultValue: JmaForecastIntensity.unknown)
-      JmaForecastIntensity intensity,
-      String code});
+  $Res call({
+    @JsonKey(
+      unknownEnumValue: JmaForecastIntensity.unknown,
+      defaultValue: JmaForecastIntensity.unknown,
+    )
+    JmaForecastIntensity intensity,
+    String code,
+  });
 }
 
 /// @nodoc
 class __$$ShakeDetectionPointImplCopyWithImpl<$Res>
     extends _$ShakeDetectionPointCopyWithImpl<$Res, _$ShakeDetectionPointImpl>
     implements _$$ShakeDetectionPointImplCopyWith<$Res> {
-  __$$ShakeDetectionPointImplCopyWithImpl(_$ShakeDetectionPointImpl _value,
-      $Res Function(_$ShakeDetectionPointImpl) _then)
-      : super(_value, _then);
+  __$$ShakeDetectionPointImplCopyWithImpl(
+    _$ShakeDetectionPointImpl _value,
+    $Res Function(_$ShakeDetectionPointImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of ShakeDetectionPoint
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? intensity = null,
-    Object? code = null,
-  }) {
-    return _then(_$ShakeDetectionPointImpl(
-      intensity: null == intensity
-          ? _value.intensity
-          : intensity // ignore: cast_nullable_to_non_nullable
-              as JmaForecastIntensity,
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? intensity = null, Object? code = null}) {
+    return _then(
+      _$ShakeDetectionPointImpl(
+        intensity:
+            null == intensity
+                ? _value.intensity
+                : intensity // ignore: cast_nullable_to_non_nullable
+                    as JmaForecastIntensity,
+        code:
+            null == code
+                ? _value.code
+                : code // ignore: cast_nullable_to_non_nullable
+                    as String,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ShakeDetectionPointImpl implements _ShakeDetectionPoint {
-  const _$ShakeDetectionPointImpl(
-      {@JsonKey(
-          unknownEnumValue: JmaForecastIntensity.unknown,
-          defaultValue: JmaForecastIntensity.unknown)
-      required this.intensity,
-      required this.code});
+  const _$ShakeDetectionPointImpl({
+    @JsonKey(
+      unknownEnumValue: JmaForecastIntensity.unknown,
+      defaultValue: JmaForecastIntensity.unknown,
+    )
+    required this.intensity,
+    required this.code,
+  });
 
   factory _$ShakeDetectionPointImpl.fromJson(Map<String, dynamic> json) =>
       _$$ShakeDetectionPointImplFromJson(json);
 
   @override
   @JsonKey(
-      unknownEnumValue: JmaForecastIntensity.unknown,
-      defaultValue: JmaForecastIntensity.unknown)
+    unknownEnumValue: JmaForecastIntensity.unknown,
+    defaultValue: JmaForecastIntensity.unknown,
+  )
   final JmaForecastIntensity intensity;
   @override
   final String code;
@@ -997,31 +1093,34 @@ class _$ShakeDetectionPointImpl implements _ShakeDetectionPoint {
   @pragma('vm:prefer-inline')
   _$$ShakeDetectionPointImplCopyWith<_$ShakeDetectionPointImpl> get copyWith =>
       __$$ShakeDetectionPointImplCopyWithImpl<_$ShakeDetectionPointImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ShakeDetectionPointImplToJson(
-      this,
-    );
+    return _$$ShakeDetectionPointImplToJson(this);
   }
 }
 
 abstract class _ShakeDetectionPoint implements ShakeDetectionPoint {
-  const factory _ShakeDetectionPoint(
-      {@JsonKey(
-          unknownEnumValue: JmaForecastIntensity.unknown,
-          defaultValue: JmaForecastIntensity.unknown)
-      required final JmaForecastIntensity intensity,
-      required final String code}) = _$ShakeDetectionPointImpl;
+  const factory _ShakeDetectionPoint({
+    @JsonKey(
+      unknownEnumValue: JmaForecastIntensity.unknown,
+      defaultValue: JmaForecastIntensity.unknown,
+    )
+    required final JmaForecastIntensity intensity,
+    required final String code,
+  }) = _$ShakeDetectionPointImpl;
 
   factory _ShakeDetectionPoint.fromJson(Map<String, dynamic> json) =
       _$ShakeDetectionPointImpl.fromJson;
 
   @override
   @JsonKey(
-      unknownEnumValue: JmaForecastIntensity.unknown,
-      defaultValue: JmaForecastIntensity.unknown)
+    unknownEnumValue: JmaForecastIntensity.unknown,
+    defaultValue: JmaForecastIntensity.unknown,
+  )
   JmaForecastIntensity get intensity;
   @override
   String get code;
@@ -1055,16 +1154,19 @@ mixin _$ShakeDetectionLatLng {
 
 /// @nodoc
 abstract class $ShakeDetectionLatLngCopyWith<$Res> {
-  factory $ShakeDetectionLatLngCopyWith(ShakeDetectionLatLng value,
-          $Res Function(ShakeDetectionLatLng) then) =
-      _$ShakeDetectionLatLngCopyWithImpl<$Res, ShakeDetectionLatLng>;
+  factory $ShakeDetectionLatLngCopyWith(
+    ShakeDetectionLatLng value,
+    $Res Function(ShakeDetectionLatLng) then,
+  ) = _$ShakeDetectionLatLngCopyWithImpl<$Res, ShakeDetectionLatLng>;
   @useResult
   $Res call({double latitude, double longitude});
 }
 
 /// @nodoc
-class _$ShakeDetectionLatLngCopyWithImpl<$Res,
-        $Val extends ShakeDetectionLatLng>
+class _$ShakeDetectionLatLngCopyWithImpl<
+  $Res,
+  $Val extends ShakeDetectionLatLng
+>
     implements $ShakeDetectionLatLngCopyWith<$Res> {
   _$ShakeDetectionLatLngCopyWithImpl(this._value, this._then);
 
@@ -1077,29 +1179,32 @@ class _$ShakeDetectionLatLngCopyWithImpl<$Res,
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? latitude = null,
-    Object? longitude = null,
-  }) {
-    return _then(_value.copyWith(
-      latitude: null == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double,
-      longitude: null == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double,
-    ) as $Val);
+  $Res call({Object? latitude = null, Object? longitude = null}) {
+    return _then(
+      _value.copyWith(
+            latitude:
+                null == latitude
+                    ? _value.latitude
+                    : latitude // ignore: cast_nullable_to_non_nullable
+                        as double,
+            longitude:
+                null == longitude
+                    ? _value.longitude
+                    : longitude // ignore: cast_nullable_to_non_nullable
+                        as double,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ShakeDetectionLatLngImplCopyWith<$Res>
     implements $ShakeDetectionLatLngCopyWith<$Res> {
-  factory _$$ShakeDetectionLatLngImplCopyWith(_$ShakeDetectionLatLngImpl value,
-          $Res Function(_$ShakeDetectionLatLngImpl) then) =
-      __$$ShakeDetectionLatLngImplCopyWithImpl<$Res>;
+  factory _$$ShakeDetectionLatLngImplCopyWith(
+    _$ShakeDetectionLatLngImpl value,
+    $Res Function(_$ShakeDetectionLatLngImpl) then,
+  ) = __$$ShakeDetectionLatLngImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({double latitude, double longitude});
@@ -1109,36 +1214,40 @@ abstract class _$$ShakeDetectionLatLngImplCopyWith<$Res>
 class __$$ShakeDetectionLatLngImplCopyWithImpl<$Res>
     extends _$ShakeDetectionLatLngCopyWithImpl<$Res, _$ShakeDetectionLatLngImpl>
     implements _$$ShakeDetectionLatLngImplCopyWith<$Res> {
-  __$$ShakeDetectionLatLngImplCopyWithImpl(_$ShakeDetectionLatLngImpl _value,
-      $Res Function(_$ShakeDetectionLatLngImpl) _then)
-      : super(_value, _then);
+  __$$ShakeDetectionLatLngImplCopyWithImpl(
+    _$ShakeDetectionLatLngImpl _value,
+    $Res Function(_$ShakeDetectionLatLngImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of ShakeDetectionLatLng
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? latitude = null,
-    Object? longitude = null,
-  }) {
-    return _then(_$ShakeDetectionLatLngImpl(
-      latitude: null == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double,
-      longitude: null == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double,
-    ));
+  $Res call({Object? latitude = null, Object? longitude = null}) {
+    return _then(
+      _$ShakeDetectionLatLngImpl(
+        latitude:
+            null == latitude
+                ? _value.latitude
+                : latitude // ignore: cast_nullable_to_non_nullable
+                    as double,
+        longitude:
+            null == longitude
+                ? _value.longitude
+                : longitude // ignore: cast_nullable_to_non_nullable
+                    as double,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ShakeDetectionLatLngImpl implements _ShakeDetectionLatLng {
-  const _$ShakeDetectionLatLngImpl(
-      {required this.latitude, required this.longitude});
+  const _$ShakeDetectionLatLngImpl({
+    required this.latitude,
+    required this.longitude,
+  });
 
   factory _$ShakeDetectionLatLngImpl.fromJson(Map<String, dynamic> json) =>
       _$$ShakeDetectionLatLngImplFromJson(json);
@@ -1174,22 +1283,23 @@ class _$ShakeDetectionLatLngImpl implements _ShakeDetectionLatLng {
   @override
   @pragma('vm:prefer-inline')
   _$$ShakeDetectionLatLngImplCopyWith<_$ShakeDetectionLatLngImpl>
-      get copyWith =>
-          __$$ShakeDetectionLatLngImplCopyWithImpl<_$ShakeDetectionLatLngImpl>(
-              this, _$identity);
+  get copyWith =>
+      __$$ShakeDetectionLatLngImplCopyWithImpl<_$ShakeDetectionLatLngImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ShakeDetectionLatLngImplToJson(
-      this,
-    );
+    return _$$ShakeDetectionLatLngImplToJson(this);
   }
 }
 
 abstract class _ShakeDetectionLatLng implements ShakeDetectionLatLng {
-  const factory _ShakeDetectionLatLng(
-      {required final double latitude,
-      required final double longitude}) = _$ShakeDetectionLatLngImpl;
+  const factory _ShakeDetectionLatLng({
+    required final double latitude,
+    required final double longitude,
+  }) = _$ShakeDetectionLatLngImpl;
 
   factory _ShakeDetectionLatLng.fromJson(Map<String, dynamic> json) =
       _$ShakeDetectionLatLngImpl.fromJson;
@@ -1204,5 +1314,5 @@ abstract class _ShakeDetectionLatLng implements ShakeDetectionLatLng {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ShakeDetectionLatLngImplCopyWith<_$ShakeDetectionLatLngImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

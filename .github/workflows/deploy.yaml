@@ -6,7 +6,7 @@ concurrency:
 on:
   push:
     branches:
-      - '*'
+      - '**'
   workflow_dispatch:
     inputs:
       ios:
@@ -77,7 +77,7 @@ jobs:
     needs: define-matrix
     if: ${{ needs.define-matrix.outputs.deploy-ios }}
     runs-on: macos-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       # https://github.com/actions/checkout
       - name: Checkout
@@ -91,31 +91,6 @@ jobs:
       - name: Setup macOS Environment
         uses: ./.github/actions/setup-macos-environment
 
-      - name: Create App Store Connect API Token
-        uses: ./.github/actions/generate-app-store-connect-jwt
-        with:
-          app_store_connect_api_key_id: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
-          app_store_connect_api_key_base64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
-
-      - name: Fetch latest build number
-        id: fetch-latest-build-number
-        run: |
-          PLATFORM=IOS
-          APP_ID=6447546703
-          BUILD_NUMBER=$(
-            curl -s https://api.appstoreconnect.apple.com/v1/builds \
-            -G \
-            -d "filter[platform]=${PLATFORM}" \
-            -d "filter[id]=${APP_ID}" \
-            -d "sort=-version" \
-            -d "fields[builds]=version" \
-            -d "limit=1" | \
-            jq -r '.data | if length == 0 then 0 else .[0].attributes.version end'
-          )
-          BUILD_NUMBER=$((BUILD_NUMBER + 1))
-          echo "BUILD_NUMBER=${BUILD_NUMBER}" >> $GITHUB_OUTPUT
-          echo "Build Number set to ${BUILD_NUMBER}."
-
       - name: Extract Dotenv
         run: |
           echo "${{ secrets.DOTENV }}" | base64 -d > environment.tar.gz
@@ -125,13 +100,9 @@ jobs:
 
       - name: Build iOS
         working-directory: app
-        env:
-          BUILD_NUMBER: ${{ steps.fetch-latest-build-number.outputs.BUILD_NUMBER }}
         run: |
-          echo "BUILD_NUMBER=${BUILD_NUMBER}"
           flutter build ipa \
             --no-codesign \
-            --build-number=${BUILD_NUMBER} \
             --dart-define-from-file=../environment/.env.prod
 
       - name: Extract App Store Connect API Key
@@ -159,7 +130,8 @@ jobs:
             -allowProvisioningUpdates \
             -authenticationKeyIssuerID ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }} \
             -authenticationKeyID ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }} \
-            -authenticationKeyPath ${{ github.workspace }}/app/ios/AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8 | xcbeautify
+            -authenticationKeyPath ${{ github.workspace }}/app/ios/AuthKey_${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}.p8 \
+          | xcbeautify
 
       - name: List files
         run: |
@@ -172,6 +144,7 @@ jobs:
         with:
           name: EQMonitor-ios.ipa
           path: app/eqmonitor.ipa
+          if-no-files-found: error
 
   deploy-ios:
     needs: build-ios
@@ -217,7 +190,7 @@ jobs:
     needs: define-matrix
     if: ${{ needs.define-matrix.outputs.deploy-android }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -243,18 +216,40 @@ jobs:
           rm environment.tar.gz
           ls -l environment/
 
+      - name: Install Codemagic CLI Tools
+        run: |
+          pip3 install codemagic-cli-tools
+
+      - name: Fetch latest build number from Google Play Store
+        id: fetch-latest-build-number
+        run: |
+          echo "${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}" > service-account.json
+          LATEST_BUILD_NUMBER=$(google-play get-latest-build-number \
+            --credentials="@file:service-account.json" \
+            --package-name="net.yumnumm.eqmonitor" || echo "0")
+          BUILD_NUMBER=$((LATEST_BUILD_NUMBER + 1))
+          echo "BUILD_NUMBER=${BUILD_NUMBER}" >> $GITHUB_OUTPUT
+          echo "Build Number set to ${BUILD_NUMBER}."
+          rm service-account.json
+
       - name: Build Android (AAB)
         working-directory: app
+        env:
+          BUILD_NUMBER: ${{ steps.fetch-latest-build-number.outputs.BUILD_NUMBER }}
         run: |
           flutter build appbundle \
             --release \
+            --build-number=${BUILD_NUMBER} \
             --dart-define-from-file=../environment/.env.prod
 
       - name: Build Android (APK)
         working-directory: app
+        env:
+          BUILD_NUMBER: ${{ steps.fetch-latest-build-number.outputs.BUILD_NUMBER }}
         run: |
           flutter build apk \
             --release \
+            --build-number=${BUILD_NUMBER} \
             --dart-define-from-file=../environment/.env.prod
 
       - name: Upload aab as artifact
@@ -262,12 +257,14 @@ jobs:
         with:
           name: EQMonitor-android.aab
           path: app/build/app/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
 
       - name: Upload apk as artifact
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
         with:
           name: EQMonitor-android.apk
           path: app/build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
 
   deploy-android:
     needs: build-android
@@ -281,10 +278,12 @@ jobs:
           path: build
 
       - name: Upload to Google Play
-        uses: r0adkll/upload-google-play@v1
+        uses: r0adkll/upload-google-play@935ef9c68bb393a8e6116b1575626a7f5be3a7fb #v1.1.3
         with:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
           packageName: net.yumnumm.eqmonitor
           releaseFiles: build/app-release.aab
           track: internal
-          status: inProgress
+          status: completed
+          # 既存ユーザーへのアップデートを許可
+          changesNotSentForReview: false

@@ -12,7 +12,8 @@ part of 'custom_feedback.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 CustomFeedback _$CustomFeedbackFromJson(Map<String, dynamic> json) {
   return _CustomFeedback.fromJson(json);
@@ -41,13 +42,15 @@ mixin _$CustomFeedback {
 /// @nodoc
 abstract class $CustomFeedbackCopyWith<$Res> {
   factory $CustomFeedbackCopyWith(
-          CustomFeedback value, $Res Function(CustomFeedback) then) =
-      _$CustomFeedbackCopyWithImpl<$Res, CustomFeedback>;
+    CustomFeedback value,
+    $Res Function(CustomFeedback) then,
+  ) = _$CustomFeedbackCopyWithImpl<$Res, CustomFeedback>;
   @useResult
-  $Res call(
-      {FeedbackType? feedbackType,
-      bool? isReplyRequested,
-      bool isScreenshotAttached});
+  $Res call({
+    FeedbackType? feedbackType,
+    bool? isReplyRequested,
+    bool isScreenshotAttached,
+  });
 }
 
 /// @nodoc
@@ -69,35 +72,43 @@ class _$CustomFeedbackCopyWithImpl<$Res, $Val extends CustomFeedback>
     Object? isReplyRequested = freezed,
     Object? isScreenshotAttached = null,
   }) {
-    return _then(_value.copyWith(
-      feedbackType: freezed == feedbackType
-          ? _value.feedbackType
-          : feedbackType // ignore: cast_nullable_to_non_nullable
-              as FeedbackType?,
-      isReplyRequested: freezed == isReplyRequested
-          ? _value.isReplyRequested
-          : isReplyRequested // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      isScreenshotAttached: null == isScreenshotAttached
-          ? _value.isScreenshotAttached
-          : isScreenshotAttached // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            feedbackType:
+                freezed == feedbackType
+                    ? _value.feedbackType
+                    : feedbackType // ignore: cast_nullable_to_non_nullable
+                        as FeedbackType?,
+            isReplyRequested:
+                freezed == isReplyRequested
+                    ? _value.isReplyRequested
+                    : isReplyRequested // ignore: cast_nullable_to_non_nullable
+                        as bool?,
+            isScreenshotAttached:
+                null == isScreenshotAttached
+                    ? _value.isScreenshotAttached
+                    : isScreenshotAttached // ignore: cast_nullable_to_non_nullable
+                        as bool,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$CustomFeedbackImplCopyWith<$Res>
     implements $CustomFeedbackCopyWith<$Res> {
-  factory _$$CustomFeedbackImplCopyWith(_$CustomFeedbackImpl value,
-          $Res Function(_$CustomFeedbackImpl) then) =
-      __$$CustomFeedbackImplCopyWithImpl<$Res>;
+  factory _$$CustomFeedbackImplCopyWith(
+    _$CustomFeedbackImpl value,
+    $Res Function(_$CustomFeedbackImpl) then,
+  ) = __$$CustomFeedbackImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {FeedbackType? feedbackType,
-      bool? isReplyRequested,
-      bool isScreenshotAttached});
+  $Res call({
+    FeedbackType? feedbackType,
+    bool? isReplyRequested,
+    bool isScreenshotAttached,
+  });
 }
 
 /// @nodoc
@@ -105,8 +116,9 @@ class __$$CustomFeedbackImplCopyWithImpl<$Res>
     extends _$CustomFeedbackCopyWithImpl<$Res, _$CustomFeedbackImpl>
     implements _$$CustomFeedbackImplCopyWith<$Res> {
   __$$CustomFeedbackImplCopyWithImpl(
-      _$CustomFeedbackImpl _value, $Res Function(_$CustomFeedbackImpl) _then)
-      : super(_value, _then);
+    _$CustomFeedbackImpl _value,
+    $Res Function(_$CustomFeedbackImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of CustomFeedback
   /// with the given fields replaced by the non-null parameter values.
@@ -117,30 +129,36 @@ class __$$CustomFeedbackImplCopyWithImpl<$Res>
     Object? isReplyRequested = freezed,
     Object? isScreenshotAttached = null,
   }) {
-    return _then(_$CustomFeedbackImpl(
-      feedbackType: freezed == feedbackType
-          ? _value.feedbackType
-          : feedbackType // ignore: cast_nullable_to_non_nullable
-              as FeedbackType?,
-      isReplyRequested: freezed == isReplyRequested
-          ? _value.isReplyRequested
-          : isReplyRequested // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      isScreenshotAttached: null == isScreenshotAttached
-          ? _value.isScreenshotAttached
-          : isScreenshotAttached // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
+    return _then(
+      _$CustomFeedbackImpl(
+        feedbackType:
+            freezed == feedbackType
+                ? _value.feedbackType
+                : feedbackType // ignore: cast_nullable_to_non_nullable
+                    as FeedbackType?,
+        isReplyRequested:
+            freezed == isReplyRequested
+                ? _value.isReplyRequested
+                : isReplyRequested // ignore: cast_nullable_to_non_nullable
+                    as bool?,
+        isScreenshotAttached:
+            null == isScreenshotAttached
+                ? _value.isScreenshotAttached
+                : isScreenshotAttached // ignore: cast_nullable_to_non_nullable
+                    as bool,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$CustomFeedbackImpl implements _CustomFeedback {
-  const _$CustomFeedbackImpl(
-      {this.feedbackType,
-      this.isReplyRequested,
-      this.isScreenshotAttached = true});
+  const _$CustomFeedbackImpl({
+    this.feedbackType,
+    this.isReplyRequested,
+    this.isScreenshotAttached = true,
+  });
 
   factory _$CustomFeedbackImpl.fromJson(Map<String, dynamic> json) =>
       _$$CustomFeedbackImplFromJson(json);
@@ -178,7 +196,11 @@ class _$CustomFeedbackImpl implements _CustomFeedback {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, feedbackType, isReplyRequested, isScreenshotAttached);
+    runtimeType,
+    feedbackType,
+    isReplyRequested,
+    isScreenshotAttached,
+  );
 
   /// Create a copy of CustomFeedback
   /// with the given fields replaced by the non-null parameter values.
@@ -187,21 +209,22 @@ class _$CustomFeedbackImpl implements _CustomFeedback {
   @pragma('vm:prefer-inline')
   _$$CustomFeedbackImplCopyWith<_$CustomFeedbackImpl> get copyWith =>
       __$$CustomFeedbackImplCopyWithImpl<_$CustomFeedbackImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$CustomFeedbackImplToJson(
-      this,
-    );
+    return _$$CustomFeedbackImplToJson(this);
   }
 }
 
 abstract class _CustomFeedback implements CustomFeedback {
-  const factory _CustomFeedback(
-      {final FeedbackType? feedbackType,
-      final bool? isReplyRequested,
-      final bool isScreenshotAttached}) = _$CustomFeedbackImpl;
+  const factory _CustomFeedback({
+    final FeedbackType? feedbackType,
+    final bool? isReplyRequested,
+    final bool isScreenshotAttached,
+  }) = _$CustomFeedbackImpl;
 
   factory _CustomFeedback.fromJson(Map<String, dynamic> json) =
       _$CustomFeedbackImpl.fromJson;

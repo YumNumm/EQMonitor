@@ -11,16 +11,14 @@ class KyoshinMonitorSettingsModel with _$KyoshinMonitorSettingsModel {
     @Default(null) double? minRealtimeShindo,
 
     /// スケールを表示するかどうか
-    @Default(true) bool showRealtimeShindoScale,
+    @Default(true) bool showScale,
 
     /// 強震モニタを使用するかどうか
-    @Default(false) bool useKmoni,
-
-    /// 現在地のマーカーを表示するかどうか
-    @Default(false) bool showCurrentLocationMarker,
+    @Default(true) bool useKmoni,
 
     /// 強震モニタ観測点のマーカーの種類
-    @Default(KmoniMarkerType.onlyEew) KmoniMarkerType kmoniMarkerType,
+    @Default(KyoshinMonitorMarkerType.onlyEew)
+    KyoshinMonitorMarkerType kmoniMarkerType,
 
     /// 強震モニタのリアルタイムデータの種類
     @Default(RealtimeDataType.shindo) RealtimeDataType realtimeDataType,
@@ -42,9 +40,7 @@ class KyoshinMonitorSettingsApiModel with _$KyoshinMonitorSettingsApiModel {
   const factory KyoshinMonitorSettingsApiModel({
     /// 強震モニタ APIのベースURL
     @Default(KyoshinMonitorEndpoint.kmoni)
-    @JsonKey(
-      unknownEnumValue: KyoshinMonitorEndpoint.kmoni,
-    )
+    @JsonKey(unknownEnumValue: KyoshinMonitorEndpoint.kmoni)
     KyoshinMonitorEndpoint endpoint,
 
     /// 画像取得頻度
@@ -66,15 +62,14 @@ class KyoshinMonitorSettingsApiModel with _$KyoshinMonitorSettingsApiModel {
 @JsonEnum(valueField: 'url')
 enum KyoshinMonitorEndpoint {
   kmoni('http://www.kmoni.bosai.go.jp'),
-  lmoniexp('https://smi.lmoniexp.bosai.go.jp'),
-  ;
+  lmoniexp('https://smi.lmoniexp.bosai.go.jp');
 
   const KyoshinMonitorEndpoint(this.url);
 
   final String url;
 }
 
-enum KmoniMarkerType {
+enum KyoshinMonitorMarkerType {
   /// 常に枠を表示する
   always,
 
@@ -83,5 +78,4 @@ enum KmoniMarkerType {
 
   /// 常に枠を表示しない
   never,
-  ;
 }

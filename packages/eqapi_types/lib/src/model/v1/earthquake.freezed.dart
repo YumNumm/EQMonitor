@@ -12,7 +12,8 @@ part of 'earthquake.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 EarthquakeV1 _$EarthquakeV1FromJson(Map<String, dynamic> json) {
   return _EarthquakeV1.fromJson(json);
@@ -64,33 +65,35 @@ mixin _$EarthquakeV1 {
 /// @nodoc
 abstract class $EarthquakeV1CopyWith<$Res> {
   factory $EarthquakeV1CopyWith(
-          EarthquakeV1 value, $Res Function(EarthquakeV1) then) =
-      _$EarthquakeV1CopyWithImpl<$Res, EarthquakeV1>;
+    EarthquakeV1 value,
+    $Res Function(EarthquakeV1) then,
+  ) = _$EarthquakeV1CopyWithImpl<$Res, EarthquakeV1>;
   @useResult
-  $Res call(
-      {int eventId,
-      String status,
-      DateTime? arrivalTime,
-      int? depth,
-      int? epicenterCode,
-      int? epicenterDetailCode,
-      String? headline,
-      List<ObservedRegionIntensity>? intensityCities,
-      List<ObservedRegionIntensity>? intensityPrefectures,
-      List<ObservedRegionIntensity>? intensityRegions,
-      List<ObservedRegionIntensity>? intensityStations,
-      double? latitude,
-      double? longitude,
-      List<ObservedRegionLpgmIntensity>? lpgmIntensityPrefectures,
-      List<ObservedRegionLpgmIntensity>? lpgmIntensityRegions,
-      List<ObservedRegionLpgmIntensity>? lpgmIntenstiyStations,
-      double? magnitude,
-      String? magnitudeCondition,
-      JmaIntensity? maxIntensity,
-      List<int>? maxIntensityRegionIds,
-      JmaLgIntensity? maxLpgmIntensity,
-      DateTime? originTime,
-      String? text});
+  $Res call({
+    int eventId,
+    String status,
+    DateTime? arrivalTime,
+    int? depth,
+    int? epicenterCode,
+    int? epicenterDetailCode,
+    String? headline,
+    List<ObservedRegionIntensity>? intensityCities,
+    List<ObservedRegionIntensity>? intensityPrefectures,
+    List<ObservedRegionIntensity>? intensityRegions,
+    List<ObservedRegionIntensity>? intensityStations,
+    double? latitude,
+    double? longitude,
+    List<ObservedRegionLpgmIntensity>? lpgmIntensityPrefectures,
+    List<ObservedRegionLpgmIntensity>? lpgmIntensityRegions,
+    List<ObservedRegionLpgmIntensity>? lpgmIntenstiyStations,
+    double? magnitude,
+    String? magnitudeCondition,
+    JmaIntensity? maxIntensity,
+    List<int>? maxIntensityRegionIds,
+    JmaLgIntensity? maxLpgmIntensity,
+    DateTime? originTime,
+    String? text,
+  });
 }
 
 /// @nodoc
@@ -132,100 +135,126 @@ class _$EarthquakeV1CopyWithImpl<$Res, $Val extends EarthquakeV1>
     Object? originTime = freezed,
     Object? text = freezed,
   }) {
-    return _then(_value.copyWith(
-      eventId: null == eventId
-          ? _value.eventId
-          : eventId // ignore: cast_nullable_to_non_nullable
-              as int,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      arrivalTime: freezed == arrivalTime
-          ? _value.arrivalTime
-          : arrivalTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      depth: freezed == depth
-          ? _value.depth
-          : depth // ignore: cast_nullable_to_non_nullable
-              as int?,
-      epicenterCode: freezed == epicenterCode
-          ? _value.epicenterCode
-          : epicenterCode // ignore: cast_nullable_to_non_nullable
-              as int?,
-      epicenterDetailCode: freezed == epicenterDetailCode
-          ? _value.epicenterDetailCode
-          : epicenterDetailCode // ignore: cast_nullable_to_non_nullable
-              as int?,
-      headline: freezed == headline
-          ? _value.headline
-          : headline // ignore: cast_nullable_to_non_nullable
-              as String?,
-      intensityCities: freezed == intensityCities
-          ? _value.intensityCities
-          : intensityCities // ignore: cast_nullable_to_non_nullable
-              as List<ObservedRegionIntensity>?,
-      intensityPrefectures: freezed == intensityPrefectures
-          ? _value.intensityPrefectures
-          : intensityPrefectures // ignore: cast_nullable_to_non_nullable
-              as List<ObservedRegionIntensity>?,
-      intensityRegions: freezed == intensityRegions
-          ? _value.intensityRegions
-          : intensityRegions // ignore: cast_nullable_to_non_nullable
-              as List<ObservedRegionIntensity>?,
-      intensityStations: freezed == intensityStations
-          ? _value.intensityStations
-          : intensityStations // ignore: cast_nullable_to_non_nullable
-              as List<ObservedRegionIntensity>?,
-      latitude: freezed == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      longitude: freezed == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      lpgmIntensityPrefectures: freezed == lpgmIntensityPrefectures
-          ? _value.lpgmIntensityPrefectures
-          : lpgmIntensityPrefectures // ignore: cast_nullable_to_non_nullable
-              as List<ObservedRegionLpgmIntensity>?,
-      lpgmIntensityRegions: freezed == lpgmIntensityRegions
-          ? _value.lpgmIntensityRegions
-          : lpgmIntensityRegions // ignore: cast_nullable_to_non_nullable
-              as List<ObservedRegionLpgmIntensity>?,
-      lpgmIntenstiyStations: freezed == lpgmIntenstiyStations
-          ? _value.lpgmIntenstiyStations
-          : lpgmIntenstiyStations // ignore: cast_nullable_to_non_nullable
-              as List<ObservedRegionLpgmIntensity>?,
-      magnitude: freezed == magnitude
-          ? _value.magnitude
-          : magnitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      magnitudeCondition: freezed == magnitudeCondition
-          ? _value.magnitudeCondition
-          : magnitudeCondition // ignore: cast_nullable_to_non_nullable
-              as String?,
-      maxIntensity: freezed == maxIntensity
-          ? _value.maxIntensity
-          : maxIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaIntensity?,
-      maxIntensityRegionIds: freezed == maxIntensityRegionIds
-          ? _value.maxIntensityRegionIds
-          : maxIntensityRegionIds // ignore: cast_nullable_to_non_nullable
-              as List<int>?,
-      maxLpgmIntensity: freezed == maxLpgmIntensity
-          ? _value.maxLpgmIntensity
-          : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaLgIntensity?,
-      originTime: freezed == originTime
-          ? _value.originTime
-          : originTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      text: freezed == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            eventId:
+                null == eventId
+                    ? _value.eventId
+                    : eventId // ignore: cast_nullable_to_non_nullable
+                        as int,
+            status:
+                null == status
+                    ? _value.status
+                    : status // ignore: cast_nullable_to_non_nullable
+                        as String,
+            arrivalTime:
+                freezed == arrivalTime
+                    ? _value.arrivalTime
+                    : arrivalTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime?,
+            depth:
+                freezed == depth
+                    ? _value.depth
+                    : depth // ignore: cast_nullable_to_non_nullable
+                        as int?,
+            epicenterCode:
+                freezed == epicenterCode
+                    ? _value.epicenterCode
+                    : epicenterCode // ignore: cast_nullable_to_non_nullable
+                        as int?,
+            epicenterDetailCode:
+                freezed == epicenterDetailCode
+                    ? _value.epicenterDetailCode
+                    : epicenterDetailCode // ignore: cast_nullable_to_non_nullable
+                        as int?,
+            headline:
+                freezed == headline
+                    ? _value.headline
+                    : headline // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            intensityCities:
+                freezed == intensityCities
+                    ? _value.intensityCities
+                    : intensityCities // ignore: cast_nullable_to_non_nullable
+                        as List<ObservedRegionIntensity>?,
+            intensityPrefectures:
+                freezed == intensityPrefectures
+                    ? _value.intensityPrefectures
+                    : intensityPrefectures // ignore: cast_nullable_to_non_nullable
+                        as List<ObservedRegionIntensity>?,
+            intensityRegions:
+                freezed == intensityRegions
+                    ? _value.intensityRegions
+                    : intensityRegions // ignore: cast_nullable_to_non_nullable
+                        as List<ObservedRegionIntensity>?,
+            intensityStations:
+                freezed == intensityStations
+                    ? _value.intensityStations
+                    : intensityStations // ignore: cast_nullable_to_non_nullable
+                        as List<ObservedRegionIntensity>?,
+            latitude:
+                freezed == latitude
+                    ? _value.latitude
+                    : latitude // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            longitude:
+                freezed == longitude
+                    ? _value.longitude
+                    : longitude // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            lpgmIntensityPrefectures:
+                freezed == lpgmIntensityPrefectures
+                    ? _value.lpgmIntensityPrefectures
+                    : lpgmIntensityPrefectures // ignore: cast_nullable_to_non_nullable
+                        as List<ObservedRegionLpgmIntensity>?,
+            lpgmIntensityRegions:
+                freezed == lpgmIntensityRegions
+                    ? _value.lpgmIntensityRegions
+                    : lpgmIntensityRegions // ignore: cast_nullable_to_non_nullable
+                        as List<ObservedRegionLpgmIntensity>?,
+            lpgmIntenstiyStations:
+                freezed == lpgmIntenstiyStations
+                    ? _value.lpgmIntenstiyStations
+                    : lpgmIntenstiyStations // ignore: cast_nullable_to_non_nullable
+                        as List<ObservedRegionLpgmIntensity>?,
+            magnitude:
+                freezed == magnitude
+                    ? _value.magnitude
+                    : magnitude // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            magnitudeCondition:
+                freezed == magnitudeCondition
+                    ? _value.magnitudeCondition
+                    : magnitudeCondition // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            maxIntensity:
+                freezed == maxIntensity
+                    ? _value.maxIntensity
+                    : maxIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaIntensity?,
+            maxIntensityRegionIds:
+                freezed == maxIntensityRegionIds
+                    ? _value.maxIntensityRegionIds
+                    : maxIntensityRegionIds // ignore: cast_nullable_to_non_nullable
+                        as List<int>?,
+            maxLpgmIntensity:
+                freezed == maxLpgmIntensity
+                    ? _value.maxLpgmIntensity
+                    : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaLgIntensity?,
+            originTime:
+                freezed == originTime
+                    ? _value.originTime
+                    : originTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime?,
+            text:
+                freezed == text
+                    ? _value.text
+                    : text // ignore: cast_nullable_to_non_nullable
+                        as String?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -233,34 +262,36 @@ class _$EarthquakeV1CopyWithImpl<$Res, $Val extends EarthquakeV1>
 abstract class _$$EarthquakeV1ImplCopyWith<$Res>
     implements $EarthquakeV1CopyWith<$Res> {
   factory _$$EarthquakeV1ImplCopyWith(
-          _$EarthquakeV1Impl value, $Res Function(_$EarthquakeV1Impl) then) =
-      __$$EarthquakeV1ImplCopyWithImpl<$Res>;
+    _$EarthquakeV1Impl value,
+    $Res Function(_$EarthquakeV1Impl) then,
+  ) = __$$EarthquakeV1ImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int eventId,
-      String status,
-      DateTime? arrivalTime,
-      int? depth,
-      int? epicenterCode,
-      int? epicenterDetailCode,
-      String? headline,
-      List<ObservedRegionIntensity>? intensityCities,
-      List<ObservedRegionIntensity>? intensityPrefectures,
-      List<ObservedRegionIntensity>? intensityRegions,
-      List<ObservedRegionIntensity>? intensityStations,
-      double? latitude,
-      double? longitude,
-      List<ObservedRegionLpgmIntensity>? lpgmIntensityPrefectures,
-      List<ObservedRegionLpgmIntensity>? lpgmIntensityRegions,
-      List<ObservedRegionLpgmIntensity>? lpgmIntenstiyStations,
-      double? magnitude,
-      String? magnitudeCondition,
-      JmaIntensity? maxIntensity,
-      List<int>? maxIntensityRegionIds,
-      JmaLgIntensity? maxLpgmIntensity,
-      DateTime? originTime,
-      String? text});
+  $Res call({
+    int eventId,
+    String status,
+    DateTime? arrivalTime,
+    int? depth,
+    int? epicenterCode,
+    int? epicenterDetailCode,
+    String? headline,
+    List<ObservedRegionIntensity>? intensityCities,
+    List<ObservedRegionIntensity>? intensityPrefectures,
+    List<ObservedRegionIntensity>? intensityRegions,
+    List<ObservedRegionIntensity>? intensityStations,
+    double? latitude,
+    double? longitude,
+    List<ObservedRegionLpgmIntensity>? lpgmIntensityPrefectures,
+    List<ObservedRegionLpgmIntensity>? lpgmIntensityRegions,
+    List<ObservedRegionLpgmIntensity>? lpgmIntenstiyStations,
+    double? magnitude,
+    String? magnitudeCondition,
+    JmaIntensity? maxIntensity,
+    List<int>? maxIntensityRegionIds,
+    JmaLgIntensity? maxLpgmIntensity,
+    DateTime? originTime,
+    String? text,
+  });
 }
 
 /// @nodoc
@@ -268,8 +299,9 @@ class __$$EarthquakeV1ImplCopyWithImpl<$Res>
     extends _$EarthquakeV1CopyWithImpl<$Res, _$EarthquakeV1Impl>
     implements _$$EarthquakeV1ImplCopyWith<$Res> {
   __$$EarthquakeV1ImplCopyWithImpl(
-      _$EarthquakeV1Impl _value, $Res Function(_$EarthquakeV1Impl) _then)
-      : super(_value, _then);
+    _$EarthquakeV1Impl _value,
+    $Res Function(_$EarthquakeV1Impl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of EarthquakeV1
   /// with the given fields replaced by the non-null parameter values.
@@ -300,138 +332,163 @@ class __$$EarthquakeV1ImplCopyWithImpl<$Res>
     Object? originTime = freezed,
     Object? text = freezed,
   }) {
-    return _then(_$EarthquakeV1Impl(
-      eventId: null == eventId
-          ? _value.eventId
-          : eventId // ignore: cast_nullable_to_non_nullable
-              as int,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      arrivalTime: freezed == arrivalTime
-          ? _value.arrivalTime
-          : arrivalTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      depth: freezed == depth
-          ? _value.depth
-          : depth // ignore: cast_nullable_to_non_nullable
-              as int?,
-      epicenterCode: freezed == epicenterCode
-          ? _value.epicenterCode
-          : epicenterCode // ignore: cast_nullable_to_non_nullable
-              as int?,
-      epicenterDetailCode: freezed == epicenterDetailCode
-          ? _value.epicenterDetailCode
-          : epicenterDetailCode // ignore: cast_nullable_to_non_nullable
-              as int?,
-      headline: freezed == headline
-          ? _value.headline
-          : headline // ignore: cast_nullable_to_non_nullable
-              as String?,
-      intensityCities: freezed == intensityCities
-          ? _value._intensityCities
-          : intensityCities // ignore: cast_nullable_to_non_nullable
-              as List<ObservedRegionIntensity>?,
-      intensityPrefectures: freezed == intensityPrefectures
-          ? _value._intensityPrefectures
-          : intensityPrefectures // ignore: cast_nullable_to_non_nullable
-              as List<ObservedRegionIntensity>?,
-      intensityRegions: freezed == intensityRegions
-          ? _value._intensityRegions
-          : intensityRegions // ignore: cast_nullable_to_non_nullable
-              as List<ObservedRegionIntensity>?,
-      intensityStations: freezed == intensityStations
-          ? _value._intensityStations
-          : intensityStations // ignore: cast_nullable_to_non_nullable
-              as List<ObservedRegionIntensity>?,
-      latitude: freezed == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      longitude: freezed == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      lpgmIntensityPrefectures: freezed == lpgmIntensityPrefectures
-          ? _value._lpgmIntensityPrefectures
-          : lpgmIntensityPrefectures // ignore: cast_nullable_to_non_nullable
-              as List<ObservedRegionLpgmIntensity>?,
-      lpgmIntensityRegions: freezed == lpgmIntensityRegions
-          ? _value._lpgmIntensityRegions
-          : lpgmIntensityRegions // ignore: cast_nullable_to_non_nullable
-              as List<ObservedRegionLpgmIntensity>?,
-      lpgmIntenstiyStations: freezed == lpgmIntenstiyStations
-          ? _value._lpgmIntenstiyStations
-          : lpgmIntenstiyStations // ignore: cast_nullable_to_non_nullable
-              as List<ObservedRegionLpgmIntensity>?,
-      magnitude: freezed == magnitude
-          ? _value.magnitude
-          : magnitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      magnitudeCondition: freezed == magnitudeCondition
-          ? _value.magnitudeCondition
-          : magnitudeCondition // ignore: cast_nullable_to_non_nullable
-              as String?,
-      maxIntensity: freezed == maxIntensity
-          ? _value.maxIntensity
-          : maxIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaIntensity?,
-      maxIntensityRegionIds: freezed == maxIntensityRegionIds
-          ? _value._maxIntensityRegionIds
-          : maxIntensityRegionIds // ignore: cast_nullable_to_non_nullable
-              as List<int>?,
-      maxLpgmIntensity: freezed == maxLpgmIntensity
-          ? _value.maxLpgmIntensity
-          : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaLgIntensity?,
-      originTime: freezed == originTime
-          ? _value.originTime
-          : originTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      text: freezed == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$EarthquakeV1Impl(
+        eventId:
+            null == eventId
+                ? _value.eventId
+                : eventId // ignore: cast_nullable_to_non_nullable
+                    as int,
+        status:
+            null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                    as String,
+        arrivalTime:
+            freezed == arrivalTime
+                ? _value.arrivalTime
+                : arrivalTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime?,
+        depth:
+            freezed == depth
+                ? _value.depth
+                : depth // ignore: cast_nullable_to_non_nullable
+                    as int?,
+        epicenterCode:
+            freezed == epicenterCode
+                ? _value.epicenterCode
+                : epicenterCode // ignore: cast_nullable_to_non_nullable
+                    as int?,
+        epicenterDetailCode:
+            freezed == epicenterDetailCode
+                ? _value.epicenterDetailCode
+                : epicenterDetailCode // ignore: cast_nullable_to_non_nullable
+                    as int?,
+        headline:
+            freezed == headline
+                ? _value.headline
+                : headline // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        intensityCities:
+            freezed == intensityCities
+                ? _value._intensityCities
+                : intensityCities // ignore: cast_nullable_to_non_nullable
+                    as List<ObservedRegionIntensity>?,
+        intensityPrefectures:
+            freezed == intensityPrefectures
+                ? _value._intensityPrefectures
+                : intensityPrefectures // ignore: cast_nullable_to_non_nullable
+                    as List<ObservedRegionIntensity>?,
+        intensityRegions:
+            freezed == intensityRegions
+                ? _value._intensityRegions
+                : intensityRegions // ignore: cast_nullable_to_non_nullable
+                    as List<ObservedRegionIntensity>?,
+        intensityStations:
+            freezed == intensityStations
+                ? _value._intensityStations
+                : intensityStations // ignore: cast_nullable_to_non_nullable
+                    as List<ObservedRegionIntensity>?,
+        latitude:
+            freezed == latitude
+                ? _value.latitude
+                : latitude // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        longitude:
+            freezed == longitude
+                ? _value.longitude
+                : longitude // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        lpgmIntensityPrefectures:
+            freezed == lpgmIntensityPrefectures
+                ? _value._lpgmIntensityPrefectures
+                : lpgmIntensityPrefectures // ignore: cast_nullable_to_non_nullable
+                    as List<ObservedRegionLpgmIntensity>?,
+        lpgmIntensityRegions:
+            freezed == lpgmIntensityRegions
+                ? _value._lpgmIntensityRegions
+                : lpgmIntensityRegions // ignore: cast_nullable_to_non_nullable
+                    as List<ObservedRegionLpgmIntensity>?,
+        lpgmIntenstiyStations:
+            freezed == lpgmIntenstiyStations
+                ? _value._lpgmIntenstiyStations
+                : lpgmIntenstiyStations // ignore: cast_nullable_to_non_nullable
+                    as List<ObservedRegionLpgmIntensity>?,
+        magnitude:
+            freezed == magnitude
+                ? _value.magnitude
+                : magnitude // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        magnitudeCondition:
+            freezed == magnitudeCondition
+                ? _value.magnitudeCondition
+                : magnitudeCondition // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        maxIntensity:
+            freezed == maxIntensity
+                ? _value.maxIntensity
+                : maxIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaIntensity?,
+        maxIntensityRegionIds:
+            freezed == maxIntensityRegionIds
+                ? _value._maxIntensityRegionIds
+                : maxIntensityRegionIds // ignore: cast_nullable_to_non_nullable
+                    as List<int>?,
+        maxLpgmIntensity:
+            freezed == maxLpgmIntensity
+                ? _value.maxLpgmIntensity
+                : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaLgIntensity?,
+        originTime:
+            freezed == originTime
+                ? _value.originTime
+                : originTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime?,
+        text:
+            freezed == text
+                ? _value.text
+                : text // ignore: cast_nullable_to_non_nullable
+                    as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$EarthquakeV1Impl implements _EarthquakeV1 {
-  const _$EarthquakeV1Impl(
-      {required this.eventId,
-      required this.status,
-      this.arrivalTime,
-      this.depth,
-      this.epicenterCode,
-      this.epicenterDetailCode,
-      this.headline,
-      final List<ObservedRegionIntensity>? intensityCities,
-      final List<ObservedRegionIntensity>? intensityPrefectures,
-      final List<ObservedRegionIntensity>? intensityRegions,
-      final List<ObservedRegionIntensity>? intensityStations,
-      this.latitude,
-      this.longitude,
-      final List<ObservedRegionLpgmIntensity>? lpgmIntensityPrefectures,
-      final List<ObservedRegionLpgmIntensity>? lpgmIntensityRegions,
-      final List<ObservedRegionLpgmIntensity>? lpgmIntenstiyStations,
-      this.magnitude,
-      this.magnitudeCondition,
-      this.maxIntensity,
-      final List<int>? maxIntensityRegionIds,
-      this.maxLpgmIntensity,
-      this.originTime,
-      this.text})
-      : _intensityCities = intensityCities,
-        _intensityPrefectures = intensityPrefectures,
-        _intensityRegions = intensityRegions,
-        _intensityStations = intensityStations,
-        _lpgmIntensityPrefectures = lpgmIntensityPrefectures,
-        _lpgmIntensityRegions = lpgmIntensityRegions,
-        _lpgmIntenstiyStations = lpgmIntenstiyStations,
-        _maxIntensityRegionIds = maxIntensityRegionIds;
+  const _$EarthquakeV1Impl({
+    required this.eventId,
+    required this.status,
+    this.arrivalTime,
+    this.depth,
+    this.epicenterCode,
+    this.epicenterDetailCode,
+    this.headline,
+    final List<ObservedRegionIntensity>? intensityCities,
+    final List<ObservedRegionIntensity>? intensityPrefectures,
+    final List<ObservedRegionIntensity>? intensityRegions,
+    final List<ObservedRegionIntensity>? intensityStations,
+    this.latitude,
+    this.longitude,
+    final List<ObservedRegionLpgmIntensity>? lpgmIntensityPrefectures,
+    final List<ObservedRegionLpgmIntensity>? lpgmIntensityRegions,
+    final List<ObservedRegionLpgmIntensity>? lpgmIntenstiyStations,
+    this.magnitude,
+    this.magnitudeCondition,
+    this.maxIntensity,
+    final List<int>? maxIntensityRegionIds,
+    this.maxLpgmIntensity,
+    this.originTime,
+    this.text,
+  }) : _intensityCities = intensityCities,
+       _intensityPrefectures = intensityPrefectures,
+       _intensityRegions = intensityRegions,
+       _intensityStations = intensityStations,
+       _lpgmIntensityPrefectures = lpgmIntensityPrefectures,
+       _lpgmIntensityRegions = lpgmIntensityRegions,
+       _lpgmIntenstiyStations = lpgmIntenstiyStations,
+       _maxIntensityRegionIds = maxIntensityRegionIds;
 
   factory _$EarthquakeV1Impl.fromJson(Map<String, dynamic> json) =>
       _$$EarthquakeV1ImplFromJson(json);
@@ -575,32 +632,48 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
                 other.epicenterDetailCode == epicenterDetailCode) &&
             (identical(other.headline, headline) ||
                 other.headline == headline) &&
-            const DeepCollectionEquality()
-                .equals(other._intensityCities, _intensityCities) &&
-            const DeepCollectionEquality()
-                .equals(other._intensityPrefectures, _intensityPrefectures) &&
-            const DeepCollectionEquality()
-                .equals(other._intensityRegions, _intensityRegions) &&
-            const DeepCollectionEquality()
-                .equals(other._intensityStations, _intensityStations) &&
+            const DeepCollectionEquality().equals(
+              other._intensityCities,
+              _intensityCities,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._intensityPrefectures,
+              _intensityPrefectures,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._intensityRegions,
+              _intensityRegions,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._intensityStations,
+              _intensityStations,
+            ) &&
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
                 other.longitude == longitude) &&
             const DeepCollectionEquality().equals(
-                other._lpgmIntensityPrefectures, _lpgmIntensityPrefectures) &&
-            const DeepCollectionEquality()
-                .equals(other._lpgmIntensityRegions, _lpgmIntensityRegions) &&
-            const DeepCollectionEquality()
-                .equals(other._lpgmIntenstiyStations, _lpgmIntenstiyStations) &&
+              other._lpgmIntensityPrefectures,
+              _lpgmIntensityPrefectures,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._lpgmIntensityRegions,
+              _lpgmIntensityRegions,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._lpgmIntenstiyStations,
+              _lpgmIntenstiyStations,
+            ) &&
             (identical(other.magnitude, magnitude) ||
                 other.magnitude == magnitude) &&
             (identical(other.magnitudeCondition, magnitudeCondition) ||
                 other.magnitudeCondition == magnitudeCondition) &&
             (identical(other.maxIntensity, maxIntensity) ||
                 other.maxIntensity == maxIntensity) &&
-            const DeepCollectionEquality()
-                .equals(other._maxIntensityRegionIds, _maxIntensityRegionIds) &&
+            const DeepCollectionEquality().equals(
+              other._maxIntensityRegionIds,
+              _maxIntensityRegionIds,
+            ) &&
             (identical(other.maxLpgmIntensity, maxLpgmIntensity) ||
                 other.maxLpgmIntensity == maxLpgmIntensity) &&
             (identical(other.originTime, originTime) ||
@@ -611,31 +684,31 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hashAll([
-        runtimeType,
-        eventId,
-        status,
-        arrivalTime,
-        depth,
-        epicenterCode,
-        epicenterDetailCode,
-        headline,
-        const DeepCollectionEquality().hash(_intensityCities),
-        const DeepCollectionEquality().hash(_intensityPrefectures),
-        const DeepCollectionEquality().hash(_intensityRegions),
-        const DeepCollectionEquality().hash(_intensityStations),
-        latitude,
-        longitude,
-        const DeepCollectionEquality().hash(_lpgmIntensityPrefectures),
-        const DeepCollectionEquality().hash(_lpgmIntensityRegions),
-        const DeepCollectionEquality().hash(_lpgmIntenstiyStations),
-        magnitude,
-        magnitudeCondition,
-        maxIntensity,
-        const DeepCollectionEquality().hash(_maxIntensityRegionIds),
-        maxLpgmIntensity,
-        originTime,
-        text
-      ]);
+    runtimeType,
+    eventId,
+    status,
+    arrivalTime,
+    depth,
+    epicenterCode,
+    epicenterDetailCode,
+    headline,
+    const DeepCollectionEquality().hash(_intensityCities),
+    const DeepCollectionEquality().hash(_intensityPrefectures),
+    const DeepCollectionEquality().hash(_intensityRegions),
+    const DeepCollectionEquality().hash(_intensityStations),
+    latitude,
+    longitude,
+    const DeepCollectionEquality().hash(_lpgmIntensityPrefectures),
+    const DeepCollectionEquality().hash(_lpgmIntensityRegions),
+    const DeepCollectionEquality().hash(_lpgmIntenstiyStations),
+    magnitude,
+    magnitudeCondition,
+    maxIntensity,
+    const DeepCollectionEquality().hash(_maxIntensityRegionIds),
+    maxLpgmIntensity,
+    originTime,
+    text,
+  ]);
 
   /// Create a copy of EarthquakeV1
   /// with the given fields replaced by the non-null parameter values.
@@ -647,37 +720,36 @@ class _$EarthquakeV1Impl implements _EarthquakeV1 {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EarthquakeV1ImplToJson(
-      this,
-    );
+    return _$$EarthquakeV1ImplToJson(this);
   }
 }
 
 abstract class _EarthquakeV1 implements EarthquakeV1 {
-  const factory _EarthquakeV1(
-      {required final int eventId,
-      required final String status,
-      final DateTime? arrivalTime,
-      final int? depth,
-      final int? epicenterCode,
-      final int? epicenterDetailCode,
-      final String? headline,
-      final List<ObservedRegionIntensity>? intensityCities,
-      final List<ObservedRegionIntensity>? intensityPrefectures,
-      final List<ObservedRegionIntensity>? intensityRegions,
-      final List<ObservedRegionIntensity>? intensityStations,
-      final double? latitude,
-      final double? longitude,
-      final List<ObservedRegionLpgmIntensity>? lpgmIntensityPrefectures,
-      final List<ObservedRegionLpgmIntensity>? lpgmIntensityRegions,
-      final List<ObservedRegionLpgmIntensity>? lpgmIntenstiyStations,
-      final double? magnitude,
-      final String? magnitudeCondition,
-      final JmaIntensity? maxIntensity,
-      final List<int>? maxIntensityRegionIds,
-      final JmaLgIntensity? maxLpgmIntensity,
-      final DateTime? originTime,
-      final String? text}) = _$EarthquakeV1Impl;
+  const factory _EarthquakeV1({
+    required final int eventId,
+    required final String status,
+    final DateTime? arrivalTime,
+    final int? depth,
+    final int? epicenterCode,
+    final int? epicenterDetailCode,
+    final String? headline,
+    final List<ObservedRegionIntensity>? intensityCities,
+    final List<ObservedRegionIntensity>? intensityPrefectures,
+    final List<ObservedRegionIntensity>? intensityRegions,
+    final List<ObservedRegionIntensity>? intensityStations,
+    final double? latitude,
+    final double? longitude,
+    final List<ObservedRegionLpgmIntensity>? lpgmIntensityPrefectures,
+    final List<ObservedRegionLpgmIntensity>? lpgmIntensityRegions,
+    final List<ObservedRegionLpgmIntensity>? lpgmIntenstiyStations,
+    final double? magnitude,
+    final String? magnitudeCondition,
+    final JmaIntensity? maxIntensity,
+    final List<int>? maxIntensityRegionIds,
+    final JmaLgIntensity? maxLpgmIntensity,
+    final DateTime? originTime,
+    final String? text,
+  }) = _$EarthquakeV1Impl;
 
   factory _EarthquakeV1.fromJson(Map<String, dynamic> json) =
       _$EarthquakeV1Impl.fromJson;
@@ -773,26 +845,28 @@ mixin _$EarthquakeV1Base {
 /// @nodoc
 abstract class $EarthquakeV1BaseCopyWith<$Res> {
   factory $EarthquakeV1BaseCopyWith(
-          EarthquakeV1Base value, $Res Function(EarthquakeV1Base) then) =
-      _$EarthquakeV1BaseCopyWithImpl<$Res, EarthquakeV1Base>;
+    EarthquakeV1Base value,
+    $Res Function(EarthquakeV1Base) then,
+  ) = _$EarthquakeV1BaseCopyWithImpl<$Res, EarthquakeV1Base>;
   @useResult
-  $Res call(
-      {int eventId,
-      String status,
-      DateTime? arrivalTime,
-      int? depth,
-      int? epicenterCode,
-      int? epicenterDetailCode,
-      String? headline,
-      double? latitude,
-      double? longitude,
-      double? magnitude,
-      String? magnitudeCondition,
-      JmaIntensity? maxIntensity,
-      List<int>? maxIntensityRegionIds,
-      JmaLgIntensity? maxLpgmIntensity,
-      DateTime? originTime,
-      String? text});
+  $Res call({
+    int eventId,
+    String status,
+    DateTime? arrivalTime,
+    int? depth,
+    int? epicenterCode,
+    int? epicenterDetailCode,
+    String? headline,
+    double? latitude,
+    double? longitude,
+    double? magnitude,
+    String? magnitudeCondition,
+    JmaIntensity? maxIntensity,
+    List<int>? maxIntensityRegionIds,
+    JmaLgIntensity? maxLpgmIntensity,
+    DateTime? originTime,
+    String? text,
+  });
 }
 
 /// @nodoc
@@ -827,109 +901,131 @@ class _$EarthquakeV1BaseCopyWithImpl<$Res, $Val extends EarthquakeV1Base>
     Object? originTime = freezed,
     Object? text = freezed,
   }) {
-    return _then(_value.copyWith(
-      eventId: null == eventId
-          ? _value.eventId
-          : eventId // ignore: cast_nullable_to_non_nullable
-              as int,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      arrivalTime: freezed == arrivalTime
-          ? _value.arrivalTime
-          : arrivalTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      depth: freezed == depth
-          ? _value.depth
-          : depth // ignore: cast_nullable_to_non_nullable
-              as int?,
-      epicenterCode: freezed == epicenterCode
-          ? _value.epicenterCode
-          : epicenterCode // ignore: cast_nullable_to_non_nullable
-              as int?,
-      epicenterDetailCode: freezed == epicenterDetailCode
-          ? _value.epicenterDetailCode
-          : epicenterDetailCode // ignore: cast_nullable_to_non_nullable
-              as int?,
-      headline: freezed == headline
-          ? _value.headline
-          : headline // ignore: cast_nullable_to_non_nullable
-              as String?,
-      latitude: freezed == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      longitude: freezed == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      magnitude: freezed == magnitude
-          ? _value.magnitude
-          : magnitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      magnitudeCondition: freezed == magnitudeCondition
-          ? _value.magnitudeCondition
-          : magnitudeCondition // ignore: cast_nullable_to_non_nullable
-              as String?,
-      maxIntensity: freezed == maxIntensity
-          ? _value.maxIntensity
-          : maxIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaIntensity?,
-      maxIntensityRegionIds: freezed == maxIntensityRegionIds
-          ? _value.maxIntensityRegionIds
-          : maxIntensityRegionIds // ignore: cast_nullable_to_non_nullable
-              as List<int>?,
-      maxLpgmIntensity: freezed == maxLpgmIntensity
-          ? _value.maxLpgmIntensity
-          : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaLgIntensity?,
-      originTime: freezed == originTime
-          ? _value.originTime
-          : originTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      text: freezed == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            eventId:
+                null == eventId
+                    ? _value.eventId
+                    : eventId // ignore: cast_nullable_to_non_nullable
+                        as int,
+            status:
+                null == status
+                    ? _value.status
+                    : status // ignore: cast_nullable_to_non_nullable
+                        as String,
+            arrivalTime:
+                freezed == arrivalTime
+                    ? _value.arrivalTime
+                    : arrivalTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime?,
+            depth:
+                freezed == depth
+                    ? _value.depth
+                    : depth // ignore: cast_nullable_to_non_nullable
+                        as int?,
+            epicenterCode:
+                freezed == epicenterCode
+                    ? _value.epicenterCode
+                    : epicenterCode // ignore: cast_nullable_to_non_nullable
+                        as int?,
+            epicenterDetailCode:
+                freezed == epicenterDetailCode
+                    ? _value.epicenterDetailCode
+                    : epicenterDetailCode // ignore: cast_nullable_to_non_nullable
+                        as int?,
+            headline:
+                freezed == headline
+                    ? _value.headline
+                    : headline // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            latitude:
+                freezed == latitude
+                    ? _value.latitude
+                    : latitude // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            longitude:
+                freezed == longitude
+                    ? _value.longitude
+                    : longitude // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            magnitude:
+                freezed == magnitude
+                    ? _value.magnitude
+                    : magnitude // ignore: cast_nullable_to_non_nullable
+                        as double?,
+            magnitudeCondition:
+                freezed == magnitudeCondition
+                    ? _value.magnitudeCondition
+                    : magnitudeCondition // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            maxIntensity:
+                freezed == maxIntensity
+                    ? _value.maxIntensity
+                    : maxIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaIntensity?,
+            maxIntensityRegionIds:
+                freezed == maxIntensityRegionIds
+                    ? _value.maxIntensityRegionIds
+                    : maxIntensityRegionIds // ignore: cast_nullable_to_non_nullable
+                        as List<int>?,
+            maxLpgmIntensity:
+                freezed == maxLpgmIntensity
+                    ? _value.maxLpgmIntensity
+                    : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaLgIntensity?,
+            originTime:
+                freezed == originTime
+                    ? _value.originTime
+                    : originTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime?,
+            text:
+                freezed == text
+                    ? _value.text
+                    : text // ignore: cast_nullable_to_non_nullable
+                        as String?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$EarthquakeV1BaseImplCopyWith<$Res>
     implements $EarthquakeV1BaseCopyWith<$Res> {
-  factory _$$EarthquakeV1BaseImplCopyWith(_$EarthquakeV1BaseImpl value,
-          $Res Function(_$EarthquakeV1BaseImpl) then) =
-      __$$EarthquakeV1BaseImplCopyWithImpl<$Res>;
+  factory _$$EarthquakeV1BaseImplCopyWith(
+    _$EarthquakeV1BaseImpl value,
+    $Res Function(_$EarthquakeV1BaseImpl) then,
+  ) = __$$EarthquakeV1BaseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int eventId,
-      String status,
-      DateTime? arrivalTime,
-      int? depth,
-      int? epicenterCode,
-      int? epicenterDetailCode,
-      String? headline,
-      double? latitude,
-      double? longitude,
-      double? magnitude,
-      String? magnitudeCondition,
-      JmaIntensity? maxIntensity,
-      List<int>? maxIntensityRegionIds,
-      JmaLgIntensity? maxLpgmIntensity,
-      DateTime? originTime,
-      String? text});
+  $Res call({
+    int eventId,
+    String status,
+    DateTime? arrivalTime,
+    int? depth,
+    int? epicenterCode,
+    int? epicenterDetailCode,
+    String? headline,
+    double? latitude,
+    double? longitude,
+    double? magnitude,
+    String? magnitudeCondition,
+    JmaIntensity? maxIntensity,
+    List<int>? maxIntensityRegionIds,
+    JmaLgIntensity? maxLpgmIntensity,
+    DateTime? originTime,
+    String? text,
+  });
 }
 
 /// @nodoc
 class __$$EarthquakeV1BaseImplCopyWithImpl<$Res>
     extends _$EarthquakeV1BaseCopyWithImpl<$Res, _$EarthquakeV1BaseImpl>
     implements _$$EarthquakeV1BaseImplCopyWith<$Res> {
-  __$$EarthquakeV1BaseImplCopyWithImpl(_$EarthquakeV1BaseImpl _value,
-      $Res Function(_$EarthquakeV1BaseImpl) _then)
-      : super(_value, _then);
+  __$$EarthquakeV1BaseImplCopyWithImpl(
+    _$EarthquakeV1BaseImpl _value,
+    $Res Function(_$EarthquakeV1BaseImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of EarthquakeV1Base
   /// with the given fields replaced by the non-null parameter values.
@@ -953,96 +1049,114 @@ class __$$EarthquakeV1BaseImplCopyWithImpl<$Res>
     Object? originTime = freezed,
     Object? text = freezed,
   }) {
-    return _then(_$EarthquakeV1BaseImpl(
-      eventId: null == eventId
-          ? _value.eventId
-          : eventId // ignore: cast_nullable_to_non_nullable
-              as int,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      arrivalTime: freezed == arrivalTime
-          ? _value.arrivalTime
-          : arrivalTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      depth: freezed == depth
-          ? _value.depth
-          : depth // ignore: cast_nullable_to_non_nullable
-              as int?,
-      epicenterCode: freezed == epicenterCode
-          ? _value.epicenterCode
-          : epicenterCode // ignore: cast_nullable_to_non_nullable
-              as int?,
-      epicenterDetailCode: freezed == epicenterDetailCode
-          ? _value.epicenterDetailCode
-          : epicenterDetailCode // ignore: cast_nullable_to_non_nullable
-              as int?,
-      headline: freezed == headline
-          ? _value.headline
-          : headline // ignore: cast_nullable_to_non_nullable
-              as String?,
-      latitude: freezed == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      longitude: freezed == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      magnitude: freezed == magnitude
-          ? _value.magnitude
-          : magnitude // ignore: cast_nullable_to_non_nullable
-              as double?,
-      magnitudeCondition: freezed == magnitudeCondition
-          ? _value.magnitudeCondition
-          : magnitudeCondition // ignore: cast_nullable_to_non_nullable
-              as String?,
-      maxIntensity: freezed == maxIntensity
-          ? _value.maxIntensity
-          : maxIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaIntensity?,
-      maxIntensityRegionIds: freezed == maxIntensityRegionIds
-          ? _value._maxIntensityRegionIds
-          : maxIntensityRegionIds // ignore: cast_nullable_to_non_nullable
-              as List<int>?,
-      maxLpgmIntensity: freezed == maxLpgmIntensity
-          ? _value.maxLpgmIntensity
-          : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaLgIntensity?,
-      originTime: freezed == originTime
-          ? _value.originTime
-          : originTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      text: freezed == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$EarthquakeV1BaseImpl(
+        eventId:
+            null == eventId
+                ? _value.eventId
+                : eventId // ignore: cast_nullable_to_non_nullable
+                    as int,
+        status:
+            null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                    as String,
+        arrivalTime:
+            freezed == arrivalTime
+                ? _value.arrivalTime
+                : arrivalTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime?,
+        depth:
+            freezed == depth
+                ? _value.depth
+                : depth // ignore: cast_nullable_to_non_nullable
+                    as int?,
+        epicenterCode:
+            freezed == epicenterCode
+                ? _value.epicenterCode
+                : epicenterCode // ignore: cast_nullable_to_non_nullable
+                    as int?,
+        epicenterDetailCode:
+            freezed == epicenterDetailCode
+                ? _value.epicenterDetailCode
+                : epicenterDetailCode // ignore: cast_nullable_to_non_nullable
+                    as int?,
+        headline:
+            freezed == headline
+                ? _value.headline
+                : headline // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        latitude:
+            freezed == latitude
+                ? _value.latitude
+                : latitude // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        longitude:
+            freezed == longitude
+                ? _value.longitude
+                : longitude // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        magnitude:
+            freezed == magnitude
+                ? _value.magnitude
+                : magnitude // ignore: cast_nullable_to_non_nullable
+                    as double?,
+        magnitudeCondition:
+            freezed == magnitudeCondition
+                ? _value.magnitudeCondition
+                : magnitudeCondition // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        maxIntensity:
+            freezed == maxIntensity
+                ? _value.maxIntensity
+                : maxIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaIntensity?,
+        maxIntensityRegionIds:
+            freezed == maxIntensityRegionIds
+                ? _value._maxIntensityRegionIds
+                : maxIntensityRegionIds // ignore: cast_nullable_to_non_nullable
+                    as List<int>?,
+        maxLpgmIntensity:
+            freezed == maxLpgmIntensity
+                ? _value.maxLpgmIntensity
+                : maxLpgmIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaLgIntensity?,
+        originTime:
+            freezed == originTime
+                ? _value.originTime
+                : originTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime?,
+        text:
+            freezed == text
+                ? _value.text
+                : text // ignore: cast_nullable_to_non_nullable
+                    as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
-  const _$EarthquakeV1BaseImpl(
-      {required this.eventId,
-      required this.status,
-      this.arrivalTime,
-      this.depth,
-      this.epicenterCode,
-      this.epicenterDetailCode,
-      this.headline,
-      this.latitude,
-      this.longitude,
-      this.magnitude,
-      this.magnitudeCondition,
-      this.maxIntensity,
-      final List<int>? maxIntensityRegionIds,
-      this.maxLpgmIntensity,
-      this.originTime,
-      this.text})
-      : _maxIntensityRegionIds = maxIntensityRegionIds;
+  const _$EarthquakeV1BaseImpl({
+    required this.eventId,
+    required this.status,
+    this.arrivalTime,
+    this.depth,
+    this.epicenterCode,
+    this.epicenterDetailCode,
+    this.headline,
+    this.latitude,
+    this.longitude,
+    this.magnitude,
+    this.magnitudeCondition,
+    this.maxIntensity,
+    final List<int>? maxIntensityRegionIds,
+    this.maxLpgmIntensity,
+    this.originTime,
+    this.text,
+  }) : _maxIntensityRegionIds = maxIntensityRegionIds;
 
   factory _$EarthquakeV1BaseImpl.fromJson(Map<String, dynamic> json) =>
       _$$EarthquakeV1BaseImplFromJson(json);
@@ -1120,8 +1234,10 @@ class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
                 other.magnitudeCondition == magnitudeCondition) &&
             (identical(other.maxIntensity, maxIntensity) ||
                 other.maxIntensity == maxIntensity) &&
-            const DeepCollectionEquality()
-                .equals(other._maxIntensityRegionIds, _maxIntensityRegionIds) &&
+            const DeepCollectionEquality().equals(
+              other._maxIntensityRegionIds,
+              _maxIntensityRegionIds,
+            ) &&
             (identical(other.maxLpgmIntensity, maxLpgmIntensity) ||
                 other.maxLpgmIntensity == maxLpgmIntensity) &&
             (identical(other.originTime, originTime) ||
@@ -1132,23 +1248,24 @@ class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      eventId,
-      status,
-      arrivalTime,
-      depth,
-      epicenterCode,
-      epicenterDetailCode,
-      headline,
-      latitude,
-      longitude,
-      magnitude,
-      magnitudeCondition,
-      maxIntensity,
-      const DeepCollectionEquality().hash(_maxIntensityRegionIds),
-      maxLpgmIntensity,
-      originTime,
-      text);
+    runtimeType,
+    eventId,
+    status,
+    arrivalTime,
+    depth,
+    epicenterCode,
+    epicenterDetailCode,
+    headline,
+    latitude,
+    longitude,
+    magnitude,
+    magnitudeCondition,
+    maxIntensity,
+    const DeepCollectionEquality().hash(_maxIntensityRegionIds),
+    maxLpgmIntensity,
+    originTime,
+    text,
+  );
 
   /// Create a copy of EarthquakeV1Base
   /// with the given fields replaced by the non-null parameter values.
@@ -1157,34 +1274,35 @@ class _$EarthquakeV1BaseImpl implements _EarthquakeV1Base {
   @pragma('vm:prefer-inline')
   _$$EarthquakeV1BaseImplCopyWith<_$EarthquakeV1BaseImpl> get copyWith =>
       __$$EarthquakeV1BaseImplCopyWithImpl<_$EarthquakeV1BaseImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EarthquakeV1BaseImplToJson(
-      this,
-    );
+    return _$$EarthquakeV1BaseImplToJson(this);
   }
 }
 
 abstract class _EarthquakeV1Base implements EarthquakeV1Base {
-  const factory _EarthquakeV1Base(
-      {required final int eventId,
-      required final String status,
-      final DateTime? arrivalTime,
-      final int? depth,
-      final int? epicenterCode,
-      final int? epicenterDetailCode,
-      final String? headline,
-      final double? latitude,
-      final double? longitude,
-      final double? magnitude,
-      final String? magnitudeCondition,
-      final JmaIntensity? maxIntensity,
-      final List<int>? maxIntensityRegionIds,
-      final JmaLgIntensity? maxLpgmIntensity,
-      final DateTime? originTime,
-      final String? text}) = _$EarthquakeV1BaseImpl;
+  const factory _EarthquakeV1Base({
+    required final int eventId,
+    required final String status,
+    final DateTime? arrivalTime,
+    final int? depth,
+    final int? epicenterCode,
+    final int? epicenterDetailCode,
+    final String? headline,
+    final double? latitude,
+    final double? longitude,
+    final double? magnitude,
+    final String? magnitudeCondition,
+    final JmaIntensity? maxIntensity,
+    final List<int>? maxIntensityRegionIds,
+    final JmaLgIntensity? maxLpgmIntensity,
+    final DateTime? originTime,
+    final String? text,
+  }) = _$EarthquakeV1BaseImpl;
 
   factory _EarthquakeV1Base.fromJson(Map<String, dynamic> json) =
       _$EarthquakeV1BaseImpl.fromJson;
@@ -1231,7 +1349,8 @@ abstract class _EarthquakeV1Base implements EarthquakeV1Base {
 }
 
 ObservedRegionIntensity _$ObservedRegionIntensityFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _ObservedRegionIntensity.fromJson(json);
 }
 
@@ -1254,19 +1373,23 @@ mixin _$ObservedRegionIntensity {
 
 /// @nodoc
 abstract class $ObservedRegionIntensityCopyWith<$Res> {
-  factory $ObservedRegionIntensityCopyWith(ObservedRegionIntensity value,
-          $Res Function(ObservedRegionIntensity) then) =
-      _$ObservedRegionIntensityCopyWithImpl<$Res, ObservedRegionIntensity>;
+  factory $ObservedRegionIntensityCopyWith(
+    ObservedRegionIntensity value,
+    $Res Function(ObservedRegionIntensity) then,
+  ) = _$ObservedRegionIntensityCopyWithImpl<$Res, ObservedRegionIntensity>;
   @useResult
-  $Res call(
-      {String code,
-      String name,
-      @JsonKey(name: 'maxInt') JmaIntensity? intensity});
+  $Res call({
+    String code,
+    String name,
+    @JsonKey(name: 'maxInt') JmaIntensity? intensity,
+  });
 }
 
 /// @nodoc
-class _$ObservedRegionIntensityCopyWithImpl<$Res,
-        $Val extends ObservedRegionIntensity>
+class _$ObservedRegionIntensityCopyWithImpl<
+  $Res,
+  $Val extends ObservedRegionIntensity
+>
     implements $ObservedRegionIntensityCopyWith<$Res> {
   _$ObservedRegionIntensityCopyWithImpl(this._value, this._then);
 
@@ -1284,20 +1407,26 @@ class _$ObservedRegionIntensityCopyWithImpl<$Res,
     Object? name = null,
     Object? intensity = freezed,
   }) {
-    return _then(_value.copyWith(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      intensity: freezed == intensity
-          ? _value.intensity
-          : intensity // ignore: cast_nullable_to_non_nullable
-              as JmaIntensity?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            code:
+                null == code
+                    ? _value.code
+                    : code // ignore: cast_nullable_to_non_nullable
+                        as String,
+            name:
+                null == name
+                    ? _value.name
+                    : name // ignore: cast_nullable_to_non_nullable
+                        as String,
+            intensity:
+                freezed == intensity
+                    ? _value.intensity
+                    : intensity // ignore: cast_nullable_to_non_nullable
+                        as JmaIntensity?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -1305,26 +1434,30 @@ class _$ObservedRegionIntensityCopyWithImpl<$Res,
 abstract class _$$ObservedRegionIntensityImplCopyWith<$Res>
     implements $ObservedRegionIntensityCopyWith<$Res> {
   factory _$$ObservedRegionIntensityImplCopyWith(
-          _$ObservedRegionIntensityImpl value,
-          $Res Function(_$ObservedRegionIntensityImpl) then) =
-      __$$ObservedRegionIntensityImplCopyWithImpl<$Res>;
+    _$ObservedRegionIntensityImpl value,
+    $Res Function(_$ObservedRegionIntensityImpl) then,
+  ) = __$$ObservedRegionIntensityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String code,
-      String name,
-      @JsonKey(name: 'maxInt') JmaIntensity? intensity});
+  $Res call({
+    String code,
+    String name,
+    @JsonKey(name: 'maxInt') JmaIntensity? intensity,
+  });
 }
 
 /// @nodoc
 class __$$ObservedRegionIntensityImplCopyWithImpl<$Res>
-    extends _$ObservedRegionIntensityCopyWithImpl<$Res,
-        _$ObservedRegionIntensityImpl>
+    extends
+        _$ObservedRegionIntensityCopyWithImpl<
+          $Res,
+          _$ObservedRegionIntensityImpl
+        >
     implements _$$ObservedRegionIntensityImplCopyWith<$Res> {
   __$$ObservedRegionIntensityImplCopyWithImpl(
-      _$ObservedRegionIntensityImpl _value,
-      $Res Function(_$ObservedRegionIntensityImpl) _then)
-      : super(_value, _then);
+    _$ObservedRegionIntensityImpl _value,
+    $Res Function(_$ObservedRegionIntensityImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of ObservedRegionIntensity
   /// with the given fields replaced by the non-null parameter values.
@@ -1335,30 +1468,36 @@ class __$$ObservedRegionIntensityImplCopyWithImpl<$Res>
     Object? name = null,
     Object? intensity = freezed,
   }) {
-    return _then(_$ObservedRegionIntensityImpl(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      intensity: freezed == intensity
-          ? _value.intensity
-          : intensity // ignore: cast_nullable_to_non_nullable
-              as JmaIntensity?,
-    ));
+    return _then(
+      _$ObservedRegionIntensityImpl(
+        code:
+            null == code
+                ? _value.code
+                : code // ignore: cast_nullable_to_non_nullable
+                    as String,
+        name:
+            null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                    as String,
+        intensity:
+            freezed == intensity
+                ? _value.intensity
+                : intensity // ignore: cast_nullable_to_non_nullable
+                    as JmaIntensity?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ObservedRegionIntensityImpl implements _ObservedRegionIntensity {
-  const _$ObservedRegionIntensityImpl(
-      {required this.code,
-      required this.name,
-      @JsonKey(name: 'maxInt') required this.intensity});
+  const _$ObservedRegionIntensityImpl({
+    required this.code,
+    required this.name,
+    @JsonKey(name: 'maxInt') required this.intensity,
+  });
 
   factory _$ObservedRegionIntensityImpl.fromJson(Map<String, dynamic> json) =>
       _$$ObservedRegionIntensityImplFromJson(json);
@@ -1397,23 +1536,22 @@ class _$ObservedRegionIntensityImpl implements _ObservedRegionIntensity {
   @override
   @pragma('vm:prefer-inline')
   _$$ObservedRegionIntensityImplCopyWith<_$ObservedRegionIntensityImpl>
-      get copyWith => __$$ObservedRegionIntensityImplCopyWithImpl<
-          _$ObservedRegionIntensityImpl>(this, _$identity);
+  get copyWith => __$$ObservedRegionIntensityImplCopyWithImpl<
+    _$ObservedRegionIntensityImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ObservedRegionIntensityImplToJson(
-      this,
-    );
+    return _$$ObservedRegionIntensityImplToJson(this);
   }
 }
 
 abstract class _ObservedRegionIntensity implements ObservedRegionIntensity {
-  const factory _ObservedRegionIntensity(
-          {required final String code,
-          required final String name,
-          @JsonKey(name: 'maxInt') required final JmaIntensity? intensity}) =
-      _$ObservedRegionIntensityImpl;
+  const factory _ObservedRegionIntensity({
+    required final String code,
+    required final String name,
+    @JsonKey(name: 'maxInt') required final JmaIntensity? intensity,
+  }) = _$ObservedRegionIntensityImpl;
 
   factory _ObservedRegionIntensity.fromJson(Map<String, dynamic> json) =
       _$ObservedRegionIntensityImpl.fromJson;
@@ -1431,11 +1569,12 @@ abstract class _ObservedRegionIntensity implements ObservedRegionIntensity {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ObservedRegionIntensityImplCopyWith<_$ObservedRegionIntensityImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 ObservedRegionLpgmIntensity _$ObservedRegionLpgmIntensityFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _ObservedRegionLpgmIntensity.fromJson(json);
 }
 
@@ -1455,27 +1594,33 @@ mixin _$ObservedRegionLpgmIntensity {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   $ObservedRegionLpgmIntensityCopyWith<ObservedRegionLpgmIntensity>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ObservedRegionLpgmIntensityCopyWith<$Res> {
   factory $ObservedRegionLpgmIntensityCopyWith(
-          ObservedRegionLpgmIntensity value,
-          $Res Function(ObservedRegionLpgmIntensity) then) =
-      _$ObservedRegionLpgmIntensityCopyWithImpl<$Res,
-          ObservedRegionLpgmIntensity>;
+    ObservedRegionLpgmIntensity value,
+    $Res Function(ObservedRegionLpgmIntensity) then,
+  ) =
+      _$ObservedRegionLpgmIntensityCopyWithImpl<
+        $Res,
+        ObservedRegionLpgmIntensity
+      >;
   @useResult
-  $Res call(
-      {String code,
-      String name,
-      @JsonKey(name: 'maxInt') JmaIntensity? intensity,
-      @JsonKey(name: 'maxLgInt') JmaLgIntensity? lpgmIntensity});
+  $Res call({
+    String code,
+    String name,
+    @JsonKey(name: 'maxInt') JmaIntensity? intensity,
+    @JsonKey(name: 'maxLgInt') JmaLgIntensity? lpgmIntensity,
+  });
 }
 
 /// @nodoc
-class _$ObservedRegionLpgmIntensityCopyWithImpl<$Res,
-        $Val extends ObservedRegionLpgmIntensity>
+class _$ObservedRegionLpgmIntensityCopyWithImpl<
+  $Res,
+  $Val extends ObservedRegionLpgmIntensity
+>
     implements $ObservedRegionLpgmIntensityCopyWith<$Res> {
   _$ObservedRegionLpgmIntensityCopyWithImpl(this._value, this._then);
 
@@ -1494,24 +1639,31 @@ class _$ObservedRegionLpgmIntensityCopyWithImpl<$Res,
     Object? intensity = freezed,
     Object? lpgmIntensity = freezed,
   }) {
-    return _then(_value.copyWith(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      intensity: freezed == intensity
-          ? _value.intensity
-          : intensity // ignore: cast_nullable_to_non_nullable
-              as JmaIntensity?,
-      lpgmIntensity: freezed == lpgmIntensity
-          ? _value.lpgmIntensity
-          : lpgmIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaLgIntensity?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            code:
+                null == code
+                    ? _value.code
+                    : code // ignore: cast_nullable_to_non_nullable
+                        as String,
+            name:
+                null == name
+                    ? _value.name
+                    : name // ignore: cast_nullable_to_non_nullable
+                        as String,
+            intensity:
+                freezed == intensity
+                    ? _value.intensity
+                    : intensity // ignore: cast_nullable_to_non_nullable
+                        as JmaIntensity?,
+            lpgmIntensity:
+                freezed == lpgmIntensity
+                    ? _value.lpgmIntensity
+                    : lpgmIntensity // ignore: cast_nullable_to_non_nullable
+                        as JmaLgIntensity?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -1519,27 +1671,31 @@ class _$ObservedRegionLpgmIntensityCopyWithImpl<$Res,
 abstract class _$$ObservedRegionLpgmIntensityImplCopyWith<$Res>
     implements $ObservedRegionLpgmIntensityCopyWith<$Res> {
   factory _$$ObservedRegionLpgmIntensityImplCopyWith(
-          _$ObservedRegionLpgmIntensityImpl value,
-          $Res Function(_$ObservedRegionLpgmIntensityImpl) then) =
-      __$$ObservedRegionLpgmIntensityImplCopyWithImpl<$Res>;
+    _$ObservedRegionLpgmIntensityImpl value,
+    $Res Function(_$ObservedRegionLpgmIntensityImpl) then,
+  ) = __$$ObservedRegionLpgmIntensityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String code,
-      String name,
-      @JsonKey(name: 'maxInt') JmaIntensity? intensity,
-      @JsonKey(name: 'maxLgInt') JmaLgIntensity? lpgmIntensity});
+  $Res call({
+    String code,
+    String name,
+    @JsonKey(name: 'maxInt') JmaIntensity? intensity,
+    @JsonKey(name: 'maxLgInt') JmaLgIntensity? lpgmIntensity,
+  });
 }
 
 /// @nodoc
 class __$$ObservedRegionLpgmIntensityImplCopyWithImpl<$Res>
-    extends _$ObservedRegionLpgmIntensityCopyWithImpl<$Res,
-        _$ObservedRegionLpgmIntensityImpl>
+    extends
+        _$ObservedRegionLpgmIntensityCopyWithImpl<
+          $Res,
+          _$ObservedRegionLpgmIntensityImpl
+        >
     implements _$$ObservedRegionLpgmIntensityImplCopyWith<$Res> {
   __$$ObservedRegionLpgmIntensityImplCopyWithImpl(
-      _$ObservedRegionLpgmIntensityImpl _value,
-      $Res Function(_$ObservedRegionLpgmIntensityImpl) _then)
-      : super(_value, _then);
+    _$ObservedRegionLpgmIntensityImpl _value,
+    $Res Function(_$ObservedRegionLpgmIntensityImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of ObservedRegionLpgmIntensity
   /// with the given fields replaced by the non-null parameter values.
@@ -1551,24 +1707,30 @@ class __$$ObservedRegionLpgmIntensityImplCopyWithImpl<$Res>
     Object? intensity = freezed,
     Object? lpgmIntensity = freezed,
   }) {
-    return _then(_$ObservedRegionLpgmIntensityImpl(
-      code: null == code
-          ? _value.code
-          : code // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      intensity: freezed == intensity
-          ? _value.intensity
-          : intensity // ignore: cast_nullable_to_non_nullable
-              as JmaIntensity?,
-      lpgmIntensity: freezed == lpgmIntensity
-          ? _value.lpgmIntensity
-          : lpgmIntensity // ignore: cast_nullable_to_non_nullable
-              as JmaLgIntensity?,
-    ));
+    return _then(
+      _$ObservedRegionLpgmIntensityImpl(
+        code:
+            null == code
+                ? _value.code
+                : code // ignore: cast_nullable_to_non_nullable
+                    as String,
+        name:
+            null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                    as String,
+        intensity:
+            freezed == intensity
+                ? _value.intensity
+                : intensity // ignore: cast_nullable_to_non_nullable
+                    as JmaIntensity?,
+        lpgmIntensity:
+            freezed == lpgmIntensity
+                ? _value.lpgmIntensity
+                : lpgmIntensity // ignore: cast_nullable_to_non_nullable
+                    as JmaLgIntensity?,
+      ),
+    );
   }
 }
 
@@ -1576,15 +1738,16 @@ class __$$ObservedRegionLpgmIntensityImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ObservedRegionLpgmIntensityImpl
     implements _ObservedRegionLpgmIntensity {
-  const _$ObservedRegionLpgmIntensityImpl(
-      {required this.code,
-      required this.name,
-      @JsonKey(name: 'maxInt') required this.intensity,
-      @JsonKey(name: 'maxLgInt') required this.lpgmIntensity});
+  const _$ObservedRegionLpgmIntensityImpl({
+    required this.code,
+    required this.name,
+    @JsonKey(name: 'maxInt') required this.intensity,
+    @JsonKey(name: 'maxLgInt') required this.lpgmIntensity,
+  });
 
   factory _$ObservedRegionLpgmIntensityImpl.fromJson(
-          Map<String, dynamic> json) =>
-      _$$ObservedRegionLpgmIntensityImplFromJson(json);
+    Map<String, dynamic> json,
+  ) => _$$ObservedRegionLpgmIntensityImplFromJson(json);
 
   @override
   final String code;
@@ -1626,26 +1789,24 @@ class _$ObservedRegionLpgmIntensityImpl
   @override
   @pragma('vm:prefer-inline')
   _$$ObservedRegionLpgmIntensityImplCopyWith<_$ObservedRegionLpgmIntensityImpl>
-      get copyWith => __$$ObservedRegionLpgmIntensityImplCopyWithImpl<
-          _$ObservedRegionLpgmIntensityImpl>(this, _$identity);
+  get copyWith => __$$ObservedRegionLpgmIntensityImplCopyWithImpl<
+    _$ObservedRegionLpgmIntensityImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ObservedRegionLpgmIntensityImplToJson(
-      this,
-    );
+    return _$$ObservedRegionLpgmIntensityImplToJson(this);
   }
 }
 
 abstract class _ObservedRegionLpgmIntensity
     implements ObservedRegionLpgmIntensity {
-  const factory _ObservedRegionLpgmIntensity(
-          {required final String code,
-          required final String name,
-          @JsonKey(name: 'maxInt') required final JmaIntensity? intensity,
-          @JsonKey(name: 'maxLgInt')
-          required final JmaLgIntensity? lpgmIntensity}) =
-      _$ObservedRegionLpgmIntensityImpl;
+  const factory _ObservedRegionLpgmIntensity({
+    required final String code,
+    required final String name,
+    @JsonKey(name: 'maxInt') required final JmaIntensity? intensity,
+    @JsonKey(name: 'maxLgInt') required final JmaLgIntensity? lpgmIntensity,
+  }) = _$ObservedRegionLpgmIntensityImpl;
 
   factory _ObservedRegionLpgmIntensity.fromJson(Map<String, dynamic> json) =
       _$ObservedRegionLpgmIntensityImpl.fromJson;
@@ -1666,5 +1827,5 @@ abstract class _ObservedRegionLpgmIntensity
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ObservedRegionLpgmIntensityImplCopyWith<_$ObservedRegionLpgmIntensityImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

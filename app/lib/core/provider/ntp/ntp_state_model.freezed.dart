@@ -12,7 +12,8 @@ part of 'ntp_state_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 NtpStateModel _$NtpStateModelFromJson(Map<String, dynamic> json) {
   return _NtpStateModel.fromJson(json);
@@ -36,8 +37,9 @@ mixin _$NtpStateModel {
 /// @nodoc
 abstract class $NtpStateModelCopyWith<$Res> {
   factory $NtpStateModelCopyWith(
-          NtpStateModel value, $Res Function(NtpStateModel) then) =
-      _$NtpStateModelCopyWithImpl<$Res, NtpStateModel>;
+    NtpStateModel value,
+    $Res Function(NtpStateModel) then,
+  ) = _$NtpStateModelCopyWithImpl<$Res, NtpStateModel>;
   @useResult
   $Res call({int? offset, DateTime? updatedAt});
 }
@@ -56,20 +58,22 @@ class _$NtpStateModelCopyWithImpl<$Res, $Val extends NtpStateModel>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? offset = freezed,
-    Object? updatedAt = freezed,
-  }) {
-    return _then(_value.copyWith(
-      offset: freezed == offset
-          ? _value.offset
-          : offset // ignore: cast_nullable_to_non_nullable
-              as int?,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
+  $Res call({Object? offset = freezed, Object? updatedAt = freezed}) {
+    return _then(
+      _value.copyWith(
+            offset:
+                freezed == offset
+                    ? _value.offset
+                    : offset // ignore: cast_nullable_to_non_nullable
+                        as int?,
+            updatedAt:
+                freezed == updatedAt
+                    ? _value.updatedAt
+                    : updatedAt // ignore: cast_nullable_to_non_nullable
+                        as DateTime?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -77,8 +81,9 @@ class _$NtpStateModelCopyWithImpl<$Res, $Val extends NtpStateModel>
 abstract class _$$NtpStateModelImplCopyWith<$Res>
     implements $NtpStateModelCopyWith<$Res> {
   factory _$$NtpStateModelImplCopyWith(
-          _$NtpStateModelImpl value, $Res Function(_$NtpStateModelImpl) then) =
-      __$$NtpStateModelImplCopyWithImpl<$Res>;
+    _$NtpStateModelImpl value,
+    $Res Function(_$NtpStateModelImpl) then,
+  ) = __$$NtpStateModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int? offset, DateTime? updatedAt});
@@ -89,27 +94,29 @@ class __$$NtpStateModelImplCopyWithImpl<$Res>
     extends _$NtpStateModelCopyWithImpl<$Res, _$NtpStateModelImpl>
     implements _$$NtpStateModelImplCopyWith<$Res> {
   __$$NtpStateModelImplCopyWithImpl(
-      _$NtpStateModelImpl _value, $Res Function(_$NtpStateModelImpl) _then)
-      : super(_value, _then);
+    _$NtpStateModelImpl _value,
+    $Res Function(_$NtpStateModelImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of NtpStateModel
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? offset = freezed,
-    Object? updatedAt = freezed,
-  }) {
-    return _then(_$NtpStateModelImpl(
-      offset: freezed == offset
-          ? _value.offset
-          : offset // ignore: cast_nullable_to_non_nullable
-              as int?,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
+  $Res call({Object? offset = freezed, Object? updatedAt = freezed}) {
+    return _then(
+      _$NtpStateModelImpl(
+        offset:
+            freezed == offset
+                ? _value.offset
+                : offset // ignore: cast_nullable_to_non_nullable
+                    as int?,
+        updatedAt:
+            freezed == updatedAt
+                ? _value.updatedAt
+                : updatedAt // ignore: cast_nullable_to_non_nullable
+                    as DateTime?,
+      ),
+    );
   }
 }
 
@@ -155,9 +162,7 @@ class _$NtpStateModelImpl implements _NtpStateModel {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$NtpStateModelImplToJson(
-      this,
-    );
+    return _$$NtpStateModelImplToJson(this);
   }
 }
 

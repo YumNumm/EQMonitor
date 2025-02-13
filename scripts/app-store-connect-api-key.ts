@@ -1,7 +1,7 @@
 import { sign } from "jsonwebtoken";
 import fs from "node:fs";
 const env = {
-  keyId: "4LQFA4R675",
+  keyId: "78559SHQLB",
   issuerId: "fd4cca56-716b-4f03-8e44-de72a03453db",
 };
 const header = {
@@ -19,7 +19,7 @@ const jwt = sign(
   {
     header,
     algorithm: "ES256",
-    expiresIn: "2m",
+    expiresIn: "1m",
   }
 );
 

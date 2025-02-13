@@ -16,9 +16,7 @@ part 'map_style_util.g.dart';
 MapStyleUtil mapStyleUtil(Ref ref) => MapStyleUtil();
 
 class MapStyleUtil {
-  Future<String> _saveStyleJson(
-    Map<String, dynamic> json,
-  ) async {
+  Future<String> _saveStyleJson(Map<String, dynamic> json) async {
     final jsonStr = jsonEncode(json);
     final hash = sha256.convert(utf8.encode(jsonStr)).toString();
 
@@ -32,19 +30,14 @@ class MapStyleUtil {
     return styleFile.path;
   }
 
-  Future<String> getStyle({
-    required MapColorScheme colorScheme,
-  }) async {
+  Future<String> getStyle({required MapColorScheme colorScheme}) async {
     if (kIsWeb) {
       return 'https://v2.map.eqmonitor.app/style-light.json';
     }
     final json = {
       'version': 8,
       'name': 'EQMonitor Style',
-      'center': [
-        139.767125,
-        35.681236,
-      ],
+      'center': [139.767125, 35.681236],
       'zoom': 5,
       'sources': {
         'eqmonitor_map': {
@@ -84,9 +77,7 @@ class MapStyleUtil {
           'source-layer': 'countries',
           'type': 'fill',
           'layout': {'visibility': 'visible'},
-          'paint': {
-            'fill-color': colorScheme.worldLandColor.toHexStringRGB(),
-          },
+          'paint': {'fill-color': colorScheme.worldLandColor.toHexStringRGB()},
         },
         {
           'id': BaseLayer.countriesLines.name,
@@ -112,9 +103,7 @@ class MapStyleUtil {
           'source': 'eqmonitor_map',
           'source-layer': 'areaForecastLocalE',
           'type': 'fill',
-          'paint': {
-            'fill-color': colorScheme.japanLandColor.toHexStringRGB(),
-          },
+          'paint': {'fill-color': colorScheme.japanLandColor.toHexStringRGB()},
         },
         // areaForecastLocalEew_line
         {
@@ -194,7 +183,6 @@ enum BaseLayer {
   areaForecastLocalEewLine,
   areaForecastLocalELine,
   areaInformationCityQuakeLine,
-  ;
 }
 
 extension ColorCode on Color {

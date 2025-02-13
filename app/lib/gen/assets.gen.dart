@@ -52,14 +52,14 @@ class $AssetsFontsGen {
 
   /// List of all assets
   List<String> get values => [
-        jetBrainsMonoBold,
-        jetBrainsMonoExtraBold,
-        jetBrainsMonoMedium,
-        notoSansJPBlack,
-        notoSansJPBold,
-        notoSansJPMedium,
-        notoSansJPRegular
-      ];
+    jetBrainsMonoBold,
+    jetBrainsMonoExtraBold,
+    jetBrainsMonoMedium,
+    notoSansJPBlack,
+    notoSansJPBold,
+    notoSansJPMedium,
+    notoSansJPRegular,
+  ];
 }
 
 class $AssetsImagesGen {
@@ -72,11 +72,29 @@ class $AssetsImagesGen {
   AssetGenImage get iconForeground =>
       const AssetGenImage('assets/images/icon_foreground.png');
 
+  /// Directory path: assets/images/map
+  $AssetsImagesMapGen get map => const $AssetsImagesMapGen();
+
   /// Directory path: assets/images/theme
   $AssetsImagesThemeGen get theme => const $AssetsImagesThemeGen();
 
   /// List of all assets
   List<AssetGenImage> get values => [icon, iconForeground];
+}
+
+class $AssetsImagesMapGen {
+  const $AssetsImagesMapGen();
+
+  /// File path: assets/images/map/low_precise_hypocenter.png
+  AssetGenImage get lowPreciseHypocenter =>
+      const AssetGenImage('assets/images/map/low_precise_hypocenter.png');
+
+  /// File path: assets/images/map/normal_hypocenter.png
+  AssetGenImage get normalHypocenter =>
+      const AssetGenImage('assets/images/map/normal_hypocenter.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [lowPreciseHypocenter, normalHypocenter];
 }
 
 class $AssetsImagesThemeGen {
@@ -112,23 +130,19 @@ class Assets {
 
   /// List of all assets
   static List<dynamic> get values => [
-        kyoshinShindoColorMap,
-        header,
-        jmaCodeTable,
-        jmaMap,
-        kyoshinMonitorScale,
-        kyoshinObservationPoint,
-        tjma2001,
-        shorebird
-      ];
+    kyoshinShindoColorMap,
+    header,
+    jmaCodeTable,
+    jmaMap,
+    kyoshinMonitorScale,
+    kyoshinObservationPoint,
+    tjma2001,
+    shorebird,
+  ];
 }
 
 class AssetGenImage {
-  const AssetGenImage(
-    this._assetName, {
-    this.size,
-    this.flavors = const {},
-  });
+  const AssetGenImage(this._assetName, {this.size, this.flavors = const {}});
 
   final String _assetName;
 
@@ -188,15 +202,8 @@ class AssetGenImage {
     );
   }
 
-  ImageProvider provider({
-    AssetBundle? bundle,
-    String? package,
-  }) {
-    return AssetImage(
-      _assetName,
-      bundle: bundle,
-      package: package,
-    );
+  ImageProvider provider({AssetBundle? bundle, String? package}) {
+    return AssetImage(_assetName, bundle: bundle, package: package);
   }
 
   String get path => _assetName;

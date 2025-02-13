@@ -13,9 +13,7 @@ class DisplaySettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('表示設定'),
-      ),
+      appBar: AppBar(title: const Text('表示設定')),
       body: const _Body(),
     );
   }
@@ -31,16 +29,15 @@ class _Body extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SettingsSectionHeader(
-              text: '配色設定',
-            ),
+            const SettingsSectionHeader(text: '配色設定'),
             const _ThemeSelector(),
             const Divider(),
             ListTile(
               title: const Text('震度配色設定'),
               leading: const Icon(Icons.color_lens),
-              onTap: () async =>
-                  const ColorSchemeConfigRoute().push<void>(context),
+              onTap:
+                  () async =>
+                      const ColorSchemeConfigRoute().push<void>(context),
             ),
           ],
         ),
@@ -63,8 +60,9 @@ class _ThemeSelector extends ConsumerWidget {
           mode == ThemeMode.light ? Brightness.light : Brightness.dark;
       return Expanded(
         child: GestureDetector(
-          onTap: () async =>
-              ref.read(themeModeNotifierProvider.notifier).update(mode),
+          onTap:
+              () async =>
+                  ref.read(themeModeNotifierProvider.notifier).update(mode),
           child: Column(
             children: [
               SizedBox(
@@ -73,35 +71,32 @@ class _ThemeSelector extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(24),
                   child: switch (mode) {
                     ThemeMode.light => Assets.images.theme.light.image(
-                        fit: BoxFit.contain,
-                      ),
+                      fit: BoxFit.contain,
+                    ),
                     ThemeMode.dark => Assets.images.theme.dark.image(),
                     _ => throw UnimplementedError(),
                   },
                 ),
               ),
-              const SizedBox(
-                height: 8,
-              ),
-              Text(
-                switch (mode) {
-                  ThemeMode.light => 'ライト',
-                  ThemeMode.dark => 'ダーク',
-                  _ => throw UnimplementedError(),
-                },
-              ),
-              const SizedBox(
-                height: 4,
-              ),
+              const SizedBox(height: 8),
+              Text(switch (mode) {
+                ThemeMode.light => 'ライト',
+                ThemeMode.dark => 'ダーク',
+                _ => throw UnimplementedError(),
+              }),
+              const SizedBox(height: 4),
               Radio.adaptive(
-                value: state == ThemeMode.system
-                    ? brightness == modeBrightness
-                        ? ThemeMode.system
-                        : null
-                    : mode,
+                value:
+                    state == ThemeMode.system
+                        ? brightness == modeBrightness
+                            ? ThemeMode.system
+                            : null
+                        : mode,
                 groupValue: state,
-                onChanged: (value) async =>
-                    ref.read(themeModeNotifierProvider.notifier).update(mode),
+                onChanged:
+                    (value) async => ref
+                        .read(themeModeNotifierProvider.notifier)
+                        .update(mode),
               ),
             ],
           ),
@@ -142,14 +137,16 @@ class _ThemeSelector extends ConsumerWidget {
             visualDensity: VisualDensity.compact,
             title: const Text('システム設定に従う'),
             value: state == ThemeMode.system,
-            onChanged: (value) async =>
-                ref.read(themeModeNotifierProvider.notifier).update(
+            onChanged:
+                (value) async => ref
+                    .read(themeModeNotifierProvider.notifier)
+                    .update(
                       value
                           ? ThemeMode.system
                           : PlatformDispatcher.instance.platformBrightness ==
-                                  Brightness.light
-                              ? ThemeMode.light
-                              : ThemeMode.dark,
+                              Brightness.light
+                          ? ThemeMode.light
+                          : ThemeMode.dark,
                     ),
           ),
         ],

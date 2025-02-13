@@ -5,6 +5,40 @@ PODS:
     - Flutter
   - device_info_plus (0.0.1):
     - Flutter
+  - DKImagePickerController/Core (4.3.9):
+    - DKImagePickerController/ImageDataManager
+    - DKImagePickerController/Resource
+  - DKImagePickerController/ImageDataManager (4.3.9)
+  - DKImagePickerController/PhotoGallery (4.3.9):
+    - DKImagePickerController/Core
+    - DKPhotoGallery
+  - DKImagePickerController/Resource (4.3.9)
+  - DKPhotoGallery (0.0.19):
+    - DKPhotoGallery/Core (= 0.0.19)
+    - DKPhotoGallery/Model (= 0.0.19)
+    - DKPhotoGallery/Preview (= 0.0.19)
+    - DKPhotoGallery/Resource (= 0.0.19)
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Core (0.0.19):
+    - DKPhotoGallery/Model
+    - DKPhotoGallery/Preview
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Model (0.0.19):
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Preview (0.0.19):
+    - DKPhotoGallery/Model
+    - DKPhotoGallery/Resource
+    - SDWebImage
+    - SwiftyGif
+  - DKPhotoGallery/Resource (0.0.19):
+    - SDWebImage
+    - SwiftyGif
+  - file_picker (0.0.1):
+    - DKImagePickerController/PhotoGallery
+    - Flutter
   - Firebase/Analytics (11.6.0):
     - Firebase/Core
   - Firebase/Core (11.6.0):
@@ -188,6 +222,9 @@ PODS:
   - PurchasesHybridCommon (13.15.2):
     - RevenueCat (= 5.14.5)
   - RevenueCat (5.14.5)
+  - SDWebImage (5.20.0):
+    - SDWebImage/Core (= 5.20.0)
+  - SDWebImage/Core (5.20.0)
   - share_plus (0.0.1):
     - Flutter
   - shared_preference_app_group (1.0.0):
@@ -196,6 +233,7 @@ PODS:
     - Flutter
     - FlutterMacOS
   - SwiftProtobuf (1.28.2)
+  - SwiftyGif (5.4.5)
   - url_launcher_ios (0.0.1):
     - Flutter
 
@@ -203,6 +241,7 @@ DEPENDENCIES:
   - app_settings (from `.symlinks/plugins/app_settings/ios`)
   - background_task (from `.symlinks/plugins/background_task/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
+  - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_app_installations (from `.symlinks/plugins/firebase_app_installations/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
@@ -228,6 +267,8 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - DKImagePickerController
+    - DKPhotoGallery
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
@@ -247,7 +288,9 @@ SPEC REPOS:
     - PromisesSwift
     - PurchasesHybridCommon
     - RevenueCat
+    - SDWebImage
     - SwiftProtobuf
+    - SwiftyGif
 
 EXTERNAL SOURCES:
   app_settings:
@@ -256,6 +299,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/background_task/ios"
   device_info_plus:
     :path: ".symlinks/plugins/device_info_plus/ios"
+  file_picker:
+    :path: ".symlinks/plugins/file_picker/ios"
   firebase_analytics:
     :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_app_installations:
@@ -303,6 +348,9 @@ SPEC CHECKSUMS:
   app_settings: 3507c575c2b18a462c99948f61d5de21d4420999
   background_task: cb74890aa75be08c253c56017a2f0f6038d0879a
   device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
+  DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
+  DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
+  file_picker: a0560bc09d61de87f12d246fc47d2119e6ef37be
   Firebase: 374a441a91ead896215703a674d58cdb3e9d772b
   firebase_analytics: 8ad276088e4f9ba7dfc8dd6be4ee93a29673dde1
   firebase_app_installations: 8a78b8906822972d1d8bf3a28c02f700d598e60f
@@ -339,10 +387,12 @@ SPEC CHECKSUMS:
   purchases_flutter: a3f9f057c0f437b8e9b4ed1985b2036d8aa95ec1
   PurchasesHybridCommon: 8af6bb6d85b794dc47ccef1b536ed0e677c789ea
   RevenueCat: 4c0e809f7c7428cbe8d79cbb9a0dc7551e71e74e
+  SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8
   share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
   shared_preference_app_group: 7422922a188e05cf680a656e18e2786dcb5c58b3
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
   SwiftProtobuf: 4dbaffec76a39a8dc5da23b40af1a5dc01a4c02d
+  SwiftyGif: 706c60cf65fa2bc5ee0313beece843c8eb8194d4
   url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
 
 PODFILE CHECKSUM: d10447a9148f63b89692c9605e3219ee49461f0a

@@ -53,11 +53,7 @@ class ErrorCard extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    Icons.error,
-                    size: 48,
-                    color: colorScheme.error,
-                  ),
+                  Icon(Icons.error, size: 48, color: colorScheme.error),
                   const SizedBox(width: 16),
                   Flexible(
                     child: Text(
@@ -92,11 +88,11 @@ class ErrorCard extends StatelessWidget {
               if (onReload != null) ...[
                 const SizedBox(height: 8),
                 FilledButton.tonalIcon(
-                  onPressed: () async =>
-                      FullScreenCircularProgressIndicator.showUntil(
-                    context,
-                    onReload!,
-                  ),
+                  onPressed:
+                      () async => FullScreenCircularProgressIndicator.showUntil(
+                        context,
+                        onReload!,
+                      ),
                   icon: const Icon(Icons.refresh),
                   label: const Text('再読み込み'),
                   style: FilledButton.styleFrom(
@@ -120,13 +116,15 @@ class ErrorCard extends StatelessWidget {
           {'error': final String errorMsg} => errorMsg,
           {'code': final String code, 'details': final String details} =>
             '$code: $details',
-          _ => 'エラーが発生しました\n'
-              '少し時間をおいて再度お試しください。\n'
-              '解消されない場合は、この画面のスクリーンショットを開発者へ送信してください',
+          _ =>
+            'エラーが発生しました\n'
+                '少し時間をおいて再度お試しください。\n'
+                '解消されない場合は、この画面のスクリーンショットを開発者へ送信してください',
         };
         final statusCode = response.statusCode;
         if (statusCode != null) {
-          final baseMessage = onDioExceptionStatusOverride?.call(statusCode) ??
+          final baseMessage =
+              onDioExceptionStatusOverride?.call(statusCode) ??
               switch (statusCode) {
                 400 => '不正なリクエストです',
                 403 => 'アクセスが拒否されました',
@@ -148,16 +146,16 @@ class ErrorCard extends StatelessWidget {
       } else {
         final message = switch (error) {
           DioException(:final type) => switch (type) {
-              DioExceptionType.badCertificate => 'SSL証明書が不正です',
-              DioExceptionType.badResponse => 'サーバーからのレスポンスが不正です',
-              DioExceptionType.connectionTimeout => 'サーバーとの接続がタイムアウトしました',
-              DioExceptionType.receiveTimeout => 'サーバーからのレスポンスがタイムアウトしました',
-              DioExceptionType.sendTimeout => 'サーバーへのリクエストがタイムアウトしました',
-              DioExceptionType.connectionError =>
-                'サーバーとの接続に失敗しました。ネットワーク接続を確認してください',
-              DioExceptionType.unknown => '不明なエラーが発生しました',
-              DioExceptionType.cancel => 'キャンセルされました',
-            },
+            DioExceptionType.badCertificate => 'SSL証明書が不正です',
+            DioExceptionType.badResponse => 'サーバーからのレスポンスが不正です',
+            DioExceptionType.connectionTimeout => 'サーバーとの接続がタイムアウトしました',
+            DioExceptionType.receiveTimeout => 'サーバーからのレスポンスがタイムアウトしました',
+            DioExceptionType.sendTimeout => 'サーバーへのリクエストがタイムアウトしました',
+            DioExceptionType.connectionError =>
+              'サーバーとの接続に失敗しました。ネットワーク接続を確認してください',
+            DioExceptionType.unknown => '不明なエラーが発生しました',
+            DioExceptionType.cancel => 'キャンセルされました',
+          },
           _ => 'エラーが発生しました',
         };
         return message;

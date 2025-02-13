@@ -27,34 +27,27 @@ class EarthquakeHistoryEarlyListTile extends HookConsumerWidget {
     final hypoName = item.name;
 
     final maxIntensity = item.maxIntensity;
-    final title = switch ((
-      hypoName,
-      maxIntensity,
-    )) {
-      (
-        final String hypoName,
-        final JmaForecastIntensity _,
-      ) =>
-        hypoName,
-      (
-        final String hypoName,
-        _,
-      ) =>
-        hypoName,
+    final title = switch ((hypoName, maxIntensity)) {
+      (final String hypoName, final JmaForecastIntensity _) => hypoName,
+      (final String hypoName, _) => hypoName,
     };
     final originTime = item.originTime.toLocal();
-    final subTitle = switch (item.originTimePrecision) {
-          OriginTimePrecision.millisecond ||
-          OriginTimePrecision.second =>
+    final subTitle =
+        switch (item.originTimePrecision) {
+          OriginTimePrecision.millisecond || OriginTimePrecision.second =>
             DateFormat('yyyy/MM/dd HH:mm:ss ').format(originTime),
-          OriginTimePrecision.minute =>
-            DateFormat('yyyy/MM/dd HH:mm ').format(originTime),
-          OriginTimePrecision.hour =>
-            DateFormat('yyyy/MM/dd HH ').format(originTime),
-          OriginTimePrecision.day =>
-            DateFormat('yyyy/MM/dd ').format(originTime),
-          OriginTimePrecision.month =>
-            DateFormat('yyyy/MM ').format(originTime),
+          OriginTimePrecision.minute => DateFormat(
+            'yyyy/MM/dd HH:mm ',
+          ).format(originTime),
+          OriginTimePrecision.hour => DateFormat(
+            'yyyy/MM/dd HH ',
+          ).format(originTime),
+          OriginTimePrecision.day => DateFormat(
+            'yyyy/MM/dd ',
+          ).format(originTime),
+          OriginTimePrecision.month => DateFormat(
+            'yyyy/MM ',
+          ).format(originTime),
         } +
         switch (item.depth) {
           (final int depth) when depth == 0 => '深さ ごく浅い',
@@ -63,9 +56,12 @@ class EarthquakeHistoryEarlyListTile extends HookConsumerWidget {
           _ => '',
         };
     final intensityColorState = ref.watch(intensityColorProvider);
-    final intensityColor = maxIntensity != null
-        ? intensityColorState.fromJmaForecastIntensity(maxIntensity).background
-        : null;
+    final intensityColor =
+        maxIntensity != null
+            ? intensityColorState
+                .fromJmaForecastIntensity(maxIntensity)
+                .background
+            : null;
     // 5 -> 5.0, 5.123 -> 5.1
     final magnitude = item.magnitude?.toStringAsFixed(1);
     final trailingText = switch (null) {
@@ -87,19 +83,18 @@ class EarthquakeHistoryEarlyListTile extends HookConsumerWidget {
         children: [
           Text(
             subTitle,
-            style: TextStyle(
-              fontFamily: GoogleFonts.notoSansJp().fontFamily,
-            ),
+            style: TextStyle(fontFamily: GoogleFonts.notoSansJp().fontFamily),
           ),
         ],
       ),
-      leading: maxIntensity != null
-          ? JmaForecastIntensityIcon(
-              intensity: maxIntensity,
-              type: IntensityIconType.filled,
-              showSuffix: !item.maxIntensityIsEarly,
-            )
-          : null,
+      leading:
+          maxIntensity != null
+              ? JmaForecastIntensityIcon(
+                intensity: maxIntensity,
+                type: IntensityIconType.filled,
+                showSuffix: !item.maxIntensityIsEarly,
+              )
+              : null,
       trailing: Text(
         trailingText,
         style: theme.textTheme.labelLarge!.copyWith(

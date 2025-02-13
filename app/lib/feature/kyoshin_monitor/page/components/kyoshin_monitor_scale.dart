@@ -2,18 +2,55 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+/// スケールの向き
+enum KyoshinMonitorScaleOrientation {
+  /// 横向き
+  horizontal,
+
+  /// 縦向き
+  vertical,
+}
+
+/// 文字の位置
+enum KyoshinMonitorScaleTextPosition {
+  /// 左 or 上
+  start,
+
+  /// 右 or 下
+  end,
+}
+
+/// グラデーションの方向
+enum KyoshinMonitorScaleGradientDirection {
+  /// 正方向（上から下、左から右）
+  forward,
+
+  /// 逆方向（下から上、右から左）
+  reverse,
+}
+
 /// 強震モニタのカラースケールを表示するWidget
 ///
 /// [type] スケールの種類（震度、PGA、PGV、PGD）
 /// [width] スケールの幅
 /// [height] スケールの高さ
 /// [tickInterval] 目盛りの間隔（震度の場合は1固定）
+/// [orientation] スケールの向き
+/// [textPosition] 文字の位置
+/// [textColor] テキストの色
+/// [textStyle] テキストのスタイル
+/// [gradientDirection] グラデーションの方向
 class KyoshinMonitorScale extends StatelessWidget {
   const KyoshinMonitorScale({
     required this.type,
     required this.width,
     required this.height,
     this.tickInterval = 4,
+    this.orientation = KyoshinMonitorScaleOrientation.horizontal,
+    this.textPosition = KyoshinMonitorScaleTextPosition.end,
+    this.textColor = Colors.black,
+    this.textStyle,
+    this.gradientDirection = KyoshinMonitorScaleGradientDirection.forward,
     super.key,
   });
 
@@ -21,25 +58,23 @@ class KyoshinMonitorScale extends StatelessWidget {
   final double width;
   final double height;
   final int tickInterval;
+  final KyoshinMonitorScaleOrientation orientation;
+  final KyoshinMonitorScaleTextPosition textPosition;
+  final Color textColor;
+  final TextStyle? textStyle;
+  final KyoshinMonitorScaleGradientDirection gradientDirection;
 
   /// カラーストップの計算
   ///
   /// 各値に対応する位置と色を計算します
   List<({double position, double value, Color color})> get colorStops {
     final values = type.scaleValues;
-    return List.generate(
-      values.length,
-      (i) {
-        final value = values[i];
-        final position = type.convertToPosition(value);
-        final colorIndex = (position * (_colors.length - 1)).round();
-        return (
-          position: position,
-          value: value,
-          color: _colors[colorIndex].$2,
-        );
-      },
-    );
+    return List.generate(values.length, (i) {
+      final value = values[i];
+      final position = type.convertToPosition(value);
+      final colorIndex = (position * (_colors.length - 1)).round();
+      return (position: position, value: value, color: _colors[colorIndex].$2);
+    });
   }
 
   @override
@@ -50,6 +85,11 @@ class KyoshinMonitorScale extends StatelessWidget {
         type: type,
         colorStops: colorStops,
         tickInterval: tickInterval,
+        orientation: orientation,
+        textPosition: textPosition,
+        textColor: textColor,
+        textStyle: textStyle ?? const TextStyle(fontSize: 10),
+        gradientDirection: gradientDirection,
       ),
     );
   }
@@ -125,8 +165,7 @@ enum KyoshinMonitorScaleType {
   pgv,
 
   /// 最大変位（PGD: Peak Ground Displacement）
-  pgd,
-  ;
+  pgd;
 
   /// 値を0-1の範囲に正規化する
   ///
@@ -142,44 +181,44 @@ enum KyoshinMonitorScaleType {
 
   /// 単位を取得
   String get unit => switch (this) {
-        KyoshinMonitorScaleType.intensity => '',
-        KyoshinMonitorScaleType.pga => 'gal',
-        KyoshinMonitorScaleType.pgv => 'kine',
-        KyoshinMonitorScaleType.pgd => 'cm',
-      };
+    KyoshinMonitorScaleType.intensity => '',
+    KyoshinMonitorScaleType.pga => 'gal',
+    KyoshinMonitorScaleType.pgv => 'cm/s',
+    KyoshinMonitorScaleType.pgd => 'cm',
+  };
 
   /// タイトルを取得
   String get title => switch (this) {
-        KyoshinMonitorScaleType.intensity => '震度',
-        KyoshinMonitorScaleType.pga => '最大加速度',
-        KyoshinMonitorScaleType.pgv => '最大速度',
-        KyoshinMonitorScaleType.pgd => '最大変位',
-      };
+    KyoshinMonitorScaleType.intensity => '震度',
+    KyoshinMonitorScaleType.pga => 'PGA',
+    KyoshinMonitorScaleType.pgv => 'PGV',
+    KyoshinMonitorScaleType.pgd => 'PGD',
+  };
 
   /// 最小値を取得
   double get minValue => switch (this) {
-        KyoshinMonitorScaleType.intensity => -3.0,
-        KyoshinMonitorScaleType.pga => 0.01,
-        KyoshinMonitorScaleType.pgv => 0.001,
-        KyoshinMonitorScaleType.pgd => 0.0001,
-      };
+    KyoshinMonitorScaleType.intensity => -3.0,
+    KyoshinMonitorScaleType.pga => 0.01,
+    KyoshinMonitorScaleType.pgv => 0.001,
+    KyoshinMonitorScaleType.pgd => 0.0001,
+  };
 
   /// 最大値を取得
   double get maxValue => switch (this) {
-        KyoshinMonitorScaleType.intensity => 7.0,
-        KyoshinMonitorScaleType.pga => 1000.0,
-        KyoshinMonitorScaleType.pgv => 100.0,
-        KyoshinMonitorScaleType.pgd => 10.0,
-      };
+    KyoshinMonitorScaleType.intensity => 7.0,
+    KyoshinMonitorScaleType.pga => 1000.0,
+    KyoshinMonitorScaleType.pgv => 100.0,
+    KyoshinMonitorScaleType.pgd => 10.0,
+  };
 
   /// スケール値のリストを取得
   List<double> get scaleValues => switch (this) {
-        KyoshinMonitorScaleType.intensity =>
-          List.generate(11, (i) => i - 3).map((e) => e.toDouble()).toList(),
-        KyoshinMonitorScaleType.pga => _generateLogValues(0.01, 1000),
-        KyoshinMonitorScaleType.pgv => _generateLogValues(0.001, 100),
-        KyoshinMonitorScaleType.pgd => _generateLogValues(0.0001, 10),
-      };
+    KyoshinMonitorScaleType.intensity =>
+      List.generate(11, (i) => i - 3).map((e) => e.toDouble()).toList(),
+    KyoshinMonitorScaleType.pga => _generateLogValues(0.01, 1000),
+    KyoshinMonitorScaleType.pgv => _generateLogValues(0.001, 100),
+    KyoshinMonitorScaleType.pgd => _generateLogValues(0.0001, 10),
+  };
 
   /// 対数スケールの値を生成
   List<double> _generateLogValues(double min, double max) {
@@ -210,23 +249,87 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
     required this.type,
     required this.colorStops,
     required this.tickInterval,
+    required this.orientation,
+    required this.textPosition,
+    required this.textColor,
+    required this.textStyle,
+    required this.gradientDirection,
   });
 
   final KyoshinMonitorScaleType type;
   final List<({double position, double value, Color color})> colorStops;
   final int tickInterval;
+  final KyoshinMonitorScaleOrientation orientation;
+  final KyoshinMonitorScaleTextPosition textPosition;
+  final Color textColor;
+  final TextStyle textStyle;
+  final KyoshinMonitorScaleGradientDirection gradientDirection;
 
   @override
   void paint(Canvas canvas, Size size) {
     // グラデーションの描画
     final rect = Offset.zero & size;
+    final colors = colorStops.map((e) => e.color).toList();
+    final stops = colorStops.map((e) => e.position).toList();
+
+    // グラデーションの方向が逆の場合は、色とストップ位置を反転
+    if (gradientDirection == KyoshinMonitorScaleGradientDirection.reverse) {
+      colors.reversed.toList();
+      stops.reversed.toList();
+    }
+
     final gradient = LinearGradient(
-      colors: colorStops.map((e) => e.color).toList(),
-      stops: colorStops.map((e) => e.position).toList(),
+      colors: colors,
+      stops: stops,
+      begin: switch ((orientation, gradientDirection)) {
+        (
+          KyoshinMonitorScaleOrientation.horizontal,
+          KyoshinMonitorScaleGradientDirection.forward,
+        ) =>
+          Alignment.centerLeft,
+        (
+          KyoshinMonitorScaleOrientation.horizontal,
+          KyoshinMonitorScaleGradientDirection.reverse,
+        ) =>
+          Alignment.centerRight,
+        (
+          KyoshinMonitorScaleOrientation.vertical,
+          KyoshinMonitorScaleGradientDirection.forward,
+        ) =>
+          Alignment.topCenter,
+        (
+          KyoshinMonitorScaleOrientation.vertical,
+          KyoshinMonitorScaleGradientDirection.reverse,
+        ) =>
+          Alignment.bottomCenter,
+      },
+      end: switch ((orientation, gradientDirection)) {
+        (
+          KyoshinMonitorScaleOrientation.horizontal,
+          KyoshinMonitorScaleGradientDirection.forward,
+        ) =>
+          Alignment.centerRight,
+        (
+          KyoshinMonitorScaleOrientation.horizontal,
+          KyoshinMonitorScaleGradientDirection.reverse,
+        ) =>
+          Alignment.centerLeft,
+        (
+          KyoshinMonitorScaleOrientation.vertical,
+          KyoshinMonitorScaleGradientDirection.forward,
+        ) =>
+          Alignment.bottomCenter,
+        (
+          KyoshinMonitorScaleOrientation.vertical,
+          KyoshinMonitorScaleGradientDirection.reverse,
+        ) =>
+          Alignment.topCenter,
+      },
     );
-    final paint = Paint()
-      ..shader = gradient.createShader(rect)
-      ..style = PaintingStyle.fill;
+    final paint =
+        Paint()
+          ..shader = gradient.createShader(rect)
+          ..style = PaintingStyle.fill;
 
     canvas.drawRect(rect, paint);
 
@@ -237,56 +340,66 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
     );
 
     // 目盛り線の描画用のペイント
-    final tickPaint = Paint()
-      ..color = Colors.black
-      ..strokeWidth = 1.0
-      ..style = PaintingStyle.stroke;
+    final tickPaint =
+        Paint()
+          ..color = textColor
+          ..strokeWidth = 1.0
+          ..style = PaintingStyle.stroke;
 
     // 目盛りを描画する間隔を決定（震度は1固定）
     final interval =
         type == KyoshinMonitorScaleType.intensity ? 1 : tickInterval;
 
-    // 文字の重なりを検出するために、前の文字の範囲を保持
-    double? previousTextRight;
-    var isOverlapping = false;
-
-    // まず全ての目盛りをチェックして重なりがあるか確認
-    for (var i = 0; i < colorStops.length; i += interval) {
-      final stop = colorStops[i];
-      final x = stop.position * size.width;
-      final text = _formatValue(stop.value);
-
-      textPainter
-        ..text = TextSpan(
-          text: text,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 10,
-          ),
-        )
-        ..layout();
-
-      final textLeft = x - textPainter.width / 2;
-      final textRight = x + textPainter.width / 2;
-
-      if (previousTextRight != null && textLeft < previousTextRight) {
-        isOverlapping = true;
-        break;
-      }
-      previousTextRight = textRight;
+    // 描画する目盛りのインデックスを準備
+    var indices = List.generate(
+      (colorStops.length / interval).ceil(),
+      (i) => i * interval,
+    );
+    // 縦向きで逆方向の場合は、インデックスを反転
+    if (gradientDirection == KyoshinMonitorScaleGradientDirection.reverse) {
+      indices = indices.reversed.toList();
     }
-
     // 目盛りの描画
-    for (var i = 0; i < colorStops.length; i += interval) {
+    for (final i in indices) {
+      if (i >= colorStops.length) {
+        continue;
+      }
       final stop = colorStops[i];
-      final x = stop.position * size.width;
+      final basePosition =
+          gradientDirection == KyoshinMonitorScaleGradientDirection.reverse
+              ? 1 - stop.position
+              : stop.position;
+      final position =
+          basePosition *
+          (orientation == KyoshinMonitorScaleOrientation.horizontal
+              ? size.width
+              : size.height);
 
       // 目盛り線を描画
-      canvas.drawLine(
-        Offset(x, size.height),
-        Offset(x, size.height + 4),
-        tickPaint,
-      );
+      switch (orientation) {
+        case KyoshinMonitorScaleOrientation.horizontal:
+          canvas.drawLine(
+            Offset(position, size.height),
+            Offset(position, size.height + 4),
+            tickPaint,
+          );
+        case KyoshinMonitorScaleOrientation.vertical:
+          canvas.drawLine(
+            Offset(
+              textPosition == KyoshinMonitorScaleTextPosition.start
+                  ? 0
+                  : size.width,
+              position,
+            ),
+            Offset(
+              textPosition == KyoshinMonitorScaleTextPosition.start
+                  ? -4
+                  : size.width + 4,
+              position,
+            ),
+            tickPaint,
+          );
+      }
 
       // 値のテキストを描画
       final text = _formatValue(stop.value);
@@ -294,26 +407,27 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
       textPainter
         ..text = TextSpan(
           text: text,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 10,
-          ),
+          style: textStyle.copyWith(color: textColor),
         )
         ..layout();
 
-      if (isOverlapping) {
-        // 文字が重なる場合は右上に向かって斜めに表示
-        canvas.save();
-        canvas.translate(x - textPainter.width / 2, size.height + 8);
-        canvas.rotate(-0.8);
-        textPainter.paint(canvas, Offset.zero);
-        canvas.restore();
-      } else {
-        // 重ならない場合は通常通り表示
-        textPainter.paint(
-          canvas,
-          Offset(x - textPainter.width / 2, size.height + 6),
-        );
+      switch (orientation) {
+        case KyoshinMonitorScaleOrientation.horizontal:
+          // 重ならない場合は通常通り表示
+          textPainter.paint(
+            canvas,
+            Offset(position - textPainter.width / 2, size.height + 6),
+          );
+        case KyoshinMonitorScaleOrientation.vertical:
+          // 重ならない場合は通常通り表示
+          final x =
+              textPosition == KyoshinMonitorScaleTextPosition.start
+                  ? -textPainter.width - 6
+                  : size.width + 6;
+          textPainter.paint(
+            canvas,
+            Offset(x, position - textPainter.height / 2),
+          );
       }
     }
   }
@@ -342,5 +456,12 @@ class _KyoshinMonitorScalePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _KyoshinMonitorScalePainter oldDelegate) =>
-      false;
+      type != oldDelegate.type ||
+      colorStops != oldDelegate.colorStops ||
+      tickInterval != oldDelegate.tickInterval ||
+      orientation != oldDelegate.orientation ||
+      textPosition != oldDelegate.textPosition ||
+      textColor != oldDelegate.textColor ||
+      textStyle != oldDelegate.textStyle ||
+      gradientDirection != oldDelegate.gradientDirection;
 }

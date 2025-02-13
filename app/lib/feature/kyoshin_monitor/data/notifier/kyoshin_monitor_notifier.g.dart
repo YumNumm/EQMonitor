@@ -15,14 +15,15 @@ String _$kyoshinMonitorNotifierHash() =>
 @ProviderFor(KyoshinMonitorNotifier)
 final kyoshinMonitorNotifierProvider =
     AsyncNotifierProvider<KyoshinMonitorNotifier, KyoshinMonitorState>.internal(
-  KyoshinMonitorNotifier.new,
-  name: r'kyoshinMonitorNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$kyoshinMonitorNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      KyoshinMonitorNotifier.new,
+      name: r'kyoshinMonitorNotifierProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$kyoshinMonitorNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$KyoshinMonitorNotifier = AsyncNotifier<KyoshinMonitorState>;
 // ignore_for_file: type=lint

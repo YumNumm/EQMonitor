@@ -13,10 +13,7 @@ class InformationV1 with _$InformationV1 implements V1Database {
     )
     required InformationAuthor author,
     required Map<String, dynamic> body,
-    @JsonKey(
-      name: 'created_at',
-    )
-    required DateTime createdAt,
+    @JsonKey(name: 'created_at') required DateTime createdAt,
     required int id,
     @JsonKey(
       unknownEnumValue: InformationLevel.info,
@@ -31,14 +28,6 @@ class InformationV1 with _$InformationV1 implements V1Database {
       _$InformationV1FromJson(json);
 }
 
-enum InformationAuthor {
-  jma,
-  developer,
-  unknown,
-}
+enum InformationAuthor { jma, developer, unknown }
 
-enum InformationLevel {
-  info,
-  warning,
-  critical,
-}
+enum InformationLevel { info, warning, critical }

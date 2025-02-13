@@ -17,10 +17,8 @@ sealed class RealtimePostgresChangesPayloadBase {
     Map<String, dynamic> json,
   ) {
     final eventTypeStr = json['eventType'].toString();
-    final eventType =
-        RealtimePostgresChangesListenEvent.values.firstWhereOrNull(
-      (e) => e.value == eventTypeStr,
-    );
+    final eventType = RealtimePostgresChangesListenEvent.values
+        .firstWhereOrNull((e) => e.value == eventTypeStr);
     if (eventType == null) {
       throw ArgumentError.value(
         eventTypeStr,
@@ -33,128 +31,127 @@ sealed class RealtimePostgresChangesPayloadBase {
       (e) => e.tableName == tableStr,
     );
     if (table == null) {
-      throw ArgumentError.value(
-        tableStr,
-        'json["table"]',
-        'Invalid value',
-      );
+      throw ArgumentError.value(tableStr, 'json["table"]', 'Invalid value');
     }
 
     return switch (eventType) {
       RealtimePostgresChangesListenEvent.insert => switch (table) {
-          PublicTable.earthquake =>
-            RealtimePostgresInsertPayload<EarthquakeV1>.fromJson(
-              json,
-              (v) => EarthquakeV1.fromJson(v! as Map<String, dynamic>),
-            ),
-          PublicTable.eew => RealtimePostgresInsertPayload<EewV1>.fromJson(
-              json,
-              (v) => EewV1.fromJson(v! as Map<String, dynamic>),
-            ),
-          PublicTable.information =>
-            RealtimePostgresInsertPayload<InformationV1>.fromJson(
-              json,
-              (v) => InformationV1.fromJson(v! as Map<String, dynamic>),
-            ),
-          PublicTable.intensitySubDivision =>
-            RealtimePostgresInsertPayload<IntensitySubDivision>.fromJson(
-              json,
-              (v) => IntensitySubDivision.fromJson(v! as Map<String, dynamic>),
-            ),
-          PublicTable.telegram =>
-            RealtimePostgresInsertPayload<TelegramV1>.fromJson(
-              json,
-              (v) => TelegramV1.fromJson(v! as Map<String, dynamic>),
-            ),
-          PublicTable.tsunami =>
-            RealtimePostgresInsertPayload<TsunamiV1>.fromJson(
-              json,
-              (v) => TsunamiV1.fromJson(v! as Map<String, dynamic>),
-            ),
-          PublicTable.shakeDetectionEvents => RealtimePostgresInsertPayload<
-                ShakeDetectionWebSocketTelegram>.fromJson(
-              json,
-              (v) => ShakeDetectionWebSocketTelegram.fromJson(
-                v! as Map<String, dynamic>,
-              ),
-            ),
-        },
+        PublicTable.earthquake =>
+          RealtimePostgresInsertPayload<EarthquakeV1>.fromJson(
+            json,
+            (v) => EarthquakeV1.fromJson(v! as Map<String, dynamic>),
+          ),
+        PublicTable.eew => RealtimePostgresInsertPayload<EewV1>.fromJson(
+          json,
+          (v) => EewV1.fromJson(v! as Map<String, dynamic>),
+        ),
+        PublicTable.information =>
+          RealtimePostgresInsertPayload<InformationV1>.fromJson(
+            json,
+            (v) => InformationV1.fromJson(v! as Map<String, dynamic>),
+          ),
+        PublicTable.intensitySubDivision =>
+          RealtimePostgresInsertPayload<IntensitySubDivision>.fromJson(
+            json,
+            (v) => IntensitySubDivision.fromJson(v! as Map<String, dynamic>),
+          ),
+        PublicTable.telegram =>
+          RealtimePostgresInsertPayload<TelegramV1>.fromJson(
+            json,
+            (v) => TelegramV1.fromJson(v! as Map<String, dynamic>),
+          ),
+        PublicTable.tsunami =>
+          RealtimePostgresInsertPayload<TsunamiV1>.fromJson(
+            json,
+            (v) => TsunamiV1.fromJson(v! as Map<String, dynamic>),
+          ),
+        PublicTable.shakeDetectionEvents => RealtimePostgresInsertPayload<
+          ShakeDetectionWebSocketTelegram
+        >.fromJson(
+          json,
+          (v) => ShakeDetectionWebSocketTelegram.fromJson(
+            v! as Map<String, dynamic>,
+          ),
+        ),
+      },
       RealtimePostgresChangesListenEvent.update => switch (table) {
-          PublicTable.earthquake =>
-            RealtimePostgresUpdatePayload<EarthquakeV1>.fromJson(
-              json,
-              (v) => EarthquakeV1.fromJson(v! as Map<String, dynamic>),
-            ),
-          PublicTable.eew => RealtimePostgresUpdatePayload<EewV1>.fromJson(
-              json,
-              (v) => EewV1.fromJson(v! as Map<String, dynamic>),
-            ),
-          PublicTable.information =>
-            RealtimePostgresUpdatePayload<InformationV1>.fromJson(
-              json,
-              (v) => InformationV1.fromJson(v! as Map<String, dynamic>),
-            ),
-          PublicTable.intensitySubDivision =>
-            RealtimePostgresUpdatePayload<IntensitySubDivision>.fromJson(
-              json,
-              (v) => IntensitySubDivision.fromJson(v! as Map<String, dynamic>),
-            ),
-          PublicTable.telegram =>
-            RealtimePostgresUpdatePayload<TelegramV1>.fromJson(
-              json,
-              (v) => TelegramV1.fromJson(v! as Map<String, dynamic>),
-            ),
-          PublicTable.tsunami =>
-            RealtimePostgresUpdatePayload<TsunamiV1>.fromJson(
-              json,
-              (v) => TsunamiV1.fromJson(v! as Map<String, dynamic>),
-            ),
-          PublicTable.shakeDetectionEvents => RealtimePostgresUpdatePayload<
-                ShakeDetectionWebSocketTelegram>.fromJson(
-              json,
-              (v) => ShakeDetectionWebSocketTelegram.fromJson(
-                v! as Map<String, dynamic>,
-              ),
-            ),
-        },
+        PublicTable.earthquake =>
+          RealtimePostgresUpdatePayload<EarthquakeV1>.fromJson(
+            json,
+            (v) => EarthquakeV1.fromJson(v! as Map<String, dynamic>),
+          ),
+        PublicTable.eew => RealtimePostgresUpdatePayload<EewV1>.fromJson(
+          json,
+          (v) => EewV1.fromJson(v! as Map<String, dynamic>),
+        ),
+        PublicTable.information =>
+          RealtimePostgresUpdatePayload<InformationV1>.fromJson(
+            json,
+            (v) => InformationV1.fromJson(v! as Map<String, dynamic>),
+          ),
+        PublicTable.intensitySubDivision =>
+          RealtimePostgresUpdatePayload<IntensitySubDivision>.fromJson(
+            json,
+            (v) => IntensitySubDivision.fromJson(v! as Map<String, dynamic>),
+          ),
+        PublicTable.telegram =>
+          RealtimePostgresUpdatePayload<TelegramV1>.fromJson(
+            json,
+            (v) => TelegramV1.fromJson(v! as Map<String, dynamic>),
+          ),
+        PublicTable.tsunami =>
+          RealtimePostgresUpdatePayload<TsunamiV1>.fromJson(
+            json,
+            (v) => TsunamiV1.fromJson(v! as Map<String, dynamic>),
+          ),
+        PublicTable.shakeDetectionEvents => RealtimePostgresUpdatePayload<
+          ShakeDetectionWebSocketTelegram
+        >.fromJson(
+          json,
+          (v) => ShakeDetectionWebSocketTelegram.fromJson(
+            v! as Map<String, dynamic>,
+          ),
+        ),
+      },
       RealtimePostgresChangesListenEvent.delete => switch (table) {
-          PublicTable.earthquake =>
-            RealtimePostgresDeletePayload<EarthquakeV1>.fromJson(
-              json,
-              (v) => EarthquakeV1.fromJson(v! as Map<String, dynamic>),
-            ),
-          PublicTable.eew => RealtimePostgresDeletePayload<EewV1>.fromJson(
-              json,
-              (v) => EewV1.fromJson(v! as Map<String, dynamic>),
-            ),
-          PublicTable.information =>
-            RealtimePostgresDeletePayload<InformationV1>.fromJson(
-              json,
-              (v) => InformationV1.fromJson(v! as Map<String, dynamic>),
-            ),
-          PublicTable.intensitySubDivision =>
-            RealtimePostgresDeletePayload<IntensitySubDivision>.fromJson(
-              json,
-              (v) => IntensitySubDivision.fromJson(v! as Map<String, dynamic>),
-            ),
-          PublicTable.telegram =>
-            RealtimePostgresDeletePayload<TelegramV1>.fromJson(
-              json,
-              (v) => TelegramV1.fromJson(v! as Map<String, dynamic>),
-            ),
-          PublicTable.tsunami =>
-            RealtimePostgresDeletePayload<TsunamiV1>.fromJson(
-              json,
-              (v) => TsunamiV1.fromJson(v! as Map<String, dynamic>),
-            ),
-          PublicTable.shakeDetectionEvents => RealtimePostgresDeletePayload<
-                ShakeDetectionWebSocketTelegram>.fromJson(
-              json,
-              (v) => ShakeDetectionWebSocketTelegram.fromJson(
-                v! as Map<String, dynamic>,
-              ),
-            ),
-        }
+        PublicTable.earthquake =>
+          RealtimePostgresDeletePayload<EarthquakeV1>.fromJson(
+            json,
+            (v) => EarthquakeV1.fromJson(v! as Map<String, dynamic>),
+          ),
+        PublicTable.eew => RealtimePostgresDeletePayload<EewV1>.fromJson(
+          json,
+          (v) => EewV1.fromJson(v! as Map<String, dynamic>),
+        ),
+        PublicTable.information =>
+          RealtimePostgresDeletePayload<InformationV1>.fromJson(
+            json,
+            (v) => InformationV1.fromJson(v! as Map<String, dynamic>),
+          ),
+        PublicTable.intensitySubDivision =>
+          RealtimePostgresDeletePayload<IntensitySubDivision>.fromJson(
+            json,
+            (v) => IntensitySubDivision.fromJson(v! as Map<String, dynamic>),
+          ),
+        PublicTable.telegram =>
+          RealtimePostgresDeletePayload<TelegramV1>.fromJson(
+            json,
+            (v) => TelegramV1.fromJson(v! as Map<String, dynamic>),
+          ),
+        PublicTable.tsunami =>
+          RealtimePostgresDeletePayload<TsunamiV1>.fromJson(
+            json,
+            (v) => TsunamiV1.fromJson(v! as Map<String, dynamic>),
+          ),
+        PublicTable.shakeDetectionEvents => RealtimePostgresDeletePayload<
+          ShakeDetectionWebSocketTelegram
+        >.fromJson(
+          json,
+          (v) => ShakeDetectionWebSocketTelegram.fromJson(
+            v! as Map<String, dynamic>,
+          ),
+        ),
+      },
     };
   }
 
@@ -174,8 +171,7 @@ enum PublicTable {
   intensitySubDivision('intensity_sub_division'),
   telegram('telegram'),
   tsunami('tsunami'),
-  shakeDetectionEvents('shake_detection_events'),
-  ;
+  shakeDetectionEvents('shake_detection_events');
 
   const PublicTable(this.tableName);
   final String tableName;
@@ -198,8 +194,7 @@ class RealtimePostgresInsertPayload<T extends V1Database>
   factory RealtimePostgresInsertPayload.fromJson(
     Map<String, dynamic> json,
     T Function(Object?) fromJsonT,
-  ) =>
-      _$RealtimePostgresInsertPayloadFromJson(json, fromJsonT);
+  ) => _$RealtimePostgresInsertPayloadFromJson(json, fromJsonT);
 
   static const RealtimePostgresChangesListenEvent eventType =
       RealtimePostgresChangesListenEvent.insert;
@@ -226,8 +221,7 @@ class RealtimePostgresUpdatePayload<T extends V1Database>
   factory RealtimePostgresUpdatePayload.fromJson(
     Map<String, dynamic> json,
     T Function(Object?) fromJsonT,
-  ) =>
-      _$RealtimePostgresUpdatePayloadFromJson(json, fromJsonT);
+  ) => _$RealtimePostgresUpdatePayloadFromJson(json, fromJsonT);
 
   static const RealtimePostgresChangesListenEvent eventType =
       RealtimePostgresChangesListenEvent.update;
@@ -252,8 +246,7 @@ class RealtimePostgresDeletePayload<T extends V1Database>
   factory RealtimePostgresDeletePayload.fromJson(
     Map<String, dynamic> json,
     T Function(Object?) fromJsonT,
-  ) =>
-      _$RealtimePostgresDeletePayloadFromJson(json, fromJsonT);
+  ) => _$RealtimePostgresDeletePayloadFromJson(json, fromJsonT);
 
   static const RealtimePostgresChangesListenEvent eventType =
       RealtimePostgresChangesListenEvent.delete;
@@ -264,8 +257,7 @@ class RealtimePostgresDeletePayload<T extends V1Database>
 enum RealtimePostgresChangesListenEvent {
   insert('INSERT'),
   update('UPDATE'),
-  delete('DELETE'),
-  ;
+  delete('DELETE');
 
   const RealtimePostgresChangesListenEvent(this.value);
   final String value;

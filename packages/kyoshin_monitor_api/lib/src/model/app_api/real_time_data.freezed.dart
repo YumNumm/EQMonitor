@@ -12,7 +12,8 @@ part of 'real_time_data.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 RealTimeData _$RealTimeDataFromJson(Map<String, dynamic> json) {
   return _RealTimeData.fromJson(json);
@@ -42,18 +43,20 @@ mixin _$RealTimeData {
 /// @nodoc
 abstract class $RealTimeDataCopyWith<$Res> {
   factory $RealTimeDataCopyWith(
-          RealTimeData value, $Res Function(RealTimeData) then) =
-      _$RealTimeDataCopyWithImpl<$Res, RealTimeData>;
+    RealTimeData value,
+    $Res Function(RealTimeData) then,
+  ) = _$RealTimeDataCopyWithImpl<$Res, RealTimeData>;
   @useResult
-  $Res call(
-      {DateTime? dateTime,
-      String? packetType,
-      String? kyoshinType,
-      String? baseData,
-      String? baseSerialNo,
-      List<double?>? items,
-      Result? result,
-      Security? security});
+  $Res call({
+    DateTime? dateTime,
+    String? packetType,
+    String? kyoshinType,
+    String? baseData,
+    String? baseSerialNo,
+    List<double?>? items,
+    Result? result,
+    Security? security,
+  });
 
   $ResultCopyWith<$Res>? get result;
   $SecurityCopyWith<$Res>? get security;
@@ -83,40 +86,51 @@ class _$RealTimeDataCopyWithImpl<$Res, $Val extends RealTimeData>
     Object? result = freezed,
     Object? security = freezed,
   }) {
-    return _then(_value.copyWith(
-      dateTime: freezed == dateTime
-          ? _value.dateTime
-          : dateTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      packetType: freezed == packetType
-          ? _value.packetType
-          : packetType // ignore: cast_nullable_to_non_nullable
-              as String?,
-      kyoshinType: freezed == kyoshinType
-          ? _value.kyoshinType
-          : kyoshinType // ignore: cast_nullable_to_non_nullable
-              as String?,
-      baseData: freezed == baseData
-          ? _value.baseData
-          : baseData // ignore: cast_nullable_to_non_nullable
-              as String?,
-      baseSerialNo: freezed == baseSerialNo
-          ? _value.baseSerialNo
-          : baseSerialNo // ignore: cast_nullable_to_non_nullable
-              as String?,
-      items: freezed == items
-          ? _value.items
-          : items // ignore: cast_nullable_to_non_nullable
-              as List<double?>?,
-      result: freezed == result
-          ? _value.result
-          : result // ignore: cast_nullable_to_non_nullable
-              as Result?,
-      security: freezed == security
-          ? _value.security
-          : security // ignore: cast_nullable_to_non_nullable
-              as Security?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            dateTime:
+                freezed == dateTime
+                    ? _value.dateTime
+                    : dateTime // ignore: cast_nullable_to_non_nullable
+                        as DateTime?,
+            packetType:
+                freezed == packetType
+                    ? _value.packetType
+                    : packetType // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            kyoshinType:
+                freezed == kyoshinType
+                    ? _value.kyoshinType
+                    : kyoshinType // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            baseData:
+                freezed == baseData
+                    ? _value.baseData
+                    : baseData // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            baseSerialNo:
+                freezed == baseSerialNo
+                    ? _value.baseSerialNo
+                    : baseSerialNo // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            items:
+                freezed == items
+                    ? _value.items
+                    : items // ignore: cast_nullable_to_non_nullable
+                        as List<double?>?,
+            result:
+                freezed == result
+                    ? _value.result
+                    : result // ignore: cast_nullable_to_non_nullable
+                        as Result?,
+            security:
+                freezed == security
+                    ? _value.security
+                    : security // ignore: cast_nullable_to_non_nullable
+                        as Security?,
+          )
+          as $Val,
+    );
   }
 
   /// Create a copy of RealTimeData
@@ -152,19 +166,21 @@ class _$RealTimeDataCopyWithImpl<$Res, $Val extends RealTimeData>
 abstract class _$$RealTimeDataImplCopyWith<$Res>
     implements $RealTimeDataCopyWith<$Res> {
   factory _$$RealTimeDataImplCopyWith(
-          _$RealTimeDataImpl value, $Res Function(_$RealTimeDataImpl) then) =
-      __$$RealTimeDataImplCopyWithImpl<$Res>;
+    _$RealTimeDataImpl value,
+    $Res Function(_$RealTimeDataImpl) then,
+  ) = __$$RealTimeDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {DateTime? dateTime,
-      String? packetType,
-      String? kyoshinType,
-      String? baseData,
-      String? baseSerialNo,
-      List<double?>? items,
-      Result? result,
-      Security? security});
+  $Res call({
+    DateTime? dateTime,
+    String? packetType,
+    String? kyoshinType,
+    String? baseData,
+    String? baseSerialNo,
+    List<double?>? items,
+    Result? result,
+    Security? security,
+  });
 
   @override
   $ResultCopyWith<$Res>? get result;
@@ -177,8 +193,9 @@ class __$$RealTimeDataImplCopyWithImpl<$Res>
     extends _$RealTimeDataCopyWithImpl<$Res, _$RealTimeDataImpl>
     implements _$$RealTimeDataImplCopyWith<$Res> {
   __$$RealTimeDataImplCopyWithImpl(
-      _$RealTimeDataImpl _value, $Res Function(_$RealTimeDataImpl) _then)
-      : super(_value, _then);
+    _$RealTimeDataImpl _value,
+    $Res Function(_$RealTimeDataImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of RealTimeData
   /// with the given fields replaced by the non-null parameter values.
@@ -194,56 +211,66 @@ class __$$RealTimeDataImplCopyWithImpl<$Res>
     Object? result = freezed,
     Object? security = freezed,
   }) {
-    return _then(_$RealTimeDataImpl(
-      dateTime: freezed == dateTime
-          ? _value.dateTime
-          : dateTime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      packetType: freezed == packetType
-          ? _value.packetType
-          : packetType // ignore: cast_nullable_to_non_nullable
-              as String?,
-      kyoshinType: freezed == kyoshinType
-          ? _value.kyoshinType
-          : kyoshinType // ignore: cast_nullable_to_non_nullable
-              as String?,
-      baseData: freezed == baseData
-          ? _value.baseData
-          : baseData // ignore: cast_nullable_to_non_nullable
-              as String?,
-      baseSerialNo: freezed == baseSerialNo
-          ? _value.baseSerialNo
-          : baseSerialNo // ignore: cast_nullable_to_non_nullable
-              as String?,
-      items: freezed == items
-          ? _value._items
-          : items // ignore: cast_nullable_to_non_nullable
-              as List<double?>?,
-      result: freezed == result
-          ? _value.result
-          : result // ignore: cast_nullable_to_non_nullable
-              as Result?,
-      security: freezed == security
-          ? _value.security
-          : security // ignore: cast_nullable_to_non_nullable
-              as Security?,
-    ));
+    return _then(
+      _$RealTimeDataImpl(
+        dateTime:
+            freezed == dateTime
+                ? _value.dateTime
+                : dateTime // ignore: cast_nullable_to_non_nullable
+                    as DateTime?,
+        packetType:
+            freezed == packetType
+                ? _value.packetType
+                : packetType // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        kyoshinType:
+            freezed == kyoshinType
+                ? _value.kyoshinType
+                : kyoshinType // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        baseData:
+            freezed == baseData
+                ? _value.baseData
+                : baseData // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        baseSerialNo:
+            freezed == baseSerialNo
+                ? _value.baseSerialNo
+                : baseSerialNo // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        items:
+            freezed == items
+                ? _value._items
+                : items // ignore: cast_nullable_to_non_nullable
+                    as List<double?>?,
+        result:
+            freezed == result
+                ? _value.result
+                : result // ignore: cast_nullable_to_non_nullable
+                    as Result?,
+        security:
+            freezed == security
+                ? _value.security
+                : security // ignore: cast_nullable_to_non_nullable
+                    as Security?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$RealTimeDataImpl implements _RealTimeData {
-  const _$RealTimeDataImpl(
-      {required this.dateTime,
-      required this.packetType,
-      required this.kyoshinType,
-      required this.baseData,
-      required this.baseSerialNo,
-      required final List<double?>? items,
-      required this.result,
-      required this.security})
-      : _items = items;
+  const _$RealTimeDataImpl({
+    required this.dateTime,
+    required this.packetType,
+    required this.kyoshinType,
+    required this.baseData,
+    required this.baseSerialNo,
+    required final List<double?>? items,
+    required this.result,
+    required this.security,
+  }) : _items = items;
 
   factory _$RealTimeDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$RealTimeDataImplFromJson(json);
@@ -302,15 +329,16 @@ class _$RealTimeDataImpl implements _RealTimeData {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      dateTime,
-      packetType,
-      kyoshinType,
-      baseData,
-      baseSerialNo,
-      const DeepCollectionEquality().hash(_items),
-      result,
-      security);
+    runtimeType,
+    dateTime,
+    packetType,
+    kyoshinType,
+    baseData,
+    baseSerialNo,
+    const DeepCollectionEquality().hash(_items),
+    result,
+    security,
+  );
 
   /// Create a copy of RealTimeData
   /// with the given fields replaced by the non-null parameter values.
@@ -322,22 +350,21 @@ class _$RealTimeDataImpl implements _RealTimeData {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$RealTimeDataImplToJson(
-      this,
-    );
+    return _$$RealTimeDataImplToJson(this);
   }
 }
 
 abstract class _RealTimeData implements RealTimeData {
-  const factory _RealTimeData(
-      {required final DateTime? dateTime,
-      required final String? packetType,
-      required final String? kyoshinType,
-      required final String? baseData,
-      required final String? baseSerialNo,
-      required final List<double?>? items,
-      required final Result? result,
-      required final Security? security}) = _$RealTimeDataImpl;
+  const factory _RealTimeData({
+    required final DateTime? dateTime,
+    required final String? packetType,
+    required final String? kyoshinType,
+    required final String? baseData,
+    required final String? baseSerialNo,
+    required final List<double?>? items,
+    required final Result? result,
+    required final Security? security,
+  }) = _$RealTimeDataImpl;
 
   factory _RealTimeData.fromJson(Map<String, dynamic> json) =
       _$RealTimeDataImpl.fromJson;

@@ -35,9 +35,7 @@ abstract class _$PeriodicTimer
     extends BuildlessAutoDisposeStreamNotifier<void> {
   late final Key key;
 
-  Stream<void> build(
-    Key key,
-  );
+  Stream<void> build(Key key);
 }
 
 /// See also [PeriodicTimer].
@@ -50,21 +48,15 @@ class PeriodicTimerFamily extends Family<AsyncValue<void>> {
   const PeriodicTimerFamily();
 
   /// See also [PeriodicTimer].
-  PeriodicTimerProvider call(
-    Key key,
-  ) {
-    return PeriodicTimerProvider(
-      key,
-    );
+  PeriodicTimerProvider call(Key key) {
+    return PeriodicTimerProvider(key);
   }
 
   @override
   PeriodicTimerProvider getProviderOverride(
     covariant PeriodicTimerProvider provider,
   ) {
-    return call(
-      provider.key,
-    );
+    return call(provider.key);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -86,21 +78,20 @@ class PeriodicTimerFamily extends Family<AsyncValue<void>> {
 class PeriodicTimerProvider
     extends AutoDisposeStreamNotifierProviderImpl<PeriodicTimer, void> {
   /// See also [PeriodicTimer].
-  PeriodicTimerProvider(
-    Key key,
-  ) : this._internal(
-          () => PeriodicTimer()..key = key,
-          from: periodicTimerProvider,
-          name: r'periodicTimerProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$periodicTimerHash,
-          dependencies: PeriodicTimerFamily._dependencies,
-          allTransitiveDependencies:
-              PeriodicTimerFamily._allTransitiveDependencies,
-          key: key,
-        );
+  PeriodicTimerProvider(Key key)
+    : this._internal(
+        () => PeriodicTimer()..key = key,
+        from: periodicTimerProvider,
+        name: r'periodicTimerProvider',
+        debugGetCreateSourceHash:
+            const bool.fromEnvironment('dart.vm.product')
+                ? null
+                : _$periodicTimerHash,
+        dependencies: PeriodicTimerFamily._dependencies,
+        allTransitiveDependencies:
+            PeriodicTimerFamily._allTransitiveDependencies,
+        key: key,
+      );
 
   PeriodicTimerProvider._internal(
     super._createNotifier, {
@@ -115,12 +106,8 @@ class PeriodicTimerProvider
   final Key key;
 
   @override
-  Stream<void> runNotifierBuild(
-    covariant PeriodicTimer notifier,
-  ) {
-    return notifier.build(
-      key,
-    );
+  Stream<void> runNotifierBuild(covariant PeriodicTimer notifier) {
+    return notifier.build(key);
   }
 
   @override
@@ -141,7 +128,7 @@ class PeriodicTimerProvider
 
   @override
   AutoDisposeStreamNotifierProviderElement<PeriodicTimer, void>
-      createElement() {
+  createElement() {
     return _PeriodicTimerProviderElement(this);
   }
 
@@ -174,5 +161,6 @@ class _PeriodicTimerProviderElement
   @override
   Key get key => (origin as PeriodicTimerProvider).key;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
