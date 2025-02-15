@@ -67,6 +67,9 @@ jobs:
       - name: format
         run: melos format
 
+      - name: fix
+        run: dart fix --apply .
+
       - name: check difference
         run: |
           git add -N .
