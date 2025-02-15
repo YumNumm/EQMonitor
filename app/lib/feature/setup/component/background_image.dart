@@ -30,7 +30,7 @@ class SetupBackgroundImageWidget extends HookWidget {
     useEffect(() {
       startTime.value = DateTime.now().millisecondsSinceEpoch;
       return null;
-    }, [context]);
+    }, [context],);
     if (shader.hasData) {
       return AnimatedBuilder(
         animation: animationController,

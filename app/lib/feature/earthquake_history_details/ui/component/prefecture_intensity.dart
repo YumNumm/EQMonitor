@@ -113,7 +113,7 @@ Future<Map<JmaIntensity, List<_MergedRegionIntensity>>> _calculator(
           .reversed
           .toList();
   return Map.fromEntries(reorderedResult);
-}, arg);
+}, arg,);
 
 class PrefectureIntensityWidget extends HookConsumerWidget {
   const PrefectureIntensityWidget({required this.item, super.key});
@@ -133,7 +133,7 @@ class PrefectureIntensityWidget extends HookConsumerWidget {
         prefectures: item.intensityPrefectures!,
         cities: item.intensityCities,
         stations: item.intensityStations,
-      )),
+      ),),
     );
     return switch (mergedPrefecturesFuture) {
       AsyncLoading() => const Center(

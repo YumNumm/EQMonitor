@@ -61,7 +61,7 @@ Future<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>> _lpgmCalculator(
         }
       }
       return result;
-    }, arg);
+    }, arg,);
 
 class PrefectureLpgmIntensityWidget extends HookConsumerWidget {
   const PrefectureLpgmIntensityWidget({required this.item, super.key});
@@ -77,7 +77,7 @@ class PrefectureLpgmIntensityWidget extends HookConsumerWidget {
       _LpgmCalculatorProvider((
         prefectures: item.lpgmIntensityPrefectures,
         stations: item.lpgmIntenstiyStations,
-      )),
+      ),),
     );
 
     return switch (mergedPrefecturesFuture) {
