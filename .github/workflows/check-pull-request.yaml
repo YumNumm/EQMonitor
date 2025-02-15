@@ -121,7 +121,7 @@ jobs:
       - name: Report custom_lint result
         run: |
           echo "::add-matcher::.github/problem_matchers/custom_lint.json"
-          melos run report_custom_lint:ci --no-select || result=$?
+          melos run ci:report:custom_lint --no-select || result=$?
           echo "::remove-matcher owner=custom_lint::"
 
           if [ -n "$result" ]; then
