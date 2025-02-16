@@ -47,7 +47,7 @@ class JmaParameterApiClient {
 
 @RestApi()
 abstract class _JmaParameterApiClient {
-  factory _JmaParameterApiClient(Dio dio, {String baseUrl}) =
+  factory _JmaParameterApiClient(Dio dio) =
       __JmaParameterApiClient;
 
   @GET('/parameter/earthquake')
