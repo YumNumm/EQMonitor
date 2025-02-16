@@ -20,7 +20,9 @@ class ThemeModeNotifier extends _$ThemeModeNotifier {
 
   Future<void> update(ThemeMode mode) async {
     state = mode;
-    await ref.read(sharedPreferencesProvider).setString(_prefsKey, mode.name);
+    await ref
+        .read(sharedPreferencesProvider)
+        .setString(_prefsKey, mode.name);
   }
 
   ThemeMode? _load() {
@@ -29,7 +31,9 @@ class ThemeModeNotifier extends _$ThemeModeNotifier {
     if (value == null) {
       return null;
     }
-    return ThemeMode.values.firstWhereOrNull((e) => e.name == value);
+    return ThemeMode.values.firstWhereOrNull(
+      (e) => e.name == value,
+    );
   }
 
   static const _prefsKey = 'theme_mode';
@@ -41,7 +45,8 @@ class BrightnessNotifier extends _$BrightnessNotifier
   @override
   ui.Brightness build() {
     // プロバイダ構築時に監視を開始。
-    final binding = WidgetsBinding.instance..addObserver(this);
+    final binding =
+        WidgetsBinding.instance..addObserver(this);
     // プロバイダが破棄された時に監視を解除。
     ref.onDispose(() => binding.removeObserver(this));
 

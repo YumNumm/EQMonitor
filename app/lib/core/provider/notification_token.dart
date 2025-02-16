@@ -10,7 +10,9 @@ part 'notification_token.freezed.dart';
 part 'notification_token.g.dart';
 
 @riverpod
-Future<NotificationTokenModel> notificationToken(Ref ref) async {
+Future<NotificationTokenModel> notificationToken(
+  Ref ref,
+) async {
   if (kIsWeb) {
     throw UnimplementedError();
   }
@@ -21,7 +23,10 @@ Future<NotificationTokenModel> notificationToken(Ref ref) async {
   }
   final fcmToken = await messaging.getToken();
 
-  return NotificationTokenModel(apnsToken: apnsToken, fcmToken: fcmToken);
+  return NotificationTokenModel(
+    apnsToken: apnsToken,
+    fcmToken: fcmToken,
+  );
 }
 
 @freezed
@@ -31,6 +36,7 @@ class NotificationTokenModel with _$NotificationTokenModel {
     required String? apnsToken,
   }) = _NotificationTokenModel;
 
-  factory NotificationTokenModel.fromJson(Map<String, dynamic> json) =>
-      _$NotificationTokenModelFromJson(json);
+  factory NotificationTokenModel.fromJson(
+    Map<String, dynamic> json,
+  ) => _$NotificationTokenModelFromJson(json);
 }

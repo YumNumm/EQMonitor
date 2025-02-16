@@ -89,6 +89,10 @@ class CrashlyticsTalkerObserver implements TalkerObserver {
     if (log.title == TelegramWebSocketLog('').title) {
       return;
     }
-    unawaited(FirebaseCrashlytics.instance.log(log.message.toString()));
+    unawaited(
+      FirebaseCrashlytics.instance.log(
+        log.message.toString(),
+      ),
+    );
   }
 }

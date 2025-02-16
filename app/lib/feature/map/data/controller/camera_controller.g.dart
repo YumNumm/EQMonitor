@@ -15,20 +15,22 @@ String _$mapCameraControllerHash() =>
 ///
 /// Copied from [MapCameraController].
 @ProviderFor(MapCameraController)
-final mapCameraControllerProvider = AutoDisposeNotifierProvider<
-  MapCameraController,
-  MapCameraPosition
->.internal(
-  MapCameraController.new,
-  name: r'mapCameraControllerProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$mapCameraControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final mapCameraControllerProvider =
+    AutoDisposeNotifierProvider<
+      MapCameraController,
+      MapCameraPosition
+    >.internal(
+      MapCameraController.new,
+      name: r'mapCameraControllerProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$mapCameraControllerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
-typedef _$MapCameraController = AutoDisposeNotifier<MapCameraPosition>;
+typedef _$MapCameraController =
+    AutoDisposeNotifier<MapCameraPosition>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

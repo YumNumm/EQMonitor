@@ -11,6 +11,7 @@ class TelegramUrlModel with _$TelegramUrlModel {
     required String? apiAuthorization,
   }) = _TelegramUrlModel;
 
-  factory TelegramUrlModel.fromJson(Map<String, dynamic> json) =>
-      _$TelegramUrlModelFromJson(json);
+  factory TelegramUrlModel.fromJson(
+    Map<String, dynamic> json,
+  ) => _$TelegramUrlModelFromJson(json);
 }

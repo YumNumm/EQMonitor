@@ -43,7 +43,8 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
     final codeTable = ref.watch(jmaCodeTableProvider);
 
     /// 遠地地震かどうか
-    final isFarEarthquake = item.headline?.contains('海外で規模の大きな地震') ?? false;
+    final isFarEarthquake =
+        item.headline?.contains('海外で規模の大きな地震') ?? false;
 
     /// 噴火かどうか
     final isVolcano = item.isVolcano;
@@ -54,17 +55,24 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
         return volcanoName;
       }
       return codeTable.areaEpicenter.items
-          .firstWhereOrNull((e) => int.tryParse(e.code) == item.epicenterCode)
+          .firstWhereOrNull(
+            (e) =>
+                int.tryParse(e.code) == item.epicenterCode,
+          )
           ?.name;
-    }, [item],);
+    }, [item]);
     final hypoDetailName = useMemoized(
-      () => codeTable.areaEpicenterDetail.items.firstWhereOrNull(
-        (e) => int.tryParse(e.code) == item.epicenterDetailCode,
-      ),
+      () => codeTable.areaEpicenterDetail.items
+          .firstWhereOrNull(
+            (e) =>
+                int.tryParse(e.code) ==
+                item.epicenterDetailCode,
+          ),
       [item.epicenterDetailCode],
     );
 
-    final maxIntensityRegionNames = item.maxIntensityRegionNames;
+    final maxIntensityRegionNames =
+        item.maxIntensityRegionNames;
     final maxIntensity = item.maxIntensity;
     final title = switch ((
       hypoName,
@@ -74,19 +82,32 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
     )) {
       (
         final String hypoName,
-        final AreaEpicenterDetail_AreaEpicenterDetailItem hypoDetailName,
+        final AreaEpicenterDetail_AreaEpicenterDetailItem
+        hypoDetailName,
         _,
         _,
       ) =>
         '$hypoName(${hypoDetailName.name})',
       (final String hypoName, _, _, _) => hypoName,
-      (_, _, final JmaIntensity intensity, final List<String> regionNames)
-          when regionNames.isNotEmpty && regionNames.length >= 2 =>
+      (
+        _,
+        _,
+        final JmaIntensity intensity,
+        final List<String> regionNames,
+      )
+          when regionNames.isNotEmpty &&
+              regionNames.length >= 2 =>
         '最大震度$intensityを${regionNames.first}などで観測',
-      (_, _, final JmaIntensity intensity, final List<String> regionNames)
+      (
+        _,
+        _,
+        final JmaIntensity intensity,
+        final List<String> regionNames,
+      )
           when regionNames.isNotEmpty =>
         '最大震度$intensityを${regionNames.first}で観測',
-      (_, _, final JmaIntensity intensity, _) => '最大震度${intensity.type}を観測',
+      (_, _, final JmaIntensity intensity, _) =>
+        '最大震度${intensity.type}を観測',
       _ => '',
     };
     final dateFormatter = DateFormat('yyyy/MM/dd HH:mm');
@@ -100,14 +121,19 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
         } +
         switch (item.depth) {
           (final int depth) when depth == 0 => '深さ ごく浅い',
-          (final int depth) when depth == 700 => '深さ 700km以上',
+          (final int depth) when depth == 700 =>
+            '深さ 700km以上',
           (final int depth) => '深さ ${depth}km',
           _ => '',
         };
-    final intensityColorState = ref.watch(intensityColorProvider);
+    final intensityColorState = ref.watch(
+      intensityColorProvider,
+    );
     final intensityColor =
         maxIntensity != null
-            ? intensityColorState.fromJmaIntensity(maxIntensity).background
+            ? intensityColorState
+                .fromJmaIntensity(maxIntensity)
+                .background
             : null;
     final maxLpgmIntensity = item.maxLpgmIntensity;
     // 5 -> 5.0, 5.123 -> 5.1
@@ -115,12 +141,14 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
     final magnitudeCondition = item.magnitudeCondition;
     final trailingText = switch (null) {
       _ when isVolcano => '大規模な噴火',
-      _ when magnitudeCondition != null => magnitudeCondition,
+      _ when magnitudeCondition != null =>
+        magnitudeCondition,
       _ when magnitude != null => 'M$magnitude',
       _ => '',
     };
     final chips = <Widget>[
-      if (maxLpgmIntensity != null && maxLpgmIntensity != JmaLgIntensity.zero)
+      if (maxLpgmIntensity != null &&
+          maxLpgmIntensity != JmaLgIntensity.zero)
         Chip(
           label: Text('最大長周期地震動階級 $maxLpgmIntensity'),
           padding: EdgeInsets.zero,
@@ -129,7 +157,9 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
     return ListTile(
       visualDensity: visualDensity,
       tileColor:
-          showBackgroundColor ? intensityColor?.withValues(alpha: 0.4) : null,
+          showBackgroundColor
+              ? intensityColor?.withValues(alpha: 0.4)
+              : null,
       onTap: onTap,
       title: Text(
         title,
@@ -145,7 +175,8 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
           Text(
             subTitle,
             style: TextStyle(
-              fontFamily: GoogleFonts.notoSansJp().fontFamily,
+              fontFamily:
+                  GoogleFonts.notoSansJp().fontFamily,
               color: descriptionTextColor,
             ),
           ),

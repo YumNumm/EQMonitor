@@ -25,7 +25,8 @@ mixin _$Security {
   String? get hash => throw _privateConstructorUsedError;
 
   /// Serializes this Security to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of Security
   /// with the given fields replaced by the non-null parameter values.
@@ -36,8 +37,10 @@ mixin _$Security {
 
 /// @nodoc
 abstract class $SecurityCopyWith<$Res> {
-  factory $SecurityCopyWith(Security value, $Res Function(Security) then) =
-      _$SecurityCopyWithImpl<$Res, Security>;
+  factory $SecurityCopyWith(
+    Security value,
+    $Res Function(Security) then,
+  ) = _$SecurityCopyWithImpl<$Res, Security>;
   @useResult
   $Res call({String? realm, String? hash});
 }
@@ -56,7 +59,10 @@ class _$SecurityCopyWithImpl<$Res, $Val extends Security>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? realm = freezed, Object? hash = freezed}) {
+  $Res call({
+    Object? realm = freezed,
+    Object? hash = freezed,
+  }) {
     return _then(
       _value.copyWith(
             realm:
@@ -100,7 +106,10 @@ class __$$SecurityImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? realm = freezed, Object? hash = freezed}) {
+  $Res call({
+    Object? realm = freezed,
+    Object? hash = freezed,
+  }) {
     return _then(
       _$SecurityImpl(
         realm:
@@ -121,10 +130,14 @@ class __$$SecurityImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$SecurityImpl implements _Security {
-  const _$SecurityImpl({required this.realm, required this.hash});
+  const _$SecurityImpl({
+    required this.realm,
+    required this.hash,
+  });
 
-  factory _$SecurityImpl.fromJson(Map<String, dynamic> json) =>
-      _$$SecurityImplFromJson(json);
+  factory _$SecurityImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$SecurityImplFromJson(json);
 
   @override
   final String? realm;
@@ -141,8 +154,10 @@ class _$SecurityImpl implements _Security {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SecurityImpl &&
-            (identical(other.realm, realm) || other.realm == realm) &&
-            (identical(other.hash, hash) || other.hash == hash));
+            (identical(other.realm, realm) ||
+                other.realm == realm) &&
+            (identical(other.hash, hash) ||
+                other.hash == hash));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -155,7 +170,10 @@ class _$SecurityImpl implements _Security {
   @override
   @pragma('vm:prefer-inline')
   _$$SecurityImplCopyWith<_$SecurityImpl> get copyWith =>
-      __$$SecurityImplCopyWithImpl<_$SecurityImpl>(this, _$identity);
+      __$$SecurityImplCopyWithImpl<_$SecurityImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {

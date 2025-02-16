@@ -34,8 +34,11 @@ class MapCameraPositionHelper {
 
     // メルカトル座標から緯度に戻す
     final centerLat =
-        (2 * math.atan(math.exp(centerY)) - math.pi / 2) * 180 / math.pi;
-    final centerLng = (_japanBounds.east + _japanBounds.west) / 2;
+        (2 * math.atan(math.exp(centerY)) - math.pi / 2) *
+        180 /
+        math.pi;
+    final centerLng =
+        (_japanBounds.east + _japanBounds.west) / 2;
 
     return LatLng(centerLat, centerLng);
   }
@@ -54,7 +57,8 @@ class MapCameraPositionHelper {
     final mercatorHeight = (northY - southY).abs();
 
     // 経度方向の幅（度）
-    final longitudeWidth = _japanBounds.east - _japanBounds.west;
+    final longitudeWidth =
+        _japanBounds.east - _japanBounds.west;
 
     // 画面サイズと地理的な範囲から基本ズームレベルを計算
     final latitudeBasedZoom =
@@ -63,6 +67,7 @@ class MapCameraPositionHelper {
         math.log(screenWidth / longitudeWidth) / math.ln2;
 
     // 縦横の小さい方のズームレベルを採用し、マージンを考慮
-    return math.min(latitudeBasedZoom, longitudeBasedZoom) - 0.5;
+    return math.min(latitudeBasedZoom, longitudeBasedZoom) -
+        0.5;
   }
 }

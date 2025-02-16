@@ -16,13 +16,15 @@ part 'dio_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 Dio dio(Ref ref) {
-  final key = ref.watch(telegramUrlProvider).apiAuthorization;
+  final key =
+      ref.watch(telegramUrlProvider).apiAuthorization;
   final authorization = key != null ? 'Bearer $key' : null;
   final dio = Dio(
     BaseOptions(
       headers: {
         'user-agent': 'eqmonitor',
-        if (authorization != null) 'authorization': authorization,
+        if (authorization != null)
+          'authorization': authorization,
       },
       baseUrl: ref.watch(telegramUrlProvider).restApiUrl,
       contentType: ContentType.json.value,
@@ -34,7 +36,10 @@ Dio dio(Ref ref) {
     HttpOverrides.global = _HttpOverrides();
     dio.httpClientAdapter = IOHttpClientAdapter(
       createHttpClient:
-          () => HttpClient()..findProxy = (url) => 'PROXY 192.168.151.154:9090',
+          () =>
+              HttpClient()
+                ..findProxy =
+                    (url) => 'PROXY 192.168.151.154:9090',
     );
   }
   dio.interceptors.add(

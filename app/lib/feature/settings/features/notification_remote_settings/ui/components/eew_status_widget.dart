@@ -6,7 +6,11 @@ import 'package:eqmonitor/feature/settings/features/notification_remote_settings
 import 'package:flutter/material.dart';
 
 class EewStatusWidget extends StatelessWidget {
-  const EewStatusWidget({required this.eew, required this.action, super.key});
+  const EewStatusWidget({
+    required this.eew,
+    required this.action,
+    super.key,
+  });
 
   final NotificationRemoteSettingsEew eew;
   final void Function() action;
@@ -18,7 +22,8 @@ class EewStatusWidget extends StatelessWidget {
 
     return BorderedContainer(
       margin: EdgeInsets.zero,
-      accentColor: Theme.of(context).colorScheme.secondaryContainer,
+      accentColor:
+          Theme.of(context).colorScheme.secondaryContainer,
       onPressed: action,
       child: Row(
         children: [
@@ -48,14 +53,19 @@ class EewStatusWidget extends StatelessWidget {
 }
 
 class EewNotificationStatusWidget extends StatelessWidget {
-  const EewNotificationStatusWidget({required this.eew, super.key});
+  const EewNotificationStatusWidget({
+    required this.eew,
+    super.key,
+  });
 
   final NotificationRemoteSettingsEew eew;
 
   @override
   Widget build(BuildContext context) {
     final enabledRegions = eew.regions.where(
-      (e) => (eew.global == null) || e.minJmaIntensity < (eew.global!),
+      (e) =>
+          (eew.global == null) ||
+          e.minJmaIntensity < (eew.global!),
     );
 
     if (eew.global == null && eew.regions.isEmpty) {
@@ -68,13 +78,17 @@ class EewNotificationStatusWidget extends StatelessWidget {
                 ? [
                   const TextSpan(
                     text: 'すべての緊急地震速報を通知します',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ]
                 : [
                   const TextSpan(
                     text: '以下の条件のいずれかを満たした時に通知します\n',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   if (eew.global != null) ...[
                     const TextSpan(text: '・任意の地域で'),
@@ -83,7 +97,9 @@ class EewNotificationStatusWidget extends StatelessWidget {
                           '震度'
                           '${eew.global!.type.fromPlusMinus}'
                           '${eew.global != JmaForecastIntensity.seven ? "以上" : ""}',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const TextSpan(text: 'が予想'),
                   ],
@@ -91,7 +107,9 @@ class EewNotificationStatusWidget extends StatelessWidget {
                     ...enabledRegions
                         .mapIndexed(
                           (index, region) => [
-                            TextSpan(text: '\n・${region.name}で'),
+                            TextSpan(
+                              text: '\n・${region.name}で',
+                            ),
                             TextSpan(
                               text:
                                   '震度${region.minJmaIntensity.type.fromPlusMinus}'

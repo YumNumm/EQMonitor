@@ -26,16 +26,24 @@ class HomeMapContent extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // 強震モニタレイヤーの監視
-    final kyoshinLayer = ref.watch(kyoshinMonitorLayerControllerProvider);
+    final kyoshinLayer = ref.watch(
+      kyoshinMonitorLayerControllerProvider,
+    );
     final isKyoshinLayerEnabled = ref.watch(
-      kyoshinMonitorSettingsProvider.select((v) => v.useKmoni),
+      kyoshinMonitorSettingsProvider.select(
+        (v) => v.useKmoni,
+      ),
     );
     // スタイルの監視
-    final configurationState = ref.watch(mapConfigurationNotifierProvider);
+    final configurationState = ref.watch(
+      mapConfigurationNotifierProvider,
+    );
     final configuration = configurationState.valueOrNull;
 
     if (configuration == null) {
-      return const Center(child: CircularProgressIndicator.adaptive());
+      return const Center(
+        child: CircularProgressIndicator.adaptive(),
+      );
     }
 
     final styleString = configuration.styleString;
@@ -43,7 +51,9 @@ class HomeMapContent extends HookConsumerWidget {
       throw ArgumentError('styleString is null');
     }
 
-    final homeConfiguration = ref.watch(homeConfigurationNotifierProvider);
+    final homeConfiguration = ref.watch(
+      homeConfigurationNotifierProvider,
+    );
 
     return RepaintBoundary(
       child: DeclarativeMap(
@@ -52,17 +62,30 @@ class HomeMapContent extends HookConsumerWidget {
         controller: mapController,
         initialCameraPosition: cameraPosition,
         layers: [
-          for (final intensity in JmaForecastIntensity.values)
-            ref.watch(eewEstimatedIntensityLayerControllerProvider(intensity)),
-          ...ref.watch(eewPsWaveLineLayerControllerProvider),
-          ref.watch(
-            eewHypocenterLayerControllerProvider(EewHypocenterIcon.normal),
+          for (final intensity
+              in JmaForecastIntensity.values)
+            ref.watch(
+              eewEstimatedIntensityLayerControllerProvider(
+                intensity,
+              ),
+            ),
+          ...ref.watch(
+            eewPsWaveLineLayerControllerProvider,
           ),
           ref.watch(
-            eewHypocenterLayerControllerProvider(EewHypocenterIcon.lowPrecise),
+            eewHypocenterLayerControllerProvider(
+              EewHypocenterIcon.normal,
+            ),
+          ),
+          ref.watch(
+            eewHypocenterLayerControllerProvider(
+              EewHypocenterIcon.lowPrecise,
+            ),
           ),
           if (isKyoshinLayerEnabled) kyoshinLayer,
-          ...ref.watch(eewPsWaveFillLayerControllerProvider),
+          ...ref.watch(
+            eewPsWaveFillLayerControllerProvider,
+          ),
           ref.watch(eewPsWaveSourceLayerControllerProvider),
         ],
       ),

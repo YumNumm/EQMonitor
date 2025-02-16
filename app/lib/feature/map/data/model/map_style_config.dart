@@ -12,11 +12,13 @@ class MapStyleConfig with _$MapStyleConfig {
     required MapStyleTheme theme,
     @JsonKey(includeToJson: false, includeFromJson: false)
     MapStyleColorScheme? colorScheme,
-    @JsonKey(includeToJson: false, includeFromJson: false) String? styleString,
+    @JsonKey(includeToJson: false, includeFromJson: false)
+    String? styleString,
   }) = _MapStyleConfig;
 
-  factory MapStyleConfig.fromJson(Map<String, dynamic> json) =>
-      _$MapStyleConfigFromJson(json);
+  factory MapStyleConfig.fromJson(
+    Map<String, dynamic> json,
+  ) => _$MapStyleConfigFromJson(json);
 }
 
 /// マップのスタイルテーマ
@@ -33,8 +35,9 @@ class MapStyleColorScheme with _$MapStyleColorScheme {
     @ColorConverter() required Color japanLineColor,
   }) = _MapStyleColorScheme;
 
-  factory MapStyleColorScheme.fromJson(Map<String, dynamic> json) =>
-      _$MapStyleColorSchemeFromJson(json);
+  factory MapStyleColorScheme.fromJson(
+    Map<String, dynamic> json,
+  ) => _$MapStyleColorSchemeFromJson(json);
 
   /// ライトテーマのカラースキーム
   factory MapStyleColorScheme.light() {

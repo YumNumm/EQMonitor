@@ -7,15 +7,20 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'earthquake_history_early_repository.g.dart';
 
 @Riverpod(keepAlive: true)
-EarthquakeHistoryEarlyRepository earthquakeHistoryEarlyRepository(Ref ref) =>
-    EarthquakeHistoryEarlyRepository(api: ref.watch(eqApiProvider));
+EarthquakeHistoryEarlyRepository
+earthquakeHistoryEarlyRepository(Ref ref) =>
+    EarthquakeHistoryEarlyRepository(
+      api: ref.watch(eqApiProvider),
+    );
 
 class EarthquakeHistoryEarlyRepository {
-  EarthquakeHistoryEarlyRepository({required EqApi api}) : _api = api;
+  EarthquakeHistoryEarlyRepository({required EqApi api})
+    : _api = api;
 
   final EqApi _api;
 
-  Future<EqApiV1Response<EarthquakeEarly>> fetchEarthquakeEarlyLists({
+  Future<EqApiV1Response<EarthquakeEarly>>
+  fetchEarthquakeEarlyLists({
     int limit = 100,
     int offset = 0,
     double? magnitudeLte,
@@ -26,7 +31,8 @@ class EarthquakeHistoryEarlyRepository {
     JmaIntensity? intensityGte,
     DateTime? originTimeLte,
     DateTime? originTimeGte,
-    EarthquakeEarlySortType sort = EarthquakeEarlySortType.origin_time,
+    EarthquakeEarlySortType sort =
+        EarthquakeEarlySortType.origin_time,
     bool ascending = false,
   }) async {
     final response = await _api.v1.getEarthquakeEarlies(
@@ -44,13 +50,17 @@ class EarthquakeHistoryEarlyRepository {
       ascending: ascending,
     );
 
-    return (count: response.response.count, items: response.data);
+    return (
+      count: response.response.count,
+      items: response.data,
+    );
   }
 
   Future<EarthquakeEarlyEvent> fetchEarthquakeEarlyEvent({
     required String id,
   }) async {
-    final result = await _api.objects.getEarthquakeEarlyEvent(id: id);
+    final result = await _api.objects
+        .getEarthquakeEarlyEvent(id: id);
     return result.data;
   }
 }

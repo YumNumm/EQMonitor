@@ -7,7 +7,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'earthquake_history_config_provider.g.dart';
 
 @riverpod
-class EarthquakeHistoryConfig extends _$EarthquakeHistoryConfig {
+class EarthquakeHistoryConfig
+    extends _$EarthquakeHistoryConfig {
   @override
   EarthquakeHistoryConfigModel build() {
     final result = _load();
@@ -22,11 +23,14 @@ class EarthquakeHistoryConfig extends _$EarthquakeHistoryConfig {
 
   static const _key = 'earthquake_history_config';
 
-  Future<void> _save() async =>
-      ref.read(sharedPreferencesProvider).setString(_key, jsonEncode(state));
+  Future<void> _save() async => ref
+      .read(sharedPreferencesProvider)
+      .setString(_key, jsonEncode(state));
 
   EarthquakeHistoryConfigModel? _load() {
-    final jsonString = ref.read(sharedPreferencesProvider).getString(_key);
+    final jsonString = ref
+        .read(sharedPreferencesProvider)
+        .getString(_key);
     if (jsonString == null) {
       return null;
     }
@@ -40,19 +44,27 @@ class EarthquakeHistoryConfig extends _$EarthquakeHistoryConfig {
     }
   }
 
-  Future<void> updateListConfig(EarthquakeHistoryListConfig config) async {
+  Future<void> updateListConfig(
+    EarthquakeHistoryListConfig config,
+  ) async {
     state = state.copyWith(list: config);
     return _save();
   }
 
-  Future<void> updateDetailConfig(EarthquakeHistoryDetailConfig config) async {
+  Future<void> updateDetailConfig(
+    EarthquakeHistoryDetailConfig config,
+  ) async {
     state = state.copyWith(detail: config);
     return _save();
   }
 
-  Future<void> updateIntensityIcon({required bool value}) async {
+  Future<void> updateIntensityIcon({
+    required bool value,
+  }) async {
     state = state.copyWith(
-      detail: state.detail.copyWith(showIntensityIcon: value),
+      detail: state.detail.copyWith(
+        showIntensityIcon: value,
+      ),
     );
     await _save();
   }

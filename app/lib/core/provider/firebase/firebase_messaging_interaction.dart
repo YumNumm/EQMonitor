@@ -6,9 +6,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'firebase_messaging_interaction.g.dart';
 
 @Riverpod(keepAlive: true)
-Stream<RemoteMessage> firebaseMessagingInteraction(Ref ref) async* {
+Stream<RemoteMessage> firebaseMessagingInteraction(
+  Ref ref,
+) async* {
   final messaging = ref.watch(firebaseMessagingProvider);
-  final initialMessage = await messaging.getInitialMessage();
+  final initialMessage =
+      await messaging.getInitialMessage();
   if (initialMessage != null) {
     yield initialMessage;
   }

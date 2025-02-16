@@ -15,13 +15,17 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'jma_parameter.g.dart';
 
 typedef JmaParameterState =
-    ({EarthquakeParameter earthquake, TsunamiParameter tsunami});
+    ({
+      EarthquakeParameter earthquake,
+      TsunamiParameter tsunami,
+    });
 
 @Riverpod(keepAlive: true)
 class JmaParameter extends _$JmaParameter {
   @override
   Stream<JmaParameterState> build() async* {
-    final streamController = StreamController<JmaParameterState>();
+    final streamController =
+        StreamController<JmaParameterState>();
     ref.onDispose(streamController.close);
 
     final earthquakeStream = getEarthquake();
@@ -32,7 +36,10 @@ class JmaParameter extends _$JmaParameter {
 
     void sendIfNotNull() {
       if (earthquake != null && tsunami != null) {
-        streamController.add((earthquake: earthquake!, tsunami: tsunami!));
+        streamController.add((
+          earthquake: earthquake!,
+          tsunami: tsunami!,
+        ));
       }
     }
 
@@ -61,37 +68,51 @@ class JmaParameter extends _$JmaParameter {
       yield value;
     }
 
-    final cachedEtag = ref.read(earthquakeParameterEtagProvider);
+    final cachedEtag = ref.read(
+      earthquakeParameterEtagProvider,
+    );
     // check Etag
     final currentEtag =
         await ref
             .watch(jmaParameterApiClientProvider)
             .getEarthquakeParameterHead();
-    talker.log('Earthquake cachedEtag: $cachedEtag, currentEtag: $currentEtag');
-    if (cachedEtag != null && cachedEtag == currentEtag && !kIsWeb) {
+    talker.log(
+      'Earthquake cachedEtag: $cachedEtag, currentEtag: $currentEtag',
+    );
+    if (cachedEtag != null &&
+        cachedEtag == currentEtag &&
+        !kIsWeb) {
       return;
     }
     // ETagが一致しない場合はAPIから再取得する
     final result =
-        await ref.watch(jmaParameterApiClientProvider).getEarthquakeParameter();
+        await ref
+            .watch(jmaParameterApiClientProvider)
+            .getEarthquakeParameter();
     if (!kIsWeb) {
       await _saveEarthquakeToLocal(result.parameter);
     }
     final etag = result.etag;
     if (etag != null) {
-      await ref.read(earthquakeParameterEtagProvider.notifier).set(etag);
+      await ref
+          .read(earthquakeParameterEtagProvider.notifier)
+          .set(etag);
     }
     yield result.parameter;
   }
 
   Future<Result<EarthquakeParameter, Exception>>
   _getEarthquakeFromLocal() async {
-    final dir = ref.read(applicationDocumentsDirectoryProvider);
+    final dir = ref.read(
+      applicationDocumentsDirectoryProvider,
+    );
     final file = File('${dir.path}/$_earthquakeFileName');
     if (file.existsSync()) {
       final buffer = await file.readAsBytes();
       try {
-        return Result.success(EarthquakeParameter.fromBuffer(buffer));
+        return Result.success(
+          EarthquakeParameter.fromBuffer(buffer),
+        );
       } on Exception catch (e) {
         return Result.failure(e);
       }
@@ -100,8 +121,12 @@ class JmaParameter extends _$JmaParameter {
     }
   }
 
-  Future<void> _saveEarthquakeToLocal(EarthquakeParameter earthquake) async {
-    final dir = ref.read(applicationDocumentsDirectoryProvider);
+  Future<void> _saveEarthquakeToLocal(
+    EarthquakeParameter earthquake,
+  ) async {
+    final dir = ref.read(
+      applicationDocumentsDirectoryProvider,
+    );
     final file = File('${dir.path}/$_earthquakeFileName');
     await file.writeAsBytes(earthquake.writeToBuffer());
   }
@@ -119,13 +144,19 @@ class JmaParameter extends _$JmaParameter {
         await ref
             .watch(jmaParameterApiClientProvider)
             .getTsunamiParameterHeadEtag();
-    talker.log('Tsunami cachedEtag: $cachedEtag, currentEtag: $currentEtag');
-    if (cachedEtag != null && cachedEtag == currentEtag && !kIsWeb) {
+    talker.log(
+      'Tsunami cachedEtag: $cachedEtag, currentEtag: $currentEtag',
+    );
+    if (cachedEtag != null &&
+        cachedEtag == currentEtag &&
+        !kIsWeb) {
       return;
     }
     // ETagが一致しない場合はAPIから再取得する
     final result =
-        await ref.watch(jmaParameterApiClientProvider).getTsunamiParameter();
+        await ref
+            .watch(jmaParameterApiClientProvider)
+            .getTsunamiParameter();
     if (!kIsWeb) {
       await _saveTsunamiToLocal(result.parameter);
     }
@@ -136,14 +167,19 @@ class JmaParameter extends _$JmaParameter {
     yield result.parameter;
   }
 
-  Future<Result<TsunamiParameter, Exception>> _getTsunamiFromLocal() async {
-    final dir = ref.read(applicationDocumentsDirectoryProvider);
+  Future<Result<TsunamiParameter, Exception>>
+  _getTsunamiFromLocal() async {
+    final dir = ref.read(
+      applicationDocumentsDirectoryProvider,
+    );
     final file = File('${dir.path}/$_tsunamiFileName');
     log('Tsunami file path: ${file.path}');
     if (file.existsSync()) {
       final buffer = await file.readAsBytes();
       try {
-        return Result.success(TsunamiParameter.fromBuffer(buffer));
+        return Result.success(
+          TsunamiParameter.fromBuffer(buffer),
+        );
       } on Exception catch (e) {
         return Result.failure(e);
       }
@@ -152,15 +188,20 @@ class JmaParameter extends _$JmaParameter {
     }
   }
 
-  Future<void> _saveTsunamiToLocal(TsunamiParameter tsunami) async {
-    final dir = ref.read(applicationDocumentsDirectoryProvider);
+  Future<void> _saveTsunamiToLocal(
+    TsunamiParameter tsunami,
+  ) async {
+    final dir = ref.read(
+      applicationDocumentsDirectoryProvider,
+    );
     final file = File('${dir.path}/$_tsunamiFileName');
     await file.writeAsBytes(tsunami.writeToBuffer());
   }
 }
 
 @Riverpod(keepAlive: true)
-class EarthquakeParameterEtag extends _$EarthquakeParameterEtag {
+class EarthquakeParameterEtag
+    extends _$EarthquakeParameterEtag {
   @override
   String? build() {
     final prefs = ref.watch(sharedPreferencesProvider);

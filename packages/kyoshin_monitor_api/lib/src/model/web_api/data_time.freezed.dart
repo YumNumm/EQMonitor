@@ -21,15 +21,25 @@ DataTime _$DataTimeFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$DataTime {
-  Security? get security => throw _privateConstructorUsedError;
+  Security? get security =>
+      throw _privateConstructorUsedError;
   Result? get result => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
-  DateTime get latestTime => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
-  DateTime get requestTime => throw _privateConstructorUsedError;
+  @JsonKey(
+    fromJson: dateTimeFromString,
+    toJson: dateTimeToString,
+  )
+  DateTime get latestTime =>
+      throw _privateConstructorUsedError;
+  @JsonKey(
+    fromJson: dateTimeFromString,
+    toJson: dateTimeToString,
+  )
+  DateTime get requestTime =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this DataTime to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of DataTime
   /// with the given fields replaced by the non-null parameter values.
@@ -40,15 +50,23 @@ mixin _$DataTime {
 
 /// @nodoc
 abstract class $DataTimeCopyWith<$Res> {
-  factory $DataTimeCopyWith(DataTime value, $Res Function(DataTime) then) =
-      _$DataTimeCopyWithImpl<$Res, DataTime>;
+  factory $DataTimeCopyWith(
+    DataTime value,
+    $Res Function(DataTime) then,
+  ) = _$DataTimeCopyWithImpl<$Res, DataTime>;
   @useResult
   $Res call({
     Security? security,
     Result? result,
-    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+    @JsonKey(
+      fromJson: dateTimeFromString,
+      toJson: dateTimeToString,
+    )
     DateTime latestTime,
-    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+    @JsonKey(
+      fromJson: dateTimeFromString,
+      toJson: dateTimeToString,
+    )
     DateTime requestTime,
   });
 
@@ -112,8 +130,12 @@ class _$DataTimeCopyWithImpl<$Res, $Val extends DataTime>
       return null;
     }
 
-    return $SecurityCopyWith<$Res>(_value.security!, (value) {
-      return _then(_value.copyWith(security: value) as $Val);
+    return $SecurityCopyWith<$Res>(_value.security!, (
+      value,
+    ) {
+      return _then(
+        _value.copyWith(security: value) as $Val,
+      );
     });
   }
 
@@ -144,9 +166,15 @@ abstract class _$$DataTimeImplCopyWith<$Res>
   $Res call({
     Security? security,
     Result? result,
-    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+    @JsonKey(
+      fromJson: dateTimeFromString,
+      toJson: dateTimeToString,
+    )
     DateTime latestTime,
-    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+    @JsonKey(
+      fromJson: dateTimeFromString,
+      toJson: dateTimeToString,
+    )
     DateTime requestTime,
   });
 
@@ -208,24 +236,37 @@ class _$DataTimeImpl implements _DataTime {
   const _$DataTimeImpl({
     required this.security,
     required this.result,
-    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+    @JsonKey(
+      fromJson: dateTimeFromString,
+      toJson: dateTimeToString,
+    )
     required this.latestTime,
-    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+    @JsonKey(
+      fromJson: dateTimeFromString,
+      toJson: dateTimeToString,
+    )
     required this.requestTime,
   });
 
-  factory _$DataTimeImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DataTimeImplFromJson(json);
+  factory _$DataTimeImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$DataTimeImplFromJson(json);
 
   @override
   final Security? security;
   @override
   final Result? result;
   @override
-  @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+  @JsonKey(
+    fromJson: dateTimeFromString,
+    toJson: dateTimeToString,
+  )
   final DateTime latestTime;
   @override
-  @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+  @JsonKey(
+    fromJson: dateTimeFromString,
+    toJson: dateTimeToString,
+  )
   final DateTime requestTime;
 
   @override
@@ -240,7 +281,8 @@ class _$DataTimeImpl implements _DataTime {
             other is _$DataTimeImpl &&
             (identical(other.security, security) ||
                 other.security == security) &&
-            (identical(other.result, result) || other.result == result) &&
+            (identical(other.result, result) ||
+                other.result == result) &&
             (identical(other.latestTime, latestTime) ||
                 other.latestTime == latestTime) &&
             (identical(other.requestTime, requestTime) ||
@@ -249,8 +291,13 @@ class _$DataTimeImpl implements _DataTime {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, security, result, latestTime, requestTime);
+  int get hashCode => Object.hash(
+    runtimeType,
+    security,
+    result,
+    latestTime,
+    requestTime,
+  );
 
   /// Create a copy of DataTime
   /// with the given fields replaced by the non-null parameter values.
@@ -258,7 +305,10 @@ class _$DataTimeImpl implements _DataTime {
   @override
   @pragma('vm:prefer-inline')
   _$$DataTimeImplCopyWith<_$DataTimeImpl> get copyWith =>
-      __$$DataTimeImplCopyWithImpl<_$DataTimeImpl>(this, _$identity);
+      __$$DataTimeImplCopyWithImpl<_$DataTimeImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -270,9 +320,15 @@ abstract class _DataTime implements DataTime {
   const factory _DataTime({
     required final Security? security,
     required final Result? result,
-    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+    @JsonKey(
+      fromJson: dateTimeFromString,
+      toJson: dateTimeToString,
+    )
     required final DateTime latestTime,
-    @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+    @JsonKey(
+      fromJson: dateTimeFromString,
+      toJson: dateTimeToString,
+    )
     required final DateTime requestTime,
   }) = _$DataTimeImpl;
 
@@ -284,10 +340,16 @@ abstract class _DataTime implements DataTime {
   @override
   Result? get result;
   @override
-  @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+  @JsonKey(
+    fromJson: dateTimeFromString,
+    toJson: dateTimeToString,
+  )
   DateTime get latestTime;
   @override
-  @JsonKey(fromJson: dateTimeFromString, toJson: dateTimeToString)
+  @JsonKey(
+    fromJson: dateTimeFromString,
+    toJson: dateTimeToString,
+  )
   DateTime get requestTime;
 
   /// Create a copy of DataTime

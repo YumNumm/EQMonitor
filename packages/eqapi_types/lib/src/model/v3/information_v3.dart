@@ -5,11 +5,13 @@ part 'information_v3.g.dart';
 
 @freezed
 class InformationV3Result with _$InformationV3Result {
-  const factory InformationV3Result({required List<InformationV3> items}) =
-      _InformationV3Result;
+  const factory InformationV3Result({
+    required List<InformationV3> items,
+  }) = _InformationV3Result;
 
-  factory InformationV3Result.fromJson(Map<String, dynamic> json) =>
-      _$InformationV3ResultFromJson(json);
+  factory InformationV3Result.fromJson(
+    Map<String, dynamic> json,
+  ) => _$InformationV3ResultFromJson(json);
 }
 
 @freezed
@@ -18,14 +20,17 @@ class InformationV3 with _$InformationV3 {
     required int id,
     required String title,
     required String body,
-    @JsonKey(unknownEnumValue: Author.unknown) required Author author,
+    @JsonKey(unknownEnumValue: Author.unknown)
+    required Author author,
     @JsonKey(name: 'createdAt') required DateTime createdAt,
-    @JsonKey(unknownEnumValue: Level.info) required Level level,
+    @JsonKey(unknownEnumValue: Level.info)
+    required Level level,
     required int? eventId,
   }) = _InformationV3;
 
-  factory InformationV3.fromJson(Map<String, dynamic> json) =>
-      _$InformationV3FromJson(json);
+  factory InformationV3.fromJson(
+    Map<String, dynamic> json,
+  ) => _$InformationV3FromJson(json);
 }
 
 enum Author {

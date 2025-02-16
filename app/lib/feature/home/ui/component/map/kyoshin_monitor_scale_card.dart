@@ -14,10 +14,13 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final realtimeDataType = ref.watch(
-      kyoshinMonitorSettingsProvider.select((v) => v.realtimeDataType),
+      kyoshinMonitorSettingsProvider.select(
+        (v) => v.realtimeDataType,
+      ),
     );
     final type = switch (realtimeDataType) {
-      RealtimeDataType.shindo => KyoshinMonitorScaleType.intensity,
+      RealtimeDataType.shindo =>
+        KyoshinMonitorScaleType.intensity,
       RealtimeDataType.pga => KyoshinMonitorScaleType.pga,
       RealtimeDataType.pgv ||
       RealtimeDataType.response0125Hz ||
@@ -25,9 +28,13 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
       RealtimeDataType.response05Hz ||
       RealtimeDataType.response1Hz ||
       RealtimeDataType.response2Hz ||
-      RealtimeDataType.response4Hz => KyoshinMonitorScaleType.pgv,
+      RealtimeDataType
+          .response4Hz => KyoshinMonitorScaleType.pgv,
       RealtimeDataType.pgd => KyoshinMonitorScaleType.pgd,
-      _ => throw ArgumentError('Invalid realtimeDataType: $realtimeDataType)'),
+      _ =>
+        throw ArgumentError(
+          'Invalid realtimeDataType: $realtimeDataType)',
+        ),
     };
     final theme = Theme.of(context);
     return GestureDetector(
@@ -50,8 +57,11 @@ class KyoshinMonitorScaleCard extends ConsumerWidget {
             type: type,
             width: 15,
             height: 150,
-            gradientDirection: KyoshinMonitorScaleGradientDirection.reverse,
-            orientation: KyoshinMonitorScaleOrientation.vertical,
+            gradientDirection:
+                KyoshinMonitorScaleGradientDirection
+                    .reverse,
+            orientation:
+                KyoshinMonitorScaleOrientation.vertical,
             textColor: theme.colorScheme.onSurface,
             tickInterval: 3,
             textStyle: theme.textTheme.bodySmall!.copyWith(

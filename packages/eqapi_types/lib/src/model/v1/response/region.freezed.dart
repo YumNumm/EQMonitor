@@ -24,12 +24,16 @@ mixin _$RegionItem {
   int get id => throw _privateConstructorUsedError;
   int get eventId => throw _privateConstructorUsedError;
   String get areaCode => throw _privateConstructorUsedError;
-  JmaIntensity get maxIntensity => throw _privateConstructorUsedError;
-  JmaLgIntensity? get maxLpgmIntensity => throw _privateConstructorUsedError;
-  EarthquakeV1Base get earthquake => throw _privateConstructorUsedError;
+  JmaIntensity get maxIntensity =>
+      throw _privateConstructorUsedError;
+  JmaLgIntensity? get maxLpgmIntensity =>
+      throw _privateConstructorUsedError;
+  EarthquakeV1Base get earthquake =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this RegionItem to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of RegionItem
   /// with the given fields replaced by the non-null parameter values.
@@ -58,7 +62,10 @@ abstract class $RegionItemCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$RegionItemCopyWithImpl<$Res, $Val extends RegionItem>
+class _$RegionItemCopyWithImpl<
+  $Res,
+  $Val extends RegionItem
+>
     implements $RegionItemCopyWith<$Res> {
   _$RegionItemCopyWithImpl(this._value, this._then);
 
@@ -121,9 +128,14 @@ class _$RegionItemCopyWithImpl<$Res, $Val extends RegionItem>
   @override
   @pragma('vm:prefer-inline')
   $EarthquakeV1BaseCopyWith<$Res> get earthquake {
-    return $EarthquakeV1BaseCopyWith<$Res>(_value.earthquake, (value) {
-      return _then(_value.copyWith(earthquake: value) as $Val);
-    });
+    return $EarthquakeV1BaseCopyWith<$Res>(
+      _value.earthquake,
+      (value) {
+        return _then(
+          _value.copyWith(earthquake: value) as $Val,
+        );
+      },
+    );
   }
 }
 
@@ -219,8 +231,9 @@ class _$RegionItemImpl implements _RegionItem {
     required this.earthquake,
   });
 
-  factory _$RegionItemImpl.fromJson(Map<String, dynamic> json) =>
-      _$$RegionItemImplFromJson(json);
+  factory _$RegionItemImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$RegionItemImplFromJson(json);
 
   @override
   final int id;
@@ -246,13 +259,18 @@ class _$RegionItemImpl implements _RegionItem {
         (other.runtimeType == runtimeType &&
             other is _$RegionItemImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.eventId, eventId) || other.eventId == eventId) &&
+            (identical(other.eventId, eventId) ||
+                other.eventId == eventId) &&
             (identical(other.areaCode, areaCode) ||
                 other.areaCode == areaCode) &&
             (identical(other.maxIntensity, maxIntensity) ||
                 other.maxIntensity == maxIntensity) &&
-            (identical(other.maxLpgmIntensity, maxLpgmIntensity) ||
-                other.maxLpgmIntensity == maxLpgmIntensity) &&
+            (identical(
+                  other.maxLpgmIntensity,
+                  maxLpgmIntensity,
+                ) ||
+                other.maxLpgmIntensity ==
+                    maxLpgmIntensity) &&
             (identical(other.earthquake, earthquake) ||
                 other.earthquake == earthquake));
   }
@@ -274,8 +292,12 @@ class _$RegionItemImpl implements _RegionItem {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$RegionItemImplCopyWith<_$RegionItemImpl> get copyWith =>
-      __$$RegionItemImplCopyWithImpl<_$RegionItemImpl>(this, _$identity);
+  _$$RegionItemImplCopyWith<_$RegionItemImpl>
+  get copyWith =>
+      __$$RegionItemImplCopyWithImpl<_$RegionItemImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -313,6 +335,6 @@ abstract class _RegionItem implements RegionItem {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$RegionItemImplCopyWith<_$RegionItemImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$RegionItemImplCopyWith<_$RegionItemImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }

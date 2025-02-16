@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class EarthquakeHistoryEarlySortChip extends StatelessWidget {
+class EarthquakeHistoryEarlySortChip
+    extends StatelessWidget {
   const EarthquakeHistoryEarlySortChip({
     required this.type,
     required this.ascending,
@@ -33,7 +34,9 @@ class EarthquakeHistoryEarlySortChip extends StatelessWidget {
       label: Row(
         children: [
           Icon(
-            ascending ? Icons.arrow_upward : Icons.arrow_downward,
+            ascending
+                ? Icons.arrow_upward
+                : Icons.arrow_downward,
             size: 18,
             color: theme.colorScheme.onSurface,
           ),
@@ -45,16 +48,17 @@ class EarthquakeHistoryEarlySortChip extends StatelessWidget {
       selectedColor: theme.colorScheme.secondaryContainer,
       showCheckmark: false,
       onPressed: () async {
-        final result =
-            await showModalBottomSheet<(EarthquakeEarlySortType, bool)?>(
-              clipBehavior: Clip.antiAlias,
-              context: context,
-              builder:
-                  (context) => _SortModal(
-                    currentSortType: type,
-                    currentAscending: ascending,
-                  ),
-            );
+        final result = await showModalBottomSheet<
+          (EarthquakeEarlySortType, bool)?
+        >(
+          clipBehavior: Clip.antiAlias,
+          context: context,
+          builder:
+              (context) => _SortModal(
+                currentSortType: type,
+                currentAscending: ascending,
+              ),
+        );
         if (result != null) {
           onChanged?.call(result.$1, result.$2);
         }
@@ -63,7 +67,8 @@ class EarthquakeHistoryEarlySortChip extends StatelessWidget {
   }
 }
 
-extension _EarthquakeEarlySortTypeEx on EarthquakeEarlySortType {
+extension _EarthquakeEarlySortTypeEx
+    on EarthquakeEarlySortType {
   String get label => switch (this) {
     EarthquakeEarlySortType.depth => '深さ',
     EarthquakeEarlySortType.magnitude => 'マグニチュード',
@@ -109,7 +114,10 @@ class _SortModal extends HookConsumerWidget {
         children: [
           Center(child: sheetBar),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            padding: const EdgeInsets.symmetric(
+              vertical: 8,
+              horizontal: 16,
+            ),
             child: Text(
               '地震履歴の並び替え',
               style: theme.textTheme.titleMedium?.copyWith(
@@ -119,7 +127,10 @@ class _SortModal extends HookConsumerWidget {
           ),
           const SizedBox(height: 24),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            padding: const EdgeInsets.symmetric(
+              vertical: 8,
+              horizontal: 16,
+            ),
             child: _SegmentedControl(
               type: type.value,
               onChanged: (v) => type.value = v,
@@ -127,16 +138,36 @@ class _SortModal extends HookConsumerWidget {
           ),
           SwitchListTile.adaptive(
             title: const Text('昇順・降順'),
-            subtitle: Text(switch ((type.value, ascending.value)) {
-              (EarthquakeEarlySortType.depth, false) => '震源の深い順',
-              (EarthquakeEarlySortType.depth, true) => '震源の浅い順',
-              (EarthquakeEarlySortType.magnitude, false) => 'マグニチュードの大きい順',
-              (EarthquakeEarlySortType.magnitude, true) => 'マグニチュードの小さい順',
-              (EarthquakeEarlySortType.origin_time, false) => '地震発生時刻の新しい順',
-              (EarthquakeEarlySortType.origin_time, true) => '地震発生時刻の古い順',
-              (EarthquakeEarlySortType.max_intensity, false) => '最大観測震度の大きい順',
-              (EarthquakeEarlySortType.max_intensity, true) => '最大観測震度の小さい順',
-            },),
+            subtitle: Text(switch ((
+              type.value,
+              ascending.value,
+            )) {
+              (EarthquakeEarlySortType.depth, false) =>
+                '震源の深い順',
+              (EarthquakeEarlySortType.depth, true) =>
+                '震源の浅い順',
+              (EarthquakeEarlySortType.magnitude, false) =>
+                'マグニチュードの大きい順',
+              (EarthquakeEarlySortType.magnitude, true) =>
+                'マグニチュードの小さい順',
+              (
+                EarthquakeEarlySortType.origin_time,
+                false,
+              ) =>
+                '地震発生時刻の新しい順',
+              (EarthquakeEarlySortType.origin_time, true) =>
+                '地震発生時刻の古い順',
+              (
+                EarthquakeEarlySortType.max_intensity,
+                false,
+              ) =>
+                '最大観測震度の大きい順',
+              (
+                EarthquakeEarlySortType.max_intensity,
+                true,
+              ) =>
+                '最大観測震度の小さい順',
+            }),
             value: ascending.value,
             onChanged: (v) => ascending.value = v,
           ),
@@ -145,7 +176,8 @@ class _SortModal extends HookConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               TextButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed:
+                    () => Navigator.of(context).pop(),
                 child: const Text('キャンセル'),
               ),
               TextButton(
@@ -165,7 +197,10 @@ class _SortModal extends HookConsumerWidget {
 }
 
 class _SegmentedControl extends StatelessWidget {
-  const _SegmentedControl({required this.type, this.onChanged});
+  const _SegmentedControl({
+    required this.type,
+    this.onChanged,
+  });
 
   final EarthquakeEarlySortType type;
   final void Function(EarthquakeEarlySortType)? onChanged;
@@ -173,11 +208,15 @@ class _SegmentedControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!kIsWeb && (Platform.isIOS || Platform.isMacOS)) {
-      return CupertinoSlidingSegmentedControl<EarthquakeEarlySortType>(
+      return CupertinoSlidingSegmentedControl<
+        EarthquakeEarlySortType
+      >(
         children: {
           for (final e in EarthquakeEarlySortType.values)
             e: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 2),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 2,
+              ),
               child: FittedBox(child: Text(e.label)),
             ),
         },

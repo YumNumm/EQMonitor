@@ -13,8 +13,9 @@ class ReplayFileHeader with _$ReplayFileHeader {
     required ReplayFileCompressionMode compressionMode,
   }) = _ReplayFileHeader;
 
-  factory ReplayFileHeader.fromJson(Map<String, dynamic> json) =>
-      _$ReplayFileHeaderFromJson(json);
+  factory ReplayFileHeader.fromJson(
+    Map<String, dynamic> json,
+  ) => _$ReplayFileHeaderFromJson(json);
 
   factory ReplayFileHeader.fromMsgPack(List<dynamic> data) {
     final compressionModeValue = data[4] as int;
@@ -23,9 +24,10 @@ class ReplayFileHeader with _$ReplayFileHeader {
       softwareName: data[1] as String,
       startTime: data[2] as DateTime,
       endTime: data[3] as DateTime,
-      compressionMode: ReplayFileCompressionMode.values.firstWhere(
-        (e) => e.value == compressionModeValue,
-      ),
+      compressionMode: ReplayFileCompressionMode.values
+          .firstWhere(
+            (e) => e.value == compressionModeValue,
+          ),
     );
   }
 }

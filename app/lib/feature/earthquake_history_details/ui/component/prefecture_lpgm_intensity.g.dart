@@ -8,7 +8,8 @@ part of 'prefecture_lpgm_intensity.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$lpgmCalculatorHash() => r'6e4fb84f94c2bb397d7704498b6ece2284cd32f2';
+String _$lpgmCalculatorHash() =>
+    r'6e4fb84f94c2bb397d7704498b6ece2284cd32f2';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -18,7 +19,8 @@ class _SystemHash {
     // ignore: parameter_assignments
     hash = 0x1fffffff & (hash + value);
     // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    hash =
+        0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
     return hash ^ (hash >> 6);
   }
 
@@ -27,7 +29,8 @@ class _SystemHash {
     hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
     // ignore: parameter_assignments
     hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+    return 0x1fffffff &
+        (hash + ((0x00003fff & hash) << 15));
   }
 }
 
@@ -39,7 +42,12 @@ const _lpgmCalculatorProvider = _LpgmCalculatorFamily();
 class _LpgmCalculatorFamily
     extends
         Family<
-          AsyncValue<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>>
+          AsyncValue<
+            Map<
+              JmaLgIntensity,
+              List<_MergedPrefectureIntensity>
+            >
+          >
         > {
   /// See also [_lpgmCalculator].
   const _LpgmCalculatorFamily();
@@ -62,15 +70,19 @@ class _LpgmCalculatorFamily
     return call(provider.arg);
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  static const Iterable<ProviderOrFamily>? _dependencies =
+      null;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+  Iterable<ProviderOrFamily>? get dependencies =>
+      _dependencies;
 
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  static const Iterable<ProviderOrFamily>?
+  _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+  Iterable<ProviderOrFamily>?
+  get allTransitiveDependencies =>
       _allTransitiveDependencies;
 
   @override
@@ -81,7 +93,10 @@ class _LpgmCalculatorFamily
 class _LpgmCalculatorProvider
     extends
         AutoDisposeFutureProvider<
-          Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>
+          Map<
+            JmaLgIntensity,
+            List<_MergedPrefectureIntensity>
+          >
         > {
   /// See also [_lpgmCalculator].
   _LpgmCalculatorProvider(
@@ -91,7 +106,8 @@ class _LpgmCalculatorProvider
     })
     arg,
   ) : this._internal(
-        (ref) => _lpgmCalculator(ref as _LpgmCalculatorRef, arg),
+        (ref) =>
+            _lpgmCalculator(ref as _LpgmCalculatorRef, arg),
         from: _lpgmCalculatorProvider,
         name: r'_lpgmCalculatorProvider',
         debugGetCreateSourceHash:
@@ -100,7 +116,8 @@ class _LpgmCalculatorProvider
                 : _$lpgmCalculatorHash,
         dependencies: _LpgmCalculatorFamily._dependencies,
         allTransitiveDependencies:
-            _LpgmCalculatorFamily._allTransitiveDependencies,
+            _LpgmCalculatorFamily
+                ._allTransitiveDependencies,
         arg: arg,
       );
 
@@ -122,9 +139,10 @@ class _LpgmCalculatorProvider
 
   @override
   Override overrideWith(
-    FutureOr<Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>> Function(
-      _LpgmCalculatorRef provider,
-    )
+    FutureOr<
+      Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>
+    >
+    Function(_LpgmCalculatorRef provider)
     create,
   ) {
     return ProviderOverride(
@@ -151,7 +169,8 @@ class _LpgmCalculatorProvider
 
   @override
   bool operator ==(Object other) {
-    return other is _LpgmCalculatorProvider && other.arg == arg;
+    return other is _LpgmCalculatorProvider &&
+        other.arg == arg;
   }
 
   @override
@@ -168,7 +187,10 @@ class _LpgmCalculatorProvider
 mixin _LpgmCalculatorRef
     on
         AutoDisposeFutureProviderRef<
-          Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>
+          Map<
+            JmaLgIntensity,
+            List<_MergedPrefectureIntensity>
+          >
         > {
   /// The parameter `arg` of this provider.
   ({
@@ -181,7 +203,10 @@ mixin _LpgmCalculatorRef
 class _LpgmCalculatorProviderElement
     extends
         AutoDisposeFutureProviderElement<
-          Map<JmaLgIntensity, List<_MergedPrefectureIntensity>>
+          Map<
+            JmaLgIntensity,
+            List<_MergedPrefectureIntensity>
+          >
         >
     with _LpgmCalculatorRef {
   _LpgmCalculatorProviderElement(super.provider);

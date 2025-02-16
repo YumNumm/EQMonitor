@@ -19,7 +19,10 @@ class CustomProviderObserver extends ProviderObserver {
       '${value?.toString().length} ',
       name: 'didAddProvider',
     ),
-    _ => log('${provider.name} ($provider)', name: 'didAddProvider'),
+    _ => log(
+      '${provider.name} ($provider)',
+      name: 'didAddProvider',
+    ),
   };
 
   @override
@@ -27,9 +30,18 @@ class CustomProviderObserver extends ProviderObserver {
     ProviderBase<Object?> provider,
     ProviderContainer container,
   ) => switch (provider.name) {
-    'timeTickerProvider' || 'eewAliveTelegramProvider' => null,
-    _ when provider.name?.contains('LayerControllerProvider') ?? false => null,
-    _ => log('${provider.name}', name: 'didDisposeProvider'),
+    'timeTickerProvider' ||
+    'eewAliveTelegramProvider' => null,
+    _
+        when provider.name?.contains(
+              'LayerControllerProvider',
+            ) ??
+            false =>
+      null,
+    _ => log(
+      '${provider.name}',
+      name: 'didDisposeProvider',
+    ),
   };
 
   @override
@@ -44,8 +56,16 @@ class CustomProviderObserver extends ProviderObserver {
     'periodicTimerProvider' ||
     'timeTickerProvider' ||
     'kyoshinMonitorNotifierProvider' => null,
-    _ when provider.name?.contains('LayerControllerProvider') ?? false => null,
-    _ when newValue.toString().length + previousValue.toString().length > 300 =>
+    _
+        when provider.name?.contains(
+              'LayerControllerProvider',
+            ) ??
+            false =>
+      null,
+    _
+        when newValue.toString().length +
+                previousValue.toString().length >
+            300 =>
       log(
         '${provider.name} (${previousValue.runtimeType} '
         '-> ${newValue.runtimeType})',
@@ -64,7 +84,15 @@ class CustomProviderObserver extends ProviderObserver {
     StackTrace stackTrace,
     ProviderContainer container,
   ) {
-    talker.handle(error, stackTrace, 'providerDidFail: ${provider.name}');
-    log('${provider.name} $error', name: 'providerDidFail', error: error);
+    talker.handle(
+      error,
+      stackTrace,
+      'providerDidFail: ${provider.name}',
+    );
+    log(
+      '${provider.name} $error',
+      name: 'providerDidFail',
+      error: error,
+    );
   }
 }

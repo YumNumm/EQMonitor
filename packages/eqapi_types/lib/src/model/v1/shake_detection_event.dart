@@ -14,12 +14,15 @@ class ShakeDetectionWebSocketTelegram
     required List<ShakeDetectionEvent> events,
   }) = _ShakeDetectionWebSocketTelegram;
 
-  factory ShakeDetectionWebSocketTelegram.fromJson(Map<String, dynamic> json) =>
-      _$ShakeDetectionWebSocketTelegramFromJson(json);
+  factory ShakeDetectionWebSocketTelegram.fromJson(
+    Map<String, dynamic> json,
+  ) => _$ShakeDetectionWebSocketTelegramFromJson(json);
 }
 
 @freezed
-class ShakeDetectionEvent with _$ShakeDetectionEvent implements V1Database {
+class ShakeDetectionEvent
+    with _$ShakeDetectionEvent
+    implements V1Database {
   const factory ShakeDetectionEvent({
     @JsonKey(defaultValue: -1) required int? id,
     required String eventId,
@@ -39,8 +42,9 @@ class ShakeDetectionEvent with _$ShakeDetectionEvent implements V1Database {
     required int pointCount,
   }) = _ShakeDetectionEvent;
 
-  factory ShakeDetectionEvent.fromJson(Map<String, dynamic> json) =>
-      _$ShakeDetectionEventFromJson(json);
+  factory ShakeDetectionEvent.fromJson(
+    Map<String, dynamic> json,
+  ) => _$ShakeDetectionEventFromJson(json);
 }
 
 @freezed
@@ -56,8 +60,9 @@ class ShakeDetectionRegion with _$ShakeDetectionRegion {
     required List<ShakeDetectionPoint> points,
   }) = _ShakeDetectionRegion;
 
-  factory ShakeDetectionRegion.fromJson(Map<String, dynamic> json) =>
-      _$ShakeDetectionRegionFromJson(json);
+  factory ShakeDetectionRegion.fromJson(
+    Map<String, dynamic> json,
+  ) => _$ShakeDetectionRegionFromJson(json);
 }
 
 @freezed
@@ -71,8 +76,9 @@ class ShakeDetectionPoint with _$ShakeDetectionPoint {
     required String code,
   }) = _ShakeDetectionPoint;
 
-  factory ShakeDetectionPoint.fromJson(Map<String, dynamic> json) =>
-      _$ShakeDetectionPointFromJson(json);
+  factory ShakeDetectionPoint.fromJson(
+    Map<String, dynamic> json,
+  ) => _$ShakeDetectionPointFromJson(json);
 }
 
 @freezed
@@ -82,6 +88,7 @@ class ShakeDetectionLatLng with _$ShakeDetectionLatLng {
     required double longitude,
   }) = _ShakeDetectionLatLng;
 
-  factory ShakeDetectionLatLng.fromJson(Map<String, dynamic> json) =>
-      _$ShakeDetectionLatLngFromJson(json);
+  factory ShakeDetectionLatLng.fromJson(
+    Map<String, dynamic> json,
+  ) => _$ShakeDetectionLatLngFromJson(json);
 }

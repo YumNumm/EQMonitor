@@ -10,7 +10,10 @@ class EarthquakeNotificationSettingsViewModel
     extends _$EarthquakeNotificationSettingsViewModel {
   @override
   FcmEarthquakeTopic? build() {
-    ref.listen(fcmTopicManagerProvider, (_, next) => _checkTopic(next));
+    ref.listen(
+      fcmTopicManagerProvider,
+      (_, next) => _checkTopic(next),
+    );
     return _checkTopic(ref.read(fcmTopicManagerProvider));
   }
 
@@ -23,7 +26,8 @@ class EarthquakeNotificationSettingsViewModel
 
   static List<FcmEarthquakeTopic> choices = [
     const FcmEarthquakeTopic(null),
-    ...([...JmaIntensity.values]
-      ..remove(JmaIntensity.fiveUpperNoInput)).map(FcmEarthquakeTopic.new),
+    ...([...JmaIntensity.values]..remove(
+      JmaIntensity.fiveUpperNoInput,
+    )).map(FcmEarthquakeTopic.new),
   ];
 }

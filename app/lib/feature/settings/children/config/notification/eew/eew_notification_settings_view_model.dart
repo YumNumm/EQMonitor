@@ -10,7 +10,10 @@ class EewNotificationsSettingsViewModel
     extends _$EewNotificationsSettingsViewModel {
   @override
   FcmEewTopic? build() {
-    ref.listen(fcmTopicManagerProvider, (_, next) => _checkTopic(next));
+    ref.listen(
+      fcmTopicManagerProvider,
+      (_, next) => _checkTopic(next),
+    );
 
     return _checkTopic(ref.read(fcmTopicManagerProvider));
   }
@@ -24,7 +27,8 @@ class EewNotificationsSettingsViewModel
 
   static List<FcmEewTopic> choices = [
     const FcmEewAllTopic(),
-    ...([...JmaIntensity.values]
-      ..remove(JmaIntensity.fiveUpperNoInput)).map(FcmEewIntensityTopic.new),
+    ...([...JmaIntensity.values]..remove(
+      JmaIntensity.fiveUpperNoInput,
+    )).map(FcmEewIntensityTopic.new),
   ];
 }

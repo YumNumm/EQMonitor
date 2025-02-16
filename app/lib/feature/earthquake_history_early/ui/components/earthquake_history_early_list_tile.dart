@@ -8,7 +8,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class EarthquakeHistoryEarlyListTile extends HookConsumerWidget {
+class EarthquakeHistoryEarlyListTile
+    extends HookConsumerWidget {
   const EarthquakeHistoryEarlyListTile({
     required this.item,
     this.onTap,
@@ -28,14 +29,20 @@ class EarthquakeHistoryEarlyListTile extends HookConsumerWidget {
 
     final maxIntensity = item.maxIntensity;
     final title = switch ((hypoName, maxIntensity)) {
-      (final String hypoName, final JmaForecastIntensity _) => hypoName,
+      (
+        final String hypoName,
+        final JmaForecastIntensity _,
+      ) =>
+        hypoName,
       (final String hypoName, _) => hypoName,
     };
     final originTime = item.originTime.toLocal();
     final subTitle =
         switch (item.originTimePrecision) {
-          OriginTimePrecision.millisecond || OriginTimePrecision.second =>
-            DateFormat('yyyy/MM/dd HH:mm:ss ').format(originTime),
+          OriginTimePrecision.millisecond ||
+          OriginTimePrecision.second => DateFormat(
+            'yyyy/MM/dd HH:mm:ss ',
+          ).format(originTime),
           OriginTimePrecision.minute => DateFormat(
             'yyyy/MM/dd HH:mm ',
           ).format(originTime),
@@ -51,11 +58,14 @@ class EarthquakeHistoryEarlyListTile extends HookConsumerWidget {
         } +
         switch (item.depth) {
           (final int depth) when depth == 0 => '深さ ごく浅い',
-          (final int depth) when depth == 700 => '深さ 700km以上',
+          (final int depth) when depth == 700 =>
+            '深さ 700km以上',
           (final int depth) => '深さ ${depth}km',
           _ => '',
         };
-    final intensityColorState = ref.watch(intensityColorProvider);
+    final intensityColorState = ref.watch(
+      intensityColorProvider,
+    );
     final intensityColor =
         maxIntensity != null
             ? intensityColorState
@@ -70,7 +80,9 @@ class EarthquakeHistoryEarlyListTile extends HookConsumerWidget {
     };
     return ListTile(
       tileColor:
-          showBackgroundColor ? intensityColor?.withValues(alpha: 0.4) : null,
+          showBackgroundColor
+              ? intensityColor?.withValues(alpha: 0.4)
+              : null,
       onTap: onTap,
       title: Text(
         title,
@@ -83,7 +95,10 @@ class EarthquakeHistoryEarlyListTile extends HookConsumerWidget {
         children: [
           Text(
             subTitle,
-            style: TextStyle(fontFamily: GoogleFonts.notoSansJp().fontFamily),
+            style: TextStyle(
+              fontFamily:
+                  GoogleFonts.notoSansJp().fontFamily,
+            ),
           ),
         ],
       ),

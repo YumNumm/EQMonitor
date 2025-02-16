@@ -24,27 +24,38 @@ mixin _$EewV1 {
   int get id => throw _privateConstructorUsedError;
   int get eventId => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
-  String get schemaType => throw _privateConstructorUsedError;
+  String get schemaType =>
+      throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
   String get infoType => throw _privateConstructorUsedError;
-  DateTime get reportTime => throw _privateConstructorUsedError;
+  DateTime get reportTime =>
+      throw _privateConstructorUsedError;
   bool get isCanceled => throw _privateConstructorUsedError;
   bool get isLastInfo => throw _privateConstructorUsedError;
   bool? get isPlum => throw _privateConstructorUsedError;
-  EewAccuracy? get accuracy => throw _privateConstructorUsedError;
+  EewAccuracy? get accuracy =>
+      throw _privateConstructorUsedError;
   int? get serialNo => throw _privateConstructorUsedError;
-  String? get headline => throw _privateConstructorUsedError;
+  String? get headline =>
+      throw _privateConstructorUsedError;
   bool? get isWarning => throw _privateConstructorUsedError;
-  DateTime? get originTime => throw _privateConstructorUsedError;
-  DateTime? get arrivalTime => throw _privateConstructorUsedError;
-  String? get hypoName => throw _privateConstructorUsedError;
+  DateTime? get originTime =>
+      throw _privateConstructorUsedError;
+  DateTime? get arrivalTime =>
+      throw _privateConstructorUsedError;
+  String? get hypoName =>
+      throw _privateConstructorUsedError;
   int? get depth => throw _privateConstructorUsedError;
-  double? get latitude => throw _privateConstructorUsedError;
-  double? get longitude => throw _privateConstructorUsedError;
-  double? get magnitude => throw _privateConstructorUsedError;
+  double? get latitude =>
+      throw _privateConstructorUsedError;
+  double? get longitude =>
+      throw _privateConstructorUsedError;
+  double? get magnitude =>
+      throw _privateConstructorUsedError;
   JmaForecastIntensity? get forecastMaxIntensity =>
       throw _privateConstructorUsedError;
-  bool? get forecastMaxIntensityIsOver => throw _privateConstructorUsedError;
+  bool? get forecastMaxIntensityIsOver =>
+      throw _privateConstructorUsedError;
   JmaForecastLgIntensity? get forecastMaxLpgmIntensity =>
       throw _privateConstructorUsedError;
   bool? get forecastMaxLpgmIntensityIsOver =>
@@ -53,18 +64,22 @@ mixin _$EewV1 {
       throw _privateConstructorUsedError;
 
   /// Serializes this EewV1 to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of EewV1
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $EewV1CopyWith<EewV1> get copyWith => throw _privateConstructorUsedError;
+  $EewV1CopyWith<EewV1> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $EewV1CopyWith<$Res> {
-  factory $EewV1CopyWith(EewV1 value, $Res Function(EewV1) then) =
-      _$EewV1CopyWithImpl<$Res, EewV1>;
+  factory $EewV1CopyWith(
+    EewV1 value,
+    $Res Function(EewV1) then,
+  ) = _$EewV1CopyWithImpl<$Res, EewV1>;
   @useResult
   $Res call({
     int id,
@@ -286,14 +301,19 @@ class _$EewV1CopyWithImpl<$Res, $Val extends EewV1>
       return null;
     }
 
-    return $EewAccuracyCopyWith<$Res>(_value.accuracy!, (value) {
-      return _then(_value.copyWith(accuracy: value) as $Val);
+    return $EewAccuracyCopyWith<$Res>(_value.accuracy!, (
+      value,
+    ) {
+      return _then(
+        _value.copyWith(accuracy: value) as $Val,
+      );
     });
   }
 }
 
 /// @nodoc
-abstract class _$$EewV1ImplCopyWith<$Res> implements $EewV1CopyWith<$Res> {
+abstract class _$$EewV1ImplCopyWith<$Res>
+    implements $EewV1CopyWith<$Res> {
   factory _$$EewV1ImplCopyWith(
     _$EewV1Impl value,
     $Res Function(_$EewV1Impl) then,
@@ -602,7 +622,8 @@ class _$EewV1Impl extends _EewV1 {
   List<EstimatedIntensityRegion>? get regions {
     final value = _regions;
     if (value == null) return null;
-    if (_regions is EqualUnmodifiableListView) return _regions;
+    if (_regions is EqualUnmodifiableListView)
+      return _regions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -618,11 +639,14 @@ class _$EewV1Impl extends _EewV1 {
         (other.runtimeType == runtimeType &&
             other is _$EewV1Impl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.eventId, eventId) || other.eventId == eventId) &&
-            (identical(other.type, type) || other.type == type) &&
+            (identical(other.eventId, eventId) ||
+                other.eventId == eventId) &&
+            (identical(other.type, type) ||
+                other.type == type) &&
             (identical(other.schemaType, schemaType) ||
                 other.schemaType == schemaType) &&
-            (identical(other.status, status) || other.status == status) &&
+            (identical(other.status, status) ||
+                other.status == status) &&
             (identical(other.infoType, infoType) ||
                 other.infoType == infoType) &&
             (identical(other.reportTime, reportTime) ||
@@ -631,7 +655,8 @@ class _$EewV1Impl extends _EewV1 {
                 other.isCanceled == isCanceled) &&
             (identical(other.isLastInfo, isLastInfo) ||
                 other.isLastInfo == isLastInfo) &&
-            (identical(other.isPlum, isPlum) || other.isPlum == isPlum) &&
+            (identical(other.isPlum, isPlum) ||
+                other.isPlum == isPlum) &&
             (identical(other.accuracy, accuracy) ||
                 other.accuracy == accuracy) &&
             (identical(other.serialNo, serialNo) ||
@@ -646,15 +671,20 @@ class _$EewV1Impl extends _EewV1 {
                 other.arrivalTime == arrivalTime) &&
             (identical(other.hypoName, hypoName) ||
                 other.hypoName == hypoName) &&
-            (identical(other.depth, depth) || other.depth == depth) &&
+            (identical(other.depth, depth) ||
+                other.depth == depth) &&
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
                 other.longitude == longitude) &&
             (identical(other.magnitude, magnitude) ||
                 other.magnitude == magnitude) &&
-            (identical(other.forecastMaxIntensity, forecastMaxIntensity) ||
-                other.forecastMaxIntensity == forecastMaxIntensity) &&
+            (identical(
+                  other.forecastMaxIntensity,
+                  forecastMaxIntensity,
+                ) ||
+                other.forecastMaxIntensity ==
+                    forecastMaxIntensity) &&
             (identical(
                   other.forecastMaxIntensityIsOver,
                   forecastMaxIntensityIsOver,
@@ -665,14 +695,18 @@ class _$EewV1Impl extends _EewV1 {
                   other.forecastMaxLpgmIntensity,
                   forecastMaxLpgmIntensity,
                 ) ||
-                other.forecastMaxLpgmIntensity == forecastMaxLpgmIntensity) &&
+                other.forecastMaxLpgmIntensity ==
+                    forecastMaxLpgmIntensity) &&
             (identical(
                   other.forecastMaxLpgmIntensityIsOver,
                   forecastMaxLpgmIntensityIsOver,
                 ) ||
                 other.forecastMaxLpgmIntensityIsOver ==
                     forecastMaxLpgmIntensityIsOver) &&
-            const DeepCollectionEquality().equals(other._regions, _regions));
+            const DeepCollectionEquality().equals(
+              other._regions,
+              _regions,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -713,7 +747,10 @@ class _$EewV1Impl extends _EewV1 {
   @override
   @pragma('vm:prefer-inline')
   _$$EewV1ImplCopyWith<_$EewV1Impl> get copyWith =>
-      __$$EewV1ImplCopyWithImpl<_$EewV1Impl>(this, _$identity);
+      __$$EewV1ImplCopyWithImpl<_$EewV1Impl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -752,7 +789,8 @@ abstract class _EewV1 extends EewV1 {
   }) = _$EewV1Impl;
   const _EewV1._() : super._();
 
-  factory _EewV1.fromJson(Map<String, dynamic> json) = _$EewV1Impl.fromJson;
+  factory _EewV1.fromJson(Map<String, dynamic> json) =
+      _$EewV1Impl.fromJson;
 
   @override
   int get id;
@@ -830,22 +868,28 @@ mixin _$EstimatedIntensityRegion {
   @JsonKey(name: 'isWarning')
   bool get isWarning => throw _privateConstructorUsedError;
   @JsonKey(name: 'forecastMaxInt')
-  ForecastMaxInt get forecastMaxInt => throw _privateConstructorUsedError;
+  ForecastMaxInt get forecastMaxInt =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'forecastMaxLgInt')
-  ForecastMaxLgInt? get forecastMaxLgInt => throw _privateConstructorUsedError;
+  ForecastMaxLgInt? get forecastMaxLgInt =>
+      throw _privateConstructorUsedError;
 
   /// nullの場合 `既に主要動到達と推測`
   @JsonKey(name: 'arrivalTime')
-  DateTime? get arrivalTime => throw _privateConstructorUsedError;
+  DateTime? get arrivalTime =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this EstimatedIntensityRegion to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of EstimatedIntensityRegion
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $EstimatedIntensityRegionCopyWith<EstimatedIntensityRegion> get copyWith =>
-      throw _privateConstructorUsedError;
+  $EstimatedIntensityRegionCopyWith<
+    EstimatedIntensityRegion
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -853,15 +897,21 @@ abstract class $EstimatedIntensityRegionCopyWith<$Res> {
   factory $EstimatedIntensityRegionCopyWith(
     EstimatedIntensityRegion value,
     $Res Function(EstimatedIntensityRegion) then,
-  ) = _$EstimatedIntensityRegionCopyWithImpl<$Res, EstimatedIntensityRegion>;
+  ) =
+      _$EstimatedIntensityRegionCopyWithImpl<
+        $Res,
+        EstimatedIntensityRegion
+      >;
   @useResult
   $Res call({
     String code,
     String name,
     @JsonKey(name: 'isPlum') bool isPlum,
     @JsonKey(name: 'isWarning') bool isWarning,
-    @JsonKey(name: 'forecastMaxInt') ForecastMaxInt forecastMaxInt,
-    @JsonKey(name: 'forecastMaxLgInt') ForecastMaxLgInt? forecastMaxLgInt,
+    @JsonKey(name: 'forecastMaxInt')
+    ForecastMaxInt forecastMaxInt,
+    @JsonKey(name: 'forecastMaxLgInt')
+    ForecastMaxLgInt? forecastMaxLgInt,
     @JsonKey(name: 'arrivalTime') DateTime? arrivalTime,
   });
 
@@ -875,7 +925,10 @@ class _$EstimatedIntensityRegionCopyWithImpl<
   $Val extends EstimatedIntensityRegion
 >
     implements $EstimatedIntensityRegionCopyWith<$Res> {
-  _$EstimatedIntensityRegionCopyWithImpl(this._value, this._then);
+  _$EstimatedIntensityRegionCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -942,9 +995,14 @@ class _$EstimatedIntensityRegionCopyWithImpl<
   @override
   @pragma('vm:prefer-inline')
   $ForecastMaxIntCopyWith<$Res> get forecastMaxInt {
-    return $ForecastMaxIntCopyWith<$Res>(_value.forecastMaxInt, (value) {
-      return _then(_value.copyWith(forecastMaxInt: value) as $Val);
-    });
+    return $ForecastMaxIntCopyWith<$Res>(
+      _value.forecastMaxInt,
+      (value) {
+        return _then(
+          _value.copyWith(forecastMaxInt: value) as $Val,
+        );
+      },
+    );
   }
 
   /// Create a copy of EstimatedIntensityRegion
@@ -956,9 +1014,14 @@ class _$EstimatedIntensityRegionCopyWithImpl<
       return null;
     }
 
-    return $ForecastMaxLgIntCopyWith<$Res>(_value.forecastMaxLgInt!, (value) {
-      return _then(_value.copyWith(forecastMaxLgInt: value) as $Val);
-    });
+    return $ForecastMaxLgIntCopyWith<$Res>(
+      _value.forecastMaxLgInt!,
+      (value) {
+        return _then(
+          _value.copyWith(forecastMaxLgInt: value) as $Val,
+        );
+      },
+    );
   }
 }
 
@@ -976,8 +1039,10 @@ abstract class _$$EstimatedIntensityRegionImplCopyWith<$Res>
     String name,
     @JsonKey(name: 'isPlum') bool isPlum,
     @JsonKey(name: 'isWarning') bool isWarning,
-    @JsonKey(name: 'forecastMaxInt') ForecastMaxInt forecastMaxInt,
-    @JsonKey(name: 'forecastMaxLgInt') ForecastMaxLgInt? forecastMaxLgInt,
+    @JsonKey(name: 'forecastMaxInt')
+    ForecastMaxInt forecastMaxInt,
+    @JsonKey(name: 'forecastMaxLgInt')
+    ForecastMaxLgInt? forecastMaxLgInt,
     @JsonKey(name: 'arrivalTime') DateTime? arrivalTime,
   });
 
@@ -994,7 +1059,8 @@ class __$$EstimatedIntensityRegionImplCopyWithImpl<$Res>
           $Res,
           _$EstimatedIntensityRegionImpl
         >
-    implements _$$EstimatedIntensityRegionImplCopyWith<$Res> {
+    implements
+        _$$EstimatedIntensityRegionImplCopyWith<$Res> {
   __$$EstimatedIntensityRegionImplCopyWithImpl(
     _$EstimatedIntensityRegionImpl _value,
     $Res Function(_$EstimatedIntensityRegionImpl) _then,
@@ -1057,19 +1123,23 @@ class __$$EstimatedIntensityRegionImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$EstimatedIntensityRegionImpl implements _EstimatedIntensityRegion {
+class _$EstimatedIntensityRegionImpl
+    implements _EstimatedIntensityRegion {
   const _$EstimatedIntensityRegionImpl({
     required this.code,
     required this.name,
     @JsonKey(name: 'isPlum') required this.isPlum,
     @JsonKey(name: 'isWarning') required this.isWarning,
-    @JsonKey(name: 'forecastMaxInt') required this.forecastMaxInt,
-    @JsonKey(name: 'forecastMaxLgInt') required this.forecastMaxLgInt,
+    @JsonKey(name: 'forecastMaxInt')
+    required this.forecastMaxInt,
+    @JsonKey(name: 'forecastMaxLgInt')
+    required this.forecastMaxLgInt,
     @JsonKey(name: 'arrivalTime') required this.arrivalTime,
   });
 
-  factory _$EstimatedIntensityRegionImpl.fromJson(Map<String, dynamic> json) =>
-      _$$EstimatedIntensityRegionImplFromJson(json);
+  factory _$EstimatedIntensityRegionImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$EstimatedIntensityRegionImplFromJson(json);
 
   @override
   final String code;
@@ -1103,15 +1173,25 @@ class _$EstimatedIntensityRegionImpl implements _EstimatedIntensityRegion {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EstimatedIntensityRegionImpl &&
-            (identical(other.code, code) || other.code == code) &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.isPlum, isPlum) || other.isPlum == isPlum) &&
+            (identical(other.code, code) ||
+                other.code == code) &&
+            (identical(other.name, name) ||
+                other.name == name) &&
+            (identical(other.isPlum, isPlum) ||
+                other.isPlum == isPlum) &&
             (identical(other.isWarning, isWarning) ||
                 other.isWarning == isWarning) &&
-            (identical(other.forecastMaxInt, forecastMaxInt) ||
+            (identical(
+                  other.forecastMaxInt,
+                  forecastMaxInt,
+                ) ||
                 other.forecastMaxInt == forecastMaxInt) &&
-            (identical(other.forecastMaxLgInt, forecastMaxLgInt) ||
-                other.forecastMaxLgInt == forecastMaxLgInt) &&
+            (identical(
+                  other.forecastMaxLgInt,
+                  forecastMaxLgInt,
+                ) ||
+                other.forecastMaxLgInt ==
+                    forecastMaxLgInt) &&
             (identical(other.arrivalTime, arrivalTime) ||
                 other.arrivalTime == arrivalTime));
   }
@@ -1134,10 +1214,13 @@ class _$EstimatedIntensityRegionImpl implements _EstimatedIntensityRegion {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EstimatedIntensityRegionImplCopyWith<_$EstimatedIntensityRegionImpl>
-  get copyWith => __$$EstimatedIntensityRegionImplCopyWithImpl<
+  _$$EstimatedIntensityRegionImplCopyWith<
     _$EstimatedIntensityRegionImpl
-  >(this, _$identity);
+  >
+  get copyWith =>
+      __$$EstimatedIntensityRegionImplCopyWithImpl<
+        _$EstimatedIntensityRegionImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -1145,21 +1228,25 @@ class _$EstimatedIntensityRegionImpl implements _EstimatedIntensityRegion {
   }
 }
 
-abstract class _EstimatedIntensityRegion implements EstimatedIntensityRegion {
+abstract class _EstimatedIntensityRegion
+    implements EstimatedIntensityRegion {
   const factory _EstimatedIntensityRegion({
     required final String code,
     required final String name,
     @JsonKey(name: 'isPlum') required final bool isPlum,
-    @JsonKey(name: 'isWarning') required final bool isWarning,
+    @JsonKey(name: 'isWarning')
+    required final bool isWarning,
     @JsonKey(name: 'forecastMaxInt')
     required final ForecastMaxInt forecastMaxInt,
     @JsonKey(name: 'forecastMaxLgInt')
     required final ForecastMaxLgInt? forecastMaxLgInt,
-    @JsonKey(name: 'arrivalTime') required final DateTime? arrivalTime,
+    @JsonKey(name: 'arrivalTime')
+    required final DateTime? arrivalTime,
   }) = _$EstimatedIntensityRegionImpl;
 
-  factory _EstimatedIntensityRegion.fromJson(Map<String, dynamic> json) =
-      _$EstimatedIntensityRegionImpl.fromJson;
+  factory _EstimatedIntensityRegion.fromJson(
+    Map<String, dynamic> json,
+  ) = _$EstimatedIntensityRegionImpl.fromJson;
 
   @override
   String get code;
@@ -1187,11 +1274,15 @@ abstract class _EstimatedIntensityRegion implements EstimatedIntensityRegion {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EstimatedIntensityRegionImplCopyWith<_$EstimatedIntensityRegionImpl>
+  _$$EstimatedIntensityRegionImplCopyWith<
+    _$EstimatedIntensityRegionImpl
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
-EewAccuracy _$EewAccuracyFromJson(Map<String, dynamic> json) {
+EewAccuracy _$EewAccuracyFromJson(
+  Map<String, dynamic> json,
+) {
   return _EewAccuracy.fromJson(json);
 }
 
@@ -1199,17 +1290,24 @@ EewAccuracy _$EewAccuracyFromJson(Map<String, dynamic> json) {
 mixin _$EewAccuracy {
   /// ['0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8',
   /// '0' | '1' | '2' | '3' | '4' | '9']
-  @JsonKey(fromJson: stringListToIntList, toJson: intListToStringList)
-  List<int> get epicenters => throw _privateConstructorUsedError;
+  @JsonKey(
+    fromJson: stringListToIntList,
+    toJson: intListToStringList,
+  )
+  List<int> get epicenters =>
+      throw _privateConstructorUsedError;
   @JsonKey(fromJson: int.parse, toJson: intToString)
   int get depth => throw _privateConstructorUsedError;
   @JsonKey(fromJson: int.parse, toJson: intToString)
-  int get magnitudeCalculation => throw _privateConstructorUsedError;
+  int get magnitudeCalculation =>
+      throw _privateConstructorUsedError;
   @JsonKey(fromJson: int.parse, toJson: intToString)
-  int get numberOfMagnitudeCalculation => throw _privateConstructorUsedError;
+  int get numberOfMagnitudeCalculation =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this EewAccuracy to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of EewAccuracy
   /// with the given fields replaced by the non-null parameter values.
@@ -1226,17 +1324,25 @@ abstract class $EewAccuracyCopyWith<$Res> {
   ) = _$EewAccuracyCopyWithImpl<$Res, EewAccuracy>;
   @useResult
   $Res call({
-    @JsonKey(fromJson: stringListToIntList, toJson: intListToStringList)
+    @JsonKey(
+      fromJson: stringListToIntList,
+      toJson: intListToStringList,
+    )
     List<int> epicenters,
-    @JsonKey(fromJson: int.parse, toJson: intToString) int depth,
-    @JsonKey(fromJson: int.parse, toJson: intToString) int magnitudeCalculation,
+    @JsonKey(fromJson: int.parse, toJson: intToString)
+    int depth,
+    @JsonKey(fromJson: int.parse, toJson: intToString)
+    int magnitudeCalculation,
     @JsonKey(fromJson: int.parse, toJson: intToString)
     int numberOfMagnitudeCalculation,
   });
 }
 
 /// @nodoc
-class _$EewAccuracyCopyWithImpl<$Res, $Val extends EewAccuracy>
+class _$EewAccuracyCopyWithImpl<
+  $Res,
+  $Val extends EewAccuracy
+>
     implements $EewAccuracyCopyWith<$Res> {
   _$EewAccuracyCopyWithImpl(this._value, this._then);
 
@@ -1293,10 +1399,15 @@ abstract class _$$EewAccuracyImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    @JsonKey(fromJson: stringListToIntList, toJson: intListToStringList)
+    @JsonKey(
+      fromJson: stringListToIntList,
+      toJson: intListToStringList,
+    )
     List<int> epicenters,
-    @JsonKey(fromJson: int.parse, toJson: intToString) int depth,
-    @JsonKey(fromJson: int.parse, toJson: intToString) int magnitudeCalculation,
+    @JsonKey(fromJson: int.parse, toJson: intToString)
+    int depth,
+    @JsonKey(fromJson: int.parse, toJson: intToString)
+    int magnitudeCalculation,
     @JsonKey(fromJson: int.parse, toJson: intToString)
     int numberOfMagnitudeCalculation,
   });
@@ -1304,7 +1415,8 @@ abstract class _$$EewAccuracyImplCopyWith<$Res>
 
 /// @nodoc
 class __$$EewAccuracyImplCopyWithImpl<$Res>
-    extends _$EewAccuracyCopyWithImpl<$Res, _$EewAccuracyImpl>
+    extends
+        _$EewAccuracyCopyWithImpl<$Res, _$EewAccuracyImpl>
     implements _$$EewAccuracyImplCopyWith<$Res> {
   __$$EewAccuracyImplCopyWithImpl(
     _$EewAccuracyImpl _value,
@@ -1353,17 +1465,22 @@ class __$$EewAccuracyImplCopyWithImpl<$Res>
 @JsonSerializable(fieldRename: FieldRename.none)
 class _$EewAccuracyImpl implements _EewAccuracy {
   const _$EewAccuracyImpl({
-    @JsonKey(fromJson: stringListToIntList, toJson: intListToStringList)
+    @JsonKey(
+      fromJson: stringListToIntList,
+      toJson: intListToStringList,
+    )
     required final List<int> epicenters,
-    @JsonKey(fromJson: int.parse, toJson: intToString) required this.depth,
+    @JsonKey(fromJson: int.parse, toJson: intToString)
+    required this.depth,
     @JsonKey(fromJson: int.parse, toJson: intToString)
     required this.magnitudeCalculation,
     @JsonKey(fromJson: int.parse, toJson: intToString)
     required this.numberOfMagnitudeCalculation,
   }) : _epicenters = epicenters;
 
-  factory _$EewAccuracyImpl.fromJson(Map<String, dynamic> json) =>
-      _$$EewAccuracyImplFromJson(json);
+  factory _$EewAccuracyImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$EewAccuracyImplFromJson(json);
 
   /// ['0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8',
   /// '0' | '1' | '2' | '3' | '4' | '9']
@@ -1372,9 +1489,13 @@ class _$EewAccuracyImpl implements _EewAccuracy {
   /// ['0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8',
   /// '0' | '1' | '2' | '3' | '4' | '9']
   @override
-  @JsonKey(fromJson: stringListToIntList, toJson: intListToStringList)
+  @JsonKey(
+    fromJson: stringListToIntList,
+    toJson: intListToStringList,
+  )
   List<int> get epicenters {
-    if (_epicenters is EqualUnmodifiableListView) return _epicenters;
+    if (_epicenters is EqualUnmodifiableListView)
+      return _epicenters;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_epicenters);
   }
@@ -1403,9 +1524,14 @@ class _$EewAccuracyImpl implements _EewAccuracy {
               other._epicenters,
               _epicenters,
             ) &&
-            (identical(other.depth, depth) || other.depth == depth) &&
-            (identical(other.magnitudeCalculation, magnitudeCalculation) ||
-                other.magnitudeCalculation == magnitudeCalculation) &&
+            (identical(other.depth, depth) ||
+                other.depth == depth) &&
+            (identical(
+                  other.magnitudeCalculation,
+                  magnitudeCalculation,
+                ) ||
+                other.magnitudeCalculation ==
+                    magnitudeCalculation) &&
             (identical(
                   other.numberOfMagnitudeCalculation,
                   numberOfMagnitudeCalculation,
@@ -1429,8 +1555,12 @@ class _$EewAccuracyImpl implements _EewAccuracy {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EewAccuracyImplCopyWith<_$EewAccuracyImpl> get copyWith =>
-      __$$EewAccuracyImplCopyWithImpl<_$EewAccuracyImpl>(this, _$identity);
+  _$$EewAccuracyImplCopyWith<_$EewAccuracyImpl>
+  get copyWith =>
+      __$$EewAccuracyImplCopyWithImpl<_$EewAccuracyImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -1440,9 +1570,13 @@ class _$EewAccuracyImpl implements _EewAccuracy {
 
 abstract class _EewAccuracy implements EewAccuracy {
   const factory _EewAccuracy({
-    @JsonKey(fromJson: stringListToIntList, toJson: intListToStringList)
+    @JsonKey(
+      fromJson: stringListToIntList,
+      toJson: intListToStringList,
+    )
     required final List<int> epicenters,
-    @JsonKey(fromJson: int.parse, toJson: intToString) required final int depth,
+    @JsonKey(fromJson: int.parse, toJson: intToString)
+    required final int depth,
     @JsonKey(fromJson: int.parse, toJson: intToString)
     required final int magnitudeCalculation,
     @JsonKey(fromJson: int.parse, toJson: intToString)
@@ -1455,7 +1589,10 @@ abstract class _EewAccuracy implements EewAccuracy {
   /// ['0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8',
   /// '0' | '1' | '2' | '3' | '4' | '9']
   @override
-  @JsonKey(fromJson: stringListToIntList, toJson: intListToStringList)
+  @JsonKey(
+    fromJson: stringListToIntList,
+    toJson: intListToStringList,
+  )
   List<int> get epicenters;
   @override
   @JsonKey(fromJson: int.parse, toJson: intToString)
@@ -1471,21 +1608,26 @@ abstract class _EewAccuracy implements EewAccuracy {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EewAccuracyImplCopyWith<_$EewAccuracyImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$EewAccuracyImplCopyWith<_$EewAccuracyImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
-ForecastMaxInt _$ForecastMaxIntFromJson(Map<String, dynamic> json) {
+ForecastMaxInt _$ForecastMaxIntFromJson(
+  Map<String, dynamic> json,
+) {
   return _ForecastMaxInt.fromJson(json);
 }
 
 /// @nodoc
 mixin _$ForecastMaxInt {
-  JmaForecastIntensity get from => throw _privateConstructorUsedError;
-  JmaForecastIntensityOver get to => throw _privateConstructorUsedError;
+  JmaForecastIntensity get from =>
+      throw _privateConstructorUsedError;
+  JmaForecastIntensityOver get to =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this ForecastMaxInt to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of ForecastMaxInt
   /// with the given fields replaced by the non-null parameter values.
@@ -1501,11 +1643,17 @@ abstract class $ForecastMaxIntCopyWith<$Res> {
     $Res Function(ForecastMaxInt) then,
   ) = _$ForecastMaxIntCopyWithImpl<$Res, ForecastMaxInt>;
   @useResult
-  $Res call({JmaForecastIntensity from, JmaForecastIntensityOver to});
+  $Res call({
+    JmaForecastIntensity from,
+    JmaForecastIntensityOver to,
+  });
 }
 
 /// @nodoc
-class _$ForecastMaxIntCopyWithImpl<$Res, $Val extends ForecastMaxInt>
+class _$ForecastMaxIntCopyWithImpl<
+  $Res,
+  $Val extends ForecastMaxInt
+>
     implements $ForecastMaxIntCopyWith<$Res> {
   _$ForecastMaxIntCopyWithImpl(this._value, this._then);
 
@@ -1546,12 +1694,19 @@ abstract class _$$ForecastMaxIntImplCopyWith<$Res>
   ) = __$$ForecastMaxIntImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({JmaForecastIntensity from, JmaForecastIntensityOver to});
+  $Res call({
+    JmaForecastIntensity from,
+    JmaForecastIntensityOver to,
+  });
 }
 
 /// @nodoc
 class __$$ForecastMaxIntImplCopyWithImpl<$Res>
-    extends _$ForecastMaxIntCopyWithImpl<$Res, _$ForecastMaxIntImpl>
+    extends
+        _$ForecastMaxIntCopyWithImpl<
+          $Res,
+          _$ForecastMaxIntImpl
+        >
     implements _$$ForecastMaxIntImplCopyWith<$Res> {
   __$$ForecastMaxIntImplCopyWithImpl(
     _$ForecastMaxIntImpl _value,
@@ -1584,10 +1739,14 @@ class __$$ForecastMaxIntImplCopyWithImpl<$Res>
 
 @JsonSerializable(fieldRename: FieldRename.none)
 class _$ForecastMaxIntImpl implements _ForecastMaxInt {
-  const _$ForecastMaxIntImpl({required this.from, required this.to});
+  const _$ForecastMaxIntImpl({
+    required this.from,
+    required this.to,
+  });
 
-  factory _$ForecastMaxIntImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ForecastMaxIntImplFromJson(json);
+  factory _$ForecastMaxIntImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$ForecastMaxIntImplFromJson(json);
 
   @override
   final JmaForecastIntensity from;
@@ -1604,7 +1763,8 @@ class _$ForecastMaxIntImpl implements _ForecastMaxInt {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ForecastMaxIntImpl &&
-            (identical(other.from, from) || other.from == from) &&
+            (identical(other.from, from) ||
+                other.from == from) &&
             (identical(other.to, to) || other.to == to));
   }
 
@@ -1617,11 +1777,10 @@ class _$ForecastMaxIntImpl implements _ForecastMaxInt {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$ForecastMaxIntImplCopyWith<_$ForecastMaxIntImpl> get copyWith =>
-      __$$ForecastMaxIntImplCopyWithImpl<_$ForecastMaxIntImpl>(
-        this,
-        _$identity,
-      );
+  _$$ForecastMaxIntImplCopyWith<_$ForecastMaxIntImpl>
+  get copyWith => __$$ForecastMaxIntImplCopyWithImpl<
+    _$ForecastMaxIntImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -1635,8 +1794,9 @@ abstract class _ForecastMaxInt implements ForecastMaxInt {
     required final JmaForecastIntensityOver to,
   }) = _$ForecastMaxIntImpl;
 
-  factory _ForecastMaxInt.fromJson(Map<String, dynamic> json) =
-      _$ForecastMaxIntImpl.fromJson;
+  factory _ForecastMaxInt.fromJson(
+    Map<String, dynamic> json,
+  ) = _$ForecastMaxIntImpl.fromJson;
 
   @override
   JmaForecastIntensity get from;
@@ -1647,27 +1807,32 @@ abstract class _ForecastMaxInt implements ForecastMaxInt {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ForecastMaxIntImplCopyWith<_$ForecastMaxIntImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$ForecastMaxIntImplCopyWith<_$ForecastMaxIntImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
-ForecastMaxLgInt _$ForecastMaxLgIntFromJson(Map<String, dynamic> json) {
+ForecastMaxLgInt _$ForecastMaxLgIntFromJson(
+  Map<String, dynamic> json,
+) {
   return _ForecastMaxLgInt.fromJson(json);
 }
 
 /// @nodoc
 mixin _$ForecastMaxLgInt {
-  JmaForecastLgIntensity get from => throw _privateConstructorUsedError;
-  JmaForecastLgIntensityOver get to => throw _privateConstructorUsedError;
+  JmaForecastLgIntensity get from =>
+      throw _privateConstructorUsedError;
+  JmaForecastLgIntensityOver get to =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this ForecastMaxLgInt to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of ForecastMaxLgInt
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ForecastMaxLgIntCopyWith<ForecastMaxLgInt> get copyWith =>
-      throw _privateConstructorUsedError;
+  $ForecastMaxLgIntCopyWith<ForecastMaxLgInt>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1675,13 +1840,23 @@ abstract class $ForecastMaxLgIntCopyWith<$Res> {
   factory $ForecastMaxLgIntCopyWith(
     ForecastMaxLgInt value,
     $Res Function(ForecastMaxLgInt) then,
-  ) = _$ForecastMaxLgIntCopyWithImpl<$Res, ForecastMaxLgInt>;
+  ) =
+      _$ForecastMaxLgIntCopyWithImpl<
+        $Res,
+        ForecastMaxLgInt
+      >;
   @useResult
-  $Res call({JmaForecastLgIntensity from, JmaForecastLgIntensityOver to});
+  $Res call({
+    JmaForecastLgIntensity from,
+    JmaForecastLgIntensityOver to,
+  });
 }
 
 /// @nodoc
-class _$ForecastMaxLgIntCopyWithImpl<$Res, $Val extends ForecastMaxLgInt>
+class _$ForecastMaxLgIntCopyWithImpl<
+  $Res,
+  $Val extends ForecastMaxLgInt
+>
     implements $ForecastMaxLgIntCopyWith<$Res> {
   _$ForecastMaxLgIntCopyWithImpl(this._value, this._then);
 
@@ -1722,12 +1897,19 @@ abstract class _$$ForecastMaxLgIntImplCopyWith<$Res>
   ) = __$$ForecastMaxLgIntImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({JmaForecastLgIntensity from, JmaForecastLgIntensityOver to});
+  $Res call({
+    JmaForecastLgIntensity from,
+    JmaForecastLgIntensityOver to,
+  });
 }
 
 /// @nodoc
 class __$$ForecastMaxLgIntImplCopyWithImpl<$Res>
-    extends _$ForecastMaxLgIntCopyWithImpl<$Res, _$ForecastMaxLgIntImpl>
+    extends
+        _$ForecastMaxLgIntCopyWithImpl<
+          $Res,
+          _$ForecastMaxLgIntImpl
+        >
     implements _$$ForecastMaxLgIntImplCopyWith<$Res> {
   __$$ForecastMaxLgIntImplCopyWithImpl(
     _$ForecastMaxLgIntImpl _value,
@@ -1760,10 +1942,14 @@ class __$$ForecastMaxLgIntImplCopyWithImpl<$Res>
 
 @JsonSerializable(fieldRename: FieldRename.none)
 class _$ForecastMaxLgIntImpl implements _ForecastMaxLgInt {
-  const _$ForecastMaxLgIntImpl({required this.from, required this.to});
+  const _$ForecastMaxLgIntImpl({
+    required this.from,
+    required this.to,
+  });
 
-  factory _$ForecastMaxLgIntImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ForecastMaxLgIntImplFromJson(json);
+  factory _$ForecastMaxLgIntImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$ForecastMaxLgIntImplFromJson(json);
 
   @override
   final JmaForecastLgIntensity from;
@@ -1780,7 +1966,8 @@ class _$ForecastMaxLgIntImpl implements _ForecastMaxLgInt {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ForecastMaxLgIntImpl &&
-            (identical(other.from, from) || other.from == from) &&
+            (identical(other.from, from) ||
+                other.from == from) &&
             (identical(other.to, to) || other.to == to));
   }
 
@@ -1793,11 +1980,10 @@ class _$ForecastMaxLgIntImpl implements _ForecastMaxLgInt {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$ForecastMaxLgIntImplCopyWith<_$ForecastMaxLgIntImpl> get copyWith =>
-      __$$ForecastMaxLgIntImplCopyWithImpl<_$ForecastMaxLgIntImpl>(
-        this,
-        _$identity,
-      );
+  _$$ForecastMaxLgIntImplCopyWith<_$ForecastMaxLgIntImpl>
+  get copyWith => __$$ForecastMaxLgIntImplCopyWithImpl<
+    _$ForecastMaxLgIntImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -1805,14 +1991,16 @@ class _$ForecastMaxLgIntImpl implements _ForecastMaxLgInt {
   }
 }
 
-abstract class _ForecastMaxLgInt implements ForecastMaxLgInt {
+abstract class _ForecastMaxLgInt
+    implements ForecastMaxLgInt {
   const factory _ForecastMaxLgInt({
     required final JmaForecastLgIntensity from,
     required final JmaForecastLgIntensityOver to,
   }) = _$ForecastMaxLgIntImpl;
 
-  factory _ForecastMaxLgInt.fromJson(Map<String, dynamic> json) =
-      _$ForecastMaxLgIntImpl.fromJson;
+  factory _ForecastMaxLgInt.fromJson(
+    Map<String, dynamic> json,
+  ) = _$ForecastMaxLgIntImpl.fromJson;
 
   @override
   JmaForecastLgIntensity get from;
@@ -1823,6 +2011,6 @@ abstract class _ForecastMaxLgInt implements ForecastMaxLgInt {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ForecastMaxLgIntImplCopyWith<_$ForecastMaxLgIntImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$ForecastMaxLgIntImplCopyWith<_$ForecastMaxLgIntImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }

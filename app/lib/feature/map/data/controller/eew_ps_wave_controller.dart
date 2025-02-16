@@ -9,33 +9,46 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'eew_ps_wave_controller.g.dart';
 
 @Riverpod(keepAlive: true)
-class EewPsWaveFillLayerController extends _$EewPsWaveFillLayerController {
+class EewPsWaveFillLayerController
+    extends _$EewPsWaveFillLayerController {
   @override
   List<EewWaveFillLayer> build() => [
     EewWaveFillLayer.sWaveWarning(color: Colors.redAccent),
-    EewWaveFillLayer.sWaveNotWarning(color: Colors.orangeAccent),
+    EewWaveFillLayer.sWaveNotWarning(
+      color: Colors.orangeAccent,
+    ),
     EewWaveFillLayer.pWave(color: Colors.blue),
   ];
 }
 
 @Riverpod(keepAlive: true)
-class EewPsWaveLineLayerController extends _$EewPsWaveLineLayerController {
+class EewPsWaveLineLayerController
+    extends _$EewPsWaveLineLayerController {
   @override
   List<EewWaveLineLayer> build() => [
     EewWaveLineLayer.sWaveWarning(color: Colors.redAccent),
-    EewWaveLineLayer.sWaveNotWarning(color: Colors.orangeAccent),
+    EewWaveLineLayer.sWaveNotWarning(
+      color: Colors.orangeAccent,
+    ),
     EewWaveLineLayer.pWave(color: Colors.blue),
   ];
 }
 
 @Riverpod(keepAlive: true)
-class EewPsWaveSourceLayerController extends _$EewPsWaveSourceLayerController {
+class EewPsWaveSourceLayerController
+    extends _$EewPsWaveSourceLayerController {
   @override
   EewPsWaveSourceLayer build() {
-    final travelTime = ref.watch(travelTimeDepthMapProvider);
+    final travelTime = ref.watch(
+      travelTimeDepthMapProvider,
+    );
     final now =
         ref
-            .watch(timeTickerProvider(const Duration(milliseconds: 100)))
+            .watch(
+              timeTickerProvider(
+                const Duration(milliseconds: 100),
+              ),
+            )
             .valueOrNull ??
         DateTime.now();
 
@@ -44,7 +57,9 @@ class EewPsWaveSourceLayerController extends _$EewPsWaveSourceLayerController {
         (aliveEews ?? [])
             .whereNot(
               (eew) =>
-                  eew.isIpfOnePoint || eew.isLevelEew || (eew.isPlum ?? false),
+                  eew.isIpfOnePoint ||
+                  eew.isLevelEew ||
+                  (eew.isPlum ?? false),
             )
             .map((eew) {
               final latitude = eew.latitude;
@@ -60,8 +75,15 @@ class EewPsWaveSourceLayerController extends _$EewPsWaveSourceLayerController {
                 );
                 return null;
               }
-              final time = now.difference(originTime).inMilliseconds / 1000;
-              final result = travelTime.getTravelTime(depth ~/ 10 * 10, time);
+              final time =
+                  now
+                      .difference(originTime)
+                      .inMilliseconds /
+                  1000;
+              final result = travelTime.getTravelTime(
+                depth ~/ 10 * 10,
+                time,
+              );
               return EewPsWaveLayerItem(
                 latitude: latitude,
                 longitude: longitude,
@@ -72,6 +94,9 @@ class EewPsWaveSourceLayerController extends _$EewPsWaveSourceLayerController {
             .nonNulls
             .toList();
 
-    return EewPsWaveSourceLayer(id: 'eew_ps_wave_source', items: items);
+    return EewPsWaveSourceLayer(
+      id: 'eew_ps_wave_source',
+      items: items,
+    );
   }
 }

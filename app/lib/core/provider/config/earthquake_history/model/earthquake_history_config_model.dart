@@ -4,18 +4,21 @@ part 'earthquake_history_config_model.freezed.dart';
 part 'earthquake_history_config_model.g.dart';
 
 @freezed
-class EarthquakeHistoryConfigModel with _$EarthquakeHistoryConfigModel {
+class EarthquakeHistoryConfigModel
+    with _$EarthquakeHistoryConfigModel {
   const factory EarthquakeHistoryConfigModel({
     required EarthquakeHistoryListConfig list,
     required EarthquakeHistoryDetailConfig detail,
   }) = _EarthquakeHistoryConfigModel;
 
-  factory EarthquakeHistoryConfigModel.fromJson(Map<String, dynamic> json) =>
-      _$EarthquakeHistoryConfigModelFromJson(json);
+  factory EarthquakeHistoryConfigModel.fromJson(
+    Map<String, dynamic> json,
+  ) => _$EarthquakeHistoryConfigModelFromJson(json);
 }
 
 @freezed
-class EarthquakeHistoryListConfig with _$EarthquakeHistoryListConfig {
+class EarthquakeHistoryListConfig
+    with _$EarthquakeHistoryListConfig {
   const factory EarthquakeHistoryListConfig({
     /// 背景塗りつぶしの有無
     @Default(true) bool isFillBackground,
@@ -24,15 +27,18 @@ class EarthquakeHistoryListConfig with _$EarthquakeHistoryListConfig {
     @Default(false) bool includeTestTelegrams,
   }) = _EarthquakeHistoryListConfig;
 
-  factory EarthquakeHistoryListConfig.fromJson(Map<String, dynamic> json) =>
-      _$EarthquakeHistoryListConfigFromJson(json);
+  factory EarthquakeHistoryListConfig.fromJson(
+    Map<String, dynamic> json,
+  ) => _$EarthquakeHistoryListConfigFromJson(json);
 }
 
 @freezed
-class EarthquakeHistoryDetailConfig with _$EarthquakeHistoryDetailConfig {
+class EarthquakeHistoryDetailConfig
+    with _$EarthquakeHistoryDetailConfig {
   const factory EarthquakeHistoryDetailConfig({
     /// 震度の表示方法
-    @Default(IntensityFillMode.fillCity) IntensityFillMode intensityFillMode,
+    @Default(IntensityFillMode.fillCity)
+    IntensityFillMode intensityFillMode,
 
     /// 震度観測点のアイコン表示
     @Default(true) bool showIntensityIcon,
@@ -41,10 +47,11 @@ class EarthquakeHistoryDetailConfig with _$EarthquakeHistoryDetailConfig {
     @Default(false) bool showingLpgmIntensity,
   }) = _EarthquakeHistoryDetailConfig;
 
-  factory EarthquakeHistoryDetailConfig.fromJson(Map<String, dynamic> json) =>
-      _$EarthquakeHistoryDetailConfigFromJson(
-        json,
-      ).copyWith(showingLpgmIntensity: false);
+  factory EarthquakeHistoryDetailConfig.fromJson(
+    Map<String, dynamic> json,
+  ) => _$EarthquakeHistoryDetailConfigFromJson(
+    json,
+  ).copyWith(showingLpgmIntensity: false);
 }
 
 /// 地震履歴詳細画面における震度の表示方法

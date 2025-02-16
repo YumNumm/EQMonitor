@@ -14,7 +14,10 @@ String _$locationTrackingModeHash() =>
 /// See also [LocationTrackingMode].
 @ProviderFor(LocationTrackingMode)
 final locationTrackingModeProvider =
-    AutoDisposeNotifierProvider<LocationTrackingMode, bool>.internal(
+    AutoDisposeNotifierProvider<
+      LocationTrackingMode,
+      bool
+    >.internal(
       LocationTrackingMode.new,
       name: r'locationTrackingModeProvider',
       debugGetCreateSourceHash:

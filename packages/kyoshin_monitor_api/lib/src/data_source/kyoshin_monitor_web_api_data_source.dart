@@ -5,20 +5,25 @@ import 'package:kyoshin_monitor_api/src/model/web_api/data_time.dart';
 import 'package:kyoshin_monitor_api/src/model/web_api/maintenance_message.dart';
 
 class KyoshinMonitorWebApiDataSource {
-  KyoshinMonitorWebApiDataSource({required KyoshinMonitorWebApiClient client})
-    : _client = client;
+  KyoshinMonitorWebApiDataSource({
+    required KyoshinMonitorWebApiClient client,
+  }) : _client = client;
 
   final KyoshinMonitorWebApiClient _client;
 
   /// データ時間
-  Future<DataTime> getLatestDataTime() async => _client.getLatestDataTime();
+  Future<DataTime> getLatestDataTime() async =>
+      _client.getLatestDataTime();
 
   /// メンテナンスメッセージ
-  Future<MaintenanceMessage> getMaintenanceMessage() async =>
+  Future<MaintenanceMessage>
+  getMaintenanceMessage() async =>
       _client.getMaintenanceMessage();
 
   /// ベース画像
-  Future<List<int>> getBaseMapImageData(BaseMapTheme theme) async =>
+  Future<List<int>> getBaseMapImageData(
+    BaseMapTheme theme,
+  ) async =>
       _client.getBaseMapImageData(theme: theme.urlString);
 
   /// スケール
@@ -33,11 +38,12 @@ class KyoshinMonitorWebApiDataSource {
   );
 
   /// PsWaveImg
-  Future<List<int>> getPsWaveImageData(DateTime dateTime) async =>
-      _client.getPsWaveImageData(
-        date: dateFormat.format(dateTime),
-        dateTime: dateTimeFormat.format(dateTime),
-      );
+  Future<List<int>> getPsWaveImageData(
+    DateTime dateTime,
+  ) async => _client.getPsWaveImageData(
+    date: dateFormat.format(dateTime),
+    dateTime: dateTimeFormat.format(dateTime),
+  );
 
   /// RealtimeImg
   Future<List<int>> getRealtimeImageData({
@@ -58,14 +64,17 @@ class KyoshinMonitorWebApiDataSource {
   }
 
   /// 予想震度
-  Future<List<int>> getEstShindoImageData(DateTime dateTime) async =>
-      _client.getEstShindoImageData(
-        date: dateFormat.format(dateTime),
-        dateTime: dateTimeFormat.format(dateTime),
-      );
+  Future<List<int>> getEstShindoImageData(
+    DateTime dateTime,
+  ) async => _client.getEstShindoImageData(
+    date: dateFormat.format(dateTime),
+    dateTime: dateTimeFormat.format(dateTime),
+  );
 
-  static DateFormat get dateFormat => DateFormat('yyyyMMdd');
-  static DateFormat get dateTimeFormat => DateFormat('yyyyMMddHHmmss');
+  static DateFormat get dateFormat =>
+      DateFormat('yyyyMMdd');
+  static DateFormat get dateTimeFormat =>
+      DateFormat('yyyyMMddHHmmss');
 }
 
 /// リアルタイム画像の種類
@@ -134,7 +143,11 @@ enum RealtimeDataType {
   abrsp7s('階級データ(周期7秒台)', 'abrsp7s', true);
 
   // ignore: avoid_positional_boolean_parameters
-  const RealtimeDataType(this.displayName, this.urlString, this.isLpgm);
+  const RealtimeDataType(
+    this.displayName,
+    this.urlString,
+    this.isLpgm,
+  );
 
   /// 表示名
   final String displayName;

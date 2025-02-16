@@ -18,7 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$EewPsWaveSourceLayer {
   String get id => throw _privateConstructorUsedError;
-  List<EewPsWaveLayerItem> get items => throw _privateConstructorUsedError;
+  List<EewPsWaveLayerItem> get items =>
+      throw _privateConstructorUsedError;
   bool get visible => throw _privateConstructorUsedError;
   String get sourceId => throw _privateConstructorUsedError;
   double? get minZoom => throw _privateConstructorUsedError;
@@ -28,8 +29,8 @@ mixin _$EewPsWaveSourceLayer {
   /// Create a copy of EewPsWaveSourceLayer
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $EewPsWaveSourceLayerCopyWith<EewPsWaveSourceLayer> get copyWith =>
-      throw _privateConstructorUsedError;
+  $EewPsWaveSourceLayerCopyWith<EewPsWaveSourceLayer>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -37,7 +38,11 @@ abstract class $EewPsWaveSourceLayerCopyWith<$Res> {
   factory $EewPsWaveSourceLayerCopyWith(
     EewPsWaveSourceLayer value,
     $Res Function(EewPsWaveSourceLayer) then,
-  ) = _$EewPsWaveSourceLayerCopyWithImpl<$Res, EewPsWaveSourceLayer>;
+  ) =
+      _$EewPsWaveSourceLayerCopyWithImpl<
+        $Res,
+        EewPsWaveSourceLayer
+      >;
   @useResult
   $Res call({
     String id,
@@ -56,7 +61,10 @@ class _$EewPsWaveSourceLayerCopyWithImpl<
   $Val extends EewPsWaveSourceLayer
 >
     implements $EewPsWaveSourceLayerCopyWith<$Res> {
-  _$EewPsWaveSourceLayerCopyWithImpl(this._value, this._then);
+  _$EewPsWaveSourceLayerCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -141,7 +149,11 @@ abstract class _$$EewPsWaveSourceLayerImplCopyWith<$Res>
 
 /// @nodoc
 class __$$EewPsWaveSourceLayerImplCopyWithImpl<$Res>
-    extends _$EewPsWaveSourceLayerCopyWithImpl<$Res, _$EewPsWaveSourceLayerImpl>
+    extends
+        _$EewPsWaveSourceLayerCopyWithImpl<
+          $Res,
+          _$EewPsWaveSourceLayerImpl
+        >
     implements _$$EewPsWaveSourceLayerImplCopyWith<$Res> {
   __$$EewPsWaveSourceLayerImplCopyWithImpl(
     _$EewPsWaveSourceLayerImpl _value,
@@ -205,7 +217,8 @@ class __$$EewPsWaveSourceLayerImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$EewPsWaveSourceLayerImpl extends _EewPsWaveSourceLayer {
+class _$EewPsWaveSourceLayerImpl
+    extends _EewPsWaveSourceLayer {
   const _$EewPsWaveSourceLayerImpl({
     required this.id,
     required final List<EewPsWaveLayerItem> items,
@@ -253,13 +266,22 @@ class _$EewPsWaveSourceLayerImpl extends _EewPsWaveSourceLayer {
         (other.runtimeType == runtimeType &&
             other is _$EewPsWaveSourceLayerImpl &&
             (identical(other.id, id) || other.id == id) &&
-            const DeepCollectionEquality().equals(other._items, _items) &&
-            (identical(other.visible, visible) || other.visible == visible) &&
+            const DeepCollectionEquality().equals(
+              other._items,
+              _items,
+            ) &&
+            (identical(other.visible, visible) ||
+                other.visible == visible) &&
             (identical(other.sourceId, sourceId) ||
                 other.sourceId == sourceId) &&
-            (identical(other.minZoom, minZoom) || other.minZoom == minZoom) &&
-            (identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom) &&
-            const DeepCollectionEquality().equals(other.filter, filter));
+            (identical(other.minZoom, minZoom) ||
+                other.minZoom == minZoom) &&
+            (identical(other.maxZoom, maxZoom) ||
+                other.maxZoom == maxZoom) &&
+            const DeepCollectionEquality().equals(
+              other.filter,
+              filter,
+            ));
   }
 
   @override
@@ -279,15 +301,16 @@ class _$EewPsWaveSourceLayerImpl extends _EewPsWaveSourceLayer {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EewPsWaveSourceLayerImplCopyWith<_$EewPsWaveSourceLayerImpl>
-  get copyWith =>
-      __$$EewPsWaveSourceLayerImplCopyWithImpl<_$EewPsWaveSourceLayerImpl>(
-        this,
-        _$identity,
-      );
+  _$$EewPsWaveSourceLayerImplCopyWith<
+    _$EewPsWaveSourceLayerImpl
+  >
+  get copyWith => __$$EewPsWaveSourceLayerImplCopyWithImpl<
+    _$EewPsWaveSourceLayerImpl
+  >(this, _$identity);
 }
 
-abstract class _EewPsWaveSourceLayer extends EewPsWaveSourceLayer {
+abstract class _EewPsWaveSourceLayer
+    extends EewPsWaveSourceLayer {
   const factory _EewPsWaveSourceLayer({
     required final String id,
     required final List<EewPsWaveLayerItem> items,
@@ -318,22 +341,26 @@ abstract class _EewPsWaveSourceLayer extends EewPsWaveSourceLayer {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EewPsWaveSourceLayerImplCopyWith<_$EewPsWaveSourceLayerImpl>
+  _$$EewPsWaveSourceLayerImplCopyWith<
+    _$EewPsWaveSourceLayerImpl
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 mixin _$EewPsWaveLayerItem {
   double get latitude => throw _privateConstructorUsedError;
-  double get longitude => throw _privateConstructorUsedError;
-  TravelTimeResult get travelTime => throw _privateConstructorUsedError;
+  double get longitude =>
+      throw _privateConstructorUsedError;
+  TravelTimeResult get travelTime =>
+      throw _privateConstructorUsedError;
   bool get isWarning => throw _privateConstructorUsedError;
 
   /// Create a copy of EewPsWaveLayerItem
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $EewPsWaveLayerItemCopyWith<EewPsWaveLayerItem> get copyWith =>
-      throw _privateConstructorUsedError;
+  $EewPsWaveLayerItemCopyWith<EewPsWaveLayerItem>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -341,7 +368,11 @@ abstract class $EewPsWaveLayerItemCopyWith<$Res> {
   factory $EewPsWaveLayerItemCopyWith(
     EewPsWaveLayerItem value,
     $Res Function(EewPsWaveLayerItem) then,
-  ) = _$EewPsWaveLayerItemCopyWithImpl<$Res, EewPsWaveLayerItem>;
+  ) =
+      _$EewPsWaveLayerItemCopyWithImpl<
+        $Res,
+        EewPsWaveLayerItem
+      >;
   @useResult
   $Res call({
     double latitude,
@@ -352,7 +383,10 @@ abstract class $EewPsWaveLayerItemCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$EewPsWaveLayerItemCopyWithImpl<$Res, $Val extends EewPsWaveLayerItem>
+class _$EewPsWaveLayerItemCopyWithImpl<
+  $Res,
+  $Val extends EewPsWaveLayerItem
+>
     implements $EewPsWaveLayerItemCopyWith<$Res> {
   _$EewPsWaveLayerItemCopyWithImpl(this._value, this._then);
 
@@ -418,7 +452,11 @@ abstract class _$$EewPsWaveLayerItemImplCopyWith<$Res>
 
 /// @nodoc
 class __$$EewPsWaveLayerItemImplCopyWithImpl<$Res>
-    extends _$EewPsWaveLayerItemCopyWithImpl<$Res, _$EewPsWaveLayerItemImpl>
+    extends
+        _$EewPsWaveLayerItemCopyWithImpl<
+          $Res,
+          _$EewPsWaveLayerItemImpl
+        >
     implements _$$EewPsWaveLayerItemImplCopyWith<$Res> {
   __$$EewPsWaveLayerItemImplCopyWithImpl(
     _$EewPsWaveLayerItemImpl _value,
@@ -502,22 +540,29 @@ class _$EewPsWaveLayerItemImpl extends _EewPsWaveLayerItem {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, latitude, longitude, travelTime, isWarning);
+  int get hashCode => Object.hash(
+    runtimeType,
+    latitude,
+    longitude,
+    travelTime,
+    isWarning,
+  );
 
   /// Create a copy of EewPsWaveLayerItem
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EewPsWaveLayerItemImplCopyWith<_$EewPsWaveLayerItemImpl> get copyWith =>
-      __$$EewPsWaveLayerItemImplCopyWithImpl<_$EewPsWaveLayerItemImpl>(
-        this,
-        _$identity,
-      );
+  _$$EewPsWaveLayerItemImplCopyWith<
+    _$EewPsWaveLayerItemImpl
+  >
+  get copyWith => __$$EewPsWaveLayerItemImplCopyWithImpl<
+    _$EewPsWaveLayerItemImpl
+  >(this, _$identity);
 }
 
-abstract class _EewPsWaveLayerItem extends EewPsWaveLayerItem {
+abstract class _EewPsWaveLayerItem
+    extends EewPsWaveLayerItem {
   const factory _EewPsWaveLayerItem({
     required final double latitude,
     required final double longitude,
@@ -539,8 +584,10 @@ abstract class _EewPsWaveLayerItem extends EewPsWaveLayerItem {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EewPsWaveLayerItemImplCopyWith<_$EewPsWaveLayerItemImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$EewPsWaveLayerItemImplCopyWith<
+    _$EewPsWaveLayerItemImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -556,8 +603,8 @@ mixin _$EewWaveFillLayer {
   /// Create a copy of EewWaveFillLayer
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $EewWaveFillLayerCopyWith<EewWaveFillLayer> get copyWith =>
-      throw _privateConstructorUsedError;
+  $EewWaveFillLayerCopyWith<EewWaveFillLayer>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -565,7 +612,11 @@ abstract class $EewWaveFillLayerCopyWith<$Res> {
   factory $EewWaveFillLayerCopyWith(
     EewWaveFillLayer value,
     $Res Function(EewWaveFillLayer) then,
-  ) = _$EewWaveFillLayerCopyWithImpl<$Res, EewWaveFillLayer>;
+  ) =
+      _$EewWaveFillLayerCopyWithImpl<
+        $Res,
+        EewWaveFillLayer
+      >;
   @useResult
   $Res call({
     String id,
@@ -579,7 +630,10 @@ abstract class $EewWaveFillLayerCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$EewWaveFillLayerCopyWithImpl<$Res, $Val extends EewWaveFillLayer>
+class _$EewWaveFillLayerCopyWithImpl<
+  $Res,
+  $Val extends EewWaveFillLayer
+>
     implements $EewWaveFillLayerCopyWith<$Res> {
   _$EewWaveFillLayerCopyWithImpl(this._value, this._then);
 
@@ -666,7 +720,11 @@ abstract class _$$EewWaveFillLayerImplCopyWith<$Res>
 
 /// @nodoc
 class __$$EewWaveFillLayerImplCopyWithImpl<$Res>
-    extends _$EewWaveFillLayerCopyWithImpl<$Res, _$EewWaveFillLayerImpl>
+    extends
+        _$EewWaveFillLayerCopyWithImpl<
+          $Res,
+          _$EewWaveFillLayerImpl
+        >
     implements _$$EewWaveFillLayerImplCopyWith<$Res> {
   __$$EewWaveFillLayerImplCopyWithImpl(
     _$EewWaveFillLayerImpl _value,
@@ -771,13 +829,20 @@ class _$EewWaveFillLayerImpl extends _EewWaveFillLayer {
         (other.runtimeType == runtimeType &&
             other is _$EewWaveFillLayerImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.color, color) || other.color == color) &&
-            const DeepCollectionEquality().equals(other.filter, filter) &&
-            (identical(other.visible, visible) || other.visible == visible) &&
+            (identical(other.color, color) ||
+                other.color == color) &&
+            const DeepCollectionEquality().equals(
+              other.filter,
+              filter,
+            ) &&
+            (identical(other.visible, visible) ||
+                other.visible == visible) &&
             (identical(other.sourceId, sourceId) ||
                 other.sourceId == sourceId) &&
-            (identical(other.minZoom, minZoom) || other.minZoom == minZoom) &&
-            (identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom));
+            (identical(other.minZoom, minZoom) ||
+                other.minZoom == minZoom) &&
+            (identical(other.maxZoom, maxZoom) ||
+                other.maxZoom == maxZoom));
   }
 
   @override
@@ -797,11 +862,10 @@ class _$EewWaveFillLayerImpl extends _EewWaveFillLayer {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EewWaveFillLayerImplCopyWith<_$EewWaveFillLayerImpl> get copyWith =>
-      __$$EewWaveFillLayerImplCopyWithImpl<_$EewWaveFillLayerImpl>(
-        this,
-        _$identity,
-      );
+  _$$EewWaveFillLayerImplCopyWith<_$EewWaveFillLayerImpl>
+  get copyWith => __$$EewWaveFillLayerImplCopyWithImpl<
+    _$EewWaveFillLayerImpl
+  >(this, _$identity);
 }
 
 abstract class _EewWaveFillLayer extends EewWaveFillLayer {
@@ -835,8 +899,8 @@ abstract class _EewWaveFillLayer extends EewWaveFillLayer {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EewWaveFillLayerImplCopyWith<_$EewWaveFillLayerImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$EewWaveFillLayerImplCopyWith<_$EewWaveFillLayerImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -852,8 +916,8 @@ mixin _$EewWaveLineLayer {
   /// Create a copy of EewWaveLineLayer
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $EewWaveLineLayerCopyWith<EewWaveLineLayer> get copyWith =>
-      throw _privateConstructorUsedError;
+  $EewWaveLineLayerCopyWith<EewWaveLineLayer>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -861,7 +925,11 @@ abstract class $EewWaveLineLayerCopyWith<$Res> {
   factory $EewWaveLineLayerCopyWith(
     EewWaveLineLayer value,
     $Res Function(EewWaveLineLayer) then,
-  ) = _$EewWaveLineLayerCopyWithImpl<$Res, EewWaveLineLayer>;
+  ) =
+      _$EewWaveLineLayerCopyWithImpl<
+        $Res,
+        EewWaveLineLayer
+      >;
   @useResult
   $Res call({
     String id,
@@ -875,7 +943,10 @@ abstract class $EewWaveLineLayerCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$EewWaveLineLayerCopyWithImpl<$Res, $Val extends EewWaveLineLayer>
+class _$EewWaveLineLayerCopyWithImpl<
+  $Res,
+  $Val extends EewWaveLineLayer
+>
     implements $EewWaveLineLayerCopyWith<$Res> {
   _$EewWaveLineLayerCopyWithImpl(this._value, this._then);
 
@@ -962,7 +1033,11 @@ abstract class _$$EewWaveLineLayerImplCopyWith<$Res>
 
 /// @nodoc
 class __$$EewWaveLineLayerImplCopyWithImpl<$Res>
-    extends _$EewWaveLineLayerCopyWithImpl<$Res, _$EewWaveLineLayerImpl>
+    extends
+        _$EewWaveLineLayerCopyWithImpl<
+          $Res,
+          _$EewWaveLineLayerImpl
+        >
     implements _$$EewWaveLineLayerImplCopyWith<$Res> {
   __$$EewWaveLineLayerImplCopyWithImpl(
     _$EewWaveLineLayerImpl _value,
@@ -1067,13 +1142,20 @@ class _$EewWaveLineLayerImpl extends _EewWaveLineLayer {
         (other.runtimeType == runtimeType &&
             other is _$EewWaveLineLayerImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.color, color) || other.color == color) &&
-            const DeepCollectionEquality().equals(other.filter, filter) &&
-            (identical(other.visible, visible) || other.visible == visible) &&
+            (identical(other.color, color) ||
+                other.color == color) &&
+            const DeepCollectionEquality().equals(
+              other.filter,
+              filter,
+            ) &&
+            (identical(other.visible, visible) ||
+                other.visible == visible) &&
             (identical(other.sourceId, sourceId) ||
                 other.sourceId == sourceId) &&
-            (identical(other.minZoom, minZoom) || other.minZoom == minZoom) &&
-            (identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom));
+            (identical(other.minZoom, minZoom) ||
+                other.minZoom == minZoom) &&
+            (identical(other.maxZoom, maxZoom) ||
+                other.maxZoom == maxZoom));
   }
 
   @override
@@ -1093,11 +1175,10 @@ class _$EewWaveLineLayerImpl extends _EewWaveLineLayer {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EewWaveLineLayerImplCopyWith<_$EewWaveLineLayerImpl> get copyWith =>
-      __$$EewWaveLineLayerImplCopyWithImpl<_$EewWaveLineLayerImpl>(
-        this,
-        _$identity,
-      );
+  _$$EewWaveLineLayerImplCopyWith<_$EewWaveLineLayerImpl>
+  get copyWith => __$$EewWaveLineLayerImplCopyWithImpl<
+    _$EewWaveLineLayerImpl
+  >(this, _$identity);
 }
 
 abstract class _EewWaveLineLayer extends EewWaveLineLayer {
@@ -1131,6 +1212,6 @@ abstract class _EewWaveLineLayer extends EewWaveLineLayer {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EewWaveLineLayerImplCopyWith<_$EewWaveLineLayerImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$EewWaveLineLayerImplCopyWith<_$EewWaveLineLayerImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }

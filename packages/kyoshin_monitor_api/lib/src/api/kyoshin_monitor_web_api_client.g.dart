@@ -10,8 +10,13 @@ part of 'kyoshin_monitor_web_api_client.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
 
-class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
-  _KyoshinMonitorWebApiClient(this._dio, {this.baseUrl, this.errorLogger}) {
+class _KyoshinMonitorWebApiClient
+    implements KyoshinMonitorWebApiClient {
+  _KyoshinMonitorWebApiClient(
+    this._dio, {
+    this.baseUrl,
+    this.errorLogger,
+  }) {
     baseUrl ??= 'http://www.kmoni.bosai.go.jp';
   }
 
@@ -28,16 +33,27 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<DataTime>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
+      Options(
+            method: 'GET',
+            headers: _headers,
+            extra: _extra,
+          )
           .compose(
             _dio.options,
             '/webservice/server/pros/latest.json',
             queryParameters: queryParameters,
             data: _data,
           )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+          .copyWith(
+            baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ),
+          ),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _options,
+    );
     late DataTime _value;
     try {
       _value = DataTime.fromJson(_result.data!);
@@ -55,16 +71,27 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<MaintenanceMessage>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
+      Options(
+            method: 'GET',
+            headers: _headers,
+            extra: _extra,
+          )
           .compose(
             _dio.options,
             '/webservice/maintenance/message.json',
             queryParameters: queryParameters,
             data: _data,
           )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+          .copyWith(
+            baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ),
+          ),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _options,
+    );
     late MaintenanceMessage _value;
     try {
       _value = MaintenanceMessage.fromJson(_result.data!);
@@ -76,7 +103,9 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
   }
 
   @override
-  Future<List<int>> getBaseMapImageData({required String theme}) async {
+  Future<List<int>> getBaseMapImageData({
+    required String theme,
+  }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -94,9 +123,16 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
             queryParameters: queryParameters,
             data: _data,
           )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+          .copyWith(
+            baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ),
+          ),
     );
-    final _result = await _dio.fetch<List<dynamic>>(_options);
+    final _result = await _dio.fetch<List<dynamic>>(
+      _options,
+    );
     late List<int> _value;
     try {
       _value = _result.data!.cast<int>();
@@ -130,9 +166,16 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
             queryParameters: queryParameters,
             data: _data,
           )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+          .copyWith(
+            baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ),
+          ),
     );
-    final _result = await _dio.fetch<List<dynamic>>(_options);
+    final _result = await _dio.fetch<List<dynamic>>(
+      _options,
+    );
     late List<int> _value;
     try {
       _value = _result.data!.cast<int>();
@@ -150,16 +193,27 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<Eew>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
+      Options(
+            method: 'GET',
+            headers: _headers,
+            extra: _extra,
+          )
           .compose(
             _dio.options,
             '/webservice/hypo/eew/${dateTime}.json',
             queryParameters: queryParameters,
             data: _data,
           )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+          .copyWith(
+            baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ),
+          ),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _options,
+    );
     late Eew _value;
     try {
       _value = Eew.fromJson(_result.data!);
@@ -192,9 +246,16 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
             queryParameters: queryParameters,
             data: _data,
           )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+          .copyWith(
+            baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ),
+          ),
     );
-    final _result = await _dio.fetch<List<dynamic>>(_options);
+    final _result = await _dio.fetch<List<dynamic>>(
+      _options,
+    );
     late List<int> _value;
     try {
       _value = _result.data!.cast<int>();
@@ -229,9 +290,16 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
             queryParameters: queryParameters,
             data: _data,
           )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+          .copyWith(
+            baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ),
+          ),
     );
-    final _result = await _dio.fetch<List<dynamic>>(_options);
+    final _result = await _dio.fetch<List<dynamic>>(
+      _options,
+    );
     late List<int> _value;
     try {
       _value = _result.data!.cast<int>();
@@ -264,9 +332,16 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
             queryParameters: queryParameters,
             data: _data,
           )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+          .copyWith(
+            baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ),
+          ),
     );
-    final _result = await _dio.fetch<List<dynamic>>(_options);
+    final _result = await _dio.fetch<List<dynamic>>(
+      _options,
+    );
     late List<int> _value;
     try {
       _value = _result.data!.cast<int>();
@@ -277,10 +352,14 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
     return _value;
   }
 
-  RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
+  RequestOptions _setStreamType<T>(
+    RequestOptions requestOptions,
+  ) {
     if (T != dynamic &&
-        !(requestOptions.responseType == ResponseType.bytes ||
-            requestOptions.responseType == ResponseType.stream)) {
+        !(requestOptions.responseType ==
+                ResponseType.bytes ||
+            requestOptions.responseType ==
+                ResponseType.stream)) {
       if (T == String) {
         requestOptions.responseType = ResponseType.plain;
       } else {
@@ -290,7 +369,10 @@ class _KyoshinMonitorWebApiClient implements KyoshinMonitorWebApiClient {
     return requestOptions;
   }
 
-  String _combineBaseUrls(String dioBaseUrl, String? baseUrl) {
+  String _combineBaseUrls(
+    String dioBaseUrl,
+    String? baseUrl,
+  ) {
     if (baseUrl == null || baseUrl.trim().isEmpty) {
       return dioBaseUrl;
     }

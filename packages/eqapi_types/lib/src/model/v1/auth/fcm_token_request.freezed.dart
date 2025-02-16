@@ -15,7 +15,9 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-FcmTokenRequest _$FcmTokenRequestFromJson(Map<String, dynamic> json) {
+FcmTokenRequest _$FcmTokenRequestFromJson(
+  Map<String, dynamic> json,
+) {
   return _FcmTokenRequest.fromJson(json);
 }
 
@@ -24,7 +26,8 @@ mixin _$FcmTokenRequest {
   String get fcmToken => throw _privateConstructorUsedError;
 
   /// Serializes this FcmTokenRequest to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of FcmTokenRequest
   /// with the given fields replaced by the non-null parameter values.
@@ -44,7 +47,10 @@ abstract class $FcmTokenRequestCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$FcmTokenRequestCopyWithImpl<$Res, $Val extends FcmTokenRequest>
+class _$FcmTokenRequestCopyWithImpl<
+  $Res,
+  $Val extends FcmTokenRequest
+>
     implements $FcmTokenRequestCopyWith<$Res> {
   _$FcmTokenRequestCopyWithImpl(this._value, this._then);
 
@@ -85,7 +91,11 @@ abstract class _$$FcmTokenRequestImplCopyWith<$Res>
 
 /// @nodoc
 class __$$FcmTokenRequestImplCopyWithImpl<$Res>
-    extends _$FcmTokenRequestCopyWithImpl<$Res, _$FcmTokenRequestImpl>
+    extends
+        _$FcmTokenRequestCopyWithImpl<
+          $Res,
+          _$FcmTokenRequestImpl
+        >
     implements _$$FcmTokenRequestImplCopyWith<$Res> {
   __$$FcmTokenRequestImplCopyWithImpl(
     _$FcmTokenRequestImpl _value,
@@ -114,8 +124,9 @@ class __$$FcmTokenRequestImplCopyWithImpl<$Res>
 class _$FcmTokenRequestImpl implements _FcmTokenRequest {
   const _$FcmTokenRequestImpl({required this.fcmToken});
 
-  factory _$FcmTokenRequestImpl.fromJson(Map<String, dynamic> json) =>
-      _$$FcmTokenRequestImplFromJson(json);
+  factory _$FcmTokenRequestImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$FcmTokenRequestImplFromJson(json);
 
   @override
   final String fcmToken;
@@ -143,11 +154,10 @@ class _$FcmTokenRequestImpl implements _FcmTokenRequest {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$FcmTokenRequestImplCopyWith<_$FcmTokenRequestImpl> get copyWith =>
-      __$$FcmTokenRequestImplCopyWithImpl<_$FcmTokenRequestImpl>(
-        this,
-        _$identity,
-      );
+  _$$FcmTokenRequestImplCopyWith<_$FcmTokenRequestImpl>
+  get copyWith => __$$FcmTokenRequestImplCopyWithImpl<
+    _$FcmTokenRequestImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -156,11 +166,13 @@ class _$FcmTokenRequestImpl implements _FcmTokenRequest {
 }
 
 abstract class _FcmTokenRequest implements FcmTokenRequest {
-  const factory _FcmTokenRequest({required final String fcmToken}) =
-      _$FcmTokenRequestImpl;
+  const factory _FcmTokenRequest({
+    required final String fcmToken,
+  }) = _$FcmTokenRequestImpl;
 
-  factory _FcmTokenRequest.fromJson(Map<String, dynamic> json) =
-      _$FcmTokenRequestImpl.fromJson;
+  factory _FcmTokenRequest.fromJson(
+    Map<String, dynamic> json,
+  ) = _$FcmTokenRequestImpl.fromJson;
 
   @override
   String get fcmToken;
@@ -169,6 +181,6 @@ abstract class _FcmTokenRequest implements FcmTokenRequest {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$FcmTokenRequestImplCopyWith<_$FcmTokenRequestImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$FcmTokenRequestImplCopyWith<_$FcmTokenRequestImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }

@@ -8,34 +8,42 @@ part of 'eew_telegram.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$eewRestHash() => r'69fa253ca95a018a286351ead0b2f662f5e47626';
+String _$eewRestHash() =>
+    r'69fa253ca95a018a286351ead0b2f662f5e47626';
 
 /// See also [_eewRest].
 @ProviderFor(_eewRest)
-final _eewRestProvider = FutureProvider<List<EewV1>>.internal(
-  _eewRest,
-  name: r'_eewRestProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$eewRestHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final _eewRestProvider =
+    FutureProvider<List<EewV1>>.internal(
+      _eewRest,
+      name: r'_eewRestProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$eewRestHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef _EewRestRef = FutureProviderRef<List<EewV1>>;
-String _$eewHash() => r'93658ea88458788029f4a06ba8ee090cad543865';
+String _$eewHash() =>
+    r'93658ea88458788029f4a06ba8ee090cad543865';
 
 /// See also [Eew].
 @ProviderFor(Eew)
-final eewProvider = NotifierProvider<Eew, AsyncValue<List<EewV1>>>.internal(
-  Eew.new,
-  name: r'eewProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$eewHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final eewProvider =
+    NotifierProvider<Eew, AsyncValue<List<EewV1>>>.internal(
+      Eew.new,
+      name: r'eewProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$eewHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$Eew = Notifier<AsyncValue<List<EewV1>>>;
 // ignore_for_file: type=lint

@@ -6,7 +6,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'eew_hypocenter_layer_controller.g.dart';
 
 @riverpod
-class EewHypocenterLayerController extends _$EewHypocenterLayerController {
+class EewHypocenterLayerController
+    extends _$EewHypocenterLayerController {
   @override
   EewHypocenterLayer build(EewHypocenterIcon icon) {
     ref
@@ -25,8 +26,10 @@ class EewHypocenterLayerController extends _$EewHypocenterLayerController {
                       !eew.isCanceled;
 
                   return switch (icon) {
-                    EewHypocenterIcon.normal => base && !isLowPrecise,
-                    EewHypocenterIcon.lowPrecise => base && isLowPrecise,
+                    EewHypocenterIcon.normal =>
+                      base && !isLowPrecise,
+                    EewHypocenterIcon.lowPrecise =>
+                      base && isLowPrecise,
                   };
                 })
                 .map(
@@ -39,9 +42,14 @@ class EewHypocenterLayerController extends _$EewHypocenterLayerController {
 
         state = state.copyWith(hypocenters: hypocenters);
       })
-      ..listen(timeTickerProvider(const Duration(milliseconds: 500)), (_, __) {
-        state = state.copyWith(visible: !state.visible);
-      });
+      ..listen(
+        timeTickerProvider(
+          const Duration(milliseconds: 500),
+        ),
+        (_, __) {
+          state = state.copyWith(visible: !state.visible);
+        },
+      );
 
     return EewHypocenterLayer(
       id: 'eew-hypocenter-${icon.name}',

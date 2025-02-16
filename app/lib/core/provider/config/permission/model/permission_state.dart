@@ -12,6 +12,7 @@ class PermissionStateModel with _$PermissionStateModel {
     @Default(false) bool backgroundLocation,
   }) = _PermissionStateModel;
 
-  factory PermissionStateModel.fromJson(Map<String, dynamic> json) =>
-      _$PermissionStateModelFromJson(json);
+  factory PermissionStateModel.fromJson(
+    Map<String, dynamic> json,
+  ) => _$PermissionStateModelFromJson(json);
 }

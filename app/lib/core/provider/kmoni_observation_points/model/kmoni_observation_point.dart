@@ -6,7 +6,8 @@ import 'package:kyoshin_observation_point_types/kyoshin_observation_point.pb.dar
 part 'kmoni_observation_point.freezed.dart';
 
 @freezed
-class AnalyzedKmoniObservationPoint with _$AnalyzedKmoniObservationPoint {
+class AnalyzedKmoniObservationPoint
+    with _$AnalyzedKmoniObservationPoint {
   const factory AnalyzedKmoniObservationPoint({
     required KyoshinObservationPoint point,
     // ここから
@@ -14,7 +15,8 @@ class AnalyzedKmoniObservationPoint with _$AnalyzedKmoniObservationPoint {
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
     Color? intensityColor,
     double? pga,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color? pgaColor,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+    Color? pgaColor,
   }) = _AnalyzedKmoniObservationPoint;
 }
 

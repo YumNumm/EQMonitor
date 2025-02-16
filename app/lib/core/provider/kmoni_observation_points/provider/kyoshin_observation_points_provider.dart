@@ -8,14 +8,19 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'kyoshin_observation_points_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-List<KyoshinMonitorObservationPoint> kyoshinMonitorObservationPoints(Ref ref) =>
+List<KyoshinMonitorObservationPoint>
+kyoshinMonitorObservationPoints(Ref ref) =>
     ref
-        .watch(kyoshinMonitorInternalObservationPointsConvertedProvider)
+        .watch(
+          kyoshinMonitorInternalObservationPointsConvertedProvider,
+        )
         .requireValue;
 
 @Riverpod(keepAlive: true)
 Future<List<KyoshinMonitorObservationPoint>>
-kyoshinMonitorInternalObservationPointsConverted(Ref ref) async {
+kyoshinMonitorInternalObservationPointsConverted(
+  Ref ref,
+) async {
   final result = await ref.watch(
     kyoshinMonitorInternalObservationPointsProvider.future,
   );
@@ -34,13 +39,22 @@ kyoshinMonitorInternalObservationPointsConverted(Ref ref) async {
 }
 
 @Riverpod(keepAlive: true)
-KyoshinObservationPoints kyoshinObservationPoints(Ref ref) =>
-    ref.watch(kyoshinMonitorInternalObservationPointsProvider).requireValue;
+KyoshinObservationPoints kyoshinObservationPoints(
+  Ref ref,
+) =>
+    ref
+        .watch(
+          kyoshinMonitorInternalObservationPointsProvider,
+        )
+        .requireValue;
 
 @Riverpod(keepAlive: true)
-Future<KyoshinObservationPoints> kyoshinMonitorInternalObservationPoints(
-  Ref ref,
-) async {
-  final binary = await rootBundle.load(Assets.kyoshinObservationPoint);
-  return KyoshinObservationPoints.fromBuffer(binary.buffer.asUint8List());
+Future<KyoshinObservationPoints>
+kyoshinMonitorInternalObservationPoints(Ref ref) async {
+  final binary = await rootBundle.load(
+    Assets.kyoshinObservationPoint,
+  );
+  return KyoshinObservationPoints.fromBuffer(
+    binary.buffer.asUint8List(),
+  );
 }

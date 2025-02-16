@@ -10,9 +10,14 @@ part of 'tsunami.dart';
 
 _$TsunamiParameterImpl _$$TsunamiParameterImplFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(r'_$TsunamiParameterImpl', json, ($checkedConvert) {
+) => $checkedCreate(r'_$TsunamiParameterImpl', json, (
+  $checkedConvert,
+) {
   final val = _$TsunamiParameterImpl(
-    responseId: $checkedConvert('responseId', (v) => v as String),
+    responseId: $checkedConvert(
+      'responseId',
+      (v) => v as String,
+    ),
     responseTime: $checkedConvert(
       'responseTime',
       (v) => DateTime.parse(v as String),
@@ -28,7 +33,9 @@ _$TsunamiParameterImpl _$$TsunamiParameterImplFromJson(
       (v) =>
           (v as List<dynamic>)
               .map(
-                (e) => TsunamiParameterItem.fromJson(e as Map<String, dynamic>),
+                (e) => TsunamiParameterItem.fromJson(
+                  e as Map<String, dynamic>,
+                ),
               )
               .toList(),
     ),
@@ -47,17 +54,26 @@ Map<String, dynamic> _$$TsunamiParameterImplToJson(
   'items': instance.items,
 };
 
-_$TsunamiParameterItemImpl _$$TsunamiParameterItemImplFromJson(
+_$TsunamiParameterItemImpl
+_$$TsunamiParameterItemImplFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(r'_$TsunamiParameterItemImpl', json, ($checkedConvert) {
+) => $checkedCreate(r'_$TsunamiParameterItemImpl', json, (
+  $checkedConvert,
+) {
   final val = _$TsunamiParameterItemImpl(
     area: $checkedConvert('area', (v) => v as String?),
-    prefecture: $checkedConvert('prefecture', (v) => v as String),
+    prefecture: $checkedConvert(
+      'prefecture',
+      (v) => v as String,
+    ),
     code: $checkedConvert('code', (v) => v as String),
     name: $checkedConvert('name', (v) => v as String),
     kana: $checkedConvert('kana', (v) => v as String),
     owner: $checkedConvert('owner', (v) => v as String),
-    latitude: $checkedConvert('latitude', (v) => doubleFromString(v as String)),
+    latitude: $checkedConvert(
+      'latitude',
+      (v) => doubleFromString(v as String),
+    ),
     longitude: $checkedConvert(
       'longitude',
       (v) => doubleFromString(v as String),

@@ -25,21 +25,32 @@ mixin _$Eew {
   Result? get result => throw _privateConstructorUsedError;
 
   /// 発報時間
-  @JsonKey(fromJson: dateTimeOrNullFromString, toJson: dateTimeOrNullToString)
-  DateTime? get reportTime => throw _privateConstructorUsedError;
+  @JsonKey(
+    fromJson: dateTimeOrNullFromString,
+    toJson: dateTimeOrNullToString,
+  )
+  DateTime? get reportTime =>
+      throw _privateConstructorUsedError;
 
   /// 地域コード
-  String? get regionCode => throw _privateConstructorUsedError;
+  String? get regionCode =>
+      throw _privateConstructorUsedError;
 
   /// リクエスト時間
-  String? get requestTime => throw _privateConstructorUsedError;
+  String? get requestTime =>
+      throw _privateConstructorUsedError;
 
   /// 地域名
-  String? get regionName => throw _privateConstructorUsedError;
+  String? get regionName =>
+      throw _privateConstructorUsedError;
 
   /// 経度
-  @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
-  double? get longitude => throw _privateConstructorUsedError;
+  @JsonKey(
+    fromJson: doubleOrNullFromString,
+    toJson: doubleOrNullToString,
+  )
+  double? get longitude =>
+      throw _privateConstructorUsedError;
 
   /// キャンセル報か
   @JsonKey(name: 'is_cancel', fromJson: boolFromDynamic)
@@ -50,8 +61,12 @@ mixin _$Eew {
   int? get depth => throw _privateConstructorUsedError;
 
   /// 予想最大震度
-  @JsonKey(name: 'calcintensity', fromJson: JmaIntensity.fromString)
-  JmaIntensity? get intensity => throw _privateConstructorUsedError;
+  @JsonKey(
+    name: 'calcintensity',
+    fromJson: JmaIntensity.fromString,
+  )
+  JmaIntensity? get intensity =>
+      throw _privateConstructorUsedError;
 
   /// 最終報か
   @JsonKey(name: 'is_final', fromJson: boolFromDynamic)
@@ -59,44 +74,67 @@ mixin _$Eew {
 
   /// 訓練報か
   @JsonKey(name: 'isTraining', fromJson: boolFromDynamic)
-  bool? get isTraining => throw _privateConstructorUsedError;
+  bool? get isTraining =>
+      throw _privateConstructorUsedError;
 
   /// 緯度
-  @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
-  double? get latitude => throw _privateConstructorUsedError;
+  @JsonKey(
+    fromJson: doubleOrNullFromString,
+    toJson: doubleOrNullToString,
+  )
+  double? get latitude =>
+      throw _privateConstructorUsedError;
 
   /// 発生時間
-  @JsonKey(name: 'origin_time', fromJson: originTimeFromString)
-  DateTime? get originTime => throw _privateConstructorUsedError;
+  @JsonKey(
+    name: 'origin_time',
+    fromJson: originTimeFromString,
+  )
+  DateTime? get originTime =>
+      throw _privateConstructorUsedError;
 
   /// セキュリティ情報
-  Security? get security => throw _privateConstructorUsedError;
+  Security? get security =>
+      throw _privateConstructorUsedError;
 
   /// マグニチュード
-  @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
-  double? get magnitude => throw _privateConstructorUsedError;
+  @JsonKey(
+    fromJson: doubleOrNullFromString,
+    toJson: doubleOrNullToString,
+  )
+  double? get magnitude =>
+      throw _privateConstructorUsedError;
 
   /// 発報番号
-  @JsonKey(name: 'report_num', fromJson: intFromString, toJson: intToString)
+  @JsonKey(
+    name: 'report_num',
+    fromJson: intFromString,
+    toJson: intToString,
+  )
   int? get reportNum => throw _privateConstructorUsedError;
 
   /// なにこれ?
-  String? get requestHypoType => throw _privateConstructorUsedError;
+  String? get requestHypoType =>
+      throw _privateConstructorUsedError;
 
   /// 地震ID
-  String? get reportId => throw _privateConstructorUsedError;
+  String? get reportId =>
+      throw _privateConstructorUsedError;
 
   /// 警報 or 予報
   @JsonKey(name: 'alertflg')
-  String? get alertFlag => throw _privateConstructorUsedError;
+  String? get alertFlag =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this Eew to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of Eew
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $EewCopyWith<Eew> get copyWith => throw _privateConstructorUsedError;
+  $EewCopyWith<Eew> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -106,27 +144,56 @@ abstract class $EewCopyWith<$Res> {
   @useResult
   $Res call({
     Result? result,
-    @JsonKey(fromJson: dateTimeOrNullFromString, toJson: dateTimeOrNullToString)
+    @JsonKey(
+      fromJson: dateTimeOrNullFromString,
+      toJson: dateTimeOrNullToString,
+    )
     DateTime? reportTime,
     String? regionCode,
     String? requestTime,
     String? regionName,
-    @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
+    @JsonKey(
+      fromJson: doubleOrNullFromString,
+      toJson: doubleOrNullToString,
+    )
     double? longitude,
-    @JsonKey(name: 'is_cancel', fromJson: boolFromDynamic) bool? isCancel,
-    @JsonKey(fromJson: depthFromString, toJson: depthToString) int? depth,
-    @JsonKey(name: 'calcintensity', fromJson: JmaIntensity.fromString)
+    @JsonKey(name: 'is_cancel', fromJson: boolFromDynamic)
+    bool? isCancel,
+    @JsonKey(
+      fromJson: depthFromString,
+      toJson: depthToString,
+    )
+    int? depth,
+    @JsonKey(
+      name: 'calcintensity',
+      fromJson: JmaIntensity.fromString,
+    )
     JmaIntensity? intensity,
-    @JsonKey(name: 'is_final', fromJson: boolFromDynamic) bool? isFinal,
-    @JsonKey(name: 'isTraining', fromJson: boolFromDynamic) bool? isTraining,
-    @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
+    @JsonKey(name: 'is_final', fromJson: boolFromDynamic)
+    bool? isFinal,
+    @JsonKey(name: 'isTraining', fromJson: boolFromDynamic)
+    bool? isTraining,
+    @JsonKey(
+      fromJson: doubleOrNullFromString,
+      toJson: doubleOrNullToString,
+    )
     double? latitude,
-    @JsonKey(name: 'origin_time', fromJson: originTimeFromString)
+    @JsonKey(
+      name: 'origin_time',
+      fromJson: originTimeFromString,
+    )
     DateTime? originTime,
     Security? security,
-    @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
+    @JsonKey(
+      fromJson: doubleOrNullFromString,
+      toJson: doubleOrNullToString,
+    )
     double? magnitude,
-    @JsonKey(name: 'report_num', fromJson: intFromString, toJson: intToString)
+    @JsonKey(
+      name: 'report_num',
+      fromJson: intFromString,
+      toJson: intToString,
+    )
     int? reportNum,
     String? requestHypoType,
     String? reportId,
@@ -138,7 +205,8 @@ abstract class $EewCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$EewCopyWithImpl<$Res, $Val extends Eew> implements $EewCopyWith<$Res> {
+class _$EewCopyWithImpl<$Res, $Val extends Eew>
+    implements $EewCopyWith<$Res> {
   _$EewCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -296,41 +364,77 @@ class _$EewCopyWithImpl<$Res, $Val extends Eew> implements $EewCopyWith<$Res> {
       return null;
     }
 
-    return $SecurityCopyWith<$Res>(_value.security!, (value) {
-      return _then(_value.copyWith(security: value) as $Val);
+    return $SecurityCopyWith<$Res>(_value.security!, (
+      value,
+    ) {
+      return _then(
+        _value.copyWith(security: value) as $Val,
+      );
     });
   }
 }
 
 /// @nodoc
-abstract class _$$EewImplCopyWith<$Res> implements $EewCopyWith<$Res> {
-  factory _$$EewImplCopyWith(_$EewImpl value, $Res Function(_$EewImpl) then) =
-      __$$EewImplCopyWithImpl<$Res>;
+abstract class _$$EewImplCopyWith<$Res>
+    implements $EewCopyWith<$Res> {
+  factory _$$EewImplCopyWith(
+    _$EewImpl value,
+    $Res Function(_$EewImpl) then,
+  ) = __$$EewImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({
     Result? result,
-    @JsonKey(fromJson: dateTimeOrNullFromString, toJson: dateTimeOrNullToString)
+    @JsonKey(
+      fromJson: dateTimeOrNullFromString,
+      toJson: dateTimeOrNullToString,
+    )
     DateTime? reportTime,
     String? regionCode,
     String? requestTime,
     String? regionName,
-    @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
+    @JsonKey(
+      fromJson: doubleOrNullFromString,
+      toJson: doubleOrNullToString,
+    )
     double? longitude,
-    @JsonKey(name: 'is_cancel', fromJson: boolFromDynamic) bool? isCancel,
-    @JsonKey(fromJson: depthFromString, toJson: depthToString) int? depth,
-    @JsonKey(name: 'calcintensity', fromJson: JmaIntensity.fromString)
+    @JsonKey(name: 'is_cancel', fromJson: boolFromDynamic)
+    bool? isCancel,
+    @JsonKey(
+      fromJson: depthFromString,
+      toJson: depthToString,
+    )
+    int? depth,
+    @JsonKey(
+      name: 'calcintensity',
+      fromJson: JmaIntensity.fromString,
+    )
     JmaIntensity? intensity,
-    @JsonKey(name: 'is_final', fromJson: boolFromDynamic) bool? isFinal,
-    @JsonKey(name: 'isTraining', fromJson: boolFromDynamic) bool? isTraining,
-    @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
+    @JsonKey(name: 'is_final', fromJson: boolFromDynamic)
+    bool? isFinal,
+    @JsonKey(name: 'isTraining', fromJson: boolFromDynamic)
+    bool? isTraining,
+    @JsonKey(
+      fromJson: doubleOrNullFromString,
+      toJson: doubleOrNullToString,
+    )
     double? latitude,
-    @JsonKey(name: 'origin_time', fromJson: originTimeFromString)
+    @JsonKey(
+      name: 'origin_time',
+      fromJson: originTimeFromString,
+    )
     DateTime? originTime,
     Security? security,
-    @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
+    @JsonKey(
+      fromJson: doubleOrNullFromString,
+      toJson: doubleOrNullToString,
+    )
     double? magnitude,
-    @JsonKey(name: 'report_num', fromJson: intFromString, toJson: intToString)
+    @JsonKey(
+      name: 'report_num',
+      fromJson: intFromString,
+      toJson: intToString,
+    )
     int? reportNum,
     String? requestHypoType,
     String? reportId,
@@ -344,10 +448,13 @@ abstract class _$$EewImplCopyWith<$Res> implements $EewCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$EewImplCopyWithImpl<$Res> extends _$EewCopyWithImpl<$Res, _$EewImpl>
+class __$$EewImplCopyWithImpl<$Res>
+    extends _$EewCopyWithImpl<$Res, _$EewImpl>
     implements _$$EewImplCopyWith<$Res> {
-  __$$EewImplCopyWithImpl(_$EewImpl _value, $Res Function(_$EewImpl) _then)
-    : super(_value, _then);
+  __$$EewImplCopyWithImpl(
+    _$EewImpl _value,
+    $Res Function(_$EewImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of Eew
   /// with the given fields replaced by the non-null parameter values.
@@ -481,27 +588,56 @@ class __$$EewImplCopyWithImpl<$Res> extends _$EewCopyWithImpl<$Res, _$EewImpl>
 class _$EewImpl extends _Eew {
   const _$EewImpl({
     this.result,
-    @JsonKey(fromJson: dateTimeOrNullFromString, toJson: dateTimeOrNullToString)
+    @JsonKey(
+      fromJson: dateTimeOrNullFromString,
+      toJson: dateTimeOrNullToString,
+    )
     this.reportTime,
     this.regionCode,
     this.requestTime,
     this.regionName,
-    @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
+    @JsonKey(
+      fromJson: doubleOrNullFromString,
+      toJson: doubleOrNullToString,
+    )
     this.longitude,
-    @JsonKey(name: 'is_cancel', fromJson: boolFromDynamic) this.isCancel,
-    @JsonKey(fromJson: depthFromString, toJson: depthToString) this.depth,
-    @JsonKey(name: 'calcintensity', fromJson: JmaIntensity.fromString)
+    @JsonKey(name: 'is_cancel', fromJson: boolFromDynamic)
+    this.isCancel,
+    @JsonKey(
+      fromJson: depthFromString,
+      toJson: depthToString,
+    )
+    this.depth,
+    @JsonKey(
+      name: 'calcintensity',
+      fromJson: JmaIntensity.fromString,
+    )
     this.intensity,
-    @JsonKey(name: 'is_final', fromJson: boolFromDynamic) this.isFinal,
-    @JsonKey(name: 'isTraining', fromJson: boolFromDynamic) this.isTraining,
-    @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
+    @JsonKey(name: 'is_final', fromJson: boolFromDynamic)
+    this.isFinal,
+    @JsonKey(name: 'isTraining', fromJson: boolFromDynamic)
+    this.isTraining,
+    @JsonKey(
+      fromJson: doubleOrNullFromString,
+      toJson: doubleOrNullToString,
+    )
     this.latitude,
-    @JsonKey(name: 'origin_time', fromJson: originTimeFromString)
+    @JsonKey(
+      name: 'origin_time',
+      fromJson: originTimeFromString,
+    )
     this.originTime,
     this.security,
-    @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
+    @JsonKey(
+      fromJson: doubleOrNullFromString,
+      toJson: doubleOrNullToString,
+    )
     this.magnitude,
-    @JsonKey(name: 'report_num', fromJson: intFromString, toJson: intToString)
+    @JsonKey(
+      name: 'report_num',
+      fromJson: intFromString,
+      toJson: intToString,
+    )
     this.reportNum,
     this.requestHypoType,
     this.reportId,
@@ -517,7 +653,10 @@ class _$EewImpl extends _Eew {
 
   /// 発報時間
   @override
-  @JsonKey(fromJson: dateTimeOrNullFromString, toJson: dateTimeOrNullToString)
+  @JsonKey(
+    fromJson: dateTimeOrNullFromString,
+    toJson: dateTimeOrNullToString,
+  )
   final DateTime? reportTime;
 
   /// 地域コード
@@ -534,7 +673,10 @@ class _$EewImpl extends _Eew {
 
   /// 経度
   @override
-  @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
+  @JsonKey(
+    fromJson: doubleOrNullFromString,
+    toJson: doubleOrNullToString,
+  )
   final double? longitude;
 
   /// キャンセル報か
@@ -549,7 +691,10 @@ class _$EewImpl extends _Eew {
 
   /// 予想最大震度
   @override
-  @JsonKey(name: 'calcintensity', fromJson: JmaIntensity.fromString)
+  @JsonKey(
+    name: 'calcintensity',
+    fromJson: JmaIntensity.fromString,
+  )
   final JmaIntensity? intensity;
 
   /// 最終報か
@@ -564,12 +709,18 @@ class _$EewImpl extends _Eew {
 
   /// 緯度
   @override
-  @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
+  @JsonKey(
+    fromJson: doubleOrNullFromString,
+    toJson: doubleOrNullToString,
+  )
   final double? latitude;
 
   /// 発生時間
   @override
-  @JsonKey(name: 'origin_time', fromJson: originTimeFromString)
+  @JsonKey(
+    name: 'origin_time',
+    fromJson: originTimeFromString,
+  )
   final DateTime? originTime;
 
   /// セキュリティ情報
@@ -578,12 +729,19 @@ class _$EewImpl extends _Eew {
 
   /// マグニチュード
   @override
-  @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
+  @JsonKey(
+    fromJson: doubleOrNullFromString,
+    toJson: doubleOrNullToString,
+  )
   final double? magnitude;
 
   /// 発報番号
   @override
-  @JsonKey(name: 'report_num', fromJson: intFromString, toJson: intToString)
+  @JsonKey(
+    name: 'report_num',
+    fromJson: intFromString,
+    toJson: intToString,
+  )
   final int? reportNum;
 
   /// なにこれ?
@@ -609,7 +767,8 @@ class _$EewImpl extends _Eew {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EewImpl &&
-            (identical(other.result, result) || other.result == result) &&
+            (identical(other.result, result) ||
+                other.result == result) &&
             (identical(other.reportTime, reportTime) ||
                 other.reportTime == reportTime) &&
             (identical(other.regionCode, regionCode) ||
@@ -622,10 +781,12 @@ class _$EewImpl extends _Eew {
                 other.longitude == longitude) &&
             (identical(other.isCancel, isCancel) ||
                 other.isCancel == isCancel) &&
-            (identical(other.depth, depth) || other.depth == depth) &&
+            (identical(other.depth, depth) ||
+                other.depth == depth) &&
             (identical(other.intensity, intensity) ||
                 other.intensity == intensity) &&
-            (identical(other.isFinal, isFinal) || other.isFinal == isFinal) &&
+            (identical(other.isFinal, isFinal) ||
+                other.isFinal == isFinal) &&
             (identical(other.isTraining, isTraining) ||
                 other.isTraining == isTraining) &&
             (identical(other.latitude, latitude) ||
@@ -638,7 +799,10 @@ class _$EewImpl extends _Eew {
                 other.magnitude == magnitude) &&
             (identical(other.reportNum, reportNum) ||
                 other.reportNum == reportNum) &&
-            (identical(other.requestHypoType, requestHypoType) ||
+            (identical(
+                  other.requestHypoType,
+                  requestHypoType,
+                ) ||
                 other.requestHypoType == requestHypoType) &&
             (identical(other.reportId, reportId) ||
                 other.reportId == reportId) &&
@@ -688,28 +852,56 @@ class _$EewImpl extends _Eew {
 abstract class _Eew extends Eew {
   const factory _Eew({
     final Result? result,
-    @JsonKey(fromJson: dateTimeOrNullFromString, toJson: dateTimeOrNullToString)
+    @JsonKey(
+      fromJson: dateTimeOrNullFromString,
+      toJson: dateTimeOrNullToString,
+    )
     final DateTime? reportTime,
     final String? regionCode,
     final String? requestTime,
     final String? regionName,
-    @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
+    @JsonKey(
+      fromJson: doubleOrNullFromString,
+      toJson: doubleOrNullToString,
+    )
     final double? longitude,
-    @JsonKey(name: 'is_cancel', fromJson: boolFromDynamic) final bool? isCancel,
-    @JsonKey(fromJson: depthFromString, toJson: depthToString) final int? depth,
-    @JsonKey(name: 'calcintensity', fromJson: JmaIntensity.fromString)
+    @JsonKey(name: 'is_cancel', fromJson: boolFromDynamic)
+    final bool? isCancel,
+    @JsonKey(
+      fromJson: depthFromString,
+      toJson: depthToString,
+    )
+    final int? depth,
+    @JsonKey(
+      name: 'calcintensity',
+      fromJson: JmaIntensity.fromString,
+    )
     final JmaIntensity? intensity,
-    @JsonKey(name: 'is_final', fromJson: boolFromDynamic) final bool? isFinal,
+    @JsonKey(name: 'is_final', fromJson: boolFromDynamic)
+    final bool? isFinal,
     @JsonKey(name: 'isTraining', fromJson: boolFromDynamic)
     final bool? isTraining,
-    @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
+    @JsonKey(
+      fromJson: doubleOrNullFromString,
+      toJson: doubleOrNullToString,
+    )
     final double? latitude,
-    @JsonKey(name: 'origin_time', fromJson: originTimeFromString)
+    @JsonKey(
+      name: 'origin_time',
+      fromJson: originTimeFromString,
+    )
     final DateTime? originTime,
     final Security? security,
-    @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
+    @JsonKey(
+      fromJson: doubleOrNullFromString,
+      toJson: doubleOrNullToString,
+    )
     final double? magnitude,
-    @JsonKey(name: 'report_num', fromJson: intFromString, toJson: intToString)
+    @JsonKey(
+      name: 'report_num',
+      fromJson: intFromString,
+      toJson: intToString,
+    )
     final int? reportNum,
     final String? requestHypoType,
     final String? reportId,
@@ -717,7 +909,8 @@ abstract class _Eew extends Eew {
   }) = _$EewImpl;
   const _Eew._() : super._();
 
-  factory _Eew.fromJson(Map<String, dynamic> json) = _$EewImpl.fromJson;
+  factory _Eew.fromJson(Map<String, dynamic> json) =
+      _$EewImpl.fromJson;
 
   /// リザルト
   @override
@@ -725,7 +918,10 @@ abstract class _Eew extends Eew {
 
   /// 発報時間
   @override
-  @JsonKey(fromJson: dateTimeOrNullFromString, toJson: dateTimeOrNullToString)
+  @JsonKey(
+    fromJson: dateTimeOrNullFromString,
+    toJson: dateTimeOrNullToString,
+  )
   DateTime? get reportTime;
 
   /// 地域コード
@@ -742,7 +938,10 @@ abstract class _Eew extends Eew {
 
   /// 経度
   @override
-  @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
+  @JsonKey(
+    fromJson: doubleOrNullFromString,
+    toJson: doubleOrNullToString,
+  )
   double? get longitude;
 
   /// キャンセル報か
@@ -757,7 +956,10 @@ abstract class _Eew extends Eew {
 
   /// 予想最大震度
   @override
-  @JsonKey(name: 'calcintensity', fromJson: JmaIntensity.fromString)
+  @JsonKey(
+    name: 'calcintensity',
+    fromJson: JmaIntensity.fromString,
+  )
   JmaIntensity? get intensity;
 
   /// 最終報か
@@ -772,12 +974,18 @@ abstract class _Eew extends Eew {
 
   /// 緯度
   @override
-  @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
+  @JsonKey(
+    fromJson: doubleOrNullFromString,
+    toJson: doubleOrNullToString,
+  )
   double? get latitude;
 
   /// 発生時間
   @override
-  @JsonKey(name: 'origin_time', fromJson: originTimeFromString)
+  @JsonKey(
+    name: 'origin_time',
+    fromJson: originTimeFromString,
+  )
   DateTime? get originTime;
 
   /// セキュリティ情報
@@ -786,12 +994,19 @@ abstract class _Eew extends Eew {
 
   /// マグニチュード
   @override
-  @JsonKey(fromJson: doubleOrNullFromString, toJson: doubleOrNullToString)
+  @JsonKey(
+    fromJson: doubleOrNullFromString,
+    toJson: doubleOrNullToString,
+  )
   double? get magnitude;
 
   /// 発報番号
   @override
-  @JsonKey(name: 'report_num', fromJson: intFromString, toJson: intToString)
+  @JsonKey(
+    name: 'report_num',
+    fromJson: intFromString,
+    toJson: intToString,
+  )
   int? get reportNum;
 
   /// なにこれ?

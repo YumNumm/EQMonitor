@@ -18,19 +18,23 @@ class HomeMapView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mapController = useMemoized(DeclarativeMapController.new);
+    final mapController = useMemoized(
+      DeclarativeMapController.new,
+    );
 
     final size = MediaQuery.sizeOf(context);
     final cameraPosition = useMemoized(
       () => MapCameraPosition(
-        target: MapCameraPositionHelper.calculateJapanCenterPosition(
-          size.width,
-          size.height,
-        ),
-        zoom: MapCameraPositionHelper.calculateJapanZoomLevel(
-          size.width,
-          size.height,
-        ),
+        target:
+            MapCameraPositionHelper.calculateJapanCenterPosition(
+              size.width,
+              size.height,
+            ),
+        zoom:
+            MapCameraPositionHelper.calculateJapanZoomLevel(
+              size.width,
+              size.height,
+            ),
       ),
       [size.width, size.height],
     );
@@ -44,7 +48,10 @@ class HomeMapView extends HookConsumerWidget {
         SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(8),
-            child: _MapHeader(mapController: mapController, size: size),
+            child: _MapHeader(
+              mapController: mapController,
+              size: size,
+            ),
           ),
         ),
       ],
@@ -53,7 +60,10 @@ class HomeMapView extends HookConsumerWidget {
 }
 
 class _MapHeader extends ConsumerWidget {
-  const _MapHeader({required this.mapController, required this.size});
+  const _MapHeader({
+    required this.mapController,
+    required this.size,
+  });
 
   final DeclarativeMapController mapController;
   final Size size;
@@ -61,10 +71,14 @@ class _MapHeader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final useKmoni = ref.watch(
-      kyoshinMonitorSettingsProvider.select((v) => v.useKmoni),
+      kyoshinMonitorSettingsProvider.select(
+        (v) => v.useKmoni,
+      ),
     );
     final showScaleCard = ref.watch(
-      kyoshinMonitorSettingsProvider.select((v) => v.showScale),
+      kyoshinMonitorSettingsProvider.select(
+        (v) => v.showScale,
+      ),
     );
 
     return Row(
@@ -76,20 +90,29 @@ class _MapHeader extends ConsumerWidget {
           child:
               useKmoni
                   ? Column(
-                    key: const ValueKey('kyoshin_monitor_status_card'),
+                    key: const ValueKey(
+                      'kyoshin_monitor_status_card',
+                    ),
                     mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start,
                     spacing: 4,
                     children: [
                       KyoshinMonitorStatusCard(
                         onTap:
                             () async =>
-                                KyoshinMonitorSettingsModal.show(context),
+                                KyoshinMonitorSettingsModal.show(
+                                  context,
+                                ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                        ),
                         child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 200),
+                          duration: const Duration(
+                            milliseconds: 200,
+                          ),
                           child:
                               showScaleCard
                                   ? const KyoshinMonitorScaleCard()
@@ -102,18 +125,21 @@ class _MapHeader extends ConsumerWidget {
         ),
         const Column(),
         MapLayerControllerCard(
-          onLayerButtonTap: () async => HomeMapLayerModal.show(context),
+          onLayerButtonTap:
+              () async => HomeMapLayerModal.show(context),
           onLocationButtonTap: () async {
             await mapController.moveCameraToPosition(
               CameraPosition(
-                target: MapCameraPositionHelper.calculateJapanCenterPosition(
-                  size.width,
-                  size.height,
-                ),
-                zoom: MapCameraPositionHelper.calculateJapanZoomLevel(
-                  size.width,
-                  size.height,
-                ),
+                target:
+                    MapCameraPositionHelper.calculateJapanCenterPosition(
+                      size.width,
+                      size.height,
+                    ),
+                zoom:
+                    MapCameraPositionHelper.calculateJapanZoomLevel(
+                      size.width,
+                      size.height,
+                    ),
               ),
             );
           },

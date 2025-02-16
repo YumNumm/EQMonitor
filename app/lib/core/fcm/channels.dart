@@ -3,7 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-final List<AndroidNotificationChannel> notificationChannels = [
+final List<AndroidNotificationChannel>
+notificationChannels = [
   const AndroidNotificationChannel(
     'fromdev',
     '開発者からのお知らせ',
@@ -78,14 +79,16 @@ final List<AndroidNotificationChannel> notificationChannels = [
     'VXSE62',
     groupId: 'earthquake',
     '長周期地震動に関する観測情報',
-    description: '長周期地震動階級1以上を観測した地震について、観測した要素などを地震発生後10分程度で発表',
+    description:
+        '長周期地震動階級1以上を観測した地震について、観測した要素などを地震発生後10分程度で発表',
     importance: Importance.high,
   ),
   const AndroidNotificationChannel(
     'VZSE40',
     groupId: 'earthquake',
     '地震・津波に関するお知らせ',
-    description: '地震・津波の試験・訓練配信のお知らせ、自治体震度データの入電停止等のお知らせ、その他を発表',
+    description:
+        '地震・津波の試験・訓練配信のお知らせ、自治体震度データの入電停止等のお知らせ、その他を発表',
     importance: Importance.low,
   ),
   /*
@@ -124,7 +127,8 @@ final List<AndroidNotificationChannel> notificationChannels = [
     'VYSE50',
     groupId: 'earthquake',
     '南海トラフ地震臨時情報',
-    description: '南海トラフ沿いで異常な現象が観測され、その現象が南海トラフ沿いの大規模な地震発生が警戒される場合に発表',
+    description:
+        '南海トラフ沿いで異常な現象が観測され、その現象が南海トラフ沿いの大規模な地震発生が警戒される場合に発表',
     importance: Importance.high,
   ),
   const AndroidNotificationChannel(
@@ -144,7 +148,8 @@ final List<AndroidNotificationChannel> notificationChannels = [
   ),
 ];
 
-final List<AndroidNotificationChannelGroup> notificationChannelGroups = [
+final List<AndroidNotificationChannelGroup>
+notificationChannelGroups = [
   const AndroidNotificationChannelGroup('eew', '緊急地震速報'),
   const AndroidNotificationChannelGroup(
     'earthquake',

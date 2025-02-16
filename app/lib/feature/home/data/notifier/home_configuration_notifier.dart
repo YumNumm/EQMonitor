@@ -8,7 +8,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'home_configuration_notifier.g.dart';
 
 @riverpod
-class HomeConfigurationNotifier extends _$HomeConfigurationNotifier {
+class HomeConfigurationNotifier
+    extends _$HomeConfigurationNotifier {
   @override
   HomeConfigurationModel build() {
     final saved = load();
@@ -22,11 +23,14 @@ class HomeConfigurationNotifier extends _$HomeConfigurationNotifier {
 
   HomeConfigurationModel? load() {
     try {
-      final jsonString = ref.read(sharedPreferencesProvider).getString(_key);
+      final jsonString = ref
+          .read(sharedPreferencesProvider)
+          .getString(_key);
       if (jsonString == null) {
         return null;
       }
-      final json = jsonDecode(jsonString) as Map<String, dynamic>;
+      final json =
+          jsonDecode(jsonString) as Map<String, dynamic>;
       return HomeConfigurationModel.fromJson(json);
     } on Exception catch (e) {
       log('load home configuration failed: $e');
@@ -34,10 +38,15 @@ class HomeConfigurationNotifier extends _$HomeConfigurationNotifier {
     }
   }
 
-  Future<void> save(HomeConfigurationModel configuration) async {
+  Future<void> save(
+    HomeConfigurationModel configuration,
+  ) async {
     state = configuration;
     await ref
         .read(sharedPreferencesProvider)
-        .setString(_key, jsonEncode(configuration.toJson()));
+        .setString(
+          _key,
+          jsonEncode(configuration.toJson()),
+        );
   }
 }

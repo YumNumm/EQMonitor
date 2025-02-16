@@ -42,39 +42,55 @@ class SettingsScreen extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(16),
                   clipBehavior: Clip.antiAlias,
                   elevation: 4,
-                  child: Assets.images.icon.image(fit: BoxFit.contain),
+                  child: Assets.images.icon.image(
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
             ),
           ),
           const _AppVersionInformation(),
           BorderedContainer(
-            accentColor: Theme.of(context).colorScheme.secondaryContainer,
+            accentColor:
+                Theme.of(
+                  context,
+                ).colorScheme.secondaryContainer,
             padding: EdgeInsets.zero,
             child: ListTile(
               title: const Text('EQMonitorを応援する'),
-              subtitle: const Text('開発者に寄付することで、アプリの開発を支援できます'),
+              subtitle: const Text(
+                '開発者に寄付することで、アプリの開発を支援できます',
+              ),
               leading: const Icon(Icons.lightbulb),
-              onTap: () async => const DonationRoute().push<void>(context),
+              onTap:
+                  () async => const DonationRoute()
+                      .push<void>(context),
             ),
           ),
           const SettingsSectionHeader(text: '各種設定'),
           ListTile(
             title: const Text('通知条件設定'),
             leading: const Icon(Icons.notifications),
-            onTap: () async => const NotificationRoute().push<void>(context),
+            onTap:
+                () async => const NotificationRoute()
+                    .push<void>(context),
           ),
           ListTile(
             title: const Text('表示設定'),
             leading: const Icon(Icons.color_lens),
-            onTap: () async => const DisplayRoute().push<void>(context),
+            onTap:
+                () async => const DisplayRoute().push<void>(
+                  context,
+                ),
           ),
           ListTile(
             title: const Text('地震履歴設定'),
             leading: const Icon(Icons.history),
             onTap:
-                () async =>
-                    context.push(const EarthquakeHistoryConfigRoute().location),
+                () async => context.push(
+                  const EarthquakeHistoryConfigRoute()
+                      .location,
+                ),
           ),
           const SettingsSectionHeader(text: 'アプリの情報と問い合わせ'),
           ListTile(
@@ -87,7 +103,9 @@ class SettingsScreen extends ConsumerWidget {
             title: const Text('このアプリケーションについて'),
             subtitle: const Text('利用規約やプライバシーポリシーを確認できます'),
             leading: const Icon(Icons.description),
-            onTap: () async => const AboutThisAppRoute().push<void>(context),
+            onTap:
+                () async => const AboutThisAppRoute()
+                    .push<void>(context),
           ),
           ListTile(
             title: const Text('サーバの稼働状況'),
@@ -103,7 +121,8 @@ class SettingsScreen extends ConsumerWidget {
             child: Text(
               'Powered by Flutter',
               style: textTheme.bodySmall!.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                color: theme.colorScheme.onSurface
+                    .withValues(alpha: 0.8),
               ),
             ),
           ),
@@ -112,7 +131,8 @@ class SettingsScreen extends ConsumerWidget {
               child: Text(
                 'Debug Mode',
                 style: textTheme.bodySmall!.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                  color: theme.colorScheme.onSurface
+                      .withValues(alpha: 0.8),
                 ),
               ),
             ),
@@ -120,7 +140,10 @@ class SettingsScreen extends ConsumerWidget {
             ListTile(
               title: const Text('デバッグメニュー'),
               leading: const Icon(Icons.bug_report),
-              onTap: () async => context.push(const DebuggerRoute().location),
+              onTap:
+                  () async => context.push(
+                    const DebuggerRoute().location,
+                  ),
             ),
           ],
         ],
@@ -151,12 +174,17 @@ class _AppVersionInformation extends HookConsumerWidget {
   }
 }
 
-Future<void> _onInquiryTap(BuildContext context, WidgetRef ref) async {
+Future<void> _onInquiryTap(
+  BuildContext context,
+  WidgetRef ref,
+) async {
   BetterFeedback.of(context).show((feedback) async {
     final packageInfo = ref.read(packageInfoProvider);
     final payload =
         await ref
-            .read(apiAuthenticationNotifierProvider.notifier)
+            .read(
+              apiAuthenticationNotifierProvider.notifier,
+            )
             .extractPayload();
 
     final base =
@@ -165,28 +193,37 @@ Future<void> _onInquiryTap(BuildContext context, WidgetRef ref) async {
         'Payload: $payload\n'
         '--------------------------';
     // draft an email and send to developer
-    final screenshotFilePath = await writeImageToStorage(feedback.screenshot);
+    final screenshotFilePath = await writeImageToStorage(
+      feedback.screenshot,
+    );
     final extra = CustomFeedback.fromJson(feedback.extra!);
 
     final email = Email(
-      body: '${feedback.text}\n\n$base\n\n${jsonEncode(extra.toJson())}',
+      body:
+          '${feedback.text}\n\n$base\n\n${jsonEncode(extra.toJson())}',
       subject: 'EQMonitor Feedback',
       recipients: ['feedback@eqmonitor.app'],
-      attachmentPaths: [if (extra.isScreenshotAttached) screenshotFilePath],
+      attachmentPaths: [
+        if (extra.isScreenshotAttached) screenshotFilePath,
+      ],
     );
     try {
       await FlutterEmailSender.send(email);
     } on PlatformException catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('エラーが発生しました: ${e.message}')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('エラーが発生しました: ${e.message}'),
+          ),
+        );
       }
     }
   });
 }
 
-Future<String> writeImageToStorage(Uint8List feedbackScreenshot) async {
+Future<String> writeImageToStorage(
+  Uint8List feedbackScreenshot,
+) async {
   final output = await getTemporaryDirectory();
   final screenshotFilePath = '${output.path}/feedback.png';
   final screenshotFile = File(screenshotFilePath);

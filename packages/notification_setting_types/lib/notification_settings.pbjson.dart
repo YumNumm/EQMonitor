@@ -13,7 +13,8 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
-@$core.Deprecated('Use notificationSettingsDescriptor instead')
+@$core.Deprecated(
+    'Use notificationSettingsDescriptor instead')
 const NotificationSettings$json = {
   '1': 'NotificationSettings',
   '2': [
@@ -30,7 +31,8 @@ const NotificationSettings$json = {
       '3': 2,
       '4': 1,
       '5': 11,
-      '6': '.eqmonitor.NotificationSettings.EarthquakeSettings',
+      '6':
+          '.eqmonitor.NotificationSettings.EarthquakeSettings',
       '10': 'earthquakeSettings'
     },
   ],
@@ -40,7 +42,8 @@ const NotificationSettings$json = {
   ],
 };
 
-@$core.Deprecated('Use notificationSettingsDescriptor instead')
+@$core.Deprecated(
+    'Use notificationSettingsDescriptor instead')
 const NotificationSettings_EewSettings$json = {
   '1': 'EewSettings',
   '2': [
@@ -69,7 +72,8 @@ const NotificationSettings_EewSettings$json = {
       '3': 3,
       '4': 3,
       '5': 11,
-      '6': '.eqmonitor.NotificationSettings.EewSettings.Region',
+      '6':
+          '.eqmonitor.NotificationSettings.EewSettings.Region',
       '10': 'regions'
     },
   ],
@@ -80,7 +84,8 @@ const NotificationSettings_EewSettings$json = {
   ],
 };
 
-@$core.Deprecated('Use notificationSettingsDescriptor instead')
+@$core.Deprecated(
+    'Use notificationSettingsDescriptor instead')
 const NotificationSettings_EewSettings_Region$json = {
   '1': 'Region',
   '2': [
@@ -102,11 +107,18 @@ const NotificationSettings_EewSettings_Region$json = {
       '6': '.eqmonitor.JmaIntensity',
       '10': 'silentIntensity'
     },
-    {'1': 'is_main', '3': 5, '4': 1, '5': 8, '10': 'isMain'},
+    {
+      '1': 'is_main',
+      '3': 5,
+      '4': 1,
+      '5': 8,
+      '10': 'isMain'
+    },
   ],
 };
 
-@$core.Deprecated('Use notificationSettingsDescriptor instead')
+@$core.Deprecated(
+    'Use notificationSettingsDescriptor instead')
 const NotificationSettings_EarthquakeSettings$json = {
   '1': 'EarthquakeSettings',
   '2': [
@@ -135,19 +147,24 @@ const NotificationSettings_EarthquakeSettings$json = {
       '3': 3,
       '4': 3,
       '5': 11,
-      '6': '.eqmonitor.NotificationSettings.EarthquakeSettings.Region',
+      '6':
+          '.eqmonitor.NotificationSettings.EarthquakeSettings.Region',
       '10': 'regions'
     },
   ],
-  '3': [NotificationSettings_EarthquakeSettings_Region$json],
+  '3': [
+    NotificationSettings_EarthquakeSettings_Region$json
+  ],
   '8': [
     {'1': '_emergency_intensity'},
     {'1': '_silent_intensity'},
   ],
 };
 
-@$core.Deprecated('Use notificationSettingsDescriptor instead')
-const NotificationSettings_EarthquakeSettings_Region$json = {
+@$core.Deprecated(
+    'Use notificationSettingsDescriptor instead')
+const NotificationSettings_EarthquakeSettings_Region$json =
+    {
   '1': 'Region',
   '2': [
     {'1': 'code', '3': 1, '4': 1, '5': 9, '10': 'code'},
@@ -168,7 +185,13 @@ const NotificationSettings_EarthquakeSettings_Region$json = {
       '6': '.eqmonitor.JmaIntensity',
       '10': 'silentIntensity'
     },
-    {'1': 'is_main', '3': 5, '4': 1, '5': 8, '10': 'isMain'},
+    {
+      '1': 'is_main',
+      '3': 5,
+      '4': 1,
+      '5': 8,
+      '10': 'isMain'
+    },
   ],
 };
 

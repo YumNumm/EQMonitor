@@ -14,7 +14,8 @@ class EewHypocenter with _$EewHypocenter {
 }
 
 @freezed
-class EewHypocenterLayer extends MapLayer with _$EewHypocenterLayer {
+class EewHypocenterLayer extends MapLayer
+    with _$EewHypocenterLayer {
   factory EewHypocenterLayer({
     required String id,
     required String sourceId,
@@ -39,7 +40,10 @@ class EewHypocenterLayer extends MapLayer with _$EewHypocenterLayer {
                   'type': 'Feature',
                   'geometry': {
                     'type': 'Point',
-                    'coordinates': [e.longitude, e.latitude],
+                    'coordinates': [
+                      e.longitude,
+                      e.latitude,
+                    ],
                   },
                   'properties': {
                     'iconImage': iconImage,
@@ -53,8 +57,9 @@ class EewHypocenterLayer extends MapLayer with _$EewHypocenterLayer {
   }
 
   @override
-  String get geoJsonSourceHash =>
-      hypocenters.map((e) => '${e.latitude},${e.longitude}').join(',');
+  String get geoJsonSourceHash => hypocenters
+      .map((e) => '${e.latitude},${e.longitude}')
+      .join(',');
 
   @override
   LayerProperties toLayerProperties() {

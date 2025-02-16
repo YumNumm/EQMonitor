@@ -15,7 +15,8 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-NotificationSettingsResponse _$NotificationSettingsResponseFromJson(
+NotificationSettingsResponse
+_$NotificationSettingsResponseFromJson(
   Map<String, dynamic> json,
 ) {
   return _NotificationSettingsResponse.fromJson(json);
@@ -25,15 +26,19 @@ NotificationSettingsResponse _$NotificationSettingsResponseFromJson(
 mixin _$NotificationSettingsResponse {
   List<DevicesEarthquakeSettings> get earthquake =>
       throw _privateConstructorUsedError;
-  List<DevicesEewSettings> get eew => throw _privateConstructorUsedError;
+  List<DevicesEewSettings> get eew =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this NotificationSettingsResponse to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of NotificationSettingsResponse
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $NotificationSettingsResponseCopyWith<NotificationSettingsResponse>
+  $NotificationSettingsResponseCopyWith<
+    NotificationSettingsResponse
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -60,7 +65,10 @@ class _$NotificationSettingsResponseCopyWithImpl<
   $Val extends NotificationSettingsResponse
 >
     implements $NotificationSettingsResponseCopyWith<$Res> {
-  _$NotificationSettingsResponseCopyWithImpl(this._value, this._then);
+  _$NotificationSettingsResponseCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -71,7 +79,10 @@ class _$NotificationSettingsResponseCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? earthquake = null, Object? eew = null}) {
+  $Res call({
+    Object? earthquake = null,
+    Object? eew = null,
+  }) {
     return _then(
       _value.copyWith(
             earthquake:
@@ -91,12 +102,17 @@ class _$NotificationSettingsResponseCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$NotificationSettingsResponseImplCopyWith<$Res>
+abstract class _$$NotificationSettingsResponseImplCopyWith<
+  $Res
+>
     implements $NotificationSettingsResponseCopyWith<$Res> {
   factory _$$NotificationSettingsResponseImplCopyWith(
     _$NotificationSettingsResponseImpl value,
     $Res Function(_$NotificationSettingsResponseImpl) then,
-  ) = __$$NotificationSettingsResponseImplCopyWithImpl<$Res>;
+  ) =
+      __$$NotificationSettingsResponseImplCopyWithImpl<
+        $Res
+      >;
   @override
   @useResult
   $Res call({
@@ -112,7 +128,8 @@ class __$$NotificationSettingsResponseImplCopyWithImpl<$Res>
           $Res,
           _$NotificationSettingsResponseImpl
         >
-    implements _$$NotificationSettingsResponseImplCopyWith<$Res> {
+    implements
+        _$$NotificationSettingsResponseImplCopyWith<$Res> {
   __$$NotificationSettingsResponseImplCopyWithImpl(
     _$NotificationSettingsResponseImpl _value,
     $Res Function(_$NotificationSettingsResponseImpl) _then,
@@ -122,7 +139,10 @@ class __$$NotificationSettingsResponseImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? earthquake = null, Object? eew = null}) {
+  $Res call({
+    Object? earthquake = null,
+    Object? eew = null,
+  }) {
     return _then(
       _$NotificationSettingsResponseImpl(
         earthquake:
@@ -145,7 +165,8 @@ class __$$NotificationSettingsResponseImplCopyWithImpl<$Res>
 class _$NotificationSettingsResponseImpl
     implements _NotificationSettingsResponse {
   const _$NotificationSettingsResponseImpl({
-    required final List<DevicesEarthquakeSettings> earthquake,
+    required final List<DevicesEarthquakeSettings>
+    earthquake,
     required final List<DevicesEewSettings> eew,
   }) : _earthquake = earthquake,
        _eew = eew;
@@ -157,7 +178,8 @@ class _$NotificationSettingsResponseImpl
   final List<DevicesEarthquakeSettings> _earthquake;
   @override
   List<DevicesEarthquakeSettings> get earthquake {
-    if (_earthquake is EqualUnmodifiableListView) return _earthquake;
+    if (_earthquake is EqualUnmodifiableListView)
+      return _earthquake;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_earthquake);
   }
@@ -184,7 +206,10 @@ class _$NotificationSettingsResponseImpl
               other._earthquake,
               _earthquake,
             ) &&
-            const DeepCollectionEquality().equals(other._eew, _eew));
+            const DeepCollectionEquality().equals(
+              other._eew,
+              _eew,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -203,9 +228,10 @@ class _$NotificationSettingsResponseImpl
   _$$NotificationSettingsResponseImplCopyWith<
     _$NotificationSettingsResponseImpl
   >
-  get copyWith => __$$NotificationSettingsResponseImplCopyWithImpl<
-    _$NotificationSettingsResponseImpl
-  >(this, _$identity);
+  get copyWith =>
+      __$$NotificationSettingsResponseImplCopyWithImpl<
+        _$NotificationSettingsResponseImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -216,12 +242,14 @@ class _$NotificationSettingsResponseImpl
 abstract class _NotificationSettingsResponse
     implements NotificationSettingsResponse {
   const factory _NotificationSettingsResponse({
-    required final List<DevicesEarthquakeSettings> earthquake,
+    required final List<DevicesEarthquakeSettings>
+    earthquake,
     required final List<DevicesEewSettings> eew,
   }) = _$NotificationSettingsResponseImpl;
 
-  factory _NotificationSettingsResponse.fromJson(Map<String, dynamic> json) =
-      _$NotificationSettingsResponseImpl.fromJson;
+  factory _NotificationSettingsResponse.fromJson(
+    Map<String, dynamic> json,
+  ) = _$NotificationSettingsResponseImpl.fromJson;
 
   @override
   List<DevicesEarthquakeSettings> get earthquake;

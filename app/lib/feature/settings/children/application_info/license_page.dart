@@ -27,15 +27,22 @@ class LicensePage extends ConsumerWidget {
             ),
           ),
           TextButton(
-            child: const Text('https://github.com/YumNumm/EQMonitor'),
+            child: const Text(
+              'https://github.com/YumNumm/EQMonitor',
+            ),
             onPressed:
-                () async =>
-                    launchUrlString('https://github.com/YumNumm/EQMonitor'),
+                () async => launchUrlString(
+                  'https://github.com/YumNumm/EQMonitor',
+                ),
           ),
           TextButton(
-            child: const Text('https://license.eqmonitor.app'),
+            child: const Text(
+              'https://license.eqmonitor.app',
+            ),
             onPressed:
-                () async => launchUrlString('https://license.eqmonitor.app'),
+                () async => launchUrlString(
+                  'https://license.eqmonitor.app',
+                ),
           ),
         ],
       ),

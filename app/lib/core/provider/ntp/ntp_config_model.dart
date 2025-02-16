@@ -11,6 +11,7 @@ class NtpConfigModel with _$NtpConfigModel {
     @Default(Duration(minutes: 30)) Duration interval,
   }) = _NtpConfigModel;
 
-  factory NtpConfigModel.fromJson(Map<String, dynamic> json) =>
-      _$NtpConfigModelFromJson(json);
+  factory NtpConfigModel.fromJson(
+    Map<String, dynamic> json,
+  ) => _$NtpConfigModelFromJson(json);
 }

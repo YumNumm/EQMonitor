@@ -13,9 +13,11 @@ part 'notification_remote_settings_migrate_service.g.dart';
 
 @Riverpod(keepAlive: true)
 class NotificationRemoteSettingsInitialSetupNotifier
-    extends _$NotificationRemoteSettingsInitialSetupNotifier {
+    extends
+        _$NotificationRemoteSettingsInitialSetupNotifier {
   @override
-  Stream<NotificationRemoteSettingsSetupState> build() async* {
+  Stream<NotificationRemoteSettingsSetupState>
+  build() async* {
     yield NotificationRemoteSettingsSetupState.initial;
     // 既にmigrate済みかどうかを確認
     final isMigrated = _getIsMigrated();
@@ -27,14 +29,18 @@ class NotificationRemoteSettingsInitialSetupNotifier
       yield NotificationRemoteSettingsSetupState.completed;
       log(
         'Already migrated',
-        name: 'NotificationRemoteSettingsInitialSetupNotifier',
+        name:
+            'NotificationRemoteSettingsInitialSetupNotifier',
       );
       return;
     }
 
-    yield NotificationRemoteSettingsSetupState.waitingForFcmToken;
+    yield NotificationRemoteSettingsSetupState
+        .waitingForFcmToken;
     await FirebaseInstallations.instance.delete();
-    final token = await ref.read(notificationTokenProvider.future);
+    final token = await ref.read(
+      notificationTokenProvider.future,
+    );
     final fcmToken = token.fcmToken;
     if (fcmToken == null) {
       throw NotificationRemoteSettingsSetupException(
@@ -45,11 +51,16 @@ class NotificationRemoteSettingsInitialSetupNotifier
     final authenticateService = ref.watch(
       notificationRemoteAuthenticateServiceProvider,
     );
-    await authenticateService.authenticate(fcmToken: fcmToken);
+    await authenticateService.authenticate(
+      fcmToken: fcmToken,
+    );
 
     yield NotificationRemoteSettingsSetupState.migrating;
     await ref
-        .read(notificationRemoteSettingsSavedStateNotifierProvider.notifier)
+        .read(
+          notificationRemoteSettingsSavedStateNotifierProvider
+              .notifier,
+        )
         .updateEarthquake(
           request: const NotificationSettingsRequest(
             global: NotificationSettingsGlobal(
@@ -59,7 +70,10 @@ class NotificationRemoteSettingsInitialSetupNotifier
         );
 
     await ref
-        .read(notificationRemoteSettingsSavedStateNotifierProvider.notifier)
+        .read(
+          notificationRemoteSettingsSavedStateNotifierProvider
+              .notifier,
+        )
         .updateEew(
           request: const NotificationSettingsRequest(
             global: NotificationSettingsGlobal(
@@ -98,8 +112,11 @@ enum NotificationRemoteSettingsSetupState {
   completed,
 }
 
-class NotificationRemoteSettingsSetupException implements Exception {
-  NotificationRemoteSettingsSetupException({required this.message});
+class NotificationRemoteSettingsSetupException
+    implements Exception {
+  NotificationRemoteSettingsSetupException({
+    required this.message,
+  });
 
   final String message;
 }

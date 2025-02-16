@@ -15,25 +15,29 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-KyoshinColorMapModel _$KyoshinColorMapModelFromJson(Map<String, dynamic> json) {
+KyoshinColorMapModel _$KyoshinColorMapModelFromJson(
+  Map<String, dynamic> json,
+) {
   return _KyoshinColorMapModel.fromJson(json);
 }
 
 /// @nodoc
 mixin _$KyoshinColorMapModel {
-  double get intensity => throw _privateConstructorUsedError;
+  double get intensity =>
+      throw _privateConstructorUsedError;
   int get r => throw _privateConstructorUsedError;
   int get g => throw _privateConstructorUsedError;
   int get b => throw _privateConstructorUsedError;
 
   /// Serializes this KyoshinColorMapModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of KyoshinColorMapModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $KyoshinColorMapModelCopyWith<KyoshinColorMapModel> get copyWith =>
-      throw _privateConstructorUsedError;
+  $KyoshinColorMapModelCopyWith<KyoshinColorMapModel>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -41,7 +45,11 @@ abstract class $KyoshinColorMapModelCopyWith<$Res> {
   factory $KyoshinColorMapModelCopyWith(
     KyoshinColorMapModel value,
     $Res Function(KyoshinColorMapModel) then,
-  ) = _$KyoshinColorMapModelCopyWithImpl<$Res, KyoshinColorMapModel>;
+  ) =
+      _$KyoshinColorMapModelCopyWithImpl<
+        $Res,
+        KyoshinColorMapModel
+      >;
   @useResult
   $Res call({double intensity, int r, int g, int b});
 }
@@ -52,7 +60,10 @@ class _$KyoshinColorMapModelCopyWithImpl<
   $Val extends KyoshinColorMapModel
 >
     implements $KyoshinColorMapModelCopyWith<$Res> {
-  _$KyoshinColorMapModelCopyWithImpl(this._value, this._then);
+  _$KyoshinColorMapModelCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -111,7 +122,11 @@ abstract class _$$KyoshinColorMapModelImplCopyWith<$Res>
 
 /// @nodoc
 class __$$KyoshinColorMapModelImplCopyWithImpl<$Res>
-    extends _$KyoshinColorMapModelCopyWithImpl<$Res, _$KyoshinColorMapModelImpl>
+    extends
+        _$KyoshinColorMapModelCopyWithImpl<
+          $Res,
+          _$KyoshinColorMapModelImpl
+        >
     implements _$$KyoshinColorMapModelImplCopyWith<$Res> {
   __$$KyoshinColorMapModelImplCopyWithImpl(
     _$KyoshinColorMapModelImpl _value,
@@ -157,7 +172,8 @@ class __$$KyoshinColorMapModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$KyoshinColorMapModelImpl implements _KyoshinColorMapModel {
+class _$KyoshinColorMapModelImpl
+    implements _KyoshinColorMapModel {
   const _$KyoshinColorMapModelImpl({
     required this.intensity,
     required this.r,
@@ -165,8 +181,9 @@ class _$KyoshinColorMapModelImpl implements _KyoshinColorMapModel {
     required this.b,
   });
 
-  factory _$KyoshinColorMapModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$KyoshinColorMapModelImplFromJson(json);
+  factory _$KyoshinColorMapModelImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$KyoshinColorMapModelImplFromJson(json);
 
   @override
   final double intensity;
@@ -196,19 +213,20 @@ class _$KyoshinColorMapModelImpl implements _KyoshinColorMapModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, intensity, r, g, b);
+  int get hashCode =>
+      Object.hash(runtimeType, intensity, r, g, b);
 
   /// Create a copy of KyoshinColorMapModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$KyoshinColorMapModelImplCopyWith<_$KyoshinColorMapModelImpl>
-  get copyWith =>
-      __$$KyoshinColorMapModelImplCopyWithImpl<_$KyoshinColorMapModelImpl>(
-        this,
-        _$identity,
-      );
+  _$$KyoshinColorMapModelImplCopyWith<
+    _$KyoshinColorMapModelImpl
+  >
+  get copyWith => __$$KyoshinColorMapModelImplCopyWithImpl<
+    _$KyoshinColorMapModelImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -216,7 +234,8 @@ class _$KyoshinColorMapModelImpl implements _KyoshinColorMapModel {
   }
 }
 
-abstract class _KyoshinColorMapModel implements KyoshinColorMapModel {
+abstract class _KyoshinColorMapModel
+    implements KyoshinColorMapModel {
   const factory _KyoshinColorMapModel({
     required final double intensity,
     required final int r,
@@ -224,8 +243,9 @@ abstract class _KyoshinColorMapModel implements KyoshinColorMapModel {
     required final int b,
   }) = _$KyoshinColorMapModelImpl;
 
-  factory _KyoshinColorMapModel.fromJson(Map<String, dynamic> json) =
-      _$KyoshinColorMapModelImpl.fromJson;
+  factory _KyoshinColorMapModel.fromJson(
+    Map<String, dynamic> json,
+  ) = _$KyoshinColorMapModelImpl.fromJson;
 
   @override
   double get intensity;
@@ -240,6 +260,8 @@ abstract class _KyoshinColorMapModel implements KyoshinColorMapModel {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$KyoshinColorMapModelImplCopyWith<_$KyoshinColorMapModelImpl>
+  _$$KyoshinColorMapModelImplCopyWith<
+    _$KyoshinColorMapModelImpl
+  >
   get copyWith => throw _privateConstructorUsedError;
 }

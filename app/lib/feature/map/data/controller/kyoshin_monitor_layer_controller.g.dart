@@ -15,19 +15,20 @@ String _$kyoshinMonitorLayerControllerHash() =>
 ///
 /// Copied from [KyoshinMonitorLayerController].
 @ProviderFor(KyoshinMonitorLayerController)
-final kyoshinMonitorLayerControllerProvider = AutoDisposeNotifierProvider<
-  KyoshinMonitorLayerController,
-  KyoshinMonitorObservationLayer
->.internal(
-  KyoshinMonitorLayerController.new,
-  name: r'kyoshinMonitorLayerControllerProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$kyoshinMonitorLayerControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final kyoshinMonitorLayerControllerProvider =
+    AutoDisposeNotifierProvider<
+      KyoshinMonitorLayerController,
+      KyoshinMonitorObservationLayer
+    >.internal(
+      KyoshinMonitorLayerController.new,
+      name: r'kyoshinMonitorLayerControllerProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$kyoshinMonitorLayerControllerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$KyoshinMonitorLayerController =
     AutoDisposeNotifier<KyoshinMonitorObservationLayer>;

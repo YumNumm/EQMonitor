@@ -20,35 +20,48 @@ part 'kyoshin_monitor_layer_controller.g.dart';
 
 /// 強震モニタの観測点レイヤーを管理するコントローラー
 @riverpod
-class KyoshinMonitorLayerController extends _$KyoshinMonitorLayerController {
+class KyoshinMonitorLayerController
+    extends _$KyoshinMonitorLayerController {
   @override
   KyoshinMonitorObservationLayer build() {
     // 強震モニタの状態を監視
     ref
-      ..listen(kyoshinMonitorNotifierProvider, (prev, next) {
+      ..listen(kyoshinMonitorNotifierProvider, (
+        prev,
+        next,
+      ) {
         // 現在の設定と違うLayerが来たらIgnore
         final nextLayer = (
           next.valueOrNull?.currentRealtimeDataType,
           next.valueOrNull?.currentRealtimeLayer,
         );
         final settingsLayer = (
-          ref.read(kyoshinMonitorSettingsProvider).realtimeDataType,
-          ref.read(kyoshinMonitorSettingsProvider).realtimeLayer,
+          ref
+              .read(kyoshinMonitorSettingsProvider)
+              .realtimeDataType,
+          ref
+              .read(kyoshinMonitorSettingsProvider)
+              .realtimeLayer,
         );
         if (nextLayer != settingsLayer) {
           _updateLayer([]);
           return;
         }
-        final previousPoints = prev?.valueOrNull?.analyzedPoints;
+        final previousPoints =
+            prev?.valueOrNull?.analyzedPoints;
         final nextPoints = next.valueOrNull?.analyzedPoints;
         if (previousPoints != nextPoints) {
           _updateLayer(nextPoints ?? []);
         }
       })
-      ..listen(kyoshinMonitorSettingsProvider, (prev, next) {
+      ..listen(kyoshinMonitorSettingsProvider, (
+        prev,
+        next,
+      ) {
         log('prev: ${jsonEncode(prev)}');
         log('next: ${jsonEncode(next)}');
-        if (prev?.realtimeDataType != next.realtimeDataType ||
+        if (prev?.realtimeDataType !=
+                next.realtimeDataType ||
             prev?.realtimeLayer != next.realtimeLayer ||
             prev?.kmoniMarkerType != next.kmoniMarkerType) {
           state = state.copyWith(
@@ -67,15 +80,24 @@ class KyoshinMonitorLayerController extends _$KyoshinMonitorLayerController {
       sourceId: 'kyoshin-monitor-points',
       visible: true,
       points: [],
-      isInEew: ref.read(eewAliveTelegramProvider)?.isNotEmpty ?? false,
-      markerType: ref.read(kyoshinMonitorSettingsProvider).kmoniMarkerType,
+      isInEew:
+          ref.read(eewAliveTelegramProvider)?.isNotEmpty ??
+          false,
+      markerType:
+          ref
+              .read(kyoshinMonitorSettingsProvider)
+              .kmoniMarkerType,
       realtimeDataType:
-          ref.read(kyoshinMonitorSettingsProvider).realtimeDataType,
+          ref
+              .read(kyoshinMonitorSettingsProvider)
+              .realtimeDataType,
     );
   }
 
   /// レイヤーを更新
-  void _updateLayer(List<KyoshinMonitorImageParseObservationPoint> points) {
+  void _updateLayer(
+    List<KyoshinMonitorImageParseObservationPoint> points,
+  ) {
     if (points.isEmpty) {
       state = state.copyWith(points: []);
       return;
@@ -101,7 +123,8 @@ class KyoshinMonitorObservationLayer extends MapLayer
     required String id,
     required String sourceId,
     required bool visible,
-    required List<KyoshinMonitorImageParseObservationPoint> points,
+    required List<KyoshinMonitorImageParseObservationPoint>
+    points,
     required bool isInEew,
     required KyoshinMonitorMarkerType markerType,
     required RealtimeDataType realtimeDataType,
@@ -132,7 +155,9 @@ class KyoshinMonitorObservationLayer extends MapLayer
                     'color': e.observation.colorHex,
                     'name': e.point.code,
                     'zIndex': e.observation.scale,
-                    'showStroke': markerType == KyoshinMonitorMarkerType.always,
+                    'showStroke':
+                        markerType ==
+                        KyoshinMonitorMarkerType.always,
                   },
                 },
               )
@@ -141,7 +166,8 @@ class KyoshinMonitorObservationLayer extends MapLayer
   }
 
   @override
-  String get geoJsonSourceHash => points.hashCode.toString();
+  String get geoJsonSourceHash =>
+      points.hashCode.toString();
 
   @override
   LayerProperties toLayerProperties() {
@@ -169,7 +195,8 @@ class KyoshinMonitorObservationLayer extends MapLayer
           "#${Colors.grey.hex.toRadixString(16).padLeft(6, '0')}",
       circleStrokeOpacity: ['get', 'strokeOpacity'],
       circleStrokeWidth: switch (markerType) {
-        KyoshinMonitorMarkerType.always => defaultStrokeWidthStatement,
+        KyoshinMonitorMarkerType.always =>
+          defaultStrokeWidthStatement,
         KyoshinMonitorMarkerType.onlyEew when isInEew =>
           defaultStrokeWidthStatement,
         _ => 0,
@@ -179,5 +206,6 @@ class KyoshinMonitorObservationLayer extends MapLayer
   }
 
   @override
-  String get layerPropertiesHash => '${markerType.name}-$isInEew';
+  String get layerPropertiesHash =>
+      '${markerType.name}-$isInEew';
 }

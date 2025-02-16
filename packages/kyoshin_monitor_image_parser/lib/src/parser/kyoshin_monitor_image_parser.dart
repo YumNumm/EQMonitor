@@ -10,7 +10,8 @@ import 'package:kyoshin_monitor_image_parser/src/util/hsv_color.dart';
 import 'package:meta/meta.dart';
 
 class KyoshinMonitorImageParser {
-  Future<List<KyoshinMonitorImageParseObservationResult>> parse({
+  Future<List<KyoshinMonitorImageParseObservationResult>>
+  parse({
     required Image image,
     required List<KyoshinMonitorObservationPoint> points,
   }) async {
@@ -19,16 +20,30 @@ class KyoshinMonitorImageParser {
       throw const KyoshinImageParseInvalidImageSizeException();
     }
 
-    final results = <KyoshinMonitorImageParseObservationResult>[];
+    final results =
+        <KyoshinMonitorImageParseObservationResult>[];
 
     for (final point in points) {
-      assert(point.x >= 0 && point.x < image.width, 'x is out of range');
-      assert(point.y >= 0 && point.y < image.height, 'y is out of range');
+      assert(
+        point.x >= 0 && point.x < image.width,
+        'x is out of range',
+      );
+      assert(
+        point.y >= 0 && point.y < image.height,
+        'y is out of range',
+      );
       final pixel = image.getPixel(point.x, point.y);
-      final hsv = HsvColor.fromRgb(pixel.r, pixel.g, pixel.b, pixel.a);
+      final hsv = HsvColor.fromRgb(
+        pixel.r,
+        pixel.g,
+        pixel.b,
+        pixel.a,
+      );
       final position = _hsvToPosition(hsv);
       if (position == null) {
-        results.add(KyoshinMonitorImageParseObservationFailure(point));
+        results.add(
+          KyoshinMonitorImageParseObservationFailure(point),
+        );
       } else {
         results.add(
           KyoshinMonitorImageParseObservationSuccess(
@@ -47,24 +62,31 @@ class KyoshinMonitorImageParser {
     return results;
   }
 
-  Future<List<KyoshinMonitorImageParseObservationResult>> parseGif({
+  Future<List<KyoshinMonitorImageParseObservationResult>>
+  parseGif({
     required List<int> gifImage,
     required List<KyoshinMonitorObservationPoint> points,
   }) async {
-    final image = img.decodeGif(Uint8List.fromList(gifImage));
+    final image = img.decodeGif(
+      Uint8List.fromList(gifImage),
+    );
     if (image == null) {
       throw const KyoshinImageParseInvalidGifException();
     }
     return parse(image: image, points: points);
   }
 
-  Future<List<KyoshinMonitorImageParseObservationResult>> parseGifInIsolate(
+  Future<List<KyoshinMonitorImageParseObservationResult>>
+  parseGifInIsolate(
     List<int> gifImage,
     List<KyoshinMonitorObservationPoint> points,
-  ) async => Isolate.run(() => parseGif(gifImage: gifImage, points: points));
+  ) async => Isolate.run(
+    () => parseGif(gifImage: gifImage, points: points),
+  );
 
   @visibleForTesting
-  double? hsvToPosition(HsvColor hsv) => _hsvToPosition(hsv);
+  double? hsvToPosition(HsvColor hsv) =>
+      _hsvToPosition(hsv);
 
   /// 任意のピクセルのHSV値からカラーバーのPositionを算出(0->1)
   /// ### hsv
@@ -102,7 +124,10 @@ class KyoshinMonitorImageParser {
             0.9033;
       }
       if (h <= 0.001) {
-        p = -0.005171 * math.pow(v, 2) - 0.3282 * v + 1.2236;
+        p =
+            -0.005171 * math.pow(v, 2) -
+            0.3282 * v +
+            1.2236;
       }
     }
     if (p < 0) {

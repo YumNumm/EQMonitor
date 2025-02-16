@@ -19,8 +19,16 @@ class EarthquakeEarly with _$EarthquakeEarly {
     required OriginTimePrecision originTimePrecision,
   }) = _EarthquakeEarly;
 
-  factory EarthquakeEarly.fromJson(Map<String, dynamic> json) =>
-      _$EarthquakeEarlyFromJson(json);
+  factory EarthquakeEarly.fromJson(
+    Map<String, dynamic> json,
+  ) => _$EarthquakeEarlyFromJson(json);
 }
 
-enum OriginTimePrecision { month, day, hour, minute, second, millisecond }
+enum OriginTimePrecision {
+  month,
+  day,
+  hour,
+  minute,
+  second,
+  millisecond,
+}

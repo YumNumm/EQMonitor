@@ -15,7 +15,8 @@ Dio kyoshinMonitorDio(Ref ref) => Dio(
     headers: {
       HttpHeaders.userAgentHeader:
           'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
-      HttpHeaders.refererHeader: 'http://www.kmoni.bosai.go.jp/',
+      HttpHeaders.refererHeader:
+          'http://www.kmoni.bosai.go.jp/',
       HttpHeaders.hostHeader: 'www.kmoni.bosai.go.jp',
       HttpHeaders.cacheControlHeader: 'no-cache',
       HttpHeaders.acceptHeader:

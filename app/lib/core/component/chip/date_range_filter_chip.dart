@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class DateRangeFilterChip extends StatelessWidget {
-  const DateRangeFilterChip({this.min, this.max, this.onChanged, super.key});
+  const DateRangeFilterChip({
+    this.min,
+    this.max,
+    this.onChanged,
+    super.key,
+  });
 
   /// 震度の範囲が変更された時に呼ばれる
   /// `min` と `max` にはそれぞれ下限値と上限値が渡される
@@ -42,9 +47,11 @@ class DateRangeFilterChip extends StatelessWidget {
       onDeleted:
           range.isAllSelected
               ? null
-              : () => onChanged?.call(initialMin, initialMax),
+              : () =>
+                  onChanged?.call(initialMin, initialMax),
       selected: !range.isAllSelected,
-      selectedColor: Theme.of(context).colorScheme.secondaryContainer,
+      selectedColor:
+          Theme.of(context).colorScheme.secondaryContainer,
     );
   }
 }

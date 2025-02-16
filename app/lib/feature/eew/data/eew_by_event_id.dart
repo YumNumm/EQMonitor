@@ -12,18 +12,26 @@ class EewsByEventId extends _$EewsByEventId {
   @override
   Future<List<EewV1>> build(String eventId) async {
     final client = ref.watch(eqApiProvider);
-    final response = await client.v1.getEewByEventId(eventId: eventId);
+    final response = await client.v1.getEewByEventId(
+      eventId: eventId,
+    );
 
     // Start Listening Eew
     // to update the list
     ref.listen(eewProvider, (_, next) {
       if (state is! AsyncData) {
-        log('EewsByEventId Provider is not AsyncData state so ignore.');
+        log(
+          'EewsByEventId Provider is not AsyncData state so ignore.',
+        );
         return;
       }
       if (next case AsyncData(value: final value)) {
         final eews =
-            value.where((e) => e.eventId.toString() == eventId).toList();
+            value
+                .where(
+                  (e) => e.eventId.toString() == eventId,
+                )
+                .toList();
         final currentEews = state.valueOrNull ?? <EewV1>[];
         for (final eew in eews) {
           if (!currentEews.contains(eew)) {

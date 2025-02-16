@@ -36,8 +36,8 @@ class _Body extends StatelessWidget {
               title: const Text('震度配色設定'),
               leading: const Icon(Icons.color_lens),
               onTap:
-                  () async =>
-                      const ColorSchemeConfigRoute().push<void>(context),
+                  () async => const ColorSchemeConfigRoute()
+                      .push<void>(context),
             ),
           ],
         ),
@@ -53,16 +53,21 @@ class _ThemeSelector extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(themeModeNotifierProvider);
 
-    final brightness = MediaQuery.platformBrightnessOf(context);
+    final brightness = MediaQuery.platformBrightnessOf(
+      context,
+    );
 
     Widget buildThemeChoice(ThemeMode mode) {
       final modeBrightness =
-          mode == ThemeMode.light ? Brightness.light : Brightness.dark;
+          mode == ThemeMode.light
+              ? Brightness.light
+              : Brightness.dark;
       return Expanded(
         child: GestureDetector(
           onTap:
-              () async =>
-                  ref.read(themeModeNotifierProvider.notifier).update(mode),
+              () async => ref
+                  .read(themeModeNotifierProvider.notifier)
+                  .update(mode),
           child: Column(
             children: [
               SizedBox(
@@ -70,10 +75,13 @@ class _ThemeSelector extends ConsumerWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(24),
                   child: switch (mode) {
-                    ThemeMode.light => Assets.images.theme.light.image(
-                      fit: BoxFit.contain,
-                    ),
-                    ThemeMode.dark => Assets.images.theme.dark.image(),
+                    ThemeMode.light => Assets
+                        .images
+                        .theme
+                        .light
+                        .image(fit: BoxFit.contain),
+                    ThemeMode.dark =>
+                      Assets.images.theme.dark.image(),
                     _ => throw UnimplementedError(),
                   },
                 ),
@@ -83,7 +91,7 @@ class _ThemeSelector extends ConsumerWidget {
                 ThemeMode.light => 'ライト',
                 ThemeMode.dark => 'ダーク',
                 _ => throw UnimplementedError(),
-              },),
+              }),
               const SizedBox(height: 4),
               Radio.adaptive(
                 value:
@@ -95,7 +103,10 @@ class _ThemeSelector extends ConsumerWidget {
                 groupValue: state,
                 onChanged:
                     (value) async => ref
-                        .read(themeModeNotifierProvider.notifier)
+                        .read(
+                          themeModeNotifierProvider
+                              .notifier,
+                        )
                         .update(mode),
               ),
             ],
@@ -121,7 +132,8 @@ class _ThemeSelector extends ConsumerWidget {
     );
 
     return BorderedContainer(
-      accentColor: Theme.of(context).colorScheme.secondaryContainer,
+      accentColor:
+          Theme.of(context).colorScheme.secondaryContainer,
       margin: const EdgeInsets.all(16),
       child: Column(
         children: [
@@ -139,11 +151,15 @@ class _ThemeSelector extends ConsumerWidget {
             value: state == ThemeMode.system,
             onChanged:
                 (value) async => ref
-                    .read(themeModeNotifierProvider.notifier)
+                    .read(
+                      themeModeNotifierProvider.notifier,
+                    )
                     .update(
                       value
                           ? ThemeMode.system
-                          : PlatformDispatcher.instance.platformBrightness ==
+                          : PlatformDispatcher
+                                  .instance
+                                  .platformBrightness ==
                               Brightness.light
                           ? ThemeMode.light
                           : ThemeMode.dark,

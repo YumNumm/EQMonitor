@@ -10,7 +10,9 @@ class LpgmKyoshinMonitorWebApiDataSource {
   final LpgmKyoshinMonitorWebApiClient _client;
 
   /// ベース画像
-  Future<List<int>> getBaseMapImageData(BaseMapTheme theme) async =>
+  Future<List<int>> getBaseMapImageData(
+    BaseMapTheme theme,
+  ) async =>
       _client.getBaseMapImageData(theme: theme.urlString);
 
   /// スケール
@@ -25,11 +27,12 @@ class LpgmKyoshinMonitorWebApiDataSource {
   );
 
   /// PsWaveImg
-  Future<List<int>> getPsWaveImageData(DateTime dateTime) async =>
-      _client.getPsWaveImageData(
-        date: dateFormat.format(dateTime),
-        dateTime: dateTimeFormat.format(dateTime),
-      );
+  Future<List<int>> getPsWaveImageData(
+    DateTime dateTime,
+  ) async => _client.getPsWaveImageData(
+    date: dateFormat.format(dateTime),
+    dateTime: dateTimeFormat.format(dateTime),
+  );
 
   /// RealtimeImg
   Future<List<int>> getRealtimeImageData(
@@ -43,6 +46,8 @@ class LpgmKyoshinMonitorWebApiDataSource {
     dateTime: dateTimeFormat.format(dateTime),
   );
 
-  static DateFormat get dateFormat => DateFormat('yyyyMMdd');
-  static DateFormat get dateTimeFormat => DateFormat('yyyyMMddHHmmss');
+  static DateFormat get dateFormat =>
+      DateFormat('yyyyMMdd');
+  static DateFormat get dateTimeFormat =>
+      DateFormat('yyyyMMddHHmmss');
 }

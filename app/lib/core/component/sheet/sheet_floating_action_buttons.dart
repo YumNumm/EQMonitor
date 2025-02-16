@@ -31,7 +31,9 @@ class SheetFloatingActionButtons extends HookWidget {
         size.height -
         (padding.top +
             // SafeAreaのtop部分, AppBarの高さ
-            (hasAppBar ? AppBar().preferredSize.height : 0));
+            (hasAppBar
+                ? AppBar().preferredSize.height
+                : 0));
     return AnimatedBuilder(
       animation: controller.animation,
       builder: (context, child) {

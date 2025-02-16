@@ -14,7 +14,10 @@ String _$kyoshinMonitorNotifierHash() =>
 /// See also [KyoshinMonitorNotifier].
 @ProviderFor(KyoshinMonitorNotifier)
 final kyoshinMonitorNotifierProvider =
-    AsyncNotifierProvider<KyoshinMonitorNotifier, KyoshinMonitorState>.internal(
+    AsyncNotifierProvider<
+      KyoshinMonitorNotifier,
+      KyoshinMonitorState
+    >.internal(
       KyoshinMonitorNotifier.new,
       name: r'kyoshinMonitorNotifierProvider',
       debugGetCreateSourceHash:
@@ -25,6 +28,7 @@ final kyoshinMonitorNotifierProvider =
       allTransitiveDependencies: null,
     );
 
-typedef _$KyoshinMonitorNotifier = AsyncNotifier<KyoshinMonitorState>;
+typedef _$KyoshinMonitorNotifier =
+    AsyncNotifier<KyoshinMonitorState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

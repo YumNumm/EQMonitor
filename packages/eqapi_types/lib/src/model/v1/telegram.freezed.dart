@@ -24,18 +24,25 @@ mixin _$TelegramV1 {
   int get id => throw _privateConstructorUsedError;
   int get eventId => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
-  String get schemaType => throw _privateConstructorUsedError;
+  String get schemaType =>
+      throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
   String get infoType => throw _privateConstructorUsedError;
-  DateTime get pressTime => throw _privateConstructorUsedError;
-  DateTime get reportTime => throw _privateConstructorUsedError;
-  Map<String, dynamic> get body => throw _privateConstructorUsedError;
-  DateTime? get validTime => throw _privateConstructorUsedError;
+  DateTime get pressTime =>
+      throw _privateConstructorUsedError;
+  DateTime get reportTime =>
+      throw _privateConstructorUsedError;
+  Map<String, dynamic> get body =>
+      throw _privateConstructorUsedError;
+  DateTime? get validTime =>
+      throw _privateConstructorUsedError;
   int? get serialNo => throw _privateConstructorUsedError;
-  String? get headline => throw _privateConstructorUsedError;
+  String? get headline =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this TelegramV1 to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of TelegramV1
   /// with the given fields replaced by the non-null parameter values.
@@ -68,7 +75,10 @@ abstract class $TelegramV1CopyWith<$Res> {
 }
 
 /// @nodoc
-class _$TelegramV1CopyWithImpl<$Res, $Val extends TelegramV1>
+class _$TelegramV1CopyWithImpl<
+  $Res,
+  $Val extends TelegramV1
+>
     implements $TelegramV1CopyWith<$Res> {
   _$TelegramV1CopyWithImpl(this._value, this._then);
 
@@ -300,8 +310,9 @@ class _$TelegramV1Impl implements _TelegramV1 {
     this.headline,
   }) : _body = body;
 
-  factory _$TelegramV1Impl.fromJson(Map<String, dynamic> json) =>
-      _$$TelegramV1ImplFromJson(json);
+  factory _$TelegramV1Impl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$TelegramV1ImplFromJson(json);
 
   @override
   final int id;
@@ -345,18 +356,24 @@ class _$TelegramV1Impl implements _TelegramV1 {
         (other.runtimeType == runtimeType &&
             other is _$TelegramV1Impl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.eventId, eventId) || other.eventId == eventId) &&
-            (identical(other.type, type) || other.type == type) &&
+            (identical(other.eventId, eventId) ||
+                other.eventId == eventId) &&
+            (identical(other.type, type) ||
+                other.type == type) &&
             (identical(other.schemaType, schemaType) ||
                 other.schemaType == schemaType) &&
-            (identical(other.status, status) || other.status == status) &&
+            (identical(other.status, status) ||
+                other.status == status) &&
             (identical(other.infoType, infoType) ||
                 other.infoType == infoType) &&
             (identical(other.pressTime, pressTime) ||
                 other.pressTime == pressTime) &&
             (identical(other.reportTime, reportTime) ||
                 other.reportTime == reportTime) &&
-            const DeepCollectionEquality().equals(other._body, _body) &&
+            const DeepCollectionEquality().equals(
+              other._body,
+              _body,
+            ) &&
             (identical(other.validTime, validTime) ||
                 other.validTime == validTime) &&
             (identical(other.serialNo, serialNo) ||
@@ -388,8 +405,12 @@ class _$TelegramV1Impl implements _TelegramV1 {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$TelegramV1ImplCopyWith<_$TelegramV1Impl> get copyWith =>
-      __$$TelegramV1ImplCopyWithImpl<_$TelegramV1Impl>(this, _$identity);
+  _$$TelegramV1ImplCopyWith<_$TelegramV1Impl>
+  get copyWith =>
+      __$$TelegramV1ImplCopyWithImpl<_$TelegramV1Impl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -445,6 +466,6 @@ abstract class _TelegramV1 implements TelegramV1 {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TelegramV1ImplCopyWith<_$TelegramV1Impl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$TelegramV1ImplCopyWith<_$TelegramV1Impl>
+  get copyWith => throw _privateConstructorUsedError;
 }

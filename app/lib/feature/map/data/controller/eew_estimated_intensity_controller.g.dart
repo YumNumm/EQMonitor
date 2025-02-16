@@ -19,7 +19,8 @@ class _SystemHash {
     // ignore: parameter_assignments
     hash = 0x1fffffff & (hash + value);
     // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    hash =
+        0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
     return hash ^ (hash >> 6);
   }
 
@@ -28,7 +29,8 @@ class _SystemHash {
     hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
     // ignore: parameter_assignments
     hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+    return 0x1fffffff &
+        (hash + ((0x00003fff & hash) << 15));
   }
 }
 
@@ -36,7 +38,9 @@ abstract class _$EewEstimatedIntensityLayerController
     extends BuildlessNotifier<EewEstimatedIntensityLayer> {
   late final JmaForecastIntensity intensity;
 
-  EewEstimatedIntensityLayer build(JmaForecastIntensity intensity);
+  EewEstimatedIntensityLayer build(
+    JmaForecastIntensity intensity,
+  );
 }
 
 /// See also [EewEstimatedIntensityLayerController].
@@ -54,29 +58,38 @@ class EewEstimatedIntensityLayerControllerFamily
   EewEstimatedIntensityLayerControllerProvider call(
     JmaForecastIntensity intensity,
   ) {
-    return EewEstimatedIntensityLayerControllerProvider(intensity);
+    return EewEstimatedIntensityLayerControllerProvider(
+      intensity,
+    );
   }
 
   @override
-  EewEstimatedIntensityLayerControllerProvider getProviderOverride(
-    covariant EewEstimatedIntensityLayerControllerProvider provider,
+  EewEstimatedIntensityLayerControllerProvider
+  getProviderOverride(
+    covariant EewEstimatedIntensityLayerControllerProvider
+    provider,
   ) {
     return call(provider.intensity);
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  static const Iterable<ProviderOrFamily>? _dependencies =
+      null;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+  Iterable<ProviderOrFamily>? get dependencies =>
+      _dependencies;
 
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  static const Iterable<ProviderOrFamily>?
+  _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+  Iterable<ProviderOrFamily>?
+  get allTransitiveDependencies =>
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'eewEstimatedIntensityLayerControllerProvider';
+  String? get name =>
+      r'eewEstimatedIntensityLayerControllerProvider';
 }
 
 /// See also [EewEstimatedIntensityLayerController].
@@ -87,16 +100,22 @@ class EewEstimatedIntensityLayerControllerProvider
           EewEstimatedIntensityLayer
         > {
   /// See also [EewEstimatedIntensityLayerController].
-  EewEstimatedIntensityLayerControllerProvider(JmaForecastIntensity intensity)
-    : this._internal(
-        () => EewEstimatedIntensityLayerController()..intensity = intensity,
+  EewEstimatedIntensityLayerControllerProvider(
+    JmaForecastIntensity intensity,
+  ) : this._internal(
+        () =>
+            EewEstimatedIntensityLayerController()
+              ..intensity = intensity,
         from: eewEstimatedIntensityLayerControllerProvider,
-        name: r'eewEstimatedIntensityLayerControllerProvider',
+        name:
+            r'eewEstimatedIntensityLayerControllerProvider',
         debugGetCreateSourceHash:
             const bool.fromEnvironment('dart.vm.product')
                 ? null
                 : _$eewEstimatedIntensityLayerControllerHash,
-        dependencies: EewEstimatedIntensityLayerControllerFamily._dependencies,
+        dependencies:
+            EewEstimatedIntensityLayerControllerFamily
+                ._dependencies,
         allTransitiveDependencies:
             EewEstimatedIntensityLayerControllerFamily
                 ._allTransitiveDependencies,
@@ -128,15 +147,16 @@ class EewEstimatedIntensityLayerControllerProvider
   ) {
     return ProviderOverride(
       origin: this,
-      override: EewEstimatedIntensityLayerControllerProvider._internal(
-        () => create()..intensity = intensity,
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        intensity: intensity,
-      ),
+      override:
+          EewEstimatedIntensityLayerControllerProvider._internal(
+            () => create()..intensity = intensity,
+            from: from,
+            name: null,
+            dependencies: null,
+            allTransitiveDependencies: null,
+            debugGetCreateSourceHash: null,
+            intensity: intensity,
+          ),
     );
   }
 
@@ -146,12 +166,15 @@ class EewEstimatedIntensityLayerControllerProvider
     EewEstimatedIntensityLayer
   >
   createElement() {
-    return _EewEstimatedIntensityLayerControllerProviderElement(this);
+    return _EewEstimatedIntensityLayerControllerProviderElement(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return other is EewEstimatedIntensityLayerControllerProvider &&
+    return other
+            is EewEstimatedIntensityLayerControllerProvider &&
         other.intensity == intensity;
   }
 
@@ -179,11 +202,14 @@ class _EewEstimatedIntensityLayerControllerProviderElement
           EewEstimatedIntensityLayer
         >
     with EewEstimatedIntensityLayerControllerRef {
-  _EewEstimatedIntensityLayerControllerProviderElement(super.provider);
+  _EewEstimatedIntensityLayerControllerProviderElement(
+    super.provider,
+  );
 
   @override
   JmaForecastIntensity get intensity =>
-      (origin as EewEstimatedIntensityLayerControllerProvider).intensity;
+      (origin as EewEstimatedIntensityLayerControllerProvider)
+          .intensity;
 }
 
 // ignore_for_file: type=lint

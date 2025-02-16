@@ -4,10 +4,17 @@ import 'package:eqmonitor/feature/kyoshin_monitor/data/model/kyoshin_color_map_m
 import 'package:eqmonitor/gen/assets.gen.dart';
 import 'package:flutter/services.dart';
 
-Future<List<KyoshinColorMapModel>> getKyoshinColorMap() async {
-  final str = await rootBundle.loadString(Assets.kyoshinShindoColorMap);
+Future<List<KyoshinColorMapModel>>
+getKyoshinColorMap() async {
+  final str = await rootBundle.loadString(
+    Assets.kyoshinShindoColorMap,
+  );
   final json = jsonDecode(str) as List<dynamic>;
   return json
-      .map((e) => KyoshinColorMapModel.fromJson(e as Map<String, dynamic>))
+      .map(
+        (e) => KyoshinColorMapModel.fromJson(
+          e as Map<String, dynamic>,
+        ),
+      )
       .toList();
 }
