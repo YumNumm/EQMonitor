@@ -14,10 +14,10 @@ jobs:
     steps:
       # https://github.com/actions/checkout
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 1
       - id: tagpr
-        uses: Songmu/tagpr@v1
+        uses: Songmu/tagpr@e89d37247ca73d3e5620bf074a53fbd5b39e66b0 # v1.5.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
