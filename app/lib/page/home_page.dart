@@ -36,7 +36,7 @@ class HomePage extends HookConsumerWidget {
                         ),
                       ),
                       builder: (context) => const _DebugModal(),
-                    ),
+                    ),        
                   ),
               child: const Icon(Icons.bug_report),
             ),
