@@ -39,7 +39,7 @@ class JmaParameter extends _$JmaParameter {
         streamController.add((
           earthquake: earthquake!,
           tsunami: tsunami!,
-        ),);
+        ));
       }
     }
 
