@@ -17,8 +17,8 @@ jobs:
     timeout-minutes: 1
 
     steps:
-      # https://github.com/dorny/paths-filter/tree/v3.0.2/
-      - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
+      # https://github.com/dorny/paths-filter
+      - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
         id: filter
         with:
           filters: |
@@ -28,10 +28,10 @@ jobs:
               - "**/pubspec.lock"
               - "scripts/**"
 
-      # https://github.com/peter-evans/create-or-update-comment/tree/v4/
+      # https://github.com/peter-evans/create-or-update-comment
       - name: Comment
         if: ${{ steps.filter.outputs.src == 'false' }}
-        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043
+        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
@@ -54,9 +54,9 @@ jobs:
       pull-requests: write
 
     steps:
-      # https://github.com/actions/checkout/tree/v4/
+      # https://github.com/actions/checkout
       - name: Checkout
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
       - name: Setup Application Runtime
         uses: ./.github/actions/setup-application-runtime
@@ -75,9 +75,9 @@ jobs:
           git add -N .
           git diff --name-only --exit-code
 
-      # https://github.com/peter-evans/create-pull-request/tree/v6/
+      # https://github.com/peter-evans/create-pull-request
       - name: Create or update pull request
-        uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f
+        uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
         if: failure()
         id: cpr
         with:
@@ -105,16 +105,16 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      # https://github.com/actions/checkout/tree/v4/
+      # https://github.com/actions/checkout
       - name: Checkout
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
       - name: Setup Application Runtime
         uses: ./.github/actions/setup-application-runtime
 
-      # https://github.com/invertase/github-action-dart-analyzer/tree/v3/
+      # https://github.com/invertase/github-action-dart-analyzer
       - name: Report analyze
-        uses: invertase/github-action-dart-analyzer@e981b01a458d0bab71ee5da182e5b26687b7101b
+        uses: invertase/github-action-dart-analyzer@e981b01a458d0bab71ee5da182e5b26687b7101b # v3.0.0
         with:
           fatal-infos: true
 
@@ -132,9 +132,9 @@ jobs:
         run: melos run report_test --no-select
         continue-on-error: true
 
-      # https://github.com/dorny/test-reporter/tree/v1.9.1/
+      # https://github.com/dorny/test-reporter
       - name: Report test
-        uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5
+        uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5 # v1.9.1
         with:
           name: "flutter test"
           path: "(app|catalog|packages/**)/test_report.log"
