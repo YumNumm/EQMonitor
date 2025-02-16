@@ -167,7 +167,7 @@ class _SortModal extends HookConsumerWidget {
                 true,
               ) =>
                 '最大観測震度の小さい順',
-            }),
+            },),
             value: ascending.value,
             onChanged: (v) => ascending.value = v,
           ),

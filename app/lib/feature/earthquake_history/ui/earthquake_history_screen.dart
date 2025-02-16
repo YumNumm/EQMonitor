@@ -44,7 +44,7 @@ class EarthquakeHistoryScreen extends HookConsumerWidget {
         }),
       );
       return null;
-    }, [parameter.value]);
+    }, [parameter.value],);
 
     return Scaffold(
       appBar: AppBar(
@@ -181,7 +181,7 @@ class _SliverListBody extends HookConsumerWidget {
         }
       });
       return null;
-    }, [controller, state, onScrollEnd, onRefresh]);
+    }, [controller, state, onScrollEnd, onRefresh],);
 
     Widget listView({
       required (List<EarthquakeV1Extended>, int) data,

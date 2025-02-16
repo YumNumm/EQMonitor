@@ -93,7 +93,7 @@ class _Body extends ConsumerWidget {
                 AsyncError(:final error) =>
                   error.toString(),
                 _ => 'Loading...',
-              }, style: bodyTextStyle),
+              }, style: bodyTextStyle,),
             ],
           ),
         ),
@@ -112,7 +112,7 @@ class _Body extends ConsumerWidget {
                 AsyncError(:final error) =>
                   error.toString(),
                 _ => 'Loading...',
-              }, style: bodyTextStyle),
+              }, style: bodyTextStyle,),
             ],
           ),
         ),
@@ -155,7 +155,7 @@ class _Body extends ConsumerWidget {
                   AsyncError(:final error) =>
                     error.toString(),
                   _ => 'Loading...',
-                }, style: bodyTextStyle),
+                }, style: bodyTextStyle,),
                 if (state.valueOrNull?.currentImageRaw !=
                     null)
                   ColoredBox(
@@ -198,7 +198,7 @@ class _Body extends ConsumerWidget {
                 AsyncError(:final error) =>
                   error.toString(),
                 _ => 'Loading...',
-              }, style: bodyTextStyle),
+              }, style: bodyTextStyle,),
             ],
           ),
         ),

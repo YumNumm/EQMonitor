@@ -113,7 +113,7 @@ class EarthquakeHistoryDetailsPage
                           config,
                           maxIntensity,
                           maxLgIntensity,
-                        )),
+                        ),),
                         margin: const EdgeInsets.all(4),
                         padding: const EdgeInsets.all(4),
                         borderRadius: BorderRadius.circular(

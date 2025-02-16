@@ -89,7 +89,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
     // ignore: discarded_futures
     final itemCalculateFutureing = useMemoized(() async {
       return _compute(colorModel, item, earthquakeParams);
-    }, [colorModel, item, earthquakeParams]);
+    }, [colorModel, item, earthquakeParams],);
     final itemCalculateFuture = useFuture(
       itemCalculateFutureing,
     );
@@ -154,7 +154,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         );
       }
       return bbox;
-    }, [regionsItem]);
+    }, [regionsItem],);
 
     final mapController = useState<MapLibreMapController?>(
       null,
@@ -194,7 +194,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         right: 10,
         top: 10,
       );
-    }, [bbox, item]);
+    }, [bbox, item],);
 
     // * Display mode related
     List<_Action> getActions(
@@ -325,7 +325,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         }),
       );
       return null;
-    }, [item]);
+    }, [item],);
     final maxZoomLevel = useState<double>(6);
 
     return RepaintBoundary(
@@ -537,7 +537,7 @@ class EarthquakeMapWidget extends HookConsumerWidget {
         regionsLpgmItem,
         stationsLpgmItem,
       );
-    }, (earthquake, earthquakeParams, colorModel));
+    }, (earthquake, earthquakeParams, colorModel),);
   }
 }
 
