@@ -302,7 +302,7 @@ class _DeclarativeMapState
         sourceId,
         layer.id,
         layerProperties,
-        // belowLayerId: belowLayerId,
+        belowLayerId: belowLayerId,
       );
     } else {
       print('no layerProperties: ${layer.id}');

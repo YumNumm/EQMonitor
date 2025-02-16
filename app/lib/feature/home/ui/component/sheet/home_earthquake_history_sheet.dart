@@ -19,16 +19,13 @@ class HomeEarthquakeHistorySheet
       ),
     );
 
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Card.outlined(
-      color:
-          Theme.of(
-            context,
-          ).colorScheme.surfaceContainerHigh,
+      color: colorScheme.surfaceContainerHigh,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8,
-          vertical: 4,
-        ),
+        padding: const EdgeInsets.all(8).copyWith(top: 4),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,6 +76,7 @@ class _Header extends StatelessWidget {
             padding: const EdgeInsets.symmetric(
               horizontal: 12,
             ),
+
             backgroundColor: colorScheme.secondaryContainer,
             foregroundColor:
                 colorScheme.onSecondaryContainer,
@@ -126,6 +124,8 @@ class _EarthquakeList extends StatelessWidget {
                         colorScheme.onSurfaceVariant,
                     magnitudeTextColor:
                         colorScheme.onPrimaryContainer,
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
                   ),
                 ),
               )
