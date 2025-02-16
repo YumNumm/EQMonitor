@@ -19,7 +19,8 @@ class _SystemHash {
     // ignore: parameter_assignments
     hash = 0x1fffffff & (hash + value);
     // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    hash =
+        0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
     return hash ^ (hash >> 6);
   }
 
@@ -28,12 +29,14 @@ class _SystemHash {
     hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
     // ignore: parameter_assignments
     hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+    return 0x1fffffff &
+        (hash + ((0x00003fff & hash) << 15));
   }
 }
 
 abstract class _$EewHypocenterLayerController
-    extends BuildlessAutoDisposeNotifier<EewHypocenterLayer> {
+    extends
+        BuildlessAutoDisposeNotifier<EewHypocenterLayer> {
   late final EewHypocenterIcon icon;
 
   EewHypocenterLayer build(EewHypocenterIcon icon);
@@ -45,12 +48,15 @@ const eewHypocenterLayerControllerProvider =
     EewHypocenterLayerControllerFamily();
 
 /// See also [EewHypocenterLayerController].
-class EewHypocenterLayerControllerFamily extends Family<EewHypocenterLayer> {
+class EewHypocenterLayerControllerFamily
+    extends Family<EewHypocenterLayer> {
   /// See also [EewHypocenterLayerController].
   const EewHypocenterLayerControllerFamily();
 
   /// See also [EewHypocenterLayerController].
-  EewHypocenterLayerControllerProvider call(EewHypocenterIcon icon) {
+  EewHypocenterLayerControllerProvider call(
+    EewHypocenterIcon icon,
+  ) {
     return EewHypocenterLayerControllerProvider(icon);
   }
 
@@ -61,19 +67,24 @@ class EewHypocenterLayerControllerFamily extends Family<EewHypocenterLayer> {
     return call(provider.icon);
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  static const Iterable<ProviderOrFamily>? _dependencies =
+      null;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+  Iterable<ProviderOrFamily>? get dependencies =>
+      _dependencies;
 
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  static const Iterable<ProviderOrFamily>?
+  _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+  Iterable<ProviderOrFamily>?
+  get allTransitiveDependencies =>
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'eewHypocenterLayerControllerProvider';
+  String? get name =>
+      r'eewHypocenterLayerControllerProvider';
 }
 
 /// See also [EewHypocenterLayerController].
@@ -84,8 +95,9 @@ class EewHypocenterLayerControllerProvider
           EewHypocenterLayer
         > {
   /// See also [EewHypocenterLayerController].
-  EewHypocenterLayerControllerProvider(EewHypocenterIcon icon)
-    : this._internal(
+  EewHypocenterLayerControllerProvider(
+    EewHypocenterIcon icon,
+  ) : this._internal(
         () => EewHypocenterLayerController()..icon = icon,
         from: eewHypocenterLayerControllerProvider,
         name: r'eewHypocenterLayerControllerProvider',
@@ -93,9 +105,12 @@ class EewHypocenterLayerControllerProvider
             const bool.fromEnvironment('dart.vm.product')
                 ? null
                 : _$eewHypocenterLayerControllerHash,
-        dependencies: EewHypocenterLayerControllerFamily._dependencies,
+        dependencies:
+            EewHypocenterLayerControllerFamily
+                ._dependencies,
         allTransitiveDependencies:
-            EewHypocenterLayerControllerFamily._allTransitiveDependencies,
+            EewHypocenterLayerControllerFamily
+                ._allTransitiveDependencies,
         icon: icon,
       );
 
@@ -119,18 +134,21 @@ class EewHypocenterLayerControllerProvider
   }
 
   @override
-  Override overrideWith(EewHypocenterLayerController Function() create) {
+  Override overrideWith(
+    EewHypocenterLayerController Function() create,
+  ) {
     return ProviderOverride(
       origin: this,
-      override: EewHypocenterLayerControllerProvider._internal(
-        () => create()..icon = icon,
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        icon: icon,
-      ),
+      override:
+          EewHypocenterLayerControllerProvider._internal(
+            () => create()..icon = icon,
+            from: from,
+            name: null,
+            dependencies: null,
+            allTransitiveDependencies: null,
+            debugGetCreateSourceHash: null,
+            icon: icon,
+          ),
     );
   }
 
@@ -140,12 +158,15 @@ class EewHypocenterLayerControllerProvider
     EewHypocenterLayer
   >
   createElement() {
-    return _EewHypocenterLayerControllerProviderElement(this);
+    return _EewHypocenterLayerControllerProviderElement(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return other is EewHypocenterLayerControllerProvider && other.icon == icon;
+    return other is EewHypocenterLayerControllerProvider &&
+        other.icon == icon;
   }
 
   @override
@@ -172,7 +193,9 @@ class _EewHypocenterLayerControllerProviderElement
           EewHypocenterLayer
         >
     with EewHypocenterLayerControllerRef {
-  _EewHypocenterLayerControllerProviderElement(super.provider);
+  _EewHypocenterLayerControllerProviderElement(
+    super.provider,
+  );
 
   @override
   EewHypocenterIcon get icon =>

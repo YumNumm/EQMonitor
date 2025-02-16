@@ -26,8 +26,12 @@ class JmaForecastIntensityWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final intensityColorModel =
         (colorModel ?? ref.watch(intensityColorProvider))!;
-    final colorScheme = intensityColorModel.fromJmaForecastIntensity(intensity);
-    final (fg, bg) = (colorScheme.foreground, colorScheme.background);
+    final colorScheme = intensityColorModel
+        .fromJmaForecastIntensity(intensity);
+    final (fg, bg) = (
+      colorScheme.foreground,
+      colorScheme.background,
+    );
     // 震度の整数部分
     final intensityMainText = intensity.type
         .replaceAll('-', '')
@@ -45,7 +49,8 @@ class JmaForecastIntensityWidget extends ConsumerWidget {
       width: size,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: type == IntensityIconType.filled ? bg : null,
+          color:
+              type == IntensityIconType.filled ? bg : null,
           // 角丸にする
           borderRadius: BorderRadius.circular(size / 5),
         ),
@@ -53,7 +58,8 @@ class JmaForecastIntensityWidget extends ConsumerWidget {
           child: FittedBox(
             fit: BoxFit.scaleDown,
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
+              crossAxisAlignment:
+                  CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
               children: [
                 if (customText != null)
@@ -66,7 +72,8 @@ class JmaForecastIntensityWidget extends ConsumerWidget {
                       fontFamily: FontFamily.jetBrainsMono,
                     ),
                   )
-                else if (intensity == JmaForecastIntensity.unknown)
+                else if (intensity ==
+                    JmaForecastIntensity.unknown)
                   Padding(
                     padding: const EdgeInsets.all(8),
                     child: Text(
@@ -126,9 +133,15 @@ class JmaForecastIntensityIcon extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final intensityColorModel = ref.watch(intensityColorProvider);
-    final colorScheme = intensityColorModel.fromJmaForecastIntensity(intensity);
-    final (fg, bg) = (colorScheme.foreground, colorScheme.background);
+    final intensityColorModel = ref.watch(
+      intensityColorProvider,
+    );
+    final colorScheme = intensityColorModel
+        .fromJmaForecastIntensity(intensity);
+    final (fg, bg) = (
+      colorScheme.foreground,
+      colorScheme.background,
+    );
     // 震度の整数部分
     final intensityMainText = intensity.type
         .replaceAll('-', '')
@@ -155,13 +168,17 @@ class JmaForecastIntensityIcon extends ConsumerWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: bg,
-            border: Border.all(color: borderColor, width: 5),
+            border: Border.all(
+              color: borderColor,
+              width: 5,
+            ),
           ),
           child: Center(
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
                 children: [
                   Text(
                     intensityMainText,
@@ -179,7 +196,9 @@ class JmaForecastIntensityIcon extends ConsumerWidget {
                       fontSize: 80,
                       fontWeight: FontWeight.w900,
                       fontFamily: FontFamily.jetBrainsMono,
-                      fontFamilyFallback: const [FontFamily.notoSansJP],
+                      fontFamilyFallback: const [
+                        FontFamily.notoSansJP,
+                      ],
                     ),
                   ),
                 ],
@@ -195,7 +214,10 @@ class JmaForecastIntensityIcon extends ConsumerWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: bg,
-            border: Border.all(color: borderColor, width: 5),
+            border: Border.all(
+              color: borderColor,
+              width: 5,
+            ),
           ),
         ),
       ),
@@ -212,7 +234,8 @@ class JmaForecastIntensityIcon extends ConsumerWidget {
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
+                crossAxisAlignment:
+                    CrossAxisAlignment.baseline,
                 textBaseline: TextBaseline.alphabetic,
                 children: [
                   if (customText != null)
@@ -222,7 +245,8 @@ class JmaForecastIntensityIcon extends ConsumerWidget {
                         color: fg,
                         fontSize: 100,
                         fontWeight: FontWeight.w900,
-                        fontFamily: FontFamily.jetBrainsMono,
+                        fontFamily:
+                            FontFamily.jetBrainsMono,
                       ),
                     )
                   else ...[
@@ -232,7 +256,8 @@ class JmaForecastIntensityIcon extends ConsumerWidget {
                         color: fg,
                         fontSize: 100,
                         fontWeight: FontWeight.w900,
-                        fontFamily: FontFamily.jetBrainsMono,
+                        fontFamily:
+                            FontFamily.jetBrainsMono,
                       ),
                     ),
                     if (showSuffix)
@@ -242,8 +267,11 @@ class JmaForecastIntensityIcon extends ConsumerWidget {
                           color: fg,
                           fontSize: 50,
                           fontWeight: FontWeight.w900,
-                          fontFamily: FontFamily.jetBrainsMono,
-                          fontFamilyFallback: const [FontFamily.notoSansJP],
+                          fontFamily:
+                              FontFamily.jetBrainsMono,
+                          fontFamilyFallback: const [
+                            FontFamily.notoSansJP,
+                          ],
                         ),
                       ),
                   ],

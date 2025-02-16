@@ -13,60 +13,66 @@ String _$eewPsWaveFillLayerControllerHash() =>
 
 /// See also [EewPsWaveFillLayerController].
 @ProviderFor(EewPsWaveFillLayerController)
-final eewPsWaveFillLayerControllerProvider = NotifierProvider<
-  EewPsWaveFillLayerController,
-  List<EewWaveFillLayer>
->.internal(
-  EewPsWaveFillLayerController.new,
-  name: r'eewPsWaveFillLayerControllerProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$eewPsWaveFillLayerControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final eewPsWaveFillLayerControllerProvider =
+    NotifierProvider<
+      EewPsWaveFillLayerController,
+      List<EewWaveFillLayer>
+    >.internal(
+      EewPsWaveFillLayerController.new,
+      name: r'eewPsWaveFillLayerControllerProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$eewPsWaveFillLayerControllerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
-typedef _$EewPsWaveFillLayerController = Notifier<List<EewWaveFillLayer>>;
+typedef _$EewPsWaveFillLayerController =
+    Notifier<List<EewWaveFillLayer>>;
 String _$eewPsWaveLineLayerControllerHash() =>
     r'6fb53c0cb954d6e81d61c9fded22504627f325f1';
 
 /// See also [EewPsWaveLineLayerController].
 @ProviderFor(EewPsWaveLineLayerController)
-final eewPsWaveLineLayerControllerProvider = NotifierProvider<
-  EewPsWaveLineLayerController,
-  List<EewWaveLineLayer>
->.internal(
-  EewPsWaveLineLayerController.new,
-  name: r'eewPsWaveLineLayerControllerProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$eewPsWaveLineLayerControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final eewPsWaveLineLayerControllerProvider =
+    NotifierProvider<
+      EewPsWaveLineLayerController,
+      List<EewWaveLineLayer>
+    >.internal(
+      EewPsWaveLineLayerController.new,
+      name: r'eewPsWaveLineLayerControllerProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$eewPsWaveLineLayerControllerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
-typedef _$EewPsWaveLineLayerController = Notifier<List<EewWaveLineLayer>>;
+typedef _$EewPsWaveLineLayerController =
+    Notifier<List<EewWaveLineLayer>>;
 String _$eewPsWaveSourceLayerControllerHash() =>
     r'37f68660c059a7e755fe5c7c1bdd5e0fc8161ea9';
 
 /// See also [EewPsWaveSourceLayerController].
 @ProviderFor(EewPsWaveSourceLayerController)
-final eewPsWaveSourceLayerControllerProvider = NotifierProvider<
-  EewPsWaveSourceLayerController,
-  EewPsWaveSourceLayer
->.internal(
-  EewPsWaveSourceLayerController.new,
-  name: r'eewPsWaveSourceLayerControllerProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$eewPsWaveSourceLayerControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final eewPsWaveSourceLayerControllerProvider =
+    NotifierProvider<
+      EewPsWaveSourceLayerController,
+      EewPsWaveSourceLayer
+    >.internal(
+      EewPsWaveSourceLayerController.new,
+      name: r'eewPsWaveSourceLayerControllerProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$eewPsWaveSourceLayerControllerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
-typedef _$EewPsWaveSourceLayerController = Notifier<EewPsWaveSourceLayer>;
+typedef _$EewPsWaveSourceLayerController =
+    Notifier<EewPsWaveSourceLayer>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -14,7 +14,8 @@ class AboutThisAppScreen extends HookWidget {
   Widget build(BuildContext context) {
     // ignore: discarded_futures
     final markdownFuture = useMemoized(
-      () async => rootBundle.loadString(Assets.docs.aboutThisApp),
+      () async =>
+          rootBundle.loadString(Assets.docs.aboutThisApp),
     );
     final markdown = useFuture(markdownFuture);
     return Scaffold(
@@ -45,7 +46,9 @@ class AboutThisAppScreen extends HookWidget {
                   'MIT License ${DateTime.now().year} Ryotaro Onoue',
                 ),
                 leading: const Icon(Icons.settings),
-                onTap: () async => const LicenseRoute().push<void>(context),
+                onTap:
+                    () async => const LicenseRoute()
+                        .push<void>(context),
               ),
               const Divider(),
               BorderedContainer(
@@ -55,7 +58,8 @@ class AboutThisAppScreen extends HookWidget {
                   data: markdown.data ?? '',
                   onTapLink: (text, href, title) async {
                     final uri = Uri.tryParse(href ?? '');
-                    if (uri != null && await canLaunchUrl(uri)) {
+                    if (uri != null &&
+                        await canLaunchUrl(uri)) {
                       await launchUrl(uri);
                     }
                   },

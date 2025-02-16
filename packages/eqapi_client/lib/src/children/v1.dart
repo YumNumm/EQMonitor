@@ -37,7 +37,8 @@ abstract class V1 {
   });
 
   @GET('/v1/earthquake/region')
-  Future<HttpResponse<List<RegionItem>>> getEarthquakeRegions({
+  Future<HttpResponse<List<RegionItem>>>
+  getEarthquakeRegions({
     @Query('regionCode') required String regionCode,
 
     /// 1~100
@@ -50,7 +51,8 @@ abstract class V1 {
   });
 
   @GET('/v1/information')
-  Future<HttpResponse<List<InformationV1>>> getInformations({
+  Future<HttpResponse<List<InformationV1>>>
+  getInformations({
     /// 1~100
     @Query('limit') int limit = 10,
 
@@ -76,7 +78,8 @@ abstract class V1 {
   });
 
   @GET('/v1/earthquake-early/list')
-  Future<HttpResponse<List<EarthquakeEarly>>> getEarthquakeEarlies({
+  Future<HttpResponse<List<EarthquakeEarly>>>
+  getEarthquakeEarlies({
     /// 1~100
     @Query('limit') int limit = 10,
 
@@ -99,12 +102,14 @@ abstract class V1 {
     @Query('originTimeLte') DateTime? originTimeLte,
     @Query('originTimeGte') DateTime? originTimeGte,
     @Query('sort')
-    EarthquakeEarlySortType sort = EarthquakeEarlySortType.origin_time,
+    EarthquakeEarlySortType sort =
+        EarthquakeEarlySortType.origin_time,
     @Query('ascending') bool ascending = false,
   });
 
   @GET('/v1/shake-detection/latest')
-  Future<List<ShakeDetectionEvent>> getLatestShakeDetectionEvents();
+  Future<List<ShakeDetectionEvent>>
+  getLatestShakeDetectionEvents();
 }
 
 enum EarthquakeEarlySortType {

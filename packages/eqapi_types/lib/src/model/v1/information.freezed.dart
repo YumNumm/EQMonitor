@@ -15,7 +15,9 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-InformationV1 _$InformationV1FromJson(Map<String, dynamic> json) {
+InformationV1 _$InformationV1FromJson(
+  Map<String, dynamic> json,
+) {
   return _InformationV1.fromJson(json);
 }
 
@@ -25,21 +27,26 @@ mixin _$InformationV1 {
     unknownEnumValue: InformationAuthor.unknown,
     defaultValue: InformationAuthor.unknown,
   )
-  InformationAuthor get author => throw _privateConstructorUsedError;
-  Map<String, dynamic> get body => throw _privateConstructorUsedError;
+  InformationAuthor get author =>
+      throw _privateConstructorUsedError;
+  Map<String, dynamic> get body =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'created_at')
-  DateTime get createdAt => throw _privateConstructorUsedError;
+  DateTime get createdAt =>
+      throw _privateConstructorUsedError;
   int get id => throw _privateConstructorUsedError;
   @JsonKey(
     unknownEnumValue: InformationLevel.info,
     defaultValue: InformationLevel.info,
   )
-  InformationLevel get level => throw _privateConstructorUsedError;
+  InformationLevel get level =>
+      throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
 
   /// Serializes this InformationV1 to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of InformationV1
   /// with the given fields replaced by the non-null parameter values.
@@ -75,7 +82,10 @@ abstract class $InformationV1CopyWith<$Res> {
 }
 
 /// @nodoc
-class _$InformationV1CopyWithImpl<$Res, $Val extends InformationV1>
+class _$InformationV1CopyWithImpl<
+  $Res,
+  $Val extends InformationV1
+>
     implements $InformationV1CopyWith<$Res> {
   _$InformationV1CopyWithImpl(this._value, this._then);
 
@@ -170,7 +180,11 @@ abstract class _$$InformationV1ImplCopyWith<$Res>
 
 /// @nodoc
 class __$$InformationV1ImplCopyWithImpl<$Res>
-    extends _$InformationV1CopyWithImpl<$Res, _$InformationV1Impl>
+    extends
+        _$InformationV1CopyWithImpl<
+          $Res,
+          _$InformationV1Impl
+        >
     implements _$$InformationV1ImplCopyWith<$Res> {
   __$$InformationV1ImplCopyWithImpl(
     _$InformationV1Impl _value,
@@ -253,8 +267,9 @@ class _$InformationV1Impl implements _InformationV1 {
     required this.type,
   }) : _body = body;
 
-  factory _$InformationV1Impl.fromJson(Map<String, dynamic> json) =>
-      _$$InformationV1ImplFromJson(json);
+  factory _$InformationV1Impl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$InformationV1ImplFromJson(json);
 
   @override
   @JsonKey(
@@ -296,14 +311,21 @@ class _$InformationV1Impl implements _InformationV1 {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$InformationV1Impl &&
-            (identical(other.author, author) || other.author == author) &&
-            const DeepCollectionEquality().equals(other._body, _body) &&
+            (identical(other.author, author) ||
+                other.author == author) &&
+            const DeepCollectionEquality().equals(
+              other._body,
+              _body,
+            ) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.level, level) || other.level == level) &&
-            (identical(other.title, title) || other.title == title) &&
-            (identical(other.type, type) || other.type == type));
+            (identical(other.level, level) ||
+                other.level == level) &&
+            (identical(other.title, title) ||
+                other.title == title) &&
+            (identical(other.type, type) ||
+                other.type == type));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -324,8 +346,10 @@ class _$InformationV1Impl implements _InformationV1 {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$InformationV1ImplCopyWith<_$InformationV1Impl> get copyWith =>
-      __$$InformationV1ImplCopyWithImpl<_$InformationV1Impl>(this, _$identity);
+  _$$InformationV1ImplCopyWith<_$InformationV1Impl>
+  get copyWith => __$$InformationV1ImplCopyWithImpl<
+    _$InformationV1Impl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -341,7 +365,8 @@ abstract class _InformationV1 implements InformationV1 {
     )
     required final InformationAuthor author,
     required final Map<String, dynamic> body,
-    @JsonKey(name: 'created_at') required final DateTime createdAt,
+    @JsonKey(name: 'created_at')
+    required final DateTime createdAt,
     required final int id,
     @JsonKey(
       unknownEnumValue: InformationLevel.info,
@@ -352,8 +377,9 @@ abstract class _InformationV1 implements InformationV1 {
     required final String type,
   }) = _$InformationV1Impl;
 
-  factory _InformationV1.fromJson(Map<String, dynamic> json) =
-      _$InformationV1Impl.fromJson;
+  factory _InformationV1.fromJson(
+    Map<String, dynamic> json,
+  ) = _$InformationV1Impl.fromJson;
 
   @override
   @JsonKey(
@@ -383,6 +409,6 @@ abstract class _InformationV1 implements InformationV1 {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$InformationV1ImplCopyWith<_$InformationV1Impl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$InformationV1ImplCopyWith<_$InformationV1Impl>
+  get copyWith => throw _privateConstructorUsedError;
 }

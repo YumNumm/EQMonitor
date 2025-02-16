@@ -7,33 +7,52 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kyoshin_monitor_api/kyoshin_monitor_api.dart';
 
-class KyoshinMonitorMaintenanceCardnceCard extends ConsumerWidget {
+class KyoshinMonitorMaintenanceCardnceCard
+    extends ConsumerWidget {
   const KyoshinMonitorMaintenanceCardnceCard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (!ref.watch(kyoshinMonitorSettingsProvider.select((v) => v.useKmoni))) {
+    if (!ref.watch(
+      kyoshinMonitorSettingsProvider.select(
+        (v) => v.useKmoni,
+      ),
+    )) {
       return const SizedBox.shrink();
     }
-    final state = ref.watch(kyoshinMonitorMaintenanceProvider);
+    final state = ref.watch(
+      kyoshinMonitorMaintenanceProvider,
+    );
     return state.maybeWhen(
       data:
           (data) => switch (data.type) {
-            MaintenanceMessageType.non => const SizedBox.shrink(),
+            MaintenanceMessageType.non =>
+              const SizedBox.shrink(),
             _ => BorderedContainer(
               accentColor:
-                  data.type == MaintenanceMessageType.highLight
-                      ? Colors.orangeAccent.withValues(alpha: 0.2)
+                  data.type ==
+                          MaintenanceMessageType.highLight
+                      ? Colors.orangeAccent.withValues(
+                        alpha: 0.2,
+                      )
                       : null,
               elevation: 1,
               margin:
-                  const EdgeInsets.symmetric(horizontal: 12) +
+                  const EdgeInsets.symmetric(
+                    horizontal: 12,
+                  ) +
                   const EdgeInsets.only(bottom: 8),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8,
+                vertical: 4,
+              ),
               child: Column(
                 children: [
                   const SheetHeader(title: '強震モニタからのお知らせ'),
-                  Html(shrinkWrap: true, data: data.message),
+                  Html(
+                    shrinkWrap: true,
+                    data: data.message,
+                  ),
                 ],
               ),
             ),

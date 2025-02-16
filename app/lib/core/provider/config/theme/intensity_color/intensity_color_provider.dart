@@ -29,7 +29,9 @@ class IntensityColor extends _$IntensityColor {
   }
 
   IntensityColorModel? load() {
-    final value = ref.read(sharedPreferencesProvider).getString(_key);
+    final value = ref
+        .read(sharedPreferencesProvider)
+        .getString(_key);
     if (value == null) {
       return null;
     }

@@ -15,7 +15,9 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-DevicesEewSettings _$DevicesEewSettingsFromJson(Map<String, dynamic> json) {
+DevicesEewSettings _$DevicesEewSettingsFromJson(
+  Map<String, dynamic> json,
+) {
   return _DevicesEewSettings.fromJson(json);
 }
 
@@ -25,17 +27,20 @@ mixin _$DevicesEewSettings {
   JmaForecastIntensity get minJmaIntensity =>
       throw _privateConstructorUsedError;
   int get regionId => throw _privateConstructorUsedError;
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  DateTime get updatedAt => throw _privateConstructorUsedError;
+  DateTime get createdAt =>
+      throw _privateConstructorUsedError;
+  DateTime get updatedAt =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this DevicesEewSettings to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of DevicesEewSettings
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $DevicesEewSettingsCopyWith<DevicesEewSettings> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DevicesEewSettingsCopyWith<DevicesEewSettings>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -43,7 +48,11 @@ abstract class $DevicesEewSettingsCopyWith<$Res> {
   factory $DevicesEewSettingsCopyWith(
     DevicesEewSettings value,
     $Res Function(DevicesEewSettings) then,
-  ) = _$DevicesEewSettingsCopyWithImpl<$Res, DevicesEewSettings>;
+  ) =
+      _$DevicesEewSettingsCopyWithImpl<
+        $Res,
+        DevicesEewSettings
+      >;
   @useResult
   $Res call({
     String id,
@@ -55,7 +64,10 @@ abstract class $DevicesEewSettingsCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$DevicesEewSettingsCopyWithImpl<$Res, $Val extends DevicesEewSettings>
+class _$DevicesEewSettingsCopyWithImpl<
+  $Res,
+  $Val extends DevicesEewSettings
+>
     implements $DevicesEewSettingsCopyWith<$Res> {
   _$DevicesEewSettingsCopyWithImpl(this._value, this._then);
 
@@ -128,7 +140,11 @@ abstract class _$$DevicesEewSettingsImplCopyWith<$Res>
 
 /// @nodoc
 class __$$DevicesEewSettingsImplCopyWithImpl<$Res>
-    extends _$DevicesEewSettingsCopyWithImpl<$Res, _$DevicesEewSettingsImpl>
+    extends
+        _$DevicesEewSettingsCopyWithImpl<
+          $Res,
+          _$DevicesEewSettingsImpl
+        >
     implements _$$DevicesEewSettingsImplCopyWith<$Res> {
   __$$DevicesEewSettingsImplCopyWithImpl(
     _$DevicesEewSettingsImpl _value,
@@ -180,7 +196,8 @@ class __$$DevicesEewSettingsImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$DevicesEewSettingsImpl implements _DevicesEewSettings {
+class _$DevicesEewSettingsImpl
+    implements _DevicesEewSettings {
   const _$DevicesEewSettingsImpl({
     required this.id,
     required this.minJmaIntensity,
@@ -189,8 +206,9 @@ class _$DevicesEewSettingsImpl implements _DevicesEewSettings {
     required this.updatedAt,
   });
 
-  factory _$DevicesEewSettingsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DevicesEewSettingsImplFromJson(json);
+  factory _$DevicesEewSettingsImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$DevicesEewSettingsImplFromJson(json);
 
   @override
   final String id;
@@ -214,7 +232,10 @@ class _$DevicesEewSettingsImpl implements _DevicesEewSettings {
         (other.runtimeType == runtimeType &&
             other is _$DevicesEewSettingsImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.minJmaIntensity, minJmaIntensity) ||
+            (identical(
+                  other.minJmaIntensity,
+                  minJmaIntensity,
+                ) ||
                 other.minJmaIntensity == minJmaIntensity) &&
             (identical(other.regionId, regionId) ||
                 other.regionId == regionId) &&
@@ -240,11 +261,12 @@ class _$DevicesEewSettingsImpl implements _DevicesEewSettings {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$DevicesEewSettingsImplCopyWith<_$DevicesEewSettingsImpl> get copyWith =>
-      __$$DevicesEewSettingsImplCopyWithImpl<_$DevicesEewSettingsImpl>(
-        this,
-        _$identity,
-      );
+  _$$DevicesEewSettingsImplCopyWith<
+    _$DevicesEewSettingsImpl
+  >
+  get copyWith => __$$DevicesEewSettingsImplCopyWithImpl<
+    _$DevicesEewSettingsImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -252,7 +274,8 @@ class _$DevicesEewSettingsImpl implements _DevicesEewSettings {
   }
 }
 
-abstract class _DevicesEewSettings implements DevicesEewSettings {
+abstract class _DevicesEewSettings
+    implements DevicesEewSettings {
   const factory _DevicesEewSettings({
     required final String id,
     required final JmaForecastIntensity minJmaIntensity,
@@ -261,8 +284,9 @@ abstract class _DevicesEewSettings implements DevicesEewSettings {
     required final DateTime updatedAt,
   }) = _$DevicesEewSettingsImpl;
 
-  factory _DevicesEewSettings.fromJson(Map<String, dynamic> json) =
-      _$DevicesEewSettingsImpl.fromJson;
+  factory _DevicesEewSettings.fromJson(
+    Map<String, dynamic> json,
+  ) = _$DevicesEewSettingsImpl.fromJson;
 
   @override
   String get id;
@@ -279,6 +303,8 @@ abstract class _DevicesEewSettings implements DevicesEewSettings {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$DevicesEewSettingsImplCopyWith<_$DevicesEewSettingsImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DevicesEewSettingsImplCopyWith<
+    _$DevicesEewSettingsImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }

@@ -43,9 +43,14 @@ class Ntp extends _$Ntp {
       );
     }
 
-    state = state.copyWith(offset: offset, updatedAt: DateTime.now());
+    state = state.copyWith(
+      offset: offset,
+      updatedAt: DateTime.now(),
+    );
 
-    talker.logCustom(NtpLog('NTP Time Sync: offset ${offset}ms'));
+    talker.logCustom(
+      NtpLog('NTP Time Sync: offset ${offset}ms'),
+    );
   }
 
   DateTime? now() {

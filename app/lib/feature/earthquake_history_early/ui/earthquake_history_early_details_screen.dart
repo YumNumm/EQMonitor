@@ -13,8 +13,11 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sheet/sheet.dart';
 
-class EarthquakeHistoryEarlyDetailsRoute extends GoRouteData {
-  const EarthquakeHistoryEarlyDetailsRoute({required this.id});
+class EarthquakeHistoryEarlyDetailsRoute
+    extends GoRouteData {
+  const EarthquakeHistoryEarlyDetailsRoute({
+    required this.id,
+  });
 
   final String id;
 
@@ -24,26 +27,36 @@ class EarthquakeHistoryEarlyDetailsRoute extends GoRouteData {
   }
 }
 
-class EarthquakeHistoryEarlyDetailsScreen extends HookConsumerWidget {
-  const EarthquakeHistoryEarlyDetailsScreen({required this.id, super.key});
+class EarthquakeHistoryEarlyDetailsScreen
+    extends HookConsumerWidget {
+  const EarthquakeHistoryEarlyDetailsScreen({
+    required this.id,
+    super.key,
+  });
 
   final String id;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sheetController = SheetController();
-    final navigateToHomeFunction = useState<VoidCallback?>(null);
+    final navigateToHomeFunction = useState<VoidCallback?>(
+      null,
+    );
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final state = ref.watch(earthquakeHistoryEarlyEventProvider(id));
+    final state = ref.watch(
+      earthquakeHistoryEarlyEventProvider(id),
+    );
     return switch (state) {
       AsyncError(:final error) => Scaffold(
         appBar: AppBar(),
         body: ErrorCard(
           error: error,
           onReload:
-              () async => ref.refresh(earthquakeHistoryEarlyEventProvider(id)),
+              () async => ref.refresh(
+                earthquakeHistoryEarlyEventProvider(id),
+              ),
         ),
       ),
       AsyncData(:final value) => Scaffold(
@@ -56,20 +69,30 @@ class EarthquakeHistoryEarlyDetailsScreen extends HookConsumerWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 250),
+                      duration: const Duration(
+                        milliseconds: 250,
+                      ),
                       child: BorderedContainer(
                         margin: const EdgeInsets.all(4),
                         padding: const EdgeInsets.all(4),
-                        borderRadius: BorderRadius.circular((25 / 5) + 5),
+                        borderRadius: BorderRadius.circular(
+                          (25 / 5) + 5,
+                        ),
                         child: Wrap(
                           spacing: 8,
                           runSpacing: 8,
                           children: [
                             for (final intensity in [
-                              ...JmaForecastIntensity.values,
-                            ].where((e) => e <= value.maxIntensity!))
+                              ...JmaForecastIntensity
+                                  .values,
+                            ].where(
+                              (e) =>
+                                  e <= value.maxIntensity!,
+                            ))
                               JmaForecastIntensityIcon(
-                                type: IntensityIconType.filled,
+                                type:
+                                    IntensityIconType
+                                        .filled,
                                 intensity: intensity,
                                 size: 25,
                               ),
@@ -88,11 +111,14 @@ class EarthquakeHistoryEarlyDetailsScreen extends HookConsumerWidget {
                 Column(
                   children: [
                     FloatingActionButton.small(
-                      heroTag: 'earthquake_history_details_fab',
+                      heroTag:
+                          'earthquake_history_details_fab',
                       tooltip: '表示領域を地図に合わせる',
                       onPressed: () {
-                        if (navigateToHomeFunction.value != null) {
-                          navigateToHomeFunction.value!.call();
+                        if (navigateToHomeFunction.value !=
+                            null) {
+                          navigateToHomeFunction.value!
+                              .call();
                         }
                       },
                       elevation: 4,
@@ -103,7 +129,10 @@ class EarthquakeHistoryEarlyDetailsScreen extends HookConsumerWidget {
               ],
             ),
             // Sheet
-            _Sheet(sheetController: sheetController, item: value),
+            _Sheet(
+              sheetController: sheetController,
+              item: value,
+            ),
             if (Navigator.canPop(context))
               // 戻るボタン
               SafeArea(
@@ -112,9 +141,12 @@ class EarthquakeHistoryEarlyDetailsScreen extends HookConsumerWidget {
                     shape: WidgetStatePropertyAll(
                       RoundedRectangleBorder(
                         side: BorderSide(
-                          color: colorScheme.primary.withValues(alpha: 0.2),
+                          color: colorScheme.primary
+                              .withValues(alpha: 0.2),
                         ),
-                        borderRadius: BorderRadius.circular(128),
+                        borderRadius: BorderRadius.circular(
+                          128,
+                        ),
                       ),
                     ),
                   ),
@@ -136,9 +168,10 @@ class EarthquakeHistoryEarlyDetailsScreen extends HookConsumerWidget {
               const SizedBox(height: 8),
               Text(
                 '各地の震度データを取得中...',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleSmall
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -149,7 +182,10 @@ class EarthquakeHistoryEarlyDetailsScreen extends HookConsumerWidget {
 }
 
 class _Sheet extends StatelessWidget {
-  const _Sheet({required this.sheetController, required this.item});
+  const _Sheet({
+    required this.sheetController,
+    required this.item,
+  });
 
   final SheetController sheetController;
   final EarthquakeEarlyEvent item;
@@ -160,7 +196,9 @@ class _Sheet extends StatelessWidget {
       bottom: false,
       child: BasicModalSheet(
         hasAppBar: false,
-        children: [EarthquakeEarlyHypoInfoWidget(item: item)],
+        children: [
+          EarthquakeEarlyHypoInfoWidget(item: item),
+        ],
       ),
     );
   }

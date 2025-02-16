@@ -17,17 +17,19 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$EstimatedIntensityPoint {
-  String get regionCode => throw _privateConstructorUsedError;
+  String get regionCode =>
+      throw _privateConstructorUsedError;
   String get cityCode => throw _privateConstructorUsedError;
   EarthquakeParameterStationItem get station =>
       throw _privateConstructorUsedError;
-  double get intensity => throw _privateConstructorUsedError;
+  double get intensity =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of EstimatedIntensityPoint
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $EstimatedIntensityPointCopyWith<EstimatedIntensityPoint> get copyWith =>
-      throw _privateConstructorUsedError;
+  $EstimatedIntensityPointCopyWith<EstimatedIntensityPoint>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -35,7 +37,11 @@ abstract class $EstimatedIntensityPointCopyWith<$Res> {
   factory $EstimatedIntensityPointCopyWith(
     EstimatedIntensityPoint value,
     $Res Function(EstimatedIntensityPoint) then,
-  ) = _$EstimatedIntensityPointCopyWithImpl<$Res, EstimatedIntensityPoint>;
+  ) =
+      _$EstimatedIntensityPointCopyWithImpl<
+        $Res,
+        EstimatedIntensityPoint
+      >;
   @useResult
   $Res call({
     String regionCode,
@@ -51,7 +57,10 @@ class _$EstimatedIntensityPointCopyWithImpl<
   $Val extends EstimatedIntensityPoint
 >
     implements $EstimatedIntensityPointCopyWith<$Res> {
-  _$EstimatedIntensityPointCopyWithImpl(this._value, this._then);
+  _$EstimatedIntensityPointCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -120,7 +129,8 @@ class __$$EstimatedIntensityPointImplCopyWithImpl<$Res>
           $Res,
           _$EstimatedIntensityPointImpl
         >
-    implements _$$EstimatedIntensityPointImplCopyWith<$Res> {
+    implements
+        _$$EstimatedIntensityPointImplCopyWith<$Res> {
   __$$EstimatedIntensityPointImplCopyWithImpl(
     _$EstimatedIntensityPointImpl _value,
     $Res Function(_$EstimatedIntensityPointImpl) _then,
@@ -185,15 +195,24 @@ class _$EstimatedIntensityPointImpl
   final double intensity;
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+  String toString({
+    DiagnosticLevel minLevel = DiagnosticLevel.info,
+  }) {
     return 'EstimatedIntensityPoint(regionCode: $regionCode, cityCode: $cityCode, station: $station, intensity: $intensity)';
   }
 
   @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  void debugFillProperties(
+    DiagnosticPropertiesBuilder properties,
+  ) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('type', 'EstimatedIntensityPoint'))
+      ..add(
+        DiagnosticsProperty(
+          'type',
+          'EstimatedIntensityPoint',
+        ),
+      )
       ..add(DiagnosticsProperty('regionCode', regionCode))
       ..add(DiagnosticsProperty('cityCode', cityCode))
       ..add(DiagnosticsProperty('station', station))
@@ -209,27 +228,37 @@ class _$EstimatedIntensityPointImpl
                 other.regionCode == regionCode) &&
             (identical(other.cityCode, cityCode) ||
                 other.cityCode == cityCode) &&
-            (identical(other.station, station) || other.station == station) &&
+            (identical(other.station, station) ||
+                other.station == station) &&
             (identical(other.intensity, intensity) ||
                 other.intensity == intensity));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, regionCode, cityCode, station, intensity);
+  int get hashCode => Object.hash(
+    runtimeType,
+    regionCode,
+    cityCode,
+    station,
+    intensity,
+  );
 
   /// Create a copy of EstimatedIntensityPoint
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EstimatedIntensityPointImplCopyWith<_$EstimatedIntensityPointImpl>
-  get copyWith => __$$EstimatedIntensityPointImplCopyWithImpl<
+  _$$EstimatedIntensityPointImplCopyWith<
     _$EstimatedIntensityPointImpl
-  >(this, _$identity);
+  >
+  get copyWith =>
+      __$$EstimatedIntensityPointImplCopyWithImpl<
+        _$EstimatedIntensityPointImpl
+      >(this, _$identity);
 }
 
-abstract class _EstimatedIntensityPoint implements EstimatedIntensityPoint {
+abstract class _EstimatedIntensityPoint
+    implements EstimatedIntensityPoint {
   const factory _EstimatedIntensityPoint({
     required final String regionCode,
     required final String cityCode,
@@ -250,6 +279,8 @@ abstract class _EstimatedIntensityPoint implements EstimatedIntensityPoint {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EstimatedIntensityPointImplCopyWith<_$EstimatedIntensityPointImpl>
+  _$$EstimatedIntensityPointImplCopyWith<
+    _$EstimatedIntensityPointImpl
+  >
   get copyWith => throw _privateConstructorUsedError;
 }

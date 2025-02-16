@@ -6,18 +6,21 @@ part 'shake_detection_kmoni_merged_event.freezed.dart';
 part 'shake_detection_kmoni_merged_event.g.dart';
 
 @freezed
-class ShakeDetectionKmoniMergedEvent with _$ShakeDetectionKmoniMergedEvent {
+class ShakeDetectionKmoniMergedEvent
+    with _$ShakeDetectionKmoniMergedEvent {
   const factory ShakeDetectionKmoniMergedEvent({
     required ShakeDetectionEvent event,
     required List<ShakeDetectionKmoniMergedRegion> regions,
   }) = _ShakeDetectionKmoniMergedEvent;
 
-  factory ShakeDetectionKmoniMergedEvent.fromJson(Map<String, dynamic> json) =>
-      _$ShakeDetectionKmoniMergedEventFromJson(json);
+  factory ShakeDetectionKmoniMergedEvent.fromJson(
+    Map<String, dynamic> json,
+  ) => _$ShakeDetectionKmoniMergedEventFromJson(json);
 }
 
 @freezed
-class ShakeDetectionKmoniMergedRegion with _$ShakeDetectionKmoniMergedRegion {
+class ShakeDetectionKmoniMergedRegion
+    with _$ShakeDetectionKmoniMergedRegion {
   const factory ShakeDetectionKmoniMergedRegion({
     required String name,
     @JsonKey(
@@ -29,12 +32,14 @@ class ShakeDetectionKmoniMergedRegion with _$ShakeDetectionKmoniMergedRegion {
     required List<ShakeDetectionKmoniMergedPoint> points,
   }) = _ShakeDetectionKmoniMergedRegion;
 
-  factory ShakeDetectionKmoniMergedRegion.fromJson(Map<String, dynamic> json) =>
-      _$ShakeDetectionKmoniMergedRegionFromJson(json);
+  factory ShakeDetectionKmoniMergedRegion.fromJson(
+    Map<String, dynamic> json,
+  ) => _$ShakeDetectionKmoniMergedRegionFromJson(json);
 }
 
 @freezed
-class ShakeDetectionKmoniMergedPoint with _$ShakeDetectionKmoniMergedPoint {
+class ShakeDetectionKmoniMergedPoint
+    with _$ShakeDetectionKmoniMergedPoint {
   const factory ShakeDetectionKmoniMergedPoint({
     @JsonKey(
       unknownEnumValue: JmaForecastIntensity.unknown,
@@ -42,13 +47,18 @@ class ShakeDetectionKmoniMergedPoint with _$ShakeDetectionKmoniMergedPoint {
     )
     required JmaForecastIntensity intensity,
     required String code,
-    @JsonKey(fromJson: KyoshinObservationPoint.fromJson, toJson: _pointToJson)
+    @JsonKey(
+      fromJson: KyoshinObservationPoint.fromJson,
+      toJson: _pointToJson,
+    )
     required KyoshinObservationPoint point,
   }) = _ShakeDetectionKmoniMergedPoint;
 
-  factory ShakeDetectionKmoniMergedPoint.fromJson(Map<String, dynamic> json) =>
-      _$ShakeDetectionKmoniMergedPointFromJson(json);
+  factory ShakeDetectionKmoniMergedPoint.fromJson(
+    Map<String, dynamic> json,
+  ) => _$ShakeDetectionKmoniMergedPointFromJson(json);
 }
 
-Map<String, dynamic> _pointToJson(KyoshinObservationPoint point) =>
-    point.writeToJsonMap();
+Map<String, dynamic> _pointToJson(
+  KyoshinObservationPoint point,
+) => point.writeToJsonMap();

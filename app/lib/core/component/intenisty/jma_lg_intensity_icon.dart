@@ -22,9 +22,15 @@ class JmaLgIntensityIcon extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final intensityColorModel = ref.watch(intensityColorProvider);
-    final colorScheme = intensityColorModel.fromJmaLgIntensity(intensity);
-    final (fg, bg) = (colorScheme.foreground, colorScheme.background);
+    final intensityColorModel = ref.watch(
+      intensityColorProvider,
+    );
+    final colorScheme = intensityColorModel
+        .fromJmaLgIntensity(intensity);
+    final (fg, bg) = (
+      colorScheme.foreground,
+      colorScheme.background,
+    );
 
     final borderColor = Color.lerp(bg, fg, 0.3)!;
     return switch (type) {
@@ -35,13 +41,17 @@ class JmaLgIntensityIcon extends ConsumerWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: bg,
-            border: Border.all(color: borderColor, width: 5),
+            border: Border.all(
+              color: borderColor,
+              width: 5,
+            ),
           ),
           child: Center(
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
                 children: [
                   Text(
                     intensity.type,
@@ -65,7 +75,10 @@ class JmaLgIntensityIcon extends ConsumerWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: bg,
-            border: Border.all(color: borderColor, width: 5),
+            border: Border.all(
+              color: borderColor,
+              width: 5,
+            ),
           ),
         ),
       ),
@@ -89,7 +102,8 @@ class JmaLgIntensityIcon extends ConsumerWidget {
                           color: fg,
                           fontSize: 100,
                           fontWeight: FontWeight.w900,
-                          fontFamily: FontFamily.jetBrainsMono,
+                          fontFamily:
+                              FontFamily.jetBrainsMono,
                         ),
                       )
                       : Text(
@@ -98,7 +112,8 @@ class JmaLgIntensityIcon extends ConsumerWidget {
                           color: fg,
                           fontSize: 100,
                           fontWeight: FontWeight.w900,
-                          fontFamily: FontFamily.jetBrainsMono,
+                          fontFamily:
+                              FontFamily.jetBrainsMono,
                         ),
                       ),
             ),

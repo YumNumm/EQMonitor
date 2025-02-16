@@ -15,7 +15,8 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-NotificationLocalSettingsModel _$NotificationLocalSettingsModelFromJson(
+NotificationLocalSettingsModel
+_$NotificationLocalSettingsModelFromJson(
   Map<String, dynamic> json,
 ) {
   return _NotificationLocalSettingsModel.fromJson(json);
@@ -24,20 +25,26 @@ NotificationLocalSettingsModel _$NotificationLocalSettingsModelFromJson(
 /// @nodoc
 mixin _$NotificationLocalSettingsModel {
   EewSettings get eew => throw _privateConstructorUsedError;
-  EarthquakeSettings get earthquake => throw _privateConstructorUsedError;
+  EarthquakeSettings get earthquake =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this NotificationLocalSettingsModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of NotificationLocalSettingsModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $NotificationLocalSettingsModelCopyWith<NotificationLocalSettingsModel>
+  $NotificationLocalSettingsModelCopyWith<
+    NotificationLocalSettingsModel
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $NotificationLocalSettingsModelCopyWith<$Res> {
+abstract class $NotificationLocalSettingsModelCopyWith<
+  $Res
+> {
   factory $NotificationLocalSettingsModelCopyWith(
     NotificationLocalSettingsModel value,
     $Res Function(NotificationLocalSettingsModel) then,
@@ -47,7 +54,10 @@ abstract class $NotificationLocalSettingsModelCopyWith<$Res> {
         NotificationLocalSettingsModel
       >;
   @useResult
-  $Res call({EewSettings eew, EarthquakeSettings earthquake});
+  $Res call({
+    EewSettings eew,
+    EarthquakeSettings earthquake,
+  });
 
   $EewSettingsCopyWith<$Res> get eew;
   $EarthquakeSettingsCopyWith<$Res> get earthquake;
@@ -58,8 +68,12 @@ class _$NotificationLocalSettingsModelCopyWithImpl<
   $Res,
   $Val extends NotificationLocalSettingsModel
 >
-    implements $NotificationLocalSettingsModelCopyWith<$Res> {
-  _$NotificationLocalSettingsModelCopyWithImpl(this._value, this._then);
+    implements
+        $NotificationLocalSettingsModelCopyWith<$Res> {
+  _$NotificationLocalSettingsModelCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -70,7 +84,10 @@ class _$NotificationLocalSettingsModelCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? eew = null, Object? earthquake = null}) {
+  $Res call({
+    Object? eew = null,
+    Object? earthquake = null,
+  }) {
     return _then(
       _value.copyWith(
             eew:
@@ -103,22 +120,37 @@ class _$NotificationLocalSettingsModelCopyWithImpl<
   @override
   @pragma('vm:prefer-inline')
   $EarthquakeSettingsCopyWith<$Res> get earthquake {
-    return $EarthquakeSettingsCopyWith<$Res>(_value.earthquake, (value) {
-      return _then(_value.copyWith(earthquake: value) as $Val);
-    });
+    return $EarthquakeSettingsCopyWith<$Res>(
+      _value.earthquake,
+      (value) {
+        return _then(
+          _value.copyWith(earthquake: value) as $Val,
+        );
+      },
+    );
   }
 }
 
 /// @nodoc
-abstract class _$$NotificationLocalSettingsModelImplCopyWith<$Res>
-    implements $NotificationLocalSettingsModelCopyWith<$Res> {
+abstract class _$$NotificationLocalSettingsModelImplCopyWith<
+  $Res
+>
+    implements
+        $NotificationLocalSettingsModelCopyWith<$Res> {
   factory _$$NotificationLocalSettingsModelImplCopyWith(
     _$NotificationLocalSettingsModelImpl value,
-    $Res Function(_$NotificationLocalSettingsModelImpl) then,
-  ) = __$$NotificationLocalSettingsModelImplCopyWithImpl<$Res>;
+    $Res Function(_$NotificationLocalSettingsModelImpl)
+    then,
+  ) =
+      __$$NotificationLocalSettingsModelImplCopyWithImpl<
+        $Res
+      >;
   @override
   @useResult
-  $Res call({EewSettings eew, EarthquakeSettings earthquake});
+  $Res call({
+    EewSettings eew,
+    EarthquakeSettings earthquake,
+  });
 
   @override
   $EewSettingsCopyWith<$Res> get eew;
@@ -127,23 +159,32 @@ abstract class _$$NotificationLocalSettingsModelImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$NotificationLocalSettingsModelImplCopyWithImpl<$Res>
+class __$$NotificationLocalSettingsModelImplCopyWithImpl<
+  $Res
+>
     extends
         _$NotificationLocalSettingsModelCopyWithImpl<
           $Res,
           _$NotificationLocalSettingsModelImpl
         >
-    implements _$$NotificationLocalSettingsModelImplCopyWith<$Res> {
+    implements
+        _$$NotificationLocalSettingsModelImplCopyWith<
+          $Res
+        > {
   __$$NotificationLocalSettingsModelImplCopyWithImpl(
     _$NotificationLocalSettingsModelImpl _value,
-    $Res Function(_$NotificationLocalSettingsModelImpl) _then,
+    $Res Function(_$NotificationLocalSettingsModelImpl)
+    _then,
   ) : super(_value, _then);
 
   /// Create a copy of NotificationLocalSettingsModel
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? eew = null, Object? earthquake = null}) {
+  $Res call({
+    Object? eew = null,
+    Object? earthquake = null,
+  }) {
     return _then(
       _$NotificationLocalSettingsModelImpl(
         eew:
@@ -191,14 +232,16 @@ class _$NotificationLocalSettingsModelImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$NotificationLocalSettingsModelImpl &&
-            (identical(other.eew, eew) || other.eew == eew) &&
+            (identical(other.eew, eew) ||
+                other.eew == eew) &&
             (identical(other.earthquake, earthquake) ||
                 other.earthquake == earthquake));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, eew, earthquake);
+  int get hashCode =>
+      Object.hash(runtimeType, eew, earthquake);
 
   /// Create a copy of NotificationLocalSettingsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -208,13 +251,16 @@ class _$NotificationLocalSettingsModelImpl
   _$$NotificationLocalSettingsModelImplCopyWith<
     _$NotificationLocalSettingsModelImpl
   >
-  get copyWith => __$$NotificationLocalSettingsModelImplCopyWithImpl<
-    _$NotificationLocalSettingsModelImpl
-  >(this, _$identity);
+  get copyWith =>
+      __$$NotificationLocalSettingsModelImplCopyWithImpl<
+        _$NotificationLocalSettingsModelImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$NotificationLocalSettingsModelImplToJson(this);
+    return _$$NotificationLocalSettingsModelImplToJson(
+      this,
+    );
   }
 }
 
@@ -225,8 +271,9 @@ abstract class _NotificationLocalSettingsModel
     final EarthquakeSettings earthquake,
   }) = _$NotificationLocalSettingsModelImpl;
 
-  factory _NotificationLocalSettingsModel.fromJson(Map<String, dynamic> json) =
-      _$NotificationLocalSettingsModelImpl.fromJson;
+  factory _NotificationLocalSettingsModel.fromJson(
+    Map<String, dynamic> json,
+  ) = _$NotificationLocalSettingsModelImpl.fromJson;
 
   @override
   EewSettings get eew;
@@ -243,7 +290,9 @@ abstract class _NotificationLocalSettingsModel
   get copyWith => throw _privateConstructorUsedError;
 }
 
-EewSettings _$EewSettingsFromJson(Map<String, dynamic> json) {
+EewSettings _$EewSettingsFromJson(
+  Map<String, dynamic> json,
+) {
   return _EewSettings.fromJson(json);
 }
 
@@ -253,10 +302,12 @@ mixin _$EewSettings {
       throw _privateConstructorUsedError;
   JmaForecastIntensity? get silentIntensity =>
       throw _privateConstructorUsedError;
-  List<Region> get regions => throw _privateConstructorUsedError;
+  List<Region> get regions =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this EewSettings to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of EewSettings
   /// with the given fields replaced by the non-null parameter values.
@@ -280,7 +331,10 @@ abstract class $EewSettingsCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$EewSettingsCopyWithImpl<$Res, $Val extends EewSettings>
+class _$EewSettingsCopyWithImpl<
+  $Res,
+  $Val extends EewSettings
+>
     implements $EewSettingsCopyWith<$Res> {
   _$EewSettingsCopyWithImpl(this._value, this._then);
 
@@ -339,7 +393,8 @@ abstract class _$$EewSettingsImplCopyWith<$Res>
 
 /// @nodoc
 class __$$EewSettingsImplCopyWithImpl<$Res>
-    extends _$EewSettingsCopyWithImpl<$Res, _$EewSettingsImpl>
+    extends
+        _$EewSettingsCopyWithImpl<$Res, _$EewSettingsImpl>
     implements _$$EewSettingsImplCopyWith<$Res> {
   __$$EewSettingsImplCopyWithImpl(
     _$EewSettingsImpl _value,
@@ -386,8 +441,9 @@ class _$EewSettingsImpl implements _EewSettings {
     final List<Region> regions = const [],
   }) : _regions = regions;
 
-  factory _$EewSettingsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$EewSettingsImplFromJson(json);
+  factory _$EewSettingsImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$EewSettingsImplFromJson(json);
 
   @override
   @JsonKey()
@@ -399,7 +455,8 @@ class _$EewSettingsImpl implements _EewSettings {
   @override
   @JsonKey()
   List<Region> get regions {
-    if (_regions is EqualUnmodifiableListView) return _regions;
+    if (_regions is EqualUnmodifiableListView)
+      return _regions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_regions);
   }
@@ -414,11 +471,21 @@ class _$EewSettingsImpl implements _EewSettings {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EewSettingsImpl &&
-            (identical(other.emergencyIntensity, emergencyIntensity) ||
-                other.emergencyIntensity == emergencyIntensity) &&
-            (identical(other.silentIntensity, silentIntensity) ||
+            (identical(
+                  other.emergencyIntensity,
+                  emergencyIntensity,
+                ) ||
+                other.emergencyIntensity ==
+                    emergencyIntensity) &&
+            (identical(
+                  other.silentIntensity,
+                  silentIntensity,
+                ) ||
                 other.silentIntensity == silentIntensity) &&
-            const DeepCollectionEquality().equals(other._regions, _regions));
+            const DeepCollectionEquality().equals(
+              other._regions,
+              _regions,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -435,8 +502,12 @@ class _$EewSettingsImpl implements _EewSettings {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EewSettingsImplCopyWith<_$EewSettingsImpl> get copyWith =>
-      __$$EewSettingsImplCopyWithImpl<_$EewSettingsImpl>(this, _$identity);
+  _$$EewSettingsImplCopyWith<_$EewSettingsImpl>
+  get copyWith =>
+      __$$EewSettingsImplCopyWithImpl<_$EewSettingsImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -465,11 +536,13 @@ abstract class _EewSettings implements EewSettings {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EewSettingsImplCopyWith<_$EewSettingsImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$EewSettingsImplCopyWith<_$EewSettingsImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
-EarthquakeSettings _$EarthquakeSettingsFromJson(Map<String, dynamic> json) {
+EarthquakeSettings _$EarthquakeSettingsFromJson(
+  Map<String, dynamic> json,
+) {
   return _EarthquakeSettings.fromJson(json);
 }
 
@@ -479,16 +552,18 @@ mixin _$EarthquakeSettings {
       throw _privateConstructorUsedError;
   JmaForecastIntensity? get silentIntensity =>
       throw _privateConstructorUsedError;
-  List<Region> get regions => throw _privateConstructorUsedError;
+  List<Region> get regions =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this EarthquakeSettings to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of EarthquakeSettings
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $EarthquakeSettingsCopyWith<EarthquakeSettings> get copyWith =>
-      throw _privateConstructorUsedError;
+  $EarthquakeSettingsCopyWith<EarthquakeSettings>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -496,7 +571,11 @@ abstract class $EarthquakeSettingsCopyWith<$Res> {
   factory $EarthquakeSettingsCopyWith(
     EarthquakeSettings value,
     $Res Function(EarthquakeSettings) then,
-  ) = _$EarthquakeSettingsCopyWithImpl<$Res, EarthquakeSettings>;
+  ) =
+      _$EarthquakeSettingsCopyWithImpl<
+        $Res,
+        EarthquakeSettings
+      >;
   @useResult
   $Res call({
     JmaForecastIntensity? emergencyIntensity,
@@ -506,7 +585,10 @@ abstract class $EarthquakeSettingsCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$EarthquakeSettingsCopyWithImpl<$Res, $Val extends EarthquakeSettings>
+class _$EarthquakeSettingsCopyWithImpl<
+  $Res,
+  $Val extends EarthquakeSettings
+>
     implements $EarthquakeSettingsCopyWith<$Res> {
   _$EarthquakeSettingsCopyWithImpl(this._value, this._then);
 
@@ -565,7 +647,11 @@ abstract class _$$EarthquakeSettingsImplCopyWith<$Res>
 
 /// @nodoc
 class __$$EarthquakeSettingsImplCopyWithImpl<$Res>
-    extends _$EarthquakeSettingsCopyWithImpl<$Res, _$EarthquakeSettingsImpl>
+    extends
+        _$EarthquakeSettingsCopyWithImpl<
+          $Res,
+          _$EarthquakeSettingsImpl
+        >
     implements _$$EarthquakeSettingsImplCopyWith<$Res> {
   __$$EarthquakeSettingsImplCopyWithImpl(
     _$EarthquakeSettingsImpl _value,
@@ -605,15 +691,17 @@ class __$$EarthquakeSettingsImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$EarthquakeSettingsImpl implements _EarthquakeSettings {
+class _$EarthquakeSettingsImpl
+    implements _EarthquakeSettings {
   const _$EarthquakeSettingsImpl({
     this.emergencyIntensity = null,
     this.silentIntensity = null,
     final List<Region> regions = const [],
   }) : _regions = regions;
 
-  factory _$EarthquakeSettingsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$EarthquakeSettingsImplFromJson(json);
+  factory _$EarthquakeSettingsImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$EarthquakeSettingsImplFromJson(json);
 
   @override
   @JsonKey()
@@ -625,7 +713,8 @@ class _$EarthquakeSettingsImpl implements _EarthquakeSettings {
   @override
   @JsonKey()
   List<Region> get regions {
-    if (_regions is EqualUnmodifiableListView) return _regions;
+    if (_regions is EqualUnmodifiableListView)
+      return _regions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_regions);
   }
@@ -640,11 +729,21 @@ class _$EarthquakeSettingsImpl implements _EarthquakeSettings {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeSettingsImpl &&
-            (identical(other.emergencyIntensity, emergencyIntensity) ||
-                other.emergencyIntensity == emergencyIntensity) &&
-            (identical(other.silentIntensity, silentIntensity) ||
+            (identical(
+                  other.emergencyIntensity,
+                  emergencyIntensity,
+                ) ||
+                other.emergencyIntensity ==
+                    emergencyIntensity) &&
+            (identical(
+                  other.silentIntensity,
+                  silentIntensity,
+                ) ||
                 other.silentIntensity == silentIntensity) &&
-            const DeepCollectionEquality().equals(other._regions, _regions));
+            const DeepCollectionEquality().equals(
+              other._regions,
+              _regions,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -661,11 +760,12 @@ class _$EarthquakeSettingsImpl implements _EarthquakeSettings {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EarthquakeSettingsImplCopyWith<_$EarthquakeSettingsImpl> get copyWith =>
-      __$$EarthquakeSettingsImplCopyWithImpl<_$EarthquakeSettingsImpl>(
-        this,
-        _$identity,
-      );
+  _$$EarthquakeSettingsImplCopyWith<
+    _$EarthquakeSettingsImpl
+  >
+  get copyWith => __$$EarthquakeSettingsImplCopyWithImpl<
+    _$EarthquakeSettingsImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -673,15 +773,17 @@ class _$EarthquakeSettingsImpl implements _EarthquakeSettings {
   }
 }
 
-abstract class _EarthquakeSettings implements EarthquakeSettings {
+abstract class _EarthquakeSettings
+    implements EarthquakeSettings {
   const factory _EarthquakeSettings({
     final JmaForecastIntensity? emergencyIntensity,
     final JmaForecastIntensity? silentIntensity,
     final List<Region> regions,
   }) = _$EarthquakeSettingsImpl;
 
-  factory _EarthquakeSettings.fromJson(Map<String, dynamic> json) =
-      _$EarthquakeSettingsImpl.fromJson;
+  factory _EarthquakeSettings.fromJson(
+    Map<String, dynamic> json,
+  ) = _$EarthquakeSettingsImpl.fromJson;
 
   @override
   JmaForecastIntensity? get emergencyIntensity;
@@ -694,8 +796,10 @@ abstract class _EarthquakeSettings implements EarthquakeSettings {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EarthquakeSettingsImplCopyWith<_$EarthquakeSettingsImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$EarthquakeSettingsImplCopyWith<
+    _$EarthquakeSettingsImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 Region _$RegionFromJson(Map<String, dynamic> json) {
@@ -713,18 +817,22 @@ mixin _$Region {
   bool get isMain => throw _privateConstructorUsedError;
 
   /// Serializes this Region to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of Region
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $RegionCopyWith<Region> get copyWith => throw _privateConstructorUsedError;
+  $RegionCopyWith<Region> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $RegionCopyWith<$Res> {
-  factory $RegionCopyWith(Region value, $Res Function(Region) then) =
-      _$RegionCopyWithImpl<$Res, Region>;
+  factory $RegionCopyWith(
+    Region value,
+    $Res Function(Region) then,
+  ) = _$RegionCopyWithImpl<$Res, Region>;
   @useResult
   $Res call({
     String code,
@@ -790,7 +898,8 @@ class _$RegionCopyWithImpl<$Res, $Val extends Region>
 }
 
 /// @nodoc
-abstract class _$$RegionImplCopyWith<$Res> implements $RegionCopyWith<$Res> {
+abstract class _$$RegionImplCopyWith<$Res>
+    implements $RegionCopyWith<$Res> {
   factory _$$RegionImplCopyWith(
     _$RegionImpl value,
     $Res Function(_$RegionImpl) then,
@@ -869,8 +978,9 @@ class _$RegionImpl implements _Region {
     required this.isMain,
   });
 
-  factory _$RegionImpl.fromJson(Map<String, dynamic> json) =>
-      _$$RegionImplFromJson(json);
+  factory _$RegionImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$RegionImplFromJson(json);
 
   @override
   final String code;
@@ -893,13 +1003,23 @@ class _$RegionImpl implements _Region {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$RegionImpl &&
-            (identical(other.code, code) || other.code == code) &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.emergencyIntensity, emergencyIntensity) ||
-                other.emergencyIntensity == emergencyIntensity) &&
-            (identical(other.silentIntensity, silentIntensity) ||
+            (identical(other.code, code) ||
+                other.code == code) &&
+            (identical(other.name, name) ||
+                other.name == name) &&
+            (identical(
+                  other.emergencyIntensity,
+                  emergencyIntensity,
+                ) ||
+                other.emergencyIntensity ==
+                    emergencyIntensity) &&
+            (identical(
+                  other.silentIntensity,
+                  silentIntensity,
+                ) ||
                 other.silentIntensity == silentIntensity) &&
-            (identical(other.isMain, isMain) || other.isMain == isMain));
+            (identical(other.isMain, isMain) ||
+                other.isMain == isMain));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -919,7 +1039,10 @@ class _$RegionImpl implements _Region {
   @override
   @pragma('vm:prefer-inline')
   _$$RegionImplCopyWith<_$RegionImpl> get copyWith =>
-      __$$RegionImplCopyWithImpl<_$RegionImpl>(this, _$identity);
+      __$$RegionImplCopyWithImpl<_$RegionImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -936,7 +1059,8 @@ abstract class _Region implements Region {
     required final bool isMain,
   }) = _$RegionImpl;
 
-  factory _Region.fromJson(Map<String, dynamic> json) = _$RegionImpl.fromJson;
+  factory _Region.fromJson(Map<String, dynamic> json) =
+      _$RegionImpl.fromJson;
 
   @override
   String get code;

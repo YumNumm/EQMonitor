@@ -17,17 +17,25 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$EarthquakeHistoryParameter {
-  double? get magnitudeLte => throw _privateConstructorUsedError;
-  double? get magnitudeGte => throw _privateConstructorUsedError;
-  double? get depthLte => throw _privateConstructorUsedError;
-  double? get depthGte => throw _privateConstructorUsedError;
-  JmaIntensity? get intensityLte => throw _privateConstructorUsedError;
-  JmaIntensity? get intensityGte => throw _privateConstructorUsedError;
+  double? get magnitudeLte =>
+      throw _privateConstructorUsedError;
+  double? get magnitudeGte =>
+      throw _privateConstructorUsedError;
+  double? get depthLte =>
+      throw _privateConstructorUsedError;
+  double? get depthGte =>
+      throw _privateConstructorUsedError;
+  JmaIntensity? get intensityLte =>
+      throw _privateConstructorUsedError;
+  JmaIntensity? get intensityGte =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of EarthquakeHistoryParameter
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $EarthquakeHistoryParameterCopyWith<EarthquakeHistoryParameter>
+  $EarthquakeHistoryParameterCopyWith<
+    EarthquakeHistoryParameter
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -58,7 +66,10 @@ class _$EarthquakeHistoryParameterCopyWithImpl<
   $Val extends EarthquakeHistoryParameter
 >
     implements $EarthquakeHistoryParameterCopyWith<$Res> {
-  _$EarthquakeHistoryParameterCopyWithImpl(this._value, this._then);
+  _$EarthquakeHistoryParameterCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -116,7 +127,9 @@ class _$EarthquakeHistoryParameterCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$EarthquakeHistoryParameterImplCopyWith<$Res>
+abstract class _$$EarthquakeHistoryParameterImplCopyWith<
+  $Res
+>
     implements $EarthquakeHistoryParameterCopyWith<$Res> {
   factory _$$EarthquakeHistoryParameterImplCopyWith(
     _$EarthquakeHistoryParameterImpl value,
@@ -141,7 +154,8 @@ class __$$EarthquakeHistoryParameterImplCopyWithImpl<$Res>
           $Res,
           _$EarthquakeHistoryParameterImpl
         >
-    implements _$$EarthquakeHistoryParameterImplCopyWith<$Res> {
+    implements
+        _$$EarthquakeHistoryParameterImplCopyWith<$Res> {
   __$$EarthquakeHistoryParameterImplCopyWithImpl(
     _$EarthquakeHistoryParameterImpl _value,
     $Res Function(_$EarthquakeHistoryParameterImpl) _then,
@@ -198,7 +212,8 @@ class __$$EarthquakeHistoryParameterImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$EarthquakeHistoryParameterImpl implements _EarthquakeHistoryParameter {
+class _$EarthquakeHistoryParameterImpl
+    implements _EarthquakeHistoryParameter {
   const _$EarthquakeHistoryParameterImpl({
     this.magnitudeLte,
     this.magnitudeGte,
@@ -261,10 +276,13 @@ class _$EarthquakeHistoryParameterImpl implements _EarthquakeHistoryParameter {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EarthquakeHistoryParameterImplCopyWith<_$EarthquakeHistoryParameterImpl>
-  get copyWith => __$$EarthquakeHistoryParameterImplCopyWithImpl<
+  _$$EarthquakeHistoryParameterImplCopyWith<
     _$EarthquakeHistoryParameterImpl
-  >(this, _$identity);
+  >
+  get copyWith =>
+      __$$EarthquakeHistoryParameterImplCopyWithImpl<
+        _$EarthquakeHistoryParameterImpl
+      >(this, _$identity);
 }
 
 abstract class _EarthquakeHistoryParameter
@@ -295,6 +313,8 @@ abstract class _EarthquakeHistoryParameter
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EarthquakeHistoryParameterImplCopyWith<_$EarthquakeHistoryParameterImpl>
+  _$$EarthquakeHistoryParameterImplCopyWith<
+    _$EarthquakeHistoryParameterImpl
+  >
   get copyWith => throw _privateConstructorUsedError;
 }

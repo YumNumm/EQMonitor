@@ -6,7 +6,9 @@ import 'package:http/http.dart' as http;
 import 'package:kyoshin_observation_point_types/kyoshin_observation_point.pb.dart';
 
 class KyoshinObservationPointConverter {
-  Future<List<ObservationModel>> readFile(String path) async {
+  Future<List<ObservationModel>> readFile(
+    String path,
+  ) async {
     final file = File(path);
     final body = await file.readAsString();
     final json = jsonDecode(body) as List<dynamic>;
@@ -14,7 +16,9 @@ class KyoshinObservationPointConverter {
         json
             .map((e) {
               try {
-                return ObservationModel.fromJson(e as Map<String, dynamic>);
+                return ObservationModel.fromJson(
+                  e as Map<String, dynamic>,
+                );
               } on Exception catch (_) {
                 return null;
               }
@@ -27,7 +31,9 @@ class KyoshinObservationPointConverter {
   Future<GeoJSON> loadMap() async {
     final file = File('AreaForecastLocalE.json');
 
-    final geojson = GeoJSON.fromJSON(await file.readAsString());
+    final geojson = GeoJSON.fromJSON(
+      await file.readAsString(),
+    );
     return geojson;
   }
 
@@ -47,7 +53,10 @@ class KyoshinObservationPointConverter {
             longitude: point.longitude,
           ),
           name: point.name,
-          point: KyoshinObservationPoint_Point(x: point.x, y: point.y),
+          point: KyoshinObservationPoint_Point(
+            x: point.x,
+            y: point.y,
+          ),
           region: point.region,
           arv400: await _getArv(
             latitude: point.latitude,
@@ -64,13 +73,19 @@ class KyoshinObservationPointConverter {
     required double longitude,
   }) async {
     // Cacheのチェック
-    final cacheFile = File('cache/${latitude}_$longitude.json');
+    final cacheFile = File(
+      'cache/${latitude}_$longitude.json',
+    );
     if (cacheFile.existsSync()) {
       final json =
-          jsonDecode(await cacheFile.readAsString()) as Map<String, dynamic>;
+          jsonDecode(await cacheFile.readAsString())
+              as Map<String, dynamic>;
       final arvStr =
           (((json['features'] as List<dynamic>?)?.first
-                      as Map<String, dynamic>?)?['properties']
+                      as Map<
+                        String,
+                        dynamic
+                      >?)?['properties']
                   as Map<String, dynamic>?)?['ARV']
               as String?;
       final arv = double.tryParse(arvStr.toString());
@@ -84,7 +99,8 @@ class KyoshinObservationPointConverter {
         '&epsg=4326',
       ),
     );
-    final json = jsonDecode(response.body) as Map<String, dynamic>;
+    final json =
+        jsonDecode(response.body) as Map<String, dynamic>;
     print(json);
     final arvStr =
         (((json['features'] as List<dynamic>?)?.first
@@ -109,7 +125,9 @@ class ObservationModel {
     required this.y,
   });
 
-  factory ObservationModel.fromJson(Map<String, dynamic> json) {
+  factory ObservationModel.fromJson(
+    Map<String, dynamic> json,
+  ) {
     if (!json.containsKey('Point')) {
       throw ArgumentError('Code is required.');
     }
@@ -118,11 +136,19 @@ class ObservationModel {
       name: json['Name'] as String,
       region: json['Region'] as String,
       latitude:
-          (json['Location'] as Map<String, dynamic>)['Latitude'] as double,
+          (json['Location']
+                  as Map<String, dynamic>)['Latitude']
+              as double,
       longitude:
-          (json['Location'] as Map<String, dynamic>)['Longitude'] as double,
-      x: (json['Point'] as Map<String, dynamic>)['X'] as int,
-      y: (json['Point'] as Map<String, dynamic>)['Y'] as int,
+          (json['Location']
+                  as Map<String, dynamic>)['Longitude']
+              as double,
+      x:
+          (json['Point'] as Map<String, dynamic>)['X']
+              as int,
+      y:
+          (json['Point'] as Map<String, dynamic>)['Y']
+              as int,
     );
   }
 

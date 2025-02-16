@@ -5,5 +5,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'kyoshin_monitor_image_parser_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-KyoshinMonitorImageParser kyoshinMonitorImageParser(Ref ref) =>
-    KyoshinMonitorImageParser();
+KyoshinMonitorImageParser kyoshinMonitorImageParser(
+  Ref ref,
+) => KyoshinMonitorImageParser();

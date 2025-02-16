@@ -46,19 +46,26 @@ import 'package:talker_flutter/talker_flutter.dart';
 
 part 'router.g.dart';
 
-final isInitializedStateProvider = StateProvider<bool>((ref) => false);
+final isInitializedStateProvider = StateProvider<bool>(
+  (ref) => false,
+);
 
 @Riverpod(keepAlive: true)
 GoRouter goRouter(Ref ref) => GoRouter(
   routes: $appRoutes,
   navigatorKey: App.navigatorKey,
   initialLocation:
-      (ref.read(sharedPreferencesProvider).getBool('isInitialized') ?? false)
+      (ref
+                  .read(sharedPreferencesProvider)
+                  .getBool('isInitialized') ??
+              false)
           ? const HomeRoute().location
           : const SetupRoute().location,
   observers: [
     _NavigatorObserver(talker),
-    FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
+    FirebaseAnalyticsObserver(
+      analytics: FirebaseAnalytics.instance,
+    ),
   ],
   debugLogDiagnostics: kDebugMode,
 );
@@ -78,7 +85,9 @@ class SetupRoute extends GoRouteData {
       const SetupScreen();
 }
 
-@TypedGoRoute<EarthquakeHistoryRoute>(path: '/earthquake-history')
+@TypedGoRoute<EarthquakeHistoryRoute>(
+  path: '/earthquake-history',
+)
 class EarthquakeHistoryRoute extends GoRouteData {
   const EarthquakeHistoryRoute();
 
@@ -91,7 +100,9 @@ class EarthquakeHistoryRoute extends GoRouteData {
   path: '/earthquake-history-details/:eventId',
 )
 class EarthquakeHistoryDetailsRoute extends GoRouteData {
-  const EarthquakeHistoryDetailsRoute({required this.eventId});
+  const EarthquakeHistoryDetailsRoute({
+    required this.eventId,
+  });
 
   final int eventId;
 
@@ -101,7 +112,9 @@ class EarthquakeHistoryDetailsRoute extends GoRouteData {
   }
 }
 
-@TypedGoRoute<InformationHistoryRoute>(path: '/information-history')
+@TypedGoRoute<InformationHistoryRoute>(
+  path: '/information-history',
+)
 class InformationHistoryRoute extends GoRouteData {
   const InformationHistoryRoute();
 
@@ -114,7 +127,9 @@ class InformationHistoryRoute extends GoRouteData {
   path: '/information-history-details',
 )
 class InformationHistoryDetailsRoute extends GoRouteData {
-  const InformationHistoryDetailsRoute({required this.$extra});
+  const InformationHistoryDetailsRoute({
+    required this.$extra,
+  });
 
   final InformationV3 $extra;
 
@@ -129,7 +144,9 @@ class InformationHistoryDetailsRoute extends GoRouteData {
     TypedGoRoute<EarthquakeHistoryEarlyRoute>(
       path: 'earthquake-history-early',
       routes: [
-        TypedGoRoute<EarthquakeHistoryEarlyDetailsRoute>(path: 'details/:id'),
+        TypedGoRoute<EarthquakeHistoryEarlyDetailsRoute>(
+          path: 'details/:id',
+        ),
       ],
     ),
     TypedGoRoute<EewDetailsByEventIdRoute>(
@@ -141,8 +158,10 @@ class HomeRoute extends GoRouteData {
   const HomeRoute();
 
   @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) =>
-      const MaterialExtendedPage<void>(child: HomePage());
+  Page<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) => const MaterialExtendedPage<void>(child: HomePage());
 }
 
 @TypedGoRoute<TalkerRoute>(path: '/talker')
@@ -150,7 +169,8 @@ class TalkerRoute extends GoRouteData {
   const TalkerRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => const TalkerPage();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const TalkerPage();
 }
 
 @TypedGoRoute<SettingsRoute>(
@@ -159,30 +179,46 @@ class TalkerRoute extends GoRouteData {
     TypedGoRoute<NotificationRoute>(
       path: 'notification',
       routes: [
-        TypedGoRoute<NotificationEarthquakeRoute>(path: 'earthquake'),
+        TypedGoRoute<NotificationEarthquakeRoute>(
+          path: 'earthquake',
+        ),
         TypedGoRoute<NotificationEewRoute>(path: 'eew'),
       ],
     ),
     TypedGoRoute<DisplayRoute>(
       path: 'display',
-      routes: [TypedGoRoute<ColorSchemeConfigRoute>(path: 'color-schema')],
+      routes: [
+        TypedGoRoute<ColorSchemeConfigRoute>(
+          path: 'color-schema',
+        ),
+      ],
     ),
     TypedGoRoute<KyoshinMonitorAboutRoute>(
       path: 'kyoshin-monitor-about',
       routes: [
-        TypedGoRoute<KyoshinMonitorAboutObservationNetworkRoute>(
-          path: 'observation-network',
-        ),
+        TypedGoRoute<
+          KyoshinMonitorAboutObservationNetworkRoute
+        >(path: 'observation-network'),
       ],
     ),
-    TypedGoRoute<TermOfServiceRoute>(path: 'term-of-service'),
-    TypedGoRoute<PrivacyPolicyRoute>(path: 'privacy-policy'),
+    TypedGoRoute<TermOfServiceRoute>(
+      path: 'term-of-service',
+    ),
+    TypedGoRoute<PrivacyPolicyRoute>(
+      path: 'privacy-policy',
+    ),
     TypedGoRoute<LicenseRoute>(path: 'license'),
-    TypedGoRoute<EarthquakeHistoryConfigRoute>(path: 'earthquake-history'),
+    TypedGoRoute<EarthquakeHistoryConfigRoute>(
+      path: 'earthquake-history',
+    ),
     TypedGoRoute<AboutThisAppRoute>(path: 'about-this-app'),
     TypedGoRoute<DonationRoute>(
       path: 'donation',
-      routes: [TypedGoRoute<DonationExecutedRoute>(path: 'executed')],
+      routes: [
+        TypedGoRoute<DonationExecutedRoute>(
+          path: 'executed',
+        ),
+      ],
     ),
     TypedGoRoute<DebuggerRoute>(
       path: 'debugger',
@@ -193,7 +229,9 @@ class TalkerRoute extends GoRouteData {
         TypedGoRoute<WebsocketEndpointSelectorRoute>(
           path: 'websocket-api-endpoint-selector',
         ),
-        TypedGoRoute<DebugKyoshinMonitorRoute>(path: 'kyoshin-monitor'),
+        TypedGoRoute<DebugKyoshinMonitorRoute>(
+          path: 'kyoshin-monitor',
+        ),
         TypedGoRoute<PlaygroundRoute>(path: 'playground'),
       ],
     ),
@@ -243,7 +281,8 @@ class DebuggerRoute extends GoRouteData {
   const DebuggerRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => const DebugPage();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const DebugPage();
 }
 
 class HttpApiEndpointSelectorRoute extends GoRouteData {
@@ -281,7 +320,10 @@ class TermOfServiceRoute extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      TermOfServiceScreen(onResult: $extra, showAcceptButton: showAcceptButton);
+      TermOfServiceScreen(
+        onResult: $extra,
+        showAcceptButton: showAcceptButton,
+      );
 }
 
 class ColorSchemeConfigRoute extends GoRouteData {
@@ -303,7 +345,10 @@ class PrivacyPolicyRoute extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      PrivacyPolicyScreen(onResult: $extra, showAcceptButton: showAcceptButton);
+      PrivacyPolicyScreen(
+        onResult: $extra,
+        showAcceptButton: showAcceptButton,
+      );
 }
 
 class LicenseRoute extends GoRouteData {
@@ -326,16 +371,22 @@ class DonationRoute extends GoRouteData {
   const DonationRoute();
 
   @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) =>
-      CustomTransitionPage(
-        child: const DonationScreen(),
-        transitionsBuilder:
-            (context, animation, secondaryAnimation, child) =>
-                FadeTransition(opacity: animation, child: child),
-      );
+  Page<void> buildPage(
+    BuildContext context,
+    GoRouterState state,
+  ) => CustomTransitionPage(
+    child: const DonationScreen(),
+    transitionsBuilder:
+        (context, animation, secondaryAnimation, child) =>
+            FadeTransition(
+              opacity: animation,
+              child: child,
+            ),
+  );
 }
 
-typedef DonationExecutedRouteExtra = (StoreProduct, CustomerInfo);
+typedef DonationExecutedRouteExtra =
+    (StoreProduct, CustomerInfo);
 
 class DonationExecutedRoute extends GoRouteData {
   const DonationExecutedRoute({required this.$extra});
@@ -352,14 +403,21 @@ class _NavigatorObserver extends NavigatorObserver {
 
   final Talker talker;
   @override
-  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+  void didPush(
+    Route<dynamic> route,
+    Route<dynamic>? previousRoute,
+  ) {
     if (route is PageRoute) {
       final page = route.settings.name;
       talker.logCustom(GoRouterLog('push to $page'));
       if (kIsWeb) {
         return;
       }
-      unawaited(FirebaseAnalytics.instance.logScreenView(screenName: page));
+      unawaited(
+        FirebaseAnalytics.instance.logScreenView(
+          screenName: page,
+        ),
+      );
     }
   }
 }

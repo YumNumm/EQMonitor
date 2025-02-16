@@ -16,7 +16,10 @@ class ErrorCard extends StatelessWidget {
     this.suffixMessage,
     this.title,
     this.padding = const EdgeInsets.all(16),
-    this.margin = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    this.margin = const EdgeInsets.symmetric(
+      horizontal: 16,
+      vertical: 8,
+    ),
     this.onReload,
   });
 
@@ -28,7 +31,8 @@ class ErrorCard extends StatelessWidget {
   final EdgeInsets? margin;
 
   /// DioExceptionで、StatusCodeがある時に　エラーメッセージを上書きする
-  final String? Function(int statusCode)? onDioExceptionStatusOverride;
+  final String? Function(int statusCode)?
+  onDioExceptionStatusOverride;
 
   /// 再読み込み
   final Future<void> Function()? onReload;
@@ -53,15 +57,22 @@ class ErrorCard extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.error, size: 48, color: colorScheme.error),
+                  Icon(
+                    Icons.error,
+                    size: 48,
+                    color: colorScheme.error,
+                  ),
                   const SizedBox(width: 16),
                   Flexible(
                     child: Text(
                       title ?? 'ERROR!',
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: colorScheme.onErrorContainer,
-                      ),
+                      style: theme.textTheme.titleLarge
+                          ?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color:
+                                colorScheme
+                                    .onErrorContainer,
+                          ),
                     ),
                   ),
                 ],
@@ -71,17 +82,25 @@ class ErrorCard extends StatelessWidget {
                 message,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onErrorContainer,
-                  fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
+                  fontFamily:
+                      GoogleFonts.jetBrainsMono()
+                          .fontFamily,
                 ),
               ),
               if (suffixMessage != null) ...[
                 const SizedBox(height: 8),
                 Text(
                   suffixMessage!,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onErrorContainer,
-                    fontFamily: GoogleFonts.jetBrainsMono().fontFamily,
-                  ),
+                  style: theme.textTheme.bodyMedium
+                      ?.copyWith(
+                        color:
+                            theme
+                                .colorScheme
+                                .onErrorContainer,
+                        fontFamily:
+                            GoogleFonts.jetBrainsMono()
+                                .fontFamily,
+                      ),
                 ),
               ],
               const _DeviceIdText(),
@@ -89,10 +108,11 @@ class ErrorCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 FilledButton.tonalIcon(
                   onPressed:
-                      () async => FullScreenCircularProgressIndicator.showUntil(
-                        context,
-                        onReload!,
-                      ),
+                      () async =>
+                          FullScreenCircularProgressIndicator.showUntil(
+                            context,
+                            onReload!,
+                          ),
                   icon: const Icon(Icons.refresh),
                   label: const Text('再読み込み'),
                   style: FilledButton.styleFrom(
@@ -111,10 +131,16 @@ class ErrorCard extends StatelessWidget {
 
   String _buildErrorMessage() {
     if (error is DioException) {
-      if (error case DioException(:final response) when response != null) {
-        final advancedErrorMessage = switch (response.data) {
+      if (error case DioException(
+        :final response,
+      ) when response != null) {
+        final advancedErrorMessage = switch (response
+            .data) {
           {'error': final String errorMsg} => errorMsg,
-          {'code': final String code, 'details': final String details} =>
+          {
+            'code': final String code,
+            'details': final String details,
+          } =>
             '$code: $details',
           _ =>
             'エラーが発生しました\n'
@@ -124,7 +150,9 @@ class ErrorCard extends StatelessWidget {
         final statusCode = response.statusCode;
         if (statusCode != null) {
           final baseMessage =
-              onDioExceptionStatusOverride?.call(statusCode) ??
+              onDioExceptionStatusOverride?.call(
+                statusCode,
+              ) ??
               switch (statusCode) {
                 400 => '不正なリクエストです',
                 403 => 'アクセスが拒否されました',
@@ -146,11 +174,16 @@ class ErrorCard extends StatelessWidget {
       } else {
         final message = switch (error) {
           DioException(:final type) => switch (type) {
-            DioExceptionType.badCertificate => 'SSL証明書が不正です',
-            DioExceptionType.badResponse => 'サーバーからのレスポンスが不正です',
-            DioExceptionType.connectionTimeout => 'サーバーとの接続がタイムアウトしました',
-            DioExceptionType.receiveTimeout => 'サーバーからのレスポンスがタイムアウトしました',
-            DioExceptionType.sendTimeout => 'サーバーへのリクエストがタイムアウトしました',
+            DioExceptionType.badCertificate =>
+              'SSL証明書が不正です',
+            DioExceptionType.badResponse =>
+              'サーバーからのレスポンスが不正です',
+            DioExceptionType.connectionTimeout =>
+              'サーバーとの接続がタイムアウトしました',
+            DioExceptionType.receiveTimeout =>
+              'サーバーからのレスポンスがタイムアウトしました',
+            DioExceptionType.sendTimeout =>
+              'サーバーへのリクエストがタイムアウトしました',
             DioExceptionType.connectionError =>
               'サーバーとの接続に失敗しました。ネットワーク接続を確認してください',
             DioExceptionType.unknown => '不明なエラーが発生しました',
@@ -175,7 +208,10 @@ class _DeviceIdText extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
-    final state = ref.watch(apiAuthenticationPayloadProvider).valueOrNull;
+    final state =
+        ref
+            .watch(apiAuthenticationPayloadProvider)
+            .valueOrNull;
     return Text(
       'デバイスID: ${state?.id ?? "Unknown"}',
       style: theme.textTheme.bodyMedium?.copyWith(

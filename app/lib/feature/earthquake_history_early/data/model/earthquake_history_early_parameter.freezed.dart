@@ -15,7 +15,8 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-EarthquakeHistoryEarlyParameter _$EarthquakeHistoryEarlyParameterFromJson(
+EarthquakeHistoryEarlyParameter
+_$EarthquakeHistoryEarlyParameterFromJson(
   Map<String, dynamic> json,
 ) {
   return _EarthquakeHistoryEarlyParameter.fromJson(json);
@@ -23,29 +24,43 @@ EarthquakeHistoryEarlyParameter _$EarthquakeHistoryEarlyParameterFromJson(
 
 /// @nodoc
 mixin _$EarthquakeHistoryEarlyParameter {
-  EarthquakeEarlySortType get sort => throw _privateConstructorUsedError;
+  EarthquakeEarlySortType get sort =>
+      throw _privateConstructorUsedError;
   bool get ascending => throw _privateConstructorUsedError;
-  double? get magnitudeLte => throw _privateConstructorUsedError;
-  double? get magnitudeGte => throw _privateConstructorUsedError;
-  double? get depthLte => throw _privateConstructorUsedError;
-  double? get depthGte => throw _privateConstructorUsedError;
-  JmaIntensity? get intensityLte => throw _privateConstructorUsedError;
-  JmaIntensity? get intensityGte => throw _privateConstructorUsedError;
-  DateTime? get originTimeLte => throw _privateConstructorUsedError;
-  DateTime? get originTimeGte => throw _privateConstructorUsedError;
+  double? get magnitudeLte =>
+      throw _privateConstructorUsedError;
+  double? get magnitudeGte =>
+      throw _privateConstructorUsedError;
+  double? get depthLte =>
+      throw _privateConstructorUsedError;
+  double? get depthGte =>
+      throw _privateConstructorUsedError;
+  JmaIntensity? get intensityLte =>
+      throw _privateConstructorUsedError;
+  JmaIntensity? get intensityGte =>
+      throw _privateConstructorUsedError;
+  DateTime? get originTimeLte =>
+      throw _privateConstructorUsedError;
+  DateTime? get originTimeGte =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this EarthquakeHistoryEarlyParameter to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of EarthquakeHistoryEarlyParameter
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $EarthquakeHistoryEarlyParameterCopyWith<EarthquakeHistoryEarlyParameter>
+  $EarthquakeHistoryEarlyParameterCopyWith<
+    EarthquakeHistoryEarlyParameter
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $EarthquakeHistoryEarlyParameterCopyWith<$Res> {
+abstract class $EarthquakeHistoryEarlyParameterCopyWith<
+  $Res
+> {
   factory $EarthquakeHistoryEarlyParameterCopyWith(
     EarthquakeHistoryEarlyParameter value,
     $Res Function(EarthquakeHistoryEarlyParameter) then,
@@ -74,8 +89,12 @@ class _$EarthquakeHistoryEarlyParameterCopyWithImpl<
   $Res,
   $Val extends EarthquakeHistoryEarlyParameter
 >
-    implements $EarthquakeHistoryEarlyParameterCopyWith<$Res> {
-  _$EarthquakeHistoryEarlyParameterCopyWithImpl(this._value, this._then);
+    implements
+        $EarthquakeHistoryEarlyParameterCopyWith<$Res> {
+  _$EarthquakeHistoryEarlyParameterCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -157,12 +176,19 @@ class _$EarthquakeHistoryEarlyParameterCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$EarthquakeHistoryEarlyParameterImplCopyWith<$Res>
-    implements $EarthquakeHistoryEarlyParameterCopyWith<$Res> {
+abstract class _$$EarthquakeHistoryEarlyParameterImplCopyWith<
+  $Res
+>
+    implements
+        $EarthquakeHistoryEarlyParameterCopyWith<$Res> {
   factory _$$EarthquakeHistoryEarlyParameterImplCopyWith(
     _$EarthquakeHistoryEarlyParameterImpl value,
-    $Res Function(_$EarthquakeHistoryEarlyParameterImpl) then,
-  ) = __$$EarthquakeHistoryEarlyParameterImplCopyWithImpl<$Res>;
+    $Res Function(_$EarthquakeHistoryEarlyParameterImpl)
+    then,
+  ) =
+      __$$EarthquakeHistoryEarlyParameterImplCopyWithImpl<
+        $Res
+      >;
   @override
   @useResult
   $Res call({
@@ -180,16 +206,22 @@ abstract class _$$EarthquakeHistoryEarlyParameterImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$EarthquakeHistoryEarlyParameterImplCopyWithImpl<$Res>
+class __$$EarthquakeHistoryEarlyParameterImplCopyWithImpl<
+  $Res
+>
     extends
         _$EarthquakeHistoryEarlyParameterCopyWithImpl<
           $Res,
           _$EarthquakeHistoryEarlyParameterImpl
         >
-    implements _$$EarthquakeHistoryEarlyParameterImplCopyWith<$Res> {
+    implements
+        _$$EarthquakeHistoryEarlyParameterImplCopyWith<
+          $Res
+        > {
   __$$EarthquakeHistoryEarlyParameterImplCopyWithImpl(
     _$EarthquakeHistoryEarlyParameterImpl _value,
-    $Res Function(_$EarthquakeHistoryEarlyParameterImpl) _then,
+    $Res Function(_$EarthquakeHistoryEarlyParameterImpl)
+    _then,
   ) : super(_value, _then);
 
   /// Create a copy of EarthquakeHistoryEarlyParameter
@@ -316,8 +348,10 @@ class _$EarthquakeHistoryEarlyParameterImpl
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$EarthquakeHistoryEarlyParameterImpl &&
-            (identical(other.sort, sort) || other.sort == sort) &&
+            other
+                is _$EarthquakeHistoryEarlyParameterImpl &&
+            (identical(other.sort, sort) ||
+                other.sort == sort) &&
             (identical(other.ascending, ascending) ||
                 other.ascending == ascending) &&
             (identical(other.magnitudeLte, magnitudeLte) ||
@@ -332,9 +366,15 @@ class _$EarthquakeHistoryEarlyParameterImpl
                 other.intensityLte == intensityLte) &&
             (identical(other.intensityGte, intensityGte) ||
                 other.intensityGte == intensityGte) &&
-            (identical(other.originTimeLte, originTimeLte) ||
+            (identical(
+                  other.originTimeLte,
+                  originTimeLte,
+                ) ||
                 other.originTimeLte == originTimeLte) &&
-            (identical(other.originTimeGte, originTimeGte) ||
+            (identical(
+                  other.originTimeGte,
+                  originTimeGte,
+                ) ||
                 other.originTimeGte == originTimeGte));
   }
 
@@ -362,13 +402,16 @@ class _$EarthquakeHistoryEarlyParameterImpl
   _$$EarthquakeHistoryEarlyParameterImplCopyWith<
     _$EarthquakeHistoryEarlyParameterImpl
   >
-  get copyWith => __$$EarthquakeHistoryEarlyParameterImplCopyWithImpl<
-    _$EarthquakeHistoryEarlyParameterImpl
-  >(this, _$identity);
+  get copyWith =>
+      __$$EarthquakeHistoryEarlyParameterImplCopyWithImpl<
+        _$EarthquakeHistoryEarlyParameterImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EarthquakeHistoryEarlyParameterImplToJson(this);
+    return _$$EarthquakeHistoryEarlyParameterImplToJson(
+      this,
+    );
   }
 }
 
@@ -387,8 +430,9 @@ abstract class _EarthquakeHistoryEarlyParameter
     final DateTime? originTimeGte,
   }) = _$EarthquakeHistoryEarlyParameterImpl;
 
-  factory _EarthquakeHistoryEarlyParameter.fromJson(Map<String, dynamic> json) =
-      _$EarthquakeHistoryEarlyParameterImpl.fromJson;
+  factory _EarthquakeHistoryEarlyParameter.fromJson(
+    Map<String, dynamic> json,
+  ) = _$EarthquakeHistoryEarlyParameterImpl.fromJson;
 
   @override
   EarthquakeEarlySortType get sort;

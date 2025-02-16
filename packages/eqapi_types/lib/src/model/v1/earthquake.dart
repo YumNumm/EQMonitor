@@ -5,7 +5,9 @@ part 'earthquake.freezed.dart';
 part 'earthquake.g.dart';
 
 @freezed
-class EarthquakeV1 with _$EarthquakeV1 implements V1Database {
+class EarthquakeV1
+    with _$EarthquakeV1
+    implements V1Database {
   const factory EarthquakeV1({
     required int eventId,
     required String status,
@@ -20,9 +22,11 @@ class EarthquakeV1 with _$EarthquakeV1 implements V1Database {
     List<ObservedRegionIntensity>? intensityStations,
     double? latitude,
     double? longitude,
-    List<ObservedRegionLpgmIntensity>? lpgmIntensityPrefectures,
+    List<ObservedRegionLpgmIntensity>?
+    lpgmIntensityPrefectures,
     List<ObservedRegionLpgmIntensity>? lpgmIntensityRegions,
-    List<ObservedRegionLpgmIntensity>? lpgmIntenstiyStations,
+    List<ObservedRegionLpgmIntensity>?
+    lpgmIntenstiyStations,
     double? magnitude,
     String? magnitudeCondition,
     JmaIntensity? maxIntensity,
@@ -32,8 +36,9 @@ class EarthquakeV1 with _$EarthquakeV1 implements V1Database {
     String? text,
   }) = _EarthquakeV1;
 
-  factory EarthquakeV1.fromJson(Map<String, dynamic> json) =>
-      _$EarthquakeV1FromJson(json);
+  factory EarthquakeV1.fromJson(
+    Map<String, dynamic> json,
+  ) => _$EarthquakeV1FromJson(json);
 }
 
 /// `/v1/earthquake/region` の `$.[*].earthquake` で利用
@@ -58,31 +63,39 @@ class EarthquakeV1Base with _$EarthquakeV1Base {
     String? text,
   }) = _EarthquakeV1Base;
 
-  factory EarthquakeV1Base.fromJson(Map<String, dynamic> json) =>
-      _$EarthquakeV1BaseFromJson(json);
+  factory EarthquakeV1Base.fromJson(
+    Map<String, dynamic> json,
+  ) => _$EarthquakeV1BaseFromJson(json);
 }
 
 @freezed
-class ObservedRegionIntensity with _$ObservedRegionIntensity {
+class ObservedRegionIntensity
+    with _$ObservedRegionIntensity {
   const factory ObservedRegionIntensity({
     required String code,
     required String name,
-    @JsonKey(name: 'maxInt') required JmaIntensity? intensity,
+    @JsonKey(name: 'maxInt')
+    required JmaIntensity? intensity,
   }) = _ObservedRegionIntensity;
 
-  factory ObservedRegionIntensity.fromJson(Map<String, dynamic> json) =>
-      _$ObservedRegionIntensityFromJson(json);
+  factory ObservedRegionIntensity.fromJson(
+    Map<String, dynamic> json,
+  ) => _$ObservedRegionIntensityFromJson(json);
 }
 
 @freezed
-class ObservedRegionLpgmIntensity with _$ObservedRegionLpgmIntensity {
+class ObservedRegionLpgmIntensity
+    with _$ObservedRegionLpgmIntensity {
   const factory ObservedRegionLpgmIntensity({
     required String code,
     required String name,
-    @JsonKey(name: 'maxInt') required JmaIntensity? intensity,
-    @JsonKey(name: 'maxLgInt') required JmaLgIntensity? lpgmIntensity,
+    @JsonKey(name: 'maxInt')
+    required JmaIntensity? intensity,
+    @JsonKey(name: 'maxLgInt')
+    required JmaLgIntensity? lpgmIntensity,
   }) = _ObservedRegionLpgmIntensity;
 
-  factory ObservedRegionLpgmIntensity.fromJson(Map<String, dynamic> json) =>
-      _$ObservedRegionLpgmIntensityFromJson(json);
+  factory ObservedRegionLpgmIntensity.fromJson(
+    Map<String, dynamic> json,
+  ) => _$ObservedRegionLpgmIntensityFromJson(json);
 }

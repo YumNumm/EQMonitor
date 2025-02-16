@@ -5,7 +5,8 @@ part 'devices_earthquake_settings.freezed.dart';
 part 'devices_earthquake_settings.g.dart';
 
 @freezed
-class DevicesEarthquakeSettings with _$DevicesEarthquakeSettings {
+class DevicesEarthquakeSettings
+    with _$DevicesEarthquakeSettings {
   const factory DevicesEarthquakeSettings({
     required String id,
     required JmaForecastIntensity minJmaIntensity,
@@ -14,6 +15,7 @@ class DevicesEarthquakeSettings with _$DevicesEarthquakeSettings {
     required DateTime updatedAt,
   }) = _DevicesEarthquakeSettings;
 
-  factory DevicesEarthquakeSettings.fromJson(Map<String, dynamic> json) =>
-      _$DevicesEarthquakeSettingsFromJson(json);
+  factory DevicesEarthquakeSettings.fromJson(
+    Map<String, dynamic> json,
+  ) => _$DevicesEarthquakeSettingsFromJson(json);
 }

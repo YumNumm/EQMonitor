@@ -3,12 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class IntensityFilterChip extends StatelessWidget {
-  const IntensityFilterChip({this.min, this.max, this.onChanged, super.key});
+  const IntensityFilterChip({
+    this.min,
+    this.max,
+    this.onChanged,
+    super.key,
+  });
 
   /// 震度の範囲が変更された時に呼ばれる
   /// `min` と `max` にはそれぞれ下限値と上限値が渡される
   /// どちらかが `null` の場合はその値は指定されていないことを示す
-  final void Function(JmaIntensity?, JmaIntensity?)? onChanged;
+  final void Function(JmaIntensity?, JmaIntensity?)?
+  onChanged;
 
   final JmaIntensity? min;
   final JmaIntensity? max;
@@ -22,14 +28,17 @@ class IntensityFilterChip extends StatelessWidget {
 
     return RawChip(
       onSelected: (_) async {
-        final result =
-            await showModalBottomSheet<(JmaIntensity?, JmaIntensity?)?>(
-              clipBehavior: Clip.antiAlias,
-              context: context,
-              builder:
-                  (context) =>
-                      _IntensityFilterModal(currentMin: min, currentMax: max),
-            );
+        final result = await showModalBottomSheet<
+          (JmaIntensity?, JmaIntensity?)?
+        >(
+          clipBehavior: Clip.antiAlias,
+          context: context,
+          builder:
+              (context) => _IntensityFilterModal(
+                currentMin: min,
+                currentMax: max,
+              ),
+        );
         if (result != null) {
           onChanged?.call(result.min, result.max);
         }
@@ -39,14 +48,18 @@ class IntensityFilterChip extends StatelessWidget {
               ? const Text('最大観測震度')
               : Text(
                 range.toRangeString,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
       onDeleted:
           range.isAllSelected
               ? null
-              : () => onChanged?.call(initialMin, initialMax),
+              : () =>
+                  onChanged?.call(initialMin, initialMax),
       selected: !range.isAllSelected,
-      selectedColor: Theme.of(context).colorScheme.secondaryContainer,
+      selectedColor:
+          Theme.of(context).colorScheme.secondaryContainer,
     );
   }
 }
@@ -60,13 +73,19 @@ class _IntensityFilterModal extends HookWidget {
   final JmaIntensity? currentMin;
   final JmaIntensity? currentMax;
 
-  static const JmaIntensity initialMin = IntensityFilterChip.initialMin;
-  static const JmaIntensity initialMax = IntensityFilterChip.initialMax;
+  static const JmaIntensity initialMin =
+      IntensityFilterChip.initialMin;
+  static const JmaIntensity initialMax =
+      IntensityFilterChip.initialMax;
 
   @override
   Widget build(BuildContext context) {
-    final min = useState<JmaIntensity>(currentMin ?? initialMin);
-    final max = useState<JmaIntensity>(currentMax ?? initialMax);
+    final min = useState<JmaIntensity>(
+      currentMin ?? initialMin,
+    );
+    final max = useState<JmaIntensity>(
+      currentMax ?? initialMax,
+    );
 
     final theme = Theme.of(context);
     final sheetBar = Container(
@@ -90,7 +109,10 @@ class _IntensityFilterModal extends HookWidget {
         children: [
           Center(child: sheetBar),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            padding: const EdgeInsets.symmetric(
+              vertical: 8,
+              horizontal: 16,
+            ),
             child: Text(
               '最大観測震度',
               style: theme.textTheme.titleMedium?.copyWith(
@@ -106,10 +128,15 @@ class _IntensityFilterModal extends HookWidget {
             ),
             max: JmaIntensity.seven.index.toDouble(),
             onChanged: (state) {
-              min.value = JmaIntensity.values[state.start.toInt()];
-              max.value = JmaIntensity.values[state.end.toInt()];
+              min.value =
+                  JmaIntensity.values[state.start.toInt()];
+              max.value =
+                  JmaIntensity.values[state.end.toInt()];
             },
-            labels: RangeLabels('震度${min.value}', '震度${max.value}'),
+            labels: RangeLabels(
+              '震度${min.value}',
+              '震度${max.value}',
+            ),
             divisions: JmaIntensity.seven.index,
           ),
           const SizedBox(height: 16),
@@ -126,12 +153,15 @@ class _IntensityFilterModal extends HookWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               TextButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed:
+                    () => Navigator.of(context).pop(),
                 child: const Text('キャンセル'),
               ),
               TextButton(
                 onPressed:
-                    () => Navigator.of(context).pop((min.value, max.value)),
+                    () => Navigator.of(
+                      context,
+                    ).pop((min.value, max.value)),
                 child: const Text('完了'),
               ),
             ],
@@ -143,7 +173,8 @@ class _IntensityFilterModal extends HookWidget {
   }
 }
 
-extension MinMaxJmaIntensity on (JmaIntensity?, JmaIntensity?) {
+extension MinMaxJmaIntensity
+    on (JmaIntensity?, JmaIntensity?) {
   JmaIntensity? get min => this.$1;
   JmaIntensity? get max => this.$2;
 

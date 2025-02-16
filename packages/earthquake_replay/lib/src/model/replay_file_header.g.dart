@@ -15,16 +15,28 @@ _$ReplayFileHeaderImpl _$$ReplayFileHeaderImplFromJson(
   json,
   ($checkedConvert) {
     final val = _$ReplayFileHeaderImpl(
-      version: $checkedConvert('version', (v) => (v as num).toInt()),
-      softwareName: $checkedConvert('software_name', (v) => v as String),
+      version: $checkedConvert(
+        'version',
+        (v) => (v as num).toInt(),
+      ),
+      softwareName: $checkedConvert(
+        'software_name',
+        (v) => v as String,
+      ),
       startTime: $checkedConvert(
         'start_time',
         (v) => DateTime.parse(v as String),
       ),
-      endTime: $checkedConvert('end_time', (v) => DateTime.parse(v as String)),
+      endTime: $checkedConvert(
+        'end_time',
+        (v) => DateTime.parse(v as String),
+      ),
       compressionMode: $checkedConvert(
         'compression_mode',
-        (v) => $enumDecode(_$ReplayFileCompressionModeEnumMap, v),
+        (v) => $enumDecode(
+          _$ReplayFileCompressionModeEnumMap,
+          v,
+        ),
       ),
     );
     return val;
@@ -45,7 +57,8 @@ Map<String, dynamic> _$$ReplayFileHeaderImplToJson(
   'start_time': instance.startTime.toIso8601String(),
   'end_time': instance.endTime.toIso8601String(),
   'compression_mode':
-      _$ReplayFileCompressionModeEnumMap[instance.compressionMode]!,
+      _$ReplayFileCompressionModeEnumMap[instance
+          .compressionMode]!,
 };
 
 const _$ReplayFileCompressionModeEnumMap = {

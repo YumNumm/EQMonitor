@@ -2,7 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class DioExceptionText extends StatelessWidget {
-  const DioExceptionText({required this.exception, super.key});
+  const DioExceptionText({
+    required this.exception,
+    super.key,
+  });
 
   final DioException exception;
 

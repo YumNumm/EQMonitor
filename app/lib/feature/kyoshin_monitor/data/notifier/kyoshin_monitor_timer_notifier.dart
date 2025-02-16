@@ -13,25 +13,38 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'kyoshin_monitor_timer_notifier.g.dart';
 
 @riverpod
-class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
+class KyoshinMonitorTimerNotifier
+    extends _$KyoshinMonitorTimerNotifier {
   @override
   Stream<KyoshinMonitorTimerState> build() async* {
-    final streamController = StreamController<KyoshinMonitorTimerState>();
+    final streamController =
+        StreamController<KyoshinMonitorTimerState>();
     // 5秒ごとにRetry
     while (true) {
       final result = await _syncDelaySimple();
-      talker.logCustom(KyoshinMonitorLog('result: $result'));
+      talker.logCustom(
+        KyoshinMonitorLog('result: $result'),
+      );
       if (result case Success(:final value)) {
-        talker.logCustom(KyoshinMonitorLog('delayFromDevice: $value'));
+        talker.logCustom(
+          KyoshinMonitorLog('delayFromDevice: $value'),
+        );
         yield KyoshinMonitorTimerState(
           delayFromDevice: value,
           lastSyncedAt: DateTime.now(),
         );
         break;
       } else {
-        final failure = result as Failure<Duration, Exception>;
-        talker.logCustom(KyoshinMonitorLog('failure: ${failure.exception}'));
-        await Future<void>.delayed(const Duration(seconds: 5));
+        final failure =
+            result as Failure<Duration, Exception>;
+        talker.logCustom(
+          KyoshinMonitorLog(
+            'failure: ${failure.exception}',
+          ),
+        );
+        await Future<void>.delayed(
+          const Duration(seconds: 5),
+        );
       }
     }
 
@@ -40,9 +53,12 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
     var isResyncing = false;
     ref
       ..listen(
-        kyoshinMonitorSettingsProvider.select((v) => v.api.delayAdjustInterval),
-        (_, next) =>
-            ref.read(periodicTimerProvider(key).notifier).setInterval(next),
+        kyoshinMonitorSettingsProvider.select(
+          (v) => v.api.delayAdjustInterval,
+        ),
+        (_, next) => ref
+            .read(periodicTimerProvider(key).notifier)
+            .setInterval(next),
       )
       ..listen(periodicTimerProvider(key), (_, next) async {
         if (isResyncing) {
@@ -62,7 +78,9 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
             break;
           } else {
             retryCount++;
-            await Future<void>.delayed(const Duration(seconds: 5));
+            await Future<void>.delayed(
+              const Duration(seconds: 5),
+            );
           }
         }
         isResyncing = false;
@@ -73,19 +91,19 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
   }
 
   @visibleForTesting
-  Future<Result<Duration, Exception>> syncDelaySimple() async =>
-      _syncDelaySimple();
+  Future<Result<Duration, Exception>>
+  syncDelaySimple() async => _syncDelaySimple();
 
   /// サーバの現在時刻を1回取得して、デバイスの現在時刻との差分を返す
-  Future<Result<Duration, Exception>> _syncDelaySimple() async =>
-      Result.capture(() async {
-        final latestJson =
-            await ref
-                .read(kyoshinMonitorWebApiDataSourceProvider)
-                .getLatestDataTime();
-        final deviceTime = DateTime.now();
-        return deviceTime.difference(latestJson.latestTime);
-      });
+  Future<Result<Duration, Exception>>
+  _syncDelaySimple() async => Result.capture(() async {
+    final latestJson =
+        await ref
+            .read(kyoshinMonitorWebApiDataSourceProvider)
+            .getLatestDataTime();
+    final deviceTime = DateTime.now();
+    return deviceTime.difference(latestJson.latestTime);
+  });
 
   @visibleForTesting
   Future<Result<Duration, Exception>> syncDelay([
@@ -98,7 +116,9 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
   ]) async => Result.capture(() async {
     final firstTime =
         (await ref
-                .read(kyoshinMonitorWebApiDataSourceProvider)
+                .read(
+                  kyoshinMonitorWebApiDataSourceProvider,
+                )
                 .getLatestDataTime())
             .latestTime;
     var latestTime = firstTime;
@@ -106,7 +126,9 @@ class KyoshinMonitorTimerNotifier extends _$KyoshinMonitorTimerNotifier {
       await Future<void>.delayed(interval);
       latestTime =
           (await ref
-                  .read(kyoshinMonitorWebApiDataSourceProvider)
+                  .read(
+                    kyoshinMonitorWebApiDataSourceProvider,
+                  )
                   .getLatestDataTime())
               .latestTime;
       if (latestTime != firstTime) {
@@ -127,16 +149,23 @@ Stream<void> _kyoshinMonitorDelayAdujustTiming(Ref ref) {
       streamController.add(null);
     })
     ..listen(
-      kyoshinMonitorSettingsProvider.select((v) => v.api.delayAdjustInterval),
+      kyoshinMonitorSettingsProvider.select(
+        (v) => v.api.delayAdjustInterval,
+      ),
       (_, next) {
-        ref.read(periodicTimerProvider(key).notifier).setInterval(next);
+        ref
+            .read(periodicTimerProvider(key).notifier)
+            .setInterval(next);
       },
     );
 
   ref
       .read(periodicTimerProvider(key).notifier)
       .setInterval(
-        ref.read(kyoshinMonitorSettingsProvider).api.delayAdjustInterval,
+        ref
+            .read(kyoshinMonitorSettingsProvider)
+            .api
+            .delayAdjustInterval,
       );
 
   ref.onDispose(streamController.close);

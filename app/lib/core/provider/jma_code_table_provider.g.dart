@@ -8,18 +8,22 @@ part of 'jma_code_table_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$jmaCodeTableHash() => r'94db7e0261aaf71cfee48960a72415da70d378c7';
+String _$jmaCodeTableHash() =>
+    r'94db7e0261aaf71cfee48960a72415da70d378c7';
 
 /// See also [jmaCodeTable].
 @ProviderFor(jmaCodeTable)
-final jmaCodeTableProvider = Provider<JmaCodeTable>.internal(
-  jmaCodeTable,
-  name: r'jmaCodeTableProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$jmaCodeTableHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final jmaCodeTableProvider =
+    Provider<JmaCodeTable>.internal(
+      jmaCodeTable,
+      name: r'jmaCodeTableProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$jmaCodeTableHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element

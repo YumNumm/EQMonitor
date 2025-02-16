@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class KyoshinMonitorAboutObservationNetworkRoute extends GoRouteData {
+class KyoshinMonitorAboutObservationNetworkRoute
+    extends GoRouteData {
   const KyoshinMonitorAboutObservationNetworkRoute();
 
   @override
@@ -11,8 +12,11 @@ class KyoshinMonitorAboutObservationNetworkRoute extends GoRouteData {
   }
 }
 
-class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
-  const KyoshinMonitorAboutObservationNetworkPage({super.key});
+class KyoshinMonitorAboutObservationNetworkPage
+    extends StatelessWidget {
+  const KyoshinMonitorAboutObservationNetworkPage({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +46,12 @@ class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
                         '東日本大震災後には、海域での観測網(S-net, DONET)も整備されました',
                         '2017年11月より本格的な統合運用が開始され、「MOWLAS: モウラス」(Monitoring of Waves on Land and Seafloor: 陸海統合地震津波火山観測網)と名付けられました',
                       ],
-                      url: 'https://www.mowlas.bosai.go.jp/mowlas/',
-                      titleColor: colorScheme.onSecondaryContainer,
-                      descriptionColor: colorScheme.onSecondaryContainer
+                      url:
+                          'https://www.mowlas.bosai.go.jp/mowlas/',
+                      titleColor:
+                          colorScheme.onSecondaryContainer,
+                      descriptionColor: colorScheme
+                          .onSecondaryContainer
                           .withValues(alpha: 0.8),
                     ),
                   ),
@@ -59,17 +66,20 @@ class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
                     '観測データは、地震防災・耐震設計・地震調査研究などに活用されています',
                     '強震モニタでは、地表を選択することで、K-NETの観測点を表示することができます',
                   ],
-                  url: 'https://www.kyoshin.bosai.go.jp/kyoshin/',
+                  url:
+                      'https://www.kyoshin.bosai.go.jp/kyoshin/',
                 ),
                 const _ObservationNetworkSection(
-                  title: 'KiK-net (Kiban Kyoshin Network 基盤強震観測網)',
+                  title:
+                      'KiK-net (Kiban Kyoshin Network 基盤強震観測網)',
                   description: [
                     '全国約700ヶ所に設置されています',
                     '各観測点では地表と地中の両方に強震計を設置し、地震動を観測します',
                     'Hi-net(高感度地震観測網)の観測施設に併設されています',
                     '強震モニタでは、地中を選択することで、KiK-netの観測点を表示することができます',
                   ],
-                  url: 'https://www.kyoshin.bosai.go.jp/kyoshin/',
+                  url:
+                      'https://www.kyoshin.bosai.go.jp/kyoshin/',
                 ),
                 const Divider(),
                 const _ObservationNetworkSection(
@@ -136,15 +146,17 @@ class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
                 ),
                 Text(
                   '関連リンク',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: theme.textTheme.titleMedium
+                      ?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 const Card(
                   child: Padding(
                     padding: EdgeInsets.all(16),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start,
                       children: [
                         _LinkItem(
                           title: '地震の基礎知識とその観測 - NIED',
@@ -160,7 +172,9 @@ class KyoshinMonitorAboutObservationNetworkPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                const Text('※上記内容は2025年2月現在の情報です。最新の情報は各公式サイトをご確認ください。'),
+                const Text(
+                  '※上記内容は2025年2月現在の情報です。最新の情報は各公式サイトをご確認ください。',
+                ),
               ],
             ),
           ),
@@ -195,7 +209,10 @@ class _ObservationNetworkSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InkWell(
-          onTap: url != null ? () async => launchUrlString(url!) : null,
+          onTap:
+              url != null
+                  ? () async => launchUrlString(url!)
+                  : null,
           child: Row(
             children: [
               Expanded(
@@ -208,7 +225,11 @@ class _ObservationNetworkSection extends StatelessWidget {
                 ),
               ),
               if (url != null)
-                Icon(Icons.open_in_new, size: 16, color: colorScheme.primary),
+                Icon(
+                  Icons.open_in_new,
+                  size: 16,
+                  color: colorScheme.primary,
+                ),
             ],
           ),
         ),
@@ -218,7 +239,9 @@ class _ObservationNetworkSection extends StatelessWidget {
           style: textTheme.bodyMedium?.copyWith(
             color:
                 descriptionColor ??
-                colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
+                colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.8,
+                ),
             height: 1.5,
           ),
         ),
@@ -243,9 +266,16 @@ class _LinkItem extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text(title, style: TextStyle(color: colorScheme.primary)),
+            child: Text(
+              title,
+              style: TextStyle(color: colorScheme.primary),
+            ),
           ),
-          Icon(Icons.open_in_new, size: 16, color: colorScheme.primary),
+          Icon(
+            Icons.open_in_new,
+            size: 16,
+            color: colorScheme.primary,
+          ),
         ],
       ),
     );

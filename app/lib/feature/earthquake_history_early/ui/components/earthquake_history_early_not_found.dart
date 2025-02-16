@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-class EarthquakeHistoryEarlyNotFound extends StatelessWidget {
+class EarthquakeHistoryEarlyNotFound
+    extends StatelessWidget {
   const EarthquakeHistoryEarlyNotFound({super.key});
 
   @override
@@ -24,7 +25,8 @@ class EarthquakeHistoryEarlyNotFound extends StatelessWidget {
   }
 }
 
-class EarthquakeHistoryEarlyAllFetched extends StatelessWidget {
+class EarthquakeHistoryEarlyAllFetched
+    extends StatelessWidget {
   const EarthquakeHistoryEarlyAllFetched({super.key});
 
   @override
@@ -39,7 +41,9 @@ class EarthquakeHistoryEarlyAllFetched extends StatelessWidget {
               Icon(Icons.search, size: 48),
               Text(
                 '全件取得済みです',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
                 textAlign: TextAlign.center,
               ),
             ],

@@ -62,22 +62,37 @@ class AppListTile extends StatelessWidget {
     );
 
     return switch (type) {
-      _AppListTileType.switchListTile => SwitchListTile.adaptive(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-        shape: shape,
-        tileColor: backgroundColor,
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(subtitle),
-        value: value!,
-        onChanged: onChanged,
-      ),
+      _AppListTileType.switchListTile =>
+        SwitchListTile.adaptive(
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+          ),
+          shape: shape,
+          tileColor: backgroundColor,
+          title: Text(
+            title,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          subtitle: Text(subtitle),
+          value: value!,
+          onChanged: onChanged,
+        ),
       _AppListTileType.listTile => ListTile(
         onTap: onTap,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+        ),
         shape: shape,
         tileColor: backgroundColor,
         textColor: textColor,
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         subtitle: Text(subtitle),
         trailing: trailing,
       ),

@@ -32,16 +32,27 @@ class _V3 implements V3 {
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<InformationV3Result>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
+      Options(
+            method: 'GET',
+            headers: _headers,
+            extra: _extra,
+          )
           .compose(
             _dio.options,
             '/v3/information',
             queryParameters: queryParameters,
             data: _data,
           )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+          .copyWith(
+            baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ),
+          ),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _options,
+    );
     late InformationV3Result _value;
     try {
       _value = InformationV3Result.fromJson(_result.data!);
@@ -59,16 +70,27 @@ class _V3 implements V3 {
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<AppInformation>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
+      Options(
+            method: 'GET',
+            headers: _headers,
+            extra: _extra,
+          )
           .compose(
             _dio.options,
             '/v3/app_information',
             queryParameters: queryParameters,
             data: _data,
           )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+          .copyWith(
+            baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ),
+          ),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _options,
+    );
     late AppInformation _value;
     try {
       _value = AppInformation.fromJson(_result.data!);
@@ -79,10 +101,14 @@ class _V3 implements V3 {
     return _value;
   }
 
-  RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
+  RequestOptions _setStreamType<T>(
+    RequestOptions requestOptions,
+  ) {
     if (T != dynamic &&
-        !(requestOptions.responseType == ResponseType.bytes ||
-            requestOptions.responseType == ResponseType.stream)) {
+        !(requestOptions.responseType ==
+                ResponseType.bytes ||
+            requestOptions.responseType ==
+                ResponseType.stream)) {
       if (T == String) {
         requestOptions.responseType = ResponseType.plain;
       } else {
@@ -92,7 +118,10 @@ class _V3 implements V3 {
     return requestOptions;
   }
 
-  String _combineBaseUrls(String dioBaseUrl, String? baseUrl) {
+  String _combineBaseUrls(
+    String dioBaseUrl,
+    String? baseUrl,
+  ) {
     if (baseUrl == null || baseUrl.trim().isEmpty) {
       return dioBaseUrl;
     }

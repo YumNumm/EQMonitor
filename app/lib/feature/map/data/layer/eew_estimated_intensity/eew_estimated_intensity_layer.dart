@@ -42,7 +42,9 @@ class EewEstimatedIntensityLayer extends MapLayer
 
   @override
   LayerProperties toLayerProperties() =>
-      FillLayerProperties(fillColor: color.toHexStringRGB());
+      FillLayerProperties(
+        fillColor: color.toHexStringRGB(),
+      );
 
   @override
   String get geoJsonSourceHash => '';

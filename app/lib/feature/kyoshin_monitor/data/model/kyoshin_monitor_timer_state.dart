@@ -4,12 +4,14 @@ part 'kyoshin_monitor_timer_state.freezed.dart';
 part 'kyoshin_monitor_timer_state.g.dart';
 
 @freezed
-class KyoshinMonitorTimerState with _$KyoshinMonitorTimerState {
+class KyoshinMonitorTimerState
+    with _$KyoshinMonitorTimerState {
   const factory KyoshinMonitorTimerState({
     required Duration delayFromDevice,
     required DateTime? lastSyncedAt,
   }) = _KyoshinMonitorTimerState;
 
-  factory KyoshinMonitorTimerState.fromJson(Map<String, dynamic> json) =>
-      _$KyoshinMonitorTimerStateFromJson(json);
+  factory KyoshinMonitorTimerState.fromJson(
+    Map<String, dynamic> json,
+  ) => _$KyoshinMonitorTimerStateFromJson(json);
 }

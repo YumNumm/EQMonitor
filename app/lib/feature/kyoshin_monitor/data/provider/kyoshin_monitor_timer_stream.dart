@@ -16,10 +16,15 @@ Stream<DateTime> kyoshinMonitorTimerStream(Ref ref) async* {
   const key = Key('kyoshinMonitorTimerStream');
 
   ref
-    ..listen(kyoshinMonitorTimerNotifierProvider, (_, next) async {
+    ..listen(kyoshinMonitorTimerNotifierProvider, (
+      _,
+      next,
+    ) async {
       if (next case AsyncData(:final value)) {
         final delay = value.delayFromDevice;
-        streamController.add(DateTime.now().subtract(delay));
+        streamController.add(
+          DateTime.now().subtract(delay),
+        );
       }
     })
     ..listen(periodicTimerProvider(key), (_, next) async {
@@ -30,7 +35,9 @@ Stream<DateTime> kyoshinMonitorTimerStream(Ref ref) async* {
                 .valueOrNull
                 ?.delayFromDevice;
         if (delay != null) {
-          streamController.add(DateTime.now().subtract(delay));
+          streamController.add(
+            DateTime.now().subtract(delay),
+          );
         }
       }
     });
@@ -38,14 +45,20 @@ Stream<DateTime> kyoshinMonitorTimerStream(Ref ref) async* {
   final kyoshinMonitorTimerNotifier = ref.read(
     kyoshinMonitorTimerNotifierProvider,
   );
-  final delay = kyoshinMonitorTimerNotifier.valueOrNull?.delayFromDevice;
+  final delay =
+      kyoshinMonitorTimerNotifier
+          .valueOrNull
+          ?.delayFromDevice;
   if (delay != null) {
     streamController.add(DateTime.now().subtract(delay));
   }
   ref
       .read(periodicTimerProvider(key).notifier)
       .setInterval(
-        ref.read(kyoshinMonitorSettingsProvider).api.imageFetchInterval,
+        ref
+            .read(kyoshinMonitorSettingsProvider)
+            .api
+            .imageFetchInterval,
       );
 
   ref.onDispose(streamController.close);

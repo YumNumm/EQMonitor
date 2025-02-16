@@ -23,21 +23,31 @@ class NotificationLocalSettingsNotifier
     }
     // base64でdecode
     final buffer = base64Decode(value);
-    final savedState = NotificationSettings.fromBuffer(buffer);
+    final savedState = NotificationSettings.fromBuffer(
+      buffer,
+    );
     return NotificationLocalSettingsModel(
       earthquake: EarthquakeSettings(
         emergencyIntensity:
-            savedState.earthquakeSettings.emergencyIntensity.jmaIntensity,
+            savedState
+                .earthquakeSettings
+                .emergencyIntensity
+                .jmaIntensity,
         silentIntensity:
-            savedState.earthquakeSettings.silentIntensity.jmaIntensity,
+            savedState
+                .earthquakeSettings
+                .silentIntensity
+                .jmaIntensity,
         regions:
             savedState.earthquakeSettings.regions
                 .map(
                   (e) => Region(
                     code: e.code,
                     name: e.name,
-                    emergencyIntensity: e.emergencyIntensity.jmaIntensity,
-                    silentIntensity: e.silentIntensity.jmaIntensity,
+                    emergencyIntensity:
+                        e.emergencyIntensity.jmaIntensity,
+                    silentIntensity:
+                        e.silentIntensity.jmaIntensity,
                     isMain: e.isMain,
                   ),
                 )
@@ -45,16 +55,25 @@ class NotificationLocalSettingsNotifier
       ),
       eew: EewSettings(
         emergencyIntensity:
-            savedState.eewSettings.emergencyIntensity.jmaIntensity,
-        silentIntensity: savedState.eewSettings.silentIntensity.jmaIntensity,
+            savedState
+                .eewSettings
+                .emergencyIntensity
+                .jmaIntensity,
+        silentIntensity:
+            savedState
+                .eewSettings
+                .silentIntensity
+                .jmaIntensity,
         regions:
             savedState.eewSettings.regions
                 .map(
                   (e) => Region(
                     code: e.code,
                     name: e.name,
-                    emergencyIntensity: e.emergencyIntensity.jmaIntensity,
-                    silentIntensity: e.silentIntensity.jmaIntensity,
+                    emergencyIntensity:
+                        e.emergencyIntensity.jmaIntensity,
+                    silentIntensity:
+                        e.silentIntensity.jmaIntensity,
                     isMain: e.isMain,
                   ),
                 )
@@ -63,37 +82,49 @@ class NotificationLocalSettingsNotifier
     );
   }
 
-  Future<void> save(NotificationLocalSettingsModel state) async {
+  Future<void> save(
+    NotificationLocalSettingsModel state,
+  ) async {
     final pb = NotificationSettings(
-      earthquakeSettings: NotificationSettings_EarthquakeSettings(
-        emergencyIntensity: state.earthquake.emergencyIntensity?.toPb,
-        silentIntensity: state.earthquake.silentIntensity?.toPb,
-        regions:
-            state.earthquake.regions
-                .map(
-                  (e) => NotificationSettings_EarthquakeSettings_Region(
-                    code: e.code,
-                    name: e.name,
-                    emergencyIntensity: e.emergencyIntensity.toPb,
-                    silentIntensity: e.silentIntensity.toPb,
-                    isMain: e.isMain,
-                  ),
-                )
-                .toList(),
-      ),
+      earthquakeSettings:
+          NotificationSettings_EarthquakeSettings(
+            emergencyIntensity:
+                state.earthquake.emergencyIntensity?.toPb,
+            silentIntensity:
+                state.earthquake.silentIntensity?.toPb,
+            regions:
+                state.earthquake.regions
+                    .map(
+                      (e) =>
+                          NotificationSettings_EarthquakeSettings_Region(
+                            code: e.code,
+                            name: e.name,
+                            emergencyIntensity:
+                                e.emergencyIntensity.toPb,
+                            silentIntensity:
+                                e.silentIntensity.toPb,
+                            isMain: e.isMain,
+                          ),
+                    )
+                    .toList(),
+          ),
       eewSettings: NotificationSettings_EewSettings(
-        emergencyIntensity: state.eew.emergencyIntensity?.toPb,
+        emergencyIntensity:
+            state.eew.emergencyIntensity?.toPb,
         silentIntensity: state.eew.silentIntensity?.toPb,
         regions:
             state.eew.regions
                 .map(
-                  (e) => NotificationSettings_EewSettings_Region(
-                    code: e.code,
-                    name: e.name,
-                    emergencyIntensity: e.emergencyIntensity.toPb,
-                    silentIntensity: e.silentIntensity.toPb,
-                    isMain: e.isMain,
-                  ),
+                  (e) =>
+                      NotificationSettings_EewSettings_Region(
+                        code: e.code,
+                        name: e.name,
+                        emergencyIntensity:
+                            e.emergencyIntensity.toPb,
+                        silentIntensity:
+                            e.silentIntensity.toPb,
+                        isMain: e.isMain,
+                      ),
                 )
                 .toList(),
       ),
@@ -101,23 +132,35 @@ class NotificationLocalSettingsNotifier
     final buffer = pb.writeToBuffer();
     // base64でencode
     final value = base64Encode(buffer);
-    await SharedPreferenceAppGroup.setString('notification_settings', value);
+    await SharedPreferenceAppGroup.setString(
+      'notification_settings',
+      value,
+    );
   }
 }
 
 extension PbEnumEx on pb_enum.JmaIntensity {
   JmaForecastIntensity get jmaIntensity => switch (this) {
-    pb_enum.JmaIntensity.JMA_INTENSITY_0 => JmaForecastIntensity.zero,
-    pb_enum.JmaIntensity.JMA_INTENSITY_1 => JmaForecastIntensity.one,
-    pb_enum.JmaIntensity.JMA_INTENSITY_2 => JmaForecastIntensity.two,
-    pb_enum.JmaIntensity.JMA_INTENSITY_3 => JmaForecastIntensity.three,
-    pb_enum.JmaIntensity.JMA_INTENSITY_4 => JmaForecastIntensity.four,
+    pb_enum.JmaIntensity.JMA_INTENSITY_0 =>
+      JmaForecastIntensity.zero,
+    pb_enum.JmaIntensity.JMA_INTENSITY_1 =>
+      JmaForecastIntensity.one,
+    pb_enum.JmaIntensity.JMA_INTENSITY_2 =>
+      JmaForecastIntensity.two,
+    pb_enum.JmaIntensity.JMA_INTENSITY_3 =>
+      JmaForecastIntensity.three,
+    pb_enum.JmaIntensity.JMA_INTENSITY_4 =>
+      JmaForecastIntensity.four,
     pb_enum.JmaIntensity.JMA_INTENSITY_5_MINUS =>
       JmaForecastIntensity.fiveLower,
-    pb_enum.JmaIntensity.JMA_INTENSITY_5_PLUS => JmaForecastIntensity.fiveUpper,
-    pb_enum.JmaIntensity.JMA_INTENSITY_6_MINUS => JmaForecastIntensity.sixLower,
-    pb_enum.JmaIntensity.JMA_INTENSITY_6_PLUS => JmaForecastIntensity.sixUpper,
-    pb_enum.JmaIntensity.JMA_INTENSITY_7 => JmaForecastIntensity.seven,
+    pb_enum.JmaIntensity.JMA_INTENSITY_5_PLUS =>
+      JmaForecastIntensity.fiveUpper,
+    pb_enum.JmaIntensity.JMA_INTENSITY_6_MINUS =>
+      JmaForecastIntensity.sixLower,
+    pb_enum.JmaIntensity.JMA_INTENSITY_6_PLUS =>
+      JmaForecastIntensity.sixUpper,
+    pb_enum.JmaIntensity.JMA_INTENSITY_7 =>
+      JmaForecastIntensity.seven,
     pb_enum.JmaIntensity.JMA_INTENSITY_UNSPECIFIED =>
       JmaForecastIntensity.unknown,
     pb_enum.JmaIntensity() => throw UnimplementedError(),
@@ -126,17 +169,26 @@ extension PbEnumEx on pb_enum.JmaIntensity {
 
 extension JmaIntensity on JmaForecastIntensity {
   pb_enum.JmaIntensity get toPb => switch (this) {
-    JmaForecastIntensity.zero => pb_enum.JmaIntensity.JMA_INTENSITY_0,
-    JmaForecastIntensity.one => pb_enum.JmaIntensity.JMA_INTENSITY_1,
-    JmaForecastIntensity.two => pb_enum.JmaIntensity.JMA_INTENSITY_2,
-    JmaForecastIntensity.three => pb_enum.JmaIntensity.JMA_INTENSITY_3,
-    JmaForecastIntensity.four => pb_enum.JmaIntensity.JMA_INTENSITY_4,
+    JmaForecastIntensity.zero =>
+      pb_enum.JmaIntensity.JMA_INTENSITY_0,
+    JmaForecastIntensity.one =>
+      pb_enum.JmaIntensity.JMA_INTENSITY_1,
+    JmaForecastIntensity.two =>
+      pb_enum.JmaIntensity.JMA_INTENSITY_2,
+    JmaForecastIntensity.three =>
+      pb_enum.JmaIntensity.JMA_INTENSITY_3,
+    JmaForecastIntensity.four =>
+      pb_enum.JmaIntensity.JMA_INTENSITY_4,
     JmaForecastIntensity.fiveLower =>
       pb_enum.JmaIntensity.JMA_INTENSITY_5_MINUS,
-    JmaForecastIntensity.fiveUpper => pb_enum.JmaIntensity.JMA_INTENSITY_5_PLUS,
-    JmaForecastIntensity.sixLower => pb_enum.JmaIntensity.JMA_INTENSITY_6_MINUS,
-    JmaForecastIntensity.sixUpper => pb_enum.JmaIntensity.JMA_INTENSITY_6_PLUS,
-    JmaForecastIntensity.seven => pb_enum.JmaIntensity.JMA_INTENSITY_7,
+    JmaForecastIntensity.fiveUpper =>
+      pb_enum.JmaIntensity.JMA_INTENSITY_5_PLUS,
+    JmaForecastIntensity.sixLower =>
+      pb_enum.JmaIntensity.JMA_INTENSITY_6_MINUS,
+    JmaForecastIntensity.sixUpper =>
+      pb_enum.JmaIntensity.JMA_INTENSITY_6_PLUS,
+    JmaForecastIntensity.seven =>
+      pb_enum.JmaIntensity.JMA_INTENSITY_7,
     JmaForecastIntensity.unknown =>
       pb_enum.JmaIntensity.JMA_INTENSITY_UNSPECIFIED,
   };

@@ -6,8 +6,12 @@ import 'package:eqmonitor/core/provider/config/permission/permission_notifier.da
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class NotificationSettingIntroPage extends HookConsumerWidget {
-  const NotificationSettingIntroPage({required this.onNext, super.key});
+class NotificationSettingIntroPage
+    extends HookConsumerWidget {
+  const NotificationSettingIntroPage({
+    required this.onNext,
+    super.key,
+  });
 
   final void Function() onNext;
 
@@ -53,7 +57,9 @@ class NotificationSettingIntroPage extends HookConsumerWidget {
                   padding: const EdgeInsets.all(8),
                   child: Text(
                     '地震に関する情報をお伝えするために、通知権限を許可してください',
-                    style: theme.textTheme.titleMedium!.copyWith(),
+                    style:
+                        theme.textTheme.titleMedium!
+                            .copyWith(),
                   ),
                 ),
               ],
@@ -64,7 +70,9 @@ class NotificationSettingIntroPage extends HookConsumerWidget {
             onPressed: () async {
               unawaited(
                 ref
-                    .read(permissionNotifierProvider.notifier)
+                    .read(
+                      permissionNotifierProvider.notifier,
+                    )
                     .requestNotificationPermission(),
               );
               if (context.mounted) {
@@ -77,7 +85,10 @@ class NotificationSettingIntroPage extends HookConsumerWidget {
           const SizedBox(height: 16),
           TextButton(
             onPressed: onNext,
-            child: const Text('拒否する', style: TextStyle(color: Colors.white)),
+            child: const Text(
+              '拒否する',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),

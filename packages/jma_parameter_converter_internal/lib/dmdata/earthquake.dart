@@ -19,12 +19,14 @@ class EarthquakeParameter with _$EarthquakeParameter {
     required List<EarthquakeParmaeterItem> items,
   }) = _EarthquakeParameter;
 
-  factory EarthquakeParameter.fromJson(Map<String, dynamic> json) =>
-      _$EarthquakeParameterFromJson(json);
+  factory EarthquakeParameter.fromJson(
+    Map<String, dynamic> json,
+  ) => _$EarthquakeParameterFromJson(json);
 }
 
 @freezed
-class EarthquakeParmaeterItem with _$EarthquakeParmaeterItem {
+class EarthquakeParmaeterItem
+    with _$EarthquakeParmaeterItem {
   const factory EarthquakeParmaeterItem({
     required ParameterRegion region,
     required ParameterCity city,
@@ -34,12 +36,19 @@ class EarthquakeParmaeterItem with _$EarthquakeParmaeterItem {
     required String kana,
     required String status,
     required String owner,
-    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
+    @JsonKey(
+      fromJson: doubleFromString,
+      toJson: doubleToString,
+    )
     required double latitude,
-    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
+    @JsonKey(
+      fromJson: doubleFromString,
+      toJson: doubleToString,
+    )
     required double longitude,
   }) = _EarthquakeParmaeterItem;
 
-  factory EarthquakeParmaeterItem.fromJson(Map<String, dynamic> json) =>
-      _$EarthquakeParmaeterItemFromJson(json);
+  factory EarthquakeParmaeterItem.fromJson(
+    Map<String, dynamic> json,
+  ) => _$EarthquakeParmaeterItemFromJson(json);
 }

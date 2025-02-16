@@ -16,10 +16,14 @@ class InformationRepository {
 
   final EqApi _api;
 
-  Future<Result<InformationV3Result, Exception>> fetchInformation({
+  Future<Result<InformationV3Result, Exception>>
+  fetchInformation({
     required int limit,
     required int offset,
   }) async => Result.capture(
-    () => _api.v3.getInformation(limit: limit, offset: offset),
+    () => _api.v3.getInformation(
+      limit: limit,
+      offset: offset,
+    ),
   );
 }

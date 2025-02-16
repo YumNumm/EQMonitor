@@ -31,12 +31,18 @@ class _TermOfServiceScreenBody extends HookWidget {
   Widget build(BuildContext context) {
     final markdownBody = useFuture(
       // ignore: discarded_futures
-      useMemoized(() async => rootBundle.loadString(Assets.docs.termOfService)),
+      useMemoized(
+        () async => rootBundle.loadString(
+          Assets.docs.termOfService,
+        ),
+      ),
       initialData: '',
     );
     final data = markdownBody.data;
     if (data == null) {
-      return const Center(child: CircularProgressIndicator.adaptive());
+      return const Center(
+        child: CircularProgressIndicator.adaptive(),
+      );
     }
     return Markdown(
       data: data,

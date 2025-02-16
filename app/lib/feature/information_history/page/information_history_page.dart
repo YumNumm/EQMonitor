@@ -15,18 +15,28 @@ class InformationHistoryPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(informationHistoryViewModelProvider);
-    final scrollController = PrimaryScrollController.of(context);
+    final state = ref.watch(
+      informationHistoryViewModelProvider,
+    );
+    final scrollController = PrimaryScrollController.of(
+      context,
+    );
     useEffect(() {
       unawaited(
         WidgetsBinding.instance.endOfFrame.then((_) async {
           scrollController.addListener(
             () => ref
-                .read(informationHistoryViewModelProvider.notifier)
+                .read(
+                  informationHistoryViewModelProvider
+                      .notifier,
+                )
                 .onScrollPositionChanged(scrollController),
           );
           await ref
-              .read(informationHistoryViewModelProvider.notifier)
+              .read(
+                informationHistoryViewModelProvider
+                    .notifier,
+              )
               .updateIfNull();
         }),
       );
@@ -37,17 +47,19 @@ class InformationHistoryPage extends HookConsumerWidget {
       child: CustomScrollView(
         primary: true,
         slivers: [
-          const SliverAppBar.medium(title: Text('地震・津波に関するお知らせ')),
+          const SliverAppBar.medium(
+            title: Text('地震・津波に関するお知らせ'),
+          ),
           switch (state) {
-            AsyncData(:final value) => _InformationDataSliverListView(
-              data: value,
-            ),
+            AsyncData(:final value) =>
+              _InformationDataSliverListView(data: value),
             AsyncError(:final error) => SliverFillRemaining(
               child: ErrorCard(
                 error: error,
                 onReload:
-                    () async =>
-                        ref.refresh(informationHistoryViewModelProvider),
+                    () async => ref.refresh(
+                      informationHistoryViewModelProvider,
+                    ),
               ),
             ),
             _ => const _LoadingSliverview(),
@@ -57,7 +69,10 @@ class InformationHistoryPage extends HookConsumerWidget {
     );
     return Scaffold(
       body: RefreshIndicator.adaptive(
-        onRefresh: () async => ref.refresh(informationHistoryViewModelProvider),
+        onRefresh:
+            () async => ref.refresh(
+              informationHistoryViewModelProvider,
+            ),
         edgeOffset: 112,
         child: body,
       ),
@@ -65,8 +80,11 @@ class InformationHistoryPage extends HookConsumerWidget {
   }
 }
 
-class _InformationDataSliverListView extends HookConsumerWidget {
-  const _InformationDataSliverListView({required this.data});
+class _InformationDataSliverListView
+    extends HookConsumerWidget {
+  const _InformationDataSliverListView({
+    required this.data,
+  });
 
   final List<InformationV3> data;
 
@@ -75,43 +93,53 @@ class _InformationDataSliverListView extends HookConsumerWidget {
     final hasNext = !data.any((e) => e.id == 1);
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm');
     return SliverList(
-      delegate: SliverChildBuilderDelegate(childCount: data.length + 1, (
-        context,
-        index,
-      ) {
-        if (index == data.length) {
-          if (hasNext) {
-            return const Center(
-              child: Padding(
+      delegate: SliverChildBuilderDelegate(
+        childCount: data.length + 1,
+        (context, index) {
+          if (index == data.length) {
+            if (hasNext) {
+              return const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child:
+                      CircularProgressIndicator.adaptive(),
+                ),
+              );
+            } else {
+              return const Padding(
                 padding: EdgeInsets.all(16),
-                child: CircularProgressIndicator.adaptive(),
-              ),
-            );
-          } else {
-            return const Padding(
-              padding: EdgeInsets.all(16),
-              child: SafeArea(
-                top: false,
-                child: Text('これ以上過去のお知らせはありません。', textAlign: TextAlign.center),
-              ),
-            );
+                child: SafeArea(
+                  top: false,
+                  child: Text(
+                    'これ以上過去のお知らせはありません。',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
+            }
           }
-        }
-        final item = data[index];
-        return ListTile(
-          title: Text(item.title.toHalfWidth),
-          subtitle: Text('${dateFormat.format(item.createdAt.toLocal())}頃発表'),
-          onTap:
-              () async => InformationHistoryDetailsRoute(
-                $extra: item,
-              ).push<void>(context),
-          tileColor: switch (item.level) {
-            Level.info => Colors.transparent,
-            Level.warning => Colors.yellow.withValues(alpha: 0.2),
-            Level.critical => Colors.red.withValues(alpha: 0.2),
-          },
-        );
-      }),
+          final item = data[index];
+          return ListTile(
+            title: Text(item.title.toHalfWidth),
+            subtitle: Text(
+              '${dateFormat.format(item.createdAt.toLocal())}頃発表',
+            ),
+            onTap:
+                () async => InformationHistoryDetailsRoute(
+                  $extra: item,
+                ).push<void>(context),
+            tileColor: switch (item.level) {
+              Level.info => Colors.transparent,
+              Level.warning => Colors.yellow.withValues(
+                alpha: 0.2,
+              ),
+              Level.critical => Colors.red.withValues(
+                alpha: 0.2,
+              ),
+            },
+          );
+        },
+      ),
     );
   }
 }

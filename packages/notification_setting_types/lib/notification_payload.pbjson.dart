@@ -40,11 +40,18 @@ final $typed_data.Uint8List jmaIntensityDescriptor = $convert.base64Decode(
     'X01JTlVTEDwSGAoUSk1BX0lOVEVOU0lUWV82X1BMVVMQQRITCg9KTUFfSU5URU5TSVRZXzcQRg'
     '==');
 
-@$core.Deprecated('Use notificationPayloadDescriptor instead')
+@$core
+    .Deprecated('Use notificationPayloadDescriptor instead')
 const NotificationPayload$json = {
   '1': 'NotificationPayload',
   '2': [
-    {'1': 'event_id', '3': 1, '4': 1, '5': 9, '10': 'eventId'},
+    {
+      '1': 'event_id',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '10': 'eventId'
+    },
     {
       '1': 'type',
       '3': 2,
@@ -67,7 +74,8 @@ const NotificationPayload$json = {
       '3': 4,
       '4': 1,
       '5': 11,
-      '6': '.eqmonitor.NotificationPayload.EarthquakeInformation',
+      '6':
+          '.eqmonitor.NotificationPayload.EarthquakeInformation',
       '9': 0,
       '10': 'earthquakeInformation'
     },
@@ -85,7 +93,8 @@ const NotificationPayload$json = {
   ],
 };
 
-@$core.Deprecated('Use notificationPayloadDescriptor instead')
+@$core
+    .Deprecated('Use notificationPayloadDescriptor instead')
 const NotificationPayload_EewInformation$json = {
   '1': 'EewInformation',
   '2': [
@@ -112,7 +121,8 @@ const NotificationPayload_EewInformation$json = {
       '3': 3,
       '4': 3,
       '5': 11,
-      '6': '.eqmonitor.NotificationPayload.EewRegionIntensity',
+      '6':
+          '.eqmonitor.NotificationPayload.EewRegionIntensity',
       '10': 'regionIntensities'
     },
   ],
@@ -121,7 +131,8 @@ const NotificationPayload_EewInformation$json = {
   ],
 };
 
-@$core.Deprecated('Use notificationPayloadDescriptor instead')
+@$core
+    .Deprecated('Use notificationPayloadDescriptor instead')
 const NotificationPayload_EarthquakeInformation$json = {
   '1': 'EarthquakeInformation',
   '2': [
@@ -157,7 +168,8 @@ const NotificationPayload_EarthquakeInformation$json = {
   ],
 };
 
-@$core.Deprecated('Use notificationPayloadDescriptor instead')
+@$core
+    .Deprecated('Use notificationPayloadDescriptor instead')
 const NotificationPayload_RegionIntensity$json = {
   '1': 'RegionIntensity',
   '2': [
@@ -173,7 +185,8 @@ const NotificationPayload_RegionIntensity$json = {
   ],
 };
 
-@$core.Deprecated('Use notificationPayloadDescriptor instead')
+@$core
+    .Deprecated('Use notificationPayloadDescriptor instead')
 const NotificationPayload_EewRegionIntensity$json = {
   '1': 'EewRegionIntensity',
   '2': [
@@ -202,20 +215,40 @@ const NotificationPayload_EewRegionIntensity$json = {
   ],
 };
 
-@$core.Deprecated('Use notificationPayloadDescriptor instead')
+@$core
+    .Deprecated('Use notificationPayloadDescriptor instead')
 const NotificationPayload_HypoInformation$json = {
   '1': 'HypoInformation',
   '2': [
     {'1': 'code', '3': 1, '4': 1, '5': 5, '10': 'code'},
     {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
-    {'1': 'latitude', '3': 3, '4': 1, '5': 2, '10': 'latitude'},
-    {'1': 'longitude', '3': 4, '4': 1, '5': 2, '10': 'longitude'},
+    {
+      '1': 'latitude',
+      '3': 3,
+      '4': 1,
+      '5': 2,
+      '10': 'latitude'
+    },
+    {
+      '1': 'longitude',
+      '3': 4,
+      '4': 1,
+      '5': 2,
+      '10': 'longitude'
+    },
     {'1': 'depth', '3': 5, '4': 1, '5': 5, '10': 'depth'},
-    {'1': 'magnitude', '3': 6, '4': 1, '5': 2, '10': 'magnitude'},
+    {
+      '1': 'magnitude',
+      '3': 6,
+      '4': 1,
+      '5': 2,
+      '10': 'magnitude'
+    },
   ],
 };
 
-@$core.Deprecated('Use notificationPayloadDescriptor instead')
+@$core
+    .Deprecated('Use notificationPayloadDescriptor instead')
 const NotificationPayload_Type$json = {
   '1': 'Type',
   '2': [

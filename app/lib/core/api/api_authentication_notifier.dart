@@ -7,11 +7,14 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'api_authentication_notifier.g.dart';
 
 @Riverpod(keepAlive: true)
-class ApiAuthenticationNotifier extends _$ApiAuthenticationNotifier {
+class ApiAuthenticationNotifier
+    extends _$ApiAuthenticationNotifier {
   @override
   Future<String?> build() async {
     final secureStorage = ref.watch(secureStorageProvider);
-    final result = await secureStorage.read(key: _secureStorageKey);
+    final result = await secureStorage.read(
+      key: _secureStorageKey,
+    );
     return result;
   }
 
@@ -19,12 +22,16 @@ class ApiAuthenticationNotifier extends _$ApiAuthenticationNotifier {
 
   Future<void> save({required String token}) async {
     final secureStorage = ref.watch(secureStorageProvider);
-    await secureStorage.write(key: _secureStorageKey, value: token);
+    await secureStorage.write(
+      key: _secureStorageKey,
+      value: token,
+    );
 
     state = AsyncData(token);
   }
 
-  Future<({String id, String role})> extractPayload() async {
+  Future<({String id, String role})>
+  extractPayload() async {
     final token = state.valueOrNull;
     if (token == null) {
       throw UnauthorizedException();
@@ -53,7 +60,9 @@ class ApiAuthenticationNotifier extends _$ApiAuthenticationNotifier {
   }
 
   static String _decodeBase64(String str) {
-    var output = str.replaceAll('-', '+').replaceAll('_', '/');
+    var output = str
+        .replaceAll('-', '+')
+        .replaceAll('_', '/');
 
     switch (output.length % 4) {
       case 0:

@@ -25,17 +25,24 @@ class EarthquakeRestrictionWidget extends StatelessWidget {
                       DecoratedBox(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: theme.colorScheme.onPrimaryContainer,
+                          color:
+                              theme
+                                  .colorScheme
+                                  .onPrimaryContainer,
                         ),
-                        child: const SizedBox(width: 8, height: 8),
+                        child: const SizedBox(
+                          width: 8,
+                          height: 8,
+                        ),
                       ),
                       const SizedBox(width: 16),
                       Flexible(
                         child: Text(
                           e,
-                          style: theme.textTheme.bodyMedium!.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: theme.textTheme.bodyMedium!
+                              .copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
                       ),
                     ],

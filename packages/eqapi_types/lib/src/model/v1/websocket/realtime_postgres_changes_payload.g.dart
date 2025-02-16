@@ -9,7 +9,9 @@ part of 'realtime_postgres_changes_payload.dart';
 // **************************************************************************
 
 _$RealtimePostgresInsertPayloadImpl<T>
-_$$RealtimePostgresInsertPayloadImplFromJson<T extends V1Database>(
+_$$RealtimePostgresInsertPayloadImplFromJson<
+  T extends V1Database
+>(
   Map<String, dynamic> json,
   T Function(Object? json) fromJsonT,
 ) => $checkedCreate(
@@ -25,29 +27,40 @@ _$$RealtimePostgresInsertPayloadImplFromJson<T extends V1Database>(
       ),
       errors: $checkedConvert(
         'errors',
-        (v) => (v as List<dynamic>?)?.map((e) => e as String).toList(),
+        (v) =>
+            (v as List<dynamic>?)
+                ?.map((e) => e as String)
+                .toList(),
       ),
       newData: $checkedConvert('new', (v) => fromJsonT(v)),
     );
     return val;
   },
-  fieldKeyMap: const {'commitTimestamp': 'commit_timestamp', 'newData': 'new'},
+  fieldKeyMap: const {
+    'commitTimestamp': 'commit_timestamp',
+    'newData': 'new',
+  },
 );
 
 Map<String, dynamic>
-_$$RealtimePostgresInsertPayloadImplToJson<T extends V1Database>(
+_$$RealtimePostgresInsertPayloadImplToJson<
+  T extends V1Database
+>(
   _$RealtimePostgresInsertPayloadImpl<T> instance,
   Object? Function(T value) toJsonT,
 ) => <String, dynamic>{
   'schema': instance.schema,
   'table': instance.table,
-  'commit_timestamp': instance.commitTimestamp.toIso8601String(),
+  'commit_timestamp':
+      instance.commitTimestamp.toIso8601String(),
   'errors': instance.errors,
   'new': toJsonT(instance.newData),
 };
 
 _$RealtimePostgresUpdatePayloadImpl<T>
-_$$RealtimePostgresUpdatePayloadImplFromJson<T extends V1Database>(
+_$$RealtimePostgresUpdatePayloadImplFromJson<
+  T extends V1Database
+>(
   Map<String, dynamic> json,
   T Function(Object? json) fromJsonT,
 ) => $checkedCreate(
@@ -63,31 +76,45 @@ _$$RealtimePostgresUpdatePayloadImplFromJson<T extends V1Database>(
       ),
       errors: $checkedConvert(
         'errors',
-        (v) => (v as List<dynamic>?)?.map((e) => e as String).toList(),
+        (v) =>
+            (v as List<dynamic>?)
+                ?.map((e) => e as String)
+                .toList(),
       ),
       newData: $checkedConvert('new', (v) => fromJsonT(v)),
-      old: $checkedConvert('old', (v) => v as Map<String, dynamic>?),
+      old: $checkedConvert(
+        'old',
+        (v) => v as Map<String, dynamic>?,
+      ),
     );
     return val;
   },
-  fieldKeyMap: const {'commitTimestamp': 'commit_timestamp', 'newData': 'new'},
+  fieldKeyMap: const {
+    'commitTimestamp': 'commit_timestamp',
+    'newData': 'new',
+  },
 );
 
 Map<String, dynamic>
-_$$RealtimePostgresUpdatePayloadImplToJson<T extends V1Database>(
+_$$RealtimePostgresUpdatePayloadImplToJson<
+  T extends V1Database
+>(
   _$RealtimePostgresUpdatePayloadImpl<T> instance,
   Object? Function(T value) toJsonT,
 ) => <String, dynamic>{
   'schema': instance.schema,
   'table': instance.table,
-  'commit_timestamp': instance.commitTimestamp.toIso8601String(),
+  'commit_timestamp':
+      instance.commitTimestamp.toIso8601String(),
   'errors': instance.errors,
   'new': toJsonT(instance.newData),
   'old': instance.old,
 };
 
 _$RealtimePostgresDeletePayloadImpl<T>
-_$$RealtimePostgresDeletePayloadImplFromJson<T extends V1Database>(
+_$$RealtimePostgresDeletePayloadImplFromJson<
+  T extends V1Database
+>(
   Map<String, dynamic> json,
   T Function(Object? json) fromJsonT,
 ) => $checkedCreate(
@@ -103,23 +130,34 @@ _$$RealtimePostgresDeletePayloadImplFromJson<T extends V1Database>(
       ),
       errors: $checkedConvert(
         'errors',
-        (v) => (v as List<dynamic>?)?.map((e) => e as String).toList(),
+        (v) =>
+            (v as List<dynamic>?)
+                ?.map((e) => e as String)
+                .toList(),
       ),
-      old: $checkedConvert('old', (v) => v as Map<String, dynamic>?),
+      old: $checkedConvert(
+        'old',
+        (v) => v as Map<String, dynamic>?,
+      ),
     );
     return val;
   },
-  fieldKeyMap: const {'commitTimestamp': 'commit_timestamp'},
+  fieldKeyMap: const {
+    'commitTimestamp': 'commit_timestamp',
+  },
 );
 
 Map<String, dynamic>
-_$$RealtimePostgresDeletePayloadImplToJson<T extends V1Database>(
+_$$RealtimePostgresDeletePayloadImplToJson<
+  T extends V1Database
+>(
   _$RealtimePostgresDeletePayloadImpl<T> instance,
   Object? Function(T value) toJsonT,
 ) => <String, dynamic>{
   'schema': instance.schema,
   'table': instance.table,
-  'commit_timestamp': instance.commitTimestamp.toIso8601String(),
+  'commit_timestamp':
+      instance.commitTimestamp.toIso8601String(),
   'errors': instance.errors,
   'old': instance.old,
 };

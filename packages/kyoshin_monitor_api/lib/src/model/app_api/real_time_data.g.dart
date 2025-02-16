@@ -17,24 +17,49 @@ _$RealTimeDataImpl _$$RealTimeDataImplFromJson(
     final val = _$RealTimeDataImpl(
       dateTime: $checkedConvert(
         'date_time',
-        (v) => v == null ? null : DateTime.parse(v as String),
+        (v) =>
+            v == null ? null : DateTime.parse(v as String),
       ),
-      packetType: $checkedConvert('packet_type', (v) => v as String?),
-      kyoshinType: $checkedConvert('kyoshin_type', (v) => v as String?),
-      baseData: $checkedConvert('base_data', (v) => v as String?),
-      baseSerialNo: $checkedConvert('base_serial_no', (v) => v as String?),
+      packetType: $checkedConvert(
+        'packet_type',
+        (v) => v as String?,
+      ),
+      kyoshinType: $checkedConvert(
+        'kyoshin_type',
+        (v) => v as String?,
+      ),
+      baseData: $checkedConvert(
+        'base_data',
+        (v) => v as String?,
+      ),
+      baseSerialNo: $checkedConvert(
+        'base_serial_no',
+        (v) => v as String?,
+      ),
       items: $checkedConvert(
         'items',
         (v) =>
-            (v as List<dynamic>?)?.map((e) => (e as num?)?.toDouble()).toList(),
+            (v as List<dynamic>?)
+                ?.map((e) => (e as num?)?.toDouble())
+                .toList(),
       ),
       result: $checkedConvert(
         'result',
-        (v) => v == null ? null : Result.fromJson(v as Map<String, dynamic>),
+        (v) =>
+            v == null
+                ? null
+                : Result.fromJson(
+                  v as Map<String, dynamic>,
+                ),
       ),
       security: $checkedConvert(
         'security',
-        (v) => v == null ? null : Security.fromJson(v as Map<String, dynamic>),
+        (v) =>
+            v == null
+                ? null
+                : Security.fromJson(
+                  v as Map<String, dynamic>,
+                ),
       ),
     );
     return val;
@@ -48,14 +73,15 @@ _$RealTimeDataImpl _$$RealTimeDataImplFromJson(
   },
 );
 
-Map<String, dynamic> _$$RealTimeDataImplToJson(_$RealTimeDataImpl instance) =>
-    <String, dynamic>{
-      'date_time': instance.dateTime?.toIso8601String(),
-      'packet_type': instance.packetType,
-      'kyoshin_type': instance.kyoshinType,
-      'base_data': instance.baseData,
-      'base_serial_no': instance.baseSerialNo,
-      'items': instance.items,
-      'result': instance.result,
-      'security': instance.security,
-    };
+Map<String, dynamic> _$$RealTimeDataImplToJson(
+  _$RealTimeDataImpl instance,
+) => <String, dynamic>{
+  'date_time': instance.dateTime?.toIso8601String(),
+  'packet_type': instance.packetType,
+  'kyoshin_type': instance.kyoshinType,
+  'base_data': instance.baseData,
+  'base_serial_no': instance.baseSerialNo,
+  'items': instance.items,
+  'result': instance.result,
+  'security': instance.security,
+};

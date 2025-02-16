@@ -24,13 +24,16 @@ class MapLayerControllerCard extends StatelessWidget {
       child: Divider(height: 0),
     );
 
-    void hapticFeedback() => unawaited(HapticFeedback.lightImpact());
+    void hapticFeedback() =>
+        unawaited(HapticFeedback.lightImpact());
 
     return Card(
       color: colorScheme.surfaceContainerHighest,
       clipBehavior: Clip.hardEdge,
       elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: IntrinsicWidth(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -57,7 +60,12 @@ class MapLayerControllerCard extends StatelessWidget {
                       },
                     ),
                   ]
-                  .mapIndexed((index, child) => [if (index > 0) divider, child])
+                  .mapIndexed(
+                    (index, child) => [
+                      if (index > 0) divider,
+                      child,
+                    ],
+                  )
                   .flattened
                   .toList(),
         ),

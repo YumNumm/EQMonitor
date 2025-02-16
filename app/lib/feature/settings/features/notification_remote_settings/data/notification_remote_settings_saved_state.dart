@@ -6,14 +6,19 @@ import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/model/notification_remote_settings_state.dart';
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/data/notification_remote_settings_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:jma_code_table_types/jma_code_table.pb.dart' as jma_code_table;
+import 'package:jma_code_table_types/jma_code_table.pb.dart'
+    as jma_code_table;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notification_remote_settings_saved_state.g.dart';
 
 @riverpod
-bool notificationRemoteSettingsHasChangedFromSavedState(Ref ref) =>
-    ref.watch(notificationRemoteSettingsSavedStateNotifierProvider) !=
+bool notificationRemoteSettingsHasChangedFromSavedState(
+  Ref ref,
+) =>
+    ref.watch(
+      notificationRemoteSettingsSavedStateNotifierProvider,
+    ) !=
     ref.watch(notificationRemoteSettingsNotifierProvider);
 
 @Riverpod(keepAlive: true)
@@ -24,7 +29,9 @@ class NotificationRemoteSettingsSavedStateNotifier
     final api = ref.read(eqApiProvider);
     final String? token;
     try {
-      token = await ref.read(apiAuthenticationNotifierProvider.future);
+      token = await ref.read(
+        apiAuthenticationNotifierProvider.future,
+      );
     } on Exception catch (e) {
       throw UnauthorizedException(innerException: e);
     }
@@ -38,7 +45,9 @@ class NotificationRemoteSettingsSavedStateNotifier
   Future<void> updateEarthquake({
     required NotificationSettingsRequest request,
   }) async {
-    final token = await ref.read(apiAuthenticationNotifierProvider.future);
+    final token = await ref.read(
+      apiAuthenticationNotifierProvider.future,
+    );
     if (token == null) {
       throw UnauthorizedException();
     }
@@ -50,7 +59,9 @@ class NotificationRemoteSettingsSavedStateNotifier
     );
 
     final areaInformationPrefectureEarthquake =
-        ref.read(jmaCodeTableProvider).areaInformationPrefectureEarthquake;
+        ref
+            .read(jmaCodeTableProvider)
+            .areaInformationPrefectureEarthquake;
 
     if (state case AsyncData(:final value)) {
       state = AsyncData(
@@ -60,8 +71,9 @@ class NotificationRemoteSettingsSavedStateNotifier
             regions:
                 request.regions
                     ?.map((r) {
-                      final prefectureName = areaInformationPrefectureEarthquake
-                          .nameFindByCode(r.code);
+                      final prefectureName =
+                          areaInformationPrefectureEarthquake
+                              .nameFindByCode(r.code);
                       if (prefectureName == null) {
                         return null;
                       }
@@ -80,8 +92,12 @@ class NotificationRemoteSettingsSavedStateNotifier
     }
   }
 
-  Future<void> updateEew({required NotificationSettingsRequest request}) async {
-    final token = await ref.read(apiAuthenticationNotifierProvider.future);
+  Future<void> updateEew({
+    required NotificationSettingsRequest request,
+  }) async {
+    final token = await ref.read(
+      apiAuthenticationNotifierProvider.future,
+    );
     if (token == null) {
       throw UnauthorizedException();
     }
@@ -103,9 +119,9 @@ class NotificationRemoteSettingsSavedStateNotifier
             regions:
                 request.regions
                     ?.map((r) {
-                      final regionName = areaForecastLocalEew.nameFindByCode(
-                        r.code,
-                      );
+                      final regionName =
+                          areaForecastLocalEew
+                              .nameFindByCode(r.code);
                       if (regionName == null) {
                         return null;
                       }
@@ -128,7 +144,9 @@ class NotificationRemoteSettingsSavedStateNotifier
     NotificationSettingsResponse response,
   ) {
     final areaInformationPrefectureEarthquake =
-        ref.read(jmaCodeTableProvider).areaInformationPrefectureEarthquake;
+        ref
+            .read(jmaCodeTableProvider)
+            .areaInformationPrefectureEarthquake;
     final areaForecastLocalEew =
         ref.read(jmaCodeTableProvider).areaForecastLocalEew;
 
@@ -142,8 +160,9 @@ class NotificationRemoteSettingsSavedStateNotifier
             response.earthquake
                 .where((r) => r.regionId != 0)
                 .map((r) {
-                  final prefecture = areaInformationPrefectureEarthquake
-                      .nameFindByCode(r.regionId);
+                  final prefecture =
+                      areaInformationPrefectureEarthquake
+                          .nameFindByCode(r.regionId);
                   if (prefecture == null) {
                     return null;
                   }
@@ -165,9 +184,8 @@ class NotificationRemoteSettingsSavedStateNotifier
             response.eew
                 .where((r) => r.regionId != 0)
                 .map((r) {
-                  final region = areaForecastLocalEew.nameFindByCode(
-                    r.regionId,
-                  );
+                  final region = areaForecastLocalEew
+                      .nameFindByCode(r.regionId);
                   if (region == null) {
                     return null;
                   }
@@ -194,10 +212,19 @@ class UnauthorizedException implements Exception {
 extension _AreaInformationPrefectureEarthquake
     on jma_code_table.AreaInformationPrefectureEarthquake {
   String? nameFindByCode(int code) =>
-      items.firstWhereOrNull((e) => int.parse(e.code) == code)?.name;
+      items
+          .firstWhereOrNull(
+            (e) => int.parse(e.code) == code,
+          )
+          ?.name;
 }
 
-extension _AreaForecastLocalEew on jma_code_table.AreaForecastLocalEew {
+extension _AreaForecastLocalEew
+    on jma_code_table.AreaForecastLocalEew {
   String? nameFindByCode(int code) =>
-      items.firstWhereOrNull((e) => int.parse(e.code) == code)?.name;
+      items
+          .firstWhereOrNull(
+            (e) => int.parse(e.code) == code,
+          )
+          ?.name;
 }

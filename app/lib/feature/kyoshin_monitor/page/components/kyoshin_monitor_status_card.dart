@@ -22,17 +22,20 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
             ?.toLocal();
     final status =
         ref.watch(
-          kyoshinMonitorNotifierProvider.select((v) => v.valueOrNull?.status),
+          kyoshinMonitorNotifierProvider.select(
+            (v) => v.valueOrNull?.status,
+          ),
         ) ??
         KyoshinMonitorStatus.stopped;
 
     final theme = Theme.of(context);
     final dateFormat = DateFormat('yyyy/MM/dd HH:mm:ss');
-    final dateTextStyle = theme.textTheme.bodyMedium!.copyWith(
-      letterSpacing: -0.5,
-      fontFamily: FontFamily.jetBrainsMono,
-      fontFamilyFallback: [FontFamily.notoSansJP],
-    );
+    final dateTextStyle = theme.textTheme.bodyMedium!
+        .copyWith(
+          letterSpacing: -0.5,
+          fontFamily: FontFamily.jetBrainsMono,
+          fontFamilyFallback: [FontFamily.notoSansJP],
+        );
 
     return Card.outlined(
       color: theme.colorScheme.surfaceContainerHighest,
@@ -43,7 +46,10 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(8),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8,
+              vertical: 4,
+            ),
             child: DefaultTextStyle(
               style: dateTextStyle,
               child: Row(
@@ -52,31 +58,45 @@ class KyoshinMonitorStatusCard extends ConsumerWidget {
                   // 現在時刻
                   ...switch (status) {
                     KyoshinMonitorStatus.stopped => [
-                      const Icon(Icons.access_time_rounded, size: 16),
+                      const Icon(
+                        Icons.access_time_rounded,
+                        size: 16,
+                      ),
                       const SizedBox(width: 4),
-                      const Flexible(child: Text('強震モニタ 取得停止中')),
+                      const Flexible(
+                        child: Text('強震モニタ 取得停止中'),
+                      ),
                     ],
                     _
                         when latestTime != null &&
-                            status == KyoshinMonitorStatus.delayed =>
+                            status ==
+                                KyoshinMonitorStatus
+                                    .delayed =>
                       [
                         Flexible(
                           child: Text(
                             DateFormat(
                               'yyyy/MM/dd HH:mm:ss',
                             ).format(latestTime),
-                            style: const TextStyle(color: Colors.redAccent),
+                            style: const TextStyle(
+                              color: Colors.redAccent,
+                            ),
                           ),
                         ),
                       ],
                     _ when latestTime != null => [
-                      Flexible(child: Text(dateFormat.format(latestTime))),
+                      Flexible(
+                        child: Text(
+                          dateFormat.format(latestTime),
+                        ),
+                      ),
                     ],
                     _ => [
                       const SizedBox(
                         height: 20,
                         width: 20,
-                        child: CircularProgressIndicator.adaptive(),
+                        child:
+                            CircularProgressIndicator.adaptive(),
                       ),
                     ],
                   },

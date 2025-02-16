@@ -10,7 +10,8 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 part 'eew_ps_wave_layer.freezed.dart';
 
 @freezed
-class EewPsWaveSourceLayer extends MapLayer with _$EewPsWaveSourceLayer {
+class EewPsWaveSourceLayer extends MapLayer
+    with _$EewPsWaveSourceLayer {
   const factory EewPsWaveSourceLayer({
     required String id,
     required List<EewPsWaveLayerItem> items,
@@ -27,7 +28,11 @@ class EewPsWaveSourceLayer extends MapLayer with _$EewPsWaveSourceLayer {
   Map<String, dynamic> toGeoJsonSource() {
     final json = {
       'type': 'FeatureCollection',
-      'features': items.map((e) => e.toGeoJsonFeatures()).flattened.toList(),
+      'features':
+          items
+              .map((e) => e.toGeoJsonFeatures())
+              .flattened
+              .toList(),
     };
     return json;
   }
@@ -76,12 +81,18 @@ class EewPsWaveLayerItem with _$EewPsWaveLayerItem {
                       sTravel * 1000,
                       bearing,
                     );
-                    return [latLng.longitude, latLng.latitude];
+                    return [
+                      latLng.longitude,
+                      latLng.latitude,
+                    ];
                   }(),
               ],
             ],
           },
-          'properties': {'type': 's', 'is_warning': isWarning},
+          'properties': {
+            'type': 's',
+            'is_warning': isWarning,
+          },
         },
       if (pTravel != null)
         {
@@ -100,19 +111,26 @@ class EewPsWaveLayerItem with _$EewPsWaveLayerItem {
                       pTravel * 1000,
                       bearing,
                     );
-                    return [latLng.longitude, latLng.latitude];
+                    return [
+                      latLng.longitude,
+                      latLng.latitude,
+                    ];
                   }(),
               ],
             ],
           },
-          'properties': {'type': 'p', 'is_warning': isWarning},
+          'properties': {
+            'type': 'p',
+            'is_warning': isWarning,
+          },
         },
     ];
   }
 }
 
 @freezed
-class EewWaveFillLayer extends MapLayer with _$EewWaveFillLayer {
+class EewWaveFillLayer extends MapLayer
+    with _$EewWaveFillLayer {
   const factory EewWaveFillLayer({
     required String id,
     required Color color,
@@ -125,40 +143,45 @@ class EewWaveFillLayer extends MapLayer with _$EewWaveFillLayer {
 
   const EewWaveFillLayer._();
 
-  factory EewWaveFillLayer.pWave({required Color color}) => EewWaveFillLayer(
-    id: 'eew_wave_fill_p',
+  factory EewWaveFillLayer.pWave({required Color color}) =>
+      EewWaveFillLayer(
+        id: 'eew_wave_fill_p',
+        color: color,
+        filter: ['==', 'type', 'p'],
+      );
+
+  factory EewWaveFillLayer.sWaveWarning({
+    required Color color,
+  }) => EewWaveFillLayer(
+    id: 'eew_wave_fill_s_warning',
     color: color,
-    filter: ['==', 'type', 'p'],
+    filter: [
+      'all',
+      ['==', 'type', 's'],
+      ['==', 'is_warning', true],
+    ],
   );
 
-  factory EewWaveFillLayer.sWaveWarning({required Color color}) =>
-      EewWaveFillLayer(
-        id: 'eew_wave_fill_s_warning',
-        color: color,
-        filter: [
-          'all',
-          ['==', 'type', 's'],
-          ['==', 'is_warning', true],
-        ],
-      );
-
-  factory EewWaveFillLayer.sWaveNotWarning({required Color color}) =>
-      EewWaveFillLayer(
-        id: 'eew_wave_fill_s_not_warning',
-        color: color,
-        filter: [
-          'all',
-          ['==', 'type', 's'],
-          ['==', 'is_warning', false],
-        ],
-      );
+  factory EewWaveFillLayer.sWaveNotWarning({
+    required Color color,
+  }) => EewWaveFillLayer(
+    id: 'eew_wave_fill_s_not_warning',
+    color: color,
+    filter: [
+      'all',
+      ['==', 'type', 's'],
+      ['==', 'is_warning', false],
+    ],
+  );
 
   @override
   Map<String, dynamic>? toGeoJsonSource() => null;
 
   @override
   LayerProperties toLayerProperties() =>
-      FillLayerProperties(fillColor: color.toHexStringRGB());
+      FillLayerProperties(
+        fillColor: color.toHexStringRGB(),
+      );
 
   @override
   String get geoJsonSourceHash => '';
@@ -168,7 +191,8 @@ class EewWaveFillLayer extends MapLayer with _$EewWaveFillLayer {
 }
 
 @freezed
-class EewWaveLineLayer extends MapLayer with _$EewWaveLineLayer {
+class EewWaveLineLayer extends MapLayer
+    with _$EewWaveLineLayer {
   const factory EewWaveLineLayer({
     required String id,
     required Color color,
@@ -181,40 +205,46 @@ class EewWaveLineLayer extends MapLayer with _$EewWaveLineLayer {
 
   const EewWaveLineLayer._();
 
-  factory EewWaveLineLayer.pWave({required Color color}) => EewWaveLineLayer(
-    id: 'eew_wave_line_p',
+  factory EewWaveLineLayer.pWave({required Color color}) =>
+      EewWaveLineLayer(
+        id: 'eew_wave_line_p',
+        color: color,
+        filter: ['==', 'type', 'p'],
+      );
+
+  factory EewWaveLineLayer.sWaveWarning({
+    required Color color,
+  }) => EewWaveLineLayer(
+    id: 'eew_wave_line_s',
     color: color,
-    filter: ['==', 'type', 'p'],
+    filter: [
+      'all',
+      ['==', 'type', 's'],
+      ['==', 'is_warning', true],
+    ],
   );
 
-  factory EewWaveLineLayer.sWaveWarning({required Color color}) =>
-      EewWaveLineLayer(
-        id: 'eew_wave_line_s',
-        color: color,
-        filter: [
-          'all',
-          ['==', 'type', 's'],
-          ['==', 'is_warning', true],
-        ],
-      );
-
-  factory EewWaveLineLayer.sWaveNotWarning({required Color color}) =>
-      EewWaveLineLayer(
-        id: 'eew_wave_line_s_not_warning',
-        color: color,
-        filter: [
-          'all',
-          ['==', 'type', 's'],
-          ['==', 'is_warning', false],
-        ],
-      );
+  factory EewWaveLineLayer.sWaveNotWarning({
+    required Color color,
+  }) => EewWaveLineLayer(
+    id: 'eew_wave_line_s_not_warning',
+    color: color,
+    filter: [
+      'all',
+      ['==', 'type', 's'],
+      ['==', 'is_warning', false],
+    ],
+  );
 
   @override
   Map<String, dynamic>? toGeoJsonSource() => null;
 
   @override
   LayerProperties toLayerProperties() =>
-      LineLayerProperties(lineColor: color.toHexStringRGB(), lineCap: 'round');
+      LineLayerProperties(
+        lineColor: color.toHexStringRGB(),
+        lineCap: 'round',
+      );
 
   @override
   String get geoJsonSourceHash => '';

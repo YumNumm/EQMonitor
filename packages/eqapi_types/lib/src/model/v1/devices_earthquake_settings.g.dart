@@ -8,7 +8,8 @@ part of 'devices_earthquake_settings.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$DevicesEarthquakeSettingsImpl _$$DevicesEarthquakeSettingsImplFromJson(
+_$DevicesEarthquakeSettingsImpl
+_$$DevicesEarthquakeSettingsImplFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
   r'_$DevicesEarthquakeSettingsImpl',
@@ -18,9 +19,13 @@ _$DevicesEarthquakeSettingsImpl _$$DevicesEarthquakeSettingsImplFromJson(
       id: $checkedConvert('id', (v) => v as String),
       minJmaIntensity: $checkedConvert(
         'min_jma_intensity',
-        (v) => $enumDecode(_$JmaForecastIntensityEnumMap, v),
+        (v) =>
+            $enumDecode(_$JmaForecastIntensityEnumMap, v),
       ),
-      regionId: $checkedConvert('region_id', (v) => (v as num).toInt()),
+      regionId: $checkedConvert(
+        'region_id',
+        (v) => (v as num).toInt(),
+      ),
       createdAt: $checkedConvert(
         'created_at',
         (v) => DateTime.parse(v as String),
@@ -44,7 +49,9 @@ Map<String, dynamic> _$$DevicesEarthquakeSettingsImplToJson(
   _$DevicesEarthquakeSettingsImpl instance,
 ) => <String, dynamic>{
   'id': instance.id,
-  'min_jma_intensity': _$JmaForecastIntensityEnumMap[instance.minJmaIntensity]!,
+  'min_jma_intensity':
+      _$JmaForecastIntensityEnumMap[instance
+          .minJmaIntensity]!,
   'region_id': instance.regionId,
   'created_at': instance.createdAt.toIso8601String(),
   'updated_at': instance.updatedAt.toIso8601String(),

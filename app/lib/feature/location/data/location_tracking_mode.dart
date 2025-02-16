@@ -12,10 +12,15 @@ class LocationTrackingMode extends _$LocationTrackingMode {
 
   Future<void> set({required bool value}) async {
     state = value;
-    await ref.read(sharedPreferencesProvider).setBool(_key, value);
+    await ref
+        .read(sharedPreferencesProvider)
+        .setBool(_key, value);
   }
 
   bool get() {
-    return ref.read(sharedPreferencesProvider).getBool(_key) ?? false;
+    return ref
+            .read(sharedPreferencesProvider)
+            .getBool(_key) ??
+        false;
   }
 }

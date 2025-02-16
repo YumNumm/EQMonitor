@@ -23,7 +23,10 @@ class MapLayerController extends _$MapLayerController {
 
   /// レイヤーを更新
   void updateLayer(MapLayer layer) {
-    state = state.map((l) => l.id == layer.id ? layer : l).toList();
+    state =
+        state
+            .map((l) => l.id == layer.id ? layer : l)
+            .toList();
   }
 
   /// レイヤーの順序を変更

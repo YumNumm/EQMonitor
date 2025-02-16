@@ -25,10 +25,13 @@ void main() {
       20240131010203: DateTime(2024, 1, 31, 1, 2, 3),
     };
     for (final entry in map.entries) {
-      test('EventId: ${entry.key} -> DateTime: ${entry.value}', () {
-        final result = EventId(entry.key);
-        expect(result.toCreationDate(), entry.value);
-      });
+      test(
+        'EventId: ${entry.key} -> DateTime: ${entry.value}',
+        () {
+          final result = EventId(entry.key);
+          expect(result.toCreationDate(), entry.value);
+        },
+      );
     }
   });
 }

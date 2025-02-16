@@ -8,7 +8,8 @@ part of 'eq_api.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$eqApiHash() => r'e9c1e9be905ca9b7fcd56b1715c1e2426c95b5b0';
+String _$eqApiHash() =>
+    r'e9c1e9be905ca9b7fcd56b1715c1e2426c95b5b0';
 
 /// See also [eqApi].
 @ProviderFor(eqApi)
@@ -16,7 +17,9 @@ final eqApiProvider = Provider<EqApi>.internal(
   eqApi,
   name: r'eqApiProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$eqApiHash,
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$eqApiHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

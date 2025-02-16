@@ -15,23 +15,33 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-RealTimeData _$RealTimeDataFromJson(Map<String, dynamic> json) {
+RealTimeData _$RealTimeDataFromJson(
+  Map<String, dynamic> json,
+) {
   return _RealTimeData.fromJson(json);
 }
 
 /// @nodoc
 mixin _$RealTimeData {
-  DateTime? get dateTime => throw _privateConstructorUsedError;
-  String? get packetType => throw _privateConstructorUsedError;
-  String? get kyoshinType => throw _privateConstructorUsedError;
-  String? get baseData => throw _privateConstructorUsedError;
-  String? get baseSerialNo => throw _privateConstructorUsedError;
-  List<double?>? get items => throw _privateConstructorUsedError;
+  DateTime? get dateTime =>
+      throw _privateConstructorUsedError;
+  String? get packetType =>
+      throw _privateConstructorUsedError;
+  String? get kyoshinType =>
+      throw _privateConstructorUsedError;
+  String? get baseData =>
+      throw _privateConstructorUsedError;
+  String? get baseSerialNo =>
+      throw _privateConstructorUsedError;
+  List<double?>? get items =>
+      throw _privateConstructorUsedError;
   Result? get result => throw _privateConstructorUsedError;
-  Security? get security => throw _privateConstructorUsedError;
+  Security? get security =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this RealTimeData to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of RealTimeData
   /// with the given fields replaced by the non-null parameter values.
@@ -63,7 +73,10 @@ abstract class $RealTimeDataCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$RealTimeDataCopyWithImpl<$Res, $Val extends RealTimeData>
+class _$RealTimeDataCopyWithImpl<
+  $Res,
+  $Val extends RealTimeData
+>
     implements $RealTimeDataCopyWith<$Res> {
   _$RealTimeDataCopyWithImpl(this._value, this._then);
 
@@ -156,8 +169,12 @@ class _$RealTimeDataCopyWithImpl<$Res, $Val extends RealTimeData>
       return null;
     }
 
-    return $SecurityCopyWith<$Res>(_value.security!, (value) {
-      return _then(_value.copyWith(security: value) as $Val);
+    return $SecurityCopyWith<$Res>(_value.security!, (
+      value,
+    ) {
+      return _then(
+        _value.copyWith(security: value) as $Val,
+      );
     });
   }
 }
@@ -190,7 +207,8 @@ abstract class _$$RealTimeDataImplCopyWith<$Res>
 
 /// @nodoc
 class __$$RealTimeDataImplCopyWithImpl<$Res>
-    extends _$RealTimeDataCopyWithImpl<$Res, _$RealTimeDataImpl>
+    extends
+        _$RealTimeDataCopyWithImpl<$Res, _$RealTimeDataImpl>
     implements _$$RealTimeDataImplCopyWith<$Res> {
   __$$RealTimeDataImplCopyWithImpl(
     _$RealTimeDataImpl _value,
@@ -272,8 +290,9 @@ class _$RealTimeDataImpl implements _RealTimeData {
     required this.security,
   }) : _items = items;
 
-  factory _$RealTimeDataImpl.fromJson(Map<String, dynamic> json) =>
-      _$$RealTimeDataImplFromJson(json);
+  factory _$RealTimeDataImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$RealTimeDataImplFromJson(json);
 
   @override
   final DateTime? dateTime;
@@ -320,8 +339,12 @@ class _$RealTimeDataImpl implements _RealTimeData {
                 other.baseData == baseData) &&
             (identical(other.baseSerialNo, baseSerialNo) ||
                 other.baseSerialNo == baseSerialNo) &&
-            const DeepCollectionEquality().equals(other._items, _items) &&
-            (identical(other.result, result) || other.result == result) &&
+            const DeepCollectionEquality().equals(
+              other._items,
+              _items,
+            ) &&
+            (identical(other.result, result) ||
+                other.result == result) &&
             (identical(other.security, security) ||
                 other.security == security));
   }
@@ -345,8 +368,12 @@ class _$RealTimeDataImpl implements _RealTimeData {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$RealTimeDataImplCopyWith<_$RealTimeDataImpl> get copyWith =>
-      __$$RealTimeDataImplCopyWithImpl<_$RealTimeDataImpl>(this, _$identity);
+  _$$RealTimeDataImplCopyWith<_$RealTimeDataImpl>
+  get copyWith =>
+      __$$RealTimeDataImplCopyWithImpl<_$RealTimeDataImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -366,8 +393,9 @@ abstract class _RealTimeData implements RealTimeData {
     required final Security? security,
   }) = _$RealTimeDataImpl;
 
-  factory _RealTimeData.fromJson(Map<String, dynamic> json) =
-      _$RealTimeDataImpl.fromJson;
+  factory _RealTimeData.fromJson(
+    Map<String, dynamic> json,
+  ) = _$RealTimeDataImpl.fromJson;
 
   @override
   DateTime? get dateTime;
@@ -390,6 +418,6 @@ abstract class _RealTimeData implements RealTimeData {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$RealTimeDataImplCopyWith<_$RealTimeDataImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$RealTimeDataImplCopyWith<_$RealTimeDataImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }

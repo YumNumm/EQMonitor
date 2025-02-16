@@ -23,19 +23,25 @@ class MapCameraPosition with _$MapCameraPosition {
   }) = _MapCameraPosition;
 
   /// MapLibreのCameraPositionから変換
-  factory MapCameraPosition.fromMapLibre(CameraPosition position) =>
-      MapCameraPosition(
-        target: position.target,
-        zoom: position.zoom,
-        tilt: position.tilt,
-        bearing: position.bearing,
-      );
+  factory MapCameraPosition.fromMapLibre(
+    CameraPosition position,
+  ) => MapCameraPosition(
+    target: position.target,
+    zoom: position.zoom,
+    tilt: position.tilt,
+    bearing: position.bearing,
+  );
 
-  factory MapCameraPosition.fromJson(Map<String, dynamic> json) =>
-      _$MapCameraPositionFromJson(json);
+  factory MapCameraPosition.fromJson(
+    Map<String, dynamic> json,
+  ) => _$MapCameraPositionFromJson(json);
 
   /// MapLibreのCameraPositionに変換
   const MapCameraPosition._();
-  CameraPosition toMapLibre() =>
-      CameraPosition(target: target, zoom: zoom, tilt: tilt, bearing: bearing);
+  CameraPosition toMapLibre() => CameraPosition(
+    target: target,
+    zoom: zoom,
+    tilt: tilt,
+    bearing: bearing,
+  );
 }

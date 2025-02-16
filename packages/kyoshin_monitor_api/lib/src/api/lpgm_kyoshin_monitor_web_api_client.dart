@@ -6,15 +6,21 @@ part 'lpgm_kyoshin_monitor_web_api_client.g.dart';
 
 @RestApi(baseUrl: 'https://www.lmoni.bosai.go.jp')
 abstract class LpgmKyoshinMonitorWebApiClient {
-  factory LpgmKyoshinMonitorWebApiClient(Dio dio, {String baseUrl}) =
-      _LpgmKyoshinMonitorWebApiClient;
+  factory LpgmKyoshinMonitorWebApiClient(
+    Dio dio, {
+    String baseUrl,
+  }) = _LpgmKyoshinMonitorWebApiClient;
 
   /// ベース画像
   ///
   /// [theme] 白(w), グレー(b)
-  @GET('/monitor/data/data/map_img/CommonImg/base_map_{theme}.gif')
+  @GET(
+    '/monitor/data/data/map_img/CommonImg/base_map_{theme}.gif',
+  )
   @DioResponseType(ResponseType.bytes)
-  Future<List<int>> getBaseMapImageData({@Path('theme') required String theme});
+  Future<List<int>> getBaseMapImageData({
+    @Path('theme') required String theme,
+  });
 
   /// スケール
   ///
@@ -35,13 +41,17 @@ abstract class LpgmKyoshinMonitorWebApiClient {
   ///
   /// [dateTime] 日付(yyyyMMddHHmmss)
   @GET('/monitor/webservice/hypo/eew/{dateTime}.json')
-  Future<Eew> getJsonEew({@Path('dateTime') required String dateTime});
+  Future<Eew> getJsonEew({
+    @Path('dateTime') required String dateTime,
+  });
 
   /// PsWaveImg
   ///
   /// [date] 日付(yyyyMMdd)
   /// [dateTime] 日付(yyyyMMddHHmmss)
-  @GET('/monitor/data/data/map_img/PSWaveImg/eew/{date}/{dateTime}_eew.gif')
+  @GET(
+    '/monitor/data/data/map_img/PSWaveImg/eew/{date}/{dateTime}_eew.gif',
+  )
   @DioResponseType(ResponseType.bytes)
   Future<List<int>> getPsWaveImageData({
     @Path('date') required String date,

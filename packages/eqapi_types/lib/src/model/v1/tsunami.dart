@@ -81,8 +81,9 @@ class _TsunamiV1Base with _$TsunamiV1Base {
     required DateTime? validAt,
   }) = __TsunamiV1Base;
 
-  factory _TsunamiV1Base.fromJson(Map<String, dynamic> json) =>
-      _$TsunamiV1BaseFromJson(json);
+  factory _TsunamiV1Base.fromJson(
+    Map<String, dynamic> json,
+  ) => _$TsunamiV1BaseFromJson(json);
 }
 
 sealed class TsunamiBody {
@@ -98,12 +99,22 @@ sealed class TsunamiBody {
     return switch (infoTypeStr) {
       '取消' => CancelBody.fromJson(json),
       '発表' || '訂正' => switch (type) {
-        TsunamiBodyType.vtse41 => PublicBodyVTSE41.fromJson(json),
-        TsunamiBodyType.vtse51 => PublicBodyVTSE51.fromJson(json),
-        TsunamiBodyType.vtse52 => PublicBodyVTSE52.fromJson(json),
-        null => throw ArgumentError('Unknown type: $typeStr'),
+        TsunamiBodyType.vtse41 => PublicBodyVTSE41.fromJson(
+          json,
+        ),
+        TsunamiBodyType.vtse51 => PublicBodyVTSE51.fromJson(
+          json,
+        ),
+        TsunamiBodyType.vtse52 => PublicBodyVTSE52.fromJson(
+          json,
+        ),
+        null =>
+          throw ArgumentError('Unknown type: $typeStr'),
       },
-      _ => throw ArgumentError('Unknown infoType: $infoTypeStr'),
+      _ =>
+        throw ArgumentError(
+          'Unknown infoType: $infoTypeStr',
+        ),
     };
   }
   Map<String, dynamic> toJson();
@@ -136,48 +147,56 @@ class CommentWarning with _$CommentWarning {
     required List<String> codes,
   }) = _CommentWarning;
 
-  factory CommentWarning.fromJson(Map<String, dynamic> json) =>
-      _$CommentWarningFromJson(json);
+  factory CommentWarning.fromJson(
+    Map<String, dynamic> json,
+  ) => _$CommentWarningFromJson(json);
 }
 
 @freezed
 class CancelBody with _$CancelBody implements TsunamiBody {
-  const factory CancelBody({required String text}) = _CancelBody;
+  const factory CancelBody({required String text}) =
+      _CancelBody;
 
   factory CancelBody.fromJson(Map<String, dynamic> json) =>
       _$CancelBodyFromJson(json);
 }
 
 @freezed
-class PublicBodyVTSE41Tsunami with _$PublicBodyVTSE41Tsunami {
+class PublicBodyVTSE41Tsunami
+    with _$PublicBodyVTSE41Tsunami {
   const factory PublicBodyVTSE41Tsunami({
     required List<TsunamiForecast> forecasts,
   }) = _PublicBodyVTSE41Tsunami;
 
-  factory PublicBodyVTSE41Tsunami.fromJson(Map<String, dynamic> json) =>
-      _$PublicBodyVTSE41TsunamiFromJson(json);
+  factory PublicBodyVTSE41Tsunami.fromJson(
+    Map<String, dynamic> json,
+  ) => _$PublicBodyVTSE41TsunamiFromJson(json);
 }
 
 @freezed
-class PublicBodyVTSE51Tsunami with _$PublicBodyVTSE51Tsunami {
+class PublicBodyVTSE51Tsunami
+    with _$PublicBodyVTSE51Tsunami {
   const factory PublicBodyVTSE51Tsunami({
     required List<TsunamiForecast> forecasts,
     required List<TsunamiObservation>? observations,
   }) = _PublicBodyVTSE51Tsunami;
 
-  factory PublicBodyVTSE51Tsunami.fromJson(Map<String, dynamic> json) =>
-      _$PublicBodyVTSE51TsunamiFromJson(json);
+  factory PublicBodyVTSE51Tsunami.fromJson(
+    Map<String, dynamic> json,
+  ) => _$PublicBodyVTSE51TsunamiFromJson(json);
 }
 
 @freezed
-class PublicBodyVTSE52Tsunami with _$PublicBodyVTSE52Tsunami {
+class PublicBodyVTSE52Tsunami
+    with _$PublicBodyVTSE52Tsunami {
   const factory PublicBodyVTSE52Tsunami({
     required List<TsunamiObservation>? observations,
     required List<TsunamiEstimation> estimations,
   }) = _PublicBodyVTSE52Tsunami;
 
-  factory PublicBodyVTSE52Tsunami.fromJson(Map<String, dynamic> json) =>
-      _$PublicBodyVTSE52TsunamiFromJson(json);
+  factory PublicBodyVTSE52Tsunami.fromJson(
+    Map<String, dynamic> json,
+  ) => _$PublicBodyVTSE52TsunamiFromJson(json);
 }
 
 @freezed
@@ -193,8 +212,9 @@ class TsunamiForecast with _$TsunamiForecast {
     required List<TsunamiForecastStation>? stations,
   }) = _TsunamiForecast;
 
-  factory TsunamiForecast.fromJson(Map<String, dynamic> json) =>
-      _$TsunamiForecastFromJson(json);
+  factory TsunamiForecast.fromJson(
+    Map<String, dynamic> json,
+  ) => _$TsunamiForecastFromJson(json);
 }
 
 @JsonEnum(valueField: 'value')
@@ -213,15 +233,17 @@ enum TsunamiForecastFirstHeightCondition {
 }
 
 @freezed
-class TsunamiForecastFirstHeight with _$TsunamiForecastFirstHeight {
+class TsunamiForecastFirstHeight
+    with _$TsunamiForecastFirstHeight {
   @JsonSerializable(fieldRename: FieldRename.none)
   const factory TsunamiForecastFirstHeight({
     required DateTime? arrivalTime,
     required TsunamiForecastFirstHeightCondition? condition,
   }) = _TsunamiForecastFirstHeight;
 
-  factory TsunamiForecastFirstHeight.fromJson(Map<String, dynamic> json) =>
-      _$TsunamiForecastFirstHeightFromJson(json);
+  factory TsunamiForecastFirstHeight.fromJson(
+    Map<String, dynamic> json,
+  ) => _$TsunamiForecastFirstHeightFromJson(json);
 }
 
 @JsonEnum(valueField: 'value')
@@ -237,7 +259,8 @@ enum TsunamiMaxHeightCondition {
 }
 
 @freezed
-class TsunamiForecastMaxHeight with _$TsunamiForecastMaxHeight {
+class TsunamiForecastMaxHeight
+    with _$TsunamiForecastMaxHeight {
   @JsonSerializable(fieldRename: FieldRename.none)
   const factory TsunamiForecastMaxHeight({
     /// 定量表現
@@ -248,8 +271,9 @@ class TsunamiForecastMaxHeight with _$TsunamiForecastMaxHeight {
     required TsunamiMaxHeightCondition? condition,
   }) = _TsunamiForecastMaxHeight;
 
-  factory TsunamiForecastMaxHeight.fromJson(Map<String, dynamic> json) =>
-      _$TsunamiForecastMaxHeightFromJson(json);
+  factory TsunamiForecastMaxHeight.fromJson(
+    Map<String, dynamic> json,
+  ) => _$TsunamiForecastMaxHeightFromJson(json);
 }
 
 @freezed
@@ -263,8 +287,9 @@ class TsunamiForecastStation with _$TsunamiForecastStation {
     required TsunamiForecastFirstHeightCondition? condition,
   }) = _TsunamiForecastStation;
 
-  factory TsunamiForecastStation.fromJson(Map<String, dynamic> json) =>
-      _$TsunamiForecastStationFromJson(json);
+  factory TsunamiForecastStation.fromJson(
+    Map<String, dynamic> json,
+  ) => _$TsunamiForecastStationFromJson(json);
 }
 
 @freezed
@@ -276,12 +301,14 @@ class TsunamiObservation with _$TsunamiObservation {
     required List<TsunamiObservationStation> stations,
   }) = _TsunamiObservation;
 
-  factory TsunamiObservation.fromJson(Map<String, dynamic> json) =>
-      _$TsunamiObservationFromJson(json);
+  factory TsunamiObservation.fromJson(
+    Map<String, dynamic> json,
+  ) => _$TsunamiObservationFromJson(json);
 }
 
 @freezed
-class TsunamiObservationStation with _$TsunamiObservationStation {
+class TsunamiObservationStation
+    with _$TsunamiObservationStation {
   @JsonSerializable(fieldRename: FieldRename.none)
   const factory TsunamiObservationStation({
     required String code,
@@ -289,7 +316,8 @@ class TsunamiObservationStation with _$TsunamiObservationStation {
 
     /// null: `識別不能`
     required DateTime? firstHeightArrivalTime,
-    required TsunamiObservationStationFirstHeightIntial? firstHeightInitial,
+    required TsunamiObservationStationFirstHeightIntial?
+    firstHeightInitial,
     required DateTime? maxHeightTime,
     required double? maxHeightValue,
     required bool? maxHeightIsOver,
@@ -299,8 +327,9 @@ class TsunamiObservationStation with _$TsunamiObservationStation {
     required TsunamiObservationStationCondition? condition,
   }) = _TsunamiObservationStation;
 
-  factory TsunamiObservationStation.fromJson(Map<String, dynamic> json) =>
-      _$TsunamiObservationStationFromJson(json);
+  factory TsunamiObservationStation.fromJson(
+    Map<String, dynamic> json,
+  ) => _$TsunamiObservationStationFromJson(json);
 }
 
 @JsonEnum(valueField: 'value')
@@ -308,7 +337,9 @@ enum TsunamiObservationStationFirstHeightIntial {
   push('押し'),
   pull('引き');
 
-  const TsunamiObservationStationFirstHeightIntial(this.value);
+  const TsunamiObservationStationFirstHeightIntial(
+    this.value,
+  );
   final String value;
 }
 
@@ -334,7 +365,8 @@ class TsunamiEstimation with _$TsunamiEstimation {
     required String code,
     required String name,
     required DateTime? firstHeightTime,
-    required TsunamiEstimationFirstHeightCondition? firstHeightCondition,
+    required TsunamiEstimationFirstHeightCondition?
+    firstHeightCondition,
     required DateTime? maxHeightTime,
     required double? maxHeightValue,
     required bool? maxHeightIsOver,
@@ -345,8 +377,9 @@ class TsunamiEstimation with _$TsunamiEstimation {
     required bool? isObserving,
   }) = _TsunamiEstimation;
 
-  factory TsunamiEstimation.fromJson(Map<String, dynamic> json) =>
-      _$TsunamiEstimationFromJson(json);
+  factory TsunamiEstimation.fromJson(
+    Map<String, dynamic> json,
+  ) => _$TsunamiEstimationFromJson(json);
 }
 
 @JsonEnum(valueField: 'value')
@@ -359,7 +392,9 @@ enum TsunamiEstimationFirstHeightCondition {
 }
 
 @freezed
-class PublicBodyVTSE41 with _$PublicBodyVTSE41 implements TsunamiBody {
+class PublicBodyVTSE41
+    with _$PublicBodyVTSE41
+    implements TsunamiBody {
   const factory PublicBodyVTSE41({
     required PublicBodyVTSE41Tsunami tsunami,
     required List<Earthquake> earthquakes,
@@ -367,12 +402,15 @@ class PublicBodyVTSE41 with _$PublicBodyVTSE41 implements TsunamiBody {
     required Comment? comment,
   }) = _PublicBodyVTSE41;
 
-  factory PublicBodyVTSE41.fromJson(Map<String, dynamic> json) =>
-      _$PublicBodyVTSE41FromJson(json);
+  factory PublicBodyVTSE41.fromJson(
+    Map<String, dynamic> json,
+  ) => _$PublicBodyVTSE41FromJson(json);
 }
 
 @freezed
-class PublicBodyVTSE51 with _$PublicBodyVTSE51 implements TsunamiBody {
+class PublicBodyVTSE51
+    with _$PublicBodyVTSE51
+    implements TsunamiBody {
   const factory PublicBodyVTSE51({
     required PublicBodyVTSE51Tsunami tsunami,
     required List<Earthquake> earthquakes,
@@ -380,12 +418,15 @@ class PublicBodyVTSE51 with _$PublicBodyVTSE51 implements TsunamiBody {
     required Comment? comment,
   }) = _PublicBodyVTSE51;
 
-  factory PublicBodyVTSE51.fromJson(Map<String, dynamic> json) =>
-      _$PublicBodyVTSE51FromJson(json);
+  factory PublicBodyVTSE51.fromJson(
+    Map<String, dynamic> json,
+  ) => _$PublicBodyVTSE51FromJson(json);
 }
 
 @freezed
-class PublicBodyVTSE52 with _$PublicBodyVTSE52 implements TsunamiBody {
+class PublicBodyVTSE52
+    with _$PublicBodyVTSE52
+    implements TsunamiBody {
   const factory PublicBodyVTSE52({
     required PublicBodyVTSE52Tsunami tsunami,
     required List<Earthquake> earthquakes,
@@ -393,8 +434,9 @@ class PublicBodyVTSE52 with _$PublicBodyVTSE52 implements TsunamiBody {
     required Comment? comment,
   }) = _PublicBodyVTSE52;
 
-  factory PublicBodyVTSE52.fromJson(Map<String, dynamic> json) =>
-      _$PublicBodyVTSE52FromJson(json);
+  factory PublicBodyVTSE52.fromJson(
+    Map<String, dynamic> json,
+  ) => _$PublicBodyVTSE52FromJson(json);
 }
 
 // ------------------ Earthquake ------------------ //
@@ -421,30 +463,35 @@ class EarthquakeHypocenter with _$EarthquakeHypocenter {
     required EarthquakeHypocenterCoordinate? coordinate,
   }) = _EarthquakeHypocenter;
 
-  factory EarthquakeHypocenter.fromJson(Map<String, dynamic> json) =>
-      _$EarthquakeHypocenterFromJson(json);
+  factory EarthquakeHypocenter.fromJson(
+    Map<String, dynamic> json,
+  ) => _$EarthquakeHypocenterFromJson(json);
 }
 
 @freezed
-class EarthquakeHypocenterDetailed with _$EarthquakeHypocenterDetailed {
+class EarthquakeHypocenterDetailed
+    with _$EarthquakeHypocenterDetailed {
   const factory EarthquakeHypocenterDetailed({
     required String code,
     required String name,
   }) = _EarthquakeHypocenterDetailed;
 
-  factory EarthquakeHypocenterDetailed.fromJson(Map<String, dynamic> json) =>
-      _$EarthquakeHypocenterDetailedFromJson(json);
+  factory EarthquakeHypocenterDetailed.fromJson(
+    Map<String, dynamic> json,
+  ) => _$EarthquakeHypocenterDetailedFromJson(json);
 }
 
 @freezed
-class EarthquakeHypocenterCoordinate with _$EarthquakeHypocenterCoordinate {
+class EarthquakeHypocenterCoordinate
+    with _$EarthquakeHypocenterCoordinate {
   const factory EarthquakeHypocenterCoordinate({
     required double lat,
     required double lon,
   }) = _EarthquakeHypocenterCoordinate;
 
-  factory EarthquakeHypocenterCoordinate.fromJson(Map<String, dynamic> json) =>
-      _$EarthquakeHypocenterCoordinateFromJson(json);
+  factory EarthquakeHypocenterCoordinate.fromJson(
+    Map<String, dynamic> json,
+  ) => _$EarthquakeHypocenterCoordinateFromJson(json);
 }
 
 @freezed
@@ -454,8 +501,9 @@ class EarthquakeMagnitude with _$EarthquakeMagnitude {
     required EarthquakeMagnitudeCondition? condition,
   }) = _EarthquakeMagnitude;
 
-  factory EarthquakeMagnitude.fromJson(Map<String, dynamic> json) =>
-      _$EarthquakeMagnitudeFromJson(json);
+  factory EarthquakeMagnitude.fromJson(
+    Map<String, dynamic> json,
+  ) => _$EarthquakeMagnitudeFromJson(json);
 }
 
 @JsonEnum(valueField: 'value')

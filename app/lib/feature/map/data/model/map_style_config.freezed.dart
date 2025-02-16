@@ -15,20 +15,26 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-MapStyleConfig _$MapStyleConfigFromJson(Map<String, dynamic> json) {
+MapStyleConfig _$MapStyleConfigFromJson(
+  Map<String, dynamic> json,
+) {
   return _MapStyleConfig.fromJson(json);
 }
 
 /// @nodoc
 mixin _$MapStyleConfig {
-  MapStyleTheme get theme => throw _privateConstructorUsedError;
+  MapStyleTheme get theme =>
+      throw _privateConstructorUsedError;
   @JsonKey(includeToJson: false, includeFromJson: false)
-  MapStyleColorScheme? get colorScheme => throw _privateConstructorUsedError;
+  MapStyleColorScheme? get colorScheme =>
+      throw _privateConstructorUsedError;
   @JsonKey(includeToJson: false, includeFromJson: false)
-  String? get styleString => throw _privateConstructorUsedError;
+  String? get styleString =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this MapStyleConfig to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of MapStyleConfig
   /// with the given fields replaced by the non-null parameter values.
@@ -48,14 +54,18 @@ abstract class $MapStyleConfigCopyWith<$Res> {
     MapStyleTheme theme,
     @JsonKey(includeToJson: false, includeFromJson: false)
     MapStyleColorScheme? colorScheme,
-    @JsonKey(includeToJson: false, includeFromJson: false) String? styleString,
+    @JsonKey(includeToJson: false, includeFromJson: false)
+    String? styleString,
   });
 
   $MapStyleColorSchemeCopyWith<$Res>? get colorScheme;
 }
 
 /// @nodoc
-class _$MapStyleConfigCopyWithImpl<$Res, $Val extends MapStyleConfig>
+class _$MapStyleConfigCopyWithImpl<
+  $Res,
+  $Val extends MapStyleConfig
+>
     implements $MapStyleConfigCopyWith<$Res> {
   _$MapStyleConfigCopyWithImpl(this._value, this._then);
 
@@ -104,9 +114,14 @@ class _$MapStyleConfigCopyWithImpl<$Res, $Val extends MapStyleConfig>
       return null;
     }
 
-    return $MapStyleColorSchemeCopyWith<$Res>(_value.colorScheme!, (value) {
-      return _then(_value.copyWith(colorScheme: value) as $Val);
-    });
+    return $MapStyleColorSchemeCopyWith<$Res>(
+      _value.colorScheme!,
+      (value) {
+        return _then(
+          _value.copyWith(colorScheme: value) as $Val,
+        );
+      },
+    );
   }
 }
 
@@ -123,7 +138,8 @@ abstract class _$$MapStyleConfigImplCopyWith<$Res>
     MapStyleTheme theme,
     @JsonKey(includeToJson: false, includeFromJson: false)
     MapStyleColorScheme? colorScheme,
-    @JsonKey(includeToJson: false, includeFromJson: false) String? styleString,
+    @JsonKey(includeToJson: false, includeFromJson: false)
+    String? styleString,
   });
 
   @override
@@ -132,7 +148,11 @@ abstract class _$$MapStyleConfigImplCopyWith<$Res>
 
 /// @nodoc
 class __$$MapStyleConfigImplCopyWithImpl<$Res>
-    extends _$MapStyleConfigCopyWithImpl<$Res, _$MapStyleConfigImpl>
+    extends
+        _$MapStyleConfigCopyWithImpl<
+          $Res,
+          _$MapStyleConfigImpl
+        >
     implements _$$MapStyleConfigImplCopyWith<$Res> {
   __$$MapStyleConfigImplCopyWithImpl(
     _$MapStyleConfigImpl _value,
@@ -175,12 +195,15 @@ class __$$MapStyleConfigImplCopyWithImpl<$Res>
 class _$MapStyleConfigImpl implements _MapStyleConfig {
   const _$MapStyleConfigImpl({
     required this.theme,
-    @JsonKey(includeToJson: false, includeFromJson: false) this.colorScheme,
-    @JsonKey(includeToJson: false, includeFromJson: false) this.styleString,
+    @JsonKey(includeToJson: false, includeFromJson: false)
+    this.colorScheme,
+    @JsonKey(includeToJson: false, includeFromJson: false)
+    this.styleString,
   });
 
-  factory _$MapStyleConfigImpl.fromJson(Map<String, dynamic> json) =>
-      _$$MapStyleConfigImplFromJson(json);
+  factory _$MapStyleConfigImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$MapStyleConfigImplFromJson(json);
 
   @override
   final MapStyleTheme theme;
@@ -201,7 +224,8 @@ class _$MapStyleConfigImpl implements _MapStyleConfig {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MapStyleConfigImpl &&
-            (identical(other.theme, theme) || other.theme == theme) &&
+            (identical(other.theme, theme) ||
+                other.theme == theme) &&
             (identical(other.colorScheme, colorScheme) ||
                 other.colorScheme == colorScheme) &&
             (identical(other.styleString, styleString) ||
@@ -210,18 +234,22 @@ class _$MapStyleConfigImpl implements _MapStyleConfig {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, theme, colorScheme, styleString);
+  int get hashCode => Object.hash(
+    runtimeType,
+    theme,
+    colorScheme,
+    styleString,
+  );
 
   /// Create a copy of MapStyleConfig
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$MapStyleConfigImplCopyWith<_$MapStyleConfigImpl> get copyWith =>
-      __$$MapStyleConfigImplCopyWithImpl<_$MapStyleConfigImpl>(
-        this,
-        _$identity,
-      );
+  _$$MapStyleConfigImplCopyWith<_$MapStyleConfigImpl>
+  get copyWith => __$$MapStyleConfigImplCopyWithImpl<
+    _$MapStyleConfigImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -238,8 +266,9 @@ abstract class _MapStyleConfig implements MapStyleConfig {
     final String? styleString,
   }) = _$MapStyleConfigImpl;
 
-  factory _MapStyleConfig.fromJson(Map<String, dynamic> json) =
-      _$MapStyleConfigImpl.fromJson;
+  factory _MapStyleConfig.fromJson(
+    Map<String, dynamic> json,
+  ) = _$MapStyleConfigImpl.fromJson;
 
   @override
   MapStyleTheme get theme;
@@ -254,35 +283,41 @@ abstract class _MapStyleConfig implements MapStyleConfig {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$MapStyleConfigImplCopyWith<_$MapStyleConfigImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$MapStyleConfigImplCopyWith<_$MapStyleConfigImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
-MapStyleColorScheme _$MapStyleColorSchemeFromJson(Map<String, dynamic> json) {
+MapStyleColorScheme _$MapStyleColorSchemeFromJson(
+  Map<String, dynamic> json,
+) {
   return _MapStyleColorScheme.fromJson(json);
 }
 
 /// @nodoc
 mixin _$MapStyleColorScheme {
   @ColorConverter()
-  Color get backgroundColor => throw _privateConstructorUsedError;
+  Color get backgroundColor =>
+      throw _privateConstructorUsedError;
   @ColorConverter()
   Color get landColor => throw _privateConstructorUsedError;
   @ColorConverter()
   Color get lineColor => throw _privateConstructorUsedError;
   @ColorConverter()
-  Color get japanLandColor => throw _privateConstructorUsedError;
+  Color get japanLandColor =>
+      throw _privateConstructorUsedError;
   @ColorConverter()
-  Color get japanLineColor => throw _privateConstructorUsedError;
+  Color get japanLineColor =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this MapStyleColorScheme to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of MapStyleColorScheme
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $MapStyleColorSchemeCopyWith<MapStyleColorScheme> get copyWith =>
-      throw _privateConstructorUsedError;
+  $MapStyleColorSchemeCopyWith<MapStyleColorScheme>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -290,7 +325,11 @@ abstract class $MapStyleColorSchemeCopyWith<$Res> {
   factory $MapStyleColorSchemeCopyWith(
     MapStyleColorScheme value,
     $Res Function(MapStyleColorScheme) then,
-  ) = _$MapStyleColorSchemeCopyWithImpl<$Res, MapStyleColorScheme>;
+  ) =
+      _$MapStyleColorSchemeCopyWithImpl<
+        $Res,
+        MapStyleColorScheme
+      >;
   @useResult
   $Res call({
     @ColorConverter() Color backgroundColor,
@@ -302,9 +341,15 @@ abstract class $MapStyleColorSchemeCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$MapStyleColorSchemeCopyWithImpl<$Res, $Val extends MapStyleColorScheme>
+class _$MapStyleColorSchemeCopyWithImpl<
+  $Res,
+  $Val extends MapStyleColorScheme
+>
     implements $MapStyleColorSchemeCopyWith<$Res> {
-  _$MapStyleColorSchemeCopyWithImpl(this._value, this._then);
+  _$MapStyleColorSchemeCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -375,7 +420,11 @@ abstract class _$$MapStyleColorSchemeImplCopyWith<$Res>
 
 /// @nodoc
 class __$$MapStyleColorSchemeImplCopyWithImpl<$Res>
-    extends _$MapStyleColorSchemeCopyWithImpl<$Res, _$MapStyleColorSchemeImpl>
+    extends
+        _$MapStyleColorSchemeCopyWithImpl<
+          $Res,
+          _$MapStyleColorSchemeImpl
+        >
     implements _$$MapStyleColorSchemeImplCopyWith<$Res> {
   __$$MapStyleColorSchemeImplCopyWithImpl(
     _$MapStyleColorSchemeImpl _value,
@@ -427,7 +476,8 @@ class __$$MapStyleColorSchemeImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$MapStyleColorSchemeImpl implements _MapStyleColorScheme {
+class _$MapStyleColorSchemeImpl
+    implements _MapStyleColorScheme {
   const _$MapStyleColorSchemeImpl({
     @ColorConverter() required this.backgroundColor,
     @ColorConverter() required this.landColor,
@@ -436,8 +486,9 @@ class _$MapStyleColorSchemeImpl implements _MapStyleColorScheme {
     @ColorConverter() required this.japanLineColor,
   });
 
-  factory _$MapStyleColorSchemeImpl.fromJson(Map<String, dynamic> json) =>
-      _$$MapStyleColorSchemeImplFromJson(json);
+  factory _$MapStyleColorSchemeImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$MapStyleColorSchemeImplFromJson(json);
 
   @override
   @ColorConverter()
@@ -465,15 +516,24 @@ class _$MapStyleColorSchemeImpl implements _MapStyleColorScheme {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MapStyleColorSchemeImpl &&
-            (identical(other.backgroundColor, backgroundColor) ||
+            (identical(
+                  other.backgroundColor,
+                  backgroundColor,
+                ) ||
                 other.backgroundColor == backgroundColor) &&
             (identical(other.landColor, landColor) ||
                 other.landColor == landColor) &&
             (identical(other.lineColor, lineColor) ||
                 other.lineColor == lineColor) &&
-            (identical(other.japanLandColor, japanLandColor) ||
+            (identical(
+                  other.japanLandColor,
+                  japanLandColor,
+                ) ||
                 other.japanLandColor == japanLandColor) &&
-            (identical(other.japanLineColor, japanLineColor) ||
+            (identical(
+                  other.japanLineColor,
+                  japanLineColor,
+                ) ||
                 other.japanLineColor == japanLineColor));
   }
 
@@ -493,11 +553,12 @@ class _$MapStyleColorSchemeImpl implements _MapStyleColorScheme {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$MapStyleColorSchemeImplCopyWith<_$MapStyleColorSchemeImpl> get copyWith =>
-      __$$MapStyleColorSchemeImplCopyWithImpl<_$MapStyleColorSchemeImpl>(
-        this,
-        _$identity,
-      );
+  _$$MapStyleColorSchemeImplCopyWith<
+    _$MapStyleColorSchemeImpl
+  >
+  get copyWith => __$$MapStyleColorSchemeImplCopyWithImpl<
+    _$MapStyleColorSchemeImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -505,7 +566,8 @@ class _$MapStyleColorSchemeImpl implements _MapStyleColorScheme {
   }
 }
 
-abstract class _MapStyleColorScheme implements MapStyleColorScheme {
+abstract class _MapStyleColorScheme
+    implements MapStyleColorScheme {
   const factory _MapStyleColorScheme({
     @ColorConverter() required final Color backgroundColor,
     @ColorConverter() required final Color landColor,
@@ -514,8 +576,9 @@ abstract class _MapStyleColorScheme implements MapStyleColorScheme {
     @ColorConverter() required final Color japanLineColor,
   }) = _$MapStyleColorSchemeImpl;
 
-  factory _MapStyleColorScheme.fromJson(Map<String, dynamic> json) =
-      _$MapStyleColorSchemeImpl.fromJson;
+  factory _MapStyleColorScheme.fromJson(
+    Map<String, dynamic> json,
+  ) = _$MapStyleColorSchemeImpl.fromJson;
 
   @override
   @ColorConverter()
@@ -537,6 +600,8 @@ abstract class _MapStyleColorScheme implements MapStyleColorScheme {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$MapStyleColorSchemeImplCopyWith<_$MapStyleColorSchemeImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$MapStyleColorSchemeImplCopyWith<
+    _$MapStyleColorSchemeImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }

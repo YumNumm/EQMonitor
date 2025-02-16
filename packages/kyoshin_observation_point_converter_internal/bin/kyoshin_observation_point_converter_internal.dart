@@ -5,7 +5,9 @@ import 'package:kyoshin_observation_point_converter_internal/kyoshin_observation
 Future<void> main(List<String> args) async {
   final path = args.isNotEmpty ? args[0] : null;
   if (path == null || path.isEmpty) {
-    print('Usage: kyoshin_observation_point_converter_internal <path>');
+    print(
+      'Usage: kyoshin_observation_point_converter_internal <path>',
+    );
     return;
   }
   final converter = KyoshinObservationPointConverter();
@@ -27,7 +29,9 @@ Future<void> main(List<String> args) async {
   }
 
   // json
-  await file.json.writeAsString(table.toBuilder().writeToJson());
+  await file.json.writeAsString(
+    table.toBuilder().writeToJson(),
+  );
   // binary
   await file.binary.writeAsBytes(table.writeToBuffer());
 

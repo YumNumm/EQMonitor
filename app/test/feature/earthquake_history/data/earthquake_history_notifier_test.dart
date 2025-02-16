@@ -21,19 +21,25 @@ void main() {
             magnitude: 5.5,
             maxIntensity: JmaIntensity.fiveLower,
           );
-          final payload = RealtimePostgresInsertPayload<EarthquakeV1>(
-            newData: data,
-            schema: 'public',
-            table: 'earthquake',
-            commitTimestamp: DateTime(2002),
-            errors: null,
-          );
+          final payload =
+              RealtimePostgresInsertPayload<EarthquakeV1>(
+                newData: data,
+                schema: 'public',
+                table: 'earthquake',
+                commitTimestamp: DateTime(2002),
+                errors: null,
+              );
 
           // Act
-          final result = parameter.isRealtimeDataMatch(payload);
+          final result = parameter.isRealtimeDataMatch(
+            payload,
+          );
 
           // Assert
-          expect(result, parameter.isEarthquakeV1Match(data));
+          expect(
+            result,
+            parameter.isEarthquakeV1Match(data),
+          );
         },
       );
       test(
@@ -51,41 +57,53 @@ void main() {
             magnitude: 5.5,
             maxIntensity: JmaIntensity.fiveLower,
           );
-          final payload = RealtimePostgresUpdatePayload<EarthquakeV1>(
-            old: {'eventId': 20220101000000},
-            newData: data,
-            schema: 'public',
-            table: 'earthquake',
-            commitTimestamp: DateTime(2002),
-            errors: null,
-          );
+          final payload =
+              RealtimePostgresUpdatePayload<EarthquakeV1>(
+                old: {'eventId': 20220101000000},
+                newData: data,
+                schema: 'public',
+                table: 'earthquake',
+                commitTimestamp: DateTime(2002),
+                errors: null,
+              );
 
           // Act
-          final result = parameter.isRealtimeDataMatch(payload);
+          final result = parameter.isRealtimeDataMatch(
+            payload,
+          );
 
           // Assert
-          expect(result, parameter.isEarthquakeV1Match(data));
+          expect(
+            result,
+            parameter.isEarthquakeV1Match(data),
+          );
         },
       );
-      test('RealtimePostgresDeletePayload<EarthquakeV1> は、falseを返すこと', () {
-        // Arrange
-        const parameter = EarthquakeHistoryParameter(
-          intensityGte: JmaIntensity.fiveLower,
-        );
-        final payload = RealtimePostgresDeletePayload<EarthquakeV1>(
-          old: {'eventId': 20220101000000},
-          schema: 'public',
-          table: 'earthquake',
-          commitTimestamp: DateTime(2002),
-          errors: null,
-        );
+      test(
+        'RealtimePostgresDeletePayload<EarthquakeV1> は、falseを返すこと',
+        () {
+          // Arrange
+          const parameter = EarthquakeHistoryParameter(
+            intensityGte: JmaIntensity.fiveLower,
+          );
+          final payload =
+              RealtimePostgresDeletePayload<EarthquakeV1>(
+                old: {'eventId': 20220101000000},
+                schema: 'public',
+                table: 'earthquake',
+                commitTimestamp: DateTime(2002),
+                errors: null,
+              );
 
-        // Act
-        final result = parameter.isRealtimeDataMatch(payload);
+          // Act
+          final result = parameter.isRealtimeDataMatch(
+            payload,
+          );
 
-        // Assert
-        expect(result, false);
-      });
+          // Assert
+          expect(result, false);
+        },
+      );
     });
     group('isEarthquakeV1Match', () {
       final base = EarthquakeV1(
@@ -105,7 +123,9 @@ void main() {
           final data = base.copyWith(maxIntensity: null);
 
           // Act
-          final result = parameter.isEarthquakeV1Match(data);
+          final result = parameter.isEarthquakeV1Match(
+            data,
+          );
 
           // Assert
           expect(result, false);
@@ -115,10 +135,14 @@ void main() {
           const parameter = EarthquakeHistoryParameter(
             intensityGte: JmaIntensity.sixLower,
           );
-          final data = base.copyWith(maxIntensity: JmaIntensity.fiveLower);
+          final data = base.copyWith(
+            maxIntensity: JmaIntensity.fiveLower,
+          );
 
           // Act
-          final result = parameter.isEarthquakeV1Match(data);
+          final result = parameter.isEarthquakeV1Match(
+            data,
+          );
 
           // Assert
           expect(result, false);
@@ -128,196 +152,283 @@ void main() {
           const parameter = EarthquakeHistoryParameter(
             intensityLte: JmaIntensity.fiveLower,
           );
-          final data = base.copyWith(maxIntensity: JmaIntensity.sixLower);
+          final data = base.copyWith(
+            maxIntensity: JmaIntensity.sixLower,
+          );
 
           // Act
-          final result = parameter.isEarthquakeV1Match(data);
+          final result = parameter.isEarthquakeV1Match(
+            data,
+          );
 
           // Assert
           expect(result, false);
         });
-        test('intensityGte <= maxIntensity <= intensityLteの場合はtrueを返す', () {
-          // Arrange
-          const parameter = EarthquakeHistoryParameter(
-            intensityGte: JmaIntensity.fiveLower,
-            intensityLte: JmaIntensity.fiveLower,
-          );
-          final data = base.copyWith(maxIntensity: JmaIntensity.fiveLower);
+        test(
+          'intensityGte <= maxIntensity <= intensityLteの場合はtrueを返す',
+          () {
+            // Arrange
+            const parameter = EarthquakeHistoryParameter(
+              intensityGte: JmaIntensity.fiveLower,
+              intensityLte: JmaIntensity.fiveLower,
+            );
+            final data = base.copyWith(
+              maxIntensity: JmaIntensity.fiveLower,
+            );
 
-          // Act
-          final result = parameter.isEarthquakeV1Match(data);
+            // Act
+            final result = parameter.isEarthquakeV1Match(
+              data,
+            );
 
-          // Assert
-          expect(result, true);
-        });
-        test('intensityGteがnullでintensityLte < maxIntensityの場合はtrueを返す', () {
-          // Arrange
-          const parameter = EarthquakeHistoryParameter(
-            intensityLte: JmaIntensity.fiveLower,
-          );
-          final data = base.copyWith(maxIntensity: JmaIntensity.fiveLower);
+            // Assert
+            expect(result, true);
+          },
+        );
+        test(
+          'intensityGteがnullでintensityLte < maxIntensityの場合はtrueを返す',
+          () {
+            // Arrange
+            const parameter = EarthquakeHistoryParameter(
+              intensityLte: JmaIntensity.fiveLower,
+            );
+            final data = base.copyWith(
+              maxIntensity: JmaIntensity.fiveLower,
+            );
 
-          // Act
-          final result = parameter.isEarthquakeV1Match(data);
+            // Act
+            final result = parameter.isEarthquakeV1Match(
+              data,
+            );
 
-          // Assert
-          expect(result, true);
-        });
-        test('intensityLteがnullでintensityGte < maxIntensityの場合はtrueを返す', () {
-          // Arrange
-          const parameter = EarthquakeHistoryParameter(
-            intensityGte: JmaIntensity.fiveLower,
-          );
-          final data = base.copyWith(maxIntensity: JmaIntensity.fiveLower);
+            // Assert
+            expect(result, true);
+          },
+        );
+        test(
+          'intensityLteがnullでintensityGte < maxIntensityの場合はtrueを返す',
+          () {
+            // Arrange
+            const parameter = EarthquakeHistoryParameter(
+              intensityGte: JmaIntensity.fiveLower,
+            );
+            final data = base.copyWith(
+              maxIntensity: JmaIntensity.fiveLower,
+            );
 
-          // Act
-          final result = parameter.isEarthquakeV1Match(data);
+            // Act
+            final result = parameter.isEarthquakeV1Match(
+              data,
+            );
 
-          // Assert
-          expect(result, true);
-        });
+            // Assert
+            expect(result, true);
+          },
+        );
       });
       group('magnitude', () {
         test('magnitudeがnullの場合はfalseを返す', () {
           // Arrange
-          const parameter = EarthquakeHistoryParameter(magnitudeGte: 5.5);
+          const parameter = EarthquakeHistoryParameter(
+            magnitudeGte: 5.5,
+          );
           final data = base.copyWith(magnitude: null);
 
           // Act
-          final result = parameter.isEarthquakeV1Match(data);
+          final result = parameter.isEarthquakeV1Match(
+            data,
+          );
 
           // Assert
           expect(result, false);
         });
         test('magnitude < magnitudeGteはfalseを返す', () {
           // Arrange
-          const parameter = EarthquakeHistoryParameter(magnitudeGte: 6);
+          const parameter = EarthquakeHistoryParameter(
+            magnitudeGte: 6,
+          );
           final data = base.copyWith(magnitude: 5.5);
 
           // Act
-          final result = parameter.isEarthquakeV1Match(data);
+          final result = parameter.isEarthquakeV1Match(
+            data,
+          );
 
           // Assert
           expect(result, false);
         });
         test('magnitudeLte < magnitudeはfalseを返す', () {
           // Arrange
-          const parameter = EarthquakeHistoryParameter(magnitudeLte: 5);
-          final data = base.copyWith(magnitude: 5.5);
-
-          // Act
-          final result = parameter.isEarthquakeV1Match(data);
-
-          // Assert
-          expect(result, false);
-        });
-        test('magnitudeGte <= magnitude <= magnitudeLteの場合はtrueを返す', () {
-          // Arrange
           const parameter = EarthquakeHistoryParameter(
-            magnitudeGte: 5.5,
-            magnitudeLte: 5.5,
+            magnitudeLte: 5,
           );
           final data = base.copyWith(magnitude: 5.5);
 
           // Act
-          final result = parameter.isEarthquakeV1Match(data);
+          final result = parameter.isEarthquakeV1Match(
+            data,
+          );
 
           // Assert
-          expect(result, true);
+          expect(result, false);
         });
-        test('magnitudeGteがnullでmagnitudeLte < magnitudeの場合はtrueを返す', () {
-          // Arrange
-          const parameter = EarthquakeHistoryParameter(magnitudeLte: 5.5);
-          final data = base.copyWith(magnitude: 5.5);
+        test(
+          'magnitudeGte <= magnitude <= magnitudeLteの場合はtrueを返す',
+          () {
+            // Arrange
+            const parameter = EarthquakeHistoryParameter(
+              magnitudeGte: 5.5,
+              magnitudeLte: 5.5,
+            );
+            final data = base.copyWith(magnitude: 5.5);
 
-          // Act
-          final result = parameter.isEarthquakeV1Match(data);
+            // Act
+            final result = parameter.isEarthquakeV1Match(
+              data,
+            );
 
-          // Assert
-          expect(result, true);
-        });
-        test('magnitudeLteがnullでmagnitudeGte < magnitudeの場合はtrueを返す', () {
-          // Arrange
-          const parameter = EarthquakeHistoryParameter(magnitudeGte: 5.5);
-          final data = base.copyWith(magnitude: 5.5);
+            // Assert
+            expect(result, true);
+          },
+        );
+        test(
+          'magnitudeGteがnullでmagnitudeLte < magnitudeの場合はtrueを返す',
+          () {
+            // Arrange
+            const parameter = EarthquakeHistoryParameter(
+              magnitudeLte: 5.5,
+            );
+            final data = base.copyWith(magnitude: 5.5);
 
-          // Act
-          final result = parameter.isEarthquakeV1Match(data);
+            // Act
+            final result = parameter.isEarthquakeV1Match(
+              data,
+            );
 
-          // Assert
-          expect(result, true);
-        });
+            // Assert
+            expect(result, true);
+          },
+        );
+        test(
+          'magnitudeLteがnullでmagnitudeGte < magnitudeの場合はtrueを返す',
+          () {
+            // Arrange
+            const parameter = EarthquakeHistoryParameter(
+              magnitudeGte: 5.5,
+            );
+            final data = base.copyWith(magnitude: 5.5);
+
+            // Act
+            final result = parameter.isEarthquakeV1Match(
+              data,
+            );
+
+            // Assert
+            expect(result, true);
+          },
+        );
       });
       group('depth', () {
         test('depthがnullの場合はfalseを返す', () {
           // Arrange
-          const parameter = EarthquakeHistoryParameter(depthGte: 10);
+          const parameter = EarthquakeHistoryParameter(
+            depthGte: 10,
+          );
           final data = base.copyWith(depth: null);
 
           // Act
-          final result = parameter.isEarthquakeV1Match(data);
+          final result = parameter.isEarthquakeV1Match(
+            data,
+          );
 
           // Assert
           expect(result, false);
         });
         test('depth < depthGteはfalseを返す', () {
           // Arrange
-          const parameter = EarthquakeHistoryParameter(depthGte: 11);
+          const parameter = EarthquakeHistoryParameter(
+            depthGte: 11,
+          );
           final data = base.copyWith(depth: 10);
 
           // Act
-          final result = parameter.isEarthquakeV1Match(data);
+          final result = parameter.isEarthquakeV1Match(
+            data,
+          );
 
           // Assert
           expect(result, false);
         });
         test('depthLte < depthはfalseを返す', () {
           // Arrange
-          const parameter = EarthquakeHistoryParameter(depthLte: 9);
-          final data = base.copyWith(depth: 10);
-
-          // Act
-          final result = parameter.isEarthquakeV1Match(data);
-
-          // Assert
-          expect(result, false);
-        });
-        test('depthGte <= depth <= depthLteの場合はtrueを返す', () {
-          // Arrange
           const parameter = EarthquakeHistoryParameter(
-            depthGte: 10,
-            depthLte: 10,
+            depthLte: 9,
           );
           final data = base.copyWith(depth: 10);
 
           // Act
-          final result = parameter.isEarthquakeV1Match(data);
+          final result = parameter.isEarthquakeV1Match(
+            data,
+          );
 
           // Assert
-          expect(result, true);
+          expect(result, false);
         });
-        test('depthGteがnullでdepthLte < depthの場合はtrueを返す', () {
-          // Arrange
-          const parameter = EarthquakeHistoryParameter(depthLte: 10);
-          final data = base.copyWith(depth: 10);
+        test(
+          'depthGte <= depth <= depthLteの場合はtrueを返す',
+          () {
+            // Arrange
+            const parameter = EarthquakeHistoryParameter(
+              depthGte: 10,
+              depthLte: 10,
+            );
+            final data = base.copyWith(depth: 10);
 
-          // Act
-          final result = parameter.isEarthquakeV1Match(data);
+            // Act
+            final result = parameter.isEarthquakeV1Match(
+              data,
+            );
 
-          // Assert
-          expect(result, true);
-        });
-        test('depthLteがnullでdepthGte < depthの場合はtrueを返す', () {
-          // Arrange
-          const parameter = EarthquakeHistoryParameter(depthGte: 10);
-          final data = base.copyWith(depth: 10);
+            // Assert
+            expect(result, true);
+          },
+        );
+        test(
+          'depthGteがnullでdepthLte < depthの場合はtrueを返す',
+          () {
+            // Arrange
+            const parameter = EarthquakeHistoryParameter(
+              depthLte: 10,
+            );
+            final data = base.copyWith(depth: 10);
 
-          // Act
-          final result = parameter.isEarthquakeV1Match(data);
+            // Act
+            final result = parameter.isEarthquakeV1Match(
+              data,
+            );
 
-          // Assert
-          expect(result, true);
-        });
+            // Assert
+            expect(result, true);
+          },
+        );
+        test(
+          'depthLteがnullでdepthGte < depthの場合はtrueを返す',
+          () {
+            // Arrange
+            const parameter = EarthquakeHistoryParameter(
+              depthGte: 10,
+            );
+            final data = base.copyWith(depth: 10);
+
+            // Act
+            final result = parameter.isEarthquakeV1Match(
+              data,
+            );
+
+            // Assert
+            expect(result, true);
+          },
+        );
       });
     });
   });

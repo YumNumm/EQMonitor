@@ -10,6 +10,7 @@ class HomeConfigurationModel with _$HomeConfigurationModel {
     @Default(false) bool showLocation,
   }) = _HomeConfigurationModel;
 
-  factory HomeConfigurationModel.fromJson(Map<String, dynamic> json) =>
-      _$HomeConfigurationModelFromJson(json);
+  factory HomeConfigurationModel.fromJson(
+    Map<String, dynamic> json,
+  ) => _$HomeConfigurationModelFromJson(json);
 }

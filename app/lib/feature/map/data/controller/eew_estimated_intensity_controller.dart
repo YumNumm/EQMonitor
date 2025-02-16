@@ -12,7 +12,9 @@ part 'eew_estimated_intensity_controller.g.dart';
 class EewEstimatedIntensityLayerController
     extends _$EewEstimatedIntensityLayerController {
   @override
-  EewEstimatedIntensityLayer build(JmaForecastIntensity intensity) {
+  EewEstimatedIntensityLayer build(
+    JmaForecastIntensity intensity,
+  ) {
     final intensityColorMap = ref
         .watch(intensityColorProvider)
         .fromJmaForecastIntensity(intensity);
@@ -25,7 +27,11 @@ class EewEstimatedIntensityLayerController
             .nonNulls
             .flattened
             .where(
-              (eew) => eew.forecastMaxInt.toDisplayMaxInt().maxInt == intensity,
+              (eew) =>
+                  eew.forecastMaxInt
+                      .toDisplayMaxInt()
+                      .maxInt ==
+                  intensity,
             )
             .map((eew) => eew.code)
             .toList();

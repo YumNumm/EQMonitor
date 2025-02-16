@@ -15,8 +15,9 @@ class CustomFeedback with _$CustomFeedback {
     @Default(true) bool isScreenshotAttached,
   }) = _CustomFeedback;
 
-  factory CustomFeedback.fromJson(Map<String, dynamic> json) =>
-      _$CustomFeedbackFromJson(json);
+  factory CustomFeedback.fromJson(
+    Map<String, dynamic> json,
+  ) => _$CustomFeedbackFromJson(json);
 }
 
 enum FeedbackType {

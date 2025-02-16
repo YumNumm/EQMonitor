@@ -10,14 +10,22 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'map_configuration_notifier.g.dart';
 
 @Riverpod(keepAlive: true)
-class MapConfigurationNotifier extends _$MapConfigurationNotifier {
+class MapConfigurationNotifier
+    extends _$MapConfigurationNotifier {
   @override
   Future<MapConfiguration> build() async {
-    final brightness = ref.watch(brightnessNotifierProvider);
-    var savedState = _load() ?? const MapConfiguration(theme: MapTheme.system);
+    final brightness = ref.watch(
+      brightnessNotifierProvider,
+    );
+    var savedState =
+        _load() ??
+        const MapConfiguration(theme: MapTheme.system);
     if (savedState.theme == MapTheme.system) {
       savedState = savedState.copyWith(
-        theme: brightness == Brightness.dark ? MapTheme.dark : MapTheme.light,
+        theme:
+            brightness == Brightness.dark
+                ? MapTheme.dark
+                : MapTheme.light,
       );
     }
 
@@ -43,6 +51,8 @@ class MapConfigurationNotifier extends _$MapConfigurationNotifier {
     if (json == null) {
       return null;
     }
-    return MapConfiguration.fromJson(jsonDecode(json) as Map<String, dynamic>);
+    return MapConfiguration.fromJson(
+      jsonDecode(json) as Map<String, dynamic>,
+    );
   }
 }

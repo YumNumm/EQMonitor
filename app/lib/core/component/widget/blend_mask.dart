@@ -19,7 +19,10 @@ class BlendMask extends SingleChildRenderObjectWidget {
   }
 
   @override
-  void updateRenderObject(BuildContext context, RenderBlendMask renderObject) {
+  void updateRenderObject(
+    BuildContext context,
+    RenderBlendMask renderObject,
+  ) {
     renderObject
       ..blendMode = blendMode
       ..opacity = opacity;
@@ -38,7 +41,12 @@ class RenderBlendMask extends RenderProxyBox {
       offset & size,
       Paint()
         ..blendMode = blendMode
-        ..color = Color.fromARGB((opacity * 255).round(), 255, 255, 255),
+        ..color = Color.fromARGB(
+          (opacity * 255).round(),
+          255,
+          255,
+          255,
+        ),
     );
 
     super.paint(context, offset);

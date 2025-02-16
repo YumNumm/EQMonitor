@@ -19,7 +19,10 @@ class ReplayDataParser {
       data.offsetInBytes,
       magicHeader.length,
     );
-    if (!const ListEquality<int>().equals(magicHeaderData, magicHeader)) {
+    if (!const ListEquality<int>().equals(
+      magicHeaderData,
+      magicHeader,
+    )) {
       throw Exception('Magic Header is invalid');
     }
 
@@ -27,30 +30,48 @@ class ReplayDataParser {
       data.buffer,
       data.offsetInBytes + magicHeader.length,
     );
-    final (header, headerOffset) = _readHeader(headerDataView);
+    final (header, headerOffset) = _readHeader(
+      headerDataView,
+    );
     print((header, headerOffset));
 
     final dataView = Uint8List.view(
       data.buffer,
-      data.offsetInBytes + magicHeader.length + headerOffset,
+      data.offsetInBytes +
+          magicHeader.length +
+          headerOffset,
     );
-    final decompressedData = switch (header.compressionMode) {
+    final decompressedData = switch (header
+        .compressionMode) {
       ReplayFileCompressionMode.none => dataView,
-      ReplayFileCompressionMode.gzip => gzip.decode(dataView),
-      ReplayFileCompressionMode.brotli => brotli.decode(dataView),
-      ReplayFileCompressionMode.messagePackCSharpLz4BlockArray => lz4.decode(
+      ReplayFileCompressionMode.gzip => gzip.decode(
         dataView,
       ),
+      ReplayFileCompressionMode.brotli => brotli.decode(
+        dataView,
+      ),
+      ReplayFileCompressionMode
+          .messagePackCSharpLz4BlockArray =>
+        lz4.decode(dataView),
     };
-    final replayData = _parseReplayData(decompressedData as Uint8List);
+    final replayData = _parseReplayData(
+      decompressedData as Uint8List,
+    );
     return ReplayFile(header: header, data: replayData);
   }
 
-  (ReplayFileHeader, int offset) _readHeader(Uint8List data) {
-    final deserializer = Deserializer(data, extDecoder: ExtTimeStampDecoder());
+  (ReplayFileHeader, int offset) _readHeader(
+    Uint8List data,
+  ) {
+    final deserializer = Deserializer(
+      data,
+      extDecoder: ExtTimeStampDecoder(),
+    );
     final headerData = deserializer.decode();
     if (headerData is! List<dynamic>) {
-      throw Exception('Header is invalid: ${headerData.runtimeType}');
+      throw Exception(
+        'Header is invalid: ${headerData.runtimeType}',
+      );
     }
     print(headerData);
     final header = ReplayFileHeader.fromMsgPack(headerData);
@@ -63,27 +84,38 @@ class ReplayDataParser {
 
   List<ReplayData> _parseReplayData(Uint8List data) {
     final result = <ReplayData>[];
-    final deserializer = Deserializer(data, extDecoder: ExtTimeStampDecoder());
-    final replayData = deserializer.decode() as List<dynamic>;
+    final deserializer = Deserializer(
+      data,
+      extDecoder: ExtTimeStampDecoder(),
+    );
+    final replayData =
+        deserializer.decode() as List<dynamic>;
     for (final data in replayData) {
       if (data is List<dynamic>) {
         result.add(ReplayData.fromMsgPack(data));
       } else {
-        throw Exception('Invalid replay data: ${data.runtimeType}');
+        throw Exception(
+          'Invalid replay data: ${data.runtimeType}',
+        );
       }
     }
     return result;
   }
 
-  static Uint8List get magicHeader => Uint8List.fromList(utf8.encode('EQRP'));
+  static Uint8List get magicHeader =>
+      Uint8List.fromList(utf8.encode('EQRP'));
 }
 
 class ReplayFile {
-  const ReplayFile({required this.header, required this.data});
+  const ReplayFile({
+    required this.header,
+    required this.data,
+  });
 
   final ReplayFileHeader header;
   final List<ReplayData> data;
 
   @override
-  String toString() => 'ReplayFile(header: $header, data: ${data.join(', ')})';
+  String toString() =>
+      'ReplayFile(header: $header, data: ${data.join(', ')})';
 }

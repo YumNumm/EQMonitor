@@ -7,7 +7,9 @@ part 'platform_brightness.g.dart';
 class PlatformBrightness extends _$PlatformBrightness {
   @override
   Brightness build() {
-    PlatformDispatcher.instance.onPlatformBrightnessChanged = () async {
+    PlatformDispatcher
+        .instance
+        .onPlatformBrightnessChanged = () async {
       Future<void>.delayed(
         const Duration(milliseconds: 250),
         ref.invalidateSelf,

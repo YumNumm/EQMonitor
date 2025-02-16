@@ -21,7 +21,8 @@ class ParameterLoaderWidget extends HookConsumerWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start,
                     children: [
                       const Text('観測点情報の取得に失敗しました'),
                       if (error is DioException)
@@ -37,7 +38,10 @@ class ParameterLoaderWidget extends HookConsumerWidget {
             else
               FilledButton(
                 child: const Text('再取得'),
-                onPressed: () async => ref.invalidate(jmaParameterProvider),
+                onPressed:
+                    () async => ref.invalidate(
+                      jmaParameterProvider,
+                    ),
               ),
           ],
         ),
@@ -54,7 +58,10 @@ class ParameterLoaderWidget extends HookConsumerWidget {
           margin:
               const EdgeInsets.symmetric(horizontal: 12) +
               const EdgeInsets.only(bottom: 8),
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8,
+            vertical: 8,
+          ),
           child: const Row(
             children: [
               Text('観測点の情報を取得中...'),

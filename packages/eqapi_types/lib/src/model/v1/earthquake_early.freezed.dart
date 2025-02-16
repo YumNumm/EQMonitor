@@ -15,7 +15,9 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-EarthquakeEarly _$EarthquakeEarlyFromJson(Map<String, dynamic> json) {
+EarthquakeEarly _$EarthquakeEarlyFromJson(
+  Map<String, dynamic> json,
+) {
   return _EarthquakeEarly.fromJson(json);
 }
 
@@ -23,18 +25,25 @@ EarthquakeEarly _$EarthquakeEarlyFromJson(Map<String, dynamic> json) {
 mixin _$EarthquakeEarly {
   String get id => throw _privateConstructorUsedError;
   int? get depth => throw _privateConstructorUsedError;
-  double? get latitude => throw _privateConstructorUsedError;
-  double? get longitude => throw _privateConstructorUsedError;
-  double? get magnitude => throw _privateConstructorUsedError;
-  JmaForecastIntensity? get maxIntensity => throw _privateConstructorUsedError;
-  bool get maxIntensityIsEarly => throw _privateConstructorUsedError;
+  double? get latitude =>
+      throw _privateConstructorUsedError;
+  double? get longitude =>
+      throw _privateConstructorUsedError;
+  double? get magnitude =>
+      throw _privateConstructorUsedError;
+  JmaForecastIntensity? get maxIntensity =>
+      throw _privateConstructorUsedError;
+  bool get maxIntensityIsEarly =>
+      throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  DateTime get originTime => throw _privateConstructorUsedError;
+  DateTime get originTime =>
+      throw _privateConstructorUsedError;
   OriginTimePrecision get originTimePrecision =>
       throw _privateConstructorUsedError;
 
   /// Serializes this EarthquakeEarly to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of EarthquakeEarly
   /// with the given fields replaced by the non-null parameter values.
@@ -65,7 +74,10 @@ abstract class $EarthquakeEarlyCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$EarthquakeEarlyCopyWithImpl<$Res, $Val extends EarthquakeEarly>
+class _$EarthquakeEarlyCopyWithImpl<
+  $Res,
+  $Val extends EarthquakeEarly
+>
     implements $EarthquakeEarlyCopyWith<$Res> {
   _$EarthquakeEarlyCopyWithImpl(this._value, this._then);
 
@@ -173,7 +185,11 @@ abstract class _$$EarthquakeEarlyImplCopyWith<$Res>
 
 /// @nodoc
 class __$$EarthquakeEarlyImplCopyWithImpl<$Res>
-    extends _$EarthquakeEarlyCopyWithImpl<$Res, _$EarthquakeEarlyImpl>
+    extends
+        _$EarthquakeEarlyCopyWithImpl<
+          $Res,
+          _$EarthquakeEarlyImpl
+        >
     implements _$$EarthquakeEarlyImplCopyWith<$Res> {
   __$$EarthquakeEarlyImplCopyWithImpl(
     _$EarthquakeEarlyImpl _value,
@@ -269,8 +285,9 @@ class _$EarthquakeEarlyImpl implements _EarthquakeEarly {
     required this.originTimePrecision,
   });
 
-  factory _$EarthquakeEarlyImpl.fromJson(Map<String, dynamic> json) =>
-      _$$EarthquakeEarlyImplFromJson(json);
+  factory _$EarthquakeEarlyImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$EarthquakeEarlyImplFromJson(json);
 
   @override
   final String id;
@@ -304,7 +321,8 @@ class _$EarthquakeEarlyImpl implements _EarthquakeEarly {
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeEarlyImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.depth, depth) || other.depth == depth) &&
+            (identical(other.depth, depth) ||
+                other.depth == depth) &&
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
@@ -313,13 +331,22 @@ class _$EarthquakeEarlyImpl implements _EarthquakeEarly {
                 other.magnitude == magnitude) &&
             (identical(other.maxIntensity, maxIntensity) ||
                 other.maxIntensity == maxIntensity) &&
-            (identical(other.maxIntensityIsEarly, maxIntensityIsEarly) ||
-                other.maxIntensityIsEarly == maxIntensityIsEarly) &&
-            (identical(other.name, name) || other.name == name) &&
+            (identical(
+                  other.maxIntensityIsEarly,
+                  maxIntensityIsEarly,
+                ) ||
+                other.maxIntensityIsEarly ==
+                    maxIntensityIsEarly) &&
+            (identical(other.name, name) ||
+                other.name == name) &&
             (identical(other.originTime, originTime) ||
                 other.originTime == originTime) &&
-            (identical(other.originTimePrecision, originTimePrecision) ||
-                other.originTimePrecision == originTimePrecision));
+            (identical(
+                  other.originTimePrecision,
+                  originTimePrecision,
+                ) ||
+                other.originTimePrecision ==
+                    originTimePrecision));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -343,11 +370,10 @@ class _$EarthquakeEarlyImpl implements _EarthquakeEarly {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EarthquakeEarlyImplCopyWith<_$EarthquakeEarlyImpl> get copyWith =>
-      __$$EarthquakeEarlyImplCopyWithImpl<_$EarthquakeEarlyImpl>(
-        this,
-        _$identity,
-      );
+  _$$EarthquakeEarlyImplCopyWith<_$EarthquakeEarlyImpl>
+  get copyWith => __$$EarthquakeEarlyImplCopyWithImpl<
+    _$EarthquakeEarlyImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -369,8 +395,9 @@ abstract class _EarthquakeEarly implements EarthquakeEarly {
     required final OriginTimePrecision originTimePrecision,
   }) = _$EarthquakeEarlyImpl;
 
-  factory _EarthquakeEarly.fromJson(Map<String, dynamic> json) =
-      _$EarthquakeEarlyImpl.fromJson;
+  factory _EarthquakeEarly.fromJson(
+    Map<String, dynamic> json,
+  ) = _$EarthquakeEarlyImpl.fromJson;
 
   @override
   String get id;
@@ -397,6 +424,6 @@ abstract class _EarthquakeEarly implements EarthquakeEarly {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EarthquakeEarlyImplCopyWith<_$EarthquakeEarlyImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$EarthquakeEarlyImplCopyWith<_$EarthquakeEarlyImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }

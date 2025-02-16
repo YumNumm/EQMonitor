@@ -15,22 +15,28 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-CustomFeedback _$CustomFeedbackFromJson(Map<String, dynamic> json) {
+CustomFeedback _$CustomFeedbackFromJson(
+  Map<String, dynamic> json,
+) {
   return _CustomFeedback.fromJson(json);
 }
 
 /// @nodoc
 mixin _$CustomFeedback {
-  FeedbackType? get feedbackType => throw _privateConstructorUsedError;
+  FeedbackType? get feedbackType =>
+      throw _privateConstructorUsedError;
 
   /// 返信を希望するかどうか
-  bool? get isReplyRequested => throw _privateConstructorUsedError;
+  bool? get isReplyRequested =>
+      throw _privateConstructorUsedError;
 
   /// スクリーンショットを添付するかどうか
-  bool get isScreenshotAttached => throw _privateConstructorUsedError;
+  bool get isScreenshotAttached =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this CustomFeedback to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of CustomFeedback
   /// with the given fields replaced by the non-null parameter values.
@@ -54,7 +60,10 @@ abstract class $CustomFeedbackCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$CustomFeedbackCopyWithImpl<$Res, $Val extends CustomFeedback>
+class _$CustomFeedbackCopyWithImpl<
+  $Res,
+  $Val extends CustomFeedback
+>
     implements $CustomFeedbackCopyWith<$Res> {
   _$CustomFeedbackCopyWithImpl(this._value, this._then);
 
@@ -113,7 +122,11 @@ abstract class _$$CustomFeedbackImplCopyWith<$Res>
 
 /// @nodoc
 class __$$CustomFeedbackImplCopyWithImpl<$Res>
-    extends _$CustomFeedbackCopyWithImpl<$Res, _$CustomFeedbackImpl>
+    extends
+        _$CustomFeedbackCopyWithImpl<
+          $Res,
+          _$CustomFeedbackImpl
+        >
     implements _$$CustomFeedbackImplCopyWith<$Res> {
   __$$CustomFeedbackImplCopyWithImpl(
     _$CustomFeedbackImpl _value,
@@ -160,8 +173,9 @@ class _$CustomFeedbackImpl implements _CustomFeedback {
     this.isScreenshotAttached = true,
   });
 
-  factory _$CustomFeedbackImpl.fromJson(Map<String, dynamic> json) =>
-      _$$CustomFeedbackImplFromJson(json);
+  factory _$CustomFeedbackImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$CustomFeedbackImplFromJson(json);
 
   @override
   final FeedbackType? feedbackType;
@@ -187,10 +201,18 @@ class _$CustomFeedbackImpl implements _CustomFeedback {
             other is _$CustomFeedbackImpl &&
             (identical(other.feedbackType, feedbackType) ||
                 other.feedbackType == feedbackType) &&
-            (identical(other.isReplyRequested, isReplyRequested) ||
-                other.isReplyRequested == isReplyRequested) &&
-            (identical(other.isScreenshotAttached, isScreenshotAttached) ||
-                other.isScreenshotAttached == isScreenshotAttached));
+            (identical(
+                  other.isReplyRequested,
+                  isReplyRequested,
+                ) ||
+                other.isReplyRequested ==
+                    isReplyRequested) &&
+            (identical(
+                  other.isScreenshotAttached,
+                  isScreenshotAttached,
+                ) ||
+                other.isScreenshotAttached ==
+                    isScreenshotAttached));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -207,11 +229,10 @@ class _$CustomFeedbackImpl implements _CustomFeedback {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$CustomFeedbackImplCopyWith<_$CustomFeedbackImpl> get copyWith =>
-      __$$CustomFeedbackImplCopyWithImpl<_$CustomFeedbackImpl>(
-        this,
-        _$identity,
-      );
+  _$$CustomFeedbackImplCopyWith<_$CustomFeedbackImpl>
+  get copyWith => __$$CustomFeedbackImplCopyWithImpl<
+    _$CustomFeedbackImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -226,8 +247,9 @@ abstract class _CustomFeedback implements CustomFeedback {
     final bool isScreenshotAttached,
   }) = _$CustomFeedbackImpl;
 
-  factory _CustomFeedback.fromJson(Map<String, dynamic> json) =
-      _$CustomFeedbackImpl.fromJson;
+  factory _CustomFeedback.fromJson(
+    Map<String, dynamic> json,
+  ) = _$CustomFeedbackImpl.fromJson;
 
   @override
   FeedbackType? get feedbackType;
@@ -244,6 +266,6 @@ abstract class _CustomFeedback implements CustomFeedback {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$CustomFeedbackImplCopyWith<_$CustomFeedbackImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$CustomFeedbackImplCopyWith<_$CustomFeedbackImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }

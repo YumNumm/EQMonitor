@@ -18,7 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$EewHypocenter {
   double get latitude => throw _privateConstructorUsedError;
-  double get longitude => throw _privateConstructorUsedError;
+  double get longitude =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of EewHypocenter
   /// with the given fields replaced by the non-null parameter values.
@@ -38,7 +39,10 @@ abstract class $EewHypocenterCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$EewHypocenterCopyWithImpl<$Res, $Val extends EewHypocenter>
+class _$EewHypocenterCopyWithImpl<
+  $Res,
+  $Val extends EewHypocenter
+>
     implements $EewHypocenterCopyWith<$Res> {
   _$EewHypocenterCopyWithImpl(this._value, this._then);
 
@@ -51,7 +55,10 @@ class _$EewHypocenterCopyWithImpl<$Res, $Val extends EewHypocenter>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? latitude = null, Object? longitude = null}) {
+  $Res call({
+    Object? latitude = null,
+    Object? longitude = null,
+  }) {
     return _then(
       _value.copyWith(
             latitude:
@@ -84,7 +91,11 @@ abstract class _$$EewHypocenterImplCopyWith<$Res>
 
 /// @nodoc
 class __$$EewHypocenterImplCopyWithImpl<$Res>
-    extends _$EewHypocenterCopyWithImpl<$Res, _$EewHypocenterImpl>
+    extends
+        _$EewHypocenterCopyWithImpl<
+          $Res,
+          _$EewHypocenterImpl
+        >
     implements _$$EewHypocenterImplCopyWith<$Res> {
   __$$EewHypocenterImplCopyWithImpl(
     _$EewHypocenterImpl _value,
@@ -95,7 +106,10 @@ class __$$EewHypocenterImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? latitude = null, Object? longitude = null}) {
+  $Res call({
+    Object? latitude = null,
+    Object? longitude = null,
+  }) {
     return _then(
       _$EewHypocenterImpl(
         latitude:
@@ -116,7 +130,10 @@ class __$$EewHypocenterImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$EewHypocenterImpl implements _EewHypocenter {
-  const _$EewHypocenterImpl({required this.latitude, required this.longitude});
+  const _$EewHypocenterImpl({
+    required this.latitude,
+    required this.longitude,
+  });
 
   @override
   final double latitude;
@@ -140,15 +157,18 @@ class _$EewHypocenterImpl implements _EewHypocenter {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, latitude, longitude);
+  int get hashCode =>
+      Object.hash(runtimeType, latitude, longitude);
 
   /// Create a copy of EewHypocenter
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EewHypocenterImplCopyWith<_$EewHypocenterImpl> get copyWith =>
-      __$$EewHypocenterImplCopyWithImpl<_$EewHypocenterImpl>(this, _$identity);
+  _$$EewHypocenterImplCopyWith<_$EewHypocenterImpl>
+  get copyWith => __$$EewHypocenterImplCopyWithImpl<
+    _$EewHypocenterImpl
+  >(this, _$identity);
 }
 
 abstract class _EewHypocenter implements EewHypocenter {
@@ -166,8 +186,8 @@ abstract class _EewHypocenter implements EewHypocenter {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EewHypocenterImplCopyWith<_$EewHypocenterImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$EewHypocenterImplCopyWith<_$EewHypocenterImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -175,8 +195,10 @@ mixin _$EewHypocenterLayer {
   String get id => throw _privateConstructorUsedError;
   String get sourceId => throw _privateConstructorUsedError;
   bool get visible => throw _privateConstructorUsedError;
-  List<EewHypocenter> get hypocenters => throw _privateConstructorUsedError;
-  String get iconImage => throw _privateConstructorUsedError;
+  List<EewHypocenter> get hypocenters =>
+      throw _privateConstructorUsedError;
+  String get iconImage =>
+      throw _privateConstructorUsedError;
   double? get minZoom => throw _privateConstructorUsedError;
   double? get maxZoom => throw _privateConstructorUsedError;
   dynamic get filter => throw _privateConstructorUsedError;
@@ -184,8 +206,8 @@ mixin _$EewHypocenterLayer {
   /// Create a copy of EewHypocenterLayer
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $EewHypocenterLayerCopyWith<EewHypocenterLayer> get copyWith =>
-      throw _privateConstructorUsedError;
+  $EewHypocenterLayerCopyWith<EewHypocenterLayer>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -193,7 +215,11 @@ abstract class $EewHypocenterLayerCopyWith<$Res> {
   factory $EewHypocenterLayerCopyWith(
     EewHypocenterLayer value,
     $Res Function(EewHypocenterLayer) then,
-  ) = _$EewHypocenterLayerCopyWithImpl<$Res, EewHypocenterLayer>;
+  ) =
+      _$EewHypocenterLayerCopyWithImpl<
+        $Res,
+        EewHypocenterLayer
+      >;
   @useResult
   $Res call({
     String id,
@@ -208,7 +234,10 @@ abstract class $EewHypocenterLayerCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$EewHypocenterLayerCopyWithImpl<$Res, $Val extends EewHypocenterLayer>
+class _$EewHypocenterLayerCopyWithImpl<
+  $Res,
+  $Val extends EewHypocenterLayer
+>
     implements $EewHypocenterLayerCopyWith<$Res> {
   _$EewHypocenterLayerCopyWithImpl(this._value, this._then);
 
@@ -302,7 +331,11 @@ abstract class _$$EewHypocenterLayerImplCopyWith<$Res>
 
 /// @nodoc
 class __$$EewHypocenterLayerImplCopyWithImpl<$Res>
-    extends _$EewHypocenterLayerCopyWithImpl<$Res, _$EewHypocenterLayerImpl>
+    extends
+        _$EewHypocenterLayerCopyWithImpl<
+          $Res,
+          _$EewHypocenterLayerImpl
+        >
     implements _$$EewHypocenterLayerImplCopyWith<$Res> {
   __$$EewHypocenterLayerImplCopyWithImpl(
     _$EewHypocenterLayerImpl _value,
@@ -394,7 +427,8 @@ class _$EewHypocenterLayerImpl extends _EewHypocenterLayer {
   final List<EewHypocenter> _hypocenters;
   @override
   List<EewHypocenter> get hypocenters {
-    if (_hypocenters is EqualUnmodifiableListView) return _hypocenters;
+    if (_hypocenters is EqualUnmodifiableListView)
+      return _hypocenters;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_hypocenters);
   }
@@ -423,16 +457,22 @@ class _$EewHypocenterLayerImpl extends _EewHypocenterLayer {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.sourceId, sourceId) ||
                 other.sourceId == sourceId) &&
-            (identical(other.visible, visible) || other.visible == visible) &&
+            (identical(other.visible, visible) ||
+                other.visible == visible) &&
             const DeepCollectionEquality().equals(
               other._hypocenters,
               _hypocenters,
             ) &&
             (identical(other.iconImage, iconImage) ||
                 other.iconImage == iconImage) &&
-            (identical(other.minZoom, minZoom) || other.minZoom == minZoom) &&
-            (identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom) &&
-            const DeepCollectionEquality().equals(other.filter, filter));
+            (identical(other.minZoom, minZoom) ||
+                other.minZoom == minZoom) &&
+            (identical(other.maxZoom, maxZoom) ||
+                other.maxZoom == maxZoom) &&
+            const DeepCollectionEquality().equals(
+              other.filter,
+              filter,
+            ));
   }
 
   @override
@@ -453,14 +493,16 @@ class _$EewHypocenterLayerImpl extends _EewHypocenterLayer {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EewHypocenterLayerImplCopyWith<_$EewHypocenterLayerImpl> get copyWith =>
-      __$$EewHypocenterLayerImplCopyWithImpl<_$EewHypocenterLayerImpl>(
-        this,
-        _$identity,
-      );
+  _$$EewHypocenterLayerImplCopyWith<
+    _$EewHypocenterLayerImpl
+  >
+  get copyWith => __$$EewHypocenterLayerImplCopyWithImpl<
+    _$EewHypocenterLayerImpl
+  >(this, _$identity);
 }
 
-abstract class _EewHypocenterLayer extends EewHypocenterLayer {
+abstract class _EewHypocenterLayer
+    extends EewHypocenterLayer {
   factory _EewHypocenterLayer({
     required final String id,
     required final String sourceId,
@@ -494,6 +536,8 @@ abstract class _EewHypocenterLayer extends EewHypocenterLayer {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EewHypocenterLayerImplCopyWith<_$EewHypocenterLayerImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$EewHypocenterLayerImplCopyWith<
+    _$EewHypocenterLayerImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }

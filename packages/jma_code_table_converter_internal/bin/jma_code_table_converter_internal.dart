@@ -8,7 +8,8 @@ Future<void> main(List<String> arguments) async {
   final converter = JmaCodeTableConverter();
   final table = JmaCodeTable(
     areaForecastLocalEew: await converter.convert22(),
-    areaInformationPrefectureEarthquake: await converter.convert23(),
+    areaInformationPrefectureEarthquake:
+        await converter.convert23(),
     areaEpicenter: await converter.convert41(),
     areaEpicenterAbbreviation: await converter.convert42(),
     areaEpicenterDetail: await converter.convert43(),
@@ -25,7 +26,9 @@ Future<void> main(List<String> arguments) async {
   }
   // json
   final jsonFile = File('output/jma_code_table.json');
-  await jsonFile.writeAsString(table.toBuilder().writeToJson());
+  await jsonFile.writeAsString(
+    table.toBuilder().writeToJson(),
+  );
 
   // binary
   const binaryPath = 'output/jma_code_table.pb';

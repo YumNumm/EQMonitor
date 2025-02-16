@@ -24,13 +24,21 @@ class JmaIntensityIcon extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final intensityColorModel = ref.watch(intensityColorProvider);
-    final colorScheme = intensityColorModel.fromJmaIntensity(intensity);
-    final (fg, bg) = (colorScheme.foreground, colorScheme.background);
+    final intensityColorModel = ref.watch(
+      intensityColorProvider,
+    );
+    final colorScheme = intensityColorModel
+        .fromJmaIntensity(intensity);
+    final (fg, bg) = (
+      colorScheme.foreground,
+      colorScheme.background,
+    );
     // 震度の整数部分
     final intensityMainText = switch (intensity) {
       JmaIntensity.fiveUpperNoInput => '5',
-      _ => intensity.type.replaceAll('-', '').replaceAll('+', ''),
+      _ => intensity.type
+          .replaceAll('-', '')
+          .replaceAll('+', ''),
     };
     // 震度の弱・強の表記
     final suffix =
@@ -57,7 +65,10 @@ class JmaIntensityIcon extends ConsumerWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: bg,
-            border: Border.all(color: borderColor, width: 5),
+            border: Border.all(
+              color: borderColor,
+              width: 5,
+            ),
           ),
           child:
               (intensity == JmaIntensity.fiveUpperNoInput)
@@ -68,7 +79,8 @@ class JmaIntensityIcon extends ConsumerWidget {
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start,
                           children: [
                             Text(
                               intensityMainText,
@@ -76,7 +88,9 @@ class JmaIntensityIcon extends ConsumerWidget {
                                 color: fg,
                                 fontSize: 100,
                                 fontWeight: FontWeight.bold,
-                                fontFamily: FontFamily.jetBrainsMono,
+                                fontFamily:
+                                    FontFamily
+                                        .jetBrainsMono,
                               ),
                             ),
                             Text(
@@ -84,7 +98,9 @@ class JmaIntensityIcon extends ConsumerWidget {
                               style: TextStyle(
                                 color: fg,
                                 fontSize: 80,
-                                fontFamily: FontFamily.jetBrainsMono,
+                                fontFamily:
+                                    FontFamily
+                                        .jetBrainsMono,
                                 fontFamilyFallback: const [
                                   FontFamily.notoSansJP,
                                 ],
@@ -104,7 +120,10 @@ class JmaIntensityIcon extends ConsumerWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: bg,
-            border: Border.all(color: borderColor, width: 5),
+            border: Border.all(
+              color: borderColor,
+              width: 5,
+            ),
           ),
         ),
       ),
@@ -121,7 +140,8 @@ class JmaIntensityIcon extends ConsumerWidget {
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
+                crossAxisAlignment:
+                    CrossAxisAlignment.baseline,
                 textBaseline: TextBaseline.alphabetic,
                 children: [
                   if (customText != null)
@@ -131,7 +151,8 @@ class JmaIntensityIcon extends ConsumerWidget {
                         color: fg,
                         fontSize: 100,
                         fontWeight: FontWeight.w900,
-                        fontFamily: FontFamily.jetBrainsMono,
+                        fontFamily:
+                            FontFamily.jetBrainsMono,
                       ),
                     )
                   else ...[
@@ -141,7 +162,8 @@ class JmaIntensityIcon extends ConsumerWidget {
                         color: fg,
                         fontSize: 100,
                         fontWeight: FontWeight.w900,
-                        fontFamily: FontFamily.jetBrainsMono,
+                        fontFamily:
+                            FontFamily.jetBrainsMono,
                       ),
                     ),
                     if (showSuffix)
@@ -151,8 +173,11 @@ class JmaIntensityIcon extends ConsumerWidget {
                           color: fg,
                           fontSize: 50,
                           fontWeight: FontWeight.w900,
-                          fontFamily: FontFamily.jetBrainsMono,
-                          fontFamilyFallback: const [FontFamily.notoSansJP],
+                          fontFamily:
+                              FontFamily.jetBrainsMono,
+                          fontFamilyFallback: const [
+                            FontFamily.notoSansJP,
+                          ],
                         ),
                       ),
                   ],

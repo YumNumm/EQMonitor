@@ -6,7 +6,8 @@ part 'auth.g.dart';
 
 @RestApi()
 abstract class AuthApiClient {
-  factory AuthApiClient(Dio dio, {String baseUrl}) = _AuthApiClient;
+  factory AuthApiClient(Dio dio, {String baseUrl}) =
+      _AuthApiClient;
 
   @PUT('/v1/auth/register')
   Future<HttpResponse<FcmTokenUpdateResponse>> register({
@@ -32,7 +33,8 @@ abstract class AuthApiClient {
   });
 
   @GET('/v1/auth/settings')
-  Future<HttpResponse<NotificationSettingsResponse>> getNotificationSettings({
+  Future<HttpResponse<NotificationSettingsResponse>>
+  getNotificationSettings({
     @Header('Authorization') required String authorization,
   });
 }

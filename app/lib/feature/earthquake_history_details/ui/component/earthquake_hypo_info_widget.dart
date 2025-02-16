@@ -16,7 +16,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class EarthquakeHypoInfoWidget extends HookConsumerWidget {
-  const EarthquakeHypoInfoWidget({required this.item, super.key});
+  const EarthquakeHypoInfoWidget({
+    required this.item,
+    super.key,
+  });
 
   final EarthquakeV1Extended item;
 
@@ -24,14 +27,15 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-    final intensityColorScheme = ref.watch(intensityColorProvider);
+    final intensityColorScheme = ref.watch(
+      intensityColorProvider,
+    );
 
     final isVolcano = item.isVolcano;
     final maxIntensity = item.maxIntensity;
     final colorScheme = switch (maxIntensity) {
-      final JmaIntensity intensity => intensityColorScheme.fromJmaIntensity(
-        intensity,
-      ),
+      final JmaIntensity intensity => intensityColorScheme
+          .fromJmaIntensity(intensity),
       _ when isVolcano => intensityColorScheme.sixUpper,
       _ => null,
     };
@@ -44,9 +48,12 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
       [item.epicenterCode],
     );
     final hypoDetailName = useMemoized(
-      () => codeTable.areaEpicenterDetail.items.firstWhereOrNull(
-        (e) => int.tryParse(e.code) == item.epicenterDetailCode,
-      ),
+      () => codeTable.areaEpicenterDetail.items
+          .firstWhereOrNull(
+            (e) =>
+                int.tryParse(e.code) ==
+                item.epicenterDetailCode,
+          ),
       [item.epicenterDetailCode],
     );
 
@@ -57,7 +64,9 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
               children: [
                 const Text(
                   '最大震度',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 JmaIntensityIcon(
@@ -77,26 +86,30 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
               children: [
                 Row(
                   mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  crossAxisAlignment:
+                      CrossAxisAlignment.baseline,
                   textBaseline: TextBaseline.alphabetic,
                   children: [
                     Flexible(
                       child: Text(
                         '火山の大規模な噴火',
-                        style: textTheme.titleMedium!.copyWith(
-                          color: textTheme.titleMedium!.color!.withValues(
-                            alpha: 0.8,
-                          ),
-                        ),
+                        style: textTheme.titleMedium!
+                            .copyWith(
+                              color: textTheme
+                                  .titleMedium!
+                                  .color!
+                                  .withValues(alpha: 0.8),
+                            ),
                       ),
                     ),
                     const SizedBox(width: 4),
                     Flexible(
                       child: Text(
                         volcanoName ?? '不明',
-                        style: textTheme.headlineMedium!.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: textTheme.headlineMedium!
+                            .copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                     ),
                   ],
@@ -112,7 +125,8 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
                         if (hypoDetailName != null) ...[
                           const TextSpan(text: ' '),
                           TextSpan(
-                            text: '(${hypoDetailName.name})',
+                            text:
+                                '(${hypoDetailName.name})',
                             style: textTheme.titleSmall,
                           ),
                         ],
@@ -133,7 +147,9 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
           '震源地',
           style: textTheme.bodyMedium!.copyWith(
             fontWeight: FontWeight.bold,
-            color: textTheme.bodyMedium!.color!.withValues(alpha: 0.8),
+            color: textTheme.bodyMedium!.color!.withValues(
+              alpha: 0.8,
+            ),
           ),
         ),
         const SizedBox(width: 4),
@@ -151,9 +167,10 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
                   const TextSpan(text: ' '),
                   TextSpan(
                     text: '(${hypoDetailName.name})',
-                    style: textTheme.headlineSmall!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: textTheme.headlineSmall!
+                        .copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                 ],
               ],
@@ -163,7 +180,8 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
       ],
     );
 
-    final creationDateFromEventId = EventId(item.eventId).toCreationDate();
+    final creationDateFromEventId =
+        EventId(item.eventId).toCreationDate();
 
     // 地震発生時刻
     final timeText = switch ((
@@ -182,7 +200,9 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
       _ => null,
     };
     final timeWidget =
-        timeText != null ? Wrap(children: [Text(timeText)]) : null;
+        timeText != null
+            ? Wrap(children: [Text(timeText)])
+            : null;
 
     // 「M 8.0 / 深さ100km」
     final magnitudeWidget = Row(
@@ -194,14 +214,19 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
           Text(
             'M',
             style: textTheme.titleMedium!.copyWith(
-              color: textTheme.titleMedium!.color!.withValues(alpha: 0.8),
+              color: textTheme.titleMedium!.color!
+                  .withValues(alpha: 0.8),
             ),
           ),
         Flexible(
           child: Text(
-            switch ((item.magnitudeCondition, item.magnitude)) {
+            switch ((
+              item.magnitudeCondition,
+              item.magnitude,
+            )) {
               (final String cond, _) => cond.toHalfWidth,
-              (_, final double value) => value.toStringAsFixed(1),
+              (_, final double value) => value
+                  .toStringAsFixed(1),
               // vxse53がある場合
               _ when item.intensityCities != null => '不明',
               _ => '調査中',
@@ -225,10 +250,14 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
         Text(
           '深さ',
           style: textTheme.titleMedium!.copyWith(
-            color: textTheme.titleMedium!.color!.withValues(alpha: 0.8),
+            color: textTheme.titleMedium!.color!.withValues(
+              alpha: 0.8,
+            ),
           ),
         ),
-        if (item.depth != null && item.depth != 0 && item.depth != 700) ...[
+        if (item.depth != null &&
+            item.depth != 0 &&
+            item.depth != 700) ...[
           Text(
             item.depth.toString(),
             style: textTheme.displaySmall!.copyWith(
@@ -239,7 +268,8 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
           Text(
             'km',
             style: textTheme.titleMedium!.copyWith(
-              color: textTheme.titleMedium!.color!.withValues(alpha: 0.8),
+              color: textTheme.titleMedium!.color!
+                  .withValues(alpha: 0.8),
             ),
           ),
         ] else
@@ -271,7 +301,9 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
         Text(
           'M・深さ',
           style: textTheme.titleMedium!.copyWith(
-            color: textTheme.titleMedium!.color!.withValues(alpha: 0.8),
+            color: textTheme.titleMedium!.color!.withValues(
+              alpha: 0.8,
+            ),
           ),
         ),
         Text(
@@ -290,7 +322,8 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
 
     // M・深さ・震源 ともに不明の場合
     final isEarthquakeNull =
-        isMagnitudeAndDepthUnknown && item.epicenterCode == null;
+        isMagnitudeAndDepthUnknown &&
+        item.epicenterCode == null;
 
     final earthquakeNullWidget = Row(
       mainAxisSize: MainAxisSize.min,
@@ -300,7 +333,9 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
         Text(
           'M・深さ・震源地',
           style: textTheme.titleMedium!.copyWith(
-            color: textTheme.titleMedium!.color!.withValues(alpha: 0.8),
+            color: textTheme.titleMedium!.color!.withValues(
+              alpha: 0.8,
+            ),
           ),
         ),
         const SizedBox(width: 4),
@@ -348,20 +383,24 @@ class EarthquakeHypoInfoWidget extends HookConsumerWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
-          color: colorScheme?.background ?? Colors.transparent,
+          color:
+              colorScheme?.background ?? Colors.transparent,
           width: 0,
         ),
       ),
-      color: (colorScheme?.background ?? Colors.transparent).withValues(
-        alpha: 0.3,
-      ),
+      color: (colorScheme?.background ?? Colors.transparent)
+          .withValues(alpha: 0.3),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 8,
+          vertical: 4,
+        ),
         child: Column(
           children: [
             Row(
               children: [
-                if (maxIntensityWidget != null) maxIntensityWidget,
+                if (maxIntensityWidget != null)
+                  maxIntensityWidget,
                 const SizedBox(width: 4),
                 Expanded(child: body),
               ],

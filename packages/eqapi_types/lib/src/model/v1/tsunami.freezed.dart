@@ -15,25 +15,32 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-_TsunamiV1Base _$TsunamiV1BaseFromJson(Map<String, dynamic> json) {
+_TsunamiV1Base _$TsunamiV1BaseFromJson(
+  Map<String, dynamic> json,
+) {
   return __TsunamiV1Base.fromJson(json);
 }
 
 /// @nodoc
 mixin _$TsunamiV1Base {
   int get eventId => throw _privateConstructorUsedError;
-  String? get headline => throw _privateConstructorUsedError;
+  String? get headline =>
+      throw _privateConstructorUsedError;
   int get id => throw _privateConstructorUsedError;
   String get infoType => throw _privateConstructorUsedError;
-  DateTime get pressAt => throw _privateConstructorUsedError;
-  DateTime get reportAt => throw _privateConstructorUsedError;
+  DateTime get pressAt =>
+      throw _privateConstructorUsedError;
+  DateTime get reportAt =>
+      throw _privateConstructorUsedError;
   int? get serialNo => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
-  DateTime? get validAt => throw _privateConstructorUsedError;
+  DateTime? get validAt =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this _TsunamiV1Base to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of _TsunamiV1Base
   /// with the given fields replaced by the non-null parameter values.
@@ -64,7 +71,10 @@ abstract class _$TsunamiV1BaseCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$TsunamiV1BaseCopyWithImpl<$Res, $Val extends _TsunamiV1Base>
+class __$TsunamiV1BaseCopyWithImpl<
+  $Res,
+  $Val extends _TsunamiV1Base
+>
     implements _$TsunamiV1BaseCopyWith<$Res> {
   __$TsunamiV1BaseCopyWithImpl(this._value, this._then);
 
@@ -172,7 +182,11 @@ abstract class _$$_TsunamiV1BaseImplCopyWith<$Res>
 
 /// @nodoc
 class __$$_TsunamiV1BaseImplCopyWithImpl<$Res>
-    extends __$TsunamiV1BaseCopyWithImpl<$Res, _$_TsunamiV1BaseImpl>
+    extends
+        __$TsunamiV1BaseCopyWithImpl<
+          $Res,
+          _$_TsunamiV1BaseImpl
+        >
     implements _$$_TsunamiV1BaseImplCopyWith<$Res> {
   __$$_TsunamiV1BaseImplCopyWithImpl(
     _$_TsunamiV1BaseImpl _value,
@@ -268,8 +282,9 @@ class _$_TsunamiV1BaseImpl implements __TsunamiV1Base {
     required this.validAt,
   });
 
-  factory _$_TsunamiV1BaseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$_TsunamiV1BaseImplFromJson(json);
+  factory _$_TsunamiV1BaseImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$_TsunamiV1BaseImplFromJson(json);
 
   @override
   final int eventId;
@@ -302,20 +317,25 @@ class _$_TsunamiV1BaseImpl implements __TsunamiV1Base {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_TsunamiV1BaseImpl &&
-            (identical(other.eventId, eventId) || other.eventId == eventId) &&
+            (identical(other.eventId, eventId) ||
+                other.eventId == eventId) &&
             (identical(other.headline, headline) ||
                 other.headline == headline) &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.infoType, infoType) ||
                 other.infoType == infoType) &&
-            (identical(other.pressAt, pressAt) || other.pressAt == pressAt) &&
+            (identical(other.pressAt, pressAt) ||
+                other.pressAt == pressAt) &&
             (identical(other.reportAt, reportAt) ||
                 other.reportAt == reportAt) &&
             (identical(other.serialNo, serialNo) ||
                 other.serialNo == serialNo) &&
-            (identical(other.status, status) || other.status == status) &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.validAt, validAt) || other.validAt == validAt));
+            (identical(other.status, status) ||
+                other.status == status) &&
+            (identical(other.type, type) ||
+                other.type == type) &&
+            (identical(other.validAt, validAt) ||
+                other.validAt == validAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -339,11 +359,10 @@ class _$_TsunamiV1BaseImpl implements __TsunamiV1Base {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TsunamiV1BaseImplCopyWith<_$_TsunamiV1BaseImpl> get copyWith =>
-      __$$_TsunamiV1BaseImplCopyWithImpl<_$_TsunamiV1BaseImpl>(
-        this,
-        _$identity,
-      );
+  _$$_TsunamiV1BaseImplCopyWith<_$_TsunamiV1BaseImpl>
+  get copyWith => __$$_TsunamiV1BaseImplCopyWithImpl<
+    _$_TsunamiV1BaseImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -365,8 +384,9 @@ abstract class __TsunamiV1Base implements _TsunamiV1Base {
     required final DateTime? validAt,
   }) = _$_TsunamiV1BaseImpl;
 
-  factory __TsunamiV1Base.fromJson(Map<String, dynamic> json) =
-      _$_TsunamiV1BaseImpl.fromJson;
+  factory __TsunamiV1Base.fromJson(
+    Map<String, dynamic> json,
+  ) = _$_TsunamiV1BaseImpl.fromJson;
 
   @override
   int get eventId;
@@ -393,8 +413,8 @@ abstract class __TsunamiV1Base implements _TsunamiV1Base {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$_TsunamiV1BaseImplCopyWith<_$_TsunamiV1BaseImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$_TsunamiV1BaseImplCopyWith<_$_TsunamiV1BaseImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 Comment _$CommentFromJson(Map<String, dynamic> json) {
@@ -404,21 +424,26 @@ Comment _$CommentFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Comment {
   String? get free => throw _privateConstructorUsedError;
-  CommentWarning? get warning => throw _privateConstructorUsedError;
+  CommentWarning? get warning =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this Comment to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of Comment
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $CommentCopyWith<Comment> get copyWith => throw _privateConstructorUsedError;
+  $CommentCopyWith<Comment> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $CommentCopyWith<$Res> {
-  factory $CommentCopyWith(Comment value, $Res Function(Comment) then) =
-      _$CommentCopyWithImpl<$Res, Comment>;
+  factory $CommentCopyWith(
+    Comment value,
+    $Res Function(Comment) then,
+  ) = _$CommentCopyWithImpl<$Res, Comment>;
   @useResult
   $Res call({String? free, CommentWarning? warning});
 
@@ -439,7 +464,10 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? free = freezed, Object? warning = freezed}) {
+  $Res call({
+    Object? free = freezed,
+    Object? warning = freezed,
+  }) {
     return _then(
       _value.copyWith(
             free:
@@ -466,14 +494,17 @@ class _$CommentCopyWithImpl<$Res, $Val extends Comment>
       return null;
     }
 
-    return $CommentWarningCopyWith<$Res>(_value.warning!, (value) {
+    return $CommentWarningCopyWith<$Res>(_value.warning!, (
+      value,
+    ) {
       return _then(_value.copyWith(warning: value) as $Val);
     });
   }
 }
 
 /// @nodoc
-abstract class _$$CommentImplCopyWith<$Res> implements $CommentCopyWith<$Res> {
+abstract class _$$CommentImplCopyWith<$Res>
+    implements $CommentCopyWith<$Res> {
   factory _$$CommentImplCopyWith(
     _$CommentImpl value,
     $Res Function(_$CommentImpl) then,
@@ -499,7 +530,10 @@ class __$$CommentImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? free = freezed, Object? warning = freezed}) {
+  $Res call({
+    Object? free = freezed,
+    Object? warning = freezed,
+  }) {
     return _then(
       _$CommentImpl(
         free:
@@ -520,10 +554,14 @@ class __$$CommentImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$CommentImpl implements _Comment {
-  const _$CommentImpl({required this.free, required this.warning});
+  const _$CommentImpl({
+    required this.free,
+    required this.warning,
+  });
 
-  factory _$CommentImpl.fromJson(Map<String, dynamic> json) =>
-      _$$CommentImplFromJson(json);
+  factory _$CommentImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$CommentImplFromJson(json);
 
   @override
   final String? free;
@@ -540,13 +578,16 @@ class _$CommentImpl implements _Comment {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CommentImpl &&
-            (identical(other.free, free) || other.free == free) &&
-            (identical(other.warning, warning) || other.warning == warning));
+            (identical(other.free, free) ||
+                other.free == free) &&
+            (identical(other.warning, warning) ||
+                other.warning == warning));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, free, warning);
+  int get hashCode =>
+      Object.hash(runtimeType, free, warning);
 
   /// Create a copy of Comment
   /// with the given fields replaced by the non-null parameter values.
@@ -554,7 +595,10 @@ class _$CommentImpl implements _Comment {
   @override
   @pragma('vm:prefer-inline')
   _$$CommentImplCopyWith<_$CommentImpl> get copyWith =>
-      __$$CommentImplCopyWithImpl<_$CommentImpl>(this, _$identity);
+      __$$CommentImplCopyWithImpl<_$CommentImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -568,7 +612,8 @@ abstract class _Comment implements Comment {
     required final CommentWarning? warning,
   }) = _$CommentImpl;
 
-  factory _Comment.fromJson(Map<String, dynamic> json) = _$CommentImpl.fromJson;
+  factory _Comment.fromJson(Map<String, dynamic> json) =
+      _$CommentImpl.fromJson;
 
   @override
   String? get free;
@@ -583,17 +628,21 @@ abstract class _Comment implements Comment {
       throw _privateConstructorUsedError;
 }
 
-CommentWarning _$CommentWarningFromJson(Map<String, dynamic> json) {
+CommentWarning _$CommentWarningFromJson(
+  Map<String, dynamic> json,
+) {
   return _CommentWarning.fromJson(json);
 }
 
 /// @nodoc
 mixin _$CommentWarning {
   String get text => throw _privateConstructorUsedError;
-  List<String> get codes => throw _privateConstructorUsedError;
+  List<String> get codes =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this CommentWarning to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of CommentWarning
   /// with the given fields replaced by the non-null parameter values.
@@ -613,7 +662,10 @@ abstract class $CommentWarningCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$CommentWarningCopyWithImpl<$Res, $Val extends CommentWarning>
+class _$CommentWarningCopyWithImpl<
+  $Res,
+  $Val extends CommentWarning
+>
     implements $CommentWarningCopyWith<$Res> {
   _$CommentWarningCopyWithImpl(this._value, this._then);
 
@@ -659,7 +711,11 @@ abstract class _$$CommentWarningImplCopyWith<$Res>
 
 /// @nodoc
 class __$$CommentWarningImplCopyWithImpl<$Res>
-    extends _$CommentWarningCopyWithImpl<$Res, _$CommentWarningImpl>
+    extends
+        _$CommentWarningCopyWithImpl<
+          $Res,
+          _$CommentWarningImpl
+        >
     implements _$$CommentWarningImplCopyWith<$Res> {
   __$$CommentWarningImplCopyWithImpl(
     _$CommentWarningImpl _value,
@@ -696,8 +752,9 @@ class _$CommentWarningImpl implements _CommentWarning {
     required final List<String> codes,
   }) : _codes = codes;
 
-  factory _$CommentWarningImpl.fromJson(Map<String, dynamic> json) =>
-      _$$CommentWarningImplFromJson(json);
+  factory _$CommentWarningImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$CommentWarningImplFromJson(json);
 
   @override
   final String text;
@@ -719,8 +776,12 @@ class _$CommentWarningImpl implements _CommentWarning {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CommentWarningImpl &&
-            (identical(other.text, text) || other.text == text) &&
-            const DeepCollectionEquality().equals(other._codes, _codes));
+            (identical(other.text, text) ||
+                other.text == text) &&
+            const DeepCollectionEquality().equals(
+              other._codes,
+              _codes,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -736,11 +797,10 @@ class _$CommentWarningImpl implements _CommentWarning {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$CommentWarningImplCopyWith<_$CommentWarningImpl> get copyWith =>
-      __$$CommentWarningImplCopyWithImpl<_$CommentWarningImpl>(
-        this,
-        _$identity,
-      );
+  _$$CommentWarningImplCopyWith<_$CommentWarningImpl>
+  get copyWith => __$$CommentWarningImplCopyWithImpl<
+    _$CommentWarningImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -754,8 +814,9 @@ abstract class _CommentWarning implements CommentWarning {
     required final List<String> codes,
   }) = _$CommentWarningImpl;
 
-  factory _CommentWarning.fromJson(Map<String, dynamic> json) =
-      _$CommentWarningImpl.fromJson;
+  factory _CommentWarning.fromJson(
+    Map<String, dynamic> json,
+  ) = _$CommentWarningImpl.fromJson;
 
   @override
   String get text;
@@ -766,8 +827,8 @@ abstract class _CommentWarning implements CommentWarning {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$CommentWarningImplCopyWith<_$CommentWarningImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$CommentWarningImplCopyWith<_$CommentWarningImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 CancelBody _$CancelBodyFromJson(Map<String, dynamic> json) {
@@ -779,7 +840,8 @@ mixin _$CancelBody {
   String get text => throw _privateConstructorUsedError;
 
   /// Serializes this CancelBody to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of CancelBody
   /// with the given fields replaced by the non-null parameter values.
@@ -799,7 +861,10 @@ abstract class $CancelBodyCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$CancelBodyCopyWithImpl<$Res, $Val extends CancelBody>
+class _$CancelBodyCopyWithImpl<
+  $Res,
+  $Val extends CancelBody
+>
     implements $CancelBodyCopyWith<$Res> {
   _$CancelBodyCopyWithImpl(this._value, this._then);
 
@@ -869,8 +934,9 @@ class __$$CancelBodyImplCopyWithImpl<$Res>
 class _$CancelBodyImpl implements _CancelBody {
   const _$CancelBodyImpl({required this.text});
 
-  factory _$CancelBodyImpl.fromJson(Map<String, dynamic> json) =>
-      _$$CancelBodyImplFromJson(json);
+  factory _$CancelBodyImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$CancelBodyImplFromJson(json);
 
   @override
   final String text;
@@ -885,7 +951,8 @@ class _$CancelBodyImpl implements _CancelBody {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CancelBodyImpl &&
-            (identical(other.text, text) || other.text == text));
+            (identical(other.text, text) ||
+                other.text == text));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -897,8 +964,12 @@ class _$CancelBodyImpl implements _CancelBody {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$CancelBodyImplCopyWith<_$CancelBodyImpl> get copyWith =>
-      __$$CancelBodyImplCopyWithImpl<_$CancelBodyImpl>(this, _$identity);
+  _$$CancelBodyImplCopyWith<_$CancelBodyImpl>
+  get copyWith =>
+      __$$CancelBodyImplCopyWithImpl<_$CancelBodyImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -907,7 +978,8 @@ class _$CancelBodyImpl implements _CancelBody {
 }
 
 abstract class _CancelBody implements CancelBody {
-  const factory _CancelBody({required final String text}) = _$CancelBodyImpl;
+  const factory _CancelBody({required final String text}) =
+      _$CancelBodyImpl;
 
   factory _CancelBody.fromJson(Map<String, dynamic> json) =
       _$CancelBodyImpl.fromJson;
@@ -919,8 +991,8 @@ abstract class _CancelBody implements CancelBody {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$CancelBodyImplCopyWith<_$CancelBodyImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$CancelBodyImplCopyWith<_$CancelBodyImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 PublicBodyVTSE41Tsunami _$PublicBodyVTSE41TsunamiFromJson(
@@ -931,16 +1003,18 @@ PublicBodyVTSE41Tsunami _$PublicBodyVTSE41TsunamiFromJson(
 
 /// @nodoc
 mixin _$PublicBodyVTSE41Tsunami {
-  List<TsunamiForecast> get forecasts => throw _privateConstructorUsedError;
+  List<TsunamiForecast> get forecasts =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this PublicBodyVTSE41Tsunami to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of PublicBodyVTSE41Tsunami
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $PublicBodyVTSE41TsunamiCopyWith<PublicBodyVTSE41Tsunami> get copyWith =>
-      throw _privateConstructorUsedError;
+  $PublicBodyVTSE41TsunamiCopyWith<PublicBodyVTSE41Tsunami>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -948,7 +1022,11 @@ abstract class $PublicBodyVTSE41TsunamiCopyWith<$Res> {
   factory $PublicBodyVTSE41TsunamiCopyWith(
     PublicBodyVTSE41Tsunami value,
     $Res Function(PublicBodyVTSE41Tsunami) then,
-  ) = _$PublicBodyVTSE41TsunamiCopyWithImpl<$Res, PublicBodyVTSE41Tsunami>;
+  ) =
+      _$PublicBodyVTSE41TsunamiCopyWithImpl<
+        $Res,
+        PublicBodyVTSE41Tsunami
+      >;
   @useResult
   $Res call({List<TsunamiForecast> forecasts});
 }
@@ -959,7 +1037,10 @@ class _$PublicBodyVTSE41TsunamiCopyWithImpl<
   $Val extends PublicBodyVTSE41Tsunami
 >
     implements $PublicBodyVTSE41TsunamiCopyWith<$Res> {
-  _$PublicBodyVTSE41TsunamiCopyWithImpl(this._value, this._then);
+  _$PublicBodyVTSE41TsunamiCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -1003,7 +1084,8 @@ class __$$PublicBodyVTSE41TsunamiImplCopyWithImpl<$Res>
           $Res,
           _$PublicBodyVTSE41TsunamiImpl
         >
-    implements _$$PublicBodyVTSE41TsunamiImplCopyWith<$Res> {
+    implements
+        _$$PublicBodyVTSE41TsunamiImplCopyWith<$Res> {
   __$$PublicBodyVTSE41TsunamiImplCopyWithImpl(
     _$PublicBodyVTSE41TsunamiImpl _value,
     $Res Function(_$PublicBodyVTSE41TsunamiImpl) _then,
@@ -1028,18 +1110,21 @@ class __$$PublicBodyVTSE41TsunamiImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$PublicBodyVTSE41TsunamiImpl implements _PublicBodyVTSE41Tsunami {
+class _$PublicBodyVTSE41TsunamiImpl
+    implements _PublicBodyVTSE41Tsunami {
   const _$PublicBodyVTSE41TsunamiImpl({
     required final List<TsunamiForecast> forecasts,
   }) : _forecasts = forecasts;
 
-  factory _$PublicBodyVTSE41TsunamiImpl.fromJson(Map<String, dynamic> json) =>
-      _$$PublicBodyVTSE41TsunamiImplFromJson(json);
+  factory _$PublicBodyVTSE41TsunamiImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$PublicBodyVTSE41TsunamiImplFromJson(json);
 
   final List<TsunamiForecast> _forecasts;
   @override
   List<TsunamiForecast> get forecasts {
-    if (_forecasts is EqualUnmodifiableListView) return _forecasts;
+    if (_forecasts is EqualUnmodifiableListView)
+      return _forecasts;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_forecasts);
   }
@@ -1062,18 +1147,23 @@ class _$PublicBodyVTSE41TsunamiImpl implements _PublicBodyVTSE41Tsunami {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_forecasts));
+  int get hashCode => Object.hash(
+    runtimeType,
+    const DeepCollectionEquality().hash(_forecasts),
+  );
 
   /// Create a copy of PublicBodyVTSE41Tsunami
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$PublicBodyVTSE41TsunamiImplCopyWith<_$PublicBodyVTSE41TsunamiImpl>
-  get copyWith => __$$PublicBodyVTSE41TsunamiImplCopyWithImpl<
+  _$$PublicBodyVTSE41TsunamiImplCopyWith<
     _$PublicBodyVTSE41TsunamiImpl
-  >(this, _$identity);
+  >
+  get copyWith =>
+      __$$PublicBodyVTSE41TsunamiImplCopyWithImpl<
+        _$PublicBodyVTSE41TsunamiImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -1081,13 +1171,15 @@ class _$PublicBodyVTSE41TsunamiImpl implements _PublicBodyVTSE41Tsunami {
   }
 }
 
-abstract class _PublicBodyVTSE41Tsunami implements PublicBodyVTSE41Tsunami {
+abstract class _PublicBodyVTSE41Tsunami
+    implements PublicBodyVTSE41Tsunami {
   const factory _PublicBodyVTSE41Tsunami({
     required final List<TsunamiForecast> forecasts,
   }) = _$PublicBodyVTSE41TsunamiImpl;
 
-  factory _PublicBodyVTSE41Tsunami.fromJson(Map<String, dynamic> json) =
-      _$PublicBodyVTSE41TsunamiImpl.fromJson;
+  factory _PublicBodyVTSE41Tsunami.fromJson(
+    Map<String, dynamic> json,
+  ) = _$PublicBodyVTSE41TsunamiImpl.fromJson;
 
   @override
   List<TsunamiForecast> get forecasts;
@@ -1096,7 +1188,9 @@ abstract class _PublicBodyVTSE41Tsunami implements PublicBodyVTSE41Tsunami {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$PublicBodyVTSE41TsunamiImplCopyWith<_$PublicBodyVTSE41TsunamiImpl>
+  _$$PublicBodyVTSE41TsunamiImplCopyWith<
+    _$PublicBodyVTSE41TsunamiImpl
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -1108,18 +1202,20 @@ PublicBodyVTSE51Tsunami _$PublicBodyVTSE51TsunamiFromJson(
 
 /// @nodoc
 mixin _$PublicBodyVTSE51Tsunami {
-  List<TsunamiForecast> get forecasts => throw _privateConstructorUsedError;
+  List<TsunamiForecast> get forecasts =>
+      throw _privateConstructorUsedError;
   List<TsunamiObservation>? get observations =>
       throw _privateConstructorUsedError;
 
   /// Serializes this PublicBodyVTSE51Tsunami to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of PublicBodyVTSE51Tsunami
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $PublicBodyVTSE51TsunamiCopyWith<PublicBodyVTSE51Tsunami> get copyWith =>
-      throw _privateConstructorUsedError;
+  $PublicBodyVTSE51TsunamiCopyWith<PublicBodyVTSE51Tsunami>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1127,7 +1223,11 @@ abstract class $PublicBodyVTSE51TsunamiCopyWith<$Res> {
   factory $PublicBodyVTSE51TsunamiCopyWith(
     PublicBodyVTSE51Tsunami value,
     $Res Function(PublicBodyVTSE51Tsunami) then,
-  ) = _$PublicBodyVTSE51TsunamiCopyWithImpl<$Res, PublicBodyVTSE51Tsunami>;
+  ) =
+      _$PublicBodyVTSE51TsunamiCopyWithImpl<
+        $Res,
+        PublicBodyVTSE51Tsunami
+      >;
   @useResult
   $Res call({
     List<TsunamiForecast> forecasts,
@@ -1141,7 +1241,10 @@ class _$PublicBodyVTSE51TsunamiCopyWithImpl<
   $Val extends PublicBodyVTSE51Tsunami
 >
     implements $PublicBodyVTSE51TsunamiCopyWith<$Res> {
-  _$PublicBodyVTSE51TsunamiCopyWithImpl(this._value, this._then);
+  _$PublicBodyVTSE51TsunamiCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -1152,7 +1255,10 @@ class _$PublicBodyVTSE51TsunamiCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? forecasts = null, Object? observations = freezed}) {
+  $Res call({
+    Object? forecasts = null,
+    Object? observations = freezed,
+  }) {
     return _then(
       _value.copyWith(
             forecasts:
@@ -1193,7 +1299,8 @@ class __$$PublicBodyVTSE51TsunamiImplCopyWithImpl<$Res>
           $Res,
           _$PublicBodyVTSE51TsunamiImpl
         >
-    implements _$$PublicBodyVTSE51TsunamiImplCopyWith<$Res> {
+    implements
+        _$$PublicBodyVTSE51TsunamiImplCopyWith<$Res> {
   __$$PublicBodyVTSE51TsunamiImplCopyWithImpl(
     _$PublicBodyVTSE51TsunamiImpl _value,
     $Res Function(_$PublicBodyVTSE51TsunamiImpl) _then,
@@ -1203,7 +1310,10 @@ class __$$PublicBodyVTSE51TsunamiImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? forecasts = null, Object? observations = freezed}) {
+  $Res call({
+    Object? forecasts = null,
+    Object? observations = freezed,
+  }) {
     return _then(
       _$PublicBodyVTSE51TsunamiImpl(
         forecasts:
@@ -1223,20 +1333,23 @@ class __$$PublicBodyVTSE51TsunamiImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$PublicBodyVTSE51TsunamiImpl implements _PublicBodyVTSE51Tsunami {
+class _$PublicBodyVTSE51TsunamiImpl
+    implements _PublicBodyVTSE51Tsunami {
   const _$PublicBodyVTSE51TsunamiImpl({
     required final List<TsunamiForecast> forecasts,
     required final List<TsunamiObservation>? observations,
   }) : _forecasts = forecasts,
        _observations = observations;
 
-  factory _$PublicBodyVTSE51TsunamiImpl.fromJson(Map<String, dynamic> json) =>
-      _$$PublicBodyVTSE51TsunamiImplFromJson(json);
+  factory _$PublicBodyVTSE51TsunamiImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$PublicBodyVTSE51TsunamiImplFromJson(json);
 
   final List<TsunamiForecast> _forecasts;
   @override
   List<TsunamiForecast> get forecasts {
-    if (_forecasts is EqualUnmodifiableListView) return _forecasts;
+    if (_forecasts is EqualUnmodifiableListView)
+      return _forecasts;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_forecasts);
   }
@@ -1246,7 +1359,8 @@ class _$PublicBodyVTSE51TsunamiImpl implements _PublicBodyVTSE51Tsunami {
   List<TsunamiObservation>? get observations {
     final value = _observations;
     if (value == null) return null;
-    if (_observations is EqualUnmodifiableListView) return _observations;
+    if (_observations is EqualUnmodifiableListView)
+      return _observations;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -1284,10 +1398,13 @@ class _$PublicBodyVTSE51TsunamiImpl implements _PublicBodyVTSE51Tsunami {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$PublicBodyVTSE51TsunamiImplCopyWith<_$PublicBodyVTSE51TsunamiImpl>
-  get copyWith => __$$PublicBodyVTSE51TsunamiImplCopyWithImpl<
+  _$$PublicBodyVTSE51TsunamiImplCopyWith<
     _$PublicBodyVTSE51TsunamiImpl
-  >(this, _$identity);
+  >
+  get copyWith =>
+      __$$PublicBodyVTSE51TsunamiImplCopyWithImpl<
+        _$PublicBodyVTSE51TsunamiImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -1295,14 +1412,16 @@ class _$PublicBodyVTSE51TsunamiImpl implements _PublicBodyVTSE51Tsunami {
   }
 }
 
-abstract class _PublicBodyVTSE51Tsunami implements PublicBodyVTSE51Tsunami {
+abstract class _PublicBodyVTSE51Tsunami
+    implements PublicBodyVTSE51Tsunami {
   const factory _PublicBodyVTSE51Tsunami({
     required final List<TsunamiForecast> forecasts,
     required final List<TsunamiObservation>? observations,
   }) = _$PublicBodyVTSE51TsunamiImpl;
 
-  factory _PublicBodyVTSE51Tsunami.fromJson(Map<String, dynamic> json) =
-      _$PublicBodyVTSE51TsunamiImpl.fromJson;
+  factory _PublicBodyVTSE51Tsunami.fromJson(
+    Map<String, dynamic> json,
+  ) = _$PublicBodyVTSE51TsunamiImpl.fromJson;
 
   @override
   List<TsunamiForecast> get forecasts;
@@ -1313,7 +1432,9 @@ abstract class _PublicBodyVTSE51Tsunami implements PublicBodyVTSE51Tsunami {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$PublicBodyVTSE51TsunamiImplCopyWith<_$PublicBodyVTSE51TsunamiImpl>
+  _$$PublicBodyVTSE51TsunamiImplCopyWith<
+    _$PublicBodyVTSE51TsunamiImpl
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -1327,16 +1448,18 @@ PublicBodyVTSE52Tsunami _$PublicBodyVTSE52TsunamiFromJson(
 mixin _$PublicBodyVTSE52Tsunami {
   List<TsunamiObservation>? get observations =>
       throw _privateConstructorUsedError;
-  List<TsunamiEstimation> get estimations => throw _privateConstructorUsedError;
+  List<TsunamiEstimation> get estimations =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this PublicBodyVTSE52Tsunami to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of PublicBodyVTSE52Tsunami
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $PublicBodyVTSE52TsunamiCopyWith<PublicBodyVTSE52Tsunami> get copyWith =>
-      throw _privateConstructorUsedError;
+  $PublicBodyVTSE52TsunamiCopyWith<PublicBodyVTSE52Tsunami>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1344,7 +1467,11 @@ abstract class $PublicBodyVTSE52TsunamiCopyWith<$Res> {
   factory $PublicBodyVTSE52TsunamiCopyWith(
     PublicBodyVTSE52Tsunami value,
     $Res Function(PublicBodyVTSE52Tsunami) then,
-  ) = _$PublicBodyVTSE52TsunamiCopyWithImpl<$Res, PublicBodyVTSE52Tsunami>;
+  ) =
+      _$PublicBodyVTSE52TsunamiCopyWithImpl<
+        $Res,
+        PublicBodyVTSE52Tsunami
+      >;
   @useResult
   $Res call({
     List<TsunamiObservation>? observations,
@@ -1358,7 +1485,10 @@ class _$PublicBodyVTSE52TsunamiCopyWithImpl<
   $Val extends PublicBodyVTSE52Tsunami
 >
     implements $PublicBodyVTSE52TsunamiCopyWith<$Res> {
-  _$PublicBodyVTSE52TsunamiCopyWithImpl(this._value, this._then);
+  _$PublicBodyVTSE52TsunamiCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -1369,7 +1499,10 @@ class _$PublicBodyVTSE52TsunamiCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? observations = freezed, Object? estimations = null}) {
+  $Res call({
+    Object? observations = freezed,
+    Object? estimations = null,
+  }) {
     return _then(
       _value.copyWith(
             observations:
@@ -1410,7 +1543,8 @@ class __$$PublicBodyVTSE52TsunamiImplCopyWithImpl<$Res>
           $Res,
           _$PublicBodyVTSE52TsunamiImpl
         >
-    implements _$$PublicBodyVTSE52TsunamiImplCopyWith<$Res> {
+    implements
+        _$$PublicBodyVTSE52TsunamiImplCopyWith<$Res> {
   __$$PublicBodyVTSE52TsunamiImplCopyWithImpl(
     _$PublicBodyVTSE52TsunamiImpl _value,
     $Res Function(_$PublicBodyVTSE52TsunamiImpl) _then,
@@ -1420,7 +1554,10 @@ class __$$PublicBodyVTSE52TsunamiImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? observations = freezed, Object? estimations = null}) {
+  $Res call({
+    Object? observations = freezed,
+    Object? estimations = null,
+  }) {
     return _then(
       _$PublicBodyVTSE52TsunamiImpl(
         observations:
@@ -1440,22 +1577,25 @@ class __$$PublicBodyVTSE52TsunamiImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$PublicBodyVTSE52TsunamiImpl implements _PublicBodyVTSE52Tsunami {
+class _$PublicBodyVTSE52TsunamiImpl
+    implements _PublicBodyVTSE52Tsunami {
   const _$PublicBodyVTSE52TsunamiImpl({
     required final List<TsunamiObservation>? observations,
     required final List<TsunamiEstimation> estimations,
   }) : _observations = observations,
        _estimations = estimations;
 
-  factory _$PublicBodyVTSE52TsunamiImpl.fromJson(Map<String, dynamic> json) =>
-      _$$PublicBodyVTSE52TsunamiImplFromJson(json);
+  factory _$PublicBodyVTSE52TsunamiImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$PublicBodyVTSE52TsunamiImplFromJson(json);
 
   final List<TsunamiObservation>? _observations;
   @override
   List<TsunamiObservation>? get observations {
     final value = _observations;
     if (value == null) return null;
-    if (_observations is EqualUnmodifiableListView) return _observations;
+    if (_observations is EqualUnmodifiableListView)
+      return _observations;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -1463,7 +1603,8 @@ class _$PublicBodyVTSE52TsunamiImpl implements _PublicBodyVTSE52Tsunami {
   final List<TsunamiEstimation> _estimations;
   @override
   List<TsunamiEstimation> get estimations {
-    if (_estimations is EqualUnmodifiableListView) return _estimations;
+    if (_estimations is EqualUnmodifiableListView)
+      return _estimations;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_estimations);
   }
@@ -1501,10 +1642,13 @@ class _$PublicBodyVTSE52TsunamiImpl implements _PublicBodyVTSE52Tsunami {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$PublicBodyVTSE52TsunamiImplCopyWith<_$PublicBodyVTSE52TsunamiImpl>
-  get copyWith => __$$PublicBodyVTSE52TsunamiImplCopyWithImpl<
+  _$$PublicBodyVTSE52TsunamiImplCopyWith<
     _$PublicBodyVTSE52TsunamiImpl
-  >(this, _$identity);
+  >
+  get copyWith =>
+      __$$PublicBodyVTSE52TsunamiImplCopyWithImpl<
+        _$PublicBodyVTSE52TsunamiImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -1512,14 +1656,16 @@ class _$PublicBodyVTSE52TsunamiImpl implements _PublicBodyVTSE52Tsunami {
   }
 }
 
-abstract class _PublicBodyVTSE52Tsunami implements PublicBodyVTSE52Tsunami {
+abstract class _PublicBodyVTSE52Tsunami
+    implements PublicBodyVTSE52Tsunami {
   const factory _PublicBodyVTSE52Tsunami({
     required final List<TsunamiObservation>? observations,
     required final List<TsunamiEstimation> estimations,
   }) = _$PublicBodyVTSE52TsunamiImpl;
 
-  factory _PublicBodyVTSE52Tsunami.fromJson(Map<String, dynamic> json) =
-      _$PublicBodyVTSE52TsunamiImpl.fromJson;
+  factory _PublicBodyVTSE52Tsunami.fromJson(
+    Map<String, dynamic> json,
+  ) = _$PublicBodyVTSE52TsunamiImpl.fromJson;
 
   @override
   List<TsunamiObservation>? get observations;
@@ -1530,11 +1676,15 @@ abstract class _PublicBodyVTSE52Tsunami implements PublicBodyVTSE52Tsunami {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$PublicBodyVTSE52TsunamiImplCopyWith<_$PublicBodyVTSE52TsunamiImpl>
+  _$$PublicBodyVTSE52TsunamiImplCopyWith<
+    _$PublicBodyVTSE52TsunamiImpl
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
-TsunamiForecast _$TsunamiForecastFromJson(Map<String, dynamic> json) {
+TsunamiForecast _$TsunamiForecastFromJson(
+  Map<String, dynamic> json,
+) {
   return _TsunamiForecast.fromJson(json);
 }
 
@@ -1546,12 +1696,14 @@ mixin _$TsunamiForecast {
   String get lastKind => throw _privateConstructorUsedError;
   TsunamiForecastFirstHeight? get firstHeight =>
       throw _privateConstructorUsedError;
-  TsunamiForecastMaxHeight? get maxHeight => throw _privateConstructorUsedError;
+  TsunamiForecastMaxHeight? get maxHeight =>
+      throw _privateConstructorUsedError;
   List<TsunamiForecastStation>? get stations =>
       throw _privateConstructorUsedError;
 
   /// Serializes this TsunamiForecast to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of TsunamiForecast
   /// with the given fields replaced by the non-null parameter values.
@@ -1577,12 +1729,16 @@ abstract class $TsunamiForecastCopyWith<$Res> {
     List<TsunamiForecastStation>? stations,
   });
 
-  $TsunamiForecastFirstHeightCopyWith<$Res>? get firstHeight;
+  $TsunamiForecastFirstHeightCopyWith<$Res>?
+  get firstHeight;
   $TsunamiForecastMaxHeightCopyWith<$Res>? get maxHeight;
 }
 
 /// @nodoc
-class _$TsunamiForecastCopyWithImpl<$Res, $Val extends TsunamiForecast>
+class _$TsunamiForecastCopyWithImpl<
+  $Res,
+  $Val extends TsunamiForecast
+>
     implements $TsunamiForecastCopyWith<$Res> {
   _$TsunamiForecastCopyWithImpl(this._value, this._then);
 
@@ -1650,16 +1806,20 @@ class _$TsunamiForecastCopyWithImpl<$Res, $Val extends TsunamiForecast>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $TsunamiForecastFirstHeightCopyWith<$Res>? get firstHeight {
+  $TsunamiForecastFirstHeightCopyWith<$Res>?
+  get firstHeight {
     if (_value.firstHeight == null) {
       return null;
     }
 
-    return $TsunamiForecastFirstHeightCopyWith<$Res>(_value.firstHeight!, (
-      value,
-    ) {
-      return _then(_value.copyWith(firstHeight: value) as $Val);
-    });
+    return $TsunamiForecastFirstHeightCopyWith<$Res>(
+      _value.firstHeight!,
+      (value) {
+        return _then(
+          _value.copyWith(firstHeight: value) as $Val,
+        );
+      },
+    );
   }
 
   /// Create a copy of TsunamiForecast
@@ -1671,9 +1831,14 @@ class _$TsunamiForecastCopyWithImpl<$Res, $Val extends TsunamiForecast>
       return null;
     }
 
-    return $TsunamiForecastMaxHeightCopyWith<$Res>(_value.maxHeight!, (value) {
-      return _then(_value.copyWith(maxHeight: value) as $Val);
-    });
+    return $TsunamiForecastMaxHeightCopyWith<$Res>(
+      _value.maxHeight!,
+      (value) {
+        return _then(
+          _value.copyWith(maxHeight: value) as $Val,
+        );
+      },
+    );
   }
 }
 
@@ -1697,14 +1862,19 @@ abstract class _$$TsunamiForecastImplCopyWith<$Res>
   });
 
   @override
-  $TsunamiForecastFirstHeightCopyWith<$Res>? get firstHeight;
+  $TsunamiForecastFirstHeightCopyWith<$Res>?
+  get firstHeight;
   @override
   $TsunamiForecastMaxHeightCopyWith<$Res>? get maxHeight;
 }
 
 /// @nodoc
 class __$$TsunamiForecastImplCopyWithImpl<$Res>
-    extends _$TsunamiForecastCopyWithImpl<$Res, _$TsunamiForecastImpl>
+    extends
+        _$TsunamiForecastCopyWithImpl<
+          $Res,
+          _$TsunamiForecastImpl
+        >
     implements _$$TsunamiForecastImplCopyWith<$Res> {
   __$$TsunamiForecastImplCopyWithImpl(
     _$TsunamiForecastImpl _value,
@@ -1780,8 +1950,9 @@ class _$TsunamiForecastImpl implements _TsunamiForecast {
     required final List<TsunamiForecastStation>? stations,
   }) : _stations = stations;
 
-  factory _$TsunamiForecastImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TsunamiForecastImplFromJson(json);
+  factory _$TsunamiForecastImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$TsunamiForecastImplFromJson(json);
 
   @override
   final String code;
@@ -1800,7 +1971,8 @@ class _$TsunamiForecastImpl implements _TsunamiForecast {
   List<TsunamiForecastStation>? get stations {
     final value = _stations;
     if (value == null) return null;
-    if (_stations is EqualUnmodifiableListView) return _stations;
+    if (_stations is EqualUnmodifiableListView)
+      return _stations;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(value);
   }
@@ -1815,16 +1987,22 @@ class _$TsunamiForecastImpl implements _TsunamiForecast {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TsunamiForecastImpl &&
-            (identical(other.code, code) || other.code == code) &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.kind, kind) || other.kind == kind) &&
+            (identical(other.code, code) ||
+                other.code == code) &&
+            (identical(other.name, name) ||
+                other.name == name) &&
+            (identical(other.kind, kind) ||
+                other.kind == kind) &&
             (identical(other.lastKind, lastKind) ||
                 other.lastKind == lastKind) &&
             (identical(other.firstHeight, firstHeight) ||
                 other.firstHeight == firstHeight) &&
             (identical(other.maxHeight, maxHeight) ||
                 other.maxHeight == maxHeight) &&
-            const DeepCollectionEquality().equals(other._stations, _stations));
+            const DeepCollectionEquality().equals(
+              other._stations,
+              _stations,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1845,11 +2023,10 @@ class _$TsunamiForecastImpl implements _TsunamiForecast {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$TsunamiForecastImplCopyWith<_$TsunamiForecastImpl> get copyWith =>
-      __$$TsunamiForecastImplCopyWithImpl<_$TsunamiForecastImpl>(
-        this,
-        _$identity,
-      );
+  _$$TsunamiForecastImplCopyWith<_$TsunamiForecastImpl>
+  get copyWith => __$$TsunamiForecastImplCopyWithImpl<
+    _$TsunamiForecastImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -1868,8 +2045,9 @@ abstract class _TsunamiForecast implements TsunamiForecast {
     required final List<TsunamiForecastStation>? stations,
   }) = _$TsunamiForecastImpl;
 
-  factory _TsunamiForecast.fromJson(Map<String, dynamic> json) =
-      _$TsunamiForecastImpl.fromJson;
+  factory _TsunamiForecast.fromJson(
+    Map<String, dynamic> json,
+  ) = _$TsunamiForecastImpl.fromJson;
 
   @override
   String get code;
@@ -1890,11 +2068,12 @@ abstract class _TsunamiForecast implements TsunamiForecast {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TsunamiForecastImplCopyWith<_$TsunamiForecastImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$TsunamiForecastImplCopyWith<_$TsunamiForecastImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
-TsunamiForecastFirstHeight _$TsunamiForecastFirstHeightFromJson(
+TsunamiForecastFirstHeight
+_$TsunamiForecastFirstHeightFromJson(
   Map<String, dynamic> json,
 ) {
   return _TsunamiForecastFirstHeight.fromJson(json);
@@ -1902,17 +2081,21 @@ TsunamiForecastFirstHeight _$TsunamiForecastFirstHeightFromJson(
 
 /// @nodoc
 mixin _$TsunamiForecastFirstHeight {
-  DateTime? get arrivalTime => throw _privateConstructorUsedError;
+  DateTime? get arrivalTime =>
+      throw _privateConstructorUsedError;
   TsunamiForecastFirstHeightCondition? get condition =>
       throw _privateConstructorUsedError;
 
   /// Serializes this TsunamiForecastFirstHeight to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of TsunamiForecastFirstHeight
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $TsunamiForecastFirstHeightCopyWith<TsunamiForecastFirstHeight>
+  $TsunamiForecastFirstHeightCopyWith<
+    TsunamiForecastFirstHeight
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -1939,7 +2122,10 @@ class _$TsunamiForecastFirstHeightCopyWithImpl<
   $Val extends TsunamiForecastFirstHeight
 >
     implements $TsunamiForecastFirstHeightCopyWith<$Res> {
-  _$TsunamiForecastFirstHeightCopyWithImpl(this._value, this._then);
+  _$TsunamiForecastFirstHeightCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -1950,7 +2136,10 @@ class _$TsunamiForecastFirstHeightCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? arrivalTime = freezed, Object? condition = freezed}) {
+  $Res call({
+    Object? arrivalTime = freezed,
+    Object? condition = freezed,
+  }) {
     return _then(
       _value.copyWith(
             arrivalTime:
@@ -1970,7 +2159,9 @@ class _$TsunamiForecastFirstHeightCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$TsunamiForecastFirstHeightImplCopyWith<$Res>
+abstract class _$$TsunamiForecastFirstHeightImplCopyWith<
+  $Res
+>
     implements $TsunamiForecastFirstHeightCopyWith<$Res> {
   factory _$$TsunamiForecastFirstHeightImplCopyWith(
     _$TsunamiForecastFirstHeightImpl value,
@@ -1991,7 +2182,8 @@ class __$$TsunamiForecastFirstHeightImplCopyWithImpl<$Res>
           $Res,
           _$TsunamiForecastFirstHeightImpl
         >
-    implements _$$TsunamiForecastFirstHeightImplCopyWith<$Res> {
+    implements
+        _$$TsunamiForecastFirstHeightImplCopyWith<$Res> {
   __$$TsunamiForecastFirstHeightImplCopyWithImpl(
     _$TsunamiForecastFirstHeightImpl _value,
     $Res Function(_$TsunamiForecastFirstHeightImpl) _then,
@@ -2001,7 +2193,10 @@ class __$$TsunamiForecastFirstHeightImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? arrivalTime = freezed, Object? condition = freezed}) {
+  $Res call({
+    Object? arrivalTime = freezed,
+    Object? condition = freezed,
+  }) {
     return _then(
       _$TsunamiForecastFirstHeightImpl(
         arrivalTime:
@@ -2022,7 +2217,8 @@ class __$$TsunamiForecastFirstHeightImplCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.none)
-class _$TsunamiForecastFirstHeightImpl implements _TsunamiForecastFirstHeight {
+class _$TsunamiForecastFirstHeightImpl
+    implements _TsunamiForecastFirstHeight {
   const _$TsunamiForecastFirstHeightImpl({
     required this.arrivalTime,
     required this.condition,
@@ -2055,17 +2251,21 @@ class _$TsunamiForecastFirstHeightImpl implements _TsunamiForecastFirstHeight {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, arrivalTime, condition);
+  int get hashCode =>
+      Object.hash(runtimeType, arrivalTime, condition);
 
   /// Create a copy of TsunamiForecastFirstHeight
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$TsunamiForecastFirstHeightImplCopyWith<_$TsunamiForecastFirstHeightImpl>
-  get copyWith => __$$TsunamiForecastFirstHeightImplCopyWithImpl<
+  _$$TsunamiForecastFirstHeightImplCopyWith<
     _$TsunamiForecastFirstHeightImpl
-  >(this, _$identity);
+  >
+  get copyWith =>
+      __$$TsunamiForecastFirstHeightImplCopyWithImpl<
+        _$TsunamiForecastFirstHeightImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -2077,11 +2277,13 @@ abstract class _TsunamiForecastFirstHeight
     implements TsunamiForecastFirstHeight {
   const factory _TsunamiForecastFirstHeight({
     required final DateTime? arrivalTime,
-    required final TsunamiForecastFirstHeightCondition? condition,
+    required final TsunamiForecastFirstHeightCondition?
+    condition,
   }) = _$TsunamiForecastFirstHeightImpl;
 
-  factory _TsunamiForecastFirstHeight.fromJson(Map<String, dynamic> json) =
-      _$TsunamiForecastFirstHeightImpl.fromJson;
+  factory _TsunamiForecastFirstHeight.fromJson(
+    Map<String, dynamic> json,
+  ) = _$TsunamiForecastFirstHeightImpl.fromJson;
 
   @override
   DateTime? get arrivalTime;
@@ -2092,7 +2294,9 @@ abstract class _TsunamiForecastFirstHeight
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TsunamiForecastFirstHeightImplCopyWith<_$TsunamiForecastFirstHeightImpl>
+  _$$TsunamiForecastFirstHeightImplCopyWith<
+    _$TsunamiForecastFirstHeightImpl
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -2113,13 +2317,16 @@ mixin _$TsunamiForecastMaxHeight {
       throw _privateConstructorUsedError;
 
   /// Serializes this TsunamiForecastMaxHeight to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of TsunamiForecastMaxHeight
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $TsunamiForecastMaxHeightCopyWith<TsunamiForecastMaxHeight> get copyWith =>
-      throw _privateConstructorUsedError;
+  $TsunamiForecastMaxHeightCopyWith<
+    TsunamiForecastMaxHeight
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -2127,7 +2334,11 @@ abstract class $TsunamiForecastMaxHeightCopyWith<$Res> {
   factory $TsunamiForecastMaxHeightCopyWith(
     TsunamiForecastMaxHeight value,
     $Res Function(TsunamiForecastMaxHeight) then,
-  ) = _$TsunamiForecastMaxHeightCopyWithImpl<$Res, TsunamiForecastMaxHeight>;
+  ) =
+      _$TsunamiForecastMaxHeightCopyWithImpl<
+        $Res,
+        TsunamiForecastMaxHeight
+      >;
   @useResult
   $Res call({
     double? value,
@@ -2142,7 +2353,10 @@ class _$TsunamiForecastMaxHeightCopyWithImpl<
   $Val extends TsunamiForecastMaxHeight
 >
     implements $TsunamiForecastMaxHeightCopyWith<$Res> {
-  _$TsunamiForecastMaxHeightCopyWithImpl(this._value, this._then);
+  _$TsunamiForecastMaxHeightCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -2204,7 +2418,8 @@ class __$$TsunamiForecastMaxHeightImplCopyWithImpl<$Res>
           $Res,
           _$TsunamiForecastMaxHeightImpl
         >
-    implements _$$TsunamiForecastMaxHeightImplCopyWith<$Res> {
+    implements
+        _$$TsunamiForecastMaxHeightImplCopyWith<$Res> {
   __$$TsunamiForecastMaxHeightImplCopyWithImpl(
     _$TsunamiForecastMaxHeightImpl _value,
     $Res Function(_$TsunamiForecastMaxHeightImpl) _then,
@@ -2244,15 +2459,17 @@ class __$$TsunamiForecastMaxHeightImplCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.none)
-class _$TsunamiForecastMaxHeightImpl implements _TsunamiForecastMaxHeight {
+class _$TsunamiForecastMaxHeightImpl
+    implements _TsunamiForecastMaxHeight {
   const _$TsunamiForecastMaxHeightImpl({
     required this.value,
     required this.isOver,
     required this.condition,
   });
 
-  factory _$TsunamiForecastMaxHeightImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TsunamiForecastMaxHeightImplFromJson(json);
+  factory _$TsunamiForecastMaxHeightImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$TsunamiForecastMaxHeightImplFromJson(json);
 
   /// 定量表現
   @override
@@ -2274,25 +2491,31 @@ class _$TsunamiForecastMaxHeightImpl implements _TsunamiForecastMaxHeight {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TsunamiForecastMaxHeightImpl &&
-            (identical(other.value, value) || other.value == value) &&
-            (identical(other.isOver, isOver) || other.isOver == isOver) &&
+            (identical(other.value, value) ||
+                other.value == value) &&
+            (identical(other.isOver, isOver) ||
+                other.isOver == isOver) &&
             (identical(other.condition, condition) ||
                 other.condition == condition));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, value, isOver, condition);
+  int get hashCode =>
+      Object.hash(runtimeType, value, isOver, condition);
 
   /// Create a copy of TsunamiForecastMaxHeight
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$TsunamiForecastMaxHeightImplCopyWith<_$TsunamiForecastMaxHeightImpl>
-  get copyWith => __$$TsunamiForecastMaxHeightImplCopyWithImpl<
+  _$$TsunamiForecastMaxHeightImplCopyWith<
     _$TsunamiForecastMaxHeightImpl
-  >(this, _$identity);
+  >
+  get copyWith =>
+      __$$TsunamiForecastMaxHeightImplCopyWithImpl<
+        _$TsunamiForecastMaxHeightImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -2300,15 +2523,17 @@ class _$TsunamiForecastMaxHeightImpl implements _TsunamiForecastMaxHeight {
   }
 }
 
-abstract class _TsunamiForecastMaxHeight implements TsunamiForecastMaxHeight {
+abstract class _TsunamiForecastMaxHeight
+    implements TsunamiForecastMaxHeight {
   const factory _TsunamiForecastMaxHeight({
     required final double? value,
     required final bool? isOver,
     required final TsunamiMaxHeightCondition? condition,
   }) = _$TsunamiForecastMaxHeightImpl;
 
-  factory _TsunamiForecastMaxHeight.fromJson(Map<String, dynamic> json) =
-      _$TsunamiForecastMaxHeightImpl.fromJson;
+  factory _TsunamiForecastMaxHeight.fromJson(
+    Map<String, dynamic> json,
+  ) = _$TsunamiForecastMaxHeightImpl.fromJson;
 
   /// 定量表現
   @override
@@ -2324,7 +2549,9 @@ abstract class _TsunamiForecastMaxHeight implements TsunamiForecastMaxHeight {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TsunamiForecastMaxHeightImplCopyWith<_$TsunamiForecastMaxHeightImpl>
+  _$$TsunamiForecastMaxHeightImplCopyWith<
+    _$TsunamiForecastMaxHeightImpl
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -2338,19 +2565,22 @@ TsunamiForecastStation _$TsunamiForecastStationFromJson(
 mixin _$TsunamiForecastStation {
   String get code => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  DateTime get highTideTime => throw _privateConstructorUsedError;
-  DateTime? get firstHeightTime => throw _privateConstructorUsedError;
+  DateTime get highTideTime =>
+      throw _privateConstructorUsedError;
+  DateTime? get firstHeightTime =>
+      throw _privateConstructorUsedError;
   TsunamiForecastFirstHeightCondition? get condition =>
       throw _privateConstructorUsedError;
 
   /// Serializes this TsunamiForecastStation to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of TsunamiForecastStation
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $TsunamiForecastStationCopyWith<TsunamiForecastStation> get copyWith =>
-      throw _privateConstructorUsedError;
+  $TsunamiForecastStationCopyWith<TsunamiForecastStation>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -2358,7 +2588,11 @@ abstract class $TsunamiForecastStationCopyWith<$Res> {
   factory $TsunamiForecastStationCopyWith(
     TsunamiForecastStation value,
     $Res Function(TsunamiForecastStation) then,
-  ) = _$TsunamiForecastStationCopyWithImpl<$Res, TsunamiForecastStation>;
+  ) =
+      _$TsunamiForecastStationCopyWithImpl<
+        $Res,
+        TsunamiForecastStation
+      >;
   @useResult
   $Res call({
     String code,
@@ -2375,7 +2609,10 @@ class _$TsunamiForecastStationCopyWithImpl<
   $Val extends TsunamiForecastStation
 >
     implements $TsunamiForecastStationCopyWith<$Res> {
-  _$TsunamiForecastStationCopyWithImpl(this._value, this._then);
+  _$TsunamiForecastStationCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -2447,7 +2684,10 @@ abstract class _$$TsunamiForecastStationImplCopyWith<$Res>
 /// @nodoc
 class __$$TsunamiForecastStationImplCopyWithImpl<$Res>
     extends
-        _$TsunamiForecastStationCopyWithImpl<$Res, _$TsunamiForecastStationImpl>
+        _$TsunamiForecastStationCopyWithImpl<
+          $Res,
+          _$TsunamiForecastStationImpl
+        >
     implements _$$TsunamiForecastStationImplCopyWith<$Res> {
   __$$TsunamiForecastStationImplCopyWithImpl(
     _$TsunamiForecastStationImpl _value,
@@ -2500,7 +2740,8 @@ class __$$TsunamiForecastStationImplCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.none)
-class _$TsunamiForecastStationImpl implements _TsunamiForecastStation {
+class _$TsunamiForecastStationImpl
+    implements _TsunamiForecastStation {
   const _$TsunamiForecastStationImpl({
     required this.code,
     required this.name,
@@ -2509,8 +2750,9 @@ class _$TsunamiForecastStationImpl implements _TsunamiForecastStation {
     required this.condition,
   });
 
-  factory _$TsunamiForecastStationImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TsunamiForecastStationImplFromJson(json);
+  factory _$TsunamiForecastStationImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$TsunamiForecastStationImplFromJson(json);
 
   @override
   final String code;
@@ -2533,11 +2775,16 @@ class _$TsunamiForecastStationImpl implements _TsunamiForecastStation {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TsunamiForecastStationImpl &&
-            (identical(other.code, code) || other.code == code) &&
-            (identical(other.name, name) || other.name == name) &&
+            (identical(other.code, code) ||
+                other.code == code) &&
+            (identical(other.name, name) ||
+                other.name == name) &&
             (identical(other.highTideTime, highTideTime) ||
                 other.highTideTime == highTideTime) &&
-            (identical(other.firstHeightTime, firstHeightTime) ||
+            (identical(
+                  other.firstHeightTime,
+                  firstHeightTime,
+                ) ||
                 other.firstHeightTime == firstHeightTime) &&
             (identical(other.condition, condition) ||
                 other.condition == condition));
@@ -2559,12 +2806,13 @@ class _$TsunamiForecastStationImpl implements _TsunamiForecastStation {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$TsunamiForecastStationImplCopyWith<_$TsunamiForecastStationImpl>
+  _$$TsunamiForecastStationImplCopyWith<
+    _$TsunamiForecastStationImpl
+  >
   get copyWith =>
-      __$$TsunamiForecastStationImplCopyWithImpl<_$TsunamiForecastStationImpl>(
-        this,
-        _$identity,
-      );
+      __$$TsunamiForecastStationImplCopyWithImpl<
+        _$TsunamiForecastStationImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -2572,17 +2820,20 @@ class _$TsunamiForecastStationImpl implements _TsunamiForecastStation {
   }
 }
 
-abstract class _TsunamiForecastStation implements TsunamiForecastStation {
+abstract class _TsunamiForecastStation
+    implements TsunamiForecastStation {
   const factory _TsunamiForecastStation({
     required final String code,
     required final String name,
     required final DateTime highTideTime,
     required final DateTime? firstHeightTime,
-    required final TsunamiForecastFirstHeightCondition? condition,
+    required final TsunamiForecastFirstHeightCondition?
+    condition,
   }) = _$TsunamiForecastStationImpl;
 
-  factory _TsunamiForecastStation.fromJson(Map<String, dynamic> json) =
-      _$TsunamiForecastStationImpl.fromJson;
+  factory _TsunamiForecastStation.fromJson(
+    Map<String, dynamic> json,
+  ) = _$TsunamiForecastStationImpl.fromJson;
 
   @override
   String get code;
@@ -2599,11 +2850,15 @@ abstract class _TsunamiForecastStation implements TsunamiForecastStation {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TsunamiForecastStationImplCopyWith<_$TsunamiForecastStationImpl>
+  _$$TsunamiForecastStationImplCopyWith<
+    _$TsunamiForecastStationImpl
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
-TsunamiObservation _$TsunamiObservationFromJson(Map<String, dynamic> json) {
+TsunamiObservation _$TsunamiObservationFromJson(
+  Map<String, dynamic> json,
+) {
   return _TsunamiObservation.fromJson(json);
 }
 
@@ -2615,13 +2870,14 @@ mixin _$TsunamiObservation {
       throw _privateConstructorUsedError;
 
   /// Serializes this TsunamiObservation to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of TsunamiObservation
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $TsunamiObservationCopyWith<TsunamiObservation> get copyWith =>
-      throw _privateConstructorUsedError;
+  $TsunamiObservationCopyWith<TsunamiObservation>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -2629,7 +2885,11 @@ abstract class $TsunamiObservationCopyWith<$Res> {
   factory $TsunamiObservationCopyWith(
     TsunamiObservation value,
     $Res Function(TsunamiObservation) then,
-  ) = _$TsunamiObservationCopyWithImpl<$Res, TsunamiObservation>;
+  ) =
+      _$TsunamiObservationCopyWithImpl<
+        $Res,
+        TsunamiObservation
+      >;
   @useResult
   $Res call({
     String? code,
@@ -2639,7 +2899,10 @@ abstract class $TsunamiObservationCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$TsunamiObservationCopyWithImpl<$Res, $Val extends TsunamiObservation>
+class _$TsunamiObservationCopyWithImpl<
+  $Res,
+  $Val extends TsunamiObservation
+>
     implements $TsunamiObservationCopyWith<$Res> {
   _$TsunamiObservationCopyWithImpl(this._value, this._then);
 
@@ -2698,7 +2961,11 @@ abstract class _$$TsunamiObservationImplCopyWith<$Res>
 
 /// @nodoc
 class __$$TsunamiObservationImplCopyWithImpl<$Res>
-    extends _$TsunamiObservationCopyWithImpl<$Res, _$TsunamiObservationImpl>
+    extends
+        _$TsunamiObservationCopyWithImpl<
+          $Res,
+          _$TsunamiObservationImpl
+        >
     implements _$$TsunamiObservationImplCopyWith<$Res> {
   __$$TsunamiObservationImplCopyWithImpl(
     _$TsunamiObservationImpl _value,
@@ -2739,15 +3006,17 @@ class __$$TsunamiObservationImplCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.none)
-class _$TsunamiObservationImpl implements _TsunamiObservation {
+class _$TsunamiObservationImpl
+    implements _TsunamiObservation {
   const _$TsunamiObservationImpl({
     required this.code,
     required this.name,
     required final List<TsunamiObservationStation> stations,
   }) : _stations = stations;
 
-  factory _$TsunamiObservationImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TsunamiObservationImplFromJson(json);
+  factory _$TsunamiObservationImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$TsunamiObservationImplFromJson(json);
 
   @override
   final String? code;
@@ -2756,7 +3025,8 @@ class _$TsunamiObservationImpl implements _TsunamiObservation {
   final List<TsunamiObservationStation> _stations;
   @override
   List<TsunamiObservationStation> get stations {
-    if (_stations is EqualUnmodifiableListView) return _stations;
+    if (_stations is EqualUnmodifiableListView)
+      return _stations;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_stations);
   }
@@ -2771,9 +3041,14 @@ class _$TsunamiObservationImpl implements _TsunamiObservation {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TsunamiObservationImpl &&
-            (identical(other.code, code) || other.code == code) &&
-            (identical(other.name, name) || other.name == name) &&
-            const DeepCollectionEquality().equals(other._stations, _stations));
+            (identical(other.code, code) ||
+                other.code == code) &&
+            (identical(other.name, name) ||
+                other.name == name) &&
+            const DeepCollectionEquality().equals(
+              other._stations,
+              _stations,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -2790,11 +3065,12 @@ class _$TsunamiObservationImpl implements _TsunamiObservation {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$TsunamiObservationImplCopyWith<_$TsunamiObservationImpl> get copyWith =>
-      __$$TsunamiObservationImplCopyWithImpl<_$TsunamiObservationImpl>(
-        this,
-        _$identity,
-      );
+  _$$TsunamiObservationImplCopyWith<
+    _$TsunamiObservationImpl
+  >
+  get copyWith => __$$TsunamiObservationImplCopyWithImpl<
+    _$TsunamiObservationImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -2802,15 +3078,17 @@ class _$TsunamiObservationImpl implements _TsunamiObservation {
   }
 }
 
-abstract class _TsunamiObservation implements TsunamiObservation {
+abstract class _TsunamiObservation
+    implements TsunamiObservation {
   const factory _TsunamiObservation({
     required final String? code,
     required final String? name,
     required final List<TsunamiObservationStation> stations,
   }) = _$TsunamiObservationImpl;
 
-  factory _TsunamiObservation.fromJson(Map<String, dynamic> json) =
-      _$TsunamiObservationImpl.fromJson;
+  factory _TsunamiObservation.fromJson(
+    Map<String, dynamic> json,
+  ) = _$TsunamiObservationImpl.fromJson;
 
   @override
   String? get code;
@@ -2823,11 +3101,14 @@ abstract class _TsunamiObservation implements TsunamiObservation {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TsunamiObservationImplCopyWith<_$TsunamiObservationImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$TsunamiObservationImplCopyWith<
+    _$TsunamiObservationImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }
 
-TsunamiObservationStation _$TsunamiObservationStationFromJson(
+TsunamiObservationStation
+_$TsunamiObservationStationFromJson(
   Map<String, dynamic> json,
 ) {
   return _TsunamiObservationStation.fromJson(json);
@@ -2839,26 +3120,35 @@ mixin _$TsunamiObservationStation {
   String get name => throw _privateConstructorUsedError;
 
   /// null: `識別不能`
-  DateTime? get firstHeightArrivalTime => throw _privateConstructorUsedError;
-  TsunamiObservationStationFirstHeightIntial? get firstHeightInitial =>
+  DateTime? get firstHeightArrivalTime =>
       throw _privateConstructorUsedError;
-  DateTime? get maxHeightTime => throw _privateConstructorUsedError;
-  double? get maxHeightValue => throw _privateConstructorUsedError;
-  bool? get maxHeightIsOver => throw _privateConstructorUsedError;
+  TsunamiObservationStationFirstHeightIntial?
+  get firstHeightInitial =>
+      throw _privateConstructorUsedError;
+  DateTime? get maxHeightTime =>
+      throw _privateConstructorUsedError;
+  double? get maxHeightValue =>
+      throw _privateConstructorUsedError;
+  bool? get maxHeightIsOver =>
+      throw _privateConstructorUsedError;
 
   /// 上昇中かどうか
-  bool? get maxHeightIsRising => throw _privateConstructorUsedError;
+  bool? get maxHeightIsRising =>
+      throw _privateConstructorUsedError;
   TsunamiObservationStationCondition? get condition =>
       throw _privateConstructorUsedError;
 
   /// Serializes this TsunamiObservationStation to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of TsunamiObservationStation
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $TsunamiObservationStationCopyWith<TsunamiObservationStation> get copyWith =>
-      throw _privateConstructorUsedError;
+  $TsunamiObservationStationCopyWith<
+    TsunamiObservationStation
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -2866,13 +3156,18 @@ abstract class $TsunamiObservationStationCopyWith<$Res> {
   factory $TsunamiObservationStationCopyWith(
     TsunamiObservationStation value,
     $Res Function(TsunamiObservationStation) then,
-  ) = _$TsunamiObservationStationCopyWithImpl<$Res, TsunamiObservationStation>;
+  ) =
+      _$TsunamiObservationStationCopyWithImpl<
+        $Res,
+        TsunamiObservationStation
+      >;
   @useResult
   $Res call({
     String code,
     String name,
     DateTime? firstHeightArrivalTime,
-    TsunamiObservationStationFirstHeightIntial? firstHeightInitial,
+    TsunamiObservationStationFirstHeightIntial?
+    firstHeightInitial,
     DateTime? maxHeightTime,
     double? maxHeightValue,
     bool? maxHeightIsOver,
@@ -2887,7 +3182,10 @@ class _$TsunamiObservationStationCopyWithImpl<
   $Val extends TsunamiObservationStation
 >
     implements $TsunamiObservationStationCopyWith<$Res> {
-  _$TsunamiObservationStationCopyWithImpl(this._value, this._then);
+  _$TsunamiObservationStationCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -2963,7 +3261,9 @@ class _$TsunamiObservationStationCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$TsunamiObservationStationImplCopyWith<$Res>
+abstract class _$$TsunamiObservationStationImplCopyWith<
+  $Res
+>
     implements $TsunamiObservationStationCopyWith<$Res> {
   factory _$$TsunamiObservationStationImplCopyWith(
     _$TsunamiObservationStationImpl value,
@@ -2975,7 +3275,8 @@ abstract class _$$TsunamiObservationStationImplCopyWith<$Res>
     String code,
     String name,
     DateTime? firstHeightArrivalTime,
-    TsunamiObservationStationFirstHeightIntial? firstHeightInitial,
+    TsunamiObservationStationFirstHeightIntial?
+    firstHeightInitial,
     DateTime? maxHeightTime,
     double? maxHeightValue,
     bool? maxHeightIsOver,
@@ -2991,7 +3292,8 @@ class __$$TsunamiObservationStationImplCopyWithImpl<$Res>
           $Res,
           _$TsunamiObservationStationImpl
         >
-    implements _$$TsunamiObservationStationImplCopyWith<$Res> {
+    implements
+        _$$TsunamiObservationStationImplCopyWith<$Res> {
   __$$TsunamiObservationStationImplCopyWithImpl(
     _$TsunamiObservationStationImpl _value,
     $Res Function(_$TsunamiObservationStationImpl) _then,
@@ -3067,7 +3369,8 @@ class __$$TsunamiObservationStationImplCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.none)
-class _$TsunamiObservationStationImpl implements _TsunamiObservationStation {
+class _$TsunamiObservationStationImpl
+    implements _TsunamiObservationStation {
   const _$TsunamiObservationStationImpl({
     required this.code,
     required this.name,
@@ -3080,8 +3383,9 @@ class _$TsunamiObservationStationImpl implements _TsunamiObservationStation {
     required this.condition,
   });
 
-  factory _$TsunamiObservationStationImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TsunamiObservationStationImplFromJson(json);
+  factory _$TsunamiObservationStationImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$TsunamiObservationStationImplFromJson(json);
 
   @override
   final String code;
@@ -3092,7 +3396,8 @@ class _$TsunamiObservationStationImpl implements _TsunamiObservationStation {
   @override
   final DateTime? firstHeightArrivalTime;
   @override
-  final TsunamiObservationStationFirstHeightIntial? firstHeightInitial;
+  final TsunamiObservationStationFirstHeightIntial?
+  firstHeightInitial;
   @override
   final DateTime? maxHeightTime;
   @override
@@ -3116,20 +3421,43 @@ class _$TsunamiObservationStationImpl implements _TsunamiObservationStation {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TsunamiObservationStationImpl &&
-            (identical(other.code, code) || other.code == code) &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.firstHeightArrivalTime, firstHeightArrivalTime) ||
-                other.firstHeightArrivalTime == firstHeightArrivalTime) &&
-            (identical(other.firstHeightInitial, firstHeightInitial) ||
-                other.firstHeightInitial == firstHeightInitial) &&
-            (identical(other.maxHeightTime, maxHeightTime) ||
+            (identical(other.code, code) ||
+                other.code == code) &&
+            (identical(other.name, name) ||
+                other.name == name) &&
+            (identical(
+                  other.firstHeightArrivalTime,
+                  firstHeightArrivalTime,
+                ) ||
+                other.firstHeightArrivalTime ==
+                    firstHeightArrivalTime) &&
+            (identical(
+                  other.firstHeightInitial,
+                  firstHeightInitial,
+                ) ||
+                other.firstHeightInitial ==
+                    firstHeightInitial) &&
+            (identical(
+                  other.maxHeightTime,
+                  maxHeightTime,
+                ) ||
                 other.maxHeightTime == maxHeightTime) &&
-            (identical(other.maxHeightValue, maxHeightValue) ||
+            (identical(
+                  other.maxHeightValue,
+                  maxHeightValue,
+                ) ||
                 other.maxHeightValue == maxHeightValue) &&
-            (identical(other.maxHeightIsOver, maxHeightIsOver) ||
+            (identical(
+                  other.maxHeightIsOver,
+                  maxHeightIsOver,
+                ) ||
                 other.maxHeightIsOver == maxHeightIsOver) &&
-            (identical(other.maxHeightIsRising, maxHeightIsRising) ||
-                other.maxHeightIsRising == maxHeightIsRising) &&
+            (identical(
+                  other.maxHeightIsRising,
+                  maxHeightIsRising,
+                ) ||
+                other.maxHeightIsRising ==
+                    maxHeightIsRising) &&
             (identical(other.condition, condition) ||
                 other.condition == condition));
   }
@@ -3154,10 +3482,13 @@ class _$TsunamiObservationStationImpl implements _TsunamiObservationStation {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$TsunamiObservationStationImplCopyWith<_$TsunamiObservationStationImpl>
-  get copyWith => __$$TsunamiObservationStationImplCopyWithImpl<
+  _$$TsunamiObservationStationImplCopyWith<
     _$TsunamiObservationStationImpl
-  >(this, _$identity);
+  >
+  get copyWith =>
+      __$$TsunamiObservationStationImplCopyWithImpl<
+        _$TsunamiObservationStationImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -3165,7 +3496,8 @@ class _$TsunamiObservationStationImpl implements _TsunamiObservationStation {
   }
 }
 
-abstract class _TsunamiObservationStation implements TsunamiObservationStation {
+abstract class _TsunamiObservationStation
+    implements TsunamiObservationStation {
   const factory _TsunamiObservationStation({
     required final String code,
     required final String name,
@@ -3176,11 +3508,13 @@ abstract class _TsunamiObservationStation implements TsunamiObservationStation {
     required final double? maxHeightValue,
     required final bool? maxHeightIsOver,
     required final bool? maxHeightIsRising,
-    required final TsunamiObservationStationCondition? condition,
+    required final TsunamiObservationStationCondition?
+    condition,
   }) = _$TsunamiObservationStationImpl;
 
-  factory _TsunamiObservationStation.fromJson(Map<String, dynamic> json) =
-      _$TsunamiObservationStationImpl.fromJson;
+  factory _TsunamiObservationStation.fromJson(
+    Map<String, dynamic> json,
+  ) = _$TsunamiObservationStationImpl.fromJson;
 
   @override
   String get code;
@@ -3191,7 +3525,8 @@ abstract class _TsunamiObservationStation implements TsunamiObservationStation {
   @override
   DateTime? get firstHeightArrivalTime;
   @override
-  TsunamiObservationStationFirstHeightIntial? get firstHeightInitial;
+  TsunamiObservationStationFirstHeightIntial?
+  get firstHeightInitial;
   @override
   DateTime? get maxHeightTime;
   @override
@@ -3209,11 +3544,15 @@ abstract class _TsunamiObservationStation implements TsunamiObservationStation {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TsunamiObservationStationImplCopyWith<_$TsunamiObservationStationImpl>
+  _$$TsunamiObservationStationImplCopyWith<
+    _$TsunamiObservationStationImpl
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
-TsunamiEstimation _$TsunamiEstimationFromJson(Map<String, dynamic> json) {
+TsunamiEstimation _$TsunamiEstimationFromJson(
+  Map<String, dynamic> json,
+) {
   return _TsunamiEstimation.fromJson(json);
 }
 
@@ -3221,25 +3560,32 @@ TsunamiEstimation _$TsunamiEstimationFromJson(Map<String, dynamic> json) {
 mixin _$TsunamiEstimation {
   String get code => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  DateTime? get firstHeightTime => throw _privateConstructorUsedError;
-  TsunamiEstimationFirstHeightCondition? get firstHeightCondition =>
+  DateTime? get firstHeightTime =>
       throw _privateConstructorUsedError;
-  DateTime? get maxHeightTime => throw _privateConstructorUsedError;
-  double? get maxHeightValue => throw _privateConstructorUsedError;
-  bool? get maxHeightIsOver => throw _privateConstructorUsedError;
+  TsunamiEstimationFirstHeightCondition?
+  get firstHeightCondition =>
+      throw _privateConstructorUsedError;
+  DateTime? get maxHeightTime =>
+      throw _privateConstructorUsedError;
+  double? get maxHeightValue =>
+      throw _privateConstructorUsedError;
+  bool? get maxHeightIsOver =>
+      throw _privateConstructorUsedError;
   TsunamiMaxHeightCondition? get maxHeightCondition =>
       throw _privateConstructorUsedError; // 津波警報以上でまだ津波の観測値が小さい場合に出現する
   // *津波観測中*
-  bool? get isObserving => throw _privateConstructorUsedError;
+  bool? get isObserving =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this TsunamiEstimation to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of TsunamiEstimation
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $TsunamiEstimationCopyWith<TsunamiEstimation> get copyWith =>
-      throw _privateConstructorUsedError;
+  $TsunamiEstimationCopyWith<TsunamiEstimation>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -3247,13 +3593,18 @@ abstract class $TsunamiEstimationCopyWith<$Res> {
   factory $TsunamiEstimationCopyWith(
     TsunamiEstimation value,
     $Res Function(TsunamiEstimation) then,
-  ) = _$TsunamiEstimationCopyWithImpl<$Res, TsunamiEstimation>;
+  ) =
+      _$TsunamiEstimationCopyWithImpl<
+        $Res,
+        TsunamiEstimation
+      >;
   @useResult
   $Res call({
     String code,
     String name,
     DateTime? firstHeightTime,
-    TsunamiEstimationFirstHeightCondition? firstHeightCondition,
+    TsunamiEstimationFirstHeightCondition?
+    firstHeightCondition,
     DateTime? maxHeightTime,
     double? maxHeightValue,
     bool? maxHeightIsOver,
@@ -3263,7 +3614,10 @@ abstract class $TsunamiEstimationCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$TsunamiEstimationCopyWithImpl<$Res, $Val extends TsunamiEstimation>
+class _$TsunamiEstimationCopyWithImpl<
+  $Res,
+  $Val extends TsunamiEstimation
+>
     implements $TsunamiEstimationCopyWith<$Res> {
   _$TsunamiEstimationCopyWithImpl(this._value, this._then);
 
@@ -3353,7 +3707,8 @@ abstract class _$$TsunamiEstimationImplCopyWith<$Res>
     String code,
     String name,
     DateTime? firstHeightTime,
-    TsunamiEstimationFirstHeightCondition? firstHeightCondition,
+    TsunamiEstimationFirstHeightCondition?
+    firstHeightCondition,
     DateTime? maxHeightTime,
     double? maxHeightValue,
     bool? maxHeightIsOver,
@@ -3364,7 +3719,11 @@ abstract class _$$TsunamiEstimationImplCopyWith<$Res>
 
 /// @nodoc
 class __$$TsunamiEstimationImplCopyWithImpl<$Res>
-    extends _$TsunamiEstimationCopyWithImpl<$Res, _$TsunamiEstimationImpl>
+    extends
+        _$TsunamiEstimationCopyWithImpl<
+          $Res,
+          _$TsunamiEstimationImpl
+        >
     implements _$$TsunamiEstimationImplCopyWith<$Res> {
   __$$TsunamiEstimationImplCopyWithImpl(
     _$TsunamiEstimationImpl _value,
@@ -3441,7 +3800,8 @@ class __$$TsunamiEstimationImplCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.none)
-class _$TsunamiEstimationImpl implements _TsunamiEstimation {
+class _$TsunamiEstimationImpl
+    implements _TsunamiEstimation {
   const _$TsunamiEstimationImpl({
     required this.code,
     required this.name,
@@ -3454,8 +3814,9 @@ class _$TsunamiEstimationImpl implements _TsunamiEstimation {
     required this.isObserving,
   });
 
-  factory _$TsunamiEstimationImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TsunamiEstimationImplFromJson(json);
+  factory _$TsunamiEstimationImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$TsunamiEstimationImplFromJson(json);
 
   @override
   final String code;
@@ -3464,7 +3825,8 @@ class _$TsunamiEstimationImpl implements _TsunamiEstimation {
   @override
   final DateTime? firstHeightTime;
   @override
-  final TsunamiEstimationFirstHeightCondition? firstHeightCondition;
+  final TsunamiEstimationFirstHeightCondition?
+  firstHeightCondition;
   @override
   final DateTime? maxHeightTime;
   @override
@@ -3488,20 +3850,42 @@ class _$TsunamiEstimationImpl implements _TsunamiEstimation {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TsunamiEstimationImpl &&
-            (identical(other.code, code) || other.code == code) &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.firstHeightTime, firstHeightTime) ||
+            (identical(other.code, code) ||
+                other.code == code) &&
+            (identical(other.name, name) ||
+                other.name == name) &&
+            (identical(
+                  other.firstHeightTime,
+                  firstHeightTime,
+                ) ||
                 other.firstHeightTime == firstHeightTime) &&
-            (identical(other.firstHeightCondition, firstHeightCondition) ||
-                other.firstHeightCondition == firstHeightCondition) &&
-            (identical(other.maxHeightTime, maxHeightTime) ||
+            (identical(
+                  other.firstHeightCondition,
+                  firstHeightCondition,
+                ) ||
+                other.firstHeightCondition ==
+                    firstHeightCondition) &&
+            (identical(
+                  other.maxHeightTime,
+                  maxHeightTime,
+                ) ||
                 other.maxHeightTime == maxHeightTime) &&
-            (identical(other.maxHeightValue, maxHeightValue) ||
+            (identical(
+                  other.maxHeightValue,
+                  maxHeightValue,
+                ) ||
                 other.maxHeightValue == maxHeightValue) &&
-            (identical(other.maxHeightIsOver, maxHeightIsOver) ||
+            (identical(
+                  other.maxHeightIsOver,
+                  maxHeightIsOver,
+                ) ||
                 other.maxHeightIsOver == maxHeightIsOver) &&
-            (identical(other.maxHeightCondition, maxHeightCondition) ||
-                other.maxHeightCondition == maxHeightCondition) &&
+            (identical(
+                  other.maxHeightCondition,
+                  maxHeightCondition,
+                ) ||
+                other.maxHeightCondition ==
+                    maxHeightCondition) &&
             (identical(other.isObserving, isObserving) ||
                 other.isObserving == isObserving));
   }
@@ -3526,11 +3910,10 @@ class _$TsunamiEstimationImpl implements _TsunamiEstimation {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$TsunamiEstimationImplCopyWith<_$TsunamiEstimationImpl> get copyWith =>
-      __$$TsunamiEstimationImplCopyWithImpl<_$TsunamiEstimationImpl>(
-        this,
-        _$identity,
-      );
+  _$$TsunamiEstimationImplCopyWith<_$TsunamiEstimationImpl>
+  get copyWith => __$$TsunamiEstimationImplCopyWithImpl<
+    _$TsunamiEstimationImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -3538,21 +3921,25 @@ class _$TsunamiEstimationImpl implements _TsunamiEstimation {
   }
 }
 
-abstract class _TsunamiEstimation implements TsunamiEstimation {
+abstract class _TsunamiEstimation
+    implements TsunamiEstimation {
   const factory _TsunamiEstimation({
     required final String code,
     required final String name,
     required final DateTime? firstHeightTime,
-    required final TsunamiEstimationFirstHeightCondition? firstHeightCondition,
+    required final TsunamiEstimationFirstHeightCondition?
+    firstHeightCondition,
     required final DateTime? maxHeightTime,
     required final double? maxHeightValue,
     required final bool? maxHeightIsOver,
-    required final TsunamiMaxHeightCondition? maxHeightCondition,
+    required final TsunamiMaxHeightCondition?
+    maxHeightCondition,
     required final bool? isObserving,
   }) = _$TsunamiEstimationImpl;
 
-  factory _TsunamiEstimation.fromJson(Map<String, dynamic> json) =
-      _$TsunamiEstimationImpl.fromJson;
+  factory _TsunamiEstimation.fromJson(
+    Map<String, dynamic> json,
+  ) = _$TsunamiEstimationImpl.fromJson;
 
   @override
   String get code;
@@ -3561,7 +3948,8 @@ abstract class _TsunamiEstimation implements TsunamiEstimation {
   @override
   DateTime? get firstHeightTime;
   @override
-  TsunamiEstimationFirstHeightCondition? get firstHeightCondition;
+  TsunamiEstimationFirstHeightCondition?
+  get firstHeightCondition;
   @override
   DateTime? get maxHeightTime;
   @override
@@ -3578,29 +3966,35 @@ abstract class _TsunamiEstimation implements TsunamiEstimation {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TsunamiEstimationImplCopyWith<_$TsunamiEstimationImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$TsunamiEstimationImplCopyWith<_$TsunamiEstimationImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
-PublicBodyVTSE41 _$PublicBodyVTSE41FromJson(Map<String, dynamic> json) {
+PublicBodyVTSE41 _$PublicBodyVTSE41FromJson(
+  Map<String, dynamic> json,
+) {
   return _PublicBodyVTSE41.fromJson(json);
 }
 
 /// @nodoc
 mixin _$PublicBodyVTSE41 {
-  PublicBodyVTSE41Tsunami get tsunami => throw _privateConstructorUsedError;
-  List<Earthquake> get earthquakes => throw _privateConstructorUsedError;
+  PublicBodyVTSE41Tsunami get tsunami =>
+      throw _privateConstructorUsedError;
+  List<Earthquake> get earthquakes =>
+      throw _privateConstructorUsedError;
   String? get text => throw _privateConstructorUsedError;
-  Comment? get comment => throw _privateConstructorUsedError;
+  Comment? get comment =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this PublicBodyVTSE41 to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of PublicBodyVTSE41
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $PublicBodyVTSE41CopyWith<PublicBodyVTSE41> get copyWith =>
-      throw _privateConstructorUsedError;
+  $PublicBodyVTSE41CopyWith<PublicBodyVTSE41>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -3608,7 +4002,11 @@ abstract class $PublicBodyVTSE41CopyWith<$Res> {
   factory $PublicBodyVTSE41CopyWith(
     PublicBodyVTSE41 value,
     $Res Function(PublicBodyVTSE41) then,
-  ) = _$PublicBodyVTSE41CopyWithImpl<$Res, PublicBodyVTSE41>;
+  ) =
+      _$PublicBodyVTSE41CopyWithImpl<
+        $Res,
+        PublicBodyVTSE41
+      >;
   @useResult
   $Res call({
     PublicBodyVTSE41Tsunami tsunami,
@@ -3622,7 +4020,10 @@ abstract class $PublicBodyVTSE41CopyWith<$Res> {
 }
 
 /// @nodoc
-class _$PublicBodyVTSE41CopyWithImpl<$Res, $Val extends PublicBodyVTSE41>
+class _$PublicBodyVTSE41CopyWithImpl<
+  $Res,
+  $Val extends PublicBodyVTSE41
+>
     implements $PublicBodyVTSE41CopyWith<$Res> {
   _$PublicBodyVTSE41CopyWithImpl(this._value, this._then);
 
@@ -3673,9 +4074,14 @@ class _$PublicBodyVTSE41CopyWithImpl<$Res, $Val extends PublicBodyVTSE41>
   @override
   @pragma('vm:prefer-inline')
   $PublicBodyVTSE41TsunamiCopyWith<$Res> get tsunami {
-    return $PublicBodyVTSE41TsunamiCopyWith<$Res>(_value.tsunami, (value) {
-      return _then(_value.copyWith(tsunami: value) as $Val);
-    });
+    return $PublicBodyVTSE41TsunamiCopyWith<$Res>(
+      _value.tsunami,
+      (value) {
+        return _then(
+          _value.copyWith(tsunami: value) as $Val,
+        );
+      },
+    );
   }
 
   /// Create a copy of PublicBodyVTSE41
@@ -3717,7 +4123,11 @@ abstract class _$$PublicBodyVTSE41ImplCopyWith<$Res>
 
 /// @nodoc
 class __$$PublicBodyVTSE41ImplCopyWithImpl<$Res>
-    extends _$PublicBodyVTSE41CopyWithImpl<$Res, _$PublicBodyVTSE41Impl>
+    extends
+        _$PublicBodyVTSE41CopyWithImpl<
+          $Res,
+          _$PublicBodyVTSE41Impl
+        >
     implements _$$PublicBodyVTSE41ImplCopyWith<$Res> {
   __$$PublicBodyVTSE41ImplCopyWithImpl(
     _$PublicBodyVTSE41Impl _value,
@@ -3771,15 +4181,17 @@ class _$PublicBodyVTSE41Impl implements _PublicBodyVTSE41 {
     required this.comment,
   }) : _earthquakes = earthquakes;
 
-  factory _$PublicBodyVTSE41Impl.fromJson(Map<String, dynamic> json) =>
-      _$$PublicBodyVTSE41ImplFromJson(json);
+  factory _$PublicBodyVTSE41Impl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$PublicBodyVTSE41ImplFromJson(json);
 
   @override
   final PublicBodyVTSE41Tsunami tsunami;
   final List<Earthquake> _earthquakes;
   @override
   List<Earthquake> get earthquakes {
-    if (_earthquakes is EqualUnmodifiableListView) return _earthquakes;
+    if (_earthquakes is EqualUnmodifiableListView)
+      return _earthquakes;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_earthquakes);
   }
@@ -3799,13 +4211,16 @@ class _$PublicBodyVTSE41Impl implements _PublicBodyVTSE41 {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PublicBodyVTSE41Impl &&
-            (identical(other.tsunami, tsunami) || other.tsunami == tsunami) &&
+            (identical(other.tsunami, tsunami) ||
+                other.tsunami == tsunami) &&
             const DeepCollectionEquality().equals(
               other._earthquakes,
               _earthquakes,
             ) &&
-            (identical(other.text, text) || other.text == text) &&
-            (identical(other.comment, comment) || other.comment == comment));
+            (identical(other.text, text) ||
+                other.text == text) &&
+            (identical(other.comment, comment) ||
+                other.comment == comment));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -3823,11 +4238,10 @@ class _$PublicBodyVTSE41Impl implements _PublicBodyVTSE41 {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$PublicBodyVTSE41ImplCopyWith<_$PublicBodyVTSE41Impl> get copyWith =>
-      __$$PublicBodyVTSE41ImplCopyWithImpl<_$PublicBodyVTSE41Impl>(
-        this,
-        _$identity,
-      );
+  _$$PublicBodyVTSE41ImplCopyWith<_$PublicBodyVTSE41Impl>
+  get copyWith => __$$PublicBodyVTSE41ImplCopyWithImpl<
+    _$PublicBodyVTSE41Impl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -3835,7 +4249,8 @@ class _$PublicBodyVTSE41Impl implements _PublicBodyVTSE41 {
   }
 }
 
-abstract class _PublicBodyVTSE41 implements PublicBodyVTSE41 {
+abstract class _PublicBodyVTSE41
+    implements PublicBodyVTSE41 {
   const factory _PublicBodyVTSE41({
     required final PublicBodyVTSE41Tsunami tsunami,
     required final List<Earthquake> earthquakes,
@@ -3843,8 +4258,9 @@ abstract class _PublicBodyVTSE41 implements PublicBodyVTSE41 {
     required final Comment? comment,
   }) = _$PublicBodyVTSE41Impl;
 
-  factory _PublicBodyVTSE41.fromJson(Map<String, dynamic> json) =
-      _$PublicBodyVTSE41Impl.fromJson;
+  factory _PublicBodyVTSE41.fromJson(
+    Map<String, dynamic> json,
+  ) = _$PublicBodyVTSE41Impl.fromJson;
 
   @override
   PublicBodyVTSE41Tsunami get tsunami;
@@ -3859,29 +4275,35 @@ abstract class _PublicBodyVTSE41 implements PublicBodyVTSE41 {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$PublicBodyVTSE41ImplCopyWith<_$PublicBodyVTSE41Impl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$PublicBodyVTSE41ImplCopyWith<_$PublicBodyVTSE41Impl>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
-PublicBodyVTSE51 _$PublicBodyVTSE51FromJson(Map<String, dynamic> json) {
+PublicBodyVTSE51 _$PublicBodyVTSE51FromJson(
+  Map<String, dynamic> json,
+) {
   return _PublicBodyVTSE51.fromJson(json);
 }
 
 /// @nodoc
 mixin _$PublicBodyVTSE51 {
-  PublicBodyVTSE51Tsunami get tsunami => throw _privateConstructorUsedError;
-  List<Earthquake> get earthquakes => throw _privateConstructorUsedError;
+  PublicBodyVTSE51Tsunami get tsunami =>
+      throw _privateConstructorUsedError;
+  List<Earthquake> get earthquakes =>
+      throw _privateConstructorUsedError;
   String? get text => throw _privateConstructorUsedError;
-  Comment? get comment => throw _privateConstructorUsedError;
+  Comment? get comment =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this PublicBodyVTSE51 to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of PublicBodyVTSE51
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $PublicBodyVTSE51CopyWith<PublicBodyVTSE51> get copyWith =>
-      throw _privateConstructorUsedError;
+  $PublicBodyVTSE51CopyWith<PublicBodyVTSE51>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -3889,7 +4311,11 @@ abstract class $PublicBodyVTSE51CopyWith<$Res> {
   factory $PublicBodyVTSE51CopyWith(
     PublicBodyVTSE51 value,
     $Res Function(PublicBodyVTSE51) then,
-  ) = _$PublicBodyVTSE51CopyWithImpl<$Res, PublicBodyVTSE51>;
+  ) =
+      _$PublicBodyVTSE51CopyWithImpl<
+        $Res,
+        PublicBodyVTSE51
+      >;
   @useResult
   $Res call({
     PublicBodyVTSE51Tsunami tsunami,
@@ -3903,7 +4329,10 @@ abstract class $PublicBodyVTSE51CopyWith<$Res> {
 }
 
 /// @nodoc
-class _$PublicBodyVTSE51CopyWithImpl<$Res, $Val extends PublicBodyVTSE51>
+class _$PublicBodyVTSE51CopyWithImpl<
+  $Res,
+  $Val extends PublicBodyVTSE51
+>
     implements $PublicBodyVTSE51CopyWith<$Res> {
   _$PublicBodyVTSE51CopyWithImpl(this._value, this._then);
 
@@ -3954,9 +4383,14 @@ class _$PublicBodyVTSE51CopyWithImpl<$Res, $Val extends PublicBodyVTSE51>
   @override
   @pragma('vm:prefer-inline')
   $PublicBodyVTSE51TsunamiCopyWith<$Res> get tsunami {
-    return $PublicBodyVTSE51TsunamiCopyWith<$Res>(_value.tsunami, (value) {
-      return _then(_value.copyWith(tsunami: value) as $Val);
-    });
+    return $PublicBodyVTSE51TsunamiCopyWith<$Res>(
+      _value.tsunami,
+      (value) {
+        return _then(
+          _value.copyWith(tsunami: value) as $Val,
+        );
+      },
+    );
   }
 
   /// Create a copy of PublicBodyVTSE51
@@ -3998,7 +4432,11 @@ abstract class _$$PublicBodyVTSE51ImplCopyWith<$Res>
 
 /// @nodoc
 class __$$PublicBodyVTSE51ImplCopyWithImpl<$Res>
-    extends _$PublicBodyVTSE51CopyWithImpl<$Res, _$PublicBodyVTSE51Impl>
+    extends
+        _$PublicBodyVTSE51CopyWithImpl<
+          $Res,
+          _$PublicBodyVTSE51Impl
+        >
     implements _$$PublicBodyVTSE51ImplCopyWith<$Res> {
   __$$PublicBodyVTSE51ImplCopyWithImpl(
     _$PublicBodyVTSE51Impl _value,
@@ -4052,15 +4490,17 @@ class _$PublicBodyVTSE51Impl implements _PublicBodyVTSE51 {
     required this.comment,
   }) : _earthquakes = earthquakes;
 
-  factory _$PublicBodyVTSE51Impl.fromJson(Map<String, dynamic> json) =>
-      _$$PublicBodyVTSE51ImplFromJson(json);
+  factory _$PublicBodyVTSE51Impl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$PublicBodyVTSE51ImplFromJson(json);
 
   @override
   final PublicBodyVTSE51Tsunami tsunami;
   final List<Earthquake> _earthquakes;
   @override
   List<Earthquake> get earthquakes {
-    if (_earthquakes is EqualUnmodifiableListView) return _earthquakes;
+    if (_earthquakes is EqualUnmodifiableListView)
+      return _earthquakes;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_earthquakes);
   }
@@ -4080,13 +4520,16 @@ class _$PublicBodyVTSE51Impl implements _PublicBodyVTSE51 {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PublicBodyVTSE51Impl &&
-            (identical(other.tsunami, tsunami) || other.tsunami == tsunami) &&
+            (identical(other.tsunami, tsunami) ||
+                other.tsunami == tsunami) &&
             const DeepCollectionEquality().equals(
               other._earthquakes,
               _earthquakes,
             ) &&
-            (identical(other.text, text) || other.text == text) &&
-            (identical(other.comment, comment) || other.comment == comment));
+            (identical(other.text, text) ||
+                other.text == text) &&
+            (identical(other.comment, comment) ||
+                other.comment == comment));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -4104,11 +4547,10 @@ class _$PublicBodyVTSE51Impl implements _PublicBodyVTSE51 {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$PublicBodyVTSE51ImplCopyWith<_$PublicBodyVTSE51Impl> get copyWith =>
-      __$$PublicBodyVTSE51ImplCopyWithImpl<_$PublicBodyVTSE51Impl>(
-        this,
-        _$identity,
-      );
+  _$$PublicBodyVTSE51ImplCopyWith<_$PublicBodyVTSE51Impl>
+  get copyWith => __$$PublicBodyVTSE51ImplCopyWithImpl<
+    _$PublicBodyVTSE51Impl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -4116,7 +4558,8 @@ class _$PublicBodyVTSE51Impl implements _PublicBodyVTSE51 {
   }
 }
 
-abstract class _PublicBodyVTSE51 implements PublicBodyVTSE51 {
+abstract class _PublicBodyVTSE51
+    implements PublicBodyVTSE51 {
   const factory _PublicBodyVTSE51({
     required final PublicBodyVTSE51Tsunami tsunami,
     required final List<Earthquake> earthquakes,
@@ -4124,8 +4567,9 @@ abstract class _PublicBodyVTSE51 implements PublicBodyVTSE51 {
     required final Comment? comment,
   }) = _$PublicBodyVTSE51Impl;
 
-  factory _PublicBodyVTSE51.fromJson(Map<String, dynamic> json) =
-      _$PublicBodyVTSE51Impl.fromJson;
+  factory _PublicBodyVTSE51.fromJson(
+    Map<String, dynamic> json,
+  ) = _$PublicBodyVTSE51Impl.fromJson;
 
   @override
   PublicBodyVTSE51Tsunami get tsunami;
@@ -4140,29 +4584,35 @@ abstract class _PublicBodyVTSE51 implements PublicBodyVTSE51 {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$PublicBodyVTSE51ImplCopyWith<_$PublicBodyVTSE51Impl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$PublicBodyVTSE51ImplCopyWith<_$PublicBodyVTSE51Impl>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
-PublicBodyVTSE52 _$PublicBodyVTSE52FromJson(Map<String, dynamic> json) {
+PublicBodyVTSE52 _$PublicBodyVTSE52FromJson(
+  Map<String, dynamic> json,
+) {
   return _PublicBodyVTSE52.fromJson(json);
 }
 
 /// @nodoc
 mixin _$PublicBodyVTSE52 {
-  PublicBodyVTSE52Tsunami get tsunami => throw _privateConstructorUsedError;
-  List<Earthquake> get earthquakes => throw _privateConstructorUsedError;
+  PublicBodyVTSE52Tsunami get tsunami =>
+      throw _privateConstructorUsedError;
+  List<Earthquake> get earthquakes =>
+      throw _privateConstructorUsedError;
   String? get text => throw _privateConstructorUsedError;
-  Comment? get comment => throw _privateConstructorUsedError;
+  Comment? get comment =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this PublicBodyVTSE52 to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of PublicBodyVTSE52
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $PublicBodyVTSE52CopyWith<PublicBodyVTSE52> get copyWith =>
-      throw _privateConstructorUsedError;
+  $PublicBodyVTSE52CopyWith<PublicBodyVTSE52>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -4170,7 +4620,11 @@ abstract class $PublicBodyVTSE52CopyWith<$Res> {
   factory $PublicBodyVTSE52CopyWith(
     PublicBodyVTSE52 value,
     $Res Function(PublicBodyVTSE52) then,
-  ) = _$PublicBodyVTSE52CopyWithImpl<$Res, PublicBodyVTSE52>;
+  ) =
+      _$PublicBodyVTSE52CopyWithImpl<
+        $Res,
+        PublicBodyVTSE52
+      >;
   @useResult
   $Res call({
     PublicBodyVTSE52Tsunami tsunami,
@@ -4184,7 +4638,10 @@ abstract class $PublicBodyVTSE52CopyWith<$Res> {
 }
 
 /// @nodoc
-class _$PublicBodyVTSE52CopyWithImpl<$Res, $Val extends PublicBodyVTSE52>
+class _$PublicBodyVTSE52CopyWithImpl<
+  $Res,
+  $Val extends PublicBodyVTSE52
+>
     implements $PublicBodyVTSE52CopyWith<$Res> {
   _$PublicBodyVTSE52CopyWithImpl(this._value, this._then);
 
@@ -4235,9 +4692,14 @@ class _$PublicBodyVTSE52CopyWithImpl<$Res, $Val extends PublicBodyVTSE52>
   @override
   @pragma('vm:prefer-inline')
   $PublicBodyVTSE52TsunamiCopyWith<$Res> get tsunami {
-    return $PublicBodyVTSE52TsunamiCopyWith<$Res>(_value.tsunami, (value) {
-      return _then(_value.copyWith(tsunami: value) as $Val);
-    });
+    return $PublicBodyVTSE52TsunamiCopyWith<$Res>(
+      _value.tsunami,
+      (value) {
+        return _then(
+          _value.copyWith(tsunami: value) as $Val,
+        );
+      },
+    );
   }
 
   /// Create a copy of PublicBodyVTSE52
@@ -4279,7 +4741,11 @@ abstract class _$$PublicBodyVTSE52ImplCopyWith<$Res>
 
 /// @nodoc
 class __$$PublicBodyVTSE52ImplCopyWithImpl<$Res>
-    extends _$PublicBodyVTSE52CopyWithImpl<$Res, _$PublicBodyVTSE52Impl>
+    extends
+        _$PublicBodyVTSE52CopyWithImpl<
+          $Res,
+          _$PublicBodyVTSE52Impl
+        >
     implements _$$PublicBodyVTSE52ImplCopyWith<$Res> {
   __$$PublicBodyVTSE52ImplCopyWithImpl(
     _$PublicBodyVTSE52Impl _value,
@@ -4333,15 +4799,17 @@ class _$PublicBodyVTSE52Impl implements _PublicBodyVTSE52 {
     required this.comment,
   }) : _earthquakes = earthquakes;
 
-  factory _$PublicBodyVTSE52Impl.fromJson(Map<String, dynamic> json) =>
-      _$$PublicBodyVTSE52ImplFromJson(json);
+  factory _$PublicBodyVTSE52Impl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$PublicBodyVTSE52ImplFromJson(json);
 
   @override
   final PublicBodyVTSE52Tsunami tsunami;
   final List<Earthquake> _earthquakes;
   @override
   List<Earthquake> get earthquakes {
-    if (_earthquakes is EqualUnmodifiableListView) return _earthquakes;
+    if (_earthquakes is EqualUnmodifiableListView)
+      return _earthquakes;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_earthquakes);
   }
@@ -4361,13 +4829,16 @@ class _$PublicBodyVTSE52Impl implements _PublicBodyVTSE52 {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PublicBodyVTSE52Impl &&
-            (identical(other.tsunami, tsunami) || other.tsunami == tsunami) &&
+            (identical(other.tsunami, tsunami) ||
+                other.tsunami == tsunami) &&
             const DeepCollectionEquality().equals(
               other._earthquakes,
               _earthquakes,
             ) &&
-            (identical(other.text, text) || other.text == text) &&
-            (identical(other.comment, comment) || other.comment == comment));
+            (identical(other.text, text) ||
+                other.text == text) &&
+            (identical(other.comment, comment) ||
+                other.comment == comment));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -4385,11 +4856,10 @@ class _$PublicBodyVTSE52Impl implements _PublicBodyVTSE52 {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$PublicBodyVTSE52ImplCopyWith<_$PublicBodyVTSE52Impl> get copyWith =>
-      __$$PublicBodyVTSE52ImplCopyWithImpl<_$PublicBodyVTSE52Impl>(
-        this,
-        _$identity,
-      );
+  _$$PublicBodyVTSE52ImplCopyWith<_$PublicBodyVTSE52Impl>
+  get copyWith => __$$PublicBodyVTSE52ImplCopyWithImpl<
+    _$PublicBodyVTSE52Impl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -4397,7 +4867,8 @@ class _$PublicBodyVTSE52Impl implements _PublicBodyVTSE52 {
   }
 }
 
-abstract class _PublicBodyVTSE52 implements PublicBodyVTSE52 {
+abstract class _PublicBodyVTSE52
+    implements PublicBodyVTSE52 {
   const factory _PublicBodyVTSE52({
     required final PublicBodyVTSE52Tsunami tsunami,
     required final List<Earthquake> earthquakes,
@@ -4405,8 +4876,9 @@ abstract class _PublicBodyVTSE52 implements PublicBodyVTSE52 {
     required final Comment? comment,
   }) = _$PublicBodyVTSE52Impl;
 
-  factory _PublicBodyVTSE52.fromJson(Map<String, dynamic> json) =
-      _$PublicBodyVTSE52Impl.fromJson;
+  factory _PublicBodyVTSE52.fromJson(
+    Map<String, dynamic> json,
+  ) = _$PublicBodyVTSE52Impl.fromJson;
 
   @override
   PublicBodyVTSE52Tsunami get tsunami;
@@ -4421,8 +4893,8 @@ abstract class _PublicBodyVTSE52 implements PublicBodyVTSE52 {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$PublicBodyVTSE52ImplCopyWith<_$PublicBodyVTSE52Impl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$PublicBodyVTSE52ImplCopyWith<_$PublicBodyVTSE52Impl>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 Earthquake _$EarthquakeFromJson(Map<String, dynamic> json) {
@@ -4431,13 +4903,18 @@ Earthquake _$EarthquakeFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Earthquake {
-  DateTime get originTime => throw _privateConstructorUsedError;
-  DateTime get arrivalTime => throw _privateConstructorUsedError;
-  EarthquakeHypocenter get hypocenter => throw _privateConstructorUsedError;
-  EarthquakeMagnitude get magnitude => throw _privateConstructorUsedError;
+  DateTime get originTime =>
+      throw _privateConstructorUsedError;
+  DateTime get arrivalTime =>
+      throw _privateConstructorUsedError;
+  EarthquakeHypocenter get hypocenter =>
+      throw _privateConstructorUsedError;
+  EarthquakeMagnitude get magnitude =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this Earthquake to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of Earthquake
   /// with the given fields replaced by the non-null parameter values.
@@ -4465,7 +4942,10 @@ abstract class $EarthquakeCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$EarthquakeCopyWithImpl<$Res, $Val extends Earthquake>
+class _$EarthquakeCopyWithImpl<
+  $Res,
+  $Val extends Earthquake
+>
     implements $EarthquakeCopyWith<$Res> {
   _$EarthquakeCopyWithImpl(this._value, this._then);
 
@@ -4516,9 +4996,14 @@ class _$EarthquakeCopyWithImpl<$Res, $Val extends Earthquake>
   @override
   @pragma('vm:prefer-inline')
   $EarthquakeHypocenterCopyWith<$Res> get hypocenter {
-    return $EarthquakeHypocenterCopyWith<$Res>(_value.hypocenter, (value) {
-      return _then(_value.copyWith(hypocenter: value) as $Val);
-    });
+    return $EarthquakeHypocenterCopyWith<$Res>(
+      _value.hypocenter,
+      (value) {
+        return _then(
+          _value.copyWith(hypocenter: value) as $Val,
+        );
+      },
+    );
   }
 
   /// Create a copy of Earthquake
@@ -4526,9 +5011,14 @@ class _$EarthquakeCopyWithImpl<$Res, $Val extends Earthquake>
   @override
   @pragma('vm:prefer-inline')
   $EarthquakeMagnitudeCopyWith<$Res> get magnitude {
-    return $EarthquakeMagnitudeCopyWith<$Res>(_value.magnitude, (value) {
-      return _then(_value.copyWith(magnitude: value) as $Val);
-    });
+    return $EarthquakeMagnitudeCopyWith<$Res>(
+      _value.magnitude,
+      (value) {
+        return _then(
+          _value.copyWith(magnitude: value) as $Val,
+        );
+      },
+    );
   }
 }
 
@@ -4610,8 +5100,9 @@ class _$EarthquakeImpl implements _Earthquake {
     required this.magnitude,
   });
 
-  factory _$EarthquakeImpl.fromJson(Map<String, dynamic> json) =>
-      _$$EarthquakeImplFromJson(json);
+  factory _$EarthquakeImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$EarthquakeImplFromJson(json);
 
   @override
   final DateTime originTime;
@@ -4644,16 +5135,25 @@ class _$EarthquakeImpl implements _Earthquake {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, originTime, arrivalTime, hypocenter, magnitude);
+  int get hashCode => Object.hash(
+    runtimeType,
+    originTime,
+    arrivalTime,
+    hypocenter,
+    magnitude,
+  );
 
   /// Create a copy of Earthquake
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EarthquakeImplCopyWith<_$EarthquakeImpl> get copyWith =>
-      __$$EarthquakeImplCopyWithImpl<_$EarthquakeImpl>(this, _$identity);
+  _$$EarthquakeImplCopyWith<_$EarthquakeImpl>
+  get copyWith =>
+      __$$EarthquakeImplCopyWithImpl<_$EarthquakeImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
@@ -4685,11 +5185,13 @@ abstract class _Earthquake implements Earthquake {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EarthquakeImplCopyWith<_$EarthquakeImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$EarthquakeImplCopyWith<_$EarthquakeImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
-EarthquakeHypocenter _$EarthquakeHypocenterFromJson(Map<String, dynamic> json) {
+EarthquakeHypocenter _$EarthquakeHypocenterFromJson(
+  Map<String, dynamic> json,
+) {
   return _EarthquakeHypocenter.fromJson(json);
 }
 
@@ -4704,13 +5206,14 @@ mixin _$EarthquakeHypocenter {
       throw _privateConstructorUsedError;
 
   /// Serializes this EarthquakeHypocenter to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of EarthquakeHypocenter
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $EarthquakeHypocenterCopyWith<EarthquakeHypocenter> get copyWith =>
-      throw _privateConstructorUsedError;
+  $EarthquakeHypocenterCopyWith<EarthquakeHypocenter>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -4718,7 +5221,11 @@ abstract class $EarthquakeHypocenterCopyWith<$Res> {
   factory $EarthquakeHypocenterCopyWith(
     EarthquakeHypocenter value,
     $Res Function(EarthquakeHypocenter) then,
-  ) = _$EarthquakeHypocenterCopyWithImpl<$Res, EarthquakeHypocenter>;
+  ) =
+      _$EarthquakeHypocenterCopyWithImpl<
+        $Res,
+        EarthquakeHypocenter
+      >;
   @useResult
   $Res call({
     String name,
@@ -4729,7 +5236,8 @@ abstract class $EarthquakeHypocenterCopyWith<$Res> {
   });
 
   $EarthquakeHypocenterDetailedCopyWith<$Res>? get detailed;
-  $EarthquakeHypocenterCoordinateCopyWith<$Res>? get coordinate;
+  $EarthquakeHypocenterCoordinateCopyWith<$Res>?
+  get coordinate;
 }
 
 /// @nodoc
@@ -4738,7 +5246,10 @@ class _$EarthquakeHypocenterCopyWithImpl<
   $Val extends EarthquakeHypocenter
 >
     implements $EarthquakeHypocenterCopyWith<$Res> {
-  _$EarthquakeHypocenterCopyWithImpl(this._value, this._then);
+  _$EarthquakeHypocenterCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -4792,32 +5303,40 @@ class _$EarthquakeHypocenterCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $EarthquakeHypocenterDetailedCopyWith<$Res>? get detailed {
+  $EarthquakeHypocenterDetailedCopyWith<$Res>?
+  get detailed {
     if (_value.detailed == null) {
       return null;
     }
 
-    return $EarthquakeHypocenterDetailedCopyWith<$Res>(_value.detailed!, (
-      value,
-    ) {
-      return _then(_value.copyWith(detailed: value) as $Val);
-    });
+    return $EarthquakeHypocenterDetailedCopyWith<$Res>(
+      _value.detailed!,
+      (value) {
+        return _then(
+          _value.copyWith(detailed: value) as $Val,
+        );
+      },
+    );
   }
 
   /// Create a copy of EarthquakeHypocenter
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $EarthquakeHypocenterCoordinateCopyWith<$Res>? get coordinate {
+  $EarthquakeHypocenterCoordinateCopyWith<$Res>?
+  get coordinate {
     if (_value.coordinate == null) {
       return null;
     }
 
-    return $EarthquakeHypocenterCoordinateCopyWith<$Res>(_value.coordinate!, (
-      value,
-    ) {
-      return _then(_value.copyWith(coordinate: value) as $Val);
-    });
+    return $EarthquakeHypocenterCoordinateCopyWith<$Res>(
+      _value.coordinate!,
+      (value) {
+        return _then(
+          _value.copyWith(coordinate: value) as $Val,
+        );
+      },
+    );
   }
 }
 
@@ -4841,12 +5360,17 @@ abstract class _$$EarthquakeHypocenterImplCopyWith<$Res>
   @override
   $EarthquakeHypocenterDetailedCopyWith<$Res>? get detailed;
   @override
-  $EarthquakeHypocenterCoordinateCopyWith<$Res>? get coordinate;
+  $EarthquakeHypocenterCoordinateCopyWith<$Res>?
+  get coordinate;
 }
 
 /// @nodoc
 class __$$EarthquakeHypocenterImplCopyWithImpl<$Res>
-    extends _$EarthquakeHypocenterCopyWithImpl<$Res, _$EarthquakeHypocenterImpl>
+    extends
+        _$EarthquakeHypocenterCopyWithImpl<
+          $Res,
+          _$EarthquakeHypocenterImpl
+        >
     implements _$$EarthquakeHypocenterImplCopyWith<$Res> {
   __$$EarthquakeHypocenterImplCopyWithImpl(
     _$EarthquakeHypocenterImpl _value,
@@ -4898,7 +5422,8 @@ class __$$EarthquakeHypocenterImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$EarthquakeHypocenterImpl implements _EarthquakeHypocenter {
+class _$EarthquakeHypocenterImpl
+    implements _EarthquakeHypocenter {
   const _$EarthquakeHypocenterImpl({
     required this.name,
     required this.code,
@@ -4907,8 +5432,9 @@ class _$EarthquakeHypocenterImpl implements _EarthquakeHypocenter {
     required this.coordinate,
   });
 
-  factory _$EarthquakeHypocenterImpl.fromJson(Map<String, dynamic> json) =>
-      _$$EarthquakeHypocenterImplFromJson(json);
+  factory _$EarthquakeHypocenterImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$EarthquakeHypocenterImplFromJson(json);
 
   @override
   final String name;
@@ -4931,9 +5457,12 @@ class _$EarthquakeHypocenterImpl implements _EarthquakeHypocenter {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeHypocenterImpl &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.code, code) || other.code == code) &&
-            (identical(other.depth, depth) || other.depth == depth) &&
+            (identical(other.name, name) ||
+                other.name == name) &&
+            (identical(other.code, code) ||
+                other.code == code) &&
+            (identical(other.depth, depth) ||
+                other.depth == depth) &&
             (identical(other.detailed, detailed) ||
                 other.detailed == detailed) &&
             (identical(other.coordinate, coordinate) ||
@@ -4942,20 +5471,26 @@ class _$EarthquakeHypocenterImpl implements _EarthquakeHypocenter {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, name, code, depth, detailed, coordinate);
+  int get hashCode => Object.hash(
+    runtimeType,
+    name,
+    code,
+    depth,
+    detailed,
+    coordinate,
+  );
 
   /// Create a copy of EarthquakeHypocenter
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EarthquakeHypocenterImplCopyWith<_$EarthquakeHypocenterImpl>
-  get copyWith =>
-      __$$EarthquakeHypocenterImplCopyWithImpl<_$EarthquakeHypocenterImpl>(
-        this,
-        _$identity,
-      );
+  _$$EarthquakeHypocenterImplCopyWith<
+    _$EarthquakeHypocenterImpl
+  >
+  get copyWith => __$$EarthquakeHypocenterImplCopyWithImpl<
+    _$EarthquakeHypocenterImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -4963,17 +5498,20 @@ class _$EarthquakeHypocenterImpl implements _EarthquakeHypocenter {
   }
 }
 
-abstract class _EarthquakeHypocenter implements EarthquakeHypocenter {
+abstract class _EarthquakeHypocenter
+    implements EarthquakeHypocenter {
   const factory _EarthquakeHypocenter({
     required final String name,
     required final String code,
     required final int? depth,
     required final EarthquakeHypocenterDetailed? detailed,
-    required final EarthquakeHypocenterCoordinate? coordinate,
+    required final EarthquakeHypocenterCoordinate?
+    coordinate,
   }) = _$EarthquakeHypocenterImpl;
 
-  factory _EarthquakeHypocenter.fromJson(Map<String, dynamic> json) =
-      _$EarthquakeHypocenterImpl.fromJson;
+  factory _EarthquakeHypocenter.fromJson(
+    Map<String, dynamic> json,
+  ) = _$EarthquakeHypocenterImpl.fromJson;
 
   @override
   String get name;
@@ -4990,11 +5528,14 @@ abstract class _EarthquakeHypocenter implements EarthquakeHypocenter {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EarthquakeHypocenterImplCopyWith<_$EarthquakeHypocenterImpl>
+  _$$EarthquakeHypocenterImplCopyWith<
+    _$EarthquakeHypocenterImpl
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
-EarthquakeHypocenterDetailed _$EarthquakeHypocenterDetailedFromJson(
+EarthquakeHypocenterDetailed
+_$EarthquakeHypocenterDetailedFromJson(
   Map<String, dynamic> json,
 ) {
   return _EarthquakeHypocenterDetailed.fromJson(json);
@@ -5006,12 +5547,15 @@ mixin _$EarthquakeHypocenterDetailed {
   String get name => throw _privateConstructorUsedError;
 
   /// Serializes this EarthquakeHypocenterDetailed to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of EarthquakeHypocenterDetailed
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $EarthquakeHypocenterDetailedCopyWith<EarthquakeHypocenterDetailed>
+  $EarthquakeHypocenterDetailedCopyWith<
+    EarthquakeHypocenterDetailed
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -5035,7 +5579,10 @@ class _$EarthquakeHypocenterDetailedCopyWithImpl<
   $Val extends EarthquakeHypocenterDetailed
 >
     implements $EarthquakeHypocenterDetailedCopyWith<$Res> {
-  _$EarthquakeHypocenterDetailedCopyWithImpl(this._value, this._then);
+  _$EarthquakeHypocenterDetailedCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -5066,12 +5613,17 @@ class _$EarthquakeHypocenterDetailedCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$EarthquakeHypocenterDetailedImplCopyWith<$Res>
+abstract class _$$EarthquakeHypocenterDetailedImplCopyWith<
+  $Res
+>
     implements $EarthquakeHypocenterDetailedCopyWith<$Res> {
   factory _$$EarthquakeHypocenterDetailedImplCopyWith(
     _$EarthquakeHypocenterDetailedImpl value,
     $Res Function(_$EarthquakeHypocenterDetailedImpl) then,
-  ) = __$$EarthquakeHypocenterDetailedImplCopyWithImpl<$Res>;
+  ) =
+      __$$EarthquakeHypocenterDetailedImplCopyWithImpl<
+        $Res
+      >;
   @override
   @useResult
   $Res call({String code, String name});
@@ -5084,7 +5636,8 @@ class __$$EarthquakeHypocenterDetailedImplCopyWithImpl<$Res>
           $Res,
           _$EarthquakeHypocenterDetailedImpl
         >
-    implements _$$EarthquakeHypocenterDetailedImplCopyWith<$Res> {
+    implements
+        _$$EarthquakeHypocenterDetailedImplCopyWith<$Res> {
   __$$EarthquakeHypocenterDetailedImplCopyWithImpl(
     _$EarthquakeHypocenterDetailedImpl _value,
     $Res Function(_$EarthquakeHypocenterDetailedImpl) _then,
@@ -5140,8 +5693,10 @@ class _$EarthquakeHypocenterDetailedImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeHypocenterDetailedImpl &&
-            (identical(other.code, code) || other.code == code) &&
-            (identical(other.name, name) || other.name == name));
+            (identical(other.code, code) ||
+                other.code == code) &&
+            (identical(other.name, name) ||
+                other.name == name));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -5156,9 +5711,10 @@ class _$EarthquakeHypocenterDetailedImpl
   _$$EarthquakeHypocenterDetailedImplCopyWith<
     _$EarthquakeHypocenterDetailedImpl
   >
-  get copyWith => __$$EarthquakeHypocenterDetailedImplCopyWithImpl<
-    _$EarthquakeHypocenterDetailedImpl
-  >(this, _$identity);
+  get copyWith =>
+      __$$EarthquakeHypocenterDetailedImplCopyWithImpl<
+        _$EarthquakeHypocenterDetailedImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -5173,8 +5729,9 @@ abstract class _EarthquakeHypocenterDetailed
     required final String name,
   }) = _$EarthquakeHypocenterDetailedImpl;
 
-  factory _EarthquakeHypocenterDetailed.fromJson(Map<String, dynamic> json) =
-      _$EarthquakeHypocenterDetailedImpl.fromJson;
+  factory _EarthquakeHypocenterDetailed.fromJson(
+    Map<String, dynamic> json,
+  ) = _$EarthquakeHypocenterDetailedImpl.fromJson;
 
   @override
   String get code;
@@ -5191,7 +5748,8 @@ abstract class _EarthquakeHypocenterDetailed
   get copyWith => throw _privateConstructorUsedError;
 }
 
-EarthquakeHypocenterCoordinate _$EarthquakeHypocenterCoordinateFromJson(
+EarthquakeHypocenterCoordinate
+_$EarthquakeHypocenterCoordinateFromJson(
   Map<String, dynamic> json,
 ) {
   return _EarthquakeHypocenterCoordinate.fromJson(json);
@@ -5203,17 +5761,22 @@ mixin _$EarthquakeHypocenterCoordinate {
   double get lon => throw _privateConstructorUsedError;
 
   /// Serializes this EarthquakeHypocenterCoordinate to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of EarthquakeHypocenterCoordinate
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $EarthquakeHypocenterCoordinateCopyWith<EarthquakeHypocenterCoordinate>
+  $EarthquakeHypocenterCoordinateCopyWith<
+    EarthquakeHypocenterCoordinate
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $EarthquakeHypocenterCoordinateCopyWith<$Res> {
+abstract class $EarthquakeHypocenterCoordinateCopyWith<
+  $Res
+> {
   factory $EarthquakeHypocenterCoordinateCopyWith(
     EarthquakeHypocenterCoordinate value,
     $Res Function(EarthquakeHypocenterCoordinate) then,
@@ -5231,8 +5794,12 @@ class _$EarthquakeHypocenterCoordinateCopyWithImpl<
   $Res,
   $Val extends EarthquakeHypocenterCoordinate
 >
-    implements $EarthquakeHypocenterCoordinateCopyWith<$Res> {
-  _$EarthquakeHypocenterCoordinateCopyWithImpl(this._value, this._then);
+    implements
+        $EarthquakeHypocenterCoordinateCopyWith<$Res> {
+  _$EarthquakeHypocenterCoordinateCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -5263,28 +5830,41 @@ class _$EarthquakeHypocenterCoordinateCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$EarthquakeHypocenterCoordinateImplCopyWith<$Res>
-    implements $EarthquakeHypocenterCoordinateCopyWith<$Res> {
+abstract class _$$EarthquakeHypocenterCoordinateImplCopyWith<
+  $Res
+>
+    implements
+        $EarthquakeHypocenterCoordinateCopyWith<$Res> {
   factory _$$EarthquakeHypocenterCoordinateImplCopyWith(
     _$EarthquakeHypocenterCoordinateImpl value,
-    $Res Function(_$EarthquakeHypocenterCoordinateImpl) then,
-  ) = __$$EarthquakeHypocenterCoordinateImplCopyWithImpl<$Res>;
+    $Res Function(_$EarthquakeHypocenterCoordinateImpl)
+    then,
+  ) =
+      __$$EarthquakeHypocenterCoordinateImplCopyWithImpl<
+        $Res
+      >;
   @override
   @useResult
   $Res call({double lat, double lon});
 }
 
 /// @nodoc
-class __$$EarthquakeHypocenterCoordinateImplCopyWithImpl<$Res>
+class __$$EarthquakeHypocenterCoordinateImplCopyWithImpl<
+  $Res
+>
     extends
         _$EarthquakeHypocenterCoordinateCopyWithImpl<
           $Res,
           _$EarthquakeHypocenterCoordinateImpl
         >
-    implements _$$EarthquakeHypocenterCoordinateImplCopyWith<$Res> {
+    implements
+        _$$EarthquakeHypocenterCoordinateImplCopyWith<
+          $Res
+        > {
   __$$EarthquakeHypocenterCoordinateImplCopyWithImpl(
     _$EarthquakeHypocenterCoordinateImpl _value,
-    $Res Function(_$EarthquakeHypocenterCoordinateImpl) _then,
+    $Res Function(_$EarthquakeHypocenterCoordinateImpl)
+    _then,
   ) : super(_value, _then);
 
   /// Create a copy of EarthquakeHypocenterCoordinate
@@ -5337,8 +5917,10 @@ class _$EarthquakeHypocenterCoordinateImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeHypocenterCoordinateImpl &&
-            (identical(other.lat, lat) || other.lat == lat) &&
-            (identical(other.lon, lon) || other.lon == lon));
+            (identical(other.lat, lat) ||
+                other.lat == lat) &&
+            (identical(other.lon, lon) ||
+                other.lon == lon));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -5353,13 +5935,16 @@ class _$EarthquakeHypocenterCoordinateImpl
   _$$EarthquakeHypocenterCoordinateImplCopyWith<
     _$EarthquakeHypocenterCoordinateImpl
   >
-  get copyWith => __$$EarthquakeHypocenterCoordinateImplCopyWithImpl<
-    _$EarthquakeHypocenterCoordinateImpl
-  >(this, _$identity);
+  get copyWith =>
+      __$$EarthquakeHypocenterCoordinateImplCopyWithImpl<
+        _$EarthquakeHypocenterCoordinateImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EarthquakeHypocenterCoordinateImplToJson(this);
+    return _$$EarthquakeHypocenterCoordinateImplToJson(
+      this,
+    );
   }
 }
 
@@ -5370,8 +5955,9 @@ abstract class _EarthquakeHypocenterCoordinate
     required final double lon,
   }) = _$EarthquakeHypocenterCoordinateImpl;
 
-  factory _EarthquakeHypocenterCoordinate.fromJson(Map<String, dynamic> json) =
-      _$EarthquakeHypocenterCoordinateImpl.fromJson;
+  factory _EarthquakeHypocenterCoordinate.fromJson(
+    Map<String, dynamic> json,
+  ) = _$EarthquakeHypocenterCoordinateImpl.fromJson;
 
   @override
   double get lat;
@@ -5388,7 +5974,9 @@ abstract class _EarthquakeHypocenterCoordinate
   get copyWith => throw _privateConstructorUsedError;
 }
 
-EarthquakeMagnitude _$EarthquakeMagnitudeFromJson(Map<String, dynamic> json) {
+EarthquakeMagnitude _$EarthquakeMagnitudeFromJson(
+  Map<String, dynamic> json,
+) {
   return _EarthquakeMagnitude.fromJson(json);
 }
 
@@ -5399,13 +5987,14 @@ mixin _$EarthquakeMagnitude {
       throw _privateConstructorUsedError;
 
   /// Serializes this EarthquakeMagnitude to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of EarthquakeMagnitude
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $EarthquakeMagnitudeCopyWith<EarthquakeMagnitude> get copyWith =>
-      throw _privateConstructorUsedError;
+  $EarthquakeMagnitudeCopyWith<EarthquakeMagnitude>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -5413,15 +6002,28 @@ abstract class $EarthquakeMagnitudeCopyWith<$Res> {
   factory $EarthquakeMagnitudeCopyWith(
     EarthquakeMagnitude value,
     $Res Function(EarthquakeMagnitude) then,
-  ) = _$EarthquakeMagnitudeCopyWithImpl<$Res, EarthquakeMagnitude>;
+  ) =
+      _$EarthquakeMagnitudeCopyWithImpl<
+        $Res,
+        EarthquakeMagnitude
+      >;
   @useResult
-  $Res call({double? value, EarthquakeMagnitudeCondition? condition});
+  $Res call({
+    double? value,
+    EarthquakeMagnitudeCondition? condition,
+  });
 }
 
 /// @nodoc
-class _$EarthquakeMagnitudeCopyWithImpl<$Res, $Val extends EarthquakeMagnitude>
+class _$EarthquakeMagnitudeCopyWithImpl<
+  $Res,
+  $Val extends EarthquakeMagnitude
+>
     implements $EarthquakeMagnitudeCopyWith<$Res> {
-  _$EarthquakeMagnitudeCopyWithImpl(this._value, this._then);
+  _$EarthquakeMagnitudeCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -5432,7 +6034,10 @@ class _$EarthquakeMagnitudeCopyWithImpl<$Res, $Val extends EarthquakeMagnitude>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? value = freezed, Object? condition = freezed}) {
+  $Res call({
+    Object? value = freezed,
+    Object? condition = freezed,
+  }) {
     return _then(
       _value.copyWith(
             value:
@@ -5460,12 +6065,19 @@ abstract class _$$EarthquakeMagnitudeImplCopyWith<$Res>
   ) = __$$EarthquakeMagnitudeImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({double? value, EarthquakeMagnitudeCondition? condition});
+  $Res call({
+    double? value,
+    EarthquakeMagnitudeCondition? condition,
+  });
 }
 
 /// @nodoc
 class __$$EarthquakeMagnitudeImplCopyWithImpl<$Res>
-    extends _$EarthquakeMagnitudeCopyWithImpl<$Res, _$EarthquakeMagnitudeImpl>
+    extends
+        _$EarthquakeMagnitudeCopyWithImpl<
+          $Res,
+          _$EarthquakeMagnitudeImpl
+        >
     implements _$$EarthquakeMagnitudeImplCopyWith<$Res> {
   __$$EarthquakeMagnitudeImplCopyWithImpl(
     _$EarthquakeMagnitudeImpl _value,
@@ -5476,7 +6088,10 @@ class __$$EarthquakeMagnitudeImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? value = freezed, Object? condition = freezed}) {
+  $Res call({
+    Object? value = freezed,
+    Object? condition = freezed,
+  }) {
     return _then(
       _$EarthquakeMagnitudeImpl(
         value:
@@ -5496,14 +6111,16 @@ class __$$EarthquakeMagnitudeImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$EarthquakeMagnitudeImpl implements _EarthquakeMagnitude {
+class _$EarthquakeMagnitudeImpl
+    implements _EarthquakeMagnitude {
   const _$EarthquakeMagnitudeImpl({
     required this.value,
     required this.condition,
   });
 
-  factory _$EarthquakeMagnitudeImpl.fromJson(Map<String, dynamic> json) =>
-      _$$EarthquakeMagnitudeImplFromJson(json);
+  factory _$EarthquakeMagnitudeImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$EarthquakeMagnitudeImplFromJson(json);
 
   @override
   final double? value;
@@ -5520,25 +6137,28 @@ class _$EarthquakeMagnitudeImpl implements _EarthquakeMagnitude {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$EarthquakeMagnitudeImpl &&
-            (identical(other.value, value) || other.value == value) &&
+            (identical(other.value, value) ||
+                other.value == value) &&
             (identical(other.condition, condition) ||
                 other.condition == condition));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, value, condition);
+  int get hashCode =>
+      Object.hash(runtimeType, value, condition);
 
   /// Create a copy of EarthquakeMagnitude
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EarthquakeMagnitudeImplCopyWith<_$EarthquakeMagnitudeImpl> get copyWith =>
-      __$$EarthquakeMagnitudeImplCopyWithImpl<_$EarthquakeMagnitudeImpl>(
-        this,
-        _$identity,
-      );
+  _$$EarthquakeMagnitudeImplCopyWith<
+    _$EarthquakeMagnitudeImpl
+  >
+  get copyWith => __$$EarthquakeMagnitudeImplCopyWithImpl<
+    _$EarthquakeMagnitudeImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -5546,14 +6166,16 @@ class _$EarthquakeMagnitudeImpl implements _EarthquakeMagnitude {
   }
 }
 
-abstract class _EarthquakeMagnitude implements EarthquakeMagnitude {
+abstract class _EarthquakeMagnitude
+    implements EarthquakeMagnitude {
   const factory _EarthquakeMagnitude({
     required final double? value,
     required final EarthquakeMagnitudeCondition? condition,
   }) = _$EarthquakeMagnitudeImpl;
 
-  factory _EarthquakeMagnitude.fromJson(Map<String, dynamic> json) =
-      _$EarthquakeMagnitudeImpl.fromJson;
+  factory _EarthquakeMagnitude.fromJson(
+    Map<String, dynamic> json,
+  ) = _$EarthquakeMagnitudeImpl.fromJson;
 
   @override
   double? get value;
@@ -5564,6 +6186,8 @@ abstract class _EarthquakeMagnitude implements EarthquakeMagnitude {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EarthquakeMagnitudeImplCopyWith<_$EarthquakeMagnitudeImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$EarthquakeMagnitudeImplCopyWith<
+    _$EarthquakeMagnitudeImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }

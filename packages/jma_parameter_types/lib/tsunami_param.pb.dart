@@ -24,30 +24,38 @@ class TsunamiParameter extends $pb.GeneratedMessage {
     return $result;
   }
   TsunamiParameter._() : super();
-  factory TsunamiParameter.fromBuffer($core.List<$core.int> i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+  factory TsunamiParameter.fromBuffer(
+          $core.List<$core.int> i,
+          [$pb.ExtensionRegistry r =
+              $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory TsunamiParameter.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+          [$pb.ExtensionRegistry r =
+              $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'TsunamiParameter',
       createEmptyInstance: create)
-    ..pc<TsunamiParameterItem>(
-        1, _omitFieldNames ? '' : 'items', $pb.PbFieldType.PM,
+    ..pc<TsunamiParameterItem>(1,
+        _omitFieldNames ? '' : 'items', $pb.PbFieldType.PM,
         subBuilder: TsunamiParameterItem.create)
     ..hasRequiredFields = false;
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
+  @$core.Deprecated(
+      'Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
-  TsunamiParameter clone() => TsunamiParameter()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
+  TsunamiParameter clone() =>
+      TsunamiParameter()..mergeFromMessage(this);
+  @$core.Deprecated(
+      'Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
       'Will be removed in next major version')
-  TsunamiParameter copyWith(void Function(TsunamiParameter) updates) =>
-      super.copyWith((message) => updates(message as TsunamiParameter))
+  TsunamiParameter copyWith(
+          void Function(TsunamiParameter) updates) =>
+      super.copyWith((message) =>
+              updates(message as TsunamiParameter))
           as TsunamiParameter;
 
   $pb.BuilderInfo get info_ => _i;
@@ -58,12 +66,14 @@ class TsunamiParameter extends $pb.GeneratedMessage {
   static $pb.PbList<TsunamiParameter> createRepeated() =>
       $pb.PbList<TsunamiParameter>();
   @$core.pragma('dart2js:noInline')
-  static TsunamiParameter getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<TsunamiParameter>(create);
+  static TsunamiParameter getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage
+          .$_defaultFor<TsunamiParameter>(create);
   static TsunamiParameter? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.List<TsunamiParameterItem> get items => $_getList(0);
+  $core.List<TsunamiParameterItem> get items =>
+      $_getList(0);
 }
 
 class TsunamiParameterItem extends $pb.GeneratedMessage {
@@ -89,11 +99,14 @@ class TsunamiParameterItem extends $pb.GeneratedMessage {
     return $result;
   }
   TsunamiParameterItem._() : super();
-  factory TsunamiParameterItem.fromBuffer($core.List<$core.int> i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+  factory TsunamiParameterItem.fromBuffer(
+          $core.List<$core.int> i,
+          [$pb.ExtensionRegistry r =
+              $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(i, r);
   factory TsunamiParameterItem.fromJson($core.String i,
-          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+          [$pb.ExtensionRegistry r =
+              $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(i, r);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -101,32 +114,41 @@ class TsunamiParameterItem extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'prefecture')
     ..aOS(2, _omitFieldNames ? '' : 'code')
-    ..a<$core.double>(3, _omitFieldNames ? '' : 'latitude', $pb.PbFieldType.OD)
-    ..a<$core.double>(4, _omitFieldNames ? '' : 'longitude', $pb.PbFieldType.OD)
+    ..a<$core.double>(3, _omitFieldNames ? '' : 'latitude',
+        $pb.PbFieldType.OD)
+    ..a<$core.double>(4, _omitFieldNames ? '' : 'longitude',
+        $pb.PbFieldType.OD)
     ..hasRequiredFields = false;
 
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
+  @$core.Deprecated(
+      'Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
       'Will be removed in next major version')
   TsunamiParameterItem clone() =>
       TsunamiParameterItem()..mergeFromMessage(this);
-  @$core.Deprecated('Using this can add significant overhead to your binary. '
+  @$core.Deprecated(
+      'Using this can add significant overhead to your binary. '
       'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
       'Will be removed in next major version')
-  TsunamiParameterItem copyWith(void Function(TsunamiParameterItem) updates) =>
-      super.copyWith((message) => updates(message as TsunamiParameterItem))
+  TsunamiParameterItem copyWith(
+          void Function(TsunamiParameterItem) updates) =>
+      super.copyWith((message) =>
+              updates(message as TsunamiParameterItem))
           as TsunamiParameterItem;
 
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static TsunamiParameterItem create() => TsunamiParameterItem._();
+  static TsunamiParameterItem create() =>
+      TsunamiParameterItem._();
   TsunamiParameterItem createEmptyInstance() => create();
-  static $pb.PbList<TsunamiParameterItem> createRepeated() =>
-      $pb.PbList<TsunamiParameterItem>();
+  static $pb.PbList<TsunamiParameterItem>
+      createRepeated() =>
+          $pb.PbList<TsunamiParameterItem>();
   @$core.pragma('dart2js:noInline')
-  static TsunamiParameterItem getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<TsunamiParameterItem>(create);
+  static TsunamiParameterItem getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage
+          .$_defaultFor<TsunamiParameterItem>(create);
   static TsunamiParameterItem? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -178,6 +200,7 @@ class TsunamiParameterItem extends $pb.GeneratedMessage {
   void clearLongitude() => clearField(4);
 }
 
-const _omitFieldNames = $core.bool.fromEnvironment('protobuf.omit_field_names');
-const _omitMessageNames =
-    $core.bool.fromEnvironment('protobuf.omit_message_names');
+const _omitFieldNames =
+    $core.bool.fromEnvironment('protobuf.omit_field_names');
+const _omitMessageNames = $core.bool.fromEnvironment(
+    'protobuf.omit_message_names');

@@ -31,7 +31,8 @@ class EarthquakeHistoryEarlyRoute extends GoRouteData {
   }
 }
 
-class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
+class EarthquakeHistoryEarlyScreen
+    extends HookConsumerWidget {
   const EarthquakeHistoryEarlyScreen({super.key});
 
   @override
@@ -43,7 +44,9 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
       ),
     );
     final state = ref.watch(
-      earthquakeHistoryEarlyNotifierProvider(parameter.value),
+      earthquakeHistoryEarlyNotifierProvider(
+        parameter.value,
+      ),
     );
     return Scaffold(
       appBar: AppBar(
@@ -60,7 +63,9 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
             icon: const Icon(Icons.info),
             onPressed:
                 () async =>
-                    _EarthquakeHistoryEarlyInformationModal.show(context),
+                    _EarthquakeHistoryEarlyInformationModal.show(
+                      context,
+                    ),
           ),
         ],
       ),
@@ -69,7 +74,9 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
         state: state,
         onRefresh:
             () async => ref.refresh(
-              earthquakeHistoryEarlyNotifierProvider(parameter.value).notifier,
+              earthquakeHistoryEarlyNotifierProvider(
+                parameter.value,
+              ).notifier,
             ),
         onScrollEnd:
             () async =>
@@ -81,7 +88,8 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
                     )
                     .fetchNextData(),
         shouldShowLatestEarthquakeMessage:
-            parameter.value.sort == EarthquakeEarlySortType.origin_time &&
+            parameter.value.sort ==
+                EarthquakeEarlySortType.origin_time &&
             !parameter.value.ascending,
       ),
     );
@@ -89,10 +97,14 @@ class EarthquakeHistoryEarlyScreen extends HookConsumerWidget {
 }
 
 class _SearchParameter extends StatelessWidget {
-  const _SearchParameter({required this.parameter, required this.onChanged});
+  const _SearchParameter({
+    required this.parameter,
+    required this.onChanged,
+  });
 
   final EarthquakeHistoryEarlyParameter parameter;
-  final void Function(EarthquakeHistoryEarlyParameter) onChanged;
+  final void Function(EarthquakeHistoryEarlyParameter)
+  onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -120,15 +132,23 @@ class _SearchParameter extends StatelessWidget {
                         min: parameter.intensityGte,
                         max: parameter.intensityLte,
                         onChanged:
-                            (min, max) =>
-                                onChanged(parameter.updateIntensity(min, max)),
+                            (min, max) => onChanged(
+                              parameter.updateIntensity(
+                                min,
+                                max,
+                              ),
+                            ),
                       ),
                       MagnitudeFilterChip(
                         min: parameter.magnitudeGte,
                         max: parameter.magnitudeLte,
                         onChanged:
-                            (min, max) =>
-                                onChanged(parameter.updateMagnitude(min, max)),
+                            (min, max) => onChanged(
+                              parameter.updateMagnitude(
+                                min,
+                                max,
+                              ),
+                            ),
                       ),
                       DepthFilterChip(
                         min: parameter.depthGte?.toInt(),
@@ -145,13 +165,19 @@ class _SearchParameter extends StatelessWidget {
                         min: parameter.originTimeGte,
                         max: parameter.originTimeLte,
                         onChanged:
-                            (min, max) =>
-                                onChanged(parameter.updateOriginTime(min, max)),
+                            (min, max) => onChanged(
+                              parameter.updateOriginTime(
+                                min,
+                                max,
+                              ),
+                            ),
                       ),
                     ]
                     .map(
                       (e) => Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                        ),
                         child: e,
                       ),
                     )
@@ -182,10 +208,14 @@ class _SliverListBody extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = useMemoized(() => PrimaryScrollController.of(context));
+    final controller = useMemoized(
+      () => PrimaryScrollController.of(context),
+    );
     useEffect(() {
       controller.addListener(() {
-        if (state.hasError || state.isRefreshing || !state.hasValue) {
+        if (state.hasError ||
+            state.isRefreshing ||
+            !state.hasValue) {
           return;
         }
         if (controller.position.pixels >=
@@ -194,7 +224,7 @@ class _SliverListBody extends HookConsumerWidget {
         }
       });
       return null;
-    }, [controller, state, onScrollEnd, onRefresh],);
+    }, [controller, state, onScrollEnd, onRefresh]);
     final theme = Theme.of(context);
     final colorSchema = theme.colorScheme;
 
@@ -202,7 +232,9 @@ class _SliverListBody extends HookConsumerWidget {
       required (List<EarthquakeEarly>, int) data,
       Widget loading = const Padding(
         padding: EdgeInsets.all(48),
-        child: Center(child: CircularProgressIndicator.adaptive()),
+        child: Center(
+          child: CircularProgressIndicator.adaptive(),
+        ),
       ),
     }) {
       if (data.$1.isEmpty) {
@@ -221,9 +253,13 @@ class _SliverListBody extends HookConsumerWidget {
                 }
                 if (state.hasError) {
                   final error = state.error!;
-                  return ErrorCard(error: error, onReload: onRefresh);
+                  return ErrorCard(
+                    error: error,
+                    onReload: onRefresh,
+                  );
                 }
-                final hasNext = state.valueOrNull?.hasNext ?? false;
+                final hasNext =
+                    state.valueOrNull?.hasNext ?? false;
                 if (hasNext) {
                   return loading;
                 } else {
@@ -234,9 +270,10 @@ class _SliverListBody extends HookConsumerWidget {
               return EarthquakeHistoryEarlyListTile(
                 item: item,
                 onTap:
-                    () async => EarthquakeHistoryEarlyDetailsRoute(
-                      id: item.id,
-                    ).push<void>(context),
+                    () async =>
+                        EarthquakeHistoryEarlyDetailsRoute(
+                          id: item.id,
+                        ).push<void>(context),
               );
             },
           ),
@@ -256,7 +293,9 @@ class _SliverListBody extends HookConsumerWidget {
             error: error,
             onReload:
                 () async => ref.refresh(
-                  earthquakeHistoryEarlyNotifierProvider(parameter),
+                  earthquakeHistoryEarlyNotifierProvider(
+                    parameter,
+                  ),
                 ),
           );
         }(),
@@ -271,20 +310,30 @@ class _SliverListBody extends HookConsumerWidget {
                   child: Text.rich(
                     TextSpan(
                       children: [
-                        const TextSpan(text: '最新の地震情報を見るためには'),
+                        const TextSpan(
+                          text: '最新の地震情報を見るためには',
+                        ),
                         TextSpan(
                           text: '地震履歴',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
                           recognizer:
                               TapGestureRecognizer()
                                 ..onTap =
-                                    () async => const EarthquakeHistoryRoute()
-                                        .push<void>(context),
+                                    () async =>
+                                        const EarthquakeHistoryRoute()
+                                            .push<void>(
+                                              context,
+                                            ),
                         ),
                         const TextSpan(text: 'を使ってください'),
                       ],
                     ),
-                    style: TextStyle(color: colorSchema.onSecondaryContainer),
+                    style: TextStyle(
+                      color:
+                          colorSchema.onSecondaryContainer,
+                    ),
                   ),
                 ),
               ),
@@ -295,8 +344,12 @@ class _SliverListBody extends HookConsumerWidget {
                   children: [
                     const TextSpan(text: '全'),
                     TextSpan(
-                      text: NumberFormat('#,###').format(value.$2),
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      text: NumberFormat(
+                        '#,###',
+                      ).format(value.$2),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const TextSpan(text: '件の地震情報が見つかりました'),
                   ],
@@ -306,18 +359,25 @@ class _SliverListBody extends HookConsumerWidget {
             Expanded(child: listView(data: value)),
           ],
         ),
-        _ => const Center(child: CircularProgressIndicator.adaptive()),
+        _ => const Center(
+          child: CircularProgressIndicator.adaptive(),
+        ),
       },
     );
   }
 }
 
-class _EarthquakeHistoryEarlyInformationModal extends StatelessWidget {
+class _EarthquakeHistoryEarlyInformationModal
+    extends StatelessWidget {
   const _EarthquakeHistoryEarlyInformationModal();
 
-  static Future<void> show(BuildContext context) async => showModalBottomSheet(
+  static Future<void> show(
+    BuildContext context,
+  ) async => showModalBottomSheet(
     context: context,
-    builder: (_) => const _EarthquakeHistoryEarlyInformationModal(),
+    builder:
+        (_) =>
+            const _EarthquakeHistoryEarlyInformationModal(),
   );
 
   @override
@@ -343,7 +403,8 @@ class _EarthquakeHistoryEarlyInformationModal extends StatelessWidget {
           Expanded(
             child: Markdown(
               onTapLink: (_, url, __) async {
-                if (url != null && await canLaunchUrlString(url)) {
+                if (url != null &&
+                    await canLaunchUrlString(url)) {
                   await launchUrlString(url);
                 }
               },

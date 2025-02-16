@@ -14,9 +14,10 @@ sealed class Result<S, E extends Exception> {
     }
   }
 
-  static Future<Result<V, E>> captureSelected<V, E extends Exception>(
-    FutureOr<V> Function() fn,
-  ) async {
+  static Future<Result<V, E>> captureSelected<
+    V,
+    E extends Exception
+  >(FutureOr<V> Function() fn) async {
     try {
       return Success(await fn.call());
     } on E catch (e, stackTrace) {
@@ -24,20 +25,24 @@ sealed class Result<S, E extends Exception> {
     }
   }
 
-  static Result<V, Exception> success<V>(V value) => Success(value);
-  static Result<V, Exception> failure<V>(Exception exception) =>
-      Failure(exception);
+  static Result<V, Exception> success<V>(V value) =>
+      Success(value);
+  static Result<V, Exception> failure<V>(
+    Exception exception,
+  ) => Failure(exception);
 }
 
 /// Resultクラスに準拠したSuccessクラス
-final class Success<S, E extends Exception> extends Result<S, E> {
+final class Success<S, E extends Exception>
+    extends Result<S, E> {
   const Success(this.value);
 
   final S value;
 }
 
 /// Resultクラスに準拠したFailureクラス
-final class Failure<S, E extends Exception> extends Result<S, E> {
+final class Failure<S, E extends Exception>
+    extends Result<S, E> {
   const Failure(this.exception, [this.stackTrace]);
 
   final E exception;

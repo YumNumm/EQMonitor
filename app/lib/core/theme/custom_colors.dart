@@ -13,14 +13,21 @@ class CustomColors extends ThemeExtension<CustomColors> {
   }
 
   @override
-  CustomColors lerp(ThemeExtension<CustomColors>? other, double t) {
+  CustomColors lerp(
+    ThemeExtension<CustomColors>? other,
+    double t,
+  ) {
     if (other is! CustomColors) {
       return this;
     }
-    return CustomColors(danger: Color.lerp(danger, other.danger, t));
+    return CustomColors(
+      danger: Color.lerp(danger, other.danger, t),
+    );
   }
 
   CustomColors harmonized(ColorScheme dynamic) {
-    return copyWith(danger: danger!.harmonizeWith(dynamic.primary));
+    return copyWith(
+      danger: danger!.harmonizeWith(dynamic.primary),
+    );
   }
 }

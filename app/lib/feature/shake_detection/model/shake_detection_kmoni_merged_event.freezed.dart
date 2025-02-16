@@ -15,7 +15,8 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-ShakeDetectionKmoniMergedEvent _$ShakeDetectionKmoniMergedEventFromJson(
+ShakeDetectionKmoniMergedEvent
+_$ShakeDetectionKmoniMergedEventFromJson(
   Map<String, dynamic> json,
 ) {
   return _ShakeDetectionKmoniMergedEvent.fromJson(json);
@@ -23,22 +24,28 @@ ShakeDetectionKmoniMergedEvent _$ShakeDetectionKmoniMergedEventFromJson(
 
 /// @nodoc
 mixin _$ShakeDetectionKmoniMergedEvent {
-  ShakeDetectionEvent get event => throw _privateConstructorUsedError;
+  ShakeDetectionEvent get event =>
+      throw _privateConstructorUsedError;
   List<ShakeDetectionKmoniMergedRegion> get regions =>
       throw _privateConstructorUsedError;
 
   /// Serializes this ShakeDetectionKmoniMergedEvent to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of ShakeDetectionKmoniMergedEvent
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ShakeDetectionKmoniMergedEventCopyWith<ShakeDetectionKmoniMergedEvent>
+  $ShakeDetectionKmoniMergedEventCopyWith<
+    ShakeDetectionKmoniMergedEvent
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ShakeDetectionKmoniMergedEventCopyWith<$Res> {
+abstract class $ShakeDetectionKmoniMergedEventCopyWith<
+  $Res
+> {
   factory $ShakeDetectionKmoniMergedEventCopyWith(
     ShakeDetectionKmoniMergedEvent value,
     $Res Function(ShakeDetectionKmoniMergedEvent) then,
@@ -61,8 +68,12 @@ class _$ShakeDetectionKmoniMergedEventCopyWithImpl<
   $Res,
   $Val extends ShakeDetectionKmoniMergedEvent
 >
-    implements $ShakeDetectionKmoniMergedEventCopyWith<$Res> {
-  _$ShakeDetectionKmoniMergedEventCopyWithImpl(this._value, this._then);
+    implements
+        $ShakeDetectionKmoniMergedEventCopyWith<$Res> {
+  _$ShakeDetectionKmoniMergedEventCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -73,7 +84,10 @@ class _$ShakeDetectionKmoniMergedEventCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? event = null, Object? regions = null}) {
+  $Res call({
+    Object? event = null,
+    Object? regions = null,
+  }) {
     return _then(
       _value.copyWith(
             event:
@@ -85,7 +99,9 @@ class _$ShakeDetectionKmoniMergedEventCopyWithImpl<
                 null == regions
                     ? _value.regions
                     : regions // ignore: cast_nullable_to_non_nullable
-                        as List<ShakeDetectionKmoniMergedRegion>,
+                        as List<
+                          ShakeDetectionKmoniMergedRegion
+                        >,
           )
           as $Val,
     );
@@ -96,19 +112,29 @@ class _$ShakeDetectionKmoniMergedEventCopyWithImpl<
   @override
   @pragma('vm:prefer-inline')
   $ShakeDetectionEventCopyWith<$Res> get event {
-    return $ShakeDetectionEventCopyWith<$Res>(_value.event, (value) {
-      return _then(_value.copyWith(event: value) as $Val);
-    });
+    return $ShakeDetectionEventCopyWith<$Res>(
+      _value.event,
+      (value) {
+        return _then(_value.copyWith(event: value) as $Val);
+      },
+    );
   }
 }
 
 /// @nodoc
-abstract class _$$ShakeDetectionKmoniMergedEventImplCopyWith<$Res>
-    implements $ShakeDetectionKmoniMergedEventCopyWith<$Res> {
+abstract class _$$ShakeDetectionKmoniMergedEventImplCopyWith<
+  $Res
+>
+    implements
+        $ShakeDetectionKmoniMergedEventCopyWith<$Res> {
   factory _$$ShakeDetectionKmoniMergedEventImplCopyWith(
     _$ShakeDetectionKmoniMergedEventImpl value,
-    $Res Function(_$ShakeDetectionKmoniMergedEventImpl) then,
-  ) = __$$ShakeDetectionKmoniMergedEventImplCopyWithImpl<$Res>;
+    $Res Function(_$ShakeDetectionKmoniMergedEventImpl)
+    then,
+  ) =
+      __$$ShakeDetectionKmoniMergedEventImplCopyWithImpl<
+        $Res
+      >;
   @override
   @useResult
   $Res call({
@@ -121,23 +147,32 @@ abstract class _$$ShakeDetectionKmoniMergedEventImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$ShakeDetectionKmoniMergedEventImplCopyWithImpl<$Res>
+class __$$ShakeDetectionKmoniMergedEventImplCopyWithImpl<
+  $Res
+>
     extends
         _$ShakeDetectionKmoniMergedEventCopyWithImpl<
           $Res,
           _$ShakeDetectionKmoniMergedEventImpl
         >
-    implements _$$ShakeDetectionKmoniMergedEventImplCopyWith<$Res> {
+    implements
+        _$$ShakeDetectionKmoniMergedEventImplCopyWith<
+          $Res
+        > {
   __$$ShakeDetectionKmoniMergedEventImplCopyWithImpl(
     _$ShakeDetectionKmoniMergedEventImpl _value,
-    $Res Function(_$ShakeDetectionKmoniMergedEventImpl) _then,
+    $Res Function(_$ShakeDetectionKmoniMergedEventImpl)
+    _then,
   ) : super(_value, _then);
 
   /// Create a copy of ShakeDetectionKmoniMergedEvent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? event = null, Object? regions = null}) {
+  $Res call({
+    Object? event = null,
+    Object? regions = null,
+  }) {
     return _then(
       _$ShakeDetectionKmoniMergedEventImpl(
         event:
@@ -149,7 +184,9 @@ class __$$ShakeDetectionKmoniMergedEventImplCopyWithImpl<$Res>
             null == regions
                 ? _value._regions
                 : regions // ignore: cast_nullable_to_non_nullable
-                    as List<ShakeDetectionKmoniMergedRegion>,
+                    as List<
+                      ShakeDetectionKmoniMergedRegion
+                    >,
       ),
     );
   }
@@ -161,7 +198,8 @@ class _$ShakeDetectionKmoniMergedEventImpl
     implements _ShakeDetectionKmoniMergedEvent {
   const _$ShakeDetectionKmoniMergedEventImpl({
     required this.event,
-    required final List<ShakeDetectionKmoniMergedRegion> regions,
+    required final List<ShakeDetectionKmoniMergedRegion>
+    regions,
   }) : _regions = regions;
 
   factory _$ShakeDetectionKmoniMergedEventImpl.fromJson(
@@ -173,7 +211,8 @@ class _$ShakeDetectionKmoniMergedEventImpl
   final List<ShakeDetectionKmoniMergedRegion> _regions;
   @override
   List<ShakeDetectionKmoniMergedRegion> get regions {
-    if (_regions is EqualUnmodifiableListView) return _regions;
+    if (_regions is EqualUnmodifiableListView)
+      return _regions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_regions);
   }
@@ -188,8 +227,12 @@ class _$ShakeDetectionKmoniMergedEventImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ShakeDetectionKmoniMergedEventImpl &&
-            (identical(other.event, event) || other.event == event) &&
-            const DeepCollectionEquality().equals(other._regions, _regions));
+            (identical(other.event, event) ||
+                other.event == event) &&
+            const DeepCollectionEquality().equals(
+              other._regions,
+              _regions,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -208,13 +251,16 @@ class _$ShakeDetectionKmoniMergedEventImpl
   _$$ShakeDetectionKmoniMergedEventImplCopyWith<
     _$ShakeDetectionKmoniMergedEventImpl
   >
-  get copyWith => __$$ShakeDetectionKmoniMergedEventImplCopyWithImpl<
-    _$ShakeDetectionKmoniMergedEventImpl
-  >(this, _$identity);
+  get copyWith =>
+      __$$ShakeDetectionKmoniMergedEventImplCopyWithImpl<
+        _$ShakeDetectionKmoniMergedEventImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ShakeDetectionKmoniMergedEventImplToJson(this);
+    return _$$ShakeDetectionKmoniMergedEventImplToJson(
+      this,
+    );
   }
 }
 
@@ -222,11 +268,13 @@ abstract class _ShakeDetectionKmoniMergedEvent
     implements ShakeDetectionKmoniMergedEvent {
   const factory _ShakeDetectionKmoniMergedEvent({
     required final ShakeDetectionEvent event,
-    required final List<ShakeDetectionKmoniMergedRegion> regions,
+    required final List<ShakeDetectionKmoniMergedRegion>
+    regions,
   }) = _$ShakeDetectionKmoniMergedEventImpl;
 
-  factory _ShakeDetectionKmoniMergedEvent.fromJson(Map<String, dynamic> json) =
-      _$ShakeDetectionKmoniMergedEventImpl.fromJson;
+  factory _ShakeDetectionKmoniMergedEvent.fromJson(
+    Map<String, dynamic> json,
+  ) = _$ShakeDetectionKmoniMergedEventImpl.fromJson;
 
   @override
   ShakeDetectionEvent get event;
@@ -243,7 +291,8 @@ abstract class _ShakeDetectionKmoniMergedEvent
   get copyWith => throw _privateConstructorUsedError;
 }
 
-ShakeDetectionKmoniMergedRegion _$ShakeDetectionKmoniMergedRegionFromJson(
+ShakeDetectionKmoniMergedRegion
+_$ShakeDetectionKmoniMergedRegionFromJson(
   Map<String, dynamic> json,
 ) {
   return _ShakeDetectionKmoniMergedRegion.fromJson(json);
@@ -257,22 +306,28 @@ mixin _$ShakeDetectionKmoniMergedRegion {
     unknownEnumValue: JmaForecastIntensity.unknown,
     defaultValue: JmaForecastIntensity.unknown,
   )
-  JmaForecastIntensity get maxIntensity => throw _privateConstructorUsedError;
+  JmaForecastIntensity get maxIntensity =>
+      throw _privateConstructorUsedError;
   List<ShakeDetectionKmoniMergedPoint> get points =>
       throw _privateConstructorUsedError;
 
   /// Serializes this ShakeDetectionKmoniMergedRegion to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of ShakeDetectionKmoniMergedRegion
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ShakeDetectionKmoniMergedRegionCopyWith<ShakeDetectionKmoniMergedRegion>
+  $ShakeDetectionKmoniMergedRegionCopyWith<
+    ShakeDetectionKmoniMergedRegion
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ShakeDetectionKmoniMergedRegionCopyWith<$Res> {
+abstract class $ShakeDetectionKmoniMergedRegionCopyWith<
+  $Res
+> {
   factory $ShakeDetectionKmoniMergedRegionCopyWith(
     ShakeDetectionKmoniMergedRegion value,
     $Res Function(ShakeDetectionKmoniMergedRegion) then,
@@ -299,8 +354,12 @@ class _$ShakeDetectionKmoniMergedRegionCopyWithImpl<
   $Res,
   $Val extends ShakeDetectionKmoniMergedRegion
 >
-    implements $ShakeDetectionKmoniMergedRegionCopyWith<$Res> {
-  _$ShakeDetectionKmoniMergedRegionCopyWithImpl(this._value, this._then);
+    implements
+        $ShakeDetectionKmoniMergedRegionCopyWith<$Res> {
+  _$ShakeDetectionKmoniMergedRegionCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -332,7 +391,9 @@ class _$ShakeDetectionKmoniMergedRegionCopyWithImpl<
                 null == points
                     ? _value.points
                     : points // ignore: cast_nullable_to_non_nullable
-                        as List<ShakeDetectionKmoniMergedPoint>,
+                        as List<
+                          ShakeDetectionKmoniMergedPoint
+                        >,
           )
           as $Val,
     );
@@ -340,12 +401,19 @@ class _$ShakeDetectionKmoniMergedRegionCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$ShakeDetectionKmoniMergedRegionImplCopyWith<$Res>
-    implements $ShakeDetectionKmoniMergedRegionCopyWith<$Res> {
+abstract class _$$ShakeDetectionKmoniMergedRegionImplCopyWith<
+  $Res
+>
+    implements
+        $ShakeDetectionKmoniMergedRegionCopyWith<$Res> {
   factory _$$ShakeDetectionKmoniMergedRegionImplCopyWith(
     _$ShakeDetectionKmoniMergedRegionImpl value,
-    $Res Function(_$ShakeDetectionKmoniMergedRegionImpl) then,
-  ) = __$$ShakeDetectionKmoniMergedRegionImplCopyWithImpl<$Res>;
+    $Res Function(_$ShakeDetectionKmoniMergedRegionImpl)
+    then,
+  ) =
+      __$$ShakeDetectionKmoniMergedRegionImplCopyWithImpl<
+        $Res
+      >;
   @override
   @useResult
   $Res call({
@@ -361,16 +429,22 @@ abstract class _$$ShakeDetectionKmoniMergedRegionImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$ShakeDetectionKmoniMergedRegionImplCopyWithImpl<$Res>
+class __$$ShakeDetectionKmoniMergedRegionImplCopyWithImpl<
+  $Res
+>
     extends
         _$ShakeDetectionKmoniMergedRegionCopyWithImpl<
           $Res,
           _$ShakeDetectionKmoniMergedRegionImpl
         >
-    implements _$$ShakeDetectionKmoniMergedRegionImplCopyWith<$Res> {
+    implements
+        _$$ShakeDetectionKmoniMergedRegionImplCopyWith<
+          $Res
+        > {
   __$$ShakeDetectionKmoniMergedRegionImplCopyWithImpl(
     _$ShakeDetectionKmoniMergedRegionImpl _value,
-    $Res Function(_$ShakeDetectionKmoniMergedRegionImpl) _then,
+    $Res Function(_$ShakeDetectionKmoniMergedRegionImpl)
+    _then,
   ) : super(_value, _then);
 
   /// Create a copy of ShakeDetectionKmoniMergedRegion
@@ -416,7 +490,8 @@ class _$ShakeDetectionKmoniMergedRegionImpl
       defaultValue: JmaForecastIntensity.unknown,
     )
     required this.maxIntensity,
-    required final List<ShakeDetectionKmoniMergedPoint> points,
+    required final List<ShakeDetectionKmoniMergedPoint>
+    points,
   }) : _points = points;
 
   factory _$ShakeDetectionKmoniMergedRegionImpl.fromJson(
@@ -435,7 +510,8 @@ class _$ShakeDetectionKmoniMergedRegionImpl
   final List<ShakeDetectionKmoniMergedPoint> _points;
   @override
   List<ShakeDetectionKmoniMergedPoint> get points {
-    if (_points is EqualUnmodifiableListView) return _points;
+    if (_points is EqualUnmodifiableListView)
+      return _points;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_points);
   }
@@ -449,11 +525,16 @@ class _$ShakeDetectionKmoniMergedRegionImpl
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ShakeDetectionKmoniMergedRegionImpl &&
-            (identical(other.name, name) || other.name == name) &&
+            other
+                is _$ShakeDetectionKmoniMergedRegionImpl &&
+            (identical(other.name, name) ||
+                other.name == name) &&
             (identical(other.maxIntensity, maxIntensity) ||
                 other.maxIntensity == maxIntensity) &&
-            const DeepCollectionEquality().equals(other._points, _points));
+            const DeepCollectionEquality().equals(
+              other._points,
+              _points,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -473,13 +554,16 @@ class _$ShakeDetectionKmoniMergedRegionImpl
   _$$ShakeDetectionKmoniMergedRegionImplCopyWith<
     _$ShakeDetectionKmoniMergedRegionImpl
   >
-  get copyWith => __$$ShakeDetectionKmoniMergedRegionImplCopyWithImpl<
-    _$ShakeDetectionKmoniMergedRegionImpl
-  >(this, _$identity);
+  get copyWith =>
+      __$$ShakeDetectionKmoniMergedRegionImplCopyWithImpl<
+        _$ShakeDetectionKmoniMergedRegionImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ShakeDetectionKmoniMergedRegionImplToJson(this);
+    return _$$ShakeDetectionKmoniMergedRegionImplToJson(
+      this,
+    );
   }
 }
 
@@ -493,11 +577,13 @@ abstract class _ShakeDetectionKmoniMergedRegion
       defaultValue: JmaForecastIntensity.unknown,
     )
     required final JmaForecastIntensity maxIntensity,
-    required final List<ShakeDetectionKmoniMergedPoint> points,
+    required final List<ShakeDetectionKmoniMergedPoint>
+    points,
   }) = _$ShakeDetectionKmoniMergedRegionImpl;
 
-  factory _ShakeDetectionKmoniMergedRegion.fromJson(Map<String, dynamic> json) =
-      _$ShakeDetectionKmoniMergedRegionImpl.fromJson;
+  factory _ShakeDetectionKmoniMergedRegion.fromJson(
+    Map<String, dynamic> json,
+  ) = _$ShakeDetectionKmoniMergedRegionImpl.fromJson;
 
   @override
   String get name;
@@ -521,7 +607,8 @@ abstract class _ShakeDetectionKmoniMergedRegion
   get copyWith => throw _privateConstructorUsedError;
 }
 
-ShakeDetectionKmoniMergedPoint _$ShakeDetectionKmoniMergedPointFromJson(
+ShakeDetectionKmoniMergedPoint
+_$ShakeDetectionKmoniMergedPointFromJson(
   Map<String, dynamic> json,
 ) {
   return _ShakeDetectionKmoniMergedPoint.fromJson(json);
@@ -533,23 +620,33 @@ mixin _$ShakeDetectionKmoniMergedPoint {
     unknownEnumValue: JmaForecastIntensity.unknown,
     defaultValue: JmaForecastIntensity.unknown,
   )
-  JmaForecastIntensity get intensity => throw _privateConstructorUsedError;
+  JmaForecastIntensity get intensity =>
+      throw _privateConstructorUsedError;
   String get code => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: KyoshinObservationPoint.fromJson, toJson: _pointToJson)
-  KyoshinObservationPoint get point => throw _privateConstructorUsedError;
+  @JsonKey(
+    fromJson: KyoshinObservationPoint.fromJson,
+    toJson: _pointToJson,
+  )
+  KyoshinObservationPoint get point =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this ShakeDetectionKmoniMergedPoint to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of ShakeDetectionKmoniMergedPoint
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ShakeDetectionKmoniMergedPointCopyWith<ShakeDetectionKmoniMergedPoint>
+  $ShakeDetectionKmoniMergedPointCopyWith<
+    ShakeDetectionKmoniMergedPoint
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ShakeDetectionKmoniMergedPointCopyWith<$Res> {
+abstract class $ShakeDetectionKmoniMergedPointCopyWith<
+  $Res
+> {
   factory $ShakeDetectionKmoniMergedPointCopyWith(
     ShakeDetectionKmoniMergedPoint value,
     $Res Function(ShakeDetectionKmoniMergedPoint) then,
@@ -566,7 +663,10 @@ abstract class $ShakeDetectionKmoniMergedPointCopyWith<$Res> {
     )
     JmaForecastIntensity intensity,
     String code,
-    @JsonKey(fromJson: KyoshinObservationPoint.fromJson, toJson: _pointToJson)
+    @JsonKey(
+      fromJson: KyoshinObservationPoint.fromJson,
+      toJson: _pointToJson,
+    )
     KyoshinObservationPoint point,
   });
 }
@@ -576,8 +676,12 @@ class _$ShakeDetectionKmoniMergedPointCopyWithImpl<
   $Res,
   $Val extends ShakeDetectionKmoniMergedPoint
 >
-    implements $ShakeDetectionKmoniMergedPointCopyWith<$Res> {
-  _$ShakeDetectionKmoniMergedPointCopyWithImpl(this._value, this._then);
+    implements
+        $ShakeDetectionKmoniMergedPointCopyWith<$Res> {
+  _$ShakeDetectionKmoniMergedPointCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -617,12 +721,19 @@ class _$ShakeDetectionKmoniMergedPointCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$ShakeDetectionKmoniMergedPointImplCopyWith<$Res>
-    implements $ShakeDetectionKmoniMergedPointCopyWith<$Res> {
+abstract class _$$ShakeDetectionKmoniMergedPointImplCopyWith<
+  $Res
+>
+    implements
+        $ShakeDetectionKmoniMergedPointCopyWith<$Res> {
   factory _$$ShakeDetectionKmoniMergedPointImplCopyWith(
     _$ShakeDetectionKmoniMergedPointImpl value,
-    $Res Function(_$ShakeDetectionKmoniMergedPointImpl) then,
-  ) = __$$ShakeDetectionKmoniMergedPointImplCopyWithImpl<$Res>;
+    $Res Function(_$ShakeDetectionKmoniMergedPointImpl)
+    then,
+  ) =
+      __$$ShakeDetectionKmoniMergedPointImplCopyWithImpl<
+        $Res
+      >;
   @override
   @useResult
   $Res call({
@@ -632,22 +743,31 @@ abstract class _$$ShakeDetectionKmoniMergedPointImplCopyWith<$Res>
     )
     JmaForecastIntensity intensity,
     String code,
-    @JsonKey(fromJson: KyoshinObservationPoint.fromJson, toJson: _pointToJson)
+    @JsonKey(
+      fromJson: KyoshinObservationPoint.fromJson,
+      toJson: _pointToJson,
+    )
     KyoshinObservationPoint point,
   });
 }
 
 /// @nodoc
-class __$$ShakeDetectionKmoniMergedPointImplCopyWithImpl<$Res>
+class __$$ShakeDetectionKmoniMergedPointImplCopyWithImpl<
+  $Res
+>
     extends
         _$ShakeDetectionKmoniMergedPointCopyWithImpl<
           $Res,
           _$ShakeDetectionKmoniMergedPointImpl
         >
-    implements _$$ShakeDetectionKmoniMergedPointImplCopyWith<$Res> {
+    implements
+        _$$ShakeDetectionKmoniMergedPointImplCopyWith<
+          $Res
+        > {
   __$$ShakeDetectionKmoniMergedPointImplCopyWithImpl(
     _$ShakeDetectionKmoniMergedPointImpl _value,
-    $Res Function(_$ShakeDetectionKmoniMergedPointImpl) _then,
+    $Res Function(_$ShakeDetectionKmoniMergedPointImpl)
+    _then,
   ) : super(_value, _then);
 
   /// Create a copy of ShakeDetectionKmoniMergedPoint
@@ -692,7 +812,10 @@ class _$ShakeDetectionKmoniMergedPointImpl
     )
     required this.intensity,
     required this.code,
-    @JsonKey(fromJson: KyoshinObservationPoint.fromJson, toJson: _pointToJson)
+    @JsonKey(
+      fromJson: KyoshinObservationPoint.fromJson,
+      toJson: _pointToJson,
+    )
     required this.point,
   });
 
@@ -709,7 +832,10 @@ class _$ShakeDetectionKmoniMergedPointImpl
   @override
   final String code;
   @override
-  @JsonKey(fromJson: KyoshinObservationPoint.fromJson, toJson: _pointToJson)
+  @JsonKey(
+    fromJson: KyoshinObservationPoint.fromJson,
+    toJson: _pointToJson,
+  )
   final KyoshinObservationPoint point;
 
   @override
@@ -724,13 +850,16 @@ class _$ShakeDetectionKmoniMergedPointImpl
             other is _$ShakeDetectionKmoniMergedPointImpl &&
             (identical(other.intensity, intensity) ||
                 other.intensity == intensity) &&
-            (identical(other.code, code) || other.code == code) &&
-            (identical(other.point, point) || other.point == point));
+            (identical(other.code, code) ||
+                other.code == code) &&
+            (identical(other.point, point) ||
+                other.point == point));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, intensity, code, point);
+  int get hashCode =>
+      Object.hash(runtimeType, intensity, code, point);
 
   /// Create a copy of ShakeDetectionKmoniMergedPoint
   /// with the given fields replaced by the non-null parameter values.
@@ -740,13 +869,16 @@ class _$ShakeDetectionKmoniMergedPointImpl
   _$$ShakeDetectionKmoniMergedPointImplCopyWith<
     _$ShakeDetectionKmoniMergedPointImpl
   >
-  get copyWith => __$$ShakeDetectionKmoniMergedPointImplCopyWithImpl<
-    _$ShakeDetectionKmoniMergedPointImpl
-  >(this, _$identity);
+  get copyWith =>
+      __$$ShakeDetectionKmoniMergedPointImplCopyWithImpl<
+        _$ShakeDetectionKmoniMergedPointImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ShakeDetectionKmoniMergedPointImplToJson(this);
+    return _$$ShakeDetectionKmoniMergedPointImplToJson(
+      this,
+    );
   }
 }
 
@@ -759,12 +891,16 @@ abstract class _ShakeDetectionKmoniMergedPoint
     )
     required final JmaForecastIntensity intensity,
     required final String code,
-    @JsonKey(fromJson: KyoshinObservationPoint.fromJson, toJson: _pointToJson)
+    @JsonKey(
+      fromJson: KyoshinObservationPoint.fromJson,
+      toJson: _pointToJson,
+    )
     required final KyoshinObservationPoint point,
   }) = _$ShakeDetectionKmoniMergedPointImpl;
 
-  factory _ShakeDetectionKmoniMergedPoint.fromJson(Map<String, dynamic> json) =
-      _$ShakeDetectionKmoniMergedPointImpl.fromJson;
+  factory _ShakeDetectionKmoniMergedPoint.fromJson(
+    Map<String, dynamic> json,
+  ) = _$ShakeDetectionKmoniMergedPointImpl.fromJson;
 
   @override
   @JsonKey(
@@ -775,7 +911,10 @@ abstract class _ShakeDetectionKmoniMergedPoint
   @override
   String get code;
   @override
-  @JsonKey(fromJson: KyoshinObservationPoint.fromJson, toJson: _pointToJson)
+  @JsonKey(
+    fromJson: KyoshinObservationPoint.fromJson,
+    toJson: _pointToJson,
+  )
   KyoshinObservationPoint get point;
 
   /// Create a copy of ShakeDetectionKmoniMergedPoint

@@ -20,11 +20,13 @@ mixin _$KyoshinMonitorObservationLayer {
   String get id => throw _privateConstructorUsedError;
   String get sourceId => throw _privateConstructorUsedError;
   bool get visible => throw _privateConstructorUsedError;
-  List<KyoshinMonitorImageParseObservationPoint> get points =>
-      throw _privateConstructorUsedError;
+  List<KyoshinMonitorImageParseObservationPoint>
+  get points => throw _privateConstructorUsedError;
   bool get isInEew => throw _privateConstructorUsedError;
-  KyoshinMonitorMarkerType get markerType => throw _privateConstructorUsedError;
-  RealtimeDataType get realtimeDataType => throw _privateConstructorUsedError;
+  KyoshinMonitorMarkerType get markerType =>
+      throw _privateConstructorUsedError;
+  RealtimeDataType get realtimeDataType =>
+      throw _privateConstructorUsedError;
   double? get minZoom => throw _privateConstructorUsedError;
   double? get maxZoom => throw _privateConstructorUsedError;
   dynamic get filter => throw _privateConstructorUsedError;
@@ -32,12 +34,16 @@ mixin _$KyoshinMonitorObservationLayer {
   /// Create a copy of KyoshinMonitorObservationLayer
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $KyoshinMonitorObservationLayerCopyWith<KyoshinMonitorObservationLayer>
+  $KyoshinMonitorObservationLayerCopyWith<
+    KyoshinMonitorObservationLayer
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $KyoshinMonitorObservationLayerCopyWith<$Res> {
+abstract class $KyoshinMonitorObservationLayerCopyWith<
+  $Res
+> {
   factory $KyoshinMonitorObservationLayerCopyWith(
     KyoshinMonitorObservationLayer value,
     $Res Function(KyoshinMonitorObservationLayer) then,
@@ -66,8 +72,12 @@ class _$KyoshinMonitorObservationLayerCopyWithImpl<
   $Res,
   $Val extends KyoshinMonitorObservationLayer
 >
-    implements $KyoshinMonitorObservationLayerCopyWith<$Res> {
-  _$KyoshinMonitorObservationLayerCopyWithImpl(this._value, this._then);
+    implements
+        $KyoshinMonitorObservationLayerCopyWith<$Res> {
+  _$KyoshinMonitorObservationLayerCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -111,7 +121,9 @@ class _$KyoshinMonitorObservationLayerCopyWithImpl<
                 null == points
                     ? _value.points
                     : points // ignore: cast_nullable_to_non_nullable
-                        as List<KyoshinMonitorImageParseObservationPoint>,
+                        as List<
+                          KyoshinMonitorImageParseObservationPoint
+                        >,
             isInEew:
                 null == isInEew
                     ? _value.isInEew
@@ -149,12 +161,19 @@ class _$KyoshinMonitorObservationLayerCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$KyoshinMonitorObservationLayerImplCopyWith<$Res>
-    implements $KyoshinMonitorObservationLayerCopyWith<$Res> {
+abstract class _$$KyoshinMonitorObservationLayerImplCopyWith<
+  $Res
+>
+    implements
+        $KyoshinMonitorObservationLayerCopyWith<$Res> {
   factory _$$KyoshinMonitorObservationLayerImplCopyWith(
     _$KyoshinMonitorObservationLayerImpl value,
-    $Res Function(_$KyoshinMonitorObservationLayerImpl) then,
-  ) = __$$KyoshinMonitorObservationLayerImplCopyWithImpl<$Res>;
+    $Res Function(_$KyoshinMonitorObservationLayerImpl)
+    then,
+  ) =
+      __$$KyoshinMonitorObservationLayerImplCopyWithImpl<
+        $Res
+      >;
   @override
   @useResult
   $Res call({
@@ -172,16 +191,22 @@ abstract class _$$KyoshinMonitorObservationLayerImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$KyoshinMonitorObservationLayerImplCopyWithImpl<$Res>
+class __$$KyoshinMonitorObservationLayerImplCopyWithImpl<
+  $Res
+>
     extends
         _$KyoshinMonitorObservationLayerCopyWithImpl<
           $Res,
           _$KyoshinMonitorObservationLayerImpl
         >
-    implements _$$KyoshinMonitorObservationLayerImplCopyWith<$Res> {
+    implements
+        _$$KyoshinMonitorObservationLayerImplCopyWith<
+          $Res
+        > {
   __$$KyoshinMonitorObservationLayerImplCopyWithImpl(
     _$KyoshinMonitorObservationLayerImpl _value,
-    $Res Function(_$KyoshinMonitorObservationLayerImpl) _then,
+    $Res Function(_$KyoshinMonitorObservationLayerImpl)
+    _then,
   ) : super(_value, _then);
 
   /// Create a copy of KyoshinMonitorObservationLayer
@@ -221,7 +246,9 @@ class __$$KyoshinMonitorObservationLayerImplCopyWithImpl<$Res>
             null == points
                 ? _value._points
                 : points // ignore: cast_nullable_to_non_nullable
-                    as List<KyoshinMonitorImageParseObservationPoint>,
+                    as List<
+                      KyoshinMonitorImageParseObservationPoint
+                    >,
         isInEew:
             null == isInEew
                 ? _value.isInEew
@@ -265,7 +292,10 @@ class _$KyoshinMonitorObservationLayerImpl
     required this.id,
     required this.sourceId,
     required this.visible,
-    required final List<KyoshinMonitorImageParseObservationPoint> points,
+    required final List<
+      KyoshinMonitorImageParseObservationPoint
+    >
+    points,
     required this.isInEew,
     required this.markerType,
     required this.realtimeDataType,
@@ -281,10 +311,13 @@ class _$KyoshinMonitorObservationLayerImpl
   final String sourceId;
   @override
   final bool visible;
-  final List<KyoshinMonitorImageParseObservationPoint> _points;
+  final List<KyoshinMonitorImageParseObservationPoint>
+  _points;
   @override
-  List<KyoshinMonitorImageParseObservationPoint> get points {
-    if (_points is EqualUnmodifiableListView) return _points;
+  List<KyoshinMonitorImageParseObservationPoint>
+  get points {
+    if (_points is EqualUnmodifiableListView)
+      return _points;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_points);
   }
@@ -315,16 +348,30 @@ class _$KyoshinMonitorObservationLayerImpl
             (identical(other.id, id) || other.id == id) &&
             (identical(other.sourceId, sourceId) ||
                 other.sourceId == sourceId) &&
-            (identical(other.visible, visible) || other.visible == visible) &&
-            const DeepCollectionEquality().equals(other._points, _points) &&
-            (identical(other.isInEew, isInEew) || other.isInEew == isInEew) &&
+            (identical(other.visible, visible) ||
+                other.visible == visible) &&
+            const DeepCollectionEquality().equals(
+              other._points,
+              _points,
+            ) &&
+            (identical(other.isInEew, isInEew) ||
+                other.isInEew == isInEew) &&
             (identical(other.markerType, markerType) ||
                 other.markerType == markerType) &&
-            (identical(other.realtimeDataType, realtimeDataType) ||
-                other.realtimeDataType == realtimeDataType) &&
-            (identical(other.minZoom, minZoom) || other.minZoom == minZoom) &&
-            (identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom) &&
-            const DeepCollectionEquality().equals(other.filter, filter));
+            (identical(
+                  other.realtimeDataType,
+                  realtimeDataType,
+                ) ||
+                other.realtimeDataType ==
+                    realtimeDataType) &&
+            (identical(other.minZoom, minZoom) ||
+                other.minZoom == minZoom) &&
+            (identical(other.maxZoom, maxZoom) ||
+                other.maxZoom == maxZoom) &&
+            const DeepCollectionEquality().equals(
+              other.filter,
+              filter,
+            ));
   }
 
   @override
@@ -350,9 +397,10 @@ class _$KyoshinMonitorObservationLayerImpl
   _$$KyoshinMonitorObservationLayerImplCopyWith<
     _$KyoshinMonitorObservationLayerImpl
   >
-  get copyWith => __$$KyoshinMonitorObservationLayerImplCopyWithImpl<
-    _$KyoshinMonitorObservationLayerImpl
-  >(this, _$identity);
+  get copyWith =>
+      __$$KyoshinMonitorObservationLayerImplCopyWithImpl<
+        _$KyoshinMonitorObservationLayerImpl
+      >(this, _$identity);
 }
 
 abstract class _KyoshinMonitorObservationLayer
@@ -361,7 +409,10 @@ abstract class _KyoshinMonitorObservationLayer
     required final String id,
     required final String sourceId,
     required final bool visible,
-    required final List<KyoshinMonitorImageParseObservationPoint> points,
+    required final List<
+      KyoshinMonitorImageParseObservationPoint
+    >
+    points,
     required final bool isInEew,
     required final KyoshinMonitorMarkerType markerType,
     required final RealtimeDataType realtimeDataType,

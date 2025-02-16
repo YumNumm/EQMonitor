@@ -29,15 +29,21 @@ final kyoshinMonitorObservationPointsProvider =
 // ignore: unused_element
 typedef KyoshinMonitorObservationPointsRef =
     ProviderRef<List<KyoshinMonitorObservationPoint>>;
-String _$kyoshinMonitorInternalObservationPointsConvertedHash() =>
+String
+_$kyoshinMonitorInternalObservationPointsConvertedHash() =>
     r'51427c40b3db363acc7c314492e24e72b2081f6a';
 
 /// See also [kyoshinMonitorInternalObservationPointsConverted].
-@ProviderFor(kyoshinMonitorInternalObservationPointsConverted)
+@ProviderFor(
+  kyoshinMonitorInternalObservationPointsConverted,
+)
 final kyoshinMonitorInternalObservationPointsConvertedProvider =
-    FutureProvider<List<KyoshinMonitorObservationPoint>>.internal(
+    FutureProvider<
+      List<KyoshinMonitorObservationPoint>
+    >.internal(
       kyoshinMonitorInternalObservationPointsConverted,
-      name: r'kyoshinMonitorInternalObservationPointsConvertedProvider',
+      name:
+          r'kyoshinMonitorInternalObservationPointsConvertedProvider',
       debugGetCreateSourceHash:
           const bool.fromEnvironment('dart.vm.product')
               ? null
@@ -69,7 +75,8 @@ final kyoshinObservationPointsProvider =
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef KyoshinObservationPointsRef = ProviderRef<KyoshinObservationPoints>;
+typedef KyoshinObservationPointsRef =
+    ProviderRef<KyoshinObservationPoints>;
 String _$kyoshinMonitorInternalObservationPointsHash() =>
     r'e6165440e4dbbff60debe63240022a39dc8691c3';
 
@@ -78,7 +85,8 @@ String _$kyoshinMonitorInternalObservationPointsHash() =>
 final kyoshinMonitorInternalObservationPointsProvider =
     FutureProvider<KyoshinObservationPoints>.internal(
       kyoshinMonitorInternalObservationPoints,
-      name: r'kyoshinMonitorInternalObservationPointsProvider',
+      name:
+          r'kyoshinMonitorInternalObservationPointsProvider',
       debugGetCreateSourceHash:
           const bool.fromEnvironment('dart.vm.product')
               ? null

@@ -19,16 +19,32 @@ enum JmaIntensity {
   four(displayName: '4', description: '震度4', level: 4),
 
   /// 震度5弱
-  fiveLower(displayName: '5-', description: '震度5弱', level: 5),
+  fiveLower(
+    displayName: '5-',
+    description: '震度5弱',
+    level: 5,
+  ),
 
   /// 震度5強
-  fiveUpper(displayName: '5+', description: '震度5強', level: 6),
+  fiveUpper(
+    displayName: '5+',
+    description: '震度5強',
+    level: 6,
+  ),
 
   /// 震度6弱
-  sixLower(displayName: '6-', description: '震度6弱', level: 7),
+  sixLower(
+    displayName: '6-',
+    description: '震度6弱',
+    level: 7,
+  ),
 
   /// 震度6強
-  sixUpper(displayName: '6+', description: '震度6強', level: 8),
+  sixUpper(
+    displayName: '6+',
+    description: '震度6強',
+    level: 8,
+  ),
 
   /// 震度7
   seven(displayName: '7', description: '震度7', level: 9);

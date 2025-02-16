@@ -12,6 +12,7 @@ class KyoshinColorMapModel with _$KyoshinColorMapModel {
     required int b,
   }) = _KyoshinColorMapModel;
 
-  factory KyoshinColorMapModel.fromJson(Map<String, dynamic> json) =>
-      _$KyoshinColorMapModelFromJson(json);
+  factory KyoshinColorMapModel.fromJson(
+    Map<String, dynamic> json,
+  ) => _$KyoshinColorMapModelFromJson(json);
 }

@@ -8,7 +8,8 @@ part of 'intensity_sub_division.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$IntensitySubDivisionImpl _$$IntensitySubDivisionImplFromJson(
+_$IntensitySubDivisionImpl
+_$$IntensitySubDivisionImplFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate(
   r'_$IntensitySubDivisionImpl',
@@ -16,15 +17,22 @@ _$IntensitySubDivisionImpl _$$IntensitySubDivisionImplFromJson(
   ($checkedConvert) {
     final val = _$IntensitySubDivisionImpl(
       id: $checkedConvert('id', (v) => (v as num).toInt()),
-      eventId: $checkedConvert('event_id', (v) => (v as num).toInt()),
-      areaCode: $checkedConvert('area_code', (v) => v as String),
+      eventId: $checkedConvert(
+        'event_id',
+        (v) => (v as num).toInt(),
+      ),
+      areaCode: $checkedConvert(
+        'area_code',
+        (v) => v as String,
+      ),
       maxIntensity: $checkedConvert(
         'max_intensity',
         (v) => $enumDecode(_$JmaIntensityEnumMap, v),
       ),
       maxLpgmIntensity: $checkedConvert(
         'max_lpgm_intensity',
-        (v) => $enumDecodeNullable(_$JmaLgIntensityEnumMap, v),
+        (v) =>
+            $enumDecodeNullable(_$JmaLgIntensityEnumMap, v),
       ),
     );
     return val;
@@ -43,8 +51,10 @@ Map<String, dynamic> _$$IntensitySubDivisionImplToJson(
   'id': instance.id,
   'event_id': instance.eventId,
   'area_code': instance.areaCode,
-  'max_intensity': _$JmaIntensityEnumMap[instance.maxIntensity]!,
-  'max_lpgm_intensity': _$JmaLgIntensityEnumMap[instance.maxLpgmIntensity],
+  'max_intensity':
+      _$JmaIntensityEnumMap[instance.maxIntensity]!,
+  'max_lpgm_intensity':
+      _$JmaLgIntensityEnumMap[instance.maxLpgmIntensity],
 };
 
 const _$JmaIntensityEnumMap = {

@@ -19,13 +19,18 @@ class EewDetailsByEventIdRoute extends GoRouteData {
 }
 
 class EewDetailsByEventIdPage extends HookConsumerWidget {
-  const EewDetailsByEventIdPage({required this.eventId, super.key});
+  const EewDetailsByEventIdPage({
+    required this.eventId,
+    super.key,
+  });
 
   final String eventId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eewsAsyncValue = ref.watch(eewsByEventIdProvider(eventId));
+    final eewsAsyncValue = ref.watch(
+      eewsByEventIdProvider(eventId),
+    );
 
     return Scaffold(
       appBar: AppBar(title: const Text('緊急地震速報の履歴')),
@@ -37,17 +42,25 @@ class EewDetailsByEventIdPage extends HookConsumerWidget {
           // serial_no の昇順でソート
           final sortedEews = useMemoized(
             () => eews.sorted(
-              (a, b) => (a.serialNo ?? 0).compareTo(b.serialNo ?? 0),
+              (a, b) => (a.serialNo ?? 0).compareTo(
+                b.serialNo ?? 0,
+              ),
             ),
             [eews],
           );
           return EewTable(eews: sortedEews);
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading:
+            () => const Center(
+              child: CircularProgressIndicator(),
+            ),
         error:
             (error, stack) => ErrorCard(
               error: error,
-              onReload: () async => ref.refresh(eewsByEventIdProvider(eventId)),
+              onReload:
+                  () async => ref.refresh(
+                    eewsByEventIdProvider(eventId),
+                  ),
             ),
       ),
     );

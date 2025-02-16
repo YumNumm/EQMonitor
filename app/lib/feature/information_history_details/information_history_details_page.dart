@@ -5,15 +5,20 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class InformationHistoryDetailsPage extends HookConsumerWidget {
-  const InformationHistoryDetailsPage({required this.data, super.key});
+class InformationHistoryDetailsPage
+    extends HookConsumerWidget {
+  const InformationHistoryDetailsPage({
+    required this.data,
+    super.key,
+  });
 
   final InformationV3 data;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final onSecondaryContainer = theme.colorScheme.onSecondaryContainer;
+    final onSecondaryContainer =
+        theme.colorScheme.onSecondaryContainer;
     return Scaffold(
       appBar: AppBar(title: Text(data.title)),
       body: CustomScrollView(
@@ -26,32 +31,43 @@ class InformationHistoryDetailsPage extends HookConsumerWidget {
                 padding: const EdgeInsets.all(8),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.info, color: onSecondaryContainer),
+                        Icon(
+                          Icons.info,
+                          color: onSecondaryContainer,
+                        ),
                         const SizedBox(width: 8),
                         Text(
                           DateFormat(
                             '発表時刻: yyyy/MM/dd HH:mm頃',
-                          ).format(data.createdAt.toLocal()),
-                          style: theme.textTheme.bodyMedium!.copyWith(
-                            color: onSecondaryContainer,
+                          ).format(
+                            data.createdAt.toLocal(),
                           ),
+                          style: theme.textTheme.bodyMedium!
+                              .copyWith(
+                                color: onSecondaryContainer,
+                              ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.edit, color: onSecondaryContainer),
+                        Icon(
+                          Icons.edit,
+                          color: onSecondaryContainer,
+                        ),
                         const SizedBox(width: 8),
                         Text(
                           '発表機関: ${data.author.name}',
-                          style: theme.textTheme.bodyMedium!.copyWith(
-                            color: onSecondaryContainer,
-                          ),
+                          style: theme.textTheme.bodyMedium!
+                              .copyWith(
+                                color: onSecondaryContainer,
+                              ),
                         ),
                       ],
                     ),
@@ -71,7 +87,10 @@ class InformationHistoryDetailsPage extends HookConsumerWidget {
                     children: [
                       Icon(
                         Icons.warning,
-                        color: theme.colorScheme.onErrorContainer,
+                        color:
+                            theme
+                                .colorScheme
+                                .onErrorContainer,
                       ),
                       const SizedBox(width: 8),
                       Expanded(
@@ -79,7 +98,10 @@ class InformationHistoryDetailsPage extends HookConsumerWidget {
                           '本アプリでは、気象庁による試験電文の通知配信を行っていません。',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.onErrorContainer,
+                            color:
+                                theme
+                                    .colorScheme
+                                    .onErrorContainer,
                           ),
                         ),
                       ),

@@ -6,14 +6,17 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'donation_notifier.g.dart';
 
 Future<void> initInAppPurchase() async {
-  await Purchases.setLogLevel(kDebugMode ? LogLevel.debug : LogLevel.warn);
+  await Purchases.setLogLevel(
+    kDebugMode ? LogLevel.debug : LogLevel.warn,
+  );
 
   // Public App-specific API Keys
   final configuration = switch (defaultTargetPlatform) {
     TargetPlatform.android => PurchasesConfiguration(
       'goog_aEcAyBNviKgaKzmCwAOXSiXwHIb',
     ),
-    TargetPlatform.iOS || TargetPlatform.macOS => PurchasesConfiguration(
+    TargetPlatform.iOS ||
+    TargetPlatform.macOS => PurchasesConfiguration(
       'appl_BUymtTPkwhhVuihBlVOddLxOBaQ',
     ),
     _ => throw UnimplementedError(),
@@ -23,14 +26,17 @@ Future<void> initInAppPurchase() async {
 }
 
 @Riverpod(keepAlive: true)
-Future<List<StoreProduct>> products(Ref ref) => Purchases.getProducts(
-  Products.values.map((e) => e.id).toList(),
-  productCategory: ProductCategory.nonSubscription,
-);
+Future<List<StoreProduct>> products(Ref ref) =>
+    Purchases.getProducts(
+      Products.values.map((e) => e.id).toList(),
+      productCategory: ProductCategory.nonSubscription,
+    );
 
 @riverpod
-Future<CustomerInfo> purchase(Ref ref, StoreProduct product) =>
-    Purchases.purchaseStoreProduct(product);
+Future<CustomerInfo> purchase(
+  Ref ref,
+  StoreProduct product,
+) => Purchases.purchaseStoreProduct(product);
 
 enum Products {
   coffee('0001'),

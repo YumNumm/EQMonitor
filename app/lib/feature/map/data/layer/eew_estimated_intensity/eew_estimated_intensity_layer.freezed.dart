@@ -21,14 +21,17 @@ mixin _$EewEstimatedIntensityLayer {
   Color get color => throw _privateConstructorUsedError;
   dynamic get filter => throw _privateConstructorUsedError;
   bool get visible => throw _privateConstructorUsedError;
-  String? get sourceId => throw _privateConstructorUsedError;
+  String? get sourceId =>
+      throw _privateConstructorUsedError;
   double? get minZoom => throw _privateConstructorUsedError;
   double? get maxZoom => throw _privateConstructorUsedError;
 
   /// Create a copy of EewEstimatedIntensityLayer
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $EewEstimatedIntensityLayerCopyWith<EewEstimatedIntensityLayer>
+  $EewEstimatedIntensityLayerCopyWith<
+    EewEstimatedIntensityLayer
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -60,7 +63,10 @@ class _$EewEstimatedIntensityLayerCopyWithImpl<
   $Val extends EewEstimatedIntensityLayer
 >
     implements $EewEstimatedIntensityLayerCopyWith<$Res> {
-  _$EewEstimatedIntensityLayerCopyWithImpl(this._value, this._then);
+  _$EewEstimatedIntensityLayerCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -124,7 +130,9 @@ class _$EewEstimatedIntensityLayerCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$EewEstimatedIntensityLayerImplCopyWith<$Res>
+abstract class _$$EewEstimatedIntensityLayerImplCopyWith<
+  $Res
+>
     implements $EewEstimatedIntensityLayerCopyWith<$Res> {
   factory _$$EewEstimatedIntensityLayerImplCopyWith(
     _$EewEstimatedIntensityLayerImpl value,
@@ -150,7 +158,8 @@ class __$$EewEstimatedIntensityLayerImplCopyWithImpl<$Res>
           $Res,
           _$EewEstimatedIntensityLayerImpl
         >
-    implements _$$EewEstimatedIntensityLayerImplCopyWith<$Res> {
+    implements
+        _$$EewEstimatedIntensityLayerImplCopyWith<$Res> {
   __$$EewEstimatedIntensityLayerImplCopyWithImpl(
     _$EewEstimatedIntensityLayerImpl _value,
     $Res Function(_$EewEstimatedIntensityLayerImpl) _then,
@@ -213,7 +222,8 @@ class __$$EewEstimatedIntensityLayerImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$EewEstimatedIntensityLayerImpl extends _EewEstimatedIntensityLayer {
+class _$EewEstimatedIntensityLayerImpl
+    extends _EewEstimatedIntensityLayer {
   const _$EewEstimatedIntensityLayerImpl({
     required this.id,
     required this.color,
@@ -254,13 +264,20 @@ class _$EewEstimatedIntensityLayerImpl extends _EewEstimatedIntensityLayer {
         (other.runtimeType == runtimeType &&
             other is _$EewEstimatedIntensityLayerImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.color, color) || other.color == color) &&
-            const DeepCollectionEquality().equals(other.filter, filter) &&
-            (identical(other.visible, visible) || other.visible == visible) &&
+            (identical(other.color, color) ||
+                other.color == color) &&
+            const DeepCollectionEquality().equals(
+              other.filter,
+              filter,
+            ) &&
+            (identical(other.visible, visible) ||
+                other.visible == visible) &&
             (identical(other.sourceId, sourceId) ||
                 other.sourceId == sourceId) &&
-            (identical(other.minZoom, minZoom) || other.minZoom == minZoom) &&
-            (identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom));
+            (identical(other.minZoom, minZoom) ||
+                other.minZoom == minZoom) &&
+            (identical(other.maxZoom, maxZoom) ||
+                other.maxZoom == maxZoom));
   }
 
   @override
@@ -280,13 +297,17 @@ class _$EewEstimatedIntensityLayerImpl extends _EewEstimatedIntensityLayer {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$EewEstimatedIntensityLayerImplCopyWith<_$EewEstimatedIntensityLayerImpl>
-  get copyWith => __$$EewEstimatedIntensityLayerImplCopyWithImpl<
+  _$$EewEstimatedIntensityLayerImplCopyWith<
     _$EewEstimatedIntensityLayerImpl
-  >(this, _$identity);
+  >
+  get copyWith =>
+      __$$EewEstimatedIntensityLayerImplCopyWithImpl<
+        _$EewEstimatedIntensityLayerImpl
+      >(this, _$identity);
 }
 
-abstract class _EewEstimatedIntensityLayer extends EewEstimatedIntensityLayer {
+abstract class _EewEstimatedIntensityLayer
+    extends EewEstimatedIntensityLayer {
   const factory _EewEstimatedIntensityLayer({
     required final String id,
     required final Color color,
@@ -317,6 +338,8 @@ abstract class _EewEstimatedIntensityLayer extends EewEstimatedIntensityLayer {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$EewEstimatedIntensityLayerImplCopyWith<_$EewEstimatedIntensityLayerImpl>
+  _$$EewEstimatedIntensityLayerImplCopyWith<
+    _$EewEstimatedIntensityLayerImpl
+  >
   get copyWith => throw _privateConstructorUsedError;
 }

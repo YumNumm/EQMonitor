@@ -15,27 +15,33 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-ReplayFileHeader _$ReplayFileHeaderFromJson(Map<String, dynamic> json) {
+ReplayFileHeader _$ReplayFileHeaderFromJson(
+  Map<String, dynamic> json,
+) {
   return _ReplayFileHeader.fromJson(json);
 }
 
 /// @nodoc
 mixin _$ReplayFileHeader {
   int get version => throw _privateConstructorUsedError;
-  String get softwareName => throw _privateConstructorUsedError;
-  DateTime get startTime => throw _privateConstructorUsedError;
-  DateTime get endTime => throw _privateConstructorUsedError;
+  String get softwareName =>
+      throw _privateConstructorUsedError;
+  DateTime get startTime =>
+      throw _privateConstructorUsedError;
+  DateTime get endTime =>
+      throw _privateConstructorUsedError;
   ReplayFileCompressionMode get compressionMode =>
       throw _privateConstructorUsedError;
 
   /// Serializes this ReplayFileHeader to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of ReplayFileHeader
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ReplayFileHeaderCopyWith<ReplayFileHeader> get copyWith =>
-      throw _privateConstructorUsedError;
+  $ReplayFileHeaderCopyWith<ReplayFileHeader>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -43,7 +49,11 @@ abstract class $ReplayFileHeaderCopyWith<$Res> {
   factory $ReplayFileHeaderCopyWith(
     ReplayFileHeader value,
     $Res Function(ReplayFileHeader) then,
-  ) = _$ReplayFileHeaderCopyWithImpl<$Res, ReplayFileHeader>;
+  ) =
+      _$ReplayFileHeaderCopyWithImpl<
+        $Res,
+        ReplayFileHeader
+      >;
   @useResult
   $Res call({
     int version,
@@ -55,7 +65,10 @@ abstract class $ReplayFileHeaderCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ReplayFileHeaderCopyWithImpl<$Res, $Val extends ReplayFileHeader>
+class _$ReplayFileHeaderCopyWithImpl<
+  $Res,
+  $Val extends ReplayFileHeader
+>
     implements $ReplayFileHeaderCopyWith<$Res> {
   _$ReplayFileHeaderCopyWithImpl(this._value, this._then);
 
@@ -128,7 +141,11 @@ abstract class _$$ReplayFileHeaderImplCopyWith<$Res>
 
 /// @nodoc
 class __$$ReplayFileHeaderImplCopyWithImpl<$Res>
-    extends _$ReplayFileHeaderCopyWithImpl<$Res, _$ReplayFileHeaderImpl>
+    extends
+        _$ReplayFileHeaderCopyWithImpl<
+          $Res,
+          _$ReplayFileHeaderImpl
+        >
     implements _$$ReplayFileHeaderImplCopyWith<$Res> {
   __$$ReplayFileHeaderImplCopyWithImpl(
     _$ReplayFileHeaderImpl _value,
@@ -189,8 +206,9 @@ class _$ReplayFileHeaderImpl implements _ReplayFileHeader {
     required this.compressionMode,
   });
 
-  factory _$ReplayFileHeaderImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ReplayFileHeaderImplFromJson(json);
+  factory _$ReplayFileHeaderImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$ReplayFileHeaderImplFromJson(json);
 
   @override
   final int version;
@@ -213,13 +231,18 @@ class _$ReplayFileHeaderImpl implements _ReplayFileHeader {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ReplayFileHeaderImpl &&
-            (identical(other.version, version) || other.version == version) &&
+            (identical(other.version, version) ||
+                other.version == version) &&
             (identical(other.softwareName, softwareName) ||
                 other.softwareName == softwareName) &&
             (identical(other.startTime, startTime) ||
                 other.startTime == startTime) &&
-            (identical(other.endTime, endTime) || other.endTime == endTime) &&
-            (identical(other.compressionMode, compressionMode) ||
+            (identical(other.endTime, endTime) ||
+                other.endTime == endTime) &&
+            (identical(
+                  other.compressionMode,
+                  compressionMode,
+                ) ||
                 other.compressionMode == compressionMode));
   }
 
@@ -239,11 +262,10 @@ class _$ReplayFileHeaderImpl implements _ReplayFileHeader {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$ReplayFileHeaderImplCopyWith<_$ReplayFileHeaderImpl> get copyWith =>
-      __$$ReplayFileHeaderImplCopyWithImpl<_$ReplayFileHeaderImpl>(
-        this,
-        _$identity,
-      );
+  _$$ReplayFileHeaderImplCopyWith<_$ReplayFileHeaderImpl>
+  get copyWith => __$$ReplayFileHeaderImplCopyWithImpl<
+    _$ReplayFileHeaderImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -251,17 +273,20 @@ class _$ReplayFileHeaderImpl implements _ReplayFileHeader {
   }
 }
 
-abstract class _ReplayFileHeader implements ReplayFileHeader {
+abstract class _ReplayFileHeader
+    implements ReplayFileHeader {
   const factory _ReplayFileHeader({
     required final int version,
     required final String softwareName,
     required final DateTime startTime,
     required final DateTime endTime,
-    required final ReplayFileCompressionMode compressionMode,
+    required final ReplayFileCompressionMode
+    compressionMode,
   }) = _$ReplayFileHeaderImpl;
 
-  factory _ReplayFileHeader.fromJson(Map<String, dynamic> json) =
-      _$ReplayFileHeaderImpl.fromJson;
+  factory _ReplayFileHeader.fromJson(
+    Map<String, dynamic> json,
+  ) = _$ReplayFileHeaderImpl.fromJson;
 
   @override
   int get version;
@@ -278,6 +303,6 @@ abstract class _ReplayFileHeader implements ReplayFileHeader {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ReplayFileHeaderImplCopyWith<_$ReplayFileHeaderImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$ReplayFileHeaderImplCopyWith<_$ReplayFileHeaderImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }

@@ -23,19 +23,23 @@ JmaXmlTelegramReplayData _$JmaXmlTelegramReplayDataFromJson(
 
 /// @nodoc
 mixin _$JmaXmlTelegramReplayData {
-  ReplayDataType get type => throw _privateConstructorUsedError;
+  ReplayDataType get type =>
+      throw _privateConstructorUsedError;
   DateTime get time => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get telegram => throw _privateConstructorUsedError;
 
   /// Serializes this JmaXmlTelegramReplayData to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of JmaXmlTelegramReplayData
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $JmaXmlTelegramReplayDataCopyWith<JmaXmlTelegramReplayData> get copyWith =>
-      throw _privateConstructorUsedError;
+  $JmaXmlTelegramReplayDataCopyWith<
+    JmaXmlTelegramReplayData
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -43,7 +47,11 @@ abstract class $JmaXmlTelegramReplayDataCopyWith<$Res> {
   factory $JmaXmlTelegramReplayDataCopyWith(
     JmaXmlTelegramReplayData value,
     $Res Function(JmaXmlTelegramReplayData) then,
-  ) = _$JmaXmlTelegramReplayDataCopyWithImpl<$Res, JmaXmlTelegramReplayData>;
+  ) =
+      _$JmaXmlTelegramReplayDataCopyWithImpl<
+        $Res,
+        JmaXmlTelegramReplayData
+      >;
   @useResult
   $Res call({
     ReplayDataType type,
@@ -59,7 +67,10 @@ class _$JmaXmlTelegramReplayDataCopyWithImpl<
   $Val extends JmaXmlTelegramReplayData
 >
     implements $JmaXmlTelegramReplayDataCopyWith<$Res> {
-  _$JmaXmlTelegramReplayDataCopyWithImpl(this._value, this._then);
+  _$JmaXmlTelegramReplayDataCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -128,7 +139,8 @@ class __$$JmaXmlTelegramReplayDataImplCopyWithImpl<$Res>
           $Res,
           _$JmaXmlTelegramReplayDataImpl
         >
-    implements _$$JmaXmlTelegramReplayDataImplCopyWith<$Res> {
+    implements
+        _$$JmaXmlTelegramReplayDataImplCopyWith<$Res> {
   __$$JmaXmlTelegramReplayDataImplCopyWithImpl(
     _$JmaXmlTelegramReplayDataImpl _value,
     $Res Function(_$JmaXmlTelegramReplayDataImpl) _then,
@@ -173,7 +185,8 @@ class __$$JmaXmlTelegramReplayDataImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$JmaXmlTelegramReplayDataImpl extends _JmaXmlTelegramReplayData {
+class _$JmaXmlTelegramReplayDataImpl
+    extends _JmaXmlTelegramReplayData {
   const _$JmaXmlTelegramReplayDataImpl({
     required this.type,
     required this.time,
@@ -181,8 +194,9 @@ class _$JmaXmlTelegramReplayDataImpl extends _JmaXmlTelegramReplayData {
     required this.telegram,
   }) : super._();
 
-  factory _$JmaXmlTelegramReplayDataImpl.fromJson(Map<String, dynamic> json) =>
-      _$$JmaXmlTelegramReplayDataImplFromJson(json);
+  factory _$JmaXmlTelegramReplayDataImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$JmaXmlTelegramReplayDataImplFromJson(json);
 
   @override
   final ReplayDataType type;
@@ -198,26 +212,33 @@ class _$JmaXmlTelegramReplayDataImpl extends _JmaXmlTelegramReplayData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$JmaXmlTelegramReplayDataImpl &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.time, time) || other.time == time) &&
-            (identical(other.title, title) || other.title == title) &&
+            (identical(other.type, type) ||
+                other.type == type) &&
+            (identical(other.time, time) ||
+                other.time == time) &&
+            (identical(other.title, title) ||
+                other.title == title) &&
             (identical(other.telegram, telegram) ||
                 other.telegram == telegram));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, type, time, title, telegram);
+  int get hashCode =>
+      Object.hash(runtimeType, type, time, title, telegram);
 
   /// Create a copy of JmaXmlTelegramReplayData
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$JmaXmlTelegramReplayDataImplCopyWith<_$JmaXmlTelegramReplayDataImpl>
-  get copyWith => __$$JmaXmlTelegramReplayDataImplCopyWithImpl<
+  _$$JmaXmlTelegramReplayDataImplCopyWith<
     _$JmaXmlTelegramReplayDataImpl
-  >(this, _$identity);
+  >
+  get copyWith =>
+      __$$JmaXmlTelegramReplayDataImplCopyWithImpl<
+        _$JmaXmlTelegramReplayDataImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -225,7 +246,8 @@ class _$JmaXmlTelegramReplayDataImpl extends _JmaXmlTelegramReplayData {
   }
 }
 
-abstract class _JmaXmlTelegramReplayData extends JmaXmlTelegramReplayData {
+abstract class _JmaXmlTelegramReplayData
+    extends JmaXmlTelegramReplayData {
   const factory _JmaXmlTelegramReplayData({
     required final ReplayDataType type,
     required final DateTime time,
@@ -234,8 +256,9 @@ abstract class _JmaXmlTelegramReplayData extends JmaXmlTelegramReplayData {
   }) = _$JmaXmlTelegramReplayDataImpl;
   const _JmaXmlTelegramReplayData._() : super._();
 
-  factory _JmaXmlTelegramReplayData.fromJson(Map<String, dynamic> json) =
-      _$JmaXmlTelegramReplayDataImpl.fromJson;
+  factory _JmaXmlTelegramReplayData.fromJson(
+    Map<String, dynamic> json,
+  ) = _$JmaXmlTelegramReplayDataImpl.fromJson;
 
   @override
   ReplayDataType get type;
@@ -250,11 +273,14 @@ abstract class _JmaXmlTelegramReplayData extends JmaXmlTelegramReplayData {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$JmaXmlTelegramReplayDataImplCopyWith<_$JmaXmlTelegramReplayDataImpl>
+  _$$JmaXmlTelegramReplayDataImplCopyWith<
+    _$JmaXmlTelegramReplayDataImpl
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
-JmaBinaryTelegramReplayData _$JmaBinaryTelegramReplayDataFromJson(
+JmaBinaryTelegramReplayData
+_$JmaBinaryTelegramReplayDataFromJson(
   Map<String, dynamic> json,
 ) {
   return _JmaBinaryTelegramReplayData.fromJson(json);
@@ -262,18 +288,23 @@ JmaBinaryTelegramReplayData _$JmaBinaryTelegramReplayDataFromJson(
 
 /// @nodoc
 mixin _$JmaBinaryTelegramReplayData {
-  ReplayDataType get type => throw _privateConstructorUsedError;
+  ReplayDataType get type =>
+      throw _privateConstructorUsedError;
   DateTime get time => throw _privateConstructorUsedError;
-  String get telegramType => throw _privateConstructorUsedError;
+  String get telegramType =>
+      throw _privateConstructorUsedError;
   List<int> get data => throw _privateConstructorUsedError;
 
   /// Serializes this JmaBinaryTelegramReplayData to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of JmaBinaryTelegramReplayData
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $JmaBinaryTelegramReplayDataCopyWith<JmaBinaryTelegramReplayData>
+  $JmaBinaryTelegramReplayDataCopyWith<
+    JmaBinaryTelegramReplayData
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -302,7 +333,10 @@ class _$JmaBinaryTelegramReplayDataCopyWithImpl<
   $Val extends JmaBinaryTelegramReplayData
 >
     implements $JmaBinaryTelegramReplayDataCopyWith<$Res> {
-  _$JmaBinaryTelegramReplayDataCopyWithImpl(this._value, this._then);
+  _$JmaBinaryTelegramReplayDataCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -348,7 +382,9 @@ class _$JmaBinaryTelegramReplayDataCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$JmaBinaryTelegramReplayDataImplCopyWith<$Res>
+abstract class _$$JmaBinaryTelegramReplayDataImplCopyWith<
+  $Res
+>
     implements $JmaBinaryTelegramReplayDataCopyWith<$Res> {
   factory _$$JmaBinaryTelegramReplayDataImplCopyWith(
     _$JmaBinaryTelegramReplayDataImpl value,
@@ -371,7 +407,8 @@ class __$$JmaBinaryTelegramReplayDataImplCopyWithImpl<$Res>
           $Res,
           _$JmaBinaryTelegramReplayDataImpl
         >
-    implements _$$JmaBinaryTelegramReplayDataImplCopyWith<$Res> {
+    implements
+        _$$JmaBinaryTelegramReplayDataImplCopyWith<$Res> {
   __$$JmaBinaryTelegramReplayDataImplCopyWithImpl(
     _$JmaBinaryTelegramReplayDataImpl _value,
     $Res Function(_$JmaBinaryTelegramReplayDataImpl) _then,
@@ -416,7 +453,8 @@ class __$$JmaBinaryTelegramReplayDataImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$JmaBinaryTelegramReplayDataImpl extends _JmaBinaryTelegramReplayData {
+class _$JmaBinaryTelegramReplayDataImpl
+    extends _JmaBinaryTelegramReplayData {
   const _$JmaBinaryTelegramReplayDataImpl({
     required this.type,
     required this.time,
@@ -448,11 +486,16 @@ class _$JmaBinaryTelegramReplayDataImpl extends _JmaBinaryTelegramReplayData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$JmaBinaryTelegramReplayDataImpl &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.time, time) || other.time == time) &&
+            (identical(other.type, type) ||
+                other.type == type) &&
+            (identical(other.time, time) ||
+                other.time == time) &&
             (identical(other.telegramType, telegramType) ||
                 other.telegramType == telegramType) &&
-            const DeepCollectionEquality().equals(other._data, _data));
+            const DeepCollectionEquality().equals(
+              other._data,
+              _data,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -470,10 +513,13 @@ class _$JmaBinaryTelegramReplayDataImpl extends _JmaBinaryTelegramReplayData {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$JmaBinaryTelegramReplayDataImplCopyWith<_$JmaBinaryTelegramReplayDataImpl>
-  get copyWith => __$$JmaBinaryTelegramReplayDataImplCopyWithImpl<
+  _$$JmaBinaryTelegramReplayDataImplCopyWith<
     _$JmaBinaryTelegramReplayDataImpl
-  >(this, _$identity);
+  >
+  get copyWith =>
+      __$$JmaBinaryTelegramReplayDataImplCopyWithImpl<
+        _$JmaBinaryTelegramReplayDataImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -491,8 +537,9 @@ abstract class _JmaBinaryTelegramReplayData
   }) = _$JmaBinaryTelegramReplayDataImpl;
   const _JmaBinaryTelegramReplayData._() : super._();
 
-  factory _JmaBinaryTelegramReplayData.fromJson(Map<String, dynamic> json) =
-      _$JmaBinaryTelegramReplayDataImpl.fromJson;
+  factory _JmaBinaryTelegramReplayData.fromJson(
+    Map<String, dynamic> json,
+  ) = _$JmaBinaryTelegramReplayDataImpl.fromJson;
 
   @override
   ReplayDataType get type;
@@ -507,11 +554,14 @@ abstract class _JmaBinaryTelegramReplayData
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$JmaBinaryTelegramReplayDataImplCopyWith<_$JmaBinaryTelegramReplayDataImpl>
+  _$$JmaBinaryTelegramReplayDataImplCopyWith<
+    _$JmaBinaryTelegramReplayDataImpl
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
-KyoshinMonitorImageReplayData _$KyoshinMonitorImageReplayDataFromJson(
+KyoshinMonitorImageReplayData
+_$KyoshinMonitorImageReplayDataFromJson(
   Map<String, dynamic> json,
 ) {
   return _KyoshinMonitorImageReplayData.fromJson(json);
@@ -519,22 +569,29 @@ KyoshinMonitorImageReplayData _$KyoshinMonitorImageReplayDataFromJson(
 
 /// @nodoc
 mixin _$KyoshinMonitorImageReplayData {
-  ReplayDataType get type => throw _privateConstructorUsedError;
+  ReplayDataType get type =>
+      throw _privateConstructorUsedError;
   DateTime get time => throw _privateConstructorUsedError;
-  Map<ImageType, List<int>> get images => throw _privateConstructorUsedError;
+  Map<ImageType, List<int>> get images =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this KyoshinMonitorImageReplayData to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of KyoshinMonitorImageReplayData
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $KyoshinMonitorImageReplayDataCopyWith<KyoshinMonitorImageReplayData>
+  $KyoshinMonitorImageReplayDataCopyWith<
+    KyoshinMonitorImageReplayData
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $KyoshinMonitorImageReplayDataCopyWith<$Res> {
+abstract class $KyoshinMonitorImageReplayDataCopyWith<
+  $Res
+> {
   factory $KyoshinMonitorImageReplayDataCopyWith(
     KyoshinMonitorImageReplayData value,
     $Res Function(KyoshinMonitorImageReplayData) then,
@@ -556,8 +613,12 @@ class _$KyoshinMonitorImageReplayDataCopyWithImpl<
   $Res,
   $Val extends KyoshinMonitorImageReplayData
 >
-    implements $KyoshinMonitorImageReplayDataCopyWith<$Res> {
-  _$KyoshinMonitorImageReplayDataCopyWithImpl(this._value, this._then);
+    implements
+        $KyoshinMonitorImageReplayDataCopyWith<$Res> {
+  _$KyoshinMonitorImageReplayDataCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -568,7 +629,11 @@ class _$KyoshinMonitorImageReplayDataCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? type = null, Object? time = null, Object? images = null}) {
+  $Res call({
+    Object? type = null,
+    Object? time = null,
+    Object? images = null,
+  }) {
     return _then(
       _value.copyWith(
             type:
@@ -593,12 +658,18 @@ class _$KyoshinMonitorImageReplayDataCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$KyoshinMonitorImageReplayDataImplCopyWith<$Res>
-    implements $KyoshinMonitorImageReplayDataCopyWith<$Res> {
+abstract class _$$KyoshinMonitorImageReplayDataImplCopyWith<
+  $Res
+>
+    implements
+        $KyoshinMonitorImageReplayDataCopyWith<$Res> {
   factory _$$KyoshinMonitorImageReplayDataImplCopyWith(
     _$KyoshinMonitorImageReplayDataImpl value,
     $Res Function(_$KyoshinMonitorImageReplayDataImpl) then,
-  ) = __$$KyoshinMonitorImageReplayDataImplCopyWithImpl<$Res>;
+  ) =
+      __$$KyoshinMonitorImageReplayDataImplCopyWithImpl<
+        $Res
+      >;
   @override
   @useResult
   $Res call({
@@ -609,23 +680,31 @@ abstract class _$$KyoshinMonitorImageReplayDataImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$KyoshinMonitorImageReplayDataImplCopyWithImpl<$Res>
+class __$$KyoshinMonitorImageReplayDataImplCopyWithImpl<
+  $Res
+>
     extends
         _$KyoshinMonitorImageReplayDataCopyWithImpl<
           $Res,
           _$KyoshinMonitorImageReplayDataImpl
         >
-    implements _$$KyoshinMonitorImageReplayDataImplCopyWith<$Res> {
+    implements
+        _$$KyoshinMonitorImageReplayDataImplCopyWith<$Res> {
   __$$KyoshinMonitorImageReplayDataImplCopyWithImpl(
     _$KyoshinMonitorImageReplayDataImpl _value,
-    $Res Function(_$KyoshinMonitorImageReplayDataImpl) _then,
+    $Res Function(_$KyoshinMonitorImageReplayDataImpl)
+    _then,
   ) : super(_value, _then);
 
   /// Create a copy of KyoshinMonitorImageReplayData
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? type = null, Object? time = null, Object? images = null}) {
+  $Res call({
+    Object? type = null,
+    Object? time = null,
+    Object? images = null,
+  }) {
     return _then(
       _$KyoshinMonitorImageReplayDataImpl(
         type:
@@ -680,9 +759,14 @@ class _$KyoshinMonitorImageReplayDataImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$KyoshinMonitorImageReplayDataImpl &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.time, time) || other.time == time) &&
-            const DeepCollectionEquality().equals(other._images, _images));
+            (identical(other.type, type) ||
+                other.type == type) &&
+            (identical(other.time, time) ||
+                other.time == time) &&
+            const DeepCollectionEquality().equals(
+              other._images,
+              _images,
+            ));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -702,9 +786,10 @@ class _$KyoshinMonitorImageReplayDataImpl
   _$$KyoshinMonitorImageReplayDataImplCopyWith<
     _$KyoshinMonitorImageReplayDataImpl
   >
-  get copyWith => __$$KyoshinMonitorImageReplayDataImplCopyWithImpl<
-    _$KyoshinMonitorImageReplayDataImpl
-  >(this, _$identity);
+  get copyWith =>
+      __$$KyoshinMonitorImageReplayDataImplCopyWithImpl<
+        _$KyoshinMonitorImageReplayDataImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -721,8 +806,9 @@ abstract class _KyoshinMonitorImageReplayData
   }) = _$KyoshinMonitorImageReplayDataImpl;
   const _KyoshinMonitorImageReplayData._() : super._();
 
-  factory _KyoshinMonitorImageReplayData.fromJson(Map<String, dynamic> json) =
-      _$KyoshinMonitorImageReplayDataImpl.fromJson;
+  factory _KyoshinMonitorImageReplayData.fromJson(
+    Map<String, dynamic> json,
+  ) = _$KyoshinMonitorImageReplayDataImpl.fromJson;
 
   @override
   ReplayDataType get type;
@@ -741,7 +827,8 @@ abstract class _KyoshinMonitorImageReplayData
   get copyWith => throw _privateConstructorUsedError;
 }
 
-KyoshinMonitorEewJsonReplayData _$KyoshinMonitorEewJsonReplayDataFromJson(
+KyoshinMonitorEewJsonReplayData
+_$KyoshinMonitorEewJsonReplayDataFromJson(
   Map<String, dynamic> json,
 ) {
   return _KyoshinMonitorEewJsonReplayData.fromJson(json);
@@ -749,22 +836,28 @@ KyoshinMonitorEewJsonReplayData _$KyoshinMonitorEewJsonReplayDataFromJson(
 
 /// @nodoc
 mixin _$KyoshinMonitorEewJsonReplayData {
-  ReplayDataType get type => throw _privateConstructorUsedError;
+  ReplayDataType get type =>
+      throw _privateConstructorUsedError;
   DateTime get time => throw _privateConstructorUsedError;
   String get json => throw _privateConstructorUsedError;
 
   /// Serializes this KyoshinMonitorEewJsonReplayData to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of KyoshinMonitorEewJsonReplayData
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $KyoshinMonitorEewJsonReplayDataCopyWith<KyoshinMonitorEewJsonReplayData>
+  $KyoshinMonitorEewJsonReplayDataCopyWith<
+    KyoshinMonitorEewJsonReplayData
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $KyoshinMonitorEewJsonReplayDataCopyWith<$Res> {
+abstract class $KyoshinMonitorEewJsonReplayDataCopyWith<
+  $Res
+> {
   factory $KyoshinMonitorEewJsonReplayDataCopyWith(
     KyoshinMonitorEewJsonReplayData value,
     $Res Function(KyoshinMonitorEewJsonReplayData) then,
@@ -774,7 +867,11 @@ abstract class $KyoshinMonitorEewJsonReplayDataCopyWith<$Res> {
         KyoshinMonitorEewJsonReplayData
       >;
   @useResult
-  $Res call({ReplayDataType type, DateTime time, String json});
+  $Res call({
+    ReplayDataType type,
+    DateTime time,
+    String json,
+  });
 }
 
 /// @nodoc
@@ -782,8 +879,12 @@ class _$KyoshinMonitorEewJsonReplayDataCopyWithImpl<
   $Res,
   $Val extends KyoshinMonitorEewJsonReplayData
 >
-    implements $KyoshinMonitorEewJsonReplayDataCopyWith<$Res> {
-  _$KyoshinMonitorEewJsonReplayDataCopyWithImpl(this._value, this._then);
+    implements
+        $KyoshinMonitorEewJsonReplayDataCopyWith<$Res> {
+  _$KyoshinMonitorEewJsonReplayDataCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -794,7 +895,11 @@ class _$KyoshinMonitorEewJsonReplayDataCopyWithImpl<
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? type = null, Object? time = null, Object? json = null}) {
+  $Res call({
+    Object? type = null,
+    Object? time = null,
+    Object? json = null,
+  }) {
     return _then(
       _value.copyWith(
             type:
@@ -819,35 +924,56 @@ class _$KyoshinMonitorEewJsonReplayDataCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$KyoshinMonitorEewJsonReplayDataImplCopyWith<$Res>
-    implements $KyoshinMonitorEewJsonReplayDataCopyWith<$Res> {
+abstract class _$$KyoshinMonitorEewJsonReplayDataImplCopyWith<
+  $Res
+>
+    implements
+        $KyoshinMonitorEewJsonReplayDataCopyWith<$Res> {
   factory _$$KyoshinMonitorEewJsonReplayDataImplCopyWith(
     _$KyoshinMonitorEewJsonReplayDataImpl value,
-    $Res Function(_$KyoshinMonitorEewJsonReplayDataImpl) then,
-  ) = __$$KyoshinMonitorEewJsonReplayDataImplCopyWithImpl<$Res>;
+    $Res Function(_$KyoshinMonitorEewJsonReplayDataImpl)
+    then,
+  ) =
+      __$$KyoshinMonitorEewJsonReplayDataImplCopyWithImpl<
+        $Res
+      >;
   @override
   @useResult
-  $Res call({ReplayDataType type, DateTime time, String json});
+  $Res call({
+    ReplayDataType type,
+    DateTime time,
+    String json,
+  });
 }
 
 /// @nodoc
-class __$$KyoshinMonitorEewJsonReplayDataImplCopyWithImpl<$Res>
+class __$$KyoshinMonitorEewJsonReplayDataImplCopyWithImpl<
+  $Res
+>
     extends
         _$KyoshinMonitorEewJsonReplayDataCopyWithImpl<
           $Res,
           _$KyoshinMonitorEewJsonReplayDataImpl
         >
-    implements _$$KyoshinMonitorEewJsonReplayDataImplCopyWith<$Res> {
+    implements
+        _$$KyoshinMonitorEewJsonReplayDataImplCopyWith<
+          $Res
+        > {
   __$$KyoshinMonitorEewJsonReplayDataImplCopyWithImpl(
     _$KyoshinMonitorEewJsonReplayDataImpl _value,
-    $Res Function(_$KyoshinMonitorEewJsonReplayDataImpl) _then,
+    $Res Function(_$KyoshinMonitorEewJsonReplayDataImpl)
+    _then,
   ) : super(_value, _then);
 
   /// Create a copy of KyoshinMonitorEewJsonReplayData
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? type = null, Object? time = null, Object? json = null}) {
+  $Res call({
+    Object? type = null,
+    Object? time = null,
+    Object? json = null,
+  }) {
     return _then(
       _$KyoshinMonitorEewJsonReplayDataImpl(
         type:
@@ -895,15 +1021,20 @@ class _$KyoshinMonitorEewJsonReplayDataImpl
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$KyoshinMonitorEewJsonReplayDataImpl &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.time, time) || other.time == time) &&
-            (identical(other.json, json) || other.json == json));
+            other
+                is _$KyoshinMonitorEewJsonReplayDataImpl &&
+            (identical(other.type, type) ||
+                other.type == type) &&
+            (identical(other.time, time) ||
+                other.time == time) &&
+            (identical(other.json, json) ||
+                other.json == json));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, type, time, json);
+  int get hashCode =>
+      Object.hash(runtimeType, type, time, json);
 
   /// Create a copy of KyoshinMonitorEewJsonReplayData
   /// with the given fields replaced by the non-null parameter values.
@@ -913,13 +1044,16 @@ class _$KyoshinMonitorEewJsonReplayDataImpl
   _$$KyoshinMonitorEewJsonReplayDataImplCopyWith<
     _$KyoshinMonitorEewJsonReplayDataImpl
   >
-  get copyWith => __$$KyoshinMonitorEewJsonReplayDataImplCopyWithImpl<
-    _$KyoshinMonitorEewJsonReplayDataImpl
-  >(this, _$identity);
+  get copyWith =>
+      __$$KyoshinMonitorEewJsonReplayDataImplCopyWithImpl<
+        _$KyoshinMonitorEewJsonReplayDataImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$KyoshinMonitorEewJsonReplayDataImplToJson(this);
+    return _$$KyoshinMonitorEewJsonReplayDataImplToJson(
+      this,
+    );
   }
 }
 
@@ -932,8 +1066,9 @@ abstract class _KyoshinMonitorEewJsonReplayData
   }) = _$KyoshinMonitorEewJsonReplayDataImpl;
   const _KyoshinMonitorEewJsonReplayData._() : super._();
 
-  factory _KyoshinMonitorEewJsonReplayData.fromJson(Map<String, dynamic> json) =
-      _$KyoshinMonitorEewJsonReplayDataImpl.fromJson;
+  factory _KyoshinMonitorEewJsonReplayData.fromJson(
+    Map<String, dynamic> json,
+  ) = _$KyoshinMonitorEewJsonReplayDataImpl.fromJson;
 
   @override
   ReplayDataType get type;
@@ -952,25 +1087,30 @@ abstract class _KyoshinMonitorEewJsonReplayData
   get copyWith => throw _privateConstructorUsedError;
 }
 
-KeviJsonReplayData _$KeviJsonReplayDataFromJson(Map<String, dynamic> json) {
+KeviJsonReplayData _$KeviJsonReplayDataFromJson(
+  Map<String, dynamic> json,
+) {
   return _KeviJsonReplayData.fromJson(json);
 }
 
 /// @nodoc
 mixin _$KeviJsonReplayData {
-  ReplayDataType get type => throw _privateConstructorUsedError;
+  ReplayDataType get type =>
+      throw _privateConstructorUsedError;
   DateTime get time => throw _privateConstructorUsedError;
-  JsonType get jsonType => throw _privateConstructorUsedError;
+  JsonType get jsonType =>
+      throw _privateConstructorUsedError;
   String get json => throw _privateConstructorUsedError;
 
   /// Serializes this KeviJsonReplayData to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of KeviJsonReplayData
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $KeviJsonReplayDataCopyWith<KeviJsonReplayData> get copyWith =>
-      throw _privateConstructorUsedError;
+  $KeviJsonReplayDataCopyWith<KeviJsonReplayData>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -978,7 +1118,11 @@ abstract class $KeviJsonReplayDataCopyWith<$Res> {
   factory $KeviJsonReplayDataCopyWith(
     KeviJsonReplayData value,
     $Res Function(KeviJsonReplayData) then,
-  ) = _$KeviJsonReplayDataCopyWithImpl<$Res, KeviJsonReplayData>;
+  ) =
+      _$KeviJsonReplayDataCopyWithImpl<
+        $Res,
+        KeviJsonReplayData
+      >;
   @useResult
   $Res call({
     ReplayDataType type,
@@ -989,7 +1133,10 @@ abstract class $KeviJsonReplayDataCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$KeviJsonReplayDataCopyWithImpl<$Res, $Val extends KeviJsonReplayData>
+class _$KeviJsonReplayDataCopyWithImpl<
+  $Res,
+  $Val extends KeviJsonReplayData
+>
     implements $KeviJsonReplayDataCopyWith<$Res> {
   _$KeviJsonReplayDataCopyWithImpl(this._value, this._then);
 
@@ -1055,7 +1202,11 @@ abstract class _$$KeviJsonReplayDataImplCopyWith<$Res>
 
 /// @nodoc
 class __$$KeviJsonReplayDataImplCopyWithImpl<$Res>
-    extends _$KeviJsonReplayDataCopyWithImpl<$Res, _$KeviJsonReplayDataImpl>
+    extends
+        _$KeviJsonReplayDataCopyWithImpl<
+          $Res,
+          _$KeviJsonReplayDataImpl
+        >
     implements _$$KeviJsonReplayDataImplCopyWith<$Res> {
   __$$KeviJsonReplayDataImplCopyWithImpl(
     _$KeviJsonReplayDataImpl _value,
@@ -1109,8 +1260,9 @@ class _$KeviJsonReplayDataImpl extends _KeviJsonReplayData {
     required this.json,
   }) : super._();
 
-  factory _$KeviJsonReplayDataImpl.fromJson(Map<String, dynamic> json) =>
-      _$$KeviJsonReplayDataImplFromJson(json);
+  factory _$KeviJsonReplayDataImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$KeviJsonReplayDataImplFromJson(json);
 
   @override
   final ReplayDataType type;
@@ -1126,27 +1278,32 @@ class _$KeviJsonReplayDataImpl extends _KeviJsonReplayData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$KeviJsonReplayDataImpl &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.time, time) || other.time == time) &&
+            (identical(other.type, type) ||
+                other.type == type) &&
+            (identical(other.time, time) ||
+                other.time == time) &&
             (identical(other.jsonType, jsonType) ||
                 other.jsonType == jsonType) &&
-            (identical(other.json, json) || other.json == json));
+            (identical(other.json, json) ||
+                other.json == json));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, type, time, jsonType, json);
+  int get hashCode =>
+      Object.hash(runtimeType, type, time, jsonType, json);
 
   /// Create a copy of KeviJsonReplayData
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$KeviJsonReplayDataImplCopyWith<_$KeviJsonReplayDataImpl> get copyWith =>
-      __$$KeviJsonReplayDataImplCopyWithImpl<_$KeviJsonReplayDataImpl>(
-        this,
-        _$identity,
-      );
+  _$$KeviJsonReplayDataImplCopyWith<
+    _$KeviJsonReplayDataImpl
+  >
+  get copyWith => __$$KeviJsonReplayDataImplCopyWithImpl<
+    _$KeviJsonReplayDataImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -1154,7 +1311,8 @@ class _$KeviJsonReplayDataImpl extends _KeviJsonReplayData {
   }
 }
 
-abstract class _KeviJsonReplayData extends KeviJsonReplayData {
+abstract class _KeviJsonReplayData
+    extends KeviJsonReplayData {
   const factory _KeviJsonReplayData({
     required final ReplayDataType type,
     required final DateTime time,
@@ -1163,8 +1321,9 @@ abstract class _KeviJsonReplayData extends KeviJsonReplayData {
   }) = _$KeviJsonReplayDataImpl;
   const _KeviJsonReplayData._() : super._();
 
-  factory _KeviJsonReplayData.fromJson(Map<String, dynamic> json) =
-      _$KeviJsonReplayDataImpl.fromJson;
+  factory _KeviJsonReplayData.fromJson(
+    Map<String, dynamic> json,
+  ) = _$KeviJsonReplayDataImpl.fromJson;
 
   @override
   ReplayDataType get type;
@@ -1179,8 +1338,10 @@ abstract class _KeviJsonReplayData extends KeviJsonReplayData {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$KeviJsonReplayDataImplCopyWith<_$KeviJsonReplayDataImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$KeviJsonReplayDataImplCopyWith<
+    _$KeviJsonReplayDataImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 SnpLogEntryReplayData _$SnpLogEntryReplayDataFromJson(
@@ -1191,18 +1352,20 @@ SnpLogEntryReplayData _$SnpLogEntryReplayDataFromJson(
 
 /// @nodoc
 mixin _$SnpLogEntryReplayData {
-  ReplayDataType get type => throw _privateConstructorUsedError;
+  ReplayDataType get type =>
+      throw _privateConstructorUsedError;
   DateTime get time => throw _privateConstructorUsedError;
   String get message => throw _privateConstructorUsedError;
 
   /// Serializes this SnpLogEntryReplayData to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of SnpLogEntryReplayData
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $SnpLogEntryReplayDataCopyWith<SnpLogEntryReplayData> get copyWith =>
-      throw _privateConstructorUsedError;
+  $SnpLogEntryReplayDataCopyWith<SnpLogEntryReplayData>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1210,9 +1373,17 @@ abstract class $SnpLogEntryReplayDataCopyWith<$Res> {
   factory $SnpLogEntryReplayDataCopyWith(
     SnpLogEntryReplayData value,
     $Res Function(SnpLogEntryReplayData) then,
-  ) = _$SnpLogEntryReplayDataCopyWithImpl<$Res, SnpLogEntryReplayData>;
+  ) =
+      _$SnpLogEntryReplayDataCopyWithImpl<
+        $Res,
+        SnpLogEntryReplayData
+      >;
   @useResult
-  $Res call({ReplayDataType type, DateTime time, String message});
+  $Res call({
+    ReplayDataType type,
+    DateTime time,
+    String message,
+  });
 }
 
 /// @nodoc
@@ -1221,7 +1392,10 @@ class _$SnpLogEntryReplayDataCopyWithImpl<
   $Val extends SnpLogEntryReplayData
 >
     implements $SnpLogEntryReplayDataCopyWith<$Res> {
-  _$SnpLogEntryReplayDataCopyWithImpl(this._value, this._then);
+  _$SnpLogEntryReplayDataCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -1269,13 +1443,20 @@ abstract class _$$SnpLogEntryReplayDataImplCopyWith<$Res>
   ) = __$$SnpLogEntryReplayDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({ReplayDataType type, DateTime time, String message});
+  $Res call({
+    ReplayDataType type,
+    DateTime time,
+    String message,
+  });
 }
 
 /// @nodoc
 class __$$SnpLogEntryReplayDataImplCopyWithImpl<$Res>
     extends
-        _$SnpLogEntryReplayDataCopyWithImpl<$Res, _$SnpLogEntryReplayDataImpl>
+        _$SnpLogEntryReplayDataCopyWithImpl<
+          $Res,
+          _$SnpLogEntryReplayDataImpl
+        >
     implements _$$SnpLogEntryReplayDataImplCopyWith<$Res> {
   __$$SnpLogEntryReplayDataImplCopyWithImpl(
     _$SnpLogEntryReplayDataImpl _value,
@@ -1315,15 +1496,17 @@ class __$$SnpLogEntryReplayDataImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$SnpLogEntryReplayDataImpl extends _SnpLogEntryReplayData {
+class _$SnpLogEntryReplayDataImpl
+    extends _SnpLogEntryReplayData {
   const _$SnpLogEntryReplayDataImpl({
     required this.type,
     required this.time,
     required this.message,
   }) : super._();
 
-  factory _$SnpLogEntryReplayDataImpl.fromJson(Map<String, dynamic> json) =>
-      _$$SnpLogEntryReplayDataImplFromJson(json);
+  factory _$SnpLogEntryReplayDataImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$SnpLogEntryReplayDataImplFromJson(json);
 
   @override
   final ReplayDataType type;
@@ -1337,26 +1520,30 @@ class _$SnpLogEntryReplayDataImpl extends _SnpLogEntryReplayData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SnpLogEntryReplayDataImpl &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.time, time) || other.time == time) &&
-            (identical(other.message, message) || other.message == message));
+            (identical(other.type, type) ||
+                other.type == type) &&
+            (identical(other.time, time) ||
+                other.time == time) &&
+            (identical(other.message, message) ||
+                other.message == message));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, type, time, message);
+  int get hashCode =>
+      Object.hash(runtimeType, type, time, message);
 
   /// Create a copy of SnpLogEntryReplayData
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$SnpLogEntryReplayDataImplCopyWith<_$SnpLogEntryReplayDataImpl>
-  get copyWith =>
-      __$$SnpLogEntryReplayDataImplCopyWithImpl<_$SnpLogEntryReplayDataImpl>(
-        this,
-        _$identity,
-      );
+  _$$SnpLogEntryReplayDataImplCopyWith<
+    _$SnpLogEntryReplayDataImpl
+  >
+  get copyWith => __$$SnpLogEntryReplayDataImplCopyWithImpl<
+    _$SnpLogEntryReplayDataImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -1364,7 +1551,8 @@ class _$SnpLogEntryReplayDataImpl extends _SnpLogEntryReplayData {
   }
 }
 
-abstract class _SnpLogEntryReplayData extends SnpLogEntryReplayData {
+abstract class _SnpLogEntryReplayData
+    extends SnpLogEntryReplayData {
   const factory _SnpLogEntryReplayData({
     required final ReplayDataType type,
     required final DateTime time,
@@ -1372,8 +1560,9 @@ abstract class _SnpLogEntryReplayData extends SnpLogEntryReplayData {
   }) = _$SnpLogEntryReplayDataImpl;
   const _SnpLogEntryReplayData._() : super._();
 
-  factory _SnpLogEntryReplayData.fromJson(Map<String, dynamic> json) =
-      _$SnpLogEntryReplayDataImpl.fromJson;
+  factory _SnpLogEntryReplayData.fromJson(
+    Map<String, dynamic> json,
+  ) = _$SnpLogEntryReplayDataImpl.fromJson;
 
   @override
   ReplayDataType get type;
@@ -1386,28 +1575,34 @@ abstract class _SnpLogEntryReplayData extends SnpLogEntryReplayData {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$SnpLogEntryReplayDataImplCopyWith<_$SnpLogEntryReplayDataImpl>
+  _$$SnpLogEntryReplayDataImplCopyWith<
+    _$SnpLogEntryReplayDataImpl
+  >
   get copyWith => throw _privateConstructorUsedError;
 }
 
-AxisJsonReplayData _$AxisJsonReplayDataFromJson(Map<String, dynamic> json) {
+AxisJsonReplayData _$AxisJsonReplayDataFromJson(
+  Map<String, dynamic> json,
+) {
   return _AxisJsonReplayData.fromJson(json);
 }
 
 /// @nodoc
 mixin _$AxisJsonReplayData {
-  ReplayDataType get type => throw _privateConstructorUsedError;
+  ReplayDataType get type =>
+      throw _privateConstructorUsedError;
   DateTime get time => throw _privateConstructorUsedError;
   String get json => throw _privateConstructorUsedError;
 
   /// Serializes this AxisJsonReplayData to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of AxisJsonReplayData
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $AxisJsonReplayDataCopyWith<AxisJsonReplayData> get copyWith =>
-      throw _privateConstructorUsedError;
+  $AxisJsonReplayDataCopyWith<AxisJsonReplayData>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1415,13 +1610,24 @@ abstract class $AxisJsonReplayDataCopyWith<$Res> {
   factory $AxisJsonReplayDataCopyWith(
     AxisJsonReplayData value,
     $Res Function(AxisJsonReplayData) then,
-  ) = _$AxisJsonReplayDataCopyWithImpl<$Res, AxisJsonReplayData>;
+  ) =
+      _$AxisJsonReplayDataCopyWithImpl<
+        $Res,
+        AxisJsonReplayData
+      >;
   @useResult
-  $Res call({ReplayDataType type, DateTime time, String json});
+  $Res call({
+    ReplayDataType type,
+    DateTime time,
+    String json,
+  });
 }
 
 /// @nodoc
-class _$AxisJsonReplayDataCopyWithImpl<$Res, $Val extends AxisJsonReplayData>
+class _$AxisJsonReplayDataCopyWithImpl<
+  $Res,
+  $Val extends AxisJsonReplayData
+>
     implements $AxisJsonReplayDataCopyWith<$Res> {
   _$AxisJsonReplayDataCopyWithImpl(this._value, this._then);
 
@@ -1434,7 +1640,11 @@ class _$AxisJsonReplayDataCopyWithImpl<$Res, $Val extends AxisJsonReplayData>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? type = null, Object? time = null, Object? json = null}) {
+  $Res call({
+    Object? type = null,
+    Object? time = null,
+    Object? json = null,
+  }) {
     return _then(
       _value.copyWith(
             type:
@@ -1467,12 +1677,20 @@ abstract class _$$AxisJsonReplayDataImplCopyWith<$Res>
   ) = __$$AxisJsonReplayDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({ReplayDataType type, DateTime time, String json});
+  $Res call({
+    ReplayDataType type,
+    DateTime time,
+    String json,
+  });
 }
 
 /// @nodoc
 class __$$AxisJsonReplayDataImplCopyWithImpl<$Res>
-    extends _$AxisJsonReplayDataCopyWithImpl<$Res, _$AxisJsonReplayDataImpl>
+    extends
+        _$AxisJsonReplayDataCopyWithImpl<
+          $Res,
+          _$AxisJsonReplayDataImpl
+        >
     implements _$$AxisJsonReplayDataImplCopyWith<$Res> {
   __$$AxisJsonReplayDataImplCopyWithImpl(
     _$AxisJsonReplayDataImpl _value,
@@ -1483,7 +1701,11 @@ class __$$AxisJsonReplayDataImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? type = null, Object? time = null, Object? json = null}) {
+  $Res call({
+    Object? type = null,
+    Object? time = null,
+    Object? json = null,
+  }) {
     return _then(
       _$AxisJsonReplayDataImpl(
         type:
@@ -1515,8 +1737,9 @@ class _$AxisJsonReplayDataImpl extends _AxisJsonReplayData {
     required this.json,
   }) : super._();
 
-  factory _$AxisJsonReplayDataImpl.fromJson(Map<String, dynamic> json) =>
-      _$$AxisJsonReplayDataImplFromJson(json);
+  factory _$AxisJsonReplayDataImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$AxisJsonReplayDataImplFromJson(json);
 
   @override
   final ReplayDataType type;
@@ -1530,25 +1753,30 @@ class _$AxisJsonReplayDataImpl extends _AxisJsonReplayData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AxisJsonReplayDataImpl &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.time, time) || other.time == time) &&
-            (identical(other.json, json) || other.json == json));
+            (identical(other.type, type) ||
+                other.type == type) &&
+            (identical(other.time, time) ||
+                other.time == time) &&
+            (identical(other.json, json) ||
+                other.json == json));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, type, time, json);
+  int get hashCode =>
+      Object.hash(runtimeType, type, time, json);
 
   /// Create a copy of AxisJsonReplayData
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$AxisJsonReplayDataImplCopyWith<_$AxisJsonReplayDataImpl> get copyWith =>
-      __$$AxisJsonReplayDataImplCopyWithImpl<_$AxisJsonReplayDataImpl>(
-        this,
-        _$identity,
-      );
+  _$$AxisJsonReplayDataImplCopyWith<
+    _$AxisJsonReplayDataImpl
+  >
+  get copyWith => __$$AxisJsonReplayDataImplCopyWithImpl<
+    _$AxisJsonReplayDataImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -1556,7 +1784,8 @@ class _$AxisJsonReplayDataImpl extends _AxisJsonReplayData {
   }
 }
 
-abstract class _AxisJsonReplayData extends AxisJsonReplayData {
+abstract class _AxisJsonReplayData
+    extends AxisJsonReplayData {
   const factory _AxisJsonReplayData({
     required final ReplayDataType type,
     required final DateTime time,
@@ -1564,8 +1793,9 @@ abstract class _AxisJsonReplayData extends AxisJsonReplayData {
   }) = _$AxisJsonReplayDataImpl;
   const _AxisJsonReplayData._() : super._();
 
-  factory _AxisJsonReplayData.fromJson(Map<String, dynamic> json) =
-      _$AxisJsonReplayDataImpl.fromJson;
+  factory _AxisJsonReplayData.fromJson(
+    Map<String, dynamic> json,
+  ) = _$AxisJsonReplayDataImpl.fromJson;
 
   @override
   ReplayDataType get type;
@@ -1578,6 +1808,8 @@ abstract class _AxisJsonReplayData extends AxisJsonReplayData {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$AxisJsonReplayDataImplCopyWith<_$AxisJsonReplayDataImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$AxisJsonReplayDataImplCopyWith<
+    _$AxisJsonReplayDataImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }

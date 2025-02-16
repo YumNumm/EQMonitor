@@ -19,7 +19,8 @@ class _SystemHash {
     // ignore: parameter_assignments
     hash = 0x1fffffff & (hash + value);
     // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    hash =
+        0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
     return hash ^ (hash >> 6);
   }
 
@@ -28,13 +29,15 @@ class _SystemHash {
     hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
     // ignore: parameter_assignments
     hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+    return 0x1fffffff &
+        (hash + ((0x00003fff & hash) << 15));
   }
 }
 
 /// See also [earthquakeV1Extended].
 @ProviderFor(earthquakeV1Extended)
-const earthquakeV1ExtendedProvider = EarthquakeV1ExtendedFamily();
+const earthquakeV1ExtendedProvider =
+    EarthquakeV1ExtendedFamily();
 
 /// See also [earthquakeV1Extended].
 class EarthquakeV1ExtendedFamily
@@ -54,15 +57,19 @@ class EarthquakeV1ExtendedFamily
     return call(provider.data);
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  static const Iterable<ProviderOrFamily>? _dependencies =
+      null;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+  Iterable<ProviderOrFamily>? get dependencies =>
+      _dependencies;
 
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  static const Iterable<ProviderOrFamily>?
+  _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+  Iterable<ProviderOrFamily>?
+  get allTransitiveDependencies =>
       _allTransitiveDependencies;
 
   @override
@@ -71,20 +78,26 @@ class EarthquakeV1ExtendedFamily
 
 /// See also [earthquakeV1Extended].
 class EarthquakeV1ExtendedProvider
-    extends AutoDisposeFutureProvider<EarthquakeV1Extended> {
+    extends
+        AutoDisposeFutureProvider<EarthquakeV1Extended> {
   /// See also [earthquakeV1Extended].
   EarthquakeV1ExtendedProvider(EarthquakeV1 data)
     : this._internal(
-        (ref) => earthquakeV1Extended(ref as EarthquakeV1ExtendedRef, data),
+        (ref) => earthquakeV1Extended(
+          ref as EarthquakeV1ExtendedRef,
+          data,
+        ),
         from: earthquakeV1ExtendedProvider,
         name: r'earthquakeV1ExtendedProvider',
         debugGetCreateSourceHash:
             const bool.fromEnvironment('dart.vm.product')
                 ? null
                 : _$earthquakeV1ExtendedHash,
-        dependencies: EarthquakeV1ExtendedFamily._dependencies,
+        dependencies:
+            EarthquakeV1ExtendedFamily._dependencies,
         allTransitiveDependencies:
-            EarthquakeV1ExtendedFamily._allTransitiveDependencies,
+            EarthquakeV1ExtendedFamily
+                ._allTransitiveDependencies,
         data: data,
       );
 
@@ -102,7 +115,9 @@ class EarthquakeV1ExtendedProvider
 
   @override
   Override overrideWith(
-    FutureOr<EarthquakeV1Extended> Function(EarthquakeV1ExtendedRef provider)
+    FutureOr<EarthquakeV1Extended> Function(
+      EarthquakeV1ExtendedRef provider,
+    )
     create,
   ) {
     return ProviderOverride(
@@ -120,13 +135,15 @@ class EarthquakeV1ExtendedProvider
   }
 
   @override
-  AutoDisposeFutureProviderElement<EarthquakeV1Extended> createElement() {
+  AutoDisposeFutureProviderElement<EarthquakeV1Extended>
+  createElement() {
     return _EarthquakeV1ExtendedProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is EarthquakeV1ExtendedProvider && other.data == data;
+    return other is EarthquakeV1ExtendedProvider &&
+        other.data == data;
   }
 
   @override
@@ -147,19 +164,26 @@ mixin EarthquakeV1ExtendedRef
 }
 
 class _EarthquakeV1ExtendedProviderElement
-    extends AutoDisposeFutureProviderElement<EarthquakeV1Extended>
+    extends
+        AutoDisposeFutureProviderElement<
+          EarthquakeV1Extended
+        >
     with EarthquakeV1ExtendedRef {
   _EarthquakeV1ExtendedProviderElement(super.provider);
 
   @override
-  EarthquakeV1 get data => (origin as EarthquakeV1ExtendedProvider).data;
+  EarthquakeV1 get data =>
+      (origin as EarthquakeV1ExtendedProvider).data;
 }
 
 String _$earthquakeHistoryNotifierHash() =>
     r'6a341ff23d02ef7a6c7904cbb565b160cc853195';
 
 abstract class _$EarthquakeHistoryNotifier
-    extends BuildlessAutoDisposeAsyncNotifier<EarthquakeHistoryNotifierState> {
+    extends
+        BuildlessAutoDisposeAsyncNotifier<
+          EarthquakeHistoryNotifierState
+        > {
   late final EarthquakeHistoryParameter parameter;
 
   FutureOr<EarthquakeHistoryNotifierState> build(
@@ -169,16 +193,20 @@ abstract class _$EarthquakeHistoryNotifier
 
 /// See also [EarthquakeHistoryNotifier].
 @ProviderFor(EarthquakeHistoryNotifier)
-const earthquakeHistoryNotifierProvider = EarthquakeHistoryNotifierFamily();
+const earthquakeHistoryNotifierProvider =
+    EarthquakeHistoryNotifierFamily();
 
 /// See also [EarthquakeHistoryNotifier].
 class EarthquakeHistoryNotifierFamily
-    extends Family<AsyncValue<EarthquakeHistoryNotifierState>> {
+    extends
+        Family<AsyncValue<EarthquakeHistoryNotifierState>> {
   /// See also [EarthquakeHistoryNotifier].
   const EarthquakeHistoryNotifierFamily();
 
   /// See also [EarthquakeHistoryNotifier].
-  EarthquakeHistoryNotifierProvider call(EarthquakeHistoryParameter parameter) {
+  EarthquakeHistoryNotifierProvider call(
+    EarthquakeHistoryParameter parameter,
+  ) {
     return EarthquakeHistoryNotifierProvider(parameter);
   }
 
@@ -189,15 +217,19 @@ class EarthquakeHistoryNotifierFamily
     return call(provider.parameter);
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  static const Iterable<ProviderOrFamily>? _dependencies =
+      null;
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+  Iterable<ProviderOrFamily>? get dependencies =>
+      _dependencies;
 
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  static const Iterable<ProviderOrFamily>?
+  _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+  Iterable<ProviderOrFamily>?
+  get allTransitiveDependencies =>
       _allTransitiveDependencies;
 
   @override
@@ -212,18 +244,23 @@ class EarthquakeHistoryNotifierProvider
           EarthquakeHistoryNotifierState
         > {
   /// See also [EarthquakeHistoryNotifier].
-  EarthquakeHistoryNotifierProvider(EarthquakeHistoryParameter parameter)
-    : this._internal(
-        () => EarthquakeHistoryNotifier()..parameter = parameter,
+  EarthquakeHistoryNotifierProvider(
+    EarthquakeHistoryParameter parameter,
+  ) : this._internal(
+        () =>
+            EarthquakeHistoryNotifier()
+              ..parameter = parameter,
         from: earthquakeHistoryNotifierProvider,
         name: r'earthquakeHistoryNotifierProvider',
         debugGetCreateSourceHash:
             const bool.fromEnvironment('dart.vm.product')
                 ? null
                 : _$earthquakeHistoryNotifierHash,
-        dependencies: EarthquakeHistoryNotifierFamily._dependencies,
+        dependencies:
+            EarthquakeHistoryNotifierFamily._dependencies,
         allTransitiveDependencies:
-            EarthquakeHistoryNotifierFamily._allTransitiveDependencies,
+            EarthquakeHistoryNotifierFamily
+                ._allTransitiveDependencies,
         parameter: parameter,
       );
 
@@ -247,7 +284,9 @@ class EarthquakeHistoryNotifierProvider
   }
 
   @override
-  Override overrideWith(EarthquakeHistoryNotifier Function() create) {
+  Override overrideWith(
+    EarthquakeHistoryNotifier Function() create,
+  ) {
     return ProviderOverride(
       origin: this,
       override: EarthquakeHistoryNotifierProvider._internal(
@@ -289,7 +328,10 @@ class EarthquakeHistoryNotifierProvider
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 mixin EarthquakeHistoryNotifierRef
-    on AutoDisposeAsyncNotifierProviderRef<EarthquakeHistoryNotifierState> {
+    on
+        AutoDisposeAsyncNotifierProviderRef<
+          EarthquakeHistoryNotifierState
+        > {
   /// The parameter `parameter` of this provider.
   EarthquakeHistoryParameter get parameter;
 }
@@ -305,7 +347,8 @@ class _EarthquakeHistoryNotifierProviderElement
 
   @override
   EarthquakeHistoryParameter get parameter =>
-      (origin as EarthquakeHistoryNotifierProvider).parameter;
+      (origin as EarthquakeHistoryNotifierProvider)
+          .parameter;
 }
 
 // ignore_for_file: type=lint

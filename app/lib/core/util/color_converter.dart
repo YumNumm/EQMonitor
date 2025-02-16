@@ -3,7 +3,8 @@ import 'dart:ui';
 import 'package:eqmonitor/feature/map/data/provider/map_style_util.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-class ColorConverter implements JsonConverter<Color, String> {
+class ColorConverter
+    implements JsonConverter<Color, String> {
   const ColorConverter();
 
   @override

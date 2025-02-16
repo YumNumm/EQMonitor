@@ -7,19 +7,28 @@ import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_hi
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class HomeEarthquakeHistorySheet extends HookConsumerWidget {
+class HomeEarthquakeHistorySheet
+    extends HookConsumerWidget {
   const HomeEarthquakeHistorySheet({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(
-      earthquakeHistoryNotifierProvider(const EarthquakeHistoryParameter()),
+      earthquakeHistoryNotifierProvider(
+        const EarthquakeHistoryParameter(),
+      ),
     );
 
     return Card.outlined(
-      color: Theme.of(context).colorScheme.surfaceContainerHigh,
+      color:
+          Theme.of(
+            context,
+          ).colorScheme.surfaceContainerHigh,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 8,
+          vertical: 4,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,9 +38,15 @@ class HomeEarthquakeHistorySheet extends HookConsumerWidget {
               AsyncData(:final value) =>
                 value.$1.isEmpty
                     ? const EarthquakeHistoryNotFound()
-                    : _EarthquakeList(earthquakes: value.$1),
-              AsyncError(:final error) => Center(child: Text(error.toString())),
-              _ => const Center(child: CircularProgressIndicator.adaptive()),
+                    : _EarthquakeList(
+                      earthquakes: value.$1,
+                    ),
+              AsyncError(:final error) => Center(
+                child: Text(error.toString()),
+              ),
+              _ => const Center(
+                child: CircularProgressIndicator.adaptive(),
+              ),
             },
           ],
         ),
@@ -61,12 +76,16 @@ class _Header extends StatelessWidget {
         FilledButton.tonalIcon(
           style: FilledButton.styleFrom(
             visualDensity: VisualDensity.compact,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+            ),
             backgroundColor: colorScheme.secondaryContainer,
-            foregroundColor: colorScheme.onSecondaryContainer,
+            foregroundColor:
+                colorScheme.onSecondaryContainer,
           ),
           onPressed:
-              () async => const EarthquakeHistoryRoute().push<void>(context),
+              () async => const EarthquakeHistoryRoute()
+                  .push<void>(context),
           icon: const Icon(Icons.arrow_forward),
           label: const Text('さらに表示'),
         ),
@@ -92,17 +111,21 @@ class _EarthquakeList extends StatelessWidget {
                 (item) => InkWell(
                   borderRadius: BorderRadius.circular(12),
                   onTap:
-                      () async => EarthquakeHistoryDetailsRoute(
-                        eventId: item.eventId,
-                      ).push<void>(context),
+                      () async =>
+                          EarthquakeHistoryDetailsRoute(
+                            eventId: item.eventId,
+                          ).push<void>(context),
                   child: EarthquakeHistoryListTile(
                     visualDensity: VisualDensity.compact,
                     item: item,
                     showBackgroundColor: false,
                     intensityIconSize: 32,
-                    titleTextColor: colorScheme.onSurfaceVariant,
-                    descriptionTextColor: colorScheme.onSurfaceVariant,
-                    magnitudeTextColor: colorScheme.onPrimaryContainer,
+                    titleTextColor:
+                        colorScheme.onSurfaceVariant,
+                    descriptionTextColor:
+                        colorScheme.onSurfaceVariant,
+                    magnitudeTextColor:
+                        colorScheme.onPrimaryContainer,
                   ),
                 ),
               )

@@ -17,8 +17,9 @@ class TsunamiParameter with _$TsunamiParameter {
     required List<TsunamiParameterItem> items,
   }) = _TsunamiParameter;
 
-  factory TsunamiParameter.fromJson(Map<String, dynamic> json) =>
-      _$TsunamiParameterFromJson(json);
+  factory TsunamiParameter.fromJson(
+    Map<String, dynamic> json,
+  ) => _$TsunamiParameterFromJson(json);
 }
 
 @freezed
@@ -30,12 +31,19 @@ class TsunamiParameterItem with _$TsunamiParameterItem {
     required String name,
     required String kana,
     required String owner,
-    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
+    @JsonKey(
+      fromJson: doubleFromString,
+      toJson: doubleToString,
+    )
     required double latitude,
-    @JsonKey(fromJson: doubleFromString, toJson: doubleToString)
+    @JsonKey(
+      fromJson: doubleFromString,
+      toJson: doubleToString,
+    )
     required double longitude,
   }) = _TsunamiParameterItem;
 
-  factory TsunamiParameterItem.fromJson(Map<String, dynamic> json) =>
-      _$TsunamiParameterItemFromJson(json);
+  factory TsunamiParameterItem.fromJson(
+    Map<String, dynamic> json,
+  ) => _$TsunamiParameterItemFromJson(json);
 }

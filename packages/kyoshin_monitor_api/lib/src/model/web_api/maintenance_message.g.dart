@@ -15,14 +15,25 @@ _$MaintenanceMessageImpl _$$MaintenanceMessageImplFromJson(
   json,
   ($checkedConvert) {
     final val = _$MaintenanceMessageImpl(
-      message: $checkedConvert('message', (v) => v as String?),
+      message: $checkedConvert(
+        'message',
+        (v) => v as String?,
+      ),
       security: $checkedConvert(
         'security',
-        (v) => v == null ? null : Security.fromJson(v as Map<String, dynamic>),
+        (v) =>
+            v == null
+                ? null
+                : Security.fromJson(
+                  v as Map<String, dynamic>,
+                ),
       ),
       type: $checkedConvert(
         'type',
-        (v) => $enumDecodeNullable(_$MaintenanceMessageTypeEnumMap, v),
+        (v) => $enumDecodeNullable(
+          _$MaintenanceMessageTypeEnumMap,
+          v,
+        ),
       ),
       requestTime: $checkedConvert(
         'request_time',
@@ -30,7 +41,12 @@ _$MaintenanceMessageImpl _$$MaintenanceMessageImplFromJson(
       ),
       result: $checkedConvert(
         'result',
-        (v) => v == null ? null : Result.fromJson(v as Map<String, dynamic>),
+        (v) =>
+            v == null
+                ? null
+                : Result.fromJson(
+                  v as Map<String, dynamic>,
+                ),
       ),
     );
     return val;

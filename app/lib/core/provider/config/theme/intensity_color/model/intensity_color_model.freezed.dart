@@ -15,32 +15,46 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-IntensityColorModel _$IntensityColorModelFromJson(Map<String, dynamic> json) {
+IntensityColorModel _$IntensityColorModelFromJson(
+  Map<String, dynamic> json,
+) {
   return _IntensityColorModel.fromJson(json);
 }
 
 /// @nodoc
 mixin _$IntensityColorModel {
-  TextColorModel get unknown => throw _privateConstructorUsedError;
-  TextColorModel get zero => throw _privateConstructorUsedError;
-  TextColorModel get one => throw _privateConstructorUsedError;
-  TextColorModel get two => throw _privateConstructorUsedError;
-  TextColorModel get three => throw _privateConstructorUsedError;
-  TextColorModel get four => throw _privateConstructorUsedError;
-  TextColorModel get fiveLower => throw _privateConstructorUsedError;
-  TextColorModel get fiveUpper => throw _privateConstructorUsedError;
-  TextColorModel get sixLower => throw _privateConstructorUsedError;
-  TextColorModel get sixUpper => throw _privateConstructorUsedError;
-  TextColorModel get seven => throw _privateConstructorUsedError;
+  TextColorModel get unknown =>
+      throw _privateConstructorUsedError;
+  TextColorModel get zero =>
+      throw _privateConstructorUsedError;
+  TextColorModel get one =>
+      throw _privateConstructorUsedError;
+  TextColorModel get two =>
+      throw _privateConstructorUsedError;
+  TextColorModel get three =>
+      throw _privateConstructorUsedError;
+  TextColorModel get four =>
+      throw _privateConstructorUsedError;
+  TextColorModel get fiveLower =>
+      throw _privateConstructorUsedError;
+  TextColorModel get fiveUpper =>
+      throw _privateConstructorUsedError;
+  TextColorModel get sixLower =>
+      throw _privateConstructorUsedError;
+  TextColorModel get sixUpper =>
+      throw _privateConstructorUsedError;
+  TextColorModel get seven =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this IntensityColorModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of IntensityColorModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $IntensityColorModelCopyWith<IntensityColorModel> get copyWith =>
-      throw _privateConstructorUsedError;
+  $IntensityColorModelCopyWith<IntensityColorModel>
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -48,7 +62,11 @@ abstract class $IntensityColorModelCopyWith<$Res> {
   factory $IntensityColorModelCopyWith(
     IntensityColorModel value,
     $Res Function(IntensityColorModel) then,
-  ) = _$IntensityColorModelCopyWithImpl<$Res, IntensityColorModel>;
+  ) =
+      _$IntensityColorModelCopyWithImpl<
+        $Res,
+        IntensityColorModel
+      >;
   @useResult
   $Res call({
     TextColorModel unknown,
@@ -78,9 +96,15 @@ abstract class $IntensityColorModelCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$IntensityColorModelCopyWithImpl<$Res, $Val extends IntensityColorModel>
+class _$IntensityColorModelCopyWithImpl<
+  $Res,
+  $Val extends IntensityColorModel
+>
     implements $IntensityColorModelCopyWith<$Res> {
-  _$IntensityColorModelCopyWithImpl(this._value, this._then);
+  _$IntensityColorModelCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
@@ -171,7 +195,9 @@ class _$IntensityColorModelCopyWithImpl<$Res, $Val extends IntensityColorModel>
   @override
   @pragma('vm:prefer-inline')
   $TextColorModelCopyWith<$Res> get unknown {
-    return $TextColorModelCopyWith<$Res>(_value.unknown, (value) {
+    return $TextColorModelCopyWith<$Res>(_value.unknown, (
+      value,
+    ) {
       return _then(_value.copyWith(unknown: value) as $Val);
     });
   }
@@ -181,7 +207,9 @@ class _$IntensityColorModelCopyWithImpl<$Res, $Val extends IntensityColorModel>
   @override
   @pragma('vm:prefer-inline')
   $TextColorModelCopyWith<$Res> get zero {
-    return $TextColorModelCopyWith<$Res>(_value.zero, (value) {
+    return $TextColorModelCopyWith<$Res>(_value.zero, (
+      value,
+    ) {
       return _then(_value.copyWith(zero: value) as $Val);
     });
   }
@@ -191,7 +219,9 @@ class _$IntensityColorModelCopyWithImpl<$Res, $Val extends IntensityColorModel>
   @override
   @pragma('vm:prefer-inline')
   $TextColorModelCopyWith<$Res> get one {
-    return $TextColorModelCopyWith<$Res>(_value.one, (value) {
+    return $TextColorModelCopyWith<$Res>(_value.one, (
+      value,
+    ) {
       return _then(_value.copyWith(one: value) as $Val);
     });
   }
@@ -201,7 +231,9 @@ class _$IntensityColorModelCopyWithImpl<$Res, $Val extends IntensityColorModel>
   @override
   @pragma('vm:prefer-inline')
   $TextColorModelCopyWith<$Res> get two {
-    return $TextColorModelCopyWith<$Res>(_value.two, (value) {
+    return $TextColorModelCopyWith<$Res>(_value.two, (
+      value,
+    ) {
       return _then(_value.copyWith(two: value) as $Val);
     });
   }
@@ -211,7 +243,9 @@ class _$IntensityColorModelCopyWithImpl<$Res, $Val extends IntensityColorModel>
   @override
   @pragma('vm:prefer-inline')
   $TextColorModelCopyWith<$Res> get three {
-    return $TextColorModelCopyWith<$Res>(_value.three, (value) {
+    return $TextColorModelCopyWith<$Res>(_value.three, (
+      value,
+    ) {
       return _then(_value.copyWith(three: value) as $Val);
     });
   }
@@ -221,7 +255,9 @@ class _$IntensityColorModelCopyWithImpl<$Res, $Val extends IntensityColorModel>
   @override
   @pragma('vm:prefer-inline')
   $TextColorModelCopyWith<$Res> get four {
-    return $TextColorModelCopyWith<$Res>(_value.four, (value) {
+    return $TextColorModelCopyWith<$Res>(_value.four, (
+      value,
+    ) {
       return _then(_value.copyWith(four: value) as $Val);
     });
   }
@@ -231,8 +267,12 @@ class _$IntensityColorModelCopyWithImpl<$Res, $Val extends IntensityColorModel>
   @override
   @pragma('vm:prefer-inline')
   $TextColorModelCopyWith<$Res> get fiveLower {
-    return $TextColorModelCopyWith<$Res>(_value.fiveLower, (value) {
-      return _then(_value.copyWith(fiveLower: value) as $Val);
+    return $TextColorModelCopyWith<$Res>(_value.fiveLower, (
+      value,
+    ) {
+      return _then(
+        _value.copyWith(fiveLower: value) as $Val,
+      );
     });
   }
 
@@ -241,8 +281,12 @@ class _$IntensityColorModelCopyWithImpl<$Res, $Val extends IntensityColorModel>
   @override
   @pragma('vm:prefer-inline')
   $TextColorModelCopyWith<$Res> get fiveUpper {
-    return $TextColorModelCopyWith<$Res>(_value.fiveUpper, (value) {
-      return _then(_value.copyWith(fiveUpper: value) as $Val);
+    return $TextColorModelCopyWith<$Res>(_value.fiveUpper, (
+      value,
+    ) {
+      return _then(
+        _value.copyWith(fiveUpper: value) as $Val,
+      );
     });
   }
 
@@ -251,8 +295,12 @@ class _$IntensityColorModelCopyWithImpl<$Res, $Val extends IntensityColorModel>
   @override
   @pragma('vm:prefer-inline')
   $TextColorModelCopyWith<$Res> get sixLower {
-    return $TextColorModelCopyWith<$Res>(_value.sixLower, (value) {
-      return _then(_value.copyWith(sixLower: value) as $Val);
+    return $TextColorModelCopyWith<$Res>(_value.sixLower, (
+      value,
+    ) {
+      return _then(
+        _value.copyWith(sixLower: value) as $Val,
+      );
     });
   }
 
@@ -261,8 +309,12 @@ class _$IntensityColorModelCopyWithImpl<$Res, $Val extends IntensityColorModel>
   @override
   @pragma('vm:prefer-inline')
   $TextColorModelCopyWith<$Res> get sixUpper {
-    return $TextColorModelCopyWith<$Res>(_value.sixUpper, (value) {
-      return _then(_value.copyWith(sixUpper: value) as $Val);
+    return $TextColorModelCopyWith<$Res>(_value.sixUpper, (
+      value,
+    ) {
+      return _then(
+        _value.copyWith(sixUpper: value) as $Val,
+      );
     });
   }
 
@@ -271,7 +323,9 @@ class _$IntensityColorModelCopyWithImpl<$Res, $Val extends IntensityColorModel>
   @override
   @pragma('vm:prefer-inline')
   $TextColorModelCopyWith<$Res> get seven {
-    return $TextColorModelCopyWith<$Res>(_value.seven, (value) {
+    return $TextColorModelCopyWith<$Res>(_value.seven, (
+      value,
+    ) {
       return _then(_value.copyWith(seven: value) as $Val);
     });
   }
@@ -326,7 +380,11 @@ abstract class _$$IntensityColorModelImplCopyWith<$Res>
 
 /// @nodoc
 class __$$IntensityColorModelImplCopyWithImpl<$Res>
-    extends _$IntensityColorModelCopyWithImpl<$Res, _$IntensityColorModelImpl>
+    extends
+        _$IntensityColorModelCopyWithImpl<
+          $Res,
+          _$IntensityColorModelImpl
+        >
     implements _$$IntensityColorModelImplCopyWith<$Res> {
   __$$IntensityColorModelImplCopyWithImpl(
     _$IntensityColorModelImpl _value,
@@ -414,7 +472,8 @@ class __$$IntensityColorModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$IntensityColorModelImpl implements _IntensityColorModel {
+class _$IntensityColorModelImpl
+    implements _IntensityColorModel {
   const _$IntensityColorModelImpl({
     required this.unknown,
     required this.zero,
@@ -429,8 +488,9 @@ class _$IntensityColorModelImpl implements _IntensityColorModel {
     required this.seven,
   });
 
-  factory _$IntensityColorModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$IntensityColorModelImplFromJson(json);
+  factory _$IntensityColorModelImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$IntensityColorModelImplFromJson(json);
 
   @override
   final TextColorModel unknown;
@@ -465,12 +525,18 @@ class _$IntensityColorModelImpl implements _IntensityColorModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$IntensityColorModelImpl &&
-            (identical(other.unknown, unknown) || other.unknown == unknown) &&
-            (identical(other.zero, zero) || other.zero == zero) &&
-            (identical(other.one, one) || other.one == one) &&
-            (identical(other.two, two) || other.two == two) &&
-            (identical(other.three, three) || other.three == three) &&
-            (identical(other.four, four) || other.four == four) &&
+            (identical(other.unknown, unknown) ||
+                other.unknown == unknown) &&
+            (identical(other.zero, zero) ||
+                other.zero == zero) &&
+            (identical(other.one, one) ||
+                other.one == one) &&
+            (identical(other.two, two) ||
+                other.two == two) &&
+            (identical(other.three, three) ||
+                other.three == three) &&
+            (identical(other.four, four) ||
+                other.four == four) &&
             (identical(other.fiveLower, fiveLower) ||
                 other.fiveLower == fiveLower) &&
             (identical(other.fiveUpper, fiveUpper) ||
@@ -479,7 +545,8 @@ class _$IntensityColorModelImpl implements _IntensityColorModel {
                 other.sixLower == sixLower) &&
             (identical(other.sixUpper, sixUpper) ||
                 other.sixUpper == sixUpper) &&
-            (identical(other.seven, seven) || other.seven == seven));
+            (identical(other.seven, seven) ||
+                other.seven == seven));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -504,11 +571,12 @@ class _$IntensityColorModelImpl implements _IntensityColorModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$IntensityColorModelImplCopyWith<_$IntensityColorModelImpl> get copyWith =>
-      __$$IntensityColorModelImplCopyWithImpl<_$IntensityColorModelImpl>(
-        this,
-        _$identity,
-      );
+  _$$IntensityColorModelImplCopyWith<
+    _$IntensityColorModelImpl
+  >
+  get copyWith => __$$IntensityColorModelImplCopyWithImpl<
+    _$IntensityColorModelImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -516,7 +584,8 @@ class _$IntensityColorModelImpl implements _IntensityColorModel {
   }
 }
 
-abstract class _IntensityColorModel implements IntensityColorModel {
+abstract class _IntensityColorModel
+    implements IntensityColorModel {
   const factory _IntensityColorModel({
     required final TextColorModel unknown,
     required final TextColorModel zero,
@@ -531,8 +600,9 @@ abstract class _IntensityColorModel implements IntensityColorModel {
     required final TextColorModel seven,
   }) = _$IntensityColorModelImpl;
 
-  factory _IntensityColorModel.fromJson(Map<String, dynamic> json) =
-      _$IntensityColorModelImpl.fromJson;
+  factory _IntensityColorModel.fromJson(
+    Map<String, dynamic> json,
+  ) = _$IntensityColorModelImpl.fromJson;
 
   @override
   TextColorModel get unknown;
@@ -561,23 +631,30 @@ abstract class _IntensityColorModel implements IntensityColorModel {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$IntensityColorModelImplCopyWith<_$IntensityColorModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$IntensityColorModelImplCopyWith<
+    _$IntensityColorModelImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }
 
-TextColorModel _$TextColorModelFromJson(Map<String, dynamic> json) {
+TextColorModel _$TextColorModelFromJson(
+  Map<String, dynamic> json,
+) {
   return _TextColorModel.fromJson(json);
 }
 
 /// @nodoc
 mixin _$TextColorModel {
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  Color get foreground => throw _privateConstructorUsedError;
+  Color get foreground =>
+      throw _privateConstructorUsedError;
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  Color get background => throw _privateConstructorUsedError;
+  Color get background =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this TextColorModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of TextColorModel
   /// with the given fields replaced by the non-null parameter values.
@@ -594,13 +671,18 @@ abstract class $TextColorModelCopyWith<$Res> {
   ) = _$TextColorModelCopyWithImpl<$Res, TextColorModel>;
   @useResult
   $Res call({
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color foreground,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color background,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+    Color foreground,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+    Color background,
   });
 }
 
 /// @nodoc
-class _$TextColorModelCopyWithImpl<$Res, $Val extends TextColorModel>
+class _$TextColorModelCopyWithImpl<
+  $Res,
+  $Val extends TextColorModel
+>
     implements $TextColorModelCopyWith<$Res> {
   _$TextColorModelCopyWithImpl(this._value, this._then);
 
@@ -613,7 +695,10 @@ class _$TextColorModelCopyWithImpl<$Res, $Val extends TextColorModel>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? foreground = null, Object? background = null}) {
+  $Res call({
+    Object? foreground = null,
+    Object? background = null,
+  }) {
     return _then(
       _value.copyWith(
             foreground:
@@ -642,14 +727,20 @@ abstract class _$$TextColorModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color foreground,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color background,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+    Color foreground,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
+    Color background,
   });
 }
 
 /// @nodoc
 class __$$TextColorModelImplCopyWithImpl<$Res>
-    extends _$TextColorModelCopyWithImpl<$Res, _$TextColorModelImpl>
+    extends
+        _$TextColorModelCopyWithImpl<
+          $Res,
+          _$TextColorModelImpl
+        >
     implements _$$TextColorModelImplCopyWith<$Res> {
   __$$TextColorModelImplCopyWithImpl(
     _$TextColorModelImpl _value,
@@ -660,7 +751,10 @@ class __$$TextColorModelImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? foreground = null, Object? background = null}) {
+  $Res call({
+    Object? foreground = null,
+    Object? background = null,
+  }) {
     return _then(
       _$TextColorModelImpl(
         foreground:
@@ -688,8 +782,9 @@ class _$TextColorModelImpl implements _TextColorModel {
     required this.background,
   });
 
-  factory _$TextColorModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TextColorModelImplFromJson(json);
+  factory _$TextColorModelImpl.fromJson(
+    Map<String, dynamic> json,
+  ) => _$$TextColorModelImplFromJson(json);
 
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
@@ -716,18 +811,18 @@ class _$TextColorModelImpl implements _TextColorModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, foreground, background);
+  int get hashCode =>
+      Object.hash(runtimeType, foreground, background);
 
   /// Create a copy of TextColorModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$TextColorModelImplCopyWith<_$TextColorModelImpl> get copyWith =>
-      __$$TextColorModelImplCopyWithImpl<_$TextColorModelImpl>(
-        this,
-        _$identity,
-      );
+  _$$TextColorModelImplCopyWith<_$TextColorModelImpl>
+  get copyWith => __$$TextColorModelImplCopyWithImpl<
+    _$TextColorModelImpl
+  >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -743,8 +838,9 @@ abstract class _TextColorModel implements TextColorModel {
     required final Color background,
   }) = _$TextColorModelImpl;
 
-  factory _TextColorModel.fromJson(Map<String, dynamic> json) =
-      _$TextColorModelImpl.fromJson;
+  factory _TextColorModel.fromJson(
+    Map<String, dynamic> json,
+  ) = _$TextColorModelImpl.fromJson;
 
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
@@ -757,6 +853,6 @@ abstract class _TextColorModel implements TextColorModel {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$TextColorModelImplCopyWith<_$TextColorModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$TextColorModelImplCopyWith<_$TextColorModelImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }

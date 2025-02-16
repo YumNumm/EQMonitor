@@ -14,6 +14,7 @@ class DevicesEewSettings with _$DevicesEewSettings {
     required DateTime updatedAt,
   }) = _DevicesEewSettings;
 
-  factory DevicesEewSettings.fromJson(Map<String, dynamic> json) =>
-      _$DevicesEewSettingsFromJson(json);
+  factory DevicesEewSettings.fromJson(
+    Map<String, dynamic> json,
+  ) => _$DevicesEewSettingsFromJson(json);
 }

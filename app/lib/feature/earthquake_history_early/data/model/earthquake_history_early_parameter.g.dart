@@ -18,9 +18,15 @@ _$$EarthquakeHistoryEarlyParameterImplFromJson(
     final val = _$EarthquakeHistoryEarlyParameterImpl(
       sort: $checkedConvert(
         'sort',
-        (v) => $enumDecode(_$EarthquakeEarlySortTypeEnumMap, v),
+        (v) => $enumDecode(
+          _$EarthquakeEarlySortTypeEnumMap,
+          v,
+        ),
       ),
-      ascending: $checkedConvert('ascending', (v) => v as bool),
+      ascending: $checkedConvert(
+        'ascending',
+        (v) => v as bool,
+      ),
       magnitudeLte: $checkedConvert(
         'magnitude_lte',
         (v) => (v as num?)?.toDouble(),
@@ -29,23 +35,33 @@ _$$EarthquakeHistoryEarlyParameterImplFromJson(
         'magnitude_gte',
         (v) => (v as num?)?.toDouble(),
       ),
-      depthLte: $checkedConvert('depth_lte', (v) => (v as num?)?.toDouble()),
-      depthGte: $checkedConvert('depth_gte', (v) => (v as num?)?.toDouble()),
+      depthLte: $checkedConvert(
+        'depth_lte',
+        (v) => (v as num?)?.toDouble(),
+      ),
+      depthGte: $checkedConvert(
+        'depth_gte',
+        (v) => (v as num?)?.toDouble(),
+      ),
       intensityLte: $checkedConvert(
         'intensity_lte',
-        (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
+        (v) =>
+            $enumDecodeNullable(_$JmaIntensityEnumMap, v),
       ),
       intensityGte: $checkedConvert(
         'intensity_gte',
-        (v) => $enumDecodeNullable(_$JmaIntensityEnumMap, v),
+        (v) =>
+            $enumDecodeNullable(_$JmaIntensityEnumMap, v),
       ),
       originTimeLte: $checkedConvert(
         'origin_time_lte',
-        (v) => v == null ? null : DateTime.parse(v as String),
+        (v) =>
+            v == null ? null : DateTime.parse(v as String),
       ),
       originTimeGte: $checkedConvert(
         'origin_time_gte',
-        (v) => v == null ? null : DateTime.parse(v as String),
+        (v) =>
+            v == null ? null : DateTime.parse(v as String),
       ),
     );
     return val;
@@ -62,7 +78,8 @@ _$$EarthquakeHistoryEarlyParameterImplFromJson(
   },
 );
 
-Map<String, dynamic> _$$EarthquakeHistoryEarlyParameterImplToJson(
+Map<String, dynamic>
+_$$EarthquakeHistoryEarlyParameterImplToJson(
   _$EarthquakeHistoryEarlyParameterImpl instance,
 ) => <String, dynamic>{
   'sort': _$EarthquakeEarlySortTypeEnumMap[instance.sort]!,
@@ -71,10 +88,14 @@ Map<String, dynamic> _$$EarthquakeHistoryEarlyParameterImplToJson(
   'magnitude_gte': instance.magnitudeGte,
   'depth_lte': instance.depthLte,
   'depth_gte': instance.depthGte,
-  'intensity_lte': _$JmaIntensityEnumMap[instance.intensityLte],
-  'intensity_gte': _$JmaIntensityEnumMap[instance.intensityGte],
-  'origin_time_lte': instance.originTimeLte?.toIso8601String(),
-  'origin_time_gte': instance.originTimeGte?.toIso8601String(),
+  'intensity_lte':
+      _$JmaIntensityEnumMap[instance.intensityLte],
+  'intensity_gte':
+      _$JmaIntensityEnumMap[instance.intensityGte],
+  'origin_time_lte':
+      instance.originTimeLte?.toIso8601String(),
+  'origin_time_gte':
+      instance.originTimeGte?.toIso8601String(),
 };
 
 const _$EarthquakeEarlySortTypeEnumMap = {
