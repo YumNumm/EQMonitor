@@ -1,7 +1,7 @@
 import 'package:eqmonitor/core/utils/map_camera_position_helper.dart';
-import 'package:eqmonitor/feature/home/component/map/home_map_content.dart';
-import 'package:eqmonitor/feature/home/component/map/home_map_layer_modal.dart';
-import 'package:eqmonitor/feature/home/component/map/kyoshin_monitor_scale_card.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/home_map_content.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/home_map_layer_modal.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/kyoshin_monitor_scale_card.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/components/kyoshin_monitor_status_card.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_settings_modal.dart';

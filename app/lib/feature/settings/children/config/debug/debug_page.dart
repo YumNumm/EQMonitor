@@ -3,7 +3,7 @@ import 'package:eqmonitor/core/provider/notification_token.dart';
 import 'package:eqmonitor/core/provider/telegram_url/provider/telegram_url_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/core/util/env.dart';
-import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
+import 'package:eqmonitor/feature/home/ui/component/sheet/sheet_header.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/hypocenter_icon/hypocenter_icon_page.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/kyoshin_monitor/debug_kyoshin_monitor.dart';
 import 'package:eqmonitor/feature/settings/children/config/debug/playground/playground_page.dart';

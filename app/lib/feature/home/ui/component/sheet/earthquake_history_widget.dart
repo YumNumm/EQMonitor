@@ -4,7 +4,7 @@ import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/earthquake_history_notifier.dart';
 import 'package:eqmonitor/feature/earthquake_history/data/model/earthquake_history_parameter.dart';
 import 'package:eqmonitor/feature/earthquake_history/ui/components/earthquake_history_list_tile.dart';
-import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
+import 'package:eqmonitor/feature/home/ui/component/sheet/sheet_header.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
