@@ -60,7 +60,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
                 int.tryParse(e.code) == item.epicenterCode,
           )
           ?.name;
-    }, [item]);
+    }, [item],);
     final hypoDetailName = useMemoized(
       () => codeTable.areaEpicenterDetail.items
           .firstWhereOrNull(

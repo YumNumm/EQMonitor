@@ -138,7 +138,7 @@ class EstimatedIntensity extends _$EstimatedIntensity {
             regionCode: region.code,
             cityCode: city.code,
             station: station,
-          ));
+          ),);
         }
       }
     }
@@ -154,7 +154,7 @@ class EstimatedIntensity extends _$EstimatedIntensity {
         lat: point.station.latitude,
         lon: point.station.longitude,
         arv400: point.station.arv400,
-      ));
+      ),);
     }
     return result;
   }

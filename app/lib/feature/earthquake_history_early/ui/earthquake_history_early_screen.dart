@@ -224,7 +224,7 @@ class _SliverListBody extends HookConsumerWidget {
         }
       });
       return null;
-    }, [controller, state, onScrollEnd, onRefresh]);
+    }, [controller, state, onScrollEnd, onRefresh],);
     final theme = Theme.of(context);
     final colorSchema = theme.colorScheme;
 

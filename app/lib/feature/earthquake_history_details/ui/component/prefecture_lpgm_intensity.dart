@@ -67,7 +67,7 @@ _lpgmCalculator(Ref ref, _Arg arg) => compute<
     }
   }
   return result;
-}, arg);
+}, arg,);
 
 class PrefectureLpgmIntensityWidget
     extends HookConsumerWidget {
@@ -87,7 +87,7 @@ class PrefectureLpgmIntensityWidget
       _LpgmCalculatorProvider((
         prefectures: item.lpgmIntensityPrefectures,
         stations: item.lpgmIntenstiyStations,
-      )),
+      ),),
     );
 
     return switch (mergedPrefecturesFuture) {
