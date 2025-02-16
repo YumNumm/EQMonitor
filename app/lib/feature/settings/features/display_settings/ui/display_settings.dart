@@ -83,7 +83,7 @@ class _ThemeSelector extends ConsumerWidget {
                 ThemeMode.light => 'ライト',
                 ThemeMode.dark => 'ダーク',
                 _ => throw UnimplementedError(),
-              }),
+              },),
               const SizedBox(height: 4),
               Radio.adaptive(
                 value:
