@@ -4,10 +4,10 @@ import 'package:eqapi_types/eqapi_types.dart';
 import 'package:eqmonitor/core/provider/jma_code_table_provider.dart';
 import 'package:eqmonitor/core/router/router.dart';
 import 'package:eqmonitor/feature/eew/data/eew_telegram.dart';
-import 'package:eqmonitor/feature/home/component/eew/eew_widget.dart';
-import 'package:eqmonitor/feature/home/component/map/home_map_view.dart';
-import 'package:eqmonitor/feature/home/component/shake-detect/shake_detection_card.dart';
-import 'package:eqmonitor/feature/home/component/sheet/home_earthquake_history_sheet.dart';
+import 'package:eqmonitor/feature/home/ui/component/eew/eew_widget.dart';
+import 'package:eqmonitor/feature/home/ui/component/map/home_map_view.dart';
+import 'package:eqmonitor/feature/home/ui/component/shake-detect/shake_detection_card.dart';
+import 'package:eqmonitor/feature/home/ui/component/sheet/home_earthquake_history_sheet.dart';
 import 'package:eqmonitor/feature/shake_detection/provider/shake_detection_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -36,7 +36,7 @@ class HomePage extends HookConsumerWidget {
                         ),
                       ),
                       builder: (context) => const _DebugModal(),
-                    ),        
+                    ),
                   ),
               child: const Icon(Icons.bug_report),
             ),

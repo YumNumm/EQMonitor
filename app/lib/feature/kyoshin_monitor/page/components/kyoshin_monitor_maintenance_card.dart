@@ -1,5 +1,5 @@
 import 'package:eqmonitor/core/component/container/bordered_container.dart';
-import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
+import 'package:eqmonitor/feature/home/ui/component/sheet/sheet_header.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_maintenance_provider.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/data/provider/kyoshin_monitor_settings.dart';
 import 'package:flutter/material.dart';

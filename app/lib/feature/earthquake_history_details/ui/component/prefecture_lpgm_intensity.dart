@@ -4,7 +4,7 @@ import 'package:eqmonitor/core/component/container/bordered_container.dart';
 import 'package:eqmonitor/core/component/intenisty/intensity_icon_type.dart';
 import 'package:eqmonitor/core/component/intenisty/jma_lg_intensity_icon.dart';
 import 'package:eqmonitor/core/extension/map_to_list.dart';
-import 'package:eqmonitor/feature/home/component/sheet/sheet_header.dart';
+import 'package:eqmonitor/feature/home/ui/component/sheet/sheet_header.dart';
 import 'package:extensions/extensions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
