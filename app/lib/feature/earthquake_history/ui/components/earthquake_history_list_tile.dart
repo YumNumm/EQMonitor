@@ -24,6 +24,8 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
     this.descriptionTextColor,
     this.magnitudeTextColor,
     this.visualDensity,
+    this.dense = false,
+    this.contentPadding,
     super.key,
   });
 
@@ -35,6 +37,8 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
   final Color? descriptionTextColor;
   final Color? magnitudeTextColor;
   final VisualDensity? visualDensity;
+  final bool dense;
+  final EdgeInsets? contentPadding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -60,7 +64,7 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
                 int.tryParse(e.code) == item.epicenterCode,
           )
           ?.name;
-    }, [item],);
+    }, [item]);
     final hypoDetailName = useMemoized(
       () => codeTable.areaEpicenterDetail.items
           .firstWhereOrNull(
@@ -205,6 +209,8 @@ class EarthquakeHistoryListTile extends HookConsumerWidget {
           color: magnitudeTextColor,
         ),
       ),
+      dense: dense,
+      contentPadding: contentPadding,
     );
   }
 }
