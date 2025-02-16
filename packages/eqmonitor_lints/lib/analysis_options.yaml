@@ -25,4 +25,4 @@ custom_lint:
     - avoid_single_child: false
 
 formatter:
-  page_width: 80
+  page_width: 60
