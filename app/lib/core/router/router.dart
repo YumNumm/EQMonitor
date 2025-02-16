@@ -11,7 +11,6 @@ import 'package:eqmonitor/feature/earthquake_history_details/ui/screen/earthquak
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_details_screen.dart';
 import 'package:eqmonitor/feature/earthquake_history_early/ui/earthquake_history_early_screen.dart';
 import 'package:eqmonitor/feature/eew/ui/screen/eew_details_by_event_id_page.dart';
-import 'package:eqmonitor/page/home_page.dart';
 import 'package:eqmonitor/feature/information_history/page/information_history_page.dart';
 import 'package:eqmonitor/feature/information_history_details/information_history_details_page.dart';
 import 'package:eqmonitor/feature/kyoshin_monitor/page/kyoshin_monitor_about_observation_network_page.dart';
@@ -33,6 +32,7 @@ import 'package:eqmonitor/feature/settings/features/notification_remote_settings
 import 'package:eqmonitor/feature/settings/features/notification_remote_settings/ui/pages/notification_remote_settings_eew_page.dart';
 import 'package:eqmonitor/feature/settings/settings_screen.dart';
 import 'package:eqmonitor/feature/setup/screen/setup_screen.dart';
+import 'package:eqmonitor/page/home_page.dart';
 import 'package:eqmonitor/page/talker/talker_page.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
