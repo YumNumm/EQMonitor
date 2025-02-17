@@ -6,7 +6,13 @@ linter:
     avoid_print: ignore
     lines_longer_than_80_chars: ignore
     document_ignores: false
-
+    # NOTE: dart format で末尾カンマ削除 -> dart analyze で末尾カンマが必要とループするため無効化中
+    require_trailing_commas: ignore
+    # NOTE: experimental なルールかつ discarded_futures と競合する箇所があるため無効化中
+    unnecessary_async: ignore
+    # NOTE: Dartチームが静的チェック付き変位指定を実装するまで無効化中
+    # https://github.com/dart-lang/language/issues/753
+    unsafe_variance: ignore
 analyzer:
   errors:
     # https://pub.dev/packages/freezed#install
