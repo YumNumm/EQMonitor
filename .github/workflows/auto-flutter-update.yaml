@@ -21,7 +21,7 @@ jobs:
 
       # https://github.com/kuhnroyal/flutter-fvm-config-action
       - name: Fetch flutter config
-        uses: kuhnroyal/flutter-fvm-config-action/config@60c14af316b09f8819202d845391260cf3b979c9 # v3.0
+        uses: kuhnroyal/flutter-fvm-config-action/config@0b792d004e2dfeda282a7af5c0609703658a9f8b # v3.1
         id: fvm-config-action
         # exposes: `steps.fvm-config-action.outputs.FLUTTER_VERSION`
         # exposes: `steps.fvm-config-action.outputs.FLUTTER_CHANNEL`
@@ -105,7 +105,7 @@ jobs:
       # Create PR
       # https://github.com/peter-evans/create-pull-request
       - name: Create or update pull request
-        uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
+        uses: peter-evans/create-pull-request@dd2324fc52d5d43c699a5636bcf19fceaa70c284 # v7.0.7
         id: cpr
         with:
           delete-branch: true
