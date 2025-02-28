@@ -1,6 +1,5 @@
-import 'package:eqmonitor/core/util/lat_lng_converter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:maplibre_gl/maplibre_gl.dart';
+import 'package:lat_lng/lat_lng.dart';
 
 part 'camera_position.freezed.dart';
 part 'camera_position.g.dart';
@@ -10,7 +9,7 @@ part 'camera_position.g.dart';
 class MapCameraPosition with _$MapCameraPosition {
   const factory MapCameraPosition({
     /// カメラの中心座標
-    @LatLngConverter() required LatLng target,
+    required LatLng target,
 
     /// ズームレベル
     @Default(5.0) double zoom,
@@ -22,26 +21,10 @@ class MapCameraPosition with _$MapCameraPosition {
     @Default(0.0) double bearing,
   }) = _MapCameraPosition;
 
-  /// MapLibreのCameraPositionから変換
-  factory MapCameraPosition.fromMapLibre(
-    CameraPosition position,
-  ) => MapCameraPosition(
-    target: position.target,
-    zoom: position.zoom,
-    tilt: position.tilt,
-    bearing: position.bearing,
-  );
-
   factory MapCameraPosition.fromJson(
     Map<String, dynamic> json,
   ) => _$MapCameraPositionFromJson(json);
 
   /// MapLibreのCameraPositionに変換
   const MapCameraPosition._();
-  CameraPosition toMapLibre() => CameraPosition(
-    target: target,
-    zoom: zoom,
-    tilt: tilt,
-    bearing: bearing,
-  );
 }
