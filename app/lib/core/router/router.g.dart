@@ -21,6 +21,7 @@ List<RouteBase> get $appRoutes => [
 
 RouteBase get $setupRoute => GoRouteData.$route(
   path: '/setup',
+
   factory: $SetupRouteExtension._fromState,
 );
 
@@ -41,6 +42,7 @@ extension $SetupRouteExtension on SetupRoute {
 
 RouteBase get $earthquakeHistoryRoute => GoRouteData.$route(
   path: '/earthquake-history',
+
   factory: $EarthquakeHistoryRouteExtension._fromState,
 );
 
@@ -62,6 +64,7 @@ extension $EarthquakeHistoryRouteExtension on EarthquakeHistoryRoute {
 
 RouteBase get $earthquakeHistoryDetailsRoute => GoRouteData.$route(
   path: '/earthquake-history-details/:eventId',
+
   factory: $EarthquakeHistoryDetailsRouteExtension._fromState,
 );
 
@@ -88,6 +91,7 @@ extension $EarthquakeHistoryDetailsRouteExtension
 
 RouteBase get $informationHistoryRoute => GoRouteData.$route(
   path: '/information-history',
+
   factory: $InformationHistoryRouteExtension._fromState,
 );
 
@@ -109,6 +113,7 @@ extension $InformationHistoryRouteExtension on InformationHistoryRoute {
 
 RouteBase get $informationHistoryDetailsRoute => GoRouteData.$route(
   path: '/information-history-details',
+
   factory: $InformationHistoryDetailsRouteExtension._fromState,
 );
 
@@ -133,20 +138,24 @@ extension $InformationHistoryDetailsRouteExtension
 
 RouteBase get $homeRoute => GoRouteData.$route(
   path: '/',
+
   factory: $HomeRouteExtension._fromState,
   routes: [
     GoRouteData.$route(
       path: 'earthquake-history-early',
+
       factory: $EarthquakeHistoryEarlyRouteExtension._fromState,
       routes: [
         GoRouteData.$route(
           path: 'details/:id',
+
           factory: $EarthquakeHistoryEarlyDetailsRouteExtension._fromState,
         ),
       ],
     ),
     GoRouteData.$route(
       path: 'eew-details-by-event-id/:eventId',
+
       factory: $EewDetailsByEventIdRouteExtension._fromState,
     ),
   ],
@@ -222,6 +231,7 @@ extension $EewDetailsByEventIdRouteExtension on EewDetailsByEventIdRoute {
 
 RouteBase get $talkerRoute => GoRouteData.$route(
   path: '/talker',
+
   factory: $TalkerRouteExtension._fromState,
 );
 
@@ -242,38 +252,46 @@ extension $TalkerRouteExtension on TalkerRoute {
 
 RouteBase get $settingsRoute => GoRouteData.$route(
   path: '/settings',
+
   factory: $SettingsRouteExtension._fromState,
   routes: [
     GoRouteData.$route(
       path: 'notification',
+
       factory: $NotificationRouteExtension._fromState,
       routes: [
         GoRouteData.$route(
           path: 'earthquake',
+
           factory: $NotificationEarthquakeRouteExtension._fromState,
         ),
         GoRouteData.$route(
           path: 'eew',
+
           factory: $NotificationEewRouteExtension._fromState,
         ),
       ],
     ),
     GoRouteData.$route(
       path: 'display',
+
       factory: $DisplayRouteExtension._fromState,
       routes: [
         GoRouteData.$route(
           path: 'color-schema',
+
           factory: $ColorSchemeConfigRouteExtension._fromState,
         ),
       ],
     ),
     GoRouteData.$route(
       path: 'kyoshin-monitor-about',
+
       factory: $KyoshinMonitorAboutRouteExtension._fromState,
       routes: [
         GoRouteData.$route(
           path: 'observation-network',
+
           factory:
               $KyoshinMonitorAboutObservationNetworkRouteExtension._fromState,
         ),
@@ -281,52 +299,64 @@ RouteBase get $settingsRoute => GoRouteData.$route(
     ),
     GoRouteData.$route(
       path: 'term-of-service',
+
       factory: $TermOfServiceRouteExtension._fromState,
     ),
     GoRouteData.$route(
       path: 'privacy-policy',
+
       factory: $PrivacyPolicyRouteExtension._fromState,
     ),
     GoRouteData.$route(
       path: 'license',
+
       factory: $LicenseRouteExtension._fromState,
     ),
     GoRouteData.$route(
       path: 'earthquake-history',
+
       factory: $EarthquakeHistoryConfigRouteExtension._fromState,
     ),
     GoRouteData.$route(
       path: 'about-this-app',
+
       factory: $AboutThisAppRouteExtension._fromState,
     ),
     GoRouteData.$route(
       path: 'donation',
+
       factory: $DonationRouteExtension._fromState,
       routes: [
         GoRouteData.$route(
           path: 'executed',
+
           factory: $DonationExecutedRouteExtension._fromState,
         ),
       ],
     ),
     GoRouteData.$route(
       path: 'debugger',
+
       factory: $DebuggerRouteExtension._fromState,
       routes: [
         GoRouteData.$route(
           path: 'api-endpoint-selector',
+
           factory: $HttpApiEndpointSelectorRouteExtension._fromState,
         ),
         GoRouteData.$route(
           path: 'websocket-api-endpoint-selector',
+
           factory: $WebsocketEndpointSelectorRouteExtension._fromState,
         ),
         GoRouteData.$route(
           path: 'kyoshin-monitor',
+
           factory: $DebugKyoshinMonitorRouteExtension._fromState,
         ),
         GoRouteData.$route(
           path: 'playground',
+
           factory: $PlaygroundRouteExtension._fromState,
         ),
       ],
