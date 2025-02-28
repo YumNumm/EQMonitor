@@ -3,16 +3,19 @@
 ## コマンド
 
 ### ビルド・実行
+
 - ビルドランナー: `dart run build_runner build -d`
 - クリーン＆再ビルド: `melos clean-all`
 
 ### テスト
+
 - 全テスト実行: `melos run test`
 - Flutterテスト実行: `melos run test:flutter`
 - Dartテスト実行: `melos run test:dart`
 - テストレポート: `melos run report:test`
 
 ### リント・解析
+
 - 全体解析: `melos run analyze`
 - カスタムリント: `dart run custom_lint`
 
