@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:crypto/crypto.dart';
+import 'package:eqmonitor/core/extension/color_extension.dart';
 import 'package:eqmonitor/feature/map/data/model/map_configuration.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -213,17 +212,4 @@ enum BaseLayer {
   areaForecastLocalEewLine,
   areaForecastLocalELine,
   areaInformationCityQuakeLine,
-}
-
-extension ColorCode on Color {
-  /// sRGB色空間における Hexカラーコードを取得
-  int get hex {
-    // 色をsRGBに変換
-    final color = withValues(colorSpace: ColorSpace.sRGB);
-    // color.{r,g,b}は0~1までの値なので、255倍にする
-    final r = (color.r * 255).toInt();
-    final g = (color.g * 255).toInt();
-    final b = (color.b * 255).toInt();
-    return (r << 16) + (g << 8) + b;
-  }
 }
