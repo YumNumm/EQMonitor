@@ -200,8 +200,15 @@ jobs:
       - name: Setup application runtime & Resolve dependencies
         uses: ./.github/actions/setup-application-runtime
 
+      # Java 17を明示的に設定
+      - name: Setup Java
+        uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9 # v4.2.1
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       - name: Accept Android License
-        run: yes | flutter doctor --android-licenses
+        run: yes | flutter doctor --android-licenses || true
 
       - name: Extract keystore
         run: |
@@ -231,6 +238,12 @@ jobs:
           echo "BUILD_NUMBER=${BUILD_NUMBER}" >> $GITHUB_OUTPUT
           echo "Build Number set to ${BUILD_NUMBER}."
           rm service-account.json
+
+      # Flutterのキャッシュをクリア
+      - name: Clean Flutter cache
+        run: |
+          flutter clean
+          flutter pub get
 
       - name: Build Android (AAB)
         working-directory: app
