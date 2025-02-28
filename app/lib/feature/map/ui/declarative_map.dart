@@ -10,7 +10,7 @@ import 'package:eqmonitor/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:maplibre_gl/maplibre_gl.dart';
+import 'package:maplibre/maplibre.dart';
 
 /// 宣言的なMapLibreMapのラッパー
 class DeclarativeMap extends StatefulHookConsumerWidget {
@@ -275,7 +275,7 @@ class _DeclarativeMapState
     required MapLayer layer,
     String? belowLayerId,
   }) async {
-    final controller = widget.controller.controller!;
+    final controller = widget.controller.controller;
     await controller.removeLayer(layer.id);
     final sourceId = layer.sourceId;
     if (sourceId == null) {
@@ -310,7 +310,7 @@ class _DeclarativeMapState
   }
 
   Future<void> _updateAllLayers() async {
-    final controller = widget.controller.controller!;
+    final controller = widget.controller.controller;
     for (final layer in widget.layers) {
       await controller.removeLayer(layer.id);
       final sourceId = layer.sourceId;
